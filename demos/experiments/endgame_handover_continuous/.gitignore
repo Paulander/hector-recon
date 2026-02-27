@@ -1,0 +1,7 @@
+# Generated artifacts
+_private/
+outputs/
+
+# Local weight snapshots (optional to commit; keep small)
+weights_snapshot/*.tmp
+
