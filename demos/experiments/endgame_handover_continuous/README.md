@@ -30,6 +30,8 @@ This folder is intended to be self-contained for running + demoing:
 
 2) Export visualization JSON for the bridge demo viewer:
    - `./demos/experiments/endgame_handover_continuous/run_export_viz.sh`
+   - Uses the first non-empty FEN from `data/near_promo.fens`
+   - Optional move budget override: `MOVES=160 ./demos/experiments/endgame_handover_continuous/run_export_viz.sh`
 
 3) Open the viewer:
    - open `demos/visualization/bridge_demo.html`
@@ -42,4 +44,3 @@ This folder is intended to be self-contained for running + demoing:
 Notes:
 - All scripts set `XDG_CACHE_HOME=/tmp` and `UV_CACHE_DIR=/tmp/uv-cache` to avoid uv cache permission issues.
 - Outputs are written under `_private/` and `outputs/` and are gitignored.
-
