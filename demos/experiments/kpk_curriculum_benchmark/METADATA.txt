@@ -1,0 +1,19 @@
+Benchmark scope: KPK curriculum baseline strengthening (reviewer request #1)
+
+Default stage list:
+  0,1,2,3,4,5,6,7
+
+Primary outputs:
+  _private/recon/<run_id>/
+  _private/ppo/<run_id>/
+  _private/heuristic/<run_id>/
+  outputs/latest_summary.json
+  outputs/latest_summary.md
+
+Paper historical comparison reference:
+  historical_comparison.md
+
+If pinning a benchmark run, record:
+  - git commit hash
+  - run IDs used in recon/ppo/heuristic
+  - any non-default hyperparameters
