@@ -14,6 +14,7 @@ CYCLES="${CYCLES:-10}"
 WIN_THRESHOLD="${WIN_THRESHOLD:-0.9}"
 STAGE_THRESHOLDS="${STAGE_THRESHOLDS:-}"
 DISABLE_PACK_SPAWNS="${DISABLE_PACK_SPAWNS:-0}"
+DISABLE_STEM_CELLS="${DISABLE_STEM_CELLS:-0}"
 PERFECT_CYCLE_THRESHOLD="${PERFECT_CYCLE_THRESHOLD:-1.0}"
 PERFECT_CYCLES_TO_ADVANCE="${PERFECT_CYCLES_TO_ADVANCE:-2}"
 NEAR_THRESHOLD_EXTRA_MARGIN="${NEAR_THRESHOLD_EXTRA_MARGIN:-0.10}"
@@ -38,6 +39,7 @@ if [ -n "$STAGE_THRESHOLDS" ]; then
   echo "  stage_thresholds:$STAGE_THRESHOLDS"
 fi
 echo "  disable_packs:   $DISABLE_PACK_SPAWNS"
+echo "  disable_stems:   $DISABLE_STEM_CELLS"
 echo "  perfect_cycle_thr:$PERFECT_CYCLE_THRESHOLD"
 echo "  perfect_cycles:  $PERFECT_CYCLES_TO_ADVANCE"
 echo "  near_extra_margin:$NEAR_THRESHOLD_EXTRA_MARGIN"
@@ -46,6 +48,10 @@ echo "  near_extra_max:  $MAX_NEAR_THRESHOLD_EXTRA_CYCLES"
 EXTRA_STAGE_THRESHOLD_ARGS=()
 if [ -n "$STAGE_THRESHOLDS" ]; then
   EXTRA_STAGE_THRESHOLD_ARGS+=(--stage-thresholds "$STAGE_THRESHOLDS")
+fi
+EXTRA_STEM_DISABLE_ARGS=()
+if [ "$DISABLE_STEM_CELLS" = "1" ]; then
+  EXTRA_STEM_DISABLE_ARGS+=(--disable-stem-cells)
 fi
 
 XDG_CACHE_HOME=/tmp UV_CACHE_DIR=/tmp/uv-cache M5_DISABLE_PACK_SPAWNS="$DISABLE_PACK_SPAWNS" uv run python "$ROOT_DIR/scripts/evolution_driver.py" \
@@ -60,6 +66,7 @@ XDG_CACHE_HOME=/tmp UV_CACHE_DIR=/tmp/uv-cache M5_DISABLE_PACK_SPAWNS="$DISABLE_
   --perfect-cycles-to-advance "$PERFECT_CYCLES_TO_ADVANCE" \
   --near-threshold-extra-margin "$NEAR_THRESHOLD_EXTRA_MARGIN" \
   --max-near-threshold-extra-cycles "$MAX_NEAR_THRESHOLD_EXTRA_CYCLES" \
+  "${EXTRA_STEM_DISABLE_ARGS[@]}" \
   "${EXTRA_STAGE_THRESHOLD_ARGS[@]}" \
   --run-name "$RUN_ID" \
   --output-dir "$RUN_DIR/reports" \
@@ -90,6 +97,7 @@ cat > "$RUN_DIR/run_manifest.json" <<EOF
   "win_threshold": $WIN_THRESHOLD,
   "stage_thresholds": "$STAGE_THRESHOLDS",
   "disable_pack_spawns": $DISABLE_PACK_SPAWNS,
+  "disable_stem_cells": $DISABLE_STEM_CELLS,
   "perfect_cycle_threshold": $PERFECT_CYCLE_THRESHOLD,
   "perfect_cycles_to_advance": $PERFECT_CYCLES_TO_ADVANCE,
   "near_threshold_extra_margin": $NEAR_THRESHOLD_EXTRA_MARGIN,

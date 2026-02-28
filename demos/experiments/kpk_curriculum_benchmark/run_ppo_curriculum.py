@@ -100,6 +100,39 @@ def main() -> None:
         help="Minimum success_rate required to continue to next stage (default: 0.9)",
     )
     parser.add_argument(
+        "--cycles-per-stage",
+        type=int,
+        default=1,
+        help="Number of train/eval cycles per stage before moving on (default: 1).",
+    )
+    parser.add_argument(
+        "--perfect-eval-threshold",
+        type=float,
+        default=1.0,
+        help="Eval success threshold counted as perfect (default: 1.0).",
+    )
+    parser.add_argument(
+        "--perfect-evals-to-advance",
+        type=int,
+        default=2,
+        help="Advance stage early after N consecutive perfect evals (0 disables, default: 2).",
+    )
+    parser.add_argument(
+        "--near-threshold-extra-margin",
+        type=float,
+        default=0.10,
+        help=(
+            "If stage mean success is within this margin below threshold at base cycle count, "
+            "run one bonus cycle (default: 0.10)."
+        ),
+    )
+    parser.add_argument(
+        "--max-near-threshold-extra-cycles",
+        type=int,
+        default=1,
+        help="Maximum near-threshold bonus cycles per stage (default: 1).",
+    )
+    parser.add_argument(
         "--eval-dir",
         type=Path,
         default=Path("demos/experiments/kpk_curriculum_benchmark/data/eval_fens"),
@@ -145,6 +178,7 @@ def main() -> None:
 
     start = time.time()
     stage_rows: List[Dict[str, Any]] = []
+    stage_cycle_rows: List[Dict[str, Any]] = []
     model: PPO | None = None
 
     for idx, stage in enumerate(stages):
@@ -169,35 +203,87 @@ def main() -> None:
         else:
             model.set_env(train_env)
 
-        stage_start = time.time()
-        model.learn(total_timesteps=steps, reset_num_timesteps=False, progress_bar=False)
-        stage_train_time = time.time() - stage_start
+        stage_cycle_limit = max(1, args.cycles_per_stage)
+        stage_cycles_used = 0
+        stage_extra_cycles_used = 0
+        stage_perfect_streak = 0
+        stage_eval_rows: List[Dict[str, Any]] = []
 
-        model_path = run_dir / f"stage_{stage:02d}_model"
-        model.save(model_path)
+        while stage_cycles_used < stage_cycle_limit:
+            stage_cycles_used += 1
+            stage_start = time.time()
+            model.learn(total_timesteps=steps, reset_num_timesteps=False, progress_bar=False)
+            stage_train_time = time.time() - stage_start
 
-        eval_row = evaluate_model(
-            model=model,
-            stage=stage,
-            fens=eval_fens[stage],
-            max_moves=args.max_moves,
-        )
-        eval_row["timesteps"] = steps
-        eval_row["train_seconds"] = stage_train_time
-        eval_row["model_path"] = str(model_path) + ".zip"
-        stage_rows.append(eval_row)
-        write_json(run_dir / f"stage_{stage:02d}_results.json", eval_row)
+            model_path = run_dir / f"stage_{stage:02d}_cycle_{stage_cycles_used:02d}_model"
+            model.save(model_path)
 
-        print(
-            f"stage {stage:02d}: success={eval_row['success_rate']:.3f} "
-            f"(win={eval_row['win_rate']:.3f}, promo={eval_row['promotion_rate']:.3f}) "
-            f"time={stage_train_time:.1f}s"
-        )
+            eval_row = evaluate_model(
+                model=model,
+                stage=stage,
+                fens=eval_fens[stage],
+                max_moves=args.max_moves,
+            )
+            eval_row["timesteps"] = steps
+            eval_row["train_seconds"] = stage_train_time
+            eval_row["model_path"] = str(model_path) + ".zip"
+            eval_row["cycle"] = stage_cycles_used
+            stage_eval_rows.append(eval_row)
+            stage_cycle_rows.append(eval_row | {"stage": stage})
+            write_json(run_dir / f"stage_{stage:02d}_cycle_{stage_cycles_used:02d}_results.json", eval_row)
 
-        if args.strict_stage_advance and eval_row["success_rate"] < args.advance_threshold:
             print(
-                f"Stopping PPO stage progression: success_rate "
-                f"{eval_row['success_rate']:.3f} < threshold {args.advance_threshold:.3f}"
+                f"stage {stage:02d} cycle {stage_cycles_used:02d}: "
+                f"success={eval_row['success_rate']:.3f} "
+                f"(win={eval_row['win_rate']:.3f}, promo={eval_row['promotion_rate']:.3f}) "
+                f"time={stage_train_time:.1f}s"
+            )
+
+            if eval_row["success_rate"] >= args.perfect_eval_threshold:
+                stage_perfect_streak += 1
+            else:
+                stage_perfect_streak = 0
+
+            if (
+                args.perfect_evals_to_advance > 0
+                and stage_perfect_streak >= args.perfect_evals_to_advance
+                and stage_cycles_used < stage_cycle_limit
+            ):
+                print(
+                    f"Early stage advance for stage {stage}: {stage_perfect_streak} "
+                    f"consecutive evals >= {args.perfect_eval_threshold:.3f}"
+                )
+                break
+
+            if (
+                stage_cycles_used == args.cycles_per_stage
+                and stage_extra_cycles_used < args.max_near_threshold_extra_cycles
+            ):
+                stage_avg_success = (
+                    sum(r["success_rate"] for r in stage_eval_rows) / len(stage_eval_rows)
+                    if stage_eval_rows
+                    else 0.0
+                )
+                near_floor = max(0.0, args.advance_threshold - args.near_threshold_extra_margin)
+                if near_floor <= stage_avg_success < args.advance_threshold:
+                    stage_extra_cycles_used += 1
+                    stage_cycle_limit += 1
+                    print(
+                        f"Near-threshold bonus cycle for stage {stage}: "
+                        f"avg_success={stage_avg_success:.3f}, threshold={args.advance_threshold:.3f}"
+                    )
+
+        final_eval = stage_eval_rows[-1]
+        stage_avg_success = sum(r["success_rate"] for r in stage_eval_rows) / len(stage_eval_rows)
+        final_eval["cycles_used"] = stage_cycles_used
+        final_eval["stage_avg_success_rate"] = stage_avg_success
+        stage_rows.append(final_eval)
+        write_json(run_dir / f"stage_{stage:02d}_results.json", final_eval)
+
+        if args.strict_stage_advance and stage_avg_success < args.advance_threshold:
+            print(
+                f"Stopping PPO stage progression: avg_success "
+                f"{stage_avg_success:.3f} < threshold {args.advance_threshold:.3f}"
             )
             break
 
@@ -218,9 +304,15 @@ def main() -> None:
             "eval_dir": str(args.eval_dir),
             "strict_stage_advance": args.strict_stage_advance,
             "advance_threshold": args.advance_threshold,
+            "cycles_per_stage": args.cycles_per_stage,
+            "perfect_eval_threshold": args.perfect_eval_threshold,
+            "perfect_evals_to_advance": args.perfect_evals_to_advance,
+            "near_threshold_extra_margin": args.near_threshold_extra_margin,
+            "max_near_threshold_extra_cycles": args.max_near_threshold_extra_cycles,
         },
         "total_train_seconds": total,
         "stage_results": stage_rows,
+        "stage_cycle_results": stage_cycle_rows,
     }
     write_json(run_dir / "ppo_curriculum_results.json", payload)
     print(f"Saved: {run_dir / 'ppo_curriculum_results.json'}")

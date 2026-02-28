@@ -92,8 +92,12 @@ XDG_CACHE_HOME=/tmp UV_CACHE_DIR=/tmp/uv-cache uv run python \
   - ReCoN uses `--strict-stage-advance` in `evolution_driver.py`.
   - PPO wrapper enables `--strict-stage-advance` unless `STRICT_STAGE_ADVANCE=0`.
   - Both use a threshold of `0.9` by default (override via `WIN_THRESHOLD` for ReCoN and `ADVANCE_THRESHOLD` for PPO).
+- PPO wrapper supports fairness controls similar to ReCoN:
+  - `CYCLES_PER_STAGE`, `PERFECT_EVAL_THRESHOLD`, `PERFECT_EVALS_TO_ADVANCE`
+  - `NEAR_THRESHOLD_EXTRA_MARGIN`, `MAX_NEAR_THRESHOLD_EXTRA_CYCLES`
 - ReCoN wrapper supports extra controls:
   - `START_STAGE` / `END_STAGE` to run a subset (default `0..7`).
+  - `DISABLE_STEM_CELLS=1` for a true no-stem ablation (no stem manager at all).
   - `DISABLE_PACK_SPAWNS=1` to disable template pack spawning (`M5_DISABLE_PACK_SPAWNS=1`).
   - `STAGE_THRESHOLDS="0-4:1.0,5-7:0.8"` (or `"0-4:100%,5-7:80%"`) for per-stage win thresholds.
   - `PERFECT_CYCLES_TO_ADVANCE=2` + `PERFECT_CYCLE_THRESHOLD=1.0` for early stage exit on repeated perfect cycles.

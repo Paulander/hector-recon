@@ -385,6 +385,7 @@ class EvolutionConfig:
     stage_promotion_threshold: float = 0.8  # Win rate to advance
     min_games_per_stage: int = 50
     use_stockfish_rewards: bool = True
+    enable_stem_cells: bool = True
     # Stage efficiency controls
     perfect_cycle_threshold: float = 1.0  # Treat cycle as "perfect" at/above this
     perfect_cycles_to_early_advance: int = 2  # Stop stage after N perfect cycles
@@ -1247,7 +1248,7 @@ def run_evolution_training(config: EvolutionConfig) -> List[CycleResult]:
     
     # Initialize stem cell manager
     stem_manager = None
-    if HAS_STEM_CELL:
+    if config.enable_stem_cells and HAS_STEM_CELL:
         # Load from previous stage if path exists
         if config.stem_cells_load_path and config.stem_cells_load_path.exists():
             try:
@@ -1272,6 +1273,8 @@ def run_evolution_training(config: EvolutionConfig) -> List[CycleResult]:
                 config=stem_cfg,
                 max_trial_slots=config.max_trial_slots,  # SPARSITY: Cap TRIAL tier
             )
+    elif not config.enable_stem_cells:
+        print("  Stem cells: DISABLED by config")
     
     # Create output directories
     config.snapshot_dir.mkdir(parents=True, exist_ok=True)
@@ -1740,6 +1743,11 @@ def main():
         action="store_true",
         help="Skip saving topology snapshots (faster for pure metric testing)"
     )
+    parser.add_argument(
+        "--disable-stem-cells",
+        action="store_true",
+        help="Disable stem-cell manager (no stem-cell sampling/spawning/promotions).",
+    )
     
     args = parser.parse_args()
     
@@ -1790,6 +1798,7 @@ def main():
             trace_dir=base_trace,
             current_stage_idx=stage_idx,
             stage_promotion_threshold=stage_threshold,
+            enable_stem_cells=not args.disable_stem_cells,
             perfect_cycle_threshold=args.perfect_cycle_threshold,
             perfect_cycles_to_early_advance=args.perfect_cycles_to_advance,
             near_threshold_extra_margin=args.near_threshold_extra_margin,
