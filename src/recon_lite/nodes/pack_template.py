@@ -17,6 +17,7 @@ Structure:
 from __future__ import annotations
 
 import random
+import hashlib
 from functools import partial
 from typing import Callable, Dict, List, Optional, Any
 
@@ -26,6 +27,73 @@ from recon_lite.graph import Graph, Node, NodeType, LinkType
 # Configuration
 MAX_BRANCH_DEPTH = 5  # Prevent O(n²) propagation
 DECAY_DEPTH_MULTIPLIER = 1.2  # Deeper packs prune faster
+
+
+def _ensure_node(graph: Graph, node: Node) -> Node:
+    """
+    Add node if missing; otherwise return existing node.
+
+    This makes pack spawning idempotent across repeated growth passes where
+    the same stem cell may attempt to spawn the same template IDs again.
+    """
+    existing = graph.nodes.get(node.nid)
+    if existing is not None:
+        return existing
+    graph.add_node(node)
+    return node
+
+
+def _has_edge(graph: Graph, src: str, dst: str, ltype: LinkType) -> bool:
+    return any(e.src == src and e.dst == dst and e.ltype == ltype for e in graph.edges)
+
+
+def _ensure_edge(graph: Graph, src: str, dst: str, ltype: LinkType) -> None:
+    """
+    Add edge only if it does not already exist.
+    """
+    if src not in graph.nodes or dst not in graph.nodes:
+        return
+    if _has_edge(graph, src, dst, ltype):
+        return
+    try:
+        graph.add_edge(src, dst, ltype)
+    except ValueError as exc:
+        # SCRIPT nodes allow only one SUB parent. If a colliding generated
+        # node already has a parent, we skip attaching this edge and let the
+        # caller resolve via unique naming on next attempt.
+        if "already has a parent" in str(exc):
+            return
+        raise
+
+
+def _resolve_pack_prefix(graph: Graph, base_prefix: str, parent_id: str) -> str:
+    """
+    Ensure generated pack IDs do not collide across different parents.
+
+    If `<base_prefix>_gate` exists and already belongs to a different parent,
+    derive a parent-scoped prefix to keep IDs unique.
+    """
+    gate_id = f"{base_prefix}_gate"
+    if gate_id not in graph.nodes:
+        return base_prefix
+
+    existing_parent = graph.parent.get(gate_id)
+    if existing_parent in (None, parent_id):
+        return base_prefix
+
+    parent_tag = hashlib.sha1(parent_id.encode("utf-8")).hexdigest()[:8]
+    scoped = f"{base_prefix}__p{parent_tag}"
+    scoped_gate = f"{scoped}_gate"
+    if scoped_gate not in graph.nodes or graph.parent.get(scoped_gate) in (None, parent_id):
+        return scoped
+
+    idx = 1
+    while True:
+        candidate = f"{scoped}_{idx}"
+        candidate_gate = f"{candidate}_gate"
+        if candidate_gate not in graph.nodes or graph.parent.get(candidate_gate) in (None, parent_id):
+            return candidate
+        idx += 1
 
 
 def spawn_goal_delegation_pack(
@@ -346,7 +414,8 @@ def spawn_and_gate_pack(
         return {}
     
     created_ids: Dict[str, Any] = {}
-    prefix = f"and_{gate_name}"
+    base_prefix = f"and_{gate_name}"
+    prefix = _resolve_pack_prefix(graph, base_prefix, parent_id)
     
     # Create gate SCRIPT node with min aggregation
     gate_id = f"{prefix}_gate"
@@ -355,12 +424,12 @@ def spawn_and_gate_pack(
     gate_node.meta["aggregation"] = "min"  # All must fire
     gate_node.meta["transient"] = is_trial
     gate_node.meta["tier"] = "trial" if is_trial else "mature"
-    graph.add_node(gate_node)
+    _ensure_node(graph, gate_node)
     created_ids["gate"] = gate_id
     
     # Attach to parent
     if parent_id in graph.nodes:
-        graph.add_edge(parent_id, gate_id, LinkType.SUB)
+        _ensure_edge(graph, parent_id, gate_id, LinkType.SUB)
     
     # Create condition sensors and attach via SUB
     cond_ids = []
@@ -369,8 +438,10 @@ def spawn_and_gate_pack(
         cond_node = Node(nid=cond_id, ntype=NodeType.TERMINAL, predicate=cond_fn)
         cond_node.meta["role"] = "and_condition"
         cond_node.meta["condition_index"] = i
-        graph.add_node(cond_node)
-        graph.add_edge(gate_id, cond_id, LinkType.SUB)
+        existing_cond = _ensure_node(graph, cond_node)
+        # Keep condition predicate fresh if this ID is reused.
+        existing_cond.predicate = cond_fn
+        _ensure_edge(graph, gate_id, cond_id, LinkType.SUB)
         cond_ids.append(cond_id)
     created_ids["conditions"] = cond_ids
     
@@ -379,8 +450,10 @@ def spawn_and_gate_pack(
     actuator_node = Node(nid=actuator_id, ntype=NodeType.TERMINAL, predicate=then_action)
     actuator_node.meta["role"] = "gate_actuator"
     actuator_node.meta["actuator_weight"] = 0.3 if is_trial else 1.0
-    graph.add_node(actuator_node)
-    graph.add_edge(gate_id, actuator_id, LinkType.SUB)  # Changed: TERMINAL can only be targeted by SUB
+    existing_actuator = _ensure_node(graph, actuator_node)
+    # Keep actuator predicate fresh if this ID is reused.
+    existing_actuator.predicate = then_action
+    _ensure_edge(graph, gate_id, actuator_id, LinkType.SUB)  # TERMINAL can only be targeted by SUB
     created_ids["actuator"] = actuator_id
     
     return created_ids
@@ -416,7 +489,8 @@ def spawn_or_gate_pack(
         return {}
     
     created_ids: Dict[str, Any] = {}
-    prefix = f"or_{gate_name}"
+    base_prefix = f"or_{gate_name}"
+    prefix = _resolve_pack_prefix(graph, base_prefix, parent_id)
     
     # Create gate SCRIPT node with max aggregation
     gate_id = f"{prefix}_gate"
@@ -425,12 +499,12 @@ def spawn_or_gate_pack(
     gate_node.meta["aggregation"] = "max"  # Any fires = gate fires
     gate_node.meta["transient"] = is_trial
     gate_node.meta["tier"] = "trial" if is_trial else "mature"
-    graph.add_node(gate_node)
+    _ensure_node(graph, gate_node)
     created_ids["gate"] = gate_id
     
     # Attach to parent
     if parent_id in graph.nodes:
-        graph.add_edge(parent_id, gate_id, LinkType.SUB)
+        _ensure_edge(graph, parent_id, gate_id, LinkType.SUB)
     
     # Create condition sensors and attach via SUB
     cond_ids = []
@@ -439,8 +513,9 @@ def spawn_or_gate_pack(
         cond_node = Node(nid=cond_id, ntype=NodeType.TERMINAL, predicate=cond_fn)
         cond_node.meta["role"] = "or_condition"
         cond_node.meta["condition_index"] = i
-        graph.add_node(cond_node)
-        graph.add_edge(gate_id, cond_id, LinkType.SUB)
+        existing_cond = _ensure_node(graph, cond_node)
+        existing_cond.predicate = cond_fn
+        _ensure_edge(graph, gate_id, cond_id, LinkType.SUB)
         cond_ids.append(cond_id)
     created_ids["conditions"] = cond_ids
     
@@ -449,8 +524,9 @@ def spawn_or_gate_pack(
     actuator_node = Node(nid=actuator_id, ntype=NodeType.TERMINAL, predicate=then_action)
     actuator_node.meta["role"] = "gate_actuator"
     actuator_node.meta["actuator_weight"] = 0.3 if is_trial else 1.0
-    graph.add_node(actuator_node)
-    graph.add_edge(gate_id, actuator_id, LinkType.SUB)  # Changed: TERMINAL can only be targeted by SUB
+    existing_actuator = _ensure_node(graph, actuator_node)
+    existing_actuator.predicate = then_action
+    _ensure_edge(graph, gate_id, actuator_id, LinkType.SUB)  # TERMINAL can only be targeted by SUB
     created_ids["actuator"] = actuator_id
     
     return created_ids

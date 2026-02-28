@@ -1368,6 +1368,7 @@ class StemCellTerminal:
             {"type": "pack"|"single"|"variant", "ids": [...]}
         """
         import os
+        disable_pack_spawns = os.environ.get("M5_DISABLE_PACK_SPAWNS", "0") == "1"
         
         # Dynamic lottery bias based on win_rate
         if win_rate < 0.10:
@@ -1385,7 +1386,12 @@ class StemCellTerminal:
             pack_prob = 0.50
             single_prob = 0.40
             # variant_prob = 0.10
-        
+
+        # Optional benchmark mode: disable pack template spawning while keeping
+        # non-pack stem-cell exploration active.
+        if disable_pack_spawns:
+            pack_prob = 0.0
+
         roll = random.random()
         
         if roll < pack_prob and graph is not None:

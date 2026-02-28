@@ -12,6 +12,8 @@ EVAL_PER_STAGE="${EVAL_PER_STAGE:-100}"
 MAX_MOVES="${MAX_MOVES:-100}"
 SEED="${SEED:-42}"
 EVAL_SEED="${EVAL_SEED:-2026}"
+ADVANCE_THRESHOLD="${ADVANCE_THRESHOLD:-0.9}"
+STRICT_STAGE_ADVANCE="${STRICT_STAGE_ADVANCE:-1}"
 
 mkdir -p "$RUN_DIR"
 
@@ -21,6 +23,12 @@ echo "  stages:         $STAGES"
 echo "  timesteps:      $TIMESTEPS"
 echo "  eval_per_stage: $EVAL_PER_STAGE"
 echo "  max_moves:      $MAX_MOVES"
+echo "  advance_thr:    $ADVANCE_THRESHOLD"
+
+EXTRA_ADVANCE_FLAG=()
+if [ "$STRICT_STAGE_ADVANCE" = "1" ]; then
+  EXTRA_ADVANCE_FLAG+=(--strict-stage-advance)
+fi
 
 XDG_CACHE_HOME=/tmp UV_CACHE_DIR=/tmp/uv-cache uv run python "$EXP_DIR/run_ppo_curriculum.py" \
   --stages "$STAGES" \
@@ -29,6 +37,8 @@ XDG_CACHE_HOME=/tmp UV_CACHE_DIR=/tmp/uv-cache uv run python "$EXP_DIR/run_ppo_c
   --max-moves "$MAX_MOVES" \
   --seed "$SEED" \
   --eval-seed "$EVAL_SEED" \
-  --output-dir "$RUN_DIR"
+  --advance-threshold "$ADVANCE_THRESHOLD" \
+  --output-dir "$RUN_DIR" \
+  "${EXTRA_ADVANCE_FLAG[@]}"
 
 echo "Wrote $RUN_DIR/ppo_curriculum_results.json"

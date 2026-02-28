@@ -86,6 +86,20 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=42, help="PPO seed")
     parser.add_argument("--eval-seed", type=int, default=2026, help="Eval FEN seed")
     parser.add_argument(
+        "--strict-stage-advance",
+        action="store_true",
+        help=(
+            "Stop curriculum progression when eval success_rate falls below "
+            "--advance-threshold."
+        ),
+    )
+    parser.add_argument(
+        "--advance-threshold",
+        type=float,
+        default=0.9,
+        help="Minimum success_rate required to continue to next stage (default: 0.9)",
+    )
+    parser.add_argument(
         "--eval-dir",
         type=Path,
         default=Path("demos/experiments/kpk_curriculum_benchmark/data/eval_fens"),
@@ -180,6 +194,13 @@ def main() -> None:
             f"time={stage_train_time:.1f}s"
         )
 
+        if args.strict_stage_advance and eval_row["success_rate"] < args.advance_threshold:
+            print(
+                f"Stopping PPO stage progression: success_rate "
+                f"{eval_row['success_rate']:.3f} < threshold {args.advance_threshold:.3f}"
+            )
+            break
+
     total = time.time() - start
     payload = {
         "run_type": "ppo_curriculum",
@@ -195,6 +216,8 @@ def main() -> None:
             "seed": args.seed,
             "eval_seed": args.eval_seed,
             "eval_dir": str(args.eval_dir),
+            "strict_stage_advance": args.strict_stage_advance,
+            "advance_threshold": args.advance_threshold,
         },
         "total_train_seconds": total,
         "stage_results": stage_rows,
