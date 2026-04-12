@@ -1,0 +1,55 @@
+# Task: 100% KRK Curriculum Win Rate
+
+## Current Status: ✅ 100% on Mate_In_1, +10 bonus is scaffolding
+
+---
+
+## Phase 1A: Diagnose & Fix 9% Failure ✅ DONE
+- [x] Root cause: Actuators don't target `is_checkmate`
+- [x] Fix: +10 checkmate bonus (temporary scaffolding)
+- [x] Verified: 100/100 mates, 7 ticks/pos
+
+## Phase 1B: Fix Actuator→Sensor Wiring ✅ DONE
+- [x] Remove positional fallback in [baseline_to_recon.py](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/scripts/baseline_to_recon.py)
+- [x] Map only via [sensor_id](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/scripts/train_baseline_krk.py#99-110), not array index
+- [x] Audit: exposed sensors 27/28 miswiring
+
+## Phase 1C: Goal Dimension Retention (In Progress)
+- [x] Library: Add [extract_actuator_patterns(..., goal_sensor_ids)](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/src/recon_lite/learning/baseline.py#463-647) (in [baseline.py](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/tests/test_baseline.py))
+- [ ] Integration: Update training scripts to pass `goal_sensor_ids=[13]`
+- [ ] Verify: Re-train and check if `sensor_13` is retained without +10 bonus
+
+## Phase 1D: Scaffold Retirement (A/B Test)
+- [ ] Run A: with +10 bonus
+- [ ] Run B: after fixes, bonus removed
+- [ ] Pass: B ≥99% on mate-in-1 within 50 cycles
+- [ ] Remove +10 bonus permanently
+
+---
+
+## Phase 2: Backward Chaining in Terminal Space
+- [ ] Implement [GoalMemory](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/src/recon_lite/learning/baseline.py#242-259) - Store stage exemplars
+- [ ] Implement `terminal_distance()` - L2 norm
+- [ ] Implement recursive chaining (Stage N → Stage N-1)
+- [ ] Test on full 10-stage curriculum
+
+## Phase 3: Automatic Stem Cell Discovery
+- [ ] Spawn triggers: failure + affordance spike
+- [ ] XP-based pruning
+- [ ] Minimal topology preference
+
+## Phase 4: Full Curriculum Integration
+- [ ] Add `--enable-chaining` and `--no-checkmate-bonus` flags
+- [ ] Run full curriculum, track win rate per stage
+
+## Phase 5: Extension Design (KQK, KPK)
+- [ ] Validate GoalMemory for other endgames
+- [ ] Design affordance detection for Leg selection
+
+---
+
+## Success Criteria
+- [x] 100% on Mate_In_1 ✅
+- [ ] +10 bonus retired, ≥99% maintained
+- [ ] 100% across all 10 stages
+- [ ] Topology stays minimal (<100 nodes)
