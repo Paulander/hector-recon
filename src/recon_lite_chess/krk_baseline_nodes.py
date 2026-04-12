@@ -10,7 +10,7 @@ from typing import Dict, Any
 import chess
 
 from recon_lite.graph import Node, NodeType
-from recon_lite.learning.baseline import apply_sensor
+from recon_lite_hector.learning.baseline import apply_sensor
 from recon_lite_chess.baseline_teacher import KRKTeacher
 
 

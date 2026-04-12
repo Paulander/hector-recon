@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from recon_lite.graph import Graph, Node, NodeType, LinkType
-from recon_lite.models.registry import TopologyRegistry, NodeSpec, EdgeSpec
+from recon_lite_hector.models.registry import TopologyRegistry, NodeSpec, EdgeSpec
 
 
 def _node_type_from_str(s: str) -> NodeType:

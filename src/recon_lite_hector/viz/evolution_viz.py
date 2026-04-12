@@ -4,7 +4,7 @@ Visualizes network evolution over training cycles, highlighting
 new nodes, new edges, and removed components.
 
 Usage:
-    from recon_lite.viz.evolution_viz import render_evolution_snapshot
+    from recon_lite_hector.viz.evolution_viz import render_evolution_snapshot
     
     path = render_evolution_snapshot(
         topology=registry.get_snapshot(),

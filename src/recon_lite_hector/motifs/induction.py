@@ -4,7 +4,7 @@ Integrates stem cells with the motif extraction system to discover
 new patterns and promote them to sensors.
 
 Usage:
-    from recon_lite.motifs import PatternInduction, PromotionConfig
+    from recon_lite_hector.motifs import PatternInduction, PromotionConfig
     
     pipeline = PatternInduction(stem_manager, motif_memory)
     

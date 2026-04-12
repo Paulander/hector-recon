@@ -8,7 +8,7 @@ All chess-specific logic lives HERE, not in the baseline module.
 import chess
 import numpy as np
 from typing import List
-from recon_lite.learning.baseline import TransitionData
+from recon_lite_hector.learning.baseline import TransitionData
 
 
 # ============================================================================

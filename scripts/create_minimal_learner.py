@@ -11,7 +11,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from recon_lite.learning.baseline import BaselineLearner, Terminal, TerminalRole, SensorSpec, ActuatorSpec
+from recon_lite_hector.learning.baseline import BaselineLearner, Terminal, TerminalRole, SensorSpec, ActuatorSpec
 from recon_lite_chess.baseline_teacher import KRKTeacher
 import numpy as np
 

@@ -32,7 +32,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from recon_lite.graph import Graph, Node, NodeType, NodeState, LinkType
 from recon_lite.engine import ReConEngine
-from recon_lite.dynamics.persistence import (
+from recon_lite_hector.dynamics.persistence import (
     PersistenceConfig,
     apply_persistence_to_node,
     get_active_plans,
@@ -83,9 +83,9 @@ from recon_lite_chess.strategy_layer.move_generators import (
     select_weighted_move,
     PlanMoveCandidate,
 )
-from recon_lite.plasticity.consolidate import ConsolidationEngine, ConsolidationConfig
+from recon_lite_hector.plasticity.consolidate import ConsolidationEngine, ConsolidationConfig
 from recon_lite.logger import RunLogger
-from recon_lite.nodes.stem_cell import StemCellManager, StemCellConfig, StemCellState
+from recon_lite_hector.nodes.stem_cell import StemCellManager, StemCellConfig, StemCellState
 
 # Import unified graph building
 from recon_lite_chess.graph import (

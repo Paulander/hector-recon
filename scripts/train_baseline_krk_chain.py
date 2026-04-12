@@ -18,7 +18,7 @@ try:
 except ImportError:
     torch = None
 
-from recon_lite.learning.baseline import (
+from recon_lite_hector.learning.baseline import (
     BaselineLearner, Terminal, TerminalRole,
     compute_sensor_xp, should_promote_sensor,
     extract_actuator_patterns, find_similar_actuator, enforce_actuator_cap,
@@ -469,7 +469,7 @@ def main() -> None:
             learner = pickle.load(f)
         # Update device if requested
         if args.device != learner.device:
-            from recon_lite.learning.baseline import ComputeBackend
+            from recon_lite_hector.learning.baseline import ComputeBackend
             learner.device = args.device
             learner.backend = ComputeBackend(device=args.device)
         print(f"  Loaded {len(learner.sensors)} sensors, {len(learner.actuators)} actuators")

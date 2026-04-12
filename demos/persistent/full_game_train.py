@@ -47,7 +47,7 @@ from recon_lite.graph import Graph, Node, NodeType, NodeState, LinkType
 from recon_lite.engine import ReConEngine
 from recon_lite.logger import RunLogger
 from recon_lite.trace_db import EpisodeRecord, TickRecord, TraceDB, pack_fingerprint, EpisodeSummary
-from recon_lite.plasticity import (
+from recon_lite_hector.plasticity import (
     PlasticityConfig,
     init_plasticity_state,
     update_eligibility,
@@ -55,12 +55,12 @@ from recon_lite.plasticity import (
     reset_episode as reset_plasticity_episode,
     extract_episode_summary,
 )
-from recon_lite.plasticity.consolidate import (
+from recon_lite_hector.plasticity.consolidate import (
     ConsolidationConfig,
     ConsolidationEngine,
 )
-from recon_lite.nodes.stem_cell import StemCellManager, StemCellConfig
-from recon_lite.dynamics.persistence import (
+from recon_lite_hector.nodes.stem_cell import StemCellManager, StemCellConfig
+from recon_lite_hector.dynamics.persistence import (
     PersistenceConfig,
     apply_persistence_to_node,
     get_active_plans,

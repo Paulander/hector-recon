@@ -16,7 +16,7 @@ except Exception as e:
 # Test feature vector
 try:
     import chess
-    from recon_lite.nodes.stem_cell import StemCellManager
+    from recon_lite_hector.nodes.stem_cell import StemCellManager
     
     mgr = StemCellManager()
     board = chess.Board()

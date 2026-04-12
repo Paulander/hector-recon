@@ -9,7 +9,7 @@ import argparse
 import pickle
 from pathlib import Path
 
-from recon_lite.learning.baseline_viz import (
+from recon_lite_hector.learning.baseline_viz import (
     export_baseline_to_topology,
     create_baseline_visualization_index
 )

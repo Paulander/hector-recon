@@ -4,7 +4,7 @@ Implements the "Dreamer" component that analyzes traces for affordance spikes,
 identifies high-impact stem cells, and promotes them to permanent nodes.
 
 Usage:
-    from recon_lite.learning.m5_structure import StructureLearner
+    from recon_lite_hector.learning.m5_structure import StructureLearner
     
     learner = StructureLearner(registry, trace_db)
     
@@ -1274,7 +1274,7 @@ class StructureLearner:
                 "id": new_node_id,
                 "type": "TERMINAL",
                 "group": "stem_promoted",
-                "factory": "recon_lite.nodes.stem_cell:create_pattern_sensor",
+                "factory": "recon_lite_hector.nodes.stem_cell:create_pattern_sensor",
                 "pattern_signature": signature,
                 "weight_source": cell.cell_id,
                 "meta": {
@@ -1344,7 +1344,7 @@ class StructureLearner:
     ) -> Optional[Path]:
         """Generate signature heatmap for a promoted node."""
         try:
-            from recon_lite.viz.signature_viz import generate_signature_heatmap
+            from recon_lite_hector.viz.signature_viz import generate_signature_heatmap
             
             self.signature_dir.mkdir(parents=True, exist_ok=True)
             output_path = self.signature_dir / f"{node_id}.png"
@@ -2180,7 +2180,7 @@ def create_pattern_sensor(node_id: str):
     Factory function for creating pattern-matching sensors from promoted stem cells.
     
     This is called when loading a graph from topology.json for nodes with
-    factory="recon_lite.nodes.stem_cell:create_pattern_sensor"
+    factory="recon_lite_hector.nodes.stem_cell:create_pattern_sensor"
     """
     from recon_lite.graph import Node, NodeType
     

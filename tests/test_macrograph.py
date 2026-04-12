@@ -10,7 +10,7 @@ for target in (PROJECT_ROOT / "src", PROJECT_ROOT):
         sys.path.append(target_str)
 
 from recon_lite.macrograph import instantiate_macrograph
-from recon_lite.macro_engine import MacroEngine
+from recon_lite_hector.macro_engine import MacroEngine
 
 
 def test_macrograph_instantiation_mounts_krk(monkeypatch):
@@ -43,5 +43,6 @@ def test_macro_engine_auto_activates_krk():
         "feature_groups",
         "bindings",
         "move_synth",
+        "features",
     }
     assert macro_frame["move_synth"]["weights"]["plan"] == 0.4

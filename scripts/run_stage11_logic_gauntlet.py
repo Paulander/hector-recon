@@ -239,8 +239,8 @@ def run_stage11_logic_gauntlet():
         print(f"Total promotions: {total_promotions}")
         
         # Check for depth > 1
-        from recon_lite.models.registry import TopologyRegistry
-        from recon_lite.learning.m5_structure import compute_branching_metrics
+        from recon_lite_hector.models.registry import TopologyRegistry
+        from recon_lite_hector.learning.m5_structure import compute_branching_metrics
         from recon_lite_chess.graph.builder import build_graph_from_topology
         
         final_topo = output_dir / "snapshots" / f"cycle_{config.max_cycles:04d}.json"

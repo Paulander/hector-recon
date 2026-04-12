@@ -97,7 +97,7 @@ from recon_lite.graph import NodeState, LinkType  # type: ignore  # pylint: disa
 from recon_lite.logger import RunLogger  # type: ignore  # pylint: disable=wrong-import-position
 from recon_lite.trace_db import EpisodeRecord, TickRecord, TraceDB, pack_fingerprint  # type: ignore  # pylint: disable=wrong-import-position
 from recon_lite_chess.scripts.kpk import build_kpk_network  # type: ignore  # pylint: disable=wrong-import-position
-from recon_lite.plasticity import (
+from recon_lite_hector.plasticity import (
     PlasticityConfig,
     init_plasticity_state,
     update_eligibility,
@@ -105,11 +105,11 @@ from recon_lite.plasticity import (
     reset_episode as reset_plasticity_episode,
     extract_episode_summary,
 )
-from recon_lite.plasticity.consolidate import (
+from recon_lite_hector.plasticity.consolidate import (
     ConsolidationConfig,
     ConsolidationEngine,
 )
-from recon_lite.nodes.stem_cell import (
+from recon_lite_hector.nodes.stem_cell import (
     StemCellManager,
     StemCellConfig,
 )

@@ -48,7 +48,7 @@ from recon_lite_chess import (
 from recon_lite_chess.krk_nodes import wire_default_krk
 from recon_lite_chess.predicates import move_features, box_area, dist_to_edge, enemy_nearest_edge_info
 from recon_lite_chess.baseline_teacher import KRKTeacher
-from recon_lite.learning.baseline import BaselineLearner, apply_sensor
+from recon_lite_hector.learning.baseline import BaselineLearner, apply_sensor
 from recon_lite_chess.graph.builder import build_graph_from_topology
 
 

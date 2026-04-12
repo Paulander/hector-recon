@@ -23,7 +23,7 @@ print("  ✅ Ramp reaches 0.0 by Stage 3")
 
 # Phase 2: Pack Templates
 print("\n[PHASE 2] Pack Templates in Lottery")
-from recon_lite.nodes.pack_template import (
+from recon_lite_hector.nodes.pack_template import (
     spawn_and_gate_pack,
     spawn_or_gate_pack,
     spawn_sequence_pack,
@@ -32,7 +32,7 @@ print("  ✅ spawn_and_gate_pack available")
 print("  ✅ spawn_or_gate_pack available")
 print("  ✅ spawn_sequence_pack available")
 # Check lottery integration
-from recon_lite.nodes.stem_cell import StemCellTerminal, StemCellState, StemCellConfig
+from recon_lite_hector.nodes.stem_cell import StemCellTerminal, StemCellState, StemCellConfig
 print("  ✅ StemCellTerminal.spawn_with_lottery exists")
 
 # Phase 4: Pure Strategies

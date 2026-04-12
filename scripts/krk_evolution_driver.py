@@ -43,20 +43,20 @@ import chess
 
 from recon_lite.graph import Graph, Node, NodeType, NodeState
 from recon_lite.trace_db import EpisodeRecord, TickRecord, TraceDB, EpisodeSummary
-from recon_lite.models.registry import TopologyRegistry
-from recon_lite.learning.m5_structure import (
+from recon_lite_hector.models.registry import TopologyRegistry
+from recon_lite_hector.learning.m5_structure import (
     StructureLearner,
     compute_branching_metrics,
     BACKBONE_NODES,
 )
-from recon_lite.viz.evolution_viz import (
+from recon_lite_hector.viz.evolution_viz import (
     diff_topologies,
     render_evolution_snapshot,
     save_topology_snapshot,
 )
 
 try:
-    from recon_lite.nodes.stem_cell import StemCellManager, StemCellConfig, StemCellState
+    from recon_lite_hector.nodes.stem_cell import StemCellManager, StemCellConfig, StemCellState
     HAS_STEM_CELL = True
 except ImportError:
     HAS_STEM_CELL = False

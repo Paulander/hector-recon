@@ -16,7 +16,7 @@ XP System (for TRIAL tier):
     - Demotion threshold: XP <= 0 → back to EXPLORING
 
 Usage:
-    from recon_lite.nodes import StemCellTerminal, StemCellState
+    from recon_lite_hector.nodes import StemCellTerminal, StemCellState
     
     stem = StemCellTerminal("stem_001", exploration_budget=100)
     
@@ -675,7 +675,7 @@ class StemCellTerminal:
         
         factory = node_factory or self.metadata.get("node_factory")
         if factory is None:
-            factory = "recon_lite.learning.m5_structure:create_pattern_sensor"
+            factory = "recon_lite_hector.learning.m5_structure:create_pattern_sensor"
 
         node_meta = {
             "cell_id": self.cell_id,
@@ -1099,7 +1099,7 @@ class StemCellTerminal:
                 "id": self.trial_node_id,
                 "type": "TERMINAL",
                 "group": "mature",  # Permanent mature node
-                "factory": "recon_lite.learning.m5_structure:create_pattern_sensor",
+                "factory": "recon_lite_hector.learning.m5_structure:create_pattern_sensor",
                 "pattern_signature": self.trial_signature,
                 "transient": False,  # Permanent!
                 "meta": {
@@ -1398,7 +1398,7 @@ class StemCellTerminal:
             # Spawn template pack - randomly select type!
             try:
                 import os
-                from recon_lite.nodes.pack_template import (
+                from recon_lite_hector.nodes.pack_template import (
                     spawn_goal_delegation_pack,
                     spawn_and_gate_pack,
                     spawn_sequence_pack,
@@ -1525,7 +1525,7 @@ class StemCellTerminal:
                 # FORCED TEST: Also spawn OR-gate for comparison
                 if pack_ids and graph is not None:
                     try:
-                        from recon_lite.nodes.pack_template import spawn_or_gate_pack
+                        from recon_lite_hector.nodes.pack_template import spawn_or_gate_pack
                         or_pack = spawn_or_gate_pack(
                             gate_name=f"or_{self.cell_id}_{current_tick}",
                             parent_id=parent_id,

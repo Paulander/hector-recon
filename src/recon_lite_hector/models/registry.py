@@ -4,7 +4,7 @@ Manages node/edge registration from topology.json files, enabling
 dynamic graph construction and hot-reloading during training.
 
 Usage:
-    from recon_lite.models.registry import TopologyRegistry
+    from recon_lite_hector.models.registry import TopologyRegistry
     
     registry = TopologyRegistry(Path("topologies/kpk_topology.json"))
     
@@ -13,7 +13,7 @@ Usage:
         "id": "SC_Opposition_42",
         "type": "TERMINAL",
         "group": "stem_promoted",
-        "factory": "recon_lite.nodes.stem_cell:create_pattern_sensor",
+        "factory": "recon_lite_hector.nodes.stem_cell:create_pattern_sensor",
         "pattern_signature": [0.1, 0.3, ...],
     })
     

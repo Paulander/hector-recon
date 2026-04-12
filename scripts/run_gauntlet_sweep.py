@@ -6,7 +6,7 @@ and only hierarchical scripts can win consistently.
 """
 
 from pathlib import Path
-from recon_lite.learning.sweep_engine import HyperSweepEngine, create_gauntlet_sweep
+from recon_lite_hector.learning.sweep_engine import HyperSweepEngine, create_gauntlet_sweep
 
 def main():
     print("=" * 60)

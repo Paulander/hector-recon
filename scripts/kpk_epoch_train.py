@@ -26,7 +26,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from recon_lite import Graph, ReConEngine, NodeState
 from recon_lite_chess.graph.unified_builder import build_unified_graph
-from recon_lite.plasticity.consolidate import ConsolidationEngine
+from recon_lite_hector.plasticity.consolidate import ConsolidationEngine
 from recon_lite.trace_db import EpisodeSummary
 
 

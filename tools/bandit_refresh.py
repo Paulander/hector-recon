@@ -20,8 +20,8 @@ from typing import List
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.recon_lite.trace_db import EpisodeRecord, TraceDB
-from src.recon_lite.plasticity.bandit import (
+from recon_lite.trace_db import EpisodeRecord, TraceDB
+from recon_lite_hector.plasticity.bandit import (
     BanditPriors,
     merge_priors,
     save_priors,

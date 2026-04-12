@@ -1,9 +1,32 @@
 # recon_lite/engine.py
 import random
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import Dict, Any, Optional, Callable, Set
 from .graph import Graph, NodeType, NodeState, LinkType
 from .time.microtick import MicrotickConfig, run_microticks
+
+
+class ActivationMode(Enum):
+    """How the engine handles node activations between discrete ReCoN ticks."""
+
+    DISCRETE = "discrete"
+    CONTINUOUS = "continuous"
+
+
+@dataclass
+class EngineConfig:
+    """
+    Runtime configuration for ReConEngine.
+
+    Defaults preserve the historical discrete engine behavior. Automatic
+    microticks only run when activation_mode is CONTINUOUS.
+    """
+
+    activation_mode: ActivationMode = ActivationMode.DISCRETE
+    microtick_steps: int = 0
+    microtick_eta: float = 0.3
+    record_activation_history: bool = False
 
 
 @dataclass
@@ -87,7 +110,12 @@ class ReConEngine:
     """
 
     # Initialize the engine with a graph and set initial tick and log storage
-    def __init__(self, graph: Graph, gating_schedule: Optional[GatingSchedule] = None):
+    def __init__(
+        self,
+        graph: Graph,
+        gating_schedule: Optional[GatingSchedule] = None,
+        config: Optional[EngineConfig] = None,
+    ):
         # Validate article compliance proactively
         try:
             graph.validate_article_compliance()
@@ -99,10 +127,28 @@ class ReConEngine:
         self.logs: list[Dict[str, Any]] = []
         self.subgraph_lock: Optional[SubgraphLock] = None
         self._subgraph_nodes_cache: Dict[str, Set[str]] = {}
+        self.config = config or EngineConfig()
         
         # Progressive gating schedule (Bach-Integrated architecture)
         self.gating_schedule = gating_schedule
         self.current_game_number: int = 0  # For gating strictness calculation
+
+    def _run_configured_microticks(self, env: Dict[str, Any]) -> None:
+        """Run engine-level activation settling when continuous mode is enabled."""
+        if self.config.activation_mode != ActivationMode.CONTINUOUS:
+            return
+        steps = max(0, int(self.config.microtick_steps))
+        if steps == 0:
+            return
+
+        history = []
+        for _ in range(steps):
+            activations = self.g.propagate_activation(eta=float(self.config.microtick_eta))
+            if self.config.record_activation_history:
+                history.append(dict(activations))
+
+        if self.config.record_activation_history:
+            env["activation_history"] = history
 
     def reset_states(self):
         """Reset all node states to INACTIVE and clear tick counter.
@@ -420,6 +466,8 @@ class ReConEngine:
         """
         self.tick += 1
         env = env or {}
+
+        self._run_configured_microticks(env)
         
         # Handle microticks (continuous activation settling)
         micro_cfg = env.get("microticks")

@@ -2,7 +2,7 @@
 
 import pytest
 from recon_lite.graph import Node, NodeType
-from recon_lite.dynamics.persistence import (
+from recon_lite_hector.dynamics.persistence import (
     PersistenceConfig,
     PersistenceState,
     update_persistence,

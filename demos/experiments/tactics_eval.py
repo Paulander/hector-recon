@@ -39,7 +39,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from recon_lite.graph import Graph, Node, NodeType, LinkType
-from recon_lite.plasticity.consolidate import ConsolidationEngine, ConsolidationConfig
+from recon_lite_hector.plasticity.consolidate import ConsolidationEngine, ConsolidationConfig
 from recon_lite.trace_db import EpisodeSummary
 from recon_lite_chess.scripts.tactics import (
     detect_forks,

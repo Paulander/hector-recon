@@ -3,7 +3,7 @@
 Generates visual signatures showing where and how patterns were detected.
 
 Usage:
-    from recon_lite.viz.signature_viz import generate_signature_heatmap
+    from recon_lite_hector.viz.signature_viz import generate_signature_heatmap
     
     path = generate_signature_heatmap(
         samples=stem_cell.samples,

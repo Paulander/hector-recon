@@ -251,10 +251,17 @@ class Graph:
         Returns:
             Dict mapping node/edge IDs to their status ("added", "updated")
         
-        Note: Import is done inline to avoid circular imports.
+        Domain packages can either expose `refresh_graph(graph)` on their
+        registry object or call their own builder/refresh function directly.
         """
-        from recon_lite_chess.graph.builder import refresh_graph_from_registry
-        return refresh_graph_from_registry(self, registry)
+        refresh_graph = getattr(registry, "refresh_graph", None)
+        if refresh_graph is None:
+            raise NotImplementedError(
+                "Graph.refresh_bindings is domain-neutral. Provide a registry "
+                "with refresh_graph(graph), or call the domain-specific refresh "
+                "function directly."
+            )
+        return refresh_graph(self)
 
     def remove_node(self, node_id: str) -> bool:
         """
@@ -494,4 +501,3 @@ class Graph:
         """Reset all node activations to a given value."""
         for node in self.nodes.values():
             node.activation.reset(value)
-

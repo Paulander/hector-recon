@@ -6,7 +6,7 @@ import math
 import pytest
 
 from recon_lite.graph import Graph, Node, NodeType, LinkType
-from recon_lite.plasticity.fast import (
+from recon_lite_hector.plasticity.fast import (
     EdgePlasticityState,
     PlasticityConfig,
     init_plasticity_state,
@@ -15,7 +15,7 @@ from recon_lite.plasticity.fast import (
     reset_episode,
     snapshot_plasticity,
 )
-from recon_lite.plasticity.bandit import (
+from recon_lite_hector.plasticity.bandit import (
     BanditArmState,
     BanditConfig,
     init_bandit_state,
@@ -25,7 +25,7 @@ from recon_lite.plasticity.bandit import (
     reset_bandit_episode,
     snapshot_bandit,
 )
-from recon_lite.plasticity.modulation import (
+from recon_lite_hector.plasticity.modulation import (
     ModulationConfig,
     Modulators,
     compute_modulators,

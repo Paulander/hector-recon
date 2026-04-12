@@ -34,8 +34,8 @@ from scripts.evolution_driver import (
     run_evolution_training,
     CycleResult,
 )
-from recon_lite.models.registry import TopologyRegistry
-from recon_lite.learning.m5_structure import compute_branching_metrics
+from recon_lite_hector.models.registry import TopologyRegistry
+from recon_lite_hector.learning.m5_structure import compute_branching_metrics
 
 
 def main():

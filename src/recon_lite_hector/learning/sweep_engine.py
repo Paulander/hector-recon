@@ -9,7 +9,7 @@ Features:
 - Automatic metric logging and report generation
 
 Usage:
-    from recon_lite.learning.sweep_engine import HyperSweepEngine, SweepConfig
+    from recon_lite_hector.learning.sweep_engine import HyperSweepEngine, SweepConfig
     
     engine = HyperSweepEngine(base_output_dir=Path("snapshots/sweeps"))
     

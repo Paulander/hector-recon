@@ -7,7 +7,7 @@ import chess
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from recon_lite.models.registry import TopologyRegistry
+from recon_lite_hector.models.registry import TopologyRegistry
 from recon_lite_chess.graph.builder import build_graph_from_topology
 from recon_lite.engine import ReConEngine
 from recon_lite.graph import Graph, NodeState, LinkType

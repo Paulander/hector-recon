@@ -25,7 +25,7 @@ for e in edges:
 
 # Try consolidation init
 print("\nTesting consolidation init...")
-from recon_lite.plasticity.consolidate import ConsolidationEngine
+from recon_lite_hector.plasticity.consolidate import ConsolidationEngine
 
 consolidation = ConsolidationEngine()
 edge_list = graph.edges.values() if isinstance(graph.edges, dict) else graph.edges

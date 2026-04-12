@@ -1,6 +1,6 @@
 """Check POR edges in topology"""
 from pathlib import Path
-from recon_lite.models.registry import TopologyRegistry
+from recon_lite_hector.models.registry import TopologyRegistry
 
 registry = TopologyRegistry(Path('topologies/krk_entry_topology.json'))
 edges = registry.get_all_edges()

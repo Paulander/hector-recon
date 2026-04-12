@@ -15,8 +15,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, List, Mapping, Optional
 
-from recon_lite import Graph, LinkType, Node, NodeType
-from recon_lite.graph import NodeState
+from .graph import Graph, LinkType, Node, NodeState, NodeType
 
 
 @dataclass

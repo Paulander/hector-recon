@@ -39,15 +39,15 @@ import chess
 
 from recon_lite.graph import Graph, Node, NodeType, NodeState, LinkType
 from recon_lite.trace_db import EpisodeRecord, TickRecord, TraceDB, EpisodeSummary
-from recon_lite.models.registry import TopologyRegistry
-from recon_lite.learning.m5_structure import (
+from recon_lite_hector.models.registry import TopologyRegistry
+from recon_lite_hector.learning.m5_structure import (
     StructureLearner,
     compute_branching_metrics,
     BACKBONE_NODES,
 )
 
 try:
-    from recon_lite.nodes.stem_cell import StemCellManager, StemCellConfig, StemCellState
+    from recon_lite_hector.nodes.stem_cell import StemCellManager, StemCellConfig, StemCellState
     HAS_STEM_CELL = True
 except ImportError:
     HAS_STEM_CELL = False
@@ -103,7 +103,7 @@ except ImportError:
 
 # ========== PLASTICITY IMPORTS (M3/M4 weight adaptation) ==========
 try:
-    from recon_lite.plasticity.fast import (
+    from recon_lite_hector.plasticity.fast import (
         init_plasticity_state,
         update_eligibility,
         apply_fast_update,
@@ -116,7 +116,7 @@ except ImportError:
 
 # ========== CONSOLIDATION IMPORTS (M4: cross-game weight persistence) ==========
 try:
-    from recon_lite.plasticity.consolidate import (
+    from recon_lite_hector.plasticity.consolidate import (
         ConsolidationEngine,
         ConsolidationConfig,
         EdgeConsolidationState,
@@ -131,13 +131,13 @@ except ImportError:
     GatingSchedule = None
 
 try:
-    from recon_lite.plasticity import PlasticityConfig, init_plasticity_state, apply_plasticity
+    from recon_lite_hector.plasticity import PlasticityConfig, init_plasticity_state, apply_plasticity
     HAS_PLASTICITY = True
 except ImportError:
     HAS_PLASTICITY = False
 
 try:
-    from recon_lite.learning.m5_structure import StructureLearner, compute_branching_metrics
+    from recon_lite_hector.learning.m5_structure import StructureLearner, compute_branching_metrics
     HAS_M5 = True
 except ImportError:
     HAS_M5 = False
@@ -1390,7 +1390,7 @@ def run_krk_curriculum(config: KRKCurriculumConfig) -> Dict[str, Any]:
             # M5 Structural Learning Phase
             if config.mode == "recon" and config.enable_m5 and stem_manager and HAS_M5:
                 try:
-                    from recon_lite.learning.m5_structure import (
+                    from recon_lite_hector.learning.m5_structure import (
                         StructureLearner,
                         compute_branching_metrics,
                     )

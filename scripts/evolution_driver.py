@@ -35,20 +35,20 @@ import chess
 
 from recon_lite.graph import Graph, Node, NodeType, NodeState
 from recon_lite.trace_db import EpisodeRecord, TickRecord, TraceDB, EpisodeSummary
-from recon_lite.models.registry import TopologyRegistry
-from recon_lite.learning.m5_structure import (
+from recon_lite_hector.models.registry import TopologyRegistry
+from recon_lite_hector.learning.m5_structure import (
     StructureLearner,
     compute_branching_metrics,
     BACKBONE_NODES,
 )
-from recon_lite.viz.evolution_viz import (
+from recon_lite_hector.viz.evolution_viz import (
     diff_topologies,
     render_evolution_snapshot,
     save_topology_snapshot,
 )
 
 try:
-    from recon_lite.nodes.stem_cell import StemCellManager, StemCellConfig, StemCellState
+    from recon_lite_hector.nodes.stem_cell import StemCellManager, StemCellConfig, StemCellState
     HAS_STEM_CELL = True
 except ImportError:
     HAS_STEM_CELL = False
@@ -462,7 +462,7 @@ def run_online_phase(
         (episodes, stats_dict)
     """
     from recon_lite.engine import ReConEngine
-    from recon_lite.plasticity import (
+    from recon_lite_hector.plasticity import (
         PlasticityConfig,
         init_plasticity_state,
         update_eligibility,
@@ -777,7 +777,7 @@ def _play_single_game(
         curiosity_spawn_count: Number of sensors to spawn per stall
         pure_cognitive_mode: If True, no random fallback - pure cognitive stall
     """
-    from recon_lite.plasticity import init_plasticity_state
+    from recon_lite_hector.plasticity import init_plasticity_state
     from recon_lite_chess.sensors.structure import summarize_kpk_material
     
     # Sentinel: stay locked while position is KPK
@@ -1190,7 +1190,7 @@ def save_cycle_snapshot(
                 "id": node_id,
                 "type": "TERMINAL",
                 "group": "trial",
-                "factory": "recon_lite.learning.m5_structure:create_pattern_sensor",
+                "factory": "recon_lite_hector.learning.m5_structure:create_pattern_sensor",
                 "meta": merged_meta,
                 "transient": True,
             }

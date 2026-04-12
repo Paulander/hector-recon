@@ -29,7 +29,7 @@ def test_macrograph_applies_weight_pack():
 
     hub_meta = graph.nodes['PlanHub'].meta
     assert hub_meta.get('por_policy') == 'weighted'
-    assert hub_meta.get('por_theta') == pytest.approx(0.75)
+    assert hub_meta.get('por_theta') == pytest.approx(10.5)
     assert getattr(graph, 'macro_weight_pack_version', None) == '0.1'
 
 

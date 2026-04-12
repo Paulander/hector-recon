@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Dict, List, Any
 import numpy as np
 
-from recon_lite.learning.baseline import BaselineLearner, Terminal, TerminalRole
+from recon_lite_hector.learning.baseline import BaselineLearner, Terminal, TerminalRole
 
 
 def export_baseline_to_topology(learner: BaselineLearner, 

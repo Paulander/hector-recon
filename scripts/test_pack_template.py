@@ -2,14 +2,14 @@
 """Quick test of pack template functionality."""
 
 print("Testing pack template import...")
-from recon_lite.nodes.pack_template import spawn_goal_delegation_pack
+from recon_lite_hector.nodes.pack_template import spawn_goal_delegation_pack
 print("  ✓ pack_template import OK")
 
-from recon_lite.nodes.pack_template import get_actuator_weight, prune_pack
+from recon_lite_hector.nodes.pack_template import get_actuator_weight, prune_pack
 print("  ✓ helper functions OK")
 
 print("\nTesting lottery spawning import...")
-from recon_lite.nodes.stem_cell import StemCellTerminal, StemCellConfig
+from recon_lite_hector.nodes.stem_cell import StemCellTerminal, StemCellConfig
 print("  ✓ stem_cell import OK")
 
 # Quick instantiation test

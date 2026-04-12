@@ -22,7 +22,7 @@ try:
 except ImportError:
     torch = None
 
-from recon_lite.learning.baseline import (
+from recon_lite_hector.learning.baseline import (
     BaselineLearner, Terminal, TerminalRole, ActuatorSpec,
     compute_sensor_xp, should_promote_sensor,
     extract_actuator_patterns, find_similar_actuator, enforce_actuator_cap,

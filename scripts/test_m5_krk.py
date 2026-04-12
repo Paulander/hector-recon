@@ -7,14 +7,14 @@ sys.path.insert(0, ".")
 print("Testing M5 imports...")
 
 try:
-    from recon_lite.learning.m5_structure import StructureLearner, compute_branching_metrics
+    from recon_lite_hector.learning.m5_structure import StructureLearner, compute_branching_metrics
     print("  ✓ M5 imports OK")
 except Exception as e:
     print(f"  ✗ M5 import failed: {e}")
     sys.exit(1)
 
 try:
-    from recon_lite.nodes.stem_cell import StemCellManager, StemCellConfig, StemCellSample
+    from recon_lite_hector.nodes.stem_cell import StemCellManager, StemCellConfig, StemCellSample
     print("  ✓ StemCell imports OK")
 except Exception as e:
     print(f"  ✗ StemCell import failed: {e}")
@@ -43,7 +43,7 @@ print(f"\nManager now has {len(manager.cells)} cells")
 # Test structural evolution
 print("\nTesting StructureLearner...")
 from recon_lite_chess.graph.builder import build_graph_from_topology
-from recon_lite.models.registry import TopologyRegistry
+from recon_lite_hector.models.registry import TopologyRegistry
 from pathlib import Path
 
 topo_path = Path("topologies/krk_legs_topology.json")

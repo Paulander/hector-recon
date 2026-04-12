@@ -19,7 +19,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from demos.experiments.teacher_stockfish import apply_weight_update, label_fens, run_phase_teacher
-from recon_lite.macro_engine import MacroEngine
+from recon_lite_hector.macro_engine import MacroEngine
 
 DATASET_ROOT = Path("data/endgames")
 DEFAULT_BASE_WEIGHTS = Path("weights/macro_weight_pack.swp")

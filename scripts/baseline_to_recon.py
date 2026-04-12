@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Dict, List, Any
 import numpy as np
 
-from recon_lite.learning.baseline import BaselineLearner, SensorSpec, ActuatorSpec
+from recon_lite_hector.learning.baseline import BaselineLearner, SensorSpec, ActuatorSpec
 
 
 def compile_baseline_to_topology(
