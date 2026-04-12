@@ -11,6 +11,27 @@ into the core library.
 
 ## Install
 
+ReCoN Lite assumes `uv` for local development and examples.
+
+<details>
+<summary>Beginner note: what is uv?</summary>
+
+`uv` is a fast Python project tool. It installs Python packages, creates local
+virtual environments, runs commands inside the right environment, and keeps
+dependency locks reproducible. Install it with:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Then open a new terminal and check:
+
+```bash
+uv --version
+```
+
+</details>
+
 From a checkout:
 
 ```bash
