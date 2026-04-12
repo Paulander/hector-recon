@@ -226,13 +226,13 @@ class EpisodeSummary:
 
 def outcome_to_score(result: Optional[str]) -> float:
     """
-    Convert game result string to numeric outcome score.
+    Convert a game-style result string to numeric outcome score.
 
     Args:
-        result: Chess result string like "1-0", "0-1", "1/2-1/2", or None
+        result: Result string like "1-0", "0-1", "1/2-1/2", "draw", or None
 
     Returns:
-        1.0 for white win, -1.0 for black win, 0.0 for draw/unknown
+        1.0 for first-side win, -1.0 for second-side win, 0.0 for draw/unknown
     """
     if result is None:
         return 0.0

@@ -6,8 +6,8 @@ from .core.activations import ActivationState
 
 
 # This file defines the graph data structure and the core node and edge types.
-# Chess-specific node types are defined in chess_nodes.py for domain separation.
-# The Node class is designed to be extensible - chess nodes inherit from it.
+# Domain projects can extend Node with their own metadata and predicates without
+# adding domain-specific imports to the core package.
 
 class NodeType(Enum):
     SCRIPT = auto()

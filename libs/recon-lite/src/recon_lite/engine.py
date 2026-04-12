@@ -76,7 +76,12 @@ class GatingSchedule:
 class SubgraphLock:
     """
     Tracks which subgraph currently owns execution (goal delegation).
-    
+
+    This is an executor extension rather than pure ReCoN formalism. The same
+    ordering should be representable with graph structure and POR logic; the
+    lock is a practical way to run a subgraph on a tighter internal timescale
+    until it finishes or yields domain-level output.
+
     When locked, the engine only ticks nodes within this subgraph,
     completing internal execution before returning control. The sentinel
     function is checked each step to detect exceptional exits.
@@ -93,6 +98,7 @@ class SubgraphLock:
     goal_achieved: bool = False                 # Subgraph completed successfully
     max_internal_ticks: int = 10                # Prevent infinite loops
     min_internal_ticks: int = 0                 # Mandatory propagation depth (0 = disabled)
+    completion_fn: Optional[Callable[[Dict[str, Any]], bool]] = None
 
 
 class ReConEngine:
@@ -104,6 +110,7 @@ class ReConEngine:
     - TERMINAL nodes use predicate(env) -> (done, success) to progress.
     
     Subgraph Goal Delegation:
+    - lock_subgraph() is an implementation extension, not pure ReCoN formalism
     - When lock_subgraph() is called, execution "collapses" into that subgraph
     - Internal ticks complete before returning control
     - Sentinel function checks for exceptional exits
@@ -531,7 +538,8 @@ class ReConEngine:
         subgraph_root: str, 
         sentinel_fn: Callable[[Dict[str, Any]], bool],
         max_internal_ticks: int = 10,
-        min_internal_ticks: int = 0
+        min_internal_ticks: int = 0,
+        completion_fn: Optional[Callable[[Dict[str, Any]], bool]] = None,
     ) -> None:
         """
         Lock execution to a specific subgraph (goal delegation).
@@ -547,6 +555,8 @@ class ReConEngine:
             min_internal_ticks: Mandatory propagation depth before allowing early
                                exit. Set to 3+ during Structural Spurt to ensure
                                TRIAL nodes have time to activate. (default 0)
+            completion_fn: Optional domain-level output predicate. When provided,
+                           internal ticking can stop as soon as it returns True.
         """
         if subgraph_root not in self.g.nodes:
             raise ValueError(f"Subgraph root '{subgraph_root}' not found in graph")
@@ -557,6 +567,7 @@ class ReConEngine:
             sentinel_fn=sentinel_fn,
             max_internal_ticks=max_internal_ticks,
             min_internal_ticks=min_internal_ticks,
+            completion_fn=completion_fn,
         )
         
         # Request the subgraph root to start internal propagation
@@ -678,10 +689,11 @@ class ReConEngine:
             if not self._gating_satisfied(subgraph_nodes):
                 continue  # Wait for children to confirm
             
-            # Check if we have a move suggestion (actuator output)
-            # This is specific to chess but could be generalized
-            subgraph_key = self.subgraph_lock.subgraph_root.replace("_root", "")
-            if env.get(subgraph_key, {}).get("policy", {}).get("suggested_move"):
+            # Check if the subgraph has produced a domain-level output. New
+            # code should pass completion_fn; the policy fallback keeps older
+            # callers working without making their output shape part of the
+            # core public API.
+            if self._subgraph_output_ready(env):
                 break
             
             # Also check if root is confirmed (subgraph completed)
@@ -691,6 +703,21 @@ class ReConEngine:
                 break
         
         return now_requested
+
+    def _subgraph_output_ready(self, env: Dict[str, Any]) -> bool:
+        """Return True when the active subgraph has produced usable output."""
+        if not self.subgraph_lock:
+            return False
+        if self.subgraph_lock.completion_fn is not None:
+            return bool(self.subgraph_lock.completion_fn(env))
+
+        subgraph_key = self.subgraph_lock.subgraph_root.replace("_root", "")
+        policy = env.get(subgraph_key, {}).get("policy", {})
+        return bool(
+            policy.get("output_ready")
+            or policy.get("result") is not None
+            or policy.get("suggested_move")
+        )
     
     def _update_predicates_subset(
         self, 
