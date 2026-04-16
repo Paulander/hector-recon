@@ -73,6 +73,40 @@ class AffordanceCrossing:
 
 
 @dataclass
+class LearningEvent:
+    """Generic structural/learning event for domain-level growth systems."""
+
+    tick: int
+    event_type: str
+    subject_id: str
+    parent_id: Optional[str] = None
+    credit: Optional[float] = None
+    meta: Dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> Dict[str, Any]:
+        payload = {
+            "tick": self.tick,
+            "event_type": self.event_type,
+            "subject_id": self.subject_id,
+            "parent_id": self.parent_id,
+            "credit": round(float(self.credit), 4) if self.credit is not None else None,
+            "meta": self.meta,
+        }
+        return {k: v for k, v in payload.items() if v not in (None, {}, [])}
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "LearningEvent":
+        return cls(
+            tick=int(data.get("tick", 0)),
+            event_type=str(data.get("event_type", "")),
+            subject_id=str(data.get("subject_id", "")),
+            parent_id=data.get("parent_id"),
+            credit=data.get("credit"),
+            meta=dict(data.get("meta", {})),
+        )
+
+
+@dataclass
 class EpisodeSummary:
     """
     Summary of an episode for M4 cross-game consolidation.
@@ -98,6 +132,7 @@ class EpisodeSummary:
     affordance_crossings: List[AffordanceCrossing] = field(default_factory=list)
     final_affordances: Dict[str, float] = field(default_factory=dict)
     max_affordances: Dict[str, float] = field(default_factory=dict)
+    learning_events: List[LearningEvent] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
         bandit_dict = {}
@@ -119,6 +154,7 @@ class EpisodeSummary:
             "affordance_crossings": [c.to_dict() for c in self.affordance_crossings],
             "final_affordances": {k: round(v, 4) for k, v in self.final_affordances.items()},
             "max_affordances": {k: round(v, 4) for k, v in self.max_affordances.items()},
+            "learning_events": [e.to_dict() for e in self.learning_events],
         }
 
     @classmethod
@@ -139,6 +175,10 @@ class EpisodeSummary:
             AffordanceCrossing.from_dict(c)
             for c in data.get("affordance_crossings", [])
         ]
+        learning_events = [
+            LearningEvent.from_dict(e)
+            for e in data.get("learning_events", [])
+        ]
         
         return cls(
             edge_delta_sums=dict(data.get("edge_delta_sums", {})),
@@ -152,6 +192,29 @@ class EpisodeSummary:
             affordance_crossings=crossings,
             final_affordances=dict(data.get("final_affordances", {})),
             max_affordances=dict(data.get("max_affordances", {})),
+            learning_events=learning_events,
+        )
+
+    def record_learning_event(
+        self,
+        *,
+        tick: int,
+        event_type: str,
+        subject_id: str,
+        parent_id: Optional[str] = None,
+        credit: Optional[float] = None,
+        meta: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Append a generic event for structural growth or credit assignment."""
+        self.learning_events.append(
+            LearningEvent(
+                tick=tick,
+                event_type=event_type,
+                subject_id=subject_id,
+                parent_id=parent_id,
+                credit=credit,
+                meta=dict(meta or {}),
+            )
         )
     
     def record_affordance(

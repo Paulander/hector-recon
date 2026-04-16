@@ -1,0 +1,191 @@
+"""Replayable KRK Stage-0/Stage-1 triplet-growth pipeline.
+
+The runner intentionally keeps structural growth conservative: it produces a
+fresh learner/topology, validates formal ReCoN pairs, evaluates mate-in-1
+stability, evaluates Stage-1 goal-distance improvement, and writes a manifest.
+Triplet growth experiments can then use the same output directory as a stable
+baseline instead of relying on stale pickles.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import subprocess
+import sys
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Dict, List
+
+from recon_lite_chess.graph.builder import build_graph_from_topology, validate_formal_pairs
+
+
+@dataclass(frozen=True)
+class PipelinePlan:
+    output_dir: Path
+    learner_path: Path
+    topology_path: Path
+    manifest_path: Path
+    commands: List[List[str]]
+
+
+def build_plan(args: argparse.Namespace) -> PipelinePlan:
+    output_dir = args.output_dir
+    learner_path = output_dir / "baseline" / "final_learner.pkl"
+    topology_path = output_dir / "topology" / "krk_entry_topology.json"
+    manifest_path = output_dir / "run_manifest.json"
+
+    train_cmd = [
+        sys.executable,
+        "scripts/train_baseline_krk_chain.py",
+        "--stage0-cycles",
+        str(args.stage0_cycles),
+        "--stage1-cycles",
+        str(args.stage1_cycles),
+        "--samples-per-cycle",
+        str(args.samples_per_cycle),
+        "--output-dir",
+        str(output_dir / "baseline"),
+        "--save-learner",
+        str(learner_path),
+        "--device",
+        args.device,
+        "--seed",
+        str(args.seed),
+    ]
+    if args.stage0_balance_corners:
+        train_cmd.append("--stage0-balance-corners")
+
+    compile_cmd = [
+        sys.executable,
+        "scripts/baseline_to_recon.py",
+        "--learner",
+        str(learner_path),
+        "--output",
+        str(topology_path),
+    ]
+
+    stage0_eval_cmd = [
+        sys.executable,
+        "scripts/test_krk_entry.py",
+        "--topology",
+        str(topology_path),
+        "--samples",
+        str(args.stage0_eval_samples),
+    ]
+
+    stage1_eval_cmd = [
+        sys.executable,
+        "scripts/test_stage1_backchain.py",
+        "--topology",
+        str(topology_path),
+        "--learner",
+        str(learner_path),
+        "--samples",
+        str(args.stage1_eval_samples),
+        "--seed",
+        str(args.seed),
+        "--stage-filter",
+        "1",
+    ]
+
+    return PipelinePlan(
+        output_dir=output_dir,
+        learner_path=learner_path,
+        topology_path=topology_path,
+        manifest_path=manifest_path,
+        commands=[train_cmd, compile_cmd, stage0_eval_cmd, stage1_eval_cmd],
+    )
+
+
+def manifest_for(args: argparse.Namespace, plan: PipelinePlan) -> Dict[str, Any]:
+    return {
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "purpose": "fresh_krk_stage0_stage1_triplet_growth_baseline",
+        "output_dir": str(plan.output_dir),
+        "learner_path": str(plan.learner_path),
+        "topology_path": str(plan.topology_path),
+        "seed": args.seed,
+        "training": {
+            "stage0_cycles": args.stage0_cycles,
+            "stage1_cycles": args.stage1_cycles,
+            "samples_per_cycle": args.samples_per_cycle,
+            "device": args.device,
+            "stage0_balance_corners": args.stage0_balance_corners,
+        },
+        "evaluation": {
+            "stage0_eval_samples": args.stage0_eval_samples,
+            "stage1_eval_samples": args.stage1_eval_samples,
+            "stage1_stage_filter": 1,
+        },
+        "formal_validation": {
+            "mode": "strict_pairs",
+            "validated": False,
+        },
+        "commands": plan.commands,
+    }
+
+
+def write_manifest(path: Path, payload: Dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+
+
+def run_command(command: List[str]) -> None:
+    print("\n$ " + " ".join(command))
+    subprocess.run(command, check=True)
+
+
+def validate_topology(topology_path: Path) -> Dict[str, int]:
+    graph = build_graph_from_topology(topology_path, formal_pairs="validate")
+    validate_formal_pairs(graph)
+    return {"nodes": len(graph.nodes), "edges": len(graph.edges)}
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Fresh KRK Stage-0/Stage-1 pipeline")
+    parser.add_argument("--output-dir", type=Path, default=None)
+    parser.add_argument("--stage0-cycles", type=int, default=10)
+    parser.add_argument("--stage1-cycles", type=int, default=10)
+    parser.add_argument("--samples-per-cycle", type=int, default=50)
+    parser.add_argument("--stage0-eval-samples", type=int, default=50)
+    parser.add_argument("--stage1-eval-samples", type=int, default=50)
+    parser.add_argument("--seed", type=int, default=7)
+    parser.add_argument("--device", type=str, default="auto")
+    parser.add_argument("--stage0-balance-corners", action="store_true", default=True)
+    parser.add_argument("--no-stage0-balance-corners", action="store_false", dest="stage0_balance_corners")
+    parser.add_argument("--dry-run", action="store_true", help="Write manifest and print commands only")
+    args = parser.parse_args()
+
+    if args.output_dir is None:
+        stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        args.output_dir = Path("snapshots/krk_triplet_pipeline") / stamp
+
+    plan = build_plan(args)
+    manifest = manifest_for(args, plan)
+    write_manifest(plan.manifest_path, manifest)
+
+    if args.dry_run:
+        print(json.dumps(manifest, indent=2))
+        return
+
+    env_seed = str(args.seed)
+    os.environ.setdefault("PYTHONHASHSEED", env_seed)
+
+    run_command(plan.commands[0])
+    run_command(plan.commands[1])
+    validation = validate_topology(plan.topology_path)
+    manifest["formal_validation"] = {
+        "mode": "strict_pairs",
+        "validated": True,
+        **validation,
+    }
+    write_manifest(plan.manifest_path, manifest)
+    run_command(plan.commands[2])
+    run_command(plan.commands[3])
+
+
+if __name__ == "__main__":
+    main()

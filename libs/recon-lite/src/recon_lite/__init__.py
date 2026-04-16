@@ -10,6 +10,7 @@ from .engine import ActivationMode, EngineConfig, ReConEngine
 from .formal_engine import EdgeMessage, FormalMessage, FormalReConEngine
 from .graph import Graph, LinkType, Node, NodeState, NodeType
 from .logger import RunLogger
+from .trace_db import LearningEvent
 
 __all__ = [
     "__version__",
@@ -19,6 +20,7 @@ __all__ = [
     "FormalMessage",
     "FormalReConEngine",
     "Graph",
+    "LearningEvent",
     "LinkType",
     "Node",
     "NodeState",

@@ -14,8 +14,11 @@ from recon_lite_chess.graph.builder import (
     validate_formal_pairs,
 )
 from recon_lite_chess.spawn_point import SpawnPoint, TrialMicroScript
-from recon_lite_chess.spawn_point import SpawnPointManager
+from recon_lite_chess.spawn_point import SpawnPointConfig, SpawnPointManager
+from recon_lite_chess.triplets import TripletGrowthProfile
 from recon_lite_hector.engine import create_recon_engine
+from recon_lite_hector.plasticity.bandit import BanditArmState
+from recon_lite_hector.plasticity.fast import init_plasticity_state
 
 _baseline_to_recon = importlib.util.module_from_spec(
     importlib.util.spec_from_file_location(
@@ -102,7 +105,8 @@ def test_spawn_point_promoted_trial_materializes_formal_triplet_pairs():
     })
     graph.add_node(sensor)
 
-    manager = SpawnPointManager(graph=graph)
+    bandit_state = {}
+    manager = SpawnPointManager(graph=graph, bandit_state=bandit_state)
     spawn_point = SpawnPoint(spawn_point_id="spawn_leg_parent", leg_id="leg_parent")
     trial = TrialMicroScript(
         trial_id="trial_1",
@@ -111,8 +115,9 @@ def test_spawn_point_promoted_trial_materializes_formal_triplet_pairs():
         delta_mean=np.array([1.0], dtype=np.float32),
     )
 
-    manager._promote_trial_to_graph(spawn_point, trial)
+    materialized = manager._promote_trial_to_graph(spawn_point, trial)
 
+    assert materialized == "trial_1_leg"
     validate_formal_pairs(graph)
     assert _has_edge(graph, "trial_1_precond", "trial_1_act_script", LinkType.POR)
     assert _has_edge(graph, "trial_1_act_script", "trial_1_precond", LinkType.RET)
@@ -120,6 +125,55 @@ def test_spawn_point_promoted_trial_materializes_formal_triplet_pairs():
     assert _has_edge(graph, "trial_1_postcond", "trial_1_act_script", LinkType.RET)
     assert _has_edge(graph, "trial_1_precond", "sensor_1", LinkType.SUB)
     assert _has_edge(graph, "sensor_1", "trial_1_precond", LinkType.SUR)
+    assert _has_edge(graph, "trial_1_postcond", "trial_1_after_verify", LinkType.SUB)
+    assert _has_edge(graph, "trial_1_after_verify", "trial_1_postcond", LinkType.SUR)
+    assert graph.nodes["trial_1_after_verify"].meta["triplet_role"] == "after_verify"
+
+    por_edge = _edge(graph, "trial_1_precond", "trial_1_act_script", LinkType.POR)
+    ret_edge = _edge(graph, "trial_1_act_script", "trial_1_precond", LinkType.RET)
+    assert por_edge.meta["trainable"] is True
+    assert ret_edge.meta["structural_fixed"] is True
+
+    plasticity = init_plasticity_state(graph)
+    assert "trial_1_precond->trial_1_act_script:POR" in plasticity
+    assert "trial_1_act_script->trial_1_precond:RET" not in plasticity
+
+    assert isinstance(bandit_state["leg_parent"]["trial_1_leg"], BanditArmState)
+
+
+def test_spawn_point_observe_only_profile_does_not_promote_or_prune():
+    config = SpawnPointConfig(growth_profile=TripletGrowthProfile.full_game_observe())
+    spawn_point = SpawnPoint(
+        spawn_point_id="spawn_leg_parent",
+        leg_id="leg_parent",
+        config=config,
+    )
+    promote = TrialMicroScript(
+        trial_id="promote_trial",
+        spawn_point_id=spawn_point.spawn_point_id,
+        sensor_ids=["sensor_1"],
+        samples=20,
+        checkmate_hits=20,
+        xp=1.0,
+        delta_mean=np.array([1.0], dtype=np.float32),
+    )
+    prune = TrialMicroScript(
+        trial_id="prune_trial",
+        spawn_point_id=spawn_point.spawn_point_id,
+        sensor_ids=["sensor_1"],
+        samples=20,
+        non_mate_hits=20,
+        xp=0.0,
+        last_update_tick=0,
+    )
+    spawn_point.active_trials[promote.trial_id] = promote
+    spawn_point.active_trials[prune.trial_id] = prune
+
+    promoted, pruned = spawn_point.prune_and_promote(tick=100)
+
+    assert promoted == []
+    assert pruned == []
+    assert set(spawn_point.active_trials) == {"promote_trial", "prune_trial"}
 
 
 def test_ensure_formal_pairs_adds_missing_ret_for_existing_por():
@@ -173,3 +227,10 @@ def _dummy_actuator():
 
 def _has_edge(graph, src, dst, ltype):
     return any(e.src == src and e.dst == dst and e.ltype == ltype for e in graph.edges)
+
+
+def _edge(graph, src, dst, ltype):
+    for edge in graph.edges:
+        if edge.src == src and edge.dst == dst and edge.ltype == ltype:
+            return edge
+    raise AssertionError(f"missing edge {src}->{dst}:{ltype.name}")

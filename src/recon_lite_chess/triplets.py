@@ -12,9 +12,92 @@ objects inside ReCoN predicates, training loops, or structural growth managers.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import Dict, Iterable, Mapping, Optional
 
 import numpy as np
+
+
+class TripletGrowthMode(Enum):
+    """Structural growth mode for a run context."""
+
+    TRAINING = "training"
+    EVAL = "eval"
+    FULL_GAME_OBSERVE = "full_game_observe"
+
+
+@dataclass(frozen=True)
+class TripletGrowthProfile:
+    """Adaptive structural exploration profile for triplet growth."""
+
+    mode: TripletGrowthMode = TripletGrowthMode.TRAINING
+    base_spawn_probability: float = 0.3
+    min_spawn_probability: float = 0.02
+    stagnation_boost: float = 1.5
+    confidence_decay: float = 0.6
+    allow_spawn: bool = True
+    allow_promotion: bool = True
+    allow_prune: bool = True
+
+    @classmethod
+    def training(cls) -> "TripletGrowthProfile":
+        return cls(mode=TripletGrowthMode.TRAINING)
+
+    @classmethod
+    def evaluation(cls) -> "TripletGrowthProfile":
+        return cls(
+            mode=TripletGrowthMode.EVAL,
+            base_spawn_probability=0.0,
+            min_spawn_probability=0.0,
+            allow_spawn=False,
+            allow_promotion=False,
+            allow_prune=False,
+        )
+
+    @classmethod
+    def full_game_observe(cls) -> "TripletGrowthProfile":
+        return cls(
+            mode=TripletGrowthMode.FULL_GAME_OBSERVE,
+            base_spawn_probability=0.05,
+            min_spawn_probability=0.0,
+            allow_spawn=True,
+            allow_promotion=False,
+            allow_prune=False,
+        )
+
+    def spawn_probability(
+        self,
+        *,
+        active_trials: int = 0,
+        promoted_trials: int = 0,
+        mean_xp: float = 0.0,
+        stagnant: bool = False,
+    ) -> float:
+        """Return effective spawn probability for current evidence state."""
+        if not self.allow_spawn:
+            return 0.0
+        confidence = max(0.0, min(1.0, (mean_xp + promoted_trials) / (1.0 + promoted_trials)))
+        probability = self.base_spawn_probability * (1.0 - self.confidence_decay * confidence)
+        if stagnant:
+            probability *= self.stagnation_boost
+        if active_trials <= 0 and self.mode == TripletGrowthMode.TRAINING:
+            probability = max(probability, self.min_spawn_probability)
+        return max(self.min_spawn_probability, min(1.0, probability))
+
+
+@dataclass(frozen=True)
+class TripletGrowthConfig:
+    """Configuration bundle for triplet structural growth."""
+
+    profile: TripletGrowthProfile = field(default_factory=TripletGrowthProfile.training)
+    max_trials: int = 5
+    trial_lifetime: int = 50
+    stagnation_window: int = 5
+    stagnation_eps: float = 1e-3
+    mature_ratio: float = 0.7
+    min_samples_for_xp: int = 10
+    prune_threshold: float = 0.2
+    promote_threshold: float = 0.7
 
 
 @dataclass(frozen=True)

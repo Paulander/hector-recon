@@ -3,6 +3,8 @@ from recon_lite_chess.triplets import (
     AfterCondition,
     BeforeCondition,
     CreditPolicy,
+    TripletGrowthMode,
+    TripletGrowthProfile,
     terminal_delta,
 )
 
@@ -67,3 +69,21 @@ def test_credit_policy_rewards_goal_distance_improvement():
     assert credit.score(before_goal_distance=0.8, after_goal_distance=0.3) == 1.0
     assert credit.score(before_goal_distance=0.8, after_goal_distance=0.3, success=True) == 10.0
     assert credit.score(before_goal_distance=0.3, after_goal_distance=0.8) < 0.0
+
+
+def test_growth_profiles_separate_training_eval_and_observe_modes():
+    training = TripletGrowthProfile.training()
+    evaluation = TripletGrowthProfile.evaluation()
+    observe = TripletGrowthProfile.full_game_observe()
+
+    assert training.mode is TripletGrowthMode.TRAINING
+    assert training.spawn_probability(active_trials=0, stagnant=True) > training.base_spawn_probability
+
+    assert evaluation.spawn_probability(active_trials=0, stagnant=True) == 0.0
+    assert evaluation.allow_promotion is False
+    assert evaluation.allow_prune is False
+
+    assert observe.allow_spawn is True
+    assert observe.allow_promotion is False
+    assert observe.allow_prune is False
+    assert observe.spawn_probability(active_trials=0, stagnant=True) > 0.0

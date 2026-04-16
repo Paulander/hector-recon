@@ -438,6 +438,7 @@ def main() -> None:
                         help="Scale factor applied to Stage-1 dense rewards before XP updates")
     parser.add_argument("--device", type=str, default="auto", help="Device (cpu, cuda, auto, numpy)")
     parser.add_argument("--batch-size", type=int, default=256, help="Batch size for sensor application")
+    parser.add_argument("--seed", type=int, default=None, help="Optional RNG seed for replayable runs")
     parser.add_argument("--goal-feature-idx", type=int, default=13,
                         help="Index of the goal feature bit (e.g. is_checkmate)")
     parser.add_argument("--seed-goal-sensor", action="store_true", default=True,
@@ -460,6 +461,12 @@ def main() -> None:
         help="When stage1-position-mode=hybrid, probability of sampling random KRK",
     )
     args = parser.parse_args()
+
+    if args.seed is not None:
+        random.seed(args.seed)
+        np.random.seed(args.seed)
+        if torch is not None:
+            torch.manual_seed(args.seed)
 
     teacher = KRKTeacher()
     

@@ -16,6 +16,7 @@ from recon_lite.trace_db import (
     EpisodeSummary,
     BanditArmSummary,
     EpisodeRecord,
+    LearningEvent,
     outcome_to_score,
 )
 from recon_lite_hector.plasticity.consolidate import (
@@ -54,6 +55,30 @@ def make_test_summary(
         avg_reward_tick=avg_reward,
         outcome_score=outcome,
     )
+
+
+def test_episode_summary_learning_events_round_trip():
+    summary = EpisodeSummary()
+    summary.record_learning_event(
+        tick=3,
+        event_type="triplet_credit",
+        subject_id="trial_1",
+        parent_id="leg_7",
+        credit=0.25,
+        meta={"goal_delta": -0.25},
+    )
+
+    restored = EpisodeSummary.from_dict(summary.to_dict())
+
+    assert len(restored.learning_events) == 1
+    event = restored.learning_events[0]
+    assert isinstance(event, LearningEvent)
+    assert event.tick == 3
+    assert event.event_type == "triplet_credit"
+    assert event.subject_id == "trial_1"
+    assert event.parent_id == "leg_7"
+    assert event.credit == 0.25
+    assert event.meta == {"goal_delta": -0.25}
 
 
 class TestConsolidationConfig:

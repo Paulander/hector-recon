@@ -10,7 +10,7 @@ from typing import Dict, Any
 import chess
 
 from recon_lite.graph import Node, NodeType
-from recon_lite_chess.triplets import cosine_similarity as terminal_cosine_similarity
+from recon_lite_chess.triplets import AfterCondition, cosine_similarity as terminal_cosine_similarity
 from recon_lite_hector.learning.baseline import apply_sensor
 from recon_lite_chess.baseline_teacher import KRKTeacher
 
@@ -463,6 +463,82 @@ def create_actuator_terminal(node_id=None):
         nid=actual_id,
         ntype=NodeType.TERMINAL,
         predicate=predicate
+    )
+
+
+def create_triplet_after_terminal(node_id=None):
+    """Create a TERMINAL that verifies a chosen move's terminal-space delta."""
+    actual_id = node_id or "triplet_after"
+
+    def predicate(node, env):
+        blackboard = env.get("blackboard")
+        board = env.get("board")
+        if not blackboard or not board:
+            return False, False
+
+        move = env.get("suggested_move") or env.get("chosen_move")
+        if move is None:
+            return False, False
+        if isinstance(move, str):
+            try:
+                move = chess.Move.from_uci(move)
+            except Exception:
+                return True, False
+        if move not in board.legal_moves:
+            return True, False
+
+        targets = tuple(node.meta.get("targets", ()))
+        goal_delta = dict(node.meta.get("goal_delta", {}))
+        if not targets or not goal_delta:
+            return True, False
+
+        sensor_outputs = blackboard.get("sensor_outputs", {})
+        sensor_specs = blackboard.get("sensor_specs", {})
+        before: Dict[str, float] = {}
+        after: Dict[str, float] = {}
+
+        board_after = board.copy()
+        board_after.push(move)
+        features_after = _teacher.features(board_after)
+
+        for target_id in targets:
+            if target_id not in sensor_outputs:
+                continue
+            spec = sensor_specs.get(target_id)
+            if spec is None:
+                base_id = target_id.split("_post_")[0]
+                spec = sensor_specs.get(base_id)
+            if spec is None:
+                continue
+            after_value = _apply_spec_to_features(spec, features_after)
+            if after_value is None:
+                continue
+            before[target_id] = float(sensor_outputs[target_id])
+            after[target_id] = float(after_value)
+
+        condition = AfterCondition(
+            targets=targets,
+            goal_delta=goal_delta,
+            min_similarity=float(node.meta.get("min_similarity", 0.0)),
+            max_error=node.meta.get("max_error"),
+        )
+        match = condition.evaluate(before, after)
+        blackboard.setdefault("triplet_after_matches", {})[node.nid] = {
+            "matched": match.matched,
+            "score": match.score,
+            "details": match.details,
+        }
+        node.meta["last_after_match"] = {
+            "matched": match.matched,
+            "score": match.score,
+            "details": match.details,
+        }
+        return True, bool(match.matched)
+
+    return Node(
+        nid=actual_id,
+        ntype=NodeType.TERMINAL,
+        predicate=predicate,
     )
 
 
