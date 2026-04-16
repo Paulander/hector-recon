@@ -32,6 +32,27 @@ XP_PRUNE_THRESHOLD = 0.2  # Prune if XP below this
 XP_PROMOTE_THRESHOLD = 0.7  # Promote to permanent if XP above this
 
 
+def _edge_exists(graph: Graph, src: str, dst: str, ltype: LinkType) -> bool:
+    return any(e.src == src and e.dst == dst and e.ltype == ltype for e in graph.edges)
+
+
+def _add_edge_if_missing(graph: Graph, src: str, dst: str, ltype: LinkType) -> None:
+    if not _edge_exists(graph, src, dst, ltype):
+        graph.add_edge(src, dst, ltype)
+
+
+def _add_hierarchy_pair(graph: Graph, parent: str, child: str) -> None:
+    """Add parent->child SUB plus child->parent SUR for formal execution."""
+    _add_edge_if_missing(graph, parent, child, LinkType.SUB)
+    _add_edge_if_missing(graph, child, parent, LinkType.SUR)
+
+
+def _add_sequence_pair(graph: Graph, predecessor: str, successor: str) -> None:
+    """Add predecessor->successor POR plus successor->predecessor RET."""
+    _add_edge_if_missing(graph, predecessor, successor, LinkType.POR)
+    _add_edge_if_missing(graph, successor, predecessor, LinkType.RET)
+
+
 @dataclass
 class SpawnPointConfig:
     """Configuration for a spawn point"""
@@ -585,8 +606,8 @@ class SpawnPointManager:
             if sensor_node is None:
                 continue
             
-            # Precondition uses existing sensors
-            self.graph.add_edge(precond_id, sensor_id, LinkType.SUB)
+            # Precondition uses existing sensors.
+            _add_hierarchy_pair(self.graph, precond_id, sensor_id)
             
             # Postcondition uses new sensor clones with same spec
             post_id = f"{sensor_id}_post_{trial.trial_id}"
@@ -599,22 +620,23 @@ class SpawnPointManager:
                 sensor_post.meta["origin"] = "spawn_point"
                 sensor_post.meta["trial_id"] = trial.trial_id
                 self.graph.add_node(sensor_post)
-            self.graph.add_edge(postcond_id, post_id, LinkType.SUB)
+            _add_hierarchy_pair(self.graph, postcond_id, post_id)
         
         # Configure actuator targets
         actuator.meta["targets"] = list(sensor_ids)
         actuator.meta["goal_delta"] = goal_delta
         
         # Wire leg structure (no POR between legs or terminals)
-        self.graph.add_edge(parent_leg_id, leg_id, LinkType.SUB)
-        self.graph.add_edge(leg_id, precond_id, LinkType.SUB)
-        self.graph.add_edge(leg_id, act_script_id, LinkType.SUB)
-        self.graph.add_edge(leg_id, postcond_id, LinkType.SUB)
-        self.graph.add_edge(act_script_id, actuator_id, LinkType.SUB)
+        _add_hierarchy_pair(self.graph, parent_leg_id, leg_id)
+        _add_hierarchy_pair(self.graph, leg_id, precond_id)
+        _add_hierarchy_pair(self.graph, leg_id, act_script_id)
+        _add_hierarchy_pair(self.graph, leg_id, postcond_id)
+        _add_hierarchy_pair(self.graph, act_script_id, actuator_id)
         
-        # POR sequencing between scripts only
-        self.graph.add_edge(precond_id, act_script_id, LinkType.POR)
-        self.graph.add_edge(act_script_id, postcond_id, LinkType.POR)
+        # POR/RET sequencing between scripts only. RET keeps earlier phases
+        # from confirming the leg before later phases have returned.
+        _add_sequence_pair(self.graph, precond_id, act_script_id)
+        _add_sequence_pair(self.graph, act_script_id, postcond_id)
 
 
 # Convenience function for testing

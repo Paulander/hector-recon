@@ -37,6 +37,7 @@ def _link_type_from_str(s: str) -> LinkType:
 def build_graph_from_topology(
     topology_path: Path,
     registry: Optional[TopologyRegistry] = None,
+    formal_pairs: str = "ignore",
 ) -> Graph:
     """
     Build a ReCoN Graph from a topology.json file.
@@ -44,6 +45,9 @@ def build_graph_from_topology(
     Args:
         topology_path: Path to the topology JSON file
         registry: Optional pre-loaded registry (will load from path if None)
+        formal_pairs: "ignore" keeps legacy behavior, "validate" requires
+            paired SUB/SUR and POR/RET links, and "normalize" adds missing
+            reverse links before validating.
         
     Returns:
         Constructed Graph with all nodes and edges
@@ -79,6 +83,16 @@ def build_graph_from_topology(
             if edge:
                 edge.meta["consolidate"] = edge_spec.consolidate
                 edge.meta["confirmation_count"] = edge_spec.confirmation_count
+
+    if formal_pairs == "normalize":
+        ensure_formal_pairs(g)
+        validate_formal_pairs(g)
+    elif formal_pairs == "validate":
+        validate_formal_pairs(g)
+    elif formal_pairs != "ignore":
+        raise ValueError(
+            "formal_pairs must be one of: 'ignore', 'validate', 'normalize'"
+        )
     
     return g
 
@@ -129,6 +143,49 @@ def _set_edge_weight(g: Graph, src: str, dst: str, ltype: LinkType, weight: floa
     edge = _get_edge(g, src, dst, ltype)
     if edge:
         edge.w = weight
+
+
+def _reverse_formal_edge(src: str, dst: str, ltype: LinkType) -> tuple[str, str, LinkType]:
+    if ltype == LinkType.SUB:
+        return dst, src, LinkType.SUR
+    if ltype == LinkType.SUR:
+        return dst, src, LinkType.SUB
+    if ltype == LinkType.POR:
+        return dst, src, LinkType.RET
+    if ltype == LinkType.RET:
+        return dst, src, LinkType.POR
+    raise ValueError(f"Unsupported link type for formal pairing: {ltype}")
+
+
+def ensure_formal_pairs(graph: Graph) -> int:
+    """Add missing reverse SUR/RET links required by the formal executor.
+
+    Returns the number of edges added. Existing edges are left untouched.
+    """
+    added = 0
+    for edge in list(graph.edges):
+        rev_src, rev_dst, rev_type = _reverse_formal_edge(edge.src, edge.dst, edge.ltype)
+        if _get_edge(graph, rev_src, rev_dst, rev_type) is None:
+            graph.add_edge(rev_src, rev_dst, rev_type)
+            added += 1
+    return added
+
+
+def validate_formal_pairs(graph: Graph) -> None:
+    """Validate paired SUB/SUR and POR/RET links for formal execution."""
+    if hasattr(graph, "validate_formal_pairs"):
+        graph.validate_formal_pairs()
+        return
+
+    edge_set = {(e.src, e.dst, e.ltype) for e in graph.edges}
+    for edge in graph.edges:
+        reverse = _reverse_formal_edge(edge.src, edge.dst, edge.ltype)
+        if reverse not in edge_set:
+            raise ValueError(
+                f"Formal ReCoN pair violation: {edge.ltype.name} edge "
+                f"{edge.src}->{edge.dst} requires reverse {reverse[2].name} edge "
+                f"{reverse[0]}->{reverse[1]}."
+            )
 
 
 def export_topology_from_graph(

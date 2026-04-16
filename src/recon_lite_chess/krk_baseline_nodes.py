@@ -10,6 +10,7 @@ from typing import Dict, Any
 import chess
 
 from recon_lite.graph import Node, NodeType
+from recon_lite_chess.triplets import cosine_similarity as terminal_cosine_similarity
 from recon_lite_hector.learning.baseline import apply_sensor
 from recon_lite_chess.baseline_teacher import KRKTeacher
 
@@ -683,22 +684,4 @@ def _goal_weight_for_sensor(
 
 def cosine_similarity(a: list, b: list) -> float:
     """Compute cosine similarity between two vectors"""
-    if len(a) == 0 or len(b) == 0:
-        return 0.0
-        
-    a = np.array(a)
-    b = np.array(b)
-    
-    # Pad shorter to match length
-    if len(a) != len(b):
-        max_len = max(len(a), len(b))
-        a = np.pad(a, (0, max_len - len(a)))
-        b = np.pad(b, (0, max_len - len(b)))
-    
-    norm_a = np.linalg.norm(a)
-    norm_b = np.linalg.norm(b)
-    
-    if norm_a == 0 or norm_b == 0:
-        return 0.0
-    
-    return float(np.dot(a, b) / (norm_a * norm_b))
+    return terminal_cosine_similarity(a, b)
