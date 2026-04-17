@@ -47,6 +47,43 @@ def generate_random_krk_position(rng: random.Random) -> chess.Board:
         return board
 
 
+def is_forced_mate_in_2(board: chess.Board) -> bool:
+    """Return True if white can force a mate-in-1 position after black replies."""
+    if board.turn != chess.WHITE:
+        return False
+    if can_deliver_mate(board):
+        return False
+
+    for move in board.legal_moves:
+        b1 = board.copy()
+        b1.push(move)
+        if b1.is_checkmate():
+            continue
+        replies = list(b1.legal_moves)
+        if not replies:
+            continue
+
+        forced = True
+        for reply in replies:
+            b2 = b1.copy()
+            b2.push(reply)
+            if not can_deliver_mate(b2):
+                forced = False
+                break
+        if forced:
+            return True
+    return False
+
+
+def generate_stage1_mate_in_2_position(rng: random.Random, max_tries: int = 5000) -> chess.Board:
+    """Generate a random legal KRK position that belongs to the Stage-1 curriculum."""
+    for _ in range(max_tries):
+        board = generate_random_krk_position(rng)
+        if is_forced_mate_in_2(board):
+            return board
+    raise RuntimeError(f"Could not generate forced mate-in-2 after {max_tries} attempts")
+
+
 def choose_move_with_engine(
     graph: Graph,
     engine: ReConEngine,
@@ -114,6 +151,10 @@ def main():
                         help="If set, only actuators from this stage can propose moves")
     parser.add_argument("--min-d0", type=float, default=0.0,
                         help="Skip positions with starting goal-distance below this threshold")
+    parser.add_argument("--position-mode", choices=["mate_in_2", "random", "hybrid"], default="random",
+                        help="Evaluation source: forced mate-in-2, random KRK, or a mix")
+    parser.add_argument("--hybrid-random-ratio", type=float, default=0.5,
+                        help="When position-mode=hybrid, probability of sampling random KRK")
     args = parser.parse_args()
 
     rng = random.Random(args.seed)
@@ -147,7 +188,15 @@ def main():
 
     eval_idx = 0
     for i in range(args.samples):
-        board = generate_random_krk_position(rng)
+        if args.position_mode == "mate_in_2":
+            board = generate_stage1_mate_in_2_position(rng)
+        elif args.position_mode == "hybrid":
+            if rng.random() < args.hybrid_random_ratio:
+                board = generate_random_krk_position(rng)
+            else:
+                board = generate_stage1_mate_in_2_position(rng)
+        else:
+            board = generate_random_krk_position(rng)
         if args.exclude_mate_in_1 and can_deliver_mate(board):
             stats["skipped_mate_in_1"] += 1
             continue

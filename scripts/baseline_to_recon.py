@@ -54,7 +54,7 @@ def compile_baseline_to_topology(
             "origin": "baseline_compilation",
             "mature_sensors": len(mature_sensors),
             "total_actuators": len(learner.actuators),
-            "baseline_xp_avg": float(np.mean([s.xp for s in mature_sensors])),
+            "baseline_xp_avg": float(np.mean([s.xp for s in mature_sensors])) if mature_sensors else 0.0,
             "goal_bank": goal_bank,
             "goal_label": "mate_in_1",
             "goal_normalize": bool(getattr(learner, "normalize_goals", True)),

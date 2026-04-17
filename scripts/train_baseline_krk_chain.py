@@ -6,6 +6,7 @@ Stage 1: Backchain using goal memories from Stage 0 (move closer to mate-in-1 go
 """
 
 import argparse
+import json
 import pickle
 import random
 from pathlib import Path
@@ -27,6 +28,94 @@ from recon_lite_hector.learning.baseline import (
     SensorSpec,
 )
 from recon_lite_chess.baseline_teacher import KRKTeacher, generate_krk_mate_in_1_position, can_deliver_mate
+
+
+def export_learner_cycle_snapshot(
+    learner: BaselineLearner,
+    output_dir: Path,
+    *,
+    stage_name: str,
+    cycle: int,
+    transitions: List[TransitionData],
+    stats: Dict[str, Any],
+) -> Path:
+    """Write a lightweight learner topology snapshot for growth animation."""
+    nodes: Dict[str, Any] = {}
+    edges: Dict[str, Any] = {}
+
+    mature = learner.get_mature_sensors()
+    mature_by_id = {s.id: s for s in mature}
+    mature_by_index = {i: s for i, s in enumerate(mature)}
+
+    for sensor in learner.sensors:
+        nodes[f"sensor_{sensor.id}"] = {
+            "id": f"sensor_{sensor.id}",
+            "type": "TERMINAL",
+            "group": "sensor" if sensor.is_mature else "candidate_sensor",
+            "meta": {
+                "stage": int(sensor.stage),
+                "xp": float(sensor.xp),
+                "is_mature": bool(sensor.is_mature),
+                "activations": int(sensor.activations),
+                "cycles_alive": int(sensor.cycles_alive),
+                "readout_type": sensor.sensor_spec.readout_type,
+                "feature_count": int(np.sum(sensor.sensor_spec.feature_mask)),
+            },
+        }
+
+    for actuator in learner.actuators:
+        act_id = f"actuator_{actuator.id}"
+        nodes[act_id] = {
+            "id": act_id,
+            "type": "TERMINAL",
+            "group": "actuator",
+            "meta": {
+                "stage": int(actuator.stage),
+                "xp": float(actuator.xp),
+                "sensor_count": int(len(actuator.actuator_spec.sensor_indices)),
+                "goal_delta_norm": float(np.linalg.norm(actuator.actuator_spec.goal_delta)),
+                "activations": int(actuator.activations),
+                "cycles_alive": int(actuator.cycles_alive),
+            },
+        }
+        for raw_idx in actuator.actuator_spec.sensor_indices:
+            sensor = mature_by_id.get(int(raw_idx)) or mature_by_index.get(int(raw_idx))
+            if sensor is None:
+                continue
+            edge_key = f"sensor_{sensor.id}->{act_id}:DELTA"
+            edges[edge_key] = {
+                "src": f"sensor_{sensor.id}",
+                "dst": act_id,
+                "type": "DELTA",
+                "weight": 1.0 + max(0.0, float(actuator.xp)),
+            }
+
+    total_transitions = len(transitions)
+    positive_transitions = sum(1 for t in transitions if t.label == 1)
+    avg_reward = float(np.mean([t.reward for t in transitions])) if transitions else 0.0
+    snapshot = {
+        "stage_name": stage_name,
+        "cycle": cycle,
+        "nodes": nodes,
+        "edges": edges,
+        "metrics": {
+            "sensors": len(learner.sensors),
+            "mature_sensors": len(mature),
+            "actuators": len(learner.actuators),
+            "goal_memories": len(learner.goal_memories),
+            "positive_transitions": positive_transitions,
+            "total_transitions": total_transitions,
+            "positive_rate": positive_transitions / total_transitions if total_transitions else 0.0,
+            "avg_transition_reward": avg_reward,
+            **stats,
+        },
+    }
+
+    stage_dir = output_dir / "topology_snapshots" / stage_name
+    stage_dir.mkdir(parents=True, exist_ok=True)
+    path = stage_dir / f"cycle_{cycle:04d}.json"
+    path.write_text(json.dumps(snapshot, indent=2), encoding="utf-8")
+    return path
 
 
 def generate_random_krk_position() -> chess.Board:
@@ -145,6 +234,12 @@ def goal_signal_sensor_ids(learner: BaselineLearner, goal_feature_idx: int) -> L
 
 def compute_sensor_vectors_batch(learner: BaselineLearner, v_batch: Any, sensor_ids: List[int]) -> Any:
     """Compute sensor vectors for a batch of feature vectors in a fixed id order."""
+    if not sensor_ids:
+        batch_len = len(v_batch)
+        if learner.backend.use_torch:
+            return torch.zeros((batch_len, 0), device=learner.backend.device)
+        return np.zeros((batch_len, 0), dtype=np.float32)
+
     outputs = learner.batch_apply_sensors(v_batch)
     
     # results[i] = [s_id_0_output, s_id_1_output, ...]
@@ -177,6 +272,9 @@ def label_transitions_by_goal(
     
     Optimized: Batches all boards (v1 and v2) for a single GPU pass.
     """
+    if not sensor_ids or not goal_vectors:
+        return []
+
     teacher = KRKTeacher()
     v0 = teacher.features(board)
     
@@ -439,6 +537,8 @@ def main() -> None:
     parser.add_argument("--device", type=str, default="auto", help="Device (cpu, cuda, auto, numpy)")
     parser.add_argument("--batch-size", type=int, default=256, help="Batch size for sensor application")
     parser.add_argument("--seed", type=int, default=None, help="Optional RNG seed for replayable runs")
+    parser.add_argument("--snapshot-every", type=int, default=1,
+                        help="Write lightweight topology snapshot every N cycles (0 disables)")
     parser.add_argument("--goal-feature-idx", type=int, default=13,
                         help="Index of the goal feature bit (e.g. is_checkmate)")
     parser.add_argument("--seed-goal-sensor", action="store_true", default=True,
@@ -553,6 +653,16 @@ def main() -> None:
                 goal_sensor_ids=goal_signal_sensor_ids(learner, goal_feature_idx),
             )
 
+            if args.snapshot_every and cycle % args.snapshot_every == 0:
+                export_learner_cycle_snapshot(
+                    learner,
+                    args.output_dir,
+                    stage_name="stage0_mate_in_1",
+                    cycle=cycle,
+                    transitions=transitions,
+                    stats=stats,
+                )
+
             if cycle % 10 == 0 or stats["newly_promoted"] or stats["newly_created_actuators"]:
                 mature = len(learner.get_mature_sensors())
                 print(f"Cycle {cycle:3d}: sensors={len(learner.sensors)} (mature={mature}) "
@@ -570,6 +680,18 @@ def main() -> None:
     learner.stage = 1
     if goal_sensor_ids is None:
         goal_sensor_ids = [s.id for s in learner.get_mature_sensors()]
+
+    usable_goal_memories = [
+        g for g in learner.goal_memories
+        if g.label == "mate_in_1" and goal_sensor_ids and g.s0.shape == (len(goal_sensor_ids),)
+    ]
+    if args.stage1_cycles > 0 and (not goal_sensor_ids or not usable_goal_memories):
+        print(
+            "Skipping Stage 1: Stage 0 did not produce mature sensors and mate_in_1 "
+            "goal prototypes. Increase --stage0-cycles/--samples-per-cycle or lower "
+            "--min-mature-for-goals for exploratory runs."
+        )
+        args.stage1_cycles = 0
 
     for cycle in range(args.stage1_cycles):
         transitions = []
@@ -619,6 +741,16 @@ def main() -> None:
             top_k=args.top_k,
             goal_sensor_ids=goal_signal_sensor_ids(learner, goal_feature_idx),
         )
+
+        if args.snapshot_every and cycle % args.snapshot_every == 0:
+            export_learner_cycle_snapshot(
+                learner,
+                args.output_dir,
+                stage_name="stage1_backchain",
+                cycle=cycle,
+                transitions=transitions,
+                stats=stats,
+            )
 
         if cycle % 10 == 0 or stats["newly_promoted"] or stats["newly_created_actuators"]:
             mature = len(learner.get_mature_sensors())

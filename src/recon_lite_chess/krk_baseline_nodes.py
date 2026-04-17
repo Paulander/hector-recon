@@ -44,6 +44,9 @@ def create_krk_entry_root(node_id=None):
         # Initialize caches
         blackboard.setdefault("sensor_outputs", {})
         blackboard.setdefault("sensor_specs", {})
+        # Suggestions are per ReCoN tick/decision. If they persist across ticks,
+        # an early high-similarity actuator can beat a later goal-progress score.
+        env["actuator_suggestions"] = []
         # Goal bank: hydrate from node.meta if present, otherwise init empty (online growth)
         if "goal_bank" not in blackboard:
             if node.meta.get("goal_bank"):
@@ -293,6 +296,7 @@ def create_actuator_terminal(node_id=None):
         goal_label = blackboard.get("goal_label", "mate_in_1")
         goal_normalize = blackboard.get("goal_normalize", True)
         goal_weight = float(blackboard.get("goal_weight", 0.7))
+        goal_progress_weight = float(blackboard.get("goal_progress_weight", 100.0))
         goal_lookahead = blackboard.get("goal_lookahead", "max")
         min_goal_overlap = float(blackboard.get("goal_min_overlap", 8))
         goal_entries = []
@@ -344,7 +348,9 @@ def create_actuator_terminal(node_id=None):
             # Score by similarity to goal_delta
             goal_deltas = [goal_delta[t] for t in targets if t in goal_delta][:len(delta_s)]
             similarity = cosine_similarity(delta_s, goal_deltas)
-            score = similarity * stage_weight
+            actuator_xp = float(node.meta.get("baseline_xp", 0.0))
+            similarity_score = similarity * stage_weight * (1.0 + max(0.0, actuator_xp))
+            score = similarity_score
 
             # Goal distance shaping (Stage > 0 only)
             if goal_entries:
@@ -393,6 +399,10 @@ def create_actuator_terminal(node_id=None):
                             best = d
                     return best
 
+                d0 = blackboard.get("goal_distance_now")
+                if d0 is None:
+                    d0 = _goal_distance_for_board(board)
+
                 # If lookahead enabled, evaluate after one black reply (worst-case by default)
                 d1 = None
                 if goal_lookahead and goal_lookahead != "none":
@@ -409,10 +419,19 @@ def create_actuator_terminal(node_id=None):
                     d1 = _goal_distance_for_board(board_copy)
 
                 if d1 is not None:
-                    score += goal_weight * (-float(d1))
-                move_meta[move] = {"is_mate": is_mate, "goal_dist": d1}
+                    if d0 is not None:
+                        # Align runtime with Stage-1 training/eval: prefer moves
+                        # that reduce distance to the learned mate-in-1 basin.
+                        goal_progress = float(d0) - float(d1)
+                        score = (goal_progress_weight * goal_progress) + (0.001 * similarity_score)
+                    else:
+                        score = (goal_weight * (-float(d1))) + (0.001 * similarity_score)
+                move_meta[move] = {"is_mate": is_mate, "goal_dist": d1, "goal_dist_before": d0}
             else:
                 move_meta[move] = {"is_mate": is_mate, "goal_dist": None}
+
+            if is_mate:
+                score += 1_000_000.0
 
             scores[move] = score
         
@@ -437,9 +456,13 @@ def create_actuator_terminal(node_id=None):
         env["move_confidence"] = best["score"]
         env["suggested_actuator"] = best["actuator"]
 
-        # Promote goal prototype from pre-move state when best move hits goal basin or checkmate.
-        # This is local/online goal discovery: "if this state leads to a goal, it becomes a goal."
-        if best["actuator"] == node.nid:
+        # Optional online goal discovery: disabled by default so evaluation and
+        # normal play do not mutate the goal basin while scoring a decision.
+        allow_goal_promotion = bool(
+            env.get("allow_online_goal_promotion")
+            or blackboard.get("allow_online_goal_promotion")
+        )
+        if allow_goal_promotion and best["actuator"] == node.nid:
             should_promote = False
             if best_meta.get("is_mate"):
                 should_promote = True

@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import pickle
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -54,7 +55,13 @@ def build_plan(args: argparse.Namespace) -> PipelinePlan:
         args.device,
         "--seed",
         str(args.seed),
+        "--snapshot-every",
+        str(args.snapshot_every),
+        "--stage1-position-mode",
+        args.stage1_position_mode,
     ]
+    if args.stage1_position_mode == "hybrid":
+        train_cmd.extend(["--stage1-hybrid-random-ratio", str(args.stage1_hybrid_random_ratio)])
     if args.stage0_balance_corners:
         train_cmd.append("--stage0-balance-corners")
 
@@ -89,7 +96,11 @@ def build_plan(args: argparse.Namespace) -> PipelinePlan:
         str(args.seed),
         "--stage-filter",
         "1",
+        "--position-mode",
+        args.stage1_eval_position_mode,
     ]
+    if args.stage1_eval_position_mode == "hybrid":
+        stage1_eval_cmd.extend(["--hybrid-random-ratio", str(args.stage1_eval_hybrid_random_ratio)])
 
     return PipelinePlan(
         output_dir=output_dir,
@@ -114,11 +125,16 @@ def manifest_for(args: argparse.Namespace, plan: PipelinePlan) -> Dict[str, Any]
             "samples_per_cycle": args.samples_per_cycle,
             "device": args.device,
             "stage0_balance_corners": args.stage0_balance_corners,
+            "snapshot_every": args.snapshot_every,
+            "stage1_position_mode": args.stage1_position_mode,
+            "stage1_hybrid_random_ratio": args.stage1_hybrid_random_ratio,
         },
         "evaluation": {
             "stage0_eval_samples": args.stage0_eval_samples,
             "stage1_eval_samples": args.stage1_eval_samples,
             "stage1_stage_filter": 1,
+            "stage1_eval_position_mode": args.stage1_eval_position_mode,
+            "stage1_eval_hybrid_random_ratio": args.stage1_eval_hybrid_random_ratio,
         },
         "formal_validation": {
             "mode": "strict_pairs",
@@ -144,6 +160,25 @@ def validate_topology(topology_path: Path) -> Dict[str, int]:
     return {"nodes": len(graph.nodes), "edges": len(graph.edges)}
 
 
+def learner_readiness(learner_path: Path) -> Dict[str, Any]:
+    with learner_path.open("rb") as fh:
+        learner = pickle.load(fh)
+    mature = [s for s in getattr(learner, "sensors", []) if getattr(s, "is_mature", False)]
+    goal_memories = [
+        g for g in getattr(learner, "goal_memories", [])
+        if getattr(g, "label", "") == "mate_in_1"
+    ]
+    actuators = list(getattr(learner, "actuators", []))
+    ready = bool(mature and goal_memories and actuators)
+    return {
+        "ready": ready,
+        "sensors": len(getattr(learner, "sensors", [])),
+        "mature_sensors": len(mature),
+        "actuators": len(actuators),
+        "mate_in_1_goal_memories": len(goal_memories),
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Fresh KRK Stage-0/Stage-1 pipeline")
     parser.add_argument("--output-dir", type=Path, default=None)
@@ -154,6 +189,11 @@ def main() -> None:
     parser.add_argument("--stage1-eval-samples", type=int, default=50)
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--device", type=str, default="auto")
+    parser.add_argument("--snapshot-every", type=int, default=1)
+    parser.add_argument("--stage1-position-mode", choices=["mate_in_2", "random", "hybrid"], default="hybrid")
+    parser.add_argument("--stage1-hybrid-random-ratio", type=float, default=0.5)
+    parser.add_argument("--stage1-eval-position-mode", choices=["mate_in_2", "random", "hybrid"], default="random")
+    parser.add_argument("--stage1-eval-hybrid-random-ratio", type=float, default=0.5)
     parser.add_argument("--stage0-balance-corners", action="store_true", default=True)
     parser.add_argument("--no-stage0-balance-corners", action="store_false", dest="stage0_balance_corners")
     parser.add_argument("--dry-run", action="store_true", help="Write manifest and print commands only")
@@ -175,6 +215,20 @@ def main() -> None:
     os.environ.setdefault("PYTHONHASHSEED", env_seed)
 
     run_command(plan.commands[0])
+    readiness = learner_readiness(plan.learner_path)
+    manifest["learner_readiness"] = readiness
+    if not readiness["ready"]:
+        manifest["status"] = "insufficient_stage0_basis"
+        manifest["recommendation"] = (
+            "Increase --stage0-cycles and --samples-per-cycle until Stage 0 creates "
+            "mature sensors, actuators, and mate_in_1 goal memories."
+        )
+        write_manifest(plan.manifest_path, manifest)
+        print("\nPipeline stopped after training: insufficient Stage-0 basis.")
+        print(json.dumps(readiness, indent=2))
+        print(f"Manifest updated: {plan.manifest_path}")
+        return
+
     run_command(plan.commands[1])
     validation = validate_topology(plan.topology_path)
     manifest["formal_validation"] = {
