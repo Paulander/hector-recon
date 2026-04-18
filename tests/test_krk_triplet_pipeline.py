@@ -29,6 +29,7 @@ def test_krk_triplet_pipeline_plan_uses_fresh_paths(tmp_path):
         seed=11,
         device="cpu",
         snapshot_every=1,
+        min_mature_for_goals=6,
         stage1_position_mode="hybrid",
         stage1_hybrid_random_ratio=0.5,
         stage1_eval_position_mode="random",
@@ -45,10 +46,12 @@ def test_krk_triplet_pipeline_plan_uses_fresh_paths(tmp_path):
     assert "--load-learner" not in plan.commands[0]
     assert "--seed" in plan.commands[0]
     assert "--snapshot-every" in plan.commands[0]
+    assert "--min-mature-for-goals" in plan.commands[0]
     assert "--stage1-position-mode" in plan.commands[0]
     assert "--position-mode" in plan.commands[3]
     assert manifest["formal_validation"]["validated"] is False
     assert manifest["training"]["stage0_cycles"] == 1
+    assert manifest["training"]["min_mature_for_goals"] == 6
     assert manifest["training"]["stage1_position_mode"] == "hybrid"
     assert manifest["evaluation"]["stage1_eval_position_mode"] == "random"
     assert manifest["evaluation"]["stage1_stage_filter"] == 1
@@ -79,6 +82,7 @@ def test_krk_triplet_pipeline_plan_passes_hybrid_eval_ratio(tmp_path):
         seed=11,
         device="cpu",
         snapshot_every=1,
+        min_mature_for_goals=6,
         stage1_position_mode="mate_in_2",
         stage1_hybrid_random_ratio=0.5,
         stage1_eval_position_mode="hybrid",
