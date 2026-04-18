@@ -30,6 +30,10 @@ def test_krk_triplet_pipeline_plan_uses_fresh_paths(tmp_path):
         device="cpu",
         snapshot_every=1,
         min_mature_for_goals=6,
+        feature_set="krk_rich_v1",
+        max_curriculum_stage=3,
+        landmark_cycles=4,
+        allow_prune_foundation=False,
         stage1_position_mode="hybrid",
         stage1_hybrid_random_ratio=0.5,
         stage1_eval_position_mode="random",
@@ -47,11 +51,20 @@ def test_krk_triplet_pipeline_plan_uses_fresh_paths(tmp_path):
     assert "--seed" in plan.commands[0]
     assert "--snapshot-every" in plan.commands[0]
     assert "--min-mature-for-goals" in plan.commands[0]
+    assert "--feature-set" in plan.commands[0]
+    assert "krk_rich_v1" in plan.commands[0]
+    assert "--max-curriculum-stage" in plan.commands[0]
+    assert "3" in plan.commands[0]
+    assert "--landmark-cycles" in plan.commands[0]
+    assert "4" in plan.commands[0]
     assert "--stage1-position-mode" in plan.commands[0]
     assert "--position-mode" in plan.commands[3]
     assert manifest["formal_validation"]["validated"] is False
     assert manifest["training"]["stage0_cycles"] == 1
     assert manifest["training"]["min_mature_for_goals"] == 6
+    assert manifest["training"]["feature_set"] == "krk_rich_v1"
+    assert manifest["training"]["max_curriculum_stage"] == 3
+    assert manifest["training"]["landmark_cycles"] == 4
     assert manifest["training"]["stage1_position_mode"] == "hybrid"
     assert manifest["evaluation"]["stage1_eval_position_mode"] == "random"
     assert manifest["evaluation"]["stage1_stage_filter"] == 1
@@ -83,6 +96,10 @@ def test_krk_triplet_pipeline_plan_passes_hybrid_eval_ratio(tmp_path):
         device="cpu",
         snapshot_every=1,
         min_mature_for_goals=6,
+        feature_set="legacy",
+        max_curriculum_stage=1,
+        landmark_cycles=10,
+        allow_prune_foundation=False,
         stage1_position_mode="mate_in_2",
         stage1_hybrid_random_ratio=0.5,
         stage1_eval_position_mode="hybrid",

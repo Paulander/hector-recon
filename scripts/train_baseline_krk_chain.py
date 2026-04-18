@@ -28,6 +28,14 @@ from recon_lite_hector.learning.baseline import (
     SensorSpec,
 )
 from recon_lite_chess.baseline_teacher import KRKTeacher, generate_krk_mate_in_1_position, can_deliver_mate
+from recon_lite_chess.training.krk_landmarks import (
+    select_stage_position,
+    specs_through,
+    worst_reply_reward,
+)
+
+
+PRUNING_PROFILES = {"explore", "consolidate", "frozen"}
 
 
 def export_learner_cycle_snapshot(
@@ -71,6 +79,7 @@ def export_learner_cycle_snapshot(
             "group": "actuator",
             "meta": {
                 "stage": int(actuator.stage),
+                "curriculum_label": getattr(actuator, "curriculum_label", None),
                 "xp": float(actuator.xp),
                 "sensor_count": int(len(actuator.actuator_spec.sensor_indices)),
                 "goal_delta_norm": float(np.linalg.norm(actuator.actuator_spec.goal_delta)),
@@ -264,6 +273,7 @@ def label_transitions_by_goal(
     board: chess.Board,
     goal_vectors: List[np.ndarray],
     sensor_ids: List[int],
+    teacher: KRKTeacher | None = None,
     eps: float = 1e-3,
     lookahead_black: bool = True,
     opponent_mode: str = "max",
@@ -275,7 +285,7 @@ def label_transitions_by_goal(
     if not sensor_ids or not goal_vectors:
         return []
 
-    teacher = KRKTeacher()
+    teacher = teacher or KRKTeacher()
     v0 = teacher.features(board)
     
     # 1. Collect all board feature vectors for current move alternatives
@@ -376,6 +386,74 @@ def label_transitions_by_goal(
     return transitions
 
 
+def label_transitions_by_landmark(
+    teacher: KRKTeacher,
+    board: chess.Board,
+    label: str,
+    eps: float = 1e-3,
+    lookahead_black: bool = True,
+) -> List[TransitionData]:
+    """Label legal moves by explicit KRK landmark progress."""
+    transitions: List[TransitionData] = []
+    v0 = teacher.features(board)
+    for move in board.legal_moves:
+        b1 = board.copy()
+        b1.push(move)
+        v1 = teacher.features(b1)
+        reward = worst_reply_reward(board, move, label, use_black_reply=lookahead_black)
+        transitions.append(
+            TransitionData(
+                v0=v0,
+                v1=v1,
+                label=1 if reward > eps else 0,
+                action=move,
+                reward=reward,
+            )
+        )
+    return transitions
+
+
+def add_goal_memory_from_vector(
+    learner: BaselineLearner,
+    teacher: KRKTeacher,
+    feature_vector: np.ndarray,
+    label: str,
+    min_mature_for_goals: int,
+    current_goal_sensor_ids: List[int] | None = None,
+) -> List[int] | None:
+    """Record a stage-specific goal memory in the current mature sensor basis."""
+    if len(learner.get_mature_sensors()) < min_mature_for_goals:
+        return current_goal_sensor_ids
+    sensor_ids = current_goal_sensor_ids
+    if sensor_ids is None:
+        sensor_ids = [s.id for s in learner.get_mature_sensors()]
+    if not sensor_ids:
+        return sensor_ids
+    s0 = compute_sensor_vectors_batch(learner, feature_vector[None, :], sensor_ids)[0]
+    learner.add_goal_memory(s0, label=label, sensor_ids=sensor_ids)
+    return sensor_ids
+
+
+def protected_goal_sensor_ids(learner: BaselineLearner, allow_prune_foundation: bool = False) -> set[int]:
+    """Return sensor IDs that should not be pruned because goal memories depend on them."""
+    if allow_prune_foundation:
+        return set()
+    protected: set[int] = set()
+    for goal in learner.goal_memories:
+        if getattr(goal, "sensor_ids", None):
+            protected.update(int(sid) for sid in goal.sensor_ids)
+    return protected
+
+
+def pruning_profile_for_cycle(cycle: int, total_cycles: int, has_goal_signal: bool) -> str:
+    """Default curriculum pruning schedule."""
+    if total_cycles <= 0:
+        return "explore"
+    if not has_goal_signal:
+        return "explore"
+    return "explore" if cycle < int(total_cycles * 0.3) else "consolidate"
+
+
 def update_learner_from_transitions(
     learner: BaselineLearner,
     transitions: List[TransitionData],
@@ -384,10 +462,31 @@ def update_learner_from_transitions(
     delta_eps: float,
     top_k: int,
     goal_sensor_ids: List[int] | None = None,
+    curriculum_label: str | None = None,
+    pruning_profile: str = "explore",
+    protected_sensor_ids: set[int] | None = None,
 ) -> Dict[str, Any]:
     """Shared update logic for sensors/actuators."""
     if not transitions:
-        return {"newly_promoted": [], "pruned_count": 0, "newly_created_actuators": 0}
+        counts = {
+            "sensors": len(learner.sensors),
+            "actuators": len(learner.actuators),
+        }
+        return {
+            "newly_promoted": [],
+            "pruned_count": 0,
+            "newly_created_actuators": 0,
+            "pruned_sensor_ids": [],
+            "pruned_actuator_ids": [],
+            "merged_actuator_ids": [],
+            "candidate_actuator_count": 0,
+            "pre_prune_counts": counts,
+            "post_prune_counts": counts,
+            "pruning_profile": pruning_profile,
+        }
+    if pruning_profile not in PRUNING_PROFILES:
+        raise ValueError(f"Unknown pruning_profile: {pruning_profile}")
+    protected_sensor_ids = protected_sensor_ids or set()
 
     # Prepare batches
     v0_batch = [t.v0 for t in transitions]
@@ -452,15 +551,42 @@ def update_learner_from_transitions(
             newly_promoted.append(sensor.id)
 
     initial_count = len(learner.sensors)
+    pre_prune_counts = {
+        "sensors": len(learner.sensors),
+        "actuators": len(learner.actuators),
+    }
+    if pruning_profile == "frozen":
+        xp_prune_threshold = -float("inf")
+        min_cycles_before_prune = 10**9
+    elif pruning_profile == "consolidate":
+        xp_prune_threshold = 0.25
+        min_cycles_before_prune = 3
+    else:
+        xp_prune_threshold = 0.05
+        min_cycles_before_prune = 5
+
+    pruned_sensor_ids = [
+        s.id
+        for s in learner.sensors
+        if (
+            s.id not in protected_sensor_ids
+            and not s.is_mature
+            and s.xp <= xp_prune_threshold
+            and s.cycles_alive >= min_cycles_before_prune
+        )
+    ]
     learner.sensors = [
         s for s in learner.sensors
-        if s.xp > 0.1 or s.cycles_alive < 3 or s.is_mature
+        if s.id not in set(pruned_sensor_ids)
     ]
     pruned_count = initial_count - len(learner.sensors)
 
     # Actuator extraction from positives
     mature_sensors = learner.get_mature_sensors()
     newly_created_actuators = 0
+    merged_actuator_ids: List[int] = []
+    candidate_actuator_count = 0
+    pruned_actuator_ids: List[int] = []
     if len(mature_sensors) >= 3:
         positive_trans = [t for t in transitions if t.label == 1]
         if positive_trans:
@@ -472,6 +598,7 @@ def update_learner_from_transitions(
                 backend=learner.backend,
                 goal_sensor_ids=goal_sensor_ids,
             )
+            candidate_actuator_count = len(actuator_specs)
             for spec in actuator_specs:
                 existing = find_similar_actuator(
                     learner.actuators,
@@ -486,6 +613,9 @@ def update_learner_from_transitions(
                     )
                     existing.xp += 0.1
                     existing.activations += 1
+                    if curriculum_label is not None and not getattr(existing, "curriculum_label", None):
+                        existing.curriculum_label = curriculum_label
+                    merged_actuator_ids.append(existing.id)
                 else:
                     actuator = Terminal(
                         id=learner._next_actuator_id,
@@ -494,24 +624,42 @@ def update_learner_from_transitions(
                         actuator_spec=spec
                     )
                     actuator.xp = float(np.mean(np.abs(spec.goal_delta)))
+                    actuator.curriculum_label = curriculum_label
                     learner._next_actuator_id += 1
                     learner.actuators.append(actuator)
                     newly_created_actuators += 1
 
+            before_cap_ids = {a.id for a in learner.actuators}
             learner.actuators, pruned_actuators = enforce_actuator_cap(
                 learner.actuators,
                 stage=learner.stage,
                 max_actuators=max_actuators_per_stage,
             )
+            after_stage_cap_ids = {a.id for a in learner.actuators}
             learner.actuators, _ = enforce_actuator_cap_total(
                 learner.actuators,
                 max_total=max_actuators_total,
+            )
+            after_total_cap_ids = {a.id for a in learner.actuators}
+            pruned_actuator_ids = sorted(
+                (before_cap_ids - after_stage_cap_ids)
+                | (after_stage_cap_ids - after_total_cap_ids)
             )
 
     return {
         "newly_promoted": newly_promoted,
         "pruned_count": pruned_count,
         "newly_created_actuators": newly_created_actuators,
+        "pruned_sensor_ids": pruned_sensor_ids,
+        "pruned_actuator_ids": pruned_actuator_ids,
+        "merged_actuator_ids": sorted(set(merged_actuator_ids)),
+        "candidate_actuator_count": candidate_actuator_count,
+        "pre_prune_counts": pre_prune_counts,
+        "post_prune_counts": {
+            "sensors": len(learner.sensors),
+            "actuators": len(learner.actuators),
+        },
+        "pruning_profile": pruning_profile,
     }
 
 def main() -> None:
@@ -519,6 +667,10 @@ def main() -> None:
     parser.add_argument("--load-learner", type=Path, help="Path to existing learner pickle to start from")
     parser.add_argument("--stage0-cycles", type=int, default=50)
     parser.add_argument("--stage1-cycles", type=int, default=50)
+    parser.add_argument("--max-curriculum-stage", type=int, default=1,
+                        help="Run explicit KRK landmark stages after Stage 1 up to this index")
+    parser.add_argument("--landmark-cycles", type=int, default=10,
+                        help="Cycles per explicit KRK landmark stage when --max-curriculum-stage > 1")
     parser.add_argument("--samples-per-cycle", type=int, default=100)
     parser.add_argument("--initial-sensors", type=int, default=20)
     parser.add_argument("--spawn-interval", type=int, default=10)
@@ -534,12 +686,16 @@ def main() -> None:
     parser.add_argument("--top-k", type=int, default=3)
     parser.add_argument("--stage1-reward-scale", type=float, default=1.0,
                         help="Scale factor applied to Stage-1 dense rewards before XP updates")
+    parser.add_argument("--feature-set", choices=["legacy", "krk_rich_v1"], default="legacy",
+                        help="Feature vector used by baseline sensors")
+    parser.add_argument("--allow-prune-foundation", action="store_true", default=False,
+                        help="Allow pruning sensors referenced by active goal memories")
     parser.add_argument("--device", type=str, default="auto", help="Device (cpu, cuda, auto, numpy)")
     parser.add_argument("--batch-size", type=int, default=256, help="Batch size for sensor application")
     parser.add_argument("--seed", type=int, default=None, help="Optional RNG seed for replayable runs")
     parser.add_argument("--snapshot-every", type=int, default=1,
                         help="Write lightweight topology snapshot every N cycles (0 disables)")
-    parser.add_argument("--goal-feature-idx", type=int, default=13,
+    parser.add_argument("--goal-feature-idx", type=int, default=None,
                         help="Index of the goal feature bit (e.g. is_checkmate)")
     parser.add_argument("--seed-goal-sensor", action="store_true", default=True,
                         help="Seed a goal sensor template (on by default)")
@@ -568,12 +724,18 @@ def main() -> None:
         if torch is not None:
             torch.manual_seed(args.seed)
 
-    teacher = KRKTeacher()
+    teacher = KRKTeacher(feature_set=args.feature_set)
     
     if args.load_learner and args.load_learner.exists():
         print(f"Loading existing learner from: {args.load_learner}")
         with open(args.load_learner, 'rb') as f:
             learner = pickle.load(f)
+        if getattr(learner, "feature_dim", teacher.feature_dim) != teacher.feature_dim:
+            raise ValueError(
+                "Loaded learner feature dimension does not match selected feature set: "
+                f"learner={getattr(learner, 'feature_dim', None)} "
+                f"teacher={teacher.feature_dim} feature_set={args.feature_set}"
+            )
         # Update device if requested
         if args.device != learner.device:
             from recon_lite_hector.learning.baseline import ComputeBackend
@@ -591,8 +753,11 @@ def main() -> None:
         for _ in range(args.initial_sensors):
             learner.sensors.append(learner.spawn_sensor())
         print(f"Created new learner on {args.device}")
+    learner.feature_set = args.feature_set
+    learner.feature_names = tuple(getattr(teacher, "feature_names", ()))
+    learner.goal_feature_index = int(getattr(teacher, "goal_feature_index", 13))
 
-    goal_feature_idx = args.goal_feature_idx or get_goal_feature_index(teacher)
+    goal_feature_idx = args.goal_feature_idx if args.goal_feature_idx is not None else get_goal_feature_index(teacher)
     if args.seed_goal_sensor:
         # Seed if not already present
         if not goal_signal_sensor_ids(learner, goal_feature_idx):
@@ -651,6 +816,16 @@ def main() -> None:
                 delta_eps=args.delta_eps,
                 top_k=args.top_k,
                 goal_sensor_ids=goal_signal_sensor_ids(learner, goal_feature_idx),
+                curriculum_label="mate_in_1",
+                pruning_profile=pruning_profile_for_cycle(
+                    cycle,
+                    args.stage0_cycles,
+                    bool(learner.goal_memories),
+                ),
+                protected_sensor_ids=protected_goal_sensor_ids(
+                    learner,
+                    allow_prune_foundation=args.allow_prune_foundation,
+                ),
             )
 
             if args.snapshot_every and cycle % args.snapshot_every == 0:
@@ -724,6 +899,7 @@ def main() -> None:
                 b0,
                 goal_vectors,
                 goal_sensor_ids,
+                teacher=teacher,
                 lookahead_black=True,
                 opponent_mode="max",
             )
@@ -731,6 +907,17 @@ def main() -> None:
                 for t in stage_transitions:
                     t.reward *= float(args.stage1_reward_scale)
             transitions.extend(stage_transitions)
+
+        stage1_goal_sensor_ids: List[int] | None = None
+        for t in (t for t in transitions if t.label == 1):
+            stage1_goal_sensor_ids = add_goal_memory_from_vector(
+                learner,
+                teacher,
+                t.v1,
+                label="stage0_basin",
+                min_mature_for_goals=args.min_mature_for_goals,
+                current_goal_sensor_ids=stage1_goal_sensor_ids,
+            )
 
         stats = update_learner_from_transitions(
             learner,
@@ -740,6 +927,16 @@ def main() -> None:
             delta_eps=args.delta_eps,
             top_k=args.top_k,
             goal_sensor_ids=goal_signal_sensor_ids(learner, goal_feature_idx),
+            curriculum_label="stage0_basin",
+            pruning_profile=pruning_profile_for_cycle(
+                cycle,
+                args.stage1_cycles,
+                any(g.label == "stage0_basin" for g in learner.goal_memories),
+            ),
+            protected_sensor_ids=protected_goal_sensor_ids(
+                learner,
+                allow_prune_foundation=args.allow_prune_foundation,
+            ),
         )
 
         if args.snapshot_every and cycle % args.snapshot_every == 0:
@@ -762,6 +959,92 @@ def main() -> None:
         if cycle % args.spawn_interval == 0 and cycle > 0:
             for _ in range(args.sensors_per_spawn):
                 learner.sensors.append(learner.spawn_sensor())
+
+    landmark_specs = specs_through(args.max_curriculum_stage)
+    for spec in landmark_specs:
+        print("=" * 70)
+        print(f"Stage {spec.stage_index}: {spec.label}")
+        print("=" * 70)
+        learner.stage = spec.stage_index
+        stage_goal_sensor_ids: List[int] | None = None
+
+        for cycle in range(args.landmark_cycles):
+            transitions = []
+            stage_gen_fallbacks = 0
+            for _ in range(args.samples_per_cycle):
+                try:
+                    b0 = select_stage_position(spec.source_stage_names)
+                    if b0.turn != chess.WHITE or not b0.is_valid() or b0.is_game_over():
+                        raise ValueError("stale or unsuitable KRK curriculum position")
+                except Exception:
+                    stage_gen_fallbacks += 1
+                    b0 = generate_random_krk_position()
+                transitions.extend(
+                    label_transitions_by_landmark(
+                        teacher,
+                        b0,
+                        label=spec.label,
+                        lookahead_black=True,
+                    )
+                )
+
+            positive_count = 0
+            for t in (t for t in transitions if t.label == 1):
+                stage_goal_sensor_ids = add_goal_memory_from_vector(
+                    learner,
+                    teacher,
+                    t.v1,
+                    label=spec.label,
+                    min_mature_for_goals=args.min_mature_for_goals,
+                    current_goal_sensor_ids=stage_goal_sensor_ids,
+                )
+                positive_count += 1
+                if positive_count >= min(20, args.max_goals):
+                    break
+
+            stats = update_learner_from_transitions(
+                learner,
+                transitions,
+                max_actuators_per_stage=args.max_actuators_per_stage,
+                max_actuators_total=args.max_actuators_total,
+                delta_eps=args.delta_eps,
+                top_k=args.top_k,
+                goal_sensor_ids=None,
+                curriculum_label=spec.label,
+                pruning_profile=pruning_profile_for_cycle(
+                    cycle,
+                    args.landmark_cycles,
+                    any(g.label == spec.label for g in learner.goal_memories),
+                ),
+                protected_sensor_ids=protected_goal_sensor_ids(
+                    learner,
+                    allow_prune_foundation=args.allow_prune_foundation,
+                ),
+            )
+
+            if args.snapshot_every and cycle % args.snapshot_every == 0:
+                export_learner_cycle_snapshot(
+                    learner,
+                    args.output_dir,
+                    stage_name=f"stage{spec.stage_index}_{spec.label}",
+                    cycle=cycle,
+                    transitions=transitions,
+                    stats=stats,
+                )
+
+            if cycle % 10 == 0 or stats["newly_promoted"] or stats["newly_created_actuators"]:
+                mature = len(learner.get_mature_sensors())
+                print(
+                    f"Cycle {cycle:3d}: sensors={len(learner.sensors)} (mature={mature}) "
+                    f"actuators={len(learner.actuators)} goal_prototypes={len(learner.goal_memories)} "
+                    f"profile={stats['pruning_profile']}"
+                )
+                if stage_gen_fallbacks:
+                    print(f"  Stage generation fallbacks to random KRK: {stage_gen_fallbacks}")
+
+            if cycle % args.spawn_interval == 0 and cycle > 0:
+                for _ in range(args.sensors_per_spawn):
+                    learner.sensors.append(learner.spawn_sensor())
 
     # Save learner pickle
     args.save_learner.parent.mkdir(parents=True, exist_ok=True)

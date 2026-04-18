@@ -59,9 +59,17 @@ def build_plan(args: argparse.Namespace) -> PipelinePlan:
         str(args.snapshot_every),
         "--min-mature-for-goals",
         str(args.min_mature_for_goals),
+        "--feature-set",
+        getattr(args, "feature_set", "legacy"),
+        "--max-curriculum-stage",
+        str(getattr(args, "max_curriculum_stage", 1)),
+        "--landmark-cycles",
+        str(getattr(args, "landmark_cycles", 10)),
         "--stage1-position-mode",
         args.stage1_position_mode,
     ]
+    if getattr(args, "allow_prune_foundation", False):
+        train_cmd.append("--allow-prune-foundation")
     if args.stage1_position_mode == "hybrid":
         train_cmd.extend(["--stage1-hybrid-random-ratio", str(args.stage1_hybrid_random_ratio)])
     if args.stage0_balance_corners:
@@ -129,6 +137,10 @@ def manifest_for(args: argparse.Namespace, plan: PipelinePlan) -> Dict[str, Any]
             "stage0_balance_corners": args.stage0_balance_corners,
             "snapshot_every": args.snapshot_every,
             "min_mature_for_goals": args.min_mature_for_goals,
+            "feature_set": getattr(args, "feature_set", "legacy"),
+            "max_curriculum_stage": getattr(args, "max_curriculum_stage", 1),
+            "landmark_cycles": getattr(args, "landmark_cycles", 10),
+            "allow_prune_foundation": getattr(args, "allow_prune_foundation", False),
             "stage1_position_mode": args.stage1_position_mode,
             "stage1_hybrid_random_ratio": args.stage1_hybrid_random_ratio,
         },
@@ -194,6 +206,10 @@ def main() -> None:
     parser.add_argument("--device", type=str, default="auto")
     parser.add_argument("--snapshot-every", type=int, default=1)
     parser.add_argument("--min-mature-for-goals", type=int, default=6)
+    parser.add_argument("--feature-set", choices=["legacy", "krk_rich_v1"], default="legacy")
+    parser.add_argument("--max-curriculum-stage", type=int, default=1)
+    parser.add_argument("--landmark-cycles", type=int, default=10)
+    parser.add_argument("--allow-prune-foundation", action="store_true", default=False)
     parser.add_argument("--stage1-position-mode", choices=["mate_in_2", "random", "hybrid"], default="hybrid")
     parser.add_argument("--stage1-hybrid-random-ratio", type=float, default=0.5)
     parser.add_argument("--stage1-eval-position-mode", choices=["mate_in_2", "random", "hybrid"], default="random")

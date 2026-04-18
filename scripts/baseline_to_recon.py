@@ -52,6 +52,8 @@ def compile_baseline_to_topology(
         "edges": [],
         "meta": {
             "origin": "baseline_compilation",
+            "feature_set": getattr(learner, "feature_set", "legacy"),
+            "feature_names": list(getattr(learner, "feature_names", [])),
             "mature_sensors": len(mature_sensors),
             "total_actuators": len(learner.actuators),
             "baseline_xp_avg": float(np.mean([s.xp for s in mature_sensors])) if mature_sensors else 0.0,
@@ -102,6 +104,8 @@ def create_root_node(topology: Dict, goal_bank: Dict | None = None):
             "goal_lookahead": topology.get("meta", {}).get("goal_lookahead", "max"),
             "goal_min_overlap": topology.get("meta", {}).get("goal_min_overlap", 8),
             "goal_handoff_threshold": topology.get("meta", {}).get("goal_handoff_threshold", 0.2),
+            "feature_set": topology.get("meta", {}).get("feature_set", "legacy"),
+            "feature_names": topology.get("meta", {}).get("feature_names", []),
             "description": "KRK entry point with feature extraction"
         }
     }
@@ -172,6 +176,7 @@ def create_leg_micro_script(
         "factory": "recon_lite_chess.krk_baseline_nodes:create_leg_script",
         "meta": {
             "actuator_id": actuator.id,
+            "curriculum_label": getattr(actuator, "curriculum_label", None),
             "description": f"Leg for actuator pattern {actuator.id}"
         }
     }
@@ -251,6 +256,7 @@ def create_leg_micro_script(
         "type": "SCRIPT",
         "factory": "recon_lite_chess.krk_baseline_nodes:create_act_script",
         "meta": {
+            "curriculum_label": getattr(actuator, "curriculum_label", None),
             "description": "Actuator wrapper (SCRIPT)"
         }
     }
@@ -429,6 +435,7 @@ def create_actuator_terminal(
         "meta": {
             "origin": "baseline",
             "stage": actuator.stage,
+            "curriculum_label": getattr(actuator, "curriculum_label", None),
             "baseline_xp": float(actuator.xp),
             "targets": targets,  # Stable IDs
             "goal_delta": goal_delta,  # Keyed by stable IDs

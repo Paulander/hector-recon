@@ -15,8 +15,15 @@ from recon_lite_hector.learning.baseline import apply_sensor
 from recon_lite_chess.baseline_teacher import KRKTeacher
 
 
-# Global teacher instance for feature extraction
-_teacher = KRKTeacher()
+_teacher_cache: Dict[str, KRKTeacher] = {}
+
+
+def _teacher_for_feature_set(feature_set: str | None) -> KRKTeacher:
+    """Return a cached teacher for the topology's feature vector contract."""
+    key = feature_set or "legacy"
+    if key not in _teacher_cache:
+        _teacher_cache[key] = KRKTeacher(feature_set=key)
+    return _teacher_cache[key]
 
 
 def create_krk_entry_root(node_id=None):
@@ -33,12 +40,15 @@ def create_krk_entry_root(node_id=None):
             node.meta["blackboard"] = {}
         blackboard = env.setdefault("blackboard", node.meta["blackboard"])
         node.meta["blackboard"] = blackboard
+        feature_set = node.meta.get("feature_set", blackboard.get("feature_set", "legacy"))
+        blackboard["feature_set"] = feature_set
+        teacher = _teacher_for_feature_set(feature_set)
 
         # Extract features ONCE per tick
         if "krk_features" not in blackboard:
             board = env.get("board")
             if board:
-                features = _teacher.features(board)
+                features = teacher.features(board)
                 blackboard["krk_features"] = features
 
         # Initialize caches
@@ -322,7 +332,8 @@ def create_actuator_terminal(node_id=None):
             is_mate = board_copy.is_checkmate()
             
             # Get new features
-            features_1 = _teacher.features(board_copy)
+            teacher = _teacher_for_feature_set(blackboard.get("feature_set", "legacy"))
+            features_1 = teacher.features(board_copy)
             
             # Compute Δs for target sensors
             delta_s = []
@@ -355,7 +366,7 @@ def create_actuator_terminal(node_id=None):
             # Goal distance shaping (Stage > 0 only)
             if goal_entries:
                 def _goal_distance_for_board(b):
-                    f = _teacher.features(b)
+                    f = teacher.features(b)
                     # Build current sensor map by stable id (graph specs + goal specs)
                     s_goal: Dict[str, float] = {}
                     goal_specs = {}
@@ -522,7 +533,8 @@ def create_triplet_after_terminal(node_id=None):
 
         board_after = board.copy()
         board_after.push(move)
-        features_after = _teacher.features(board_after)
+        teacher = _teacher_for_feature_set(blackboard.get("feature_set", "legacy"))
+        features_after = teacher.features(board_after)
 
         for target_id in targets:
             if target_id not in sensor_outputs:
