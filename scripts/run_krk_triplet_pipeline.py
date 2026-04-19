@@ -63,6 +63,8 @@ def build_plan(args: argparse.Namespace) -> PipelinePlan:
         getattr(args, "feature_set", "legacy"),
         "--max-curriculum-stage",
         str(getattr(args, "max_curriculum_stage", 1)),
+        "--start-curriculum-stage",
+        str(getattr(args, "start_curriculum_stage", 2)),
         "--landmark-cycles",
         str(getattr(args, "landmark_cycles", 10)),
         "--stage1-position-mode",
@@ -83,6 +85,8 @@ def build_plan(args: argparse.Namespace) -> PipelinePlan:
             str(getattr(args, "max_cycles_per_stage", 80)),
             "--adaptive-eval-samples",
             str(getattr(args, "adaptive_eval_samples", None) or args.stage1_eval_samples),
+            "--adaptive-playout-max-plies",
+            str(getattr(args, "adaptive_playout_max_plies", 80)),
         ])
     if getattr(args, "allow_prune_foundation", False):
         train_cmd.append("--allow-prune-foundation")
@@ -155,6 +159,7 @@ def manifest_for(args: argparse.Namespace, plan: PipelinePlan) -> Dict[str, Any]
             "min_mature_for_goals": args.min_mature_for_goals,
             "feature_set": getattr(args, "feature_set", "legacy"),
             "max_curriculum_stage": getattr(args, "max_curriculum_stage", 1),
+            "start_curriculum_stage": getattr(args, "start_curriculum_stage", 2),
             "landmark_cycles": getattr(args, "landmark_cycles", 10),
             "allow_prune_foundation": getattr(args, "allow_prune_foundation", False),
             "adaptive_curriculum": getattr(args, "adaptive_curriculum", False),
@@ -163,6 +168,7 @@ def manifest_for(args: argparse.Namespace, plan: PipelinePlan) -> Dict[str, Any]
             "min_cycles_per_stage": getattr(args, "min_cycles_per_stage", 10),
             "max_cycles_per_stage": getattr(args, "max_cycles_per_stage", 80),
             "adaptive_eval_samples": getattr(args, "adaptive_eval_samples", None) or args.stage1_eval_samples,
+            "adaptive_playout_max_plies": getattr(args, "adaptive_playout_max_plies", 80),
             "load_learner": str(args.load_learner) if getattr(args, "load_learner", None) else None,
             "stage1_position_mode": args.stage1_position_mode,
             "stage1_hybrid_random_ratio": args.stage1_hybrid_random_ratio,
@@ -233,6 +239,7 @@ def main() -> None:
     parser.add_argument("--min-mature-for-goals", type=int, default=6)
     parser.add_argument("--feature-set", choices=["legacy", "krk_rich_v1"], default="legacy")
     parser.add_argument("--max-curriculum-stage", type=int, default=1)
+    parser.add_argument("--start-curriculum-stage", type=int, default=2)
     parser.add_argument("--landmark-cycles", type=int, default=10)
     parser.add_argument("--allow-prune-foundation", action="store_true", default=False)
     parser.add_argument("--adaptive-curriculum", action="store_true", default=False)
@@ -241,6 +248,7 @@ def main() -> None:
     parser.add_argument("--min-cycles-per-stage", type=int, default=10)
     parser.add_argument("--max-cycles-per-stage", type=int, default=80)
     parser.add_argument("--adaptive-eval-samples", type=int, default=None)
+    parser.add_argument("--adaptive-playout-max-plies", type=int, default=80)
     parser.add_argument("--stage1-position-mode", choices=["mate_in_2", "random", "hybrid"], default="hybrid")
     parser.add_argument("--stage1-hybrid-random-ratio", type=float, default=0.5)
     parser.add_argument("--stage1-eval-position-mode", choices=["mate_in_2", "random", "hybrid"], default="random")

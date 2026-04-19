@@ -42,7 +42,10 @@ class StageEvalResult:
     cycle: int
     metrics: Dict[str, Any]
     passed: bool
+    one_ply_passed: bool
+    conversion_passed: bool
     failure_reasons: List[str]
+    conversion_failure_reasons: List[str]
     score: float
 
 
@@ -76,9 +79,10 @@ def stage_score(metrics: Dict[str, Any]) -> float:
     return float(score)
 
 
-def evaluate_pass_criteria(metrics: Dict[str, Any], criteria: StagePassCriteria) -> tuple[bool, List[str]]:
-    """Evaluate metrics against criteria and return pass/failure reasons."""
-    reasons: List[str] = []
+def evaluate_pass_criteria(metrics: Dict[str, Any], criteria: StagePassCriteria) -> tuple[bool, bool, List[str], List[str]]:
+    """Evaluate local one-ply skill separately from optional conversion/playout."""
+    local_reasons: List[str] = []
+    conversion_reasons: List[str] = []
 
     checks = [
         ("mate_rate", criteria.min_mate_rate, _rate(metrics, "mate_found"), ">="),
@@ -87,32 +91,34 @@ def evaluate_pass_criteria(metrics: Dict[str, Any], criteria: StagePassCriteria)
         ("optimal_rate", criteria.min_optimal_rate, _rate(metrics, "optimal"), ">="),
         ("worsened_rate", criteria.max_worsened_rate, _rate(metrics, "worsened"), "<="),
         ("avg_reward", criteria.min_avg_reward, float(metrics.get("avg_reward", 0.0) or 0.0), ">="),
-        ("mate_playout_rate", criteria.min_mate_playout_rate, _playout_rate(metrics, "mate"), ">="),
-        ("draw_rate", criteria.max_draw_rate, _playout_rate(metrics, "draw"), "<="),
-        ("max_plies_rate", criteria.max_max_plies_rate, _playout_rate(metrics, "max_plies"), "<="),
     ]
     for name, threshold, value, op in checks:
         if threshold is None:
             continue
         if op == ">=" and value < threshold:
-            reasons.append(f"{name}={value:.3f} < {threshold:.3f}")
+            local_reasons.append(f"{name}={value:.3f} < {threshold:.3f}")
         elif op == "<=" and value > threshold:
-            reasons.append(f"{name}={value:.3f} > {threshold:.3f}")
+            local_reasons.append(f"{name}={value:.3f} > {threshold:.3f}")
 
-    one_ply_ok = (
-        criteria.min_improved_rate is not None
-        and _rate(metrics, "improved") >= criteria.min_improved_rate
-        and (criteria.max_worsened_rate is None or _rate(metrics, "worsened") <= criteria.max_worsened_rate)
-        and (criteria.min_avg_reward is None or float(metrics.get("avg_reward", 0.0) or 0.0) >= criteria.min_avg_reward)
-    )
-    playout_failed = any(
-        reason.startswith(("mate_playout_rate", "draw_rate", "max_plies_rate"))
-        for reason in reasons
-    )
-    if one_ply_ok and playout_failed:
-        reasons.append("handoff_or_conversion")
+    conversion_checks = [
+        ("mate_playout_rate", criteria.min_mate_playout_rate, _playout_rate(metrics, "mate"), ">="),
+        ("draw_rate", criteria.max_draw_rate, _playout_rate(metrics, "draw"), "<="),
+        ("max_plies_rate", criteria.max_max_plies_rate, _playout_rate(metrics, "max_plies"), "<="),
+    ]
+    for name, threshold, value, op in conversion_checks:
+        if threshold is None:
+            continue
+        if op == ">=" and value < threshold:
+            conversion_reasons.append(f"{name}={value:.3f} < {threshold:.3f}")
+        elif op == "<=" and value > threshold:
+            conversion_reasons.append(f"{name}={value:.3f} > {threshold:.3f}")
 
-    return not reasons, reasons
+    one_ply_passed = not local_reasons
+    conversion_passed = not conversion_reasons
+    if one_ply_passed and not conversion_passed:
+        conversion_reasons.append("handoff_or_conversion")
+
+    return one_ply_passed, conversion_passed, local_reasons, conversion_reasons
 
 
 def make_eval_result(
@@ -121,13 +127,16 @@ def make_eval_result(
     metrics: Dict[str, Any],
     criteria: StagePassCriteria,
 ) -> StageEvalResult:
-    passed, reasons = evaluate_pass_criteria(metrics, criteria)
+    one_ply_passed, conversion_passed, reasons, conversion_reasons = evaluate_pass_criteria(metrics, criteria)
     return StageEvalResult(
         stage_label=stage_label,
         cycle=int(cycle),
         metrics=metrics,
-        passed=passed,
+        passed=one_ply_passed,
+        one_ply_passed=one_ply_passed,
+        conversion_passed=conversion_passed,
         failure_reasons=reasons,
+        conversion_failure_reasons=conversion_reasons,
         score=stage_score(metrics),
     )
 
@@ -147,4 +156,3 @@ def record_curriculum_event(history_path: Path, event: Dict[str, Any]) -> None:
             serializable[key] = value
     payload.setdefault("events", []).append(serializable)
     history_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-

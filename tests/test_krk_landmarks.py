@@ -126,7 +126,9 @@ def test_stage_pass_criteria_reports_handoff_or_conversion():
         "playouts": {"mate": 40, "draw": 5, "max_plies": 55},
     }
 
-    passed, reasons = evaluate_pass_criteria(metrics, criteria)
+    one_ply_passed, conversion_passed, reasons, conversion_reasons = evaluate_pass_criteria(metrics, criteria)
 
-    assert passed is False
-    assert "handoff_or_conversion" in reasons
+    assert one_ply_passed is True
+    assert conversion_passed is False
+    assert reasons == []
+    assert "handoff_or_conversion" in conversion_reasons

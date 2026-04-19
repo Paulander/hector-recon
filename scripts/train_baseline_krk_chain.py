@@ -1035,6 +1035,8 @@ def main() -> None:
     parser.add_argument("--stage1-cycles", type=int, default=50)
     parser.add_argument("--max-curriculum-stage", type=int, default=1,
                         help="Run explicit KRK landmark stages after Stage 1 up to this index")
+    parser.add_argument("--start-curriculum-stage", type=int, default=2,
+                        help="First explicit KRK landmark stage to run when max-curriculum-stage > 1")
     parser.add_argument("--landmark-cycles", type=int, default=10,
                         help="Cycles per explicit KRK landmark stage when --max-curriculum-stage > 1")
     parser.add_argument("--adaptive-curriculum", action="store_true", default=False,
@@ -1399,7 +1401,10 @@ def main() -> None:
         print("Adaptive Stage 1 did not pass; stopping before landmark stages.")
         args.max_curriculum_stage = 1
 
-    landmark_specs = specs_through(args.max_curriculum_stage)
+    landmark_specs = [
+        spec for spec in specs_through(args.max_curriculum_stage)
+        if spec.stage_index >= args.start_curriculum_stage
+    ]
     for spec in landmark_specs:
         print("=" * 70)
         print(f"Stage {spec.stage_index}: {spec.label}")

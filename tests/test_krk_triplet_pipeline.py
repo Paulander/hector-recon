@@ -33,6 +33,7 @@ def test_krk_triplet_pipeline_plan_uses_fresh_paths(tmp_path):
         min_mature_for_goals=6,
         feature_set="krk_rich_v1",
         max_curriculum_stage=3,
+        start_curriculum_stage=2,
         landmark_cycles=4,
         allow_prune_foundation=False,
         adaptive_curriculum=True,
@@ -41,6 +42,7 @@ def test_krk_triplet_pipeline_plan_uses_fresh_paths(tmp_path):
         min_cycles_per_stage=10,
         max_cycles_per_stage=80,
         adaptive_eval_samples=12,
+        adaptive_playout_max_plies=40,
         stage1_position_mode="hybrid",
         stage1_hybrid_random_ratio=0.5,
         stage1_eval_position_mode="random",
@@ -62,12 +64,16 @@ def test_krk_triplet_pipeline_plan_uses_fresh_paths(tmp_path):
     assert "krk_rich_v1" in plan.commands[0]
     assert "--max-curriculum-stage" in plan.commands[0]
     assert "3" in plan.commands[0]
+    assert "--start-curriculum-stage" in plan.commands[0]
+    assert "2" in plan.commands[0]
     assert "--landmark-cycles" in plan.commands[0]
     assert "4" in plan.commands[0]
     assert "--adaptive-curriculum" in plan.commands[0]
     assert "--eval-every" in plan.commands[0]
     assert "--adaptive-eval-samples" in plan.commands[0]
     assert "12" in plan.commands[0]
+    assert "--adaptive-playout-max-plies" in plan.commands[0]
+    assert "40" in plan.commands[0]
     assert "--stage1-position-mode" in plan.commands[0]
     assert "--position-mode" in plan.commands[3]
     assert manifest["formal_validation"]["validated"] is False
@@ -75,9 +81,11 @@ def test_krk_triplet_pipeline_plan_uses_fresh_paths(tmp_path):
     assert manifest["training"]["min_mature_for_goals"] == 6
     assert manifest["training"]["feature_set"] == "krk_rich_v1"
     assert manifest["training"]["max_curriculum_stage"] == 3
+    assert manifest["training"]["start_curriculum_stage"] == 2
     assert manifest["training"]["landmark_cycles"] == 4
     assert manifest["training"]["adaptive_curriculum"] is True
     assert manifest["training"]["adaptive_eval_samples"] == 12
+    assert manifest["training"]["adaptive_playout_max_plies"] == 40
     assert manifest["training"]["stage1_position_mode"] == "hybrid"
     assert manifest["evaluation"]["stage1_eval_position_mode"] == "random"
     assert manifest["evaluation"]["stage1_stage_filter"] == 1
@@ -112,6 +120,7 @@ def test_krk_triplet_pipeline_plan_passes_hybrid_eval_ratio(tmp_path):
         min_mature_for_goals=6,
         feature_set="legacy",
         max_curriculum_stage=1,
+        start_curriculum_stage=2,
         landmark_cycles=10,
         allow_prune_foundation=False,
         adaptive_curriculum=False,
@@ -120,6 +129,7 @@ def test_krk_triplet_pipeline_plan_passes_hybrid_eval_ratio(tmp_path):
         min_cycles_per_stage=10,
         max_cycles_per_stage=80,
         adaptive_eval_samples=None,
+        adaptive_playout_max_plies=80,
         stage1_position_mode="mate_in_2",
         stage1_hybrid_random_ratio=0.5,
         stage1_eval_position_mode="hybrid",
@@ -151,6 +161,7 @@ def test_krk_triplet_pipeline_plan_passes_load_learner(tmp_path):
         min_mature_for_goals=6,
         feature_set="krk_rich_v1",
         max_curriculum_stage=2,
+        start_curriculum_stage=3,
         landmark_cycles=10,
         allow_prune_foundation=False,
         adaptive_curriculum=True,
@@ -159,6 +170,7 @@ def test_krk_triplet_pipeline_plan_passes_load_learner(tmp_path):
         min_cycles_per_stage=10,
         max_cycles_per_stage=80,
         adaptive_eval_samples=None,
+        adaptive_playout_max_plies=80,
         stage1_position_mode="mate_in_2",
         stage1_hybrid_random_ratio=0.5,
         stage1_eval_position_mode="mate_in_2",
@@ -171,4 +183,7 @@ def test_krk_triplet_pipeline_plan_passes_load_learner(tmp_path):
 
     assert "--load-learner" in plan.commands[0]
     assert str(learner_path) in plan.commands[0]
+    assert "--start-curriculum-stage" in plan.commands[0]
+    assert "3" in plan.commands[0]
     assert manifest["training"]["load_learner"] == str(learner_path)
+    assert manifest["training"]["start_curriculum_stage"] == 3
