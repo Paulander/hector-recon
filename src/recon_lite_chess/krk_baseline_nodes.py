@@ -13,6 +13,7 @@ from recon_lite.graph import Node, NodeType
 from recon_lite_chess.triplets import AfterCondition, cosine_similarity as terminal_cosine_similarity
 from recon_lite_hector.learning.baseline import apply_sensor
 from recon_lite_chess.baseline_teacher import KRKTeacher
+from recon_lite_chess.training.krk_landmarks import LANDMARK_LABELS, worst_reply_reward
 
 
 _teacher_cache: Dict[str, KRKTeacher] = {}
@@ -54,9 +55,10 @@ def create_krk_entry_root(node_id=None):
         # Initialize caches
         blackboard.setdefault("sensor_outputs", {})
         blackboard.setdefault("sensor_specs", {})
-        # Suggestions are per ReCoN tick/decision. If they persist across ticks,
-        # an early high-similarity actuator can beat a later goal-progress score.
-        env["actuator_suggestions"] = []
+        # Suggestions are per external decision, not per internal ReCoN tick.
+        # Legs can fire at different depths, so clearing this every tick makes
+        # later/deeper timing dominate selection instead of score.
+        env.setdefault("actuator_suggestions", [])
         # Goal bank: hydrate from node.meta if present, otherwise init empty (online growth)
         if "goal_bank" not in blackboard:
             if node.meta.get("goal_bank"):
@@ -69,6 +71,8 @@ def create_krk_entry_root(node_id=None):
                     "sensor_weights": {},
                     "goal_eps": float(node.meta.get("goal_eps", 0.08)),
                 }
+        if "goal_banks" not in blackboard:
+            blackboard["goal_banks"] = node.meta.get("goal_banks", {}) or {}
         blackboard["goal_label"] = node.meta.get("goal_label", "mate_in_1")
         blackboard["goal_normalize"] = node.meta.get("goal_normalize", True)
         blackboard["goal_weight"] = node.meta.get("goal_weight", 0.7)
@@ -302,13 +306,21 @@ def create_actuator_terminal(node_id=None):
             stage_weight = 0.7 if stage == 0 else 1.0
 
         # Optional goal bank for backchaining (pure terminal-space objective)
-        goal_bank = blackboard.get("goal_bank")
-        goal_label = blackboard.get("goal_label", "mate_in_1")
+        goal_banks = blackboard.get("goal_banks", {}) or {}
+        default_goal_bank = blackboard.get("goal_bank")
+        default_goal_label = blackboard.get("goal_label", "mate_in_1")
+        goal_label = node.meta.get("target_goal_label") or default_goal_label
+        goal_bank = goal_banks.get(goal_label) if isinstance(goal_banks, dict) else None
+        if goal_bank is None:
+            goal_bank = default_goal_bank
+            goal_label = default_goal_label
         goal_normalize = blackboard.get("goal_normalize", True)
         goal_weight = float(blackboard.get("goal_weight", 0.7))
         goal_progress_weight = float(blackboard.get("goal_progress_weight", 100.0))
         goal_lookahead = blackboard.get("goal_lookahead", "max")
         min_goal_overlap = float(blackboard.get("goal_min_overlap", 8))
+        curriculum_label = node.meta.get("curriculum_label")
+        use_landmark_runtime_reward = curriculum_label in LANDMARK_LABELS and stage >= 2
         goal_entries = []
         if goal_bank and stage > 0:
             if isinstance(goal_bank, dict) and goal_bank.get("label") == goal_label:
@@ -410,7 +422,7 @@ def create_actuator_terminal(node_id=None):
                             best = d
                     return best
 
-                d0 = blackboard.get("goal_distance_now")
+                d0 = blackboard.get("goal_distance_now") if goal_label == default_goal_label else None
                 if d0 is None:
                     d0 = _goal_distance_for_board(board)
 
@@ -429,15 +441,26 @@ def create_actuator_terminal(node_id=None):
                 else:
                     d1 = _goal_distance_for_board(board_copy)
 
+                move_meta[move] = {"is_mate": is_mate, "goal_dist": d1, "goal_dist_before": d0}
                 if d1 is not None:
                     if d0 is not None:
                         # Align runtime with Stage-1 training/eval: prefer moves
                         # that reduce distance to the learned mate-in-1 basin.
                         goal_progress = float(d0) - float(d1)
-                        score = (goal_progress_weight * goal_progress) + (0.001 * similarity_score)
+                        if use_landmark_runtime_reward:
+                            landmark_score = worst_reply_reward(
+                                board,
+                                move,
+                                curriculum_label,
+                                use_black_reply=bool(goal_lookahead and goal_lookahead != "none"),
+                            )
+                            score = (0.45 * landmark_score) + (0.55 * goal_progress) + (0.001 * similarity_score)
+                            move_meta[move]["landmark_reward"] = landmark_score
+                            move_meta[move]["goal_progress"] = goal_progress
+                        else:
+                            score = (goal_progress_weight * goal_progress) + (0.001 * similarity_score)
                     else:
                         score = (goal_weight * (-float(d1))) + (0.001 * similarity_score)
-                move_meta[move] = {"is_mate": is_mate, "goal_dist": d1, "goal_dist_before": d0}
             else:
                 move_meta[move] = {"is_mate": is_mate, "goal_dist": None}
 
@@ -460,6 +483,10 @@ def create_actuator_terminal(node_id=None):
             "actuator": node.nid,
             "move": best_move,
             "score": best_score,
+            "stage": stage,
+            "curriculum_label": node.meta.get("curriculum_label"),
+            "target_goal_label": goal_label,
+            "meta": best_meta,
         })
         
         best = max(suggestions, key=lambda s: s["score"])

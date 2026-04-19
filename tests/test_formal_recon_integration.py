@@ -32,6 +32,7 @@ _baseline_to_recon.__spec__.loader.exec_module(_baseline_to_recon)
 create_root_node = _baseline_to_recon.create_root_node
 create_hub_node = _baseline_to_recon.create_hub_node
 create_leg_micro_script = _baseline_to_recon.create_leg_micro_script
+target_goal_label_for_curriculum = _baseline_to_recon.target_goal_label_for_curriculum
 
 
 def test_engine_selector_preserves_pragmatic_default_and_exposes_formal():
@@ -92,6 +93,23 @@ def test_baseline_compiled_triplet_topology_passes_formal_pair_validation(tmp_pa
     assert _has_edge(graph, "act_script_7", "precond_7", LinkType.RET)
     assert _has_edge(graph, "act_script_7", "postcond_7", LinkType.POR)
     assert _has_edge(graph, "postcond_7", "act_script_7", LinkType.RET)
+
+
+def test_baseline_compiler_marks_stage_target_goal_label():
+    topology = {"nodes": {}, "edges": [], "meta": {}}
+    sensor = _dummy_sensor()
+    actuator = _dummy_actuator()
+    actuator.curriculum_label = "edge_trap_close"
+    actuator.stage = 2
+
+    create_root_node(topology)
+    create_hub_node(topology)
+    create_leg_micro_script(topology, actuator, [sensor])
+
+    assert target_goal_label_for_curriculum("stage0_basin") == "mate_in_1"
+    assert target_goal_label_for_curriculum("edge_trap_close") == "stage0_basin"
+    assert topology["nodes"]["leg_7"]["meta"]["target_goal_label"] == "stage0_basin"
+    assert topology["nodes"]["actuator_7"]["meta"]["target_goal_label"] == "stage0_basin"
 
 
 def test_spawn_point_promoted_trial_materializes_formal_triplet_pairs():

@@ -19,6 +19,19 @@ from typing import Dict, List, Any
 import numpy as np
 
 from recon_lite_hector.learning.baseline import BaselineLearner, SensorSpec, ActuatorSpec
+from recon_lite_chess.training.krk_landmarks import KRK_LANDMARK_STAGE_SPECS
+
+
+_LANDMARK_TARGETS = {spec.label: spec.target_label for spec in KRK_LANDMARK_STAGE_SPECS}
+
+
+def target_goal_label_for_curriculum(label: str | None) -> str:
+    """Return the lower-stage goal bank a learned actuator should optimize toward."""
+    if label == "stage0_basin":
+        return "mate_in_1"
+    if label in _LANDMARK_TARGETS:
+        return _LANDMARK_TARGETS[label]
+    return "mate_in_1"
 
 
 def compile_baseline_to_topology(
@@ -46,7 +59,8 @@ def compile_baseline_to_topology(
     print(f"Mature sensors: {len(mature_sensors)}")
     
     # Build topology
-    goal_bank = build_goal_bank(learner, label="mate_in_1")
+    goal_banks = build_goal_banks(learner)
+    goal_bank = goal_banks.get("mate_in_1")
     topology = {
         "nodes": {},
         "edges": [],
@@ -58,6 +72,7 @@ def compile_baseline_to_topology(
             "total_actuators": len(learner.actuators),
             "baseline_xp_avg": float(np.mean([s.xp for s in mature_sensors])) if mature_sensors else 0.0,
             "goal_bank": goal_bank,
+            "goal_banks": goal_banks,
             "goal_label": "mate_in_1",
             "goal_normalize": bool(getattr(learner, "normalize_goals", True)),
             "goal_weight": 0.7,
@@ -98,6 +113,7 @@ def create_root_node(topology: Dict, goal_bank: Dict | None = None):
         "meta": {
             "blackboard": {},  # Will cache features + sensor outputs
             "goal_bank": topology.get("meta", {}).get("goal_bank"),
+            "goal_banks": topology.get("meta", {}).get("goal_banks", {}),
             "goal_label": topology.get("meta", {}).get("goal_label", "mate_in_1"),
             "goal_normalize": topology.get("meta", {}).get("goal_normalize", True),
             "goal_weight": topology.get("meta", {}).get("goal_weight", 0.7),
@@ -177,6 +193,9 @@ def create_leg_micro_script(
         "meta": {
             "actuator_id": actuator.id,
             "curriculum_label": getattr(actuator, "curriculum_label", None),
+            "target_goal_label": target_goal_label_for_curriculum(
+                getattr(actuator, "curriculum_label", None)
+            ),
             "description": f"Leg for actuator pattern {actuator.id}"
         }
     }
@@ -257,6 +276,9 @@ def create_leg_micro_script(
         "factory": "recon_lite_chess.krk_baseline_nodes:create_act_script",
         "meta": {
             "curriculum_label": getattr(actuator, "curriculum_label", None),
+            "target_goal_label": target_goal_label_for_curriculum(
+                getattr(actuator, "curriculum_label", None)
+            ),
             "description": "Actuator wrapper (SCRIPT)"
         }
     }
@@ -436,6 +458,9 @@ def create_actuator_terminal(
             "origin": "baseline",
             "stage": actuator.stage,
             "curriculum_label": getattr(actuator, "curriculum_label", None),
+            "target_goal_label": target_goal_label_for_curriculum(
+                getattr(actuator, "curriculum_label", None)
+            ),
             "baseline_xp": float(actuator.xp),
             "targets": targets,  # Stable IDs
             "goal_delta": goal_delta,  # Keyed by stable IDs
@@ -519,6 +544,17 @@ def build_goal_bank(learner: BaselineLearner, label: str = "mate_in_1") -> Dict[
         "sensor_weights": sensor_weights,
         "goal_eps": float(getattr(learner, "goal_eps", 0.15)),
     }
+
+
+def build_goal_banks(learner: BaselineLearner) -> Dict[str, Dict[str, Any]]:
+    """Export every labelled goal bank with enough sensor alignment for runtime scoring."""
+    labels = sorted({getattr(g, "label", "") for g in learner.goal_memories if getattr(g, "label", "")})
+    banks: Dict[str, Dict[str, Any]] = {}
+    for label in labels:
+        bank = build_goal_bank(learner, label=label)
+        if bank:
+            banks[label] = bank
+    return banks
 
 
 if __name__ == "__main__":

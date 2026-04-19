@@ -60,6 +60,16 @@ def choose_move_with_engine(
     max_ticks: int = 200,
     stage_filter: Optional[int] = None,
 ) -> Optional[str]:
+    return choose_move_details(graph, engine, board, max_ticks=max_ticks, stage_filter=stage_filter).get("move")
+
+
+def choose_move_details(
+    graph: Graph,
+    engine: ReConEngine,
+    board: chess.Board,
+    max_ticks: int = 200,
+    stage_filter: Optional[int] = None,
+) -> dict:
     env = {
         "board": board,
         "chosen_move": None,
@@ -81,7 +91,29 @@ def choose_move_with_engine(
     while ticks < max_ticks and env.get("chosen_move") is None:
         ticks += 1
         engine.step(env)
-    return env.get("chosen_move") or env.get("suggested_move")
+    suggestions = list(env.get("actuator_suggestions", []))
+    suggestions.sort(key=lambda item: item.get("score", float("-inf")), reverse=True)
+    clean_suggestions = []
+    for item in suggestions[:10]:
+        move = item.get("move")
+        clean = dict(item)
+        clean["move"] = move.uci() if hasattr(move, "uci") else move
+        if "score" in clean:
+            clean["score"] = float(clean["score"])
+        meta = clean.get("meta")
+        if isinstance(meta, dict):
+            clean["meta"] = {
+                key: (float(value) if isinstance(value, (int, float)) and not isinstance(value, bool) else value)
+                for key, value in meta.items()
+            }
+        clean_suggestions.append(clean)
+    return {
+        "move": env.get("chosen_move") or env.get("suggested_move"),
+        "ticks": ticks,
+        "confidence": float(env["move_confidence"]) if env.get("move_confidence") is not None else None,
+        "suggested_actuator": env.get("suggested_actuator"),
+        "suggestions": clean_suggestions,
+    }
 
 
 def oracle_best_reward(board: chess.Board, label: str, lookahead_black: bool) -> float:
@@ -91,6 +123,15 @@ def oracle_best_reward(board: chess.Board, label: str, lookahead_black: bool) ->
         if reward > best:
             best = reward
     return best
+
+
+def oracle_move_rewards(board: chess.Board, label: str, lookahead_black: bool) -> list[tuple[chess.Move, float]]:
+    rewards = [
+        (move, worst_reply_reward(board, move, label, use_black_reply=lookahead_black))
+        for move in board.legal_moves
+    ]
+    rewards.sort(key=lambda item: item[1], reverse=True)
+    return rewards
 
 
 def choose_black_reply(
@@ -127,6 +168,7 @@ def play_to_mate(
 ) -> dict:
     """Run a simple KRK playout using the compiled topology for White moves."""
     b = board.copy()
+    white_moves = 0
     for ply in range(max_plies):
         if b.is_checkmate():
             return {"result": "mate", "plies": ply}
@@ -134,7 +176,10 @@ def play_to_mate(
             return {"result": "draw", "plies": ply}
 
         if b.turn == chess.WHITE:
-            move_uci = choose_move_with_engine(graph, engine, b, stage_filter=stage_filter)
+            # Use the stage filter for the tested handoff move, then allow the
+            # full topology to convert through lower-stage skills.
+            active_stage_filter = stage_filter if white_moves == 0 else None
+            move_uci = choose_move_with_engine(graph, engine, b, stage_filter=active_stage_filter)
             if not move_uci:
                 return {"result": "no_move", "plies": ply}
             try:
@@ -144,6 +189,7 @@ def play_to_mate(
             if move not in b.legal_moves:
                 return {"result": "illegal_move", "plies": ply}
             b.push(move)
+            white_moves += 1
         else:
             reply = choose_black_reply(rng, b, label, black_policy)
             if reply is None:
@@ -185,6 +231,7 @@ def evaluate_landmark_progress(
     lookahead_black: bool = True,
     playout_max_plies: int = 0,
     black_policy: str = "adversarial",
+    debug_failures: int = 0,
     verbose: bool = True,
 ) -> dict:
     rng = random.Random(seed)
@@ -208,12 +255,15 @@ def evaluate_landmark_progress(
         "avg_reward": 0.0,
         "avg_oracle_reward": 0.0,
         "playouts": {},
+        "debug_failures": [],
     }
 
     for i in range(samples):
         board = select_eval_position(rng, label, position_mode, source_names)
-        move_uci = choose_move_with_engine(graph, engine, board, stage_filter=stage_filter)
-        best_reward = oracle_best_reward(board, label, lookahead_black)
+        move_details = choose_move_details(graph, engine, board, stage_filter=stage_filter)
+        move_uci = move_details.get("move")
+        oracle_rewards = oracle_move_rewards(board, label, lookahead_black)
+        best_reward = oracle_rewards[0][1] if oracle_rewards else -float("inf")
 
         stats["total"] += 1
         stats["avg_oracle_reward"] += best_reward
@@ -239,6 +289,19 @@ def evaluate_landmark_progress(
             stats["flat"] += 1
         if reward >= best_reward - eps:
             stats["optimal"] += 1
+        elif len(stats["debug_failures"]) < debug_failures:
+            stats["debug_failures"].append({
+                "sample": i,
+                "fen": board.fen(),
+                "board": str(board),
+                "chosen_move": move_uci,
+                "chosen_reward": reward,
+                "oracle_moves": [
+                    {"move": move.uci(), "reward": move_reward}
+                    for move, move_reward in oracle_rewards[:5]
+                ],
+                "engine": move_details,
+            })
 
         if verbose and (i + 1) % 10 == 0:
             print(f"{i + 1:4d}/{samples}: improved={stats['improved']} optimal={stats['optimal']}")
@@ -263,6 +326,8 @@ def evaluate_landmark_progress(
 
     stats["label"] = label
     stats["source_stage_names"] = list(source_names)
+    if not stats["debug_failures"]:
+        stats.pop("debug_failures", None)
     return stats
 
 
@@ -281,6 +346,21 @@ def print_landmark_results(stats: dict, *, black_policy: str = "adversarial", pl
     print(f"Avg oracle reward: {stats['avg_oracle_reward']:.4f}")
     if playout_max_plies > 0:
         print(f"Playout results ({black_policy} Black, max {playout_max_plies} plies): {stats['playouts']}")
+    if stats.get("debug_failures"):
+        print("\nDebug failures")
+        print("-" * 60)
+        for item in stats["debug_failures"]:
+            print(f"Sample {item['sample']} FEN: {item['fen']}")
+            print(item["board"])
+            print(f"Chosen: {item['chosen_move']} reward={item['chosen_reward']:.4f}")
+            print("Oracle:", ", ".join(
+                f"{entry['move']}={entry['reward']:.4f}" for entry in item["oracle_moves"]
+            ))
+            print(
+                "Engine:",
+                f"actuator={item['engine'].get('suggested_actuator')}",
+                f"confidence={item['engine'].get('confidence')}",
+            )
     print(json.dumps(stats, indent=2))
 
 
@@ -301,6 +381,8 @@ def main() -> None:
                         help="If >0, also run full KRK playouts up to this ply limit")
     parser.add_argument("--black-policy", choices=["random", "adversarial"], default="adversarial")
     parser.add_argument("--json-output", type=Path, default=None)
+    parser.add_argument("--debug-failures", type=int, default=0,
+                        help="Include this many non-oracle selected positions with board/move diagnostics")
     args = parser.parse_args()
 
     source_names = (
@@ -320,6 +402,7 @@ def main() -> None:
         lookahead_black=args.lookahead_black,
         playout_max_plies=args.playout_max_plies,
         black_policy=args.black_policy,
+        debug_failures=args.debug_failures,
         verbose=True,
     )
     print_landmark_results(stats, black_policy=args.black_policy, playout_max_plies=args.playout_max_plies)
