@@ -45,6 +45,8 @@ def generate_random_krk_position(rng: random.Random) -> chess.Board:
 
 
 def source_stage_names_for_label(label: str) -> tuple[str, ...]:
+    if label == "edge_trap":
+        return ("Edge_Trap_Close", "Edge_Trap_Enemy_Between", "Edge_Trap_Wrong_Tempo")
     for spec in KRK_LANDMARK_STAGE_SPECS:
         if spec.label == label:
             return spec.source_stage_names
@@ -170,6 +172,118 @@ def select_eval_position(
         return generate_random_krk_position(rng)
 
 
+def evaluate_landmark_progress(
+    topology: Path,
+    *,
+    label: str = "edge_trap",
+    samples: int = 100,
+    seed: int = 7,
+    stage_filter: int | None = None,
+    eps: float = 1e-3,
+    position_mode: str = "curriculum",
+    source_stage_names: tuple[str, ...] | None = None,
+    lookahead_black: bool = True,
+    playout_max_plies: int = 0,
+    black_policy: str = "adversarial",
+    verbose: bool = True,
+) -> dict:
+    rng = random.Random(seed)
+    random.seed(seed)
+    source_names = (
+        source_stage_names
+        if source_stage_names
+        else source_stage_names_for_label(label)
+    )
+
+    graph = build_graph_from_topology(topology)
+    engine = ReConEngine(graph)
+
+    stats = {
+        "total": 0,
+        "no_move": 0,
+        "improved": 0,
+        "flat": 0,
+        "worsened": 0,
+        "optimal": 0,
+        "avg_reward": 0.0,
+        "avg_oracle_reward": 0.0,
+        "playouts": {},
+    }
+
+    for i in range(samples):
+        board = select_eval_position(rng, label, position_mode, source_names)
+        move_uci = choose_move_with_engine(graph, engine, board, stage_filter=stage_filter)
+        best_reward = oracle_best_reward(board, label, lookahead_black)
+
+        stats["total"] += 1
+        stats["avg_oracle_reward"] += best_reward
+        if not move_uci:
+            stats["no_move"] += 1
+            continue
+        try:
+            move = chess.Move.from_uci(move_uci)
+        except ValueError:
+            stats["no_move"] += 1
+            continue
+        if move not in board.legal_moves:
+            stats["no_move"] += 1
+            continue
+
+        reward = worst_reply_reward(board, move, label, use_black_reply=lookahead_black)
+        stats["avg_reward"] += reward
+        if reward > eps:
+            stats["improved"] += 1
+        elif reward < -eps:
+            stats["worsened"] += 1
+        else:
+            stats["flat"] += 1
+        if reward >= best_reward - eps:
+            stats["optimal"] += 1
+
+        if verbose and (i + 1) % 10 == 0:
+            print(f"{i + 1:4d}/{samples}: improved={stats['improved']} optimal={stats['optimal']}")
+
+        if playout_max_plies > 0:
+            result = play_to_mate(
+                graph,
+                engine,
+                board,
+                rng,
+                label,
+                stage_filter,
+                playout_max_plies,
+                black_policy,
+            )
+            key = result["result"]
+            stats["playouts"][key] = stats["playouts"].get(key, 0) + 1
+
+    if stats["total"]:
+        stats["avg_reward"] /= stats["total"]
+        stats["avg_oracle_reward"] /= stats["total"]
+
+    stats["label"] = label
+    stats["source_stage_names"] = list(source_names)
+    return stats
+
+
+def print_landmark_results(stats: dict, *, black_policy: str = "adversarial", playout_max_plies: int = 0) -> None:
+    print("\nKRK Landmark Progress Evaluation")
+    print("-" * 60)
+    print(f"Label: {stats.get('label', '')}")
+    print(f"Source stages: {', '.join(stats.get('source_stage_names', []))}")
+    print(f"Total evaluated: {stats['total']}")
+    print(f"No move: {stats['no_move']}")
+    print(f"Improved: {stats['improved']} ({stats['improved']/stats['total']*100:.1f}%)")
+    print(f"Flat:     {stats['flat']} ({stats['flat']/stats['total']*100:.1f}%)")
+    print(f"Worsened: {stats['worsened']} ({stats['worsened']/stats['total']*100:.1f}%)")
+    print(f"Optimal:  {stats['optimal']} ({stats['optimal']/stats['total']*100:.1f}%)")
+    print(f"Avg chosen reward: {stats['avg_reward']:.4f}")
+    print(f"Avg oracle reward: {stats['avg_oracle_reward']:.4f}")
+    if playout_max_plies > 0:
+        print(f"Playout results ({black_policy} Black, max {playout_max_plies} plies): {stats['playouts']}")
+    print(json.dumps(stats, indent=2))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Evaluate KRK landmark reward progress")
     parser.add_argument("--topology", type=Path, required=True)
@@ -186,97 +300,32 @@ def main() -> None:
     parser.add_argument("--playout-max-plies", type=int, default=0,
                         help="If >0, also run full KRK playouts up to this ply limit")
     parser.add_argument("--black-policy", choices=["random", "adversarial"], default="adversarial")
+    parser.add_argument("--json-output", type=Path, default=None)
     args = parser.parse_args()
 
-    rng = random.Random(args.seed)
-    random.seed(args.seed)
     source_names = (
         tuple(name.strip() for name in args.source_stage_names.split(",") if name.strip())
         if args.source_stage_names
-        else source_stage_names_for_label(args.label)
+        else None
     )
-
-    graph = build_graph_from_topology(args.topology)
-    engine = ReConEngine(graph)
-
-    stats = {
-        "total": 0,
-        "no_move": 0,
-        "improved": 0,
-        "flat": 0,
-        "worsened": 0,
-        "optimal": 0,
-        "avg_reward": 0.0,
-        "avg_oracle_reward": 0.0,
-        "playouts": {},
-    }
-
-    for i in range(args.samples):
-        board = select_eval_position(rng, args.label, args.position_mode, source_names)
-        move_uci = choose_move_with_engine(graph, engine, board, stage_filter=args.stage_filter)
-        best_reward = oracle_best_reward(board, args.label, args.lookahead_black)
-
-        stats["total"] += 1
-        stats["avg_oracle_reward"] += best_reward
-        if not move_uci:
-            stats["no_move"] += 1
-            continue
-        try:
-            move = chess.Move.from_uci(move_uci)
-        except ValueError:
-            stats["no_move"] += 1
-            continue
-        if move not in board.legal_moves:
-            stats["no_move"] += 1
-            continue
-
-        reward = worst_reply_reward(board, move, args.label, use_black_reply=args.lookahead_black)
-        stats["avg_reward"] += reward
-        if reward > args.eps:
-            stats["improved"] += 1
-        elif reward < -args.eps:
-            stats["worsened"] += 1
-        else:
-            stats["flat"] += 1
-        if reward >= best_reward - args.eps:
-            stats["optimal"] += 1
-
-        if (i + 1) % 10 == 0:
-            print(f"{i + 1:4d}/{args.samples}: improved={stats['improved']} optimal={stats['optimal']}")
-
-        if args.playout_max_plies > 0:
-            result = play_to_mate(
-                graph,
-                engine,
-                board,
-                rng,
-                args.label,
-                args.stage_filter,
-                args.playout_max_plies,
-                args.black_policy,
-            )
-            key = result["result"]
-            stats["playouts"][key] = stats["playouts"].get(key, 0) + 1
-
-    if stats["total"]:
-        stats["avg_reward"] /= stats["total"]
-        stats["avg_oracle_reward"] /= stats["total"]
-
-    print("\nKRK Landmark Progress Evaluation")
-    print("-" * 60)
-    print(f"Label: {args.label}")
-    print(f"Source stages: {', '.join(source_names)}")
-    print(f"Total evaluated: {stats['total']}")
-    print(f"No move: {stats['no_move']}")
-    print(f"Improved: {stats['improved']} ({stats['improved']/stats['total']*100:.1f}%)")
-    print(f"Flat:     {stats['flat']} ({stats['flat']/stats['total']*100:.1f}%)")
-    print(f"Worsened: {stats['worsened']} ({stats['worsened']/stats['total']*100:.1f}%)")
-    print(f"Optimal:  {stats['optimal']} ({stats['optimal']/stats['total']*100:.1f}%)")
-    print(f"Avg chosen reward: {stats['avg_reward']:.4f}")
-    print(f"Avg oracle reward: {stats['avg_oracle_reward']:.4f}")
-    if args.playout_max_plies > 0:
-        print(f"Playout results ({args.black_policy} Black, max {args.playout_max_plies} plies): {stats['playouts']}")
-    print(json.dumps(stats, indent=2))
+    stats = evaluate_landmark_progress(
+        args.topology,
+        label=args.label,
+        samples=args.samples,
+        seed=args.seed,
+        stage_filter=args.stage_filter,
+        eps=args.eps,
+        position_mode=args.position_mode,
+        source_stage_names=source_names,
+        lookahead_black=args.lookahead_black,
+        playout_max_plies=args.playout_max_plies,
+        black_policy=args.black_policy,
+        verbose=True,
+    )
+    print_landmark_results(stats, black_policy=args.black_policy, playout_max_plies=args.playout_max_plies)
+    if args.json_output:
+        args.json_output.parent.mkdir(parents=True, exist_ok=True)
+        args.json_output.write_text(json.dumps(stats, indent=2) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

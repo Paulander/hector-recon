@@ -23,6 +23,7 @@ def test_krk_triplet_pipeline_plan_uses_fresh_paths(tmp_path):
         output_dir=tmp_path / "run",
         stage0_cycles=1,
         stage1_cycles=2,
+        load_learner=None,
         samples_per_cycle=3,
         stage0_eval_samples=4,
         stage1_eval_samples=5,
@@ -34,6 +35,12 @@ def test_krk_triplet_pipeline_plan_uses_fresh_paths(tmp_path):
         max_curriculum_stage=3,
         landmark_cycles=4,
         allow_prune_foundation=False,
+        adaptive_curriculum=True,
+        eval_every=5,
+        patience=3,
+        min_cycles_per_stage=10,
+        max_cycles_per_stage=80,
+        adaptive_eval_samples=12,
         stage1_position_mode="hybrid",
         stage1_hybrid_random_ratio=0.5,
         stage1_eval_position_mode="random",
@@ -57,6 +64,10 @@ def test_krk_triplet_pipeline_plan_uses_fresh_paths(tmp_path):
     assert "3" in plan.commands[0]
     assert "--landmark-cycles" in plan.commands[0]
     assert "4" in plan.commands[0]
+    assert "--adaptive-curriculum" in plan.commands[0]
+    assert "--eval-every" in plan.commands[0]
+    assert "--adaptive-eval-samples" in plan.commands[0]
+    assert "12" in plan.commands[0]
     assert "--stage1-position-mode" in plan.commands[0]
     assert "--position-mode" in plan.commands[3]
     assert manifest["formal_validation"]["validated"] is False
@@ -65,6 +76,8 @@ def test_krk_triplet_pipeline_plan_uses_fresh_paths(tmp_path):
     assert manifest["training"]["feature_set"] == "krk_rich_v1"
     assert manifest["training"]["max_curriculum_stage"] == 3
     assert manifest["training"]["landmark_cycles"] == 4
+    assert manifest["training"]["adaptive_curriculum"] is True
+    assert manifest["training"]["adaptive_eval_samples"] == 12
     assert manifest["training"]["stage1_position_mode"] == "hybrid"
     assert manifest["evaluation"]["stage1_eval_position_mode"] == "random"
     assert manifest["evaluation"]["stage1_stage_filter"] == 1
@@ -89,6 +102,7 @@ def test_krk_triplet_pipeline_plan_passes_hybrid_eval_ratio(tmp_path):
         output_dir=tmp_path / "run",
         stage0_cycles=1,
         stage1_cycles=1,
+        load_learner=None,
         samples_per_cycle=5,
         stage0_eval_samples=5,
         stage1_eval_samples=5,
@@ -100,6 +114,12 @@ def test_krk_triplet_pipeline_plan_passes_hybrid_eval_ratio(tmp_path):
         max_curriculum_stage=1,
         landmark_cycles=10,
         allow_prune_foundation=False,
+        adaptive_curriculum=False,
+        eval_every=5,
+        patience=3,
+        min_cycles_per_stage=10,
+        max_cycles_per_stage=80,
+        adaptive_eval_samples=None,
         stage1_position_mode="mate_in_2",
         stage1_hybrid_random_ratio=0.5,
         stage1_eval_position_mode="hybrid",
@@ -113,3 +133,42 @@ def test_krk_triplet_pipeline_plan_passes_hybrid_eval_ratio(tmp_path):
     assert "hybrid" in plan.commands[3]
     assert "--hybrid-random-ratio" in plan.commands[3]
     assert "0.25" in plan.commands[3]
+
+
+def test_krk_triplet_pipeline_plan_passes_load_learner(tmp_path):
+    learner_path = tmp_path / "stage1.pkl"
+    args = argparse.Namespace(
+        output_dir=tmp_path / "run",
+        stage0_cycles=0,
+        stage1_cycles=0,
+        load_learner=learner_path,
+        samples_per_cycle=5,
+        stage0_eval_samples=5,
+        stage1_eval_samples=5,
+        seed=11,
+        device="cpu",
+        snapshot_every=1,
+        min_mature_for_goals=6,
+        feature_set="krk_rich_v1",
+        max_curriculum_stage=2,
+        landmark_cycles=10,
+        allow_prune_foundation=False,
+        adaptive_curriculum=True,
+        eval_every=5,
+        patience=3,
+        min_cycles_per_stage=10,
+        max_cycles_per_stage=80,
+        adaptive_eval_samples=None,
+        stage1_position_mode="mate_in_2",
+        stage1_hybrid_random_ratio=0.5,
+        stage1_eval_position_mode="mate_in_2",
+        stage1_eval_hybrid_random_ratio=0.5,
+        stage0_balance_corners=True,
+    )
+
+    plan = _pipeline.build_plan(args)
+    manifest = _pipeline.manifest_for(args, plan)
+
+    assert "--load-learner" in plan.commands[0]
+    assert str(learner_path) in plan.commands[0]
+    assert manifest["training"]["load_learner"] == str(learner_path)

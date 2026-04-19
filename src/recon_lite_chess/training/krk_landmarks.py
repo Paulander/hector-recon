@@ -15,6 +15,9 @@ import chess
 
 LANDMARK_LABELS = (
     "edge_trap",
+    "edge_trap_close",
+    "edge_trap_enemy_between",
+    "edge_trap_wrong_tempo",
     "fence_established",
     "drive_to_edge",
     "box_shrink",
@@ -37,45 +40,55 @@ class KRKLandmarkStageSpec:
 KRK_LANDMARK_STAGE_SPECS: List[KRKLandmarkStageSpec] = [
     KRKLandmarkStageSpec(
         stage_index=2,
-        label="edge_trap",
-        source_stage_names=(
-            "Edge_Trap_Close",
-            "Edge_Trap_Enemy_Between",
-            "Edge_Trap_Wrong_Tempo",
-        ),
+        label="edge_trap_close",
+        source_stage_names=("Edge_Trap_Close",),
         target_label="stage0_basin",
-        description="Convert edge-trapped setups toward the learned mate basin.",
+        description="Convert close edge-trap geometry toward the learned mate basin.",
     ),
     KRKLandmarkStageSpec(
         stage_index=3,
-        label="fence_established",
-        source_stage_names=("Fence_Established", "Anchored_Cut", "Edge_Cut_Hold"),
-        target_label="edge_trap",
-        description="Gain or maintain a safe rook fence/cut.",
+        label="edge_trap_enemy_between",
+        source_stage_names=("Edge_Trap_Enemy_Between",),
+        target_label="stage0_basin",
+        description="Resolve edge traps where the enemy king is between king and rook.",
     ),
     KRKLandmarkStageSpec(
         stage_index=4,
+        label="edge_trap_wrong_tempo",
+        source_stage_names=("Edge_Trap_Wrong_Tempo",),
+        target_label="stage0_basin",
+        description="Fix wrong-tempo edge traps without drifting into stalemate.",
+    ),
+    KRKLandmarkStageSpec(
+        stage_index=5,
+        label="fence_established",
+        source_stage_names=("Fence_Established", "Anchored_Cut", "Edge_Cut_Hold"),
+        target_label="edge_trap_wrong_tempo",
+        description="Gain or maintain a safe rook fence/cut.",
+    ),
+    KRKLandmarkStageSpec(
+        stage_index=6,
         label="drive_to_edge",
         source_stage_names=("Opposition_Approach", "Tempo_Wait", "King_Close_1"),
         target_label="fence_established",
         description="Drive the enemy king toward the rim while preserving safety.",
     ),
     KRKLandmarkStageSpec(
-        stage_index=5,
+        stage_index=7,
         label="box_shrink",
         source_stage_names=("Box_Small", "Box_Medium", "Edge_Fence_Deep"),
         target_label="drive_to_edge",
         description="Shrink the confinement box without letting it grow.",
     ),
     KRKLandmarkStageSpec(
-        stage_index=6,
+        stage_index=8,
         label="opposition_tempo",
         source_stage_names=("Opposition_Approach", "Tempo_Wait", "Edge_Fence_Approach"),
         target_label="box_shrink",
         description="Learn opposition and waiting/tempo motifs.",
     ),
     KRKLandmarkStageSpec(
-        stage_index=7,
+        stage_index=9,
         label="full_krk",
         source_stage_names=("Full_KRK",),
         target_label="opposition_tempo",
@@ -93,6 +106,13 @@ def spec_for_stage(stage_index: int) -> KRKLandmarkStageSpec | None:
 
 def specs_through(max_stage: int) -> List[KRKLandmarkStageSpec]:
     return [spec for spec in KRK_LANDMARK_STAGE_SPECS if spec.stage_index <= max_stage]
+
+
+def reward_family_for_label(label: str) -> str:
+    """Map split curriculum labels onto the shared reward family."""
+    if label in {"edge_trap_close", "edge_trap_enemy_between", "edge_trap_wrong_tempo"}:
+        return "edge_trap"
+    return label
 
 
 def _wk(board: chess.Board) -> int | None:
@@ -270,6 +290,7 @@ def _bool_gain(before: bool, after: bool, maintain_bonus: float = 0.03) -> float
 
 def landmark_reward(board_before: chess.Board, board_after: chess.Board, label: str) -> float:
     """Compute a dense KRK landmark reward for one white move outcome."""
+    label = reward_family_for_label(label)
     if board_after.is_checkmate():
         return 2.0
     if board_after.is_stalemate() or _rook(board_after) is None:

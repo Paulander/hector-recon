@@ -11,6 +11,10 @@ from recon_lite_chess.training.krk_landmarks import (
     rich_feature_dict,
     specs_through,
 )
+from recon_lite_chess.training.adaptive_curriculum import (
+    StagePassCriteria,
+    evaluate_pass_criteria,
+)
 
 _landmark_eval = importlib.util.module_from_spec(
     importlib.util.spec_from_file_location(
@@ -72,9 +76,9 @@ def test_landmark_stage_specs_are_ordered_after_stage_one():
 
     assert [spec.stage_index for spec in specs] == [2, 3, 4]
     assert [spec.label for spec in specs] == [
-        "edge_trap",
-        "fence_established",
-        "drive_to_edge",
+        "edge_trap_close",
+        "edge_trap_enemy_between",
+        "edge_trap_wrong_tempo",
     ]
 
 
@@ -94,3 +98,35 @@ def test_landmark_eval_black_reply_policy_returns_legal_move():
     reply = _landmark_eval.choose_black_reply(rng, board, "drive_to_edge", "adversarial")
 
     assert reply in board.legal_moves
+
+
+def test_split_edge_trap_labels_share_edge_trap_reward_family():
+    before = chess.Board("8/8/8/8/3k4/8/8/R3K3 w - - 0 1")
+    after = chess.Board("8/8/8/8/k7/8/8/R3K3 b - - 0 1")
+
+    assert landmark_reward(before, after, "edge_trap_close") == landmark_reward(before, after, "edge_trap")
+    assert landmark_reward(before, after, "edge_trap_enemy_between") == landmark_reward(before, after, "edge_trap")
+    assert landmark_reward(before, after, "edge_trap_wrong_tempo") == landmark_reward(before, after, "edge_trap")
+
+
+def test_stage_pass_criteria_reports_handoff_or_conversion():
+    criteria = StagePassCriteria(
+        min_improved_rate=0.70,
+        max_worsened_rate=0.20,
+        min_avg_reward=0.0,
+        min_mate_playout_rate=0.65,
+        max_draw_rate=0.10,
+        max_max_plies_rate=0.25,
+    )
+    metrics = {
+        "total": 100,
+        "improved": 80,
+        "worsened": 10,
+        "avg_reward": 0.1,
+        "playouts": {"mate": 40, "draw": 5, "max_plies": 55},
+    }
+
+    passed, reasons = evaluate_pass_criteria(metrics, criteria)
+
+    assert passed is False
+    assert "handoff_or_conversion" in reasons
