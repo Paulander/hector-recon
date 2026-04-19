@@ -168,7 +168,8 @@ def main():
     if not goal_bank:
         raise SystemExit("Goal bank missing; run Stage-0 training first.")
 
-    teacher = KRKTeacher()
+    teacher = KRKTeacher(feature_set=getattr(learner, "feature_set", "legacy"))
+    print(f"Using feature_set: {teacher.feature_set}")
 
     # Load topology
     graph = build_graph_from_topology(args.topology)
