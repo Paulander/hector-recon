@@ -1,0 +1,1688 @@
+DEBUG: KRK_NODES MODULE LOADED
+  10/100: improved=7 optimal=7
+  20/100: improved=15 optimal=15
+  30/100: improved=24 optimal=24
+  40/100: improved=34 optimal=34
+  50/100: improved=42 optimal=42
+  60/100: improved=51 optimal=51
+  70/100: improved=59 optimal=59
+  80/100: improved=65 optimal=65
+  90/100: improved=73 optimal=73
+ 100/100: improved=82 optimal=82
+
+KRK Landmark Progress Evaluation
+------------------------------------------------------------
+Label: edge_trap_wrong_tempo
+Source stages: Edge_Trap_Wrong_Tempo
+Total evaluated: 100
+No move: 0
+Improved: 82 (82.0%)
+Flat:     0 (0.0%)
+Worsened: 18 (18.0%)
+Optimal:  82 (82.0%)
+Avg chosen reward: -0.1316
+Avg oracle reward: 0.0950
+
+Debug failures
+------------------------------------------------------------
+Sample 1 FEN: 7k/5KR1/8/8/8/8/8/8 w - - 0 1
+. . . . . . . k
+. . . . . K R .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+Chosen: f7f8 reward=-1.0000
+Oracle: g7g5=0.2590, g7g4=0.2590, g7g3=0.2590, g7g2=0.2590, g7g1=0.2590
+Engine: actuator=actuator_33 confidence=0.7912901001671953
+Sample 5 FEN: 7k/5KR1/8/8/8/8/8/8 w - - 0 1
+. . . . . . . k
+. . . . . K R .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+Chosen: f7f8 reward=-1.0000
+Oracle: g7g5=0.2590, g7g4=0.2590, g7g3=0.2590, g7g2=0.2590, g7g1=0.2590
+Engine: actuator=actuator_33 confidence=0.7912901001671953
+Sample 9 FEN: 7k/5KR1/8/8/8/8/8/8 w - - 0 1
+. . . . . . . k
+. . . . . K R .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+Chosen: f7f8 reward=-1.0000
+Oracle: g7g5=0.2590, g7g4=0.2590, g7g3=0.2590, g7g2=0.2590, g7g1=0.2590
+Engine: actuator=actuator_33 confidence=0.7912901001671953
+Sample 12 FEN: 7k/5KR1/8/8/8/8/8/8 w - - 0 1
+. . . . . . . k
+. . . . . K R .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+Chosen: f7f8 reward=-1.0000
+Oracle: g7g5=0.2590, g7g4=0.2590, g7g3=0.2590, g7g2=0.2590, g7g1=0.2590
+Engine: actuator=actuator_33 confidence=0.7912901001671953
+Sample 13 FEN: 7k/5KR1/8/8/8/8/8/8 w - - 0 1
+. . . . . . . k
+. . . . . K R .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+Chosen: f7f8 reward=-1.0000
+Oracle: g7g5=0.2590, g7g4=0.2590, g7g3=0.2590, g7g2=0.2590, g7g1=0.2590
+Engine: actuator=actuator_33 confidence=0.7912901001671953
+Sample 23 FEN: k7/2K1R3/8/8/8/8/8/8 w - - 0 1
+k . . . . . . .
+. . K . R . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+Chosen: c7c8 reward=-1.0000
+Oracle: e7e5=0.2590, e7e4=0.2590, e7e3=0.2590, e7e2=0.2590, e7e1=0.2590
+Engine: actuator=actuator_33 confidence=0.704617799073458
+Sample 47 FEN: k7/2K1R3/8/8/8/8/8/8 w - - 0 1
+k . . . . . . .
+. . K . R . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+Chosen: c7c8 reward=-1.0000
+Oracle: e7e5=0.2590, e7e4=0.2590, e7e3=0.2590, e7e2=0.2590, e7e1=0.2590
+Engine: actuator=actuator_33 confidence=0.704617799073458
+Sample 49 FEN: k7/2K1R3/8/8/8/8/8/8 w - - 0 1
+k . . . . . . .
+. . K . R . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+Chosen: c7c8 reward=-1.0000
+Oracle: e7e5=0.2590, e7e4=0.2590, e7e3=0.2590, e7e2=0.2590, e7e1=0.2590
+Engine: actuator=actuator_33 confidence=0.704617799073458
+Sample 53 FEN: k7/2K1R3/8/8/8/8/8/8 w - - 0 1
+k . . . . . . .
+. . K . R . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+Chosen: c7c8 reward=-1.0000
+Oracle: e7e5=0.2590, e7e4=0.2590, e7e3=0.2590, e7e2=0.2590, e7e1=0.2590
+Engine: actuator=actuator_33 confidence=0.704617799073458
+Sample 63 FEN: 7k/5KR1/8/8/8/8/8/8 w - - 0 1
+. . . . . . . k
+. . . . . K R .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+Chosen: f7f8 reward=-1.0000
+Oracle: g7g5=0.2590, g7g4=0.2590, g7g3=0.2590, g7g2=0.2590, g7g1=0.2590
+Engine: actuator=actuator_33 confidence=0.7912901001671953
+Sample 66 FEN: 7k/5KR1/8/8/8/8/8/8 w - - 0 1
+. . . . . . . k
+. . . . . K R .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+Chosen: f7f8 reward=-1.0000
+Oracle: g7g5=0.2590, g7g4=0.2590, g7g3=0.2590, g7g2=0.2590, g7g1=0.2590
+Engine: actuator=actuator_33 confidence=0.7912901001671953
+Sample 70 FEN: k7/2K1R3/8/8/8/8/8/8 w - - 0 1
+k . . . . . . .
+. . K . R . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+Chosen: c7c8 reward=-1.0000
+Oracle: e7e5=0.2590, e7e4=0.2590, e7e3=0.2590, e7e2=0.2590, e7e1=0.2590
+Engine: actuator=actuator_33 confidence=0.704617799073458
+{
+  "total": 100,
+  "no_move": 0,
+  "improved": 82,
+  "flat": 0,
+  "worsened": 18,
+  "optimal": 82,
+  "avg_reward": -0.13162000000000007,
+  "avg_oracle_reward": 0.09500000000000003,
+  "playouts": {},
+  "debug_failures": [
+    {
+      "sample": 1,
+      "fen": "7k/5KR1/8/8/8/8/8/8 w - - 0 1",
+      "board": ". . . . . . . k\n. . . . . K R .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .",
+      "chosen_move": "f7f8",
+      "chosen_reward": -1.0,
+      "oracle_moves": [
+        {
+          "move": "g7g5",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g4",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g3",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g2",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g1",
+          "reward": 0.259
+        }
+      ],
+      "engine": {
+        "move": "f7f8",
+        "ticks": 200,
+        "confidence": 0.7912901001671953,
+        "suggested_actuator": "actuator_33",
+        "suggestions": [
+          {
+            "actuator": "actuator_33",
+            "move": "f7f8",
+            "score": 0.7912901001671953,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": null,
+              "goal_dist_before": 8.069364412222058e-07
+            }
+          },
+          {
+            "actuator": "actuator_32",
+            "move": "g7g5",
+            "score": 0.05910498993328376,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_31",
+            "move": "g7g5",
+            "score": 0.05849569590573519,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_34",
+            "move": "g7g5",
+            "score": 0.05832613963966578,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_36",
+            "move": "g7g5",
+            "score": 0.05805840936188906,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_35",
+            "move": "g7g5",
+            "score": 0.057720298962642844,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          }
+        ]
+      }
+    },
+    {
+      "sample": 5,
+      "fen": "7k/5KR1/8/8/8/8/8/8 w - - 0 1",
+      "board": ". . . . . . . k\n. . . . . K R .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .",
+      "chosen_move": "f7f8",
+      "chosen_reward": -1.0,
+      "oracle_moves": [
+        {
+          "move": "g7g5",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g4",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g3",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g2",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g1",
+          "reward": 0.259
+        }
+      ],
+      "engine": {
+        "move": "f7f8",
+        "ticks": 200,
+        "confidence": 0.7912901001671953,
+        "suggested_actuator": "actuator_33",
+        "suggestions": [
+          {
+            "actuator": "actuator_33",
+            "move": "f7f8",
+            "score": 0.7912901001671953,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": null,
+              "goal_dist_before": 8.069364412222058e-07
+            }
+          },
+          {
+            "actuator": "actuator_32",
+            "move": "g7g5",
+            "score": 0.05910498993328376,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_31",
+            "move": "g7g5",
+            "score": 0.05849569590573519,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_34",
+            "move": "g7g5",
+            "score": 0.05832613963966578,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_36",
+            "move": "g7g5",
+            "score": 0.05805840936188906,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_35",
+            "move": "g7g5",
+            "score": 0.057720298962642844,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          }
+        ]
+      }
+    },
+    {
+      "sample": 9,
+      "fen": "7k/5KR1/8/8/8/8/8/8 w - - 0 1",
+      "board": ". . . . . . . k\n. . . . . K R .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .",
+      "chosen_move": "f7f8",
+      "chosen_reward": -1.0,
+      "oracle_moves": [
+        {
+          "move": "g7g5",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g4",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g3",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g2",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g1",
+          "reward": 0.259
+        }
+      ],
+      "engine": {
+        "move": "f7f8",
+        "ticks": 200,
+        "confidence": 0.7912901001671953,
+        "suggested_actuator": "actuator_33",
+        "suggestions": [
+          {
+            "actuator": "actuator_33",
+            "move": "f7f8",
+            "score": 0.7912901001671953,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": null,
+              "goal_dist_before": 8.069364412222058e-07
+            }
+          },
+          {
+            "actuator": "actuator_32",
+            "move": "g7g5",
+            "score": 0.05910498993328376,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_31",
+            "move": "g7g5",
+            "score": 0.05849569590573519,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_34",
+            "move": "g7g5",
+            "score": 0.05832613963966578,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_36",
+            "move": "g7g5",
+            "score": 0.05805840936188906,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_35",
+            "move": "g7g5",
+            "score": 0.057720298962642844,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          }
+        ]
+      }
+    },
+    {
+      "sample": 12,
+      "fen": "7k/5KR1/8/8/8/8/8/8 w - - 0 1",
+      "board": ". . . . . . . k\n. . . . . K R .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .",
+      "chosen_move": "f7f8",
+      "chosen_reward": -1.0,
+      "oracle_moves": [
+        {
+          "move": "g7g5",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g4",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g3",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g2",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g1",
+          "reward": 0.259
+        }
+      ],
+      "engine": {
+        "move": "f7f8",
+        "ticks": 200,
+        "confidence": 0.7912901001671953,
+        "suggested_actuator": "actuator_33",
+        "suggestions": [
+          {
+            "actuator": "actuator_33",
+            "move": "f7f8",
+            "score": 0.7912901001671953,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": null,
+              "goal_dist_before": 8.069364412222058e-07
+            }
+          },
+          {
+            "actuator": "actuator_32",
+            "move": "g7g5",
+            "score": 0.05910498993328376,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_31",
+            "move": "g7g5",
+            "score": 0.05849569590573519,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_34",
+            "move": "g7g5",
+            "score": 0.05832613963966578,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_36",
+            "move": "g7g5",
+            "score": 0.05805840936188906,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_35",
+            "move": "g7g5",
+            "score": 0.057720298962642844,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          }
+        ]
+      }
+    },
+    {
+      "sample": 13,
+      "fen": "7k/5KR1/8/8/8/8/8/8 w - - 0 1",
+      "board": ". . . . . . . k\n. . . . . K R .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .",
+      "chosen_move": "f7f8",
+      "chosen_reward": -1.0,
+      "oracle_moves": [
+        {
+          "move": "g7g5",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g4",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g3",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g2",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g1",
+          "reward": 0.259
+        }
+      ],
+      "engine": {
+        "move": "f7f8",
+        "ticks": 200,
+        "confidence": 0.7912901001671953,
+        "suggested_actuator": "actuator_33",
+        "suggestions": [
+          {
+            "actuator": "actuator_33",
+            "move": "f7f8",
+            "score": 0.7912901001671953,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": null,
+              "goal_dist_before": 8.069364412222058e-07
+            }
+          },
+          {
+            "actuator": "actuator_32",
+            "move": "g7g5",
+            "score": 0.05910498993328376,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_31",
+            "move": "g7g5",
+            "score": 0.05849569590573519,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_34",
+            "move": "g7g5",
+            "score": 0.05832613963966578,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_36",
+            "move": "g7g5",
+            "score": 0.05805840936188906,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_35",
+            "move": "g7g5",
+            "score": 0.057720298962642844,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          }
+        ]
+      }
+    },
+    {
+      "sample": 23,
+      "fen": "k7/2K1R3/8/8/8/8/8/8 w - - 0 1",
+      "board": "k . . . . . . .\n. . K . R . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .",
+      "chosen_move": "c7c8",
+      "chosen_reward": -1.0,
+      "oracle_moves": [
+        {
+          "move": "e7e5",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e4",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e3",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e2",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e1",
+          "reward": 0.259
+        }
+      ],
+      "engine": {
+        "move": "c7c8",
+        "ticks": 200,
+        "confidence": 0.704617799073458,
+        "suggested_actuator": "actuator_33",
+        "suggestions": [
+          {
+            "actuator": "actuator_33",
+            "move": "c7c8",
+            "score": 0.704617799073458,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": null,
+              "goal_dist_before": 0.04292919114232063
+            }
+          },
+          {
+            "actuator": "actuator_32",
+            "move": "e7e5",
+            "score": 0.08294127191385398,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_31",
+            "move": "e7e5",
+            "score": 0.08260537269264459,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_36",
+            "move": "e7e5",
+            "score": 0.08205876451283693,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_34",
+            "move": "e7e5",
+            "score": 0.08190222272723913,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_35",
+            "move": "e7e5",
+            "score": 0.08129638205021619,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          }
+        ]
+      }
+    },
+    {
+      "sample": 47,
+      "fen": "k7/2K1R3/8/8/8/8/8/8 w - - 0 1",
+      "board": "k . . . . . . .\n. . K . R . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .",
+      "chosen_move": "c7c8",
+      "chosen_reward": -1.0,
+      "oracle_moves": [
+        {
+          "move": "e7e5",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e4",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e3",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e2",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e1",
+          "reward": 0.259
+        }
+      ],
+      "engine": {
+        "move": "c7c8",
+        "ticks": 200,
+        "confidence": 0.704617799073458,
+        "suggested_actuator": "actuator_33",
+        "suggestions": [
+          {
+            "actuator": "actuator_33",
+            "move": "c7c8",
+            "score": 0.704617799073458,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": null,
+              "goal_dist_before": 0.04292919114232063
+            }
+          },
+          {
+            "actuator": "actuator_32",
+            "move": "e7e5",
+            "score": 0.08294127191385398,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_31",
+            "move": "e7e5",
+            "score": 0.08260537269264459,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_36",
+            "move": "e7e5",
+            "score": 0.08205876451283693,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_34",
+            "move": "e7e5",
+            "score": 0.08190222272723913,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_35",
+            "move": "e7e5",
+            "score": 0.08129638205021619,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          }
+        ]
+      }
+    },
+    {
+      "sample": 49,
+      "fen": "k7/2K1R3/8/8/8/8/8/8 w - - 0 1",
+      "board": "k . . . . . . .\n. . K . R . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .",
+      "chosen_move": "c7c8",
+      "chosen_reward": -1.0,
+      "oracle_moves": [
+        {
+          "move": "e7e5",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e4",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e3",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e2",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e1",
+          "reward": 0.259
+        }
+      ],
+      "engine": {
+        "move": "c7c8",
+        "ticks": 200,
+        "confidence": 0.704617799073458,
+        "suggested_actuator": "actuator_33",
+        "suggestions": [
+          {
+            "actuator": "actuator_33",
+            "move": "c7c8",
+            "score": 0.704617799073458,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": null,
+              "goal_dist_before": 0.04292919114232063
+            }
+          },
+          {
+            "actuator": "actuator_32",
+            "move": "e7e5",
+            "score": 0.08294127191385398,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_31",
+            "move": "e7e5",
+            "score": 0.08260537269264459,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_36",
+            "move": "e7e5",
+            "score": 0.08205876451283693,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_34",
+            "move": "e7e5",
+            "score": 0.08190222272723913,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_35",
+            "move": "e7e5",
+            "score": 0.08129638205021619,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          }
+        ]
+      }
+    },
+    {
+      "sample": 53,
+      "fen": "k7/2K1R3/8/8/8/8/8/8 w - - 0 1",
+      "board": "k . . . . . . .\n. . K . R . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .",
+      "chosen_move": "c7c8",
+      "chosen_reward": -1.0,
+      "oracle_moves": [
+        {
+          "move": "e7e5",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e4",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e3",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e2",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e1",
+          "reward": 0.259
+        }
+      ],
+      "engine": {
+        "move": "c7c8",
+        "ticks": 200,
+        "confidence": 0.704617799073458,
+        "suggested_actuator": "actuator_33",
+        "suggestions": [
+          {
+            "actuator": "actuator_33",
+            "move": "c7c8",
+            "score": 0.704617799073458,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": null,
+              "goal_dist_before": 0.04292919114232063
+            }
+          },
+          {
+            "actuator": "actuator_32",
+            "move": "e7e5",
+            "score": 0.08294127191385398,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_31",
+            "move": "e7e5",
+            "score": 0.08260537269264459,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_36",
+            "move": "e7e5",
+            "score": 0.08205876451283693,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_34",
+            "move": "e7e5",
+            "score": 0.08190222272723913,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_35",
+            "move": "e7e5",
+            "score": 0.08129638205021619,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          }
+        ]
+      }
+    },
+    {
+      "sample": 63,
+      "fen": "7k/5KR1/8/8/8/8/8/8 w - - 0 1",
+      "board": ". . . . . . . k\n. . . . . K R .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .",
+      "chosen_move": "f7f8",
+      "chosen_reward": -1.0,
+      "oracle_moves": [
+        {
+          "move": "g7g5",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g4",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g3",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g2",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g1",
+          "reward": 0.259
+        }
+      ],
+      "engine": {
+        "move": "f7f8",
+        "ticks": 200,
+        "confidence": 0.7912901001671953,
+        "suggested_actuator": "actuator_33",
+        "suggestions": [
+          {
+            "actuator": "actuator_33",
+            "move": "f7f8",
+            "score": 0.7912901001671953,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": null,
+              "goal_dist_before": 8.069364412222058e-07
+            }
+          },
+          {
+            "actuator": "actuator_32",
+            "move": "g7g5",
+            "score": 0.05910498993328376,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_31",
+            "move": "g7g5",
+            "score": 0.05849569590573519,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_34",
+            "move": "g7g5",
+            "score": 0.05832613963966578,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_36",
+            "move": "g7g5",
+            "score": 0.05805840936188906,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_35",
+            "move": "g7g5",
+            "score": 0.057720298962642844,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          }
+        ]
+      }
+    },
+    {
+      "sample": 66,
+      "fen": "7k/5KR1/8/8/8/8/8/8 w - - 0 1",
+      "board": ". . . . . . . k\n. . . . . K R .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .",
+      "chosen_move": "f7f8",
+      "chosen_reward": -1.0,
+      "oracle_moves": [
+        {
+          "move": "g7g5",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g4",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g3",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g2",
+          "reward": 0.259
+        },
+        {
+          "move": "g7g1",
+          "reward": 0.259
+        }
+      ],
+      "engine": {
+        "move": "f7f8",
+        "ticks": 200,
+        "confidence": 0.7912901001671953,
+        "suggested_actuator": "actuator_33",
+        "suggestions": [
+          {
+            "actuator": "actuator_33",
+            "move": "f7f8",
+            "score": 0.7912901001671953,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": null,
+              "goal_dist_before": 8.069364412222058e-07
+            }
+          },
+          {
+            "actuator": "actuator_32",
+            "move": "g7g5",
+            "score": 0.05910498993328376,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_31",
+            "move": "g7g5",
+            "score": 0.05849569590573519,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_34",
+            "move": "g7g5",
+            "score": 0.05832613963966578,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_36",
+            "move": "g7g5",
+            "score": 0.05805840936188906,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          },
+          {
+            "actuator": "actuator_35",
+            "move": "g7g5",
+            "score": 0.057720298962642844,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.10943476855754852,
+              "goal_dist_before": 8.069364412222058e-07,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.1094339616211073
+            }
+          }
+        ]
+      }
+    },
+    {
+      "sample": 70,
+      "fen": "k7/2K1R3/8/8/8/8/8/8 w - - 0 1",
+      "board": "k . . . . . . .\n. . K . R . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .",
+      "chosen_move": "c7c8",
+      "chosen_reward": -1.0,
+      "oracle_moves": [
+        {
+          "move": "e7e5",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e4",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e3",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e2",
+          "reward": 0.259
+        },
+        {
+          "move": "e7e1",
+          "reward": 0.259
+        }
+      ],
+      "engine": {
+        "move": "c7c8",
+        "ticks": 200,
+        "confidence": 0.704617799073458,
+        "suggested_actuator": "actuator_33",
+        "suggestions": [
+          {
+            "actuator": "actuator_33",
+            "move": "c7c8",
+            "score": 0.704617799073458,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": null,
+              "goal_dist_before": 0.04292919114232063
+            }
+          },
+          {
+            "actuator": "actuator_32",
+            "move": "e7e5",
+            "score": 0.08294127191385398,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_31",
+            "move": "e7e5",
+            "score": 0.08260537269264459,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_36",
+            "move": "e7e5",
+            "score": 0.08205876451283693,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_34",
+            "move": "e7e5",
+            "score": 0.08190222272723913,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          },
+          {
+            "actuator": "actuator_35",
+            "move": "e7e5",
+            "score": 0.08129638205021619,
+            "stage": 4,
+            "curriculum_label": "edge_trap_wrong_tempo",
+            "target_goal_label": "stage0_basin",
+            "meta": {
+              "is_mate": false,
+              "goal_dist": 0.1094975471496582,
+              "goal_dist_before": 0.04292919114232063,
+              "landmark_reward": 0.259,
+              "goal_progress": -0.06656835600733757
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "label": "edge_trap_wrong_tempo",
+  "source_stage_names": [
+    "Edge_Trap_Wrong_Tempo"
+  ]
+}

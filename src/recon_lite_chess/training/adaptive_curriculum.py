@@ -64,6 +64,11 @@ def _playout_rate(metrics: Dict[str, Any], key: str) -> float:
     return float(playouts.get(key, 0) or 0) / total
 
 
+def _has_playout_samples(metrics: Dict[str, Any]) -> bool:
+    playouts = metrics.get("playouts", {}) or {}
+    return sum(int(v) for v in playouts.values()) > 0
+
+
 def stage_score(metrics: Dict[str, Any]) -> float:
     """Return a monotonic scalar for checkpoint selection."""
     score = 0.0
@@ -105,6 +110,11 @@ def evaluate_pass_criteria(metrics: Dict[str, Any], criteria: StagePassCriteria)
         ("draw_rate", criteria.max_draw_rate, _playout_rate(metrics, "draw"), "<="),
         ("max_plies_rate", criteria.max_max_plies_rate, _playout_rate(metrics, "max_plies"), "<="),
     ]
+    has_conversion_thresholds = any(threshold is not None for _, threshold, _, _ in conversion_checks)
+    if has_conversion_thresholds and not _has_playout_samples(metrics):
+        one_ply_passed = not local_reasons
+        return one_ply_passed, False, local_reasons, ["conversion_not_checked"]
+
     for name, threshold, value, op in conversion_checks:
         if threshold is None:
             continue

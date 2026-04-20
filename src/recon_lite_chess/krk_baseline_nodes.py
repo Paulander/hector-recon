@@ -342,6 +342,7 @@ def create_actuator_terminal(node_id=None):
             board_copy = board.copy()
             board_copy.push(move)
             is_mate = board_copy.is_checkmate()
+            is_draw = board_copy.is_stalemate() or board_copy.is_insufficient_material()
             
             # Get new features
             teacher = _teacher_for_feature_set(blackboard.get("feature_set", "legacy"))
@@ -441,7 +442,12 @@ def create_actuator_terminal(node_id=None):
                 else:
                     d1 = _goal_distance_for_board(board_copy)
 
-                move_meta[move] = {"is_mate": is_mate, "goal_dist": d1, "goal_dist_before": d0}
+                move_meta[move] = {
+                    "is_mate": is_mate,
+                    "is_draw": is_draw,
+                    "goal_dist": d1,
+                    "goal_dist_before": d0,
+                }
                 if d1 is not None:
                     if d0 is not None:
                         # Align runtime with Stage-1 training/eval: prefer moves
@@ -462,10 +468,14 @@ def create_actuator_terminal(node_id=None):
                     else:
                         score = (goal_weight * (-float(d1))) + (0.001 * similarity_score)
             else:
-                move_meta[move] = {"is_mate": is_mate, "goal_dist": None}
+                move_meta[move] = {"is_mate": is_mate, "is_draw": is_draw, "goal_dist": None}
 
             if is_mate:
                 score += 1_000_000.0
+            elif is_draw:
+                # Do not let raw delta-s similarity select a stalemate/draw
+                # when goal-distance scoring is unavailable.
+                score -= 1_000_000.0
 
             scores[move] = score
         

@@ -132,3 +132,28 @@ def test_stage_pass_criteria_reports_handoff_or_conversion():
     assert conversion_passed is False
     assert reasons == []
     assert "handoff_or_conversion" in conversion_reasons
+
+
+def test_stage_pass_criteria_reports_conversion_not_checked_without_playouts():
+    criteria = StagePassCriteria(
+        min_improved_rate=0.70,
+        max_worsened_rate=0.20,
+        min_avg_reward=0.0,
+        min_mate_playout_rate=0.65,
+        max_draw_rate=0.10,
+        max_max_plies_rate=0.25,
+    )
+    metrics = {
+        "total": 100,
+        "improved": 100,
+        "worsened": 0,
+        "avg_reward": 0.1,
+        "playouts": {},
+    }
+
+    one_ply_passed, conversion_passed, reasons, conversion_reasons = evaluate_pass_criteria(metrics, criteria)
+
+    assert one_ply_passed is True
+    assert conversion_passed is False
+    assert reasons == []
+    assert conversion_reasons == ["conversion_not_checked"]
