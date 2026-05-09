@@ -166,3 +166,27 @@ def test_stage_pass_criteria_reports_conversion_not_checked_without_playouts():
     assert conversion_passed is False
     assert reasons == []
     assert conversion_reasons == ["conversion_not_checked"]
+
+
+def test_make_eval_result_reports_conversion_status_not_checked():
+    from recon_lite_chess.training.adaptive_curriculum import make_eval_result
+
+    criteria = StagePassCriteria(
+        min_improved_rate=0.70,
+        max_worsened_rate=0.20,
+        min_avg_reward=0.0,
+        min_mate_playout_rate=0.65,
+    )
+    metrics = {
+        "total": 100,
+        "improved": 100,
+        "worsened": 0,
+        "avg_reward": 0.1,
+        "playouts": {},
+    }
+
+    result = make_eval_result("fence_established", 9, metrics, criteria)
+
+    assert result.one_ply_status == "passed"
+    assert result.conversion_status == "not_checked"
+    assert result.conversion_passed is False

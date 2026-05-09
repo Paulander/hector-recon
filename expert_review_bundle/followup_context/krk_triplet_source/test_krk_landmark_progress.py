@@ -19,7 +19,6 @@ import chess
 from recon_lite.engine import ReConEngine
 from recon_lite.graph import Graph, NodeState
 from recon_lite_chess.graph.builder import build_graph_from_topology
-from recon_lite_chess.routing import HandoffPacket, ShadowStemCandidate, stable_record_id
 from recon_lite_chess.training.krk_landmarks import (
     LANDMARK_LABELS,
     KRK_LANDMARK_STAGE_SPECS,
@@ -52,49 +51,6 @@ def source_stage_names_for_label(label: str) -> tuple[str, ...]:
         if spec.label == label:
             return spec.source_stage_names
     return ("Full_KRK",)
-
-
-def canonical_skill_id(label: str) -> str:
-    normalized = "".join(ch if ch.isalnum() else "_" for ch in label.lower()).strip("_")
-    return f"krk.{normalized or 'unknown'}"
-
-
-def _top_route_scores(move_details: dict) -> dict:
-    scores = {}
-    for item in move_details.get("suggestions", [])[:5]:
-        actuator = item.get("actuator")
-        if actuator:
-            scores[str(actuator)] = float(item.get("score", 0.0) or 0.0)
-    return scores
-
-
-def _append_packet(stats: dict, packet: HandoffPacket) -> None:
-    stats.setdefault("handoff_packets", []).append(packet.to_dict())
-
-
-def _append_shadow_candidate(
-    stats: dict,
-    *,
-    trigger: str,
-    parent_skill: str,
-    board: chess.Board,
-    move_details: dict,
-    packet_id: str,
-    observed_outcome: str,
-    priority: int,
-) -> None:
-    candidate = ShadowStemCandidate(
-        trigger=trigger,
-        owner_router="krk.skill_hub",
-        scope="krk",
-        parent_skill=parent_skill,
-        state_signature=stable_record_id("state", board.board_fen(), board.turn),
-        route_scores=_top_route_scores(move_details),
-        packet_id=packet_id,
-        observed_outcome=observed_outcome,
-        priority=priority,
-    )
-    stats.setdefault("shadow_candidates", []).append(candidate.to_dict())
 
 
 def choose_move_with_engine(
@@ -371,8 +327,6 @@ def evaluate_landmark_progress(
         "playouts": {},
         "debug_failures": [],
         "debug_playouts": [],
-        "handoff_packets": [],
-        "shadow_candidates": [],
     }
 
     for i in range(samples):
@@ -398,29 +352,6 @@ def evaluate_landmark_progress(
 
         reward = worst_reply_reward(board, move, label, use_black_reply=lookahead_black)
         stats["avg_reward"] += reward
-        local_confirmed = reward > eps
-        parent_skill = canonical_skill_id(label)
-        post_own_move_packet = HandoffPacket.create(
-            from_skill=parent_skill,
-            phase="post_own_move",
-            status="confirmed" if local_confirmed else "failed",
-            scope="krk.landmark_eval",
-            evidence_terms={
-                "label": label,
-                "fen": board.fen(),
-                "move": move_uci,
-                "chosen_reward": float(reward),
-                "oracle_reward": float(best_reward),
-                "stage_filter": stage_filter,
-            },
-            achieved=[label] if local_confirmed else [],
-            failed=[] if local_confirmed else [label],
-            continuation_exports={
-                f"target_goal.{label}": max(0.0, float(reward)),
-            },
-            observed_outcome="local_landmark_confirmed" if local_confirmed else "local_landmark_failed",
-        )
-        _append_packet(stats, post_own_move_packet)
         if reward > eps:
             stats["improved"] += 1
         elif reward < -eps:
@@ -460,62 +391,6 @@ def evaluate_landmark_progress(
             )
             key = result["result"]
             stats["playouts"][key] = stats["playouts"].get(key, 0) + 1
-            survived = key not in {"draw", "illegal_move", "no_move", "no_black_reply"}
-            post_reply_packet = HandoffPacket.create(
-                from_skill=parent_skill,
-                phase="post_opponent_reply",
-                status="confirmed" if local_confirmed and survived else "failed",
-                scope="krk.landmark_eval",
-                evidence_terms={
-                    "label": label,
-                    "fen": board.fen(),
-                    "move": move_uci,
-                    "survived": bool(survived),
-                    "playout_result": key,
-                    "plies": int(result.get("plies", 0) or 0),
-                    "stage_filter": stage_filter,
-                },
-                achieved=["survived_opponent_reply"] if local_confirmed and survived else [],
-                failed=[] if local_confirmed and survived else ["survived_opponent_reply"],
-                continuation_exports={
-                    "krk.continue_conversion": 1.0 if survived else 0.0,
-                },
-                observed_outcome=key,
-            )
-            _append_packet(stats, post_reply_packet)
-            conversion_status = "passed" if key == "mate" else "failed"
-            playout_packet = HandoffPacket.create(
-                from_skill=parent_skill,
-                phase="playout_summary",
-                status="confirmed" if conversion_status == "passed" else "failed",
-                scope="krk.landmark_eval",
-                evidence_terms={
-                    "label": label,
-                    "fen": board.fen(),
-                    "move": move_uci,
-                    "conversion_status": conversion_status,
-                    "playout_result": key,
-                    "max_plies": playout_max_plies,
-                    "plies": int(result.get("plies", 0) or 0),
-                },
-                achieved=["conversion_to_mate"] if conversion_status == "passed" else [],
-                failed=[] if conversion_status == "passed" else ["conversion_to_mate"],
-                observed_outcome=key,
-            )
-            _append_packet(stats, playout_packet)
-            if local_confirmed and key != "mate":
-                trigger = "repeated_conversion_failure" if key in {"draw", "max_plies"} else "handoff_gap"
-                priority = 1 if trigger == "repeated_conversion_failure" else 2
-                _append_shadow_candidate(
-                    stats,
-                    trigger=trigger,
-                    parent_skill=parent_skill,
-                    board=board,
-                    move_details=move_details,
-                    packet_id=playout_packet.packet_id,
-                    observed_outcome=key,
-                    priority=priority,
-                )
             if key != "mate" and len(stats["debug_playouts"]) < debug_playouts:
                 stats["debug_playouts"].append({
                     "sample": i,
@@ -534,10 +409,6 @@ def evaluate_landmark_progress(
         stats.pop("debug_failures", None)
     if not stats["debug_playouts"]:
         stats.pop("debug_playouts", None)
-    if not stats["handoff_packets"]:
-        stats.pop("handoff_packets", None)
-    if not stats["shadow_candidates"]:
-        stats.pop("shadow_candidates", None)
     return stats
 
 

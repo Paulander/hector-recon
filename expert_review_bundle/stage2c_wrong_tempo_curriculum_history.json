@@ -1,0 +1,42 @@
+{
+  "events": [
+    {
+      "type": "stage_eval",
+      "stage_label": "edge_trap_wrong_tempo",
+      "cycle": 9,
+      "result": {
+        "stage_label": "edge_trap_wrong_tempo",
+        "cycle": 9,
+        "metrics": {
+          "total": 100,
+          "no_move": 0,
+          "improved": 100,
+          "flat": 0,
+          "worsened": 0,
+          "optimal": 100,
+          "avg_reward": 0.09500000000000003,
+          "avg_oracle_reward": 0.09500000000000003,
+          "playouts": {},
+          "label": "edge_trap_wrong_tempo",
+          "source_stage_names": [
+            "Edge_Trap_Wrong_Tempo"
+          ]
+        },
+        "passed": true,
+        "one_ply_passed": true,
+        "conversion_passed": false,
+        "failure_reasons": [],
+        "conversion_failure_reasons": [
+          "conversion_not_checked"
+        ],
+        "score": 3.595
+      },
+      "best_score": 3.595,
+      "best_cycle": 9,
+      "patience_used": 0,
+      "patience": 3,
+      "best_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2c_clean/baseline/best_learner.pkl",
+      "stage_best_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2c_clean/baseline/best_by_stage/edge_trap_wrong_tempo.pkl"
+    }
+  ]
+}

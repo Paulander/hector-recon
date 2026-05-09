@@ -19,18 +19,10 @@ from typing import Dict, List, Any
 import numpy as np
 
 from recon_lite_hector.learning.baseline import BaselineLearner, SensorSpec, ActuatorSpec
-from recon_lite_chess.routing import SkillContractSpec
 from recon_lite_chess.training.krk_landmarks import KRK_LANDMARK_STAGE_SPECS
 
 
 _LANDMARK_TARGETS = {spec.label: spec.target_label for spec in KRK_LANDMARK_STAGE_SPECS}
-
-
-def canonicalize_skill_id(curriculum_label: str | None) -> str:
-    """Map training labels to stable skill IDs without merging skills yet."""
-    raw = curriculum_label or "uncategorized"
-    normalized = "".join(ch if ch.isalnum() else "_" for ch in raw.lower()).strip("_")
-    return f"krk.{normalized or 'uncategorized'}"
 
 
 def target_goal_label_for_curriculum(label: str | None) -> str:
@@ -96,13 +88,9 @@ def compile_baseline_to_topology(
     # Create Hub
     create_hub_node(topology)
     
-    # Create Legs (one per actuator), grouped by canonical curriculum skill.
+    # Create Legs (one per actuator)
     for actuator in learner.actuators:
-        skill_node_id = ensure_skill_node(
-            topology,
-            getattr(actuator, "curriculum_label", None),
-        )
-        create_leg_micro_script(topology, actuator, mature_sensors, skill_node_id)
+        create_leg_micro_script(topology, actuator, mature_sensors)
     
     # Save
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -171,67 +159,10 @@ def create_hub_node(topology: Dict):
     print("Created hub: krk_hub")
 
 
-def ensure_skill_node(topology: Dict, curriculum_label: str | None) -> str:
-    """Create or return the ReCoN skill node for a curriculum label."""
-    skill_id = canonicalize_skill_id(curriculum_label)
-    skill_name = skill_id.split(".", 1)[1]
-    node_id = f"skill.{skill_id}"
-    if node_id in topology["nodes"]:
-        return node_id
-
-    contract = SkillContractSpec(
-        skill_id=skill_id,
-        source_node_id=node_id,
-        scope="krk",
-        affordance_terms=[
-            f"affordance.{skill_id}",
-            f"curriculum_label.{curriculum_label or 'uncategorized'}",
-        ],
-        request_terms=[f"request.{skill_id}"],
-        confirmation_terms=[f"confirm.{skill_id}"],
-        continuation_exports={
-            f"target_goal.{target_goal_label_for_curriculum(curriculum_label)}": 1.0,
-        },
-        evidence_terms={
-            "curriculum_label": curriculum_label,
-            "canonical_skill_id": skill_id,
-            "target_goal_label": target_goal_label_for_curriculum(curriculum_label),
-        },
-    )
-    topology["nodes"][node_id] = {
-        "id": node_id,
-        "type": "SCRIPT",
-        "factory": None,
-        "meta": {
-            "skill_id": skill_id,
-            "canonical_skill_id": skill_id,
-            "curriculum_label": curriculum_label,
-            "target_goal_label": target_goal_label_for_curriculum(curriculum_label),
-            "skill_contract": contract.to_dict(),
-            "description": f"KRK skill group {skill_name}",
-        },
-    }
-    topology["edges"].append({
-        "src": "krk_hub",
-        "dst": node_id,
-        "type": "SUB",
-        "weight": 1.0,
-    })
-    topology["edges"].append({
-        "src": node_id,
-        "dst": "krk_hub",
-        "type": "SUR",
-        "weight": 1.0,
-    })
-    print(f"Created skill: {node_id}")
-    return node_id
-
-
 def create_leg_micro_script(
     topology: Dict,
     actuator: Any,
-    sensors: List[Any],
-    skill_node_id: str,
+    sensors: List[Any]
 ):
     """
     Create 3-part micro-script for one actuator pattern.
@@ -261,7 +192,6 @@ def create_leg_micro_script(
         "factory": "recon_lite_chess.krk_baseline_nodes:create_leg_script",
         "meta": {
             "actuator_id": actuator.id,
-            "skill_id": topology["nodes"][skill_node_id]["meta"]["skill_id"],
             "curriculum_label": getattr(actuator, "curriculum_label", None),
             "target_goal_label": target_goal_label_for_curriculum(
                 getattr(actuator, "curriculum_label", None)
@@ -270,17 +200,17 @@ def create_leg_micro_script(
         }
     }
     
-    # Edge: Skill → Leg (parallel alternative within a skill group)
+    # Edge: Hub → Leg (parallel alternative)
     topology["edges"].append({
-        "src": skill_node_id,
+        "src": "krk_hub",
         "dst": leg_id,
         "type": "SUB",
         "weight": 1.0
     })
-    # SUR confirmation: Leg → Skill
+    # SUR confirmation: Leg → Hub
     topology["edges"].append({
         "src": leg_id,
-        "dst": skill_node_id,
+        "dst": "krk_hub",
         "type": "SUR",
         "weight": 1.0
     })

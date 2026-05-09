@@ -21,8 +21,7 @@ import chess
 
 from recon_lite.graph import NodeState
 from recon_lite.engine import ReConEngine
-from recon_lite_chess.scripts.endgame_gate import create_endgame_gate
-from recon_lite_chess.scripts.kpk import create_kpk_move_selector, create_kpk_promotion_probe
+from recon_lite_chess.scripts.kpk import create_kpk_move_selector
 from recon_lite_chess.scripts.kqk import create_kqk_move_selector, is_kqk_position
 from recon_lite_chess.graph import build_unified_graph
 
@@ -193,39 +192,10 @@ def test_kpk_to_kqk_transition():
         return False
     
     print(f"  KPK suggests: {kpk_move}")
-
-    gate_node = create_endgame_gate("endgame_gate")
-    gate_node.predicate(gate_node, env)
-    router_before = env.get("routers", {}).get("endgame_gate", {})
-    if env.get("endgame_gate", {}).get("active_endgame") != "kpk":
-        print(f"  ✗ Before promotion, gate did not select KPK: {env.get('endgame_gate')}")
-        return False
-    if router_before.get("domain_execution_eligibility", {}).get("kqk"):
-        print("  ✗ Before promotion, KQK was execution-eligible")
-        return False
-    if "activations" not in env.get("endgame_gate", {}):
-        print("  ✗ Legacy endgame_gate activations missing")
-        return False
     
     # Apply promotion
     move = chess.Move.from_uci(kpk_move)
     board.push(move)
-
-    # Promotion confirmation emits trace only; it must not route by itself.
-    trace_env = {"board": board}
-    promotion_probe = create_kpk_promotion_probe("kpk_promotion_probe")
-    promotion_probe.predicate(promotion_probe, trace_env)
-    packets = trace_env.get("handoff_packets", [])
-    if not packets:
-        print("  ✗ Promotion did not emit handoff packet")
-        return False
-    packet = packets[-1]
-    if packet.get("from_skill") != "kpk.promotion" or packet.get("status") != "confirmed":
-        print(f"  ✗ Unexpected handoff packet: {packet}")
-        return False
-    if packet.get("continuation_exports", {}).get("domain.kqk") != 1.0:
-        print(f"  ✗ Missing KQK continuation export: {packet}")
-        return False
     
     # Now should be KQK
     is_kqk, attacker = is_kqk_position(board)
@@ -234,22 +204,9 @@ def test_kpk_to_kqk_transition():
         return False
     
     print(f"  ✓ After promotion: KQK detected (attacker={attacker})")
-
-    # Simulate the next White turn for domain execution eligibility.
-    gate_board = board.copy(stack=False)
-    gate_board.turn = attacker
-    gate_env = {"board": gate_board}
-    gate_node.predicate(gate_node, gate_env)
-    router_after = gate_env.get("routers", {}).get("endgame_gate", {})
-    if gate_env.get("endgame_gate", {}).get("active_endgame") != "kqk":
-        print(f"  ✗ After promotion, gate did not select KQK: {gate_env.get('endgame_gate')}")
-        return False
-    if not router_after.get("domain_execution_eligibility", {}).get("kqk"):
-        print(f"  ✗ After promotion, KQK not execution-eligible: {router_after}")
-        return False
     
-    # KQK should suggest move on the next attacking turn - need fresh env with correct setup
-    env2 = {"board": gate_board}
+    # KQK should suggest move - need fresh env with correct setup
+    env2 = {"board": board}
     
     # First run material detector to populate env properly
     from recon_lite_chess.scripts.kqk import create_kqk_material_detector

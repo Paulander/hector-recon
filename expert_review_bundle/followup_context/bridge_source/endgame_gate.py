@@ -22,8 +22,6 @@ import chess
 
 from recon_lite import Node, NodeType
 
-from recon_lite_chess.affordance.sensors import compute_all_affordances
-from recon_lite_chess.routing import RouteDecision
 from recon_lite_chess.sensors.structure import summarize_kpk_material
 from recon_lite_chess.scripts.kqk import is_kqk_position
 
@@ -81,22 +79,11 @@ def create_endgame_gate(node_id: str = "endgame_gate") -> Node:
         if not board:
             return True, False
         
-        # Compute activations based on material detection. These are the hard
-        # execution eligibility values; soft affordance is recorded separately.
+        # Compute activations based on material detection
         activations = {
             "kpk": 0.0,
             "kqk": 0.0,
             "krk": 0.0,
-        }
-        execution_eligibility = {
-            "kpk": False,
-            "kqk": False,
-            "krk": False,
-        }
-        route_evidence: Dict[str, Dict[str, Any]] = {
-            "kpk": {},
-            "kqk": {},
-            "krk": {},
         }
         
         # Check whose turn it is - only activate gates for current player's endgames
@@ -104,42 +91,18 @@ def create_endgame_gate(node_id: str = "endgame_gate") -> Node:
         
         # KQK detection (highest priority - strongest piece)
         is_kqk, kqk_attacker = is_kqk_position(board)
-        route_evidence["kqk"] = {
-            "material_is_kqk": bool(is_kqk),
-            "attacker_to_move": bool(is_kqk and kqk_attacker == turn),
-        }
         if is_kqk and kqk_attacker == turn:
             activations["kqk"] = 1.0
-            execution_eligibility["kqk"] = True
         
         # KRK detection
         is_krk, krk_attacker = _detect_krk(board)
-        route_evidence["krk"] = {
-            "material_is_krk": bool(is_krk),
-            "attacker_to_move": bool(is_krk and krk_attacker == turn),
-        }
         if is_krk and krk_attacker == turn:
             activations["krk"] = 1.0
-            execution_eligibility["krk"] = True
         
         # KPK detection (lowest priority)
         kpk_summary = summarize_kpk_material(board)
-        route_evidence["kpk"] = {
-            "material_is_kpk": bool(kpk_summary.get("is_kpk")),
-            "attacker_to_move": bool(kpk_summary.get("attacker_color") == turn),
-        }
         if kpk_summary.get("is_kpk") and kpk_summary.get("attacker_color") == turn:
             activations["kpk"] = 1.0
-            execution_eligibility["kpk"] = True
-
-        affordances = compute_all_affordances(board)
-        approach_affordance = {
-            name: float(signal.value) for name, signal in affordances.items()
-        }
-        execution_veto_reason = {
-            name: "" if eligible else "execution_ineligible_material_or_turn"
-            for name, eligible in execution_eligibility.items()
-        }
         
         # Store gate activations in env
         env["endgame_gate"] = {
@@ -158,22 +121,6 @@ def create_endgame_gate(node_id: str = "endgame_gate") -> Node:
         
         if active_endgame:
             env["endgame_gate"]["active_endgame"] = active_endgame
-
-        route_decision = RouteDecision(
-            router_id=node.nid,
-            router_kind="domain_endgame_gate",
-            selected_route=active_endgame,
-            route_scores=dict(activations),
-            route_evidence=route_evidence,
-            domain_approach_affordance=approach_affordance,
-            domain_execution_eligibility=execution_eligibility,
-            execution_veto_reason=execution_veto_reason,
-            evidence_terms={
-                "side_to_move": "white" if turn == chess.WHITE else "black",
-                "board_fen": board.fen(),
-            },
-        )
-        env.setdefault("routers", {})["endgame_gate"] = route_decision.to_dict()
         
         return True, max_activation > 0.0
     

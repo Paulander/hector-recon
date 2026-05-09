@@ -43,8 +43,6 @@ class StageEvalResult:
     metrics: Dict[str, Any]
     passed: bool
     one_ply_passed: bool
-    one_ply_status: str
-    conversion_status: str
     conversion_passed: bool
     failure_reasons: List[str]
     conversion_failure_reasons: List[str]
@@ -133,25 +131,6 @@ def evaluate_pass_criteria(metrics: Dict[str, Any], criteria: StagePassCriteria)
     return one_ply_passed, conversion_passed, local_reasons, conversion_reasons
 
 
-def conversion_status_for_metrics(
-    metrics: Dict[str, Any],
-    criteria: StagePassCriteria,
-    conversion_reasons: List[str],
-) -> str:
-    """Return passed/failed/not_checked for conversion separately from one-ply skill."""
-    has_conversion_thresholds = any(
-        threshold is not None
-        for threshold in (
-            criteria.min_mate_playout_rate,
-            criteria.max_draw_rate,
-            criteria.max_max_plies_rate,
-        )
-    )
-    if not has_conversion_thresholds or not _has_playout_samples(metrics):
-        return "not_checked"
-    return "failed" if conversion_reasons else "passed"
-
-
 def make_eval_result(
     stage_label: str,
     cycle: int,
@@ -159,15 +138,12 @@ def make_eval_result(
     criteria: StagePassCriteria,
 ) -> StageEvalResult:
     one_ply_passed, conversion_passed, reasons, conversion_reasons = evaluate_pass_criteria(metrics, criteria)
-    conversion_status = conversion_status_for_metrics(metrics, criteria, conversion_reasons)
     return StageEvalResult(
         stage_label=stage_label,
         cycle=int(cycle),
         metrics=metrics,
         passed=one_ply_passed,
         one_ply_passed=one_ply_passed,
-        one_ply_status="passed" if one_ply_passed else "failed",
-        conversion_status=conversion_status,
         conversion_passed=conversion_passed,
         failure_reasons=reasons,
         conversion_failure_reasons=conversion_reasons,
