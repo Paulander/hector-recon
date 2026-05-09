@@ -9,6 +9,7 @@ from recon_lite_chess.training.krk_landmarks import (
     RICH_FEATURE_NAMES,
     landmark_reward,
     rich_feature_dict,
+    select_stage_position,
     specs_through,
 )
 from recon_lite_chess.training.adaptive_curriculum import (
@@ -98,6 +99,14 @@ def test_landmark_eval_black_reply_policy_returns_legal_move():
     reply = _landmark_eval.choose_black_reply(rng, board, "drive_to_edge", "adversarial")
 
     assert reply in board.legal_moves
+
+
+def test_select_stage_position_filters_invalid_stage_fens():
+    for _ in range(20):
+        board = select_stage_position(("Fence_Established", "Anchored_Cut", "Edge_Cut_Hold"))
+        assert board.turn == chess.WHITE
+        assert board.is_valid()
+        assert not board.is_game_over()
 
 
 def test_split_edge_trap_labels_share_edge_trap_reward_family():

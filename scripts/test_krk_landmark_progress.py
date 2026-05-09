@@ -165,38 +165,107 @@ def play_to_mate(
     stage_filter: Optional[int],
     max_plies: int,
     black_policy: str,
+    trace: bool = False,
 ) -> dict:
     """Run a simple KRK playout using the compiled topology for White moves."""
     b = board.copy()
     white_moves = 0
+    events = []
+
+    def finish(result: str, ply: int) -> dict:
+        payload = {"result": result, "plies": ply}
+        if trace:
+            payload["final_fen"] = b.fen()
+            payload["trace"] = events
+        return payload
+
     for ply in range(max_plies):
         if b.is_checkmate():
-            return {"result": "mate", "plies": ply}
+            return finish("mate", ply)
         if b.is_stalemate() or b.is_insufficient_material():
-            return {"result": "draw", "plies": ply}
+            return finish("draw", ply)
 
         if b.turn == chess.WHITE:
             # Use the stage filter for the tested handoff move, then allow the
             # full topology to convert through lower-stage skills.
             active_stage_filter = stage_filter if white_moves == 0 else None
-            move_uci = choose_move_with_engine(graph, engine, b, stage_filter=active_stage_filter)
+            before_fen = b.fen()
+            move_details = choose_move_details(graph, engine, b, stage_filter=active_stage_filter)
+            move_uci = move_details.get("move")
             if not move_uci:
-                return {"result": "no_move", "plies": ply}
+                if trace:
+                    events.append({
+                        "ply": ply,
+                        "turn": "white",
+                        "fen": before_fen,
+                        "stage_filter": active_stage_filter,
+                        "move": None,
+                        "engine": move_details,
+                    })
+                return finish("no_move", ply)
             try:
                 move = chess.Move.from_uci(move_uci)
             except ValueError:
-                return {"result": "illegal_move", "plies": ply}
+                if trace:
+                    events.append({
+                        "ply": ply,
+                        "turn": "white",
+                        "fen": before_fen,
+                        "stage_filter": active_stage_filter,
+                        "move": move_uci,
+                        "engine": move_details,
+                    })
+                return finish("illegal_move", ply)
             if move not in b.legal_moves:
-                return {"result": "illegal_move", "plies": ply}
+                if trace:
+                    events.append({
+                        "ply": ply,
+                        "turn": "white",
+                        "fen": before_fen,
+                        "stage_filter": active_stage_filter,
+                        "move": move_uci,
+                        "engine": move_details,
+                    })
+                return finish("illegal_move", ply)
             b.push(move)
+            if trace:
+                events.append({
+                    "ply": ply,
+                    "turn": "white",
+                    "fen": before_fen,
+                    "stage_filter": active_stage_filter,
+                    "move": move_uci,
+                    "resulting_fen": b.fen(),
+                    "is_checkmate": b.is_checkmate(),
+                    "is_stalemate": b.is_stalemate(),
+                    "engine": move_details,
+                })
             white_moves += 1
         else:
+            before_fen = b.fen()
             reply = choose_black_reply(rng, b, label, black_policy)
             if reply is None:
-                return {"result": "no_black_reply", "plies": ply}
+                if trace:
+                    events.append({
+                        "ply": ply,
+                        "turn": "black",
+                        "fen": before_fen,
+                        "move": None,
+                    })
+                return finish("no_black_reply", ply)
             b.push(reply)
+            if trace:
+                events.append({
+                    "ply": ply,
+                    "turn": "black",
+                    "fen": before_fen,
+                    "move": reply.uci(),
+                    "resulting_fen": b.fen(),
+                    "is_checkmate": b.is_checkmate(),
+                    "is_stalemate": b.is_stalemate(),
+                })
 
-    return {"result": "max_plies", "plies": max_plies}
+    return finish("max_plies", max_plies)
 
 
 def select_eval_position(
@@ -232,6 +301,7 @@ def evaluate_landmark_progress(
     playout_max_plies: int = 0,
     black_policy: str = "adversarial",
     debug_failures: int = 0,
+    debug_playouts: int = 0,
     verbose: bool = True,
 ) -> dict:
     rng = random.Random(seed)
@@ -256,6 +326,7 @@ def evaluate_landmark_progress(
         "avg_oracle_reward": 0.0,
         "playouts": {},
         "debug_failures": [],
+        "debug_playouts": [],
     }
 
     for i in range(samples):
@@ -316,9 +387,17 @@ def evaluate_landmark_progress(
                 stage_filter,
                 playout_max_plies,
                 black_policy,
+                trace=len(stats["debug_playouts"]) < debug_playouts,
             )
             key = result["result"]
             stats["playouts"][key] = stats["playouts"].get(key, 0) + 1
+            if key != "mate" and len(stats["debug_playouts"]) < debug_playouts:
+                stats["debug_playouts"].append({
+                    "sample": i,
+                    "start_fen": board.fen(),
+                    "start_board": str(board),
+                    **result,
+                })
 
     if stats["total"]:
         stats["avg_reward"] /= stats["total"]
@@ -328,6 +407,8 @@ def evaluate_landmark_progress(
     stats["source_stage_names"] = list(source_names)
     if not stats["debug_failures"]:
         stats.pop("debug_failures", None)
+    if not stats["debug_playouts"]:
+        stats.pop("debug_playouts", None)
     return stats
 
 
@@ -361,6 +442,26 @@ def print_landmark_results(stats: dict, *, black_policy: str = "adversarial", pl
                 f"actuator={item['engine'].get('suggested_actuator')}",
                 f"confidence={item['engine'].get('confidence')}",
             )
+    if stats.get("debug_playouts"):
+        print("\nDebug playouts")
+        print("-" * 60)
+        for item in stats["debug_playouts"]:
+            print(f"Sample {item['sample']} result={item['result']} plies={item['plies']}")
+            print(f"Start FEN: {item['start_fen']}")
+            print(item["start_board"])
+            trace = item.get("trace", [])
+            for event in trace[:12]:
+                print(
+                    f"  ply={event.get('ply')} {event.get('turn')} "
+                    f"move={event.get('move')} stage_filter={event.get('stage_filter')}"
+                )
+                engine = event.get("engine")
+                if isinstance(engine, dict):
+                    print(
+                        "    engine:",
+                        f"actuator={engine.get('suggested_actuator')}",
+                        f"confidence={engine.get('confidence')}",
+                    )
     print(json.dumps(stats, indent=2))
 
 
@@ -383,6 +484,8 @@ def main() -> None:
     parser.add_argument("--json-output", type=Path, default=None)
     parser.add_argument("--debug-failures", type=int, default=0,
                         help="Include this many non-oracle selected positions with board/move diagnostics")
+    parser.add_argument("--debug-playouts", type=int, default=0,
+                        help="Include this many non-mating playout traces with move-by-move diagnostics")
     args = parser.parse_args()
 
     source_names = (
@@ -403,6 +506,7 @@ def main() -> None:
         playout_max_plies=args.playout_max_plies,
         black_policy=args.black_policy,
         debug_failures=args.debug_failures,
+        debug_playouts=args.debug_playouts,
         verbose=True,
     )
     print_landmark_results(stats, black_policy=args.black_policy, playout_max_plies=args.playout_max_plies)

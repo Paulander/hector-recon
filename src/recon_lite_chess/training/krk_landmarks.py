@@ -366,4 +366,12 @@ def select_stage_position(stage_names: Iterable[str]) -> chess.Board:
         raise ValueError(f"No KRK curriculum stages found for {tuple(stage_names)}")
     import random
 
-    return random.choice(candidates).select_position()
+    positions = []
+    for stage in candidates:
+        for pos in stage.positions:
+            board = chess.Board(pos.fen)
+            if board.turn == chess.WHITE and board.is_valid() and not board.is_game_over():
+                positions.append(board)
+    if not positions:
+        raise ValueError(f"No valid KRK curriculum positions found for {tuple(stage_names)}")
+    return random.choice(positions).copy(stack=False)
