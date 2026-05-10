@@ -68,6 +68,90 @@ def _top_route_scores(move_details: dict) -> dict:
     return scores
 
 
+def _skill_id_for_suggestion(item: dict) -> str:
+    meta = item.get("meta") if isinstance(item.get("meta"), dict) else {}
+    label = meta.get("curriculum_label") or item.get("curriculum_label")
+    if label:
+        return canonical_skill_id(str(label))
+    stage = item.get("stage") or meta.get("stage")
+    return f"krk.stage_{stage}" if stage is not None else "krk.unknown"
+
+
+def _successor_skill_summary(
+    move_details: dict | None,
+    *,
+    affordance_threshold: float,
+    route_conflict_delta: float,
+) -> dict:
+    """Summarize post-reply continuation options by canonical KRK skill.
+
+    This is diagnostic only. It observes the engine suggestions that already
+    exist; it does not feed back into scoring or routing.
+    """
+    if not move_details:
+        return {
+            "selected_skill": None,
+            "best_score": None,
+            "handoff_gap": True,
+            "route_conflict": False,
+            "skills": {},
+            "exports": {},
+        }
+
+    grouped: dict[str, dict] = {}
+    for item in move_details.get("suggestions", []):
+        skill_id = _skill_id_for_suggestion(item)
+        meta = item.get("meta") if isinstance(item.get("meta"), dict) else {}
+        curriculum_label = meta.get("curriculum_label") or item.get("curriculum_label")
+        score = float(item.get("score", 0.0) or 0.0)
+        entry = grouped.setdefault(
+            skill_id,
+            {
+                "score": score,
+                "count": 0,
+                "best_move": item.get("move"),
+                "best_actuator": item.get("actuator"),
+                "stage": item.get("stage"),
+                "curriculum_label": curriculum_label,
+            },
+        )
+        entry["count"] += 1
+        if score > float(entry["score"]):
+            meta = item.get("meta") if isinstance(item.get("meta"), dict) else {}
+            curriculum_label = meta.get("curriculum_label") or item.get("curriculum_label")
+            entry.update({
+                "score": score,
+                "best_move": item.get("move"),
+                "best_actuator": item.get("actuator"),
+                "stage": item.get("stage"),
+                "curriculum_label": curriculum_label,
+            })
+
+    ranked = sorted(grouped.items(), key=lambda kv: kv[1]["score"], reverse=True)
+    selected_skill = ranked[0][0] if ranked else None
+    best_score = float(ranked[0][1]["score"]) if ranked else None
+    second_score = float(ranked[1][1]["score"]) if len(ranked) > 1 else None
+    route_conflict = (
+        best_score is not None
+        and second_score is not None
+        and abs(best_score - second_score) <= route_conflict_delta
+    )
+    handoff_gap = best_score is None or best_score <= affordance_threshold
+    exports = {
+        skill_id: max(0.0, min(1.0, float(entry["score"])))
+        for skill_id, entry in grouped.items()
+    }
+    return {
+        "selected_skill": selected_skill,
+        "best_score": best_score,
+        "second_score": second_score,
+        "handoff_gap": bool(handoff_gap),
+        "route_conflict": bool(route_conflict),
+        "skills": grouped,
+        "exports": exports,
+    }
+
+
 def _append_packet(stats: dict, packet: HandoffPacket) -> None:
     stats.setdefault("handoff_packets", []).append(packet.to_dict())
 
@@ -82,6 +166,7 @@ def _append_shadow_candidate(
     packet_id: str,
     observed_outcome: str,
     priority: int,
+    route_scores: Optional[dict] = None,
 ) -> None:
     candidate = ShadowStemCandidate(
         trigger=trigger,
@@ -89,7 +174,7 @@ def _append_shadow_candidate(
         scope="krk",
         parent_skill=parent_skill,
         state_signature=stable_record_id("state", board.board_fen(), board.turn),
-        route_scores=_top_route_scores(move_details),
+        route_scores=route_scores if route_scores is not None else _top_route_scores(move_details),
         packet_id=packet_id,
         observed_outcome=observed_outcome,
         priority=priority,
@@ -253,6 +338,8 @@ def play_to_mate(
     white_moves = 0
     events = []
     trace_truncated_events = 0
+    first_reply: dict | None = None
+    first_successor: dict | None = None
 
     def record_event(event: dict) -> None:
         nonlocal trace_truncated_events
@@ -265,6 +352,10 @@ def play_to_mate(
 
     def finish(result: str, ply: int) -> dict:
         payload = {"result": result, "plies": ply}
+        if first_reply is not None:
+            payload["first_reply"] = first_reply
+        if first_successor is not None:
+            payload["first_successor"] = first_successor
         if trace:
             payload["final_fen"] = b.fen()
             payload["trace"] = events
@@ -292,6 +383,13 @@ def play_to_mate(
                 suggestion_limit=suggestion_limit,
             )
             move_uci = move_details.get("move")
+            if white_moves == 1 and first_successor is None:
+                first_successor = {
+                    "fen": before_fen,
+                    "stage_filter": active_stage_filter,
+                    "move": move_uci,
+                    "engine": move_details,
+                }
             if not move_uci:
                 record_event({
                     "ply": ply,
@@ -325,6 +423,8 @@ def play_to_mate(
                 })
                 return finish("illegal_move", ply)
             b.push(move)
+            if first_successor is not None and first_successor.get("fen") == before_fen:
+                first_successor["resulting_fen"] = b.fen()
             record_event({
                 "ply": ply,
                 "turn": "white",
@@ -349,6 +449,13 @@ def play_to_mate(
                 })
                 return finish("no_black_reply", ply)
             b.push(reply)
+            if white_moves == 1 and first_reply is None:
+                first_reply = {
+                    "fen": before_fen,
+                    "move": reply.uci(),
+                    "resulting_fen": b.fen(),
+                    "policy": black_policy,
+                }
             record_event({
                 "ply": ply,
                 "turn": "black",
@@ -404,6 +511,8 @@ def evaluate_landmark_progress(
     max_handoff_packets: int = 0,
     max_shadow_candidates: int = 0,
     shadow_candidates_output: Optional[Path] = None,
+    successor_affordance_threshold: float = 0.0,
+    route_conflict_delta: float = 0.01,
     verbose: bool = True,
 ) -> dict:
     rng = random.Random(seed)
@@ -531,25 +640,63 @@ def evaluate_landmark_progress(
             key = result["result"]
             stats["playouts"][key] = stats["playouts"].get(key, 0) + 1
             survived = key not in {"draw", "illegal_move", "no_move", "no_black_reply"}
+            successor_summary = _successor_skill_summary(
+                (
+                    result.get("first_successor", {}).get("engine")
+                    if isinstance(result.get("first_successor"), dict)
+                    else None
+                ),
+                affordance_threshold=successor_affordance_threshold,
+                route_conflict_delta=route_conflict_delta,
+            )
+            handoff_gap = bool(local_confirmed and survived and successor_summary["handoff_gap"])
+            route_conflict = bool(local_confirmed and successor_summary["route_conflict"])
             post_reply_packet = HandoffPacket.create(
                 from_skill=parent_skill,
                 phase="post_opponent_reply",
-                status="confirmed" if local_confirmed and survived else "failed",
+                status="confirmed" if local_confirmed and survived and not handoff_gap else "failed",
                 scope="krk.landmark_eval",
                 evidence_terms={
                     "label": label,
                     "fen": board.fen(),
                     "move": move_uci,
+                    "black_reply": (
+                        result.get("first_reply", {}).get("move")
+                        if isinstance(result.get("first_reply"), dict)
+                        else None
+                    ),
+                    "post_reply_fen": (
+                        result.get("first_reply", {}).get("resulting_fen")
+                        if isinstance(result.get("first_reply"), dict)
+                        else None
+                    ),
                     "survived": bool(survived),
+                    "handoff_gap": handoff_gap,
+                    "route_conflict": route_conflict,
+                    "successor_selected_skill": successor_summary["selected_skill"],
+                    "successor_best_score": successor_summary["best_score"],
+                    "successor_second_score": successor_summary.get("second_score"),
+                    "successor_skills": successor_summary["skills"],
                     "playout_result": key,
                     "plies": int(result.get("plies", 0) or 0),
                     "stage_filter": stage_filter,
                 },
-                achieved=["survived_opponent_reply"] if local_confirmed and survived else [],
-                failed=[] if local_confirmed and survived else ["survived_opponent_reply"],
-                continuation_exports={
-                    "krk.continue_conversion": 1.0 if survived else 0.0,
-                },
+                achieved=(
+                    ["survived_opponent_reply", "successor_affordance"]
+                    if local_confirmed and survived and not handoff_gap
+                    else ["survived_opponent_reply"]
+                    if local_confirmed and survived
+                    else []
+                ),
+                failed=(
+                    ["survived_opponent_reply"]
+                    if not (local_confirmed and survived)
+                    else ["successor_affordance"]
+                    if handoff_gap
+                    else []
+                ),
+                continuation_exports=successor_summary["exports"]
+                or {"krk.continue_conversion": 1.0 if survived else 0.0},
                 observed_outcome=key,
             )
             _append_packet(stats, post_reply_packet)
@@ -585,6 +732,54 @@ def evaluate_landmark_progress(
                     packet_id=playout_packet.packet_id,
                     observed_outcome=key,
                     priority=priority,
+                    route_scores={
+                        skill_id: float(entry.get("score", 0.0) or 0.0)
+                        for skill_id, entry in successor_summary["skills"].items()
+                    },
+                )
+            if local_confirmed and handoff_gap and key != "mate":
+                _append_shadow_candidate(
+                    stats,
+                    trigger="handoff_gap",
+                    parent_skill=parent_skill,
+                    board=board,
+                    move_details=move_details,
+                    packet_id=post_reply_packet.packet_id,
+                    observed_outcome=key,
+                    priority=2,
+                    route_scores={
+                        skill_id: float(entry.get("score", 0.0) or 0.0)
+                        for skill_id, entry in successor_summary["skills"].items()
+                    },
+                )
+                _append_shadow_candidate(
+                    stats,
+                    trigger="low_affordance_state",
+                    parent_skill=parent_skill,
+                    board=board,
+                    move_details=move_details,
+                    packet_id=post_reply_packet.packet_id,
+                    observed_outcome=key,
+                    priority=4,
+                    route_scores={
+                        skill_id: float(entry.get("score", 0.0) or 0.0)
+                        for skill_id, entry in successor_summary["skills"].items()
+                    },
+                )
+            if local_confirmed and route_conflict and key != "mate":
+                _append_shadow_candidate(
+                    stats,
+                    trigger="route_conflict",
+                    parent_skill=parent_skill,
+                    board=board,
+                    move_details=move_details,
+                    packet_id=post_reply_packet.packet_id,
+                    observed_outcome=key,
+                    priority=3,
+                    route_scores={
+                        skill_id: float(entry.get("score", 0.0) or 0.0)
+                        for skill_id, entry in successor_summary["skills"].items()
+                    },
                 )
             if key != "mate" and len(stats["debug_playouts"]) < debug_playouts:
                 stats["debug_playouts"].append({
@@ -761,6 +956,10 @@ def main() -> None:
                         help="If >0, truncate saved shadow candidate records to this count")
     parser.add_argument("--shadow-candidates-output", type=Path, default=None,
                         help="Optional JSONL path for full shadow growth-candidate records")
+    parser.add_argument("--successor-affordance-threshold", type=float, default=0.0,
+                        help="Score threshold below which post-reply successor skill affordance is a handoff gap")
+    parser.add_argument("--route-conflict-delta", type=float, default=0.01,
+                        help="Top-two successor skill scores within this delta count as a route conflict")
     args = parser.parse_args()
 
     source_names = (
@@ -790,6 +989,8 @@ def main() -> None:
         max_handoff_packets=args.max_handoff_packets,
         max_shadow_candidates=args.max_shadow_candidates,
         shadow_candidates_output=args.shadow_candidates_output,
+        successor_affordance_threshold=args.successor_affordance_threshold,
+        route_conflict_delta=args.route_conflict_delta,
         verbose=True,
     )
     print_landmark_results(stats, black_policy=args.black_policy, playout_max_plies=args.playout_max_plies)
