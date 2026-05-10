@@ -86,6 +86,31 @@ TACTIC_TYPES = [
 ]
 
 
+def _domain_root_predicate(node: Node, env: Dict[str, Any]) -> Tuple[bool, bool]:
+    """Expose router execution eligibility at the domain root.
+
+    Direct subgraph tests and tools may call roots without running the router.
+    In that case, preserve legacy wait-for-children behavior. When a router
+    veto exists, the root confirms as a non-blocking inactive branch so sibling
+    domain roots can proceed under the current parallel SUB executor.
+    """
+    subgraph = node.meta.get("subgraph")
+    router = env.get("routers", {}).get("endgame_gate", {})
+    eligibility = router.get("domain_execution_eligibility")
+    if isinstance(eligibility, dict) and subgraph in eligibility:
+        allowed = bool(eligibility[subgraph])
+        node.activation.value = 1.0 if allowed else 0.0
+        node.meta["execution_eligible"] = allowed
+        node.meta["execution_vetoed"] = not allowed
+        node.meta["domain_children_allowed"] = allowed
+        if not allowed:
+            return True, True
+    node.meta["execution_eligible"] = True
+    node.meta["execution_vetoed"] = False
+    node.meta["domain_children_allowed"] = True
+    return False, True
+
+
 def build_unified_graph(
     include_endgames: bool = True,
     include_tactics: bool = True,
@@ -285,7 +310,9 @@ def _integrate_krk_subgraph(g: Graph) -> None:
         "layer": "endgame",
         "subgraph": "krk",
         "gate_source": "EndgameDetector",
+        "gate_children_with_predicate": True,
     })
+    krk_root.predicate = _domain_root_predicate
     g.add_node(krk_root)
     
     # Connect to endgame gate with trainable weighted edge
@@ -385,7 +412,9 @@ def _integrate_kpk_subgraph(g: Graph) -> None:
         "layer": "endgame",
         "subgraph": "kpk",
         "gate_source": "EndgameDetector",
+        "gate_children_with_predicate": True,
     })
+    kpk_root.predicate = _domain_root_predicate
     g.add_node(kpk_root)
     
     # Connect to endgame gate with trainable weighted edge
@@ -445,7 +474,9 @@ def _integrate_kqk_subgraph(g: Graph) -> None:
         "layer": "endgame",
         "subgraph": "kqk",
         "gate_source": "EndgameDetector",
+        "gate_children_with_predicate": True,
     })
+    kqk_root.predicate = _domain_root_predicate
     g.add_node(kqk_root)
     
     # Connect to main graph

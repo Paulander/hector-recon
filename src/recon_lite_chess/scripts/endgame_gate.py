@@ -180,6 +180,7 @@ def create_endgame_gate(node_id: str = "endgame_gate") -> Node:
     node = Node(node_id, NodeType.SCRIPT, meta={
         "layer": "gate",
         "subgraph": "main",
+        "confirm_policy": "or",
         "description": "Endgame subgraph routing gate",
     })
     node.predicate = gate_predicate

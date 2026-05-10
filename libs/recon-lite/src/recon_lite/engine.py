@@ -434,6 +434,11 @@ class ReConEngine:
                     node.tick_entered = self.tick
 
                 if node.state in (NodeState.REQUESTED, NodeState.WAITING):
+                    if (
+                        node.meta.get("gate_children_with_predicate")
+                        and not node.meta.get("domain_children_allowed", False)
+                    ):
+                        continue
                     for child_id in self.g.children(nid):
                         self._request_child_if_ready(child_id, now_requested)
 
@@ -776,6 +781,11 @@ class ReConEngine:
                     node.tick_entered = self.tick
 
                 if node.state in (NodeState.REQUESTED, NodeState.WAITING):
+                    if (
+                        node.meta.get("gate_children_with_predicate")
+                        and not node.meta.get("domain_children_allowed", False)
+                    ):
+                        continue
                     for child_id in self.g.children(nid):
                         if child_id in allowed_nodes:
                             self._request_child_if_ready(child_id, now_requested)
