@@ -97,14 +97,47 @@ def _append_shadow_candidate(
     stats.setdefault("shadow_candidates", []).append(candidate.to_dict())
 
 
+def _count_by(records: list[dict], key: str) -> dict:
+    counts: dict[str, int] = {}
+    for record in records:
+        value = str(record.get(key, "unknown"))
+        counts[value] = counts.get(value, 0) + 1
+    return counts
+
+
+def _count_handoff_packets(records: list[dict]) -> dict:
+    counts: dict[str, dict[str, int]] = {}
+    for record in records:
+        phase = str(record.get("phase", "unknown"))
+        status = str(record.get("status", "unknown"))
+        by_status = counts.setdefault(phase, {})
+        by_status[status] = by_status.get(status, 0) + 1
+    return counts
+
+
+def _write_jsonl(path: Path, records: list[dict]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as fh:
+        for record in records:
+            fh.write(json.dumps(record, sort_keys=True) + "\n")
+
+
 def choose_move_with_engine(
     graph: Graph,
     engine: ReConEngine,
     board: chess.Board,
     max_ticks: int = 200,
     stage_filter: Optional[int] = None,
+    suggestion_limit: int = 10,
 ) -> Optional[str]:
-    return choose_move_details(graph, engine, board, max_ticks=max_ticks, stage_filter=stage_filter).get("move")
+    return choose_move_details(
+        graph,
+        engine,
+        board,
+        max_ticks=max_ticks,
+        stage_filter=stage_filter,
+        suggestion_limit=suggestion_limit,
+    ).get("move")
 
 
 def choose_move_details(
@@ -113,6 +146,7 @@ def choose_move_details(
     board: chess.Board,
     max_ticks: int = 200,
     stage_filter: Optional[int] = None,
+    suggestion_limit: int = 10,
 ) -> dict:
     env = {
         "board": board,
@@ -138,7 +172,7 @@ def choose_move_details(
     suggestions = list(env.get("actuator_suggestions", []))
     suggestions.sort(key=lambda item: item.get("score", float("-inf")), reverse=True)
     clean_suggestions = []
-    for item in suggestions[:10]:
+    for item in suggestions[:max(0, suggestion_limit)]:
         move = item.get("move")
         clean = dict(item)
         clean["move"] = move.uci() if hasattr(move, "uci") else move
@@ -210,17 +244,32 @@ def play_to_mate(
     max_plies: int,
     black_policy: str,
     trace: bool = False,
+    max_ticks: int = 200,
+    suggestion_limit: int = 10,
+    trace_max_plies: Optional[int] = None,
 ) -> dict:
     """Run a simple KRK playout using the compiled topology for White moves."""
     b = board.copy()
     white_moves = 0
     events = []
+    trace_truncated_events = 0
+
+    def record_event(event: dict) -> None:
+        nonlocal trace_truncated_events
+        if not trace:
+            return
+        if trace_max_plies is None or len(events) < trace_max_plies:
+            events.append(event)
+        else:
+            trace_truncated_events += 1
 
     def finish(result: str, ply: int) -> dict:
         payload = {"result": result, "plies": ply}
         if trace:
             payload["final_fen"] = b.fen()
             payload["trace"] = events
+            if trace_truncated_events:
+                payload["trace_truncated_events"] = trace_truncated_events
         return payload
 
     for ply in range(max_plies):
@@ -234,80 +283,81 @@ def play_to_mate(
             # full topology to convert through lower-stage skills.
             active_stage_filter = stage_filter if white_moves == 0 else None
             before_fen = b.fen()
-            move_details = choose_move_details(graph, engine, b, stage_filter=active_stage_filter)
+            move_details = choose_move_details(
+                graph,
+                engine,
+                b,
+                max_ticks=max_ticks,
+                stage_filter=active_stage_filter,
+                suggestion_limit=suggestion_limit,
+            )
             move_uci = move_details.get("move")
             if not move_uci:
-                if trace:
-                    events.append({
-                        "ply": ply,
-                        "turn": "white",
-                        "fen": before_fen,
-                        "stage_filter": active_stage_filter,
-                        "move": None,
-                        "engine": move_details,
-                    })
+                record_event({
+                    "ply": ply,
+                    "turn": "white",
+                    "fen": before_fen,
+                    "stage_filter": active_stage_filter,
+                    "move": None,
+                    "engine": move_details,
+                })
                 return finish("no_move", ply)
             try:
                 move = chess.Move.from_uci(move_uci)
             except ValueError:
-                if trace:
-                    events.append({
-                        "ply": ply,
-                        "turn": "white",
-                        "fen": before_fen,
-                        "stage_filter": active_stage_filter,
-                        "move": move_uci,
-                        "engine": move_details,
-                    })
-                return finish("illegal_move", ply)
-            if move not in b.legal_moves:
-                if trace:
-                    events.append({
-                        "ply": ply,
-                        "turn": "white",
-                        "fen": before_fen,
-                        "stage_filter": active_stage_filter,
-                        "move": move_uci,
-                        "engine": move_details,
-                    })
-                return finish("illegal_move", ply)
-            b.push(move)
-            if trace:
-                events.append({
+                record_event({
                     "ply": ply,
                     "turn": "white",
                     "fen": before_fen,
                     "stage_filter": active_stage_filter,
                     "move": move_uci,
-                    "resulting_fen": b.fen(),
-                    "is_checkmate": b.is_checkmate(),
-                    "is_stalemate": b.is_stalemate(),
                     "engine": move_details,
                 })
+                return finish("illegal_move", ply)
+            if move not in b.legal_moves:
+                record_event({
+                    "ply": ply,
+                    "turn": "white",
+                    "fen": before_fen,
+                    "stage_filter": active_stage_filter,
+                    "move": move_uci,
+                    "engine": move_details,
+                })
+                return finish("illegal_move", ply)
+            b.push(move)
+            record_event({
+                "ply": ply,
+                "turn": "white",
+                "fen": before_fen,
+                "stage_filter": active_stage_filter,
+                "move": move_uci,
+                "resulting_fen": b.fen(),
+                "is_checkmate": b.is_checkmate(),
+                "is_stalemate": b.is_stalemate(),
+                "engine": move_details,
+            })
             white_moves += 1
         else:
             before_fen = b.fen()
             reply = choose_black_reply(rng, b, label, black_policy)
             if reply is None:
-                if trace:
-                    events.append({
-                        "ply": ply,
-                        "turn": "black",
-                        "fen": before_fen,
-                        "move": None,
-                    })
-                return finish("no_black_reply", ply)
-            b.push(reply)
-            if trace:
-                events.append({
+                record_event({
                     "ply": ply,
                     "turn": "black",
                     "fen": before_fen,
-                    "move": reply.uci(),
-                    "resulting_fen": b.fen(),
-                    "is_checkmate": b.is_checkmate(),
-                    "is_stalemate": b.is_stalemate(),
+                    "move": None,
                 })
+                return finish("no_black_reply", ply)
+            b.push(reply)
+            record_event({
+                "ply": ply,
+                "turn": "black",
+                "fen": before_fen,
+                "move": reply.uci(),
+                "resulting_fen": b.fen(),
+                "is_checkmate": b.is_checkmate(),
+                "is_stalemate": b.is_stalemate(),
+            })
 
     return finish("max_plies", max_plies)
 
@@ -346,6 +396,14 @@ def evaluate_landmark_progress(
     black_policy: str = "adversarial",
     debug_failures: int = 0,
     debug_playouts: int = 0,
+    max_ticks: int = 200,
+    playout_max_ticks: Optional[int] = None,
+    suggestion_limit: int = 10,
+    debug_trace_max_plies: Optional[int] = None,
+    stop_after_conversion_failures: int = 0,
+    max_handoff_packets: int = 0,
+    max_shadow_candidates: int = 0,
+    shadow_candidates_output: Optional[Path] = None,
     verbose: bool = True,
 ) -> dict:
     rng = random.Random(seed)
@@ -373,11 +431,20 @@ def evaluate_landmark_progress(
         "debug_playouts": [],
         "handoff_packets": [],
         "shadow_candidates": [],
+        "one_ply_status": "not_checked",
+        "conversion_status": "not_checked",
     }
 
     for i in range(samples):
         board = select_eval_position(rng, label, position_mode, source_names)
-        move_details = choose_move_details(graph, engine, board, stage_filter=stage_filter)
+        move_details = choose_move_details(
+            graph,
+            engine,
+            board,
+            max_ticks=max_ticks,
+            stage_filter=stage_filter,
+            suggestion_limit=suggestion_limit,
+        )
         move_uci = move_details.get("move")
         oracle_rewards = oracle_move_rewards(board, label, lookahead_black)
         best_reward = oracle_rewards[0][1] if oracle_rewards else -float("inf")
@@ -457,6 +524,9 @@ def evaluate_landmark_progress(
                 playout_max_plies,
                 black_policy,
                 trace=len(stats["debug_playouts"]) < debug_playouts,
+                max_ticks=playout_max_ticks if playout_max_ticks is not None else max_ticks,
+                suggestion_limit=suggestion_limit,
+                trace_max_plies=debug_trace_max_plies,
             )
             key = result["result"]
             stats["playouts"][key] = stats["playouts"].get(key, 0) + 1
@@ -523,6 +593,18 @@ def evaluate_landmark_progress(
                     "start_board": str(board),
                     **result,
                 })
+            if (
+                local_confirmed
+                and key != "mate"
+                and stop_after_conversion_failures > 0
+                and len(stats.get("shadow_candidates", [])) >= stop_after_conversion_failures
+            ):
+                if verbose:
+                    print(
+                        "Stopping early after "
+                        f"{stop_after_conversion_failures} conversion failures."
+                    )
+                break
 
     if stats["total"]:
         stats["avg_reward"] /= stats["total"]
@@ -530,6 +612,48 @@ def evaluate_landmark_progress(
 
     stats["label"] = label
     stats["source_stage_names"] = list(source_names)
+    evaluated = max(0, stats["total"] - stats["no_move"])
+    stats["one_ply_status"] = (
+        "passed"
+        if evaluated > 0
+        and stats["no_move"] == 0
+        and stats["worsened"] == 0
+        and stats["optimal"] == stats["total"]
+        else "failed"
+        if stats["total"] > 0
+        else "not_checked"
+    )
+
+    playout_total = sum(int(value) for value in stats.get("playouts", {}).values())
+    mate_total = int(stats.get("playouts", {}).get("mate", 0))
+    if playout_max_plies <= 0 or playout_total == 0:
+        stats["conversion_status"] = "not_checked"
+    elif mate_total == playout_total:
+        stats["conversion_status"] = "passed"
+    else:
+        stats["conversion_status"] = "failed"
+    stats["conversion_failure_count"] = max(0, playout_total - mate_total)
+
+    full_handoff_packets = list(stats.get("handoff_packets", []))
+    full_shadow_candidates = list(stats.get("shadow_candidates", []))
+    stats["handoff_packet_count"] = len(full_handoff_packets)
+    stats["shadow_candidate_count"] = len(full_shadow_candidates)
+    stats["handoff_packet_counts_by_phase"] = _count_handoff_packets(full_handoff_packets)
+    stats["shadow_candidate_counts_by_trigger"] = _count_by(full_shadow_candidates, "trigger")
+    if shadow_candidates_output is not None:
+        _write_jsonl(shadow_candidates_output, full_shadow_candidates)
+    if max_handoff_packets > 0:
+        stats["handoff_packets"] = stats["handoff_packets"][:max_handoff_packets]
+        stats["handoff_packets_truncated"] = max(
+            0,
+            stats["handoff_packet_count"] - len(stats["handoff_packets"]),
+        )
+    if max_shadow_candidates > 0:
+        stats["shadow_candidates"] = stats["shadow_candidates"][:max_shadow_candidates]
+        stats["shadow_candidates_truncated"] = max(
+            0,
+            stats["shadow_candidate_count"] - len(stats["shadow_candidates"]),
+        )
     if not stats["debug_failures"]:
         stats.pop("debug_failures", None)
     if not stats["debug_playouts"]:
@@ -554,8 +678,14 @@ def print_landmark_results(stats: dict, *, black_policy: str = "adversarial", pl
     print(f"Optimal:  {stats['optimal']} ({stats['optimal']/stats['total']*100:.1f}%)")
     print(f"Avg chosen reward: {stats['avg_reward']:.4f}")
     print(f"Avg oracle reward: {stats['avg_oracle_reward']:.4f}")
+    print(f"One-ply status: {stats.get('one_ply_status', 'not_checked')}")
+    print(f"Conversion status: {stats.get('conversion_status', 'not_checked')}")
     if playout_max_plies > 0:
         print(f"Playout results ({black_policy} Black, max {playout_max_plies} plies): {stats['playouts']}")
+    if "handoff_packet_count" in stats:
+        print(f"Handoff packets: {stats['handoff_packet_count']}")
+    if "shadow_candidate_count" in stats:
+        print(f"Shadow candidates: {stats['shadow_candidate_count']}")
     if stats.get("debug_failures"):
         print("\nDebug failures")
         print("-" * 60)
@@ -615,6 +745,22 @@ def main() -> None:
                         help="Include this many non-oracle selected positions with board/move diagnostics")
     parser.add_argument("--debug-playouts", type=int, default=0,
                         help="Include this many non-mating playout traces with move-by-move diagnostics")
+    parser.add_argument("--max-ticks", type=int, default=200,
+                        help="Max ReCoN ticks for the evaluated one-ply move")
+    parser.add_argument("--playout-max-ticks", type=int, default=None,
+                        help="Max ReCoN ticks for each White move inside playouts (default: --max-ticks)")
+    parser.add_argument("--suggestion-limit", type=int, default=10,
+                        help="Number of actuator suggestions retained per engine decision")
+    parser.add_argument("--debug-trace-max-plies", type=int, default=None,
+                        help="If set, truncate saved debug playout traces to this many ply events")
+    parser.add_argument("--stop-after-conversion-failures", type=int, default=0,
+                        help="If >0, stop after this many non-mating conversion failures")
+    parser.add_argument("--max-handoff-packets", type=int, default=0,
+                        help="If >0, truncate saved handoff packet records to this count")
+    parser.add_argument("--max-shadow-candidates", type=int, default=0,
+                        help="If >0, truncate saved shadow candidate records to this count")
+    parser.add_argument("--shadow-candidates-output", type=Path, default=None,
+                        help="Optional JSONL path for full shadow growth-candidate records")
     args = parser.parse_args()
 
     source_names = (
@@ -636,6 +782,14 @@ def main() -> None:
         black_policy=args.black_policy,
         debug_failures=args.debug_failures,
         debug_playouts=args.debug_playouts,
+        max_ticks=args.max_ticks,
+        playout_max_ticks=args.playout_max_ticks,
+        suggestion_limit=args.suggestion_limit,
+        debug_trace_max_plies=args.debug_trace_max_plies,
+        stop_after_conversion_failures=args.stop_after_conversion_failures,
+        max_handoff_packets=args.max_handoff_packets,
+        max_shadow_candidates=args.max_shadow_candidates,
+        shadow_candidates_output=args.shadow_candidates_output,
         verbose=True,
     )
     print_landmark_results(stats, black_policy=args.black_policy, playout_max_plies=args.playout_max_plies)
