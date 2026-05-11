@@ -90,6 +90,10 @@ class HandoffAnalysis:
     contract_mismatch_count: int = 0
     contract_mismatch_by_successor_counts: dict[str, int] = field(default_factory=dict)
     visible_eligible_successor_counts: dict[str, int] = field(default_factory=dict)
+    semantic_alignment_status_counts: dict[str, int] = field(default_factory=dict)
+    conversion_by_semantic_alignment_status: dict[str, dict[str, int]] = field(default_factory=dict)
+    semantic_alignment_confusion_counts: dict[str, int] = field(default_factory=dict)
+    semantic_alignment_snapshots: dict[str, list[dict[str, Any]]] = field(default_factory=dict)
     handoff_gap_count: int = 0
     route_conflict_count: int = 0
     shadow_trigger_counts: dict[str, int] = field(default_factory=dict)
@@ -156,6 +160,35 @@ class HandoffAnalysis:
             for skill, count in self.visible_eligible_successor_counts.items():
                 lines.append(f"- `{skill}`: {count}")
 
+        if self.semantic_alignment_status_counts:
+            lines.extend(["", "## Semantic Alignment", ""])
+            lines.append("Status counts:")
+            for status, count in self.semantic_alignment_status_counts.items():
+                lines.append(f"- `{status}`: {count}")
+            if self.conversion_by_semantic_alignment_status:
+                lines.extend(["", "Conversion by semantic alignment:"])
+                for status, outcomes in self.conversion_by_semantic_alignment_status.items():
+                    lines.append(f"- `{status}`: {outcomes}")
+            if self.semantic_alignment_confusion_counts:
+                lines.extend(["", "Reward/contract/reply/conversion confusion matrix:"])
+                for key, count in self.semantic_alignment_confusion_counts.items():
+                    lines.append(f"- `{key}`: {count}")
+            if self.semantic_alignment_snapshots:
+                lines.extend(["", "Representative mismatch FENs:"])
+                for bucket, records in self.semantic_alignment_snapshots.items():
+                    if not records:
+                        continue
+                    lines.append(f"- `{bucket}`:")
+                    for record in records[:3]:
+                        lines.append(
+                            "  - "
+                            f"sample={record.get('sample')} "
+                            f"start={record.get('start_fen')} "
+                            f"move={record.get('move')} "
+                            f"post_reply={record.get('post_reply_fen')} "
+                            f"result={record.get('conversion_result')}"
+                        )
+
         lines.extend(["", "## Shadow Candidates", ""])
         if self.shadow_trigger_counts:
             for trigger, count in self.shadow_trigger_counts.items():
@@ -186,6 +219,10 @@ def analyze_handoff_records(
     failure_class_by_successor = Counter()
     contract_mismatch_by_successor = Counter()
     visible_eligible_successors = Counter()
+    semantic_alignment = Counter()
+    semantic_confusion = Counter()
+    conversion_by_alignment: defaultdict[str, Counter] = defaultdict(Counter)
+    semantic_snapshots: dict[str, list[dict[str, Any]]] = defaultdict(list)
     shadow_triggers = Counter()
     shadow_parent_skills = Counter()
     motifs: Counter[tuple[str, str, str, bool, bool]] = Counter()
@@ -216,6 +253,22 @@ def analyze_handoff_records(
                 conversion[str(diag.get("conversion_status", "not_checked"))] += int(diag.get("total", 1) or 1)
         for key, value in (diag.get("playouts") or {}).items():
             playouts[str(key)] += int(value or 0)
+        _add_counter_values(semantic_alignment, diag.get("semantic_alignment_status_counts"))
+        _add_counter_values(semantic_confusion, diag.get("semantic_alignment_confusion_counts"))
+        conversion_by = diag.get("conversion_by_semantic_alignment_status")
+        if isinstance(conversion_by, Mapping):
+            for status, outcomes in conversion_by.items():
+                if isinstance(outcomes, Mapping):
+                    _add_counter_values(conversion_by_alignment[str(status)], outcomes)
+        snapshots = diag.get("semantic_alignment_snapshots")
+        if isinstance(snapshots, Mapping):
+            for bucket, records in snapshots.items():
+                if not isinstance(records, list):
+                    continue
+                target = semantic_snapshots.setdefault(str(bucket), [])
+                for record in records:
+                    if isinstance(record, Mapping) and len(target) < 5:
+                        target.append(dict(record))
 
         raw_shadows = diag.get("shadow_candidates") or []
         if isinstance(raw_shadows, list):
@@ -256,6 +309,12 @@ def analyze_handoff_records(
                     selected_successor_outcomes[f"{successor}:{outcome}"] += 1
                 if evidence.get("selected_despite_contract_mismatch"):
                     contract_mismatch_by_successor[str(successor or "unknown")] += 1
+                status_value = evidence.get("semantic_alignment_status")
+                if status_value and not diag.get("semantic_alignment_status_counts"):
+                    semantic_alignment[str(status_value)] += 1
+                conversion_status = evidence.get("playout_result")
+                if status_value and conversion_status and not diag.get("conversion_by_semantic_alignment_status"):
+                    conversion_by_alignment[str(status_value)][str(conversion_status)] += 1
             context = post_reply_context.get(context_key, {})
             successor_for_packet = successor or context.get("successor_selected_skill")
             handoff_gap = bool(evidence.get("handoff_gap", context.get("handoff_gap", False)))
@@ -318,6 +377,16 @@ def analyze_handoff_records(
         contract_mismatch_count=sum(contract_mismatch_by_successor.values()),
         contract_mismatch_by_successor_counts=_counter_dict(contract_mismatch_by_successor),
         visible_eligible_successor_counts=_counter_dict(visible_eligible_successors),
+        semantic_alignment_status_counts=_counter_dict(semantic_alignment),
+        conversion_by_semantic_alignment_status={
+            key: _counter_dict(value)
+            for key, value in conversion_by_alignment.items()
+        },
+        semantic_alignment_confusion_counts=_counter_dict(semantic_confusion),
+        semantic_alignment_snapshots={
+            key: list(value)
+            for key, value in semantic_snapshots.items()
+        },
         handoff_gap_count=handoff_gaps,
         route_conflict_count=route_conflicts,
         shadow_trigger_counts=_counter_dict(shadow_triggers),

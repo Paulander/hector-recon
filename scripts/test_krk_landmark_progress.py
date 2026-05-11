@@ -361,6 +361,7 @@ def _classify_successor_failure(
 def _trigger_priority(trigger: str) -> int:
     priorities = {
         "repeated_conversion_failure": 1,
+        "reward_contract_mismatch": 2,
         "same_skill_loop_after_confirmation": 2,
         "successor_absent": 3,
         "handoff_gap": 3,
@@ -382,6 +383,85 @@ def _trigger_for_failure_class(failure_class: str) -> str | None:
         "maintenance_needed_but_not_detected": "maintenance_needed_but_not_detected",
     }
     return mapping.get(failure_class)
+
+
+def _semantic_alignment_status(
+    *,
+    reward_confirmed: bool,
+    visible_fence_exists: bool,
+    fence_survived_reply: Optional[bool],
+) -> str:
+    if reward_confirmed and visible_fence_exists:
+        if fence_survived_reply is True:
+            return "reward_visible_fence_aligned_survived"
+        if fence_survived_reply is False:
+            return "reward_visible_fence_aligned_broken_by_reply"
+        return "reward_visible_fence_aligned_reply_not_checked"
+    if reward_confirmed and not visible_fence_exists:
+        return "reward_contract_mismatch"
+    if not reward_confirmed and visible_fence_exists:
+        return "visible_contract_without_reward"
+    return "neither_reward_nor_visible_contract"
+
+
+def _semantic_confusion_key(
+    *,
+    reward_confirmed: bool,
+    visible_fence_exists: bool,
+    fence_survived_reply: Optional[bool],
+    conversion_result: str,
+) -> str:
+    survived = (
+        "not_checked"
+        if fence_survived_reply is None
+        else "true"
+        if fence_survived_reply
+        else "false"
+    )
+    return (
+        f"reward={str(bool(reward_confirmed)).lower()}"
+        f"|visible_fence={str(bool(visible_fence_exists)).lower()}"
+        f"|fence_survived_reply={survived}"
+        f"|conversion={conversion_result}"
+    )
+
+
+def _increment_nested_count(container: dict, outer: str, inner: str) -> None:
+    bucket = container.setdefault(outer, {})
+    bucket[inner] = bucket.get(inner, 0) + 1
+
+
+def _append_semantic_snapshot(
+    stats: dict,
+    *,
+    bucket: str,
+    sample: int,
+    start_fen: str,
+    move: str,
+    post_reply_fen: Optional[str],
+    conversion_result: str,
+    geometry: dict,
+    limit: int = 20,
+) -> None:
+    snapshots = stats.setdefault("semantic_alignment_snapshots", {})
+    records = snapshots.setdefault(bucket, [])
+    if len(records) >= limit:
+        return
+    records.append({
+        "sample": sample,
+        "start_fen": start_fen,
+        "move": move,
+        "post_reply_fen": post_reply_fen,
+        "conversion_result": conversion_result,
+        "fence_exists_after_own_move": geometry.get("fence_exists_after_own_move"),
+        "fence_stable_after_own_move": geometry.get("fence_stable_after_own_move"),
+        "cut_axis_after_own_move": geometry.get("cut_axis_after_own_move"),
+        "fence_survived_reply": geometry.get("fence_survived_reply"),
+        "fence_broken_by_reply": geometry.get("fence_broken_by_reply"),
+        "box_area_after_own_move": geometry.get("box_area_after_own_move"),
+        "box_area_after_reply": geometry.get("box_area_after_reply"),
+        "box_area_delta_after_reply": geometry.get("box_area_delta_after_reply"),
+    })
 
 
 def _append_packet(stats: dict, packet: HandoffPacket) -> None:
@@ -884,6 +964,10 @@ def evaluate_landmark_progress(
         "counterfactual_successor_sweeps": [],
         "one_ply_status_counts": {},
         "conversion_status_counts": {},
+        "semantic_alignment_status_counts": {},
+        "conversion_by_semantic_alignment_status": {},
+        "semantic_alignment_confusion_counts": {},
+        "semantic_alignment_snapshots": {},
         "one_ply_status": "not_checked",
         "conversion_status": "not_checked",
     }
@@ -941,6 +1025,14 @@ def evaluate_landmark_progress(
             own_move=move,
             post_reply_fen=None,
         )
+        visible_fence_exists_after_own = bool(own_geometry.get("fence_exists_after_own_move"))
+        reward_term = f"reward_confirmed.{label}"
+        post_own_achieved = [reward_term] if local_confirmed else []
+        post_own_failed = [] if local_confirmed else [reward_term]
+        if visible_fence_exists_after_own:
+            post_own_achieved.append("visible_fence_contract_confirmed")
+        else:
+            post_own_failed.append("visible_fence_contract_confirmed")
         post_own_move_packet = HandoffPacket.create(
             from_skill=parent_skill,
             phase="post_own_move",
@@ -953,10 +1045,13 @@ def evaluate_landmark_progress(
                 "chosen_reward": float(reward),
                 "oracle_reward": float(best_reward),
                 "stage_filter": stage_filter,
+                "reward_confirmed": bool(local_confirmed),
+                "visible_fence_contract_confirmed": visible_fence_exists_after_own,
+                "reward_contract_mismatch": bool(local_confirmed and not visible_fence_exists_after_own),
                 **own_geometry,
             },
-            achieved=[label] if local_confirmed else [],
-            failed=[] if local_confirmed else [label],
+            achieved=post_own_achieved,
+            failed=post_own_failed,
             continuation_exports={
                 f"target_goal.{label}": max(0.0, float(reward)),
             },
@@ -1021,6 +1116,40 @@ def evaluate_landmark_progress(
                 own_move=move,
                 post_reply_fen=post_reply_fen,
             )
+            fence_survived_reply = reply_geometry.get("fence_survived_reply")
+            semantic_alignment_status = _semantic_alignment_status(
+                reward_confirmed=local_confirmed,
+                visible_fence_exists=visible_fence_exists_after_own,
+                fence_survived_reply=fence_survived_reply,
+            )
+            stats["semantic_alignment_status_counts"][semantic_alignment_status] = (
+                stats["semantic_alignment_status_counts"].get(semantic_alignment_status, 0) + 1
+            )
+            _increment_nested_count(
+                stats["conversion_by_semantic_alignment_status"],
+                semantic_alignment_status,
+                key,
+            )
+            confusion_key = _semantic_confusion_key(
+                reward_confirmed=local_confirmed,
+                visible_fence_exists=visible_fence_exists_after_own,
+                fence_survived_reply=fence_survived_reply,
+                conversion_result=key,
+            )
+            stats["semantic_alignment_confusion_counts"][confusion_key] = (
+                stats["semantic_alignment_confusion_counts"].get(confusion_key, 0) + 1
+            )
+            if semantic_alignment_status != "reward_visible_fence_aligned_survived":
+                _append_semantic_snapshot(
+                    stats,
+                    bucket=semantic_alignment_status,
+                    sample=i,
+                    start_fen=board.fen(),
+                    move=move_uci,
+                    post_reply_fen=post_reply_fen,
+                    conversion_result=key,
+                    geometry=reply_geometry,
+                )
             successor_summary = _successor_skill_summary(
                 (
                     result.get("first_successor", {}).get("engine")
@@ -1057,6 +1186,10 @@ def evaluate_landmark_progress(
                         post_reply_fen
                     ),
                     "survived": bool(survived),
+                    "semantic_alignment_status": semantic_alignment_status,
+                    "reward_confirmed": bool(local_confirmed),
+                    "visible_fence_contract_confirmed": visible_fence_exists_after_own,
+                    "reward_contract_mismatch": bool(local_confirmed and not visible_fence_exists_after_own),
                     "handoff_gap": handoff_gap,
                     "route_conflict": route_conflict,
                     "failure_classes": failure_classes,
@@ -1082,18 +1215,42 @@ def evaluate_landmark_progress(
                     **reply_geometry,
                 },
                 achieved=(
-                    ["survived_opponent_reply", "successor_affordance"]
-                    if local_confirmed and survived and not handoff_gap
-                    else ["survived_opponent_reply"]
-                    if local_confirmed and survived
-                    else []
+                    [
+                        *(
+                            ["survived_opponent_reply"]
+                            if local_confirmed and survived
+                            else []
+                        ),
+                        *(
+                            ["visible_fence_survived_reply"]
+                            if fence_survived_reply is True
+                            else []
+                        ),
+                        *(
+                            ["successor_affordance"]
+                            if local_confirmed and survived and not handoff_gap
+                            else []
+                        ),
+                    ]
                 ),
                 failed=(
-                    ["survived_opponent_reply"]
-                    if not (local_confirmed and survived)
-                    else ["successor_affordance"]
-                    if handoff_gap
-                    else []
+                    [
+                        *(
+                            ["survived_opponent_reply"]
+                            if not (local_confirmed and survived)
+                            else []
+                        ),
+                        *(
+                            ["visible_fence_survived_reply"]
+                            if fence_survived_reply is False
+                            else []
+                        ),
+                        *(
+                            ["successor_affordance"]
+                            if handoff_gap
+                            else []
+                        ),
+                    ]
                 ),
                 continuation_exports=successor_summary["exports"]
                 or {"krk.continue_conversion": 1.0 if survived else 0.0},
@@ -1111,6 +1268,7 @@ def evaluate_landmark_progress(
                     "fen": board.fen(),
                     "move": move_uci,
                     "conversion_status": conversion_status,
+                    "semantic_alignment_status": semantic_alignment_status,
                     "failure_classes": failure_classes,
                     "playout_result": key,
                     "max_plies": playout_max_plies,
@@ -1121,6 +1279,21 @@ def evaluate_landmark_progress(
                 observed_outcome=key,
             )
             _append_packet(stats, playout_packet)
+            if local_confirmed and not visible_fence_exists_after_own:
+                _append_shadow_candidate(
+                    stats,
+                    trigger="reward_contract_mismatch",
+                    parent_skill=parent_skill,
+                    board=board,
+                    move_details=move_details,
+                    packet_id=post_reply_packet.packet_id,
+                    observed_outcome=key,
+                    priority=_trigger_priority("reward_contract_mismatch"),
+                    route_scores={
+                        skill_id: float(entry.get("score", 0.0) or 0.0)
+                        for skill_id, entry in successor_summary["skills"].items()
+                    },
+                )
             if (
                 local_confirmed
                 and key != "mate"
@@ -1305,6 +1478,8 @@ def print_landmark_results(stats: dict, *, black_policy: str = "adversarial", pl
         print(f"Shadow candidates: {stats['shadow_candidate_count']}")
     if stats.get("counterfactual_successor_sweep_count"):
         print(f"Counterfactual successor sweeps: {stats['counterfactual_successor_sweep_count']}")
+    if stats.get("semantic_alignment_status_counts"):
+        print(f"Semantic alignment: {stats['semantic_alignment_status_counts']}")
     if stats.get("debug_failures"):
         print("\nDebug failures")
         print("-" * 60)

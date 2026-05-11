@@ -15,6 +15,24 @@ def test_analyze_handoff_records_surfaces_successor_failure_motifs():
         "no_move": 0,
         "one_ply_status_counts": {"passed": 1},
         "conversion_status_counts": {"failed": 1},
+        "semantic_alignment_status_counts": {"reward_contract_mismatch": 1},
+        "conversion_by_semantic_alignment_status": {
+            "reward_contract_mismatch": {"max_plies": 1}
+        },
+        "semantic_alignment_confusion_counts": {
+            "reward=true|visible_fence=false|fence_survived_reply=false|conversion=max_plies": 1
+        },
+        "semantic_alignment_snapshots": {
+            "reward_contract_mismatch": [
+                {
+                    "sample": 0,
+                    "start_fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                    "move": "a1a8",
+                    "post_reply_fen": "8/8/8/8/8/8/8/8 w - - 1 1",
+                    "conversion_result": "max_plies",
+                }
+            ]
+        },
         "playouts": {"max_plies": 1},
         "handoff_packets": [
             {
@@ -81,6 +99,14 @@ def test_analyze_handoff_records_surfaces_successor_failure_motifs():
     assert payload["contract_mismatch_count"] == 1
     assert payload["contract_mismatch_by_successor_counts"] == {"krk.edge_trap_close": 1}
     assert payload["visible_eligible_successor_counts"] == {"krk.fence_maintenance": 1}
+    assert payload["semantic_alignment_status_counts"] == {"reward_contract_mismatch": 1}
+    assert payload["conversion_by_semantic_alignment_status"] == {
+        "reward_contract_mismatch": {"max_plies": 1}
+    }
+    assert payload["semantic_alignment_confusion_counts"] == {
+        "reward=true|visible_fence=false|fence_survived_reply=false|conversion=max_plies": 1
+    }
+    assert "reward_contract_mismatch" in payload["semantic_alignment_snapshots"]
     assert payload["shadow_trigger_counts"] == {"handoff_gap": 1}
     assert payload["top_failure_motifs"][0]["from_skill"] == "krk.fence_established"
     assert payload["top_failure_motifs"][0]["successor_skill"] == "krk.edge_trap_close"

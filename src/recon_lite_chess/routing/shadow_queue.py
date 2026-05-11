@@ -15,6 +15,7 @@ from typing import Any, Iterable, Mapping
 
 TRIGGER_PRIORITY = {
     "repeated_conversion_failure": 1,
+    "reward_contract_mismatch": 2,
     "same_skill_loop_after_confirmation": 2,
     "successor_absent": 3,
     "handoff_gap": 3,

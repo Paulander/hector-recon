@@ -29,6 +29,14 @@ def test_build_shadow_stem_queue_deduplicates_and_prioritizes():
             "packet_id": "packet.0",
         },
         {
+            "candidate_id": "cand.reward_contract",
+            "trigger": "reward_contract_mismatch",
+            "parent_skill": "krk.fence_established",
+            "state_signature": "state.e",
+            "observed_outcome": "max_plies",
+            "packet_id": "packet.5",
+        },
+        {
             "candidate_id": "cand.repeat",
             "trigger": "repeated_conversion_failure",
             "parent_skill": "krk.fence_established",
@@ -63,13 +71,17 @@ def test_build_shadow_stem_queue_deduplicates_and_prioritizes():
     assert queue["trigger_counts"] == {
         "repeated_conversion_failure": 2,
         "same_skill_loop_after_confirmation": 1,
+        "reward_contract_mismatch": 1,
         "maintenance_needed_but_not_detected": 1,
         "low_affordance_state": 1,
     }
-    assert len(queue["queue"]) == 4
+    assert len(queue["queue"]) == 5
     assert queue["queue"][0]["trigger"] == "repeated_conversion_failure"
     assert queue["queue"][0]["support"] == 2
     assert queue["queue"][0]["packet_ids"] == ["packet.2", "packet.3"]
-    assert queue["queue"][1]["trigger"] == "same_skill_loop_after_confirmation"
-    assert queue["queue"][2]["trigger"] == "maintenance_needed_but_not_detected"
-    assert queue["queue"][3]["trigger"] == "low_affordance_state"
+    assert {
+        queue["queue"][1]["trigger"],
+        queue["queue"][2]["trigger"],
+    } == {"reward_contract_mismatch", "same_skill_loop_after_confirmation"}
+    assert queue["queue"][3]["trigger"] == "maintenance_needed_but_not_detected"
+    assert queue["queue"][4]["trigger"] == "low_affordance_state"
