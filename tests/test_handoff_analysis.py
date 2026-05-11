@@ -13,8 +13,8 @@ def test_analyze_handoff_records_surfaces_successor_failure_motifs():
     diagnostic = {
         "total": 1,
         "no_move": 0,
-        "one_ply_status": "passed",
-        "conversion_status": "failed",
+        "one_ply_status_counts": {"passed": 1},
+        "conversion_status_counts": {"failed": 1},
         "playouts": {"max_plies": 1},
         "handoff_packets": [
             {
@@ -38,6 +38,8 @@ def test_analyze_handoff_records_surfaces_successor_failure_motifs():
                     "handoff_gap": True,
                     "route_conflict": True,
                     "failure_classes": ["successor_conflict"],
+                    "selected_despite_contract_mismatch": True,
+                    "visible_eligible_successors": {"krk.fence_maintenance": {"score": 0.5}},
                 },
             },
             {
@@ -72,6 +74,13 @@ def test_analyze_handoff_records_surfaces_successor_failure_motifs():
     assert payload["successor_selected_skill_counts"] == {"krk.edge_trap_close": 1}
     assert payload["failed_successor_skill_counts"] == {"krk.edge_trap_close": 1}
     assert payload["failure_class_counts"] == {"successor_conflict": 1}
+    assert payload["selected_successor_outcome_counts"] == {"krk.edge_trap_close:max_plies": 1}
+    assert payload["failure_class_by_successor_counts"] == {
+        "krk.edge_trap_close:successor_conflict": 1
+    }
+    assert payload["contract_mismatch_count"] == 1
+    assert payload["contract_mismatch_by_successor_counts"] == {"krk.edge_trap_close": 1}
+    assert payload["visible_eligible_successor_counts"] == {"krk.fence_maintenance": 1}
     assert payload["shadow_trigger_counts"] == {"handoff_gap": 1}
     assert payload["top_failure_motifs"][0]["from_skill"] == "krk.fence_established"
     assert payload["top_failure_motifs"][0]["successor_skill"] == "krk.edge_trap_close"
@@ -90,6 +99,35 @@ def test_analyze_handoff_records_counts_embedded_shadow_candidates():
     analysis = analyze_handoff_records([diagnostic])
 
     assert analysis.to_dict()["shadow_trigger_counts"] == {"route_conflict": 1}
+
+
+def test_analyze_handoff_records_counts_repeated_packets_as_samples():
+    packet = {
+        "from_skill": "krk.fence_established",
+        "phase": "post_opponent_reply",
+        "status": "confirmed",
+        "observed_outcome": "max_plies",
+        "evidence_terms": {
+            "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+            "successor_selected_skill": "krk.stage0_basin",
+            "handoff_gap": False,
+            "route_conflict": False,
+            "failure_classes": ["selected_successor_miscalibrated"],
+        },
+    }
+    diagnostic = {
+        "total": 2,
+        "one_ply_status_counts": {"passed": 2},
+        "conversion_status_counts": {"failed": 2},
+        "handoff_packets": [dict(packet), dict(packet)],
+    }
+
+    analysis = analyze_handoff_records([diagnostic]).to_dict()
+
+    assert analysis["one_ply_status_counts"] == {"passed": 2}
+    assert analysis["conversion_status_counts"] == {"failed": 2}
+    assert analysis["successor_selected_skill_counts"] == {"krk.stage0_basin": 2}
+    assert analysis["failure_class_counts"] == {"selected_successor_miscalibrated": 2}
 
 
 def test_handoff_analysis_markdown_is_human_readable():

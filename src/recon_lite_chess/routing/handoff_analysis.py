@@ -62,6 +62,13 @@ def _handoff_context_key(packet: Mapping[str, Any]) -> tuple[str, str]:
     )
 
 
+def _add_counter_values(counter: Counter, payload: Mapping[str, Any] | None) -> None:
+    if not isinstance(payload, Mapping):
+        return
+    for key, value in payload.items():
+        counter[str(key)] += int(value or 0)
+
+
 @dataclass
 class HandoffAnalysis:
     """Compact aggregate of one or more handoff diagnostic outputs."""
@@ -78,6 +85,11 @@ class HandoffAnalysis:
     successor_selected_skill_counts: dict[str, int] = field(default_factory=dict)
     failed_successor_skill_counts: dict[str, int] = field(default_factory=dict)
     failure_class_counts: dict[str, int] = field(default_factory=dict)
+    selected_successor_outcome_counts: dict[str, int] = field(default_factory=dict)
+    failure_class_by_successor_counts: dict[str, int] = field(default_factory=dict)
+    contract_mismatch_count: int = 0
+    contract_mismatch_by_successor_counts: dict[str, int] = field(default_factory=dict)
+    visible_eligible_successor_counts: dict[str, int] = field(default_factory=dict)
     handoff_gap_count: int = 0
     route_conflict_count: int = 0
     shadow_trigger_counts: dict[str, int] = field(default_factory=dict)
@@ -128,6 +140,22 @@ class HandoffAnalysis:
         else:
             lines.append("- No failed post-reply or conversion motifs found.")
 
+        if self.selected_successor_outcome_counts:
+            lines.extend(["", "Selected successor by outcome:"])
+            for key, count in self.selected_successor_outcome_counts.items():
+                lines.append(f"- `{key}`: {count}")
+
+        if self.contract_mismatch_count:
+            lines.extend(["", "Contract mismatches:"])
+            lines.append(f"- Total selected despite contract mismatch: {self.contract_mismatch_count}")
+            for skill, count in self.contract_mismatch_by_successor_counts.items():
+                lines.append(f"- `{skill}`: {count}")
+
+        if self.visible_eligible_successor_counts:
+            lines.extend(["", "Visible eligible successors:"])
+            for skill, count in self.visible_eligible_successor_counts.items():
+                lines.append(f"- `{skill}`: {count}")
+
         lines.extend(["", "## Shadow Candidates", ""])
         if self.shadow_trigger_counts:
             for trigger, count in self.shadow_trigger_counts.items():
@@ -154,6 +182,10 @@ def analyze_handoff_records(
     successor_selected = Counter()
     failed_successor = Counter()
     failure_classes = Counter()
+    selected_successor_outcomes = Counter()
+    failure_class_by_successor = Counter()
+    contract_mismatch_by_successor = Counter()
+    visible_eligible_successors = Counter()
     shadow_triggers = Counter()
     shadow_parent_skills = Counter()
     motifs: Counter[tuple[str, str, str, bool, bool]] = Counter()
@@ -163,14 +195,25 @@ def analyze_handoff_records(
     post_reply_failures = 0
     handoff_gaps = 0
     route_conflicts = 0
-    seen_packets: set[tuple[str, str, str]] = set()
     embedded_shadows: list[Mapping[str, Any]] = []
 
     for diag in diagnostics:
         total += int(diag.get("total", 0) or 0)
         no_move += int(diag.get("no_move", 0) or 0)
-        one_ply[str(diag.get("one_ply_status", "not_checked"))] += 1
-        conversion[str(diag.get("conversion_status", "not_checked"))] += 1
+        if isinstance(diag.get("one_ply_status_counts"), Mapping):
+            _add_counter_values(one_ply, diag.get("one_ply_status_counts"))
+        else:
+            one_ply[str(diag.get("one_ply_status", "not_checked"))] += int(diag.get("total", 1) or 1)
+        if isinstance(diag.get("conversion_status_counts"), Mapping):
+            _add_counter_values(conversion, diag.get("conversion_status_counts"))
+        else:
+            raw_playouts = diag.get("playouts") or {}
+            playout_total = sum(int(value or 0) for value in raw_playouts.values())
+            if playout_total:
+                conversion["passed"] += int(raw_playouts.get("mate", 0) or 0)
+                conversion["failed"] += max(0, playout_total - int(raw_playouts.get("mate", 0) or 0))
+            else:
+                conversion[str(diag.get("conversion_status", "not_checked"))] += int(diag.get("total", 1) or 1)
         for key, value in (diag.get("playouts") or {}).items():
             playouts[str(key)] += int(value or 0)
 
@@ -187,27 +230,32 @@ def analyze_handoff_records(
         for packet in packets:
             if not isinstance(packet, Mapping):
                 continue
-            key = _packet_key(packet)
-            if key in seen_packets:
-                continue
-            seen_packets.add(key)
             packet_phase_status[_phase_status_key(packet)] += 1
 
             evidence = packet.get("evidence_terms")
             if not isinstance(evidence, Mapping):
                 continue
             successor = evidence.get("successor_selected_skill")
-            if successor:
-                successor_selected[str(successor)] += 1
-            for failure_class in evidence.get("failure_classes", []) or []:
-                failure_classes[str(failure_class)] += 1
-
             phase = packet.get("phase")
             status = packet.get("status")
             outcome = str(packet.get("observed_outcome") or evidence.get("playout_result") or "unknown")
             context_key = _handoff_context_key(packet)
             if phase == "post_opponent_reply":
                 post_reply_context[context_key] = evidence
+                if successor:
+                    successor_selected[str(successor)] += 1
+                for failure_class in evidence.get("failure_classes", []) or []:
+                    failure_classes[str(failure_class)] += 1
+                    if successor:
+                        failure_class_by_successor[f"{successor}:{failure_class}"] += 1
+                visible_eligible = evidence.get("visible_eligible_successors")
+                if isinstance(visible_eligible, Mapping):
+                    for skill in visible_eligible:
+                        visible_eligible_successors[str(skill)] += 1
+                if successor:
+                    selected_successor_outcomes[f"{successor}:{outcome}"] += 1
+                if evidence.get("selected_despite_contract_mismatch"):
+                    contract_mismatch_by_successor[str(successor or "unknown")] += 1
             context = post_reply_context.get(context_key, {})
             successor_for_packet = successor or context.get("successor_selected_skill")
             handoff_gap = bool(evidence.get("handoff_gap", context.get("handoff_gap", False)))
@@ -265,6 +313,11 @@ def analyze_handoff_records(
         successor_selected_skill_counts=_counter_dict(successor_selected),
         failed_successor_skill_counts=_counter_dict(failed_successor),
         failure_class_counts=_counter_dict(failure_classes),
+        selected_successor_outcome_counts=_counter_dict(selected_successor_outcomes),
+        failure_class_by_successor_counts=_counter_dict(failure_class_by_successor),
+        contract_mismatch_count=sum(contract_mismatch_by_successor.values()),
+        contract_mismatch_by_successor_counts=_counter_dict(contract_mismatch_by_successor),
+        visible_eligible_successor_counts=_counter_dict(visible_eligible_successors),
         handoff_gap_count=handoff_gaps,
         route_conflict_count=route_conflicts,
         shadow_trigger_counts=_counter_dict(shadow_triggers),

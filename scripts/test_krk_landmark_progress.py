@@ -145,6 +145,11 @@ def _successor_skill_summary(
         and second_score is not None
         and abs(best_score - second_score) <= route_conflict_delta
     )
+    route_margin = (
+        float(best_score) - float(second_score)
+        if best_score is not None and second_score is not None
+        else None
+    )
     handoff_gap = best_score is None or best_score <= affordance_threshold
     exports = {
         skill_id: max(0.0, min(1.0, float(entry["score"])))
@@ -155,18 +160,165 @@ def _successor_skill_summary(
         for skill_id, payload in visible_affordances.items()
         if skill_id not in grouped and float(payload.get("score", 0.0) or 0.0) > affordance_threshold
     }
+    selected_contract = _successor_contract_audit(
+        selected_skill,
+        visible_terms=visible_terms,
+        visible_affordances=visible_affordances,
+        grouped=grouped,
+    )
+    visible_eligible_successors = {
+        skill_id: payload
+        for skill_id, payload in visible_affordances.items()
+        if _contract_met(payload, visible_terms)
+        and float(payload.get("score", 0.0) or 0.0) > affordance_threshold
+    }
     return {
         "selected_skill": selected_skill,
         "best_score": best_score,
         "second_score": second_score,
+        "route_margin": route_margin,
         "handoff_gap": bool(handoff_gap),
         "route_conflict": bool(route_conflict),
         "skills": grouped,
         "exports": exports,
         "visible_terms": visible_terms,
         "visible_successor_affordances": visible_affordances,
+        "visible_eligible_successors": visible_eligible_successors,
         "missing_afforded_skills": missing_afforded,
+        **selected_contract,
     }
+
+
+def _contract_met(payload: dict, visible_terms: dict) -> bool:
+    required = list(payload.get("required_terms", []) or [])
+    veto = list(payload.get("veto_terms", []) or [])
+    return all(bool(visible_terms.get(term, False)) for term in required) and not any(
+        bool(visible_terms.get(term, False)) for term in veto
+    )
+
+
+def _successor_contract_audit(
+    selected_skill: str | None,
+    *,
+    visible_terms: dict,
+    visible_affordances: dict,
+    grouped: dict,
+) -> dict:
+    if not selected_skill:
+        return {
+            "selected_successor_visible_affordance": None,
+            "selected_successor_required_terms": [],
+            "selected_successor_missing_terms": [],
+            "selected_successor_veto_terms": [],
+            "selected_successor_contract_met": False,
+            "selected_despite_contract_mismatch": False,
+            "selected_skill_source": "none",
+        }
+
+    visible_payload = visible_affordances.get(selected_skill)
+    selected_group = grouped.get(selected_skill, {})
+    group_payload = selected_group.get("visible_successor_affordance") or {}
+    payload = visible_payload or group_payload or {}
+    required = list(payload.get("required_terms", []) or [])
+    veto_terms = list(payload.get("veto_terms", []) or [])
+    missing = [term for term in required if not bool(visible_terms.get(term, False))]
+    active_veto = [term for term in veto_terms if bool(visible_terms.get(term, False))]
+    contract_met = bool(payload) and not missing and not active_veto
+    return {
+        "selected_successor_visible_affordance": (
+            float(payload.get("score", 0.0) or 0.0) if payload else None
+        ),
+        "selected_successor_required_terms": required,
+        "selected_successor_missing_terms": missing,
+        "selected_successor_veto_terms": active_veto,
+        "selected_successor_contract_met": bool(contract_met),
+        "selected_despite_contract_mismatch": bool(payload and not contract_met),
+        "selected_skill_source": "visible_contract" if visible_payload else "actuator_score",
+    }
+
+
+def _krk_geometry(board: chess.Board) -> dict:
+    wk_sq = next(iter(board.pieces(chess.KING, chess.WHITE)), None)
+    bk_sq = next(iter(board.pieces(chess.KING, chess.BLACK)), None)
+    wr_sq = next(iter(board.pieces(chess.ROOK, chess.WHITE)), None)
+    if wk_sq is None or bk_sq is None or wr_sq is None:
+        return {
+            "fence_exists": False,
+            "fence_stable": False,
+            "cut_axis": "none",
+            "box_area": None,
+            "rook_safe": False,
+            "enemy_king_boxed": False,
+        }
+
+    wk_file, wk_rank = chess.square_file(wk_sq), chess.square_rank(wk_sq)
+    bk_file, bk_rank = chess.square_file(bk_sq), chess.square_rank(bk_sq)
+    wr_file, wr_rank = chess.square_file(wr_sq), chess.square_rank(wr_sq)
+    cut_axis = "file" if wr_file == bk_file else "rank" if wr_rank == bk_rank else "none"
+    rook_safe = chess.square_distance(wr_sq, bk_sq) > 1 and not board.is_attacked_by(chess.BLACK, wr_sq)
+    king_support = chess.square_distance(wk_sq, wr_sq) <= 2 or chess.square_distance(wk_sq, bk_sq) <= 2
+    fence_exists = cut_axis != "none" and rook_safe
+    box_width = abs(wk_file - bk_file) + 1
+    box_height = abs(wk_rank - bk_rank) + 1
+    edge_distance = min(bk_file, 7 - bk_file, bk_rank, 7 - bk_rank)
+    return {
+        "fence_exists": bool(fence_exists),
+        "fence_stable": bool(fence_exists and king_support),
+        "cut_axis": cut_axis,
+        "box_area": int(box_width * box_height),
+        "rook_safe": bool(rook_safe),
+        "enemy_king_boxed": bool(fence_exists or edge_distance == 0),
+        "enemy_king_edge_distance": int(edge_distance),
+        "white_king_support_distance": int(min(
+            chess.square_distance(wk_sq, wr_sq),
+            chess.square_distance(wk_sq, bk_sq),
+        )),
+    }
+
+
+def _geometry_evidence(
+    *,
+    start_board: chess.Board,
+    own_move: chess.Move,
+    post_reply_fen: str | None,
+) -> dict:
+    after_own = start_board.copy()
+    after_own.push(own_move)
+    own = _krk_geometry(after_own)
+    evidence = {
+        "fence_exists_after_own_move": own["fence_exists"],
+        "fence_stable_after_own_move": own["fence_stable"],
+        "cut_axis_after_own_move": own["cut_axis"],
+        "box_area_after_own_move": own["box_area"],
+        "rook_safe_after_own_move": own["rook_safe"],
+        "enemy_king_boxed_after_own_move": own["enemy_king_boxed"],
+    }
+    if post_reply_fen:
+        try:
+            after_reply = chess.Board(post_reply_fen)
+            reply = _krk_geometry(after_reply)
+            evidence.update({
+                "fence_survived_reply": bool(own["fence_exists"] and reply["fence_exists"]),
+                "fence_broken_by_reply": bool(own["fence_exists"] and not reply["fence_exists"]),
+                "box_area_after_reply": reply["box_area"],
+                "box_area_delta_after_reply": (
+                    int(reply["box_area"] - own["box_area"])
+                    if reply["box_area"] is not None and own["box_area"] is not None
+                    else None
+                ),
+                "cut_axis_after_reply": reply["cut_axis"],
+                "rook_safe_after_reply": reply["rook_safe"],
+                "enemy_king_boxed_after_reply": reply["enemy_king_boxed"],
+            })
+        except Exception:
+            evidence.update({
+                "fence_survived_reply": None,
+                "fence_broken_by_reply": None,
+                "box_area_after_reply": None,
+                "box_area_delta_after_reply": None,
+                "cut_axis_after_reply": "invalid_fen",
+            })
+    return evidence
 
 
 def _classify_successor_failure(
@@ -295,6 +447,7 @@ def choose_move_with_engine(
     stage_filter: Optional[int] = None,
     suggestion_limit: int = 10,
     successor_affordance_layer_enabled: bool = False,
+    forced_successor_skill: Optional[str] = None,
 ) -> Optional[str]:
     return choose_move_details(
         graph,
@@ -304,6 +457,7 @@ def choose_move_with_engine(
         stage_filter=stage_filter,
         suggestion_limit=suggestion_limit,
         successor_affordance_layer_enabled=successor_affordance_layer_enabled,
+        forced_successor_skill=forced_successor_skill,
     ).get("move")
 
 
@@ -315,6 +469,7 @@ def choose_move_details(
     stage_filter: Optional[int] = None,
     suggestion_limit: int = 10,
     successor_affordance_layer_enabled: bool = False,
+    forced_successor_skill: Optional[str] = None,
 ) -> dict:
     env = {
         "board": board,
@@ -341,8 +496,33 @@ def choose_move_details(
         engine.step(env)
     suggestions = list(env.get("actuator_suggestions", []))
     suggestions.sort(key=lambda item: item.get("score", float("-inf")), reverse=True)
+    selected_suggestion = suggestions[0] if suggestions else None
+    forced_candidates = []
+    if forced_successor_skill:
+        forced_candidates = [
+            item for item in suggestions
+            if _skill_id_for_suggestion(item) == forced_successor_skill
+        ]
+        forced_candidates.sort(key=lambda item: item.get("score", float("-inf")), reverse=True)
+        selected_suggestion = forced_candidates[0] if forced_candidates else None
+    selected_move = None
+    selected_confidence = None
+    selected_actuator = None
+    if selected_suggestion:
+        raw_move = selected_suggestion.get("move")
+        selected_move = raw_move.uci() if hasattr(raw_move, "uci") else raw_move
+        selected_confidence = float(selected_suggestion.get("score", 0.0) or 0.0)
+        selected_actuator = selected_suggestion.get("actuator")
+    elif not forced_successor_skill:
+        selected_move = env.get("chosen_move") or env.get("suggested_move")
+        selected_confidence = (
+            float(env["move_confidence"]) if env.get("move_confidence") is not None else None
+        )
+        selected_actuator = env.get("suggested_actuator")
+
+    suggestion_source = forced_candidates if forced_successor_skill else suggestions
     clean_suggestions = []
-    for item in suggestions[:max(0, suggestion_limit)]:
+    for item in suggestion_source[:max(0, suggestion_limit)]:
         move = item.get("move")
         clean = dict(item)
         clean["move"] = move.uci() if hasattr(move, "uci") else move
@@ -356,11 +536,13 @@ def choose_move_details(
             }
         clean_suggestions.append(clean)
     return {
-        "move": env.get("chosen_move") or env.get("suggested_move"),
+        "move": selected_move,
         "ticks": ticks,
-        "confidence": float(env["move_confidence"]) if env.get("move_confidence") is not None else None,
-        "suggested_actuator": env.get("suggested_actuator"),
+        "confidence": selected_confidence,
+        "suggested_actuator": selected_actuator,
         "suggestions": clean_suggestions,
+        "forced_successor_skill": forced_successor_skill,
+        "forced_successor_available": bool(forced_candidates) if forced_successor_skill else None,
         "visible_terms": dict(env.get("blackboard", {}).get("krk_visible_terms", {}) or {}),
         "successor_affordances": dict(
             env.get("blackboard", {}).get("krk_successor_affordances", {}) or {}
@@ -422,6 +604,7 @@ def play_to_mate(
     suggestion_limit: int = 10,
     trace_max_plies: Optional[int] = None,
     successor_affordance_layer_enabled: bool = False,
+    forced_successor_skill: Optional[str] = None,
 ) -> dict:
     """Run a simple KRK playout using the compiled topology for White moves."""
     b = board.copy()
@@ -463,6 +646,7 @@ def play_to_mate(
             # Use the stage filter for the tested handoff move, then allow the
             # full topology to convert through lower-stage skills.
             active_stage_filter = stage_filter if white_moves == 0 else None
+            active_forced_successor = forced_successor_skill if white_moves == 0 else None
             before_fen = b.fen()
             move_details = choose_move_details(
                 graph,
@@ -472,12 +656,18 @@ def play_to_mate(
                 stage_filter=active_stage_filter,
                 suggestion_limit=suggestion_limit,
                 successor_affordance_layer_enabled=successor_affordance_layer_enabled,
+                forced_successor_skill=active_forced_successor,
             )
             move_uci = move_details.get("move")
-            if white_moves == 1 and first_successor is None:
+            capture_successor_now = (
+                (forced_successor_skill is not None and white_moves == 0)
+                or (forced_successor_skill is None and white_moves == 1)
+            )
+            if capture_successor_now and first_successor is None:
                 first_successor = {
                     "fen": before_fen,
                     "stage_filter": active_stage_filter,
+                    "forced_successor_skill": active_forced_successor,
                     "move": move_uci,
                     "engine": move_details,
                 }
@@ -579,6 +769,62 @@ def select_eval_position(
         return generate_random_krk_position(rng)
 
 
+def run_counterfactual_successor_sweep(
+    graph: Graph,
+    engine: ReConEngine,
+    *,
+    post_reply_fen: str,
+    successors: tuple[str, ...],
+    rng: random.Random,
+    label: str,
+    max_plies: int,
+    black_policy: str,
+    max_ticks: int,
+    suggestion_limit: int,
+    successor_affordance_layer_enabled: bool,
+) -> dict:
+    """Try existing successor skills from the same post-reply state.
+
+    This is an offline audit. It forces only the first White move to belong to
+    the requested successor skill, then releases control back to the normal
+    topology for the rest of the playout.
+    """
+    board = chess.Board(post_reply_fen)
+    results = {}
+    for skill_id in successors:
+        local_rng = random.Random(rng.randrange(2**32))
+        result = play_to_mate(
+            graph,
+            engine,
+            board,
+            local_rng,
+            label,
+            None,
+            max_plies,
+            black_policy,
+            trace=False,
+            max_ticks=max_ticks,
+            suggestion_limit=suggestion_limit,
+            successor_affordance_layer_enabled=successor_affordance_layer_enabled,
+            forced_successor_skill=skill_id,
+        )
+        first_successor = result.get("first_successor") if isinstance(result, dict) else None
+        engine_details = (
+            first_successor.get("engine")
+            if isinstance(first_successor, dict) and isinstance(first_successor.get("engine"), dict)
+            else {}
+        )
+        results[skill_id] = {
+            "result": result.get("result"),
+            "plies": int(result.get("plies", 0) or 0),
+            "first_move": first_successor.get("move") if isinstance(first_successor, dict) else None,
+            "forced_successor_available": engine_details.get("forced_successor_available"),
+            "confidence": engine_details.get("confidence"),
+            "suggested_actuator": engine_details.get("suggested_actuator"),
+        }
+    return results
+
+
 def evaluate_landmark_progress(
     topology: Path,
     *,
@@ -606,6 +852,8 @@ def evaluate_landmark_progress(
     route_conflict_delta: float = 0.01,
     high_successor_score_threshold: float = 0.5,
     successor_affordance_layer_enabled: bool = False,
+    counterfactual_successors: tuple[str, ...] = (),
+    max_counterfactual_sweeps: int = 0,
     verbose: bool = True,
 ) -> dict:
     rng = random.Random(seed)
@@ -633,6 +881,9 @@ def evaluate_landmark_progress(
         "debug_playouts": [],
         "handoff_packets": [],
         "shadow_candidates": [],
+        "counterfactual_successor_sweeps": [],
+        "one_ply_status_counts": {},
+        "conversion_status_counts": {},
         "one_ply_status": "not_checked",
         "conversion_status": "not_checked",
     }
@@ -656,20 +907,40 @@ def evaluate_landmark_progress(
         stats["avg_oracle_reward"] += best_reward
         if not move_uci:
             stats["no_move"] += 1
+            stats["one_ply_status_counts"]["no_move"] = (
+                stats["one_ply_status_counts"].get("no_move", 0) + 1
+            )
             continue
         try:
             move = chess.Move.from_uci(move_uci)
         except ValueError:
             stats["no_move"] += 1
+            stats["one_ply_status_counts"]["invalid_move"] = (
+                stats["one_ply_status_counts"].get("invalid_move", 0) + 1
+            )
             continue
         if move not in board.legal_moves:
             stats["no_move"] += 1
+            stats["one_ply_status_counts"]["illegal_move"] = (
+                stats["one_ply_status_counts"].get("illegal_move", 0) + 1
+            )
             continue
 
         reward = worst_reply_reward(board, move, label, use_black_reply=lookahead_black)
         stats["avg_reward"] += reward
         local_confirmed = reward > eps
+        sample_one_ply_status = (
+            "passed" if local_confirmed and reward >= best_reward - eps else "failed"
+        )
+        stats["one_ply_status_counts"][sample_one_ply_status] = (
+            stats["one_ply_status_counts"].get(sample_one_ply_status, 0) + 1
+        )
         parent_skill = canonical_skill_id(label)
+        own_geometry = _geometry_evidence(
+            start_board=board,
+            own_move=move,
+            post_reply_fen=None,
+        )
         post_own_move_packet = HandoffPacket.create(
             from_skill=parent_skill,
             phase="post_own_move",
@@ -682,6 +953,7 @@ def evaluate_landmark_progress(
                 "chosen_reward": float(reward),
                 "oracle_reward": float(best_reward),
                 "stage_filter": stage_filter,
+                **own_geometry,
             },
             achieved=[label] if local_confirmed else [],
             failed=[] if local_confirmed else [label],
@@ -734,7 +1006,21 @@ def evaluate_landmark_progress(
             )
             key = result["result"]
             stats["playouts"][key] = stats["playouts"].get(key, 0) + 1
+            sample_conversion_status = "passed" if key == "mate" else "failed"
+            stats["conversion_status_counts"][sample_conversion_status] = (
+                stats["conversion_status_counts"].get(sample_conversion_status, 0) + 1
+            )
             survived = key not in {"draw", "illegal_move", "no_move", "no_black_reply"}
+            post_reply_fen = (
+                result.get("first_reply", {}).get("resulting_fen")
+                if isinstance(result.get("first_reply"), dict)
+                else None
+            )
+            reply_geometry = _geometry_evidence(
+                start_board=board,
+                own_move=move,
+                post_reply_fen=post_reply_fen,
+            )
             successor_summary = _successor_skill_summary(
                 (
                     result.get("first_successor", {}).get("engine")
@@ -768,9 +1054,7 @@ def evaluate_landmark_progress(
                         else None
                     ),
                     "post_reply_fen": (
-                        result.get("first_reply", {}).get("resulting_fen")
-                        if isinstance(result.get("first_reply"), dict)
-                        else None
+                        post_reply_fen
                     ),
                     "survived": bool(survived),
                     "handoff_gap": handoff_gap,
@@ -779,13 +1063,23 @@ def evaluate_landmark_progress(
                     "successor_selected_skill": successor_summary["selected_skill"],
                     "successor_best_score": successor_summary["best_score"],
                     "successor_second_score": successor_summary.get("second_score"),
+                    "route_margin": successor_summary.get("route_margin"),
+                    "selected_successor_visible_affordance": successor_summary.get("selected_successor_visible_affordance"),
+                    "selected_successor_required_terms": successor_summary.get("selected_successor_required_terms"),
+                    "selected_successor_missing_terms": successor_summary.get("selected_successor_missing_terms"),
+                    "selected_successor_veto_terms": successor_summary.get("selected_successor_veto_terms"),
+                    "selected_successor_contract_met": successor_summary.get("selected_successor_contract_met"),
+                    "selected_despite_contract_mismatch": successor_summary.get("selected_despite_contract_mismatch"),
+                    "selected_skill_source": successor_summary.get("selected_skill_source"),
                     "successor_skills": successor_summary["skills"],
                     "visible_terms": successor_summary["visible_terms"],
                     "visible_successor_affordances": successor_summary["visible_successor_affordances"],
+                    "visible_eligible_successors": successor_summary["visible_eligible_successors"],
                     "missing_afforded_skills": successor_summary["missing_afforded_skills"],
                     "playout_result": key,
                     "plies": int(result.get("plies", 0) or 0),
                     "stage_filter": stage_filter,
+                    **reply_geometry,
                 },
                 achieved=(
                     ["survived_opponent_reply", "successor_affordance"]
@@ -827,6 +1121,43 @@ def evaluate_landmark_progress(
                 observed_outcome=key,
             )
             _append_packet(stats, playout_packet)
+            if (
+                local_confirmed
+                and key != "mate"
+                and counterfactual_successors
+                and (
+                    max_counterfactual_sweeps <= 0
+                    or len(stats["counterfactual_successor_sweeps"]) < max_counterfactual_sweeps
+                )
+                and post_reply_fen
+            ):
+                sweep = run_counterfactual_successor_sweep(
+                    graph,
+                    engine,
+                    post_reply_fen=post_reply_fen,
+                    successors=counterfactual_successors,
+                    rng=rng,
+                    label=label,
+                    max_plies=playout_max_plies,
+                    black_policy=black_policy,
+                    max_ticks=playout_max_ticks if playout_max_ticks is not None else max_ticks,
+                    suggestion_limit=suggestion_limit,
+                    successor_affordance_layer_enabled=successor_affordance_layer_enabled,
+                )
+                stats["counterfactual_successor_sweeps"].append({
+                    "sample": i,
+                    "state_signature": stable_record_id("state", chess.Board(post_reply_fen).board_fen(), chess.WHITE),
+                    "start_fen": board.fen(),
+                    "post_reply_fen": post_reply_fen,
+                    "actual_selected_successor": successor_summary["selected_skill"],
+                    "actual_result": key,
+                    "actual_route_scores": {
+                        skill_id: float(entry.get("score", 0.0) or 0.0)
+                        for skill_id, entry in successor_summary["skills"].items()
+                    },
+                    "counterfactual_results": sweep,
+                    "failure_classes": failure_classes,
+                })
             if local_confirmed and key != "mate":
                 trigger = "repeated_conversion_failure" if key in {"draw", "max_plies"} else "handoff_gap"
                 _append_shadow_candidate(
@@ -912,11 +1243,16 @@ def evaluate_landmark_progress(
     else:
         stats["conversion_status"] = "failed"
     stats["conversion_failure_count"] = max(0, playout_total - mate_total)
+    if playout_max_plies <= 0 and not stats["conversion_status_counts"]:
+        stats["conversion_status_counts"]["not_checked"] = stats["total"]
 
     full_handoff_packets = list(stats.get("handoff_packets", []))
     full_shadow_candidates = list(stats.get("shadow_candidates", []))
     stats["handoff_packet_count"] = len(full_handoff_packets)
     stats["shadow_candidate_count"] = len(full_shadow_candidates)
+    stats["counterfactual_successor_sweep_count"] = len(
+        stats.get("counterfactual_successor_sweeps", [])
+    )
     stats["handoff_packet_counts_by_phase"] = _count_handoff_packets(full_handoff_packets)
     stats["shadow_candidate_counts_by_trigger"] = _count_by(full_shadow_candidates, "trigger")
     if shadow_candidates_output is not None:
@@ -941,6 +1277,8 @@ def evaluate_landmark_progress(
         stats.pop("handoff_packets", None)
     if not stats["shadow_candidates"]:
         stats.pop("shadow_candidates", None)
+    if not stats["counterfactual_successor_sweeps"]:
+        stats.pop("counterfactual_successor_sweeps", None)
     return stats
 
 
@@ -965,6 +1303,8 @@ def print_landmark_results(stats: dict, *, black_policy: str = "adversarial", pl
         print(f"Handoff packets: {stats['handoff_packet_count']}")
     if "shadow_candidate_count" in stats:
         print(f"Shadow candidates: {stats['shadow_candidate_count']}")
+    if stats.get("counterfactual_successor_sweep_count"):
+        print(f"Counterfactual successor sweeps: {stats['counterfactual_successor_sweep_count']}")
     if stats.get("debug_failures"):
         print("\nDebug failures")
         print("-" * 60)
@@ -1048,6 +1388,10 @@ def main() -> None:
                         help="Failed conversion with successor score at/above this threshold is miscalibrated")
     parser.add_argument("--enable-successor-affordance-layer", action="store_true",
                         help="Enable visible KRK successor-affordance layer as a causal score bias")
+    parser.add_argument("--counterfactual-successors", type=str, default=None,
+                        help="Comma-separated canonical successor skill IDs to force on failed post-reply states")
+    parser.add_argument("--max-counterfactual-sweeps", type=int, default=0,
+                        help="If >0, limit forced-successor sweeps to this many failed samples")
     args = parser.parse_args()
 
     source_names = (
@@ -1081,6 +1425,12 @@ def main() -> None:
         route_conflict_delta=args.route_conflict_delta,
         high_successor_score_threshold=args.high_successor_score_threshold,
         successor_affordance_layer_enabled=args.enable_successor_affordance_layer,
+        counterfactual_successors=tuple(
+            item.strip()
+            for item in (args.counterfactual_successors or "").split(",")
+            if item.strip()
+        ),
+        max_counterfactual_sweeps=args.max_counterfactual_sweeps,
         verbose=True,
     )
     print_landmark_results(stats, black_policy=args.black_policy, playout_max_plies=args.playout_max_plies)
