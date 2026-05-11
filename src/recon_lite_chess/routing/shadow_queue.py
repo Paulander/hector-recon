@@ -18,6 +18,7 @@ TRIGGER_PRIORITY = {
     "same_skill_loop_after_confirmation": 2,
     "successor_absent": 3,
     "handoff_gap": 3,
+    "maintenance_needed_but_not_detected": 3,
     "high_score_conversion_failure": 4,
     "route_conflict": 5,
     "low_affordance_state": 6,

@@ -226,6 +226,16 @@ KRK_SUCCESSOR_AFFORDANCES = {
         "required_terms": ["rook_safe"],
         "veto_terms": ["fence_already_satisfied"],
     },
+    "krk.fence_maintenance": {
+        "source_terms": [
+            "fence_exists",
+            "fence_needs_repair",
+            "rook_safe",
+            "post_fence_conversion_needed",
+        ],
+        "required_terms": ["fence_exists", "rook_safe"],
+        "veto_terms": ["fence_already_satisfied", "mate_basin_available"],
+    },
     "krk.stage0_basin": {
         "source_terms": ["mate_basin_available", "rook_safe"],
         "required_terms": ["mate_basin_available"],

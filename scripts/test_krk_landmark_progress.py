@@ -96,7 +96,12 @@ def _successor_skill_summary(
             "route_conflict": False,
             "skills": {},
             "exports": {},
+            "visible_terms": {},
+            "visible_successor_affordances": {},
+            "missing_afforded_skills": {},
         }
+    visible_terms = dict(move_details.get("visible_terms", {}) or {})
+    visible_affordances = dict(move_details.get("successor_affordances", {}) or {})
 
     grouped: dict[str, dict] = {}
     for item in move_details.get("suggestions", []):
@@ -145,6 +150,11 @@ def _successor_skill_summary(
         skill_id: max(0.0, min(1.0, float(entry["score"])))
         for skill_id, entry in grouped.items()
     }
+    missing_afforded = {
+        skill_id: payload
+        for skill_id, payload in visible_affordances.items()
+        if skill_id not in grouped and float(payload.get("score", 0.0) or 0.0) > affordance_threshold
+    }
     return {
         "selected_skill": selected_skill,
         "best_score": best_score,
@@ -153,6 +163,9 @@ def _successor_skill_summary(
         "route_conflict": bool(route_conflict),
         "skills": grouped,
         "exports": exports,
+        "visible_terms": visible_terms,
+        "visible_successor_affordances": visible_affordances,
+        "missing_afforded_skills": missing_afforded,
     }
 
 
@@ -169,12 +182,21 @@ def _classify_successor_failure(
     classes: list[str] = []
     selected = successor_summary.get("selected_skill")
     best_score = successor_summary.get("best_score")
+    visible_terms = successor_summary.get("visible_terms", {}) or {}
+    missing_afforded = successor_summary.get("missing_afforded_skills", {}) or {}
     if selected is None:
         classes.append("successor_absent")
     if successor_summary.get("route_conflict"):
         classes.append("successor_conflict")
     if selected == parent_skill:
-        classes.append("same_skill_reselected_after_satisfaction")
+        if visible_terms.get("fence_already_satisfied"):
+            classes.append("same_skill_reselected_after_satisfaction")
+        elif (
+            visible_terms.get("fence_needs_repair")
+            or not visible_terms.get("fence_exists", False)
+            or "krk.fence_maintenance" in missing_afforded
+        ):
+            classes.append("maintenance_needed_but_not_detected")
     if successor_summary.get("handoff_gap"):
         classes.append("low_support_fallback")
     if best_score is not None and float(best_score) >= high_score_threshold:
@@ -190,6 +212,7 @@ def _trigger_priority(trigger: str) -> int:
         "same_skill_loop_after_confirmation": 2,
         "successor_absent": 3,
         "handoff_gap": 3,
+        "maintenance_needed_but_not_detected": 3,
         "high_score_conversion_failure": 4,
         "route_conflict": 5,
         "low_affordance_state": 6,
@@ -204,7 +227,7 @@ def _trigger_for_failure_class(failure_class: str) -> str | None:
         "same_skill_reselected_after_satisfaction": "same_skill_loop_after_confirmation",
         "selected_successor_miscalibrated": "high_score_conversion_failure",
         "low_support_fallback": "low_affordance_state",
-        "maintenance_needed_but_not_detected": "handoff_gap",
+        "maintenance_needed_but_not_detected": "maintenance_needed_but_not_detected",
     }
     return mapping.get(failure_class)
 
@@ -338,6 +361,10 @@ def choose_move_details(
         "confidence": float(env["move_confidence"]) if env.get("move_confidence") is not None else None,
         "suggested_actuator": env.get("suggested_actuator"),
         "suggestions": clean_suggestions,
+        "visible_terms": dict(env.get("blackboard", {}).get("krk_visible_terms", {}) or {}),
+        "successor_affordances": dict(
+            env.get("blackboard", {}).get("krk_successor_affordances", {}) or {}
+        ),
     }
 
 
@@ -753,6 +780,9 @@ def evaluate_landmark_progress(
                     "successor_best_score": successor_summary["best_score"],
                     "successor_second_score": successor_summary.get("second_score"),
                     "successor_skills": successor_summary["skills"],
+                    "visible_terms": successor_summary["visible_terms"],
+                    "visible_successor_affordances": successor_summary["visible_successor_affordances"],
+                    "missing_afforded_skills": successor_summary["missing_afforded_skills"],
                     "playout_result": key,
                     "plies": int(result.get("plies", 0) or 0),
                     "stage_filter": stage_filter,

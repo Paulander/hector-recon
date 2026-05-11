@@ -54,3 +54,34 @@ def test_visible_successor_affordance_records_source_terms_when_enabled():
     assert payload["score"] == 0.5
     assert payload["source_terms"] == ["rook_safe"]
     assert payload["veto_terms"] == []
+
+
+def test_fence_maintenance_affordance_can_be_visible_without_durable_skill():
+    env = {
+        "board": chess.Board("4k3/1R6/1K6/8/8/8/8/8 w - - 0 1"),
+        "blackboard": {
+            "successor_affordance_layer_enabled": True,
+            "krk_visible_terms": {
+                "fence_exists": True,
+                "fence_needs_repair": True,
+                "rook_safe": True,
+                "fence_already_satisfied": False,
+            },
+        },
+    }
+
+    affordance = create_krk_successor_affordance("script.krk.successor.fence_maintenance_affordance")
+    affordance.meta.update({
+        "successor_skill_id": "krk.fence_maintenance",
+        "source_terms": ["fence_exists", "fence_needs_repair", "rook_safe"],
+        "required_terms": ["fence_exists", "rook_safe"],
+        "veto_terms": ["fence_already_satisfied"],
+    })
+
+    success, done = affordance.predicate(affordance, env)
+
+    payload = env["blackboard"]["krk_successor_affordances"]["krk.fence_maintenance"]
+    assert success is True
+    assert done is True
+    assert payload["score"] > 0.0
+    assert payload["successor"] == "krk.fence_maintenance"
