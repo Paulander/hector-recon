@@ -37,6 +37,7 @@ def test_analyze_handoff_records_surfaces_successor_failure_motifs():
                     "successor_selected_skill": "krk.edge_trap_close",
                     "handoff_gap": True,
                     "route_conflict": True,
+                    "failure_classes": ["successor_conflict"],
                 },
             },
             {
@@ -70,6 +71,7 @@ def test_analyze_handoff_records_surfaces_successor_failure_motifs():
     assert payload["route_conflict_count"] == 1
     assert payload["successor_selected_skill_counts"] == {"krk.edge_trap_close": 1}
     assert payload["failed_successor_skill_counts"] == {"krk.edge_trap_close": 1}
+    assert payload["failure_class_counts"] == {"successor_conflict": 1}
     assert payload["shadow_trigger_counts"] == {"handoff_gap": 1}
     assert payload["top_failure_motifs"][0]["from_skill"] == "krk.fence_established"
     assert payload["top_failure_motifs"][0]["successor_skill"] == "krk.edge_trap_close"

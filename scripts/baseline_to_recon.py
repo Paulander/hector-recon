@@ -95,6 +95,7 @@ def compile_baseline_to_topology(
     
     # Create Hub
     create_hub_node(topology)
+    create_successor_affordance_layer(topology)
     
     # Create Legs (one per actuator), grouped by canonical curriculum skill.
     for actuator in learner.actuators:
@@ -169,6 +170,178 @@ def create_hub_node(topology: Dict):
     })
     
     print("Created hub: krk_hub")
+
+
+KRK_SUCCESSOR_CONTEXT_TERMS = [
+    "fence_exists",
+    "fence_stable",
+    "fence_needs_repair",
+    "fence_already_satisfied",
+    "post_fence_conversion_needed",
+    "enemy_king_not_at_edge",
+    "enemy_king_edge_distance_bin",
+    "box_area_large",
+    "box_shrink_available",
+    "white_king_support_available",
+    "wrong_tempo_detected",
+    "mate_basin_available",
+    "rook_safe",
+    "cut_stable",
+    "black_king_escape_available",
+]
+
+
+KRK_SUCCESSOR_AFFORDANCES = {
+    "krk.edge_trap_close": {
+        "source_terms": [
+            "fence_exists",
+            "enemy_king_not_at_edge",
+            "rook_safe",
+            "post_fence_conversion_needed",
+        ],
+        "required_terms": ["rook_safe"],
+        "veto_terms": ["mate_basin_available"],
+    },
+    "krk.edge_trap_enemy_between": {
+        "source_terms": [
+            "fence_exists",
+            "white_king_support_available",
+            "cut_stable",
+            "post_fence_conversion_needed",
+        ],
+        "required_terms": ["fence_exists"],
+        "veto_terms": ["mate_basin_available"],
+    },
+    "krk.edge_trap_wrong_tempo": {
+        "source_terms": [
+            "wrong_tempo_detected",
+            "fence_exists",
+            "post_fence_conversion_needed",
+        ],
+        "required_terms": ["fence_exists"],
+        "veto_terms": ["mate_basin_available"],
+    },
+    "krk.fence_established": {
+        "source_terms": ["fence_needs_repair", "rook_safe"],
+        "required_terms": ["rook_safe"],
+        "veto_terms": ["fence_already_satisfied"],
+    },
+    "krk.stage0_basin": {
+        "source_terms": ["mate_basin_available", "rook_safe"],
+        "required_terms": ["mate_basin_available"],
+        "veto_terms": [],
+    },
+}
+
+
+def create_successor_affordance_layer(topology: Dict) -> None:
+    """Create visible, opt-in KRK successor-affordance evidence nodes."""
+    hub_id = "krk_successor_affordance_hub"
+    topology["nodes"][hub_id] = {
+        "id": hub_id,
+        "type": "SCRIPT",
+        "factory": None,
+        "meta": {
+            "successor_affordance_layer": True,
+            "enabled_by_default": False,
+            "description": "Visible KRK successor-affordance evidence hub; non-causal unless enabled.",
+        },
+    }
+    topology["edges"].append({
+        "src": "krk_hub",
+        "dst": hub_id,
+        "type": "SUB",
+        "weight": 1.0,
+    })
+    topology["edges"].append({
+        "src": hub_id,
+        "dst": "krk_hub",
+        "type": "SUR",
+        "weight": 1.0,
+    })
+
+    for term in KRK_SUCCESSOR_CONTEXT_TERMS:
+        term_id = f"terminal.krk.{term}"
+        topology["nodes"][term_id] = {
+            "id": term_id,
+            "type": "TERMINAL",
+            "factory": "recon_lite_chess.krk_baseline_nodes:create_krk_context_terminal",
+            "meta": {
+                "term": term,
+                "visible_successor_term": True,
+                "description": f"Visible KRK context term: {term}",
+            },
+        }
+        topology["edges"].append({
+            "src": hub_id,
+            "dst": term_id,
+            "type": "SUB",
+            "weight": 1.0,
+        })
+        topology["edges"].append({
+            "src": term_id,
+            "dst": hub_id,
+            "type": "SUR",
+            "weight": 1.0,
+        })
+
+    for skill_id, config in KRK_SUCCESSOR_AFFORDANCES.items():
+        node_id = f"script.krk.successor.{skill_id.split('.', 1)[1]}_affordance"
+        marker_id = f"terminal.krk.successor.{skill_id.split('.', 1)[1]}_marker"
+        topology["nodes"][node_id] = {
+            "id": node_id,
+            "type": "SCRIPT",
+            "factory": "recon_lite_chess.krk_baseline_nodes:create_krk_successor_affordance",
+            "meta": {
+                "successor_skill_id": skill_id,
+                "source_terms": config["source_terms"],
+                "required_terms": config["required_terms"],
+                "veto_terms": config["veto_terms"],
+                "visible_successor_affordance": True,
+                "description": f"Visible successor affordance for {skill_id}",
+            },
+        }
+        topology["edges"].append({
+            "src": hub_id,
+            "dst": node_id,
+            "type": "SUB",
+            "weight": 1.0,
+        })
+        topology["edges"].append({
+            "src": node_id,
+            "dst": hub_id,
+            "type": "SUR",
+            "weight": 1.0,
+        })
+        topology["nodes"][marker_id] = {
+            "id": marker_id,
+            "type": "TERMINAL",
+            "factory": "recon_lite_chess.krk_baseline_nodes:create_krk_affordance_marker_terminal",
+            "meta": {
+                "successor_skill_id": skill_id,
+                "visible_successor_affordance_marker": True,
+                "description": f"Marker terminal for {skill_id} affordance SCRIPT execution",
+            },
+        }
+        topology["edges"].append({
+            "src": node_id,
+            "dst": marker_id,
+            "type": "SUB",
+            "weight": 1.0,
+        })
+        topology["edges"].append({
+            "src": marker_id,
+            "dst": node_id,
+            "type": "SUR",
+            "weight": 1.0,
+        })
+
+    topology["meta"]["successor_affordance_layer"] = {
+        "enabled_by_default": False,
+        "context_terms": KRK_SUCCESSOR_CONTEXT_TERMS,
+        "successor_skills": sorted(KRK_SUCCESSOR_AFFORDANCES),
+    }
+    print("Created visible successor-affordance layer")
 
 
 def ensure_skill_node(topology: Dict, curriculum_label: str | None) -> str:
@@ -527,6 +700,7 @@ def create_actuator_terminal(
         "meta": {
             "origin": "baseline",
             "stage": actuator.stage,
+            "skill_id": canonicalize_skill_id(getattr(actuator, "curriculum_label", None)),
             "curriculum_label": getattr(actuator, "curriculum_label", None),
             "target_goal_label": target_goal_label_for_curriculum(
                 getattr(actuator, "curriculum_label", None)

@@ -103,6 +103,7 @@ def _successor_skill_summary(
         skill_id = _skill_id_for_suggestion(item)
         meta = item.get("meta") if isinstance(item.get("meta"), dict) else {}
         curriculum_label = meta.get("curriculum_label") or item.get("curriculum_label")
+        visible_affordance = meta.get("visible_successor_affordance") or {}
         score = float(item.get("score", 0.0) or 0.0)
         entry = grouped.setdefault(
             skill_id,
@@ -113,18 +114,21 @@ def _successor_skill_summary(
                 "best_actuator": item.get("actuator"),
                 "stage": item.get("stage"),
                 "curriculum_label": curriculum_label,
+                "visible_successor_affordance": visible_affordance,
             },
         )
         entry["count"] += 1
         if score > float(entry["score"]):
             meta = item.get("meta") if isinstance(item.get("meta"), dict) else {}
             curriculum_label = meta.get("curriculum_label") or item.get("curriculum_label")
+            visible_affordance = meta.get("visible_successor_affordance") or {}
             entry.update({
                 "score": score,
                 "best_move": item.get("move"),
                 "best_actuator": item.get("actuator"),
                 "stage": item.get("stage"),
                 "curriculum_label": curriculum_label,
+                "visible_successor_affordance": visible_affordance,
             })
 
     ranked = sorted(grouped.items(), key=lambda kv: kv[1]["score"], reverse=True)
@@ -150,6 +154,59 @@ def _successor_skill_summary(
         "skills": grouped,
         "exports": exports,
     }
+
+
+def _classify_successor_failure(
+    *,
+    parent_skill: str,
+    local_confirmed: bool,
+    conversion_result: str,
+    successor_summary: dict,
+    high_score_threshold: float,
+) -> list[str]:
+    if not local_confirmed or conversion_result == "mate":
+        return []
+    classes: list[str] = []
+    selected = successor_summary.get("selected_skill")
+    best_score = successor_summary.get("best_score")
+    if selected is None:
+        classes.append("successor_absent")
+    if successor_summary.get("route_conflict"):
+        classes.append("successor_conflict")
+    if selected == parent_skill:
+        classes.append("same_skill_reselected_after_satisfaction")
+    if successor_summary.get("handoff_gap"):
+        classes.append("low_support_fallback")
+    if best_score is not None and float(best_score) >= high_score_threshold:
+        classes.append("selected_successor_miscalibrated")
+    if selected == parent_skill and successor_summary.get("handoff_gap"):
+        classes.append("maintenance_needed_but_not_detected")
+    return classes or ["conversion_failure_unclassified"]
+
+
+def _trigger_priority(trigger: str) -> int:
+    priorities = {
+        "repeated_conversion_failure": 1,
+        "same_skill_loop_after_confirmation": 2,
+        "successor_absent": 3,
+        "handoff_gap": 3,
+        "high_score_conversion_failure": 4,
+        "route_conflict": 5,
+        "low_affordance_state": 6,
+    }
+    return priorities.get(trigger, 99)
+
+
+def _trigger_for_failure_class(failure_class: str) -> str | None:
+    mapping = {
+        "successor_absent": "successor_absent",
+        "successor_conflict": "route_conflict",
+        "same_skill_reselected_after_satisfaction": "same_skill_loop_after_confirmation",
+        "selected_successor_miscalibrated": "high_score_conversion_failure",
+        "low_support_fallback": "low_affordance_state",
+        "maintenance_needed_but_not_detected": "handoff_gap",
+    }
+    return mapping.get(failure_class)
 
 
 def _append_packet(stats: dict, packet: HandoffPacket) -> None:
@@ -214,6 +271,7 @@ def choose_move_with_engine(
     max_ticks: int = 200,
     stage_filter: Optional[int] = None,
     suggestion_limit: int = 10,
+    successor_affordance_layer_enabled: bool = False,
 ) -> Optional[str]:
     return choose_move_details(
         graph,
@@ -222,6 +280,7 @@ def choose_move_with_engine(
         max_ticks=max_ticks,
         stage_filter=stage_filter,
         suggestion_limit=suggestion_limit,
+        successor_affordance_layer_enabled=successor_affordance_layer_enabled,
     ).get("move")
 
 
@@ -232,13 +291,16 @@ def choose_move_details(
     max_ticks: int = 200,
     stage_filter: Optional[int] = None,
     suggestion_limit: int = 10,
+    successor_affordance_layer_enabled: bool = False,
 ) -> dict:
     env = {
         "board": board,
         "chosen_move": None,
         "suggested_move": None,
         "blackboard": {"stage_filter": stage_filter} if stage_filter is not None else {},
+        "successor_affordance_layer_enabled": successor_affordance_layer_enabled,
     }
+    env["blackboard"]["successor_affordance_layer_enabled"] = successor_affordance_layer_enabled
 
     engine.reset_states()
     root_id = "krk_entry" if "krk_entry" in graph.nodes else None
@@ -332,6 +394,7 @@ def play_to_mate(
     max_ticks: int = 200,
     suggestion_limit: int = 10,
     trace_max_plies: Optional[int] = None,
+    successor_affordance_layer_enabled: bool = False,
 ) -> dict:
     """Run a simple KRK playout using the compiled topology for White moves."""
     b = board.copy()
@@ -381,6 +444,7 @@ def play_to_mate(
                 max_ticks=max_ticks,
                 stage_filter=active_stage_filter,
                 suggestion_limit=suggestion_limit,
+                successor_affordance_layer_enabled=successor_affordance_layer_enabled,
             )
             move_uci = move_details.get("move")
             if white_moves == 1 and first_successor is None:
@@ -513,6 +577,8 @@ def evaluate_landmark_progress(
     shadow_candidates_output: Optional[Path] = None,
     successor_affordance_threshold: float = 0.0,
     route_conflict_delta: float = 0.01,
+    high_successor_score_threshold: float = 0.5,
+    successor_affordance_layer_enabled: bool = False,
     verbose: bool = True,
 ) -> dict:
     rng = random.Random(seed)
@@ -553,6 +619,7 @@ def evaluate_landmark_progress(
             max_ticks=max_ticks,
             stage_filter=stage_filter,
             suggestion_limit=suggestion_limit,
+            successor_affordance_layer_enabled=successor_affordance_layer_enabled,
         )
         move_uci = move_details.get("move")
         oracle_rewards = oracle_move_rewards(board, label, lookahead_black)
@@ -636,6 +703,7 @@ def evaluate_landmark_progress(
                 max_ticks=playout_max_ticks if playout_max_ticks is not None else max_ticks,
                 suggestion_limit=suggestion_limit,
                 trace_max_plies=debug_trace_max_plies,
+                successor_affordance_layer_enabled=successor_affordance_layer_enabled,
             )
             key = result["result"]
             stats["playouts"][key] = stats["playouts"].get(key, 0) + 1
@@ -651,6 +719,13 @@ def evaluate_landmark_progress(
             )
             handoff_gap = bool(local_confirmed and survived and successor_summary["handoff_gap"])
             route_conflict = bool(local_confirmed and successor_summary["route_conflict"])
+            failure_classes = _classify_successor_failure(
+                parent_skill=parent_skill,
+                local_confirmed=local_confirmed,
+                conversion_result=key,
+                successor_summary=successor_summary,
+                high_score_threshold=high_successor_score_threshold,
+            )
             post_reply_packet = HandoffPacket.create(
                 from_skill=parent_skill,
                 phase="post_opponent_reply",
@@ -673,6 +748,7 @@ def evaluate_landmark_progress(
                     "survived": bool(survived),
                     "handoff_gap": handoff_gap,
                     "route_conflict": route_conflict,
+                    "failure_classes": failure_classes,
                     "successor_selected_skill": successor_summary["selected_skill"],
                     "successor_best_score": successor_summary["best_score"],
                     "successor_second_score": successor_summary.get("second_score"),
@@ -711,6 +787,7 @@ def evaluate_landmark_progress(
                     "fen": board.fen(),
                     "move": move_uci,
                     "conversion_status": conversion_status,
+                    "failure_classes": failure_classes,
                     "playout_result": key,
                     "max_plies": playout_max_plies,
                     "plies": int(result.get("plies", 0) or 0),
@@ -722,7 +799,6 @@ def evaluate_landmark_progress(
             _append_packet(stats, playout_packet)
             if local_confirmed and key != "mate":
                 trigger = "repeated_conversion_failure" if key in {"draw", "max_plies"} else "handoff_gap"
-                priority = 1 if trigger == "repeated_conversion_failure" else 2
                 _append_shadow_candidate(
                     stats,
                     trigger=trigger,
@@ -731,56 +807,33 @@ def evaluate_landmark_progress(
                     move_details=move_details,
                     packet_id=playout_packet.packet_id,
                     observed_outcome=key,
-                    priority=priority,
+                    priority=_trigger_priority(trigger),
                     route_scores={
                         skill_id: float(entry.get("score", 0.0) or 0.0)
                         for skill_id, entry in successor_summary["skills"].items()
                     },
                 )
-            if local_confirmed and handoff_gap and key != "mate":
-                _append_shadow_candidate(
-                    stats,
-                    trigger="handoff_gap",
-                    parent_skill=parent_skill,
-                    board=board,
-                    move_details=move_details,
-                    packet_id=post_reply_packet.packet_id,
-                    observed_outcome=key,
-                    priority=2,
-                    route_scores={
-                        skill_id: float(entry.get("score", 0.0) or 0.0)
-                        for skill_id, entry in successor_summary["skills"].items()
-                    },
-                )
-                _append_shadow_candidate(
-                    stats,
-                    trigger="low_affordance_state",
-                    parent_skill=parent_skill,
-                    board=board,
-                    move_details=move_details,
-                    packet_id=post_reply_packet.packet_id,
-                    observed_outcome=key,
-                    priority=4,
-                    route_scores={
-                        skill_id: float(entry.get("score", 0.0) or 0.0)
-                        for skill_id, entry in successor_summary["skills"].items()
-                    },
-                )
-            if local_confirmed and route_conflict and key != "mate":
-                _append_shadow_candidate(
-                    stats,
-                    trigger="route_conflict",
-                    parent_skill=parent_skill,
-                    board=board,
-                    move_details=move_details,
-                    packet_id=post_reply_packet.packet_id,
-                    observed_outcome=key,
-                    priority=3,
-                    route_scores={
-                        skill_id: float(entry.get("score", 0.0) or 0.0)
-                        for skill_id, entry in successor_summary["skills"].items()
-                    },
-                )
+            if local_confirmed and key != "mate":
+                emitted = set()
+                for failure_class in failure_classes:
+                    trigger = _trigger_for_failure_class(failure_class)
+                    if not trigger or trigger in emitted:
+                        continue
+                    emitted.add(trigger)
+                    _append_shadow_candidate(
+                        stats,
+                        trigger=trigger,
+                        parent_skill=parent_skill,
+                        board=board,
+                        move_details=move_details,
+                        packet_id=post_reply_packet.packet_id,
+                        observed_outcome=key,
+                        priority=_trigger_priority(trigger),
+                        route_scores={
+                            skill_id: float(entry.get("score", 0.0) or 0.0)
+                            for skill_id, entry in successor_summary["skills"].items()
+                        },
+                    )
             if key != "mate" and len(stats["debug_playouts"]) < debug_playouts:
                 stats["debug_playouts"].append({
                     "sample": i,
@@ -807,6 +860,7 @@ def evaluate_landmark_progress(
 
     stats["label"] = label
     stats["source_stage_names"] = list(source_names)
+    stats["successor_affordance_layer_enabled"] = successor_affordance_layer_enabled
     evaluated = max(0, stats["total"] - stats["no_move"])
     stats["one_ply_status"] = (
         "passed"
@@ -960,6 +1014,10 @@ def main() -> None:
                         help="Score threshold below which post-reply successor skill affordance is a handoff gap")
     parser.add_argument("--route-conflict-delta", type=float, default=0.01,
                         help="Top-two successor skill scores within this delta count as a route conflict")
+    parser.add_argument("--high-successor-score-threshold", type=float, default=0.5,
+                        help="Failed conversion with successor score at/above this threshold is miscalibrated")
+    parser.add_argument("--enable-successor-affordance-layer", action="store_true",
+                        help="Enable visible KRK successor-affordance layer as a causal score bias")
     args = parser.parse_args()
 
     source_names = (
@@ -991,6 +1049,8 @@ def main() -> None:
         shadow_candidates_output=args.shadow_candidates_output,
         successor_affordance_threshold=args.successor_affordance_threshold,
         route_conflict_delta=args.route_conflict_delta,
+        high_successor_score_threshold=args.high_successor_score_threshold,
+        successor_affordance_layer_enabled=args.enable_successor_affordance_layer,
         verbose=True,
     )
     print_landmark_results(stats, black_policy=args.black_policy, playout_max_plies=args.playout_max_plies)

@@ -21,6 +21,14 @@ def test_build_shadow_stem_queue_deduplicates_and_prioritizes():
             "packet_id": "packet.1",
         },
         {
+            "candidate_id": "cand.loop",
+            "trigger": "same_skill_loop_after_confirmation",
+            "parent_skill": "krk.fence_established",
+            "state_signature": "state.c",
+            "observed_outcome": "max_plies",
+            "packet_id": "packet.0",
+        },
+        {
             "candidate_id": "cand.repeat",
             "trigger": "repeated_conversion_failure",
             "parent_skill": "krk.fence_established",
@@ -46,10 +54,12 @@ def test_build_shadow_stem_queue_deduplicates_and_prioritizes():
     assert queue["schema_version"] == "shadow_stem_queue.v1"
     assert queue["trigger_counts"] == {
         "repeated_conversion_failure": 2,
+        "same_skill_loop_after_confirmation": 1,
         "low_affordance_state": 1,
     }
-    assert len(queue["queue"]) == 2
+    assert len(queue["queue"]) == 3
     assert queue["queue"][0]["trigger"] == "repeated_conversion_failure"
     assert queue["queue"][0]["support"] == 2
     assert queue["queue"][0]["packet_ids"] == ["packet.2", "packet.3"]
-    assert queue["queue"][1]["trigger"] == "low_affordance_state"
+    assert queue["queue"][1]["trigger"] == "same_skill_loop_after_confirmation"
+    assert queue["queue"][2]["trigger"] == "low_affordance_state"

@@ -77,6 +77,7 @@ class HandoffAnalysis:
     post_reply_failure_count: int = 0
     successor_selected_skill_counts: dict[str, int] = field(default_factory=dict)
     failed_successor_skill_counts: dict[str, int] = field(default_factory=dict)
+    failure_class_counts: dict[str, int] = field(default_factory=dict)
     handoff_gap_count: int = 0
     route_conflict_count: int = 0
     shadow_trigger_counts: dict[str, int] = field(default_factory=dict)
@@ -110,6 +111,11 @@ class HandoffAnalysis:
             lines.append("- No successor skill evidence found.")
 
         lines.extend(["", "## Failure Motifs", ""])
+        if self.failure_class_counts:
+            lines.append("Failure classes:")
+            for cls, count in self.failure_class_counts.items():
+                lines.append(f"- `{cls}`: {count}")
+            lines.append("")
         if self.top_failure_motifs:
             for motif in self.top_failure_motifs:
                 lines.append(
@@ -147,6 +153,7 @@ def analyze_handoff_records(
     packet_phase_status = Counter()
     successor_selected = Counter()
     failed_successor = Counter()
+    failure_classes = Counter()
     shadow_triggers = Counter()
     shadow_parent_skills = Counter()
     motifs: Counter[tuple[str, str, str, bool, bool]] = Counter()
@@ -192,6 +199,8 @@ def analyze_handoff_records(
             successor = evidence.get("successor_selected_skill")
             if successor:
                 successor_selected[str(successor)] += 1
+            for failure_class in evidence.get("failure_classes", []) or []:
+                failure_classes[str(failure_class)] += 1
 
             phase = packet.get("phase")
             status = packet.get("status")
@@ -255,6 +264,7 @@ def analyze_handoff_records(
         post_reply_failure_count=post_reply_failures,
         successor_selected_skill_counts=_counter_dict(successor_selected),
         failed_successor_skill_counts=_counter_dict(failed_successor),
+        failure_class_counts=_counter_dict(failure_classes),
         handoff_gap_count=handoff_gaps,
         route_conflict_count=route_conflicts,
         shadow_trigger_counts=_counter_dict(shadow_triggers),

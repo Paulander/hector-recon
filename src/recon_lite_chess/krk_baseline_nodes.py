@@ -80,6 +80,15 @@ def create_krk_entry_root(node_id=None):
         blackboard["goal_min_overlap"] = node.meta.get("goal_min_overlap", 8)
         blackboard["goal_handoff_threshold"] = node.meta.get("goal_handoff_threshold", 0.2)
         node.meta["goal_bank"] = blackboard.get("goal_bank")
+        blackboard["successor_affordance_layer_enabled"] = bool(
+            env.get(
+                "successor_affordance_layer_enabled",
+                blackboard.get(
+                    "successor_affordance_layer_enabled",
+                    node.meta.get("successor_affordance_layer_enabled", False),
+                ),
+            )
+        )
 
         # Compute current goal distance (for handoff gating) when goal bank exists
         if blackboard.get("goal_bank") and blackboard.get("krk_features") is not None:
@@ -102,6 +111,79 @@ def create_krk_entry_root(node_id=None):
         ntype=NodeType.SCRIPT,
         predicate=predicate
     )
+
+
+def create_krk_context_terminal(node_id=None):
+    """Create a visible KRK geometric/context terminal.
+
+    These terminals write graph-visible source terms into the blackboard. They
+    are safe to run even when the successor layer is disabled; actuator scoring
+    only reads them when explicitly enabled.
+    """
+    actual_id = node_id or "krk_context_terminal"
+
+    def predicate(node, env):
+        blackboard = env.get("blackboard")
+        board = env.get("board")
+        if not blackboard or not board:
+            return False, False
+        if not blackboard.get("successor_affordance_layer_enabled", False):
+            return False, True
+        term = node.meta.get("term")
+        if not term:
+            return False, False
+        value = _evaluate_krk_context_term(board, term)
+        terms = blackboard.setdefault("krk_visible_terms", {})
+        terms[term] = bool(value)
+        node.meta["last_value"] = bool(value)
+        return bool(value), True
+
+    return Node(nid=actual_id, ntype=NodeType.TERMINAL, predicate=predicate)
+
+
+def create_krk_successor_affordance(node_id=None):
+    """Create a visible successor-affordance SCRIPT node.
+
+    The node computes a score from visible context terms and records the source
+    terms/veto terms. It does not select moves by itself.
+    """
+    actual_id = node_id or "krk_successor_affordance"
+
+    def predicate(node, env):
+        blackboard = env.get("blackboard")
+        if not blackboard:
+            return False, False
+        if not blackboard.get("successor_affordance_layer_enabled", False):
+            return False, True
+        terms = blackboard.get("krk_visible_terms", {})
+        source_terms = list(node.meta.get("source_terms", []))
+        veto_terms = list(node.meta.get("veto_terms", []))
+        required_terms = list(node.meta.get("required_terms", []))
+        score = _score_visible_affordance(terms, source_terms, veto_terms, required_terms)
+        skill_id = node.meta.get("successor_skill_id") or node.meta.get("skill_id") or actual_id
+        payload = {
+            "successor": skill_id,
+            "score": score,
+            "source_terms": [term for term in source_terms if terms.get(term)],
+            "veto_terms": [term for term in veto_terms if terms.get(term)],
+            "required_terms": required_terms,
+            "enabled": bool(blackboard.get("successor_affordance_layer_enabled", False)),
+        }
+        blackboard.setdefault("krk_successor_affordances", {})[skill_id] = payload
+        node.meta["last_successor_affordance"] = payload
+        return score > float(node.meta.get("confirm_threshold", 0.0)), True
+
+    return Node(nid=actual_id, ntype=NodeType.SCRIPT, predicate=predicate)
+
+
+def create_krk_affordance_marker_terminal(node_id=None):
+    """Marker terminal that prevents affordance SCRIPTs from auto-confirming before predicate execution."""
+    actual_id = node_id or "krk_affordance_marker"
+
+    def predicate(node, env):
+        return True, True
+
+    return Node(nid=actual_id, ntype=NodeType.TERMINAL, predicate=predicate)
 
 
 def create_krk_hub(node_id=None):
@@ -320,6 +402,7 @@ def create_actuator_terminal(node_id=None):
         goal_lookahead = blackboard.get("goal_lookahead", "max")
         min_goal_overlap = float(blackboard.get("goal_min_overlap", 8))
         curriculum_label = node.meta.get("curriculum_label")
+        skill_id = node.meta.get("skill_id")
         use_landmark_runtime_reward = curriculum_label in LANDMARK_LABELS and stage >= 2
         goal_entries = []
         if goal_bank and stage > 0:
@@ -490,6 +573,15 @@ def create_actuator_terminal(node_id=None):
                 # or a tactically loose move where Black can remove the rook.
                 score -= 1_000_000.0
 
+            if blackboard.get("successor_affordance_layer_enabled"):
+                score = _apply_successor_affordance_bias(
+                    score,
+                    skill_id=skill_id,
+                    curriculum_label=curriculum_label,
+                    blackboard=blackboard,
+                    move_meta=move_meta[move],
+                )
+
             scores[move] = score
         
         if not scores:
@@ -548,6 +640,103 @@ def create_actuator_terminal(node_id=None):
         ntype=NodeType.TERMINAL,
         predicate=predicate
     )
+
+
+def _evaluate_krk_context_term(board: chess.Board, term: str) -> bool:
+    wk_sq = next(iter(board.pieces(chess.KING, chess.WHITE)), None)
+    bk_sq = next(iter(board.pieces(chess.KING, chess.BLACK)), None)
+    wr_sq = next(iter(board.pieces(chess.ROOK, chess.WHITE)), None)
+    if wk_sq is None or bk_sq is None or wr_sq is None:
+        return False
+
+    wk_file, wk_rank = chess.square_file(wk_sq), chess.square_rank(wk_sq)
+    bk_file, bk_rank = chess.square_file(bk_sq), chess.square_rank(bk_sq)
+    wr_file, wr_rank = chess.square_file(wr_sq), chess.square_rank(wr_sq)
+    edge_distance = min(bk_file, 7 - bk_file, bk_rank, 7 - bk_rank)
+    rook_safe = chess.square_distance(wr_sq, bk_sq) > 1 and not board.is_attacked_by(chess.BLACK, wr_sq)
+    king_support = chess.square_distance(wk_sq, wr_sq) <= 2 or chess.square_distance(wk_sq, bk_sq) <= 2
+    same_line_cut = wr_file == bk_file or wr_rank == bk_rank
+    fence_exists = same_line_cut and rook_safe
+    fence_stable = fence_exists and king_support
+    box_width = abs(wk_file - bk_file) + 1
+    box_height = abs(wk_rank - bk_rank) + 1
+    box_area = box_width * box_height
+    mate_basin_available = board.turn == chess.WHITE and any(
+        _move_checkmates(board, move) for move in board.legal_moves
+    )
+
+    values = {
+        "fence_exists": fence_exists,
+        "fence_stable": fence_stable,
+        "fence_needs_repair": fence_exists and not fence_stable,
+        "fence_already_satisfied": fence_exists and fence_stable,
+        "post_fence_conversion_needed": fence_exists and not mate_basin_available,
+        "enemy_king_not_at_edge": edge_distance > 0,
+        "enemy_king_edge_distance_bin": edge_distance >= 2,
+        "box_area_large": box_area >= 12,
+        "box_shrink_available": box_area >= 6 and fence_exists,
+        "white_king_support_available": king_support,
+        "wrong_tempo_detected": fence_exists and not king_support,
+        "mate_basin_available": mate_basin_available,
+        "rook_safe": rook_safe,
+        "cut_stable": fence_stable,
+        "black_king_escape_available": edge_distance > 0,
+    }
+    return bool(values.get(term, False))
+
+
+def _move_checkmates(board: chess.Board, move: chess.Move) -> bool:
+    if move not in board.legal_moves:
+        return False
+    b2 = board.copy()
+    b2.push(move)
+    return b2.is_checkmate()
+
+
+def _score_visible_affordance(
+    terms: Dict[str, bool],
+    source_terms: list[str],
+    veto_terms: list[str],
+    required_terms: list[str],
+) -> float:
+    if any(terms.get(term, False) for term in veto_terms):
+        return 0.0
+    if any(not terms.get(term, False) for term in required_terms):
+        return 0.0
+    if not source_terms:
+        return 0.0
+    active = sum(1 for term in source_terms if terms.get(term, False))
+    return float(active) / float(len(source_terms))
+
+
+def _apply_successor_affordance_bias(
+    score: float,
+    *,
+    skill_id: str | None,
+    curriculum_label: str | None,
+    blackboard: Dict[str, Any],
+    move_meta: Dict[str, Any],
+) -> float:
+    canonical = skill_id or _canonical_krk_skill_id(curriculum_label)
+    affordances = blackboard.get("krk_successor_affordances", {})
+    payload = affordances.get(canonical, {})
+    affordance_score = float(payload.get("score", 0.0) or 0.0)
+    terms = blackboard.get("krk_visible_terms", {})
+    fence_satisfied = bool(terms.get("fence_already_satisfied", False))
+    fence_needs_repair = bool(terms.get("fence_needs_repair", False))
+    bias_weight = float(blackboard.get("successor_affordance_bias_weight", 0.05))
+    adjusted = float(score) + (bias_weight * affordance_score)
+    if canonical == "krk.fence_established" and fence_satisfied and not fence_needs_repair:
+        adjusted -= float(blackboard.get("same_skill_satisfied_penalty", 0.05))
+        move_meta["same_skill_satisfied_penalty"] = True
+    move_meta["visible_successor_affordance"] = payload
+    return adjusted
+
+
+def _canonical_krk_skill_id(curriculum_label: str | None) -> str:
+    raw = curriculum_label or "uncategorized"
+    normalized = "".join(ch if ch.isalnum() else "_" for ch in raw.lower()).strip("_")
+    return f"krk.{normalized or 'uncategorized'}"
 
 
 def create_triplet_after_terminal(node_id=None):
