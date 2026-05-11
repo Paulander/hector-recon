@@ -254,13 +254,24 @@ def _krk_geometry(board: chess.Board) -> dict:
     wk_file, wk_rank = chess.square_file(wk_sq), chess.square_rank(wk_sq)
     bk_file, bk_rank = chess.square_file(bk_sq), chess.square_rank(bk_sq)
     wr_file, wr_rank = chess.square_file(wr_sq), chess.square_rank(wr_sq)
-    cut_axis = "file" if wr_file == bk_file else "rank" if wr_rank == bk_rank else "none"
-    rook_safe = chess.square_distance(wr_sq, bk_sq) > 1 and not board.is_attacked_by(chess.BLACK, wr_sq)
-    king_support = chess.square_distance(wk_sq, wr_sq) <= 2 or chess.square_distance(wk_sq, bk_sq) <= 2
-    fence_exists = cut_axis != "none" and rook_safe
-    box_width = abs(wk_file - bk_file) + 1
-    box_height = abs(wk_rank - bk_rank) + 1
     edge_distance = min(bk_file, 7 - bk_file, bk_rank, 7 - bk_rank)
+    rook_king_distance = max(abs(wr_file - bk_file), abs(wr_rank - bk_rank))
+    king_rook_distance = max(abs(wk_file - wr_file), abs(wk_rank - wr_rank))
+    king_distance = max(abs(wk_file - bk_file), abs(wk_rank - bk_rank))
+    cut_axis = "file" if wr_file == bk_file else "rank" if wr_rank == bk_rank else "edge" if edge_distance == 0 else "none"
+    if rook_king_distance > 1:
+        rook_safe = True
+    else:
+        capture = chess.Move(bk_sq, wr_sq)
+        reply_board = board.copy(stack=False)
+        reply_board.turn = chess.BLACK
+        rook_safe = capture not in reply_board.legal_moves or king_rook_distance <= 1
+    king_support = king_rook_distance <= 2 or king_distance <= 2
+    fence_exists = rook_safe and (edge_distance == 0 or (cut_axis in {"file", "rank"} and rook_king_distance >= 2))
+    box_width = wr_file if bk_file < wr_file else 7 - wr_file
+    box_height = wr_rank if bk_rank < wr_rank else 7 - wr_rank
+    box_width = max(1, box_width)
+    box_height = max(1, box_height)
     return {
         "fence_exists": bool(fence_exists),
         "fence_stable": bool(fence_exists and king_support),

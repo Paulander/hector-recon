@@ -56,6 +56,21 @@ def test_visible_successor_affordance_records_source_terms_when_enabled():
     assert payload["veto_terms"] == []
 
 
+def test_edge_trapped_black_king_counts_as_visible_fence_contract():
+    env = {
+        "board": chess.Board("4k3/7R/1K6/8/8/8/8/8 b - - 1 1"),
+        "blackboard": {"successor_affordance_layer_enabled": True},
+    }
+    context = create_krk_context_terminal("terminal.krk.fence_exists")
+    context.meta["term"] = "fence_exists"
+
+    success, done = context.predicate(context, env)
+
+    assert success is True
+    assert done is True
+    assert env["blackboard"]["krk_visible_terms"]["fence_exists"] is True
+
+
 def test_fence_maintenance_affordance_can_be_visible_without_durable_skill():
     env = {
         "board": chess.Board("4k3/1R6/1K6/8/8/8/8/8 w - - 0 1"),
