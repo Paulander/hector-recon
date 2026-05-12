@@ -530,6 +530,12 @@ def _write_jsonl(path: Path, records: list[dict]) -> None:
             fh.write(json.dumps(record, sort_keys=True) + "\n")
 
 
+def _append_jsonl(path: Path, record: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(record, sort_keys=True) + "\n")
+
+
 def choose_move_with_engine(
     graph: Graph,
     engine: ReConEngine,
@@ -873,6 +879,8 @@ def run_counterfactual_successor_sweep(
     max_ticks: int,
     suggestion_limit: int,
     successor_affordance_layer_enabled: bool,
+    step_output: Optional[Path] = None,
+    step_context: Optional[dict] = None,
 ) -> dict:
     """Try existing successor skills from the same post-reply state.
 
@@ -913,7 +921,68 @@ def run_counterfactual_successor_sweep(
             "confidence": engine_details.get("confidence"),
             "suggested_actuator": engine_details.get("suggested_actuator"),
         }
+        if step_output is not None:
+            _append_jsonl(
+                step_output,
+                {
+                    **(step_context or {}),
+                    "forced_successor": skill_id,
+                    "counterfactual_result": results[skill_id],
+                },
+            )
     return results
+
+
+def summarize_counterfactual_successor_sweeps(sweeps: list[dict]) -> dict:
+    """Aggregate forced-successor audit records.
+
+    This is diagnostic-only. It answers whether existing compiled successor
+    skills could convert failed post-reply states if granted first ownership.
+    """
+    summary = {
+        "total_sweeps": len(sweeps),
+        "sweeps_with_any_mate": 0,
+        "sweeps_without_any_mate": 0,
+        "forced_successor_outcome_counts": {},
+        "forced_successor_available_counts": {},
+        "actual_to_forced_outcome_counts": {},
+        "best_mating_successor_counts": {},
+    }
+    for sweep in sweeps:
+        actual = str(sweep.get("actual_selected_successor") or "unknown")
+        results = sweep.get("counterfactual_results") or {}
+        if not isinstance(results, dict):
+            continue
+        mating_successors: list[str] = []
+        for skill_id, result in results.items():
+            if not isinstance(result, dict):
+                continue
+            forced = str(skill_id)
+            outcome = str(result.get("result") or "unknown")
+            available = bool(result.get("forced_successor_available"))
+            outcome_key = f"{forced}:{outcome}"
+            availability_key = f"{forced}:{'available' if available else 'unavailable'}"
+            actual_key = f"{actual}->{forced}:{outcome}"
+            summary["forced_successor_outcome_counts"][outcome_key] = (
+                summary["forced_successor_outcome_counts"].get(outcome_key, 0) + 1
+            )
+            summary["forced_successor_available_counts"][availability_key] = (
+                summary["forced_successor_available_counts"].get(availability_key, 0) + 1
+            )
+            summary["actual_to_forced_outcome_counts"][actual_key] = (
+                summary["actual_to_forced_outcome_counts"].get(actual_key, 0) + 1
+            )
+            if outcome == "mate":
+                mating_successors.append(forced)
+        if mating_successors:
+            summary["sweeps_with_any_mate"] += 1
+            for forced in sorted(mating_successors):
+                summary["best_mating_successor_counts"][forced] = (
+                    summary["best_mating_successor_counts"].get(forced, 0) + 1
+                )
+        else:
+            summary["sweeps_without_any_mate"] += 1
+    return summary
 
 
 def evaluate_landmark_progress(
@@ -945,6 +1014,8 @@ def evaluate_landmark_progress(
     successor_affordance_layer_enabled: bool = False,
     counterfactual_successors: tuple[str, ...] = (),
     max_counterfactual_sweeps: int = 0,
+    counterfactual_sweeps_output: Optional[Path] = None,
+    counterfactual_steps_output: Optional[Path] = None,
     verbose: bool = True,
 ) -> dict:
     rng = random.Random(seed)
@@ -1092,7 +1163,10 @@ def evaluate_landmark_progress(
             })
 
         if verbose and (i + 1) % 10 == 0:
-            print(f"{i + 1:4d}/{samples}: improved={stats['improved']} optimal={stats['optimal']}")
+            print(
+                f"{i + 1:4d}/{samples}: improved={stats['improved']} optimal={stats['optimal']}",
+                flush=True,
+            )
 
         if playout_max_plies > 0:
             result = play_to_mate(
@@ -1315,6 +1389,15 @@ def evaluate_landmark_progress(
                 )
                 and post_reply_fen
             ):
+                step_context = {
+                    "sample": i,
+                    "state_signature": stable_record_id("state", chess.Board(post_reply_fen).board_fen(), chess.WHITE),
+                    "start_fen": board.fen(),
+                    "post_reply_fen": post_reply_fen,
+                    "actual_selected_successor": successor_summary["selected_skill"],
+                    "actual_result": key,
+                    "failure_classes": failure_classes,
+                }
                 sweep = run_counterfactual_successor_sweep(
                     graph,
                     engine,
@@ -1327,21 +1410,28 @@ def evaluate_landmark_progress(
                     max_ticks=playout_max_ticks if playout_max_ticks is not None else max_ticks,
                     suggestion_limit=suggestion_limit,
                     successor_affordance_layer_enabled=successor_affordance_layer_enabled,
+                    step_output=counterfactual_steps_output,
+                    step_context=step_context,
                 )
-                stats["counterfactual_successor_sweeps"].append({
-                    "sample": i,
-                    "state_signature": stable_record_id("state", chess.Board(post_reply_fen).board_fen(), chess.WHITE),
-                    "start_fen": board.fen(),
-                    "post_reply_fen": post_reply_fen,
-                    "actual_selected_successor": successor_summary["selected_skill"],
-                    "actual_result": key,
+                sweep_record = {
+                    **step_context,
                     "actual_route_scores": {
                         skill_id: float(entry.get("score", 0.0) or 0.0)
                         for skill_id, entry in successor_summary["skills"].items()
                     },
                     "counterfactual_results": sweep,
-                    "failure_classes": failure_classes,
-                })
+                }
+                stats["counterfactual_successor_sweeps"].append(sweep_record)
+                if counterfactual_sweeps_output is not None:
+                    _append_jsonl(counterfactual_sweeps_output, sweep_record)
+                if verbose:
+                    print(
+                        "  counterfactual sweep "
+                        f"{len(stats['counterfactual_successor_sweeps'])}: "
+                        f"sample={i} actual={successor_summary['selected_skill']} "
+                        f"result={key}",
+                        flush=True,
+                    )
             if local_confirmed and key != "mate":
                 trigger = "repeated_conversion_failure" if key in {"draw", "max_plies"} else "handoff_gap"
                 _append_shadow_candidate(
@@ -1437,6 +1527,9 @@ def evaluate_landmark_progress(
     stats["counterfactual_successor_sweep_count"] = len(
         stats.get("counterfactual_successor_sweeps", [])
     )
+    stats["counterfactual_successor_summary"] = summarize_counterfactual_successor_sweeps(
+        stats.get("counterfactual_successor_sweeps", [])
+    )
     stats["handoff_packet_counts_by_phase"] = _count_handoff_packets(full_handoff_packets)
     stats["shadow_candidate_counts_by_trigger"] = _count_by(full_shadow_candidates, "trigger")
     if shadow_candidates_output is not None:
@@ -1463,6 +1556,7 @@ def evaluate_landmark_progress(
         stats.pop("shadow_candidates", None)
     if not stats["counterfactual_successor_sweeps"]:
         stats.pop("counterfactual_successor_sweeps", None)
+        stats.pop("counterfactual_successor_summary", None)
     return stats
 
 
@@ -1489,6 +1583,7 @@ def print_landmark_results(stats: dict, *, black_policy: str = "adversarial", pl
         print(f"Shadow candidates: {stats['shadow_candidate_count']}")
     if stats.get("counterfactual_successor_sweep_count"):
         print(f"Counterfactual successor sweeps: {stats['counterfactual_successor_sweep_count']}")
+        print(f"Counterfactual successor summary: {stats.get('counterfactual_successor_summary', {})}")
     if stats.get("semantic_alignment_status_counts"):
         print(f"Semantic alignment: {stats['semantic_alignment_status_counts']}")
     if stats.get("debug_failures"):
@@ -1578,6 +1673,10 @@ def main() -> None:
                         help="Comma-separated canonical successor skill IDs to force on failed post-reply states")
     parser.add_argument("--max-counterfactual-sweeps", type=int, default=0,
                         help="If >0, limit forced-successor sweeps to this many failed samples")
+    parser.add_argument("--counterfactual-sweeps-output", type=Path, default=None,
+                        help="Optional JSONL path for streaming forced-successor sweep records as they complete")
+    parser.add_argument("--counterfactual-steps-output", type=Path, default=None,
+                        help="Optional JSONL path for streaming each forced-successor playout result as it completes")
     args = parser.parse_args()
 
     source_names = (
@@ -1617,6 +1716,8 @@ def main() -> None:
             if item.strip()
         ),
         max_counterfactual_sweeps=args.max_counterfactual_sweeps,
+        counterfactual_sweeps_output=args.counterfactual_sweeps_output,
+        counterfactual_steps_output=args.counterfactual_steps_output,
         verbose=True,
     )
     print_landmark_results(stats, black_policy=args.black_policy, playout_max_plies=args.playout_max_plies)

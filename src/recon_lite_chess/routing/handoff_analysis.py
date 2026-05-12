@@ -94,6 +94,13 @@ class HandoffAnalysis:
     conversion_by_semantic_alignment_status: dict[str, dict[str, int]] = field(default_factory=dict)
     semantic_alignment_confusion_counts: dict[str, int] = field(default_factory=dict)
     semantic_alignment_snapshots: dict[str, list[dict[str, Any]]] = field(default_factory=dict)
+    counterfactual_successor_sweep_count: int = 0
+    counterfactual_sweeps_with_any_mate: int = 0
+    counterfactual_sweeps_without_any_mate: int = 0
+    counterfactual_forced_successor_outcome_counts: dict[str, int] = field(default_factory=dict)
+    counterfactual_forced_successor_available_counts: dict[str, int] = field(default_factory=dict)
+    counterfactual_actual_to_forced_outcome_counts: dict[str, int] = field(default_factory=dict)
+    counterfactual_best_mating_successor_counts: dict[str, int] = field(default_factory=dict)
     handoff_gap_count: int = 0
     route_conflict_count: int = 0
     shadow_trigger_counts: dict[str, int] = field(default_factory=dict)
@@ -189,6 +196,24 @@ class HandoffAnalysis:
                             f"result={record.get('conversion_result')}"
                         )
 
+        if self.counterfactual_successor_sweep_count:
+            lines.extend(["", "## Counterfactual Successor Sweep", ""])
+            lines.append(f"- Sweeps: {self.counterfactual_successor_sweep_count}")
+            lines.append(f"- Any existing forced successor mated: {self.counterfactual_sweeps_with_any_mate}")
+            lines.append(f"- No forced successor mated: {self.counterfactual_sweeps_without_any_mate}")
+            if self.counterfactual_best_mating_successor_counts:
+                lines.extend(["", "Mating forced successors:"])
+                for key, count in self.counterfactual_best_mating_successor_counts.items():
+                    lines.append(f"- `{key}`: {count}")
+            if self.counterfactual_forced_successor_outcome_counts:
+                lines.extend(["", "Forced successor outcomes:"])
+                for key, count in self.counterfactual_forced_successor_outcome_counts.items():
+                    lines.append(f"- `{key}`: {count}")
+            if self.counterfactual_actual_to_forced_outcome_counts:
+                lines.extend(["", "Actual successor -> forced successor outcomes:"])
+                for key, count in list(self.counterfactual_actual_to_forced_outcome_counts.items())[:20]:
+                    lines.append(f"- `{key}`: {count}")
+
         lines.extend(["", "## Shadow Candidates", ""])
         if self.shadow_trigger_counts:
             for trigger, count in self.shadow_trigger_counts.items():
@@ -223,6 +248,10 @@ def analyze_handoff_records(
     semantic_confusion = Counter()
     conversion_by_alignment: defaultdict[str, Counter] = defaultdict(Counter)
     semantic_snapshots: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    counterfactual_forced_outcomes = Counter()
+    counterfactual_forced_availability = Counter()
+    counterfactual_actual_to_forced = Counter()
+    counterfactual_best_mating = Counter()
     shadow_triggers = Counter()
     shadow_parent_skills = Counter()
     motifs: Counter[tuple[str, str, str, bool, bool]] = Counter()
@@ -232,6 +261,9 @@ def analyze_handoff_records(
     post_reply_failures = 0
     handoff_gaps = 0
     route_conflicts = 0
+    counterfactual_sweeps = 0
+    counterfactual_with_any_mate = 0
+    counterfactual_without_any_mate = 0
     embedded_shadows: list[Mapping[str, Any]] = []
 
     for diag in diagnostics:
@@ -269,6 +301,63 @@ def analyze_handoff_records(
                 for record in records:
                     if isinstance(record, Mapping) and len(target) < 5:
                         target.append(dict(record))
+        counterfactual_summary = diag.get("counterfactual_successor_summary")
+        if isinstance(counterfactual_summary, Mapping):
+            counterfactual_sweeps += int(counterfactual_summary.get("total_sweeps", 0) or 0)
+            counterfactual_with_any_mate += int(
+                counterfactual_summary.get("sweeps_with_any_mate", 0) or 0
+            )
+            counterfactual_without_any_mate += int(
+                counterfactual_summary.get("sweeps_without_any_mate", 0) or 0
+            )
+            _add_counter_values(
+                counterfactual_forced_outcomes,
+                counterfactual_summary.get("forced_successor_outcome_counts"),
+            )
+            _add_counter_values(
+                counterfactual_forced_availability,
+                counterfactual_summary.get("forced_successor_available_counts"),
+            )
+            _add_counter_values(
+                counterfactual_actual_to_forced,
+                counterfactual_summary.get("actual_to_forced_outcome_counts"),
+            )
+            _add_counter_values(
+                counterfactual_best_mating,
+                counterfactual_summary.get("best_mating_successor_counts"),
+            )
+        else:
+            sweeps = diag.get("counterfactual_successor_sweeps")
+            if isinstance(sweeps, list):
+                for sweep in sweeps:
+                    if not isinstance(sweep, Mapping):
+                        continue
+                    counterfactual_sweeps += 1
+                    actual = str(sweep.get("actual_selected_successor") or "unknown")
+                    results = sweep.get("counterfactual_results")
+                    if not isinstance(results, Mapping):
+                        counterfactual_without_any_mate += 1
+                        continue
+                    mating_successors = []
+                    for skill_id, result in results.items():
+                        if not isinstance(result, Mapping):
+                            continue
+                        forced = str(skill_id)
+                        outcome = str(result.get("result") or "unknown")
+                        available = bool(result.get("forced_successor_available"))
+                        counterfactual_forced_outcomes[f"{forced}:{outcome}"] += 1
+                        counterfactual_forced_availability[
+                            f"{forced}:{'available' if available else 'unavailable'}"
+                        ] += 1
+                        counterfactual_actual_to_forced[f"{actual}->{forced}:{outcome}"] += 1
+                        if outcome == "mate":
+                            mating_successors.append(forced)
+                    if mating_successors:
+                        counterfactual_with_any_mate += 1
+                        for forced in sorted(mating_successors):
+                            counterfactual_best_mating[forced] += 1
+                    else:
+                        counterfactual_without_any_mate += 1
 
         raw_shadows = diag.get("shadow_candidates") or []
         if isinstance(raw_shadows, list):
@@ -387,6 +476,13 @@ def analyze_handoff_records(
             key: list(value)
             for key, value in semantic_snapshots.items()
         },
+        counterfactual_successor_sweep_count=counterfactual_sweeps,
+        counterfactual_sweeps_with_any_mate=counterfactual_with_any_mate,
+        counterfactual_sweeps_without_any_mate=counterfactual_without_any_mate,
+        counterfactual_forced_successor_outcome_counts=_counter_dict(counterfactual_forced_outcomes),
+        counterfactual_forced_successor_available_counts=_counter_dict(counterfactual_forced_availability),
+        counterfactual_actual_to_forced_outcome_counts=_counter_dict(counterfactual_actual_to_forced),
+        counterfactual_best_mating_successor_counts=_counter_dict(counterfactual_best_mating),
         handoff_gap_count=handoff_gaps,
         route_conflict_count=route_conflicts,
         shadow_trigger_counts=_counter_dict(shadow_triggers),

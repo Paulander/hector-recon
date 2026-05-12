@@ -156,6 +156,67 @@ def test_analyze_handoff_records_counts_repeated_packets_as_samples():
     assert analysis["failure_class_counts"] == {"selected_successor_miscalibrated": 2}
 
 
+def test_analyze_handoff_records_summarizes_counterfactual_sweeps():
+    diagnostic = {
+        "total": 2,
+        "counterfactual_successor_sweeps": [
+            {
+                "actual_selected_successor": "krk.stage0_basin",
+                "actual_result": "max_plies",
+                "counterfactual_results": {
+                    "krk.edge_trap_close": {
+                        "result": "mate",
+                        "forced_successor_available": True,
+                    },
+                    "krk.fence_established": {
+                        "result": "max_plies",
+                        "forced_successor_available": True,
+                    },
+                },
+            },
+            {
+                "actual_selected_successor": "krk.fence_established",
+                "actual_result": "max_plies",
+                "counterfactual_results": {
+                    "krk.edge_trap_close": {
+                        "result": "max_plies",
+                        "forced_successor_available": False,
+                    },
+                    "krk.fence_established": {
+                        "result": "max_plies",
+                        "forced_successor_available": True,
+                    },
+                },
+            },
+        ],
+    }
+
+    analysis = analyze_handoff_records([diagnostic]).to_dict()
+
+    assert analysis["counterfactual_successor_sweep_count"] == 2
+    assert analysis["counterfactual_sweeps_with_any_mate"] == 1
+    assert analysis["counterfactual_sweeps_without_any_mate"] == 1
+    assert analysis["counterfactual_best_mating_successor_counts"] == {
+        "krk.edge_trap_close": 1
+    }
+    assert analysis["counterfactual_forced_successor_outcome_counts"] == {
+        "krk.edge_trap_close:max_plies": 1,
+        "krk.edge_trap_close:mate": 1,
+        "krk.fence_established:max_plies": 2,
+    }
+    assert analysis["counterfactual_forced_successor_available_counts"] == {
+        "krk.edge_trap_close:available": 1,
+        "krk.edge_trap_close:unavailable": 1,
+        "krk.fence_established:available": 2,
+    }
+    assert analysis["counterfactual_actual_to_forced_outcome_counts"] == {
+        "krk.fence_established->krk.edge_trap_close:max_plies": 1,
+        "krk.fence_established->krk.fence_established:max_plies": 1,
+        "krk.stage0_basin->krk.edge_trap_close:mate": 1,
+        "krk.stage0_basin->krk.fence_established:max_plies": 1,
+    }
+
+
 def test_handoff_analysis_markdown_is_human_readable():
     analysis = analyze_handoff_records([{"total": 0, "handoff_packets": []}])
 
