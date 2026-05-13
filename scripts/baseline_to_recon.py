@@ -89,6 +89,8 @@ def compile_baseline_to_topology(
             "goal_handoff_threshold": 0.2,
             "successor_contract_gate_enabled": False,
             "successor_contract_mismatch_penalty": 10.0,
+            "successor_role_license_enabled": False,
+            "successor_role_license_bonus": 0.25,
         }
     }
     
@@ -137,6 +139,8 @@ def create_root_node(topology: Dict, goal_bank: Dict | None = None):
             "goal_handoff_threshold": topology.get("meta", {}).get("goal_handoff_threshold", 0.2),
             "successor_contract_gate_enabled": topology.get("meta", {}).get("successor_contract_gate_enabled", False),
             "successor_contract_mismatch_penalty": topology.get("meta", {}).get("successor_contract_mismatch_penalty", 10.0),
+            "successor_role_license_enabled": topology.get("meta", {}).get("successor_role_license_enabled", False),
+            "successor_role_license_bonus": topology.get("meta", {}).get("successor_role_license_bonus", 0.25),
             "feature_set": topology.get("meta", {}).get("feature_set", "legacy"),
             "feature_names": topology.get("meta", {}).get("feature_names", []),
             "description": "KRK entry point with feature extraction"
@@ -187,8 +191,21 @@ KRK_SUCCESSOR_CONTEXT_TERMS = [
     "box_area_large",
     "box_shrink_available",
     "white_king_support_available",
+    "white_king_can_improve_support",
     "wrong_tempo_detected",
+    "wrong_tempo_geometry",
+    "mate_in_one_available",
     "mate_basin_available",
+    "goal_basin_proximity_low",
+    "goal_distance_can_decrease",
+    "enemy_king_restricted",
+    "enemy_king_near_edge",
+    "king_approach_after_fence_available",
+    "enemy_between_king_and_rook_axis",
+    "edge_trap_shape_available",
+    "edge_trap_close_geometry",
+    "enemy_between_geometry",
+    "rook_has_safe_lateral_transfer",
     "rook_safe",
     "cut_stable",
     "black_king_escape_available",
@@ -196,41 +213,81 @@ KRK_SUCCESSOR_CONTEXT_TERMS = [
 
 
 KRK_SUCCESSOR_AFFORDANCES = {
-    "krk.edge_trap_close": {
+    "krk.stage0_finish": {
+        "provider_skill_ids": ["krk.stage0_basin"],
+        "source_terms": ["mate_in_one_available", "rook_safe"],
+        "required_terms": ["mate_in_one_available", "rook_safe"],
+        "veto_terms": [],
+    },
+    "krk.stage0_king_approach_after_fence": {
+        "provider_skill_ids": ["krk.stage0_basin"],
+        "source_terms": [
+            "king_approach_after_fence_available",
+            "post_fence_conversion_needed",
+            "rook_safe",
+            "white_king_can_improve_support",
+        ],
+        "required_terms": ["king_approach_after_fence_available", "rook_safe"],
+        "veto_terms": ["mate_in_one_available", "edge_trap_shape_available"],
+    },
+    "krk.stage0_goal_basin_approach": {
+        "provider_skill_ids": ["krk.stage0_basin"],
+        "source_terms": [
+            "post_fence_conversion_needed",
+            "enemy_king_restricted",
+            "rook_safe",
+            "white_king_support_available",
+        ],
+        "required_terms": ["post_fence_conversion_needed", "rook_safe"],
+        "veto_terms": ["mate_in_one_available", "edge_trap_shape_available"],
+    },
+    "krk.edge_trap_close_recovery": {
+        "provider_skill_ids": ["krk.edge_trap_close"],
         "source_terms": [
             "fence_exists",
-            "enemy_king_not_at_edge",
+            "edge_trap_close_geometry",
+            "edge_trap_shape_available",
+            "rook_has_safe_lateral_transfer",
             "rook_safe",
             "post_fence_conversion_needed",
         ],
-        "required_terms": ["rook_safe"],
-        "veto_terms": ["mate_basin_available"],
+        "required_terms": ["fence_exists", "edge_trap_close_geometry", "rook_safe"],
+        "veto_terms": ["mate_in_one_available"],
     },
-    "krk.edge_trap_enemy_between": {
+    "krk.edge_trap_enemy_between_recovery": {
+        "provider_skill_ids": ["krk.edge_trap_enemy_between"],
         "source_terms": [
             "fence_exists",
-            "white_king_support_available",
-            "cut_stable",
+            "enemy_between_geometry",
+            "enemy_between_king_and_rook_axis",
+            "edge_trap_shape_available",
+            "rook_has_safe_lateral_transfer",
+            "rook_safe",
             "post_fence_conversion_needed",
         ],
-        "required_terms": ["fence_exists"],
-        "veto_terms": ["mate_basin_available"],
+        "required_terms": ["fence_exists", "enemy_between_geometry", "rook_safe"],
+        "veto_terms": ["mate_in_one_available"],
     },
-    "krk.edge_trap_wrong_tempo": {
+    "krk.edge_trap_wrong_tempo_recovery": {
+        "provider_skill_ids": ["krk.edge_trap_wrong_tempo"],
         "source_terms": [
+            "fence_exists",
+            "wrong_tempo_geometry",
             "wrong_tempo_detected",
-            "fence_exists",
+            "rook_safe",
             "post_fence_conversion_needed",
         ],
-        "required_terms": ["fence_exists"],
-        "veto_terms": ["mate_basin_available"],
+        "required_terms": ["fence_exists", "wrong_tempo_geometry", "rook_safe"],
+        "veto_terms": ["mate_in_one_available"],
     },
-    "krk.fence_established": {
+    "krk.fence_repair": {
+        "provider_skill_ids": ["krk.fence_established"],
         "source_terms": ["fence_needs_repair", "rook_safe"],
         "required_terms": ["rook_safe"],
         "veto_terms": ["fence_already_satisfied"],
     },
     "krk.fence_maintenance": {
+        "provider_skill_ids": ["krk.fence_maintenance"],
         "source_terms": [
             "fence_exists",
             "fence_needs_repair",
@@ -238,12 +295,7 @@ KRK_SUCCESSOR_AFFORDANCES = {
             "post_fence_conversion_needed",
         ],
         "required_terms": ["fence_exists", "rook_safe"],
-        "veto_terms": ["fence_already_satisfied", "mate_basin_available"],
-    },
-    "krk.stage0_basin": {
-        "source_terms": ["mate_basin_available", "rook_safe"],
-        "required_terms": ["mate_basin_available"],
-        "veto_terms": [],
+        "veto_terms": ["fence_already_satisfied", "mate_in_one_available"],
     },
 }
 
@@ -299,20 +351,24 @@ def create_successor_affordance_layer(topology: Dict) -> None:
             "weight": 1.0,
         })
 
-    for skill_id, config in KRK_SUCCESSOR_AFFORDANCES.items():
-        node_id = f"script.krk.successor.{skill_id.split('.', 1)[1]}_affordance"
-        marker_id = f"terminal.krk.successor.{skill_id.split('.', 1)[1]}_marker"
+    for role_id, config in KRK_SUCCESSOR_AFFORDANCES.items():
+        role_name = role_id.split(".", 1)[1]
+        provider_skill_ids = list(config.get("provider_skill_ids", [role_id]))
+        node_id = f"script.krk.successor.{role_name}_affordance"
+        marker_id = f"terminal.krk.successor.{role_name}_marker"
         topology["nodes"][node_id] = {
             "id": node_id,
             "type": "SCRIPT",
             "factory": "recon_lite_chess.krk_baseline_nodes:create_krk_successor_affordance",
             "meta": {
-                "successor_skill_id": skill_id,
+                "successor_skill_id": role_id,
+                "role_id": role_id,
+                "provider_skill_ids": provider_skill_ids,
                 "source_terms": config["source_terms"],
                 "required_terms": config["required_terms"],
                 "veto_terms": config["veto_terms"],
                 "visible_successor_affordance": True,
-                "description": f"Visible successor affordance for {skill_id}",
+                "description": f"Visible successor role {role_id} licensing {provider_skill_ids}",
             },
         }
         topology["edges"].append({
@@ -332,9 +388,11 @@ def create_successor_affordance_layer(topology: Dict) -> None:
             "type": "TERMINAL",
             "factory": "recon_lite_chess.krk_baseline_nodes:create_krk_affordance_marker_terminal",
             "meta": {
-                "successor_skill_id": skill_id,
+                "successor_skill_id": role_id,
+                "role_id": role_id,
+                "provider_skill_ids": provider_skill_ids,
                 "visible_successor_affordance_marker": True,
-                "description": f"Marker terminal for {skill_id} affordance SCRIPT execution",
+                "description": f"Marker terminal for {role_id} role affordance SCRIPT execution",
             },
         }
         topology["edges"].append({
@@ -353,7 +411,12 @@ def create_successor_affordance_layer(topology: Dict) -> None:
     topology["meta"]["successor_affordance_layer"] = {
         "enabled_by_default": False,
         "context_terms": KRK_SUCCESSOR_CONTEXT_TERMS,
-        "successor_skills": sorted(KRK_SUCCESSOR_AFFORDANCES),
+        "successor_roles": sorted(KRK_SUCCESSOR_AFFORDANCES),
+        "successor_skills": sorted({
+            provider
+            for config in KRK_SUCCESSOR_AFFORDANCES.values()
+            for provider in config.get("provider_skill_ids", [])
+        }),
     }
     print("Created visible successor-affordance layer")
 

@@ -168,3 +168,77 @@ def test_contract_gate_does_not_penalize_without_visible_alternative():
 
     assert adjusted == 5.7
     assert "visible_contract_gate_penalty" not in move_meta
+
+
+def test_role_license_bonus_supports_provider_without_contract_penalty():
+    move_meta = {}
+    adjusted = _apply_successor_affordance_bias(
+        5.7,
+        skill_id="krk.stage0_basin",
+        curriculum_label="stage0_basin",
+        blackboard={
+            "successor_role_license_enabled": True,
+            "successor_role_license_bonus": 0.25,
+            "krk_successor_affordances": {
+                "krk.stage0_finish": {
+                    "score": 0.0,
+                    "role_id": "krk.stage0_finish",
+                    "provider_skill_ids": ["krk.stage0_basin"],
+                    "missing_required_terms": ["mate_in_one_available"],
+                    "veto_terms": [],
+                    "contract_met": False,
+                },
+            },
+            "krk_successor_provider_licenses": {
+                "krk.stage0_basin": {
+                    "krk.stage0_king_approach_after_fence": {
+                        "score": 0.75,
+                        "role_id": "krk.stage0_king_approach_after_fence",
+                        "provider_skill_ids": ["krk.stage0_basin"],
+                        "source_terms": ["rook_safe", "white_king_can_improve_support"],
+                        "missing_required_terms": [],
+                        "veto_terms": [],
+                        "contract_met": True,
+                    }
+                }
+            },
+        },
+        move_meta=move_meta,
+    )
+
+    assert abs(adjusted - (5.7 + (0.25 * 0.75))) < 1e-9
+    assert abs(move_meta["visible_role_license_bonus"] - (0.25 * 0.75)) < 1e-9
+    assert move_meta["visible_role_licenses"][0]["role_id"] == "krk.stage0_king_approach_after_fence"
+    assert "visible_contract_gate_penalty" not in move_meta
+
+
+def test_successor_affordance_records_role_and_provider_license():
+    env = {
+        "board": chess.Board("4k3/1R6/1K6/8/8/8/8/8 w - - 0 1"),
+        "blackboard": {
+            "successor_affordance_layer_enabled": True,
+            "krk_visible_terms": {
+                "rook_safe": True,
+                "king_approach_after_fence_available": True,
+            },
+        },
+    }
+    affordance = create_krk_successor_affordance("script.krk.successor.stage0_approach_affordance")
+    affordance.meta.update({
+        "successor_skill_id": "krk.stage0_king_approach_after_fence",
+        "role_id": "krk.stage0_king_approach_after_fence",
+        "provider_skill_ids": ["krk.stage0_basin"],
+        "source_terms": ["rook_safe", "king_approach_after_fence_available"],
+        "required_terms": ["rook_safe"],
+        "veto_terms": ["mate_in_one_available"],
+    })
+
+    success, done = affordance.predicate(affordance, env)
+
+    payload = env["blackboard"]["krk_successor_role_affordances"]["krk.stage0_king_approach_after_fence"]
+    licenses = env["blackboard"]["krk_successor_provider_licenses"]["krk.stage0_basin"]
+    assert success is True
+    assert done is True
+    assert payload["role_id"] == "krk.stage0_king_approach_after_fence"
+    assert payload["provider_skill_ids"] == ["krk.stage0_basin"]
+    assert licenses["krk.stage0_king_approach_after_fence"]["contract_met"] is True

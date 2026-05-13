@@ -104,6 +104,7 @@ def main() -> None:
     parser.add_argument("--suggestion-limit", type=int, default=5)
     parser.add_argument("--enable-successor-affordance-layer", action="store_true")
     parser.add_argument("--enable-successor-contract-gate", action="store_true")
+    parser.add_argument("--enable-successor-role-licenses", action="store_true")
     parser.add_argument("--steps-output", type=Path, default=None,
                         help="Optional JSONL path for per-forced-successor records")
     parser.add_argument("--sweeps-output", type=Path, default=None,
@@ -150,6 +151,7 @@ def main() -> None:
             suggestion_limit=args.suggestion_limit,
             successor_affordance_layer_enabled=args.enable_successor_affordance_layer,
             successor_contract_gate_enabled=args.enable_successor_contract_gate,
+            successor_role_license_enabled=args.enable_successor_role_licenses,
             step_output=args.steps_output,
             step_context=step_context,
         )

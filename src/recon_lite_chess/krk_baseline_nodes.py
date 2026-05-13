@@ -107,6 +107,24 @@ def create_krk_entry_root(node_id=None):
                 ),
             )
         )
+        blackboard["successor_role_license_enabled"] = bool(
+            env.get(
+                "successor_role_license_enabled",
+                blackboard.get(
+                    "successor_role_license_enabled",
+                    node.meta.get("successor_role_license_enabled", False),
+                ),
+            )
+        )
+        blackboard["successor_role_license_bonus"] = float(
+            env.get(
+                "successor_role_license_bonus",
+                blackboard.get(
+                    "successor_role_license_bonus",
+                    node.meta.get("successor_role_license_bonus", 0.25),
+                ),
+            )
+        )
 
         # Compute current goal distance (for handoff gating) when goal bank exists
         if blackboard.get("goal_bank") and blackboard.get("krk_features") is not None:
@@ -182,8 +200,12 @@ def create_krk_successor_affordance(node_id=None):
         active_veto = [term for term in veto_terms if terms.get(term, False)]
         contract_met = not missing_required and not active_veto
         skill_id = node.meta.get("successor_skill_id") or node.meta.get("skill_id") or actual_id
+        role_id = node.meta.get("role_id") or skill_id
+        provider_skill_ids = list(node.meta.get("provider_skill_ids", [])) or [skill_id]
         payload = {
             "successor": skill_id,
+            "role_id": role_id,
+            "provider_skill_ids": provider_skill_ids,
             "score": score,
             "source_terms": [term for term in source_terms if terms.get(term)],
             "veto_terms": active_veto,
@@ -193,6 +215,14 @@ def create_krk_successor_affordance(node_id=None):
             "enabled": bool(blackboard.get("successor_affordance_layer_enabled", False)),
         }
         blackboard.setdefault("krk_successor_affordances", {})[skill_id] = payload
+        blackboard.setdefault("krk_successor_role_affordances", {})[role_id] = payload
+        provider_licenses = blackboard.setdefault("krk_successor_provider_licenses", {})
+        for provider_id in provider_skill_ids:
+            provider_payload = provider_licenses.setdefault(provider_id, {})
+            if isinstance(provider_payload, dict):
+                provider_payload[role_id] = payload
+            else:
+                provider_licenses[provider_id] = {role_id: payload}
         node.meta["last_successor_affordance"] = payload
         return score > float(node.meta.get("confirm_threshold", 0.0)), True
 
@@ -698,20 +728,53 @@ def _evaluate_krk_context_term(board: chess.Board, term: str) -> bool:
     mate_basin_available = board.turn == chess.WHITE and any(
         _move_checkmates(board, move) for move in board.legal_moves
     )
+    enemy_between_axis = (
+        (wk_file == bk_file == wr_file and min(wk_rank, wr_rank) < bk_rank < max(wk_rank, wr_rank))
+        or (wk_rank == bk_rank == wr_rank and min(wk_file, wr_file) < bk_file < max(wk_file, wr_file))
+    )
+    enemy_king_near_edge = edge_distance <= 1
+    post_fence_conversion_needed = fence_exists and not mate_basin_available
+    rook_has_safe_lateral_transfer = _rook_has_safe_lateral_transfer(board, wr_sq, bk_sq)
+    edge_trap_shape_available = (
+        fence_exists
+        and enemy_king_near_edge
+        and rook_safe
+        and post_fence_conversion_needed
+        and rook_has_safe_lateral_transfer
+    )
+    edge_trap_close_geometry = edge_trap_shape_available and king_support
+    wrong_tempo_geometry = fence_exists and not king_support and rook_safe
 
     values = {
         "fence_exists": fence_exists,
         "fence_stable": fence_stable,
         "fence_needs_repair": fence_exists and not fence_stable,
         "fence_already_satisfied": fence_exists and fence_stable,
-        "post_fence_conversion_needed": fence_exists and not mate_basin_available,
+        "post_fence_conversion_needed": post_fence_conversion_needed,
         "enemy_king_not_at_edge": edge_distance > 0,
         "enemy_king_edge_distance_bin": edge_distance >= 2,
+        "enemy_king_near_edge": enemy_king_near_edge,
         "box_area_large": box_area >= 12,
         "box_shrink_available": box_area >= 6 and fence_exists,
         "white_king_support_available": king_support,
+        "white_king_can_improve_support": _white_king_can_improve_support(board, wk_sq, bk_sq),
         "wrong_tempo_detected": fence_exists and not king_support,
+        "wrong_tempo_geometry": wrong_tempo_geometry,
+        "mate_in_one_available": mate_basin_available,
+        # Backwards-compatible alias for older compiled topologies. The term
+        # really means immediate mate availability, not basin membership.
         "mate_basin_available": mate_basin_available,
+        "goal_basin_proximity_low": False,
+        "goal_distance_can_decrease": False,
+        "enemy_king_restricted": fence_exists or edge_distance <= 1,
+        "king_approach_after_fence_available": (
+            post_fence_conversion_needed and rook_safe and _white_king_can_improve_support(board, wk_sq, bk_sq)
+        ),
+        "enemy_between_king_and_rook_axis": enemy_between_axis,
+        "edge_trap_shape_available": edge_trap_shape_available,
+        "edge_trap_close_geometry": edge_trap_close_geometry,
+        "enemy_between_geometry": edge_trap_shape_available and enemy_between_axis,
+        "rook_has_safe_lateral_transfer": rook_has_safe_lateral_transfer,
         "rook_safe": rook_safe,
         "cut_stable": fence_stable,
         "black_king_escape_available": edge_distance > 0,
@@ -725,6 +788,51 @@ def _move_checkmates(board: chess.Board, move: chess.Move) -> bool:
     b2 = board.copy()
     b2.push(move)
     return b2.is_checkmate()
+
+
+def _rook_has_safe_lateral_transfer(
+    board: chess.Board,
+    wr_sq: chess.Square,
+    bk_sq: chess.Square,
+) -> bool:
+    if board.turn != chess.WHITE:
+        return False
+    wr_file = chess.square_file(wr_sq)
+    wr_rank = chess.square_rank(wr_sq)
+    for move in board.legal_moves:
+        if move.from_square != wr_sq:
+            continue
+        to_file = chess.square_file(move.to_square)
+        to_rank = chess.square_rank(move.to_square)
+        if to_file == wr_file and to_rank == wr_rank:
+            continue
+        if to_file != wr_file and to_rank != wr_rank:
+            continue
+        b2 = board.copy(stack=False)
+        b2.push(move)
+        if b2.is_game_over():
+            return True
+        capture = chess.Move(bk_sq, move.to_square)
+        b2.turn = chess.BLACK
+        if capture not in b2.legal_moves:
+            return True
+    return False
+
+
+def _white_king_can_improve_support(
+    board: chess.Board,
+    wk_sq: chess.Square,
+    bk_sq: chess.Square,
+) -> bool:
+    if board.turn != chess.WHITE:
+        return False
+    current = chess.square_distance(wk_sq, bk_sq)
+    for move in board.legal_moves:
+        if move.from_square != wk_sq:
+            continue
+        if chess.square_distance(move.to_square, bk_sq) < current:
+            return True
+    return False
 
 
 def _score_visible_affordance(
@@ -760,6 +868,22 @@ def _apply_successor_affordance_bias(
     fence_needs_repair = bool(terms.get("fence_needs_repair", False))
     bias_weight = float(blackboard.get("successor_affordance_bias_weight", 0.05))
     adjusted = float(score) + (bias_weight * affordance_score)
+    role_licenses = _provider_role_licenses(canonical, blackboard)
+    if blackboard.get("successor_role_license_enabled", False) and role_licenses:
+        best_license = max(role_licenses, key=lambda item: float(item.get("score", 0.0) or 0.0))
+        role_bonus_weight = float(blackboard.get("successor_role_license_bonus", 0.25))
+        role_bonus = role_bonus_weight * float(best_license.get("score", 0.0) or 0.0)
+        adjusted += role_bonus
+        move_meta["visible_role_license_bonus"] = role_bonus
+        move_meta["visible_role_licenses"] = [
+            {
+                "role_id": str(item.get("role_id") or item.get("successor") or ""),
+                "score": float(item.get("score", 0.0) or 0.0),
+                "source_terms": list(item.get("source_terms", [])),
+                "provider_skill_ids": list(item.get("provider_skill_ids", [])),
+            }
+            for item in role_licenses
+        ]
     if _visible_contract_gate_applies(canonical, payload, affordances, blackboard):
         penalty = float(blackboard.get("successor_contract_mismatch_penalty", 10.0))
         adjusted -= penalty
@@ -775,6 +899,29 @@ def _apply_successor_affordance_bias(
         move_meta["same_skill_satisfied_penalty"] = True
     move_meta["visible_successor_affordance"] = payload
     return adjusted
+
+
+def _provider_role_licenses(provider_id: str, blackboard: Dict[str, Any]) -> list[Dict[str, Any]]:
+    """Return visible role contracts that license a provider skill.
+
+    Missing role contracts are intentionally neutral. A role can add visible
+    support only when its own required terms are confirmed and veto terms are
+    absent.
+    """
+    licenses = blackboard.get("krk_successor_provider_licenses", {}).get(provider_id, {})
+    if isinstance(licenses, dict):
+        iterable = licenses.values()
+    elif isinstance(licenses, list):
+        iterable = licenses
+    else:
+        return []
+    visible: list[Dict[str, Any]] = []
+    for item in iterable:
+        if not isinstance(item, dict):
+            continue
+        if bool(item.get("contract_met", False)) and float(item.get("score", 0.0) or 0.0) > 0.0:
+            visible.append(item)
+    return visible
 
 
 def _visible_contract_gate_applies(
