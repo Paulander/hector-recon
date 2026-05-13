@@ -121,7 +121,7 @@ def create_krk_entry_root(node_id=None):
                 "successor_role_license_bonus",
                 blackboard.get(
                     "successor_role_license_bonus",
-                    node.meta.get("successor_role_license_bonus", 0.25),
+                    node.meta.get("successor_role_license_bonus", 0.05),
                 ),
             )
         )
@@ -743,7 +743,14 @@ def _evaluate_krk_context_term(board: chess.Board, term: str) -> bool:
         and rook_has_safe_lateral_transfer
     )
     edge_trap_close_geometry = edge_trap_shape_available and king_support
-    wrong_tempo_geometry = fence_exists and not king_support and rook_safe
+    wrong_tempo_geometry = (
+        fence_exists
+        and enemy_king_near_edge
+        and enemy_between_axis
+        and not king_support
+        and rook_safe
+        and post_fence_conversion_needed
+    )
 
     values = {
         "fence_exists": fence_exists,
@@ -871,7 +878,7 @@ def _apply_successor_affordance_bias(
     role_licenses = _provider_role_licenses(canonical, blackboard)
     if blackboard.get("successor_role_license_enabled", False) and role_licenses:
         best_license = max(role_licenses, key=lambda item: float(item.get("score", 0.0) or 0.0))
-        role_bonus_weight = float(blackboard.get("successor_role_license_bonus", 0.25))
+        role_bonus_weight = float(blackboard.get("successor_role_license_bonus", 0.05))
         role_bonus = role_bonus_weight * float(best_license.get("score", 0.0) or 0.0)
         adjusted += role_bonus
         move_meta["visible_role_license_bonus"] = role_bonus

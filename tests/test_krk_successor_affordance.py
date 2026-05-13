@@ -178,7 +178,7 @@ def test_role_license_bonus_supports_provider_without_contract_penalty():
         curriculum_label="stage0_basin",
         blackboard={
             "successor_role_license_enabled": True,
-            "successor_role_license_bonus": 0.25,
+            "successor_role_license_bonus": 0.05,
             "krk_successor_affordances": {
                 "krk.stage0_finish": {
                     "score": 0.0,
@@ -206,8 +206,8 @@ def test_role_license_bonus_supports_provider_without_contract_penalty():
         move_meta=move_meta,
     )
 
-    assert abs(adjusted - (5.7 + (0.25 * 0.75))) < 1e-9
-    assert abs(move_meta["visible_role_license_bonus"] - (0.25 * 0.75)) < 1e-9
+    assert abs(adjusted - (5.7 + (0.05 * 0.75))) < 1e-9
+    assert abs(move_meta["visible_role_license_bonus"] - (0.05 * 0.75)) < 1e-9
     assert move_meta["visible_role_licenses"][0]["role_id"] == "krk.stage0_king_approach_after_fence"
     assert "visible_contract_gate_penalty" not in move_meta
 

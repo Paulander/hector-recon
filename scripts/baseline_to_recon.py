@@ -90,7 +90,7 @@ def compile_baseline_to_topology(
             "successor_contract_gate_enabled": False,
             "successor_contract_mismatch_penalty": 10.0,
             "successor_role_license_enabled": False,
-            "successor_role_license_bonus": 0.25,
+            "successor_role_license_bonus": 0.05,
         }
     }
     
@@ -140,7 +140,7 @@ def create_root_node(topology: Dict, goal_bank: Dict | None = None):
             "successor_contract_gate_enabled": topology.get("meta", {}).get("successor_contract_gate_enabled", False),
             "successor_contract_mismatch_penalty": topology.get("meta", {}).get("successor_contract_mismatch_penalty", 10.0),
             "successor_role_license_enabled": topology.get("meta", {}).get("successor_role_license_enabled", False),
-            "successor_role_license_bonus": topology.get("meta", {}).get("successor_role_license_bonus", 0.25),
+            "successor_role_license_bonus": topology.get("meta", {}).get("successor_role_license_bonus", 0.05),
             "feature_set": topology.get("meta", {}).get("feature_set", "legacy"),
             "feature_names": topology.get("meta", {}).get("feature_names", []),
             "description": "KRK entry point with feature extraction"
@@ -273,17 +273,23 @@ KRK_SUCCESSOR_AFFORDANCES = {
         "source_terms": [
             "fence_exists",
             "wrong_tempo_geometry",
+            "enemy_between_king_and_rook_axis",
             "wrong_tempo_detected",
             "rook_safe",
             "post_fence_conversion_needed",
         ],
-        "required_terms": ["fence_exists", "wrong_tempo_geometry", "rook_safe"],
+        "required_terms": [
+            "fence_exists",
+            "wrong_tempo_geometry",
+            "enemy_between_king_and_rook_axis",
+            "rook_safe",
+        ],
         "veto_terms": ["mate_in_one_available"],
     },
     "krk.fence_repair": {
-        "provider_skill_ids": ["krk.fence_established"],
+        "provider_skill_ids": ["krk.fence_maintenance"],
         "source_terms": ["fence_needs_repair", "rook_safe"],
-        "required_terms": ["rook_safe"],
+        "required_terms": ["fence_needs_repair", "rook_safe"],
         "veto_terms": ["fence_already_satisfied"],
     },
     "krk.fence_maintenance": {

@@ -31,3 +31,12 @@ The next mechanism is role-contract refinement. Several visible roles may licens
 - `krk.edge_trap_*_recovery` roles license edge-trap providers only when motif-specific geometry is visible.
 
 The old coarse gate remains opt-in diagnostic mode. The new role-license mode is additive and experimental.
+
+## First Role-License Smoke Result
+
+A tiny bounded smoke comparison (`5` samples, `20` plies, `40` ticks) showed:
+
+- No role-license mode: `3 mate / 2 max_plies`.
+- Role-license mode with `0.25` bonus: `2 mate / 3 max_plies`.
+
+The failure was informative: role licenses were mechanically visible, but the bonus was too strong and over-licensed `krk.fence_established` repair and `krk.edge_trap_wrong_tempo` in states where the geometry was still too broad. The next conservative patch reduced the default role bonus to `0.05`, moved the repair license away from same-skill `krk.fence_established`, and made wrong-tempo geometry require visible enemy-between geometry.
