@@ -44,9 +44,14 @@ def _route_scores(evidence: dict[str, Any]) -> dict[str, float]:
     return scores
 
 
-def failed_post_reply_states(diagnostic: dict[str, Any]) -> list[dict[str, Any]]:
+def failed_post_reply_states(
+    diagnostic: dict[str, Any],
+    *,
+    dedupe_state_signatures: bool = True,
+) -> list[dict[str, Any]]:
     """Extract failed post-opponent-reply states from a diagnostic payload."""
     records: list[dict[str, Any]] = []
+    seen: set[str] = set()
     for packet in diagnostic.get("handoff_packets") or []:
         if not isinstance(packet, dict):
             continue
@@ -65,6 +70,9 @@ def failed_post_reply_states(diagnostic: dict[str, Any]) -> list[dict[str, Any]]
             state_signature = stable_record_id("state", chess.Board(post_reply_fen).board_fen(), chess.WHITE)
         except Exception:
             state_signature = "state.invalid"
+        if dedupe_state_signatures and state_signature in seen:
+            continue
+        seen.add(state_signature)
         records.append({
             "packet_id": packet.get("packet_id"),
             "state_signature": state_signature,
@@ -88,6 +96,8 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--max-states", type=int, default=0,
                         help="If >0, limit replay to this many failed post-reply states")
+    parser.add_argument("--include-duplicate-states", action="store_true",
+                        help="Replay duplicate failed post-reply state signatures instead of one representative each")
     parser.add_argument("--playout-max-plies", type=int, default=80)
     parser.add_argument("--black-policy", choices=["random", "adversarial"], default="adversarial")
     parser.add_argument("--max-ticks", type=int, default=200)
@@ -101,7 +111,11 @@ def main() -> None:
     args = parser.parse_args()
 
     diagnostic = json.loads(args.diagnostic.read_text(encoding="utf-8"))
-    states = failed_post_reply_states(diagnostic)
+    all_states = failed_post_reply_states(diagnostic, dedupe_state_signatures=False)
+    states = failed_post_reply_states(
+        diagnostic,
+        dedupe_state_signatures=not args.include_duplicate_states,
+    )
     if args.max_states > 0:
         states = states[:args.max_states]
     successors = tuple(item.strip() for item in args.successors.split(",") if item.strip())
@@ -150,7 +164,9 @@ def main() -> None:
         "source_diagnostic": str(args.diagnostic),
         "topology": str(args.topology),
         "successors": list(successors),
+        "source_failed_state_count": len(all_states),
         "failed_state_count": len(states),
+        "dedupe_state_signatures": not args.include_duplicate_states,
         "counterfactual_successor_sweeps": sweeps,
         "counterfactual_successor_summary": summarize_counterfactual_successor_sweeps(sweeps),
     }
