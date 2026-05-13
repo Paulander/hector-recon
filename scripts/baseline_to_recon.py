@@ -87,6 +87,8 @@ def compile_baseline_to_topology(
             "goal_lookahead": "max",
             "goal_min_overlap": 8,
             "goal_handoff_threshold": 0.2,
+            "successor_contract_gate_enabled": False,
+            "successor_contract_mismatch_penalty": 10.0,
         }
     }
     
@@ -133,6 +135,8 @@ def create_root_node(topology: Dict, goal_bank: Dict | None = None):
             "goal_lookahead": topology.get("meta", {}).get("goal_lookahead", "max"),
             "goal_min_overlap": topology.get("meta", {}).get("goal_min_overlap", 8),
             "goal_handoff_threshold": topology.get("meta", {}).get("goal_handoff_threshold", 0.2),
+            "successor_contract_gate_enabled": topology.get("meta", {}).get("successor_contract_gate_enabled", False),
+            "successor_contract_mismatch_penalty": topology.get("meta", {}).get("successor_contract_mismatch_penalty", 10.0),
             "feature_set": topology.get("meta", {}).get("feature_set", "legacy"),
             "feature_names": topology.get("meta", {}).get("feature_names", []),
             "description": "KRK entry point with feature extraction"

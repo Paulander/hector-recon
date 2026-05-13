@@ -89,6 +89,24 @@ def create_krk_entry_root(node_id=None):
                 ),
             )
         )
+        blackboard["successor_contract_gate_enabled"] = bool(
+            env.get(
+                "successor_contract_gate_enabled",
+                blackboard.get(
+                    "successor_contract_gate_enabled",
+                    node.meta.get("successor_contract_gate_enabled", False),
+                ),
+            )
+        )
+        blackboard["successor_contract_mismatch_penalty"] = float(
+            env.get(
+                "successor_contract_mismatch_penalty",
+                blackboard.get(
+                    "successor_contract_mismatch_penalty",
+                    node.meta.get("successor_contract_mismatch_penalty", 10.0),
+                ),
+            )
+        )
 
         # Compute current goal distance (for handoff gating) when goal bank exists
         if blackboard.get("goal_bank") and blackboard.get("krk_features") is not None:
@@ -160,13 +178,18 @@ def create_krk_successor_affordance(node_id=None):
         veto_terms = list(node.meta.get("veto_terms", []))
         required_terms = list(node.meta.get("required_terms", []))
         score = _score_visible_affordance(terms, source_terms, veto_terms, required_terms)
+        missing_required = [term for term in required_terms if not terms.get(term, False)]
+        active_veto = [term for term in veto_terms if terms.get(term, False)]
+        contract_met = not missing_required and not active_veto
         skill_id = node.meta.get("successor_skill_id") or node.meta.get("skill_id") or actual_id
         payload = {
             "successor": skill_id,
             "score": score,
             "source_terms": [term for term in source_terms if terms.get(term)],
-            "veto_terms": [term for term in veto_terms if terms.get(term)],
+            "veto_terms": active_veto,
             "required_terms": required_terms,
+            "missing_required_terms": missing_required,
+            "contract_met": contract_met,
             "enabled": bool(blackboard.get("successor_affordance_layer_enabled", False)),
         }
         blackboard.setdefault("krk_successor_affordances", {})[skill_id] = payload
@@ -737,11 +760,55 @@ def _apply_successor_affordance_bias(
     fence_needs_repair = bool(terms.get("fence_needs_repair", False))
     bias_weight = float(blackboard.get("successor_affordance_bias_weight", 0.05))
     adjusted = float(score) + (bias_weight * affordance_score)
+    if _visible_contract_gate_applies(canonical, payload, affordances, blackboard):
+        penalty = float(blackboard.get("successor_contract_mismatch_penalty", 10.0))
+        adjusted -= penalty
+        move_meta["visible_contract_gate_penalty"] = penalty
+        move_meta["visible_contract_gate_reason"] = {
+            "skill_id": canonical,
+            "missing_required_terms": list(payload.get("missing_required_terms", [])),
+            "veto_terms": list(payload.get("veto_terms", [])),
+            "eligible_alternatives": _eligible_successor_ids(affordances, exclude=canonical),
+        }
     if canonical == "krk.fence_established" and fence_satisfied and not fence_needs_repair:
         adjusted -= float(blackboard.get("same_skill_satisfied_penalty", 0.05))
         move_meta["same_skill_satisfied_penalty"] = True
     move_meta["visible_successor_affordance"] = payload
     return adjusted
+
+
+def _visible_contract_gate_applies(
+    canonical: str,
+    payload: Dict[str, Any],
+    affordances: Dict[str, Any],
+    blackboard: Dict[str, Any],
+) -> bool:
+    """Return whether an opt-in visible contract penalty should apply.
+
+    This is deliberately a penalty, not a hidden router. The move still comes
+    from normal actuator scoring; the visible contract only prevents an
+    overconfident skill from dominating when its own visible preconditions are
+    unmet and another visible successor has support.
+    """
+    if not blackboard.get("successor_contract_gate_enabled", False):
+        return False
+    if not payload:
+        return False
+    if bool(payload.get("contract_met", False)):
+        return False
+    if not _eligible_successor_ids(affordances, exclude=canonical):
+        return False
+    return True
+
+
+def _eligible_successor_ids(affordances: Dict[str, Any], *, exclude: str | None = None) -> list[str]:
+    eligible: list[str] = []
+    for skill_id, entry in affordances.items():
+        if skill_id == exclude or not isinstance(entry, dict):
+            continue
+        if bool(entry.get("contract_met", False)) and float(entry.get("score", 0.0) or 0.0) > 0.0:
+            eligible.append(str(skill_id))
+    return sorted(eligible)
 
 
 def _canonical_krk_skill_id(curriculum_label: str | None) -> str:

@@ -9,6 +9,7 @@ import chess
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from recon_lite_chess.krk_baseline_nodes import (
+    _apply_successor_affordance_bias,
     create_krk_context_terminal,
     create_krk_successor_affordance,
 )
@@ -100,3 +101,70 @@ def test_fence_maintenance_affordance_can_be_visible_without_durable_skill():
     assert done is True
     assert payload["score"] > 0.0
     assert payload["successor"] == "krk.fence_maintenance"
+
+
+def test_contract_gate_penalizes_unmet_stage0_when_edge_trap_is_eligible():
+    move_meta = {}
+    adjusted = _apply_successor_affordance_bias(
+        5.7,
+        skill_id="krk.stage0_basin",
+        curriculum_label="stage0_basin",
+        blackboard={
+            "successor_contract_gate_enabled": True,
+            "successor_contract_mismatch_penalty": 10.0,
+            "krk_successor_affordances": {
+                "krk.stage0_basin": {
+                    "score": 0.0,
+                    "required_terms": ["mate_basin_available"],
+                    "missing_required_terms": ["mate_basin_available"],
+                    "veto_terms": [],
+                    "contract_met": False,
+                },
+                "krk.edge_trap_close": {
+                    "score": 0.75,
+                    "required_terms": ["rook_safe"],
+                    "missing_required_terms": [],
+                    "veto_terms": [],
+                    "contract_met": True,
+                },
+            },
+        },
+        move_meta=move_meta,
+    )
+
+    assert adjusted < 0.0
+    assert move_meta["visible_contract_gate_penalty"] == 10.0
+    assert move_meta["visible_contract_gate_reason"]["eligible_alternatives"] == [
+        "krk.edge_trap_close"
+    ]
+
+
+def test_contract_gate_does_not_penalize_without_visible_alternative():
+    move_meta = {}
+    adjusted = _apply_successor_affordance_bias(
+        5.7,
+        skill_id="krk.stage0_basin",
+        curriculum_label="stage0_basin",
+        blackboard={
+            "successor_contract_gate_enabled": True,
+            "successor_contract_mismatch_penalty": 10.0,
+            "krk_successor_affordances": {
+                "krk.stage0_basin": {
+                    "score": 0.0,
+                    "missing_required_terms": ["mate_basin_available"],
+                    "veto_terms": [],
+                    "contract_met": False,
+                },
+                "krk.edge_trap_close": {
+                    "score": 0.0,
+                    "missing_required_terms": ["rook_safe"],
+                    "veto_terms": [],
+                    "contract_met": False,
+                },
+            },
+        },
+        move_meta=move_meta,
+    )
+
+    assert adjusted == 5.7
+    assert "visible_contract_gate_penalty" not in move_meta

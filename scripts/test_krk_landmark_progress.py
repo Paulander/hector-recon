@@ -544,6 +544,7 @@ def choose_move_with_engine(
     stage_filter: Optional[int] = None,
     suggestion_limit: int = 10,
     successor_affordance_layer_enabled: bool = False,
+    successor_contract_gate_enabled: bool = False,
     forced_successor_skill: Optional[str] = None,
 ) -> Optional[str]:
     return choose_move_details(
@@ -554,6 +555,7 @@ def choose_move_with_engine(
         stage_filter=stage_filter,
         suggestion_limit=suggestion_limit,
         successor_affordance_layer_enabled=successor_affordance_layer_enabled,
+        successor_contract_gate_enabled=successor_contract_gate_enabled,
         forced_successor_skill=forced_successor_skill,
     ).get("move")
 
@@ -566,6 +568,7 @@ def choose_move_details(
     stage_filter: Optional[int] = None,
     suggestion_limit: int = 10,
     successor_affordance_layer_enabled: bool = False,
+    successor_contract_gate_enabled: bool = False,
     forced_successor_skill: Optional[str] = None,
 ) -> dict:
     env = {
@@ -574,8 +577,10 @@ def choose_move_details(
         "suggested_move": None,
         "blackboard": {"stage_filter": stage_filter} if stage_filter is not None else {},
         "successor_affordance_layer_enabled": successor_affordance_layer_enabled,
+        "successor_contract_gate_enabled": successor_contract_gate_enabled,
     }
     env["blackboard"]["successor_affordance_layer_enabled"] = successor_affordance_layer_enabled
+    env["blackboard"]["successor_contract_gate_enabled"] = successor_contract_gate_enabled
 
     engine.reset_states()
     root_id = "krk_entry" if "krk_entry" in graph.nodes else None
@@ -640,6 +645,7 @@ def choose_move_details(
         "suggestions": clean_suggestions,
         "forced_successor_skill": forced_successor_skill,
         "forced_successor_available": bool(forced_candidates) if forced_successor_skill else None,
+        "successor_contract_gate_enabled": successor_contract_gate_enabled,
         "visible_terms": dict(env.get("blackboard", {}).get("krk_visible_terms", {}) or {}),
         "successor_affordances": dict(
             env.get("blackboard", {}).get("krk_successor_affordances", {}) or {}
@@ -701,6 +707,7 @@ def play_to_mate(
     suggestion_limit: int = 10,
     trace_max_plies: Optional[int] = None,
     successor_affordance_layer_enabled: bool = False,
+    successor_contract_gate_enabled: bool = False,
     forced_successor_skill: Optional[str] = None,
 ) -> dict:
     """Run a simple KRK playout using the compiled topology for White moves."""
@@ -753,6 +760,7 @@ def play_to_mate(
                 stage_filter=active_stage_filter,
                 suggestion_limit=suggestion_limit,
                 successor_affordance_layer_enabled=successor_affordance_layer_enabled,
+                successor_contract_gate_enabled=successor_contract_gate_enabled,
                 forced_successor_skill=active_forced_successor,
             )
             move_uci = move_details.get("move")
@@ -879,6 +887,7 @@ def run_counterfactual_successor_sweep(
     max_ticks: int,
     suggestion_limit: int,
     successor_affordance_layer_enabled: bool,
+    successor_contract_gate_enabled: bool,
     step_output: Optional[Path] = None,
     step_context: Optional[dict] = None,
 ) -> dict:
@@ -905,6 +914,7 @@ def run_counterfactual_successor_sweep(
             max_ticks=max_ticks,
             suggestion_limit=suggestion_limit,
             successor_affordance_layer_enabled=successor_affordance_layer_enabled,
+            successor_contract_gate_enabled=successor_contract_gate_enabled,
             forced_successor_skill=skill_id,
         )
         first_successor = result.get("first_successor") if isinstance(result, dict) else None
@@ -1012,6 +1022,7 @@ def evaluate_landmark_progress(
     route_conflict_delta: float = 0.01,
     high_successor_score_threshold: float = 0.5,
     successor_affordance_layer_enabled: bool = False,
+    successor_contract_gate_enabled: bool = False,
     counterfactual_successors: tuple[str, ...] = (),
     max_counterfactual_sweeps: int = 0,
     counterfactual_sweeps_output: Optional[Path] = None,
@@ -1064,6 +1075,7 @@ def evaluate_landmark_progress(
             stage_filter=stage_filter,
             suggestion_limit=suggestion_limit,
             successor_affordance_layer_enabled=successor_affordance_layer_enabled,
+            successor_contract_gate_enabled=successor_contract_gate_enabled,
         )
         move_uci = move_details.get("move")
         oracle_rewards = oracle_move_rewards(board, label, lookahead_black)
@@ -1183,6 +1195,7 @@ def evaluate_landmark_progress(
                 suggestion_limit=suggestion_limit,
                 trace_max_plies=debug_trace_max_plies,
                 successor_affordance_layer_enabled=successor_affordance_layer_enabled,
+                successor_contract_gate_enabled=successor_contract_gate_enabled,
             )
             key = result["result"]
             stats["playouts"][key] = stats["playouts"].get(key, 0) + 1
@@ -1410,6 +1423,7 @@ def evaluate_landmark_progress(
                     max_ticks=playout_max_ticks if playout_max_ticks is not None else max_ticks,
                     suggestion_limit=suggestion_limit,
                     successor_affordance_layer_enabled=successor_affordance_layer_enabled,
+                    successor_contract_gate_enabled=successor_contract_gate_enabled,
                     step_output=counterfactual_steps_output,
                     step_context=step_context,
                 )
@@ -1496,6 +1510,7 @@ def evaluate_landmark_progress(
     stats["label"] = label
     stats["source_stage_names"] = list(source_names)
     stats["successor_affordance_layer_enabled"] = successor_affordance_layer_enabled
+    stats["successor_contract_gate_enabled"] = successor_contract_gate_enabled
     evaluated = max(0, stats["total"] - stats["no_move"])
     stats["one_ply_status"] = (
         "passed"
@@ -1669,6 +1684,8 @@ def main() -> None:
                         help="Failed conversion with successor score at/above this threshold is miscalibrated")
     parser.add_argument("--enable-successor-affordance-layer", action="store_true",
                         help="Enable visible KRK successor-affordance layer as a causal score bias")
+    parser.add_argument("--enable-successor-contract-gate", action="store_true",
+                        help="Enable opt-in visible contract mismatch penalty for successor skill ownership")
     parser.add_argument("--counterfactual-successors", type=str, default=None,
                         help="Comma-separated canonical successor skill IDs to force on failed post-reply states")
     parser.add_argument("--max-counterfactual-sweeps", type=int, default=0,
@@ -1710,6 +1727,7 @@ def main() -> None:
         route_conflict_delta=args.route_conflict_delta,
         high_successor_score_threshold=args.high_successor_score_threshold,
         successor_affordance_layer_enabled=args.enable_successor_affordance_layer,
+        successor_contract_gate_enabled=args.enable_successor_contract_gate,
         counterfactual_successors=tuple(
             item.strip()
             for item in (args.counterfactual_successors or "").split(",")
