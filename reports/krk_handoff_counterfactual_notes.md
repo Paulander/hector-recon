@@ -503,3 +503,100 @@ Implication:
 - Further increasing visible score pressure is unlikely to solve the remaining failures cleanly.
 - The next useful diagnostic should compare filtered legal-first mating moves against provider actuator suggestions and emit a `provider_missing_converting_shape` / `converting_move_not_proposed` signal.
 - If confirmed, the next architectural step is likely a small visible move-shape action provider or training target for post-fence continuation, rather than more role bonus tuning.
+
+## Slice 26 Provider Suggestions vs Legal-First Conversions
+
+The counterfactual sweep tool now has a provider-suggestion audit:
+
+- Flag: `--provider-suggestion-audit`
+- It runs one normal ReCoN decision from each failed post-reply state.
+- It compares the runtime suggestion set against filtered legal-first moves that converted in replay.
+- It classifies each state as:
+  - `no_converting_legal_first_in_filter`
+  - `selected_converting_move`
+  - `converting_move_proposed_not_selected`
+  - `converting_move_not_proposed`
+
+Artifact:
+
+- `slice26_provider_vs_legal_first.json`
+- Source diagnostic: `slice25_stronger_far_edge_rank_shape_stage5_25_earlystop2.json`
+- Failed unique states: `2`
+
+Summary:
+
+- `state.3d73682bdbe3`
+  - Runtime selected `h7c7`.
+  - Filtered legal-first replay found no mating first move within the 20-ply bound.
+  - Classification: `no_converting_legal_first_in_filter`.
+- `state.394b71e02d00`
+  - Runtime selected `h7d7`.
+  - Filtered legal-first replay says `h7d7` itself can convert.
+  - Other converting first moves exist but were not proposed: `c6d5`, `c6d6`, `c6d7`, `h7e7`, `h7f7`, `h7g7`, `h7h1`, `h7h8`.
+  - Classification: `selected_converting_move`.
+
+Important correction:
+
+- The remaining `state.394` failure is not primarily a missing first-move proposal after Slice 25. The runtime already selected a first move that can convert under the filtered replay.
+- The failure is downstream continuation instability after a good first move, or replay sensitivity under bounded playout.
+- More first-move score pressure is therefore the wrong next step.
+
+Implication:
+
+- For `state.394`, inspect the post-`h7d7` continuation trace and identify where conversion diverges.
+- For `state.3d73`, keep it separate: either the 20-ply bound is too short, the filtered move set is incomplete, or a deeper continuation skill is missing.
+- The next safe implementation should add continuation-phase diagnostics after a selected converting first move, rather than further provider/move-shape bonuses.
+
+## Slice 27 Selected-Converting Continuation Trace
+
+The counterfactual sweep tool now has continuation-phase tracing:
+
+- Flag: `--continuation-trace-audit`
+- Optional focus: `--continuation-trace-only-selected-converting`
+- Trace cap: `--continuation-trace-max-plies`
+
+The audit applies the runtime-selected first move from the provider audit, then runs a traced ReCoN continuation. It records compact per-ply summaries:
+
+- White/Black move
+- selected skill
+- confidence
+- top suggestions
+- resulting FEN
+
+Artifact:
+
+- `slice27_selected_converting_continuation_trace.json`
+- Source diagnostic: `slice25_stronger_far_edge_rank_shape_stage5_25_earlystop2.json`
+
+Result:
+
+- Only `state.394b71e02d00` was traced because it was the only state where the selected first move was also a converting legal-first move.
+- First move: `h7d7`
+- Continuation trace result: `mate`
+- Plies including first move: `19`
+- Final FEN: `8/5K1k/8/8/8/8/8/7R b - - 21 11`
+
+Observed continuation pattern:
+
+- `h7d7`
+- Black `b8c8`
+- `d7h7` by `krk.stage0_basin`
+- Black `c8d8`
+- `h7d7` by `krk.edge_trap_close`
+- Black `d8e8`
+- `d7h7` by `krk.stage0_basin`
+- Black `e8f8`
+- `h7c7` by `krk.edge_trap_close`
+- Then `stage0_basin` king approach converts to mate.
+
+Interpretation:
+
+- The `state.394` remaining failures are not explained by a bad selected first move or by missing immediate continuation capacity in the traced replay.
+- The traced replay can mate after `h7d7`, using the current graph.
+- The discrepancy with bounded diagnostic max-plies likely reflects continuation sensitivity: duplicate-state replay context, trace/replay seed path, or subtle state/timing differences.
+- Do not add more first-move or provider score pressure for `state.394` until the exact divergence between the failing playout and the successful traced replay is captured.
+
+Next diagnostic target:
+
+- Capture full trace for failing `state.394` duplicates directly inside the 25-sample landmark diagnostic when conversion fails.
+- Compare failing trace against the successful Slice 27 trace to locate the first divergent White move or Black reply.
