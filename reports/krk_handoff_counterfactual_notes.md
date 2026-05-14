@@ -301,3 +301,39 @@ Interpretation:
 - The role-scoped mechanism is now inspectable and ReCoN-shaped.
 - It is not ready as a default causal path.
 - The next safe step is performance-oriented paired diagnostics: compare trace-only, role-license, and role-scoped move-shape modes on shared samples without increasing causal strength.
+
+## Slice 19 Paired Early-Stop Comparison
+
+Two 25-sample bounded diagnostics were run with identical settings except for role-scoped move-shape support:
+
+- Role-license only: `slice19_role_license_only_stage5_25_earlystop2.json`
+- Role-license + role-scoped move-shape: `slice19_role_scoped_move_shape_stage5_25_earlystop2.json`
+
+Shared settings:
+
+- `--samples 25`
+- `--playout-max-plies 20`
+- `--max-ticks 40`
+- `--playout-max-ticks 40`
+- `--early-stop-stable-suggestions 2`
+- `--enable-successor-affordance-layer`
+- `--enable-successor-role-licenses`
+
+Result:
+
+- Both runs: `25/25` one-ply optimal.
+- Both runs: `17 mate / 8 max_plies`.
+- Both runs selected successors identically: `krk.stage0_basin=18`, `krk.edge_trap_close=7`.
+- Role-scoped move-shape bonuses were active in `3/25` post-reply packets, but did not change selected successors or conversion outcomes.
+
+Performance counters:
+
+- One-ply decisions: `25`, total ticks `200`, early-stop count `25`.
+- Playout decisions: `206`, total ticks `1648`, early-stop count `206`.
+- Max ticks per decision stabilized at `8`, so the main cost is the number of playout decisions, not unstable long engine loops.
+
+Interpretation:
+
+- Role-scoped move-shape support is currently safe and traceable, but causally neutral at bonus `0.05`.
+- Increasing the global bonus is not the right next step because prior aggressive move-shape/veto mode regressed badly.
+- The next implementation should use the legal-first audit to narrow role-scoped contracts for specific failure families, especially replacing broad `box_area_decreases_after_move` licensing with more specific vertical/checking-line/corner-net terms where supported by the audit.
