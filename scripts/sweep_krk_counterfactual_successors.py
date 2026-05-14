@@ -18,6 +18,7 @@ from typing import Any
 import chess
 
 from recon_lite.engine import ReConEngine
+from recon_lite_chess.krk_baseline_nodes import krk_move_shape_audit
 
 from test_krk_landmark_progress import (
     build_graph_from_topology,
@@ -139,6 +140,7 @@ def run_legal_first_move_sweep(
                 "result": continuation.get("result"),
                 "plies": int(continuation.get("plies", 0) or 0) + 1,
             }
+        result["move_shape_audit"] = krk_move_shape_audit(board, move)
         results[move.uci()] = result
         if step_output is not None:
             _append_jsonl(

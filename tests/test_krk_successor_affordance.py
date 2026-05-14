@@ -14,6 +14,7 @@ from recon_lite_chess.krk_baseline_nodes import (
     _compute_krk_context_terms,
     create_krk_context_terminal,
     create_krk_successor_affordance,
+    krk_move_shape_audit,
 )
 
 
@@ -450,3 +451,16 @@ def test_visible_role_veto_can_suppress_provider_when_visible_alternative_exists
     assert adjusted < 0.0
     assert move_meta["visible_role_veto_penalty"] == 10.0
     assert move_meta["visible_role_vetoes"][0]["veto_terms"] == ["edge_trap_shape_available"]
+
+
+def test_move_shape_audit_emits_current_candidate_post_and_worst_reply_terms():
+    board = chess.Board("5k2/7R/1K6/8/8/8/8/8 w - - 2 2")
+    audit = krk_move_shape_audit(board, chess.Move.from_uci("h7h1"))
+
+    assert audit["legal"] is True
+    assert "post_fence_conversion_needed" in audit["current_terms"]
+    assert "candidate_is_rook_transfer" in audit["move_shape_terms"]
+    assert "rook_transfer_vertical" in audit["move_shape_terms"]
+    assert "rook_safe_after_move" in audit["post_move_terms"]
+    assert "enemy_edge_distance_not_increased_after_move" in audit["post_move_terms"]
+    assert "rook_safe_after_worst_reply" in audit["worst_reply_terms"]

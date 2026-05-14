@@ -209,3 +209,39 @@ Current conclusion:
 - Keep visible rook-transfer terms and role contracts.
 - Keep explicit role veto and move-shape bias available for controlled experiments only.
 - Do not make either a default causal path until paired diagnostics show no conversion regression.
+
+## Slice 17 Move-Shape Audit
+
+A non-causal move-shape audit was added to the legal-first sweep. For every legal first move from a failed post-reply state it records:
+
+- current visible terms
+- candidate move-shape terms
+- post-move terms
+- worst-reply survival terms
+
+This does not change runtime behavior. It is ontology-discovery data for a future role-scoped move-shape SCRIPT layer.
+
+The unique failed-state audit confirmed that every unique family has converting legal moves, but simple terms still do not perfectly separate conversion from failure.
+
+Key findings:
+
+- `state.0d62...`
+  - Converting moves: `b6c5`, `h7a7`, `h7h1`.
+  - No term is unique to only converting moves.
+  - Converting rook moves include `rook_to_edge_file`; the best move `h7h1` includes `rook_transfer_vertical` and `rook_to_edge_rank`.
+
+- `state.3d73...`
+  - Converting move: `h7h5`.
+  - The move has `rook_transfer_vertical`, `rook_to_edge_file`, `cut_preserved_after_move`, `rook_safe_after_worst_reply`, and `no_draw_after_worst_reply`.
+  - These terms are not globally unique, so role-scoped context remains necessary.
+
+- `state.394...`
+  - Many converting rook transfers exist.
+  - Terms unique to converting moves include `checking_line_created`, `rook_to_checking_line`, `safe_check_created`, `rook_transfer_vertical`, and `rook_to_edge_rank`.
+  - Fast `5`-ply conversions often have vertical transfer or checking-line/corner-net pressure terms.
+
+Interpretation:
+
+- A global move-shape bonus remains too broad.
+- The next causal experiment should be role-scoped and state-family-aware, e.g. `post_fence_edge_trap_recovery` licenses a move shape only when current-state terms, candidate terms, post-move terms, and worst-reply survival terms all confirm.
+- The audit supports the expert's recommendation: C powered by A, with legal-first labels used non-causally.

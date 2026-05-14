@@ -735,6 +735,56 @@ def _evaluate_krk_context_term(board: chess.Board, term: str) -> bool:
     return bool(_compute_krk_context_terms(board).get(term, False))
 
 
+def krk_move_shape_audit(board: chess.Board, move: chess.Move) -> Dict[str, Any]:
+    """Return visible current/candidate/post-move terms for a legal KRK move.
+
+    This is diagnostic scaffolding for role-scoped move-shape design. It does
+    not select or score moves; it exposes the terms needed to decide whether a
+    candidate move fulfills a visible role contract.
+    """
+    if move not in board.legal_moves:
+        return {
+            "move": move.uci(),
+            "legal": False,
+            "current_terms": [],
+            "move_shape_terms": [],
+            "post_move_terms": [],
+            "worst_reply_terms": [],
+        }
+
+    current_terms = _compute_krk_context_terms(board)
+    current_metrics = _krk_geometry_metrics(board)
+    move_shape_terms = _candidate_move_shape_terms(board, move)
+
+    post = board.copy(stack=False)
+    post.push(move)
+    post_terms = _compute_krk_context_terms(post)
+    post_metrics = _krk_geometry_metrics(post)
+    post_move_terms = _post_move_terms(
+        current_terms,
+        post_terms,
+        current_metrics,
+        post_metrics,
+        board,
+        move,
+    )
+    worst_reply_terms = _worst_reply_terms(
+        post,
+        current_metrics=current_metrics,
+        post_metrics=post_metrics,
+    )
+    return {
+        "move": move.uci(),
+        "legal": True,
+        "current_terms": _active_term_names(current_terms),
+        "move_shape_terms": move_shape_terms,
+        "post_move_terms": post_move_terms,
+        "worst_reply_terms": worst_reply_terms,
+        "current_metrics": current_metrics or {},
+        "post_move_metrics": post_metrics or {},
+    }
+
+
 def _compute_krk_context_terms(board: chess.Board) -> Dict[str, bool]:
     wk_sq = next(iter(board.pieces(chess.KING, chess.WHITE)), None)
     bk_sq = next(iter(board.pieces(chess.KING, chess.BLACK)), None)
@@ -864,6 +914,155 @@ def _compute_krk_context_terms(board: chess.Board) -> Dict[str, bool]:
         "black_king_escape_available": edge_distance > 0,
     }
     return {key: bool(value) for key, value in values.items()}
+
+
+def _active_term_names(terms: Dict[str, bool]) -> list[str]:
+    return sorted(key for key, value in terms.items() if value)
+
+
+def _krk_geometry_metrics(board: chess.Board) -> Dict[str, int] | None:
+    wk_sq = next(iter(board.pieces(chess.KING, chess.WHITE)), None)
+    bk_sq = next(iter(board.pieces(chess.KING, chess.BLACK)), None)
+    wr_sq = next(iter(board.pieces(chess.ROOK, chess.WHITE)), None)
+    if wk_sq is None or bk_sq is None or wr_sq is None:
+        return None
+    wk_file, wk_rank = chess.square_file(wk_sq), chess.square_rank(wk_sq)
+    bk_file, bk_rank = chess.square_file(bk_sq), chess.square_rank(bk_sq)
+    wr_file, wr_rank = chess.square_file(wr_sq), chess.square_rank(wr_sq)
+    edge_distance = min(bk_file, 7 - bk_file, bk_rank, 7 - bk_rank)
+    corner_distance = min(
+        max(abs(bk_file - file_), abs(bk_rank - rank_))
+        for file_, rank_ in ((0, 0), (0, 7), (7, 0), (7, 7))
+    )
+    box_width = max(1, wr_file if bk_file < wr_file else 7 - wr_file)
+    box_height = max(1, wr_rank if bk_rank < wr_rank else 7 - wr_rank)
+    return {
+        "box_area": int(box_width * box_height),
+        "enemy_edge_distance": int(edge_distance),
+        "enemy_corner_distance": int(corner_distance),
+        "white_king_enemy_distance": int(max(abs(wk_file - bk_file), abs(wk_rank - bk_rank))),
+        "white_king_rook_distance": int(max(abs(wk_file - wr_file), abs(wk_rank - wr_rank))),
+    }
+
+
+def _candidate_move_shape_terms(board: chess.Board, move: chess.Move) -> list[str]:
+    terms: list[str] = []
+    wk_sqs = board.pieces(chess.KING, chess.WHITE)
+    wr_sqs = board.pieces(chess.ROOK, chess.WHITE)
+    bk_sq = next(iter(board.pieces(chess.KING, chess.BLACK)), None)
+    from_file = chess.square_file(move.from_square)
+    from_rank = chess.square_rank(move.from_square)
+    to_file = chess.square_file(move.to_square)
+    to_rank = chess.square_rank(move.to_square)
+    same_file = from_file == to_file and from_rank != to_rank
+    same_rank = from_rank == to_rank and from_file != to_file
+    distance = max(abs(to_file - from_file), abs(to_rank - from_rank))
+    if move.from_square in wr_sqs:
+        terms.append("candidate_is_rook_move")
+        if distance >= 2 and (same_file or same_rank):
+            terms.append("candidate_is_rook_transfer")
+        if same_file:
+            terms.append("rook_transfer_vertical")
+        if same_rank:
+            terms.append("rook_lateral_transfer")
+        if to_file in (0, 7):
+            terms.append("rook_to_edge_file")
+        if to_rank in (0, 7):
+            terms.append("rook_to_edge_rank")
+        if board.gives_check(move):
+            terms.append("rook_to_checking_line")
+        if _rook_safe_after_white_move(board, move):
+            terms.append("rook_safe_after_candidate")
+            if board.gives_check(move):
+                terms.append("safe_check_created")
+    if move.from_square in wk_sqs:
+        terms.append("candidate_is_king_move")
+        wk_sq = next(iter(wk_sqs), None)
+        wr_sq = next(iter(wr_sqs), None)
+        if wk_sq is not None and bk_sq is not None:
+            if chess.square_distance(move.to_square, bk_sq) < chess.square_distance(wk_sq, bk_sq):
+                terms.append("king_moves_toward_enemy")
+        if wk_sq is not None and wr_sq is not None:
+            if chess.square_distance(move.to_square, wr_sq) < chess.square_distance(wk_sq, wr_sq):
+                terms.append("king_moves_toward_rook_support")
+    return sorted(set(terms))
+
+
+def _post_move_terms(
+    current_terms: Dict[str, bool],
+    post_terms: Dict[str, bool],
+    current_metrics: Dict[str, int] | None,
+    post_metrics: Dict[str, int] | None,
+    board: chess.Board,
+    move: chess.Move,
+) -> list[str]:
+    terms: list[str] = []
+    if _rook_safe_after_white_move(board, move):
+        terms.append("rook_safe_after_move")
+    if post_terms.get("fence_exists"):
+        terms.append("fence_exists_after_move")
+    if post_terms.get("fence_stable"):
+        terms.append("fence_stable_after_move")
+    if current_terms.get("fence_exists") and post_terms.get("fence_exists"):
+        terms.append("cut_preserved_after_move")
+    if not current_terms.get("fence_exists") and post_terms.get("fence_exists"):
+        terms.append("cut_created_after_move")
+    if current_metrics and post_metrics:
+        if post_metrics["box_area"] <= current_metrics["box_area"]:
+            terms.append("box_area_not_increased_after_move")
+        if post_metrics["box_area"] < current_metrics["box_area"]:
+            terms.append("box_area_decreases_after_move")
+        if post_metrics["enemy_edge_distance"] <= current_metrics["enemy_edge_distance"]:
+            terms.append("enemy_edge_distance_not_increased_after_move")
+        if post_metrics["enemy_corner_distance"] <= current_metrics["enemy_corner_distance"]:
+            terms.append("enemy_corner_distance_not_increased_after_move")
+        if post_metrics["white_king_enemy_distance"] < current_metrics["white_king_enemy_distance"]:
+            terms.append("white_king_distance_to_enemy_decreases")
+        if post_metrics["white_king_rook_distance"] < current_metrics["white_king_rook_distance"]:
+            terms.append("white_king_distance_to_rook_decreases")
+    if board.gives_check(move):
+        terms.append("checking_line_created")
+    return sorted(set(terms))
+
+
+def _worst_reply_terms(
+    post_board: chess.Board,
+    *,
+    current_metrics: Dict[str, int] | None,
+    post_metrics: Dict[str, int] | None,
+) -> list[str]:
+    if post_board.is_checkmate():
+        return ["mate_after_move", "rook_safe_after_worst_reply", "fence_survives_worst_reply"]
+    replies = list(post_board.legal_moves)
+    if not replies:
+        return ["no_legal_reply"]
+    rook_survives_all = True
+    fence_survives_all = True
+    box_not_increased_all = True
+    no_draw_all = True
+    for reply in replies:
+        b2 = post_board.copy(stack=False)
+        b2.push(reply)
+        terms = _compute_krk_context_terms(b2)
+        metrics = _krk_geometry_metrics(b2)
+        if not list(b2.pieces(chess.ROOK, chess.WHITE)) or not terms.get("rook_safe", False):
+            rook_survives_all = False
+        if not terms.get("fence_exists", False):
+            fence_survives_all = False
+        if current_metrics and metrics and metrics["box_area"] > current_metrics["box_area"]:
+            box_not_increased_all = False
+        if b2.is_stalemate() or b2.is_insufficient_material():
+            no_draw_all = False
+    result = []
+    if rook_survives_all:
+        result.append("rook_safe_after_worst_reply")
+    if fence_survives_all:
+        result.append("fence_survives_worst_reply")
+    if box_not_increased_all:
+        result.append("box_area_not_increased_after_worst_reply")
+    if no_draw_all:
+        result.append("no_draw_after_worst_reply")
+    return result
 
 
 def _move_checkmates(board: chess.Board, move: chess.Move) -> bool:
