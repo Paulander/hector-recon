@@ -748,3 +748,73 @@ Implementation follow-up:
   - reversible rook-move oscillation pairs
 - Add failure class `rook_oscillation_loop` and shadow trigger `stagnation_loop`.
 - Keep this diagnostic-only; do not let loop detection suppress moves or route causally yet.
+
+## Slice 33-35 ReCoN-Visible Stagnation Breaker
+
+Implemented:
+
+- Non-causal stagnation/loop audit fields:
+  - exact and abstract repeated-state counts
+  - abstract state history
+  - rook/king square histories
+  - box-area and enemy-edge-distance histories
+  - mate-in-one and safe-check histories
+  - rook reversal count and oscillation pairs
+  - legal loop-breaking move audits
+- Visible dynamic terms:
+  - `repeated_abstract_state`
+  - `rook_oscillation_loop`
+  - `no_box_progress_recently`
+  - `no_edge_progress_recently`
+  - `no_mate_progress_recently`
+  - `safe_loop_breaking_move_available`
+  - `loop_breaking_rook_transfer_available`
+  - `loop_breaking_check_or_cut_available`
+- Compiler metadata for `krk.stagnation_breaker_affordance`.
+- Opt-in causal flags:
+  - `--enable-stagnation-breaker`
+  - `--stagnation-breaker-bonus`
+
+Hard constraints preserved:
+
+- Defaults are unchanged.
+- No state-hash exception was added.
+- Handoff packets, stats, and shadow candidates remain non-causal.
+- The opt-in causal path only adds support when visible stagnation terms confirm and the candidate move is in the audited loop-breaking legal set.
+
+Targeted `state.3d73` replay with `--enable-stagnation-breaker --stagnation-breaker-bonus 0.5`:
+
+- Artifact: `slice35_state3d73_stagnation_breaker_trace.json`
+- Result remains `max_plies` at 21 plies.
+- The visible loop-breaker license fires at later loop points:
+  - `h4d4`
+  - `h4f4`
+- Example source terms include:
+  - `rook_oscillation_loop`
+  - `no_box_progress_recently`
+  - `safe_loop_breaking_move_available`
+  - `escapes_rook_oscillation_pair`
+  - `rook_safe_after_move`
+  - `no_draw_after_move`
+  - `box_area_decreases_after_move`
+  - `checking_line_created`
+
+25-sample opt-in comparison:
+
+- Artifact: `slice35_stagnation_breaker_stage5_25.json`
+- One-ply objective remains solved: `25/25 improved`, `25/25 optimal`.
+- Conversion remains `24 mate / 1 max_plies`.
+- Remaining failure is still `state.3d73682bdbe3`.
+- Failure classes: `rook_oscillation_loop + successor_conflict`.
+- Shadow triggers: `repeated_conversion_failure`, `stagnation_loop`, `route_conflict`.
+
+Interpretation:
+
+- The loop is now visible and causally addressable in ReCoN terms, but the first loop-breaker license is not enough to convert the remaining state within 21 plies.
+- This is no longer a generic max-plies failure. It is a visible stagnation-control problem: the system can notice the loop, find safe loop-breaking rook transfers, and choose different licensed moves, but it still lacks a reliable post-break continuation.
+
+Next likely target:
+
+- Compare licensed loop-breaking moves by downstream outcome over a longer horizon.
+- Add a non-causal `loop_breaking_moves_that_convert` audit for the detected loop state, not only for the original post-reply state.
+- Only after that, consider a stricter visible post-break continuation role or train a small `post_stagnation_break_continuation` skill from the loop-break examples.

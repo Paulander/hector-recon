@@ -169,7 +169,8 @@ def create_krk_context_terminal(node_id=None):
         if not term:
             return False, False
         terms_for_board = _krk_context_terms_for_board(board, blackboard)
-        value = terms_for_board.get(term, False)
+        dynamic_terms = blackboard.get("krk_dynamic_context_terms", {})
+        value = terms_for_board.get(term, dynamic_terms.get(term, False))
         terms = blackboard.setdefault("krk_visible_terms", {})
         terms[term] = bool(value)
         node.meta["last_value"] = bool(value)
@@ -647,6 +648,14 @@ def create_actuator_terminal(node_id=None):
                     move_meta=move_meta[move],
                 )
                 score = _apply_visible_rook_transfer_move_bias(
+                    score,
+                    board=board,
+                    move=move,
+                    skill_id=skill_id,
+                    blackboard=blackboard,
+                    move_meta=move_meta[move],
+                )
+                score = _apply_visible_stagnation_breaker_bias(
                     score,
                     board=board,
                     move=move,
@@ -1397,6 +1406,95 @@ def _apply_visible_rook_transfer_move_bias(
     move_meta["visible_role_scoped_move_shape_require_worst_reply"] = require_worst_reply
     adjusted = float(score) + bonus
     move_meta["score_after_role_scoped_move_shape_bonus"] = adjusted
+    return adjusted
+
+
+def _apply_visible_stagnation_breaker_bias(
+    score: float,
+    *,
+    board: chess.Board,
+    move: chess.Move,
+    skill_id: str | None,
+    blackboard: Dict[str, Any],
+    move_meta: Dict[str, Any],
+) -> float:
+    """Opt-in visible loop-breaker support for repeated KRK playout loops.
+
+    This is intentionally not a provider penalty or hidden selector. It only
+    adds support when the blackboard already exposes a visible stagnation
+    affordance and the candidate move is one of the audited loop-breaking legal
+    moves that preserves KRK safety/progress terms.
+    """
+    if not blackboard.get("stagnation_breaker_enabled", False):
+        return score
+    weight = float(blackboard.get("stagnation_breaker_bonus", 0.0) or 0.0)
+    if weight <= 0.0:
+        return score
+    terms = blackboard.get("krk_dynamic_context_terms", {}) or {}
+    required_context = {
+        "rook_oscillation_loop",
+        "no_box_progress_recently",
+        "safe_loop_breaking_move_available",
+    }
+    if not all(bool(terms.get(term, False)) for term in required_context):
+        return score
+    context = blackboard.get("krk_stagnation_context", {}) or {}
+    loop_moves = set(context.get("legal_loop_breaking_moves", []) or [])
+    if move.uci() not in loop_moves:
+        return score
+
+    audit = krk_move_shape_audit(board, move, blackboard, include_worst_reply=False)
+    move_terms = set(audit.get("move_shape_terms", []) or [])
+    post_terms = set(audit.get("post_move_terms", []) or [])
+    loop_audit = None
+    for item in context.get("legal_loop_breaking_move_audits", []) or []:
+        if isinstance(item, dict) and item.get("move") == move.uci():
+            loop_audit = item
+            break
+    loop_terms = set((loop_audit or {}).get("source_terms", []) or [])
+    required_move_terms = {"rook_safe_after_move", "no_draw_after_move"}
+    progress_terms = {
+        "box_area_not_increased_after_move",
+        "box_area_decreases_after_move",
+        "enemy_edge_distance_not_increased_after_move",
+        "checking_line_created",
+    }
+    if not required_move_terms <= (post_terms | loop_terms):
+        return score
+    if not progress_terms & (post_terms | loop_terms):
+        return score
+
+    source_terms = sorted(
+        required_context
+        | required_move_terms
+        | (progress_terms & (post_terms | loop_terms))
+        | ({"candidate_is_rook_transfer"} & move_terms)
+        | ({"escapes_rook_oscillation_pair"} & loop_terms)
+    )
+    adjusted = float(score) + weight
+    license_payload = {
+        "role_id": "krk.stagnation_breaker_affordance",
+        "provider_skill_id": _canonical_krk_skill_id(skill_id),
+        "move": move.uci(),
+        "score": float(weight),
+        "source_terms": source_terms,
+        "move_shape_terms": sorted(move_terms),
+        "post_move_terms": sorted(post_terms),
+        "loop_breaking_terms": sorted(loop_terms),
+    }
+    move_meta["visible_stagnation_breaker_bonus"] = float(weight)
+    move_meta["visible_stagnation_breaker_license"] = license_payload
+    move_meta["visible_stagnation_breaker_context"] = {
+        key: context.get(key)
+        for key in (
+            "abstract_state_signature",
+            "repeated_abstract_state_count",
+            "rook_reversal_count",
+            "no_progress_plies",
+            "legal_loop_breaking_moves",
+        )
+    }
+    move_meta["score_after_stagnation_breaker_bonus"] = adjusted
     return adjusted
 
 

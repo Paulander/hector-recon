@@ -123,6 +123,8 @@ def run_legal_first_move_sweep(
     successor_role_scoped_move_shape_enabled: bool = False,
     successor_role_scoped_move_shape_bonus: float = 0.0,
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
+    stagnation_breaker_enabled: bool = False,
+    stagnation_breaker_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     require_any_terms: tuple[str, ...] = (),
     require_all_terms: tuple[str, ...] = (),
@@ -180,6 +182,8 @@ def run_legal_first_move_sweep(
                 successor_role_scoped_move_shape_require_worst_reply=(
                     successor_role_scoped_move_shape_require_worst_reply
                 ),
+                stagnation_breaker_enabled=stagnation_breaker_enabled,
+                stagnation_breaker_bonus=stagnation_breaker_bonus,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
             )
             result = {
@@ -229,6 +233,8 @@ def run_provider_suggestion_audit(
     successor_role_scoped_move_shape_enabled: bool = False,
     successor_role_scoped_move_shape_bonus: float = 0.0,
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
+    stagnation_breaker_enabled: bool = False,
+    stagnation_breaker_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
 ) -> dict[str, Any]:
     """Compare converting legal-first moves against runtime provider suggestions."""
@@ -249,6 +255,8 @@ def run_provider_suggestion_audit(
         successor_role_scoped_move_shape_require_worst_reply=(
             successor_role_scoped_move_shape_require_worst_reply
         ),
+        stagnation_breaker_enabled=stagnation_breaker_enabled,
+        stagnation_breaker_bonus=stagnation_breaker_bonus,
         early_stop_stable_suggestions=early_stop_stable_suggestions,
     )
     suggestions = list(move_details.get("suggestions", []) or [])
@@ -318,6 +326,8 @@ def run_continuation_trace_audit(
     successor_role_scoped_move_shape_enabled: bool = False,
     successor_role_scoped_move_shape_bonus: float = 0.0,
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
+    stagnation_breaker_enabled: bool = False,
+    stagnation_breaker_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     trace_max_plies: int = 24,
 ) -> dict[str, Any]:
@@ -364,6 +374,8 @@ def run_continuation_trace_audit(
         successor_role_scoped_move_shape_require_worst_reply=(
             successor_role_scoped_move_shape_require_worst_reply
         ),
+        stagnation_breaker_enabled=stagnation_breaker_enabled,
+        stagnation_breaker_bonus=stagnation_breaker_bonus,
         early_stop_stable_suggestions=early_stop_stable_suggestions,
     )
     trace = list(continuation.get("trace", []) or [])
@@ -375,6 +387,7 @@ def run_continuation_trace_audit(
         "final_fen": continuation.get("final_fen"),
         "engine_decision_count": continuation.get("engine_decision_count"),
         "engine_ticks_total": continuation.get("engine_ticks_total"),
+        "stagnation_summary": continuation.get("stagnation_summary"),
         "trace_truncated_events": continuation.get("trace_truncated_events", 0),
         "trace_summary": _summarize_continuation_trace(trace),
     }
@@ -394,6 +407,16 @@ def _summarize_continuation_trace(trace: list[dict[str, Any]]) -> list[dict[str,
             "is_checkmate": bool(event.get("is_checkmate", False)),
             "is_stalemate": bool(event.get("is_stalemate", False)),
         }
+        if isinstance(event.get("stagnation_context"), dict):
+            ctx = event["stagnation_context"]
+            item["stagnation_context"] = {
+                "stagnation_loop": bool(ctx.get("stagnation_loop", False)),
+                "rook_oscillation_loop": bool(ctx.get("rook_oscillation_loop", False)),
+                "repeated_abstract_state_count": int(ctx.get("repeated_abstract_state_count", 0) or 0),
+                "no_progress_plies": int(ctx.get("no_progress_plies", 0) or 0),
+                "safe_loop_breaking_move_available": bool(ctx.get("safe_loop_breaking_move_available", False)),
+                "legal_loop_breaking_moves": list(ctx.get("legal_loop_breaking_moves", []) or []),
+            }
         engine_details = event.get("engine") if isinstance(event.get("engine"), dict) else None
         if engine_details:
             suggestions = list(engine_details.get("suggestions", []) or [])
@@ -416,6 +439,14 @@ def _summarize_continuation_trace(trace: list[dict[str, Any]]) -> list[dict[str,
                     for suggestion in suggestions[:5]
                 ],
             })
+            meta = selected.get("meta") if isinstance(selected, dict) and isinstance(selected.get("meta"), dict) else {}
+            if meta.get("visible_stagnation_breaker_license"):
+                item["visible_stagnation_breaker_license"] = meta.get(
+                    "visible_stagnation_breaker_license"
+                )
+                item["visible_stagnation_breaker_bonus"] = meta.get(
+                    "visible_stagnation_breaker_bonus"
+                )
         summary.append(item)
     return summary
 
@@ -534,6 +565,10 @@ def main() -> None:
     parser.add_argument("--role-scoped-move-shape-bonus", type=float, default=0.0)
     parser.add_argument("--require-role-scoped-move-shape-worst-reply", action="store_true",
                         help="Require worst-reply survival terms for role-scoped move-shape support")
+    parser.add_argument("--enable-stagnation-breaker", action="store_true",
+                        help="Enable opt-in visible stagnation-breaker move license bonus")
+    parser.add_argument("--stagnation-breaker-bonus", type=float, default=0.0,
+                        help="Small bonus for moves licensed by visible stagnation-breaker terms")
     parser.add_argument("--skip-forced-successor-sweep", action="store_true",
                         help="Run only legal-first replay diagnostics, without forced-successor sweeps")
     parser.add_argument("--steps-output", type=Path, default=None,
@@ -613,6 +648,8 @@ def main() -> None:
                 successor_role_scoped_move_shape_require_worst_reply=(
                     args.require_role_scoped_move_shape_worst_reply
                 ),
+                stagnation_breaker_enabled=args.enable_stagnation_breaker,
+                stagnation_breaker_bonus=args.stagnation_breaker_bonus,
                 early_stop_stable_suggestions=args.early_stop_stable_suggestions,
                 step_output=args.steps_output,
                 step_context=step_context,
@@ -642,6 +679,8 @@ def main() -> None:
                 successor_role_scoped_move_shape_require_worst_reply=(
                     args.require_role_scoped_move_shape_worst_reply
                 ),
+                stagnation_breaker_enabled=args.enable_stagnation_breaker,
+                stagnation_breaker_bonus=args.stagnation_breaker_bonus,
                 early_stop_stable_suggestions=args.early_stop_stable_suggestions,
                 require_any_terms=_parse_terms(args.legal_first_require_any_terms),
                 require_all_terms=_parse_terms(args.legal_first_require_all_terms),
@@ -669,6 +708,8 @@ def main() -> None:
                     successor_role_scoped_move_shape_require_worst_reply=(
                         args.require_role_scoped_move_shape_worst_reply
                     ),
+                    stagnation_breaker_enabled=args.enable_stagnation_breaker,
+                    stagnation_breaker_bonus=args.stagnation_breaker_bonus,
                     early_stop_stable_suggestions=args.early_stop_stable_suggestions,
                 )
             if args.continuation_trace_audit:
@@ -708,6 +749,8 @@ def main() -> None:
                         successor_role_scoped_move_shape_require_worst_reply=(
                             args.require_role_scoped_move_shape_worst_reply
                         ),
+                        stagnation_breaker_enabled=args.enable_stagnation_breaker,
+                        stagnation_breaker_bonus=args.stagnation_breaker_bonus,
                         early_stop_stable_suggestions=args.early_stop_stable_suggestions,
                         trace_max_plies=args.continuation_trace_max_plies,
                     )

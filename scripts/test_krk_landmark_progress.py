@@ -140,6 +140,17 @@ def _suggestion_role_trace(meta: dict) -> dict:
         "visible_stage0_drift_reason": dict(
             meta.get("visible_stage0_drift_reason", {}) or {}
         ),
+        "visible_stagnation_breaker_bonus": float(
+            meta.get("visible_stagnation_breaker_bonus", 0.0) or 0.0
+        ),
+        "visible_stagnation_breaker_license": dict(
+            meta.get("visible_stagnation_breaker_license", {}) or {}
+        ),
+        "score_after_stagnation_breaker_bonus": (
+            float(meta.get("score_after_stagnation_breaker_bonus"))
+            if meta.get("score_after_stagnation_breaker_bonus") is not None
+            else None
+        ),
     }
 
 
@@ -372,6 +383,15 @@ def _successor_contract_audit(
         ),
         "visible_stage0_drift_reason": dict(
             selected_group.get("visible_stage0_drift_reason", {}) or {}
+        ),
+        "visible_stagnation_breaker_bonus": float(
+            selected_group.get("visible_stagnation_breaker_bonus", 0.0) or 0.0
+        ),
+        "visible_stagnation_breaker_license": dict(
+            selected_group.get("visible_stagnation_breaker_license", {}) or {}
+        ),
+        "score_after_stagnation_breaker_bonus": selected_group.get(
+            "score_after_stagnation_breaker_bonus"
         ),
     }
 
@@ -700,6 +720,9 @@ def choose_move_with_engine(
     successor_role_scoped_move_shape_enabled: bool = False,
     successor_role_scoped_move_shape_bonus: float = 0.0,
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
+    stagnation_context: Optional[dict] = None,
+    stagnation_breaker_enabled: bool = False,
+    stagnation_breaker_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
 ) -> Optional[str]:
@@ -718,6 +741,9 @@ def choose_move_with_engine(
         successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
         successor_role_scoped_move_shape_bonus=successor_role_scoped_move_shape_bonus,
         successor_role_scoped_move_shape_require_worst_reply=successor_role_scoped_move_shape_require_worst_reply,
+        stagnation_context=stagnation_context,
+        stagnation_breaker_enabled=stagnation_breaker_enabled,
+        stagnation_breaker_bonus=stagnation_breaker_bonus,
         early_stop_stable_suggestions=early_stop_stable_suggestions,
         forced_successor_skill=forced_successor_skill,
     ).get("move")
@@ -738,6 +764,9 @@ def choose_move_details(
     successor_role_scoped_move_shape_enabled: bool = False,
     successor_role_scoped_move_shape_bonus: float = 0.0,
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
+    stagnation_context: Optional[dict] = None,
+    stagnation_breaker_enabled: bool = False,
+    stagnation_breaker_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
 ) -> dict:
@@ -760,6 +789,22 @@ def choose_move_details(
     env["blackboard"]["successor_role_scoped_move_shape_require_worst_reply"] = (
         successor_role_scoped_move_shape_require_worst_reply
     )
+    if stagnation_context:
+        dynamic_terms = {
+            "repeated_abstract_state": bool(stagnation_context.get("repeated_abstract_state_count", 0)),
+            "rook_oscillation_loop": bool(stagnation_context.get("rook_oscillation_loop", False)),
+            "no_box_progress_recently": bool(stagnation_context.get("no_box_progress_recently", False)),
+            "no_edge_progress_recently": bool(stagnation_context.get("no_edge_progress_recently", False)),
+            "no_mate_progress_recently": bool(stagnation_context.get("no_mate_progress_recently", False)),
+            "safe_loop_breaking_move_available": bool(stagnation_context.get("safe_loop_breaking_move_available", False)),
+            "loop_breaking_rook_transfer_available": bool(stagnation_context.get("loop_breaking_rook_transfer_available", False)),
+            "loop_breaking_check_or_cut_available": bool(stagnation_context.get("loop_breaking_check_or_cut_available", False)),
+        }
+        env["blackboard"]["krk_dynamic_context_terms"] = dynamic_terms
+        env["blackboard"].setdefault("krk_visible_terms", {}).update(dynamic_terms)
+        env["blackboard"]["krk_stagnation_context"] = dict(stagnation_context)
+    env["blackboard"]["stagnation_breaker_enabled"] = bool(stagnation_breaker_enabled)
+    env["blackboard"]["stagnation_breaker_bonus"] = float(stagnation_breaker_bonus)
     if forced_successor_skill:
         env["blackboard"]["forced_successor_skill"] = forced_successor_skill
 
@@ -853,6 +898,9 @@ def choose_move_details(
         "successor_role_scoped_move_shape_enabled": successor_role_scoped_move_shape_enabled,
         "successor_role_scoped_move_shape_bonus": successor_role_scoped_move_shape_bonus,
         "successor_role_scoped_move_shape_require_worst_reply": successor_role_scoped_move_shape_require_worst_reply,
+        "stagnation_breaker_enabled": bool(stagnation_breaker_enabled),
+        "stagnation_breaker_bonus": float(stagnation_breaker_bonus),
+        "stagnation_context": dict(stagnation_context or {}),
         "early_stop_stable_suggestions": int(early_stop_stable_suggestions),
         "early_stopped": bool(early_stopped),
         "stable_suggestion_ticks": int(stable_suggestion_ticks),
@@ -942,6 +990,8 @@ def play_to_mate(
     successor_role_scoped_move_shape_enabled: bool = False,
     successor_role_scoped_move_shape_bonus: float = 0.0,
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
+    stagnation_breaker_enabled: bool = False,
+    stagnation_breaker_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
 ) -> dict:
@@ -949,6 +999,7 @@ def play_to_mate(
     b = board.copy()
     white_moves = 0
     events = []
+    all_events = []
     trace_truncated_events = 0
     first_reply: dict | None = None
     first_successor: dict | None = None
@@ -956,6 +1007,7 @@ def play_to_mate(
 
     def record_event(event: dict) -> None:
         nonlocal trace_truncated_events
+        all_events.append(event)
         if not trace:
             return
         if trace_max_plies is None or len(events) < trace_max_plies:
@@ -980,7 +1032,10 @@ def play_to_mate(
         if trace:
             payload["final_fen"] = b.fen()
             payload["trace"] = events
-            payload["stagnation_summary"] = _playout_stagnation_summary(events)
+            payload["stagnation_summary"] = _playout_stagnation_summary(
+                all_events,
+                current_board=b,
+            )
             if trace_truncated_events:
                 payload["trace_truncated_events"] = trace_truncated_events
         return payload
@@ -997,6 +1052,10 @@ def play_to_mate(
             active_stage_filter = stage_filter if white_moves == 0 else None
             active_forced_successor = forced_successor_skill if white_moves == 0 else None
             before_fen = b.fen()
+            stagnation_context = _playout_stagnation_summary(
+                all_events,
+                current_board=b,
+            )
             move_details = choose_move_details(
                 graph,
                 engine,
@@ -1014,6 +1073,9 @@ def play_to_mate(
                 successor_role_scoped_move_shape_require_worst_reply=(
                     successor_role_scoped_move_shape_require_worst_reply
                 ),
+                stagnation_context=stagnation_context,
+                stagnation_breaker_enabled=stagnation_breaker_enabled,
+                stagnation_breaker_bonus=stagnation_breaker_bonus,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
                 forced_successor_skill=active_forced_successor,
             )
@@ -1038,6 +1100,7 @@ def play_to_mate(
                     "fen": before_fen,
                     "stage_filter": active_stage_filter,
                     "move": None,
+                    "stagnation_context": stagnation_context,
                     "engine": move_details,
                 })
                 return finish("no_move", ply)
@@ -1050,6 +1113,7 @@ def play_to_mate(
                     "fen": before_fen,
                     "stage_filter": active_stage_filter,
                     "move": move_uci,
+                    "stagnation_context": stagnation_context,
                     "engine": move_details,
                 })
                 return finish("illegal_move", ply)
@@ -1060,6 +1124,7 @@ def play_to_mate(
                     "fen": before_fen,
                     "stage_filter": active_stage_filter,
                     "move": move_uci,
+                    "stagnation_context": stagnation_context,
                     "engine": move_details,
                 })
                 return finish("illegal_move", ply)
@@ -1075,6 +1140,7 @@ def play_to_mate(
                 "resulting_fen": b.fen(),
                 "is_checkmate": b.is_checkmate(),
                 "is_stalemate": b.is_stalemate(),
+                "stagnation_context": stagnation_context,
                 "engine": move_details,
             })
             white_moves += 1
@@ -1140,6 +1206,15 @@ def _compact_playout_trace(trace: list[dict]) -> list[dict]:
             "is_checkmate": bool(event.get("is_checkmate", False)),
             "is_stalemate": bool(event.get("is_stalemate", False)),
         }
+        if isinstance(event.get("stagnation_context"), dict):
+            ctx = event["stagnation_context"]
+            item["stagnation_context"] = {
+                "stagnation_loop": bool(ctx.get("stagnation_loop", False)),
+                "rook_oscillation_loop": bool(ctx.get("rook_oscillation_loop", False)),
+                "repeated_abstract_state_count": int(ctx.get("repeated_abstract_state_count", 0) or 0),
+                "no_progress_plies": int(ctx.get("no_progress_plies", 0) or 0),
+                "legal_loop_breaking_moves": list(ctx.get("legal_loop_breaking_moves", []) or []),
+            }
         engine = event.get("engine") if isinstance(event.get("engine"), dict) else None
         if engine:
             suggestions = list(engine.get("suggestions", []) or [])
@@ -1166,6 +1241,14 @@ def _compact_playout_trace(trace: list[dict]) -> list[dict]:
                     for suggestion in suggestions[:5]
                 ],
             })
+            meta = selected.get("meta") if isinstance(selected, dict) and isinstance(selected.get("meta"), dict) else {}
+            if meta.get("visible_stagnation_breaker_license"):
+                item["visible_stagnation_breaker_license"] = meta.get(
+                    "visible_stagnation_breaker_license"
+                )
+                item["visible_stagnation_breaker_bonus"] = meta.get(
+                    "visible_stagnation_breaker_bonus"
+                )
         compact.append(item)
     return compact
 
@@ -1178,16 +1261,218 @@ def _fen_state_key(fen: str) -> str | None:
     return f"{board.board_fen()} {'w' if board.turn == chess.WHITE else 'b'}"
 
 
+def _krk_squares(board: chess.Board) -> tuple[int | None, int | None, int | None]:
+    wk_sq = next(iter(board.pieces(chess.KING, chess.WHITE)), None)
+    bk_sq = next(iter(board.pieces(chess.KING, chess.BLACK)), None)
+    wr_sq = next(iter(board.pieces(chess.ROOK, chess.WHITE)), None)
+    return wk_sq, bk_sq, wr_sq
+
+
+def _krk_box_area_and_edge(board: chess.Board) -> tuple[int | None, int | None]:
+    wk_sq, bk_sq, wr_sq = _krk_squares(board)
+    if wk_sq is None or bk_sq is None or wr_sq is None:
+        return None, None
+    bk_file, bk_rank = chess.square_file(bk_sq), chess.square_rank(bk_sq)
+    wr_file, wr_rank = chess.square_file(wr_sq), chess.square_rank(wr_sq)
+    edge_distance = min(bk_file, 7 - bk_file, bk_rank, 7 - bk_rank)
+    box_width = max(1, wr_file if bk_file < wr_file else 7 - wr_file)
+    box_height = max(1, wr_rank if bk_rank < wr_rank else 7 - wr_rank)
+    return int(box_width * box_height), int(edge_distance)
+
+
+def _krk_abstract_state_signature(board: chess.Board) -> str | None:
+    wk_sq, bk_sq, wr_sq = _krk_squares(board)
+    if wk_sq is None or bk_sq is None or wr_sq is None:
+        return None
+    wk_file, wk_rank = chess.square_file(wk_sq), chess.square_rank(wk_sq)
+    bk_file, bk_rank = chess.square_file(bk_sq), chess.square_rank(bk_sq)
+    wr_file, wr_rank = chess.square_file(wr_sq), chess.square_rank(wr_sq)
+    box_area, edge_distance = _krk_box_area_and_edge(board)
+    if wr_file == bk_file:
+        cut_axis = "file"
+    elif wr_rank == bk_rank:
+        cut_axis = "rank"
+    else:
+        cut_axis = "off"
+    rook_relation = (
+        "same_file" if wr_file == bk_file
+        else "same_rank" if wr_rank == bk_rank
+        else f"df{_sign(wr_file - bk_file)}_dr{_sign(wr_rank - bk_rank)}"
+    )
+    return "|".join([
+        f"wk={chess.square_name(wk_sq)}",
+        f"bk={chess.square_name(bk_sq)}",
+        f"wr_rel={rook_relation}",
+        f"wr_edge={int(wr_file in (0, 7) or wr_rank in (0, 7))}",
+        f"box={box_area}",
+        f"edge={edge_distance}",
+        f"cut={cut_axis}",
+        f"turn={'w' if board.turn == chess.WHITE else 'b'}",
+    ])
+
+
+def _sign(value: int) -> int:
+    return -1 if value < 0 else 1 if value > 0 else 0
+
+
+def _boards_from_trace(trace: list[dict], current_board: chess.Board | None = None) -> list[chess.Board]:
+    boards: list[chess.Board] = []
+    seen: set[str] = set()
+    for event in trace:
+        if not isinstance(event, dict):
+            continue
+        for key in ("fen", "resulting_fen"):
+            fen = event.get(key)
+            if not isinstance(fen, str) or fen in seen:
+                continue
+            try:
+                board = chess.Board(fen)
+            except Exception:
+                continue
+            boards.append(board)
+            seen.add(fen)
+    if current_board is not None:
+        fen = current_board.fen()
+        if fen not in seen:
+            boards.append(current_board.copy(stack=False))
+    return boards
+
+
+def _rook_safe_after_move(board: chess.Board, move: chess.Move) -> bool:
+    b = board.copy(stack=False)
+    b.push(move)
+    wr_sq = next(iter(b.pieces(chess.ROOK, chess.WHITE)), None)
+    bk_sq = next(iter(b.pieces(chess.KING, chess.BLACK)), None)
+    wk_sq = next(iter(b.pieces(chess.KING, chess.WHITE)), None)
+    if wr_sq is None or bk_sq is None or wk_sq is None:
+        return False
+    if chess.square_distance(wr_sq, bk_sq) > 1:
+        return True
+    reply_board = b.copy(stack=False)
+    reply_board.turn = chess.BLACK
+    capture = chess.Move(bk_sq, wr_sq)
+    return capture not in reply_board.legal_moves or chess.square_distance(wk_sq, wr_sq) <= 1
+
+
+def _loop_breaking_move_audit(
+    board: chess.Board,
+    move: chess.Move,
+    *,
+    oscillation_squares: set[str],
+    last_rook_move: str | None = None,
+) -> dict:
+    if move not in board.legal_moves:
+        return {"move": move.uci(), "legal": False, "loop_breaking": False}
+    current_box, current_edge = _krk_box_area_and_edge(board)
+    b = board.copy(stack=False)
+    b.push(move)
+    post_box, post_edge = _krk_box_area_and_edge(b)
+    is_rook_move = bool(board.piece_at(move.from_square) == chess.Piece(chess.ROOK, chess.WHITE))
+    to_square = chess.square_name(move.to_square)
+    escapes_oscillation_pair = not is_rook_move or to_square not in oscillation_squares
+    is_immediate_rook_reverse = bool(
+        is_rook_move
+        and last_rook_move
+        and _reverse_uci(last_rook_move, move.uci())
+    )
+    no_draw = not (b.is_stalemate() or b.is_insufficient_material())
+    rook_safe = _rook_safe_after_move(board, move)
+    preserves_box = (
+        current_box is not None
+        and post_box is not None
+        and post_box <= current_box
+    )
+    improves_box = (
+        current_box is not None
+        and post_box is not None
+        and post_box < current_box
+    )
+    preserves_edge = (
+        current_edge is not None
+        and post_edge is not None
+        and post_edge <= current_edge
+    )
+    creates_check = board.gives_check(move)
+    loop_breaking = bool(
+        escapes_oscillation_pair
+        and not is_immediate_rook_reverse
+        and no_draw
+        and rook_safe
+        and (preserves_box or preserves_edge or creates_check or b.is_checkmate())
+    )
+    terms = []
+    if is_rook_move:
+        terms.append("candidate_is_rook_move")
+        if chess.square_distance(move.from_square, move.to_square) >= 2:
+            terms.append("candidate_is_rook_transfer")
+    else:
+        terms.append("candidate_is_king_move")
+    if escapes_oscillation_pair:
+        terms.append("escapes_rook_oscillation_pair")
+    if not is_immediate_rook_reverse:
+        terms.append("not_immediate_rook_reverse")
+    if rook_safe:
+        terms.append("rook_safe_after_move")
+    if no_draw:
+        terms.append("no_draw_after_move")
+    if preserves_box:
+        terms.append("box_area_not_increased_after_move")
+    if improves_box:
+        terms.append("box_area_decreases_after_move")
+    if preserves_edge:
+        terms.append("enemy_edge_distance_not_increased_after_move")
+    if creates_check:
+        terms.append("checking_line_created")
+    return {
+        "move": move.uci(),
+        "legal": True,
+        "loop_breaking": loop_breaking,
+        "source_terms": sorted(set(terms)),
+        "current_box_area": current_box,
+        "post_box_area": post_box,
+        "current_enemy_edge_distance": current_edge,
+        "post_enemy_edge_distance": post_edge,
+    }
+
+
 def _reverse_uci(move_a: str, move_b: str) -> bool:
     if len(move_a) < 4 or len(move_b) < 4:
         return False
     return move_a[:2] == move_b[2:4] and move_a[2:4] == move_b[:2]
 
 
-def _playout_stagnation_summary(trace: list[dict]) -> dict:
+def _playout_stagnation_summary(
+    trace: list[dict],
+    *,
+    current_board: chess.Board | None = None,
+) -> dict:
     state_counts: dict[str, int] = {}
+    abstract_counts: dict[str, int] = {}
     white_moves: list[str] = []
     reverse_pairs: dict[str, int] = {}
+    boards = _boards_from_trace(trace, current_board)
+    abstract_history: list[str] = []
+    rook_history: list[str] = []
+    wk_history: list[str] = []
+    bk_history: list[str] = []
+    box_history: list[int | None] = []
+    edge_history: list[int | None] = []
+    mate_one_history: list[bool] = []
+    safe_check_history: list[bool] = []
+    for board in boards:
+        abstract = _krk_abstract_state_signature(board)
+        if abstract:
+            abstract_history.append(abstract)
+            abstract_counts[abstract] = abstract_counts.get(abstract, 0) + 1
+        wk_sq, bk_sq, wr_sq = _krk_squares(board)
+        rook_history.append(chess.square_name(wr_sq) if wr_sq is not None else "missing")
+        wk_history.append(chess.square_name(wk_sq) if wk_sq is not None else "missing")
+        bk_history.append(chess.square_name(bk_sq) if bk_sq is not None else "missing")
+        box_area, edge_distance = _krk_box_area_and_edge(board)
+        box_history.append(box_area)
+        edge_history.append(edge_distance)
+        mate_one_history.append(_mate_in_one_available(board))
+        safe_check_history.append(_safe_check_available_local(board))
     for event in trace:
         if not isinstance(event, dict):
             continue
@@ -1203,11 +1488,44 @@ def _playout_stagnation_summary(trace: list[dict]) -> dict:
         if _reverse_uci(previous, current):
             pair = " / ".join(sorted([previous, current]))
             reverse_pairs[pair] = reverse_pairs.get(pair, 0) + 1
+    oscillation_squares: set[str] = set()
+    for pair in reverse_pairs:
+        for move in pair.split(" / "):
+            oscillation_squares.add(move[:2])
+            oscillation_squares.add(move[2:4])
     repeated_states = {
         state: count
         for state, count in state_counts.items()
         if count >= 2
     }
+    repeated_abstract = {
+        state: count
+        for state, count in abstract_counts.items()
+        if count >= 2
+    }
+    no_box_progress = _no_recent_decrease(box_history)
+    no_edge_progress = _no_recent_decrease(edge_history)
+    no_mate_progress = not any(mate_one_history[-8:])
+    no_progress_plies = _recent_no_progress_plies(
+        box_history=box_history,
+        edge_history=edge_history,
+        mate_one_history=mate_one_history,
+    )
+    loop_breaking_audits = []
+    last_rook_move = white_moves[-1] if white_moves else None
+    if current_board is not None and current_board.turn == chess.WHITE:
+        loop_breaking_audits = [
+            _loop_breaking_move_audit(
+                current_board,
+                move,
+                oscillation_squares=oscillation_squares,
+                last_rook_move=last_rook_move,
+            )
+            for move in current_board.legal_moves
+        ]
+    legal_loop_breaking_moves = [
+        item["move"] for item in loop_breaking_audits if item.get("loop_breaking")
+    ]
     top_repeated = sorted(
         repeated_states.items(),
         key=lambda item: (-item[1], item[0]),
@@ -1216,6 +1534,15 @@ def _playout_stagnation_summary(trace: list[dict]) -> dict:
         reverse_pairs.items(),
         key=lambda item: (-item[1], item[0]),
     )[:5]
+    rook_reversal_count = sum(reverse_pairs.values())
+    rook_oscillation_loop = rook_reversal_count >= 2
+    stagnation_loop = bool(
+        rook_oscillation_loop
+        and no_box_progress
+        and no_edge_progress
+        and no_mate_progress
+        and repeated_abstract
+    )
     return {
         "max_state_repetition": max(state_counts.values(), default=0),
         "repeated_state_count": len(repeated_states),
@@ -1224,11 +1551,108 @@ def _playout_stagnation_summary(trace: list[dict]) -> dict:
             for state, count in top_repeated
         ],
         "rook_oscillation_detected": bool(top_reverse_pairs),
+        "rook_oscillation_loop": rook_oscillation_loop,
+        "rook_reversal_count": int(rook_reversal_count),
         "rook_oscillation_pairs": [
             {"moves": pair, "count": count}
             for pair, count in top_reverse_pairs
         ],
+        "abstract_state_signature": abstract_history[-1] if abstract_history else None,
+        "abstract_state_history": abstract_history,
+        "repeated_abstract_state_count": len(repeated_abstract),
+        "repeated_abstract_state_examples": [
+            {"state": state, "count": count}
+            for state, count in sorted(
+                repeated_abstract.items(),
+                key=lambda item: (-item[1], item[0]),
+            )[:5]
+        ],
+        "rook_square_history": rook_history,
+        "king_square_history": {
+            "white": wk_history,
+            "black": bk_history,
+        },
+        "box_area_history": box_history,
+        "enemy_king_edge_distance_history": edge_history,
+        "mate_in_one_history": mate_one_history,
+        "safe_check_available_history": safe_check_history,
+        "no_box_progress_recently": bool(no_box_progress),
+        "no_edge_progress_recently": bool(no_edge_progress),
+        "no_mate_progress_recently": bool(no_mate_progress),
+        "no_progress_plies": int(no_progress_plies),
+        "stagnation_loop": stagnation_loop,
+        "safe_loop_breaking_move_available": bool(legal_loop_breaking_moves),
+        "loop_breaking_rook_transfer_available": any(
+            item.get("loop_breaking")
+            and "candidate_is_rook_transfer" in item.get("source_terms", [])
+            for item in loop_breaking_audits
+        ),
+        "loop_breaking_check_or_cut_available": any(
+            item.get("loop_breaking")
+            and (
+                "checking_line_created" in item.get("source_terms", [])
+                or "box_area_decreases_after_move" in item.get("source_terms", [])
+            )
+            for item in loop_breaking_audits
+        ),
+        "legal_loop_breaking_moves": legal_loop_breaking_moves,
+        "legal_loop_breaking_move_audits": [
+            item for item in loop_breaking_audits if item.get("loop_breaking")
+        ],
+        "legal_loop_breaking_moves_that_convert": [],
     }
+
+
+def _safe_check_available_local(board: chess.Board) -> bool:
+    if board.turn != chess.WHITE:
+        return False
+    for move in board.legal_moves:
+        if not board.gives_check(move):
+            continue
+        if _rook_safe_after_move(board, move):
+            return True
+    return False
+
+
+def _no_recent_decrease(values: list[int | None], *, window: int = 8) -> bool:
+    clean = [value for value in values[-window:] if value is not None]
+    if len(clean) < 3:
+        return False
+    return min(clean[1:]) >= clean[0]
+
+
+def _recent_no_progress_plies(
+    *,
+    box_history: list[int | None],
+    edge_history: list[int | None],
+    mate_one_history: list[bool],
+) -> int:
+    limit = min(len(box_history), len(edge_history), len(mate_one_history))
+    if limit < 2:
+        return 0
+    count = 0
+    best_box = box_history[max(0, limit - 10)]
+    best_edge = edge_history[max(0, limit - 10)]
+    for idx in range(max(1, limit - 9), limit):
+        box = box_history[idx]
+        edge = edge_history[idx]
+        mate = mate_one_history[idx]
+        improved = False
+        if box is not None and best_box is not None and box < best_box:
+            improved = True
+        if edge is not None and best_edge is not None and edge < best_edge:
+            improved = True
+        if mate:
+            improved = True
+        if improved:
+            count = 0
+        else:
+            count += 1
+        if box is not None and (best_box is None or box < best_box):
+            best_box = box
+        if edge is not None and (best_edge is None or edge < best_edge):
+            best_edge = edge
+    return count
 
 
 def select_eval_position(
@@ -1270,6 +1694,8 @@ def run_counterfactual_successor_sweep(
     successor_role_scoped_move_shape_enabled: bool = False,
     successor_role_scoped_move_shape_bonus: float = 0.0,
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
+    stagnation_breaker_enabled: bool = False,
+    stagnation_breaker_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     step_output: Optional[Path] = None,
     step_context: Optional[dict] = None,
@@ -1306,6 +1732,8 @@ def run_counterfactual_successor_sweep(
             successor_role_scoped_move_shape_require_worst_reply=(
                 successor_role_scoped_move_shape_require_worst_reply
             ),
+            stagnation_breaker_enabled=stagnation_breaker_enabled,
+            stagnation_breaker_bonus=stagnation_breaker_bonus,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
             forced_successor_skill=skill_id,
         )
@@ -1424,6 +1852,8 @@ def evaluate_landmark_progress(
     successor_role_scoped_move_shape_enabled: bool = False,
     successor_role_scoped_move_shape_bonus: float = 0.0,
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
+    stagnation_breaker_enabled: bool = False,
+    stagnation_breaker_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     counterfactual_successors: tuple[str, ...] = (),
     max_counterfactual_sweeps: int = 0,
@@ -1635,6 +2065,8 @@ def evaluate_landmark_progress(
                 successor_role_scoped_move_shape_require_worst_reply=(
                     successor_role_scoped_move_shape_require_worst_reply
                 ),
+                stagnation_breaker_enabled=stagnation_breaker_enabled,
+                stagnation_breaker_bonus=stagnation_breaker_bonus,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
             )
             key = result["result"]
@@ -1719,7 +2151,7 @@ def evaluate_landmark_progress(
                 high_score_threshold=high_successor_score_threshold,
                 final_mate_in_one_available=bool(result.get("final_mate_in_one_available", False)),
                 rook_oscillation_detected=bool(
-                    (result.get("stagnation_summary") or {}).get("rook_oscillation_detected")
+                    (result.get("stagnation_summary") or {}).get("rook_oscillation_loop")
                 ),
             )
             post_reply_packet = HandoffPacket.create(
@@ -1782,6 +2214,15 @@ def evaluate_landmark_progress(
                     ),
                     "visible_stage0_drift_reason": successor_summary.get(
                         "visible_stage0_drift_reason"
+                    ),
+                    "visible_stagnation_breaker_bonus": successor_summary.get(
+                        "visible_stagnation_breaker_bonus"
+                    ),
+                    "visible_stagnation_breaker_license": successor_summary.get(
+                        "visible_stagnation_breaker_license"
+                    ),
+                    "score_after_stagnation_breaker_bonus": successor_summary.get(
+                        "score_after_stagnation_breaker_bonus"
                     ),
                     "selected_skill_source": successor_summary.get("selected_skill_source"),
                     "successor_skills": successor_summary["skills"],
@@ -1923,6 +2364,8 @@ def evaluate_landmark_progress(
                     successor_role_scoped_move_shape_require_worst_reply=(
                         successor_role_scoped_move_shape_require_worst_reply
                     ),
+                    stagnation_breaker_enabled=stagnation_breaker_enabled,
+                    stagnation_breaker_bonus=stagnation_breaker_bonus,
                     early_stop_stable_suggestions=early_stop_stable_suggestions,
                     step_output=counterfactual_steps_output,
                     step_context=step_context,
@@ -2049,6 +2492,8 @@ def evaluate_landmark_progress(
     stats["successor_role_scoped_move_shape_require_worst_reply"] = (
         successor_role_scoped_move_shape_require_worst_reply
     )
+    stats["stagnation_breaker_enabled"] = stagnation_breaker_enabled
+    stats["stagnation_breaker_bonus"] = stagnation_breaker_bonus
     stats["early_stop_stable_suggestions"] = int(early_stop_stable_suggestions)
     stats["target_failure_trace_state_signatures"] = list(target_failure_trace_state_signatures)
     evaluated = max(0, stats["total"] - stats["no_move"])
@@ -2257,6 +2702,10 @@ def main() -> None:
                         help="Bonus weight for confirmed role-scoped visible move-shape licenses")
     parser.add_argument("--require-role-scoped-move-shape-worst-reply", action="store_true",
                         help="Require worst-reply survival terms for runtime role-scoped move-shape bonuses; slower, audit-oriented")
+    parser.add_argument("--enable-stagnation-breaker", action="store_true",
+                        help="Enable opt-in visible stagnation-breaker move license bonus")
+    parser.add_argument("--stagnation-breaker-bonus", type=float, default=0.0,
+                        help="Small bonus for candidate moves licensed by visible stagnation-breaker terms")
     parser.add_argument("--counterfactual-successors", type=str, default=None,
                         help="Comma-separated canonical successor skill IDs to force on failed post-reply states")
     parser.add_argument("--max-counterfactual-sweeps", type=int, default=0,
@@ -2312,6 +2761,8 @@ def main() -> None:
         successor_role_scoped_move_shape_enabled=args.enable_role_scoped_move_shapes,
         successor_role_scoped_move_shape_bonus=args.role_scoped_move_shape_bonus,
         successor_role_scoped_move_shape_require_worst_reply=args.require_role_scoped_move_shape_worst_reply,
+        stagnation_breaker_enabled=args.enable_stagnation_breaker,
+        stagnation_breaker_bonus=args.stagnation_breaker_bonus,
         early_stop_stable_suggestions=args.early_stop_stable_suggestions,
         counterfactual_successors=tuple(
             item.strip()
