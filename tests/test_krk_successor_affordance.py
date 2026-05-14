@@ -10,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from recon_lite_chess.krk_baseline_nodes import (
     _apply_successor_affordance_bias,
+    _apply_visible_post_break_continuation_bias,
     _apply_visible_stage0_drift_penalty,
     _apply_visible_rook_transfer_move_bias,
     _compute_krk_context_terms,
@@ -568,6 +569,62 @@ def test_stage0_drift_penalty_targets_unproductive_king_drift_only():
     assert king_meta["visible_stage0_drift_penalty"] == 6.0
     assert rook_score == 5.7
     assert "visible_stage0_drift_penalty" not in rook_meta
+
+
+def test_post_break_continuation_bonus_requires_visible_recent_break_context():
+    board = chess.Board("5k2/8/K7/8/7R/8/8/8 w - - 18 10")
+    blackboard = {
+        "post_break_continuation_enabled": True,
+        "post_break_continuation_bonus": 0.25,
+        "krk_dynamic_context_terms": {
+            "rook_oscillation_loop_recently_broken": True,
+            "confinement_preserved_after_break": True,
+            "post_stagnation_break_continuation_needed": True,
+            "safe_followup_available": True,
+        },
+        "krk_post_break_continuation_context": {
+            "breaker_move": "h4d4",
+            "legal_post_break_followup_moves": ["a6a7", "a6b7"],
+        },
+    }
+    licensed_meta = {}
+    unlicensed_meta = {}
+
+    licensed = _apply_visible_post_break_continuation_bias(
+        1.0,
+        board=board,
+        move=chess.Move.from_uci("a6b7"),
+        skill_id="krk.stage0_basin",
+        blackboard=blackboard,
+        move_meta=licensed_meta,
+    )
+    missing_context = _apply_visible_post_break_continuation_bias(
+        1.0,
+        board=board,
+        move=chess.Move.from_uci("a6b7"),
+        skill_id="krk.stage0_basin",
+        blackboard={
+            **blackboard,
+            "krk_dynamic_context_terms": {
+                "rook_oscillation_loop_recently_broken": True,
+                "confinement_preserved_after_break": False,
+                "post_stagnation_break_continuation_needed": True,
+                "safe_followup_available": True,
+            },
+        },
+        move_meta=unlicensed_meta,
+    )
+
+    assert licensed == 1.25
+    assert licensed_meta["visible_post_break_continuation_bonus"] == 0.25
+    assert licensed_meta["visible_post_break_continuation_license"]["role_id"] == (
+        "krk.post_stagnation_break_continuation"
+    )
+    assert "candidate_is_king_move" in licensed_meta[
+        "visible_post_break_continuation_license"
+    ]["source_terms"]
+    assert missing_context == 1.0
+    assert "visible_post_break_continuation_bonus" not in unlicensed_meta
 
 
 def test_move_shape_audit_emits_current_candidate_post_and_worst_reply_terms():

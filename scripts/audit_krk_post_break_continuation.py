@@ -253,6 +253,8 @@ def _run_candidate(
     successor_role_scoped_move_shape_bonus: float,
     stagnation_breaker_enabled: bool,
     stagnation_breaker_bonus: float,
+    post_break_continuation_enabled: bool,
+    post_break_continuation_bonus: float,
     trace_max_plies: int,
 ) -> dict[str, Any]:
     move = chess.Move.from_uci(move_uci)
@@ -288,6 +290,8 @@ def _run_candidate(
         successor_role_scoped_move_shape_bonus=successor_role_scoped_move_shape_bonus,
         stagnation_breaker_enabled=stagnation_breaker_enabled,
         stagnation_breaker_bonus=stagnation_breaker_bonus,
+        post_break_continuation_enabled=post_break_continuation_enabled,
+        post_break_continuation_bonus=post_break_continuation_bonus,
         early_stop_stable_suggestions=early_stop_stable_suggestions,
     )
     continuation["plies"] = int(continuation.get("plies", 0) or 0) + 1
@@ -317,6 +321,8 @@ def main() -> None:
     parser.add_argument("--role-scoped-move-shape-bonus", type=float, default=0.0)
     parser.add_argument("--enable-stagnation-breaker", action="store_true")
     parser.add_argument("--stagnation-breaker-bonus", type=float, default=0.0)
+    parser.add_argument("--enable-post-break-continuation", action="store_true")
+    parser.add_argument("--post-break-continuation-bonus", type=float, default=0.0)
     parser.add_argument("--steps-output", type=Path, default=None)
     parser.add_argument("--json-output", type=Path, default=None)
     args = parser.parse_args()
@@ -378,6 +384,8 @@ def main() -> None:
                 successor_role_scoped_move_shape_bonus=args.role_scoped_move_shape_bonus,
                 stagnation_breaker_enabled=args.enable_stagnation_breaker,
                 stagnation_breaker_bonus=args.stagnation_breaker_bonus,
+                post_break_continuation_enabled=args.enable_post_break_continuation,
+                post_break_continuation_bonus=args.post_break_continuation_bonus,
                 trace_max_plies=args.trace_max_plies,
             )
             outcome = str(continuation.get("result") or "unknown")

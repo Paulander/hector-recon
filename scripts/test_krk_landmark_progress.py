@@ -151,6 +151,17 @@ def _suggestion_role_trace(meta: dict) -> dict:
             if meta.get("score_after_stagnation_breaker_bonus") is not None
             else None
         ),
+        "visible_post_break_continuation_bonus": float(
+            meta.get("visible_post_break_continuation_bonus", 0.0) or 0.0
+        ),
+        "visible_post_break_continuation_license": dict(
+            meta.get("visible_post_break_continuation_license", {}) or {}
+        ),
+        "score_after_post_break_continuation_bonus": (
+            float(meta.get("score_after_post_break_continuation_bonus"))
+            if meta.get("score_after_post_break_continuation_bonus") is not None
+            else None
+        ),
     }
 
 
@@ -392,6 +403,15 @@ def _successor_contract_audit(
         ),
         "score_after_stagnation_breaker_bonus": selected_group.get(
             "score_after_stagnation_breaker_bonus"
+        ),
+        "visible_post_break_continuation_bonus": float(
+            selected_group.get("visible_post_break_continuation_bonus", 0.0) or 0.0
+        ),
+        "visible_post_break_continuation_license": dict(
+            selected_group.get("visible_post_break_continuation_license", {}) or {}
+        ),
+        "score_after_post_break_continuation_bonus": selected_group.get(
+            "score_after_post_break_continuation_bonus"
         ),
     }
 
@@ -723,6 +743,8 @@ def choose_move_with_engine(
     stagnation_context: Optional[dict] = None,
     stagnation_breaker_enabled: bool = False,
     stagnation_breaker_bonus: float = 0.0,
+    post_break_continuation_enabled: bool = False,
+    post_break_continuation_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
 ) -> Optional[str]:
@@ -744,6 +766,8 @@ def choose_move_with_engine(
         stagnation_context=stagnation_context,
         stagnation_breaker_enabled=stagnation_breaker_enabled,
         stagnation_breaker_bonus=stagnation_breaker_bonus,
+        post_break_continuation_enabled=post_break_continuation_enabled,
+        post_break_continuation_bonus=post_break_continuation_bonus,
         early_stop_stable_suggestions=early_stop_stable_suggestions,
         forced_successor_skill=forced_successor_skill,
     ).get("move")
@@ -767,6 +791,8 @@ def choose_move_details(
     stagnation_context: Optional[dict] = None,
     stagnation_breaker_enabled: bool = False,
     stagnation_breaker_bonus: float = 0.0,
+    post_break_continuation_enabled: bool = False,
+    post_break_continuation_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
 ) -> dict:
@@ -799,12 +825,22 @@ def choose_move_details(
             "safe_loop_breaking_move_available": bool(stagnation_context.get("safe_loop_breaking_move_available", False)),
             "loop_breaking_rook_transfer_available": bool(stagnation_context.get("loop_breaking_rook_transfer_available", False)),
             "loop_breaking_check_or_cut_available": bool(stagnation_context.get("loop_breaking_check_or_cut_available", False)),
+            "rook_oscillation_loop_recently_broken": bool(stagnation_context.get("rook_oscillation_loop_recently_broken", False)),
+            "confinement_preserved_after_break": bool(stagnation_context.get("confinement_preserved_after_break", False)),
+            "enemy_king_edge_control_preserved": bool(stagnation_context.get("enemy_king_edge_control_preserved", False)),
+            "post_stagnation_break_continuation_needed": bool(stagnation_context.get("post_stagnation_break_continuation_needed", False)),
+            "safe_followup_available": bool(stagnation_context.get("safe_followup_available", False)),
         }
         env["blackboard"]["krk_dynamic_context_terms"] = dynamic_terms
         env["blackboard"].setdefault("krk_visible_terms", {}).update(dynamic_terms)
         env["blackboard"]["krk_stagnation_context"] = dict(stagnation_context)
+        env["blackboard"]["krk_post_break_continuation_context"] = dict(
+            stagnation_context.get("post_break_continuation_context", {}) or {}
+        )
     env["blackboard"]["stagnation_breaker_enabled"] = bool(stagnation_breaker_enabled)
     env["blackboard"]["stagnation_breaker_bonus"] = float(stagnation_breaker_bonus)
+    env["blackboard"]["post_break_continuation_enabled"] = bool(post_break_continuation_enabled)
+    env["blackboard"]["post_break_continuation_bonus"] = float(post_break_continuation_bonus)
     if forced_successor_skill:
         env["blackboard"]["forced_successor_skill"] = forced_successor_skill
 
@@ -900,6 +936,8 @@ def choose_move_details(
         "successor_role_scoped_move_shape_require_worst_reply": successor_role_scoped_move_shape_require_worst_reply,
         "stagnation_breaker_enabled": bool(stagnation_breaker_enabled),
         "stagnation_breaker_bonus": float(stagnation_breaker_bonus),
+        "post_break_continuation_enabled": bool(post_break_continuation_enabled),
+        "post_break_continuation_bonus": float(post_break_continuation_bonus),
         "stagnation_context": dict(stagnation_context or {}),
         "early_stop_stable_suggestions": int(early_stop_stable_suggestions),
         "early_stopped": bool(early_stopped),
@@ -992,6 +1030,8 @@ def play_to_mate(
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
     stagnation_breaker_enabled: bool = False,
     stagnation_breaker_bonus: float = 0.0,
+    post_break_continuation_enabled: bool = False,
+    post_break_continuation_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
 ) -> dict:
@@ -1056,6 +1096,11 @@ def play_to_mate(
                 all_events,
                 current_board=b,
             )
+            stagnation_context = _with_post_break_continuation_context(
+                stagnation_context,
+                all_events=all_events,
+                current_board=b,
+            )
             move_details = choose_move_details(
                 graph,
                 engine,
@@ -1076,6 +1121,8 @@ def play_to_mate(
                 stagnation_context=stagnation_context,
                 stagnation_breaker_enabled=stagnation_breaker_enabled,
                 stagnation_breaker_bonus=stagnation_breaker_bonus,
+                post_break_continuation_enabled=post_break_continuation_enabled,
+                post_break_continuation_bonus=post_break_continuation_bonus,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
                 forced_successor_skill=active_forced_successor,
             )
@@ -1248,6 +1295,13 @@ def _compact_playout_trace(trace: list[dict]) -> list[dict]:
                 )
                 item["visible_stagnation_breaker_bonus"] = meta.get(
                     "visible_stagnation_breaker_bonus"
+                )
+            if meta.get("visible_post_break_continuation_license"):
+                item["visible_post_break_continuation_license"] = meta.get(
+                    "visible_post_break_continuation_license"
+                )
+                item["visible_post_break_continuation_bonus"] = meta.get(
+                    "visible_post_break_continuation_bonus"
                 )
         compact.append(item)
     return compact
@@ -1603,6 +1657,162 @@ def _playout_stagnation_summary(
     }
 
 
+def _with_post_break_continuation_context(
+    stagnation_summary: dict,
+    *,
+    all_events: list[dict],
+    current_board: chess.Board,
+) -> dict:
+    """Add non-causal visible context for follow-up after a loop break."""
+    summary = dict(stagnation_summary)
+    if current_board.turn != chess.WHITE:
+        return summary
+    breaker_event = _last_stagnation_breaker_event(all_events)
+    if not breaker_event:
+        return summary
+    try:
+        pre_break_board = chess.Board(str(breaker_event.get("fen")))
+        break_board = chess.Board(str(breaker_event.get("resulting_fen")))
+    except Exception:
+        return summary
+
+    pre_box, pre_edge = _krk_box_area_and_edge(pre_break_board)
+    break_box, break_edge = _krk_box_area_and_edge(break_board)
+    current_box, current_edge = _krk_box_area_and_edge(current_board)
+    confinement_preserved = (
+        pre_box is not None and current_box is not None and current_box <= pre_box
+    )
+    edge_control_preserved = (
+        pre_edge is not None and current_edge is not None and current_edge <= pre_edge
+    )
+    followup_audits = [
+        _post_break_followup_move_audit(current_board, move)
+        for move in current_board.legal_moves
+    ]
+    legal_followups = [
+        item["move"] for item in followup_audits if item.get("post_break_followup")
+    ]
+    context = {
+        "breaker_ply": breaker_event.get("ply"),
+        "breaker_move": breaker_event.get("move"),
+        "breaker_fen": breaker_event.get("fen"),
+        "breaker_resulting_fen": breaker_event.get("resulting_fen"),
+        "pre_break_box_area": pre_box,
+        "break_box_area": break_box,
+        "current_box_area": current_box,
+        "pre_break_enemy_edge_distance": pre_edge,
+        "break_enemy_edge_distance": break_edge,
+        "current_enemy_edge_distance": current_edge,
+        "confinement_preserved_after_break": confinement_preserved,
+        "enemy_king_edge_control_preserved": edge_control_preserved,
+        "legal_post_break_followup_moves": legal_followups,
+        "legal_post_break_followup_move_audits": [
+            item for item in followup_audits if item.get("post_break_followup")
+        ],
+    }
+    summary.update({
+        "rook_oscillation_loop_recently_broken": True,
+        "confinement_preserved_after_break": confinement_preserved,
+        "enemy_king_edge_control_preserved": edge_control_preserved,
+        "post_stagnation_break_continuation_needed": not _mate_in_one_available(current_board),
+        "safe_followup_available": bool(legal_followups),
+        "post_break_continuation_context": context,
+    })
+    return summary
+
+
+def _last_stagnation_breaker_event(events: list[dict], *, window: int = 6) -> dict | None:
+    for event in reversed(events[-window:]):
+        if not isinstance(event, dict) or event.get("turn") != "white":
+            continue
+        if event.get("visible_stagnation_breaker_license"):
+            return event
+        engine = event.get("engine") if isinstance(event.get("engine"), dict) else {}
+        selected = _selected_engine_suggestion(engine)
+        meta = selected.get("meta") if isinstance(selected.get("meta"), dict) else {}
+        if meta.get("visible_stagnation_breaker_license"):
+            return event
+    return None
+
+
+def _selected_engine_suggestion(engine: dict) -> dict:
+    suggestions = list(engine.get("suggestions", []) or [])
+    selected_move = engine.get("move")
+    return next(
+        (item for item in suggestions if item.get("move") == selected_move),
+        suggestions[0] if suggestions else {},
+    )
+
+
+def _post_break_followup_move_audit(board: chess.Board, move: chess.Move) -> dict:
+    if move not in board.legal_moves:
+        return {"move": move.uci(), "legal": False, "post_break_followup": False}
+    current_box, current_edge = _krk_box_area_and_edge(board)
+    b = board.copy(stack=False)
+    b.push(move)
+    post_box, post_edge = _krk_box_area_and_edge(b)
+    no_draw = not (b.is_stalemate() or b.is_insufficient_material())
+    rook_safe = _rook_safe_after_move(board, move)
+    preserves_box = current_box is not None and post_box is not None and post_box <= current_box
+    improves_box = current_box is not None and post_box is not None and post_box < current_box
+    preserves_edge = current_edge is not None and post_edge is not None and post_edge <= current_edge
+    is_king_move = bool(board.piece_at(move.from_square) == chess.Piece(chess.KING, chess.WHITE))
+    is_rook_move = bool(board.piece_at(move.from_square) == chess.Piece(chess.ROOK, chess.WHITE))
+    support_improves = _king_support_improves_after_move(board, move) if is_king_move else False
+    creates_check = board.gives_check(move)
+    terms = []
+    if is_king_move:
+        terms.append("candidate_is_king_move")
+    if is_rook_move:
+        terms.append("candidate_is_rook_move")
+        if chess.square_distance(move.from_square, move.to_square) >= 2:
+            terms.append("candidate_is_rook_transfer")
+    if rook_safe:
+        terms.append("rook_safe_after_move")
+    if no_draw:
+        terms.append("no_draw_after_move")
+    if preserves_box:
+        terms.append("box_area_not_increased_after_move")
+    if improves_box:
+        terms.append("box_area_decreases_after_move")
+    if preserves_edge:
+        terms.append("enemy_edge_distance_not_increased_after_move")
+    if support_improves:
+        terms.append("white_king_support_improves_after_move")
+    if creates_check:
+        terms.append("checking_line_created")
+    post_break_followup = bool(
+        rook_safe
+        and no_draw
+        and preserves_box
+        and (improves_box or support_improves or preserves_edge or creates_check)
+    )
+    return {
+        "move": move.uci(),
+        "legal": True,
+        "post_break_followup": post_break_followup,
+        "source_terms": sorted(set(terms)),
+        "current_box_area": current_box,
+        "post_box_area": post_box,
+        "current_enemy_edge_distance": current_edge,
+        "post_enemy_edge_distance": post_edge,
+    }
+
+
+def _king_support_improves_after_move(board: chess.Board, move: chess.Move) -> bool:
+    if board.piece_at(move.from_square) != chess.Piece(chess.KING, chess.WHITE):
+        return False
+    bk_sq = next(iter(board.pieces(chess.KING, chess.BLACK)), None)
+    wr_sq = next(iter(board.pieces(chess.ROOK, chess.WHITE)), None)
+    if bk_sq is None or wr_sq is None:
+        return False
+    before_enemy = chess.square_distance(move.from_square, bk_sq)
+    before_rook = chess.square_distance(move.from_square, wr_sq)
+    after_enemy = chess.square_distance(move.to_square, bk_sq)
+    after_rook = chess.square_distance(move.to_square, wr_sq)
+    return after_enemy < before_enemy or after_rook < before_rook
+
+
 def _safe_check_available_local(board: chess.Board) -> bool:
     if board.turn != chess.WHITE:
         return False
@@ -1696,6 +1906,8 @@ def run_counterfactual_successor_sweep(
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
     stagnation_breaker_enabled: bool = False,
     stagnation_breaker_bonus: float = 0.0,
+    post_break_continuation_enabled: bool = False,
+    post_break_continuation_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     step_output: Optional[Path] = None,
     step_context: Optional[dict] = None,
@@ -1734,6 +1946,8 @@ def run_counterfactual_successor_sweep(
             ),
             stagnation_breaker_enabled=stagnation_breaker_enabled,
             stagnation_breaker_bonus=stagnation_breaker_bonus,
+            post_break_continuation_enabled=post_break_continuation_enabled,
+            post_break_continuation_bonus=post_break_continuation_bonus,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
             forced_successor_skill=skill_id,
         )
@@ -1854,6 +2068,8 @@ def evaluate_landmark_progress(
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
     stagnation_breaker_enabled: bool = False,
     stagnation_breaker_bonus: float = 0.0,
+    post_break_continuation_enabled: bool = False,
+    post_break_continuation_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     counterfactual_successors: tuple[str, ...] = (),
     max_counterfactual_sweeps: int = 0,
@@ -2067,6 +2283,8 @@ def evaluate_landmark_progress(
                 ),
                 stagnation_breaker_enabled=stagnation_breaker_enabled,
                 stagnation_breaker_bonus=stagnation_breaker_bonus,
+                post_break_continuation_enabled=post_break_continuation_enabled,
+                post_break_continuation_bonus=post_break_continuation_bonus,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
             )
             key = result["result"]
@@ -2224,6 +2442,15 @@ def evaluate_landmark_progress(
                     "score_after_stagnation_breaker_bonus": successor_summary.get(
                         "score_after_stagnation_breaker_bonus"
                     ),
+                    "visible_post_break_continuation_bonus": successor_summary.get(
+                        "visible_post_break_continuation_bonus"
+                    ),
+                    "visible_post_break_continuation_license": successor_summary.get(
+                        "visible_post_break_continuation_license"
+                    ),
+                    "score_after_post_break_continuation_bonus": successor_summary.get(
+                        "score_after_post_break_continuation_bonus"
+                    ),
                     "selected_skill_source": successor_summary.get("selected_skill_source"),
                     "successor_skills": successor_summary["skills"],
                     "visible_terms": successor_summary["visible_terms"],
@@ -2366,6 +2593,8 @@ def evaluate_landmark_progress(
                     ),
                     stagnation_breaker_enabled=stagnation_breaker_enabled,
                     stagnation_breaker_bonus=stagnation_breaker_bonus,
+                    post_break_continuation_enabled=post_break_continuation_enabled,
+                    post_break_continuation_bonus=post_break_continuation_bonus,
                     early_stop_stable_suggestions=early_stop_stable_suggestions,
                     step_output=counterfactual_steps_output,
                     step_context=step_context,
@@ -2494,6 +2723,8 @@ def evaluate_landmark_progress(
     )
     stats["stagnation_breaker_enabled"] = stagnation_breaker_enabled
     stats["stagnation_breaker_bonus"] = stagnation_breaker_bonus
+    stats["post_break_continuation_enabled"] = post_break_continuation_enabled
+    stats["post_break_continuation_bonus"] = post_break_continuation_bonus
     stats["early_stop_stable_suggestions"] = int(early_stop_stable_suggestions)
     stats["target_failure_trace_state_signatures"] = list(target_failure_trace_state_signatures)
     evaluated = max(0, stats["total"] - stats["no_move"])
@@ -2706,6 +2937,10 @@ def main() -> None:
                         help="Enable opt-in visible stagnation-breaker move license bonus")
     parser.add_argument("--stagnation-breaker-bonus", type=float, default=0.0,
                         help="Small bonus for candidate moves licensed by visible stagnation-breaker terms")
+    parser.add_argument("--enable-post-break-continuation", action="store_true",
+                        help="Enable opt-in visible post-stagnation-break continuation move license bonus")
+    parser.add_argument("--post-break-continuation-bonus", type=float, default=0.0,
+                        help="Small bonus for candidate moves licensed by visible post-break continuation terms")
     parser.add_argument("--counterfactual-successors", type=str, default=None,
                         help="Comma-separated canonical successor skill IDs to force on failed post-reply states")
     parser.add_argument("--max-counterfactual-sweeps", type=int, default=0,
@@ -2763,6 +2998,8 @@ def main() -> None:
         successor_role_scoped_move_shape_require_worst_reply=args.require_role_scoped_move_shape_worst_reply,
         stagnation_breaker_enabled=args.enable_stagnation_breaker,
         stagnation_breaker_bonus=args.stagnation_breaker_bonus,
+        post_break_continuation_enabled=args.enable_post_break_continuation,
+        post_break_continuation_bonus=args.post_break_continuation_bonus,
         early_stop_stable_suggestions=args.early_stop_stable_suggestions,
         counterfactual_successors=tuple(
             item.strip()

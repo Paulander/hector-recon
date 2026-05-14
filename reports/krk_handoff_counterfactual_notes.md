@@ -878,3 +878,53 @@ detect loop
 ```
 
 Do not train yet from this single family. If a full post-break sweep shows that no existing provider can reliably convert after a good break, then a narrow `krk.post_stagnation_break_continuation` skill becomes justified.
+
+## Slice 37: Visible Post-Break Continuation Role
+
+Implemented default-off scaffolding for a visible post-break continuation role:
+
+```text
+krk.post_stagnation_break_continuation
+```
+
+New dynamic terms:
+
+```text
+rook_oscillation_loop_recently_broken
+confinement_preserved_after_break
+enemy_king_edge_control_preserved
+post_stagnation_break_continuation_needed
+safe_followup_available
+```
+
+The role is opt-in only:
+
+```text
+--enable-post-break-continuation
+--post-break-continuation-bonus <small value>
+```
+
+Hard constraints preserved:
+
+- Defaults are unchanged.
+- No broad provider penalty was added.
+- No training was added.
+- The role only adds support when the recent loop-break context is visible and the candidate move has visible safety/progress terms.
+
+Targeted `state.3d73` h4d4 audit:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice37_state3d73_post_break_continuation_h4d4.json
+first break: h4d4
+horizon: 40
+result: max_plies
+classification: changes_loop_family
+```
+
+Interpretation:
+
+```text
+The post-break continuation role fires and is traceable, but it is still too broad.
+It licenses safe/progress-looking rook moves after the break, yet the playout remains in an oscillation family.
+This supports the earlier conclusion: do not increase bonuses. Refine the post-break role toward moves that preserve the break and avoid immediate return to the rook oscillation family.
+```

@@ -663,6 +663,14 @@ def create_actuator_terminal(node_id=None):
                     blackboard=blackboard,
                     move_meta=move_meta[move],
                 )
+                score = _apply_visible_post_break_continuation_bias(
+                    score,
+                    board=board,
+                    move=move,
+                    skill_id=skill_id,
+                    blackboard=blackboard,
+                    move_meta=move_meta[move],
+                )
 
             scores[move] = score
         
@@ -955,6 +963,11 @@ def _compute_krk_context_terms(board: chess.Board) -> Dict[str, bool]:
         "rook_safe": rook_safe,
         "cut_stable": fence_stable,
         "black_king_escape_available": edge_distance > 0,
+        "rook_oscillation_loop_recently_broken": False,
+        "confinement_preserved_after_break": False,
+        "enemy_king_edge_control_preserved": False,
+        "post_stagnation_break_continuation_needed": False,
+        "safe_followup_available": False,
     }
     return {key: bool(value) for key, value in values.items()}
 
@@ -1495,6 +1508,85 @@ def _apply_visible_stagnation_breaker_bias(
         )
     }
     move_meta["score_after_stagnation_breaker_bonus"] = adjusted
+    return adjusted
+
+
+def _apply_visible_post_break_continuation_bias(
+    score: float,
+    *,
+    board: chess.Board,
+    move: chess.Move,
+    skill_id: str | None,
+    blackboard: Dict[str, Any],
+    move_meta: Dict[str, Any],
+) -> float:
+    """Opt-in support for follow-up moves after a visible loop break.
+
+    This is intentionally narrower than the loop breaker. It only fires when
+    dynamic ReCoN-visible terms say a loop was recently broken and confinement
+    survived, then requires the candidate move itself to preserve safety and
+    make visible progress. Missing terms do not penalize other moves.
+    """
+    if not blackboard.get("post_break_continuation_enabled", False):
+        return score
+    weight = float(blackboard.get("post_break_continuation_bonus", 0.0) or 0.0)
+    if weight <= 0.0:
+        return score
+    terms = blackboard.get("krk_dynamic_context_terms", {}) or {}
+    required_context = {
+        "rook_oscillation_loop_recently_broken",
+        "confinement_preserved_after_break",
+        "post_stagnation_break_continuation_needed",
+        "safe_followup_available",
+    }
+    if not all(bool(terms.get(term, False)) for term in required_context):
+        return score
+
+    audit = krk_move_shape_audit(board, move, blackboard, include_worst_reply=False)
+    move_terms = set(audit.get("move_shape_terms", []) or [])
+    post_terms = set(audit.get("post_move_terms", []) or [])
+    required_post = {"rook_safe_after_move", "box_area_not_increased_after_move"}
+    progress_terms = {
+        "box_area_decreases_after_move",
+        "white_king_distance_to_enemy_decreases",
+        "white_king_distance_to_rook_decreases",
+        "enemy_edge_distance_not_increased_after_move",
+        "checking_line_created",
+        "cut_preserved_after_move",
+        "fence_stable_after_move",
+    }
+    shape_terms = {
+        "candidate_is_king_move",
+        "candidate_is_rook_transfer",
+        "rook_to_checking_line",
+        "safe_check_created",
+    }
+    if not required_post <= post_terms:
+        return score
+    if not progress_terms & post_terms:
+        return score
+    if not shape_terms & (move_terms | post_terms):
+        return score
+
+    matched_progress = progress_terms & post_terms
+    matched_shape = shape_terms & (move_terms | post_terms)
+    source_terms = sorted(required_context | required_post | matched_progress | matched_shape)
+    adjusted = float(score) + weight
+    license_payload = {
+        "role_id": "krk.post_stagnation_break_continuation",
+        "provider_skill_id": _canonical_krk_skill_id(skill_id),
+        "move": move.uci(),
+        "score": float(weight),
+        "source_terms": source_terms,
+        "move_shape_terms": sorted(move_terms),
+        "post_move_terms": sorted(post_terms),
+        "post_break_context": dict(
+            blackboard.get("krk_post_break_continuation_context", {}) or {}
+        ),
+    }
+    move_meta["visible_post_break_continuation_bonus"] = float(weight)
+    move_meta["visible_post_break_continuation_license"] = license_payload
+    move_meta["score_after_post_break_continuation_bonus"] = adjusted
     return adjusted
 
 
