@@ -1097,6 +1097,50 @@ def play_to_mate(
     return finish("max_plies", max_plies)
 
 
+def _compact_playout_trace(trace: list[dict]) -> list[dict]:
+    compact: list[dict] = []
+    for event in trace:
+        if not isinstance(event, dict):
+            continue
+        item = {
+            "ply": event.get("ply"),
+            "turn": event.get("turn"),
+            "fen": event.get("fen"),
+            "move": event.get("move"),
+            "resulting_fen": event.get("resulting_fen"),
+            "is_checkmate": bool(event.get("is_checkmate", False)),
+            "is_stalemate": bool(event.get("is_stalemate", False)),
+        }
+        engine = event.get("engine") if isinstance(event.get("engine"), dict) else None
+        if engine:
+            suggestions = list(engine.get("suggestions", []) or [])
+            selected_move = engine.get("move")
+            selected = next(
+                (
+                    suggestion
+                    for suggestion in suggestions
+                    if suggestion.get("move") == selected_move
+                ),
+                suggestions[0] if suggestions else {},
+            )
+            item.update({
+                "selected_skill": _skill_id_for_suggestion(selected) if selected else None,
+                "confidence": engine.get("confidence"),
+                "ticks": engine.get("ticks"),
+                "early_stopped": bool(engine.get("early_stopped", False)),
+                "top_suggestions": [
+                    {
+                        "move": suggestion.get("move"),
+                        "skill_id": _skill_id_for_suggestion(suggestion),
+                        "score": suggestion.get("score"),
+                    }
+                    for suggestion in suggestions[:5]
+                ],
+            })
+        compact.append(item)
+    return compact
+
+
 def select_eval_position(
     rng: random.Random,
     label: str,
@@ -1268,6 +1312,9 @@ def evaluate_landmark_progress(
     black_policy: str = "adversarial",
     debug_failures: int = 0,
     debug_playouts: int = 0,
+    target_failure_trace_state_signatures: tuple[str, ...] = (),
+    max_target_failure_traces: int = 0,
+    target_failure_traces_output: Optional[Path] = None,
     max_ticks: int = 200,
     playout_max_ticks: Optional[int] = None,
     suggestion_limit: int = 10,
@@ -1317,6 +1364,7 @@ def evaluate_landmark_progress(
         "playouts": {},
         "debug_failures": [],
         "debug_playouts": [],
+        "target_failure_traces": [],
         "handoff_packets": [],
         "shadow_candidates": [],
         "counterfactual_successor_sweeps": [],
@@ -1464,6 +1512,13 @@ def evaluate_landmark_progress(
             )
 
         if playout_max_plies > 0:
+            target_trace_budget_open = (
+                bool(target_failure_trace_state_signatures)
+                and (
+                    max_target_failure_traces <= 0
+                    or len(stats["target_failure_traces"]) < max_target_failure_traces
+                )
+            )
             result = play_to_mate(
                 graph,
                 engine,
@@ -1473,7 +1528,10 @@ def evaluate_landmark_progress(
                 stage_filter,
                 playout_max_plies,
                 black_policy,
-                trace=len(stats["debug_playouts"]) < debug_playouts,
+                trace=(
+                    len(stats["debug_playouts"]) < debug_playouts
+                    or target_trace_budget_open
+                ),
                 max_ticks=playout_max_ticks if playout_max_ticks is not None else max_ticks,
                 suggestion_limit=suggestion_limit,
                 trace_max_plies=debug_trace_max_plies,
@@ -1506,6 +1564,11 @@ def evaluate_landmark_progress(
             post_reply_fen = (
                 result.get("first_reply", {}).get("resulting_fen")
                 if isinstance(result.get("first_reply"), dict)
+                else None
+            )
+            post_reply_state_signature = (
+                stable_record_id("state", chess.Board(post_reply_fen).board_fen(), chess.WHITE)
+                if post_reply_fen
                 else None
             )
             reply_geometry = _geometry_evidence(
@@ -1582,6 +1645,7 @@ def evaluate_landmark_progress(
                     "post_reply_fen": (
                         post_reply_fen
                     ),
+                    "post_reply_state_signature": post_reply_state_signature,
                     "survived": bool(survived),
                     "semantic_alignment_status": semantic_alignment_status,
                     "reward_confirmed": bool(local_confirmed),
@@ -1827,6 +1891,33 @@ def evaluate_landmark_progress(
                     **result,
                 })
             if (
+                key != "mate"
+                and post_reply_state_signature
+                and post_reply_state_signature in set(target_failure_trace_state_signatures)
+                and (
+                    max_target_failure_traces <= 0
+                    or len(stats["target_failure_traces"]) < max_target_failure_traces
+                )
+            ):
+                record = {
+                    "sample": i,
+                    "state_signature": post_reply_state_signature,
+                    "start_fen": board.fen(),
+                    "post_reply_fen": post_reply_fen,
+                    "selected_successor": successor_summary.get("selected_skill"),
+                    "playout_result": key,
+                    "plies": int(result.get("plies", 0) or 0),
+                    "first_move": move_uci,
+                    "first_reply": result.get("first_reply"),
+                    "first_successor": result.get("first_successor"),
+                    "trace": _compact_playout_trace(result.get("trace", []) or []),
+                    "trace_truncated_events": result.get("trace_truncated_events", 0),
+                    "final_fen": result.get("final_fen"),
+                }
+                stats["target_failure_traces"].append(record)
+                if target_failure_traces_output is not None:
+                    _append_jsonl(target_failure_traces_output, record)
+            if (
                 local_confirmed
                 and key != "mate"
                 and stop_after_conversion_failures > 0
@@ -1856,6 +1947,7 @@ def evaluate_landmark_progress(
         successor_role_scoped_move_shape_require_worst_reply
     )
     stats["early_stop_stable_suggestions"] = int(early_stop_stable_suggestions)
+    stats["target_failure_trace_state_signatures"] = list(target_failure_trace_state_signatures)
     evaluated = max(0, stats["total"] - stats["no_move"])
     stats["one_ply_status"] = (
         "passed"
@@ -1910,6 +2002,8 @@ def evaluate_landmark_progress(
         stats.pop("debug_failures", None)
     if not stats["debug_playouts"]:
         stats.pop("debug_playouts", None)
+    if not stats["target_failure_traces"]:
+        stats.pop("target_failure_traces", None)
     if not stats["handoff_packets"]:
         stats.pop("handoff_packets", None)
     if not stats["shadow_candidates"]:
@@ -2014,6 +2108,12 @@ def main() -> None:
                         help="Include this many non-oracle selected positions with board/move diagnostics")
     parser.add_argument("--debug-playouts", type=int, default=0,
                         help="Include this many non-mating playout traces with move-by-move diagnostics")
+    parser.add_argument("--target-failure-trace-state-signatures", type=str, default="",
+                        help="Comma-separated post-reply state signatures whose failed playouts should be traced")
+    parser.add_argument("--max-target-failure-traces", type=int, default=0,
+                        help="If >0, limit targeted failure traces to this count")
+    parser.add_argument("--target-failure-traces-output", type=Path, default=None,
+                        help="Optional JSONL path for targeted failure trace records")
     parser.add_argument("--max-ticks", type=int, default=200,
                         help="Max ReCoN ticks for the evaluated one-ply move")
     parser.add_argument("--playout-max-ticks", type=int, default=None,
@@ -2083,6 +2183,13 @@ def main() -> None:
         black_policy=args.black_policy,
         debug_failures=args.debug_failures,
         debug_playouts=args.debug_playouts,
+        target_failure_trace_state_signatures=tuple(
+            item.strip()
+            for item in args.target_failure_trace_state_signatures.split(",")
+            if item.strip()
+        ),
+        max_target_failure_traces=args.max_target_failure_traces,
+        target_failure_traces_output=args.target_failure_traces_output,
         max_ticks=args.max_ticks,
         playout_max_ticks=args.playout_max_ticks,
         suggestion_limit=args.suggestion_limit,
