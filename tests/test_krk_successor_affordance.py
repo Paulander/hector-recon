@@ -371,7 +371,8 @@ def test_visible_rook_transfer_move_bonus_prefers_matching_rook_transfer_shape()
     board = chess.Board("5k2/7R/1K6/8/8/8/8/8 w - - 2 2")
     blackboard = {
         "successor_role_license_enabled": True,
-        "successor_rook_transfer_move_bonus": 0.05,
+        "successor_role_scoped_move_shape_enabled": True,
+        "successor_role_scoped_move_shape_bonus": 0.05,
         "krk_successor_provider_licenses": {
             "krk.edge_trap_close": {
                 "krk.rook_transfer_after_fence": {
@@ -407,8 +408,9 @@ def test_visible_rook_transfer_move_bonus_prefers_matching_rook_transfer_shape()
     )
 
     assert vertical > horizontal
-    assert "same_file_rook_transfer" in vertical_meta["visible_rook_transfer_move_terms"]
-    assert "visible_rook_transfer_move_bonus" not in horizontal_meta
+    assert vertical_meta["visible_role_scoped_move_shape_bonus"] > 0.0
+    assert vertical_meta["visible_role_scoped_move_shape_licenses"]
+    assert "visible_role_scoped_move_shape_bonus" not in horizontal_meta
 
 
 def test_visible_role_veto_can_suppress_provider_when_visible_alternative_exists():

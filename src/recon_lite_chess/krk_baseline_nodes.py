@@ -735,13 +735,29 @@ def _evaluate_krk_context_term(board: chess.Board, term: str) -> bool:
     return bool(_compute_krk_context_terms(board).get(term, False))
 
 
-def krk_move_shape_audit(board: chess.Board, move: chess.Move) -> Dict[str, Any]:
+def krk_move_shape_audit(
+    board: chess.Board,
+    move: chess.Move,
+    blackboard: Dict[str, Any] | None = None,
+    *,
+    include_worst_reply: bool = True,
+) -> Dict[str, Any]:
     """Return visible current/candidate/post-move terms for a legal KRK move.
 
     This is diagnostic scaffolding for role-scoped move-shape design. It does
     not select or score moves; it exposes the terms needed to decide whether a
     candidate move fulfills a visible role contract.
     """
+    cache_key = (board.board_fen(), bool(board.turn), move.uci(), bool(include_worst_reply))
+    if blackboard is not None:
+        cache = blackboard.setdefault("krk_move_shape_audit_cache", {})
+        cached = cache.get(cache_key)
+        if isinstance(cached, dict):
+            blackboard["krk_move_shape_audit_cache_hits"] = int(
+                blackboard.get("krk_move_shape_audit_cache_hits", 0)
+            ) + 1
+            return cached
+
     if move not in board.legal_moves:
         return {
             "move": move.uci(),
@@ -752,13 +768,13 @@ def krk_move_shape_audit(board: chess.Board, move: chess.Move) -> Dict[str, Any]
             "worst_reply_terms": [],
         }
 
-    current_terms = _compute_krk_context_terms(board)
+    current_terms = _krk_context_terms_for_board(board, blackboard)
     current_metrics = _krk_geometry_metrics(board)
     move_shape_terms = _candidate_move_shape_terms(board, move)
 
     post = board.copy(stack=False)
     post.push(move)
-    post_terms = _compute_krk_context_terms(post)
+    post_terms = _krk_context_terms_for_board(post, blackboard)
     post_metrics = _krk_geometry_metrics(post)
     post_move_terms = _post_move_terms(
         current_terms,
@@ -768,12 +784,16 @@ def krk_move_shape_audit(board: chess.Board, move: chess.Move) -> Dict[str, Any]
         board,
         move,
     )
-    worst_reply_terms = _worst_reply_terms(
-        post,
-        current_metrics=current_metrics,
-        post_metrics=post_metrics,
+    worst_reply_terms = (
+        _worst_reply_terms(
+            post,
+            current_metrics=current_metrics,
+            post_metrics=post_metrics,
+        )
+        if include_worst_reply
+        else []
     )
-    return {
+    audit = {
         "move": move.uci(),
         "legal": True,
         "current_terms": _active_term_names(current_terms),
@@ -783,6 +803,12 @@ def krk_move_shape_audit(board: chess.Board, move: chess.Move) -> Dict[str, Any]
         "current_metrics": current_metrics or {},
         "post_move_metrics": post_metrics or {},
     }
+    if blackboard is not None:
+        cache[cache_key] = audit
+        blackboard["krk_move_shape_audit_cache_misses"] = int(
+            blackboard.get("krk_move_shape_audit_cache_misses", 0)
+        ) + 1
+    return audit
 
 
 def _compute_krk_context_terms(board: chess.Board) -> Dict[str, bool]:
@@ -1299,67 +1325,155 @@ def _apply_visible_rook_transfer_move_bias(
     blackboard: Dict[str, Any],
     move_meta: Dict[str, Any],
 ) -> float:
-    """Apply visible move-shape support for active rook-transfer roles.
+    """Apply visible move-shape support for active role-scoped move contracts.
 
     This is intentionally narrow: it only applies in role-license mode, only to
-    edge-trap providers that already have a visible rook-transfer license, and
-    only when the candidate move itself is a safe rook transfer. The role
-    licenses the provider; this bonus helps distinguish which provider move
-    matches the visible role geometry.
+    providers that already have a visible role license, and only when the
+    candidate move itself satisfies that role's current/candidate/post-move
+    contract. The role licenses the provider; this bonus helps distinguish
+    which provider move matches the visible role geometry.
     """
     if not blackboard.get("successor_role_license_enabled", False):
         return score
-    if skill_id not in {
-        "krk.edge_trap_close",
-        "krk.edge_trap_enemy_between",
-        "krk.edge_trap_wrong_tempo",
-    }:
+    if not blackboard.get("successor_role_scoped_move_shape_enabled", False):
+        return score
+    weight = float(blackboard.get("successor_role_scoped_move_shape_bonus", 0.0))
+    if weight <= 0.0:
         return score
     role_licenses = _provider_role_licenses(skill_id, blackboard)
-    active_transfer_roles = {
-        str(item.get("role_id") or item.get("successor") or "")
-        for item in role_licenses
-        if str(item.get("role_id") or item.get("successor") or "")
-        in {"krk.rook_transfer_after_fence", "krk.edge_rook_transfer_recovery"}
-    }
-    if not active_transfer_roles:
+    if not role_licenses:
         return score
-    if move.from_square not in board.pieces(chess.ROOK, chess.WHITE):
-        return score
-    if not _rook_safe_after_white_move(board, move):
-        return score
-
-    from_file = chess.square_file(move.from_square)
-    from_rank = chess.square_rank(move.from_square)
-    to_file = chess.square_file(move.to_square)
-    to_rank = chess.square_rank(move.to_square)
-    same_file = from_file == to_file and from_rank != to_rank
-    same_rank = from_rank == to_rank and from_file != to_file
-    edge_dest = to_file in (0, 7) or to_rank in (0, 7)
-    distance = max(abs(to_file - from_file), abs(to_rank - from_rank))
-    if distance < 2 or (not same_file and not same_rank):
+    # Most legal moves are irrelevant to a role's requested move shape. Avoid
+    # the expensive worst-reply scan unless current/candidate/post-move terms
+    # already make the move a plausible role-scoped candidate.
+    require_worst_reply = bool(
+        blackboard.get("successor_role_scoped_move_shape_require_worst_reply", False)
+    )
+    cheap_audit = krk_move_shape_audit(
+        board,
+        move,
+        blackboard,
+        include_worst_reply=False,
+    )
+    if not _role_scoped_move_shape_licenses(
+        cheap_audit,
+        role_licenses,
+        require_worst=False,
+    ):
         return score
 
-    shape_score = 0.0
-    shape_terms = []
-    if same_file:
-        shape_score += 1.0
-        shape_terms.append("same_file_rook_transfer")
-    if edge_dest:
-        shape_score += 0.5
-        shape_terms.append("edge_destination")
-    if same_rank and edge_dest:
-        shape_score += 0.25
-        shape_terms.append("same_rank_edge_transfer")
-    if not shape_terms:
+    if require_worst_reply:
+        audit = krk_move_shape_audit(board, move, blackboard, include_worst_reply=True)
+        licenses = _role_scoped_move_shape_licenses(audit, role_licenses)
+    else:
+        audit = cheap_audit
+        licenses = _role_scoped_move_shape_licenses(
+            audit,
+            role_licenses,
+            require_worst=False,
+        )
+    if not licenses:
         return score
 
-    weight = float(blackboard.get("successor_rook_transfer_move_bonus", 0.0))
-    bonus = weight * shape_score
-    move_meta["visible_rook_transfer_move_bonus"] = bonus
-    move_meta["visible_rook_transfer_move_terms"] = shape_terms
-    move_meta["visible_rook_transfer_roles"] = sorted(active_transfer_roles)
-    return float(score) + bonus
+    best_license_score = max(float(item.get("score", 0.0) or 0.0) for item in licenses)
+    bonus = weight * best_license_score
+    move_meta["visible_role_scoped_move_shape_bonus"] = bonus
+    move_meta["visible_role_scoped_move_shape_licenses"] = licenses
+    move_meta["visible_move_shape_audit"] = audit
+    move_meta["visible_role_scoped_move_shape_require_worst_reply"] = require_worst_reply
+    adjusted = float(score) + bonus
+    move_meta["score_after_role_scoped_move_shape_bonus"] = adjusted
+    return adjusted
+
+
+def _role_scoped_move_shape_licenses(
+    audit: Dict[str, Any],
+    role_licenses: list[Dict[str, Any]],
+    *,
+    require_worst: bool = True,
+) -> list[Dict[str, Any]]:
+    current = set(audit.get("current_terms", []) or [])
+    move_terms = set(audit.get("move_shape_terms", []) or [])
+    post_terms = set(audit.get("post_move_terms", []) or [])
+    worst_terms = set(audit.get("worst_reply_terms", []) or [])
+    licenses: list[Dict[str, Any]] = []
+    for role in role_licenses:
+        role_id = str(role.get("role_id") or role.get("successor") or "")
+        if role_id in {"krk.rook_transfer_after_fence", "krk.edge_rook_transfer_recovery"}:
+            required_current = {"post_fence_conversion_needed", "rook_safe"}
+            required_move = {"candidate_is_rook_transfer"}
+            required_post = {"cut_preserved_after_move", "rook_safe_after_move"}
+            required_worst = {"rook_safe_after_worst_reply", "no_draw_after_worst_reply"}
+            shape_options = (
+                {
+                    "rook_transfer_vertical",
+                    "rook_to_edge_file",
+                    "rook_to_checking_line",
+                    "safe_check_created",
+                }
+                if role_id == "krk.rook_transfer_after_fence"
+                else {
+                    "rook_transfer_vertical",
+                    "rook_to_edge_file",
+                    "rook_to_checking_line",
+                    "safe_check_created",
+                    "box_area_decreases_after_move",
+                }
+            )
+            if (
+                required_current <= current
+                and required_move <= move_terms
+                and required_post <= post_terms
+                and (not require_worst or required_worst <= worst_terms)
+                and (shape_options & (move_terms | post_terms))
+            ):
+                worst_source_terms = required_worst if require_worst else set()
+                source_terms = sorted(
+                    required_current
+                    | required_move
+                    | required_post
+                    | worst_source_terms
+                    | (shape_options & (move_terms | post_terms))
+                )
+                licenses.append({
+                    "role_id": role_id,
+                    "score": float(role.get("score", 0.0) or 0.0),
+                    "source_terms": source_terms,
+                    "move_shape_terms": sorted(move_terms),
+                    "post_move_terms": sorted(post_terms),
+                    "worst_reply_terms": sorted(worst_terms),
+                })
+        elif role_id in {"krk.stage0_king_approach_after_fence", "krk.stage0_goal_basin_approach"}:
+            required_current = {"post_fence_conversion_needed", "rook_safe"}
+            required_move = {"candidate_is_king_move"}
+            progress_terms = {
+                "king_moves_toward_enemy",
+                "king_moves_toward_rook_support",
+                "white_king_distance_to_enemy_decreases",
+                "white_king_distance_to_rook_decreases",
+            }
+            required_worst = {"no_draw_after_worst_reply"}
+            if (
+                required_current <= current
+                and required_move <= move_terms
+                and (not require_worst or required_worst <= worst_terms)
+                and (progress_terms & (move_terms | post_terms))
+            ):
+                worst_source_terms = required_worst if require_worst else set()
+                licenses.append({
+                    "role_id": role_id,
+                    "score": float(role.get("score", 0.0) or 0.0),
+                    "source_terms": sorted(
+                        required_current
+                        | required_move
+                        | worst_source_terms
+                        | (progress_terms & (move_terms | post_terms))
+                    ),
+                    "move_shape_terms": sorted(move_terms),
+                    "post_move_terms": sorted(post_terms),
+                    "worst_reply_terms": sorted(worst_terms),
+                })
+    return licenses
 
 
 def _provider_role_licenses(provider_id: str, blackboard: Dict[str, Any]) -> list[Dict[str, Any]]:

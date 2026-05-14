@@ -77,6 +77,75 @@ def _skill_id_for_suggestion(item: dict) -> str:
     return f"krk.stage_{stage}" if stage is not None else "krk.unknown"
 
 
+def _suggestion_stability_signature(
+    suggestions: list[dict],
+    *,
+    forced_successor_skill: Optional[str] = None,
+    limit: int = 1,
+) -> tuple | None:
+    source = list(suggestions)
+    if forced_successor_skill:
+        source = [
+            item for item in source
+            if _skill_id_for_suggestion(item) == forced_successor_skill
+        ]
+    if not source:
+        return None
+    source.sort(key=lambda item: item.get("score", float("-inf")), reverse=True)
+    rows = []
+    for item in source[:max(1, limit)]:
+        move = item.get("move")
+        rows.append((
+            _skill_id_for_suggestion(item),
+            move.uci() if hasattr(move, "uci") else move,
+            item.get("actuator"),
+        ))
+    return tuple(rows)
+
+
+def _suggestion_role_trace(meta: dict) -> dict:
+    return {
+        "visible_role_licenses": list(meta.get("visible_role_licenses", []) or []),
+        "visible_role_license_bonus": float(meta.get("visible_role_license_bonus", 0.0) or 0.0),
+        "raw_score_before_role_bonus": (
+            float(meta.get("raw_score_before_role_bonus"))
+            if meta.get("raw_score_before_role_bonus") is not None
+            else None
+        ),
+        "score_after_role_bonus": (
+            float(meta.get("score_after_role_bonus"))
+            if meta.get("score_after_role_bonus") is not None
+            else None
+        ),
+        "role_bonus_total": float(meta.get("role_bonus_total", 0.0) or 0.0),
+        "role_bonus_by_role": dict(meta.get("role_bonus_by_role", {}) or {}),
+        "visible_role_scoped_move_shape_bonus": float(
+            meta.get("visible_role_scoped_move_shape_bonus", 0.0) or 0.0
+        ),
+        "visible_role_scoped_move_shape_licenses": list(
+            meta.get("visible_role_scoped_move_shape_licenses", []) or []
+        ),
+        "visible_move_shape_audit": dict(meta.get("visible_move_shape_audit", {}) or {}),
+        "visible_role_scoped_move_shape_require_worst_reply": bool(
+            meta.get("visible_role_scoped_move_shape_require_worst_reply", False)
+        ),
+        "score_after_role_scoped_move_shape_bonus": (
+            float(meta.get("score_after_role_scoped_move_shape_bonus"))
+            if meta.get("score_after_role_scoped_move_shape_bonus") is not None
+            else None
+        ),
+    }
+
+
+def _accumulate_engine_perf(stats: dict, move_details: dict, *, prefix: str = "engine") -> None:
+    stats[f"{prefix}_decision_count"] = int(stats.get(f"{prefix}_decision_count", 0)) + 1
+    ticks = int(move_details.get("ticks", 0) or 0)
+    stats[f"{prefix}_ticks_total"] = int(stats.get(f"{prefix}_ticks_total", 0)) + ticks
+    stats[f"{prefix}_ticks_max"] = max(int(stats.get(f"{prefix}_ticks_max", 0)), ticks)
+    if bool(move_details.get("early_stopped", False)):
+        stats[f"{prefix}_early_stop_count"] = int(stats.get(f"{prefix}_early_stop_count", 0)) + 1
+
+
 def _successor_skill_summary(
     move_details: dict | None,
     *,
@@ -124,20 +193,7 @@ def _successor_skill_summary(
                 "stage": item.get("stage"),
                 "curriculum_label": curriculum_label,
                 "visible_successor_affordance": visible_affordance,
-                "visible_role_licenses": list(meta.get("visible_role_licenses", []) or []),
-                "visible_role_license_bonus": float(meta.get("visible_role_license_bonus", 0.0) or 0.0),
-                "raw_score_before_role_bonus": (
-                    float(meta.get("raw_score_before_role_bonus"))
-                    if meta.get("raw_score_before_role_bonus") is not None
-                    else None
-                ),
-                "score_after_role_bonus": (
-                    float(meta.get("score_after_role_bonus"))
-                    if meta.get("score_after_role_bonus") is not None
-                    else None
-                ),
-                "role_bonus_total": float(meta.get("role_bonus_total", 0.0) or 0.0),
-                "role_bonus_by_role": dict(meta.get("role_bonus_by_role", {}) or {}),
+                **_suggestion_role_trace(meta),
             },
         )
         entry["count"] += 1
@@ -152,20 +208,7 @@ def _successor_skill_summary(
                 "stage": item.get("stage"),
                 "curriculum_label": curriculum_label,
                 "visible_successor_affordance": visible_affordance,
-                "visible_role_licenses": list(meta.get("visible_role_licenses", []) or []),
-                "visible_role_license_bonus": float(meta.get("visible_role_license_bonus", 0.0) or 0.0),
-                "raw_score_before_role_bonus": (
-                    float(meta.get("raw_score_before_role_bonus"))
-                    if meta.get("raw_score_before_role_bonus") is not None
-                    else None
-                ),
-                "score_after_role_bonus": (
-                    float(meta.get("score_after_role_bonus"))
-                    if meta.get("score_after_role_bonus") is not None
-                    else None
-                ),
-                "role_bonus_total": float(meta.get("role_bonus_total", 0.0) or 0.0),
-                "role_bonus_by_role": dict(meta.get("role_bonus_by_role", {}) or {}),
+                **_suggestion_role_trace(meta),
             })
 
     ranked = sorted(grouped.items(), key=lambda kv: kv[1]["score"], reverse=True)
@@ -263,6 +306,11 @@ def _successor_contract_audit(
             "role_bonus_by_role": {},
             "raw_score_before_role_bonus": None,
             "score_after_role_bonus": None,
+            "visible_role_scoped_move_shape_bonus": 0.0,
+            "visible_role_scoped_move_shape_licenses": [],
+            "visible_move_shape_audit": {},
+            "visible_role_scoped_move_shape_require_worst_reply": False,
+            "score_after_role_scoped_move_shape_bonus": None,
             "selected_skill_source": "none",
         }
 
@@ -298,6 +346,19 @@ def _successor_contract_audit(
         "role_bonus_by_role": dict(selected_group.get("role_bonus_by_role", {}) or {}),
         "raw_score_before_role_bonus": selected_group.get("raw_score_before_role_bonus"),
         "score_after_role_bonus": selected_group.get("score_after_role_bonus"),
+        "visible_role_scoped_move_shape_bonus": float(
+            selected_group.get("visible_role_scoped_move_shape_bonus", 0.0) or 0.0
+        ),
+        "visible_role_scoped_move_shape_licenses": list(
+            selected_group.get("visible_role_scoped_move_shape_licenses", []) or []
+        ),
+        "visible_move_shape_audit": dict(selected_group.get("visible_move_shape_audit", {}) or {}),
+        "visible_role_scoped_move_shape_require_worst_reply": bool(
+            selected_group.get("visible_role_scoped_move_shape_require_worst_reply", False)
+        ),
+        "score_after_role_scoped_move_shape_bonus": selected_group.get(
+            "score_after_role_scoped_move_shape_bonus"
+        ),
     }
 
 
@@ -610,6 +671,10 @@ def choose_move_with_engine(
     successor_affordance_layer_enabled: bool = False,
     successor_contract_gate_enabled: bool = False,
     successor_role_license_enabled: bool = False,
+    successor_role_scoped_move_shape_enabled: bool = False,
+    successor_role_scoped_move_shape_bonus: float = 0.0,
+    successor_role_scoped_move_shape_require_worst_reply: bool = False,
+    early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
 ) -> Optional[str]:
     return choose_move_details(
@@ -622,6 +687,10 @@ def choose_move_with_engine(
         successor_affordance_layer_enabled=successor_affordance_layer_enabled,
         successor_contract_gate_enabled=successor_contract_gate_enabled,
         successor_role_license_enabled=successor_role_license_enabled,
+        successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
+        successor_role_scoped_move_shape_bonus=successor_role_scoped_move_shape_bonus,
+        successor_role_scoped_move_shape_require_worst_reply=successor_role_scoped_move_shape_require_worst_reply,
+        early_stop_stable_suggestions=early_stop_stable_suggestions,
         forced_successor_skill=forced_successor_skill,
     ).get("move")
 
@@ -636,6 +705,10 @@ def choose_move_details(
     successor_affordance_layer_enabled: bool = False,
     successor_contract_gate_enabled: bool = False,
     successor_role_license_enabled: bool = False,
+    successor_role_scoped_move_shape_enabled: bool = False,
+    successor_role_scoped_move_shape_bonus: float = 0.0,
+    successor_role_scoped_move_shape_require_worst_reply: bool = False,
+    early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
 ) -> dict:
     env = {
@@ -650,6 +723,11 @@ def choose_move_details(
     env["blackboard"]["successor_affordance_layer_enabled"] = successor_affordance_layer_enabled
     env["blackboard"]["successor_contract_gate_enabled"] = successor_contract_gate_enabled
     env["blackboard"]["successor_role_license_enabled"] = successor_role_license_enabled
+    env["blackboard"]["successor_role_scoped_move_shape_enabled"] = successor_role_scoped_move_shape_enabled
+    env["blackboard"]["successor_role_scoped_move_shape_bonus"] = successor_role_scoped_move_shape_bonus
+    env["blackboard"]["successor_role_scoped_move_shape_require_worst_reply"] = (
+        successor_role_scoped_move_shape_require_worst_reply
+    )
     if forced_successor_skill:
         env["blackboard"]["forced_successor_skill"] = forced_successor_skill
 
@@ -664,9 +742,29 @@ def choose_move_details(
         graph.nodes[root_id].state = NodeState.REQUESTED
 
     ticks = 0
+    early_stopped = False
+    stable_suggestion_ticks = 0
+    last_suggestion_signature = None
     while ticks < max_ticks and env.get("chosen_move") is None:
         ticks += 1
         engine.step(env)
+        if early_stop_stable_suggestions > 0:
+            signature = _suggestion_stability_signature(
+                list(env.get("actuator_suggestions", []) or []),
+                forced_successor_skill=forced_successor_skill,
+            )
+            if signature is None:
+                stable_suggestion_ticks = 0
+                last_suggestion_signature = None
+                continue
+            if signature == last_suggestion_signature:
+                stable_suggestion_ticks += 1
+            else:
+                stable_suggestion_ticks = 1
+                last_suggestion_signature = signature
+            if stable_suggestion_ticks >= early_stop_stable_suggestions:
+                early_stopped = True
+                break
     suggestions = list(env.get("actuator_suggestions", []))
     suggestions.sort(key=lambda item: item.get("score", float("-inf")), reverse=True)
     selected_suggestion = suggestions[0] if suggestions else None
@@ -718,6 +816,12 @@ def choose_move_details(
         "forced_successor_available": bool(forced_candidates) if forced_successor_skill else None,
         "successor_contract_gate_enabled": successor_contract_gate_enabled,
         "successor_role_license_enabled": successor_role_license_enabled,
+        "successor_role_scoped_move_shape_enabled": successor_role_scoped_move_shape_enabled,
+        "successor_role_scoped_move_shape_bonus": successor_role_scoped_move_shape_bonus,
+        "successor_role_scoped_move_shape_require_worst_reply": successor_role_scoped_move_shape_require_worst_reply,
+        "early_stop_stable_suggestions": int(early_stop_stable_suggestions),
+        "early_stopped": bool(early_stopped),
+        "stable_suggestion_ticks": int(stable_suggestion_ticks),
         "visible_terms": dict(env.get("blackboard", {}).get("krk_visible_terms", {}) or {}),
         "successor_affordances": dict(
             env.get("blackboard", {}).get("krk_successor_affordances", {}) or {}
@@ -733,6 +837,12 @@ def choose_move_details(
         ),
         "context_terms_cache_misses": int(
             env.get("blackboard", {}).get("krk_context_terms_cache_misses", 0) or 0
+        ),
+        "move_shape_audit_cache_hits": int(
+            env.get("blackboard", {}).get("krk_move_shape_audit_cache_hits", 0) or 0
+        ),
+        "move_shape_audit_cache_misses": int(
+            env.get("blackboard", {}).get("krk_move_shape_audit_cache_misses", 0) or 0
         ),
     }
 
@@ -793,6 +903,10 @@ def play_to_mate(
     successor_affordance_layer_enabled: bool = False,
     successor_contract_gate_enabled: bool = False,
     successor_role_license_enabled: bool = False,
+    successor_role_scoped_move_shape_enabled: bool = False,
+    successor_role_scoped_move_shape_bonus: float = 0.0,
+    successor_role_scoped_move_shape_require_worst_reply: bool = False,
+    early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
 ) -> dict:
     """Run a simple KRK playout using the compiled topology for White moves."""
@@ -802,6 +916,7 @@ def play_to_mate(
     trace_truncated_events = 0
     first_reply: dict | None = None
     first_successor: dict | None = None
+    engine_perf: dict = {}
 
     def record_event(event: dict) -> None:
         nonlocal trace_truncated_events
@@ -814,6 +929,12 @@ def play_to_mate(
 
     def finish(result: str, ply: int) -> dict:
         payload = {"result": result, "plies": ply}
+        payload.update({
+            "engine_decision_count": int(engine_perf.get("engine_decision_count", 0)),
+            "engine_ticks_total": int(engine_perf.get("engine_ticks_total", 0)),
+            "engine_ticks_max": int(engine_perf.get("engine_ticks_max", 0)),
+            "engine_early_stop_count": int(engine_perf.get("engine_early_stop_count", 0)),
+        })
         if first_reply is not None:
             payload["first_reply"] = first_reply
         if first_successor is not None:
@@ -847,8 +968,15 @@ def play_to_mate(
                 successor_affordance_layer_enabled=successor_affordance_layer_enabled,
                 successor_contract_gate_enabled=successor_contract_gate_enabled,
                 successor_role_license_enabled=successor_role_license_enabled,
+                successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
+                successor_role_scoped_move_shape_bonus=successor_role_scoped_move_shape_bonus,
+                successor_role_scoped_move_shape_require_worst_reply=(
+                    successor_role_scoped_move_shape_require_worst_reply
+                ),
+                early_stop_stable_suggestions=early_stop_stable_suggestions,
                 forced_successor_skill=active_forced_successor,
             )
+            _accumulate_engine_perf(engine_perf, move_details, prefix="engine")
             move_uci = move_details.get("move")
             capture_successor_now = (
                 (forced_successor_skill is not None and white_moves == 0)
@@ -975,6 +1103,10 @@ def run_counterfactual_successor_sweep(
     successor_affordance_layer_enabled: bool,
     successor_contract_gate_enabled: bool,
     successor_role_license_enabled: bool,
+    successor_role_scoped_move_shape_enabled: bool = False,
+    successor_role_scoped_move_shape_bonus: float = 0.0,
+    successor_role_scoped_move_shape_require_worst_reply: bool = False,
+    early_stop_stable_suggestions: int = 0,
     step_output: Optional[Path] = None,
     step_context: Optional[dict] = None,
 ) -> dict:
@@ -1003,6 +1135,12 @@ def run_counterfactual_successor_sweep(
             successor_affordance_layer_enabled=successor_affordance_layer_enabled,
             successor_contract_gate_enabled=successor_contract_gate_enabled,
             successor_role_license_enabled=successor_role_license_enabled,
+            successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
+            successor_role_scoped_move_shape_bonus=successor_role_scoped_move_shape_bonus,
+            successor_role_scoped_move_shape_require_worst_reply=(
+                successor_role_scoped_move_shape_require_worst_reply
+            ),
+            early_stop_stable_suggestions=early_stop_stable_suggestions,
             forced_successor_skill=skill_id,
         )
         first_successor = result.get("first_successor") if isinstance(result, dict) else None
@@ -1112,6 +1250,10 @@ def evaluate_landmark_progress(
     successor_affordance_layer_enabled: bool = False,
     successor_contract_gate_enabled: bool = False,
     successor_role_license_enabled: bool = False,
+    successor_role_scoped_move_shape_enabled: bool = False,
+    successor_role_scoped_move_shape_bonus: float = 0.0,
+    successor_role_scoped_move_shape_require_worst_reply: bool = False,
+    early_stop_stable_suggestions: int = 0,
     counterfactual_successors: tuple[str, ...] = (),
     max_counterfactual_sweeps: int = 0,
     counterfactual_sweeps_output: Optional[Path] = None,
@@ -1150,6 +1292,14 @@ def evaluate_landmark_progress(
         "conversion_by_semantic_alignment_status": {},
         "semantic_alignment_confusion_counts": {},
         "semantic_alignment_snapshots": {},
+        "one_ply_engine_decision_count": 0,
+        "one_ply_engine_ticks_total": 0,
+        "one_ply_engine_ticks_max": 0,
+        "one_ply_engine_early_stop_count": 0,
+        "playout_engine_decision_count": 0,
+        "playout_engine_ticks_total": 0,
+        "playout_engine_ticks_max": 0,
+        "playout_engine_early_stop_count": 0,
         "one_ply_status": "not_checked",
         "conversion_status": "not_checked",
     }
@@ -1166,7 +1316,14 @@ def evaluate_landmark_progress(
             successor_affordance_layer_enabled=successor_affordance_layer_enabled,
             successor_contract_gate_enabled=successor_contract_gate_enabled,
             successor_role_license_enabled=successor_role_license_enabled,
+            successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
+            successor_role_scoped_move_shape_bonus=successor_role_scoped_move_shape_bonus,
+            successor_role_scoped_move_shape_require_worst_reply=(
+                successor_role_scoped_move_shape_require_worst_reply
+            ),
+            early_stop_stable_suggestions=early_stop_stable_suggestions,
         )
+        _accumulate_engine_perf(stats, move_details, prefix="one_ply_engine")
         move_uci = move_details.get("move")
         oracle_rewards = oracle_move_rewards(board, label, lookahead_black)
         best_reward = oracle_rewards[0][1] if oracle_rewards else -float("inf")
@@ -1287,8 +1444,21 @@ def evaluate_landmark_progress(
                 successor_affordance_layer_enabled=successor_affordance_layer_enabled,
                 successor_contract_gate_enabled=successor_contract_gate_enabled,
                 successor_role_license_enabled=successor_role_license_enabled,
+                successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
+                successor_role_scoped_move_shape_bonus=successor_role_scoped_move_shape_bonus,
+                successor_role_scoped_move_shape_require_worst_reply=(
+                    successor_role_scoped_move_shape_require_worst_reply
+                ),
+                early_stop_stable_suggestions=early_stop_stable_suggestions,
             )
             key = result["result"]
+            stats["playout_engine_decision_count"] += int(result.get("engine_decision_count", 0) or 0)
+            stats["playout_engine_ticks_total"] += int(result.get("engine_ticks_total", 0) or 0)
+            stats["playout_engine_ticks_max"] = max(
+                int(stats.get("playout_engine_ticks_max", 0) or 0),
+                int(result.get("engine_ticks_max", 0) or 0),
+            )
+            stats["playout_engine_early_stop_count"] += int(result.get("engine_early_stop_count", 0) or 0)
             stats["playouts"][key] = stats["playouts"].get(key, 0) + 1
             sample_conversion_status = "passed" if key == "mate" else "failed"
             stats["conversion_status_counts"][sample_conversion_status] = (
@@ -1398,6 +1568,19 @@ def evaluate_landmark_progress(
                     "role_bonus_by_role": successor_summary.get("role_bonus_by_role"),
                     "raw_score_before_role_bonus": successor_summary.get("raw_score_before_role_bonus"),
                     "score_after_role_bonus": successor_summary.get("score_after_role_bonus"),
+                    "visible_role_scoped_move_shape_bonus": successor_summary.get(
+                        "visible_role_scoped_move_shape_bonus"
+                    ),
+                    "visible_role_scoped_move_shape_licenses": successor_summary.get(
+                        "visible_role_scoped_move_shape_licenses"
+                    ),
+                    "visible_move_shape_audit": successor_summary.get("visible_move_shape_audit"),
+                    "visible_role_scoped_move_shape_require_worst_reply": successor_summary.get(
+                        "visible_role_scoped_move_shape_require_worst_reply"
+                    ),
+                    "score_after_role_scoped_move_shape_bonus": successor_summary.get(
+                        "score_after_role_scoped_move_shape_bonus"
+                    ),
                     "selected_skill_source": successor_summary.get("selected_skill_source"),
                     "successor_skills": successor_summary["skills"],
                     "visible_terms": successor_summary["visible_terms"],
@@ -1525,6 +1708,12 @@ def evaluate_landmark_progress(
                     successor_affordance_layer_enabled=successor_affordance_layer_enabled,
                     successor_contract_gate_enabled=successor_contract_gate_enabled,
                     successor_role_license_enabled=successor_role_license_enabled,
+                    successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
+                    successor_role_scoped_move_shape_bonus=successor_role_scoped_move_shape_bonus,
+                    successor_role_scoped_move_shape_require_worst_reply=(
+                        successor_role_scoped_move_shape_require_worst_reply
+                    ),
+                    early_stop_stable_suggestions=early_stop_stable_suggestions,
                     step_output=counterfactual_steps_output,
                     step_context=step_context,
                 )
@@ -1613,6 +1802,12 @@ def evaluate_landmark_progress(
     stats["successor_affordance_layer_enabled"] = successor_affordance_layer_enabled
     stats["successor_contract_gate_enabled"] = successor_contract_gate_enabled
     stats["successor_role_license_enabled"] = successor_role_license_enabled
+    stats["successor_role_scoped_move_shape_enabled"] = successor_role_scoped_move_shape_enabled
+    stats["successor_role_scoped_move_shape_bonus"] = successor_role_scoped_move_shape_bonus
+    stats["successor_role_scoped_move_shape_require_worst_reply"] = (
+        successor_role_scoped_move_shape_require_worst_reply
+    )
+    stats["early_stop_stable_suggestions"] = int(early_stop_stable_suggestions)
     evaluated = max(0, stats["total"] - stats["no_move"])
     stats["one_ply_status"] = (
         "passed"
@@ -1677,7 +1872,13 @@ def evaluate_landmark_progress(
     return stats
 
 
-def print_landmark_results(stats: dict, *, black_policy: str = "adversarial", playout_max_plies: int = 0) -> None:
+def print_landmark_results(
+    stats: dict,
+    *,
+    black_policy: str = "adversarial",
+    playout_max_plies: int = 0,
+    print_json: bool = True,
+) -> None:
     print("\nKRK Landmark Progress Evaluation")
     print("-" * 60)
     print(f"Label: {stats.get('label', '')}")
@@ -1738,7 +1939,8 @@ def print_landmark_results(stats: dict, *, black_policy: str = "adversarial", pl
                         f"actuator={engine.get('suggested_actuator')}",
                         f"confidence={engine.get('confidence')}",
                     )
-    print(json.dumps(stats, indent=2))
+    if print_json:
+        print(json.dumps(stats, indent=2))
 
 
 def main() -> None:
@@ -1758,6 +1960,8 @@ def main() -> None:
                         help="If >0, also run full KRK playouts up to this ply limit")
     parser.add_argument("--black-policy", choices=["random", "adversarial"], default="adversarial")
     parser.add_argument("--json-output", type=Path, default=None)
+    parser.add_argument("--no-json-stdout", action="store_true",
+                        help="Print only the human summary; still writes full JSON when --json-output is set")
     parser.add_argument("--debug-failures", type=int, default=0,
                         help="Include this many non-oracle selected positions with board/move diagnostics")
     parser.add_argument("--debug-playouts", type=int, default=0,
@@ -1768,6 +1972,8 @@ def main() -> None:
                         help="Max ReCoN ticks for each White move inside playouts (default: --max-ticks)")
     parser.add_argument("--suggestion-limit", type=int, default=10,
                         help="Number of actuator suggestions retained per engine decision")
+    parser.add_argument("--early-stop-stable-suggestions", type=int, default=0,
+                        help="Diagnostic speedup: stop a ReCoN move loop after the top suggestion is stable for this many ticks (0 disables)")
     parser.add_argument("--debug-trace-max-plies", type=int, default=None,
                         help="If set, truncate saved debug playout traces to this many ply events")
     parser.add_argument("--stop-after-conversion-failures", type=int, default=0,
@@ -1790,6 +1996,12 @@ def main() -> None:
                         help="Enable opt-in visible contract mismatch penalty for successor skill ownership")
     parser.add_argument("--enable-successor-role-licenses", action="store_true",
                         help="Enable additive visible role-license bonuses for successor provider skills")
+    parser.add_argument("--enable-role-scoped-move-shapes", action="store_true",
+                        help="Enable opt-in role-scoped visible move-shape bonuses")
+    parser.add_argument("--role-scoped-move-shape-bonus", type=float, default=0.0,
+                        help="Bonus weight for confirmed role-scoped visible move-shape licenses")
+    parser.add_argument("--require-role-scoped-move-shape-worst-reply", action="store_true",
+                        help="Require worst-reply survival terms for runtime role-scoped move-shape bonuses; slower, audit-oriented")
     parser.add_argument("--counterfactual-successors", type=str, default=None,
                         help="Comma-separated canonical successor skill IDs to force on failed post-reply states")
     parser.add_argument("--max-counterfactual-sweeps", type=int, default=0,
@@ -1833,6 +2045,10 @@ def main() -> None:
         successor_affordance_layer_enabled=args.enable_successor_affordance_layer,
         successor_contract_gate_enabled=args.enable_successor_contract_gate,
         successor_role_license_enabled=args.enable_successor_role_licenses,
+        successor_role_scoped_move_shape_enabled=args.enable_role_scoped_move_shapes,
+        successor_role_scoped_move_shape_bonus=args.role_scoped_move_shape_bonus,
+        successor_role_scoped_move_shape_require_worst_reply=args.require_role_scoped_move_shape_worst_reply,
+        early_stop_stable_suggestions=args.early_stop_stable_suggestions,
         counterfactual_successors=tuple(
             item.strip()
             for item in (args.counterfactual_successors or "").split(",")
@@ -1843,7 +2059,12 @@ def main() -> None:
         counterfactual_steps_output=args.counterfactual_steps_output,
         verbose=True,
     )
-    print_landmark_results(stats, black_policy=args.black_policy, playout_max_plies=args.playout_max_plies)
+    print_landmark_results(
+        stats,
+        black_policy=args.black_policy,
+        playout_max_plies=args.playout_max_plies,
+        print_json=not args.no_json_stdout,
+    )
     if args.json_output:
         args.json_output.parent.mkdir(parents=True, exist_ok=True)
         args.json_output.write_text(json.dumps(stats, indent=2) + "\n", encoding="utf-8")

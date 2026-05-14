@@ -102,6 +102,7 @@ def run_legal_first_move_sweep(
     successor_affordance_layer_enabled: bool,
     successor_contract_gate_enabled: bool,
     successor_role_license_enabled: bool,
+    early_stop_stable_suggestions: int = 0,
     step_output: Path | None = None,
     step_context: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -135,6 +136,7 @@ def run_legal_first_move_sweep(
                 successor_affordance_layer_enabled=successor_affordance_layer_enabled,
                 successor_contract_gate_enabled=successor_contract_gate_enabled,
                 successor_role_license_enabled=successor_role_license_enabled,
+                early_stop_stable_suggestions=early_stop_stable_suggestions,
             )
             result = {
                 "result": continuation.get("result"),
@@ -206,6 +208,8 @@ def main() -> None:
     parser.add_argument("--black-policy", choices=["random", "adversarial"], default="adversarial")
     parser.add_argument("--max-ticks", type=int, default=200)
     parser.add_argument("--suggestion-limit", type=int, default=5)
+    parser.add_argument("--early-stop-stable-suggestions", type=int, default=0,
+                        help="Diagnostic speedup: stop each ReCoN move loop after the top suggestion is stable for this many ticks")
     parser.add_argument("--enable-successor-affordance-layer", action="store_true")
     parser.add_argument("--enable-successor-contract-gate", action="store_true")
     parser.add_argument("--enable-successor-role-licenses", action="store_true")
@@ -260,6 +264,7 @@ def main() -> None:
             successor_affordance_layer_enabled=args.enable_successor_affordance_layer,
             successor_contract_gate_enabled=args.enable_successor_contract_gate,
             successor_role_license_enabled=args.enable_successor_role_licenses,
+            early_stop_stable_suggestions=args.early_stop_stable_suggestions,
             step_output=args.steps_output,
             step_context=step_context,
         )
@@ -281,6 +286,7 @@ def main() -> None:
                 successor_affordance_layer_enabled=args.enable_successor_affordance_layer,
                 successor_contract_gate_enabled=args.enable_successor_contract_gate,
                 successor_role_license_enabled=args.enable_successor_role_licenses,
+                early_stop_stable_suggestions=args.early_stop_stable_suggestions,
                 step_output=args.legal_steps_output,
                 step_context=step_context,
             )

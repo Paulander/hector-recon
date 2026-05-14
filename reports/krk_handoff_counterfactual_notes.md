@@ -245,3 +245,59 @@ Interpretation:
 - A global move-shape bonus remains too broad.
 - The next causal experiment should be role-scoped and state-family-aware, e.g. `post_fence_edge_trap_recovery` licenses a move shape only when current-state terms, candidate terms, post-move terms, and worst-reply survival terms all confirm.
 - The audit supports the expert's recommendation: C powered by A, with legal-first labels used non-causally.
+
+## Slice 18 Role-Scoped Move-Shape Trace
+
+A first role-scoped move-shape scoring path was added behind explicit opt-in flags:
+
+- `--enable-successor-role-licenses`
+- `--enable-role-scoped-move-shapes`
+- `--role-scoped-move-shape-bonus`
+
+The causal path is intentionally narrow:
+
+- A provider must already have a visible role license.
+- The candidate move must satisfy role-scoped current terms, move-shape terms, post-move terms, and worst-reply survival terms.
+- The score contribution is recorded as visible evidence, not hidden arithmetic.
+
+Trace fields now include:
+
+- `visible_role_scoped_move_shape_bonus`
+- `visible_role_scoped_move_shape_licenses`
+- `visible_move_shape_audit`
+- `score_after_role_scoped_move_shape_bonus`
+
+The first 5-sample trace-fixed smoke run produced:
+
+- `5/5` one-ply optimal.
+- Conversion: `3 mate / 2 max_plies`.
+- Handoff packets include the full current/candidate/post-move/worst-reply evidence for the selected role-scoped move-shape license.
+
+Example observed license:
+
+- Role: `krk.edge_rook_transfer_recovery`
+- Provider: `krk.edge_trap_close`
+- Move: `h7c7`
+- Source terms: `candidate_is_rook_transfer`, `cut_preserved_after_move`, `rook_safe_after_move`, `rook_safe_after_worst_reply`, `no_draw_after_worst_reply`, `box_area_decreases_after_move`
+
+Important performance note:
+
+- Evaluating full worst-reply move-shape audits inside runtime scoring is expensive.
+- A cache and cheap current/candidate/post-move prefilter were added.
+- Runtime role-scoped move-shape bonuses now use current/candidate/post-move terms by default. Full worst-reply checks are opt-in with `--require-role-scoped-move-shape-worst-reply`.
+- Diagnostic loops can stop once the top actuator suggestion is stable via `--early-stop-stable-suggestions N`.
+- `--no-json-stdout` suppresses full JSON printing when `--json-output` is already writing the artifact.
+- The JSON now records one-ply/playout engine decision counts, total ticks, max ticks, and early-stop counts.
+
+Tiny verification run:
+
+- Command shape: `--samples 1 --playout-max-plies 4 --early-stop-stable-suggestions 2 --no-json-stdout`
+- One-ply engine: `1` decision, `8` ticks, `1` early stop.
+- Playout engine: `2` decisions, `16` ticks, `2` early stops.
+- Full worst-reply role-scoped checks were disabled: `successor_role_scoped_move_shape_require_worst_reply=false`.
+
+Interpretation:
+
+- The role-scoped mechanism is now inspectable and ReCoN-shaped.
+- It is not ready as a default causal path.
+- The next safe step is performance-oriented paired diagnostics: compare trace-only, role-license, and role-scoped move-shape modes on shared samples without increasing causal strength.
