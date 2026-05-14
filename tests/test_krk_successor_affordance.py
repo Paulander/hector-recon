@@ -368,7 +368,7 @@ def test_rook_transfer_role_can_license_multiple_edge_trap_providers():
         assert licenses["krk.rook_transfer_after_fence"]["contract_met"] is True
 
 
-def test_visible_rook_transfer_move_bonus_prefers_matching_rook_transfer_shape():
+def test_visible_rook_transfer_move_bonus_supports_matching_rook_transfer_shapes():
     board = chess.Board("5k2/7R/1K6/8/8/8/8/8 w - - 2 2")
     blackboard = {
         "successor_role_license_enabled": True,
@@ -408,14 +408,16 @@ def test_visible_rook_transfer_move_bonus_prefers_matching_rook_transfer_shape()
         move_meta=horizontal_meta,
     )
 
-    assert vertical > horizontal
+    assert vertical > 0.0
+    assert horizontal > 0.0
     assert vertical_meta["visible_role_scoped_move_shape_bonus"] > 0.0
+    assert horizontal_meta["visible_role_scoped_move_shape_bonus"] > 0.0
     assert vertical_meta["visible_role_scoped_move_shape_licenses"]
-    assert "visible_role_scoped_move_shape_bonus" not in horizontal_meta
+    assert horizontal_meta["visible_role_scoped_move_shape_licenses"]
 
 
 def test_edge_rook_recovery_requires_specific_transfer_shape_not_box_shrink_only():
-    board = chess.Board("5k2/7R/1K6/8/8/8/8/8 w - - 2 2")
+    board = chess.Board("1k6/7R/2K5/8/8/8/8/8 w - - 2 2")
     blackboard = {
         "successor_role_license_enabled": True,
         "successor_role_scoped_move_shape_enabled": True,
@@ -435,6 +437,7 @@ def test_edge_rook_recovery_requires_specific_transfer_shape_not_box_shrink_only
         },
     }
     box_shrink_only_meta = {}
+    far_lateral_meta = {}
     edge_rank_meta = {}
 
     box_shrink_only = _apply_visible_rook_transfer_move_bias(
@@ -444,6 +447,14 @@ def test_edge_rook_recovery_requires_specific_transfer_shape_not_box_shrink_only
         skill_id="krk.edge_trap_close",
         blackboard=blackboard,
         move_meta=box_shrink_only_meta,
+    )
+    far_lateral = _apply_visible_rook_transfer_move_bias(
+        0.0,
+        board=board,
+        move=chess.Move.from_uci("h7e7"),
+        skill_id="krk.edge_trap_close",
+        blackboard=blackboard,
+        move_meta=far_lateral_meta,
     )
     edge_rank = _apply_visible_rook_transfer_move_bias(
         0.0,
@@ -456,6 +467,10 @@ def test_edge_rook_recovery_requires_specific_transfer_shape_not_box_shrink_only
 
     assert box_shrink_only == 0.0
     assert "visible_role_scoped_move_shape_bonus" not in box_shrink_only_meta
+    assert far_lateral > box_shrink_only
+    far_source_terms = far_lateral_meta["visible_role_scoped_move_shape_licenses"][0]["source_terms"]
+    assert "rook_destination_not_adjacent_enemy" in far_source_terms
+    assert "box_area_decreases_after_move" in far_source_terms
     assert edge_rank > box_shrink_only
     assert edge_rank_meta["visible_role_scoped_move_shape_bonus"] > 0.0
     source_terms = edge_rank_meta["visible_role_scoped_move_shape_licenses"][0]["source_terms"]

@@ -425,3 +425,81 @@ Targeted replay note:
 - Partial output for `state.3d73682bdbe3` showed all tested rook transfers through `h7h5` still max-plied at the 20-ply bound.
 - Forced-successor replays for that state also max-plied for all available existing successors at the 20-ply bound.
 - This suggests either the 20-ply bound is too short for that family, or the current continuation policy still lacks a visible move-shape/continuation mechanism after the first edge-trap move.
+
+## Slice 23 Filtered Legal-First Replay
+
+The counterfactual sweep tool was extended with cheaper legal-first filtering:
+
+- `--skip-forced-successor-sweep`
+- `--legal-first-require-any-terms`
+- `--legal-first-require-all-terms`
+- `--legal-first-max-moves`
+- `--legal-first-audit-no-worst-reply`
+
+This keeps the offline audit behavior-preserving while avoiding exhaustive legal-first playouts when only selected visible move-shape families are relevant.
+
+Filtered replay artifact:
+
+- `slice23_filtered_legal_first.json`
+- Source diagnostic: `slice22_stage0_drift_penalty6_stage5_25_earlystop2.json`
+- Failed unique states: `2`
+- Forced-successor sweep skipped.
+- Legal-first filter terms:
+  - `rook_to_checking_line`
+  - `safe_check_created`
+  - `rook_to_edge_rank`
+  - `king_moves_toward_enemy`
+  - `king_moves_toward_rook_support`
+  - `white_king_distance_to_enemy_decreases`
+  - `white_king_distance_to_rook_decreases`
+
+Result:
+
+- `state.3d73682bdbe3` (`5k2/7R/K7/8/8/8/8/8 w - - 2 2`)
+  - Tested `12` filtered legal first moves.
+  - Outcomes: `9 max_plies`, `3 draw`, `0 mate`.
+  - Candidate king-support moves and rook-transfer/checking-line moves did not convert within the 20-ply bound.
+- `state.394b71e02d00` (`1k6/7R/2K5/8/8/8/8/8 w - - 2 2`)
+  - Tested `12` filtered legal first moves.
+  - Outcomes: `10 mate`, `1 max_plies`, `1 draw`.
+  - Best mating first moves at the 20-ply bound included `h7e7`, `h7f7`, `h7g7`, `h7h1`, and `h7h8`, all mating in `5` plies.
+  - Several king-support moves also mated but more slowly, e.g. `c6d7` in `7` plies and `c6d5/c6d6` in `19` plies.
+
+Interpretation:
+
+- `state.394` is not missing first-move capacity. The graph has many converting legal first moves, and the visible move-shape vocabulary can describe them.
+- `state.394` should be targeted by role-scoped move-shape ranking/calibration, especially distinguishing stronger rook transfers/checking-line/edge-rank moves from weaker lateral transfers such as `h7c7`.
+- `state.3d73` is different: filtered promising moves did not convert within the bounded test. This may require a longer playout bound, a deeper continuation skill, or additional geometry terms before training.
+- The next causal refinement should stay narrow: improve role-scoped ranking inside `state.394`-like edge-trap recovery states. Do not use broad provider gates or train on `state.3d73` until its required continuation is clearer.
+
+## Slice 24/25 Rook Destination Distance Ranking
+
+The visible move-shape vocabulary was extended with rook-destination distance terms:
+
+- `rook_destination_not_adjacent_enemy`
+- `rook_destination_far_from_enemy`
+
+The `krk.edge_rook_transfer_recovery` / `krk.rook_transfer_after_fence` role-scoped move-shape license was refined:
+
+- Lateral box-shrink transfers can now be licensed only when the rook destination is not adjacent to the enemy king.
+- Far rook destinations and edge-rank transfers receive stronger visible shape support than merely non-adjacent lateral transfers.
+- Adjacent lateral transfers such as `h7c7` in `state.394` remain unlicensed by the edge-rook recovery shape.
+
+Bounded diagnostics:
+
+- Slice 24 artifact: `slice24_lateral_distance_shape_stage5_25_earlystop2.json`
+- Slice 25 artifact: `slice25_stronger_far_edge_rank_shape_stage5_25_earlystop2.json`
+- Both kept one-ply solved: `25/25` optimal.
+- Both remained conversion-neutral versus Slice 22: `19 mate / 6 max_plies`.
+
+Trace interpretation:
+
+- The refinement changed visible support terms and shifted the repeated `state.394` selected edge-trap move from `h7b7` to `h7d7`.
+- Conversion did not improve because the better legal-first moves (`h7e7`, `h7f7`, `h7g7`, `h7h1`, `h7h8`) were not surfaced as selected provider suggestions in the runtime trace.
+- This suggests the bottleneck is no longer the visible role license alone. The current provider/action layer may not expose the best legal first moves as actuator suggestions for the licensed provider.
+
+Implication:
+
+- Further increasing visible score pressure is unlikely to solve the remaining failures cleanly.
+- The next useful diagnostic should compare filtered legal-first mating moves against provider actuator suggestions and emit a `provider_missing_converting_shape` / `converting_move_not_proposed` signal.
+- If confirmed, the next architectural step is likely a small visible move-shape action provider or training target for post-fence continuation, rather than more role bonus tuning.

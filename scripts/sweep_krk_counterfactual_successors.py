@@ -108,6 +108,10 @@ def run_legal_first_move_sweep(
     successor_role_scoped_move_shape_bonus: float = 0.0,
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
     early_stop_stable_suggestions: int = 0,
+    require_any_terms: tuple[str, ...] = (),
+    require_all_terms: tuple[str, ...] = (),
+    max_moves: int = 0,
+    audit_worst_reply: bool = True,
     step_output: Path | None = None,
     step_context: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -119,7 +123,19 @@ def run_legal_first_move_sweep(
     """
     board = chess.Board(post_reply_fen)
     results: dict[str, Any] = {}
+    candidates: list[tuple[chess.Move, dict[str, Any]]] = []
     for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        audit = krk_move_shape_audit(board, move, include_worst_reply=audit_worst_reply)
+        term_set = _audit_term_set(audit)
+        if require_any_terms and not term_set.intersection(require_any_terms):
+            continue
+        if require_all_terms and not set(require_all_terms).issubset(term_set):
+            continue
+        candidates.append((move, audit))
+    if max_moves > 0:
+        candidates = candidates[:max_moves]
+
+    for move, audit in candidates:
         b = board.copy()
         b.push(move)
         if b.is_checkmate():
@@ -154,7 +170,7 @@ def run_legal_first_move_sweep(
                 "result": continuation.get("result"),
                 "plies": int(continuation.get("plies", 0) or 0) + 1,
             }
-        result["move_shape_audit"] = krk_move_shape_audit(board, move)
+        result["move_shape_audit"] = audit
         results[move.uci()] = result
         if step_output is not None:
             _append_jsonl(
@@ -166,6 +182,19 @@ def run_legal_first_move_sweep(
                 },
             )
     return results
+
+
+def _audit_term_set(audit: dict[str, Any]) -> set[str]:
+    terms: set[str] = set()
+    for key in ("current_terms", "move_shape_terms", "post_move_terms", "worst_reply_terms"):
+        values = audit.get(key)
+        if isinstance(values, list):
+            terms.update(str(item) for item in values)
+    return terms
+
+
+def _parse_terms(value: str) -> tuple[str, ...]:
+    return tuple(item.strip() for item in value.split(",") if item.strip())
 
 
 def summarize_legal_first_move_sweeps(sweeps: list[dict[str, Any]]) -> dict[str, Any]:
@@ -234,12 +263,22 @@ def main() -> None:
     parser.add_argument("--role-scoped-move-shape-bonus", type=float, default=0.0)
     parser.add_argument("--require-role-scoped-move-shape-worst-reply", action="store_true",
                         help="Require worst-reply survival terms for role-scoped move-shape support")
+    parser.add_argument("--skip-forced-successor-sweep", action="store_true",
+                        help="Run only legal-first replay diagnostics, without forced-successor sweeps")
     parser.add_argument("--steps-output", type=Path, default=None,
                         help="Optional JSONL path for per-forced-successor records")
     parser.add_argument("--sweeps-output", type=Path, default=None,
                         help="Optional JSONL path for per-state sweep records")
     parser.add_argument("--legal-first-move-sweep", action="store_true",
                         help="Also try every legal first White move from each failed post-reply state")
+    parser.add_argument("--legal-first-require-any-terms", default="",
+                        help="Comma-separated audit terms; only replay moves matching at least one")
+    parser.add_argument("--legal-first-require-all-terms", default="",
+                        help="Comma-separated audit terms; only replay moves matching all")
+    parser.add_argument("--legal-first-max-moves", type=int, default=0,
+                        help="If >0, cap tested legal-first moves after term filtering")
+    parser.add_argument("--legal-first-audit-no-worst-reply", action="store_true",
+                        help="Skip worst-reply terms in legal-first move-shape audits for speed")
     parser.add_argument("--legal-steps-output", type=Path, default=None,
                         help="Optional JSONL path for per-legal-first-move records")
     parser.add_argument("--json-output", type=Path, default=None)
@@ -271,31 +310,34 @@ def main() -> None:
             "state_index": index - 1,
             **state,
         }
-        results = run_counterfactual_successor_sweep(
-            graph,
-            engine,
-            post_reply_fen=str(state["post_reply_fen"]),
-            successors=successors,
-            rng=rng,
-            label=args.label,
-            max_plies=args.playout_max_plies,
-            black_policy=args.black_policy,
-            max_ticks=args.max_ticks,
-            suggestion_limit=args.suggestion_limit,
-            successor_affordance_layer_enabled=args.enable_successor_affordance_layer,
-            successor_contract_gate_enabled=args.enable_successor_contract_gate,
-            successor_role_license_enabled=args.enable_successor_role_licenses,
-            successor_role_veto_penalty=args.successor_role_veto_penalty,
-            successor_stage0_drift_penalty=args.successor_stage0_drift_penalty,
-            successor_role_scoped_move_shape_enabled=args.enable_role_scoped_move_shapes,
-            successor_role_scoped_move_shape_bonus=args.role_scoped_move_shape_bonus,
-            successor_role_scoped_move_shape_require_worst_reply=(
-                args.require_role_scoped_move_shape_worst_reply
-            ),
-            early_stop_stable_suggestions=args.early_stop_stable_suggestions,
-            step_output=args.steps_output,
-            step_context=step_context,
-        )
+        if args.skip_forced_successor_sweep:
+            results = {}
+        else:
+            results = run_counterfactual_successor_sweep(
+                graph,
+                engine,
+                post_reply_fen=str(state["post_reply_fen"]),
+                successors=successors,
+                rng=rng,
+                label=args.label,
+                max_plies=args.playout_max_plies,
+                black_policy=args.black_policy,
+                max_ticks=args.max_ticks,
+                suggestion_limit=args.suggestion_limit,
+                successor_affordance_layer_enabled=args.enable_successor_affordance_layer,
+                successor_contract_gate_enabled=args.enable_successor_contract_gate,
+                successor_role_license_enabled=args.enable_successor_role_licenses,
+                successor_role_veto_penalty=args.successor_role_veto_penalty,
+                successor_stage0_drift_penalty=args.successor_stage0_drift_penalty,
+                successor_role_scoped_move_shape_enabled=args.enable_role_scoped_move_shapes,
+                successor_role_scoped_move_shape_bonus=args.role_scoped_move_shape_bonus,
+                successor_role_scoped_move_shape_require_worst_reply=(
+                    args.require_role_scoped_move_shape_worst_reply
+                ),
+                early_stop_stable_suggestions=args.early_stop_stable_suggestions,
+                step_output=args.steps_output,
+                step_context=step_context,
+            )
         sweep = {
             **state,
             "counterfactual_results": results,
@@ -322,6 +364,10 @@ def main() -> None:
                     args.require_role_scoped_move_shape_worst_reply
                 ),
                 early_stop_stable_suggestions=args.early_stop_stable_suggestions,
+                require_any_terms=_parse_terms(args.legal_first_require_any_terms),
+                require_all_terms=_parse_terms(args.legal_first_require_all_terms),
+                max_moves=args.legal_first_max_moves,
+                audit_worst_reply=not args.legal_first_audit_no_worst_reply,
                 step_output=args.legal_steps_output,
                 step_context=step_context,
             )

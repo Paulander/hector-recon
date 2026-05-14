@@ -1003,6 +1003,12 @@ def _candidate_move_shape_terms(board: chess.Board, move: chess.Move) -> list[st
             terms.append("rook_to_edge_file")
         if to_rank in (0, 7):
             terms.append("rook_to_edge_rank")
+        if bk_sq is not None:
+            rook_enemy_distance = chess.square_distance(move.to_square, bk_sq)
+            if rook_enemy_distance >= 2:
+                terms.append("rook_destination_not_adjacent_enemy")
+            if rook_enemy_distance >= 3:
+                terms.append("rook_destination_far_from_enemy")
         if board.gives_check(move):
             terms.append("rook_to_checking_line")
         if _rook_safe_after_white_move(board, move):
@@ -1489,41 +1495,49 @@ def _role_scoped_move_shape_licenses(
             required_move = {"candidate_is_rook_transfer"}
             required_post = {"cut_preserved_after_move", "rook_safe_after_move"}
             required_worst = {"rook_safe_after_worst_reply", "no_draw_after_worst_reply"}
-            shape_options = (
-                {
-                    "rook_transfer_vertical",
-                    "rook_to_edge_file",
-                    "rook_to_edge_rank",
-                    "rook_to_checking_line",
-                    "safe_check_created",
-                }
-                if role_id == "krk.rook_transfer_after_fence"
-                else {
-                    "rook_transfer_vertical",
-                    "rook_to_edge_file",
-                    "rook_to_edge_rank",
-                    "rook_to_checking_line",
-                    "safe_check_created",
-                }
+            direct_shape_options = {
+                "rook_transfer_vertical",
+                "rook_to_edge_file",
+                "rook_to_edge_rank",
+                "rook_to_checking_line",
+                "safe_check_created",
+            }
+            lateral_box_shape = (
+                "rook_lateral_transfer" in move_terms
+                and "box_area_decreases_after_move" in post_terms
+                and "rook_destination_not_adjacent_enemy" in move_terms
             )
+            matched_shape_terms = direct_shape_options & (move_terms | post_terms)
+            if lateral_box_shape:
+                matched_shape_terms.update({
+                    "rook_lateral_transfer",
+                    "box_area_decreases_after_move",
+                    "rook_destination_not_adjacent_enemy",
+                })
             if (
                 required_current <= current
                 and required_move <= move_terms
                 and required_post <= post_terms
                 and (not require_worst or required_worst <= worst_terms)
-                and (shape_options & (move_terms | post_terms))
+                and matched_shape_terms
             ):
                 worst_source_terms = required_worst if require_worst else set()
+                shape_score = _role_scoped_rook_transfer_shape_score(
+                    move_terms=move_terms,
+                    post_terms=post_terms,
+                )
                 source_terms = sorted(
                     required_current
                     | required_move
                     | required_post
                     | worst_source_terms
-                    | (shape_options & (move_terms | post_terms))
+                    | matched_shape_terms
                 )
                 licenses.append({
                     "role_id": role_id,
-                    "score": float(role.get("score", 0.0) or 0.0),
+                    "score": float(role.get("score", 0.0) or 0.0) * shape_score,
+                    "role_score": float(role.get("score", 0.0) or 0.0),
+                    "shape_score": shape_score,
                     "source_terms": source_terms,
                     "move_shape_terms": sorted(move_terms),
                     "post_move_terms": sorted(post_terms),
@@ -1560,6 +1574,27 @@ def _role_scoped_move_shape_licenses(
                     "worst_reply_terms": sorted(worst_terms),
                 })
     return licenses
+
+
+def _role_scoped_rook_transfer_shape_score(
+    *,
+    move_terms: set[str],
+    post_terms: set[str],
+) -> float:
+    """Small visible ranking signal among already-licensed rook transfers."""
+    score = 1.0
+    if "box_area_decreases_after_move" in post_terms and "rook_destination_far_from_enemy" in move_terms:
+        score += 1.20
+    elif (
+        "box_area_decreases_after_move" in post_terms
+        and "rook_destination_not_adjacent_enemy" in move_terms
+    ):
+        score += 0.15
+    if "rook_to_edge_rank" in move_terms:
+        score += 0.80
+    if "rook_to_checking_line" in move_terms or "safe_check_created" in move_terms:
+        score += 0.15
+    return score
 
 
 def _provider_role_licenses(provider_id: str, blackboard: Dict[str, Any]) -> list[Dict[str, Any]]:
