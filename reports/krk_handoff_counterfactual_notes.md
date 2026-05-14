@@ -40,3 +40,142 @@ A tiny bounded smoke comparison (`5` samples, `20` plies, `40` ticks) showed:
 - Role-license mode with `0.25` bonus: `2 mate / 3 max_plies`.
 
 The failure was informative: role licenses were mechanically visible, but the bonus was too strong and over-licensed `krk.fence_established` repair and `krk.edge_trap_wrong_tempo` in states where the geometry was still too broad. The next conservative patch reduced the default role bonus to `0.05`, moved the repair license away from same-skill `krk.fence_established`, and made wrong-tempo geometry require visible enemy-between geometry.
+
+## Slice 13 Bounded Paired Comparison
+
+A bounded `25`-sample comparison used the same Stage 5 curriculum setup with `20` plies and `40` ticks:
+
+- No role-license mode: `17 mate / 8 max_plies`.
+- Role-license mode: `17 mate / 8 max_plies`.
+- One-ply local skill remained solved in both modes: `25/25 optimal`.
+- Selected successors were identical in both modes: `krk.stage0_basin` `18`, `krk.edge_trap_close` `5`, `krk.fence_established` `2`.
+- No selected successor, move, or outcome changed across the paired run.
+
+The role-license layer was neutral rather than helpful in this bounded run. The important audit detail is that `role_bonus_count` was `0`, and selected providers were still sourced by actuator score. This means the conservative role contracts did not degrade routing, but they also did not yet license the selected providers in these states.
+
+## Slice 13 Failed-State Counterfactual Sweep
+
+The eight bounded conversion failures were replayed with forced first-successor ownership over:
+
+- `krk.stage0_basin`
+- `krk.edge_trap_close`
+- `krk.fence_established`
+- `krk.fence_maintenance`
+- `krk.edge_trap_wrong_tempo`
+- `krk.edge_trap_enemy_between`
+
+Summary:
+
+- `8` failed samples replayed.
+- `5/8` had at least one forced successor that converted to mate.
+- `3/8` had no tested forced successor convert within the bounded playout.
+- `krk.fence_maintenance` was unavailable in all eight states, so it is currently a role/contract placeholder rather than an effective provider.
+
+The five recoverable failures were all the repeated `state.394b71e02d00` family:
+
+- Start FEN: `k7/2R5/2K5/8/8/8/8/8 w - - 0 1`
+- Post-reply FEN: `1k6/7R/2K5/8/8/8/8/8 w - - 2 2`
+- Actual selected successor: `krk.stage0_basin`
+- Actual result: `max_plies`
+- Forced `krk.edge_trap_close`: `mate`
+- Forced `krk.edge_trap_wrong_tempo`: `mate`
+- Forced `krk.edge_trap_enemy_between`: `mate`
+
+This is evidence for a visible routing/role-license gap, not missing skill capacity, for that state family. The edge-trap providers contain useful first moves, but `krk.stage0_basin` wins the actual selection with a high score.
+
+The three unrecovered failures were:
+
+- `state.0d62ea23963f`, repeated twice. Actual selected successor: `krk.fence_established`; failure classes included `successor_conflict`, `maintenance_needed_but_not_detected`, and `low_support_fallback`.
+- `state.3d73682bdbe3`, once. Actual selected successor: `krk.edge_trap_close`; failure class `successor_conflict`.
+
+No tested existing successor converted these two state families in the bounded playout. These remain possible missing-capacity, missing-geometry, or downstream-handoff cases. They should be tested next with legal-first-move sweeps and/or force-until-role-breaks before training a new continuation skill.
+
+## Slice 13 Legal-First-Move Sweep
+
+A unique-state legal-first-move sweep was added to `scripts/sweep_krk_counterfactual_successors.py`. It pushes each legal White move from the failed post-reply state and then releases control back to normal ReCoN playout. This is still diagnostic-only and does not alter runtime routing.
+
+Result over the three unique failed state families:
+
+- `3/3` had at least one legal first move that converted to mate.
+- Therefore the bounded failures are not yet evidence of missing basic move capacity.
+- The immediate problem is successor/role selection and visible ontology: useful converting moves exist, but the current provider/role machinery does not select them.
+
+Per-state result:
+
+- `state.0d62ea23963f`
+  - Post-reply FEN: `5k2/7R/1K6/8/8/8/8/8 w - - 2 2`
+  - Actual successor: `krk.fence_established`
+  - Forced-successor sweep: no tested provider converted.
+  - Legal converting first moves: `b6c5`, `h7a7`, `h7h1`.
+  - Best bounded result: `h7h1`, mate in `13` plies.
+
+- `state.3d73682bdbe3`
+  - Post-reply FEN: `5k2/7R/K7/8/8/8/8/8 w - - 2 2`
+  - Actual successor: `krk.edge_trap_close`
+  - Forced-successor sweep: no tested provider converted.
+  - Legal converting first move: `h7h5`.
+  - Best bounded result: mate in `17` plies.
+
+- `state.394b71e02d00`
+  - Post-reply FEN: `1k6/7R/2K5/8/8/8/8/8 w - - 2 2`
+  - Actual successor: `krk.stage0_basin`
+  - Forced edge-trap providers converted.
+  - Legal-first sweep found `15` converting first moves.
+  - Several rook moves converted in `5` plies, including `h7e7`, `h7f7`, `h7g7`, and `h7h1` through `h7h8`.
+
+Next interpretation:
+
+- `state.394...` is a clear role-license/routing failure: edge-trap providers can convert, but high-scoring `stage0_basin` wins.
+- `state.0d62...` and `state.3d73...` are not missing-capacity examples. They are missing provider coverage or missing visible role terms for legal moves that current successor providers do not expose.
+- Before training a new continuation skill, add or refine visible terms around rook transfer, checking/tempo moves, king support improvement, and corner-distance/box geometry so these legal converting moves become explainable by a ReCoN-visible role.
+
+## Slice 14 Visible Rook-Transfer Ontology
+
+The next ontology slice added action-relevant visible terms:
+
+- `king_support_improvement_move_exists`
+- `safe_rook_long_transfer_available`
+- `safe_rook_edge_transfer_available`
+- `safe_check_available`
+- `rook_transfer_after_fence_available`
+- `edge_rook_transfer_recovery_available`
+- `corner_net_pressure_available`
+
+Two visible role contracts were added:
+
+- `krk.rook_transfer_after_fence`
+- `krk.edge_rook_transfer_recovery`
+
+Both roles can license the existing edge-trap providers:
+
+- `krk.edge_trap_close`
+- `krk.edge_trap_enemy_between`
+- `krk.edge_trap_wrong_tempo`
+
+This keeps the mechanism ReCoN-shaped: visible TERMINAL context terms activate visible role SCRIPTs, and those roles provide an additive provider license. The role does not directly select a move.
+
+Validation on the three unique failed state families:
+
+- All three expose `rook_transfer_after_fence_available`.
+- All three expose `edge_rook_transfer_recovery_available`.
+- All three expose `safe_rook_edge_transfer_available`.
+
+Bounded `25`-sample paired comparison on the recompiled Slice 14 topology:
+
+- No role-license mode: `17 mate / 8 max_plies`.
+- Role-license mode: `17 mate / 8 max_plies`.
+- One-ply local skill remained solved in both modes: `25/25 optimal`.
+- Role bonuses became active in `3/25` post-reply states.
+- One selected successor changed: from `krk.fence_established` to `krk.edge_trap_close` on the `state.0d62...` family.
+- The changed state still ended in `max_plies`, so the role-license direction is semantically better but not yet sufficient for conversion.
+
+Shadow trigger changes:
+
+- No-role mode: `repeated_conversion_failure=8`, `route_conflict=3`, `maintenance_needed_but_not_detected=2`, `low_support_fallback=2`, `high_score_conversion_failure=5`.
+- Role-license mode: `repeated_conversion_failure=8`, `route_conflict=3`, `high_score_conversion_failure=5`.
+
+Interpretation:
+
+- The new roles reduced some diagnostic noise by replacing low/maintenance ambiguity with visible edge-trap support.
+- They did not improve conversion yet because the selected edge-trap provider still chooses a non-converting first move in at least one family.
+- The next likely need is finer visible terms for *which rook transfer* is appropriate, not just whether a safe rook transfer exists.

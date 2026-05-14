@@ -10,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from recon_lite_chess.krk_baseline_nodes import (
     _apply_successor_affordance_bias,
+    _compute_krk_context_terms,
     create_krk_context_terminal,
     create_krk_successor_affordance,
 )
@@ -212,6 +213,46 @@ def test_role_license_bonus_supports_provider_without_contract_penalty():
     assert "visible_contract_gate_penalty" not in move_meta
 
 
+def test_unmet_or_vetoed_role_license_does_not_bonus_provider():
+    for role_payload in [
+        {
+            "score": 0.75,
+            "role_id": "krk.stage0_king_approach_after_fence",
+            "provider_skill_ids": ["krk.stage0_basin"],
+            "missing_required_terms": ["white_king_can_improve_support"],
+            "veto_terms": [],
+            "contract_met": False,
+        },
+        {
+            "score": 0.75,
+            "role_id": "krk.stage0_king_approach_after_fence",
+            "provider_skill_ids": ["krk.stage0_basin"],
+            "missing_required_terms": [],
+            "veto_terms": ["mate_in_one_available"],
+            "contract_met": False,
+        },
+    ]:
+        move_meta = {}
+        adjusted = _apply_successor_affordance_bias(
+            5.7,
+            skill_id="krk.stage0_basin",
+            curriculum_label="stage0_basin",
+            blackboard={
+                "successor_role_license_enabled": True,
+                "successor_role_license_bonus": 0.05,
+                "krk_successor_provider_licenses": {
+                    "krk.stage0_basin": {
+                        "krk.stage0_king_approach_after_fence": role_payload
+                    }
+                },
+            },
+            move_meta=move_meta,
+        )
+
+        assert adjusted == 5.7
+        assert "visible_role_license_bonus" not in move_meta
+
+
 def test_successor_affordance_records_role_and_provider_license():
     env = {
         "board": chess.Board("4k3/1R6/1K6/8/8/8/8/8 w - - 0 1"),
@@ -242,3 +283,83 @@ def test_successor_affordance_records_role_and_provider_license():
     assert payload["role_id"] == "krk.stage0_king_approach_after_fence"
     assert payload["provider_skill_ids"] == ["krk.stage0_basin"]
     assert licenses["krk.stage0_king_approach_after_fence"]["contract_met"] is True
+
+
+def test_context_terminal_caches_full_term_vector_per_board():
+    env = {
+        "board": chess.Board("4k3/1R6/1K6/8/8/8/8/8 w - - 0 1"),
+        "blackboard": {"successor_affordance_layer_enabled": True},
+    }
+    first = create_krk_context_terminal("terminal.krk.fence_exists")
+    first.meta["term"] = "fence_exists"
+    second = create_krk_context_terminal("terminal.krk.rook_safe")
+    second.meta["term"] = "rook_safe"
+
+    first.predicate(first, env)
+    second.predicate(second, env)
+
+    assert env["blackboard"]["krk_context_terms_cache_misses"] == 1
+    assert env["blackboard"]["krk_context_terms_cache_hits"] == 1
+    assert env["blackboard"]["krk_visible_terms"]["fence_exists"] is True
+    assert env["blackboard"]["krk_visible_terms"]["rook_safe"] is True
+
+
+def test_failed_post_fence_families_expose_rook_transfer_terms():
+    for fen in [
+        "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+        "5k2/7R/K7/8/8/8/8/8 w - - 2 2",
+        "1k6/7R/2K5/8/8/8/8/8 w - - 2 2",
+    ]:
+        terms = _compute_krk_context_terms(chess.Board(fen))
+
+        assert terms["post_fence_conversion_needed"] is True
+        assert terms["rook_safe"] is True
+        assert terms["rook_transfer_after_fence_available"] is True
+        assert terms["edge_rook_transfer_recovery_available"] is True
+        assert terms["safe_rook_edge_transfer_available"] is True
+
+
+def test_rook_transfer_role_can_license_multiple_edge_trap_providers():
+    env = {
+        "board": chess.Board("5k2/7R/1K6/8/8/8/8/8 w - - 2 2"),
+        "blackboard": {
+            "successor_affordance_layer_enabled": True,
+            "krk_visible_terms": {
+                "rook_transfer_after_fence_available": True,
+                "safe_rook_long_transfer_available": True,
+                "safe_rook_edge_transfer_available": True,
+                "rook_has_safe_lateral_transfer": True,
+                "post_fence_conversion_needed": True,
+                "rook_safe": True,
+            },
+        },
+    }
+    affordance = create_krk_successor_affordance("script.krk.successor.rook_transfer_after_fence")
+    providers = [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo",
+    ]
+    affordance.meta.update({
+        "successor_skill_id": "krk.rook_transfer_after_fence",
+        "role_id": "krk.rook_transfer_after_fence",
+        "provider_skill_ids": providers,
+        "source_terms": [
+            "rook_transfer_after_fence_available",
+            "safe_rook_long_transfer_available",
+            "safe_rook_edge_transfer_available",
+            "rook_has_safe_lateral_transfer",
+            "post_fence_conversion_needed",
+            "rook_safe",
+        ],
+        "required_terms": ["rook_transfer_after_fence_available", "rook_safe"],
+        "veto_terms": ["mate_in_one_available"],
+    })
+
+    success, done = affordance.predicate(affordance, env)
+
+    assert success is True
+    assert done is True
+    for provider in providers:
+        licenses = env["blackboard"]["krk_successor_provider_licenses"][provider]
+        assert licenses["krk.rook_transfer_after_fence"]["contract_met"] is True

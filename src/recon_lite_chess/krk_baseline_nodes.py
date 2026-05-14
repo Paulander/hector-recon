@@ -168,7 +168,8 @@ def create_krk_context_terminal(node_id=None):
         term = node.meta.get("term")
         if not term:
             return False, False
-        value = _evaluate_krk_context_term(board, term)
+        terms_for_board = _krk_context_terms_for_board(board, blackboard)
+        value = terms_for_board.get(term, False)
         terms = blackboard.setdefault("krk_visible_terms", {})
         terms[term] = bool(value)
         node.meta["last_value"] = bool(value)
@@ -456,6 +457,9 @@ def create_actuator_terminal(node_id=None):
         min_goal_overlap = float(blackboard.get("goal_min_overlap", 8))
         curriculum_label = node.meta.get("curriculum_label")
         skill_id = node.meta.get("skill_id")
+        forced_successor_skill = blackboard.get("forced_successor_skill")
+        if forced_successor_skill and skill_id != forced_successor_skill:
+            return False, False
         use_landmark_runtime_reward = curriculum_label in LANDMARK_LABELS and stage >= 2
         goal_entries = []
         if goal_bank and stage > 0:
@@ -695,12 +699,40 @@ def create_actuator_terminal(node_id=None):
     )
 
 
+def _krk_context_terms_for_board(
+    board: chess.Board,
+    blackboard: Dict[str, Any] | None = None,
+) -> Dict[str, bool]:
+    """Compute/cache the visible KRK context vector once per board state."""
+    cache_key = (board.board_fen(), bool(board.turn))
+    if blackboard is not None:
+        cache = blackboard.setdefault("krk_context_terms_cache", {})
+        cached = cache.get(cache_key)
+        if isinstance(cached, dict):
+            blackboard["krk_context_terms_cache_hits"] = int(
+                blackboard.get("krk_context_terms_cache_hits", 0)
+            ) + 1
+            return cached
+    terms = _compute_krk_context_terms(board)
+    if blackboard is not None:
+        cache = blackboard.setdefault("krk_context_terms_cache", {})
+        cache[cache_key] = terms
+        blackboard["krk_context_terms_cache_misses"] = int(
+            blackboard.get("krk_context_terms_cache_misses", 0)
+        ) + 1
+    return terms
+
+
 def _evaluate_krk_context_term(board: chess.Board, term: str) -> bool:
+    return bool(_compute_krk_context_terms(board).get(term, False))
+
+
+def _compute_krk_context_terms(board: chess.Board) -> Dict[str, bool]:
     wk_sq = next(iter(board.pieces(chess.KING, chess.WHITE)), None)
     bk_sq = next(iter(board.pieces(chess.KING, chess.BLACK)), None)
     wr_sq = next(iter(board.pieces(chess.ROOK, chess.WHITE)), None)
     if wk_sq is None or bk_sq is None or wr_sq is None:
-        return False
+        return {}
 
     wk_file, wk_rank = chess.square_file(wk_sq), chess.square_rank(wk_sq)
     bk_file, bk_rank = chess.square_file(bk_sq), chess.square_rank(bk_sq)
@@ -735,6 +767,20 @@ def _evaluate_krk_context_term(board: chess.Board, term: str) -> bool:
     enemy_king_near_edge = edge_distance <= 1
     post_fence_conversion_needed = fence_exists and not mate_basin_available
     rook_has_safe_lateral_transfer = _rook_has_safe_lateral_transfer(board, wr_sq, bk_sq)
+    safe_rook_long_transfer_available = _safe_rook_transfer_available(
+        board, wr_sq, min_distance=3
+    )
+    safe_rook_edge_transfer_available = _safe_rook_transfer_available(
+        board, wr_sq, min_distance=2, require_edge_destination=True
+    )
+    safe_check_available = _safe_check_available(board)
+    king_support_improvement_move_exists = _king_support_improvement_move_exists(
+        board, wk_sq, bk_sq, wr_sq
+    )
+    corner_distance = min(
+        max(abs(bk_file - file_), abs(bk_rank - rank_))
+        for file_, rank_ in ((0, 0), (0, 7), (7, 0), (7, 7))
+    )
     edge_trap_shape_available = (
         fence_exists
         and enemy_king_near_edge
@@ -765,6 +811,7 @@ def _evaluate_krk_context_term(board: chess.Board, term: str) -> bool:
         "box_shrink_available": box_area >= 6 and fence_exists,
         "white_king_support_available": king_support,
         "white_king_can_improve_support": _white_king_can_improve_support(board, wk_sq, bk_sq),
+        "king_support_improvement_move_exists": king_support_improvement_move_exists,
         "wrong_tempo_detected": fence_exists and not king_support,
         "wrong_tempo_geometry": wrong_tempo_geometry,
         "mate_in_one_available": mate_basin_available,
@@ -775,18 +822,40 @@ def _evaluate_krk_context_term(board: chess.Board, term: str) -> bool:
         "goal_distance_can_decrease": False,
         "enemy_king_restricted": fence_exists or edge_distance <= 1,
         "king_approach_after_fence_available": (
-            post_fence_conversion_needed and rook_safe and _white_king_can_improve_support(board, wk_sq, bk_sq)
+            post_fence_conversion_needed and rook_safe and king_support_improvement_move_exists
         ),
         "enemy_between_king_and_rook_axis": enemy_between_axis,
         "edge_trap_shape_available": edge_trap_shape_available,
         "edge_trap_close_geometry": edge_trap_close_geometry,
         "enemy_between_geometry": edge_trap_shape_available and enemy_between_axis,
         "rook_has_safe_lateral_transfer": rook_has_safe_lateral_transfer,
+        "safe_rook_long_transfer_available": safe_rook_long_transfer_available,
+        "safe_rook_edge_transfer_available": safe_rook_edge_transfer_available,
+        "safe_check_available": safe_check_available,
+        "rook_transfer_after_fence_available": (
+            post_fence_conversion_needed
+            and rook_safe
+            and rook_has_safe_lateral_transfer
+            and safe_rook_long_transfer_available
+        ),
+        "edge_rook_transfer_recovery_available": (
+            post_fence_conversion_needed
+            and rook_safe
+            and enemy_king_near_edge
+            and safe_rook_edge_transfer_available
+        ),
+        "corner_net_pressure_available": (
+            post_fence_conversion_needed
+            and rook_safe
+            and enemy_king_near_edge
+            and corner_distance <= 2
+            and (safe_rook_edge_transfer_available or safe_check_available)
+        ),
         "rook_safe": rook_safe,
         "cut_stable": fence_stable,
         "black_king_escape_available": edge_distance > 0,
     }
-    return bool(values.get(term, False))
+    return {key: bool(value) for key, value in values.items()}
 
 
 def _move_checkmates(board: chess.Board, move: chess.Move) -> bool:
@@ -822,6 +891,90 @@ def _rook_has_safe_lateral_transfer(
         capture = chess.Move(bk_sq, move.to_square)
         b2.turn = chess.BLACK
         if capture not in b2.legal_moves:
+            return True
+    return False
+
+
+def _rook_safe_after_white_move(board: chess.Board, move: chess.Move) -> bool:
+    if move not in board.legal_moves:
+        return False
+    b2 = board.copy(stack=False)
+    b2.push(move)
+    if b2.is_checkmate():
+        return True
+    wr_sqs = list(b2.pieces(chess.ROOK, chess.WHITE))
+    wk_sqs = list(b2.pieces(chess.KING, chess.WHITE))
+    bk_sqs = list(b2.pieces(chess.KING, chess.BLACK))
+    if not wr_sqs or not wk_sqs or not bk_sqs:
+        return False
+    wr_sq = wr_sqs[0]
+    wk_sq = wk_sqs[0]
+    bk_sq = bk_sqs[0]
+    if chess.square_distance(wr_sq, bk_sq) > 1:
+        return True
+    capture = chess.Move(bk_sq, wr_sq)
+    b2.turn = chess.BLACK
+    return capture not in b2.legal_moves or chess.square_distance(wk_sq, wr_sq) <= 1
+
+
+def _safe_rook_transfer_available(
+    board: chess.Board,
+    wr_sq: chess.Square,
+    *,
+    min_distance: int = 2,
+    require_edge_destination: bool = False,
+) -> bool:
+    if board.turn != chess.WHITE:
+        return False
+    wr_file = chess.square_file(wr_sq)
+    wr_rank = chess.square_rank(wr_sq)
+    for move in board.legal_moves:
+        if move.from_square != wr_sq:
+            continue
+        to_file = chess.square_file(move.to_square)
+        to_rank = chess.square_rank(move.to_square)
+        if max(abs(to_file - wr_file), abs(to_rank - wr_rank)) < min_distance:
+            continue
+        if require_edge_destination and to_file not in (0, 7) and to_rank not in (0, 7):
+            continue
+        if _rook_safe_after_white_move(board, move):
+            return True
+    return False
+
+
+def _safe_check_available(board: chess.Board) -> bool:
+    if board.turn != chess.WHITE:
+        return False
+    for move in board.legal_moves:
+        if not board.gives_check(move):
+            continue
+        if move.from_square in board.pieces(chess.ROOK, chess.WHITE):
+            if not _rook_safe_after_white_move(board, move):
+                continue
+        return True
+    return False
+
+
+def _king_support_improvement_move_exists(
+    board: chess.Board,
+    wk_sq: chess.Square,
+    bk_sq: chess.Square,
+    wr_sq: chess.Square,
+) -> bool:
+    if board.turn != chess.WHITE:
+        return False
+    current_to_black = chess.square_distance(wk_sq, bk_sq)
+    current_to_rook = chess.square_distance(wk_sq, wr_sq)
+    for move in board.legal_moves:
+        if move.from_square != wk_sq:
+            continue
+        improves_black = chess.square_distance(move.to_square, bk_sq) < current_to_black
+        improves_rook = chess.square_distance(move.to_square, wr_sq) < current_to_rook
+        if not improves_black and not improves_rook:
+            continue
+        b2 = board.copy(stack=False)
+        b2.push(move)
+        if b2.is_checkmate() or not b2.is_check():
             return True
     return False
 
@@ -874,7 +1027,11 @@ def _apply_successor_affordance_bias(
     fence_satisfied = bool(terms.get("fence_already_satisfied", False))
     fence_needs_repair = bool(terms.get("fence_needs_repair", False))
     bias_weight = float(blackboard.get("successor_affordance_bias_weight", 0.05))
-    adjusted = float(score) + (bias_weight * affordance_score)
+    raw_score = float(score)
+    visible_affordance_bonus = bias_weight * affordance_score
+    adjusted = raw_score + visible_affordance_bonus
+    move_meta["raw_score_before_role_bonus"] = raw_score
+    move_meta["visible_affordance_bonus"] = visible_affordance_bonus
     role_licenses = _provider_role_licenses(canonical, blackboard)
     if blackboard.get("successor_role_license_enabled", False) and role_licenses:
         best_license = max(role_licenses, key=lambda item: float(item.get("score", 0.0) or 0.0))
@@ -882,6 +1039,13 @@ def _apply_successor_affordance_bias(
         role_bonus = role_bonus_weight * float(best_license.get("score", 0.0) or 0.0)
         adjusted += role_bonus
         move_meta["visible_role_license_bonus"] = role_bonus
+        move_meta["role_bonus_total"] = role_bonus
+        move_meta["role_bonus_by_role"] = {
+            str(item.get("role_id") or item.get("successor") or ""): (
+                role_bonus_weight * float(item.get("score", 0.0) or 0.0)
+            )
+            for item in role_licenses
+        }
         move_meta["visible_role_licenses"] = [
             {
                 "role_id": str(item.get("role_id") or item.get("successor") or ""),
@@ -904,6 +1068,7 @@ def _apply_successor_affordance_bias(
     if canonical == "krk.fence_established" and fence_satisfied and not fence_needs_repair:
         adjusted -= float(blackboard.get("same_skill_satisfied_penalty", 0.05))
         move_meta["same_skill_satisfied_penalty"] = True
+    move_meta["score_after_role_bonus"] = adjusted
     move_meta["visible_successor_affordance"] = payload
     return adjusted
 

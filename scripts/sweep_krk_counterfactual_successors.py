@@ -21,6 +21,7 @@ from recon_lite.engine import ReConEngine
 
 from test_krk_landmark_progress import (
     build_graph_from_topology,
+    play_to_mate,
     run_counterfactual_successor_sweep,
     stable_record_id,
     summarize_counterfactual_successor_sweeps,
@@ -86,6 +87,107 @@ def failed_post_reply_states(
     return records
 
 
+def run_legal_first_move_sweep(
+    graph,
+    engine: ReConEngine,
+    *,
+    post_reply_fen: str,
+    rng: random.Random,
+    label: str,
+    max_plies: int,
+    black_policy: str,
+    max_ticks: int,
+    suggestion_limit: int,
+    successor_affordance_layer_enabled: bool,
+    successor_contract_gate_enabled: bool,
+    successor_role_license_enabled: bool,
+    step_output: Path | None = None,
+    step_context: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Try every legal first White move, then release to normal topology.
+
+    This is diagnostic-only. It answers whether a failed post-reply state has
+    any converting first move under the current continuation policy, independent
+    of whether an existing successor provider selected that move.
+    """
+    board = chess.Board(post_reply_fen)
+    results: dict[str, Any] = {}
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        b = board.copy()
+        b.push(move)
+        if b.is_checkmate():
+            result = {"result": "mate", "plies": 1}
+        else:
+            local_rng = random.Random(rng.randrange(2**32))
+            continuation = play_to_mate(
+                graph,
+                engine,
+                b,
+                local_rng,
+                label,
+                None,
+                max(0, max_plies - 1),
+                black_policy,
+                trace=False,
+                max_ticks=max_ticks,
+                suggestion_limit=suggestion_limit,
+                successor_affordance_layer_enabled=successor_affordance_layer_enabled,
+                successor_contract_gate_enabled=successor_contract_gate_enabled,
+                successor_role_license_enabled=successor_role_license_enabled,
+            )
+            result = {
+                "result": continuation.get("result"),
+                "plies": int(continuation.get("plies", 0) or 0) + 1,
+            }
+        results[move.uci()] = result
+        if step_output is not None:
+            _append_jsonl(
+                step_output,
+                {
+                    **(step_context or {}),
+                    "legal_first_move": move.uci(),
+                    "legal_first_move_result": result,
+                },
+            )
+    return results
+
+
+def summarize_legal_first_move_sweeps(sweeps: list[dict[str, Any]]) -> dict[str, Any]:
+    summary: dict[str, Any] = {
+        "total_sweeps": len(sweeps),
+        "sweeps_with_any_mate": 0,
+        "sweeps_without_any_mate": 0,
+        "legal_first_move_outcome_counts": {},
+        "best_mating_first_move_counts": {},
+    }
+    for sweep in sweeps:
+        results = sweep.get("legal_first_move_results")
+        if not isinstance(results, dict):
+            continue
+        mating_moves = []
+        for move, result in results.items():
+            if not isinstance(result, dict):
+                continue
+            outcome = str(result.get("result") or "unknown")
+            key = f"{move}:{outcome}"
+            summary["legal_first_move_outcome_counts"][key] = (
+                summary["legal_first_move_outcome_counts"].get(key, 0) + 1
+            )
+            if outcome == "mate":
+                mating_moves.append((move, int(result.get("plies", 0) or 0)))
+        if mating_moves:
+            summary["sweeps_with_any_mate"] += 1
+            best_plies = min(plies for _, plies in mating_moves)
+            for move, plies in mating_moves:
+                if plies == best_plies:
+                    summary["best_mating_first_move_counts"][move] = (
+                        summary["best_mating_first_move_counts"].get(move, 0) + 1
+                    )
+        else:
+            summary["sweeps_without_any_mate"] += 1
+    return summary
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Replay failed KRK handoff states with forced successors")
     parser.add_argument("--diagnostic", type=Path, required=True)
@@ -109,6 +211,10 @@ def main() -> None:
                         help="Optional JSONL path for per-forced-successor records")
     parser.add_argument("--sweeps-output", type=Path, default=None,
                         help="Optional JSONL path for per-state sweep records")
+    parser.add_argument("--legal-first-move-sweep", action="store_true",
+                        help="Also try every legal first White move from each failed post-reply state")
+    parser.add_argument("--legal-steps-output", type=Path, default=None,
+                        help="Optional JSONL path for per-legal-first-move records")
     parser.add_argument("--json-output", type=Path, default=None)
     args = parser.parse_args()
 
@@ -159,6 +265,24 @@ def main() -> None:
             **state,
             "counterfactual_results": results,
         }
+        if args.legal_first_move_sweep:
+            legal_results = run_legal_first_move_sweep(
+                graph,
+                engine,
+                post_reply_fen=str(state["post_reply_fen"]),
+                rng=rng,
+                label=args.label,
+                max_plies=args.playout_max_plies,
+                black_policy=args.black_policy,
+                max_ticks=args.max_ticks,
+                suggestion_limit=args.suggestion_limit,
+                successor_affordance_layer_enabled=args.enable_successor_affordance_layer,
+                successor_contract_gate_enabled=args.enable_successor_contract_gate,
+                successor_role_license_enabled=args.enable_successor_role_licenses,
+                step_output=args.legal_steps_output,
+                step_context=step_context,
+            )
+            sweep["legal_first_move_results"] = legal_results
         sweeps.append(sweep)
         if args.sweeps_output is not None:
             _append_jsonl(args.sweeps_output, sweep)
@@ -174,10 +298,14 @@ def main() -> None:
         "counterfactual_successor_sweeps": sweeps,
         "counterfactual_successor_summary": summarize_counterfactual_successor_sweeps(sweeps),
     }
+    if args.legal_first_move_sweep:
+        summary["legal_first_move_summary"] = summarize_legal_first_move_sweeps(sweeps)
     if args.json_output is not None:
         args.json_output.parent.mkdir(parents=True, exist_ok=True)
         args.json_output.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(summary["counterfactual_successor_summary"], indent=2))
+    if args.legal_first_move_sweep:
+        print(json.dumps(summary["legal_first_move_summary"], indent=2))
 
 
 if __name__ == "__main__":

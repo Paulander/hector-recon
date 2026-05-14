@@ -99,6 +99,8 @@ def _successor_skill_summary(
             "visible_terms": {},
             "visible_successor_affordances": {},
             "visible_successor_provider_licenses": {},
+            "role_license_present_but_provider_absent": {},
+            "role_contract_met_but_provider_not_selected": {},
             "missing_afforded_skills": {},
         }
     visible_terms = dict(move_details.get("visible_terms", {}) or {})
@@ -124,6 +126,18 @@ def _successor_skill_summary(
                 "visible_successor_affordance": visible_affordance,
                 "visible_role_licenses": list(meta.get("visible_role_licenses", []) or []),
                 "visible_role_license_bonus": float(meta.get("visible_role_license_bonus", 0.0) or 0.0),
+                "raw_score_before_role_bonus": (
+                    float(meta.get("raw_score_before_role_bonus"))
+                    if meta.get("raw_score_before_role_bonus") is not None
+                    else None
+                ),
+                "score_after_role_bonus": (
+                    float(meta.get("score_after_role_bonus"))
+                    if meta.get("score_after_role_bonus") is not None
+                    else None
+                ),
+                "role_bonus_total": float(meta.get("role_bonus_total", 0.0) or 0.0),
+                "role_bonus_by_role": dict(meta.get("role_bonus_by_role", {}) or {}),
             },
         )
         entry["count"] += 1
@@ -140,6 +154,18 @@ def _successor_skill_summary(
                 "visible_successor_affordance": visible_affordance,
                 "visible_role_licenses": list(meta.get("visible_role_licenses", []) or []),
                 "visible_role_license_bonus": float(meta.get("visible_role_license_bonus", 0.0) or 0.0),
+                "raw_score_before_role_bonus": (
+                    float(meta.get("raw_score_before_role_bonus"))
+                    if meta.get("raw_score_before_role_bonus") is not None
+                    else None
+                ),
+                "score_after_role_bonus": (
+                    float(meta.get("score_after_role_bonus"))
+                    if meta.get("score_after_role_bonus") is not None
+                    else None
+                ),
+                "role_bonus_total": float(meta.get("role_bonus_total", 0.0) or 0.0),
+                "role_bonus_by_role": dict(meta.get("role_bonus_by_role", {}) or {}),
             })
 
     ranked = sorted(grouped.items(), key=lambda kv: kv[1]["score"], reverse=True)
@@ -178,6 +204,16 @@ def _successor_skill_summary(
         if _contract_met(payload, visible_terms)
         and float(payload.get("score", 0.0) or 0.0) > affordance_threshold
     }
+    role_license_present_but_provider_absent = {}
+    role_contract_met_but_provider_not_selected = {}
+    for role_id, payload in visible_eligible_successors.items():
+        providers = list(payload.get("provider_skill_ids", []) or [])
+        absent = [provider for provider in providers if provider not in grouped]
+        if absent:
+            role_license_present_but_provider_absent[role_id] = absent
+        not_selected = [provider for provider in providers if provider != selected_skill]
+        if not_selected:
+            role_contract_met_but_provider_not_selected[role_id] = not_selected
     return {
         "selected_skill": selected_skill,
         "best_score": best_score,
@@ -191,6 +227,8 @@ def _successor_skill_summary(
         "visible_successor_affordances": visible_affordances,
         "visible_successor_provider_licenses": provider_licenses,
         "visible_eligible_successors": visible_eligible_successors,
+        "role_license_present_but_provider_absent": role_license_present_but_provider_absent,
+        "role_contract_met_but_provider_not_selected": role_contract_met_but_provider_not_selected,
         "missing_afforded_skills": missing_afforded,
         **selected_contract,
     }
@@ -220,6 +258,11 @@ def _successor_contract_audit(
             "selected_successor_contract_met": False,
             "selected_despite_contract_mismatch": False,
             "selected_provider_role_licenses": [],
+            "provider_selected_without_role_license": False,
+            "role_bonus_total": 0.0,
+            "role_bonus_by_role": {},
+            "raw_score_before_role_bonus": None,
+            "score_after_role_bonus": None,
             "selected_skill_source": "none",
         }
 
@@ -250,6 +293,11 @@ def _successor_contract_audit(
             if visible_payload
             else "actuator_score"
         ),
+        "provider_selected_without_role_license": bool(not role_licenses),
+        "role_bonus_total": float(selected_group.get("role_bonus_total", 0.0) or 0.0),
+        "role_bonus_by_role": dict(selected_group.get("role_bonus_by_role", {}) or {}),
+        "raw_score_before_role_bonus": selected_group.get("raw_score_before_role_bonus"),
+        "score_after_role_bonus": selected_group.get("score_after_role_bonus"),
     }
 
 
@@ -602,6 +650,8 @@ def choose_move_details(
     env["blackboard"]["successor_affordance_layer_enabled"] = successor_affordance_layer_enabled
     env["blackboard"]["successor_contract_gate_enabled"] = successor_contract_gate_enabled
     env["blackboard"]["successor_role_license_enabled"] = successor_role_license_enabled
+    if forced_successor_skill:
+        env["blackboard"]["forced_successor_skill"] = forced_successor_skill
 
     engine.reset_states()
     root_id = "krk_entry" if "krk_entry" in graph.nodes else None
@@ -677,6 +727,12 @@ def choose_move_details(
         ),
         "successor_provider_licenses": dict(
             env.get("blackboard", {}).get("krk_successor_provider_licenses", {}) or {}
+        ),
+        "context_terms_cache_hits": int(
+            env.get("blackboard", {}).get("krk_context_terms_cache_hits", 0) or 0
+        ),
+        "context_terms_cache_misses": int(
+            env.get("blackboard", {}).get("krk_context_terms_cache_misses", 0) or 0
         ),
     }
 
@@ -1337,12 +1393,19 @@ def evaluate_landmark_progress(
                     "selected_successor_contract_met": successor_summary.get("selected_successor_contract_met"),
                     "selected_despite_contract_mismatch": successor_summary.get("selected_despite_contract_mismatch"),
                     "selected_provider_role_licenses": successor_summary.get("selected_provider_role_licenses"),
+                    "provider_selected_without_role_license": successor_summary.get("provider_selected_without_role_license"),
+                    "role_bonus_total": successor_summary.get("role_bonus_total"),
+                    "role_bonus_by_role": successor_summary.get("role_bonus_by_role"),
+                    "raw_score_before_role_bonus": successor_summary.get("raw_score_before_role_bonus"),
+                    "score_after_role_bonus": successor_summary.get("score_after_role_bonus"),
                     "selected_skill_source": successor_summary.get("selected_skill_source"),
                     "successor_skills": successor_summary["skills"],
                     "visible_terms": successor_summary["visible_terms"],
                     "visible_successor_affordances": successor_summary["visible_successor_affordances"],
                     "visible_successor_provider_licenses": successor_summary.get("visible_successor_provider_licenses", {}),
                     "visible_eligible_successors": successor_summary["visible_eligible_successors"],
+                    "role_license_present_but_provider_absent": successor_summary.get("role_license_present_but_provider_absent", {}),
+                    "role_contract_met_but_provider_not_selected": successor_summary.get("role_contract_met_but_provider_not_selected", {}),
                     "missing_afforded_skills": successor_summary["missing_afforded_skills"],
                     "playout_result": key,
                     "plies": int(result.get("plies", 0) or 0),
