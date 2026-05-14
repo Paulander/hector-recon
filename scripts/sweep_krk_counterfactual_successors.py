@@ -102,6 +102,11 @@ def run_legal_first_move_sweep(
     successor_affordance_layer_enabled: bool,
     successor_contract_gate_enabled: bool,
     successor_role_license_enabled: bool,
+    successor_role_veto_penalty: float = 0.0,
+    successor_stage0_drift_penalty: float = 0.0,
+    successor_role_scoped_move_shape_enabled: bool = False,
+    successor_role_scoped_move_shape_bonus: float = 0.0,
+    successor_role_scoped_move_shape_require_worst_reply: bool = False,
     early_stop_stable_suggestions: int = 0,
     step_output: Path | None = None,
     step_context: dict[str, Any] | None = None,
@@ -136,6 +141,13 @@ def run_legal_first_move_sweep(
                 successor_affordance_layer_enabled=successor_affordance_layer_enabled,
                 successor_contract_gate_enabled=successor_contract_gate_enabled,
                 successor_role_license_enabled=successor_role_license_enabled,
+                successor_role_veto_penalty=successor_role_veto_penalty,
+                successor_stage0_drift_penalty=successor_stage0_drift_penalty,
+                successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
+                successor_role_scoped_move_shape_bonus=successor_role_scoped_move_shape_bonus,
+                successor_role_scoped_move_shape_require_worst_reply=(
+                    successor_role_scoped_move_shape_require_worst_reply
+                ),
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
             )
             result = {
@@ -213,6 +225,15 @@ def main() -> None:
     parser.add_argument("--enable-successor-affordance-layer", action="store_true")
     parser.add_argument("--enable-successor-contract-gate", action="store_true")
     parser.add_argument("--enable-successor-role-licenses", action="store_true")
+    parser.add_argument("--successor-role-veto-penalty", type=float, default=0.0,
+                        help="Opt-in diagnostic visible role-veto penalty")
+    parser.add_argument("--successor-stage0-drift-penalty", type=float, default=0.0,
+                        help="Opt-in penalty for visibly unproductive stage0 king drift")
+    parser.add_argument("--enable-role-scoped-move-shapes", action="store_true",
+                        help="Enable role-scoped visible move-shape support")
+    parser.add_argument("--role-scoped-move-shape-bonus", type=float, default=0.0)
+    parser.add_argument("--require-role-scoped-move-shape-worst-reply", action="store_true",
+                        help="Require worst-reply survival terms for role-scoped move-shape support")
     parser.add_argument("--steps-output", type=Path, default=None,
                         help="Optional JSONL path for per-forced-successor records")
     parser.add_argument("--sweeps-output", type=Path, default=None,
@@ -264,6 +285,13 @@ def main() -> None:
             successor_affordance_layer_enabled=args.enable_successor_affordance_layer,
             successor_contract_gate_enabled=args.enable_successor_contract_gate,
             successor_role_license_enabled=args.enable_successor_role_licenses,
+            successor_role_veto_penalty=args.successor_role_veto_penalty,
+            successor_stage0_drift_penalty=args.successor_stage0_drift_penalty,
+            successor_role_scoped_move_shape_enabled=args.enable_role_scoped_move_shapes,
+            successor_role_scoped_move_shape_bonus=args.role_scoped_move_shape_bonus,
+            successor_role_scoped_move_shape_require_worst_reply=(
+                args.require_role_scoped_move_shape_worst_reply
+            ),
             early_stop_stable_suggestions=args.early_stop_stable_suggestions,
             step_output=args.steps_output,
             step_context=step_context,
@@ -286,6 +314,13 @@ def main() -> None:
                 successor_affordance_layer_enabled=args.enable_successor_affordance_layer,
                 successor_contract_gate_enabled=args.enable_successor_contract_gate,
                 successor_role_license_enabled=args.enable_successor_role_licenses,
+                successor_role_veto_penalty=args.successor_role_veto_penalty,
+                successor_stage0_drift_penalty=args.successor_stage0_drift_penalty,
+                successor_role_scoped_move_shape_enabled=args.enable_role_scoped_move_shapes,
+                successor_role_scoped_move_shape_bonus=args.role_scoped_move_shape_bonus,
+                successor_role_scoped_move_shape_require_worst_reply=(
+                    args.require_role_scoped_move_shape_worst_reply
+                ),
                 early_stop_stable_suggestions=args.early_stop_stable_suggestions,
                 step_output=args.legal_steps_output,
                 step_context=step_context,

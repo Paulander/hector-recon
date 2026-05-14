@@ -337,3 +337,91 @@ Interpretation:
 - Role-scoped move-shape support is currently safe and traceable, but causally neutral at bonus `0.05`.
 - Increasing the global bonus is not the right next step because prior aggressive move-shape/veto mode regressed badly.
 - The next implementation should use the legal-first audit to narrow role-scoped contracts for specific failure families, especially replacing broad `box_area_decreases_after_move` licensing with more specific vertical/checking-line/corner-net terms where supported by the audit.
+
+## Slice 20 Narrow Edge-Rook Recovery Contract
+
+The `krk.edge_rook_transfer_recovery` move-shape license was narrowed:
+
+- Removed `box_area_decreases_after_move` as a sufficient shape by itself.
+- Added `rook_to_edge_rank` alongside the already-supported vertical transfer, edge-file transfer, checking-line, and safe-check terms.
+- Added a regression test that confirms `h7c7` no longer receives an edge-rook recovery shape bonus merely because it shrinks the box, while `h7h1` remains licensed through edge-rank/vertical transfer geometry.
+
+Bounded diagnostic:
+
+- Artifact: `slice20_narrow_edge_rook_recovery_stage5_25_earlystop2.json`
+- Settings matched Slice 19 role-scoped mode.
+- One-ply: `25/25` optimal.
+- Conversion improved from Slice 19 `17 mate / 8 max_plies` to `19 mate / 6 max_plies`.
+- Selected successor counts did not change: `krk.stage0_basin=18`, `krk.edge_trap_close=7`.
+- The gain came entirely from `krk.edge_trap_close` conversions:
+  - Slice 19: `4 mate / 3 max_plies`
+  - Slice 20: `6 mate / 1 max_plies`
+- Stage0 remained unchanged:
+  - `13 mate / 5 max_plies`
+
+Interpretation:
+
+- This validates the expert's recommendation: narrow visible role-scoped move-shape contracts beat broader/global bonuses.
+- The role-scoped mechanism can improve conversion without changing successor ownership, by licensing better first-move shapes within an already selected provider.
+- Remaining failures are now mostly stage0 high-score conversion failures and one residual edge-trap-close failure. The next refinement should target `stage0_basin` role splitting / first-move shape, not further broad edge-trap bonus increases.
+
+## Slice 21 Broad Role-Veto Negative Result
+
+A broad visible role-veto penalty was tested as an opt-in diagnostic mode:
+
+- Flag: `--successor-role-veto-penalty 6.0`
+- Artifact: `slice21_stage0_veto_penalty6_stage5_25_earlystop2.json`
+- Same bounded 25-sample settings as Slice 20.
+
+Result:
+
+- One-ply remained solved: `25/25` optimal.
+- Conversion regressed badly: `7 mate / 18 max_plies`.
+- Selected successors shifted only mildly: `krk.stage0_basin=17`, `krk.edge_trap_close=8`.
+- The regression confirms the expert warning: missing or vetoed role contracts are too coarse to use as blanket provider suppression.
+
+Interpretation:
+
+- Keep broad role-veto disabled by default.
+- Do not use it as the next causal mechanism.
+- The safe path remains narrow, role-scoped move-shape evidence and explicit geometry terms, not global penalties.
+
+## Slice 22 Narrow Stage0 Drift Penalty
+
+A narrower opt-in penalty was added for one repeated failure family:
+
+- Flag: `--successor-stage0-drift-penalty 6.0`
+- Artifact: `slice22_stage0_drift_penalty6_stage5_25_earlystop2.json`
+- Same bounded 25-sample settings as Slice 20, with `--suggestion-limit 20` to preserve richer trace evidence.
+
+The rule is intentionally narrow:
+
+- It applies only to `krk.stage0_basin`.
+- It requires visible edge-trap context: `edge_trap_close_geometry`, `edge_trap_shape_available`, `fence_stable`, `rook_safe`.
+- It requires an already licensed visible edge-trap recovery role for `krk.edge_trap_close`.
+- It applies only to king moves that lack visible progress terms such as moving toward the enemy king or toward rook support.
+
+Result:
+
+- One-ply remained solved: `25/25` optimal.
+- Conversion matched Slice 20: `19 mate / 6 max_plies`.
+- Shadow candidates dropped from `16` in Slice 20 to `12`.
+- The repeated `state.394` family was shifted from `krk.stage0_basin` to `krk.edge_trap_close`, but still max-plied.
+- Selected successor counts changed from `stage0=18, edge_trap_close=7` to `stage0=13, edge_trap_close=12`.
+- Stage0 failures were converted into edge-trap-close failures rather than solved:
+  - Slice 20: `stage0_basin 13 mate / 5 max_plies`, `edge_trap_close 6 mate / 1 max_plies`
+  - Slice 22: `stage0_basin 13 mate / 0 max_plies`, `edge_trap_close 6 mate / 6 max_plies`
+
+Interpretation:
+
+- The narrow drift penalty is semantically useful as a diagnostic: it identifies unproductive stage0 king drift in an edge-trap-ready state.
+- It is not sufficient as a conversion fix, because ownership transfer to `edge_trap_close` still does not select a converting continuation in the repeated family.
+- Do not enable this by default yet.
+- The next problem is first-move selection inside a licensed edge-trap role, not just successor ownership.
+
+Targeted replay note:
+
+- A matching-mode counterfactual/legal-first replay was started for the two unique Slice 22 failure states, but the exhaustive legal-first portion was too slow interactively and was stopped after partial output.
+- Partial output for `state.3d73682bdbe3` showed all tested rook transfers through `h7h5` still max-plied at the 20-ply bound.
+- Forced-successor replays for that state also max-plied for all available existing successors at the 20-ply bound.
+- This suggests either the 20-ply bound is too short for that family, or the current continuation policy still lacks a visible move-shape/continuation mechanism after the first edge-trap move.

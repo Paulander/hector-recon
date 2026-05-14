@@ -134,6 +134,12 @@ def _suggestion_role_trace(meta: dict) -> dict:
             if meta.get("score_after_role_scoped_move_shape_bonus") is not None
             else None
         ),
+        "visible_stage0_drift_penalty": float(
+            meta.get("visible_stage0_drift_penalty", 0.0) or 0.0
+        ),
+        "visible_stage0_drift_reason": dict(
+            meta.get("visible_stage0_drift_reason", {}) or {}
+        ),
     }
 
 
@@ -311,6 +317,8 @@ def _successor_contract_audit(
             "visible_move_shape_audit": {},
             "visible_role_scoped_move_shape_require_worst_reply": False,
             "score_after_role_scoped_move_shape_bonus": None,
+            "visible_stage0_drift_penalty": 0.0,
+            "visible_stage0_drift_reason": {},
             "selected_skill_source": "none",
         }
 
@@ -358,6 +366,12 @@ def _successor_contract_audit(
         ),
         "score_after_role_scoped_move_shape_bonus": selected_group.get(
             "score_after_role_scoped_move_shape_bonus"
+        ),
+        "visible_stage0_drift_penalty": float(
+            selected_group.get("visible_stage0_drift_penalty", 0.0) or 0.0
+        ),
+        "visible_stage0_drift_reason": dict(
+            selected_group.get("visible_stage0_drift_reason", {}) or {}
         ),
     }
 
@@ -671,6 +685,8 @@ def choose_move_with_engine(
     successor_affordance_layer_enabled: bool = False,
     successor_contract_gate_enabled: bool = False,
     successor_role_license_enabled: bool = False,
+    successor_role_veto_penalty: float = 0.0,
+    successor_stage0_drift_penalty: float = 0.0,
     successor_role_scoped_move_shape_enabled: bool = False,
     successor_role_scoped_move_shape_bonus: float = 0.0,
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
@@ -687,6 +703,8 @@ def choose_move_with_engine(
         successor_affordance_layer_enabled=successor_affordance_layer_enabled,
         successor_contract_gate_enabled=successor_contract_gate_enabled,
         successor_role_license_enabled=successor_role_license_enabled,
+        successor_role_veto_penalty=successor_role_veto_penalty,
+        successor_stage0_drift_penalty=successor_stage0_drift_penalty,
         successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
         successor_role_scoped_move_shape_bonus=successor_role_scoped_move_shape_bonus,
         successor_role_scoped_move_shape_require_worst_reply=successor_role_scoped_move_shape_require_worst_reply,
@@ -705,6 +723,8 @@ def choose_move_details(
     successor_affordance_layer_enabled: bool = False,
     successor_contract_gate_enabled: bool = False,
     successor_role_license_enabled: bool = False,
+    successor_role_veto_penalty: float = 0.0,
+    successor_stage0_drift_penalty: float = 0.0,
     successor_role_scoped_move_shape_enabled: bool = False,
     successor_role_scoped_move_shape_bonus: float = 0.0,
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
@@ -723,6 +743,8 @@ def choose_move_details(
     env["blackboard"]["successor_affordance_layer_enabled"] = successor_affordance_layer_enabled
     env["blackboard"]["successor_contract_gate_enabled"] = successor_contract_gate_enabled
     env["blackboard"]["successor_role_license_enabled"] = successor_role_license_enabled
+    env["blackboard"]["successor_role_veto_penalty"] = successor_role_veto_penalty
+    env["blackboard"]["successor_stage0_drift_penalty"] = successor_stage0_drift_penalty
     env["blackboard"]["successor_role_scoped_move_shape_enabled"] = successor_role_scoped_move_shape_enabled
     env["blackboard"]["successor_role_scoped_move_shape_bonus"] = successor_role_scoped_move_shape_bonus
     env["blackboard"]["successor_role_scoped_move_shape_require_worst_reply"] = (
@@ -816,6 +838,8 @@ def choose_move_details(
         "forced_successor_available": bool(forced_candidates) if forced_successor_skill else None,
         "successor_contract_gate_enabled": successor_contract_gate_enabled,
         "successor_role_license_enabled": successor_role_license_enabled,
+        "successor_role_veto_penalty": successor_role_veto_penalty,
+        "successor_stage0_drift_penalty": successor_stage0_drift_penalty,
         "successor_role_scoped_move_shape_enabled": successor_role_scoped_move_shape_enabled,
         "successor_role_scoped_move_shape_bonus": successor_role_scoped_move_shape_bonus,
         "successor_role_scoped_move_shape_require_worst_reply": successor_role_scoped_move_shape_require_worst_reply,
@@ -903,6 +927,8 @@ def play_to_mate(
     successor_affordance_layer_enabled: bool = False,
     successor_contract_gate_enabled: bool = False,
     successor_role_license_enabled: bool = False,
+    successor_role_veto_penalty: float = 0.0,
+    successor_stage0_drift_penalty: float = 0.0,
     successor_role_scoped_move_shape_enabled: bool = False,
     successor_role_scoped_move_shape_bonus: float = 0.0,
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
@@ -968,6 +994,8 @@ def play_to_mate(
                 successor_affordance_layer_enabled=successor_affordance_layer_enabled,
                 successor_contract_gate_enabled=successor_contract_gate_enabled,
                 successor_role_license_enabled=successor_role_license_enabled,
+                successor_role_veto_penalty=successor_role_veto_penalty,
+                successor_stage0_drift_penalty=successor_stage0_drift_penalty,
                 successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
                 successor_role_scoped_move_shape_bonus=successor_role_scoped_move_shape_bonus,
                 successor_role_scoped_move_shape_require_worst_reply=(
@@ -1103,6 +1131,8 @@ def run_counterfactual_successor_sweep(
     successor_affordance_layer_enabled: bool,
     successor_contract_gate_enabled: bool,
     successor_role_license_enabled: bool,
+    successor_role_veto_penalty: float = 0.0,
+    successor_stage0_drift_penalty: float = 0.0,
     successor_role_scoped_move_shape_enabled: bool = False,
     successor_role_scoped_move_shape_bonus: float = 0.0,
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
@@ -1135,6 +1165,8 @@ def run_counterfactual_successor_sweep(
             successor_affordance_layer_enabled=successor_affordance_layer_enabled,
             successor_contract_gate_enabled=successor_contract_gate_enabled,
             successor_role_license_enabled=successor_role_license_enabled,
+            successor_role_veto_penalty=successor_role_veto_penalty,
+            successor_stage0_drift_penalty=successor_stage0_drift_penalty,
             successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
             successor_role_scoped_move_shape_bonus=successor_role_scoped_move_shape_bonus,
             successor_role_scoped_move_shape_require_worst_reply=(
@@ -1250,6 +1282,8 @@ def evaluate_landmark_progress(
     successor_affordance_layer_enabled: bool = False,
     successor_contract_gate_enabled: bool = False,
     successor_role_license_enabled: bool = False,
+    successor_role_veto_penalty: float = 0.0,
+    successor_stage0_drift_penalty: float = 0.0,
     successor_role_scoped_move_shape_enabled: bool = False,
     successor_role_scoped_move_shape_bonus: float = 0.0,
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
@@ -1316,6 +1350,8 @@ def evaluate_landmark_progress(
             successor_affordance_layer_enabled=successor_affordance_layer_enabled,
             successor_contract_gate_enabled=successor_contract_gate_enabled,
             successor_role_license_enabled=successor_role_license_enabled,
+            successor_role_veto_penalty=successor_role_veto_penalty,
+            successor_stage0_drift_penalty=successor_stage0_drift_penalty,
             successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
             successor_role_scoped_move_shape_bonus=successor_role_scoped_move_shape_bonus,
             successor_role_scoped_move_shape_require_worst_reply=(
@@ -1444,6 +1480,8 @@ def evaluate_landmark_progress(
                 successor_affordance_layer_enabled=successor_affordance_layer_enabled,
                 successor_contract_gate_enabled=successor_contract_gate_enabled,
                 successor_role_license_enabled=successor_role_license_enabled,
+                successor_role_veto_penalty=successor_role_veto_penalty,
+                successor_stage0_drift_penalty=successor_stage0_drift_penalty,
                 successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
                 successor_role_scoped_move_shape_bonus=successor_role_scoped_move_shape_bonus,
                 successor_role_scoped_move_shape_require_worst_reply=(
@@ -1581,6 +1619,12 @@ def evaluate_landmark_progress(
                     "score_after_role_scoped_move_shape_bonus": successor_summary.get(
                         "score_after_role_scoped_move_shape_bonus"
                     ),
+                    "visible_stage0_drift_penalty": successor_summary.get(
+                        "visible_stage0_drift_penalty"
+                    ),
+                    "visible_stage0_drift_reason": successor_summary.get(
+                        "visible_stage0_drift_reason"
+                    ),
                     "selected_skill_source": successor_summary.get("selected_skill_source"),
                     "successor_skills": successor_summary["skills"],
                     "visible_terms": successor_summary["visible_terms"],
@@ -1708,6 +1752,8 @@ def evaluate_landmark_progress(
                     successor_affordance_layer_enabled=successor_affordance_layer_enabled,
                     successor_contract_gate_enabled=successor_contract_gate_enabled,
                     successor_role_license_enabled=successor_role_license_enabled,
+                    successor_role_veto_penalty=successor_role_veto_penalty,
+                    successor_stage0_drift_penalty=successor_stage0_drift_penalty,
                     successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
                     successor_role_scoped_move_shape_bonus=successor_role_scoped_move_shape_bonus,
                     successor_role_scoped_move_shape_require_worst_reply=(
@@ -1802,6 +1848,8 @@ def evaluate_landmark_progress(
     stats["successor_affordance_layer_enabled"] = successor_affordance_layer_enabled
     stats["successor_contract_gate_enabled"] = successor_contract_gate_enabled
     stats["successor_role_license_enabled"] = successor_role_license_enabled
+    stats["successor_role_veto_penalty"] = successor_role_veto_penalty
+    stats["successor_stage0_drift_penalty"] = successor_stage0_drift_penalty
     stats["successor_role_scoped_move_shape_enabled"] = successor_role_scoped_move_shape_enabled
     stats["successor_role_scoped_move_shape_bonus"] = successor_role_scoped_move_shape_bonus
     stats["successor_role_scoped_move_shape_require_worst_reply"] = (
@@ -1996,6 +2044,10 @@ def main() -> None:
                         help="Enable opt-in visible contract mismatch penalty for successor skill ownership")
     parser.add_argument("--enable-successor-role-licenses", action="store_true",
                         help="Enable additive visible role-license bonuses for successor provider skills")
+    parser.add_argument("--successor-role-veto-penalty", type=float, default=0.0,
+                        help="Opt-in visible role-veto penalty applied only when another provider has a visible role license")
+    parser.add_argument("--successor-stage0-drift-penalty", type=float, default=0.0,
+                        help="Opt-in penalty for visibly unproductive stage0 king drift when edge-trap recovery is licensed")
     parser.add_argument("--enable-role-scoped-move-shapes", action="store_true",
                         help="Enable opt-in role-scoped visible move-shape bonuses")
     parser.add_argument("--role-scoped-move-shape-bonus", type=float, default=0.0,
@@ -2045,6 +2097,8 @@ def main() -> None:
         successor_affordance_layer_enabled=args.enable_successor_affordance_layer,
         successor_contract_gate_enabled=args.enable_successor_contract_gate,
         successor_role_license_enabled=args.enable_successor_role_licenses,
+        successor_role_veto_penalty=args.successor_role_veto_penalty,
+        successor_stage0_drift_penalty=args.successor_stage0_drift_penalty,
         successor_role_scoped_move_shape_enabled=args.enable_role_scoped_move_shapes,
         successor_role_scoped_move_shape_bonus=args.role_scoped_move_shape_bonus,
         successor_role_scoped_move_shape_require_worst_reply=args.require_role_scoped_move_shape_worst_reply,

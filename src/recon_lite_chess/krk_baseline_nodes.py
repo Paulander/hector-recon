@@ -638,6 +638,14 @@ def create_actuator_terminal(node_id=None):
                     blackboard=blackboard,
                     move_meta=move_meta[move],
                 )
+                score = _apply_visible_stage0_drift_penalty(
+                    score,
+                    board=board,
+                    move=move,
+                    skill_id=skill_id,
+                    blackboard=blackboard,
+                    move_meta=move_meta[move],
+                )
                 score = _apply_visible_rook_transfer_move_bias(
                     score,
                     board=board,
@@ -1386,6 +1394,83 @@ def _apply_visible_rook_transfer_move_bias(
     return adjusted
 
 
+def _apply_visible_stage0_drift_penalty(
+    score: float,
+    *,
+    board: chess.Board,
+    move: chess.Move,
+    skill_id: str | None,
+    blackboard: Dict[str, Any],
+    move_meta: Dict[str, Any],
+) -> float:
+    """Penalize a narrow class of visibly unproductive stage0 king drifts.
+
+    This is opt-in diagnostic scaffolding for the repeated post-fence failure
+    family. It is not a hidden router: the penalty only applies when visible
+    edge-trap recovery roles are already licensed and the stage0 candidate is a
+    king move that does not improve any visible king/support term.
+    """
+    penalty = float(blackboard.get("successor_stage0_drift_penalty", 0.0) or 0.0)
+    if penalty <= 0.0:
+        return score
+    if _canonical_krk_skill_id(skill_id) != "krk.stage0_basin":
+        return score
+    if not blackboard.get("successor_role_license_enabled", False):
+        return score
+
+    visible_terms = blackboard.get("krk_visible_terms", {})
+    if not (
+        bool(visible_terms.get("edge_trap_close_geometry", False))
+        and bool(visible_terms.get("edge_trap_shape_available", False))
+        and bool(visible_terms.get("fence_stable", False))
+        and bool(visible_terms.get("rook_safe", False))
+    ):
+        return score
+
+    edge_roles = _provider_role_licenses("krk.edge_trap_close", blackboard)
+    edge_role_ids = {
+        str(item.get("role_id") or item.get("successor") or "")
+        for item in edge_roles
+    }
+    if not edge_role_ids.intersection({
+        "krk.edge_trap_close_recovery",
+        "krk.edge_rook_transfer_recovery",
+        "krk.rook_transfer_after_fence",
+    }):
+        return score
+
+    audit = krk_move_shape_audit(board, move, blackboard, include_worst_reply=False)
+    move_terms = set(audit.get("move_shape_terms", []) or [])
+    post_terms = set(audit.get("post_move_terms", []) or [])
+    if "candidate_is_king_move" not in move_terms:
+        return score
+
+    progress_terms = {
+        "king_moves_toward_enemy",
+        "king_moves_toward_rook_support",
+        "white_king_distance_to_enemy_decreases",
+        "white_king_distance_to_rook_decreases",
+    }
+    if progress_terms.intersection(move_terms | post_terms):
+        return score
+
+    move_meta["visible_stage0_drift_penalty"] = penalty
+    move_meta["visible_stage0_drift_reason"] = {
+        "active_edge_roles": sorted(edge_role_ids),
+        "source_terms": [
+            "edge_trap_close_geometry",
+            "edge_trap_shape_available",
+            "fence_stable",
+            "rook_safe",
+            "candidate_is_king_move",
+        ],
+        "missing_progress_terms": sorted(progress_terms),
+        "move_shape_terms": sorted(move_terms),
+        "post_move_terms": sorted(post_terms),
+    }
+    return float(score) - penalty
+
+
 def _role_scoped_move_shape_licenses(
     audit: Dict[str, Any],
     role_licenses: list[Dict[str, Any]],
@@ -1408,6 +1493,7 @@ def _role_scoped_move_shape_licenses(
                 {
                     "rook_transfer_vertical",
                     "rook_to_edge_file",
+                    "rook_to_edge_rank",
                     "rook_to_checking_line",
                     "safe_check_created",
                 }
@@ -1415,9 +1501,9 @@ def _role_scoped_move_shape_licenses(
                 else {
                     "rook_transfer_vertical",
                     "rook_to_edge_file",
+                    "rook_to_edge_rank",
                     "rook_to_checking_line",
                     "safe_check_created",
-                    "box_area_decreases_after_move",
                 }
             )
             if (
@@ -1569,6 +1655,8 @@ def _eligible_successor_ids(affordances: Dict[str, Any], *, exclude: str | None 
 
 def _canonical_krk_skill_id(curriculum_label: str | None) -> str:
     raw = curriculum_label or "uncategorized"
+    if raw.startswith("krk."):
+        return raw
     normalized = "".join(ch if ch.isalnum() else "_" for ch in raw.lower()).strip("_")
     return f"krk.{normalized or 'uncategorized'}"
 

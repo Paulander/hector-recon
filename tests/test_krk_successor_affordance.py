@@ -10,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from recon_lite_chess.krk_baseline_nodes import (
     _apply_successor_affordance_bias,
+    _apply_visible_stage0_drift_penalty,
     _apply_visible_rook_transfer_move_bias,
     _compute_krk_context_terms,
     create_krk_context_terminal,
@@ -413,6 +414,54 @@ def test_visible_rook_transfer_move_bonus_prefers_matching_rook_transfer_shape()
     assert "visible_role_scoped_move_shape_bonus" not in horizontal_meta
 
 
+def test_edge_rook_recovery_requires_specific_transfer_shape_not_box_shrink_only():
+    board = chess.Board("5k2/7R/1K6/8/8/8/8/8 w - - 2 2")
+    blackboard = {
+        "successor_role_license_enabled": True,
+        "successor_role_scoped_move_shape_enabled": True,
+        "successor_role_scoped_move_shape_bonus": 0.05,
+        "krk_successor_provider_licenses": {
+            "krk.edge_trap_close": {
+                "krk.edge_rook_transfer_recovery": {
+                    "score": 1.0,
+                    "role_id": "krk.edge_rook_transfer_recovery",
+                    "provider_skill_ids": ["krk.edge_trap_close"],
+                    "source_terms": ["edge_rook_transfer_recovery_available", "rook_safe"],
+                    "missing_required_terms": [],
+                    "veto_terms": [],
+                    "contract_met": True,
+                }
+            }
+        },
+    }
+    box_shrink_only_meta = {}
+    edge_rank_meta = {}
+
+    box_shrink_only = _apply_visible_rook_transfer_move_bias(
+        0.0,
+        board=board,
+        move=chess.Move.from_uci("h7c7"),
+        skill_id="krk.edge_trap_close",
+        blackboard=blackboard,
+        move_meta=box_shrink_only_meta,
+    )
+    edge_rank = _apply_visible_rook_transfer_move_bias(
+        0.0,
+        board=board,
+        move=chess.Move.from_uci("h7h1"),
+        skill_id="krk.edge_trap_close",
+        blackboard=blackboard,
+        move_meta=edge_rank_meta,
+    )
+
+    assert box_shrink_only == 0.0
+    assert "visible_role_scoped_move_shape_bonus" not in box_shrink_only_meta
+    assert edge_rank > box_shrink_only
+    assert edge_rank_meta["visible_role_scoped_move_shape_bonus"] > 0.0
+    source_terms = edge_rank_meta["visible_role_scoped_move_shape_licenses"][0]["source_terms"]
+    assert "rook_to_edge_rank" in source_terms or "rook_transfer_vertical" in source_terms
+
+
 def test_visible_role_veto_can_suppress_provider_when_visible_alternative_exists():
     move_meta = {}
     adjusted = _apply_successor_affordance_bias(
@@ -453,6 +502,57 @@ def test_visible_role_veto_can_suppress_provider_when_visible_alternative_exists
     assert adjusted < 0.0
     assert move_meta["visible_role_veto_penalty"] == 10.0
     assert move_meta["visible_role_vetoes"][0]["veto_terms"] == ["edge_trap_shape_available"]
+
+
+def test_stage0_drift_penalty_targets_unproductive_king_drift_only():
+    board = chess.Board("1k6/7R/2K5/8/8/8/8/8 w - - 2 2")
+    blackboard = {
+        "successor_role_license_enabled": True,
+        "successor_stage0_drift_penalty": 6.0,
+        "krk_visible_terms": {
+            "edge_trap_close_geometry": True,
+            "edge_trap_shape_available": True,
+            "fence_stable": True,
+            "rook_safe": True,
+        },
+        "krk_successor_provider_licenses": {
+            "krk.edge_trap_close": {
+                "krk.edge_trap_close_recovery": {
+                    "score": 1.0,
+                    "role_id": "krk.edge_trap_close_recovery",
+                    "provider_skill_ids": ["krk.edge_trap_close"],
+                    "source_terms": ["edge_trap_close_geometry", "rook_safe"],
+                    "missing_required_terms": [],
+                    "veto_terms": [],
+                    "contract_met": True,
+                }
+            }
+        },
+    }
+    king_meta = {}
+    rook_meta = {}
+
+    king_score = _apply_visible_stage0_drift_penalty(
+        5.7,
+        board=board,
+        move=chess.Move.from_uci("c6b6"),
+        skill_id="krk.stage0_basin",
+        blackboard=blackboard,
+        move_meta=king_meta,
+    )
+    rook_score = _apply_visible_stage0_drift_penalty(
+        5.7,
+        board=board,
+        move=chess.Move.from_uci("h7b7"),
+        skill_id="krk.stage0_basin",
+        blackboard=blackboard,
+        move_meta=rook_meta,
+    )
+
+    assert king_score < 0.0
+    assert king_meta["visible_stage0_drift_penalty"] == 6.0
+    assert rook_score == 5.7
+    assert "visible_stage0_drift_penalty" not in rook_meta
 
 
 def test_move_shape_audit_emits_current_candidate_post_and_worst_reply_terms():
