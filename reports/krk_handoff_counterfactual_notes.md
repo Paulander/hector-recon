@@ -179,3 +179,33 @@ Interpretation:
 - The new roles reduced some diagnostic noise by replacing low/maintenance ambiguity with visible edge-trap support.
 - They did not improve conversion yet because the selected edge-trap provider still chooses a non-converting first move in at least one family.
 - The next likely need is finer visible terms for *which rook transfer* is appropriate, not just whether a safe rook transfer exists.
+
+## Slice 15/16 Move-Shape Bias And Explicit Veto Audit
+
+An experimental move-shape refinement was added behind role-license mode:
+
+- Edge-trap providers may receive visible move-shape support when an active rook-transfer role exists and the candidate move itself is a safe rook transfer.
+- Providers with explicit active visible role vetoes may be penalized when another provider has a visible role license.
+
+The first aggressive default was intentionally tested and failed:
+
+- Aggressive role-veto/move-shape defaults: `7 mate / 18 max_plies`.
+- This is worse than the Slice 14 role-license baseline: `17 mate / 8 max_plies`.
+
+Interpretation:
+
+- The explicit-veto idea is ReCoN-faithful, but it is too blunt as a default causal mechanism.
+- The move-shape support also needs finer evidence before it should steer normal play.
+- These mechanisms were therefore made opt-in by setting their default weights to `0.0`.
+
+Safe-default rerun:
+
+- Slice 16 safe default role-license mode: `17 mate / 8 max_plies`.
+- Selected successors matched Slice 14: `krk.edge_trap_close` `7`, `krk.stage0_basin` `18`.
+- Role-license source count matched Slice 14: `visible_role_license=3`, `actuator_score=22`.
+
+Current conclusion:
+
+- Keep visible rook-transfer terms and role contracts.
+- Keep explicit role veto and move-shape bias available for controlled experiments only.
+- Do not make either a default causal path until paired diagnostics show no conversion regression.

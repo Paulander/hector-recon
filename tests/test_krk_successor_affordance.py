@@ -10,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from recon_lite_chess.krk_baseline_nodes import (
     _apply_successor_affordance_bias,
+    _apply_visible_rook_transfer_move_bias,
     _compute_krk_context_terms,
     create_krk_context_terminal,
     create_krk_successor_affordance,
@@ -363,3 +364,89 @@ def test_rook_transfer_role_can_license_multiple_edge_trap_providers():
     for provider in providers:
         licenses = env["blackboard"]["krk_successor_provider_licenses"][provider]
         assert licenses["krk.rook_transfer_after_fence"]["contract_met"] is True
+
+
+def test_visible_rook_transfer_move_bonus_prefers_matching_rook_transfer_shape():
+    board = chess.Board("5k2/7R/1K6/8/8/8/8/8 w - - 2 2")
+    blackboard = {
+        "successor_role_license_enabled": True,
+        "successor_rook_transfer_move_bonus": 0.05,
+        "krk_successor_provider_licenses": {
+            "krk.edge_trap_close": {
+                "krk.rook_transfer_after_fence": {
+                    "score": 1.0,
+                    "role_id": "krk.rook_transfer_after_fence",
+                    "provider_skill_ids": ["krk.edge_trap_close"],
+                    "source_terms": ["rook_transfer_after_fence_available", "rook_safe"],
+                    "missing_required_terms": [],
+                    "veto_terms": [],
+                    "contract_met": True,
+                }
+            }
+        },
+    }
+    vertical_meta = {}
+    horizontal_meta = {}
+
+    vertical = _apply_visible_rook_transfer_move_bias(
+        0.0,
+        board=board,
+        move=chess.Move.from_uci("h7h1"),
+        skill_id="krk.edge_trap_close",
+        blackboard=blackboard,
+        move_meta=vertical_meta,
+    )
+    horizontal = _apply_visible_rook_transfer_move_bias(
+        0.0,
+        board=board,
+        move=chess.Move.from_uci("h7c7"),
+        skill_id="krk.edge_trap_close",
+        blackboard=blackboard,
+        move_meta=horizontal_meta,
+    )
+
+    assert vertical > horizontal
+    assert "same_file_rook_transfer" in vertical_meta["visible_rook_transfer_move_terms"]
+    assert "visible_rook_transfer_move_bonus" not in horizontal_meta
+
+
+def test_visible_role_veto_can_suppress_provider_when_visible_alternative_exists():
+    move_meta = {}
+    adjusted = _apply_successor_affordance_bias(
+        5.7,
+        skill_id="krk.stage0_basin",
+        curriculum_label="stage0_basin",
+        blackboard={
+            "successor_role_license_enabled": True,
+            "successor_role_veto_penalty": 10.0,
+            "krk_successor_provider_licenses": {
+                "krk.stage0_basin": {
+                    "krk.stage0_king_approach_after_fence": {
+                        "score": 0.0,
+                        "role_id": "krk.stage0_king_approach_after_fence",
+                        "provider_skill_ids": ["krk.stage0_basin"],
+                        "source_terms": ["rook_safe"],
+                        "missing_required_terms": [],
+                        "veto_terms": ["edge_trap_shape_available"],
+                        "contract_met": False,
+                    }
+                },
+                "krk.edge_trap_close": {
+                    "krk.rook_transfer_after_fence": {
+                        "score": 1.0,
+                        "role_id": "krk.rook_transfer_after_fence",
+                        "provider_skill_ids": ["krk.edge_trap_close"],
+                        "source_terms": ["rook_transfer_after_fence_available"],
+                        "missing_required_terms": [],
+                        "veto_terms": [],
+                        "contract_met": True,
+                    }
+                },
+            },
+        },
+        move_meta=move_meta,
+    )
+
+    assert adjusted < 0.0
+    assert move_meta["visible_role_veto_penalty"] == 10.0
+    assert move_meta["visible_role_vetoes"][0]["veto_terms"] == ["edge_trap_shape_available"]

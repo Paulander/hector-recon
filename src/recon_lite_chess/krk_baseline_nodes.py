@@ -638,6 +638,14 @@ def create_actuator_terminal(node_id=None):
                     blackboard=blackboard,
                     move_meta=move_meta[move],
                 )
+                score = _apply_visible_rook_transfer_move_bias(
+                    score,
+                    board=board,
+                    move=move,
+                    skill_id=skill_id,
+                    blackboard=blackboard,
+                    move_meta=move_meta[move],
+                )
 
             scores[move] = score
         
@@ -1055,6 +1063,16 @@ def _apply_successor_affordance_bias(
             }
             for item in role_licenses
         ]
+    vetoes = _provider_role_vetoes(canonical, blackboard)
+    if (
+        blackboard.get("successor_role_license_enabled", False)
+        and vetoes
+        and _role_licensed_alternative_exists(canonical, blackboard)
+    ):
+        penalty = float(blackboard.get("successor_role_veto_penalty", 0.0))
+        adjusted -= penalty
+        move_meta["visible_role_veto_penalty"] = penalty
+        move_meta["visible_role_vetoes"] = vetoes
     if _visible_contract_gate_applies(canonical, payload, affordances, blackboard):
         penalty = float(blackboard.get("successor_contract_mismatch_penalty", 10.0))
         adjusted -= penalty
@@ -1071,6 +1089,78 @@ def _apply_successor_affordance_bias(
     move_meta["score_after_role_bonus"] = adjusted
     move_meta["visible_successor_affordance"] = payload
     return adjusted
+
+
+def _apply_visible_rook_transfer_move_bias(
+    score: float,
+    *,
+    board: chess.Board,
+    move: chess.Move,
+    skill_id: str | None,
+    blackboard: Dict[str, Any],
+    move_meta: Dict[str, Any],
+) -> float:
+    """Apply visible move-shape support for active rook-transfer roles.
+
+    This is intentionally narrow: it only applies in role-license mode, only to
+    edge-trap providers that already have a visible rook-transfer license, and
+    only when the candidate move itself is a safe rook transfer. The role
+    licenses the provider; this bonus helps distinguish which provider move
+    matches the visible role geometry.
+    """
+    if not blackboard.get("successor_role_license_enabled", False):
+        return score
+    if skill_id not in {
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo",
+    }:
+        return score
+    role_licenses = _provider_role_licenses(skill_id, blackboard)
+    active_transfer_roles = {
+        str(item.get("role_id") or item.get("successor") or "")
+        for item in role_licenses
+        if str(item.get("role_id") or item.get("successor") or "")
+        in {"krk.rook_transfer_after_fence", "krk.edge_rook_transfer_recovery"}
+    }
+    if not active_transfer_roles:
+        return score
+    if move.from_square not in board.pieces(chess.ROOK, chess.WHITE):
+        return score
+    if not _rook_safe_after_white_move(board, move):
+        return score
+
+    from_file = chess.square_file(move.from_square)
+    from_rank = chess.square_rank(move.from_square)
+    to_file = chess.square_file(move.to_square)
+    to_rank = chess.square_rank(move.to_square)
+    same_file = from_file == to_file and from_rank != to_rank
+    same_rank = from_rank == to_rank and from_file != to_file
+    edge_dest = to_file in (0, 7) or to_rank in (0, 7)
+    distance = max(abs(to_file - from_file), abs(to_rank - from_rank))
+    if distance < 2 or (not same_file and not same_rank):
+        return score
+
+    shape_score = 0.0
+    shape_terms = []
+    if same_file:
+        shape_score += 1.0
+        shape_terms.append("same_file_rook_transfer")
+    if edge_dest:
+        shape_score += 0.5
+        shape_terms.append("edge_destination")
+    if same_rank and edge_dest:
+        shape_score += 0.25
+        shape_terms.append("same_rank_edge_transfer")
+    if not shape_terms:
+        return score
+
+    weight = float(blackboard.get("successor_rook_transfer_move_bonus", 0.0))
+    bonus = weight * shape_score
+    move_meta["visible_rook_transfer_move_bonus"] = bonus
+    move_meta["visible_rook_transfer_move_terms"] = shape_terms
+    move_meta["visible_rook_transfer_roles"] = sorted(active_transfer_roles)
+    return float(score) + bonus
 
 
 def _provider_role_licenses(provider_id: str, blackboard: Dict[str, Any]) -> list[Dict[str, Any]]:
@@ -1094,6 +1184,40 @@ def _provider_role_licenses(provider_id: str, blackboard: Dict[str, Any]) -> lis
         if bool(item.get("contract_met", False)) and float(item.get("score", 0.0) or 0.0) > 0.0:
             visible.append(item)
     return visible
+
+
+def _provider_role_vetoes(provider_id: str, blackboard: Dict[str, Any]) -> list[Dict[str, Any]]:
+    licenses = blackboard.get("krk_successor_provider_licenses", {}).get(provider_id, {})
+    if isinstance(licenses, dict):
+        iterable = licenses.values()
+    elif isinstance(licenses, list):
+        iterable = licenses
+    else:
+        return []
+    vetoes: list[Dict[str, Any]] = []
+    for item in iterable:
+        if not isinstance(item, dict):
+            continue
+        active_veto = list(item.get("veto_terms", []) or [])
+        if active_veto:
+            vetoes.append({
+                "role_id": str(item.get("role_id") or item.get("successor") or ""),
+                "veto_terms": active_veto,
+                "source_terms": list(item.get("source_terms", []) or []),
+            })
+    return vetoes
+
+
+def _role_licensed_alternative_exists(provider_id: str, blackboard: Dict[str, Any]) -> bool:
+    provider_licenses = blackboard.get("krk_successor_provider_licenses", {})
+    if not isinstance(provider_licenses, dict):
+        return False
+    for other_provider, _ in provider_licenses.items():
+        if other_provider == provider_id:
+            continue
+        if _provider_role_licenses(str(other_provider), blackboard):
+            return True
+    return False
 
 
 def _visible_contract_gate_applies(
