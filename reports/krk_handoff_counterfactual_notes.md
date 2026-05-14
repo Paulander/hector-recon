@@ -600,3 +600,151 @@ Next diagnostic target:
 
 - Capture full trace for failing `state.394` duplicates directly inside the 25-sample landmark diagnostic when conversion fails.
 - Compare failing trace against the successful Slice 27 trace to locate the first divergent White move or Black reply.
+
+## Slice 29 Horizon Mate-In-One Classification
+
+The Stage 5 landmark diagnostic now records end-of-horizon state facts for max-plies playouts:
+
+- `final_turn`
+- `final_mate_in_one_available`
+- failure class `horizon_mate_in_one`
+
+Artifacts:
+
+- `slice29_horizon_mate_in_one_stage5_25.json`
+- `slice29_state394_horizon_traces.jsonl`
+
+Result:
+
+- One-ply objective remains solved: `25/25 improved`, `25/25 optimal`.
+- Bounded conversion remains `19 mate / 6 max_plies` at `--playout-max-plies 20`.
+- Shadow triggers now distinguish:
+  - `repeated_conversion_failure`: 6
+  - `route_conflict`: 6
+  - `horizon_mate_in_one`: 5
+
+Failure class split:
+
+- `5` cases: `horizon_mate_in_one + successor_conflict`
+- `1` case: `successor_conflict`
+
+Targeted `state.394b71e02d00` traces:
+
+- All five `state.394` max-plies cases end at:
+  - `8/5K1k/8/8/8/8/8/2R5 w - - 20 11`
+  - White to move
+  - mate-in-one available
+
+Interpretation:
+
+- The apparent `state.394` failures are horizon misses under a 20-ply cap, not true conversion failures.
+- This matches Slice 27, where the same family converted in 19 plies after the post-reply state, but the full diagnostic includes the initial Stage 5 move and Black reply inside the same 20-ply budget.
+- For diagnostics, `max_plies` should now be read with the horizon marker. A max-plies playout ending with White-to-move mate-in-one is a near-pass/measurement-boundary case, not evidence for missing first-move selection or missing KRK capacity.
+
+Remaining real bounded failure:
+
+- `state.3d73682bdbe3`
+- Start FEN: `4k3/R7/K7/8/8/8/8/8 w - - 0 1`
+- Stage 5 move/reply: `a7h7`, Black `e8f8`
+- Post-reply FEN: `5k2/7R/K7/8/8/8/8/8 w - - 2 2`
+- Selected successor: `krk.edge_trap_close`
+- Failure class: `successor_conflict`
+- Route margin: approximately `0.00118`
+
+Next implication:
+
+- Do not add broader first-move pressure for `state.394`; it is already near conversion and only crosses the cap boundary.
+- Focus the next diagnostic/implementation slice on `state.3d73`: legal-first coverage, horizon extension sensitivity, and whether any visible move-shape or continuation trace can distinguish a converting route from the low-margin conflict.
+
+## Slice 31 Final-Ply Mate Accounting
+
+While checking the +1 horizon run, the diagnostic exposed an accounting issue:
+
+- If White delivered checkmate on the final permitted ply, `play_to_mate` exited the loop and returned `max_plies` before checking the terminal board.
+- The diagnostic now checks terminal mate/draw state once more after the loop before reporting `max_plies`.
+- This changes diagnostic conversion accounting only; it does not change routing, topology, or move selection.
+
+Artifacts:
+
+- `slice31_horizon_plus_one_fixed_stage5_25.json`
+- `slice31_horizon_plus_one_fixed_stage5_25_analysis.md`
+
+Result at `--playout-max-plies 21`:
+
+- One-ply objective: `25/25 improved`, `25/25 optimal`
+- Conversion: `24 mate / 1 max_plies`
+- Shadow triggers:
+  - `repeated_conversion_failure`: 1
+  - `route_conflict`: 1
+
+Remaining bounded failure:
+
+- `state.3d73682bdbe3`
+- Start FEN: `4k3/R7/K7/8/8/8/8/8 w - - 0 1`
+- Stage 5 move/reply: `a7h7`, Black `e8f8`
+- Post-reply FEN: `5k2/7R/K7/8/8/8/8/8 w - - 2 2`
+- Selected successor: `krk.edge_trap_close`
+- Failure class: `successor_conflict`
+- Best/second score: approximately `0.17334 / 0.17216`
+- Route margin: approximately `0.00118`
+
+Interpretation:
+
+- The previous `19/25` conversion result at 20 plies was mostly a horizon/reporting boundary, not a real KRK capability gap.
+- With one extra ply and corrected final-ply mate accounting, only one of the 25 sampled Stage 5 cases remains unresolved.
+- The remaining problem is compact and inspectable: a single low-margin `state.3d73` route conflict.
+
+Next target:
+
+- Run a targeted legal-first and continuation trace for `state.3d73`.
+- Determine whether the non-converting result is another horizon artifact, a legal-first selection gap, or a genuinely missing continuation role/move-shape.
+
+## Slice 32 State 3d73 Legal-First And Continuation Audit
+
+Artifact:
+
+- `slice32_state3d73_legal_provider_trace.json`
+- `slice32_state3d73_legal_steps.jsonl`
+
+Target state:
+
+- `state.3d73682bdbe3`
+- Post-reply FEN: `5k2/7R/K7/8/8/8/8/8 w - - 2 2`
+- Runtime first successor move: `h7c7`
+
+Legal-first result at `--playout-max-plies 21`:
+
+- Tested legal moves: 19
+- `mate`: 0
+- `max_plies`: 16
+- `draw`: 3
+
+Draw moves:
+
+- `h7e7`
+- `h7f7`
+- `h7g7`
+
+Continuation trace after runtime first move `h7c7`:
+
+- Result: `max_plies`
+- Final FEN: `5k2/8/K7/8/4R3/8/8/8 b - - 23 12`
+- The trace enters a repeated rook oscillation pattern:
+  - `h4e4`
+  - `e4h4`
+  - repeated while Black oscillates `f8g8` / `g8f8`
+
+Interpretation:
+
+- `state.3d73` is not a simple first-move selection gap under the current 21-ply continuation policy: no legal first move converted in the audit.
+- The visible graph reaches a stagnating rook-transfer loop after the initial edge-trap move.
+- This is a better target for a stagnation/loop detector and later post-fence continuation ontology than for more provider-level score pressure.
+
+Implementation follow-up:
+
+- Add non-causal playout stagnation summaries:
+  - repeated abstract state count
+  - max state repetition
+  - reversible rook-move oscillation pairs
+- Add failure class `rook_oscillation_loop` and shadow trigger `stagnation_loop`.
+- Keep this diagnostic-only; do not let loop detection suppress moves or route causally yet.

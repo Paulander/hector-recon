@@ -478,10 +478,16 @@ def _classify_successor_failure(
     conversion_result: str,
     successor_summary: dict,
     high_score_threshold: float,
+    final_mate_in_one_available: bool = False,
+    rook_oscillation_detected: bool = False,
 ) -> list[str]:
     if not local_confirmed or conversion_result == "mate":
         return []
     classes: list[str] = []
+    if conversion_result == "max_plies" and final_mate_in_one_available:
+        classes.append("horizon_mate_in_one")
+    if conversion_result == "max_plies" and rook_oscillation_detected:
+        classes.append("rook_oscillation_loop")
     selected = successor_summary.get("selected_skill")
     best_score = successor_summary.get("best_score")
     visible_terms = successor_summary.get("visible_terms", {}) or {}
@@ -517,6 +523,8 @@ def _trigger_priority(trigger: str) -> int:
         "handoff_gap": 3,
         "maintenance_needed_but_not_detected": 3,
         "high_score_conversion_failure": 4,
+        "horizon_mate_in_one": 4,
+        "rook_oscillation_loop": 4,
         "route_conflict": 5,
         "low_affordance_state": 6,
     }
@@ -529,6 +537,8 @@ def _trigger_for_failure_class(failure_class: str) -> str | None:
         "successor_conflict": "route_conflict",
         "same_skill_reselected_after_satisfaction": "same_skill_loop_after_confirmation",
         "selected_successor_miscalibrated": "high_score_conversion_failure",
+        "horizon_mate_in_one": "horizon_mate_in_one",
+        "rook_oscillation_loop": "stagnation_loop",
         "low_support_fallback": "low_affordance_state",
         "maintenance_needed_but_not_detected": "maintenance_needed_but_not_detected",
     }
@@ -960,6 +970,8 @@ def play_to_mate(
             "engine_ticks_total": int(engine_perf.get("engine_ticks_total", 0)),
             "engine_ticks_max": int(engine_perf.get("engine_ticks_max", 0)),
             "engine_early_stop_count": int(engine_perf.get("engine_early_stop_count", 0)),
+            "final_turn": "white" if b.turn == chess.WHITE else "black",
+            "final_mate_in_one_available": _mate_in_one_available(b),
         })
         if first_reply is not None:
             payload["first_reply"] = first_reply
@@ -968,6 +980,7 @@ def play_to_mate(
         if trace:
             payload["final_fen"] = b.fen()
             payload["trace"] = events
+            payload["stagnation_summary"] = _playout_stagnation_summary(events)
             if trace_truncated_events:
                 payload["trace_truncated_events"] = trace_truncated_events
         return payload
@@ -1094,7 +1107,23 @@ def play_to_mate(
                 "is_stalemate": b.is_stalemate(),
             })
 
+    if b.is_checkmate():
+        return finish("mate", max_plies)
+    if b.is_stalemate() or b.is_insufficient_material():
+        return finish("draw", max_plies)
     return finish("max_plies", max_plies)
+
+
+def _move_checkmates(board: chess.Board, move: chess.Move) -> bool:
+    b = board.copy(stack=False)
+    b.push(move)
+    return b.is_checkmate()
+
+
+def _mate_in_one_available(board: chess.Board) -> bool:
+    if board.turn != chess.WHITE:
+        return False
+    return any(_move_checkmates(board, move) for move in board.legal_moves)
 
 
 def _compact_playout_trace(trace: list[dict]) -> list[dict]:
@@ -1139,6 +1168,67 @@ def _compact_playout_trace(trace: list[dict]) -> list[dict]:
             })
         compact.append(item)
     return compact
+
+
+def _fen_state_key(fen: str) -> str | None:
+    try:
+        board = chess.Board(fen)
+    except Exception:
+        return None
+    return f"{board.board_fen()} {'w' if board.turn == chess.WHITE else 'b'}"
+
+
+def _reverse_uci(move_a: str, move_b: str) -> bool:
+    if len(move_a) < 4 or len(move_b) < 4:
+        return False
+    return move_a[:2] == move_b[2:4] and move_a[2:4] == move_b[:2]
+
+
+def _playout_stagnation_summary(trace: list[dict]) -> dict:
+    state_counts: dict[str, int] = {}
+    white_moves: list[str] = []
+    reverse_pairs: dict[str, int] = {}
+    for event in trace:
+        if not isinstance(event, dict):
+            continue
+        for key in ("fen", "resulting_fen"):
+            fen = event.get(key)
+            if isinstance(fen, str):
+                state_key = _fen_state_key(fen)
+                if state_key:
+                    state_counts[state_key] = state_counts.get(state_key, 0) + 1
+        if event.get("turn") == "white" and isinstance(event.get("move"), str):
+            white_moves.append(str(event["move"]))
+    for previous, current in zip(white_moves, white_moves[1:]):
+        if _reverse_uci(previous, current):
+            pair = " / ".join(sorted([previous, current]))
+            reverse_pairs[pair] = reverse_pairs.get(pair, 0) + 1
+    repeated_states = {
+        state: count
+        for state, count in state_counts.items()
+        if count >= 2
+    }
+    top_repeated = sorted(
+        repeated_states.items(),
+        key=lambda item: (-item[1], item[0]),
+    )[:5]
+    top_reverse_pairs = sorted(
+        reverse_pairs.items(),
+        key=lambda item: (-item[1], item[0]),
+    )[:5]
+    return {
+        "max_state_repetition": max(state_counts.values(), default=0),
+        "repeated_state_count": len(repeated_states),
+        "repeated_state_examples": [
+            {"state": state, "count": count}
+            for state, count in top_repeated
+        ],
+        "rook_oscillation_detected": bool(top_reverse_pairs),
+        "rook_oscillation_pairs": [
+            {"moves": pair, "count": count}
+            for pair, count in top_reverse_pairs
+        ],
+    }
 
 
 def select_eval_position(
@@ -1627,6 +1717,10 @@ def evaluate_landmark_progress(
                 conversion_result=key,
                 successor_summary=successor_summary,
                 high_score_threshold=high_successor_score_threshold,
+                final_mate_in_one_available=bool(result.get("final_mate_in_one_available", False)),
+                rook_oscillation_detected=bool(
+                    (result.get("stagnation_summary") or {}).get("rook_oscillation_detected")
+                ),
             )
             post_reply_packet = HandoffPacket.create(
                 from_skill=parent_skill,
@@ -1700,6 +1794,9 @@ def evaluate_landmark_progress(
                     "missing_afforded_skills": successor_summary["missing_afforded_skills"],
                     "playout_result": key,
                     "plies": int(result.get("plies", 0) or 0),
+                    "final_turn": result.get("final_turn"),
+                    "final_mate_in_one_available": result.get("final_mate_in_one_available"),
+                    "stagnation_summary": result.get("stagnation_summary"),
                     "stage_filter": stage_filter,
                     **reply_geometry,
                 },
@@ -1762,6 +1859,9 @@ def evaluate_landmark_progress(
                     "playout_result": key,
                     "max_plies": playout_max_plies,
                     "plies": int(result.get("plies", 0) or 0),
+                    "final_turn": result.get("final_turn"),
+                    "final_mate_in_one_available": result.get("final_mate_in_one_available"),
+                    "stagnation_summary": result.get("stagnation_summary"),
                 },
                 achieved=["conversion_to_mate"] if conversion_status == "passed" else [],
                 failed=[] if conversion_status == "passed" else ["conversion_to_mate"],
@@ -1913,6 +2013,9 @@ def evaluate_landmark_progress(
                     "trace": _compact_playout_trace(result.get("trace", []) or []),
                     "trace_truncated_events": result.get("trace_truncated_events", 0),
                     "final_fen": result.get("final_fen"),
+                    "final_turn": result.get("final_turn"),
+                    "final_mate_in_one_available": result.get("final_mate_in_one_available"),
+                    "stagnation_summary": result.get("stagnation_summary"),
                 }
                 stats["target_failure_traces"].append(record)
                 if target_failure_traces_output is not None:
