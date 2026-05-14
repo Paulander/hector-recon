@@ -818,3 +818,63 @@ Next likely target:
 - Compare licensed loop-breaking moves by downstream outcome over a longer horizon.
 - Add a non-causal `loop_breaking_moves_that_convert` audit for the detected loop state, not only for the original post-reply state.
 - Only after that, consider a stricter visible post-break continuation role or train a small `post_stagnation_break_continuation` skill from the loop-break examples.
+
+## Slice 36: Post-Break Continuation Audit
+
+Implemented a non-causal targeted audit for the first state where `krk.stagnation_breaker_affordance` fires.
+
+Target state:
+
+```text
+5k2/8/K7/8/7R/8/8/8 w - - 18 10
+```
+
+Bounded post-break sweep:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice36_state3d73_post_break_sweep_bounded.json
+trace:    snapshots/krk_triplet_pipeline/handoff_observability_check/slice36_state3d73_post_break_trace_bounded.jsonl
+horizons: 21, 30, 40
+audited visible loop-breaking candidates: 6
+```
+
+Results:
+
+```text
+21 plies: 0 mate / 6 max_plies
+30 plies: 0 mate / 6 max_plies
+40 plies: 2 mate / 4 max_plies
+converting moves at 40 plies: a6a7, a6b7
+runtime-selected break h4d4: max_plies through 40, re-enters/no-progress oscillation
+```
+
+Unchanged Stage 5 regressions:
+
+```text
+slice36_stage5_25_unchanged_regression.json:
+  local:      25/25 improved, 25/25 optimal
+  conversion: 19 mate / 6 max_plies at 20 plies
+
+slice36_stage5_100_unchanged_regression.json:
+  local:      100/100 improved, 100/100 optimal
+  conversion: 65 mate / 35 max_plies at 20 plies
+```
+
+Interpretation:
+
+```text
+The remaining state is not fixed by increasing the loop-breaker bonus.
+The loop-breaker can identify and license safe loop-breaking moves, but the selected break is not reliably followed by conversion.
+Some loop-breaking moves convert only at longer horizon, so this is partly a post-break continuation/horizon problem rather than missing local Stage 5 capacity.
+```
+
+Recommended next causal shape:
+
+```text
+detect loop
+-> break loop
+-> confirm loop was broken and confinement/safety were preserved
+-> request a visible post-stagnation-break continuation role
+```
+
+Do not train yet from this single family. If a full post-break sweep shows that no existing provider can reliably convert after a good break, then a narrow `krk.post_stagnation_break_continuation` skill becomes justified.
