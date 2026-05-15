@@ -1352,3 +1352,74 @@ The visible successor/role-scoped move-shape/stagnation/post-break/stage0-drift 
 This is still opt-in and should not be treated as a default runtime path until cross-stage and non-Stage-5 regressions are run.
 The next useful validation is either 1000 samples or cross-stage checks against Stage 1, Stage 2C, KPK->KQK bridge behavior, and old M1-M4 learning tests.
 ```
+
+## Slice 45: Cross-Stage Non-Regression Validation
+
+After the 500-sample Stage 5 validation, ran cross-stage and bridge regressions before considering the opt-in path stable.
+
+Bridge/subgraph/KRK tests:
+
+```text
+tests:
+  test_subgraph_delegation.py
+  test_goal_hierarchy.py
+  test_endgame_components.py
+  test_tactics_subgraph.py
+  test_handoff_analysis.py
+  test_krk_landmarks.py
+  test_krk_baseline_runtime.py
+result: 58 passed
+note: pytest still reports pre-existing warnings for test_subgraph_delegation functions returning bool
+```
+
+Stage 1 backchain:
+
+```text
+topology: snapshots/krk_triplet_pipeline/handoff_observability_check/slice14_role_ontology_topology.json
+learner: snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/final_learner.pkl
+samples: 100
+result: 100/100 improved, 100/100 optimal, 0 worsened, 0 no-move
+avg reward: 0.4606
+```
+
+Stage 4 wrong-tempo:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice45_stage4_wrong_tempo_100_seed7_h40.json
+label: edge_trap_wrong_tempo
+samples: 100
+seed: 7
+horizon: 40 plies
+local: 100/100 improved, 100/100 optimal
+conversion: 100 mate / 0 max_plies
+shadow candidates: 0
+wall time: 80.37s
+```
+
+Stage 5 different seed:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice45_stage5_fence_100_seed11_h40.json
+label: fence_established
+samples: 100
+seed: 11
+horizon: 40 plies
+local: 100/100 improved, 100/100 optimal
+conversion: 100 mate / 0 max_plies
+shadow candidates: 0
+wall time: 145.27s
+```
+
+M1-M4 preservation suite remains green:
+
+```text
+tests: architecture preservation, consolidation, plasticity, plasticity integration, routing contracts, shadow queue, KRK successor affordance, diagnostic early stop, counterfactual sweep
+result: 96 passed
+```
+
+Interpretation:
+
+```text
+The opt-in successor/role/move-shape/stagnation/post-break/stage0-drift path now passes Stage 5 at 500 samples, Stage 4 wrong-tempo at 100 samples, Stage 1 backchain at 100 samples, KPK->KQK bridge/subgraph tests, and M1-M4 learning preservation tests.
+It is reasonable to treat this as the current stable experimental handoff-composition configuration, while still keeping it opt-in until default-policy implications are reviewed.
+```
