@@ -1320,3 +1320,35 @@ Parallel validation plus diagnostic caches makes larger Stage 5 sweeps practical
 The 100-sample parallel validation finishes in ~2.25 minutes instead of ~35.7 minutes uncached/profiled or ~6.7 minutes cached/profiled single-process.
 The next practical validation is 500 or 1000 samples with --enable-diagnostic-caches and --parallel-workers sized to available CPU cores.
 ```
+
+## Slice 44: 500-Sample Parallel Stage 5 Validation
+
+Ran the first large cached parallel Stage 5 validation:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice44_parallel_stage5_500_seed7_h40.json
+samples: 500
+seed: 7
+workers: 8
+chunk_size: 25
+horizon: 40 plies
+black policy: adversarial
+wall time: 397.14s
+```
+
+Result:
+
+```text
+local: 500/500 improved, 500/500 optimal
+conversion: 500 mate / 0 max_plies
+shadow candidates: 0
+semantic alignment: 500 reward_visible_fence_aligned_survived
+```
+
+Interpretation:
+
+```text
+The visible successor/role-scoped move-shape/stagnation/post-break/stage0-drift configuration survives a materially larger Stage 5 curriculum validation.
+This is still opt-in and should not be treated as a default runtime path until cross-stage and non-Stage-5 regressions are run.
+The next useful validation is either 1000 samples or cross-stage checks against Stage 1, Stage 2C, KPK->KQK bridge behavior, and old M1-M4 learning tests.
+```
