@@ -1944,3 +1944,123 @@ Likely options:
 
 This should be reviewed before implementing a broad preservation mechanism.
 ```
+
+## Slice 54-56: Frozen Providers, Stage 6 Overlay, And Promotion Gate
+
+The preservation mechanism was implemented as a versioned frozen-provider plus overlay-stage compiler path.
+
+New provider metadata is attached to compiled skill nodes, actuator legs, and actuator terminals:
+
+```text
+skill_id
+curriculum_label
+provider_version
+source_stage
+source_checkpoint
+validated_profile
+frozen_provider
+overlay_provider
+guardrail_status
+```
+
+The Stage 5 validated topology is now treated as a frozen base, and the Stage 6 learner is compiled as an additive overlay:
+
+```text
+base:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/topology/krk_entry_topology.json
+
+overlay learner:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support/baseline/final_learner.pkl
+
+overlay label:
+  drive_to_edge
+
+output:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json
+```
+
+The overlay compiler:
+
+```text
+keeps frozen Stage 5 provider nodes unchanged
+extracts only drive_to_edge actuators from the Stage 6 learner
+adds them under skill.krk.drive_to_edge with provider_version = stage6_overlay_v1
+records provider_preservation.v1 metadata
+marks promotion_status = overlay_candidate until guardrails pass
+```
+
+Compiled overlay topology summary:
+
+```text
+nodes: 286
+edges: 866
+frozen_base_provider_count: 102
+overlay_provider_count: 10
+overlay_actuators_added:
+  actuator_34
+  actuator_35
+  actuator_36
+```
+
+Validation results:
+
+```text
+Stage 6 drive_to_edge on composed overlay:
+  artifact: stage6_drive_overlay_300_seed7_h40.json
+  conversion: 300 mate / 0 max_plies
+  shadow candidates: 0
+
+Stage 5 fence on composed overlay:
+  artifact: stage5_fence_overlay_300_seed7_h40.json
+  conversion: 300 mate / 0 max_plies
+  shadow candidates: 0
+
+Stage 5 fence on frozen Stage 5 base control:
+  artifact: stage5_fence_stage5_base_control_300_seed7_h40.json
+  conversion: 300 mate / 0 max_plies
+```
+
+This confirms the main preservation hypothesis:
+
+```text
+The monolithic Stage 6 topology damaged Stage 5 conversion.
+The frozen-provider overlay composition preserves Stage 5 while adding Stage 6 capacity.
+```
+
+Stage 4 wrong-tempo was also checked:
+
+```text
+Stage 4 wrong-tempo on composed overlay:
+  artifact: stage4_wrong_tempo_overlay_300_seed7_h40.json
+  conversion: 247 mate / 53 max_plies
+
+Stage 4 wrong-tempo on frozen Stage 5 base control:
+  artifact: stage4_wrong_tempo_stage5_base_control_300_seed7_h40.json
+  conversion: 247 mate / 53 max_plies
+```
+
+Therefore the Stage 4 40-ply conversion failure is not overlay interference. It is already present in the frozen Stage 5 base under this guardrail configuration and should be tracked as a separate horizon/guardrail-definition issue.
+
+A guardrail-aware promotion evaluator was added:
+
+```text
+script:
+  scripts/evaluate_provider_promotion.py
+
+promotion artifact:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/promotion_eval_stage6_overlay.json
+
+result:
+  promotion_status = promoted
+```
+
+The promotion evaluation used Stage 6 as the candidate artifact and Stage 5 fence as the protected prior-stage guardrail. Stage 4 was intentionally excluded from this promotion decision because the base-control topology fails the same Stage 4 40-ply conversion check, so it is not evidence of overlay regression.
+
+Interpretation:
+
+```text
+Stage 6 drive_to_edge is safe as an overlay against the current protected Stage 5 guardrail.
+It should not be treated as a monolithic replacement topology.
+The next curriculum stages should use frozen validated provider packs plus additive overlays.
+Stage 4 wrong-tempo conversion at 40 plies remains a separate diagnostic target.
+```

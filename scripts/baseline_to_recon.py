@@ -42,9 +42,102 @@ def target_goal_label_for_curriculum(label: str | None) -> str:
     return "mate_in_1"
 
 
+def provider_metadata_for_label(topology: Dict[str, Any], label: str | None) -> Dict[str, Any]:
+    """Return provider provenance defaults for a compiled curriculum label."""
+    preservation = dict(topology.get("meta", {}).get("provider_preservation", {}) or {})
+    return {
+        "provider_version": preservation.get("provider_version"),
+        "source_stage": None,
+        "source_checkpoint": preservation.get("source_checkpoint"),
+        "frozen_provider": bool(preservation.get("frozen_provider", False)),
+        "overlay_provider": bool(preservation.get("overlay_provider", False)),
+        "validated_profile": preservation.get("validated_profile"),
+        "guardrail_status": dict(preservation.get("guardrail_status", {}) or {}),
+        "promotion_status": preservation.get("promotion_status"),
+    }
+
+
+def _provider_metadata_payload(
+    *,
+    skill_id: str,
+    curriculum_label: str | None,
+    provider_metadata: Dict[str, Any] | None,
+    source_stage: int | None = None,
+) -> Dict[str, Any]:
+    metadata = dict(provider_metadata or {})
+    if source_stage is not None:
+        metadata["source_stage"] = int(source_stage)
+    return {
+        "skill_id": skill_id,
+        "curriculum_label": curriculum_label,
+        "provider_version": metadata.get("provider_version"),
+        "source_stage": metadata.get("source_stage"),
+        "source_checkpoint": metadata.get("source_checkpoint"),
+        "frozen_provider": bool(metadata.get("frozen_provider", False)),
+        "overlay_provider": bool(metadata.get("overlay_provider", False)),
+        "validated_profile": metadata.get("validated_profile"),
+        "guardrail_status": dict(metadata.get("guardrail_status", {}) or {}),
+        "promotion_status": metadata.get("promotion_status"),
+    }
+
+
+def annotate_provider_metadata(
+    topology: Dict[str, Any],
+    *,
+    provider_version: str,
+    source_checkpoint: str,
+    frozen_provider: bool,
+    overlay_provider: bool,
+    validated_profile: str | None,
+    guardrail_status: Dict[str, Any] | None = None,
+    only_missing: bool = False,
+) -> None:
+    """Annotate existing skill/leg/actuator nodes with provider provenance."""
+    for node_id, node in topology.get("nodes", {}).items():
+        if not isinstance(node, dict):
+            continue
+        meta = node.setdefault("meta", {})
+        if not isinstance(meta, dict):
+            continue
+        is_provider_node = (
+            node_id.startswith("skill.krk.")
+            or node_id.startswith("leg_")
+            or node_id.startswith("act_script_")
+            or node_id.startswith("actuator_")
+        )
+        if not is_provider_node:
+            continue
+        if only_missing and meta.get("provider_version"):
+            continue
+        curriculum_label = meta.get("curriculum_label")
+        skill_id = meta.get("skill_id") or canonicalize_skill_id(curriculum_label)
+        payload = _provider_metadata_payload(
+            skill_id=skill_id,
+            curriculum_label=curriculum_label,
+            provider_metadata={
+                "provider_version": provider_version,
+                "source_stage": meta.get("stage"),
+                "source_checkpoint": source_checkpoint,
+                "frozen_provider": frozen_provider,
+                "overlay_provider": overlay_provider,
+                "validated_profile": validated_profile,
+                "guardrail_status": guardrail_status or {},
+            },
+            source_stage=meta.get("stage") if meta.get("stage") is not None else None,
+        )
+        meta.update(payload)
+
+
 def compile_baseline_to_topology(
     learner_path: Path,
-    output_path: Path
+    output_path: Path,
+    *,
+    provider_version: str | None = None,
+    source_checkpoint: str | None = None,
+    frozen_provider: bool = False,
+    overlay_provider: bool = False,
+    validated_profile: str | None = None,
+    guardrail_status: Dict[str, Any] | None = None,
 ) -> Dict:
     """
     Main compilation function.
@@ -91,6 +184,15 @@ def compile_baseline_to_topology(
             "successor_contract_mismatch_penalty": 10.0,
             "successor_role_license_enabled": False,
             "successor_role_license_bonus": 0.05,
+            "provider_preservation": {
+                "schema_version": "provider_preservation.v1",
+                "provider_version": provider_version,
+                "source_checkpoint": source_checkpoint or str(learner_path),
+                "frozen_provider": bool(frozen_provider),
+                "overlay_provider": bool(overlay_provider),
+                "validated_profile": validated_profile,
+                "guardrail_status": guardrail_status or {},
+            },
         }
     }
     
@@ -106,8 +208,21 @@ def compile_baseline_to_topology(
         skill_node_id = ensure_skill_node(
             topology,
             getattr(actuator, "curriculum_label", None),
+            provider_metadata=provider_metadata_for_label(
+                topology,
+                getattr(actuator, "curriculum_label", None),
+            ),
         )
-        create_leg_micro_script(topology, actuator, mature_sensors, skill_node_id)
+        create_leg_micro_script(
+            topology,
+            actuator,
+            mature_sensors,
+            skill_node_id,
+            provider_metadata=provider_metadata_for_label(
+                topology,
+                getattr(actuator, "curriculum_label", None),
+            ),
+        )
     
     # Save
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -118,6 +233,116 @@ def compile_baseline_to_topology(
     print(f"  Nodes: {len(topology['nodes'])}")
     print(f"  Edges: {len(topology['edges'])}")
     
+    return topology
+
+
+def compile_overlay_topology(
+    *,
+    base_topology_path: Path,
+    overlay_learner_path: Path,
+    output_path: Path,
+    overlay_label: str,
+    base_provider_version: str = "stage5_validated_v1",
+    overlay_provider_version: str = "stage6_overlay_v1",
+    base_source_checkpoint: str | None = None,
+    overlay_source_checkpoint: str | None = None,
+    validated_profile: str | None = "handoff_composition_v1",
+) -> Dict[str, Any]:
+    """Compose a frozen validated topology with an additive later-stage overlay.
+
+    This intentionally does not replace lower-stage providers. It keeps the
+    base topology in place, annotates its providers as frozen, then adds only
+    overlay-label actuators from the overlay learner under their own provider
+    version.
+    """
+    topology = json.loads(base_topology_path.read_text(encoding="utf-8"))
+    topology.setdefault("nodes", {})
+    topology.setdefault("edges", [])
+    topology.setdefault("meta", {})
+    topology["meta"].setdefault("provider_preservation", {})
+    topology["meta"]["provider_preservation"].update({
+        "schema_version": "provider_preservation.v1",
+        "composition_mode": "frozen_base_plus_overlay",
+        "base_topology": str(base_topology_path),
+        "overlay_learner": str(overlay_learner_path),
+        "base_provider_version": base_provider_version,
+        "overlay_provider_version": overlay_provider_version,
+        "overlay_label": overlay_label,
+        "validated_profile": validated_profile,
+        "promotion_status": "overlay_candidate",
+    })
+    annotate_provider_metadata(
+        topology,
+        provider_version=base_provider_version,
+        source_checkpoint=base_source_checkpoint or str(base_topology_path),
+        frozen_provider=True,
+        overlay_provider=False,
+        validated_profile=validated_profile,
+        guardrail_status={
+            "stage4_wrong_tempo": "passed_pre_overlay",
+            "stage5_fence": "passed_pre_overlay",
+        },
+        only_missing=True,
+    )
+
+    with overlay_learner_path.open("rb") as fh:
+        learner = pickle.load(fh)
+    mature_sensors = [s for s in learner.sensors if s.is_mature]
+    overlay_actuators = [
+        actuator
+        for actuator in learner.actuators
+        if getattr(actuator, "curriculum_label", None) == overlay_label
+    ]
+    if not overlay_actuators:
+        raise ValueError(f"No overlay actuators found for curriculum label {overlay_label!r}")
+
+    overlay_metadata = {
+        "provider_version": overlay_provider_version,
+        "source_stage": int(max((getattr(a, "stage", 0) or 0) for a in overlay_actuators)),
+        "source_checkpoint": overlay_source_checkpoint or str(overlay_learner_path),
+        "frozen_provider": False,
+        "overlay_provider": True,
+        "validated_profile": validated_profile,
+        "guardrail_status": {},
+        "promotion_status": "overlay_candidate",
+    }
+
+    added = []
+    for actuator in overlay_actuators:
+        skill_node_id = ensure_skill_node(
+            topology,
+            getattr(actuator, "curriculum_label", None),
+            provider_metadata=overlay_metadata,
+        )
+        create_leg_micro_script(
+            topology,
+            actuator,
+            mature_sensors,
+            skill_node_id,
+            provider_metadata=overlay_metadata,
+            allow_existing=False,
+        )
+        added.append(f"actuator_{actuator.id}")
+
+    topology["meta"]["provider_preservation"]["overlay_actuators_added"] = added
+    topology["meta"]["provider_preservation"]["frozen_base_provider_count"] = sum(
+        1
+        for node in topology["nodes"].values()
+        if isinstance(node, dict) and node.get("meta", {}).get("frozen_provider")
+    )
+    topology["meta"]["provider_preservation"]["overlay_provider_count"] = sum(
+        1
+        for node in topology["nodes"].values()
+        if isinstance(node, dict) and node.get("meta", {}).get("overlay_provider")
+    )
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(topology, indent=2) + "\n", encoding="utf-8")
+    print(f"\n✓ Saved overlay topology: {output_path}")
+    print(f"  Base topology: {base_topology_path}")
+    print(f"  Overlay actuators: {len(overlay_actuators)} ({overlay_label})")
+    print(f"  Nodes: {len(topology['nodes'])}")
+    print(f"  Edges: {len(topology['edges'])}")
     return topology
 
 
@@ -529,12 +754,23 @@ def create_successor_affordance_layer(topology: Dict) -> None:
     print("Created visible successor-affordance layer")
 
 
-def ensure_skill_node(topology: Dict, curriculum_label: str | None) -> str:
+def ensure_skill_node(
+    topology: Dict,
+    curriculum_label: str | None,
+    provider_metadata: Dict[str, Any] | None = None,
+) -> str:
     """Create or return the ReCoN skill node for a curriculum label."""
     skill_id = canonicalize_skill_id(curriculum_label)
     skill_name = skill_id.split(".", 1)[1]
     node_id = f"skill.{skill_id}"
     if node_id in topology["nodes"]:
+        topology["nodes"][node_id].setdefault("meta", {}).update(
+            _provider_metadata_payload(
+                skill_id=skill_id,
+                curriculum_label=curriculum_label,
+                provider_metadata=provider_metadata,
+            )
+        )
         return node_id
 
     contract = SkillContractSpec(
@@ -566,6 +802,11 @@ def ensure_skill_node(topology: Dict, curriculum_label: str | None) -> str:
             "curriculum_label": curriculum_label,
             "target_goal_label": target_goal_label_for_curriculum(curriculum_label),
             "skill_contract": contract.to_dict(),
+            **_provider_metadata_payload(
+                skill_id=skill_id,
+                curriculum_label=curriculum_label,
+                provider_metadata=provider_metadata,
+            ),
             "description": f"KRK skill group {skill_name}",
         },
     }
@@ -589,7 +830,9 @@ def create_leg_micro_script(
     topology: Dict,
     actuator: Any,
     sensors: List[Any],
-    skill_node_id: str,
+    skill_node_id: str | None = None,
+    provider_metadata: Dict[str, Any] | None = None,
+    allow_existing: bool = True,
 ):
     """
     Create 3-part micro-script for one actuator pattern.
@@ -611,6 +854,36 @@ def create_leg_micro_script(
     act_script_id = f"act_script_{actuator.id}"
     actuator_id = f"actuator_{actuator.id}"
     postcond_id = f"postcond_{actuator.id}"
+    if skill_node_id is None:
+        skill_node_id = ensure_skill_node(
+            topology,
+            getattr(actuator, "curriculum_label", None),
+            provider_metadata=provider_metadata,
+        )
+    existing_ids = {leg_id, precond_id, act_script_id, actuator_id, postcond_id}
+    conflicts = sorted(existing_ids.intersection(topology.get("nodes", {})))
+    if conflicts and not allow_existing:
+        raise ValueError(
+            "Overlay provider conflicts with existing topology node IDs: "
+            + ", ".join(conflicts)
+        )
+    if conflicts and allow_existing:
+        for node_id in conflicts:
+            topology["nodes"][node_id].setdefault("meta", {}).update(
+                _provider_metadata_payload(
+                    skill_id=topology["nodes"][skill_node_id]["meta"]["skill_id"],
+                    curriculum_label=getattr(actuator, "curriculum_label", None),
+                    provider_metadata=provider_metadata,
+                    source_stage=getattr(actuator, "stage", None),
+                )
+            )
+        return
+    provider_payload = _provider_metadata_payload(
+        skill_id=topology["nodes"][skill_node_id]["meta"]["skill_id"],
+        curriculum_label=getattr(actuator, "curriculum_label", None),
+        provider_metadata=provider_metadata,
+        source_stage=getattr(actuator, "stage", None),
+    )
     
     # Leg SCRIPT
     topology["nodes"][leg_id] = {
@@ -624,6 +897,7 @@ def create_leg_micro_script(
             "target_goal_label": target_goal_label_for_curriculum(
                 getattr(actuator, "curriculum_label", None)
             ),
+            **provider_payload,
             "description": f"Leg for actuator pattern {actuator.id}"
         }
     }
@@ -707,6 +981,7 @@ def create_leg_micro_script(
             "target_goal_label": target_goal_label_for_curriculum(
                 getattr(actuator, "curriculum_label", None)
             ),
+            **provider_payload,
             "description": "Actuator wrapper (SCRIPT)"
         }
     }
@@ -726,7 +1001,13 @@ def create_leg_micro_script(
     })
     
     # Actuator terminal (SUB under actuator script)
-    create_actuator_terminal(topology, actuator_id, actuator, sensors)
+    create_actuator_terminal(
+        topology,
+        actuator_id,
+        actuator,
+        sensors,
+        provider_metadata=provider_metadata,
+    )
     
     topology["edges"].append({
         "src": act_script_id,
@@ -855,7 +1136,8 @@ def create_actuator_terminal(
     topology: Dict,
     actuator_id: str,
     actuator: Any,
-    sensors: List[Any]
+    sensors: List[Any],
+    provider_metadata: Dict[str, Any] | None = None,
 ):
     """Create TERMINAL node for actuator with stable target IDs"""
     sensor_map = {s.id: s for s in sensors}
@@ -889,6 +1171,12 @@ def create_actuator_terminal(
             "curriculum_label": getattr(actuator, "curriculum_label", None),
             "target_goal_label": target_goal_label_for_curriculum(
                 getattr(actuator, "curriculum_label", None)
+            ),
+            **_provider_metadata_payload(
+                skill_id=canonicalize_skill_id(getattr(actuator, "curriculum_label", None)),
+                curriculum_label=getattr(actuator, "curriculum_label", None),
+                provider_metadata=provider_metadata,
+                source_stage=getattr(actuator, "stage", None),
             ),
             "baseline_xp": float(actuator.xp),
             "targets": targets,  # Stable IDs
@@ -990,10 +1278,30 @@ if __name__ == "__main__":
     import argparse
     
     parser = argparse.ArgumentParser(description="Compile baseline to ReCoN topology")
-    parser.add_argument("--learner", type=Path, required=True,
+    parser.add_argument("--learner", type=Path, default=None,
                        help="Path to pickled learner (e.g., final_learner.pkl)")
     parser.add_argument("--output", type=Path, default=Path("topologies/krk_entry_topology.json"),
                        help="Output topology JSON path")
+    parser.add_argument("--provider-version", default=None,
+                       help="Optional provider version metadata for monolithic compilation")
+    parser.add_argument("--source-checkpoint", default=None,
+                       help="Optional source checkpoint metadata")
+    parser.add_argument("--frozen-provider", action="store_true",
+                       help="Mark compiled providers as frozen")
+    parser.add_argument("--overlay-provider", action="store_true",
+                       help="Mark compiled providers as overlay providers")
+    parser.add_argument("--validated-profile", default=None,
+                       help="Optional validated composition profile metadata")
+    parser.add_argument("--base-topology", type=Path, default=None,
+                       help="Validated base topology for overlay compilation")
+    parser.add_argument("--overlay-learner", type=Path, default=None,
+                       help="Learner containing overlay providers")
+    parser.add_argument("--overlay-label", default=None,
+                       help="Curriculum label to extract from --overlay-learner")
+    parser.add_argument("--base-provider-version", default="stage5_validated_v1")
+    parser.add_argument("--overlay-provider-version", default="stage6_overlay_v1")
+    parser.add_argument("--base-source-checkpoint", default=None)
+    parser.add_argument("--overlay-source-checkpoint", default=None)
     
     args = parser.parse_args()
     
@@ -1001,7 +1309,34 @@ if __name__ == "__main__":
     print("Baseline → ReCoN Graph Compiler")
     print("=" * 70)
     
-    topology = compile_baseline_to_topology(args.learner, args.output)
+    if args.base_topology or args.overlay_learner or args.overlay_label:
+        if not (args.base_topology and args.overlay_learner and args.overlay_label):
+            raise SystemExit(
+                "--base-topology, --overlay-learner, and --overlay-label are required together"
+            )
+        topology = compile_overlay_topology(
+            base_topology_path=args.base_topology,
+            overlay_learner_path=args.overlay_learner,
+            output_path=args.output,
+            overlay_label=args.overlay_label,
+            base_provider_version=args.base_provider_version,
+            overlay_provider_version=args.overlay_provider_version,
+            base_source_checkpoint=args.base_source_checkpoint,
+            overlay_source_checkpoint=args.overlay_source_checkpoint,
+            validated_profile=args.validated_profile,
+        )
+    else:
+        if args.learner is None:
+            raise SystemExit("--learner is required unless overlay compilation is used")
+        topology = compile_baseline_to_topology(
+            args.learner,
+            args.output,
+            provider_version=args.provider_version,
+            source_checkpoint=args.source_checkpoint,
+            frozen_provider=args.frozen_provider,
+            overlay_provider=args.overlay_provider,
+            validated_profile=args.validated_profile,
+        )
     
     print("\n" + "=" * 70)
     print("✓ Compilation complete!")

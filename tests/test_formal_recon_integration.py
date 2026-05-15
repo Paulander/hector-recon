@@ -34,6 +34,16 @@ create_hub_node = _baseline_to_recon.create_hub_node
 create_leg_micro_script = _baseline_to_recon.create_leg_micro_script
 target_goal_label_for_curriculum = _baseline_to_recon.target_goal_label_for_curriculum
 
+_provider_promotion = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "evaluate_provider_promotion",
+        Path(__file__).resolve().parents[1] / "scripts" / "evaluate_provider_promotion.py",
+    )
+)
+assert _provider_promotion.__spec__ is not None
+assert _provider_promotion.__spec__.loader is not None
+_provider_promotion.__spec__.loader.exec_module(_provider_promotion)
+
 
 def test_engine_selector_preserves_pragmatic_default_and_exposes_formal():
     pragmatic = create_recon_engine(Graph())
@@ -110,6 +120,150 @@ def test_baseline_compiler_marks_stage_target_goal_label():
     assert target_goal_label_for_curriculum("edge_trap_close") == "stage0_basin"
     assert topology["nodes"]["leg_7"]["meta"]["target_goal_label"] == "stage0_basin"
     assert topology["nodes"]["actuator_7"]["meta"]["target_goal_label"] == "stage0_basin"
+
+
+def test_baseline_compiler_records_provider_provenance_metadata():
+    topology = {"nodes": {}, "edges": [], "meta": {}}
+    sensor = _dummy_sensor()
+    actuator = _dummy_actuator()
+    actuator.curriculum_label = "fence_established"
+    provider_metadata = {
+        "provider_version": "stage5_validated_v1",
+        "source_stage": 5,
+        "source_checkpoint": "stage5.pkl",
+        "frozen_provider": True,
+        "overlay_provider": False,
+        "validated_profile": "handoff_composition_v1",
+        "guardrail_status": {"stage5_fence": "passed"},
+    }
+
+    create_root_node(topology)
+    create_hub_node(topology)
+    skill_node_id = _baseline_to_recon.ensure_skill_node(
+        topology,
+        "fence_established",
+        provider_metadata=provider_metadata,
+    )
+    create_leg_micro_script(
+        topology,
+        actuator,
+        [sensor],
+        skill_node_id,
+        provider_metadata=provider_metadata,
+    )
+
+    for node_id in ("skill.krk.fence_established", "leg_7", "actuator_7"):
+        meta = topology["nodes"][node_id]["meta"]
+        assert meta["provider_version"] == "stage5_validated_v1"
+        assert meta["source_checkpoint"] == "stage5.pkl"
+        assert meta["frozen_provider"] is True
+        assert meta["overlay_provider"] is False
+        assert meta["validated_profile"] == "handoff_composition_v1"
+
+
+def test_annotate_provider_metadata_marks_existing_provider_nodes():
+    topology = {
+        "nodes": {
+            "skill.krk.stage0_basin": {
+                "id": "skill.krk.stage0_basin",
+                "type": "SCRIPT",
+                "meta": {"skill_id": "krk.stage0_basin", "curriculum_label": "stage0_basin"},
+            },
+            "leg_2": {
+                "id": "leg_2",
+                "type": "SCRIPT",
+                "meta": {"skill_id": "krk.stage0_basin", "curriculum_label": "stage0_basin"},
+            },
+            "terminal.krk.rook_safe": {
+                "id": "terminal.krk.rook_safe",
+                "type": "TERMINAL",
+                "meta": {"term": "rook_safe"},
+            },
+        },
+        "edges": [],
+        "meta": {},
+    }
+
+    _baseline_to_recon.annotate_provider_metadata(
+        topology,
+        provider_version="stage5_validated_v1",
+        source_checkpoint="stage5_topology.json",
+        frozen_provider=True,
+        overlay_provider=False,
+        validated_profile="handoff_composition_v1",
+    )
+
+    assert topology["nodes"]["skill.krk.stage0_basin"]["meta"]["frozen_provider"] is True
+    assert topology["nodes"]["leg_2"]["meta"]["provider_version"] == "stage5_validated_v1"
+    assert "provider_version" not in topology["nodes"]["terminal.krk.rook_safe"]["meta"]
+
+
+def test_provider_promotion_eval_promotes_when_stage_and_guardrails_pass(tmp_path):
+    stage_path = tmp_path / "stage.json"
+    guardrail_path = tmp_path / "guardrail.json"
+    payload = {
+        "total": 100,
+        "improved": 100,
+        "worsened": 0,
+        "playouts": {"mate": 100},
+        "shadow_candidates": [],
+    }
+    stage_path.write_text(json.dumps(payload), encoding="utf-8")
+    guardrail_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    result = _provider_promotion.evaluate_promotion(
+        stage_artifact=stage_path,
+        guardrail_artifacts=[guardrail_path],
+        min_improved_rate=0.70,
+        max_worsened_rate=0.20,
+        min_mate_rate=0.65,
+        max_max_plies_rate=0.25,
+        max_shadow_candidates=0,
+    )
+
+    assert result["schema_version"] == "provider_promotion_eval.v1"
+    assert result["promotion_status"] == "promoted"
+    assert result["stage"]["passed"] is True
+    assert result["guardrails"][0]["passed"] is True
+
+
+def test_provider_promotion_eval_keeps_stage_as_overlay_when_guardrail_fails(tmp_path):
+    stage_path = tmp_path / "stage.json"
+    guardrail_path = tmp_path / "guardrail.json"
+    stage_path.write_text(
+        json.dumps({
+            "total": 100,
+            "improved": 100,
+            "worsened": 0,
+            "playouts": {"mate": 100},
+            "shadow_candidates": [],
+        }),
+        encoding="utf-8",
+    )
+    guardrail_path.write_text(
+        json.dumps({
+            "total": 100,
+            "improved": 100,
+            "worsened": 0,
+            "playouts": {"mate": 50, "max_plies": 50},
+            "shadow_candidates": [],
+        }),
+        encoding="utf-8",
+    )
+
+    result = _provider_promotion.evaluate_promotion(
+        stage_artifact=stage_path,
+        guardrail_artifacts=[guardrail_path],
+        min_improved_rate=0.70,
+        max_worsened_rate=0.20,
+        min_mate_rate=0.65,
+        max_max_plies_rate=0.25,
+        max_shadow_candidates=0,
+    )
+
+    assert result["promotion_status"] == "overlay_only"
+    assert result["stage"]["passed"] is True
+    assert result["guardrails"][0]["passed"] is False
 
 
 def test_spawn_point_promoted_trial_materializes_formal_triplet_pairs():
