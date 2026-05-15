@@ -1,0 +1,291 @@
+{
+  "schema_version": "candidate_local_m3_warmup_plan.v1",
+  "causal_status": "non_causal",
+  "topology_source": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_drive_repair_sandbox/topology/krk_entry_topology.json",
+  "growth_plan_source": "reports/structural_candidates/stage7_box_shrink_growth_governor_plan.json",
+  "target_role": "krk.box_shrink_to_drive_repair",
+  "target_providers": [
+    "krk.drive_to_edge"
+  ],
+  "growth_governor_decision": "needs_more_weight_training",
+  "growth_governor_phase": "phase_3_bounded_plasticity_warmup",
+  "warmup_scope": "candidate_local_provider_only",
+  "role_nodes": [
+    "script.krk.successor.box_shrink_to_drive_repair_affordance",
+    "terminal.krk.successor.box_shrink_to_drive_repair_marker"
+  ],
+  "provider_nodes": {
+    "krk.drive_to_edge": [
+      "act_script_34",
+      "act_script_35",
+      "act_script_36",
+      "actuator_34",
+      "actuator_35",
+      "actuator_36",
+      "leg_34",
+      "leg_35",
+      "leg_36",
+      "skill.krk.drive_to_edge"
+    ]
+  },
+  "provider_subtree_node_count": 30,
+  "eligible_edge_whitelist": [
+    {
+      "src": "skill.krk.drive_to_edge",
+      "dst": "leg_34",
+      "type": "SUB",
+      "reason": "candidate_provider_leg_selection",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "leg_34",
+      "dst": "precond_34",
+      "type": "SUB",
+      "reason": "candidate_provider_internal",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "leg_34",
+      "dst": "act_script_34",
+      "type": "SUB",
+      "reason": "candidate_provider_internal",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "act_script_34",
+      "dst": "actuator_34",
+      "type": "SUB",
+      "reason": "candidate_provider_internal",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "leg_34",
+      "dst": "postcond_34",
+      "type": "SUB",
+      "reason": "candidate_provider_internal",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "precond_34",
+      "dst": "act_script_34",
+      "type": "POR",
+      "reason": "candidate_provider_triplet_temporal",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "act_script_34",
+      "dst": "postcond_34",
+      "type": "POR",
+      "reason": "candidate_provider_triplet_temporal",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "skill.krk.drive_to_edge",
+      "dst": "leg_35",
+      "type": "SUB",
+      "reason": "candidate_provider_leg_selection",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "leg_35",
+      "dst": "precond_35",
+      "type": "SUB",
+      "reason": "candidate_provider_internal",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "leg_35",
+      "dst": "act_script_35",
+      "type": "SUB",
+      "reason": "candidate_provider_internal",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "act_script_35",
+      "dst": "actuator_35",
+      "type": "SUB",
+      "reason": "candidate_provider_internal",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "leg_35",
+      "dst": "postcond_35",
+      "type": "SUB",
+      "reason": "candidate_provider_internal",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "precond_35",
+      "dst": "act_script_35",
+      "type": "POR",
+      "reason": "candidate_provider_triplet_temporal",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "act_script_35",
+      "dst": "postcond_35",
+      "type": "POR",
+      "reason": "candidate_provider_triplet_temporal",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "skill.krk.drive_to_edge",
+      "dst": "leg_36",
+      "type": "SUB",
+      "reason": "candidate_provider_leg_selection",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "leg_36",
+      "dst": "precond_36",
+      "type": "SUB",
+      "reason": "candidate_provider_internal",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "leg_36",
+      "dst": "act_script_36",
+      "type": "SUB",
+      "reason": "candidate_provider_internal",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "act_script_36",
+      "dst": "actuator_36",
+      "type": "SUB",
+      "reason": "candidate_provider_internal",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "leg_36",
+      "dst": "postcond_36",
+      "type": "SUB",
+      "reason": "candidate_provider_internal",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "precond_36",
+      "dst": "act_script_36",
+      "type": "POR",
+      "reason": "candidate_provider_triplet_temporal",
+      "initial_weight": 1.0
+    },
+    {
+      "src": "act_script_36",
+      "dst": "postcond_36",
+      "type": "POR",
+      "reason": "candidate_provider_triplet_temporal",
+      "initial_weight": 1.0
+    }
+  ],
+  "eligible_edge_count": 21,
+  "observe_only_role_support_edges": [
+    {
+      "src": "krk_successor_affordance_hub",
+      "dst": "script.krk.successor.box_shrink_to_drive_repair_affordance",
+      "type": "SUB",
+      "reason": "visible_role_activation_support_observe_only",
+      "trainable": false
+    },
+    {
+      "src": "script.krk.successor.box_shrink_to_drive_repair_affordance",
+      "dst": "terminal.krk.successor.box_shrink_to_drive_repair_marker",
+      "type": "SUB",
+      "reason": "visible_role_activation_support_observe_only",
+      "trainable": false
+    }
+  ],
+  "excluded_edge_counts": {
+    "outside_candidate_provider_subtree": 379,
+    "non_trainable_link_type": 656,
+    "protected_frozen_provider": 238,
+    "not_m3_update_enabled": 18
+  },
+  "protected_provider_versions": [
+    "stage5_validated_v1"
+  ],
+  "metadata_warnings": {
+    "overlay_nodes_missing_maturity_fields": [
+      "act_script_34",
+      "act_script_35",
+      "act_script_36",
+      "act_script_37",
+      "act_script_38",
+      "act_script_39",
+      "act_script_40",
+      "act_script_41",
+      "act_script_42",
+      "act_script_43",
+      "act_script_44",
+      "act_script_45",
+      "act_script_46",
+      "act_script_47",
+      "actuator_34",
+      "actuator_35",
+      "actuator_36",
+      "actuator_37",
+      "actuator_38",
+      "actuator_39",
+      "actuator_40",
+      "actuator_41",
+      "actuator_42",
+      "actuator_43",
+      "actuator_44",
+      "actuator_45",
+      "actuator_46",
+      "actuator_47",
+      "leg_34",
+      "leg_35",
+      "leg_36",
+      "leg_37",
+      "leg_38",
+      "leg_39",
+      "leg_40",
+      "leg_41",
+      "leg_42",
+      "leg_43",
+      "leg_44",
+      "leg_45",
+      "leg_46",
+      "leg_47",
+      "skill.krk.box_shrink",
+      "skill.krk.drive_to_edge"
+    ],
+    "requires_topology_regeneration": true
+  },
+  "training_limits": {
+    "schema_version": "candidate_local_m3_limits.v0",
+    "max_warmup_episodes": 20,
+    "max_delta_episode": 0.25,
+    "eta_eff": 0.02,
+    "lambda_decay": 0.8,
+    "m4_consolidation_enabled": false,
+    "topology_mutation_enabled": false,
+    "protected_provider_mutation_enabled": false
+  },
+  "guardrails": [
+    "stage7_box_shrink_target",
+    "stage6_drive_overlay",
+    "stage5_fence",
+    "stage1_backchain",
+    "krk_entry",
+    "m1_m4_preservation"
+  ],
+  "hard_blocks": [
+    "do_not_train_stage8",
+    "do_not_promote_stage7",
+    "do_not_enable_stage7_repair_by_default",
+    "do_not_make_packets_stats_or_candidates_causal"
+  ],
+  "next_probe_command_template": [
+    "run_candidate_local_m3_warmup_probe",
+    "--edge-whitelist",
+    "<this_artifact>.eligible_edge_whitelist",
+    "--freeze-provider-versions",
+    "stage5_validated_v1",
+    "--m4-consolidation",
+    "disabled",
+    "--topology-mutation",
+    "disabled"
+  ]
+}

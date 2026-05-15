@@ -2877,3 +2877,135 @@ The governor and diagnosis fields are non-causal.
 They do not alter routing, M3, M4, M5, or topology during gameplay.
 They only decide whether an offline candidate should settle, receive more weight/plasticity diagnosis, enter sandbox, or remain quarantined.
 ```
+
+## Slice 65: Growth Governor Evaluation Plan
+
+Added non-causal evaluation planner:
+
+```text
+scripts/plan_structural_candidate_evaluation.py
+```
+
+Generated artifacts:
+
+```text
+reports/structural_candidates/stage7_box_shrink_growth_governor_plan.json
+reports/structural_candidates/stage7_box_shrink_growth_governor_plan.md
+```
+
+Planner input:
+
+```text
+reports/structural_candidates/stage7_box_shrink_candidates.json
+reports/structural_candidates/stage7_box_shrink_counterfactual_candidate_update.json
+reports/structural_candidates/stage7_box_shrink_drive_repair_sandbox_smoke_10.json
+```
+
+Growth Governor result:
+
+```text
+recommended_next_action:
+  bounded_m3_warmup_for_box_shrink_to_drive_repair
+
+hard_blocks:
+  do_not_train_stage8
+  do_not_promote_stage7
+  do_not_enable_stage7_repair_by_default
+  do_not_make_packets_stats_or_candidates_causal
+```
+
+Role plan:
+
+```text
+krk.box_shrink_to_drive_repair
+  decision: needs_more_weight_training
+  phase: phase_3_bounded_plasticity_warmup
+  next_action: run_candidate_local_m3_warmup_probe
+  labels: parameter_miscalibrated, topology_present_untrained, trainable_candidate
+  sandbox smoke: role contract met 5 times, selected 0 times, stage0 selected under role 5 times
+
+krk.box_shrink_post_reply_continuation
+  decision: growth_blocked_by_cooldown
+  phase: phase_2_forced_oracle_probe
+  next_action: run_targeted_legal_first_or_longer_horizon_sweep
+  blocked: existing_provider_capacity_inconclusive
+
+krk.stage0_basin_after_box_shrink
+  decision: growth_blocked_by_guardrail
+  phase: phase_1_frozen_weight_probe
+  next_action: do_not_sandbox_as_default_continuation
+  blocked: negative_counterfactual_evidence
+```
+
+Interpretation:
+
+```text
+The next Stage 7 step is not a new topology patch.
+The current box_shrink_to_drive_repair role is visible and counterfactually plausible,
+but the sandbox smoke shows it is not selected over stage0_basin.
+That makes the next bounded probe a candidate-local M3 warmup with protected frozen providers,
+not Stage 8 training and not Stage 7 promotion.
+```
+
+## Slice 66: Candidate-Local M3 Warmup Scope
+
+Added offline warmup-scope planner:
+
+```text
+scripts/plan_candidate_local_m3_warmup.py
+```
+
+The planner consumes the Growth Governor plan and topology, then emits an edge whitelist for a later bounded M3 probe. It does not run plasticity, mutate topology, alter routing, consolidate M4, or promote candidates.
+
+Initial stale-topology artifact:
+
+```text
+reports/structural_candidates/stage7_box_shrink_candidate_local_m3_warmup_plan.json
+reports/structural_candidates/stage7_box_shrink_candidate_local_m3_warmup_plan.md
+```
+
+This correctly flagged missing provider maturity/plasticity fields in the older sandbox topology. The overlay compiler was then fixed so `only_missing` backfills missing maturity/plasticity masks without relabeling existing provider versions.
+
+Refreshed sandbox topology:
+
+```text
+snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_drive_repair_sandbox/topology/krk_entry_topology_refreshed.json
+```
+
+Refreshed warmup plan:
+
+```text
+reports/structural_candidates/stage7_box_shrink_candidate_local_m3_warmup_plan_refreshed.json
+reports/structural_candidates/stage7_box_shrink_candidate_local_m3_warmup_plan_refreshed.md
+```
+
+Warmup scope:
+
+```text
+target_role: krk.box_shrink_to_drive_repair
+target_provider: krk.drive_to_edge
+eligible M3 edges: 21
+  candidate_provider_leg_selection: 3
+  candidate_provider_internal: 12
+  candidate_provider_triplet_temporal: 6
+
+protected provider versions:
+  stage5_validated_v1
+
+M4 consolidation:
+  disabled
+
+topology mutation:
+  disabled
+
+protected provider mutation:
+  disabled
+```
+
+Interpretation:
+
+```text
+The next executable probe can warm up only the candidate-local drive_to_edge overlay edges.
+Visible role-support edges remain observe-only because the current topology represents role-provider support through visible role SCRIPT payloads rather than explicit provider-support edges.
+Frozen base providers are excluded from the M3 whitelist.
+```

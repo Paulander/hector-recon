@@ -84,6 +84,26 @@ assert _stage7_counterfactual_summary.__spec__ is not None
 assert _stage7_counterfactual_summary.__spec__.loader is not None
 _stage7_counterfactual_summary.__spec__.loader.exec_module(_stage7_counterfactual_summary)
 
+_growth_governor_plan = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "plan_structural_candidate_evaluation",
+        Path(__file__).resolve().parents[1] / "scripts" / "plan_structural_candidate_evaluation.py",
+    )
+)
+assert _growth_governor_plan.__spec__ is not None
+assert _growth_governor_plan.__spec__.loader is not None
+_growth_governor_plan.__spec__.loader.exec_module(_growth_governor_plan)
+
+_candidate_m3_warmup_plan = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "plan_candidate_local_m3_warmup",
+        Path(__file__).resolve().parents[1] / "scripts" / "plan_candidate_local_m3_warmup.py",
+    )
+)
+assert _candidate_m3_warmup_plan.__spec__ is not None
+assert _candidate_m3_warmup_plan.__spec__.loader is not None
+_candidate_m3_warmup_plan.__spec__.loader.exec_module(_candidate_m3_warmup_plan)
+
 
 def test_engine_selector_preserves_pragmatic_default_and_exposes_formal():
     pragmatic = create_recon_engine(Graph())
@@ -242,6 +262,45 @@ def test_annotate_provider_metadata_marks_existing_provider_nodes():
     assert topology["nodes"]["skill.krk.stage0_basin"]["meta"]["plasticity_scope"] == "none"
     assert topology["nodes"]["leg_2"]["meta"]["provider_version"] == "stage5_validated_v1"
     assert "provider_version" not in topology["nodes"]["terminal.krk.rook_safe"]["meta"]
+
+
+def test_annotate_provider_metadata_backfills_plasticity_masks_without_relabeling_existing_provider():
+    topology = {
+        "nodes": {
+            "skill.krk.drive_to_edge": {
+                "id": "skill.krk.drive_to_edge",
+                "type": "SCRIPT",
+                "meta": {
+                    "skill_id": "krk.drive_to_edge",
+                    "curriculum_label": "drive_to_edge",
+                    "provider_version": "stage6_overlay_v1",
+                    "overlay_provider": True,
+                    "frozen_provider": False,
+                },
+            },
+        },
+        "edges": [],
+        "meta": {},
+    }
+
+    _baseline_to_recon.annotate_provider_metadata(
+        topology,
+        provider_version="stage5_validated_v1",
+        source_checkpoint="stage5_topology.json",
+        frozen_provider=True,
+        overlay_provider=False,
+        validated_profile="handoff_composition_v1",
+        only_missing=True,
+    )
+
+    meta = topology["nodes"]["skill.krk.drive_to_edge"]["meta"]
+    assert meta["provider_version"] == "stage6_overlay_v1"
+    assert meta["overlay_provider"] is True
+    assert meta["frozen_provider"] is False
+    assert meta["provider_maturity"] == "candidate_high_plasticity"
+    assert meta["plasticity_scope"] == "overlay_local"
+    assert meta["can_m3_update"] is True
+    assert meta["can_m4_consolidate"] is True
 
 
 def test_provider_promotion_eval_promotes_when_stage_and_guardrails_pass(tmp_path):
@@ -610,6 +669,264 @@ def test_stage7_counterfactual_summary_updates_candidates_without_causality(tmp_
     updates = {item["candidate_role"]: item["status"] for item in summary["candidate_updates"]}
     assert updates["krk.box_shrink_to_drive_repair"] == "counterfactual_supported"
     assert updates["krk.stage0_basin_after_box_shrink"] == "negative_counterfactual_evidence"
+
+
+def test_growth_governor_plans_bounded_weight_probe_before_new_topology(tmp_path):
+    candidates_path = tmp_path / "candidates.json"
+    counterfactual_path = tmp_path / "counterfactual_update.json"
+    sandbox_smoke_path = tmp_path / "sandbox_smoke.json"
+
+    candidates_path.write_text(
+        json.dumps({
+            "schema_version": "structural_candidate_set.v1",
+            "source_stage": "stage7_box_shrink",
+            "candidate_count": 3,
+            "candidates": [
+                {
+                    "candidate_id": "cand.krk.box_shrink.reward_contract_refinement.v1",
+                    "governor_status": "growth_allowed",
+                },
+                {
+                    "candidate_id": "cand.krk.box_shrink.handoff_role_refinement.v1",
+                    "governor_status": "growth_allowed",
+                },
+                {
+                    "candidate_id": "cand.krk.box_shrink.overlay_quarantine_confirmed.v1",
+                    "governor_status": "growth_blocked_by_guardrail",
+                },
+            ],
+        }),
+        encoding="utf-8",
+    )
+    counterfactual_path.write_text(
+        json.dumps({
+            "schema_version": "stage7_counterfactual_candidate_update.v1",
+            "causal_status": "non_causal",
+            "candidate_updates": [
+                {
+                    "candidate_role": "krk.box_shrink_to_drive_repair",
+                    "status": "counterfactual_supported",
+                    "support": 1,
+                    "topology_weight_diagnosis": {
+                        "diagnostic_labels": ["topology_present_untrained", "trainable_candidate"],
+                    },
+                },
+                {
+                    "candidate_role": "krk.box_shrink_post_reply_continuation",
+                    "status": "counterfactual_partial",
+                    "support": 2,
+                    "topology_weight_diagnosis": {
+                        "diagnostic_labels": ["provider_capacity_missing"],
+                    },
+                },
+                {
+                    "candidate_role": "krk.stage0_basin_after_box_shrink",
+                    "status": "negative_counterfactual_evidence",
+                    "support": 4,
+                    "topology_weight_diagnosis": {
+                        "diagnostic_labels": ["parameter_miscalibrated"],
+                    },
+                },
+            ],
+        }),
+        encoding="utf-8",
+    )
+    sandbox_smoke_path.write_text(
+        json.dumps({
+            "total": 10,
+            "playouts": {"mate": 3, "max_plies": 7},
+            "shadow_candidate_count": 19,
+            "handoff_packets": [
+                {
+                    "phase": "post_opponent_reply",
+                    "evidence_terms": {
+                        "successor_selected_skill": "krk.stage0_basin",
+                        "visible_successor_provider_licenses": {
+                            "krk.drive_to_edge": {
+                                "krk.box_shrink_to_drive_repair": {
+                                    "contract_met": True,
+                                },
+                            },
+                        },
+                    },
+                }
+            ],
+        }),
+        encoding="utf-8",
+    )
+
+    plan = _growth_governor_plan.plan_candidate_evaluation(
+        candidates_path=candidates_path,
+        counterfactual_update_path=counterfactual_path,
+        sandbox_smoke_path=sandbox_smoke_path,
+    )
+
+    assert plan["schema_version"] == "growth_governor_evaluation_plan.v1"
+    assert plan["causal_status"] == "non_causal"
+    assert plan["recommended_next_action"] == "bounded_m3_warmup_for_box_shrink_to_drive_repair"
+    assert "do_not_promote_stage7" in plan["hard_blocks"]
+
+    role_plans = {item["candidate_role"]: item for item in plan["role_plans"]}
+    drive_plan = role_plans["krk.box_shrink_to_drive_repair"]
+    assert drive_plan["evaluation_phase"] == "phase_3_bounded_plasticity_warmup"
+    assert drive_plan["governor_decision"] == "needs_more_weight_training"
+    assert drive_plan["next_action"] == "run_candidate_local_m3_warmup_probe"
+    assert drive_plan["sandbox_smoke"]["role_contract_met_count"] == 1
+    assert drive_plan["sandbox_smoke"]["role_selected_count"] == 0
+    assert "candidate_local_m3_only" in drive_plan["required_probes"]
+
+    continuation_plan = role_plans["krk.box_shrink_post_reply_continuation"]
+    assert continuation_plan["evaluation_phase"] == "phase_2_forced_oracle_probe"
+    assert continuation_plan["governor_decision"] == "growth_blocked_by_cooldown"
+
+    stage0_plan = role_plans["krk.stage0_basin_after_box_shrink"]
+    assert stage0_plan["governor_decision"] == "growth_blocked_by_guardrail"
+    assert stage0_plan["next_action"] == "do_not_sandbox_as_default_continuation"
+
+
+def test_candidate_local_m3_warmup_plan_whitelists_only_overlay_provider_edges(tmp_path):
+    topology_path = tmp_path / "topology.json"
+    growth_plan_path = tmp_path / "growth_plan.json"
+    topology_path.write_text(
+        json.dumps({
+            "nodes": {
+                "skill.krk.stage0_basin": {
+                    "type": "SCRIPT",
+                    "meta": {
+                        "skill_id": "krk.stage0_basin",
+                        "frozen_provider": True,
+                        "provider_version": "stage5_validated_v1",
+                        "provider_maturity": "foundation_frozen",
+                        "can_m3_update": False,
+                    },
+                },
+                "leg_1": {
+                    "type": "SCRIPT",
+                    "meta": {
+                        "skill_id": "krk.stage0_basin",
+                        "frozen_provider": True,
+                        "provider_version": "stage5_validated_v1",
+                        "provider_maturity": "foundation_frozen",
+                        "can_m3_update": False,
+                    },
+                },
+                "skill.krk.drive_to_edge": {
+                    "type": "SCRIPT",
+                    "meta": {
+                        "skill_id": "krk.drive_to_edge",
+                        "overlay_provider": True,
+                        "provider_version": "stage6_overlay_v1",
+                        "provider_maturity": "candidate_high_plasticity",
+                        "plasticity_scope": "overlay_local",
+                        "can_m3_update": True,
+                    },
+                },
+                "leg_34": {
+                    "type": "SCRIPT",
+                    "meta": {
+                        "skill_id": "krk.drive_to_edge",
+                        "overlay_provider": True,
+                        "provider_version": "stage6_overlay_v1",
+                        "provider_maturity": "candidate_high_plasticity",
+                        "plasticity_scope": "overlay_local",
+                        "can_m3_update": True,
+                    },
+                },
+                "precond_34": {
+                    "type": "SCRIPT",
+                    "meta": {
+                        "skill_id": "krk.drive_to_edge",
+                        "overlay_provider": True,
+                        "can_m3_update": True,
+                    },
+                },
+                "act_script_34": {
+                    "type": "SCRIPT",
+                    "meta": {
+                        "skill_id": "krk.drive_to_edge",
+                        "overlay_provider": True,
+                        "can_m3_update": True,
+                    },
+                },
+                "script.krk.successor.box_shrink_to_drive_repair_affordance": {
+                    "type": "SCRIPT",
+                    "meta": {
+                        "role_id": "krk.box_shrink_to_drive_repair",
+                        "provider_skill_ids": ["krk.drive_to_edge"],
+                    },
+                },
+                "terminal.krk.successor.box_shrink_to_drive_repair_marker": {
+                    "type": "TERMINAL",
+                    "meta": {
+                        "role_id": "krk.box_shrink_to_drive_repair",
+                        "provider_skill_ids": ["krk.drive_to_edge"],
+                    },
+                },
+                "krk_hub": {"type": "SCRIPT", "meta": {}},
+            },
+            "edges": [
+                {"src": "skill.krk.stage0_basin", "dst": "leg_1", "type": "SUB", "weight": 1.0},
+                {"src": "skill.krk.drive_to_edge", "dst": "leg_34", "type": "SUB", "weight": 1.0},
+                {"src": "leg_34", "dst": "precond_34", "type": "SUB", "weight": 1.0},
+                {"src": "precond_34", "dst": "act_script_34", "type": "POR", "weight": 1.0},
+                {
+                    "src": "script.krk.successor.box_shrink_to_drive_repair_affordance",
+                    "dst": "terminal.krk.successor.box_shrink_to_drive_repair_marker",
+                    "type": "SUB",
+                    "weight": 1.0,
+                },
+                {"src": "krk_hub", "dst": "skill.krk.drive_to_edge", "type": "SUB", "weight": 1.0},
+            ],
+        }),
+        encoding="utf-8",
+    )
+    growth_plan_path.write_text(
+        json.dumps({
+            "schema_version": "growth_governor_evaluation_plan.v1",
+            "causal_status": "non_causal",
+            "hard_blocks": ["do_not_promote_stage7"],
+            "role_plans": [
+                {
+                    "candidate_role": "krk.box_shrink_to_drive_repair",
+                    "governor_decision": "needs_more_weight_training",
+                    "evaluation_phase": "phase_3_bounded_plasticity_warmup",
+                    "guardrails": ["stage7_box_shrink_target", "stage5_fence"],
+                }
+            ],
+        }),
+        encoding="utf-8",
+    )
+
+    plan = _candidate_m3_warmup_plan.plan_candidate_local_m3_warmup(
+        topology_path=topology_path,
+        growth_plan_path=growth_plan_path,
+    )
+
+    assert plan["schema_version"] == "candidate_local_m3_warmup_plan.v1"
+    assert plan["causal_status"] == "non_causal"
+    assert plan["target_providers"] == ["krk.drive_to_edge"]
+    assert plan["growth_governor_decision"] == "needs_more_weight_training"
+    assert plan["training_limits"]["m4_consolidation_enabled"] is False
+    assert plan["training_limits"]["topology_mutation_enabled"] is False
+    assert plan["protected_provider_versions"] == ["stage5_validated_v1"]
+
+    whitelisted = {(edge["src"], edge["dst"], edge["type"]) for edge in plan["eligible_edge_whitelist"]}
+    assert ("skill.krk.drive_to_edge", "leg_34", "SUB") in whitelisted
+    assert ("leg_34", "precond_34", "SUB") in whitelisted
+    assert ("precond_34", "act_script_34", "POR") in whitelisted
+    assert ("skill.krk.stage0_basin", "leg_1", "SUB") not in whitelisted
+    assert ("krk_hub", "skill.krk.drive_to_edge", "SUB") not in whitelisted
+
+    role_support = {
+        (edge["src"], edge["dst"], edge["type"], edge["trainable"])
+        for edge in plan["observe_only_role_support_edges"]
+    }
+    assert (
+        "script.krk.successor.box_shrink_to_drive_repair_affordance",
+        "terminal.krk.successor.box_shrink_to_drive_repair_marker",
+        "SUB",
+        False,
+    ) in role_support
 
 
 def test_spawn_point_promoted_trial_materializes_formal_triplet_pairs():

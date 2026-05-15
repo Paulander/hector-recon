@@ -82,16 +82,32 @@ def _provider_metadata_payload(
         "frozen_provider": bool(metadata.get("frozen_provider", False)),
         "overlay_provider": bool(metadata.get("overlay_provider", False)),
         "validated_profile": metadata.get("validated_profile"),
-        "provider_maturity": metadata.get(
-            "provider_maturity",
-            "foundation_frozen" if metadata.get("frozen_provider") else "candidate_high_plasticity" if metadata.get("overlay_provider") else "sandbox_medium_plasticity",
+        "provider_maturity": metadata.get("provider_maturity")
+        or (
+            "foundation_frozen"
+            if metadata.get("frozen_provider")
+            else "candidate_high_plasticity"
+            if metadata.get("overlay_provider")
+            else "sandbox_medium_plasticity"
         ),
-        "plasticity_scope": metadata.get(
-            "plasticity_scope",
-            "none" if metadata.get("frozen_provider") else "overlay_local" if metadata.get("overlay_provider") else "provider_local",
+        "plasticity_scope": metadata.get("plasticity_scope")
+        or (
+            "none"
+            if metadata.get("frozen_provider")
+            else "overlay_local"
+            if metadata.get("overlay_provider")
+            else "provider_local"
         ),
-        "can_m3_update": bool(metadata.get("can_m3_update", not metadata.get("frozen_provider", False))),
-        "can_m4_consolidate": bool(metadata.get("can_m4_consolidate", not metadata.get("frozen_provider", False))),
+        "can_m3_update": bool(
+            metadata.get("can_m3_update")
+            if metadata.get("can_m3_update") is not None
+            else not metadata.get("frozen_provider", False)
+        ),
+        "can_m4_consolidate": bool(
+            metadata.get("can_m4_consolidate")
+            if metadata.get("can_m4_consolidate") is not None
+            else not metadata.get("frozen_provider", False)
+        ),
         "guardrail_status": dict(metadata.get("guardrail_status", {}) or {}),
         "promotion_status": metadata.get("promotion_status"),
     }
@@ -109,6 +125,7 @@ def annotate_provider_metadata(
     only_missing: bool = False,
 ) -> None:
     """Annotate existing skill/leg/actuator nodes with provider provenance."""
+    maturity_keys = ("provider_maturity", "plasticity_scope", "can_m3_update", "can_m4_consolidate")
     for node_id, node in topology.get("nodes", {}).items():
         if not isinstance(node, dict):
             continue
@@ -123,10 +140,34 @@ def annotate_provider_metadata(
         )
         if not is_provider_node:
             continue
-        if only_missing and meta.get("provider_version"):
+        if only_missing and meta.get("provider_version") and all(meta.get(key) is not None for key in maturity_keys):
             continue
         curriculum_label = meta.get("curriculum_label")
         skill_id = meta.get("skill_id") or canonicalize_skill_id(curriculum_label)
+        if only_missing and meta.get("provider_version"):
+            payload = _provider_metadata_payload(
+                skill_id=skill_id,
+                curriculum_label=curriculum_label,
+                provider_metadata={
+                    "provider_version": meta.get("provider_version"),
+                    "source_stage": meta.get("source_stage", meta.get("stage")),
+                    "source_checkpoint": meta.get("source_checkpoint"),
+                    "frozen_provider": bool(meta.get("frozen_provider", False)),
+                    "overlay_provider": bool(meta.get("overlay_provider", False)),
+                    "validated_profile": meta.get("validated_profile", validated_profile),
+                    "provider_maturity": meta.get("provider_maturity"),
+                    "plasticity_scope": meta.get("plasticity_scope"),
+                    "can_m3_update": meta.get("can_m3_update"),
+                    "can_m4_consolidate": meta.get("can_m4_consolidate"),
+                    "guardrail_status": meta.get("guardrail_status", {}),
+                    "promotion_status": meta.get("promotion_status"),
+                },
+                source_stage=meta.get("source_stage", meta.get("stage")) if meta.get("source_stage", meta.get("stage")) is not None else None,
+            )
+            for key, value in payload.items():
+                if meta.get(key) is None:
+                    meta[key] = value
+            continue
         payload = _provider_metadata_payload(
             skill_id=skill_id,
             curriculum_label=curriculum_label,
