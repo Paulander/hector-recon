@@ -975,3 +975,124 @@ The narrowed role fixes the targeted h4d4 continuation at the longer horizon and
 It should remain opt-in/experimental until tested on larger samples and against regressions.
 The next useful diagnostic is to inspect the remaining 5 max_plies cases under the narrowed role and decide whether they are horizon-limited, loop-family changes, or genuine post-break capacity gaps.
 ```
+
+## Slice 39: State394 Stage0 Drift Audit
+
+Remaining failures after Slice 38 were a single clean bucket:
+
+```text
+state: state.394b71e02d00
+post-reply FEN: 1k6/7R/2K5/8/8/8/8/8 w - - 2 2
+selected successor: krk.stage0_basin
+failure class: selected_successor_miscalibrated
+```
+
+Targeted audit:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice39_state394_audit.json
+```
+
+Findings:
+
+```text
+forced krk.stage0_basin: max_plies
+forced krk.edge_trap_close: mate
+forced krk.fence_established: mate
+forced krk.edge_trap_wrong_tempo: mate
+forced krk.edge_trap_enemy_between: mate
+```
+
+Legal-first audit:
+
+```text
+many converting legal first moves exist
+runtime selected c6b6, which did not convert
+provider audit: converting_move_not_proposed
+```
+
+The existing opt-in `successor_stage0_drift_penalty` targets exactly this condition: a high-scoring `stage0_basin` king drift while edge-trap recovery is visibly licensed and the king move does not improve visible support/progress.
+
+Targeted run with `--successor-stage0-drift-penalty 6.0`:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice39_state394_stage0_drift_penalty_audit.json
+selected first move: h7d7
+result: mate
+provider audit: selected_converting_move
+```
+
+Matched 25-sample Stage 5 at 40 plies:
+
+```text
+narrow post-break only:
+  artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice38_stage5_25_post_break_king_followup_h40.json
+  conversion: 20 mate / 5 max_plies
+
+narrow post-break + existing stage0 drift penalty:
+  artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice39_stage5_25_post_break_plus_stage0_drift_h40.json
+  conversion: 25 mate / 0 max_plies
+  shadow candidates: 0
+```
+
+Interpretation:
+
+```text
+This is not missing KRK capacity. The graph had converting providers and moves.
+The remaining error was miscalibrated stage0 ownership in an edge-trap recovery geometry.
+The existing narrow drift penalty is sufficient for the 25-sample bounded set when combined with the narrowed post-break continuation role.
+```
+
+Keep this experimental until larger validation passes.
+
+100-sample validation:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice39_stage5_100_post_break_plus_stage0_drift_h40.json
+local:      100/100 improved, 100/100 optimal
+conversion: 100 mate / 0 max_plies at 40 plies
+shadow candidates: 0
+semantic alignment: 100 reward_visible_fence_aligned_survived
+```
+
+This is the first clean 100-sample Stage 5 conversion pass for the visible successor/stagnation/post-break configuration. It remains opt-in and should be validated against larger randomized Stage 5 and cross-stage regressions before becoming a default runtime path.
+
+## Slice 40: Bounded Cross-Seed Validation
+
+Attempted a naive 500-sample Stage 5 validation with the Slice 39 opt-in configuration:
+
+```text
+artifact target: snapshots/krk_triplet_pipeline/handoff_observability_check/slice40_stage5_500_post_break_plus_stage0_drift_h40.json
+status: stopped manually at 10/500
+reason: too slow for interactive validation; projected runtime was hours
+```
+
+The runtime bottleneck is CPU-side adversarial ReCoN playout, not neural training/GPU work. Each sample may require many White decisions, and each decision evaluates visible roles, move-shapes, stagnation/post-break terms, and actuator suggestions.
+
+Instead, ran a bounded different-seed validation:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice40_stage5_30_seed11_post_break_plus_stage0_drift_h40.json
+analysis: snapshots/krk_triplet_pipeline/handoff_observability_check/slice40_stage5_30_seed11_post_break_plus_stage0_drift_h40_analysis.md
+seed: 11
+samples: 30
+horizon: 40 plies
+local: 30/30 improved, 30/30 optimal
+conversion: 30 mate / 0 max_plies
+shadow candidates: 0
+semantic alignment: 30 reward_visible_fence_aligned_survived
+```
+
+Regression suite:
+
+```text
+tests: architecture preservation, plasticity, consolidation, routing contracts, shadow queue, KRK successor affordance, diagnostic early stop, counterfactual sweep
+result: 94 passed
+```
+
+Interpretation:
+
+```text
+The Slice 39 configuration is not just memorizing the seed-7 100-sample run; it also passes a different bounded curriculum sample.
+The mechanisms remain opt-in. The next engineering bottleneck is diagnostic throughput, so larger randomized validation should be preceded by more performance work or run as an overnight job.
+```
