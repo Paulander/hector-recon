@@ -50,11 +50,27 @@ def _load_records(path: Path) -> list[dict[str, Any]]:
     payload = json.loads(text)
     if isinstance(payload, dict) and isinstance(payload.get("target_failure_traces"), list):
         return [item for item in payload["target_failure_traces"] if isinstance(item, dict)]
+    if isinstance(payload, dict) and isinstance(payload.get("debug_playouts"), list):
+        return [item for item in payload["debug_playouts"] if isinstance(item, dict)]
     if isinstance(payload, dict):
         return [payload]
     if isinstance(payload, list):
         return [item for item in payload if isinstance(item, dict)]
     return []
+
+
+def _event_has_stagnation_breaker_license(event: dict[str, Any]) -> bool:
+    if event.get("visible_stagnation_breaker_license"):
+        return True
+    engine = event.get("engine") if isinstance(event.get("engine"), dict) else {}
+    selected_move = engine.get("move")
+    suggestions = list(engine.get("suggestions") or [])
+    selected = next(
+        (item for item in suggestions if item.get("move") == selected_move),
+        suggestions[0] if suggestions else {},
+    )
+    meta = selected.get("meta") if isinstance(selected.get("meta"), dict) else {}
+    return bool(meta.get("visible_stagnation_breaker_license"))
 
 
 def _find_first_stagnation_breaker_event(records: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]]]:
@@ -63,7 +79,7 @@ def _find_first_stagnation_breaker_event(records: list[dict[str, Any]]) -> tuple
         for idx, event in enumerate(trace):
             if not isinstance(event, dict):
                 continue
-            if event.get("visible_stagnation_breaker_license"):
+            if _event_has_stagnation_breaker_license(event):
                 return record, event, trace[: idx + 1]
     raise ValueError("No visible_stagnation_breaker_license event found in trace input")
 
@@ -232,6 +248,55 @@ def _candidate_loop_breaking_audits(
     audits = [item for item in audits if item.get("loop_breaking")]
     audits.sort(key=lambda item: str(item.get("move")))
     return board, pre_break_summary, audits
+
+
+def _candidate_horizon_summary(
+    candidates: list[dict[str, Any]],
+    horizons: list[int],
+    *,
+    selected_break_move: str,
+) -> dict[str, Any]:
+    """Summarize which loop-breaking candidates convert at each horizon."""
+    converters_by_horizon: dict[str, list[str]] = {}
+    fastest_horizon_by_move: dict[str, int] = {}
+    selected_break_move_outcomes: dict[str, Any] | None = None
+
+    for horizon in horizons:
+        key = str(horizon)
+        converters_by_horizon[key] = sorted(
+            str(candidate.get("move"))
+            for candidate in candidates
+            if candidate.get("outcomes_by_horizon", {}).get(key) == "mate"
+        )
+
+    for candidate in candidates:
+        move_uci = str(candidate.get("move"))
+        outcomes = candidate.get("outcomes_by_horizon", {})
+        for horizon in horizons:
+            if outcomes.get(str(horizon)) == "mate":
+                fastest_horizon_by_move[move_uci] = horizon
+                break
+        if selected_break_move and move_uci == selected_break_move:
+            selected_break_move_outcomes = {
+                "move": move_uci,
+                "outcomes_by_horizon": outcomes,
+                "fastest_mating_horizon": fastest_horizon_by_move.get(move_uci),
+            }
+
+    fastest_converting_moves = sorted(
+        [
+            {"move": move_uci, "fastest_mating_horizon": horizon}
+            for move_uci, horizon in fastest_horizon_by_move.items()
+        ],
+        key=lambda item: (item["fastest_mating_horizon"], item["move"]),
+    )
+
+    return {
+        "loop_breaking_moves_that_convert_by_horizon": converters_by_horizon,
+        "fastest_mating_horizon_by_move": dict(sorted(fastest_horizon_by_move.items())),
+        "fastest_converting_moves": fastest_converting_moves,
+        "selected_break_move_outcomes": selected_break_move_outcomes,
+    }
 
 
 def _run_candidate(
@@ -467,6 +532,13 @@ def main() -> None:
             for horizon in horizons
         },
     }
+    output.update(
+        _candidate_horizon_summary(
+            candidates,
+            horizons,
+            selected_break_move=selected_break_move,
+        )
+    )
     if args.json_output is not None:
         args.json_output.parent.mkdir(parents=True, exist_ok=True)
         args.json_output.write_text(json.dumps(output, indent=2) + "\n", encoding="utf-8")
@@ -474,6 +546,8 @@ def main() -> None:
         "first_stagnation_breaker_state": output["first_stagnation_breaker_state"],
         "candidate_count": len(candidates),
         "loop_breaking_moves_that_convert": output["loop_breaking_moves_that_convert"],
+        "loop_breaking_moves_that_convert_by_horizon": output["loop_breaking_moves_that_convert_by_horizon"],
+        "selected_break_move_outcomes": output["selected_break_move_outcomes"],
         "outcome_counts_by_horizon": output["outcome_counts_by_horizon"],
     }, indent=2))
 

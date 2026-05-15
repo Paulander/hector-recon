@@ -1546,3 +1546,154 @@ Interpretation:
 The profile is now validated beyond the original Stage 5 tuning set and can be used as the conversion/handoff evaluation harness for subsequent KRK curriculum stages.
 This remains an opt-in experimental profile; default training/eval behavior is unchanged unless the profile is selected.
 ```
+
+## Slice 48: Strict Stage 6 Curriculum Gate
+
+The next curriculum trial used `handoff_composition_v1` as the conversion harness for Stage 6:
+
+```text
+label: drive_to_edge
+source stages: Opposition_Approach, Tempo_Wait, King_Close_1
+load learner: adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl
+output: snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_strict
+adaptive eval samples: 200
+adaptive playout horizon: 40
+```
+
+A curriculum bug was found and fixed before accepting this stage:
+
+```text
+StageEvalResult.passed now requires one_ply_passed AND conversion_passed.
+Late KRK stages now have conversion criteria, not local-only criteria:
+  fence_established
+  drive_to_edge
+  box_shrink
+  opposition_tempo
+  full_krk
+```
+
+This prevented false advancement. With strict criteria, Stage 6 did not pass:
+
+```text
+cycle 9:  149 mate / 51 max_plies, max_plies_rate=0.255 > 0.250
+cycle 14: 149 mate / 51 max_plies, plateau patience 1
+cycle 19: 149 mate / 51 max_plies, plateau patience 2
+cycle 24: 149 mate / 51 max_plies, plateau patience 3
+result: plateau stop, no strict Stage 6 pass
+```
+
+The compiled final learner still preserved core regressions:
+
+```text
+KRK entry: 100/100 mate
+Stage 1 backchain: 100/100 improved, 100/100 optimal
+```
+
+Interpretation:
+
+```text
+The profile harness is doing its job: it blocks a locally-good but conversion-incomplete stage.
+Do not advance to Stage 7 from this checkpoint as if Stage 6 were solved.
+```
+
+## Slice 49: Stage 6 Failure Classification
+
+A 200-sample Stage 6 diagnostic on the strict topology produced:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_strict/stage6_drive_strict_debug_200_seed7_h40.json
+analysis: snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_strict/stage6_drive_strict_debug_200_seed7_h40_analysis.md
+local: 200/200 improved
+optimal: 149/200
+conversion: 149 mate / 51 max_plies
+shadow candidates: 153
+```
+
+The failure set was compact:
+
+```text
+rook_oscillation_loop: 51
+successor_conflict: 51
+selected successor by outcome:
+  krk.stage0_basin: 149 mate
+  krk.edge_trap_close: 51 max_plies
+```
+
+Representative repeated start:
+
+```text
+4k3/R7/8/K7/8/8/8/8 w - - 0 1
+```
+
+Observed early sequence:
+
+```text
+a7h7
+... e8f8
+h7c7
+```
+
+There were no handoff gaps and semantic alignment was still fine. A forced-successor sweep over the unique failure family did not find a tested successor that mated by horizon 40:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_strict/stage6_counterfactual_summary.json
+unique states: 1
+forced successors tested:
+  krk.stage0_basin
+  krk.edge_trap_close
+  krk.fence_established
+  krk.fence_maintenance
+  krk.edge_trap_wrong_tempo
+  krk.edge_trap_enemy_between
+  krk.drive_to_edge
+result: no forced successor mated by horizon 40
+```
+
+Interpretation:
+
+```text
+This is not a simple wrong-successor handoff.
+It is a post-drive edge-rim continuation / rook-oscillation / horizon family.
+The existing stagnation breaker can fire, but the selected break is not the fastest conversion path.
+```
+
+## Slice 50: Stage 6 Post-Break Continuation Audit
+
+The post-break audit script now reads full diagnostic `debug_playouts`, detects stagnation-breaker licenses embedded in selected suggestion metadata, and summarizes horizon-specific converters.
+
+Targeted audit:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_strict/stage6_post_break_audit.json
+steps: snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_strict/stage6_post_break_audit_steps.jsonl
+first stagnation-breaker state:
+  5k2/8/8/K7/7R/8/8/8 w - - 18 10
+licensed loop-breaking candidates: 18
+```
+
+Outcome by horizon:
+
+```text
+horizon 21: 3 mate / 15 max_plies
+horizon 40: 7 mate / 11 max_plies
+horizon 60: 17 mate / 1 max_plies
+```
+
+Key finding:
+
+```text
+The runtime-selected break move h4f4 is not hopeless; it mates by horizon 60.
+Several alternatives convert faster:
+  a5b4
+  a5b5
+  a5b6
+```
+
+Interpretation:
+
+```text
+The remaining Stage 6 issue is mostly post-break continuation quality and horizon sensitivity, not missing local Stage 6 capacity.
+Good loop-breaking moves exist, but the current visible loop-breaker does not yet rank quick king-support continuation shapes over slower rook-transfer continuations.
+The next safe work should be non-causal post-break move-shape classification and then a narrow visible post-drive/post-break continuation role if the terms separate fast converters cleanly.
+Do not add broad score bonuses or train a generic convert-from-fence skill yet.
+```

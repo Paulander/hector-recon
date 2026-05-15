@@ -164,7 +164,7 @@ def make_eval_result(
         stage_label=stage_label,
         cycle=int(cycle),
         metrics=metrics,
-        passed=one_ply_passed,
+        passed=one_ply_passed and conversion_passed,
         one_ply_passed=one_ply_passed,
         one_ply_status="passed" if one_ply_passed else "failed",
         conversion_status=conversion_status,

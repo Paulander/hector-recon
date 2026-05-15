@@ -684,6 +684,15 @@ def pass_criteria_for_label(label: str) -> StagePassCriteria:
             max_draw_rate=0.10,
             max_max_plies_rate=0.25,
         )
+    if label in {"fence_established", "drive_to_edge", "box_shrink", "opposition_tempo", "full_krk"}:
+        return StagePassCriteria(
+            min_improved_rate=0.70,
+            max_worsened_rate=0.20,
+            min_avg_reward=0.0,
+            min_mate_playout_rate=0.65,
+            max_draw_rate=0.10,
+            max_max_plies_rate=0.25,
+        )
     return StagePassCriteria(min_improved_rate=0.70, max_worsened_rate=0.20, min_avg_reward=0.0)
 
 

@@ -190,3 +190,46 @@ def test_make_eval_result_reports_conversion_status_not_checked():
     assert result.one_ply_status == "passed"
     assert result.conversion_status == "not_checked"
     assert result.conversion_passed is False
+    assert result.passed is False
+
+
+def test_make_eval_result_requires_conversion_when_conversion_criteria_exist():
+    from recon_lite_chess.training.adaptive_curriculum import make_eval_result
+
+    criteria = StagePassCriteria(
+        min_improved_rate=0.70,
+        max_worsened_rate=0.20,
+        min_avg_reward=0.0,
+        min_mate_playout_rate=0.65,
+        max_max_plies_rate=0.25,
+    )
+    metrics = {
+        "total": 100,
+        "improved": 100,
+        "worsened": 0,
+        "avg_reward": 0.1,
+        "playouts": {"mate": 50, "max_plies": 50},
+    }
+
+    result = make_eval_result("drive_to_edge", 9, metrics, criteria)
+
+    assert result.one_ply_status == "passed"
+    assert result.conversion_status == "failed"
+    assert result.conversion_passed is False
+    assert result.passed is False
+
+
+def test_late_krk_landmark_pass_criteria_include_conversion():
+    import importlib.util
+
+    module_path = Path(__file__).resolve().parents[1] / "scripts" / "train_baseline_krk_chain.py"
+    spec = importlib.util.spec_from_file_location("train_baseline_krk_chain_for_criteria", module_path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec is not None and spec.loader is not None
+    sys.modules["train_baseline_krk_chain_for_criteria"] = module
+    spec.loader.exec_module(module)
+
+    criteria = module.pass_criteria_for_label("drive_to_edge")
+
+    assert criteria.min_mate_playout_rate == 0.65
+    assert criteria.max_max_plies_rate == 0.25
