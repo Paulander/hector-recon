@@ -2122,3 +2122,141 @@ The frozen-provider overlay work did not break the older bridge machinery.
 KQK approach affordance may be visible before promotion, but KQK execution remains vetoed until material eligibility confirms.
 The promotion handoff packet remains trace-only and does not cause the KQK route.
 ```
+
+## Slice 58: Stage 7 Box-Shrink Overlay Smoke
+
+The next curriculum stage was attempted as an overlay candidate source rather than a replacement topology.
+
+Training setup:
+
+```text
+label: box_shrink
+source stages: Box_Small, Box_Medium, Edge_Fence_Deep
+load learner: adaptive_krk_stage6_drive_profile_king_support/baseline/best_by_stage/drive_to_edge.pkl
+profile: handoff_composition_v1
+adaptive eval: 50 samples
+adaptive playout horizon: 20 plies
+output: snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_profile_overlay_smoke
+```
+
+Two evaluator robustness fixes were needed before the smoke could run:
+
+```text
+sample index bug:
+  semantic mismatch snapshots used sample=i even though the loop variable is sample_index
+
+successor summary schema bug:
+  empty post-reply summaries did not include visible_eligible_successors
+```
+
+Adaptive checkpoint evaluation was also changed to use the existing parallel landmark evaluator when `--adaptive-use-profile-validation-defaults` is selected:
+
+```text
+parallel_workers: 8
+chunk_size: 25
+diagnostic caches: enabled
+```
+
+This is behavior-preserving for default training and only affects profile-selected adaptive validation.
+
+Smoke result:
+
+```text
+local one-ply objective:
+  50/50 improved
+  50/50 optimal during adaptive validation
+
+conversion:
+  19 mate / 31 max_plies
+
+status:
+  plateaued at cycle 24
+  saved learner: adaptive_krk_stage7_box_profile_overlay_smoke/baseline/final_learner.pkl
+```
+
+The learned Stage 7 provider was then compiled as an additive overlay on top of the Stage 6 overlay topology:
+
+```text
+base:
+  adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json
+
+overlay learner:
+  adaptive_krk_stage7_box_profile_overlay_smoke/baseline/final_learner.pkl
+
+overlay label:
+  box_shrink
+
+output:
+  adaptive_krk_stage7_box_overlay_composed_smoke/topology/krk_entry_topology.json
+
+overlay actuators:
+  11
+```
+
+Overlay validation:
+
+```text
+artifact:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/stage7_box_overlay_smoke_50_seed7_h20.json
+
+local:
+  improved: 50/50
+  optimal: 32/50
+  one_ply_status: failed
+
+conversion:
+  19 mate / 31 max_plies
+  conversion_status: failed
+
+shadow candidates:
+  86
+```
+
+Promotion gate:
+
+```text
+artifact:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/promotion_eval_stage7_box_overlay_smoke.json
+
+promotion_status:
+  quarantine
+
+failure reasons:
+  mate_rate=0.380 < 0.650
+  max_plies_rate=0.620 > 0.250
+  shadow_candidates=86 > 0
+```
+
+Handoff analysis:
+
+```text
+artifact:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/stage7_box_overlay_smoke_50_seed7_h20_analysis.md
+
+failure motifs:
+  selected_successor_miscalibrated: 31
+
+selected successor by outcome:
+  krk.stage0_basin:max_plies: 31
+  krk.edge_trap_close:mate: 8
+
+semantic alignment:
+  reward_contract_mismatch: 24
+  reward_visible_fence_aligned_survived: 15
+  reward_visible_fence_aligned_reply_not_checked: 11
+
+shadow triggers:
+  repeated_conversion_failure: 31
+  high_score_conversion_failure: 31
+  reward_contract_mismatch: 24
+```
+
+Interpretation:
+
+```text
+Stage 7 box_shrink is locally learnable but not composition-ready.
+The overlay mechanism correctly quarantines it instead of promoting it.
+The failure is not diffuse: box_shrink rewards often confirm when the visible fence/contract does not, and continuation falls back to high-scoring stage0_basin paths that fail conversion.
+Do not train Stage 8 or promote Stage 7 yet.
+The next work should be a Stage 7 semantic/contract audit around box-shrink reward confirmation versus visible box/fence contraction terms.
+```

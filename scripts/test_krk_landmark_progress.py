@@ -454,6 +454,7 @@ def _successor_skill_summary(
             "visible_terms": {},
             "visible_successor_affordances": {},
             "visible_successor_provider_licenses": {},
+            "visible_eligible_successors": {},
             "role_license_present_but_provider_absent": {},
             "role_contract_met_but_provider_not_selected": {},
             "missing_afforded_skills": {},
@@ -2870,7 +2871,7 @@ def evaluate_landmark_progress(
                 _append_semantic_snapshot(
                     stats,
                     bucket=semantic_alignment_status,
-                    sample=i,
+                    sample=sample_index,
                     start_fen=board.fen(),
                     move=move_uci,
                     post_reply_fen=post_reply_fen,

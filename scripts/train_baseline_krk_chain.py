@@ -10,6 +10,7 @@ import importlib.util
 import json
 import pickle
 import random
+import sys
 from pathlib import Path
 from typing import Dict, List, Any
 
@@ -49,6 +50,7 @@ def _load_script_module(name: str, path: Path):
     spec = importlib.util.spec_from_file_location(name, path)
     module = importlib.util.module_from_spec(spec)
     assert spec is not None and spec.loader is not None
+    sys.modules[name] = module
     spec.loader.exec_module(module)
     return module
 
@@ -837,9 +839,19 @@ def evaluate_landmark_checkpoint(
         eval_kwargs["stagnation_breaker_king_support_bonus"] = (
             adaptive_stagnation_breaker_king_support_bonus
         )
+    parallel_workers = 1
+    chunk_size = 25
     if getattr(args, "adaptive_use_profile_validation_defaults", False):
         eval_kwargs["enable_diagnostic_caches"] = True
-    return _landmark_eval_module().evaluate_landmark_progress(**eval_kwargs)
+        parallel_workers = 8
+    landmark_eval = _landmark_eval_module()
+    if parallel_workers > 1 and int(eval_kwargs.get("samples", 0) or 0) > chunk_size:
+        return landmark_eval.evaluate_landmark_progress_parallel(
+            parallel_workers=parallel_workers,
+            chunk_size=chunk_size,
+            **eval_kwargs,
+        )
+    return landmark_eval.evaluate_landmark_progress(**eval_kwargs)
 
 
 def update_learner_from_transitions(
