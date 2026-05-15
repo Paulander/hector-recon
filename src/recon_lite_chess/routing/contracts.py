@@ -316,3 +316,64 @@ def record_handoff_composition_event(
         credit=0.0,
         meta=payload,
     )
+
+
+def record_provider_promotion_event(
+    episode_summary: Any,
+    *,
+    tick: int,
+    skill_id: str,
+    provider_version: str,
+    promotion_status: str,
+    source_checkpoint: Optional[str] = None,
+    base_provider_version: Optional[str] = None,
+    overlay_provider_version: Optional[str] = None,
+    validated_profile: Optional[str] = None,
+    stage_artifact: Optional[str] = None,
+    guardrail_artifacts: Optional[List[str]] = None,
+    promotion_eval: Mapping[str, Any] | None = None,
+    meta: Optional[Mapping[str, Any]] = None,
+) -> None:
+    """Export provider-preservation/promotion evidence into an EpisodeSummary.
+
+    This is deliberately non-causal. It gives M5/promotion tooling and later
+    analysis a durable trace record while M4 consolidation still ignores it and
+    consumes ordinary edge-delta summaries only.
+    """
+    if not hasattr(episode_summary, "record_learning_event"):
+        raise TypeError("episode_summary must provide record_learning_event")
+
+    payload: Dict[str, Any] = {
+        "schema_version": "provider_promotion_event.v1",
+        "skill_id": skill_id,
+        "provider_version": provider_version,
+        "promotion_status": promotion_status,
+        "source_checkpoint": source_checkpoint,
+        "base_provider_version": base_provider_version,
+        "overlay_provider_version": overlay_provider_version,
+        "validated_profile": validated_profile,
+        "stage_artifact": stage_artifact,
+        "guardrail_artifacts": guardrail_artifacts or [],
+    }
+    if promotion_eval is not None:
+        payload["promotion_eval"] = dict(promotion_eval)
+    if meta:
+        payload["meta"] = dict(meta)
+    payload = _jsonable(payload)
+    subject_id = stable_record_id(
+        "provider_promotion_event",
+        skill_id,
+        provider_version,
+        promotion_status,
+        source_checkpoint,
+        stage_artifact,
+        guardrail_artifacts or [],
+    )
+    episode_summary.record_learning_event(
+        tick=tick,
+        event_type="provider_promotion_event",
+        subject_id=subject_id,
+        parent_id=skill_id,
+        credit=0.0,
+        meta=payload,
+    )

@@ -2064,3 +2064,61 @@ It should not be treated as a monolithic replacement topology.
 The next curriculum stages should use frozen validated provider packs plus additive overlays.
 Stage 4 wrong-tempo conversion at 40 plies remains a separate diagnostic target.
 ```
+
+## Slice 57: Preservation Evidence Export And Cross-Domain Bridge Check
+
+Provider promotion is now exportable as non-causal episode metadata:
+
+```text
+event_type: provider_promotion_event
+schema_version: provider_promotion_event.v1
+credit: 0.0
+payload:
+  skill_id
+  provider_version
+  promotion_status
+  source_checkpoint
+  base_provider_version
+  overlay_provider_version
+  validated_profile
+  stage artifact
+  guardrail artifacts
+  provider_promotion_eval.v1 payload
+```
+
+This mirrors the handoff-composition event path. It lets future M5 tooling preserve promotion evidence in `EpisodeSummary.learning_events` without making the event causal and without changing M4 consolidation inputs.
+
+A persistent manifest was added:
+
+```text
+reports/stage6_overlay_validation_manifest.md
+```
+
+It records the frozen base, Stage 6 overlay learner/checkpoint, composed topology, validation artifacts, promotion artifact, and reproduction commands for the current `stage6_overlay_v1` checkpoint.
+
+The existing KPK to KQK bridge suite was re-run under the current routing-contract instrumentation:
+
+```text
+command:
+  uv run python tests/test_subgraph_delegation.py
+
+result:
+  all tests passed
+
+checks covered:
+  KPK direct promotion
+  KQK direct move selection
+  pre-promotion KQK execution veto
+  KPK promotion handoff packet
+  post-promotion KQK route eligibility
+  KQK continuation move
+  SubgraphLock
+```
+
+Interpretation:
+
+```text
+The frozen-provider overlay work did not break the older bridge machinery.
+KQK approach affordance may be visible before promotion, but KQK execution remains vetoed until material eligibility confirms.
+The promotion handoff packet remains trace-only and does not cause the KQK route.
+```

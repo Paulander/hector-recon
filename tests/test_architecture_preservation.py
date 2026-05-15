@@ -14,6 +14,7 @@ from recon_lite_chess.routing.contracts import (
     ShadowStemCandidate,
     SkillContractStats,
     record_handoff_composition_event,
+    record_provider_promotion_event,
 )
 from recon_lite_chess.routing.shadow_queue import build_shadow_stem_queue
 from recon_lite_hector.plasticity.consolidate import (
@@ -174,3 +175,49 @@ def test_handoff_composition_events_export_to_episode_summary_non_causally():
 
     assert set(engine.edge_states) == {"phase1->phase2:POR"}
     assert engine.edge_states["phase1->phase2:POR"].accumulated_weighted_delta == 0.4
+
+
+def test_provider_promotion_events_export_to_episode_summary_non_causally():
+    summary = EpisodeSummary(
+        edge_delta_sums={"phase1->phase2:POR": 0.35},
+        avg_reward_tick=1.0,
+        outcome_score=1.0,
+    )
+
+    record_provider_promotion_event(
+        summary,
+        tick=21,
+        skill_id="krk.drive_to_edge",
+        provider_version="stage6_overlay_v1",
+        promotion_status="promoted",
+        source_checkpoint="snapshots/.../drive_to_edge.pkl",
+        base_provider_version="stage5_validated_v1",
+        overlay_provider_version="stage6_overlay_v1",
+        validated_profile="handoff_composition_v1",
+        stage_artifact="stage6_drive_overlay_300_seed7_h40.json",
+        guardrail_artifacts=["stage5_fence_overlay_300_seed7_h40.json"],
+        promotion_eval={"schema_version": "provider_promotion_eval.v1"},
+    )
+
+    restored = EpisodeSummary.from_dict(summary.to_dict())
+    assert restored.edge_delta_sums == {"phase1->phase2:POR": 0.35}
+    assert len(restored.learning_events) == 1
+    event = restored.learning_events[0]
+    assert event.event_type == "provider_promotion_event"
+    assert event.credit == 0.0
+    assert event.parent_id == "krk.drive_to_edge"
+    assert event.meta["schema_version"] == "provider_promotion_event.v1"
+    assert event.meta["promotion_status"] == "promoted"
+    assert event.meta["promotion_eval"]["schema_version"] == "provider_promotion_eval.v1"
+
+    engine = ConsolidationEngine(
+        ConsolidationConfig(min_episodes=1, outcome_weight=0.5)
+    )
+    engine.edge_states["phase1->phase2:POR"] = EdgeConsolidationState(
+        edge_key="phase1->phase2:POR",
+        w_base=1.0,
+    )
+    engine.accumulate_episode(restored)
+
+    assert set(engine.edge_states) == {"phase1->phase2:POR"}
+    assert engine.edge_states["phase1->phase2:POR"].accumulated_weighted_delta == 0.35

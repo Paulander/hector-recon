@@ -8,5 +8,6 @@ The handoff, role, and stagnation work extends observability and future growth e
 - M3 is temporary within-episode plasticity. Fast edge deltas adapt behavior during an episode and are reset rather than treated as durable topology.
 - M4 is slow cross-game consolidation. It consumes `EpisodeSummary.edge_delta_sums` plus episode reward/outcome signals to update persistent edge weights. Handoff diagnostics may travel as learning-event metadata without becoming consolidation inputs by themselves.
 - M5 is topology promotion/pruning. Structural growth remains shadow/proposal/promote-only and offline until explicitly promoted; there is no live topology mutation during gameplay in the current handoff/stagnation milestones.
+- Provider promotion records are also trace evidence. A `provider_promotion_event` may record that a versioned overlay passed guardrails, but the record itself does not promote topology or alter routing. Promotion remains an explicit offline M5 action.
 
 Structural growth complements plasticity. M3/M4 adjust the strength of existing temporal/support structure, while M5 proposes or promotes topology changes when repeated evidence shows that the current graph needs new structure.
