@@ -59,17 +59,22 @@ PROFILE_COUNT_KEYS = (
 )
 
 
-def _new_perf_profile(enabled: bool) -> dict | None:
-    if not enabled:
+def _new_perf_profile(enabled: bool, *, diagnostic_caches_enabled: bool = False) -> dict | None:
+    if not enabled and not diagnostic_caches_enabled:
         return None
     return {
-        "enabled": True,
+        "enabled": bool(enabled),
+        "diagnostic_caches_enabled": bool(diagnostic_caches_enabled),
         "timers": {key: 0.0 for key in PROFILE_TIMER_KEYS},
         "counts": {key: 0 for key in PROFILE_COUNT_KEYS},
         "cache": {
             "context_terms": {"hits": 0, "misses": 0},
             "move_shape_audit": {"hits": 0, "misses": 0},
+            "worst_reply_reward": {"hits": 0, "misses": 0},
+            "oracle_best_reward": {"hits": 0, "misses": 0},
+            "black_reply": {"hits": 0, "misses": 0},
         },
+        "runtime_caches": {},
     }
 
 
@@ -131,6 +136,37 @@ def _profile_cache_delta(profile: dict | None, move_details: dict) -> None:
     )
 
 
+def _profile_cache_event(profile: dict | None, cache_name: str, hit: bool) -> None:
+    if not profile:
+        return
+    cache = profile.setdefault("cache", {}).setdefault(cache_name, {"hits": 0, "misses": 0})
+    key = "hits" if hit else "misses"
+    cache[key] = int(cache.get(key, 0) or 0) + 1
+    _profile_add_count(profile, "cache_hits" if hit else "cache_misses")
+
+
+def _diagnostic_cache(profile: dict | None, cache_name: str) -> dict | None:
+    if not profile or not profile.get("diagnostic_caches_enabled"):
+        return None
+    return profile.setdefault("runtime_caches", {}).setdefault(cache_name, {})
+
+
+def _board_cache_key(board: chess.Board) -> tuple:
+    transposition_key = getattr(board, "transposition_key", None)
+    if callable(transposition_key):
+        try:
+            return ("tk", transposition_key(), bool(board.turn))
+        except Exception:
+            pass
+    private_key = getattr(board, "_transposition_key", None)
+    if callable(private_key):
+        try:
+            return ("tk", private_key(), bool(board.turn))
+        except Exception:
+            pass
+    return ("fen", board.board_fen(), bool(board.turn))
+
+
 def _finalize_perf_profile(profile: dict | None) -> dict | None:
     if not profile or not profile.get("enabled"):
         return None
@@ -153,6 +189,7 @@ def _finalize_perf_profile(profile: dict | None) -> dict | None:
         "timer_percentages_of_total": percentages,
         "counts": counts,
         "cache": profile.get("cache", {}),
+        "diagnostic_caches_enabled": bool(profile.get("diagnostic_caches_enabled", False)),
     }
 
 
@@ -924,6 +961,7 @@ def choose_move_details(
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
     perf_profile: dict | None = None,
+    enable_diagnostic_caches: bool = False,
 ) -> dict:
     with _profile_timer(perf_profile, "choose_move_details_time"):
         return _choose_move_details_impl(
@@ -949,6 +987,7 @@ def choose_move_details(
             early_stop_stable_suggestions=early_stop_stable_suggestions,
             forced_successor_skill=forced_successor_skill,
             perf_profile=perf_profile,
+            enable_diagnostic_caches=enable_diagnostic_caches,
         )
 
 
@@ -975,6 +1014,7 @@ def _choose_move_details_impl(
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
     perf_profile: dict | None = None,
+    enable_diagnostic_caches: bool = False,
 ) -> dict:
     env = {
         "board": board,
@@ -987,6 +1027,7 @@ def _choose_move_details_impl(
     }
     if perf_profile:
         env["blackboard"]["perf_profile"] = perf_profile
+    env["blackboard"]["diagnostic_caches_enabled"] = bool(enable_diagnostic_caches)
     env["blackboard"]["successor_affordance_layer_enabled"] = successor_affordance_layer_enabled
     env["blackboard"]["successor_contract_gate_enabled"] = successor_contract_gate_enabled
     env["blackboard"]["successor_role_license_enabled"] = successor_role_license_enabled
@@ -1158,6 +1199,13 @@ def oracle_best_reward(
     lookahead_black: bool,
     perf_profile: dict | None = None,
 ) -> float:
+    cache = _diagnostic_cache(perf_profile, "oracle_best_reward")
+    cache_key = (_board_cache_key(board), label, bool(lookahead_black))
+    if cache is not None and cache_key in cache:
+        _profile_cache_event(perf_profile, "oracle_best_reward", True)
+        return float(cache[cache_key])
+    if cache is not None:
+        _profile_cache_event(perf_profile, "oracle_best_reward", False)
     _profile_add_count(perf_profile, "oracle_best_reward_calls")
     best = -float("inf")
     for move in board.legal_moves:
@@ -1170,6 +1218,8 @@ def oracle_best_reward(
         )
         if reward > best:
             best = reward
+    if cache is not None:
+        cache[cache_key] = float(best)
     return best
 
 
@@ -1204,14 +1254,29 @@ def _profiled_worst_reply_reward(
     use_black_reply: bool,
     perf_profile: dict | None = None,
 ) -> float:
+    cache = _diagnostic_cache(perf_profile, "worst_reply_reward")
+    cache_key = (
+        _board_cache_key(board),
+        move.uci(),
+        label,
+        bool(use_black_reply),
+    )
+    if cache is not None and cache_key in cache:
+        _profile_cache_event(perf_profile, "worst_reply_reward", True)
+        return float(cache[cache_key])
+    if cache is not None:
+        _profile_cache_event(perf_profile, "worst_reply_reward", False)
     _profile_add_count(perf_profile, "worst_reply_reward_calls")
     with _profile_timer(perf_profile, "worst_reply_reward_time"):
-        return worst_reply_reward(
+        reward = worst_reply_reward(
             board,
             move,
             label,
             use_black_reply=use_black_reply,
         )
+    if cache is not None:
+        cache[cache_key] = float(reward)
+    return reward
 
 
 def choose_black_reply(
@@ -1222,8 +1287,18 @@ def choose_black_reply(
     perf_profile: dict | None = None,
 ) -> chess.Move | None:
     with _profile_timer(perf_profile, "choose_black_reply_time"):
+        cache = _diagnostic_cache(perf_profile, "black_reply")
+        cache_key = (_board_cache_key(board), label, policy)
+        if cache is not None and cache_key in cache:
+            _profile_cache_event(perf_profile, "black_reply", True)
+            cached = cache[cache_key]
+            return chess.Move.from_uci(cached) if cached else None
+        if cache is not None:
+            _profile_cache_event(perf_profile, "black_reply", False)
         replies = list(board.legal_moves)
         if not replies:
+            if cache is not None:
+                cache[cache_key] = None
             return None
         if policy == "random":
             return rng.choice(replies)
@@ -1244,7 +1319,10 @@ def choose_black_reply(
                 ),
                 reply,
             ))
-        return min(scored, key=lambda item: item[0])[1]
+        reply = min(scored, key=lambda item: item[0])[1]
+        if cache is not None:
+            cache[cache_key] = reply.uci()
+        return reply
 
 
 def play_to_mate(
@@ -1275,6 +1353,7 @@ def play_to_mate(
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
     perf_profile: dict | None = None,
+    enable_diagnostic_caches: bool = False,
 ) -> dict:
     """Run a simple KRK playout using the compiled topology for White moves."""
     _profile_add_count(perf_profile, "board_copy_calls")
@@ -1371,6 +1450,7 @@ def play_to_mate(
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
                 forced_successor_skill=active_forced_successor,
                 perf_profile=perf_profile,
+                enable_diagnostic_caches=enable_diagnostic_caches,
             )
             _accumulate_engine_perf(engine_perf, move_details, prefix="engine")
             move_uci = move_details.get("move")
@@ -2329,10 +2409,14 @@ def evaluate_landmark_progress(
     counterfactual_sweeps_output: Optional[Path] = None,
     counterfactual_steps_output: Optional[Path] = None,
     profile_performance: bool = False,
+    enable_diagnostic_caches: bool = False,
     verbose: bool = True,
 ) -> dict:
-    perf_profile = _new_perf_profile(profile_performance)
-    total_start = time.perf_counter() if perf_profile else None
+    perf_profile = _new_perf_profile(
+        profile_performance,
+        diagnostic_caches_enabled=enable_diagnostic_caches,
+    )
+    total_start = time.perf_counter() if profile_performance else None
     rng = random.Random(seed)
     random.seed(seed)
     source_names = (
@@ -2400,6 +2484,7 @@ def evaluate_landmark_progress(
             ),
             early_stop_stable_suggestions=early_stop_stable_suggestions,
             perf_profile=perf_profile,
+            enable_diagnostic_caches=enable_diagnostic_caches,
         )
         _accumulate_engine_perf(stats, move_details, prefix="one_ply_engine")
         move_uci = move_details.get("move")
@@ -2556,6 +2641,7 @@ def evaluate_landmark_progress(
                 post_break_continuation_bonus=post_break_continuation_bonus,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
                 perf_profile=perf_profile,
+                enable_diagnostic_caches=enable_diagnostic_caches,
             )
             key = result["result"]
             stats["playout_engine_decision_count"] += int(result.get("engine_decision_count", 0) or 0)
@@ -2996,6 +3082,7 @@ def evaluate_landmark_progress(
     stats["post_break_continuation_enabled"] = post_break_continuation_enabled
     stats["post_break_continuation_bonus"] = post_break_continuation_bonus
     stats["early_stop_stable_suggestions"] = int(early_stop_stable_suggestions)
+    stats["diagnostic_caches_enabled"] = bool(enable_diagnostic_caches)
     stats["target_failure_trace_state_signatures"] = list(target_failure_trace_state_signatures)
     evaluated = max(0, stats["total"] - stats["no_move"])
     stats["one_ply_status"] = (
@@ -3060,7 +3147,7 @@ def evaluate_landmark_progress(
     if not stats["counterfactual_successor_sweeps"]:
         stats.pop("counterfactual_successor_sweeps", None)
         stats.pop("counterfactual_successor_summary", None)
-    if perf_profile and total_start is not None:
+    if profile_performance and perf_profile and total_start is not None:
         _profile_add_time(perf_profile, "total_wall_time", time.perf_counter() - total_start)
         stats["performance_profile"] = _finalize_perf_profile(perf_profile)
     return stats
@@ -3224,6 +3311,8 @@ def main() -> None:
                         help="Optional JSONL path for streaming each forced-successor playout result as it completes")
     parser.add_argument("--profile-performance", action="store_true",
                         help="Record diagnostic timing/count buckets without changing behavior")
+    parser.add_argument("--enable-diagnostic-caches", action="store_true",
+                        help="Enable opt-in pure memoization caches for diagnostic/profiling runs")
     args = parser.parse_args()
 
     source_names = (
@@ -3285,6 +3374,7 @@ def main() -> None:
         counterfactual_sweeps_output=args.counterfactual_sweeps_output,
         counterfactual_steps_output=args.counterfactual_steps_output,
         profile_performance=args.profile_performance,
+        enable_diagnostic_caches=args.enable_diagnostic_caches,
         verbose=True,
     )
     print_landmark_results(

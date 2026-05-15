@@ -148,7 +148,7 @@ def test_playout_stagnation_summary_detects_rook_oscillation():
 
 
 def test_performance_profile_schema_round_trips_core_buckets():
-    profile = _new_perf_profile(True)
+    profile = _new_perf_profile(True, diagnostic_caches_enabled=True)
     _profile_add_time(profile, "choose_move_details_time", 1.25)
     _profile_add_time(profile, "engine_step_time", 0.75)
     _profile_add_time(profile, "total_wall_time", 2.0)
@@ -162,4 +162,5 @@ def test_performance_profile_schema_round_trips_core_buckets():
     assert finalized["timers_sec"]["engine_step_time"] == 0.75
     assert finalized["counts"]["samples"] == 3
     assert finalized["counts"]["engine_ticks"] == 42
+    assert finalized["diagnostic_caches_enabled"] is True
     assert "cache" in finalized

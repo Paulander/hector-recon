@@ -1178,3 +1178,84 @@ The throughput problem is not JSON serialization, stagnation diagnostics, move-s
 The bottleneck is actuator scoring, dominated by repeated goal-distance computation and repeated teacher feature extraction inside legal-move/reply loops.
 The next safe optimization slice should target immutable feature/goal-distance/reward caches and goal-bank precomputation before parallel validation.
 ```
+
+## Slice 42: Opt-In Diagnostic Caches
+
+Added behavior-preserving memoization behind:
+
+```text
+--enable-diagnostic-caches
+```
+
+The caches are scaffolding, not ReCoN evidence:
+
+```text
+feature cache: teacher.features(board)
+goal-distance cache: board/goal/sensor-contract distance
+worst-reply reward cache: board/move/label/lookahead
+oracle-best reward cache: board/label/lookahead
+black-reply cache: deterministic adversarial reply
+```
+
+They are keyed by board state and deterministic config. They do not create activations, packets, role licenses, shadow candidates, learning updates, or topology changes.
+
+Small smoke comparison:
+
+```text
+uncached smoke artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice41_profile_smoke.json
+cached smoke artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice42_cache_smoke.json
+behavior: identical 1 mate / 1 max_plies
+wall time: 5.63s -> 2.07s
+teacher.features calls: 4545 -> 242
+goal-distance time: 2.58s -> 0.25s
+```
+
+30-sample seed-11 comparison:
+
+```text
+uncached artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice41_profile_stage5_30_seed11_h40.json
+cached artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice42_cache_profile_stage5_30_seed11_h40.json
+behavior: 30 mate / 0 max_plies in both
+wall time: 645.44s -> 124.79s
+speedup: ~5.2x
+goal-distance time: 472.61s -> 38.16s
+teacher.features time: 137.39s -> 4.38s
+teacher.features calls: 752541 -> 24325
+worst_reply_reward time: 91.83s -> 28.40s
+worst_reply_reward calls: 80654 -> 23875
+```
+
+100-sample seed-7 comparison:
+
+```text
+uncached artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice41_profile_stage5_100_seed7_h40.json
+cached artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice42_cache_profile_stage5_100_seed7_h40.json
+behavior: 100 mate / 0 max_plies in both
+wall time: 2142.45s -> 404.04s
+speedup: ~5.3x
+goal-distance time: 1576.65s -> 130.13s
+teacher.features time: 464.34s -> 15.41s
+teacher.features calls: 2491687 -> 82936
+worst_reply_reward time: 314.62s -> 95.58s
+worst_reply_reward calls: 264447 -> 72183
+```
+
+Cached 100-sample cache counts:
+
+```text
+teacher_features: 657384 hits / 82936 misses
+goal_distance: 1751367 hits / 169395 misses
+worst_reply_reward: 150765 hits / 72183 misses
+black_reply: 784 hits / 49 misses
+oracle_best_reward: 7 hits / 125 misses
+context_terms: 135354 hits / 15715 misses
+move_shape_audit: 461786 hits / 14682 misses
+```
+
+Interpretation:
+
+```text
+The cache slice preserves the 100-sample Stage 5 result and removes the largest known throughput bottleneck.
+The remaining dominant cost is still actuator scoring, now mostly non-cached goal-distance misses and reward evaluation.
+Next optimization should be parallel validation and/or deeper goal-bank vector precomputation, not more role/stagnation logic.
+```

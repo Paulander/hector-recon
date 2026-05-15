@@ -59,17 +59,56 @@ def _perf_cache_event(
     _perf_add_count(blackboard, "cache_hits" if hit else "cache_misses")
 
 
+def _diagnostic_caches_enabled(blackboard: Dict[str, Any] | None) -> bool:
+    return bool(blackboard and blackboard.get("diagnostic_caches_enabled", False))
+
+
+def _diagnostic_cache(
+    blackboard: Dict[str, Any] | None,
+    cache_name: str,
+) -> Dict[Any, Any] | None:
+    if not _diagnostic_caches_enabled(blackboard):
+        return None
+    return blackboard.setdefault("diagnostic_caches", {}).setdefault(cache_name, {})
+
+
+def _board_cache_key(board: chess.Board) -> tuple:
+    transposition_key = getattr(board, "transposition_key", None)
+    if callable(transposition_key):
+        try:
+            return ("tk", transposition_key(), bool(board.turn))
+        except Exception:
+            pass
+    private_key = getattr(board, "_transposition_key", None)
+    if callable(private_key):
+        try:
+            return ("tk", private_key(), bool(board.turn))
+        except Exception:
+            pass
+    return ("fen", board.board_fen(), bool(board.turn))
+
+
 def _profiled_teacher_features(
     teacher: KRKTeacher,
     board: chess.Board,
     blackboard: Dict[str, Any] | None,
 ):
+    cache = _diagnostic_cache(blackboard, "teacher_features")
+    cache_key = (blackboard.get("feature_set", "legacy") if blackboard else "legacy", _board_cache_key(board))
+    if cache is not None and cache_key in cache:
+        _perf_cache_event(blackboard, "teacher_features", True)
+        return cache[cache_key]
+    if cache is not None:
+        _perf_cache_event(blackboard, "teacher_features", False)
     _perf_add_count(blackboard, "teacher_features_calls")
     start = time.perf_counter()
     try:
-        return teacher.features(board)
+        features = teacher.features(board)
     finally:
         _perf_add_time(blackboard, "teacher_features_time", time.perf_counter() - start)
+    if cache is not None:
+        cache[cache_key] = features
+    return features
 
 
 def _profiled_worst_reply_reward(
@@ -80,10 +119,17 @@ def _profiled_worst_reply_reward(
     use_black_reply: bool,
     blackboard: Dict[str, Any] | None,
 ) -> float:
+    cache = _diagnostic_cache(blackboard, "worst_reply_reward")
+    cache_key = (_board_cache_key(board), move.uci(), label, bool(use_black_reply))
+    if cache is not None and cache_key in cache:
+        _perf_cache_event(blackboard, "worst_reply_reward", True)
+        return float(cache[cache_key])
+    if cache is not None:
+        _perf_cache_event(blackboard, "worst_reply_reward", False)
     _perf_add_count(blackboard, "worst_reply_reward_calls")
     start = time.perf_counter()
     try:
-        return worst_reply_reward(
+        reward = worst_reply_reward(
             board,
             move,
             label,
@@ -91,6 +137,9 @@ def _profiled_worst_reply_reward(
         )
     finally:
         _perf_add_time(blackboard, "worst_reply_reward_time", time.perf_counter() - start)
+    if cache is not None:
+        cache[cache_key] = float(reward)
+    return reward
 
 
 def _teacher_for_feature_set(feature_set: str | None) -> KRKTeacher:
@@ -540,6 +589,12 @@ def create_actuator_terminal(node_id=None):
         if goal_bank and stage > 0:
             if isinstance(goal_bank, dict) and goal_bank.get("label") == goal_label:
                 goal_entries = goal_bank.get("goals", [])
+        goal_specs_for_distance = {}
+        merged_specs_for_distance = None
+        if goal_entries and isinstance(goal_bank, dict):
+            goal_specs_for_distance = goal_bank.get("sensor_specs", {}) or {}
+            merged_specs_for_distance = dict(goal_specs_for_distance)
+            merged_specs_for_distance.update(sensor_specs)
 
         # Score each legal move
         board = env.get("board")
@@ -601,15 +656,30 @@ def create_actuator_terminal(node_id=None):
                 if goal_entries:
                     def _goal_distance_for_board(b):
                         goal_start = time.perf_counter()
+                        cache = _diagnostic_cache(blackboard, "goal_distance")
+                        cache_key = (
+                            _board_cache_key(b),
+                            goal_label,
+                            bool(goal_normalize),
+                            float(min_goal_overlap),
+                            id(goal_bank),
+                            id(sensor_specs),
+                        )
+                        if cache is not None and cache_key in cache:
+                            _perf_cache_event(blackboard, "goal_distance", True)
+                            _perf_add_time(
+                                blackboard,
+                                "goal_distance_time",
+                                time.perf_counter() - goal_start,
+                            )
+                            return cache[cache_key]
+                        if cache is not None:
+                            _perf_cache_event(blackboard, "goal_distance", False)
                         try:
                             f = _profiled_teacher_features(teacher, b, blackboard)
                             # Build current sensor map by stable id (graph specs + goal specs)
                             s_goal: Dict[str, float] = {}
-                            goal_specs = {}
-                            if isinstance(goal_bank, dict):
-                                goal_specs = goal_bank.get("sensor_specs", {}) or {}
-                            merged_specs = dict(goal_specs)
-                            merged_specs.update(sensor_specs)
+                            merged_specs = merged_specs_for_distance or sensor_specs
                             for sid_key, spec in merged_specs.items():
                                 val = _apply_spec_to_features(spec, f)
                                 if val is not None:
@@ -644,6 +714,8 @@ def create_actuator_terminal(node_id=None):
                                     continue
                                 if best is None or d < best:
                                     best = d
+                            if cache is not None:
+                                cache[cache_key] = best
                             return best
                         finally:
                             _perf_add_time(
