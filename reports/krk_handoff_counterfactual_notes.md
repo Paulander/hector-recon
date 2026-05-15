@@ -1480,3 +1480,69 @@ Validation:
 focused M1-M4 + handoff diagnostics suite: 101 passed
 profile smoke artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice46_profile_smoke.json
 ```
+
+## Slice 47: Profile Robustness Validation And Curriculum Passthrough
+
+Large validation with `handoff_composition_v1`:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice47_profile_stage5_1000_seed7_h40.json
+label: fence_established
+samples: 1000
+seed: 7
+horizon: 40 plies
+local: 1000/1000 improved, 1000/1000 optimal
+conversion: 1000 mate / 0 max_plies
+shadow candidates: 0
+parallel: 8 workers, chunk size 25
+wall time: 781.77s
+```
+
+Cross-stage validation:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice47_profile_stage4_wrong_tempo_500_seed7_h40.json
+label: edge_trap_wrong_tempo
+samples: 500
+seed: 7
+horizon: 40 plies
+local: 500/500 improved, 500/500 optimal
+conversion: 500 mate / 0 max_plies
+shadow candidates: 0
+parallel: 8 workers, chunk size 25
+wall time: 235.24s
+```
+
+Stage 1 regression:
+
+```text
+samples: 500
+seed: 7
+position mode: mate_in_2
+result: 500/500 improved, 500/500 optimal, 0 worsened, 0 no-move
+avg reward: 0.5035
+```
+
+The triplet pipeline and adaptive baseline trainer now accept profile-aware adaptive validation:
+
+```text
+--adaptive-composition-profile handoff_composition_v1
+--adaptive-use-profile-validation-defaults
+```
+
+Pipeline dry-run verified that those flags are passed through to `train_baseline_krk_chain.py` and recorded in the run manifest.
+
+KPK/KQK bridge-adjacent regression:
+
+```text
+tests: test_subgraph_delegation.py, test_endgame_components.py, test_routing_contracts.py
+result: 10 passed
+note: existing pytest return-value warnings remain in test_subgraph_delegation.py
+```
+
+Interpretation:
+
+```text
+The profile is now validated beyond the original Stage 5 tuning set and can be used as the conversion/handoff evaluation harness for subsequent KRK curriculum stages.
+This remains an opt-in experimental profile; default training/eval behavior is unchanged unless the profile is selected.
+```

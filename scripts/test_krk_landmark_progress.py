@@ -2502,6 +2502,42 @@ def evaluate_landmark_progress(
     deterministic_sample_seeds: bool = False,
     verbose: bool = True,
 ) -> dict:
+    profile_meta = _composition_profile_metadata(composition_profile)
+    if profile_meta is not None:
+        settings = dict(profile_meta.get("settings", {}) or {})
+        successor_affordance_layer_enabled = bool(
+            settings.get("successor_affordance_layer_enabled", successor_affordance_layer_enabled)
+        )
+        successor_role_license_enabled = bool(
+            settings.get("successor_role_license_enabled", successor_role_license_enabled)
+        )
+        successor_role_scoped_move_shape_enabled = bool(
+            settings.get(
+                "successor_role_scoped_move_shape_enabled",
+                successor_role_scoped_move_shape_enabled,
+            )
+        )
+        successor_role_scoped_move_shape_bonus = float(
+            settings.get(
+                "successor_role_scoped_move_shape_bonus",
+                successor_role_scoped_move_shape_bonus,
+            )
+        )
+        stagnation_breaker_enabled = bool(
+            settings.get("stagnation_breaker_enabled", stagnation_breaker_enabled)
+        )
+        stagnation_breaker_bonus = float(
+            settings.get("stagnation_breaker_bonus", stagnation_breaker_bonus)
+        )
+        post_break_continuation_enabled = bool(
+            settings.get("post_break_continuation_enabled", post_break_continuation_enabled)
+        )
+        post_break_continuation_bonus = float(
+            settings.get("post_break_continuation_bonus", post_break_continuation_bonus)
+        )
+        successor_stage0_drift_penalty = float(
+            settings.get("successor_stage0_drift_penalty", successor_stage0_drift_penalty)
+        )
     perf_profile = _new_perf_profile(
         profile_performance,
         diagnostic_caches_enabled=enable_diagnostic_caches,
@@ -2551,7 +2587,6 @@ def evaluate_landmark_progress(
         "one_ply_status": "not_checked",
         "conversion_status": "not_checked",
     }
-    profile_meta = _composition_profile_metadata(composition_profile)
     if profile_meta is not None:
         stats["composition_profile"] = profile_meta
 

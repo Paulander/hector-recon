@@ -239,6 +239,7 @@ def test_handoff_composition_v1_metadata_is_non_default_and_domain_scoped():
     assert metadata["experimental_profile"] is True
     assert metadata["default_policy"] is False
     assert "handoff_packets" in metadata["non_causal_records"]
+    assert metadata["settings"]["successor_stage0_drift_penalty"] == 6.0
 
 
 def test_cli_option_provided_accepts_space_and_equals_forms():

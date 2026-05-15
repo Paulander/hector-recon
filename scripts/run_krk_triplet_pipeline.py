@@ -88,6 +88,14 @@ def build_plan(args: argparse.Namespace) -> PipelinePlan:
             "--adaptive-playout-max-plies",
             str(getattr(args, "adaptive_playout_max_plies", 80)),
         ])
+        adaptive_composition_profile = getattr(args, "adaptive_composition_profile", "none")
+        if adaptive_composition_profile and adaptive_composition_profile != "none":
+            train_cmd.extend([
+                "--adaptive-composition-profile",
+                adaptive_composition_profile,
+            ])
+        if getattr(args, "adaptive_use_profile_validation_defaults", False):
+            train_cmd.append("--adaptive-use-profile-validation-defaults")
     if getattr(args, "allow_prune_foundation", False):
         train_cmd.append("--allow-prune-foundation")
     if args.stage1_position_mode == "hybrid":
@@ -169,6 +177,12 @@ def manifest_for(args: argparse.Namespace, plan: PipelinePlan) -> Dict[str, Any]
             "max_cycles_per_stage": getattr(args, "max_cycles_per_stage", 80),
             "adaptive_eval_samples": getattr(args, "adaptive_eval_samples", None) or args.stage1_eval_samples,
             "adaptive_playout_max_plies": getattr(args, "adaptive_playout_max_plies", 80),
+            "adaptive_composition_profile": getattr(args, "adaptive_composition_profile", "none"),
+            "adaptive_use_profile_validation_defaults": getattr(
+                args,
+                "adaptive_use_profile_validation_defaults",
+                False,
+            ),
             "load_learner": str(args.load_learner) if getattr(args, "load_learner", None) else None,
             "stage1_position_mode": args.stage1_position_mode,
             "stage1_hybrid_random_ratio": args.stage1_hybrid_random_ratio,
@@ -249,6 +263,11 @@ def main() -> None:
     parser.add_argument("--max-cycles-per-stage", type=int, default=80)
     parser.add_argument("--adaptive-eval-samples", type=int, default=None)
     parser.add_argument("--adaptive-playout-max-plies", type=int, default=80)
+    parser.add_argument("--adaptive-composition-profile",
+                        choices=["none", "handoff_composition_v1"],
+                        default="none")
+    parser.add_argument("--adaptive-use-profile-validation-defaults",
+                        action="store_true", default=False)
     parser.add_argument("--stage1-position-mode", choices=["mate_in_2", "random", "hybrid"], default="hybrid")
     parser.add_argument("--stage1-hybrid-random-ratio", type=float, default=0.5)
     parser.add_argument("--stage1-eval-position-mode", choices=["mate_in_2", "random", "hybrid"], default="random")

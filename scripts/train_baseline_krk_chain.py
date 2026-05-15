@@ -806,18 +806,24 @@ def evaluate_landmark_checkpoint(
     stage_filter: int,
 ) -> Dict[str, Any]:
     _learner_path, topology_path = compile_checkpoint_for_eval(learner, args.output_dir, spec_label, cycle)
-    return _landmark_eval_module().evaluate_landmark_progress(
-        topology_path,
-        label=spec_label,
-        samples=max(10, int(args.adaptive_eval_samples)),
-        seed=args.seed or 7,
-        stage_filter=stage_filter,
-        position_mode="curriculum",
-        source_stage_names=source_stage_names,
-        playout_max_plies=int(args.adaptive_playout_max_plies),
-        black_policy="adversarial",
-        verbose=False,
-    )
+    eval_kwargs = {
+        "topology": topology_path,
+        "label": spec_label,
+        "samples": max(10, int(args.adaptive_eval_samples)),
+        "seed": args.seed or 7,
+        "stage_filter": stage_filter,
+        "position_mode": "curriculum",
+        "source_stage_names": source_stage_names,
+        "playout_max_plies": int(args.adaptive_playout_max_plies),
+        "black_policy": "adversarial",
+        "verbose": False,
+    }
+    composition_profile = getattr(args, "adaptive_composition_profile", "none")
+    if composition_profile and composition_profile != "none":
+        eval_kwargs["composition_profile"] = composition_profile
+    if getattr(args, "adaptive_use_profile_validation_defaults", False):
+        eval_kwargs["enable_diagnostic_caches"] = True
+    return _landmark_eval_module().evaluate_landmark_progress(**eval_kwargs)
 
 
 def update_learner_from_transitions(
@@ -1053,6 +1059,12 @@ def main() -> None:
                         help="Adaptive mode: samples per validation evaluation")
     parser.add_argument("--adaptive-playout-max-plies", type=int, default=80,
                         help="Adaptive mode: max plies for landmark playout validation")
+    parser.add_argument("--adaptive-composition-profile",
+                        choices=["none", "handoff_composition_v1"],
+                        default="none",
+                        help="Optional named handoff-composition profile for adaptive landmark validation")
+    parser.add_argument("--adaptive-use-profile-validation-defaults", action="store_true",
+                        help="Enable diagnostic validation defaults associated with the adaptive composition profile")
     parser.add_argument("--samples-per-cycle", type=int, default=100)
     parser.add_argument("--initial-sensors", type=int, default=20)
     parser.add_argument("--spawn-interval", type=int, default=10)
