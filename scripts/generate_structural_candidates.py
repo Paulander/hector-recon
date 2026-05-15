@@ -30,6 +30,153 @@ def _playout_count(payload: dict[str, Any], key: str) -> int:
     return int((payload.get("playouts") or {}).get(key, 0) or 0)
 
 
+def _base_governor_rules() -> dict[str, Any]:
+    return {
+        "schema_version": "growth_governor_rules.v0",
+        "max_active_candidates_per_stage": 3,
+        "max_promoted_overlays_per_stage_before_settling": 1,
+        "require_candidate_resolution_before_next_overlay": True,
+        "block_growth_if_guardrails_regress": True,
+        "prefer_settling_if_conversion_rate_improving": True,
+        "require_repeated_failure_family_before_growth": True,
+    }
+
+
+def _unique_failed_family_count(payload: dict[str, Any]) -> int:
+    signatures = set()
+    for packet in payload.get("handoff_packets") or []:
+        if not isinstance(packet, dict) or packet.get("phase") != "post_opponent_reply":
+            continue
+        evidence = packet.get("evidence_terms")
+        if not isinstance(evidence, dict):
+            continue
+        if str(evidence.get("playout_result") or "") == "mate":
+            continue
+        signature = evidence.get("post_reply_state_signature") or evidence.get("post_reply_fen")
+        if signature:
+            signatures.add(str(signature))
+    return len(signatures)
+
+
+def _growth_governor_metadata(
+    diagnostic: dict[str, Any],
+    promotion_eval: dict[str, Any],
+    *,
+    active_candidate_count: int = 0,
+) -> dict[str, Any]:
+    total = int(diagnostic.get("total", 0) or 0)
+    mate_count = _playout_count(diagnostic, "mate")
+    max_plies_count = _playout_count(diagnostic, "max_plies")
+    shadow_count = _shadow_count(diagnostic)
+    semantic_counts = diagnostic.get("semantic_alignment_status_counts") or {}
+    shadow_triggers = diagnostic.get("shadow_trigger_counts") or {}
+    guardrails = promotion_eval.get("guardrails") or []
+    if isinstance(guardrails, list) and guardrails:
+        passed_guardrails = sum(1 for item in guardrails if isinstance(item, dict) and item.get("passed"))
+        guardrail_pass_rate = passed_guardrails / len(guardrails)
+    else:
+        guardrail_pass_rate = 0.0 if promotion_eval.get("promotion_status") == "quarantine" else None
+    repeated_failure_family_count = _unique_failed_family_count(diagnostic)
+    if not repeated_failure_family_count:
+        repeated_failure_family_count = int(shadow_triggers.get("repeated_conversion_failure", 0) or 0)
+    return {
+        "schema_version": "growth_governor_snapshot.v0",
+        "rules": _base_governor_rules(),
+        "metrics": {
+            "episodes_since_last_structural_change": None,
+            "recent_conversion_rate_history": [
+                (mate_count / total) if total else 0.0,
+            ],
+            "recent_shadow_candidate_rate": (shadow_count / total) if total else 0.0,
+            "repeated_failure_family_count": repeated_failure_family_count,
+            "route_conflict_rate": float(shadow_triggers.get("route_conflict", 0) or 0) / total if total else 0.0,
+            "handoff_gap_rate": float(shadow_triggers.get("handoff_gap", 0) or 0) / total if total else 0.0,
+            "reward_contract_mismatch_rate": (
+                float(semantic_counts.get("reward_contract_mismatch", 0) or 0) / total if total else 0.0
+            ),
+            "guardrail_pass_rate": guardrail_pass_rate,
+            "weight_delta_magnitude": None,
+            "weight_saturation_rate": None,
+            "plasticity_improvement_slope": None,
+            "active_candidate_count": active_candidate_count,
+            "provider_maturity": "quarantined_no_plasticity"
+            if promotion_eval.get("promotion_status") == "quarantine"
+            else "candidate_high_plasticity",
+            "promotion_status": promotion_eval.get("promotion_status") or "unknown",
+            "mate_count": mate_count,
+            "max_plies_count": max_plies_count,
+            "shadow_candidate_count": shadow_count,
+        },
+        "performance": {
+            "wall_time": diagnostic.get("wall_time"),
+            "samples": total,
+            "workers": (diagnostic.get("parallel_validation") or {}).get("workers"),
+            "cache_hits_misses": {
+                "context_terms_hits": diagnostic.get("context_terms_cache_hits"),
+                "context_terms_misses": diagnostic.get("context_terms_cache_misses"),
+                "move_shape_audit_hits": diagnostic.get("move_shape_audit_cache_hits"),
+                "move_shape_audit_misses": diagnostic.get("move_shape_audit_cache_misses"),
+            },
+            "engine_decisions": diagnostic.get("playout_engine_decision_count"),
+            "engine_ticks": diagnostic.get("playout_engine_ticks_total"),
+            "teacher_features_calls": diagnostic.get("teacher_features_calls"),
+            "goal_distance_calls": diagnostic.get("goal_distance_calls"),
+            "worst_reply_reward_calls": diagnostic.get("worst_reply_reward_calls"),
+            "trace_mode": "diagnostic_packets",
+        },
+    }
+
+
+def _growth_status_for_candidate(
+    *,
+    candidate_type: str,
+    conversion_failed: bool,
+    shadow_support_high: bool,
+    promotion_eval: dict[str, Any],
+    repeated_failure_family_count: int,
+) -> str:
+    if promotion_eval.get("promotion_status") == "quarantine" and candidate_type == "quarantine_overlay":
+        return "growth_blocked_by_guardrail"
+    if conversion_failed and shadow_support_high and repeated_failure_family_count > 0:
+        return "growth_allowed"
+    if conversion_failed:
+        return "needs_more_weight_training"
+    return "settling"
+
+
+def _initial_topology_weight_diagnosis(*, candidate_type: str) -> dict[str, Any]:
+    labels: list[str]
+    if candidate_type == "contract_refinement":
+        labels = ["topology_underbroad"]
+    elif candidate_type == "successor_contract_refinement":
+        labels = ["parameter_miscalibrated"]
+    elif candidate_type == "quarantine_overlay":
+        labels = ["quarantined_after_calibration_budget"]
+    else:
+        labels = []
+    return {
+        "schema_version": "topology_weight_diagnosis.v0",
+        "frozen_weight_probe_result": "not_run",
+        "forced_oracle_probe_result": "not_run",
+        "bounded_m3_warmup_result": "not_run",
+        "bounded_m4_consolidation_result": "not_run",
+        "guardrail_delta": None,
+        "weight_saturation": "unknown",
+        "candidate_locality": "stage7_box_shrink",
+        "candidate_complexity": "small",
+        "diagnostic_labels": labels,
+        "evaluation_phases": {
+            "phase_0_static_sanity": "pending",
+            "phase_1_frozen_weight_probe": "pending",
+            "phase_2_forced_oracle_probe": "pending",
+            "phase_3_bounded_plasticity_warmup": "pending",
+            "phase_4_bounded_m4_consolidation_probe": "pending",
+            "phase_5_guardrail_validation": "pending",
+            "phase_6_promote_quarantine_reject": "pending",
+        },
+    }
+
+
 def generate_stage7_box_shrink_candidates(
     *,
     diagnostic_path: Path,
@@ -65,6 +212,14 @@ def generate_stage7_box_shrink_candidates(
     target_skill = "krk.box_shrink"
     parent_skill = "krk.drive_to_edge"
     candidates: list[StructuralCandidate] = []
+    governor_metadata = _growth_governor_metadata(
+        diagnostic,
+        promotion_eval,
+        active_candidate_count=0,
+    )
+    repeated_family_count = int(
+        governor_metadata.get("metrics", {}).get("repeated_failure_family_count", 0) or 0
+    )
 
     semantic_counts = diagnostic.get("semantic_alignment_status_counts") or {}
     reward_mismatch_count = int(semantic_counts.get("reward_contract_mismatch", 0) or 0)
@@ -102,6 +257,18 @@ def generate_stage7_box_shrink_candidates(
                 },
                 evidence_artifacts=evidence_artifacts,
                 promotion_status="proposed",
+                governor_status=_growth_status_for_candidate(
+                    candidate_type="contract_refinement",
+                    conversion_failed=conversion_failed,
+                    shadow_support_high=shadow_support_high,
+                    promotion_eval=promotion_eval,
+                    repeated_failure_family_count=repeated_family_count,
+                ),
+                governor_metadata=governor_metadata,
+                topology_weight_diagnosis=_initial_topology_weight_diagnosis(
+                    candidate_type="contract_refinement"
+                ),
+                candidate_diagnostic_labels=["topology_underbroad"],
             )
         )
 
@@ -142,6 +309,18 @@ def generate_stage7_box_shrink_candidates(
                 },
                 evidence_artifacts=evidence_artifacts,
                 promotion_status="proposed",
+                governor_status=_growth_status_for_candidate(
+                    candidate_type="successor_contract_refinement",
+                    conversion_failed=conversion_failed,
+                    shadow_support_high=shadow_support_high,
+                    promotion_eval=promotion_eval,
+                    repeated_failure_family_count=repeated_family_count,
+                ),
+                governor_metadata=governor_metadata,
+                topology_weight_diagnosis=_initial_topology_weight_diagnosis(
+                    candidate_type="successor_contract_refinement"
+                ),
+                candidate_diagnostic_labels=["parameter_miscalibrated"],
             )
         )
 
@@ -168,9 +347,23 @@ def generate_stage7_box_shrink_candidates(
                 },
                 evidence_artifacts=evidence_artifacts,
                 promotion_status="quarantined",
+                governor_status=_growth_status_for_candidate(
+                    candidate_type="quarantine_overlay",
+                    conversion_failed=conversion_failed,
+                    shadow_support_high=shadow_support_high,
+                    promotion_eval=promotion_eval,
+                    repeated_failure_family_count=repeated_family_count,
+                ),
+                governor_metadata=governor_metadata,
+                topology_weight_diagnosis=_initial_topology_weight_diagnosis(
+                    candidate_type="quarantine_overlay"
+                ),
+                candidate_diagnostic_labels=["quarantined_after_calibration_budget"],
             )
         )
 
+    for candidate in candidates:
+        candidate.governor_metadata["metrics"]["active_candidate_count"] = len(candidates)
     return candidates
 
 

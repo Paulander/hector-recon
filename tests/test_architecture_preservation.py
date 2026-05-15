@@ -243,6 +243,10 @@ def test_structural_candidate_round_trips_and_remains_non_causal():
     assert restored.causal_status == "non_causal"
     assert restored.credit == 0.0
     assert restored.promotion_status == "proposed"
+    assert restored.governor_status == "settling"
+    assert restored.governor_metadata == {}
+    assert restored.topology_weight_diagnosis == {}
+    assert restored.candidate_diagnostic_labels == []
 
 
 def test_structural_candidate_event_exports_without_m4_or_topology_effect():

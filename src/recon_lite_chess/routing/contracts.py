@@ -258,6 +258,19 @@ class StructuralCandidate:
     parent_skill: str
     proposed_change: Dict[str, Any]
     evidence_artifacts: List[str] = field(default_factory=list)
+    governor_status: Literal[
+        "settling",
+        "needs_more_weight_training",
+        "structure_insufficient",
+        "growth_allowed",
+        "growth_blocked_by_cooldown",
+        "growth_blocked_by_guardrail",
+        "growth_blocked_by_active_candidate_limit",
+        "growth_blocked_by_improving_performance",
+    ] = "settling"
+    governor_metadata: Dict[str, Any] = field(default_factory=dict)
+    topology_weight_diagnosis: Dict[str, Any] = field(default_factory=dict)
+    candidate_diagnostic_labels: List[str] = field(default_factory=list)
     promotion_status: Literal[
         "shadow",
         "proposed",
@@ -277,6 +290,18 @@ class StructuralCandidate:
             raise ValueError("StructuralCandidate must remain non_causal")
         if float(self.credit) != 0.0:
             raise ValueError("StructuralCandidate credit must be 0.0")
+        allowed_governor_statuses = {
+            "settling",
+            "needs_more_weight_training",
+            "structure_insufficient",
+            "growth_allowed",
+            "growth_blocked_by_cooldown",
+            "growth_blocked_by_guardrail",
+            "growth_blocked_by_active_candidate_limit",
+            "growth_blocked_by_improving_performance",
+        }
+        if self.governor_status not in allowed_governor_statuses:
+            raise ValueError(f"invalid Growth Governor status: {self.governor_status}")
         if self.candidate_id is None:
             object.__setattr__(
                 self,

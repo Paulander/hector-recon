@@ -2755,3 +2755,125 @@ Do not promote Stage 7.
 Do not increase broad bonuses or add hidden penalties.
 The next repair should be candidate-driven: either a narrow stage0-after-box-shrink suppression term with visible evidence, or a longer/legal-first sweep to identify first-move shapes for the unresolved families.
 ```
+
+## Slice 64: Plasticity Balance Protocol And Growth Governor V0
+
+Added plan note:
+
+```text
+reports/plasticity_balance_protocol.md
+```
+
+Policy:
+
+```text
+First try existing structure.
+Then try bounded weight/plasticity calibration.
+Only then propose or sandbox new topology.
+```
+
+Growth Governor v0 is metadata/reporting only. It records:
+
+```text
+recent_conversion_rate_history
+recent_shadow_candidate_rate
+repeated_failure_family_count
+route_conflict_rate
+handoff_gap_rate
+reward_contract_mismatch_rate
+guardrail_pass_rate
+weight_delta_magnitude
+weight_saturation_rate
+plasticity_improvement_slope
+active_candidate_count
+provider_maturity
+promotion_status
+performance metadata
+```
+
+`StructuralCandidate` now carries:
+
+```text
+governor_status
+governor_metadata
+topology_weight_diagnosis
+candidate_diagnostic_labels
+```
+
+Topology-vs-weight diagnosis fields:
+
+```text
+frozen_weight_probe_result
+forced_oracle_probe_result
+bounded_m3_warmup_result
+bounded_m4_consolidation_result
+guardrail_delta
+weight_saturation
+candidate_locality
+candidate_complexity
+diagnostic_labels
+evaluation_phases
+```
+
+Provider metadata now includes:
+
+```text
+provider_maturity
+plasticity_scope
+can_m3_update
+can_m4_consolidate
+```
+
+Current Stage 7 Growth Governor states:
+
+```text
+cand.krk.box_shrink.reward_contract_refinement.v1
+  governor_status: growth_allowed
+  diagnostic_labels: topology_underbroad
+
+cand.krk.box_shrink.handoff_role_refinement.v1
+  governor_status: growth_allowed
+  diagnostic_labels: parameter_miscalibrated
+
+cand.krk.box_shrink.overlay_quarantine_confirmed.v1
+  governor_status: growth_blocked_by_guardrail
+  diagnostic_labels: quarantined_after_calibration_budget
+```
+
+Current Stage 7 governor metrics:
+
+```text
+mate_count: 19
+max_plies_count: 31
+recent_conversion_rate_history: [0.38]
+recent_shadow_candidate_rate: 1.72
+repeated_failure_family_count: 4
+reward_contract_mismatch_rate: 0.48
+active_candidate_count: 3
+provider_maturity: quarantined_no_plasticity
+promotion_status: quarantine
+```
+
+Counterfactual candidate diagnosis:
+
+```text
+krk.box_shrink_to_drive_repair
+  status: counterfactual_supported
+  labels: topology_present_untrained, trainable_candidate
+
+krk.box_shrink_post_reply_continuation
+  status: insufficient_existing_successor_capacity_in_quick_sweep
+  labels: provider_capacity_missing
+
+krk.stage0_basin_after_box_shrink
+  status: negative_counterfactual_evidence
+  labels: parameter_miscalibrated, topology_overbroad
+```
+
+Boundary:
+
+```text
+The governor and diagnosis fields are non-causal.
+They do not alter routing, M3, M4, M5, or topology during gameplay.
+They only decide whether an offline candidate should settle, receive more weight/plasticity diagnosis, enter sandbox, or remain quarantined.
+```

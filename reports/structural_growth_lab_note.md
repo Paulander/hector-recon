@@ -82,3 +82,21 @@ No gameplay-time topology mutation is allowed in this milestone.
 `HandoffPacket`, `ShadowStemCandidate`, `SkillContractStats`, provider-promotion events, and `StructuralCandidate` records remain non-causal evidence.
 
 Promotion is an explicit offline M5 action after sandbox validation and guardrail checks.
+
+## Plasticity Balance
+
+The lab now follows the Plasticity Balance Protocol:
+
+```text
+First try existing structure.
+Then try bounded weight/plasticity calibration.
+Only then propose or sandbox new topology.
+```
+
+Structural candidates carry Growth Governor metadata and topology-vs-weight diagnosis fields. This prevents treating every failed candidate as missing topology.
+
+Reference:
+
+```text
+reports/plasticity_balance_protocol.md
+```

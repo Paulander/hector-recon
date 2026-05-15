@@ -212,6 +212,15 @@ def _representative(evidence: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _candidate_governance(candidate: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "governor_status": candidate.get("governor_status", "settling"),
+        "governor_metadata": candidate.get("governor_metadata", {}),
+        "topology_weight_diagnosis": candidate.get("topology_weight_diagnosis", {}),
+        "candidate_diagnostic_labels": candidate.get("candidate_diagnostic_labels", []),
+    }
+
+
 def _audit_reward_contract(candidate: dict[str, Any], diagnostic: dict[str, Any]) -> dict[str, Any]:
     term_counts: dict[str, dict[str, int]] = {}
     term_by_outcome: dict[str, dict[str, dict[str, int]]] = defaultdict(dict)
@@ -261,6 +270,7 @@ def _audit_reward_contract(candidate: dict[str, Any], diagnostic: dict[str, Any]
         "candidate_id": candidate.get("candidate_id"),
         "candidate_type": candidate.get("candidate_type"),
         "source_monitor_script": candidate.get("source_monitor_script"),
+        **_candidate_governance(candidate),
         "audit_status": "needs_more_terms" if mismatch_count else "no_issue_detected",
         "candidate_update": {
             "from": candidate.get("promotion_status", "proposed"),
@@ -316,6 +326,7 @@ def _audit_handoff_role(candidate: dict[str, Any], diagnostic: dict[str, Any]) -
         "candidate_id": candidate.get("candidate_id"),
         "candidate_type": candidate.get("candidate_type"),
         "source_monitor_script": candidate.get("source_monitor_script"),
+        **_candidate_governance(candidate),
         "audit_status": "handoff_role_audit_required" if findings else "no_issue_detected",
         "candidate_update": {
             "from": candidate.get("promotion_status", "proposed"),
@@ -343,6 +354,7 @@ def _audit_quarantine(candidate: dict[str, Any], diagnostic: dict[str, Any], pro
         "candidate_id": candidate.get("candidate_id"),
         "candidate_type": candidate.get("candidate_type"),
         "source_monitor_script": candidate.get("source_monitor_script"),
+        **_candidate_governance(candidate),
         "audit_status": "quarantine_confirmed" if target_failed else "promotion_recheck_needed",
         "candidate_update": {
             "from": candidate.get("promotion_status", "quarantined"),
@@ -389,6 +401,7 @@ def audit_stage7_candidates(
                 "candidate_id": candidate.get("candidate_id"),
                 "candidate_type": candidate.get("candidate_type"),
                 "source_monitor_script": monitor,
+                **_candidate_governance(candidate),
                 "audit_status": "unsupported_monitor",
                 "candidate_update": {
                     "from": candidate.get("promotion_status", "proposed"),
@@ -431,6 +444,10 @@ def _write_markdown(payload: dict[str, Any], path: Path) -> None:
         lines.append(f"- Type: `{audit.get('candidate_type')}`")
         lines.append(f"- Monitor: `{audit.get('source_monitor_script')}`")
         lines.append(f"- Audit status: `{audit.get('audit_status')}`")
+        lines.append(f"- Growth Governor: `{audit.get('governor_status', 'settling')}`")
+        labels = ", ".join(f"`{item}`" for item in audit.get("candidate_diagnostic_labels") or [])
+        if labels:
+            lines.append(f"- Diagnostic labels: {labels}")
         update = audit.get("candidate_update") or {}
         lines.append(f"- Candidate update: `{update.get('from')}` -> `{update.get('to')}`")
         for finding in audit.get("findings") or []:

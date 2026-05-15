@@ -199,6 +199,10 @@ def test_baseline_compiler_records_provider_provenance_metadata():
         assert meta["frozen_provider"] is True
         assert meta["overlay_provider"] is False
         assert meta["validated_profile"] == "handoff_composition_v1"
+        assert meta["provider_maturity"] == "foundation_frozen"
+        assert meta["plasticity_scope"] == "none"
+        assert meta["can_m3_update"] is False
+        assert meta["can_m4_consolidate"] is False
 
 
 def test_annotate_provider_metadata_marks_existing_provider_nodes():
@@ -234,6 +238,8 @@ def test_annotate_provider_metadata_marks_existing_provider_nodes():
     )
 
     assert topology["nodes"]["skill.krk.stage0_basin"]["meta"]["frozen_provider"] is True
+    assert topology["nodes"]["skill.krk.stage0_basin"]["meta"]["provider_maturity"] == "foundation_frozen"
+    assert topology["nodes"]["skill.krk.stage0_basin"]["meta"]["plasticity_scope"] == "none"
     assert topology["nodes"]["leg_2"]["meta"]["provider_version"] == "stage5_validated_v1"
     assert "provider_version" not in topology["nodes"]["terminal.krk.rook_safe"]["meta"]
 
@@ -350,6 +356,11 @@ def test_stage7_growth_monitor_generates_structural_candidates(tmp_path):
     }
     assert all(candidate.causal_status == "non_causal" for candidate in candidates)
     assert all(candidate.credit == 0.0 for candidate in candidates)
+    assert all(candidate.governor_metadata["schema_version"] == "growth_governor_snapshot.v0" for candidate in candidates)
+    assert all(candidate.topology_weight_diagnosis["schema_version"] == "topology_weight_diagnosis.v0" for candidate in candidates)
+    assert {
+        candidate.governor_status for candidate in candidates
+    } == {"growth_allowed", "growth_blocked_by_guardrail"}
     assert {
         candidate.source_monitor_script for candidate in candidates
     } == {

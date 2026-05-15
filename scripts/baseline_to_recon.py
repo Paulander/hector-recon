@@ -45,13 +45,19 @@ def target_goal_label_for_curriculum(label: str | None) -> str:
 def provider_metadata_for_label(topology: Dict[str, Any], label: str | None) -> Dict[str, Any]:
     """Return provider provenance defaults for a compiled curriculum label."""
     preservation = dict(topology.get("meta", {}).get("provider_preservation", {}) or {})
+    frozen = bool(preservation.get("frozen_provider", False))
+    overlay = bool(preservation.get("overlay_provider", False))
     return {
         "provider_version": preservation.get("provider_version"),
         "source_stage": None,
         "source_checkpoint": preservation.get("source_checkpoint"),
-        "frozen_provider": bool(preservation.get("frozen_provider", False)),
-        "overlay_provider": bool(preservation.get("overlay_provider", False)),
+        "frozen_provider": frozen,
+        "overlay_provider": overlay,
         "validated_profile": preservation.get("validated_profile"),
+        "provider_maturity": "foundation_frozen" if frozen else "candidate_high_plasticity" if overlay else "sandbox_medium_plasticity",
+        "plasticity_scope": "none" if frozen else "overlay_local" if overlay else "provider_local",
+        "can_m3_update": not frozen,
+        "can_m4_consolidate": not frozen,
         "guardrail_status": dict(preservation.get("guardrail_status", {}) or {}),
         "promotion_status": preservation.get("promotion_status"),
     }
@@ -76,6 +82,16 @@ def _provider_metadata_payload(
         "frozen_provider": bool(metadata.get("frozen_provider", False)),
         "overlay_provider": bool(metadata.get("overlay_provider", False)),
         "validated_profile": metadata.get("validated_profile"),
+        "provider_maturity": metadata.get(
+            "provider_maturity",
+            "foundation_frozen" if metadata.get("frozen_provider") else "candidate_high_plasticity" if metadata.get("overlay_provider") else "sandbox_medium_plasticity",
+        ),
+        "plasticity_scope": metadata.get(
+            "plasticity_scope",
+            "none" if metadata.get("frozen_provider") else "overlay_local" if metadata.get("overlay_provider") else "provider_local",
+        ),
+        "can_m3_update": bool(metadata.get("can_m3_update", not metadata.get("frozen_provider", False))),
+        "can_m4_consolidate": bool(metadata.get("can_m4_consolidate", not metadata.get("frozen_provider", False))),
         "guardrail_status": dict(metadata.get("guardrail_status", {}) or {}),
         "promotion_status": metadata.get("promotion_status"),
     }
@@ -121,6 +137,10 @@ def annotate_provider_metadata(
                 "frozen_provider": frozen_provider,
                 "overlay_provider": overlay_provider,
                 "validated_profile": validated_profile,
+                "provider_maturity": "foundation_frozen" if frozen_provider else "candidate_high_plasticity" if overlay_provider else "sandbox_medium_plasticity",
+                "plasticity_scope": "none" if frozen_provider else "overlay_local" if overlay_provider else "provider_local",
+                "can_m3_update": not frozen_provider,
+                "can_m4_consolidate": not frozen_provider,
                 "guardrail_status": guardrail_status or {},
             },
             source_stage=meta.get("stage") if meta.get("stage") is not None else None,
@@ -304,6 +324,10 @@ def compile_overlay_topology(
         "frozen_provider": False,
         "overlay_provider": True,
         "validated_profile": validated_profile,
+        "provider_maturity": "candidate_high_plasticity",
+        "plasticity_scope": "overlay_local",
+        "can_m3_update": True,
+        "can_m4_consolidate": True,
         "guardrail_status": {},
         "promotion_status": "overlay_candidate",
     }

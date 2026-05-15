@@ -9,6 +9,18 @@
     "max_ticks": 12,
     "interpretation": "quick triage only; not a validation result"
   },
+  "performance": {
+    "wall_time": null,
+    "samples": 4,
+    "workers": null,
+    "cache_hits_misses": {},
+    "engine_decisions": null,
+    "engine_ticks": null,
+    "teacher_features_calls": null,
+    "goal_distance_calls": null,
+    "worst_reply_reward_calls": null,
+    "trace_mode": "quick_forced_successor_sweep"
+  },
   "state_count": 4,
   "states_with_any_forced_mate": 1,
   "states_without_any_forced_mate": 3,
@@ -40,6 +52,20 @@
       "candidate_role": "krk.box_shrink_to_drive_repair",
       "status": "counterfactual_supported",
       "support": 1,
+      "topology_weight_diagnosis": {
+        "frozen_weight_probe_result": "partial_success",
+        "forced_oracle_probe_result": "existing_provider_can_convert_some_families",
+        "bounded_m3_warmup_result": "not_run",
+        "bounded_m4_consolidation_result": "not_run",
+        "guardrail_delta": null,
+        "weight_saturation": "unknown",
+        "candidate_locality": "stage7_box_shrink_to_drive_to_edge",
+        "candidate_complexity": "small",
+        "diagnostic_labels": [
+          "topology_present_untrained",
+          "trainable_candidate"
+        ]
+      },
       "proposed_next_action": "sandbox_visible_drive_repair_role",
       "source_terms_to_validate": [
         "box_shrink_reward_confirmed",
@@ -52,6 +78,19 @@
       "candidate_role": "krk.box_shrink_post_reply_continuation",
       "status": "insufficient_existing_successor_capacity_in_quick_sweep",
       "support": 3,
+      "topology_weight_diagnosis": {
+        "frozen_weight_probe_result": "failed_for_some_families",
+        "forced_oracle_probe_result": "inconclusive_quick_horizon",
+        "bounded_m3_warmup_result": "not_run",
+        "bounded_m4_consolidation_result": "not_run",
+        "guardrail_delta": null,
+        "weight_saturation": "unknown",
+        "candidate_locality": "stage7_box_shrink_post_reply",
+        "candidate_complexity": "unknown",
+        "diagnostic_labels": [
+          "provider_capacity_missing"
+        ]
+      },
       "proposed_next_action": "run_targeted_legal_first_or_longer_horizon_sweep",
       "source_terms_to_validate": [
         "post_box_shrink_conversion_needed",
@@ -64,6 +103,20 @@
       "candidate_role": "krk.stage0_basin_after_box_shrink",
       "status": "negative_counterfactual_evidence",
       "support": 4,
+      "topology_weight_diagnosis": {
+        "frozen_weight_probe_result": "failed",
+        "forced_oracle_probe_result": "existing_provider_does_not_convert_quick_sweep",
+        "bounded_m3_warmup_result": "not_run",
+        "bounded_m4_consolidation_result": "not_run",
+        "guardrail_delta": null,
+        "weight_saturation": "unknown",
+        "candidate_locality": "stage7_box_shrink_to_stage0",
+        "candidate_complexity": "small",
+        "diagnostic_labels": [
+          "parameter_miscalibrated",
+          "topology_overbroad"
+        ]
+      },
       "proposed_next_action": "avoid_sandboxing_stage0_as_default_box_shrink_continuation",
       "source_terms_to_validate": [
         "stage0_basin_fallback_detected",

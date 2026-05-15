@@ -16,6 +16,83 @@
       "candidate_id": "cand.krk.box_shrink.reward_contract_refinement.v1",
       "candidate_type": "contract_refinement",
       "source_monitor_script": "growth.monitor.reward_contract_mismatch",
+      "governor_status": "growth_allowed",
+      "governor_metadata": {
+        "metrics": {
+          "active_candidate_count": 3,
+          "episodes_since_last_structural_change": null,
+          "guardrail_pass_rate": 1.0,
+          "handoff_gap_rate": 0.0,
+          "mate_count": 19,
+          "max_plies_count": 31,
+          "plasticity_improvement_slope": null,
+          "promotion_status": "quarantine",
+          "provider_maturity": "quarantined_no_plasticity",
+          "recent_conversion_rate_history": [
+            0.38
+          ],
+          "recent_shadow_candidate_rate": 1.72,
+          "repeated_failure_family_count": 4,
+          "reward_contract_mismatch_rate": 0.48,
+          "route_conflict_rate": 0.0,
+          "shadow_candidate_count": 86,
+          "weight_delta_magnitude": null,
+          "weight_saturation_rate": null
+        },
+        "performance": {
+          "cache_hits_misses": {
+            "context_terms_hits": null,
+            "context_terms_misses": null,
+            "move_shape_audit_hits": null,
+            "move_shape_audit_misses": null
+          },
+          "engine_decisions": 337,
+          "engine_ticks": 67400,
+          "goal_distance_calls": null,
+          "samples": 50,
+          "teacher_features_calls": null,
+          "trace_mode": "diagnostic_packets",
+          "wall_time": null,
+          "workers": 2,
+          "worst_reply_reward_calls": null
+        },
+        "rules": {
+          "block_growth_if_guardrails_regress": true,
+          "max_active_candidates_per_stage": 3,
+          "max_promoted_overlays_per_stage_before_settling": 1,
+          "prefer_settling_if_conversion_rate_improving": true,
+          "require_candidate_resolution_before_next_overlay": true,
+          "require_repeated_failure_family_before_growth": true,
+          "schema_version": "growth_governor_rules.v0"
+        },
+        "schema_version": "growth_governor_snapshot.v0"
+      },
+      "topology_weight_diagnosis": {
+        "bounded_m3_warmup_result": "not_run",
+        "bounded_m4_consolidation_result": "not_run",
+        "candidate_complexity": "small",
+        "candidate_locality": "stage7_box_shrink",
+        "diagnostic_labels": [
+          "topology_underbroad"
+        ],
+        "evaluation_phases": {
+          "phase_0_static_sanity": "pending",
+          "phase_1_frozen_weight_probe": "pending",
+          "phase_2_forced_oracle_probe": "pending",
+          "phase_3_bounded_plasticity_warmup": "pending",
+          "phase_4_bounded_m4_consolidation_probe": "pending",
+          "phase_5_guardrail_validation": "pending",
+          "phase_6_promote_quarantine_reject": "pending"
+        },
+        "forced_oracle_probe_result": "not_run",
+        "frozen_weight_probe_result": "not_run",
+        "guardrail_delta": null,
+        "schema_version": "topology_weight_diagnosis.v0",
+        "weight_saturation": "unknown"
+      },
+      "candidate_diagnostic_labels": [
+        "topology_underbroad"
+      ],
       "audit_status": "needs_more_terms",
       "candidate_update": {
         "from": "proposed",
@@ -248,6 +325,83 @@
       "candidate_id": "cand.krk.box_shrink.handoff_role_refinement.v1",
       "candidate_type": "successor_contract_refinement",
       "source_monitor_script": "growth.monitor.successor_miscalibration",
+      "governor_status": "growth_allowed",
+      "governor_metadata": {
+        "metrics": {
+          "active_candidate_count": 3,
+          "episodes_since_last_structural_change": null,
+          "guardrail_pass_rate": 1.0,
+          "handoff_gap_rate": 0.0,
+          "mate_count": 19,
+          "max_plies_count": 31,
+          "plasticity_improvement_slope": null,
+          "promotion_status": "quarantine",
+          "provider_maturity": "quarantined_no_plasticity",
+          "recent_conversion_rate_history": [
+            0.38
+          ],
+          "recent_shadow_candidate_rate": 1.72,
+          "repeated_failure_family_count": 4,
+          "reward_contract_mismatch_rate": 0.48,
+          "route_conflict_rate": 0.0,
+          "shadow_candidate_count": 86,
+          "weight_delta_magnitude": null,
+          "weight_saturation_rate": null
+        },
+        "performance": {
+          "cache_hits_misses": {
+            "context_terms_hits": null,
+            "context_terms_misses": null,
+            "move_shape_audit_hits": null,
+            "move_shape_audit_misses": null
+          },
+          "engine_decisions": 337,
+          "engine_ticks": 67400,
+          "goal_distance_calls": null,
+          "samples": 50,
+          "teacher_features_calls": null,
+          "trace_mode": "diagnostic_packets",
+          "wall_time": null,
+          "workers": 2,
+          "worst_reply_reward_calls": null
+        },
+        "rules": {
+          "block_growth_if_guardrails_regress": true,
+          "max_active_candidates_per_stage": 3,
+          "max_promoted_overlays_per_stage_before_settling": 1,
+          "prefer_settling_if_conversion_rate_improving": true,
+          "require_candidate_resolution_before_next_overlay": true,
+          "require_repeated_failure_family_before_growth": true,
+          "schema_version": "growth_governor_rules.v0"
+        },
+        "schema_version": "growth_governor_snapshot.v0"
+      },
+      "topology_weight_diagnosis": {
+        "bounded_m3_warmup_result": "not_run",
+        "bounded_m4_consolidation_result": "not_run",
+        "candidate_complexity": "small",
+        "candidate_locality": "stage7_box_shrink",
+        "diagnostic_labels": [
+          "parameter_miscalibrated"
+        ],
+        "evaluation_phases": {
+          "phase_0_static_sanity": "pending",
+          "phase_1_frozen_weight_probe": "pending",
+          "phase_2_forced_oracle_probe": "pending",
+          "phase_3_bounded_plasticity_warmup": "pending",
+          "phase_4_bounded_m4_consolidation_probe": "pending",
+          "phase_5_guardrail_validation": "pending",
+          "phase_6_promote_quarantine_reject": "pending"
+        },
+        "forced_oracle_probe_result": "not_run",
+        "frozen_weight_probe_result": "not_run",
+        "guardrail_delta": null,
+        "schema_version": "topology_weight_diagnosis.v0",
+        "weight_saturation": "unknown"
+      },
+      "candidate_diagnostic_labels": [
+        "parameter_miscalibrated"
+      ],
       "audit_status": "handoff_role_audit_required",
       "candidate_update": {
         "from": "proposed",
@@ -366,6 +520,83 @@
       "candidate_id": "cand.krk.box_shrink.overlay_quarantine_confirmed.v1",
       "candidate_type": "quarantine_overlay",
       "source_monitor_script": "growth.monitor.stage_overlay_quarantine",
+      "governor_status": "growth_blocked_by_guardrail",
+      "governor_metadata": {
+        "metrics": {
+          "active_candidate_count": 3,
+          "episodes_since_last_structural_change": null,
+          "guardrail_pass_rate": 1.0,
+          "handoff_gap_rate": 0.0,
+          "mate_count": 19,
+          "max_plies_count": 31,
+          "plasticity_improvement_slope": null,
+          "promotion_status": "quarantine",
+          "provider_maturity": "quarantined_no_plasticity",
+          "recent_conversion_rate_history": [
+            0.38
+          ],
+          "recent_shadow_candidate_rate": 1.72,
+          "repeated_failure_family_count": 4,
+          "reward_contract_mismatch_rate": 0.48,
+          "route_conflict_rate": 0.0,
+          "shadow_candidate_count": 86,
+          "weight_delta_magnitude": null,
+          "weight_saturation_rate": null
+        },
+        "performance": {
+          "cache_hits_misses": {
+            "context_terms_hits": null,
+            "context_terms_misses": null,
+            "move_shape_audit_hits": null,
+            "move_shape_audit_misses": null
+          },
+          "engine_decisions": 337,
+          "engine_ticks": 67400,
+          "goal_distance_calls": null,
+          "samples": 50,
+          "teacher_features_calls": null,
+          "trace_mode": "diagnostic_packets",
+          "wall_time": null,
+          "workers": 2,
+          "worst_reply_reward_calls": null
+        },
+        "rules": {
+          "block_growth_if_guardrails_regress": true,
+          "max_active_candidates_per_stage": 3,
+          "max_promoted_overlays_per_stage_before_settling": 1,
+          "prefer_settling_if_conversion_rate_improving": true,
+          "require_candidate_resolution_before_next_overlay": true,
+          "require_repeated_failure_family_before_growth": true,
+          "schema_version": "growth_governor_rules.v0"
+        },
+        "schema_version": "growth_governor_snapshot.v0"
+      },
+      "topology_weight_diagnosis": {
+        "bounded_m3_warmup_result": "not_run",
+        "bounded_m4_consolidation_result": "not_run",
+        "candidate_complexity": "small",
+        "candidate_locality": "stage7_box_shrink",
+        "diagnostic_labels": [
+          "quarantined_after_calibration_budget"
+        ],
+        "evaluation_phases": {
+          "phase_0_static_sanity": "pending",
+          "phase_1_frozen_weight_probe": "pending",
+          "phase_2_forced_oracle_probe": "pending",
+          "phase_3_bounded_plasticity_warmup": "pending",
+          "phase_4_bounded_m4_consolidation_probe": "pending",
+          "phase_5_guardrail_validation": "pending",
+          "phase_6_promote_quarantine_reject": "pending"
+        },
+        "forced_oracle_probe_result": "not_run",
+        "frozen_weight_probe_result": "not_run",
+        "guardrail_delta": null,
+        "schema_version": "topology_weight_diagnosis.v0",
+        "weight_saturation": "unknown"
+      },
+      "candidate_diagnostic_labels": [
+        "quarantined_after_calibration_budget"
+      ],
       "audit_status": "quarantine_confirmed",
       "candidate_update": {
         "from": "quarantined",
