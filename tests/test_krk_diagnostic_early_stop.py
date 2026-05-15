@@ -9,7 +9,11 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from scripts.test_krk_landmark_progress import (
     _classify_successor_failure,
     _compact_playout_trace,
+    _finalize_perf_profile,
     _mate_in_one_available,
+    _new_perf_profile,
+    _profile_add_count,
+    _profile_add_time,
     _playout_stagnation_summary,
     _suggestion_stability_signature,
 )
@@ -141,3 +145,21 @@ def test_playout_stagnation_summary_detects_rook_oscillation():
     assert summary["rook_oscillation_pairs"] == [
         {"moves": "e4h4 / h4e4", "count": 1}
     ]
+
+
+def test_performance_profile_schema_round_trips_core_buckets():
+    profile = _new_perf_profile(True)
+    _profile_add_time(profile, "choose_move_details_time", 1.25)
+    _profile_add_time(profile, "engine_step_time", 0.75)
+    _profile_add_time(profile, "total_wall_time", 2.0)
+    _profile_add_count(profile, "samples", 3)
+    _profile_add_count(profile, "engine_ticks", 42)
+
+    finalized = _finalize_perf_profile(profile)
+
+    assert finalized["schema_version"] == "krk_performance_profile.v1"
+    assert finalized["timers_sec"]["choose_move_details_time"] == 1.25
+    assert finalized["timers_sec"]["engine_step_time"] == 0.75
+    assert finalized["counts"]["samples"] == 3
+    assert finalized["counts"]["engine_ticks"] == 42
+    assert "cache" in finalized

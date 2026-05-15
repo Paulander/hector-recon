@@ -1096,3 +1096,85 @@ Interpretation:
 The Slice 39 configuration is not just memorizing the seed-7 100-sample run; it also passes a different bounded curriculum sample.
 The mechanisms remain opt-in. The next engineering bottleneck is diagnostic throughput, so larger randomized validation should be preceded by more performance work or run as an overnight job.
 ```
+
+## Slice 41: Performance Profiling Baseline
+
+Added diagnostic-only profiling via:
+
+```text
+--profile-performance
+```
+
+The profiler records timing/count buckets without changing scoring, routing, packets, shadow candidates, or topology. It is attached to the diagnostic blackboard only when enabled.
+
+30-sample seed-11 profile:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice41_profile_stage5_30_seed11_h40.json
+samples: 30
+conversion: 30 mate / 0 max_plies
+total wall time: 645.44s
+choose_move_details: 638.58s (98.94%)
+engine.step: 638.51s (98.93%)
+actuator scoring: 635.44s (98.45%)
+goal_distance: 472.61s (73.22%)
+teacher.features: 137.39s (21.29%)
+worst_reply_reward: 91.83s (14.23%)
+move_shape_audit: 0.76s (0.12%)
+stagnation_summary: 1.22s (0.19%)
+```
+
+30-sample counts:
+
+```text
+playout decisions: 291
+engine ticks: 2568
+actuator evaluations: 8934
+legal moves scored: 175054
+board.copy calls instrumented: 690245
+teacher.features calls: 752541
+worst_reply_reward calls: 80654
+oracle_best_reward calls: 667
+context cache: 41746 hits / 5183 misses
+move-shape audit cache: 174702 hits / 4862 misses
+```
+
+100-sample seed-7 profile:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice41_profile_stage5_100_seed7_h40.json
+samples: 100
+conversion: 100 mate / 0 max_plies
+total wall time: 2142.45s
+choose_move_details: 2121.62s (99.03%)
+engine.step: 2121.40s (99.02%)
+actuator scoring: 2111.60s (98.56%)
+goal_distance: 1576.65s (73.59%)
+teacher.features: 464.34s (21.67%)
+worst_reply_reward: 314.62s (14.69%)
+move_shape_audit: 2.30s (0.11%)
+stagnation_summary: 3.51s (0.16%)
+```
+
+100-sample counts:
+
+```text
+playout decisions: 933
+engine ticks: 8264
+actuator evaluations: 28522
+legal moves scored: 569892
+board.copy calls instrumented: 2287601
+teacher.features calls: 2491687
+worst_reply_reward calls: 264447
+oracle_best_reward calls: 2197
+context cache: 135354 hits / 15715 misses
+move-shape audit cache: 461786 hits / 14682 misses
+```
+
+Interpretation:
+
+```text
+The throughput problem is not JSON serialization, stagnation diagnostics, move-shape audit, or Black reply selection.
+The bottleneck is actuator scoring, dominated by repeated goal-distance computation and repeated teacher feature extraction inside legal-move/reply loops.
+The next safe optimization slice should target immutable feature/goal-distance/reward caches and goal-bank precomputation before parallel validation.
+```

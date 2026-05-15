@@ -6,6 +6,7 @@ These are referenced in krk_entry_topology.json.
 """
 
 import numpy as np
+import time
 from typing import Dict, Any
 import chess
 
@@ -17,6 +18,79 @@ from recon_lite_chess.training.krk_landmarks import LANDMARK_LABELS, worst_reply
 
 
 _teacher_cache: Dict[str, KRKTeacher] = {}
+
+
+def _perf_profile(blackboard: Dict[str, Any] | None) -> Dict[str, Any] | None:
+    if not blackboard:
+        return None
+    profile = blackboard.get("perf_profile")
+    if isinstance(profile, dict) and profile.get("enabled"):
+        return profile
+    return None
+
+
+def _perf_add_time(blackboard: Dict[str, Any] | None, key: str, seconds: float) -> None:
+    profile = _perf_profile(blackboard)
+    if profile is None:
+        return
+    timers = profile.setdefault("timers", {})
+    timers[key] = float(timers.get(key, 0.0) or 0.0) + float(seconds)
+
+
+def _perf_add_count(blackboard: Dict[str, Any] | None, key: str, amount: int = 1) -> None:
+    profile = _perf_profile(blackboard)
+    if profile is None:
+        return
+    counts = profile.setdefault("counts", {})
+    counts[key] = int(counts.get(key, 0) or 0) + int(amount)
+
+
+def _perf_cache_event(
+    blackboard: Dict[str, Any] | None,
+    cache_name: str,
+    hit: bool,
+) -> None:
+    profile = _perf_profile(blackboard)
+    if profile is None:
+        return
+    cache = profile.setdefault("cache", {}).setdefault(cache_name, {"hits": 0, "misses": 0})
+    key = "hits" if hit else "misses"
+    cache[key] = int(cache.get(key, 0) or 0) + 1
+    _perf_add_count(blackboard, "cache_hits" if hit else "cache_misses")
+
+
+def _profiled_teacher_features(
+    teacher: KRKTeacher,
+    board: chess.Board,
+    blackboard: Dict[str, Any] | None,
+):
+    _perf_add_count(blackboard, "teacher_features_calls")
+    start = time.perf_counter()
+    try:
+        return teacher.features(board)
+    finally:
+        _perf_add_time(blackboard, "teacher_features_time", time.perf_counter() - start)
+
+
+def _profiled_worst_reply_reward(
+    board: chess.Board,
+    move: chess.Move,
+    label: str,
+    *,
+    use_black_reply: bool,
+    blackboard: Dict[str, Any] | None,
+) -> float:
+    _perf_add_count(blackboard, "worst_reply_reward_calls")
+    start = time.perf_counter()
+    try:
+        return worst_reply_reward(
+            board,
+            move,
+            label,
+            use_black_reply=use_black_reply,
+        )
+    finally:
+        _perf_add_time(blackboard, "worst_reply_reward_time", time.perf_counter() - start)
 
 
 def _teacher_for_feature_set(feature_set: str | None) -> KRKTeacher:
@@ -49,7 +123,7 @@ def create_krk_entry_root(node_id=None):
         if "krk_features" not in blackboard:
             board = env.get("board")
             if board:
-                features = teacher.features(board)
+                features = _profiled_teacher_features(teacher, board, blackboard)
                 blackboard["krk_features"] = features
 
         # Initialize caches
@@ -476,163 +550,178 @@ def create_actuator_terminal(node_id=None):
         if not legal_moves:
             return False, False
         
+        _perf_add_count(blackboard, "actuator_evaluations")
+        _perf_add_count(blackboard, "legal_moves_scored", len(legal_moves))
+        scoring_start = time.perf_counter()
         scores = {}
         move_meta: Dict[Any, Dict[str, Any]] = {}
-        for move in legal_moves:
-            # Simulate move
-            board_copy = board.copy()
-            board_copy.push(move)
-            is_mate = board_copy.is_checkmate()
-            is_draw = board_copy.is_stalemate() or board_copy.is_insufficient_material()
-            reply_draw_or_rook_loss_risk = False
-            
-            # Get new features
-            teacher = _teacher_for_feature_set(blackboard.get("feature_set", "legacy"))
-            features_1 = teacher.features(board_copy)
-            
-            # Compute Δs for target sensors
-            delta_s = []
-            for target_id in targets:
-                spec = sensor_specs.get(target_id)
-                if spec is None:
-                    base_id = target_id.split("_post_")[0]
-                    spec = sensor_specs.get(base_id)
-                if spec is None:
+        try:
+            for move in legal_moves:
+                # Simulate move
+                _perf_add_count(blackboard, "board_copy_calls")
+                board_copy = board.copy()
+                board_copy.push(move)
+                is_mate = board_copy.is_checkmate()
+                is_draw = board_copy.is_stalemate() or board_copy.is_insufficient_material()
+                reply_draw_or_rook_loss_risk = False
+                
+                # Get new features
+                teacher = _teacher_for_feature_set(blackboard.get("feature_set", "legacy"))
+                features_1 = _profiled_teacher_features(teacher, board_copy, blackboard)
+                
+                # Compute Δs for target sensors
+                delta_s = []
+                for target_id in targets:
+                    spec = sensor_specs.get(target_id)
+                    if spec is None:
+                        base_id = target_id.split("_post_")[0]
+                        spec = sensor_specs.get(base_id)
+                    if spec is None:
+                        continue
+                    
+                    s1 = _apply_spec_to_features(spec, features_1)
+                    if s1 is None:
+                        continue
+                    
+                    # Compute delta
+                    delta = s1 - s0[target_id]
+                    delta_s.append(delta)
+                
+                if len(delta_s) == 0:
                     continue
-                
-                s1 = _apply_spec_to_features(spec, features_1)
-                if s1 is None:
-                    continue
-                
-                # Compute delta
-                delta = s1 - s0[target_id]
-                delta_s.append(delta)
-            
-            if len(delta_s) == 0:
-                continue
-                
-            # Score by similarity to goal_delta
-            goal_deltas = [goal_delta[t] for t in targets if t in goal_delta][:len(delta_s)]
-            similarity = cosine_similarity(delta_s, goal_deltas)
-            actuator_xp = float(node.meta.get("baseline_xp", 0.0))
-            similarity_score = similarity * stage_weight * (1.0 + max(0.0, actuator_xp))
-            score = similarity_score
+                    
+                # Score by similarity to goal_delta
+                goal_deltas = [goal_delta[t] for t in targets if t in goal_delta][:len(delta_s)]
+                similarity = cosine_similarity(delta_s, goal_deltas)
+                actuator_xp = float(node.meta.get("baseline_xp", 0.0))
+                similarity_score = similarity * stage_weight * (1.0 + max(0.0, actuator_xp))
+                score = similarity_score
 
-            # Goal distance shaping (Stage > 0 only)
-            if goal_entries:
-                def _goal_distance_for_board(b):
-                    f = teacher.features(b)
-                    # Build current sensor map by stable id (graph specs + goal specs)
-                    s_goal: Dict[str, float] = {}
-                    goal_specs = {}
-                    if isinstance(goal_bank, dict):
-                        goal_specs = goal_bank.get("sensor_specs", {}) or {}
-                    merged_specs = dict(goal_specs)
-                    merged_specs.update(sensor_specs)
-                    for sid_key, spec in merged_specs.items():
-                        val = _apply_spec_to_features(spec, f)
-                        if val is not None:
-                            s_goal[sid_key] = float(val)
-                    if not s_goal:
-                        return None
+                # Goal distance shaping (Stage > 0 only)
+                if goal_entries:
+                    def _goal_distance_for_board(b):
+                        goal_start = time.perf_counter()
+                        try:
+                            f = _profiled_teacher_features(teacher, b, blackboard)
+                            # Build current sensor map by stable id (graph specs + goal specs)
+                            s_goal: Dict[str, float] = {}
+                            goal_specs = {}
+                            if isinstance(goal_bank, dict):
+                                goal_specs = goal_bank.get("sensor_specs", {}) or {}
+                            merged_specs = dict(goal_specs)
+                            merged_specs.update(sensor_specs)
+                            for sid_key, spec in merged_specs.items():
+                                val = _apply_spec_to_features(spec, f)
+                                if val is not None:
+                                    s_goal[sid_key] = float(val)
+                            if not s_goal:
+                                return None
 
-                    def _dist(entry):
-                        gvals = entry.get("values", {})
-                        keys = set(s_goal.keys()) & set(gvals.keys())
-                        if not keys:
-                            return None
-                        weights = np.array([
-                            _goal_weight_for_sensor(k, goal_bank, merged_specs)
-                            for k in keys
-                        ], dtype=np.float32)
-                        weight_sum = float(np.sum(weights))
-                        if weight_sum < min_goal_overlap:
-                            return None
-                        vec_cur = np.array([s_goal[k] for k in keys], dtype=np.float32)
-                        vec_goal = np.array([gvals[k] for k in keys], dtype=np.float32)
-                        if goal_normalize:
-                            vec_cur = vec_cur / (np.sqrt(np.sum(weights * (vec_cur ** 2))) + 1e-6)
-                            vec_goal = vec_goal / (np.sqrt(np.sum(weights * (vec_goal ** 2))) + 1e-6)
-                        diff = vec_cur - vec_goal
-                        return float(np.sqrt(np.sum(weights * (diff ** 2))))
+                            def _dist(entry):
+                                gvals = entry.get("values", {})
+                                keys = set(s_goal.keys()) & set(gvals.keys())
+                                if not keys:
+                                    return None
+                                weights = np.array([
+                                    _goal_weight_for_sensor(k, goal_bank, merged_specs)
+                                    for k in keys
+                                ], dtype=np.float32)
+                                weight_sum = float(np.sum(weights))
+                                if weight_sum < min_goal_overlap:
+                                    return None
+                                vec_cur = np.array([s_goal[k] for k in keys], dtype=np.float32)
+                                vec_goal = np.array([gvals[k] for k in keys], dtype=np.float32)
+                                if goal_normalize:
+                                    vec_cur = vec_cur / (np.sqrt(np.sum(weights * (vec_cur ** 2))) + 1e-6)
+                                    vec_goal = vec_goal / (np.sqrt(np.sum(weights * (vec_goal ** 2))) + 1e-6)
+                                diff = vec_cur - vec_goal
+                                return float(np.sqrt(np.sum(weights * (diff ** 2))))
 
-                    best = None
-                    for entry in goal_entries:
-                        d = _dist(entry)
-                        if d is None:
-                            continue
-                        if best is None or d < best:
-                            best = d
-                    return best
-
-                d0 = blackboard.get("goal_distance_now") if goal_label == default_goal_label else None
-                if d0 is None:
-                    d0 = _goal_distance_for_board(board)
-
-                # If lookahead enabled, evaluate after one black reply (worst-case by default)
-                d1 = None
-                if goal_lookahead and goal_lookahead != "none":
-                    d1_candidates = []
-                    for reply in board_copy.legal_moves:
-                        b2 = board_copy.copy()
-                        b2.push(reply)
-                        if (
-                            b2.is_stalemate()
-                            or b2.is_insufficient_material()
-                            or not list(b2.pieces(chess.ROOK, chess.WHITE))
-                        ):
-                            reply_draw_or_rook_loss_risk = True
-                        d2 = _goal_distance_for_board(b2)
-                        if d2 is not None:
-                            d1_candidates.append(d2)
-                    if d1_candidates:
-                        d1 = max(d1_candidates) if goal_lookahead == "max" else min(d1_candidates)
-                else:
-                    d1 = _goal_distance_for_board(board_copy)
-
-                move_meta[move] = {
-                    "is_mate": is_mate,
-                    "is_draw": is_draw,
-                    "reply_draw_or_rook_loss_risk": reply_draw_or_rook_loss_risk,
-                    "goal_dist": d1,
-                    "goal_dist_before": d0,
-                }
-                if d1 is not None:
-                    if d0 is not None:
-                        # Align runtime with Stage-1 training/eval: prefer moves
-                        # that reduce distance to the learned mate-in-1 basin.
-                        goal_progress = float(d0) - float(d1)
-                        if use_landmark_runtime_reward:
-                            landmark_score = worst_reply_reward(
-                                board,
-                                move,
-                                curriculum_label,
-                                use_black_reply=bool(goal_lookahead and goal_lookahead != "none"),
+                            best = None
+                            for entry in goal_entries:
+                                d = _dist(entry)
+                                if d is None:
+                                    continue
+                                if best is None or d < best:
+                                    best = d
+                            return best
+                        finally:
+                            _perf_add_time(
+                                blackboard,
+                                "goal_distance_time",
+                                time.perf_counter() - goal_start,
                             )
-                            score = (0.45 * landmark_score) + (0.55 * goal_progress) + (0.001 * similarity_score)
-                            move_meta[move]["landmark_reward"] = landmark_score
-                            move_meta[move]["goal_progress"] = goal_progress
-                        else:
-                            score = (goal_progress_weight * goal_progress) + (0.001 * similarity_score)
+
+                    d0 = blackboard.get("goal_distance_now") if goal_label == default_goal_label else None
+                    if d0 is None:
+                        d0 = _goal_distance_for_board(board)
+
+                    # If lookahead enabled, evaluate after one black reply (worst-case by default)
+                    d1 = None
+                    if goal_lookahead and goal_lookahead != "none":
+                        d1_candidates = []
+                        for reply in board_copy.legal_moves:
+                            _perf_add_count(blackboard, "board_copy_calls")
+                            b2 = board_copy.copy()
+                            b2.push(reply)
+                            if (
+                                b2.is_stalemate()
+                                or b2.is_insufficient_material()
+                                or not list(b2.pieces(chess.ROOK, chess.WHITE))
+                            ):
+                                reply_draw_or_rook_loss_risk = True
+                            d2 = _goal_distance_for_board(b2)
+                            if d2 is not None:
+                                d1_candidates.append(d2)
+                        if d1_candidates:
+                            d1 = max(d1_candidates) if goal_lookahead == "max" else min(d1_candidates)
                     else:
-                        score = (goal_weight * (-float(d1))) + (0.001 * similarity_score)
-            else:
-                move_meta[move] = {
-                    "is_mate": is_mate,
-                    "is_draw": is_draw,
-                    "reply_draw_or_rook_loss_risk": reply_draw_or_rook_loss_risk,
-                    "goal_dist": None,
-                }
+                        d1 = _goal_distance_for_board(board_copy)
 
-            if is_mate:
-                score += 1_000_000.0
-            elif is_draw or reply_draw_or_rook_loss_risk:
-                # Do not let raw delta-s similarity select a stalemate/draw
-                # or a tactically loose move where Black can remove the rook.
-                score -= 1_000_000.0
+                    move_meta[move] = {
+                        "is_mate": is_mate,
+                        "is_draw": is_draw,
+                        "reply_draw_or_rook_loss_risk": reply_draw_or_rook_loss_risk,
+                        "goal_dist": d1,
+                        "goal_dist_before": d0,
+                    }
+                    if d1 is not None:
+                        if d0 is not None:
+                            # Align runtime with Stage-1 training/eval: prefer moves
+                            # that reduce distance to the learned mate-in-1 basin.
+                            goal_progress = float(d0) - float(d1)
+                            if use_landmark_runtime_reward:
+                                landmark_score = _profiled_worst_reply_reward(
+                                    board,
+                                    move,
+                                    curriculum_label,
+                                    use_black_reply=bool(goal_lookahead and goal_lookahead != "none"),
+                                    blackboard=blackboard,
+                                )
+                                score = (0.45 * landmark_score) + (0.55 * goal_progress) + (0.001 * similarity_score)
+                                move_meta[move]["landmark_reward"] = landmark_score
+                                move_meta[move]["goal_progress"] = goal_progress
+                            else:
+                                score = (goal_progress_weight * goal_progress) + (0.001 * similarity_score)
+                        else:
+                            score = (goal_weight * (-float(d1))) + (0.001 * similarity_score)
+                else:
+                    move_meta[move] = {
+                        "is_mate": is_mate,
+                        "is_draw": is_draw,
+                        "reply_draw_or_rook_loss_risk": reply_draw_or_rook_loss_risk,
+                        "goal_dist": None,
+                    }
 
-            if blackboard.get("successor_affordance_layer_enabled"):
-                score = _apply_successor_affordance_bias(
+                if is_mate:
+                    score += 1_000_000.0
+                elif is_draw or reply_draw_or_rook_loss_risk:
+                    # Do not let raw delta-s similarity select a stalemate/draw
+                    # or a tactically loose move where Black can remove the rook.
+                    score -= 1_000_000.0
+
+                if blackboard.get("successor_affordance_layer_enabled"):
+                    score = _apply_successor_affordance_bias(
                     score,
                     skill_id=skill_id,
                     curriculum_label=curriculum_label,
@@ -672,7 +761,13 @@ def create_actuator_terminal(node_id=None):
                     move_meta=move_meta[move],
                 )
 
-            scores[move] = score
+                scores[move] = score
+        finally:
+            _perf_add_time(
+                blackboard,
+                "actuator_scoring_time",
+                time.perf_counter() - scoring_start,
+            )
         
         if not scores:
             return False, False
@@ -742,6 +837,7 @@ def _krk_context_terms_for_board(
         cache = blackboard.setdefault("krk_context_terms_cache", {})
         cached = cache.get(cache_key)
         if isinstance(cached, dict):
+            _perf_cache_event(blackboard, "context_terms", True)
             blackboard["krk_context_terms_cache_hits"] = int(
                 blackboard.get("krk_context_terms_cache_hits", 0)
             ) + 1
@@ -750,6 +846,7 @@ def _krk_context_terms_for_board(
     if blackboard is not None:
         cache = blackboard.setdefault("krk_context_terms_cache", {})
         cache[cache_key] = terms
+        _perf_cache_event(blackboard, "context_terms", False)
         blackboard["krk_context_terms_cache_misses"] = int(
             blackboard.get("krk_context_terms_cache_misses", 0)
         ) + 1
@@ -778,10 +875,39 @@ def krk_move_shape_audit(
         cache = blackboard.setdefault("krk_move_shape_audit_cache", {})
         cached = cache.get(cache_key)
         if isinstance(cached, dict):
+            _perf_cache_event(blackboard, "move_shape_audit", True)
             blackboard["krk_move_shape_audit_cache_hits"] = int(
                 blackboard.get("krk_move_shape_audit_cache_hits", 0)
             ) + 1
             return cached
+
+    audit_start = time.perf_counter()
+    try:
+        return _krk_move_shape_audit_impl(
+            board,
+            move,
+            blackboard,
+            include_worst_reply=include_worst_reply,
+            cache_key=cache_key,
+        )
+    finally:
+        _perf_add_time(
+            blackboard,
+            "move_shape_audit_time",
+            time.perf_counter() - audit_start,
+        )
+
+
+def _krk_move_shape_audit_impl(
+    board: chess.Board,
+    move: chess.Move,
+    blackboard: Dict[str, Any] | None = None,
+    *,
+    include_worst_reply: bool = True,
+    cache_key: tuple | None = None,
+) -> Dict[str, Any]:
+    if cache_key is None:
+        cache_key = (board.board_fen(), bool(board.turn), move.uci(), bool(include_worst_reply))
 
     if move not in board.legal_moves:
         return {
@@ -797,6 +923,7 @@ def krk_move_shape_audit(
     current_metrics = _krk_geometry_metrics(board)
     move_shape_terms = _candidate_move_shape_terms(board, move)
 
+    _perf_add_count(blackboard, "board_copy_calls")
     post = board.copy(stack=False)
     post.push(move)
     post_terms = _krk_context_terms_for_board(post, blackboard)
@@ -829,7 +956,9 @@ def krk_move_shape_audit(
         "post_move_metrics": post_metrics or {},
     }
     if blackboard is not None:
+        cache = blackboard.setdefault("krk_move_shape_audit_cache", {})
         cache[cache_key] = audit
+        _perf_cache_event(blackboard, "move_shape_audit", False)
         blackboard["krk_move_shape_audit_cache_misses"] = int(
             blackboard.get("krk_move_shape_audit_cache_misses", 0)
         ) + 1

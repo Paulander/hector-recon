@@ -9,8 +9,10 @@ shrinkage, opposition/tempo, or the blended full_krk score.
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 import json
 import random
+import time
 from pathlib import Path
 from typing import Optional
 
@@ -26,6 +28,132 @@ from recon_lite_chess.training.krk_landmarks import (
     select_stage_position,
     worst_reply_reward,
 )
+
+
+PROFILE_TIMER_KEYS = (
+    "total_wall_time",
+    "choose_move_details_time",
+    "engine_step_time",
+    "actuator_scoring_time",
+    "teacher_features_time",
+    "goal_distance_time",
+    "worst_reply_reward_time",
+    "choose_black_reply_time",
+    "move_shape_audit_time",
+    "stagnation_summary_time",
+    "json_trace_serialization_time",
+)
+
+PROFILE_COUNT_KEYS = (
+    "samples",
+    "playout_decisions",
+    "engine_ticks",
+    "actuator_evaluations",
+    "legal_moves_scored",
+    "board_copy_calls",
+    "teacher_features_calls",
+    "worst_reply_reward_calls",
+    "oracle_best_reward_calls",
+    "cache_hits",
+    "cache_misses",
+)
+
+
+def _new_perf_profile(enabled: bool) -> dict | None:
+    if not enabled:
+        return None
+    return {
+        "enabled": True,
+        "timers": {key: 0.0 for key in PROFILE_TIMER_KEYS},
+        "counts": {key: 0 for key in PROFILE_COUNT_KEYS},
+        "cache": {
+            "context_terms": {"hits": 0, "misses": 0},
+            "move_shape_audit": {"hits": 0, "misses": 0},
+        },
+    }
+
+
+def _profile_add_time(profile: dict | None, key: str, seconds: float) -> None:
+    if not profile or not profile.get("enabled"):
+        return
+    timers = profile.setdefault("timers", {})
+    timers[key] = float(timers.get(key, 0.0) or 0.0) + float(seconds)
+
+
+def _profile_add_count(profile: dict | None, key: str, amount: int = 1) -> None:
+    if not profile or not profile.get("enabled"):
+        return
+    counts = profile.setdefault("counts", {})
+    counts[key] = int(counts.get(key, 0) or 0) + int(amount)
+
+
+@contextmanager
+def _profile_timer(profile: dict | None, key: str):
+    if not profile or not profile.get("enabled"):
+        yield
+        return
+    start = time.perf_counter()
+    try:
+        yield
+    finally:
+        _profile_add_time(profile, key, time.perf_counter() - start)
+
+
+def _profile_cache_delta(profile: dict | None, move_details: dict) -> None:
+    if not profile or not profile.get("enabled"):
+        return
+    cache = profile.setdefault("cache", {})
+    context = cache.setdefault("context_terms", {"hits": 0, "misses": 0})
+    shape = cache.setdefault("move_shape_audit", {"hits": 0, "misses": 0})
+    context["hits"] = int(context.get("hits", 0) or 0) + int(
+        move_details.get("context_terms_cache_hits", 0) or 0
+    )
+    context["misses"] = int(context.get("misses", 0) or 0) + int(
+        move_details.get("context_terms_cache_misses", 0) or 0
+    )
+    shape["hits"] = int(shape.get("hits", 0) or 0) + int(
+        move_details.get("move_shape_audit_cache_hits", 0) or 0
+    )
+    shape["misses"] = int(shape.get("misses", 0) or 0) + int(
+        move_details.get("move_shape_audit_cache_misses", 0) or 0
+    )
+    _profile_add_count(
+        profile,
+        "cache_hits",
+        int(move_details.get("context_terms_cache_hits", 0) or 0)
+        + int(move_details.get("move_shape_audit_cache_hits", 0) or 0),
+    )
+    _profile_add_count(
+        profile,
+        "cache_misses",
+        int(move_details.get("context_terms_cache_misses", 0) or 0)
+        + int(move_details.get("move_shape_audit_cache_misses", 0) or 0),
+    )
+
+
+def _finalize_perf_profile(profile: dict | None) -> dict | None:
+    if not profile or not profile.get("enabled"):
+        return None
+    timers = {
+        key: round(float(profile.get("timers", {}).get(key, 0.0) or 0.0), 6)
+        for key in PROFILE_TIMER_KEYS
+    }
+    counts = {
+        key: int(profile.get("counts", {}).get(key, 0) or 0)
+        for key in PROFILE_COUNT_KEYS
+    }
+    total = timers.get("total_wall_time", 0.0)
+    percentages = {
+        key: round((value / total * 100.0), 3) if total > 0 else 0.0
+        for key, value in timers.items()
+    }
+    return {
+        "schema_version": "krk_performance_profile.v1",
+        "timers_sec": timers,
+        "timer_percentages_of_total": percentages,
+        "counts": counts,
+        "cache": profile.get("cache", {}),
+    }
 
 
 def generate_random_krk_position(rng: random.Random) -> chess.Board:
@@ -795,6 +923,58 @@ def choose_move_details(
     post_break_continuation_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
+    perf_profile: dict | None = None,
+) -> dict:
+    with _profile_timer(perf_profile, "choose_move_details_time"):
+        return _choose_move_details_impl(
+            graph,
+            engine,
+            board,
+            max_ticks=max_ticks,
+            stage_filter=stage_filter,
+            suggestion_limit=suggestion_limit,
+            successor_affordance_layer_enabled=successor_affordance_layer_enabled,
+            successor_contract_gate_enabled=successor_contract_gate_enabled,
+            successor_role_license_enabled=successor_role_license_enabled,
+            successor_role_veto_penalty=successor_role_veto_penalty,
+            successor_stage0_drift_penalty=successor_stage0_drift_penalty,
+            successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
+            successor_role_scoped_move_shape_bonus=successor_role_scoped_move_shape_bonus,
+            successor_role_scoped_move_shape_require_worst_reply=successor_role_scoped_move_shape_require_worst_reply,
+            stagnation_context=stagnation_context,
+            stagnation_breaker_enabled=stagnation_breaker_enabled,
+            stagnation_breaker_bonus=stagnation_breaker_bonus,
+            post_break_continuation_enabled=post_break_continuation_enabled,
+            post_break_continuation_bonus=post_break_continuation_bonus,
+            early_stop_stable_suggestions=early_stop_stable_suggestions,
+            forced_successor_skill=forced_successor_skill,
+            perf_profile=perf_profile,
+        )
+
+
+def _choose_move_details_impl(
+    graph: Graph,
+    engine: ReConEngine,
+    board: chess.Board,
+    max_ticks: int = 200,
+    stage_filter: Optional[int] = None,
+    suggestion_limit: int = 10,
+    successor_affordance_layer_enabled: bool = False,
+    successor_contract_gate_enabled: bool = False,
+    successor_role_license_enabled: bool = False,
+    successor_role_veto_penalty: float = 0.0,
+    successor_stage0_drift_penalty: float = 0.0,
+    successor_role_scoped_move_shape_enabled: bool = False,
+    successor_role_scoped_move_shape_bonus: float = 0.0,
+    successor_role_scoped_move_shape_require_worst_reply: bool = False,
+    stagnation_context: Optional[dict] = None,
+    stagnation_breaker_enabled: bool = False,
+    stagnation_breaker_bonus: float = 0.0,
+    post_break_continuation_enabled: bool = False,
+    post_break_continuation_bonus: float = 0.0,
+    early_stop_stable_suggestions: int = 0,
+    forced_successor_skill: Optional[str] = None,
+    perf_profile: dict | None = None,
 ) -> dict:
     env = {
         "board": board,
@@ -805,6 +985,8 @@ def choose_move_details(
         "successor_contract_gate_enabled": successor_contract_gate_enabled,
         "successor_role_license_enabled": successor_role_license_enabled,
     }
+    if perf_profile:
+        env["blackboard"]["perf_profile"] = perf_profile
     env["blackboard"]["successor_affordance_layer_enabled"] = successor_affordance_layer_enabled
     env["blackboard"]["successor_contract_gate_enabled"] = successor_contract_gate_enabled
     env["blackboard"]["successor_role_license_enabled"] = successor_role_license_enabled
@@ -860,7 +1042,9 @@ def choose_move_details(
     last_suggestion_signature = None
     while ticks < max_ticks and env.get("chosen_move") is None:
         ticks += 1
-        engine.step(env)
+        _profile_add_count(perf_profile, "engine_ticks")
+        with _profile_timer(perf_profile, "engine_step_time"):
+            engine.step(env)
         if early_stop_stable_suggestions > 0:
             signature = _suggestion_stability_signature(
                 list(env.get("actuator_suggestions", []) or []),
@@ -919,7 +1103,7 @@ def choose_move_details(
                 for key, value in meta.items()
             }
         clean_suggestions.append(clean)
-    return {
+    result = {
         "move": selected_move,
         "ticks": ticks,
         "confidence": selected_confidence,
@@ -965,24 +1149,69 @@ def choose_move_details(
             env.get("blackboard", {}).get("krk_move_shape_audit_cache_misses", 0) or 0
         ),
     }
+    return result
 
 
-def oracle_best_reward(board: chess.Board, label: str, lookahead_black: bool) -> float:
+def oracle_best_reward(
+    board: chess.Board,
+    label: str,
+    lookahead_black: bool,
+    perf_profile: dict | None = None,
+) -> float:
+    _profile_add_count(perf_profile, "oracle_best_reward_calls")
     best = -float("inf")
     for move in board.legal_moves:
-        reward = worst_reply_reward(board, move, label, use_black_reply=lookahead_black)
+        reward = _profiled_worst_reply_reward(
+            board,
+            move,
+            label,
+            use_black_reply=lookahead_black,
+            perf_profile=perf_profile,
+        )
         if reward > best:
             best = reward
     return best
 
 
-def oracle_move_rewards(board: chess.Board, label: str, lookahead_black: bool) -> list[tuple[chess.Move, float]]:
+def oracle_move_rewards(
+    board: chess.Board,
+    label: str,
+    lookahead_black: bool,
+    perf_profile: dict | None = None,
+) -> list[tuple[chess.Move, float]]:
     rewards = [
-        (move, worst_reply_reward(board, move, label, use_black_reply=lookahead_black))
+        (
+            move,
+            _profiled_worst_reply_reward(
+                board,
+                move,
+                label,
+                use_black_reply=lookahead_black,
+                perf_profile=perf_profile,
+            ),
+        )
         for move in board.legal_moves
     ]
     rewards.sort(key=lambda item: item[1], reverse=True)
     return rewards
+
+
+def _profiled_worst_reply_reward(
+    board: chess.Board,
+    move: chess.Move,
+    label: str,
+    *,
+    use_black_reply: bool,
+    perf_profile: dict | None = None,
+) -> float:
+    _profile_add_count(perf_profile, "worst_reply_reward_calls")
+    with _profile_timer(perf_profile, "worst_reply_reward_time"):
+        return worst_reply_reward(
+            board,
+            move,
+            label,
+            use_black_reply=use_black_reply,
+        )
 
 
 def choose_black_reply(
@@ -990,21 +1219,32 @@ def choose_black_reply(
     board: chess.Board,
     label: str,
     policy: str,
+    perf_profile: dict | None = None,
 ) -> chess.Move | None:
-    replies = list(board.legal_moves)
-    if not replies:
-        return None
-    if policy == "random":
-        return rng.choice(replies)
+    with _profile_timer(perf_profile, "choose_black_reply_time"):
+        replies = list(board.legal_moves)
+        if not replies:
+            return None
+        if policy == "random":
+            return rng.choice(replies)
 
-    # Adversarial Black chooses the reply that gives White the worst next
-    # one-ply landmark opportunity. This is intentionally cheap, not tablebase.
-    scored = []
-    for reply in replies:
-        b2 = board.copy()
-        b2.push(reply)
-        scored.append((oracle_best_reward(b2, label, lookahead_black=False), reply))
-    return min(scored, key=lambda item: item[0])[1]
+        # Adversarial Black chooses the reply that gives White the worst next
+        # one-ply landmark opportunity. This is intentionally cheap, not tablebase.
+        scored = []
+        for reply in replies:
+            _profile_add_count(perf_profile, "board_copy_calls")
+            b2 = board.copy()
+            b2.push(reply)
+            scored.append((
+                oracle_best_reward(
+                    b2,
+                    label,
+                    lookahead_black=False,
+                    perf_profile=perf_profile,
+                ),
+                reply,
+            ))
+        return min(scored, key=lambda item: item[0])[1]
 
 
 def play_to_mate(
@@ -1034,8 +1274,10 @@ def play_to_mate(
     post_break_continuation_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
+    perf_profile: dict | None = None,
 ) -> dict:
     """Run a simple KRK playout using the compiled topology for White moves."""
+    _profile_add_count(perf_profile, "board_copy_calls")
     b = board.copy()
     white_moves = 0
     events = []
@@ -1072,10 +1314,11 @@ def play_to_mate(
         if trace:
             payload["final_fen"] = b.fen()
             payload["trace"] = events
-            payload["stagnation_summary"] = _playout_stagnation_summary(
-                all_events,
-                current_board=b,
-            )
+            with _profile_timer(perf_profile, "stagnation_summary_time"):
+                payload["stagnation_summary"] = _playout_stagnation_summary(
+                    all_events,
+                    current_board=b,
+                )
             if trace_truncated_events:
                 payload["trace_truncated_events"] = trace_truncated_events
         return payload
@@ -1092,15 +1335,17 @@ def play_to_mate(
             active_stage_filter = stage_filter if white_moves == 0 else None
             active_forced_successor = forced_successor_skill if white_moves == 0 else None
             before_fen = b.fen()
-            stagnation_context = _playout_stagnation_summary(
-                all_events,
-                current_board=b,
-            )
-            stagnation_context = _with_post_break_continuation_context(
-                stagnation_context,
-                all_events=all_events,
-                current_board=b,
-            )
+            with _profile_timer(perf_profile, "stagnation_summary_time"):
+                stagnation_context = _playout_stagnation_summary(
+                    all_events,
+                    current_board=b,
+                )
+                stagnation_context = _with_post_break_continuation_context(
+                    stagnation_context,
+                    all_events=all_events,
+                    current_board=b,
+                )
+            _profile_add_count(perf_profile, "playout_decisions")
             move_details = choose_move_details(
                 graph,
                 engine,
@@ -1125,6 +1370,7 @@ def play_to_mate(
                 post_break_continuation_bonus=post_break_continuation_bonus,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
                 forced_successor_skill=active_forced_successor,
+                perf_profile=perf_profile,
             )
             _accumulate_engine_perf(engine_perf, move_details, prefix="engine")
             move_uci = move_details.get("move")
@@ -1193,7 +1439,13 @@ def play_to_mate(
             white_moves += 1
         else:
             before_fen = b.fen()
-            reply = choose_black_reply(rng, b, label, black_policy)
+            reply = choose_black_reply(
+                rng,
+                b,
+                label,
+                black_policy,
+                perf_profile=perf_profile,
+            )
             if reply is None:
                 record_event({
                     "ply": ply,
@@ -2076,8 +2328,11 @@ def evaluate_landmark_progress(
     max_counterfactual_sweeps: int = 0,
     counterfactual_sweeps_output: Optional[Path] = None,
     counterfactual_steps_output: Optional[Path] = None,
+    profile_performance: bool = False,
     verbose: bool = True,
 ) -> dict:
+    perf_profile = _new_perf_profile(profile_performance)
+    total_start = time.perf_counter() if perf_profile else None
     rng = random.Random(seed)
     random.seed(seed)
     source_names = (
@@ -2124,6 +2379,7 @@ def evaluate_landmark_progress(
     }
 
     for i in range(samples):
+        _profile_add_count(perf_profile, "samples")
         board = select_eval_position(rng, label, position_mode, source_names)
         move_details = choose_move_details(
             graph,
@@ -2143,10 +2399,16 @@ def evaluate_landmark_progress(
                 successor_role_scoped_move_shape_require_worst_reply
             ),
             early_stop_stable_suggestions=early_stop_stable_suggestions,
+            perf_profile=perf_profile,
         )
         _accumulate_engine_perf(stats, move_details, prefix="one_ply_engine")
         move_uci = move_details.get("move")
-        oracle_rewards = oracle_move_rewards(board, label, lookahead_black)
+        oracle_rewards = oracle_move_rewards(
+            board,
+            label,
+            lookahead_black,
+            perf_profile=perf_profile,
+        )
         best_reward = oracle_rewards[0][1] if oracle_rewards else -float("inf")
 
         stats["total"] += 1
@@ -2172,7 +2434,13 @@ def evaluate_landmark_progress(
             )
             continue
 
-        reward = worst_reply_reward(board, move, label, use_black_reply=lookahead_black)
+        reward = _profiled_worst_reply_reward(
+            board,
+            move,
+            label,
+            use_black_reply=lookahead_black,
+            perf_profile=perf_profile,
+        )
         stats["avg_reward"] += reward
         local_confirmed = reward > eps
         sample_one_ply_status = (
@@ -2287,6 +2555,7 @@ def evaluate_landmark_progress(
                 post_break_continuation_enabled=post_break_continuation_enabled,
                 post_break_continuation_bonus=post_break_continuation_bonus,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
+                perf_profile=perf_profile,
             )
             key = result["result"]
             stats["playout_engine_decision_count"] += int(result.get("engine_decision_count", 0) or 0)
@@ -2791,6 +3060,9 @@ def evaluate_landmark_progress(
     if not stats["counterfactual_successor_sweeps"]:
         stats.pop("counterfactual_successor_sweeps", None)
         stats.pop("counterfactual_successor_summary", None)
+    if perf_profile and total_start is not None:
+        _profile_add_time(perf_profile, "total_wall_time", time.perf_counter() - total_start)
+        stats["performance_profile"] = _finalize_perf_profile(perf_profile)
     return stats
 
 
@@ -2950,6 +3222,8 @@ def main() -> None:
                         help="Optional JSONL path for streaming forced-successor sweep records as they complete")
     parser.add_argument("--counterfactual-steps-output", type=Path, default=None,
                         help="Optional JSONL path for streaming each forced-successor playout result as it completes")
+    parser.add_argument("--profile-performance", action="store_true",
+                        help="Record diagnostic timing/count buckets without changing behavior")
     args = parser.parse_args()
 
     source_names = (
@@ -3010,6 +3284,7 @@ def main() -> None:
         max_counterfactual_sweeps=args.max_counterfactual_sweeps,
         counterfactual_sweeps_output=args.counterfactual_sweeps_output,
         counterfactual_steps_output=args.counterfactual_steps_output,
+        profile_performance=args.profile_performance,
         verbose=True,
     )
     print_landmark_results(
@@ -3020,6 +3295,25 @@ def main() -> None:
     )
     if args.json_output:
         args.json_output.parent.mkdir(parents=True, exist_ok=True)
+        if args.profile_performance and stats.get("performance_profile"):
+            start = time.perf_counter()
+            _ = json.dumps(stats, indent=2)
+            elapsed = time.perf_counter() - start
+            profile = stats["performance_profile"]
+            timers = profile.setdefault("timers_sec", {})
+            timers["json_trace_serialization_time"] = round(
+                float(timers.get("json_trace_serialization_time", 0.0) or 0.0) + elapsed,
+                6,
+            )
+            timers["total_wall_time"] = round(
+                float(timers.get("total_wall_time", 0.0) or 0.0) + elapsed,
+                6,
+            )
+            total = float(timers.get("total_wall_time", 0.0) or 0.0)
+            profile["timer_percentages_of_total"] = {
+                key: round((float(value) / total * 100.0), 3) if total > 0 else 0.0
+                for key, value in timers.items()
+            }
         args.json_output.write_text(json.dumps(stats, indent=2) + "\n", encoding="utf-8")
 
 
