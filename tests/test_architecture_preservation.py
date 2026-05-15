@@ -13,8 +13,10 @@ from recon_lite_chess.routing.contracts import (
     HandoffPacket,
     ShadowStemCandidate,
     SkillContractStats,
+    StructuralCandidate,
     record_handoff_composition_event,
     record_provider_promotion_event,
+    record_structural_candidate_event,
 )
 from recon_lite_chess.routing.shadow_queue import build_shadow_stem_queue
 from recon_lite_hector.plasticity.consolidate import (
@@ -221,3 +223,68 @@ def test_provider_promotion_events_export_to_episode_summary_non_causally():
 
     assert set(engine.edge_states) == {"phase1->phase2:POR"}
     assert engine.edge_states["phase1->phase2:POR"].accumulated_weighted_delta == 0.35
+
+
+def test_structural_candidate_round_trips_and_remains_non_causal():
+    candidate = StructuralCandidate(
+        candidate_type="contract_refinement",
+        source_monitor_script="growth.monitor.reward_contract_mismatch",
+        source_terms=["reward_confirmed", "visible_contract_not_confirmed"],
+        trigger_failure_classes=["reward_contract_mismatch"],
+        target_skill="krk.box_shrink",
+        parent_skill="krk.drive_to_edge",
+        proposed_change={"kind": "visible_contract_audit"},
+        evidence_artifacts=["stage7.json"],
+    )
+
+    restored = StructuralCandidate.from_dict(candidate.to_dict())
+
+    assert restored.schema_version == "structural_candidate.v1"
+    assert restored.causal_status == "non_causal"
+    assert restored.credit == 0.0
+    assert restored.promotion_status == "proposed"
+
+
+def test_structural_candidate_event_exports_without_m4_or_topology_effect():
+    graph = _make_graph()
+    before_nodes = set(graph.nodes)
+    before_edges = len(graph.edges)
+    candidate = StructuralCandidate(
+        candidate_type="successor_contract_refinement",
+        source_monitor_script="growth.monitor.successor_miscalibration",
+        source_terms=["selected_successor_miscalibrated", "repeated_conversion_failure"],
+        trigger_failure_classes=["selected_successor_miscalibrated", "repeated_conversion_failure"],
+        target_skill="krk.box_shrink",
+        parent_skill="krk.drive_to_edge",
+        proposed_change={"kind": "handoff_role_audit"},
+        evidence_artifacts=["stage7.json", "stage7.md"],
+    )
+    summary = EpisodeSummary(
+        edge_delta_sums={"phase1->phase2:POR": 0.45},
+        avg_reward_tick=1.0,
+        outcome_score=1.0,
+    )
+
+    record_structural_candidate_event(summary, tick=33, candidate=candidate)
+
+    restored = EpisodeSummary.from_dict(summary.to_dict())
+    event = restored.learning_events[0]
+    assert event.event_type == "structural_candidate_event"
+    assert event.credit == 0.0
+    assert event.meta["schema_version"] == "structural_candidate_event.v1"
+    assert event.meta["structural_candidate"]["schema_version"] == "structural_candidate.v1"
+    assert event.meta["structural_candidate"]["causal_status"] == "non_causal"
+
+    engine = ConsolidationEngine(
+        ConsolidationConfig(min_episodes=1, outcome_weight=0.5)
+    )
+    engine.edge_states["phase1->phase2:POR"] = EdgeConsolidationState(
+        edge_key="phase1->phase2:POR",
+        w_base=1.0,
+    )
+    engine.accumulate_episode(restored)
+
+    assert set(graph.nodes) == before_nodes
+    assert len(graph.edges) == before_edges
+    assert set(engine.edge_states) == {"phase1->phase2:POR"}
+    assert engine.edge_states["phase1->phase2:POR"].accumulated_weighted_delta == 0.45

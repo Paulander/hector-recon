@@ -246,6 +246,59 @@ class ShadowStemCandidate:
         return cls(**dict(payload))
 
 
+@dataclass(frozen=True)
+class StructuralCandidate:
+    """Non-causal structural repair/growth hypothesis emitted by a monitor."""
+
+    candidate_type: str
+    source_monitor_script: str
+    source_terms: List[str]
+    trigger_failure_classes: List[str]
+    target_skill: str
+    parent_skill: str
+    proposed_change: Dict[str, Any]
+    evidence_artifacts: List[str] = field(default_factory=list)
+    promotion_status: Literal[
+        "shadow",
+        "proposed",
+        "sandboxed",
+        "validated",
+        "promoted",
+        "quarantined",
+        "rejected",
+    ] = "proposed"
+    causal_status: Literal["non_causal"] = "non_causal"
+    credit: float = 0.0
+    schema_version: str = "structural_candidate.v1"
+    candidate_id: Optional[str] = None
+
+    def __post_init__(self) -> None:
+        if self.causal_status != "non_causal":
+            raise ValueError("StructuralCandidate must remain non_causal")
+        if float(self.credit) != 0.0:
+            raise ValueError("StructuralCandidate credit must be 0.0")
+        if self.candidate_id is None:
+            object.__setattr__(
+                self,
+                "candidate_id",
+                stable_record_id(
+                    "cand",
+                    self.target_skill,
+                    self.candidate_type,
+                    self.source_monitor_script,
+                    self.trigger_failure_classes,
+                    self.proposed_change,
+                ),
+            )
+
+    def to_dict(self) -> Dict[str, Any]:
+        return _jsonable(asdict(self))
+
+    @classmethod
+    def from_dict(cls, payload: Mapping[str, Any]) -> "StructuralCandidate":
+        return cls(**dict(payload))
+
+
 def record_handoff_composition_event(
     episode_summary: Any,
     *,
@@ -374,6 +427,39 @@ def record_provider_promotion_event(
         event_type="provider_promotion_event",
         subject_id=subject_id,
         parent_id=skill_id,
+        credit=0.0,
+        meta=payload,
+    )
+
+
+def record_structural_candidate_event(
+    episode_summary: Any,
+    *,
+    tick: int,
+    candidate: StructuralCandidate | Mapping[str, Any],
+    meta: Optional[Mapping[str, Any]] = None,
+) -> None:
+    """Export a structural growth candidate into an EpisodeSummary.
+
+    The event is zero-credit evidence for later M5 review. It must not affect
+    runtime routing, M3 adaptation, or M4 edge consolidation by itself.
+    """
+    if not hasattr(episode_summary, "record_learning_event"):
+        raise TypeError("episode_summary must provide record_learning_event")
+
+    candidate_payload = candidate.to_dict() if hasattr(candidate, "to_dict") else dict(candidate)
+    payload: Dict[str, Any] = {
+        "schema_version": "structural_candidate_event.v1",
+        "structural_candidate": candidate_payload,
+    }
+    if meta:
+        payload["meta"] = dict(meta)
+    payload = _jsonable(payload)
+    episode_summary.record_learning_event(
+        tick=tick,
+        event_type="structural_candidate_event",
+        subject_id=str(candidate_payload.get("candidate_id")),
+        parent_id=str(candidate_payload.get("parent_skill")),
         credit=0.0,
         meta=payload,
     )

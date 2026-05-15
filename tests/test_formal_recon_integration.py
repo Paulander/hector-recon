@@ -44,6 +44,16 @@ assert _provider_promotion.__spec__ is not None
 assert _provider_promotion.__spec__.loader is not None
 _provider_promotion.__spec__.loader.exec_module(_provider_promotion)
 
+_structural_candidates = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "generate_structural_candidates",
+        Path(__file__).resolve().parents[1] / "scripts" / "generate_structural_candidates.py",
+    )
+)
+assert _structural_candidates.__spec__ is not None
+assert _structural_candidates.__spec__.loader is not None
+_structural_candidates.__spec__.loader.exec_module(_structural_candidates)
+
 
 def test_engine_selector_preserves_pragmatic_default_and_exposes_formal():
     pragmatic = create_recon_engine(Graph())
@@ -264,6 +274,59 @@ def test_provider_promotion_eval_keeps_stage_as_overlay_when_guardrail_fails(tmp
     assert result["promotion_status"] == "overlay_only"
     assert result["stage"]["passed"] is True
     assert result["guardrails"][0]["passed"] is False
+
+
+def test_stage7_growth_monitor_generates_structural_candidates(tmp_path):
+    diagnostic_path = tmp_path / "stage7.json"
+    analysis_path = tmp_path / "stage7.md"
+    promotion_path = tmp_path / "promotion.json"
+    diagnostic_path.write_text(
+        json.dumps({
+            "label": "box_shrink",
+            "total": 50,
+            "conversion_status": "failed",
+            "playouts": {"mate": 19, "max_plies": 31},
+            "semantic_alignment_status_counts": {
+                "reward_contract_mismatch": 24,
+            },
+            "shadow_candidate_count": 86,
+            "shadow_trigger_counts": {
+                "repeated_conversion_failure": 31,
+                "high_score_conversion_failure": 31,
+                "reward_contract_mismatch": 24,
+            },
+        }),
+        encoding="utf-8",
+    )
+    analysis_path.write_text(
+        "selected_successor_miscalibrated\nrepeated_conversion_failure\nreward_contract_mismatch\n",
+        encoding="utf-8",
+    )
+    promotion_path.write_text(
+        json.dumps({"schema_version": "provider_promotion_eval.v1", "promotion_status": "quarantine"}),
+        encoding="utf-8",
+    )
+
+    candidates = _structural_candidates.generate_stage7_box_shrink_candidates(
+        diagnostic_path=diagnostic_path,
+        analysis_path=analysis_path,
+        promotion_eval_path=promotion_path,
+    )
+
+    assert {candidate.candidate_type for candidate in candidates} == {
+        "contract_refinement",
+        "successor_contract_refinement",
+        "quarantine_overlay",
+    }
+    assert all(candidate.causal_status == "non_causal" for candidate in candidates)
+    assert all(candidate.credit == 0.0 for candidate in candidates)
+    assert {
+        candidate.source_monitor_script for candidate in candidates
+    } == {
+        "growth.monitor.reward_contract_mismatch",
+        "growth.monitor.successor_miscalibration",
+        "growth.monitor.stage_overlay_quarantine",
+    }
 
 
 def test_spawn_point_promoted_trial_materializes_formal_triplet_pairs():

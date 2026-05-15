@@ -2260,3 +2260,113 @@ The failure is not diffuse: box_shrink rewards often confirm when the visible fe
 Do not train Stage 8 or promote Stage 7 yet.
 The next work should be a Stage 7 semantic/contract audit around box-shrink reward confirmation versus visible box/fence contraction terms.
 ```
+
+## Slice 59: Growth Monitor v0 Structural Candidates
+
+The Stage 7 failure is now framed as the first Growth Monitor v0 test case rather than a manual patch request.
+
+New schema:
+
+```text
+StructuralCandidate
+schema_version: structural_candidate.v1
+causal_status: non_causal
+credit: 0.0
+promotion_status: shadow/proposed/sandboxed/validated/promoted/quarantined/rejected
+```
+
+New non-causal event export:
+
+```text
+event_type: structural_candidate_event
+schema_version: structural_candidate_event.v1
+credit: 0.0
+```
+
+Initial monitor families:
+
+```text
+growth.monitor.reward_contract_mismatch
+growth.monitor.successor_miscalibration
+growth.monitor.stage_overlay_quarantine
+```
+
+Stage 7 candidate artifact:
+
+```text
+reports/structural_candidates/stage7_box_shrink_candidates.json
+```
+
+Generated candidates:
+
+```text
+cand.krk.box_shrink.reward_contract_refinement.v1
+  type: contract_refinement
+  monitor: growth.monitor.reward_contract_mismatch
+  status: proposed
+  source terms:
+    reward_confirmed
+    visible_contract_not_confirmed
+    conversion_failed
+    shadow_support_high
+
+cand.krk.box_shrink.handoff_role_refinement.v1
+  type: successor_contract_refinement
+  monitor: growth.monitor.successor_miscalibration
+  status: proposed
+  source terms:
+    selected_successor_miscalibrated
+    repeated_conversion_failure
+    high_score_conversion_failure
+
+cand.krk.box_shrink.overlay_quarantine_confirmed.v1
+  type: quarantine_overlay
+  monitor: growth.monitor.stage_overlay_quarantine
+  status: quarantined
+  source terms:
+    target_stage_local_success
+    target_stage_conversion_failure
+    shadow_candidates_above_threshold
+```
+
+The generated candidates point to the next audit domains, but do not apply any repair:
+
+```text
+visible box-shrink contract audit:
+  box_area_decreased_after_own_move
+  box_area_not_increased_after_reply
+  fence_or_cut_preserved
+  rook_safe_after_reply
+  enemy_king_mobility_reduced
+
+handoff role audit:
+  krk.box_shrink_to_edge_trap_handoff
+  krk.box_shrink_to_drive_repair
+  krk.box_shrink_post_reply_continuation
+```
+
+Architecture note:
+
+```text
+reports/structural_growth_lab_note.md
+```
+
+Core boundary:
+
+```text
+The Structural Growth Lab is not the cognitive mechanism itself.
+It is the compiler/evaluator/safety harness.
+
+The cognitive mechanism begins when ReCoN-visible monitor SCRIPTs emit candidate hypotheses with source terms.
+
+External tooling may sandbox, validate, promote, quarantine, and serialize candidates.
+External tooling must not become a hidden runtime controller.
+```
+
+Interpretation:
+
+```text
+Stage 7 failure now produces ReCoN-shaped structural hypotheses.
+The next Stage 7 semantic audit should be candidate-driven, starting from the generated candidates, not from a human-invented patch.
+Handoff packets, stats, shadow candidates, provider-promotion events, and structural candidates all remain non-causal.
+```

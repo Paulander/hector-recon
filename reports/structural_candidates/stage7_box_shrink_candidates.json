@@ -1,0 +1,120 @@
+{
+  "schema_version": "structural_candidate_set.v1",
+  "source_stage": "stage7_box_shrink",
+  "candidate_count": 3,
+  "candidates": [
+    {
+      "candidate_id": "cand.krk.box_shrink.reward_contract_refinement.v1",
+      "candidate_type": "contract_refinement",
+      "causal_status": "non_causal",
+      "credit": 0.0,
+      "evidence_artifacts": [
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/stage7_box_overlay_smoke_50_seed7_h20.json",
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/stage7_box_overlay_smoke_50_seed7_h20_analysis.md",
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/promotion_eval_stage7_box_overlay_smoke.json"
+      ],
+      "parent_skill": "krk.drive_to_edge",
+      "promotion_status": "proposed",
+      "proposed_change": {
+        "audit_questions": [
+          "Does box_shrink reward confirm true visible box contraction?",
+          "Which post-reply box/fence terms are missing in max_plies cases?"
+        ],
+        "kind": "visible_contract_audit",
+        "suggested_terms": [
+          "box_area_decreased_after_own_move",
+          "box_area_not_increased_after_reply",
+          "fence_or_cut_preserved",
+          "rook_safe_after_reply",
+          "enemy_king_mobility_reduced"
+        ]
+      },
+      "schema_version": "structural_candidate.v1",
+      "source_monitor_script": "growth.monitor.reward_contract_mismatch",
+      "source_terms": [
+        "reward_confirmed",
+        "visible_contract_not_confirmed",
+        "conversion_failed",
+        "shadow_support_high"
+      ],
+      "target_skill": "krk.box_shrink",
+      "trigger_failure_classes": [
+        "repeated_conversion_failure",
+        "reward_contract_mismatch",
+        "selected_successor_miscalibrated"
+      ]
+    },
+    {
+      "candidate_id": "cand.krk.box_shrink.handoff_role_refinement.v1",
+      "candidate_type": "successor_contract_refinement",
+      "causal_status": "non_causal",
+      "credit": 0.0,
+      "evidence_artifacts": [
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/stage7_box_overlay_smoke_50_seed7_h20.json",
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/stage7_box_overlay_smoke_50_seed7_h20_analysis.md",
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/promotion_eval_stage7_box_overlay_smoke.json"
+      ],
+      "parent_skill": "krk.drive_to_edge",
+      "promotion_status": "proposed",
+      "proposed_change": {
+        "audit_questions": [
+          "When box_shrink confirms locally, which successor should own continuation?",
+          "Is stage0_basin being selected as a generic fallback after box_shrink?"
+        ],
+        "candidate_roles": [
+          "krk.box_shrink_to_edge_trap_handoff",
+          "krk.box_shrink_to_drive_repair",
+          "krk.box_shrink_post_reply_continuation"
+        ],
+        "kind": "handoff_role_audit",
+        "suspect_successor": "krk.stage0_basin"
+      },
+      "schema_version": "structural_candidate.v1",
+      "source_monitor_script": "growth.monitor.successor_miscalibration",
+      "source_terms": [
+        "selected_successor_miscalibrated",
+        "repeated_conversion_failure",
+        "high_score_conversion_failure"
+      ],
+      "target_skill": "krk.box_shrink",
+      "trigger_failure_classes": [
+        "repeated_conversion_failure",
+        "reward_contract_mismatch",
+        "selected_successor_miscalibrated"
+      ]
+    },
+    {
+      "candidate_id": "cand.krk.box_shrink.overlay_quarantine_confirmed.v1",
+      "candidate_type": "quarantine_overlay",
+      "causal_status": "non_causal",
+      "credit": 0.0,
+      "evidence_artifacts": [
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/stage7_box_overlay_smoke_50_seed7_h20.json",
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/stage7_box_overlay_smoke_50_seed7_h20_analysis.md",
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/promotion_eval_stage7_box_overlay_smoke.json"
+      ],
+      "parent_skill": "krk.drive_to_edge",
+      "promotion_status": "quarantined",
+      "proposed_change": {
+        "guardrail_rule": "do_not_promote_until_target_conversion_and_shadow_candidates_pass",
+        "kind": "promotion_gate_record",
+        "next_required_action": "candidate_driven_semantic_audit",
+        "promotion_status": "quarantined"
+      },
+      "schema_version": "structural_candidate.v1",
+      "source_monitor_script": "growth.monitor.stage_overlay_quarantine",
+      "source_terms": [
+        "target_stage_local_success",
+        "target_stage_conversion_failure",
+        "shadow_candidates_above_threshold"
+      ],
+      "target_skill": "krk.box_shrink",
+      "trigger_failure_classes": [
+        "repeated_conversion_failure",
+        "reward_contract_mismatch",
+        "selected_successor_miscalibrated",
+        "stage_overlay_quarantine"
+      ]
+    }
+  ]
+}
