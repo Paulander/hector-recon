@@ -6,6 +6,7 @@ from .contracts import (
     ShadowStemCandidate,
     SkillContractSpec,
     SkillContractStats,
+    record_handoff_composition_event,
     stable_record_id,
 )
 from .handoff_analysis import HandoffAnalysis, analyze_handoff_files, analyze_handoff_records
@@ -29,5 +30,6 @@ __all__ = [
     "analyze_handoff_records",
     "build_shadow_stem_queue",
     "build_shadow_stem_queue_from_files",
+    "record_handoff_composition_event",
     "stable_record_id",
 ]

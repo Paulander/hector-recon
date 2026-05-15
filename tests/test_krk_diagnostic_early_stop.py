@@ -7,8 +7,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from scripts.test_krk_landmark_progress import (
+    COMPOSITION_PROFILE_HANDOFF_V1,
+    COMPOSITION_PROFILE_NONE,
+    _apply_composition_profile_to_eval_kwargs,
     _classify_successor_failure,
+    _cli_option_provided,
     _compact_playout_trace,
+    _composition_profile_metadata,
     _finalize_perf_profile,
     _merge_count_dict,
     _mate_in_one_available,
@@ -172,3 +177,71 @@ def test_merge_count_dict_handles_nested_buckets():
     _merge_count_dict(target, {"a": 3, "nested": {"mate": 4, "draw": 1}})
 
     assert target == {"a": 4, "nested": {"mate": 6, "draw": 1}}
+
+
+def test_composition_profile_none_preserves_default_eval_kwargs():
+    base = {
+        "successor_affordance_layer_enabled": False,
+        "successor_role_license_enabled": False,
+        "successor_role_scoped_move_shape_enabled": False,
+        "enable_diagnostic_caches": False,
+    }
+
+    updated, runtime_overrides = _apply_composition_profile_to_eval_kwargs(
+        base,
+        COMPOSITION_PROFILE_NONE,
+    )
+
+    assert updated == {**base, "composition_profile": None}
+    assert runtime_overrides == {}
+
+
+def test_handoff_composition_v1_applies_named_experimental_profile():
+    base = {
+        "successor_affordance_layer_enabled": False,
+        "successor_role_license_enabled": False,
+        "successor_role_scoped_move_shape_enabled": False,
+        "successor_role_scoped_move_shape_bonus": 0.0,
+        "stagnation_breaker_enabled": False,
+        "stagnation_breaker_bonus": 0.0,
+        "post_break_continuation_enabled": False,
+        "post_break_continuation_bonus": 0.0,
+        "successor_stage0_drift_penalty": 0.0,
+        "enable_diagnostic_caches": False,
+    }
+
+    updated, runtime_overrides = _apply_composition_profile_to_eval_kwargs(
+        base,
+        COMPOSITION_PROFILE_HANDOFF_V1,
+        use_validation_defaults=True,
+    )
+
+    assert updated["composition_profile"] == COMPOSITION_PROFILE_HANDOFF_V1
+    assert updated["successor_affordance_layer_enabled"] is True
+    assert updated["successor_role_license_enabled"] is True
+    assert updated["successor_role_scoped_move_shape_enabled"] is True
+    assert updated["successor_role_scoped_move_shape_bonus"] == 0.05
+    assert updated["stagnation_breaker_enabled"] is True
+    assert updated["stagnation_breaker_bonus"] == 0.5
+    assert updated["post_break_continuation_enabled"] is True
+    assert updated["post_break_continuation_bonus"] == 0.25
+    assert updated["successor_stage0_drift_penalty"] == 6.0
+    assert updated["enable_diagnostic_caches"] is True
+    assert runtime_overrides == {"parallel_workers": 8, "chunk_size": 25}
+
+
+def test_handoff_composition_v1_metadata_is_non_default_and_domain_scoped():
+    metadata = _composition_profile_metadata(COMPOSITION_PROFILE_HANDOFF_V1)
+
+    assert metadata["schema_version"] == "composition_profile.v1"
+    assert metadata["profile_id"] == COMPOSITION_PROFILE_HANDOFF_V1
+    assert metadata["domain"] == "KRK"
+    assert metadata["experimental_profile"] is True
+    assert metadata["default_policy"] is False
+    assert "handoff_packets" in metadata["non_causal_records"]
+
+
+def test_cli_option_provided_accepts_space_and_equals_forms():
+    assert _cli_option_provided("--parallel-workers", ["--parallel-workers", "1"])
+    assert _cli_option_provided("--parallel-workers", ["--parallel-workers=1"])
+    assert not _cli_option_provided("--parallel-workers", ["--chunk-size", "25"])

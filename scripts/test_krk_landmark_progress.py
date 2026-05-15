@@ -14,6 +14,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from contextlib import contextmanager
 import json
 import random
+import sys
 import time
 from pathlib import Path
 from typing import Optional
@@ -59,6 +60,90 @@ PROFILE_COUNT_KEYS = (
     "cache_hits",
     "cache_misses",
 )
+
+COMPOSITION_PROFILE_NONE = "none"
+COMPOSITION_PROFILE_HANDOFF_V1 = "handoff_composition_v1"
+
+HANDOFF_COMPOSITION_V1_SETTINGS = {
+    "successor_affordance_layer_enabled": True,
+    "successor_role_license_enabled": True,
+    "successor_role_scoped_move_shape_enabled": True,
+    "successor_role_scoped_move_shape_bonus": 0.05,
+    "stagnation_breaker_enabled": True,
+    "stagnation_breaker_bonus": 0.5,
+    "post_break_continuation_enabled": True,
+    "post_break_continuation_bonus": 0.25,
+    "successor_stage0_drift_penalty": 6.0,
+}
+
+HANDOFF_COMPOSITION_V1_VALIDATION_DEFAULTS = {
+    "enable_diagnostic_caches": True,
+    "parallel_workers": 8,
+    "chunk_size": 25,
+}
+
+COMPOSITION_PROFILES = {
+    COMPOSITION_PROFILE_HANDOFF_V1: {
+        "schema_version": "composition_profile.v1",
+        "profile_id": COMPOSITION_PROFILE_HANDOFF_V1,
+        "domain": "KRK",
+        "experimental_profile": True,
+        "default_policy": False,
+        "description": (
+            "Stable experimental KRK handoff-composition profile: visible "
+            "successor affordances, role licenses, role-scoped move shapes, "
+            "stagnation breaker, post-break continuation, and stage0 drift "
+            "penalty. This is opt-in and domain-scoped, not the universal "
+            "Hector default policy."
+        ),
+        "settings": HANDOFF_COMPOSITION_V1_SETTINGS,
+        "recommended_validation_defaults": HANDOFF_COMPOSITION_V1_VALIDATION_DEFAULTS,
+        "non_causal_records": [
+            "handoff_packets",
+            "shadow_candidates",
+            "skill_contract_stats",
+        ],
+    },
+}
+
+
+def _composition_profile_metadata(profile_id: str | None) -> dict | None:
+    if not profile_id or profile_id == COMPOSITION_PROFILE_NONE:
+        return None
+    if profile_id not in COMPOSITION_PROFILES:
+        raise ValueError(f"unknown composition profile: {profile_id}")
+    return copy.deepcopy(COMPOSITION_PROFILES[profile_id])
+
+
+def _apply_composition_profile_to_eval_kwargs(
+    eval_kwargs: dict,
+    profile_id: str | None,
+    *,
+    use_validation_defaults: bool = False,
+) -> tuple[dict, dict]:
+    """Apply a named opt-in profile without changing default policy semantics."""
+    profile = _composition_profile_metadata(profile_id)
+    updated = dict(eval_kwargs)
+    runtime_overrides: dict = {}
+    if profile is None:
+        updated["composition_profile"] = None
+        return updated, runtime_overrides
+
+    updated.update(profile["settings"])
+    updated["composition_profile"] = profile["profile_id"]
+    if use_validation_defaults:
+        defaults = dict(profile.get("recommended_validation_defaults", {}) or {})
+        if defaults.get("enable_diagnostic_caches"):
+            updated["enable_diagnostic_caches"] = True
+        for key in ("parallel_workers", "chunk_size"):
+            if key in defaults:
+                runtime_overrides[key] = int(defaults[key])
+    return updated, runtime_overrides
+
+
+def _cli_option_provided(option: str, argv: list[str] | None = None) -> bool:
+    argv = list(sys.argv[1:] if argv is None else argv)
+    return any(item == option or item.startswith(f"{option}=") for item in argv)
 
 
 def _new_perf_profile(enabled: bool, *, diagnostic_caches_enabled: bool = False) -> dict | None:
@@ -2412,6 +2497,7 @@ def evaluate_landmark_progress(
     counterfactual_steps_output: Optional[Path] = None,
     profile_performance: bool = False,
     enable_diagnostic_caches: bool = False,
+    composition_profile: str | None = None,
     sample_indices: tuple[int, ...] | None = None,
     deterministic_sample_seeds: bool = False,
     verbose: bool = True,
@@ -2465,6 +2551,9 @@ def evaluate_landmark_progress(
         "one_ply_status": "not_checked",
         "conversion_status": "not_checked",
     }
+    profile_meta = _composition_profile_metadata(composition_profile)
+    if profile_meta is not None:
+        stats["composition_profile"] = profile_meta
 
     indices = tuple(range(samples)) if sample_indices is None else tuple(sample_indices)
     samples = len(indices)
@@ -3608,6 +3697,12 @@ def main() -> None:
                         help="Enable opt-in visible post-stagnation-break continuation move license bonus")
     parser.add_argument("--post-break-continuation-bonus", type=float, default=0.0,
                         help="Small bonus for candidate moves licensed by visible post-break continuation terms")
+    parser.add_argument("--composition-profile",
+                        choices=[COMPOSITION_PROFILE_NONE, COMPOSITION_PROFILE_HANDOFF_V1],
+                        default=COMPOSITION_PROFILE_NONE,
+                        help="Named opt-in composition profile. Defaults to none.")
+    parser.add_argument("--use-profile-validation-defaults", action="store_true",
+                        help="Apply non-behavioral validation defaults recommended by the selected profile")
     parser.add_argument("--counterfactual-successors", type=str, default=None,
                         help="Comma-separated canonical successor skill IDs to force on failed post-reply states")
     parser.add_argument("--max-counterfactual-sweeps", type=int, default=0,
@@ -3688,6 +3783,24 @@ def main() -> None:
         enable_diagnostic_caches=args.enable_diagnostic_caches,
         verbose=True,
     )
+    eval_kwargs, profile_runtime_overrides = _apply_composition_profile_to_eval_kwargs(
+        eval_kwargs,
+        args.composition_profile,
+        use_validation_defaults=args.use_profile_validation_defaults,
+    )
+    if args.use_profile_validation_defaults and profile_runtime_overrides:
+        if (
+            args.parallel_workers == 1
+            and "parallel_workers" in profile_runtime_overrides
+            and not _cli_option_provided("--parallel-workers")
+        ):
+            args.parallel_workers = profile_runtime_overrides["parallel_workers"]
+        if (
+            args.chunk_size == 25
+            and "chunk_size" in profile_runtime_overrides
+            and not _cli_option_provided("--chunk-size")
+        ):
+            args.chunk_size = profile_runtime_overrides["chunk_size"]
     if args.parallel_workers > 1:
         stats = evaluate_landmark_progress_parallel(
             parallel_workers=args.parallel_workers,

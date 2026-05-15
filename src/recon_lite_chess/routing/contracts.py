@@ -244,3 +244,75 @@ class ShadowStemCandidate:
     @classmethod
     def from_dict(cls, payload: Mapping[str, Any]) -> "ShadowStemCandidate":
         return cls(**dict(payload))
+
+
+def record_handoff_composition_event(
+    episode_summary: Any,
+    *,
+    tick: int,
+    from_skill: str,
+    to_skill: Optional[str] = None,
+    role: Optional[str] = None,
+    move_shape: Optional[str] = None,
+    status: str,
+    handoff_packet: HandoffPacket | Mapping[str, Any] | None = None,
+    route_decision: RouteDecision | Mapping[str, Any] | None = None,
+    shadow_candidate: ShadowStemCandidate | Mapping[str, Any] | None = None,
+    plies_to_mate: Optional[int] = None,
+    meta: Optional[Mapping[str, Any]] = None,
+) -> None:
+    """Export handoff-composition evidence into an EpisodeSummary event.
+
+    This helper is intentionally non-causal: it records zero-credit metadata for
+    later analysis/consolidation, while M4 remains driven by normal episode edge
+    deltas.
+    """
+    if not hasattr(episode_summary, "record_learning_event"):
+        raise TypeError("episode_summary must provide record_learning_event")
+
+    payload: Dict[str, Any] = {
+        "schema_version": "handoff_composition_event.v1",
+        "from_skill": from_skill,
+        "to_skill": to_skill,
+        "role": role,
+        "move_shape": move_shape,
+        "status": status,
+        "plies_to_mate": plies_to_mate,
+    }
+    if handoff_packet is not None:
+        payload["handoff_packet"] = (
+            handoff_packet.to_dict() if hasattr(handoff_packet, "to_dict") else dict(handoff_packet)
+        )
+    if route_decision is not None:
+        payload["route_decision"] = (
+            route_decision.to_dict() if hasattr(route_decision, "to_dict") else dict(route_decision)
+        )
+    if shadow_candidate is not None:
+        payload["shadow_candidate"] = (
+            shadow_candidate.to_dict()
+            if hasattr(shadow_candidate, "to_dict")
+            else dict(shadow_candidate)
+        )
+    if meta:
+        payload["meta"] = dict(meta)
+    payload = _jsonable(payload)
+    subject_id = stable_record_id(
+        "handoff_event",
+        from_skill,
+        to_skill,
+        role,
+        move_shape,
+        status,
+        tick,
+        payload.get("handoff_packet", {}).get("packet_id")
+        if isinstance(payload.get("handoff_packet"), dict)
+        else None,
+    )
+    episode_summary.record_learning_event(
+        tick=tick,
+        event_type="handoff_composition_event",
+        subject_id=subject_id,
+        parent_id=from_skill,
+        credit=0.0,
+        meta=payload,
+    )

@@ -1423,3 +1423,60 @@ Interpretation:
 The opt-in successor/role/move-shape/stagnation/post-break/stage0-drift path now passes Stage 5 at 500 samples, Stage 4 wrong-tempo at 100 samples, Stage 1 backchain at 100 samples, KPK->KQK bridge/subgraph tests, and M1-M4 learning preservation tests.
 It is reasonable to treat this as the current stable experimental handoff-composition configuration, while still keeping it opt-in until default-policy implications are reviewed.
 ```
+
+## Slice 46: Named Experimental Profile Freeze
+
+The Stage 5 handoff-composition path is now packaged as a named profile rather than a repeated flag pile:
+
+```text
+profile_id: handoff_composition_v1
+domain: KRK
+experimental_profile: true
+default_policy: false
+```
+
+Behavioral settings captured by the profile:
+
+```text
+successor_affordance_layer_enabled: true
+successor_role_license_enabled: true
+successor_role_scoped_move_shape_enabled: true
+successor_role_scoped_move_shape_bonus: 0.05
+stagnation_breaker_enabled: true
+stagnation_breaker_bonus: 0.5
+post_break_continuation_enabled: true
+post_break_continuation_bonus: 0.25
+successor_stage0_drift_penalty: 6.0
+```
+
+Recommended validation scaffolding captured as profile metadata:
+
+```text
+enable_diagnostic_caches: true
+parallel_workers: 8
+chunk_size: 25
+```
+
+Interpretation:
+
+```text
+handoff_composition_v1 is the stable experimental KRK handoff-composition profile.
+It remains opt-in, domain-scoped, and non-default.
+Handoff packets, shadow candidates, and skill-contract stats remain trace/evidence records and do not become M4 causal inputs by virtue of selecting the profile.
+```
+
+Added a non-causal EpisodeSummary export helper for future consolidation analysis:
+
+```text
+event_type: handoff_composition_event
+schema_version: handoff_composition_event.v1
+credit: 0.0
+payload: from_skill, to_skill, role, move_shape, status, handoff packet / route / shadow metadata
+```
+
+Validation:
+
+```text
+focused M1-M4 + handoff diagnostics suite: 101 passed
+profile smoke artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice46_profile_smoke.json
+```
