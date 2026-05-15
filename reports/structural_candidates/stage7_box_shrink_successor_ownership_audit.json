@@ -1,0 +1,269 @@
+{
+  "schema_version": "stage7_successor_ownership_audit.v1",
+  "causal_status": "non_causal",
+  "candidate_audit_source": "reports/structural_candidates/stage7_box_shrink_semantic_audit.json",
+  "diagnostic_source": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/stage7_box_overlay_smoke_50_seed7_h20.json",
+  "source_candidate_id": "cand.krk.box_shrink.handoff_role_refinement.v1",
+  "source_candidate_ready": true,
+  "successor_outcome_counts": {
+    "krk.stage0_basin:max_plies": 31,
+    "krk.edge_trap_close:mate": 8,
+    "none:mate": 11
+  },
+  "stage0_basin_max_plies_count": 31,
+  "edge_trap_mate_count": 8,
+  "no_successor_mate_count": 11,
+  "role_audits": [
+    {
+      "role_id": "krk.box_shrink_to_edge_trap_handoff",
+      "audit_status": "sandbox_candidate",
+      "positive_support": 8,
+      "negative_support": 0,
+      "unsupported_failure_support": 0,
+      "proposed_visible_terms": [
+        "box_area_not_increased_after_reply",
+        "rook_safe_after_reply",
+        "fence_or_cut_preserved",
+        "successor_edge_trap_close_available"
+      ],
+      "term_summary": {
+        "box_area_decreased_after_own_move": {
+          "false": 8
+        },
+        "box_area_not_increased_after_reply": {
+          "true": 8
+        },
+        "fence_or_cut_preserved": {
+          "true": 8
+        },
+        "rook_safe_after_reply": {
+          "true": 8
+        },
+        "enemy_king_mobility_reduced": {
+          "false": 8
+        }
+      },
+      "representative_fens": [
+        {
+          "fen": "8/8/8/8/8/5K2/5R2/6k1 w - - 0 1",
+          "move": "f3g3",
+          "black_reply": "g1h1",
+          "post_reply_fen": "8/8/8/8/8/6K1/5R2/7k w - - 2 2",
+          "playout_result": "mate",
+          "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+          "successor_selected_skill": "krk.edge_trap_close",
+          "failure_classes": [],
+          "box_area_after_own_move": 2,
+          "box_area_after_reply": 2,
+          "box_area_delta_after_reply": 0,
+          "fence_survived_reply": true,
+          "rook_safe_after_reply": true
+        },
+        {
+          "fen": "8/8/8/8/8/5K2/5R2/6k1 w - - 0 1",
+          "move": "f3g3",
+          "black_reply": "g1h1",
+          "post_reply_fen": "8/8/8/8/8/6K1/5R2/7k w - - 2 2",
+          "playout_result": "mate",
+          "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+          "successor_selected_skill": "krk.edge_trap_close",
+          "failure_classes": [],
+          "box_area_after_own_move": 2,
+          "box_area_after_reply": 2,
+          "box_area_delta_after_reply": 0,
+          "fence_survived_reply": true,
+          "rook_safe_after_reply": true
+        },
+        {
+          "fen": "8/8/8/8/8/5K2/5R2/6k1 w - - 0 1",
+          "move": "f3g3",
+          "black_reply": "g1h1",
+          "post_reply_fen": "8/8/8/8/8/6K1/5R2/7k w - - 2 2",
+          "playout_result": "mate",
+          "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+          "successor_selected_skill": "krk.edge_trap_close",
+          "failure_classes": [],
+          "box_area_after_own_move": 2,
+          "box_area_after_reply": 2,
+          "box_area_delta_after_reply": 0,
+          "fence_survived_reply": true,
+          "rook_safe_after_reply": true
+        },
+        {
+          "fen": "8/8/8/8/8/5K2/5R2/6k1 w - - 0 1",
+          "move": "f3g3",
+          "black_reply": "g1h1",
+          "post_reply_fen": "8/8/8/8/8/6K1/5R2/7k w - - 2 2",
+          "playout_result": "mate",
+          "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+          "successor_selected_skill": "krk.edge_trap_close",
+          "failure_classes": [],
+          "box_area_after_own_move": 2,
+          "box_area_after_reply": 2,
+          "box_area_delta_after_reply": 0,
+          "fence_survived_reply": true,
+          "rook_safe_after_reply": true
+        },
+        {
+          "fen": "8/8/8/8/8/5K2/5R2/6k1 w - - 0 1",
+          "move": "f3g3",
+          "black_reply": "g1h1",
+          "post_reply_fen": "8/8/8/8/8/6K1/5R2/7k w - - 2 2",
+          "playout_result": "mate",
+          "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+          "successor_selected_skill": "krk.edge_trap_close",
+          "failure_classes": [],
+          "box_area_after_own_move": 2,
+          "box_area_after_reply": 2,
+          "box_area_delta_after_reply": 0,
+          "fence_survived_reply": true,
+          "rook_safe_after_reply": true
+        }
+      ]
+    },
+    {
+      "role_id": "krk.box_shrink_to_drive_repair",
+      "audit_status": "needs_counterfactual_evidence",
+      "positive_support": 0,
+      "negative_support": 0,
+      "unsupported_failure_support": 31,
+      "proposed_visible_terms": [
+        "box_shrink_reward_confirmed",
+        "fence_or_cut_not_preserved",
+        "drive_to_edge_affordance_after_box_shrink",
+        "repair_or_reestablish_cut_available"
+      ],
+      "term_summary": {
+        "box_area_decreased_after_own_move": {},
+        "box_area_not_increased_after_reply": {},
+        "fence_or_cut_preserved": {},
+        "rook_safe_after_reply": {},
+        "enemy_king_mobility_reduced": {}
+      },
+      "representative_fens": []
+    },
+    {
+      "role_id": "krk.box_shrink_post_reply_continuation",
+      "audit_status": "needs_role_split_or_successor_sweep",
+      "positive_support": 11,
+      "negative_support": 31,
+      "unsupported_failure_support": 0,
+      "proposed_visible_terms": [
+        "post_box_shrink_conversion_needed",
+        "stage0_basin_fallback_detected",
+        "stage0_basin_unlicensed_after_box_shrink",
+        "edge_or_drive_repair_not_selected"
+      ],
+      "term_summary": {
+        "box_area_decreased_after_own_move": {
+          "true": 17,
+          "false": 25
+        },
+        "box_area_not_increased_after_reply": {
+          "unknown": 11,
+          "true": 31
+        },
+        "fence_or_cut_preserved": {
+          "true": 18,
+          "false": 24
+        },
+        "rook_safe_after_reply": {
+          "unknown": 11,
+          "true": 31
+        },
+        "enemy_king_mobility_reduced": {
+          "true": 34,
+          "false": 8
+        }
+      },
+      "representative_fens": [
+        {
+          "fen": "8/8/8/8/R7/8/2k1K3/8 w - - 0 1",
+          "move": "a4h4",
+          "black_reply": "c2c3",
+          "post_reply_fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+          "playout_result": "max_plies",
+          "semantic_alignment_status": "reward_contract_mismatch",
+          "successor_selected_skill": "krk.stage0_basin",
+          "failure_classes": [
+            "selected_successor_miscalibrated"
+          ],
+          "box_area_after_own_move": 21,
+          "box_area_after_reply": 21,
+          "box_area_delta_after_reply": 0,
+          "fence_survived_reply": false,
+          "rook_safe_after_reply": true
+        },
+        {
+          "fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+          "move": "a1a5",
+          "black_reply": "d4e4",
+          "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+          "playout_result": "max_plies",
+          "semantic_alignment_status": "reward_contract_mismatch",
+          "successor_selected_skill": "krk.stage0_basin",
+          "failure_classes": [
+            "selected_successor_miscalibrated"
+          ],
+          "box_area_after_own_move": 28,
+          "box_area_after_reply": 28,
+          "box_area_delta_after_reply": 0,
+          "fence_survived_reply": false,
+          "rook_safe_after_reply": true
+        },
+        {
+          "fen": "8/8/8/8/4K3/R7/4k3/8 w - - 0 1",
+          "move": "a3a2",
+          "black_reply": "e2e1",
+          "post_reply_fen": "8/8/8/8/4K3/8/R7/4k3 w - - 2 2",
+          "playout_result": "max_plies",
+          "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+          "successor_selected_skill": "krk.stage0_basin",
+          "failure_classes": [
+            "selected_successor_miscalibrated"
+          ],
+          "box_area_after_own_move": 42,
+          "box_area_after_reply": 7,
+          "box_area_delta_after_reply": -35,
+          "fence_survived_reply": true,
+          "rook_safe_after_reply": true
+        },
+        {
+          "fen": "8/8/8/8/4K3/R7/4k3/8 w - - 0 1",
+          "move": "a3a2",
+          "black_reply": "e2e1",
+          "post_reply_fen": "8/8/8/8/4K3/8/R7/4k3 w - - 2 2",
+          "playout_result": "max_plies",
+          "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+          "successor_selected_skill": "krk.stage0_basin",
+          "failure_classes": [
+            "selected_successor_miscalibrated"
+          ],
+          "box_area_after_own_move": 42,
+          "box_area_after_reply": 7,
+          "box_area_delta_after_reply": -35,
+          "fence_survived_reply": true,
+          "rook_safe_after_reply": true
+        },
+        {
+          "fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+          "move": "a1a5",
+          "black_reply": "d4e4",
+          "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+          "playout_result": "max_plies",
+          "semantic_alignment_status": "reward_contract_mismatch",
+          "successor_selected_skill": "krk.stage0_basin",
+          "failure_classes": [
+            "selected_successor_miscalibrated"
+          ],
+          "box_area_after_own_move": 28,
+          "box_area_after_reply": 28,
+          "box_area_delta_after_reply": 0,
+          "fence_survived_reply": false,
+          "rook_safe_after_reply": true
+        }
+      ]
+    }
+  ],
+  "recommended_next_action": "sandbox_edge_trap_handoff_role_and_counterfactual_stage0_failures"
+}

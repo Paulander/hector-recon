@@ -1107,6 +1107,25 @@ def _compute_krk_context_terms(board: chess.Board) -> Dict[str, bool]:
         and rook_safe
         and post_fence_conversion_needed
     )
+    fence_or_cut_not_preserved = not fence_exists
+    drive_to_edge_affordance_after_box_shrink = (
+        fence_or_cut_not_preserved
+        and rook_safe
+        and edge_distance > 0
+        and box_area >= 12
+    )
+    repair_or_reestablish_cut_available = (
+        rook_safe
+        and (
+            safe_check_available
+            or safe_rook_long_transfer_available
+            or king_support_improvement_move_exists
+        )
+    )
+    box_shrink_drive_repair_available = (
+        drive_to_edge_affordance_after_box_shrink
+        and repair_or_reestablish_cut_available
+    )
 
     values = {
         "fence_exists": fence_exists,
@@ -1161,6 +1180,10 @@ def _compute_krk_context_terms(board: chess.Board) -> Dict[str, bool]:
             and corner_distance <= 2
             and (safe_rook_edge_transfer_available or safe_check_available)
         ),
+        "fence_or_cut_not_preserved": fence_or_cut_not_preserved,
+        "drive_to_edge_affordance_after_box_shrink": drive_to_edge_affordance_after_box_shrink,
+        "repair_or_reestablish_cut_available": repair_or_reestablish_cut_available,
+        "box_shrink_drive_repair_available": box_shrink_drive_repair_available,
         "rook_safe": rook_safe,
         "cut_stable": fence_stable,
         "black_king_escape_available": edge_distance > 0,
@@ -1995,6 +2018,55 @@ def _role_scoped_move_shape_licenses(
                         | worst_source_terms
                         | (progress_terms & (move_terms | post_terms))
                     ),
+                    "move_shape_terms": sorted(move_terms),
+                    "post_move_terms": sorted(post_terms),
+                    "worst_reply_terms": sorted(worst_terms),
+                })
+        elif role_id == "krk.box_shrink_to_drive_repair":
+            required_current = {
+                "box_shrink_drive_repair_available",
+                "enemy_king_not_at_edge",
+                "rook_safe",
+            }
+            required_post = {"rook_safe_after_move"}
+            required_worst = {"rook_safe_after_worst_reply", "no_draw_after_worst_reply"}
+            drive_repair_move_terms = {
+                "candidate_is_king_move",
+                "candidate_is_rook_transfer",
+                "rook_to_checking_line",
+                "safe_check_created",
+            }
+            drive_repair_progress_terms = {
+                "box_area_not_increased_after_move",
+                "enemy_edge_distance_not_increased_after_move",
+                "enemy_corner_distance_not_increased_after_move",
+                "cut_created_after_move",
+                "fence_exists_after_move",
+                "checking_line_created",
+            }
+            matched_move_terms = drive_repair_move_terms & (move_terms | post_terms)
+            matched_progress_terms = drive_repair_progress_terms & post_terms
+            if (
+                required_current <= current
+                and required_post <= post_terms
+                and (not require_worst or required_worst <= worst_terms)
+                and matched_move_terms
+                and matched_progress_terms
+            ):
+                worst_source_terms = required_worst if require_worst else set()
+                source_terms = sorted(
+                    required_current
+                    | required_post
+                    | worst_source_terms
+                    | matched_move_terms
+                    | matched_progress_terms
+                )
+                licenses.append({
+                    "role_id": role_id,
+                    "score": float(role.get("score", 0.0) or 0.0),
+                    "role_score": float(role.get("score", 0.0) or 0.0),
+                    "shape_score": 1.0,
+                    "source_terms": source_terms,
                     "move_shape_terms": sorted(move_terms),
                     "post_move_terms": sorted(post_terms),
                     "worst_reply_terms": sorted(worst_terms),

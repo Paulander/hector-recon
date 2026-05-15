@@ -54,6 +54,36 @@ assert _structural_candidates.__spec__ is not None
 assert _structural_candidates.__spec__.loader is not None
 _structural_candidates.__spec__.loader.exec_module(_structural_candidates)
 
+_structural_candidate_audit = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "audit_stage7_structural_candidates",
+        Path(__file__).resolve().parents[1] / "scripts" / "audit_stage7_structural_candidates.py",
+    )
+)
+assert _structural_candidate_audit.__spec__ is not None
+assert _structural_candidate_audit.__spec__.loader is not None
+_structural_candidate_audit.__spec__.loader.exec_module(_structural_candidate_audit)
+
+_stage7_successor_ownership = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "audit_stage7_successor_ownership",
+        Path(__file__).resolve().parents[1] / "scripts" / "audit_stage7_successor_ownership.py",
+    )
+)
+assert _stage7_successor_ownership.__spec__ is not None
+assert _stage7_successor_ownership.__spec__.loader is not None
+_stage7_successor_ownership.__spec__.loader.exec_module(_stage7_successor_ownership)
+
+_stage7_counterfactual_summary = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "summarize_stage7_counterfactual_evidence",
+        Path(__file__).resolve().parents[1] / "scripts" / "summarize_stage7_counterfactual_evidence.py",
+    )
+)
+assert _stage7_counterfactual_summary.__spec__ is not None
+assert _stage7_counterfactual_summary.__spec__.loader is not None
+_stage7_counterfactual_summary.__spec__.loader.exec_module(_stage7_counterfactual_summary)
+
 
 def test_engine_selector_preserves_pragmatic_default_and_exposes_formal():
     pragmatic = create_recon_engine(Graph())
@@ -327,6 +357,248 @@ def test_stage7_growth_monitor_generates_structural_candidates(tmp_path):
         "growth.monitor.successor_miscalibration",
         "growth.monitor.stage_overlay_quarantine",
     }
+
+
+def test_stage7_structural_candidate_audit_remains_non_causal(tmp_path):
+    candidates_path = tmp_path / "candidates.json"
+    diagnostic_path = tmp_path / "diagnostic.json"
+    promotion_path = tmp_path / "promotion.json"
+    candidates_path.write_text(
+        json.dumps({
+            "schema_version": "structural_candidate_set.v1",
+            "source_stage": "stage7_box_shrink",
+            "candidate_count": 3,
+            "candidates": [
+                {
+                    "schema_version": "structural_candidate.v1",
+                    "candidate_id": "cand.krk.box_shrink.reward_contract_refinement.v1",
+                    "candidate_type": "contract_refinement",
+                    "source_monitor_script": "growth.monitor.reward_contract_mismatch",
+                    "source_terms": ["reward_confirmed", "visible_contract_not_confirmed"],
+                    "trigger_failure_classes": ["reward_contract_mismatch"],
+                    "target_skill": "krk.box_shrink",
+                    "parent_skill": "krk.drive_to_edge",
+                    "proposed_change": {
+                        "kind": "visible_contract_audit",
+                        "suggested_terms": [
+                            "box_area_decreased_after_own_move",
+                            "box_area_not_increased_after_reply",
+                            "fence_or_cut_preserved",
+                            "rook_safe_after_reply",
+                            "enemy_king_mobility_reduced",
+                        ],
+                    },
+                    "evidence_artifacts": [],
+                    "promotion_status": "proposed",
+                    "causal_status": "non_causal",
+                    "credit": 0.0,
+                },
+                {
+                    "schema_version": "structural_candidate.v1",
+                    "candidate_id": "cand.krk.box_shrink.handoff_role_refinement.v1",
+                    "candidate_type": "successor_contract_refinement",
+                    "source_monitor_script": "growth.monitor.successor_miscalibration",
+                    "source_terms": ["selected_successor_miscalibrated"],
+                    "trigger_failure_classes": ["selected_successor_miscalibrated"],
+                    "target_skill": "krk.box_shrink",
+                    "parent_skill": "krk.drive_to_edge",
+                    "proposed_change": {"kind": "handoff_role_audit"},
+                    "evidence_artifacts": [],
+                    "promotion_status": "proposed",
+                    "causal_status": "non_causal",
+                    "credit": 0.0,
+                },
+                {
+                    "schema_version": "structural_candidate.v1",
+                    "candidate_id": "cand.krk.box_shrink.overlay_quarantine_confirmed.v1",
+                    "candidate_type": "quarantine_overlay",
+                    "source_monitor_script": "growth.monitor.stage_overlay_quarantine",
+                    "source_terms": ["target_stage_conversion_failure"],
+                    "trigger_failure_classes": ["stage_overlay_quarantine"],
+                    "target_skill": "krk.box_shrink",
+                    "parent_skill": "krk.drive_to_edge",
+                    "proposed_change": {"kind": "promotion_gate_record"},
+                    "evidence_artifacts": [],
+                    "promotion_status": "quarantined",
+                    "causal_status": "non_causal",
+                    "credit": 0.0,
+                },
+            ],
+        }),
+        encoding="utf-8",
+    )
+    diagnostic_path.write_text(
+        json.dumps({
+            "playouts": {"mate": 0, "max_plies": 1},
+            "shadow_candidate_count": 2,
+            "handoff_packets": [
+                {
+                    "phase": "post_opponent_reply",
+                    "evidence_terms": {
+                        "fen": "8/8/8/8/R7/8/2k1K3/8 w - - 0 1",
+                        "move": "a4h4",
+                        "black_reply": "c2c3",
+                        "post_reply_fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+                        "playout_result": "max_plies",
+                        "reward_confirmed": True,
+                        "reward_contract_mismatch": True,
+                        "successor_selected_skill": "krk.stage0_basin",
+                        "provider_selected_without_role_license": True,
+                        "failure_classes": ["selected_successor_miscalibrated"],
+                        "box_area_after_own_move": 21,
+                        "box_area_after_reply": 21,
+                        "box_area_delta_after_reply": 0,
+                        "fence_survived_reply": False,
+                        "rook_safe_after_reply": True,
+                    },
+                }
+            ],
+        }),
+        encoding="utf-8",
+    )
+    promotion_path.write_text(
+        json.dumps({
+            "schema_version": "provider_promotion_eval.v1",
+            "promotion_status": "quarantine",
+            "failure_reasons": ["target shadow candidates exceed threshold"],
+        }),
+        encoding="utf-8",
+    )
+
+    audit = _structural_candidate_audit.audit_stage7_candidates(
+        candidates_path=candidates_path,
+        diagnostic_path=diagnostic_path,
+        promotion_eval_path=promotion_path,
+    )
+
+    assert audit["schema_version"] == "structural_candidate_audit.v1"
+    assert audit["causal_status"] == "non_causal"
+    statuses = {item["candidate_id"]: item["audit_status"] for item in audit["audits"]}
+    assert statuses["cand.krk.box_shrink.reward_contract_refinement.v1"] == "needs_more_terms"
+    assert statuses["cand.krk.box_shrink.handoff_role_refinement.v1"] == "handoff_role_audit_required"
+    assert statuses["cand.krk.box_shrink.overlay_quarantine_confirmed.v1"] == "quarantine_confirmed"
+    reward_audit = next(
+        item for item in audit["audits"]
+        if item["candidate_id"] == "cand.krk.box_shrink.reward_contract_refinement.v1"
+    )
+    assert reward_audit["suggested_term_counts"]["box_area_not_increased_after_reply"]["true"] == 1
+    assert reward_audit["representative_mismatch_fens"][0]["fen"].startswith("8/8/8/8/R7")
+
+
+def test_stage7_successor_ownership_audit_is_candidate_driven(tmp_path):
+    candidate_audit_path = tmp_path / "candidate_audit.json"
+    diagnostic_path = tmp_path / "diagnostic.json"
+    candidate_audit_path.write_text(
+        json.dumps({
+            "schema_version": "structural_candidate_audit.v1",
+            "causal_status": "non_causal",
+            "audits": [
+                {
+                    "candidate_id": "cand.krk.box_shrink.handoff_role_refinement.v1",
+                    "audit_status": "handoff_role_audit_required",
+                    "candidate_update": {"from": "proposed", "to": "sandbox_ready"},
+                }
+            ],
+        }),
+        encoding="utf-8",
+    )
+    diagnostic_path.write_text(
+        json.dumps({
+            "handoff_packets": [
+                {
+                    "phase": "post_opponent_reply",
+                    "evidence_terms": {
+                        "fen": "8/8/8/8/R7/8/2k1K3/8 w - - 0 1",
+                        "move": "a4h4",
+                        "post_reply_fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+                        "successor_selected_skill": "krk.stage0_basin",
+                        "playout_result": "max_plies",
+                        "rook_safe_after_reply": True,
+                    },
+                },
+                {
+                    "phase": "post_opponent_reply",
+                    "evidence_terms": {
+                        "fen": "8/8/8/8/8/5K2/5R2/6k1 w - - 0 1",
+                        "move": "f3g3",
+                        "post_reply_fen": "8/8/8/8/8/6K1/5R2/7k w - - 2 2",
+                        "successor_selected_skill": "krk.edge_trap_close",
+                        "playout_result": "mate",
+                        "rook_safe_after_reply": True,
+                    },
+                },
+            ],
+        }),
+        encoding="utf-8",
+    )
+
+    audit = _stage7_successor_ownership.audit_successor_ownership(
+        candidate_audit_path=candidate_audit_path,
+        diagnostic_path=diagnostic_path,
+    )
+
+    assert audit["schema_version"] == "stage7_successor_ownership_audit.v1"
+    assert audit["causal_status"] == "non_causal"
+    assert audit["source_candidate_ready"] is True
+    assert audit["successor_outcome_counts"]["krk.stage0_basin:max_plies"] == 1
+    assert audit["successor_outcome_counts"]["krk.edge_trap_close:mate"] == 1
+    role_statuses = {role["role_id"]: role["audit_status"] for role in audit["role_audits"]}
+    assert role_statuses["krk.box_shrink_to_edge_trap_handoff"] == "sandbox_candidate"
+    assert role_statuses["krk.box_shrink_post_reply_continuation"] == "needs_role_split_or_successor_sweep"
+
+
+def test_stage7_counterfactual_summary_updates_candidates_without_causality(tmp_path):
+    successor_audit_path = tmp_path / "successor_audit.json"
+    sweep_path = tmp_path / "sweep.json"
+    successor_audit_path.write_text(
+        json.dumps({
+            "schema_version": "stage7_successor_ownership_audit.v1",
+            "causal_status": "non_causal",
+            "source_candidate_id": "cand.krk.box_shrink.handoff_role_refinement.v1",
+        }),
+        encoding="utf-8",
+    )
+    sweep_path.write_text(
+        json.dumps({
+            "schema_version": "krk_counterfactual_successor_sweep.v1",
+            "counterfactual_successor_sweeps": [
+                {
+                    "state_signature": "state.1",
+                    "actual_selected_successor": "krk.stage0_basin",
+                    "actual_result": "max_plies",
+                    "counterfactual_results": {
+                        "krk.drive_to_edge": {
+                            "result": "mate",
+                            "plies": 7,
+                            "first_move": "e2e3",
+                            "confidence": 0.1,
+                            "forced_successor_available": True,
+                        },
+                        "krk.stage0_basin": {
+                            "result": "max_plies",
+                            "plies": 8,
+                            "first_move": "e2d1",
+                            "confidence": 13.0,
+                            "forced_successor_available": True,
+                        },
+                    },
+                }
+            ],
+        }),
+        encoding="utf-8",
+    )
+
+    summary = _stage7_counterfactual_summary.summarize_counterfactual_evidence(
+        successor_audit_path=successor_audit_path,
+        sweep_path=sweep_path,
+    )
+
+    assert summary["schema_version"] == "stage7_counterfactual_candidate_update.v1"
+    assert summary["causal_status"] == "non_causal"
+    assert summary["best_mating_successor_counts"]["krk.drive_to_edge"] == 1
+    updates = {item["candidate_role"]: item["status"] for item in summary["candidate_updates"]}
+    assert updates["krk.box_shrink_to_drive_repair"] == "counterfactual_supported"
+    assert updates["krk.stage0_basin_after_box_shrink"] == "negative_counterfactual_evidence"
 
 
 def test_spawn_point_promoted_trial_materializes_formal_triplet_pairs():

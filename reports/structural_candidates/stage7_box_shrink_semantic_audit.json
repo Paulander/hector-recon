@@ -1,0 +1,386 @@
+{
+  "schema_version": "structural_candidate_audit.v1",
+  "source_stage": "stage7_box_shrink",
+  "causal_status": "non_causal",
+  "candidate_source": "reports/structural_candidates/stage7_box_shrink_candidates.json",
+  "diagnostic_source": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/stage7_box_overlay_smoke_50_seed7_h20.json",
+  "promotion_eval_source": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/promotion_eval_stage7_box_overlay_smoke.json",
+  "candidate_count": 3,
+  "audit_status_counts": {
+    "needs_more_terms": 1,
+    "handoff_role_audit_required": 1,
+    "quarantine_confirmed": 1
+  },
+  "audits": [
+    {
+      "candidate_id": "cand.krk.box_shrink.reward_contract_refinement.v1",
+      "candidate_type": "contract_refinement",
+      "source_monitor_script": "growth.monitor.reward_contract_mismatch",
+      "audit_status": "needs_more_terms",
+      "candidate_update": {
+        "from": "proposed",
+        "to": "needs_more_terms"
+      },
+      "reward_confirmed_samples": 50,
+      "reward_contract_mismatch_samples": 24,
+      "conversion_by_reward_contract_mismatch": {
+        "max_plies": 24
+      },
+      "suggested_term_counts": {
+        "box_area_decreased_after_own_move": {
+          "true": 17,
+          "false": 33,
+          "unknown": 0
+        },
+        "box_area_not_increased_after_reply": {
+          "true": 39,
+          "false": 0,
+          "unknown": 11
+        },
+        "fence_or_cut_preserved": {
+          "true": 26,
+          "false": 24,
+          "unknown": 0
+        },
+        "rook_safe_after_reply": {
+          "true": 39,
+          "false": 0,
+          "unknown": 11
+        },
+        "enemy_king_mobility_reduced": {
+          "true": 34,
+          "false": 16,
+          "unknown": 0
+        }
+      },
+      "suggested_term_by_outcome": {
+        "box_area_decreased_after_own_move": {
+          "max_plies": {
+            "true": 6,
+            "false": 25,
+            "unknown": 0
+          },
+          "mate": {
+            "true": 11,
+            "false": 8,
+            "unknown": 0
+          }
+        },
+        "box_area_not_increased_after_reply": {
+          "max_plies": {
+            "true": 31,
+            "false": 0,
+            "unknown": 0
+          },
+          "mate": {
+            "true": 8,
+            "false": 0,
+            "unknown": 11
+          }
+        },
+        "fence_or_cut_preserved": {
+          "max_plies": {
+            "true": 7,
+            "false": 24,
+            "unknown": 0
+          },
+          "mate": {
+            "true": 19,
+            "false": 0,
+            "unknown": 0
+          }
+        },
+        "rook_safe_after_reply": {
+          "max_plies": {
+            "true": 31,
+            "false": 0,
+            "unknown": 0
+          },
+          "mate": {
+            "true": 8,
+            "false": 0,
+            "unknown": 11
+          }
+        },
+        "enemy_king_mobility_reduced": {
+          "max_plies": {
+            "true": 23,
+            "false": 8,
+            "unknown": 0
+          },
+          "mate": {
+            "true": 11,
+            "false": 8,
+            "unknown": 0
+          }
+        }
+      },
+      "representative_mismatch_fens": [
+        {
+          "fen": "8/8/8/8/R7/8/2k1K3/8 w - - 0 1",
+          "move": "a4h4",
+          "black_reply": "c2c3",
+          "post_reply_fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+          "playout_result": "max_plies",
+          "semantic_alignment_status": "reward_contract_mismatch",
+          "successor_selected_skill": "krk.stage0_basin",
+          "failure_classes": [
+            "selected_successor_miscalibrated"
+          ],
+          "box_area_after_own_move": 21,
+          "box_area_after_reply": 21,
+          "box_area_delta_after_reply": 0,
+          "fence_survived_reply": false,
+          "rook_safe_after_reply": true,
+          "derived_terms": {
+            "box_area_decreased_after_own_move": false,
+            "box_area_not_increased_after_reply": true,
+            "fence_or_cut_preserved": false,
+            "rook_safe_after_reply": true,
+            "enemy_king_mobility_reduced": true
+          }
+        },
+        {
+          "fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+          "move": "a1a5",
+          "black_reply": "d4e4",
+          "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+          "playout_result": "max_plies",
+          "semantic_alignment_status": "reward_contract_mismatch",
+          "successor_selected_skill": "krk.stage0_basin",
+          "failure_classes": [
+            "selected_successor_miscalibrated"
+          ],
+          "box_area_after_own_move": 28,
+          "box_area_after_reply": 28,
+          "box_area_delta_after_reply": 0,
+          "fence_survived_reply": false,
+          "rook_safe_after_reply": true,
+          "derived_terms": {
+            "box_area_decreased_after_own_move": true,
+            "box_area_not_increased_after_reply": true,
+            "fence_or_cut_preserved": false,
+            "rook_safe_after_reply": true,
+            "enemy_king_mobility_reduced": true
+          }
+        },
+        {
+          "fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+          "move": "a1a5",
+          "black_reply": "d4e4",
+          "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+          "playout_result": "max_plies",
+          "semantic_alignment_status": "reward_contract_mismatch",
+          "successor_selected_skill": "krk.stage0_basin",
+          "failure_classes": [
+            "selected_successor_miscalibrated"
+          ],
+          "box_area_after_own_move": 28,
+          "box_area_after_reply": 28,
+          "box_area_delta_after_reply": 0,
+          "fence_survived_reply": false,
+          "rook_safe_after_reply": true,
+          "derived_terms": {
+            "box_area_decreased_after_own_move": true,
+            "box_area_not_increased_after_reply": true,
+            "fence_or_cut_preserved": false,
+            "rook_safe_after_reply": true,
+            "enemy_king_mobility_reduced": true
+          }
+        },
+        {
+          "fen": "8/8/8/3k4/8/R7/8/3K4 w - - 0 1",
+          "move": "a3a6",
+          "black_reply": "d5c4",
+          "post_reply_fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+          "playout_result": "max_plies",
+          "semantic_alignment_status": "reward_contract_mismatch",
+          "successor_selected_skill": "krk.stage0_basin",
+          "failure_classes": [
+            "selected_successor_miscalibrated"
+          ],
+          "box_area_after_own_move": 35,
+          "box_area_after_reply": 35,
+          "box_area_delta_after_reply": 0,
+          "fence_survived_reply": false,
+          "rook_safe_after_reply": true,
+          "derived_terms": {
+            "box_area_decreased_after_own_move": false,
+            "box_area_not_increased_after_reply": true,
+            "fence_or_cut_preserved": false,
+            "rook_safe_after_reply": true,
+            "enemy_king_mobility_reduced": false
+          }
+        },
+        {
+          "fen": "8/8/8/3k4/8/R7/8/3K4 w - - 0 1",
+          "move": "a3a6",
+          "black_reply": "d5c4",
+          "post_reply_fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+          "playout_result": "max_plies",
+          "semantic_alignment_status": "reward_contract_mismatch",
+          "successor_selected_skill": "krk.stage0_basin",
+          "failure_classes": [
+            "selected_successor_miscalibrated"
+          ],
+          "box_area_after_own_move": 35,
+          "box_area_after_reply": 35,
+          "box_area_delta_after_reply": 0,
+          "fence_survived_reply": false,
+          "rook_safe_after_reply": true,
+          "derived_terms": {
+            "box_area_decreased_after_own_move": false,
+            "box_area_not_increased_after_reply": true,
+            "fence_or_cut_preserved": false,
+            "rook_safe_after_reply": true,
+            "enemy_king_mobility_reduced": false
+          }
+        }
+      ],
+      "findings": [
+        "box_shrink reward confirms in states where the current visible contract does not confirm",
+        "box_area_decreased_after_own_move is not consistently true under reward confirmation",
+        "box_area_not_increased_after_reply is weaker than true box shrink and may only show non-expansion",
+        "some reward-confirmed samples lack visible fence/cut preservation"
+      ]
+    },
+    {
+      "candidate_id": "cand.krk.box_shrink.handoff_role_refinement.v1",
+      "candidate_type": "successor_contract_refinement",
+      "source_monitor_script": "growth.monitor.successor_miscalibration",
+      "audit_status": "handoff_role_audit_required",
+      "candidate_update": {
+        "from": "proposed",
+        "to": "sandbox_ready"
+      },
+      "successor_by_outcome": {
+        "krk.stage0_basin:max_plies": 31,
+        "krk.edge_trap_close:mate": 8,
+        "unknown:mate": 11
+      },
+      "provider_selected_without_role_license_by_successor": {
+        "krk.stage0_basin": 31,
+        "krk.edge_trap_close": 8
+      },
+      "selected_successor_miscalibrated_by_successor": {
+        "krk.stage0_basin": 31
+      },
+      "stage0_basin_failure_ratio": {
+        "max_plies": 31,
+        "total": 31
+      },
+      "representative_failed_handoff_fens": [
+        {
+          "fen": "8/8/8/8/R7/8/2k1K3/8 w - - 0 1",
+          "move": "a4h4",
+          "black_reply": "c2c3",
+          "post_reply_fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+          "playout_result": "max_plies",
+          "semantic_alignment_status": "reward_contract_mismatch",
+          "successor_selected_skill": "krk.stage0_basin",
+          "failure_classes": [
+            "selected_successor_miscalibrated"
+          ],
+          "box_area_after_own_move": 21,
+          "box_area_after_reply": 21,
+          "box_area_delta_after_reply": 0,
+          "fence_survived_reply": false,
+          "rook_safe_after_reply": true
+        },
+        {
+          "fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+          "move": "a1a5",
+          "black_reply": "d4e4",
+          "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+          "playout_result": "max_plies",
+          "semantic_alignment_status": "reward_contract_mismatch",
+          "successor_selected_skill": "krk.stage0_basin",
+          "failure_classes": [
+            "selected_successor_miscalibrated"
+          ],
+          "box_area_after_own_move": 28,
+          "box_area_after_reply": 28,
+          "box_area_delta_after_reply": 0,
+          "fence_survived_reply": false,
+          "rook_safe_after_reply": true
+        },
+        {
+          "fen": "8/8/8/8/4K3/R7/4k3/8 w - - 0 1",
+          "move": "a3a2",
+          "black_reply": "e2e1",
+          "post_reply_fen": "8/8/8/8/4K3/8/R7/4k3 w - - 2 2",
+          "playout_result": "max_plies",
+          "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+          "successor_selected_skill": "krk.stage0_basin",
+          "failure_classes": [
+            "selected_successor_miscalibrated"
+          ],
+          "box_area_after_own_move": 42,
+          "box_area_after_reply": 7,
+          "box_area_delta_after_reply": -35,
+          "fence_survived_reply": true,
+          "rook_safe_after_reply": true
+        },
+        {
+          "fen": "8/8/8/8/4K3/R7/4k3/8 w - - 0 1",
+          "move": "a3a2",
+          "black_reply": "e2e1",
+          "post_reply_fen": "8/8/8/8/4K3/8/R7/4k3 w - - 2 2",
+          "playout_result": "max_plies",
+          "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+          "successor_selected_skill": "krk.stage0_basin",
+          "failure_classes": [
+            "selected_successor_miscalibrated"
+          ],
+          "box_area_after_own_move": 42,
+          "box_area_after_reply": 7,
+          "box_area_delta_after_reply": -35,
+          "fence_survived_reply": true,
+          "rook_safe_after_reply": true
+        },
+        {
+          "fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+          "move": "a1a5",
+          "black_reply": "d4e4",
+          "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+          "playout_result": "max_plies",
+          "semantic_alignment_status": "reward_contract_mismatch",
+          "successor_selected_skill": "krk.stage0_basin",
+          "failure_classes": [
+            "selected_successor_miscalibrated"
+          ],
+          "box_area_after_own_move": 28,
+          "box_area_after_reply": 28,
+          "box_area_delta_after_reply": 0,
+          "fence_survived_reply": false,
+          "rook_safe_after_reply": true
+        }
+      ],
+      "findings": [
+        "stage0_basin remains the dominant failed continuation after box_shrink",
+        "some selected successors are not licensed by visible role evidence",
+        "high-score successor selections still fail conversion and need role/contract audit"
+      ]
+    },
+    {
+      "candidate_id": "cand.krk.box_shrink.overlay_quarantine_confirmed.v1",
+      "candidate_type": "quarantine_overlay",
+      "source_monitor_script": "growth.monitor.stage_overlay_quarantine",
+      "audit_status": "quarantine_confirmed",
+      "candidate_update": {
+        "from": "quarantined",
+        "to": "quarantined"
+      },
+      "playouts": {
+        "max_plies": 31,
+        "mate": 19
+      },
+      "shadow_candidate_count": 86,
+      "promotion_eval_status": "quarantine",
+      "promotion_failure_reasons": [],
+      "findings": [
+        "overlay remains quarantined by target conversion/shadow evidence"
+      ]
+    }
+  ]
+}

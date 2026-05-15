@@ -1,0 +1,195 @@
+{
+  "schema_version": "stage7_counterfactual_candidate_update.v1",
+  "causal_status": "non_causal",
+  "successor_audit_source": "reports/structural_candidates/stage7_box_shrink_successor_ownership_audit.json",
+  "counterfactual_sweep_source": "reports/structural_candidates/stage7_box_shrink_forced_successor_quick_sweep.json",
+  "source_candidate_id": "cand.krk.box_shrink.handoff_role_refinement.v1",
+  "sweep_profile": {
+    "playout_max_plies": 8,
+    "max_ticks": 12,
+    "interpretation": "quick triage only; not a validation result"
+  },
+  "state_count": 4,
+  "states_with_any_forced_mate": 1,
+  "states_without_any_forced_mate": 3,
+  "forced_successor_outcome_counts": {
+    "krk.edge_trap_close:max_plies": 4,
+    "krk.drive_to_edge:mate": 1,
+    "krk.stage0_basin:max_plies": 4,
+    "krk.drive_to_edge:max_plies": 3
+  },
+  "best_mating_successor_counts": {
+    "krk.drive_to_edge": 1
+  },
+  "first_move_counts": {
+    "krk.edge_trap_close:h4g4": 1,
+    "krk.drive_to_edge:e2e3": 1,
+    "krk.stage0_basin:e2d1": 1,
+    "krk.edge_trap_close:d2c3": 1,
+    "krk.drive_to_edge:d2c3": 1,
+    "krk.stage0_basin:a5h5": 1,
+    "krk.edge_trap_close:e4d4": 1,
+    "krk.drive_to_edge:e4f3": 1,
+    "krk.stage0_basin:e4f3": 1,
+    "krk.edge_trap_close:a6a7": 1,
+    "krk.drive_to_edge:a6a8": 1,
+    "krk.stage0_basin:a6a8": 1
+  },
+  "candidate_updates": [
+    {
+      "candidate_role": "krk.box_shrink_to_drive_repair",
+      "status": "counterfactual_supported",
+      "support": 1,
+      "proposed_next_action": "sandbox_visible_drive_repair_role",
+      "source_terms_to_validate": [
+        "box_shrink_reward_confirmed",
+        "fence_or_cut_not_preserved",
+        "drive_to_edge_affordance_after_box_shrink",
+        "repair_or_reestablish_cut_available"
+      ]
+    },
+    {
+      "candidate_role": "krk.box_shrink_post_reply_continuation",
+      "status": "insufficient_existing_successor_capacity_in_quick_sweep",
+      "support": 3,
+      "proposed_next_action": "run_targeted_legal_first_or_longer_horizon_sweep",
+      "source_terms_to_validate": [
+        "post_box_shrink_conversion_needed",
+        "stage0_basin_fallback_detected",
+        "edge_or_drive_repair_not_selected",
+        "safe_alternative_first_move_exists"
+      ]
+    },
+    {
+      "candidate_role": "krk.stage0_basin_after_box_shrink",
+      "status": "negative_counterfactual_evidence",
+      "support": 4,
+      "proposed_next_action": "avoid_sandboxing_stage0_as_default_box_shrink_continuation",
+      "source_terms_to_validate": [
+        "stage0_basin_fallback_detected",
+        "stage0_basin_unlicensed_after_box_shrink"
+      ]
+    }
+  ],
+  "state_records": [
+    {
+      "state_signature": "state.069e81a609ed",
+      "actual_selected_successor": "krk.stage0_basin",
+      "actual_result": "max_plies",
+      "mating_successors": [
+        "krk.drive_to_edge"
+      ],
+      "forced_results": {
+        "krk.edge_trap_close": {
+          "result": "max_plies",
+          "plies": 8,
+          "first_move": "h4g4",
+          "confidence": 0.10513108387552203,
+          "forced_successor_available": true
+        },
+        "krk.drive_to_edge": {
+          "result": "mate",
+          "plies": 7,
+          "first_move": "e2e3",
+          "confidence": 0.09407215807858632,
+          "forced_successor_available": true
+        },
+        "krk.stage0_basin": {
+          "result": "max_plies",
+          "plies": 8,
+          "first_move": "e2d1",
+          "confidence": 13.163832062316127,
+          "forced_successor_available": true
+        }
+      }
+    },
+    {
+      "state_signature": "state.bace6f82b671",
+      "actual_selected_successor": "krk.stage0_basin",
+      "actual_result": "max_plies",
+      "mating_successors": [],
+      "forced_results": {
+        "krk.edge_trap_close": {
+          "result": "max_plies",
+          "plies": 8,
+          "first_move": "d2c3",
+          "confidence": 0.10632407596539707,
+          "forced_successor_available": true
+        },
+        "krk.drive_to_edge": {
+          "result": "max_plies",
+          "plies": 8,
+          "first_move": "d2c3",
+          "confidence": 0.09183874835660251,
+          "forced_successor_available": true
+        },
+        "krk.stage0_basin": {
+          "result": "max_plies",
+          "plies": 8,
+          "first_move": "a5h5",
+          "confidence": 13.653311365676112,
+          "forced_successor_available": true
+        }
+      }
+    },
+    {
+      "state_signature": "state.0926f12f8e8f",
+      "actual_selected_successor": "krk.stage0_basin",
+      "actual_result": "max_plies",
+      "mating_successors": [],
+      "forced_results": {
+        "krk.edge_trap_close": {
+          "result": "max_plies",
+          "plies": 8,
+          "first_move": "e4d4",
+          "confidence": 0.06792472345232964,
+          "forced_successor_available": true
+        },
+        "krk.drive_to_edge": {
+          "result": "max_plies",
+          "plies": 8,
+          "first_move": "e4f3",
+          "confidence": 0.04568140039136202,
+          "forced_successor_available": true
+        },
+        "krk.stage0_basin": {
+          "result": "max_plies",
+          "plies": 8,
+          "first_move": "e4f3",
+          "confidence": 25.380020075869748,
+          "forced_successor_available": true
+        }
+      }
+    },
+    {
+      "state_signature": "state.2cc0b3e1033a",
+      "actual_selected_successor": "krk.stage0_basin",
+      "actual_result": "max_plies",
+      "mating_successors": [],
+      "forced_results": {
+        "krk.edge_trap_close": {
+          "result": "max_plies",
+          "plies": 8,
+          "first_move": "a6a7",
+          "confidence": -0.029459141875058412,
+          "forced_successor_available": true
+        },
+        "krk.drive_to_edge": {
+          "result": "max_plies",
+          "plies": 8,
+          "first_move": "a6a8",
+          "confidence": -0.06166593219813184,
+          "forced_successor_available": true
+        },
+        "krk.stage0_basin": {
+          "result": "max_plies",
+          "plies": 8,
+          "first_move": "a6a8",
+          "confidence": 1.4091374812843278,
+          "forced_successor_available": true
+        }
+      }
+    }
+  ],
+  "recommended_next_action": "sandbox_visible_drive_repair_role"
+}

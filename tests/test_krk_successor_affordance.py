@@ -290,6 +290,68 @@ def test_successor_affordance_records_role_and_provider_license():
     assert licenses["krk.stage0_king_approach_after_fence"]["contract_met"] is True
 
 
+def test_box_shrink_drive_repair_context_exposes_visible_terms():
+    board = chess.Board("8/8/8/8/7R/2k5/4K3/8 w - - 2 2")
+    terms = _compute_krk_context_terms(board)
+
+    assert terms["box_shrink_drive_repair_available"] is True
+    assert terms["fence_or_cut_not_preserved"] is True
+    assert terms["drive_to_edge_affordance_after_box_shrink"] is True
+    assert terms["repair_or_reestablish_cut_available"] is True
+    assert terms["rook_safe"] is True
+    assert terms["enemy_king_not_at_edge"] is True
+
+
+def test_box_shrink_drive_repair_role_licenses_drive_to_edge_provider():
+    env = {
+        "board": chess.Board("8/8/8/8/7R/2k5/4K3/8 w - - 2 2"),
+        "blackboard": {"successor_affordance_layer_enabled": True},
+    }
+    for term in [
+        "box_shrink_drive_repair_available",
+        "fence_or_cut_not_preserved",
+        "drive_to_edge_affordance_after_box_shrink",
+        "repair_or_reestablish_cut_available",
+        "enemy_king_not_at_edge",
+        "rook_safe",
+    ]:
+        node = create_krk_context_terminal(f"terminal.krk.{term}")
+        node.meta["term"] = term
+        node.predicate(node, env)
+
+    affordance = create_krk_successor_affordance(
+        "script.krk.successor.box_shrink_to_drive_repair_affordance"
+    )
+    affordance.meta.update({
+        "successor_skill_id": "krk.box_shrink_to_drive_repair",
+        "role_id": "krk.box_shrink_to_drive_repair",
+        "provider_skill_ids": ["krk.drive_to_edge"],
+        "source_terms": [
+            "box_shrink_drive_repair_available",
+            "fence_or_cut_not_preserved",
+            "drive_to_edge_affordance_after_box_shrink",
+            "repair_or_reestablish_cut_available",
+            "enemy_king_not_at_edge",
+            "rook_safe",
+        ],
+        "required_terms": [
+            "box_shrink_drive_repair_available",
+            "enemy_king_not_at_edge",
+            "rook_safe",
+        ],
+        "veto_terms": ["mate_in_one_available"],
+    })
+
+    success, done = affordance.predicate(affordance, env)
+
+    payload = env["blackboard"]["krk_successor_role_affordances"]["krk.box_shrink_to_drive_repair"]
+    licenses = env["blackboard"]["krk_successor_provider_licenses"]["krk.drive_to_edge"]
+    assert success is True
+    assert done is True
+    assert payload["contract_met"] is True
+    assert licenses["krk.box_shrink_to_drive_repair"]["provider_skill_ids"] == ["krk.drive_to_edge"]
+
+
 def test_context_terminal_caches_full_term_vector_per_board():
     env = {
         "board": chess.Board("4k3/1R6/1K6/8/8/8/8/8 w - - 0 1"),
@@ -416,6 +478,49 @@ def test_visible_rook_transfer_move_bonus_supports_matching_rook_transfer_shapes
     assert horizontal_meta["visible_role_scoped_move_shape_bonus"] > 0.0
     assert vertical_meta["visible_role_scoped_move_shape_licenses"]
     assert horizontal_meta["visible_role_scoped_move_shape_licenses"]
+
+
+def test_visible_drive_repair_move_bonus_supports_licensed_king_repair_shape():
+    board = chess.Board("8/8/8/8/7R/2k5/4K3/8 w - - 2 2")
+    blackboard = {
+        "successor_role_license_enabled": True,
+        "successor_role_scoped_move_shape_enabled": True,
+        "successor_role_scoped_move_shape_bonus": 0.05,
+        "krk_successor_provider_licenses": {
+            "krk.drive_to_edge": {
+                "krk.box_shrink_to_drive_repair": {
+                    "score": 1.0,
+                    "role_id": "krk.box_shrink_to_drive_repair",
+                    "provider_skill_ids": ["krk.drive_to_edge"],
+                    "source_terms": [
+                        "box_shrink_drive_repair_available",
+                        "enemy_king_not_at_edge",
+                        "rook_safe",
+                    ],
+                    "missing_required_terms": [],
+                    "veto_terms": [],
+                    "contract_met": True,
+                }
+            }
+        },
+    }
+    move_meta = {}
+
+    adjusted = _apply_visible_rook_transfer_move_bias(
+        0.0,
+        board=board,
+        move=chess.Move.from_uci("e2e3"),
+        skill_id="krk.drive_to_edge",
+        blackboard=blackboard,
+        move_meta=move_meta,
+    )
+
+    assert adjusted > 0.0
+    assert move_meta["visible_role_scoped_move_shape_bonus"] > 0.0
+    licenses = move_meta["visible_role_scoped_move_shape_licenses"]
+    assert licenses[0]["role_id"] == "krk.box_shrink_to_drive_repair"
+    assert "box_shrink_drive_repair_available" in licenses[0]["source_terms"]
+    assert "candidate_is_king_move" in licenses[0]["source_terms"]
 
 
 def test_edge_rook_recovery_requires_specific_transfer_shape_not_box_shrink_only():

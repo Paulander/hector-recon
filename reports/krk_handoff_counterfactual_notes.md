@@ -2370,3 +2370,388 @@ Stage 7 failure now produces ReCoN-shaped structural hypotheses.
 The next Stage 7 semantic audit should be candidate-driven, starting from the generated candidates, not from a human-invented patch.
 Handoff packets, stats, shadow candidates, provider-promotion events, and structural candidates all remain non-causal.
 ```
+
+## Slice 60: Stage 7 Candidate-Driven Semantic Audit
+
+Added an offline audit tool:
+
+```text
+scripts/audit_stage7_structural_candidates.py
+```
+
+Input artifacts:
+
+```text
+reports/structural_candidates/stage7_box_shrink_candidates.json
+snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/stage7_box_overlay_smoke_50_seed7_h20.json
+snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/promotion_eval_stage7_box_overlay_smoke.json
+```
+
+Output artifacts:
+
+```text
+reports/structural_candidates/stage7_box_shrink_semantic_audit.json
+reports/structural_candidates/stage7_box_shrink_semantic_audit.md
+```
+
+Audit result:
+
+```text
+schema_version: structural_candidate_audit.v1
+causal_status: non_causal
+
+needs_more_terms: 1
+handoff_role_audit_required: 1
+quarantine_confirmed: 1
+```
+
+Candidate outcomes:
+
+```text
+cand.krk.box_shrink.reward_contract_refinement.v1
+  proposed -> needs_more_terms
+  reward_contract_mismatch samples: 24
+
+cand.krk.box_shrink.handoff_role_refinement.v1
+  proposed -> sandbox_ready
+  stage0_basin max_plies ratio after box_shrink: 31/31
+
+cand.krk.box_shrink.overlay_quarantine_confirmed.v1
+  quarantined -> quarantined
+```
+
+Suggested term counts over the 50-sample smoke:
+
+```text
+box_area_decreased_after_own_move:
+  true: 17
+  false: 33
+
+box_area_not_increased_after_reply:
+  true: 39
+  false: 0
+  unknown: 11
+
+fence_or_cut_preserved:
+  true: 26
+  false: 24
+
+rook_safe_after_reply:
+  true: 39
+  false: 0
+  unknown: 11
+
+enemy_king_mobility_reduced:
+  true: 34
+  false: 16
+```
+
+For `max_plies` cases specifically:
+
+```text
+box_area_decreased_after_own_move:
+  true: 6
+  false: 25
+
+box_area_not_increased_after_reply:
+  true: 31
+  false: 0
+
+fence_or_cut_preserved:
+  true: 7
+  false: 24
+
+rook_safe_after_reply:
+  true: 31
+  false: 0
+
+enemy_king_mobility_reduced:
+  true: 23
+  false: 8
+```
+
+Interpretation:
+
+```text
+The current Stage 7 reward can confirm without visible box contraction.
+Non-expansion after reply is too weak to stand in for box_shrink.
+Many failed reward-confirmed samples preserve rook safety but do not preserve a visible fence/cut.
+The dominant failed continuation remains stage0_basin, selected 31/31 times in max_plies cases.
+```
+
+Next candidate-driven step:
+
+```text
+Use the sandbox_ready handoff-role candidate to audit Stage 7 successor ownership and visible box-shrink handoff roles.
+Do not promote Stage 7.
+Do not make the audit causal.
+Do not patch box_shrink directly until the candidate-specific audit identifies the proposed role/contract repair.
+```
+
+## Slice 61: Stage 7 Successor Ownership Audit
+
+Added:
+
+```text
+scripts/audit_stage7_successor_ownership.py
+```
+
+This script consumes the Stage 7 semantic audit and the original handoff trace. It expands:
+
+```text
+cand.krk.box_shrink.handoff_role_refinement.v1
+```
+
+into candidate handoff-role evidence. It is still non-causal.
+
+Output artifacts:
+
+```text
+reports/structural_candidates/stage7_box_shrink_successor_ownership_audit.json
+reports/structural_candidates/stage7_box_shrink_successor_ownership_audit.md
+```
+
+Observed successor ownership:
+
+```text
+krk.stage0_basin:max_plies: 31
+krk.edge_trap_close:mate: 8
+none:mate: 11
+```
+
+Role audit results:
+
+```text
+krk.box_shrink_to_edge_trap_handoff
+  audit_status: sandbox_candidate
+  positive_support: 8
+  negative_support: 0
+
+krk.box_shrink_to_drive_repair
+  audit_status: needs_counterfactual_evidence
+  unsupported_failure_support: 31
+
+krk.box_shrink_post_reply_continuation
+  audit_status: needs_role_split_or_successor_sweep
+  positive_support: 11
+  negative_support: 31
+```
+
+Candidate-visible terms proposed by the audit:
+
+```text
+krk.box_shrink_to_edge_trap_handoff:
+  box_area_not_increased_after_reply
+  rook_safe_after_reply
+  fence_or_cut_preserved
+  successor_edge_trap_close_available
+
+krk.box_shrink_to_drive_repair:
+  box_shrink_reward_confirmed
+  fence_or_cut_not_preserved
+  drive_to_edge_affordance_after_box_shrink
+  repair_or_reestablish_cut_available
+
+krk.box_shrink_post_reply_continuation:
+  post_box_shrink_conversion_needed
+  stage0_basin_fallback_detected
+  stage0_basin_unlicensed_after_box_shrink
+  edge_or_drive_repair_not_selected
+```
+
+Recommended next action from the audit:
+
+```text
+sandbox_edge_trap_handoff_role_and_counterfactual_stage0_failures
+```
+
+Interpretation:
+
+```text
+There is direct positive evidence for an edge-trap handoff after box_shrink.
+There is direct negative evidence for unlicensed stage0_basin fallback after box_shrink.
+Drive repair remains a plausible hypothesis, but it needs counterfactual evidence before sandboxing.
+```
+
+## Slice 62: Stage 7 Quick Counterfactual Candidate Update
+
+Ran a bounded forced-successor counterfactual sweep over the unique Stage 7 `stage0_basin:max_plies` post-reply families.
+
+Command profile:
+
+```text
+source diagnostic:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/stage7_box_overlay_smoke_50_seed7_h20.json
+
+topology:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/topology/krk_entry_topology.json
+
+successors:
+  krk.edge_trap_close
+  krk.drive_to_edge
+  krk.stage0_basin
+
+quick profile:
+  playout_max_plies: 8
+  max_ticks: 12
+  early_stop_stable_suggestions: 1
+```
+
+Artifacts:
+
+```text
+reports/structural_candidates/stage7_box_shrink_forced_successor_quick_sweep.json
+reports/structural_candidates/stage7_box_shrink_forced_successor_quick_steps.jsonl
+reports/structural_candidates/stage7_box_shrink_forced_successor_quick_sweeps.jsonl
+```
+
+The full legal-first sweep was intentionally stopped because it was too slow for an interactive pass. The quick sweep is only triage evidence, not validation.
+
+Quick sweep result:
+
+```text
+unique failed state families: 4
+families with any forced mate: 1
+families without any forced mate: 3
+
+krk.edge_trap_close:max_plies: 4
+krk.drive_to_edge:mate: 1
+krk.drive_to_edge:max_plies: 3
+krk.stage0_basin:max_plies: 4
+```
+
+Added summarizer:
+
+```text
+scripts/summarize_stage7_counterfactual_evidence.py
+```
+
+Candidate update artifacts:
+
+```text
+reports/structural_candidates/stage7_box_shrink_counterfactual_candidate_update.json
+reports/structural_candidates/stage7_box_shrink_counterfactual_candidate_update.md
+```
+
+Candidate update result:
+
+```text
+schema_version: stage7_counterfactual_candidate_update.v1
+causal_status: non_causal
+recommended_next_action: sandbox_visible_drive_repair_role
+```
+
+Candidate statuses:
+
+```text
+krk.box_shrink_to_drive_repair
+  status: counterfactual_supported
+  support: 1
+  proposed next action: sandbox_visible_drive_repair_role
+
+krk.box_shrink_post_reply_continuation
+  status: insufficient_existing_successor_capacity_in_quick_sweep
+  support: 3
+  proposed next action: run_targeted_legal_first_or_longer_horizon_sweep
+
+krk.stage0_basin_after_box_shrink
+  status: negative_counterfactual_evidence
+  support: 4
+  proposed next action: avoid_sandboxing_stage0_as_default_box_shrink_continuation
+```
+
+Interpretation:
+
+```text
+The earlier edge-trap handoff evidence is real, but it does not explain the unique stage0 failure families under forced replay.
+The quick forced replay gives the first concrete support for a box_shrink_to_drive_repair role.
+Stage0 should not be sandboxed as the default post-box-shrink continuation.
+Three unique families still need either longer-horizon replay, targeted legal-first sweeps, or a future post-box-shrink continuation candidate.
+```
+
+## Slice 63: Visible Box-Shrink Drive-Repair Sandbox Role
+
+Added a visible successor role:
+
+```text
+krk.box_shrink_to_drive_repair
+  provider: krk.drive_to_edge
+```
+
+Visible context terms:
+
+```text
+fence_or_cut_not_preserved
+drive_to_edge_affordance_after_box_shrink
+repair_or_reestablish_cut_available
+box_shrink_drive_repair_available
+```
+
+Role contract:
+
+```text
+required:
+  box_shrink_drive_repair_available
+  enemy_king_not_at_edge
+  rook_safe
+
+veto:
+  mate_in_one_available
+```
+
+Role-scoped move-shape support:
+
+```text
+king move or rook transfer/check
+rook_safe_after_move
+box/edge/corner/confinement non-regression or cut/check creation
+optional worst-reply safety if the diagnostic flag requires it
+```
+
+Compiler fix:
+
+```text
+overlay compilation now refreshes generated successor-affordance nodes from current compiler definitions.
+This prevents overlays from inheriting stale role ontology from the frozen base topology.
+```
+
+Sandbox topology:
+
+```text
+snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_drive_repair_sandbox/topology/krk_entry_topology.json
+```
+
+Smoke command:
+
+```text
+scripts/test_krk_landmark_progress.py
+  --label box_shrink
+  --samples 10
+  --composition-profile handoff_composition_v1
+  --use-profile-validation-defaults
+```
+
+Smoke result:
+
+```text
+improved: 10/10
+optimal: 7/10
+playouts: 3 mate / 7 max_plies
+shadow candidates: 19
+```
+
+Trace observation:
+
+```text
+box_shrink_to_drive_repair role was visible and contract-met in several failed continuations.
+It did not overcome stage0_basin selection in the smoke.
+```
+
+Interpretation:
+
+```text
+The drive-repair role is now ReCoN-visible and traceable, but not yet a sufficient causal repair.
+Do not promote Stage 7.
+Do not increase broad bonuses or add hidden penalties.
+The next repair should be candidate-driven: either a narrow stage0-after-box-shrink suppression term with visible evidence, or a longer/legal-first sweep to identify first-move shapes for the unresolved families.
+```

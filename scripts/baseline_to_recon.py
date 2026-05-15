@@ -284,6 +284,7 @@ def compile_overlay_topology(
         },
         only_missing=True,
     )
+    refresh_successor_affordance_layer(topology)
 
     with overlay_learner_path.open("rb") as fh:
         learner = pickle.load(fh)
@@ -446,6 +447,10 @@ KRK_SUCCESSOR_CONTEXT_TERMS = [
     "safe_loop_breaking_move_available",
     "loop_breaking_rook_transfer_available",
     "loop_breaking_check_or_cut_available",
+    "fence_or_cut_not_preserved",
+    "drive_to_edge_affordance_after_box_shrink",
+    "repair_or_reestablish_cut_available",
+    "box_shrink_drive_repair_available",
     "rook_oscillation_loop_recently_broken",
     "confinement_preserved_after_break",
     "enemy_king_edge_control_preserved",
@@ -630,6 +635,24 @@ KRK_SUCCESSOR_AFFORDANCES = {
         ],
         "veto_terms": ["mate_in_one_available"],
     },
+    "krk.box_shrink_to_drive_repair": {
+        "provider_skill_ids": ["krk.drive_to_edge"],
+        "source_terms": [
+            "box_shrink_drive_repair_available",
+            "fence_or_cut_not_preserved",
+            "drive_to_edge_affordance_after_box_shrink",
+            "repair_or_reestablish_cut_available",
+            "enemy_king_not_at_edge",
+            "box_area_large",
+            "rook_safe",
+        ],
+        "required_terms": [
+            "box_shrink_drive_repair_available",
+            "enemy_king_not_at_edge",
+            "rook_safe",
+        ],
+        "veto_terms": ["mate_in_one_available"],
+    },
 }
 
 
@@ -752,6 +775,31 @@ def create_successor_affordance_layer(topology: Dict) -> None:
         }),
     }
     print("Created visible successor-affordance layer")
+
+
+def refresh_successor_affordance_layer(topology: Dict) -> None:
+    """Replace generated successor-affordance nodes with current compiler definitions."""
+    nodes = topology.setdefault("nodes", {})
+    remove_ids = set()
+    for node_id, node in list(nodes.items()):
+        if not isinstance(node, dict):
+            continue
+        meta = node.get("meta", {}) if isinstance(node.get("meta"), dict) else {}
+        if (
+            node_id == "krk_successor_affordance_hub"
+            or meta.get("successor_affordance_layer")
+            or meta.get("visible_successor_term")
+            or meta.get("visible_successor_affordance")
+            or meta.get("visible_successor_affordance_marker")
+        ):
+            remove_ids.add(node_id)
+    for node_id in remove_ids:
+        nodes.pop(node_id, None)
+    topology["edges"] = [
+        edge for edge in topology.get("edges", [])
+        if edge.get("src") not in remove_ids and edge.get("dst") not in remove_ids
+    ]
+    create_successor_affordance_layer(topology)
 
 
 def ensure_skill_node(
