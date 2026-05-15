@@ -1678,6 +1678,26 @@ def _apply_visible_stagnation_breaker_bias(
     if not progress_terms & (post_terms | loop_terms):
         return score
 
+    king_support_weight = float(
+        blackboard.get("stagnation_breaker_king_support_bonus", 0.0) or 0.0
+    )
+    king_support_terms = {
+        "candidate_is_king_move",
+        "king_moves_toward_enemy",
+        "king_moves_toward_rook_support",
+    }
+    king_support_post_terms = {
+        "rook_safe_after_move",
+        "box_area_not_increased_after_move",
+        "enemy_edge_distance_not_increased_after_move",
+    }
+    king_support_license = bool(
+        king_support_weight > 0.0
+        and king_support_terms <= move_terms
+        and king_support_post_terms <= (post_terms | loop_terms)
+        and "no_draw_after_move" in loop_terms
+    )
+    bonus = weight + (king_support_weight if king_support_license else 0.0)
     source_terms = sorted(
         required_context
         | required_move_terms
@@ -1685,18 +1705,40 @@ def _apply_visible_stagnation_breaker_bias(
         | ({"candidate_is_rook_transfer"} & move_terms)
         | ({"escapes_rook_oscillation_pair"} & loop_terms)
     )
-    adjusted = float(score) + weight
+    adjusted = float(score) + bonus
     license_payload = {
         "role_id": "krk.stagnation_breaker_affordance",
         "provider_skill_id": _canonical_krk_skill_id(skill_id),
         "move": move.uci(),
-        "score": float(weight),
+        "score": float(bonus),
         "source_terms": source_terms,
         "move_shape_terms": sorted(move_terms),
         "post_move_terms": sorted(post_terms),
         "loop_breaking_terms": sorted(loop_terms),
     }
-    move_meta["visible_stagnation_breaker_bonus"] = float(weight)
+    if king_support_license:
+        king_support_payload = {
+            "role_id": "krk.stagnation_breaker_king_support",
+            "provider_skill_id": _canonical_krk_skill_id(skill_id),
+            "move": move.uci(),
+            "score": float(king_support_weight),
+            "source_terms": sorted(
+                king_support_terms
+                | king_support_post_terms
+                | {"no_draw_after_move", "safe_loop_breaking_move_available"}
+            ),
+            "move_shape_terms": sorted(move_terms),
+            "post_move_terms": sorted(post_terms),
+            "loop_breaking_terms": sorted(loop_terms),
+        }
+        license_payload["king_support_license"] = king_support_payload
+        move_meta["visible_stagnation_breaker_king_support_bonus"] = float(
+            king_support_weight
+        )
+        move_meta["visible_stagnation_breaker_king_support_license"] = (
+            king_support_payload
+        )
+    move_meta["visible_stagnation_breaker_bonus"] = float(bonus)
     move_meta["visible_stagnation_breaker_license"] = license_payload
     move_meta["visible_stagnation_breaker_context"] = {
         key: context.get(key)

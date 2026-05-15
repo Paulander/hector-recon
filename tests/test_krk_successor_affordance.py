@@ -13,6 +13,7 @@ from recon_lite_chess.krk_baseline_nodes import (
     _apply_visible_post_break_continuation_bias,
     _apply_visible_stage0_drift_penalty,
     _apply_visible_rook_transfer_move_bias,
+    _apply_visible_stagnation_breaker_bias,
     _compute_krk_context_terms,
     create_krk_context_terminal,
     create_krk_successor_affordance,
@@ -625,6 +626,75 @@ def test_post_break_continuation_bonus_requires_visible_recent_break_context():
     ]["source_terms"]
     assert missing_context == 1.0
     assert "visible_post_break_continuation_bonus" not in unlicensed_meta
+
+
+def test_stagnation_breaker_king_support_bonus_is_narrow_and_visible():
+    board = chess.Board("5k2/8/8/K7/7R/8/8/8 w - - 18 10")
+    blackboard = {
+        "stagnation_breaker_enabled": True,
+        "stagnation_breaker_bonus": 0.5,
+        "stagnation_breaker_king_support_bonus": 2.0,
+        "krk_dynamic_context_terms": {
+            "rook_oscillation_loop": True,
+            "no_box_progress_recently": True,
+            "safe_loop_breaking_move_available": True,
+        },
+        "krk_stagnation_context": {
+            "legal_loop_breaking_moves": ["a5b6", "h4f4"],
+            "legal_loop_breaking_move_audits": [
+                {
+                    "move": "a5b6",
+                    "source_terms": [
+                        "escapes_rook_oscillation_pair",
+                        "not_immediate_rook_reverse",
+                        "rook_safe_after_move",
+                        "no_draw_after_move",
+                        "box_area_not_increased_after_move",
+                        "enemy_edge_distance_not_increased_after_move",
+                    ],
+                },
+                {
+                    "move": "h4f4",
+                    "source_terms": [
+                        "escapes_rook_oscillation_pair",
+                        "not_immediate_rook_reverse",
+                        "rook_safe_after_move",
+                        "no_draw_after_move",
+                        "box_area_not_increased_after_move",
+                        "enemy_edge_distance_not_increased_after_move",
+                    ],
+                },
+            ],
+        },
+    }
+    king_meta = {}
+    rook_meta = {}
+
+    king_score = _apply_visible_stagnation_breaker_bias(
+        1.0,
+        board=board,
+        move=chess.Move.from_uci("a5b6"),
+        skill_id="krk.stage0_basin",
+        blackboard=blackboard,
+        move_meta=king_meta,
+    )
+    rook_score = _apply_visible_stagnation_breaker_bias(
+        1.0,
+        board=board,
+        move=chess.Move.from_uci("h4f4"),
+        skill_id="krk.edge_trap_close",
+        blackboard=blackboard,
+        move_meta=rook_meta,
+    )
+
+    assert king_score == 3.5
+    assert rook_score == 1.5
+    assert king_meta["visible_stagnation_breaker_bonus"] == 2.5
+    assert king_meta["visible_stagnation_breaker_king_support_bonus"] == 2.0
+    assert king_meta["visible_stagnation_breaker_king_support_license"]["role_id"] == (
+        "krk.stagnation_breaker_king_support"
+    )
+    assert "visible_stagnation_breaker_king_support_bonus" not in rook_meta
 
 
 def test_move_shape_audit_emits_current_candidate_post_and_worst_reply_terms():

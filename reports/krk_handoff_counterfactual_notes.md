@@ -1798,3 +1798,149 @@ It should be narrow:
 
 This is the first plausible causal follow-up, but it should still be implemented as an opt-in visible role/move-shape license and validated against the 200-sample Stage 6 diagnostic before retraining.
 ```
+
+## Slice 52: Opt-In King-Support Loop Breaker And Stage 6 Pass
+
+A narrow opt-in causal experiment was added:
+
+```text
+flag: --stagnation-breaker-king-support-bonus
+adaptive passthrough: --adaptive-stagnation-breaker-king-support-bonus
+default: 0.0
+```
+
+This does not change `handoff_composition_v1` by default. It only adds extra visible support when:
+
+```text
+rook_oscillation_loop
+no_box_progress_recently
+safe_loop_breaking_move_available
+candidate_is_king_move
+king_moves_toward_enemy
+king_moves_toward_rook_support
+rook_safe_after_move
+box_area_not_increased_after_move
+enemy_edge_distance_not_increased_after_move
+no_draw_after_move
+```
+
+Stage 6 diagnostic with the opt-in bonus:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_strict/stage6_drive_king_support_breaker_200_seed7_h40.json
+label: drive_to_edge
+samples: 200
+horizon: 40
+bonus: 2.0
+local improved: 200/200
+local optimal: 149/200
+conversion: 200 mate / 0 max_plies
+shadow candidates: 0
+```
+
+Strict adaptive Stage 6 run:
+
+```text
+output: snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support
+cycle: 9
+adaptive result: passed
+one_ply_status: passed under adaptive criteria
+conversion_status: passed
+playouts: 200 mate / 0 max_plies
+KRK entry regression: 100/100 mate
+Stage 1 backchain regression: 100/100 improved, 100/100 optimal
+```
+
+Stage 6 robustness validation:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support/stage6_drive_king_support_500_seed7_h40.json
+samples: 500
+horizon: 40
+local improved: 500/500
+local optimal: 374/500
+conversion: 500 mate / 0 max_plies
+shadow candidates: 0
+```
+
+Interpretation:
+
+```text
+The narrow king-support loop-break license fixes the compact Stage 6 conversion family without making the profile default more aggressive.
+For Stage 6 itself, this is a successful opt-in architecture slice.
+```
+
+## Slice 53: Earlier-Stage Guardrail Regression On Stage 6 Topology
+
+Cross-stage guardrails on the Stage 6 topology exposed a separate architecture issue.
+
+With the opt-in king-support bonus enabled:
+
+```text
+Stage 4 wrong-tempo guard, 300 samples:
+  artifact: stage4_wrong_tempo_king_support_guard_300_seed7_h40.json
+  local: 300/300 optimal
+  conversion: 242 mate / 58 max_plies
+  shadow candidates: 116
+
+Stage 5 fence guard, 300 samples:
+  artifact: stage5_fence_king_support_guard_300_seed7_h40.json
+  local: 300/300 optimal
+  conversion: 259 mate / 41 max_plies
+  shadow candidates: 82
+```
+
+The same guardrails without the new king-support bonus produced essentially the same failures:
+
+```text
+Stage 4 wrong-tempo guard without bonus:
+  artifact: stage4_wrong_tempo_no_king_support_guard_300_seed7_h40.json
+  conversion: 242 mate / 58 max_plies
+
+Stage 5 fence guard without bonus:
+  artifact: stage5_fence_no_king_support_guard_300_seed7_h40.json
+  conversion: 256 mate / 44 max_plies
+```
+
+Therefore:
+
+```text
+The regression is not caused by the new king-support loop-breaker.
+It is caused by adding/training Stage 6 into the learner/topology, which changes downstream conversion behavior for earlier-stage guardrails.
+```
+
+Analysis summaries:
+
+```text
+Stage 4:
+  analysis: stage4_wrong_tempo_no_king_support_guard_300_seed7_h40_analysis.md
+  failure motif: selected_successor_miscalibrated
+  selected successor by outcome:
+    krk.stage0_basin: 114 mate / 45 max_plies
+    krk.edge_trap_close: 41 mate
+
+Stage 5:
+  analysis: stage5_fence_no_king_support_guard_300_seed7_h40_analysis.md
+  failure motifs:
+    horizon_mate_in_one
+    successor_conflict
+  selected successor by outcome:
+    krk.edge_trap_close: 105 mate / 28 max_plies
+    krk.stage0_basin: 67 mate
+```
+
+Interpretation:
+
+```text
+Do not promote the Stage 6 topology as a globally safe successor to Stage 5 yet.
+The next architecture decision is not another Stage 6 move-shape tweak.
+It is how Hector should preserve previously validated subskills while adding later curriculum stages.
+
+Likely options:
+  freeze/layer older actuator providers during later-stage training
+  add versioned skill contracts/checkpoints per stage
+  add a visible stage/domain ownership lock during lower-stage guardrail conversion
+  train Stage 6 as an overlay rather than mutating earlier skill providers
+
+This should be reviewed before implementing a broad preservation mechanism.
+```

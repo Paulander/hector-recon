@@ -830,6 +830,13 @@ def evaluate_landmark_checkpoint(
     composition_profile = getattr(args, "adaptive_composition_profile", "none")
     if composition_profile and composition_profile != "none":
         eval_kwargs["composition_profile"] = composition_profile
+    adaptive_stagnation_breaker_king_support_bonus = float(
+        getattr(args, "adaptive_stagnation_breaker_king_support_bonus", 0.0) or 0.0
+    )
+    if adaptive_stagnation_breaker_king_support_bonus > 0.0:
+        eval_kwargs["stagnation_breaker_king_support_bonus"] = (
+            adaptive_stagnation_breaker_king_support_bonus
+        )
     if getattr(args, "adaptive_use_profile_validation_defaults", False):
         eval_kwargs["enable_diagnostic_caches"] = True
     return _landmark_eval_module().evaluate_landmark_progress(**eval_kwargs)
@@ -1074,6 +1081,8 @@ def main() -> None:
                         help="Optional named handoff-composition profile for adaptive landmark validation")
     parser.add_argument("--adaptive-use-profile-validation-defaults", action="store_true",
                         help="Enable diagnostic validation defaults associated with the adaptive composition profile")
+    parser.add_argument("--adaptive-stagnation-breaker-king-support-bonus", type=float, default=0.0,
+                        help="Opt-in extra validation bonus for visible loop-breaking king support moves")
     parser.add_argument("--samples-per-cycle", type=int, default=100)
     parser.add_argument("--initial-sensors", type=int, default=20)
     parser.add_argument("--spawn-interval", type=int, default=10)

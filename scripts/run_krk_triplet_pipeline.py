@@ -96,6 +96,14 @@ def build_plan(args: argparse.Namespace) -> PipelinePlan:
             ])
         if getattr(args, "adaptive_use_profile_validation_defaults", False):
             train_cmd.append("--adaptive-use-profile-validation-defaults")
+        adaptive_stagnation_breaker_king_support_bonus = float(
+            getattr(args, "adaptive_stagnation_breaker_king_support_bonus", 0.0) or 0.0
+        )
+        if adaptive_stagnation_breaker_king_support_bonus > 0.0:
+            train_cmd.extend([
+                "--adaptive-stagnation-breaker-king-support-bonus",
+                str(adaptive_stagnation_breaker_king_support_bonus),
+            ])
     if getattr(args, "allow_prune_foundation", False):
         train_cmd.append("--allow-prune-foundation")
     if args.stage1_position_mode == "hybrid":
@@ -183,6 +191,11 @@ def manifest_for(args: argparse.Namespace, plan: PipelinePlan) -> Dict[str, Any]
                 "adaptive_use_profile_validation_defaults",
                 False,
             ),
+            "adaptive_stagnation_breaker_king_support_bonus": getattr(
+                args,
+                "adaptive_stagnation_breaker_king_support_bonus",
+                0.0,
+            ),
             "load_learner": str(args.load_learner) if getattr(args, "load_learner", None) else None,
             "stage1_position_mode": args.stage1_position_mode,
             "stage1_hybrid_random_ratio": args.stage1_hybrid_random_ratio,
@@ -268,6 +281,8 @@ def main() -> None:
                         default="none")
     parser.add_argument("--adaptive-use-profile-validation-defaults",
                         action="store_true", default=False)
+    parser.add_argument("--adaptive-stagnation-breaker-king-support-bonus",
+                        type=float, default=0.0)
     parser.add_argument("--stage1-position-mode", choices=["mate_in_2", "random", "hybrid"], default="hybrid")
     parser.add_argument("--stage1-hybrid-random-ratio", type=float, default=0.5)
     parser.add_argument("--stage1-eval-position-mode", choices=["mate_in_2", "random", "hybrid"], default="random")

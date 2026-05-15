@@ -398,6 +398,12 @@ def _suggestion_role_trace(meta: dict) -> dict:
         "visible_stagnation_breaker_license": dict(
             meta.get("visible_stagnation_breaker_license", {}) or {}
         ),
+        "visible_stagnation_breaker_king_support_bonus": float(
+            meta.get("visible_stagnation_breaker_king_support_bonus", 0.0) or 0.0
+        ),
+        "visible_stagnation_breaker_king_support_license": dict(
+            meta.get("visible_stagnation_breaker_king_support_license", {}) or {}
+        ),
         "score_after_stagnation_breaker_bonus": (
             float(meta.get("score_after_stagnation_breaker_bonus"))
             if meta.get("score_after_stagnation_breaker_bonus") is not None
@@ -652,6 +658,12 @@ def _successor_contract_audit(
         ),
         "visible_stagnation_breaker_license": dict(
             selected_group.get("visible_stagnation_breaker_license", {}) or {}
+        ),
+        "visible_stagnation_breaker_king_support_bonus": float(
+            selected_group.get("visible_stagnation_breaker_king_support_bonus", 0.0) or 0.0
+        ),
+        "visible_stagnation_breaker_king_support_license": dict(
+            selected_group.get("visible_stagnation_breaker_king_support_license", {}) or {}
         ),
         "score_after_stagnation_breaker_bonus": selected_group.get(
             "score_after_stagnation_breaker_bonus"
@@ -995,6 +1007,7 @@ def choose_move_with_engine(
     stagnation_context: Optional[dict] = None,
     stagnation_breaker_enabled: bool = False,
     stagnation_breaker_bonus: float = 0.0,
+    stagnation_breaker_king_support_bonus: float = 0.0,
     post_break_continuation_enabled: bool = False,
     post_break_continuation_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
@@ -1018,6 +1031,7 @@ def choose_move_with_engine(
         stagnation_context=stagnation_context,
         stagnation_breaker_enabled=stagnation_breaker_enabled,
         stagnation_breaker_bonus=stagnation_breaker_bonus,
+        stagnation_breaker_king_support_bonus=stagnation_breaker_king_support_bonus,
         post_break_continuation_enabled=post_break_continuation_enabled,
         post_break_continuation_bonus=post_break_continuation_bonus,
         early_stop_stable_suggestions=early_stop_stable_suggestions,
@@ -1043,6 +1057,7 @@ def choose_move_details(
     stagnation_context: Optional[dict] = None,
     stagnation_breaker_enabled: bool = False,
     stagnation_breaker_bonus: float = 0.0,
+    stagnation_breaker_king_support_bonus: float = 0.0,
     post_break_continuation_enabled: bool = False,
     post_break_continuation_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
@@ -1069,6 +1084,7 @@ def choose_move_details(
             stagnation_context=stagnation_context,
             stagnation_breaker_enabled=stagnation_breaker_enabled,
             stagnation_breaker_bonus=stagnation_breaker_bonus,
+            stagnation_breaker_king_support_bonus=stagnation_breaker_king_support_bonus,
             post_break_continuation_enabled=post_break_continuation_enabled,
             post_break_continuation_bonus=post_break_continuation_bonus,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
@@ -1096,6 +1112,7 @@ def _choose_move_details_impl(
     stagnation_context: Optional[dict] = None,
     stagnation_breaker_enabled: bool = False,
     stagnation_breaker_bonus: float = 0.0,
+    stagnation_breaker_king_support_bonus: float = 0.0,
     post_break_continuation_enabled: bool = False,
     post_break_continuation_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
@@ -1149,6 +1166,9 @@ def _choose_move_details_impl(
         )
     env["blackboard"]["stagnation_breaker_enabled"] = bool(stagnation_breaker_enabled)
     env["blackboard"]["stagnation_breaker_bonus"] = float(stagnation_breaker_bonus)
+    env["blackboard"]["stagnation_breaker_king_support_bonus"] = float(
+        stagnation_breaker_king_support_bonus
+    )
     env["blackboard"]["post_break_continuation_enabled"] = bool(post_break_continuation_enabled)
     env["blackboard"]["post_break_continuation_bonus"] = float(post_break_continuation_bonus)
     if forced_successor_skill:
@@ -1248,6 +1268,7 @@ def _choose_move_details_impl(
         "successor_role_scoped_move_shape_require_worst_reply": successor_role_scoped_move_shape_require_worst_reply,
         "stagnation_breaker_enabled": bool(stagnation_breaker_enabled),
         "stagnation_breaker_bonus": float(stagnation_breaker_bonus),
+        "stagnation_breaker_king_support_bonus": float(stagnation_breaker_king_support_bonus),
         "post_break_continuation_enabled": bool(post_break_continuation_enabled),
         "post_break_continuation_bonus": float(post_break_continuation_bonus),
         "stagnation_context": dict(stagnation_context or {}),
@@ -1435,6 +1456,7 @@ def play_to_mate(
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
     stagnation_breaker_enabled: bool = False,
     stagnation_breaker_bonus: float = 0.0,
+    stagnation_breaker_king_support_bonus: float = 0.0,
     post_break_continuation_enabled: bool = False,
     post_break_continuation_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
@@ -1532,6 +1554,7 @@ def play_to_mate(
                 stagnation_context=stagnation_context,
                 stagnation_breaker_enabled=stagnation_breaker_enabled,
                 stagnation_breaker_bonus=stagnation_breaker_bonus,
+                stagnation_breaker_king_support_bonus=stagnation_breaker_king_support_bonus,
                 post_break_continuation_enabled=post_break_continuation_enabled,
                 post_break_continuation_bonus=post_break_continuation_bonus,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
@@ -1714,6 +1737,13 @@ def _compact_playout_trace(trace: list[dict]) -> list[dict]:
                 )
                 item["visible_stagnation_breaker_bonus"] = meta.get(
                     "visible_stagnation_breaker_bonus"
+                )
+            if meta.get("visible_stagnation_breaker_king_support_license"):
+                item["visible_stagnation_breaker_king_support_license"] = meta.get(
+                    "visible_stagnation_breaker_king_support_license"
+                )
+                item["visible_stagnation_breaker_king_support_bonus"] = meta.get(
+                    "visible_stagnation_breaker_king_support_bonus"
                 )
             if meta.get("visible_post_break_continuation_license"):
                 item["visible_post_break_continuation_license"] = meta.get(
@@ -2326,6 +2356,7 @@ def run_counterfactual_successor_sweep(
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
     stagnation_breaker_enabled: bool = False,
     stagnation_breaker_bonus: float = 0.0,
+    stagnation_breaker_king_support_bonus: float = 0.0,
     post_break_continuation_enabled: bool = False,
     post_break_continuation_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
@@ -2366,6 +2397,7 @@ def run_counterfactual_successor_sweep(
             ),
             stagnation_breaker_enabled=stagnation_breaker_enabled,
             stagnation_breaker_bonus=stagnation_breaker_bonus,
+            stagnation_breaker_king_support_bonus=stagnation_breaker_king_support_bonus,
             post_break_continuation_enabled=post_break_continuation_enabled,
             post_break_continuation_bonus=post_break_continuation_bonus,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
@@ -2488,6 +2520,7 @@ def evaluate_landmark_progress(
     successor_role_scoped_move_shape_require_worst_reply: bool = False,
     stagnation_breaker_enabled: bool = False,
     stagnation_breaker_bonus: float = 0.0,
+    stagnation_breaker_king_support_bonus: float = 0.0,
     post_break_continuation_enabled: bool = False,
     post_break_continuation_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
@@ -2774,6 +2807,7 @@ def evaluate_landmark_progress(
                 ),
                 stagnation_breaker_enabled=stagnation_breaker_enabled,
                 stagnation_breaker_bonus=stagnation_breaker_bonus,
+                stagnation_breaker_king_support_bonus=stagnation_breaker_king_support_bonus,
                 post_break_continuation_enabled=post_break_continuation_enabled,
                 post_break_continuation_bonus=post_break_continuation_bonus,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
@@ -3086,6 +3120,7 @@ def evaluate_landmark_progress(
                     ),
                     stagnation_breaker_enabled=stagnation_breaker_enabled,
                     stagnation_breaker_bonus=stagnation_breaker_bonus,
+                    stagnation_breaker_king_support_bonus=stagnation_breaker_king_support_bonus,
                     post_break_continuation_enabled=post_break_continuation_enabled,
                     post_break_continuation_bonus=post_break_continuation_bonus,
                     early_stop_stable_suggestions=early_stop_stable_suggestions,
@@ -3216,6 +3251,7 @@ def evaluate_landmark_progress(
     )
     stats["stagnation_breaker_enabled"] = stagnation_breaker_enabled
     stats["stagnation_breaker_bonus"] = stagnation_breaker_bonus
+    stats["stagnation_breaker_king_support_bonus"] = stagnation_breaker_king_support_bonus
     stats["post_break_continuation_enabled"] = post_break_continuation_enabled
     stats["post_break_continuation_bonus"] = post_break_continuation_bonus
     stats["early_stop_stable_suggestions"] = int(early_stop_stable_suggestions)
@@ -3728,6 +3764,8 @@ def main() -> None:
                         help="Enable opt-in visible stagnation-breaker move license bonus")
     parser.add_argument("--stagnation-breaker-bonus", type=float, default=0.0,
                         help="Small bonus for candidate moves licensed by visible stagnation-breaker terms")
+    parser.add_argument("--stagnation-breaker-king-support-bonus", type=float, default=0.0,
+                        help="Extra opt-in bonus for loop-breaking king moves toward both enemy king and rook support")
     parser.add_argument("--enable-post-break-continuation", action="store_true",
                         help="Enable opt-in visible post-stagnation-break continuation move license bonus")
     parser.add_argument("--post-break-continuation-bonus", type=float, default=0.0,
@@ -3803,6 +3841,7 @@ def main() -> None:
         successor_role_scoped_move_shape_require_worst_reply=args.require_role_scoped_move_shape_worst_reply,
         stagnation_breaker_enabled=args.enable_stagnation_breaker,
         stagnation_breaker_bonus=args.stagnation_breaker_bonus,
+        stagnation_breaker_king_support_bonus=args.stagnation_breaker_king_support_bonus,
         post_break_continuation_enabled=args.enable_post_break_continuation,
         post_break_continuation_bonus=args.post_break_continuation_bonus,
         early_stop_stable_suggestions=args.early_stop_stable_suggestions,
