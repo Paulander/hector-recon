@@ -9,6 +9,8 @@ shrinkage, opposition/tempo, or the blended full_krk score.
 from __future__ import annotations
 
 import argparse
+import copy
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from contextlib import contextmanager
 import json
 import random
@@ -2410,6 +2412,8 @@ def evaluate_landmark_progress(
     counterfactual_steps_output: Optional[Path] = None,
     profile_performance: bool = False,
     enable_diagnostic_caches: bool = False,
+    sample_indices: tuple[int, ...] | None = None,
+    deterministic_sample_seeds: bool = False,
     verbose: bool = True,
 ) -> dict:
     perf_profile = _new_perf_profile(
@@ -2462,9 +2466,18 @@ def evaluate_landmark_progress(
         "conversion_status": "not_checked",
     }
 
-    for i in range(samples):
+    indices = tuple(range(samples)) if sample_indices is None else tuple(sample_indices)
+    samples = len(indices)
+
+    for local_i, sample_index in enumerate(indices):
         _profile_add_count(perf_profile, "samples")
-        board = select_eval_position(rng, label, position_mode, source_names)
+        if deterministic_sample_seeds:
+            sample_seed = int(seed) * 1_000_000 + int(sample_index)
+            sample_rng = random.Random(sample_seed)
+            random.seed(sample_seed)
+        else:
+            sample_rng = rng
+        board = select_eval_position(sample_rng, label, position_mode, source_names)
         move_details = choose_move_details(
             graph,
             engine,
@@ -2583,7 +2596,7 @@ def evaluate_landmark_progress(
             stats["optimal"] += 1
         elif len(stats["debug_failures"]) < debug_failures:
             stats["debug_failures"].append({
-                "sample": i,
+                "sample": sample_index,
                 "fen": board.fen(),
                 "board": str(board),
                 "chosen_move": move_uci,
@@ -2595,9 +2608,9 @@ def evaluate_landmark_progress(
                 "engine": move_details,
             })
 
-        if verbose and (i + 1) % 10 == 0:
+        if verbose and (local_i + 1) % 10 == 0:
             print(
-                f"{i + 1:4d}/{samples}: improved={stats['improved']} optimal={stats['optimal']}",
+                f"{local_i + 1:4d}/{samples}: improved={stats['improved']} optimal={stats['optimal']}",
                 flush=True,
             )
 
@@ -2613,7 +2626,7 @@ def evaluate_landmark_progress(
                 graph,
                 engine,
                 board,
-                rng,
+                sample_rng,
                 label,
                 stage_filter,
                 playout_max_plies,
@@ -2918,7 +2931,7 @@ def evaluate_landmark_progress(
                 and post_reply_fen
             ):
                 step_context = {
-                    "sample": i,
+                    "sample": sample_index,
                     "state_signature": stable_record_id("state", chess.Board(post_reply_fen).board_fen(), chess.WHITE),
                     "start_fen": board.fen(),
                     "post_reply_fen": post_reply_fen,
@@ -2931,7 +2944,7 @@ def evaluate_landmark_progress(
                     engine,
                     post_reply_fen=post_reply_fen,
                     successors=counterfactual_successors,
-                    rng=rng,
+                    rng=sample_rng,
                     label=label,
                     max_plies=playout_max_plies,
                     black_policy=black_policy,
@@ -2970,7 +2983,7 @@ def evaluate_landmark_progress(
                     print(
                         "  counterfactual sweep "
                         f"{len(stats['counterfactual_successor_sweeps'])}: "
-                        f"sample={i} actual={successor_summary['selected_skill']} "
+                        f"sample={sample_index} actual={successor_summary['selected_skill']} "
                         f"result={key}",
                         flush=True,
                     )
@@ -3013,7 +3026,7 @@ def evaluate_landmark_progress(
                     )
             if key != "mate" and len(stats["debug_playouts"]) < debug_playouts:
                 stats["debug_playouts"].append({
-                    "sample": i,
+                    "sample": sample_index,
                     "start_fen": board.fen(),
                     "start_board": str(board),
                     **result,
@@ -3028,7 +3041,7 @@ def evaluate_landmark_progress(
                 )
             ):
                 record = {
-                    "sample": i,
+                    "sample": sample_index,
                     "state_signature": post_reply_state_signature,
                     "start_fen": board.fen(),
                     "post_reply_fen": post_reply_fen,
@@ -3083,6 +3096,9 @@ def evaluate_landmark_progress(
     stats["post_break_continuation_bonus"] = post_break_continuation_bonus
     stats["early_stop_stable_suggestions"] = int(early_stop_stable_suggestions)
     stats["diagnostic_caches_enabled"] = bool(enable_diagnostic_caches)
+    stats["deterministic_sample_seeds"] = bool(deterministic_sample_seeds)
+    if sample_indices is not None:
+        stats["sample_indices"] = list(indices)
     stats["target_failure_trace_state_signatures"] = list(target_failure_trace_state_signatures)
     evaluated = max(0, stats["total"] - stats["no_move"])
     stats["one_ply_status"] = (
@@ -3151,6 +3167,297 @@ def evaluate_landmark_progress(
         _profile_add_time(perf_profile, "total_wall_time", time.perf_counter() - total_start)
         stats["performance_profile"] = _finalize_perf_profile(perf_profile)
     return stats
+
+
+def _merge_count_dict(target: dict, source: dict | None) -> None:
+    if not isinstance(source, dict):
+        return
+    for key, value in source.items():
+        if isinstance(value, dict):
+            bucket = target.setdefault(key, {})
+            if not isinstance(bucket, dict):
+                bucket = {}
+                target[key] = bucket
+            _merge_count_dict(bucket, value)
+        else:
+            target[key] = int(target.get(key, 0) or 0) + int(value or 0)
+
+
+def _merge_nested_count_dict(target: dict, source: dict | None) -> None:
+    if not isinstance(source, dict):
+        return
+    for key, value in source.items():
+        if isinstance(value, dict):
+            bucket = target.setdefault(key, {})
+            _merge_count_dict(bucket, value)
+        else:
+            target[key] = int(target.get(key, 0) or 0) + int(value or 0)
+
+
+def _merge_profile_profiles(worker_stats: list[dict], *, wall_time: float) -> dict | None:
+    profiles = [
+        stats.get("performance_profile")
+        for stats in worker_stats
+        if isinstance(stats.get("performance_profile"), dict)
+    ]
+    if not profiles:
+        return None
+    timers = {key: 0.0 for key in PROFILE_TIMER_KEYS}
+    counts = {key: 0 for key in PROFILE_COUNT_KEYS}
+    cache: dict[str, dict[str, int]] = {}
+    diagnostic_caches_enabled = False
+    for profile in profiles:
+        diagnostic_caches_enabled = diagnostic_caches_enabled or bool(
+            profile.get("diagnostic_caches_enabled", False)
+        )
+        for key, value in (profile.get("timers_sec") or {}).items():
+            timers[key] = float(timers.get(key, 0.0) or 0.0) + float(value or 0.0)
+        for key, value in (profile.get("counts") or {}).items():
+            counts[key] = int(counts.get(key, 0) or 0) + int(value or 0)
+        for cache_name, cache_counts in (profile.get("cache") or {}).items():
+            if not isinstance(cache_counts, dict):
+                continue
+            merged_counts = cache.setdefault(cache_name, {"hits": 0, "misses": 0})
+            merged_counts["hits"] = int(merged_counts.get("hits", 0) or 0) + int(
+                cache_counts.get("hits", 0) or 0
+            )
+            merged_counts["misses"] = int(merged_counts.get("misses", 0) or 0) + int(
+                cache_counts.get("misses", 0) or 0
+            )
+    worker_total = float(timers.get("total_wall_time", 0.0) or 0.0)
+    timers["parallel_wall_time"] = round(float(wall_time), 6)
+    timers["worker_total_wall_time_sum"] = round(worker_total, 6)
+    total_for_percent = float(wall_time) if wall_time > 0 else worker_total
+    percentages = {
+        key: round((float(value) / total_for_percent * 100.0), 3)
+        if total_for_percent > 0
+        else 0.0
+        for key, value in timers.items()
+    }
+    return {
+        "schema_version": "krk_performance_profile.v1",
+        "timers_sec": {key: round(float(value), 6) for key, value in timers.items()},
+        "timer_percentages_of_total": percentages,
+        "counts": counts,
+        "cache": cache,
+        "diagnostic_caches_enabled": diagnostic_caches_enabled,
+        "parallel_profile": True,
+    }
+
+
+def _merge_parallel_stats(
+    worker_stats: list[dict],
+    *,
+    base_kwargs: dict,
+    wall_time: float,
+    parallel_workers: int,
+    chunk_size: int,
+    max_handoff_packets: int,
+    max_shadow_candidates: int,
+) -> dict:
+    if not worker_stats:
+        raise ValueError("no worker stats to merge")
+    merged = copy.deepcopy(worker_stats[0])
+    count_keys = (
+        "total",
+        "no_move",
+        "improved",
+        "flat",
+        "worsened",
+        "optimal",
+        "conversion_failure_count",
+        "one_ply_engine_decision_count",
+        "one_ply_engine_ticks_total",
+        "one_ply_engine_early_stop_count",
+        "playout_engine_decision_count",
+        "playout_engine_ticks_total",
+        "playout_engine_early_stop_count",
+        "handoff_packet_count",
+        "shadow_candidate_count",
+        "counterfactual_successor_sweep_count",
+    )
+    max_keys = ("one_ply_engine_ticks_max", "playout_engine_ticks_max")
+    dict_count_keys = (
+        "playouts",
+        "one_ply_status_counts",
+        "conversion_status_counts",
+        "semantic_alignment_status_counts",
+        "semantic_alignment_confusion_counts",
+        "handoff_packet_counts_by_phase",
+        "shadow_candidate_counts_by_trigger",
+    )
+    nested_count_keys = ("conversion_by_semantic_alignment_status",)
+    list_keys = (
+        "debug_failures",
+        "debug_playouts",
+        "target_failure_traces",
+        "handoff_packets",
+        "shadow_candidates",
+        "counterfactual_successor_sweeps",
+    )
+    snapshot_keys = ("semantic_alignment_snapshots",)
+
+    for key in count_keys:
+        merged[key] = sum(int(stats.get(key, 0) or 0) for stats in worker_stats)
+    for key in max_keys:
+        merged[key] = max(int(stats.get(key, 0) or 0) for stats in worker_stats)
+    for key in dict_count_keys:
+        merged[key] = {}
+        for stats in worker_stats:
+            _merge_count_dict(merged[key], stats.get(key))
+    for key in nested_count_keys:
+        merged[key] = {}
+        for stats in worker_stats:
+            _merge_nested_count_dict(merged[key], stats.get(key))
+    for key in list_keys:
+        merged[key] = []
+        for stats in worker_stats:
+            merged[key].extend(list(stats.get(key, []) or []))
+    for key in snapshot_keys:
+        merged[key] = {}
+        for stats in worker_stats:
+            for bucket, items in (stats.get(key) or {}).items():
+                merged[key].setdefault(bucket, []).extend(list(items or []))
+
+    total = int(merged.get("total", 0) or 0)
+    if total:
+        merged["avg_reward"] = sum(
+            float(stats.get("avg_reward", 0.0) or 0.0) * int(stats.get("total", 0) or 0)
+            for stats in worker_stats
+        ) / total
+        merged["avg_oracle_reward"] = sum(
+            float(stats.get("avg_oracle_reward", 0.0) or 0.0) * int(stats.get("total", 0) or 0)
+            for stats in worker_stats
+        ) / total
+
+    evaluated = max(0, total - int(merged.get("no_move", 0) or 0))
+    merged["one_ply_status"] = (
+        "passed"
+        if evaluated > 0
+        and int(merged.get("no_move", 0) or 0) == 0
+        and int(merged.get("worsened", 0) or 0) == 0
+        and int(merged.get("optimal", 0) or 0) == total
+        else "failed"
+        if total > 0
+        else "not_checked"
+    )
+    playout_total = sum(int(value) for value in (merged.get("playouts") or {}).values())
+    mate_total = int((merged.get("playouts") or {}).get("mate", 0) or 0)
+    if int(base_kwargs.get("playout_max_plies", 0) or 0) <= 0 or playout_total == 0:
+        merged["conversion_status"] = "not_checked"
+    elif mate_total == playout_total:
+        merged["conversion_status"] = "passed"
+    else:
+        merged["conversion_status"] = "failed"
+    merged["conversion_failure_count"] = max(0, playout_total - mate_total)
+
+    merged["counterfactual_successor_summary"] = summarize_counterfactual_successor_sweeps(
+        merged.get("counterfactual_successor_sweeps", [])
+    )
+    if not merged.get("counterfactual_successor_sweeps"):
+        merged.pop("counterfactual_successor_sweeps", None)
+        merged.pop("counterfactual_successor_summary", None)
+
+    if max_handoff_packets > 0:
+        merged["handoff_packets"] = merged.get("handoff_packets", [])[:max_handoff_packets]
+        merged["handoff_packets_truncated"] = max(
+            0,
+            int(merged.get("handoff_packet_count", 0) or 0) - len(merged["handoff_packets"]),
+        )
+    if max_shadow_candidates > 0:
+        merged["shadow_candidates"] = merged.get("shadow_candidates", [])[:max_shadow_candidates]
+        merged["shadow_candidates_truncated"] = max(
+            0,
+            int(merged.get("shadow_candidate_count", 0) or 0) - len(merged["shadow_candidates"]),
+        )
+    for key in ("debug_failures", "debug_playouts", "target_failure_traces", "handoff_packets", "shadow_candidates"):
+        if not merged.get(key):
+            merged.pop(key, None)
+
+    profile = _merge_profile_profiles(worker_stats, wall_time=wall_time)
+    if profile is not None:
+        merged["performance_profile"] = profile
+
+    merged["parallel_validation"] = {
+        "enabled": True,
+        "workers": int(parallel_workers),
+        "chunk_size": int(chunk_size),
+        "chunks": len(worker_stats),
+        "deterministic_sample_seeds": True,
+        "sample_seed_formula": "base_seed * 1_000_000 + sample_index",
+        "wall_time_sec": round(float(wall_time), 6),
+    }
+    merged["sample_indices"] = [
+        index
+        for stats in worker_stats
+        for index in list(stats.get("sample_indices", []) or [])
+    ]
+    merged["deterministic_sample_seeds"] = True
+    return merged
+
+
+def _parallel_eval_worker(payload: dict) -> dict:
+    kwargs = dict(payload["kwargs"])
+    return evaluate_landmark_progress(**kwargs)
+
+
+def evaluate_landmark_progress_parallel(
+    *,
+    parallel_workers: int,
+    chunk_size: int,
+    **kwargs,
+) -> dict:
+    samples = int(kwargs.get("samples", 0) or 0)
+    if samples <= 0:
+        return evaluate_landmark_progress(**kwargs)
+    chunk_size = max(1, int(chunk_size or 1))
+    chunks = [
+        tuple(range(start, min(samples, start + chunk_size)))
+        for start in range(0, samples, chunk_size)
+    ]
+    worker_count = max(1, min(int(parallel_workers), len(chunks)))
+    base_kwargs = dict(kwargs)
+    max_handoff_packets = int(base_kwargs.get("max_handoff_packets", 0) or 0)
+    max_shadow_candidates = int(base_kwargs.get("max_shadow_candidates", 0) or 0)
+    payloads = []
+    for chunk in chunks:
+        worker_kwargs = dict(base_kwargs)
+        worker_kwargs.update({
+            "samples": len(chunk),
+            "sample_indices": chunk,
+            "deterministic_sample_seeds": True,
+            "verbose": False,
+            "target_failure_traces_output": None,
+            "shadow_candidates_output": None,
+            "counterfactual_sweeps_output": None,
+            "counterfactual_steps_output": None,
+        })
+        payloads.append({"kwargs": worker_kwargs})
+
+    start = time.perf_counter()
+    results: list[dict] = []
+    with ProcessPoolExecutor(max_workers=worker_count) as executor:
+        futures = [executor.submit(_parallel_eval_worker, payload) for payload in payloads]
+        for index, future in enumerate(as_completed(futures), start=1):
+            stats = future.result()
+            results.append(stats)
+            print(
+                f"  parallel chunk {index}/{len(futures)}: "
+                f"n={stats.get('total')} improved={stats.get('improved')} "
+                f"optimal={stats.get('optimal')} playouts={stats.get('playouts', {})}",
+                flush=True,
+            )
+    results.sort(key=lambda item: min(item.get("sample_indices", [0]) or [0]))
+    wall_time = time.perf_counter() - start
+    return _merge_parallel_stats(
+        results,
+        base_kwargs=base_kwargs,
+        wall_time=wall_time,
+        parallel_workers=worker_count,
+        chunk_size=chunk_size,
+        max_handoff_packets=max_handoff_packets,
+        max_shadow_candidates=max_shadow_candidates,
+    )
 
 
 def print_landmark_results(
@@ -3313,6 +3620,10 @@ def main() -> None:
                         help="Record diagnostic timing/count buckets without changing behavior")
     parser.add_argument("--enable-diagnostic-caches", action="store_true",
                         help="Enable opt-in pure memoization caches for diagnostic/profiling runs")
+    parser.add_argument("--parallel-workers", type=int, default=1,
+                        help="Run validation samples across this many worker processes")
+    parser.add_argument("--chunk-size", type=int, default=25,
+                        help="Samples per worker chunk when --parallel-workers > 1")
     args = parser.parse_args()
 
     source_names = (
@@ -3320,8 +3631,8 @@ def main() -> None:
         if args.source_stage_names
         else None
     )
-    stats = evaluate_landmark_progress(
-        args.topology,
+    eval_kwargs = dict(
+        topology=args.topology,
         label=args.label,
         samples=args.samples,
         seed=args.seed,
@@ -3377,6 +3688,14 @@ def main() -> None:
         enable_diagnostic_caches=args.enable_diagnostic_caches,
         verbose=True,
     )
+    if args.parallel_workers > 1:
+        stats = evaluate_landmark_progress_parallel(
+            parallel_workers=args.parallel_workers,
+            chunk_size=args.chunk_size,
+            **eval_kwargs,
+        )
+    else:
+        stats = evaluate_landmark_progress(**eval_kwargs)
     print_landmark_results(
         stats,
         black_policy=args.black_policy,

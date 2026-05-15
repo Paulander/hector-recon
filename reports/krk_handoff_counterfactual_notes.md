@@ -1259,3 +1259,64 @@ The cache slice preserves the 100-sample Stage 5 result and removes the largest 
 The remaining dominant cost is still actuator scoring, now mostly non-cached goal-distance misses and reward evaluation.
 Next optimization should be parallel validation and/or deeper goal-bank vector precomputation, not more role/stagnation logic.
 ```
+
+## Slice 43: Parallel Validation
+
+Added multiprocessing validation via:
+
+```text
+--parallel-workers N
+--chunk-size M
+```
+
+Parallel mode is for validation throughput, not behavior change. It splits sample indices into chunks, each worker loads/builds its own graph and engine, and each sample uses a deterministic seed:
+
+```text
+sample_seed = base_seed * 1_000_000 + sample_index
+```
+
+This avoids shared mutable engine state and avoids thread/GIL contention. Worker summaries are merged into the same result schema. Shared JSONL streaming outputs are disabled inside workers; use normal single-process mode for detailed targeted trace streaming.
+
+Smoke:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice43_parallel_smoke.json
+samples: 4
+workers: 2
+chunk_size: 2
+result: 4/4 local optimal, 4 max_plies at 8-ply smoke horizon
+```
+
+30-sample Stage 5:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice43_parallel_stage5_30_seed11_h40.json
+samples: 30
+workers used: 3
+chunk_size: 10
+wall time: 70.86s
+local: 30/30 improved, 30/30 optimal
+conversion: 30 mate / 0 max_plies
+shadow candidates: 0
+```
+
+100-sample Stage 5:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice43_parallel_stage5_100_seed7_h40.json
+samples: 100
+workers used: 4
+chunk_size: 25
+wall time: 135.03s
+local: 100/100 improved, 100/100 optimal
+conversion: 100 mate / 0 max_plies
+shadow candidates: 0
+```
+
+Interpretation:
+
+```text
+Parallel validation plus diagnostic caches makes larger Stage 5 sweeps practical.
+The 100-sample parallel validation finishes in ~2.25 minutes instead of ~35.7 minutes uncached/profiled or ~6.7 minutes cached/profiled single-process.
+The next practical validation is 500 or 1000 samples with --enable-diagnostic-caches and --parallel-workers sized to available CPU cores.
+```

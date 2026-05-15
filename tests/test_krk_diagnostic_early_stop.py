@@ -10,6 +10,7 @@ from scripts.test_krk_landmark_progress import (
     _classify_successor_failure,
     _compact_playout_trace,
     _finalize_perf_profile,
+    _merge_count_dict,
     _mate_in_one_available,
     _new_perf_profile,
     _profile_add_count,
@@ -164,3 +165,10 @@ def test_performance_profile_schema_round_trips_core_buckets():
     assert finalized["counts"]["engine_ticks"] == 42
     assert finalized["diagnostic_caches_enabled"] is True
     assert "cache" in finalized
+
+
+def test_merge_count_dict_handles_nested_buckets():
+    target = {"a": 1, "nested": {"mate": 2}}
+    _merge_count_dict(target, {"a": 3, "nested": {"mate": 4, "draw": 1}})
+
+    assert target == {"a": 4, "nested": {"mate": 6, "draw": 1}}
