@@ -928,3 +928,50 @@ The post-break continuation role fires and is traceable, but it is still too bro
 It licenses safe/progress-looking rook moves after the break, yet the playout remains in an oscillation family.
 This supports the earlier conclusion: do not increase bonuses. Refine the post-break role toward moves that preserve the break and avoid immediate return to the rook oscillation family.
 ```
+
+## Slice 38: Narrow Post-Break Continuation To King Follow-Up
+
+Refined the opt-in post-break continuation role so it no longer licenses ordinary lateral rook transfers after a loop break. The loop breaker remains responsible for escaping the repeated rook-control state; the post-break continuation role now licenses visible king follow-up moves that preserve confinement and KRK safety.
+
+Narrowed rule:
+
+```text
+rook_oscillation_loop_recently_broken
+AND confinement_preserved_after_break
+AND post_stagnation_break_continuation_needed
+AND safe_followup_available
+AND candidate_is_king_move
+AND rook_safe_after_move
+AND box_area_not_increased_after_move
+AND visible progress/preservation term
+```
+
+Targeted `state.3d73`, first break `h4d4`:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice38_state3d73_post_break_king_followup_h4d4.json
+horizon: 40
+result: mate
+first post-break king follow-up license: a6a7
+later licensed king moves: a7b8, b8c8, c8c7, c7d6
+```
+
+Matched 25-sample comparison at 40 plies:
+
+```text
+no post-break continuation:
+  artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice38_stage5_25_no_post_break_h40.json
+  conversion: 19 mate / 6 max_plies
+
+narrow king-followup post-break continuation:
+  artifact: snapshots/krk_triplet_pipeline/handoff_observability_check/slice38_stage5_25_post_break_king_followup_h40.json
+  conversion: 20 mate / 5 max_plies
+```
+
+Interpretation:
+
+```text
+The narrowed role fixes the targeted h4d4 continuation at the longer horizon and gives a small positive 25-sample effect.
+It should remain opt-in/experimental until tested on larger samples and against regressions.
+The next useful diagnostic is to inspect the remaining 5 max_plies cases under the narrowed role and decide whether they are horizon-limited, loop-family changes, or genuine post-break capacity gaps.
+```

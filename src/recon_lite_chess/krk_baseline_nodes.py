@@ -1547,29 +1547,22 @@ def _apply_visible_post_break_continuation_bias(
     post_terms = set(audit.get("post_move_terms", []) or [])
     required_post = {"rook_safe_after_move", "box_area_not_increased_after_move"}
     progress_terms = {
-        "box_area_decreases_after_move",
         "white_king_distance_to_enemy_decreases",
         "white_king_distance_to_rook_decreases",
         "enemy_edge_distance_not_increased_after_move",
-        "checking_line_created",
         "cut_preserved_after_move",
         "fence_stable_after_move",
     }
-    shape_terms = {
-        "candidate_is_king_move",
-        "candidate_is_rook_transfer",
-        "rook_to_checking_line",
-        "safe_check_created",
-    }
+    shape_terms = {"candidate_is_king_move"}
     if not required_post <= post_terms:
+        return score
+    if "candidate_is_king_move" not in move_terms:
         return score
     if not progress_terms & post_terms:
         return score
-    if not shape_terms & (move_terms | post_terms):
-        return score
 
     matched_progress = progress_terms & post_terms
-    matched_shape = shape_terms & (move_terms | post_terms)
+    matched_shape = shape_terms & move_terms
     source_terms = sorted(required_context | required_post | matched_progress | matched_shape)
     adjusted = float(score) + weight
     license_payload = {

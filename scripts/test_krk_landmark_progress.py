@@ -1785,7 +1785,8 @@ def _post_break_followup_move_audit(board: chess.Board, move: chess.Move) -> dic
         rook_safe
         and no_draw
         and preserves_box
-        and (improves_box or support_improves or preserves_edge or creates_check)
+        and is_king_move
+        and (support_improves or preserves_edge)
     )
     return {
         "move": move.uci(),
