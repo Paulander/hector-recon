@@ -250,6 +250,91 @@ def _candidate_loop_breaking_audits(
     return board, pre_break_summary, audits
 
 
+def _post_break_candidate_terms(
+    board: chess.Board,
+    move_uci: str,
+    audit: dict[str, Any],
+) -> list[str]:
+    """Return non-causal candidate/action terms for post-break ontology discovery."""
+    terms = set(str(term) for term in audit.get("source_terms", []) or [])
+    try:
+        move = chess.Move.from_uci(move_uci)
+    except ValueError:
+        return sorted(terms)
+    if move not in board.legal_moves:
+        return sorted(terms)
+
+    piece = board.piece_at(move.from_square)
+    wk_before = next(iter(board.pieces(chess.KING, chess.WHITE)), None)
+    bk_before = next(iter(board.pieces(chess.KING, chess.BLACK)), None)
+    wr_before = next(iter(board.pieces(chess.ROOK, chess.WHITE)), None)
+    from_file = chess.square_file(move.from_square)
+    to_file = chess.square_file(move.to_square)
+    from_rank = chess.square_rank(move.from_square)
+    to_rank = chess.square_rank(move.to_square)
+
+    if piece == chess.Piece(chess.ROOK, chess.WHITE):
+        terms.add("post_break_rook_move")
+        if from_file == to_file and from_rank != to_rank:
+            terms.add("post_break_rook_vertical_transfer")
+        if from_rank == to_rank and from_file != to_file:
+            terms.add("post_break_rook_horizontal_transfer")
+        if to_file in {0, 7}:
+            terms.add("post_break_rook_to_edge_file")
+        if to_rank in {0, 7}:
+            terms.add("post_break_rook_to_edge_rank")
+        if bk_before is not None:
+            destination_enemy_distance = chess.square_distance(move.to_square, bk_before)
+            if destination_enemy_distance > 1:
+                terms.add("post_break_rook_destination_not_adjacent_enemy")
+            if destination_enemy_distance >= 3:
+                terms.add("post_break_rook_destination_far_from_enemy")
+    elif piece == chess.Piece(chess.KING, chess.WHITE):
+        terms.add("post_break_king_move")
+        if bk_before is not None:
+            before = chess.square_distance(move.from_square, bk_before)
+            after = chess.square_distance(move.to_square, bk_before)
+            if after < before:
+                terms.add("post_break_king_moves_toward_enemy")
+            elif after == before:
+                terms.add("post_break_king_keeps_enemy_distance")
+        if wr_before is not None:
+            before = chess.square_distance(move.from_square, wr_before)
+            after = chess.square_distance(move.to_square, wr_before)
+            if after < before:
+                terms.add("post_break_king_moves_toward_rook_support")
+            elif after == before:
+                terms.add("post_break_king_keeps_rook_support_distance")
+
+    after_board = board.copy(stack=False)
+    after_board.push(move)
+    if after_board.is_check():
+        terms.add("post_break_check_after_move")
+    if after_board.is_checkmate():
+        terms.add("post_break_immediate_mate")
+
+    current_box = audit.get("current_box_area")
+    post_box = audit.get("post_box_area")
+    if current_box is not None and post_box is not None:
+        if post_box < current_box:
+            terms.add("post_break_box_decreases")
+        elif post_box == current_box:
+            terms.add("post_break_box_unchanged")
+        else:
+            terms.add("post_break_box_increases")
+    current_edge = audit.get("current_enemy_edge_distance")
+    post_edge = audit.get("post_enemy_edge_distance")
+    if current_edge is not None and post_edge is not None:
+        if post_edge < current_edge:
+            terms.add("post_break_enemy_edge_distance_decreases")
+        elif post_edge == current_edge:
+            terms.add("post_break_enemy_edge_distance_unchanged")
+        else:
+            terms.add("post_break_enemy_edge_distance_increases")
+
+    return sorted(terms)
+
+
 def _candidate_horizon_summary(
     candidates: list[dict[str, Any]],
     horizons: list[int],
@@ -260,6 +345,9 @@ def _candidate_horizon_summary(
     converters_by_horizon: dict[str, list[str]] = {}
     fastest_horizon_by_move: dict[str, int] = {}
     selected_break_move_outcomes: dict[str, Any] | None = None
+    term_outcomes_by_horizon: dict[str, dict[str, dict[str, int]]] = {}
+    common_converter_terms_by_horizon: dict[str, list[str]] = {}
+    distinctive_converter_terms_by_horizon: dict[str, list[str]] = {}
 
     for horizon in horizons:
         key = str(horizon)
@@ -268,6 +356,32 @@ def _candidate_horizon_summary(
             for candidate in candidates
             if candidate.get("outcomes_by_horizon", {}).get(key) == "mate"
         )
+        converter_term_sets = [
+            set(candidate.get("candidate_terms", []) or [])
+            for candidate in candidates
+            if candidate.get("outcomes_by_horizon", {}).get(key) == "mate"
+        ]
+        non_converter_terms = set().union(*[
+            set(candidate.get("candidate_terms", []) or [])
+            for candidate in candidates
+            if candidate.get("outcomes_by_horizon", {}).get(key) != "mate"
+        ]) if candidates else set()
+        if converter_term_sets:
+            common_terms = set.intersection(*converter_term_sets)
+            converter_union = set.union(*converter_term_sets)
+        else:
+            common_terms = set()
+            converter_union = set()
+        common_converter_terms_by_horizon[key] = sorted(common_terms)
+        distinctive_converter_terms_by_horizon[key] = sorted(converter_union - non_converter_terms)
+
+        term_outcomes: dict[str, dict[str, int]] = {}
+        for candidate in candidates:
+            outcome = str(candidate.get("outcomes_by_horizon", {}).get(key) or "unknown")
+            for term in candidate.get("candidate_terms", []) or []:
+                term_counts = term_outcomes.setdefault(str(term), {})
+                term_counts[outcome] = int(term_counts.get(outcome, 0) or 0) + 1
+        term_outcomes_by_horizon[key] = dict(sorted(term_outcomes.items()))
 
     for candidate in candidates:
         move_uci = str(candidate.get("move"))
@@ -296,7 +410,53 @@ def _candidate_horizon_summary(
         "fastest_mating_horizon_by_move": dict(sorted(fastest_horizon_by_move.items())),
         "fastest_converting_moves": fastest_converting_moves,
         "selected_break_move_outcomes": selected_break_move_outcomes,
+        "common_converter_terms_by_horizon": common_converter_terms_by_horizon,
+        "distinctive_converter_terms_by_horizon": distinctive_converter_terms_by_horizon,
+        "term_outcomes_by_horizon": term_outcomes_by_horizon,
     }
+
+
+def _augment_existing_audit(payload: dict[str, Any]) -> dict[str, Any]:
+    """Add candidate term summaries to an existing audit JSON without replaying playouts."""
+    state_fen = payload.get("first_stagnation_breaker_state")
+    if not isinstance(state_fen, str):
+        raise ValueError("Existing audit has no first_stagnation_breaker_state")
+    board = chess.Board(state_fen)
+    horizons = [int(item) for item in payload.get("horizons", [])]
+    candidates = list(payload.get("licensed_loop_breaking_moves") or [])
+    for candidate in candidates:
+        if not isinstance(candidate, dict):
+            continue
+        move_uci = str(candidate.get("move"))
+        audit = {
+            "source_terms": list(candidate.get("source_terms") or []),
+            "current_box_area": candidate.get("current_box_area"),
+            "post_box_area": candidate.get("post_box_area"),
+            "current_enemy_edge_distance": candidate.get("current_enemy_edge_distance"),
+            "post_enemy_edge_distance": candidate.get("post_enemy_edge_distance"),
+        }
+        if candidate.get("candidate_terms"):
+            continue
+        candidate["candidate_terms"] = _post_break_candidate_terms(board, move_uci, audit)
+    payload["licensed_loop_breaking_moves"] = candidates
+    selected_move = ""
+    selected_outcomes = payload.get("selected_break_move_outcomes")
+    if isinstance(selected_outcomes, dict):
+        selected_move = str(selected_outcomes.get("move") or "")
+    if not selected_move:
+        first_event = payload.get("first_stagnation_breaker_event")
+        if isinstance(first_event, dict):
+            selected_move = str(first_event.get("move") or "")
+    payload.update(
+        _candidate_horizon_summary(
+            candidates,
+            horizons,
+            selected_break_move=selected_move,
+        )
+    )
+    payload["schema_version"] = "krk_post_break_continuation_audit.v1"
+    payload["augmented_with_candidate_terms"] = True
+    return payload
 
 
 def _run_candidate(
@@ -365,9 +525,11 @@ def _run_candidate(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Audit post-stagnation-break KRK continuation")
-    parser.add_argument("--trace", type=Path, required=True,
+    parser.add_argument("--trace", type=Path, default=None,
                         help="Target failure trace JSON/JSONL containing visible_stagnation_breaker_license")
-    parser.add_argument("--topology", type=Path, required=True)
+    parser.add_argument("--topology", type=Path, default=None)
+    parser.add_argument("--augment-existing-audit", type=Path, default=None,
+                        help="Existing audit JSON to enrich with candidate term summaries without replaying")
     parser.add_argument("--label", default="fence_established")
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--horizons", default="21,30,40",
@@ -391,6 +553,31 @@ def main() -> None:
     parser.add_argument("--steps-output", type=Path, default=None)
     parser.add_argument("--json-output", type=Path, default=None)
     args = parser.parse_args()
+
+    if args.augment_existing_audit is not None:
+        payload = json.loads(args.augment_existing_audit.read_text(encoding="utf-8"))
+        if not isinstance(payload, dict):
+            raise ValueError("--augment-existing-audit must point to a JSON object")
+        output = _augment_existing_audit(payload)
+        output_path = args.json_output or args.augment_existing_audit
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(json.dumps(output, indent=2) + "\n", encoding="utf-8")
+        print(json.dumps({
+            "first_stagnation_breaker_state": output["first_stagnation_breaker_state"],
+            "candidate_count": len(output.get("licensed_loop_breaking_moves", []) or []),
+            "loop_breaking_moves_that_convert_by_horizon": output.get(
+                "loop_breaking_moves_that_convert_by_horizon", {}
+            ),
+            "selected_break_move_outcomes": output.get("selected_break_move_outcomes"),
+            "common_converter_terms_by_horizon": output.get("common_converter_terms_by_horizon", {}),
+            "distinctive_converter_terms_by_horizon": output.get(
+                "distinctive_converter_terms_by_horizon", {}
+            ),
+        }, indent=2))
+        return
+
+    if args.trace is None or args.topology is None:
+        raise ValueError("--trace and --topology are required unless --augment-existing-audit is used")
 
     horizons = [int(item) for item in args.horizons.split(",") if item.strip()]
     if args.include_horizon_60 and 60 not in horizons:
@@ -490,9 +677,11 @@ def main() -> None:
                 )
         if any(outcome == "mate" for outcome in outcomes_by_horizon.values()):
             loop_breaking_moves_that_convert.append(move_uci)
+        candidate_terms = _post_break_candidate_terms(board, move_uci, audit)
         candidates.append({
             "move": move_uci,
             "source_terms": list(audit.get("source_terms") or []),
+            "candidate_terms": candidate_terms,
             "outcomes_by_horizon": outcomes_by_horizon,
             "details_by_horizon": details_by_horizon,
         })
@@ -548,6 +737,8 @@ def main() -> None:
         "loop_breaking_moves_that_convert": output["loop_breaking_moves_that_convert"],
         "loop_breaking_moves_that_convert_by_horizon": output["loop_breaking_moves_that_convert_by_horizon"],
         "selected_break_move_outcomes": output["selected_break_move_outcomes"],
+        "common_converter_terms_by_horizon": output["common_converter_terms_by_horizon"],
+        "distinctive_converter_terms_by_horizon": output["distinctive_converter_terms_by_horizon"],
         "outcome_counts_by_horizon": output["outcome_counts_by_horizon"],
     }, indent=2))
 

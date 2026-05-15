@@ -1697,3 +1697,104 @@ Good loop-breaking moves exist, but the current visible loop-breaker does not ye
 The next safe work should be non-causal post-break move-shape classification and then a narrow visible post-drive/post-break continuation role if the terms separate fast converters cleanly.
 Do not add broad score bonuses or train a generic convert-from-fence skill yet.
 ```
+
+## Slice 51: Replay-Free Post-Break Term Augmentation
+
+The post-break audit can now enrich an existing full audit artifact without replaying playouts:
+
+```text
+flag: --augment-existing-audit
+input: stage6_post_break_audit.json
+output: stage6_post_break_audit_augmented.json
+```
+
+This adds:
+
+```text
+candidate_terms
+loop_breaking_moves_that_convert_by_horizon
+fastest_mating_horizon_by_move
+fastest_converting_moves
+selected_break_move_outcomes
+common_converter_terms_by_horizon
+distinctive_converter_terms_by_horizon
+term_outcomes_by_horizon
+```
+
+Augmented Stage 6 post-break result:
+
+```text
+artifact: snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_strict/stage6_post_break_audit_augmented.json
+first stagnation-breaker state:
+  5k2/8/8/K7/7R/8/8/8 w - - 18 10
+candidate count: 18
+```
+
+Converters by horizon:
+
+```text
+21 plies:
+  a5b4
+  a5b5
+  a5b6
+
+40 plies:
+  a5a6
+  a5b4
+  a5b5
+  a5b6
+  h4h3
+  h4h5
+  h4h7
+
+60 plies:
+  17/18 candidates convert
+```
+
+The runtime-selected loop break remains horizon-sensitive:
+
+```text
+selected break: h4f4
+21 plies: max_plies
+40 plies: max_plies
+60 plies: mate
+```
+
+Fast-converter visible terms:
+
+```text
+21-ply converters all include:
+  candidate_is_king_move
+  post_break_king_move
+  post_break_king_moves_toward_enemy
+  post_break_king_moves_toward_rook_support
+  box_area_not_increased_after_move
+  enemy_edge_distance_not_increased_after_move
+  rook_safe_after_move
+  no_draw_after_move
+```
+
+Distinctive terms for fast converters:
+
+```text
+post_break_king_moves_toward_enemy
+post_break_king_moves_toward_rook_support
+```
+
+Interpretation:
+
+```text
+Stage 6 now has a clean non-causal target for the next possible visible role:
+  post-drive/post-break king-support continuation.
+
+The candidate role should not be a broad loop-break bonus.
+It should be narrow:
+  loop was detected / recently broken
+  candidate is a king move
+  king moves toward enemy king
+  king moves toward rook support
+  box/confinement is not released
+  rook remains safe
+
+This is the first plausible causal follow-up, but it should still be implemented as an opt-in visible role/move-shape license and validated against the 200-sample Stage 6 diagnostic before retraining.
+```

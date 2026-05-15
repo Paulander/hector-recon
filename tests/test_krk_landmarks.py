@@ -233,3 +233,89 @@ def test_late_krk_landmark_pass_criteria_include_conversion():
 
     assert criteria.min_mate_playout_rate == 0.65
     assert criteria.max_max_plies_rate == 0.25
+
+
+def test_post_break_candidate_terms_identify_fast_king_support_move():
+    sys.modules.setdefault("test_krk_landmark_progress", _landmark_eval)
+    module_path = Path(__file__).resolve().parents[1] / "scripts" / "audit_krk_post_break_continuation.py"
+    spec = importlib.util.spec_from_file_location("audit_krk_post_break_for_terms", module_path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec is not None and spec.loader is not None
+    sys.modules["audit_krk_post_break_for_terms"] = module
+    spec.loader.exec_module(module)
+
+    board = chess.Board("5k2/8/8/K7/7R/8/8/8 w - - 18 10")
+    audit = {
+        "source_terms": ["escapes_rook_oscillation_pair", "rook_safe_after_move"],
+        "current_box_area": 24,
+        "post_box_area": 24,
+        "current_enemy_edge_distance": 0,
+        "post_enemy_edge_distance": 0,
+    }
+
+    terms = module._post_break_candidate_terms(board, "a5b6", audit)
+
+    assert "post_break_king_move" in terms
+    assert "post_break_king_moves_toward_enemy" in terms
+    assert "post_break_king_moves_toward_rook_support" in terms
+    assert "post_break_box_unchanged" in terms
+
+
+def test_candidate_horizon_summary_cross_tabs_converter_terms():
+    sys.modules.setdefault("test_krk_landmark_progress", _landmark_eval)
+    module_path = Path(__file__).resolve().parents[1] / "scripts" / "audit_krk_post_break_continuation.py"
+    spec = importlib.util.spec_from_file_location("audit_krk_post_break_for_summary", module_path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec is not None and spec.loader is not None
+    sys.modules["audit_krk_post_break_for_summary"] = module
+    spec.loader.exec_module(module)
+
+    candidates = [
+        {
+            "move": "a5b6",
+            "candidate_terms": ["post_break_king_move", "post_break_king_moves_toward_enemy"],
+            "outcomes_by_horizon": {"21": "mate", "40": "mate"},
+        },
+        {
+            "move": "h4f4",
+            "candidate_terms": ["post_break_rook_move"],
+            "outcomes_by_horizon": {"21": "max_plies", "40": "mate"},
+        },
+    ]
+
+    summary = module._candidate_horizon_summary(candidates, [21, 40], selected_break_move="h4f4")
+
+    assert summary["loop_breaking_moves_that_convert_by_horizon"]["21"] == ["a5b6"]
+    assert summary["fastest_mating_horizon_by_move"] == {"a5b6": 21, "h4f4": 40}
+    assert summary["selected_break_move_outcomes"]["fastest_mating_horizon"] == 40
+    assert summary["term_outcomes_by_horizon"]["21"]["post_break_king_move"]["mate"] == 1
+
+
+def test_augment_existing_post_break_audit_adds_candidate_terms():
+    sys.modules.setdefault("test_krk_landmark_progress", _landmark_eval)
+    module_path = Path(__file__).resolve().parents[1] / "scripts" / "audit_krk_post_break_continuation.py"
+    spec = importlib.util.spec_from_file_location("audit_krk_post_break_for_augment", module_path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec is not None and spec.loader is not None
+    sys.modules["audit_krk_post_break_for_augment"] = module
+    spec.loader.exec_module(module)
+
+    payload = {
+        "first_stagnation_breaker_state": "5k2/8/8/K7/7R/8/8/8 w - - 18 10",
+        "first_stagnation_breaker_event": {"move": "h4f4"},
+        "horizons": [21],
+        "licensed_loop_breaking_moves": [
+            {
+                "move": "a5b6",
+                "source_terms": ["rook_safe_after_move"],
+                "outcomes_by_horizon": {"21": "mate"},
+            }
+        ],
+    }
+
+    output = module._augment_existing_audit(payload)
+
+    candidate = output["licensed_loop_breaking_moves"][0]
+    assert "post_break_king_moves_toward_enemy" in candidate["candidate_terms"]
+    assert output["augmented_with_candidate_terms"] is True
+    assert output["loop_breaking_moves_that_convert_by_horizon"]["21"] == ["a5b6"]
