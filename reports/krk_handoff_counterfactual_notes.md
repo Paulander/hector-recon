@@ -3009,3 +3009,83 @@ The next executable probe can warm up only the candidate-local drive_to_edge ove
 Visible role-support edges remain observe-only because the current topology represents role-provider support through visible role SCRIPT payloads rather than explicit provider-support edges.
 Frozen base providers are excluded from the M3 whitelist.
 ```
+
+## Slice 67: Candidate-Local M3 Probe And Role-Provider Support Proposal
+
+Added non-causal M3 feasibility probe:
+
+```text
+scripts/probe_candidate_local_m3_warmup.py
+```
+
+Generated artifacts:
+
+```text
+reports/structural_candidates/stage7_box_shrink_candidate_local_m3_probe.json
+reports/structural_candidates/stage7_box_shrink_candidate_local_m3_probe.md
+```
+
+Probe result:
+
+```text
+target_role: krk.box_shrink_to_drive_repair
+target_provider: krk.drive_to_edge
+probe_result: blocked_no_candidate_provider_eligibility
+recommended_next_action: compile_visible_role_provider_support_or_owner_eligibility_before_m3
+
+role_contract_met: 5
+role_met_provider_not_selected: 5
+role_met_selected:krk.stage0_basin: 5
+candidate_edge_eligibility_events: 0
+```
+
+Interpretation:
+
+```text
+The role is visible and confirms, but the provider never owns the continuation.
+Candidate-local drive_to_edge edges therefore do not fire, so M3 has no eligible candidate-local edge activity to warm up.
+Running a weight update now would be fake progress.
+```
+
+Added non-causal role-provider support proposal generator:
+
+```text
+scripts/propose_role_provider_support_edges.py
+```
+
+Generated artifacts:
+
+```text
+reports/structural_candidates/stage7_box_shrink_role_provider_support_proposal.json
+reports/structural_candidates/stage7_box_shrink_role_provider_support_proposal.md
+```
+
+Proposed sandbox edge:
+
+```text
+script.krk.successor.box_shrink_to_drive_repair_affordance
+  -- SUB / initial_weight=0.0 / trainable=true -->
+skill.krk.drive_to_edge
+```
+
+Proposal constraints:
+
+```text
+causal_status: non_causal
+proposal_status: sandbox_ready
+do_not_insert_into_default_topology
+do_not_train_stage8
+do_not_promote_stage7_without_guardrails
+do_not_make_probe_or_candidate_causal
+```
+
+This is the first concrete handoff from:
+
+```text
+visible monitor evidence
+  -> structural candidate
+  -> bounded topology-vs-weight diagnosis
+  -> explicit sandbox support-edge proposal
+```
+
+It keeps the external lab as sandbox/evaluator only; the proposed edge is sourced by visible SCRIPT evidence and remains non-causal until explicitly sandbox-compiled and guardrail validated.

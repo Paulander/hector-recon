@@ -104,6 +104,26 @@ assert _candidate_m3_warmup_plan.__spec__ is not None
 assert _candidate_m3_warmup_plan.__spec__.loader is not None
 _candidate_m3_warmup_plan.__spec__.loader.exec_module(_candidate_m3_warmup_plan)
 
+_candidate_m3_warmup_probe = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "probe_candidate_local_m3_warmup",
+        Path(__file__).resolve().parents[1] / "scripts" / "probe_candidate_local_m3_warmup.py",
+    )
+)
+assert _candidate_m3_warmup_probe.__spec__ is not None
+assert _candidate_m3_warmup_probe.__spec__.loader is not None
+_candidate_m3_warmup_probe.__spec__.loader.exec_module(_candidate_m3_warmup_probe)
+
+_role_provider_support = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "propose_role_provider_support_edges",
+        Path(__file__).resolve().parents[1] / "scripts" / "propose_role_provider_support_edges.py",
+    )
+)
+assert _role_provider_support.__spec__ is not None
+assert _role_provider_support.__spec__.loader is not None
+_role_provider_support.__spec__.loader.exec_module(_role_provider_support)
+
 
 def test_engine_selector_preserves_pragmatic_default_and_exposes_formal():
     pragmatic = create_recon_engine(Graph())
@@ -927,6 +947,165 @@ def test_candidate_local_m3_warmup_plan_whitelists_only_overlay_provider_edges(t
         "SUB",
         False,
     ) in role_support
+
+
+def test_candidate_local_m3_probe_blocks_when_role_fires_but_provider_never_selected(tmp_path):
+    warmup_plan_path = tmp_path / "warmup_plan.json"
+    diagnostic_path = tmp_path / "diagnostic.json"
+    warmup_plan_path.write_text(
+        json.dumps({
+            "schema_version": "candidate_local_m3_warmup_plan.v1",
+            "target_role": "krk.box_shrink_to_drive_repair",
+            "target_providers": ["krk.drive_to_edge"],
+            "eligible_edge_whitelist": [
+                {"src": "skill.krk.drive_to_edge", "dst": "leg_34", "type": "SUB", "reason": "candidate_provider_leg_selection"},
+                {"src": "precond_34", "dst": "act_script_34", "type": "POR", "reason": "candidate_provider_triplet_temporal"},
+            ],
+            "training_limits": {
+                "eta_eff": 0.02,
+                "max_delta_episode": 0.25,
+                "m4_consolidation_enabled": False,
+                "topology_mutation_enabled": False,
+                "protected_provider_mutation_enabled": False,
+            },
+            "hard_blocks": ["do_not_promote_stage7"],
+        }),
+        encoding="utf-8",
+    )
+    diagnostic_path.write_text(
+        json.dumps({
+            "handoff_packets": [
+                {
+                    "packet_id": "packet.1",
+                    "phase": "post_opponent_reply",
+                    "evidence_terms": {
+                        "fen": "8/8/8/8/R7/8/2k1K3/8 w - - 0 1",
+                        "successor_selected_skill": "krk.stage0_basin",
+                        "playout_result": "max_plies",
+                        "visible_successor_provider_licenses": {
+                            "krk.drive_to_edge": {
+                                "krk.box_shrink_to_drive_repair": {
+                                    "contract_met": True,
+                                    "source_terms": ["box_shrink_drive_repair_available"],
+                                },
+                            },
+                        },
+                    },
+                }
+            ],
+        }),
+        encoding="utf-8",
+    )
+
+    probe = _candidate_m3_warmup_probe.probe_candidate_local_m3_warmup(
+        warmup_plan_path=warmup_plan_path,
+        diagnostic_path=diagnostic_path,
+    )
+
+    assert probe["schema_version"] == "candidate_local_m3_warmup_probe.v1"
+    assert probe["causal_status"] == "non_causal"
+    assert probe["probe_result"] == "blocked_no_candidate_provider_eligibility"
+    assert probe["recommended_next_action"] == "compile_visible_role_provider_support_or_owner_eligibility_before_m3"
+    assert probe["counts"]["role_contract_met"] == 1
+    assert probe["counts"]["role_met_provider_not_selected"] == 1
+    assert probe["candidate_edge_eligibility_events"] == 0
+    assert probe["edge_delta_preview"] == []
+    assert probe["safety"]["m4_consolidation_enabled"] is False
+    assert probe["safety"]["topology_mutation_enabled"] is False
+
+
+def test_candidate_local_m3_probe_previews_bounded_edge_deltas_when_provider_fires(tmp_path):
+    warmup_plan_path = tmp_path / "warmup_plan.json"
+    diagnostic_path = tmp_path / "diagnostic.json"
+    warmup_plan_path.write_text(
+        json.dumps({
+            "target_role": "krk.box_shrink_to_drive_repair",
+            "target_providers": ["krk.drive_to_edge"],
+            "eligible_edge_whitelist": [
+                {"src": "skill.krk.drive_to_edge", "dst": "leg_34", "type": "SUB", "reason": "candidate_provider_leg_selection"},
+            ],
+            "training_limits": {"eta_eff": 0.5, "max_delta_episode": 0.25},
+        }),
+        encoding="utf-8",
+    )
+    diagnostic_path.write_text(
+        json.dumps({
+            "handoff_packets": [
+                {
+                    "phase": "post_opponent_reply",
+                    "evidence_terms": {
+                        "successor_selected_skill": "krk.drive_to_edge",
+                        "playout_result": "mate",
+                        "visible_successor_provider_licenses": {
+                            "krk.drive_to_edge": {
+                                "krk.box_shrink_to_drive_repair": {"contract_met": True},
+                            },
+                        },
+                    },
+                }
+            ],
+        }),
+        encoding="utf-8",
+    )
+
+    probe = _candidate_m3_warmup_probe.probe_candidate_local_m3_warmup(
+        warmup_plan_path=warmup_plan_path,
+        diagnostic_path=diagnostic_path,
+    )
+
+    assert probe["probe_result"] == "candidate_local_m3_warmup_feasible"
+    assert probe["candidate_edge_eligibility_events"] == 1
+    assert probe["edge_delta_preview"][0]["preview_delta_sum"] == 0.25
+
+
+def test_role_provider_support_proposal_remains_non_causal_and_sandbox_only(tmp_path):
+    topology_path = tmp_path / "topology.json"
+    probe_path = tmp_path / "probe.json"
+    topology_path.write_text(
+        json.dumps({
+            "nodes": {
+                "script.krk.successor.box_shrink_to_drive_repair_affordance": {
+                    "type": "SCRIPT",
+                    "meta": {"role_id": "krk.box_shrink_to_drive_repair"},
+                },
+                "terminal.krk.successor.box_shrink_to_drive_repair_marker": {
+                    "type": "TERMINAL",
+                    "meta": {"role_id": "krk.box_shrink_to_drive_repair"},
+                },
+                "skill.krk.drive_to_edge": {
+                    "type": "SCRIPT",
+                    "meta": {"skill_id": "krk.drive_to_edge"},
+                },
+            },
+            "edges": [],
+        }),
+        encoding="utf-8",
+    )
+    probe_path.write_text(
+        json.dumps({
+            "probe_result": "blocked_no_candidate_provider_eligibility",
+            "target_role": "krk.box_shrink_to_drive_repair",
+            "target_provider": "krk.drive_to_edge",
+        }),
+        encoding="utf-8",
+    )
+
+    proposal = _role_provider_support.propose_role_provider_support_edges(
+        topology_path=topology_path,
+        m3_probe_path=probe_path,
+    )
+
+    assert proposal["schema_version"] == "role_provider_support_proposal.v1"
+    assert proposal["causal_status"] == "non_causal"
+    assert proposal["proposal_status"] == "sandbox_ready"
+    assert proposal["proposed_edge_count"] == 1
+    edge = proposal["proposed_edges"][0]
+    assert edge["src"] == "script.krk.successor.box_shrink_to_drive_repair_affordance"
+    assert edge["dst"] == "skill.krk.drive_to_edge"
+    assert edge["type"] == "SUB"
+    assert edge["initial_weight"] == 0.0
+    assert edge["causal_status"] == "non_causal_until_sandbox_compiled"
+    assert "do_not_insert_into_default_topology" in proposal["hard_blocks"]
 
 
 def test_spawn_point_promoted_trial_materializes_formal_triplet_pairs():

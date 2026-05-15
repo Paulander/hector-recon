@@ -1,0 +1,42 @@
+{
+  "schema_version": "role_provider_support_proposal.v1",
+  "causal_status": "non_causal",
+  "topology_source": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_drive_repair_sandbox/topology/krk_entry_topology_refreshed.json",
+  "m3_probe_source": "reports/structural_candidates/stage7_box_shrink_candidate_local_m3_probe.json",
+  "target_role": "krk.box_shrink_to_drive_repair",
+  "target_provider": "krk.drive_to_edge",
+  "source_probe_result": "blocked_no_candidate_provider_eligibility",
+  "proposal_status": "sandbox_ready",
+  "candidate_id": "cand.krk.box_shrink_to_drive_repair.visible_provider_support.v1",
+  "proposed_edges": [
+    {
+      "src": "script.krk.successor.box_shrink_to_drive_repair_affordance",
+      "dst": "skill.krk.drive_to_edge",
+      "type": "SUB",
+      "initial_weight": 0.0,
+      "trainable": true,
+      "edge_kind": "visible_role_provider_support",
+      "causal_status": "non_causal_until_sandbox_compiled",
+      "source_terms": [
+        "role_contract_met_provider_not_selected",
+        "candidate_edges_not_firing"
+      ],
+      "activation_rule": "role_script_confirmation_may_support_provider_skill_after_sandbox_promotion"
+    }
+  ],
+  "proposed_edge_count": 1,
+  "required_validation": [
+    "compile_sandbox_topology_with_support_edges",
+    "stage7_target_smoke",
+    "stage6_drive_guardrail",
+    "stage5_fence_guardrail",
+    "stage1_backchain_guardrail",
+    "m1_m4_preservation"
+  ],
+  "hard_blocks": [
+    "do_not_insert_into_default_topology",
+    "do_not_train_stage8",
+    "do_not_promote_stage7_without_guardrails",
+    "do_not_make_probe_or_candidate_causal"
+  ]
+}
