@@ -3928,3 +3928,97 @@ manifest: reports/structural_candidates/stage8_opposition_overlay_manifest.json
 Architectural note: Stage 8 is useful as an overlay candidate, but should not
 be treated as a globally promoted KRK base until the Stage 7/Stage 4 guardrail
 debt is resolved or explicitly scoped.
+
+## Stage 7 current guardrail debt retry
+
+Status: `not solved` on the current harder guardrail profile.
+
+After Stage 8 exposed Stage 7 guardrail debt, I rechecked Stage 7 against the
+current profile:
+
+```text
+label: box_shrink
+source stages: Box_Small, Box_Medium, Edge_Fence_Deep
+horizon: 40 / adversarial Black
+baseline artifact: reports/structural_candidates/stage7_current_base_25_h40_compare.json
+baseline result: 12/25 mate, 13/25 max_plies, 28 shadows
+```
+
+I added a scoped, default-off visible repair provider:
+
+```text
+terminal.krk.stage7_drive_repair
+role: krk.box_shrink_drive_repair_move
+enabled by: --enable-stage7-drive-repair
+scope: post-reply only, active_landmark_label == box_shrink
+causal status: sandbox_opt_in
+```
+
+The terminal only fires when visible context says the box-shrink attempt broke
+or failed to preserve the drive/fence context:
+
+```text
+box_shrink_drive_repair_available
+enemy_king_not_at_edge
+rook_safe
+rook_safe_after_move
+rook_safe_after_worst_reply
+no_draw_after_worst_reply
+safe check/cut repair or box-progress move shape
+```
+
+This repair is not a hidden router: it emits an ordinary visible terminal
+suggestion with `direct_request = false` and source terms in
+`visible_stage7_drive_repair_license`. It is also gated to post-reply
+continuation so it cannot hijack the first local Stage 7 move.
+
+Result:
+
+```text
+artifact: reports/structural_candidates/stage7_drive_repair_on_25_h40.json
+result: 15/25 mate, 10/25 max_plies, 23 shadows
+delta vs baseline: +3 mates, -5 shadows
+```
+
+I then tried the Plasticity Balance Protocol step: retrain a guarded Stage 7
+overlay from the validated Stage 6 provider with
+`--prevent-cross-label-actuator-merge`:
+
+```text
+learner: snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/baseline/final_learner.pkl
+overlay topology: snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_sandbox.json
+```
+
+The guarded retrain produced explicit `box_shrink` overlay actuators, but did
+not improve conversion on the harder profile:
+
+```text
+artifact: reports/structural_candidates/stage7_guarded_retry_target_25_h40.json
+result: 15/25 mate, 10/25 max_plies, 23 shadows
+```
+
+An 80-ply check did not change the result:
+
+```text
+artifact: reports/structural_candidates/stage7_guarded_retry_target_25_h80.json
+result: 15/25 mate, 10/25 max_plies, 23 shadows
+```
+
+Interpretation:
+
+```text
+Stage 7 old scoped profile remains historically solved, but the current
+Box_Small/Box_Medium/Edge_Fence_Deep guardrail profile is not solved.
+The first visible repair reduced failures but plateaued.
+The guarded weight retrain did not move the plateau.
+The remaining failures are not a simple horizon-40 artifact.
+```
+
+Next candidate source should be the remaining Stage 7 max-plies families from
+`stage7_guarded_retry_target_25_h80.json`, not another broad score bonus.
+Likely diagnosis to verify before more code:
+
+```text
+post-drive-repair continuation gap / loop recurrence
+or box_shrink reward distribution mismatch on Box_Small/Box_Medium/Edge_Fence_Deep
+```

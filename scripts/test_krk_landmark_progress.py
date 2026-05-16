@@ -486,6 +486,12 @@ def _suggestion_role_trace(meta: dict) -> dict:
         "visible_stage7_king_tempo_license": dict(
             meta.get("visible_stage7_king_tempo_license", {}) or {}
         ),
+        "visible_stage7_drive_repair_bonus": float(
+            meta.get("visible_stage7_drive_repair_bonus", 0.0) or 0.0
+        ),
+        "visible_stage7_drive_repair_license": dict(
+            meta.get("visible_stage7_drive_repair_license", {}) or {}
+        ),
         "visible_stage7_post_king_tempo_bonus": float(
             meta.get("visible_stage7_post_king_tempo_bonus", 0.0) or 0.0
         ),
@@ -775,6 +781,12 @@ def _successor_contract_audit(
         ),
         "visible_stage7_king_tempo_license": dict(
             selected_group.get("visible_stage7_king_tempo_license", {}) or {}
+        ),
+        "visible_stage7_drive_repair_bonus": float(
+            selected_group.get("visible_stage7_drive_repair_bonus", 0.0) or 0.0
+        ),
+        "visible_stage7_drive_repair_license": dict(
+            selected_group.get("visible_stage7_drive_repair_license", {}) or {}
         ),
         "visible_stage7_post_king_tempo_bonus": float(
             selected_group.get("visible_stage7_post_king_tempo_bonus", 0.0) or 0.0
@@ -1118,6 +1130,8 @@ def choose_move_with_engine(
     post_break_continuation_bonus: float = 0.0,
     stage7_king_tempo_enabled: bool = False,
     stage7_king_tempo_score: float = 25.0,
+    stage7_drive_repair_enabled: bool = False,
+    stage7_drive_repair_score: float = 28.0,
     stage7_post_king_tempo_enabled: bool = False,
     stage7_post_king_tempo_score: float = 30.0,
     stage7_provider_scope_label: str = "box_shrink",
@@ -1149,6 +1163,8 @@ def choose_move_with_engine(
         post_break_continuation_bonus=post_break_continuation_bonus,
         stage7_king_tempo_enabled=stage7_king_tempo_enabled,
         stage7_king_tempo_score=stage7_king_tempo_score,
+        stage7_drive_repair_enabled=stage7_drive_repair_enabled,
+        stage7_drive_repair_score=stage7_drive_repair_score,
         stage7_post_king_tempo_enabled=stage7_post_king_tempo_enabled,
         stage7_post_king_tempo_score=stage7_post_king_tempo_score,
         stage7_provider_scope_label=stage7_provider_scope_label,
@@ -1182,6 +1198,8 @@ def choose_move_details(
     post_break_continuation_bonus: float = 0.0,
     stage7_king_tempo_enabled: bool = False,
     stage7_king_tempo_score: float = 25.0,
+    stage7_drive_repair_enabled: bool = False,
+    stage7_drive_repair_score: float = 28.0,
     stage7_post_king_tempo_enabled: bool = False,
     stage7_post_king_tempo_score: float = 30.0,
     stage7_provider_scope_label: str = "box_shrink",
@@ -1189,6 +1207,8 @@ def choose_move_details(
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
     stage7_king_tempo_already_used: bool = False,
+    stage7_drive_repair_already_used: bool = False,
+    stage7_drive_repair_post_reply_context: bool = False,
     stage7_post_king_tempo_already_used: bool = False,
     perf_profile: dict | None = None,
     enable_diagnostic_caches: bool = False,
@@ -1218,6 +1238,8 @@ def choose_move_details(
             post_break_continuation_bonus=post_break_continuation_bonus,
             stage7_king_tempo_enabled=stage7_king_tempo_enabled,
             stage7_king_tempo_score=stage7_king_tempo_score,
+            stage7_drive_repair_enabled=stage7_drive_repair_enabled,
+            stage7_drive_repair_score=stage7_drive_repair_score,
             stage7_post_king_tempo_enabled=stage7_post_king_tempo_enabled,
             stage7_post_king_tempo_score=stage7_post_king_tempo_score,
             stage7_provider_scope_label=stage7_provider_scope_label,
@@ -1225,6 +1247,8 @@ def choose_move_details(
             early_stop_stable_suggestions=early_stop_stable_suggestions,
             forced_successor_skill=forced_successor_skill,
             stage7_king_tempo_already_used=stage7_king_tempo_already_used,
+            stage7_drive_repair_already_used=stage7_drive_repair_already_used,
+            stage7_drive_repair_post_reply_context=stage7_drive_repair_post_reply_context,
             stage7_post_king_tempo_already_used=stage7_post_king_tempo_already_used,
             perf_profile=perf_profile,
             enable_diagnostic_caches=enable_diagnostic_caches,
@@ -1255,6 +1279,8 @@ def _choose_move_details_impl(
     post_break_continuation_bonus: float = 0.0,
     stage7_king_tempo_enabled: bool = False,
     stage7_king_tempo_score: float = 25.0,
+    stage7_drive_repair_enabled: bool = False,
+    stage7_drive_repair_score: float = 28.0,
     stage7_post_king_tempo_enabled: bool = False,
     stage7_post_king_tempo_score: float = 30.0,
     stage7_provider_scope_label: str = "box_shrink",
@@ -1262,6 +1288,8 @@ def _choose_move_details_impl(
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
     stage7_king_tempo_already_used: bool = False,
+    stage7_drive_repair_already_used: bool = False,
+    stage7_drive_repair_post_reply_context: bool = False,
     stage7_post_king_tempo_already_used: bool = False,
     perf_profile: dict | None = None,
     enable_diagnostic_caches: bool = False,
@@ -1321,6 +1349,12 @@ def _choose_move_details_impl(
     env["blackboard"]["stage7_king_tempo_enabled"] = bool(stage7_king_tempo_enabled)
     env["blackboard"]["stage7_king_tempo_score"] = float(stage7_king_tempo_score)
     env["blackboard"]["stage7_king_tempo_already_used"] = bool(stage7_king_tempo_already_used)
+    env["blackboard"]["stage7_drive_repair_enabled"] = bool(stage7_drive_repair_enabled)
+    env["blackboard"]["stage7_drive_repair_score"] = float(stage7_drive_repair_score)
+    env["blackboard"]["stage7_drive_repair_already_used"] = bool(stage7_drive_repair_already_used)
+    env["blackboard"]["stage7_drive_repair_post_reply_context"] = bool(
+        stage7_drive_repair_post_reply_context
+    )
     env["blackboard"]["stage7_post_king_tempo_enabled"] = bool(stage7_post_king_tempo_enabled)
     env["blackboard"]["stage7_post_king_tempo_score"] = float(stage7_post_king_tempo_score)
     env["blackboard"]["stage7_post_king_tempo_already_used"] = bool(
@@ -1435,6 +1469,10 @@ def _choose_move_details_impl(
         "stage7_king_tempo_enabled": bool(stage7_king_tempo_enabled),
         "stage7_king_tempo_score": float(stage7_king_tempo_score),
         "stage7_king_tempo_already_used": bool(stage7_king_tempo_already_used),
+        "stage7_drive_repair_enabled": bool(stage7_drive_repair_enabled),
+        "stage7_drive_repair_score": float(stage7_drive_repair_score),
+        "stage7_drive_repair_already_used": bool(stage7_drive_repair_already_used),
+        "stage7_drive_repair_post_reply_context": bool(stage7_drive_repair_post_reply_context),
         "stage7_post_king_tempo_enabled": bool(stage7_post_king_tempo_enabled),
         "stage7_post_king_tempo_score": float(stage7_post_king_tempo_score),
         "stage7_post_king_tempo_already_used": bool(stage7_post_king_tempo_already_used),
@@ -1635,6 +1673,8 @@ def play_to_mate(
     post_break_continuation_bonus: float = 0.0,
     stage7_king_tempo_enabled: bool = False,
     stage7_king_tempo_score: float = 25.0,
+    stage7_drive_repair_enabled: bool = False,
+    stage7_drive_repair_score: float = 28.0,
     stage7_post_king_tempo_enabled: bool = False,
     stage7_post_king_tempo_score: float = 30.0,
     early_stop_stable_suggestions: int = 0,
@@ -1654,6 +1694,7 @@ def play_to_mate(
     first_successor: dict | None = None
     engine_perf: dict = {}
     stage7_king_tempo_used = False
+    stage7_drive_repair_used = False
     stage7_post_king_tempo_used = False
 
     def record_event(event: dict) -> None:
@@ -1748,10 +1789,14 @@ def play_to_mate(
                 post_break_continuation_bonus=post_break_continuation_bonus,
                 stage7_king_tempo_enabled=stage7_king_tempo_enabled,
                 stage7_king_tempo_score=stage7_king_tempo_score,
+                stage7_drive_repair_enabled=stage7_drive_repair_enabled,
+                stage7_drive_repair_score=stage7_drive_repair_score,
                 stage7_post_king_tempo_enabled=stage7_post_king_tempo_enabled,
                 stage7_post_king_tempo_score=stage7_post_king_tempo_score,
                 active_landmark_label=label,
                 stage7_king_tempo_already_used=stage7_king_tempo_used,
+                stage7_drive_repair_already_used=stage7_drive_repair_used,
+                stage7_drive_repair_post_reply_context=white_moves > 0,
                 stage7_post_king_tempo_already_used=stage7_post_king_tempo_used,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
                 forced_successor_skill=active_forced_successor,
@@ -1814,6 +1859,11 @@ def play_to_mate(
                 and _skill_id_for_suggestion(selected_suggestion) == "krk.stage7_king_tempo"
             ):
                 stage7_king_tempo_used = True
+            if (
+                selected_suggestion
+                and _skill_id_for_suggestion(selected_suggestion) == "krk.stage7_drive_repair"
+            ):
+                stage7_drive_repair_used = True
             if (
                 selected_suggestion
                 and _skill_id_for_suggestion(selected_suggestion) == "krk.stage7_post_king_tempo"
@@ -2569,6 +2619,8 @@ def run_counterfactual_successor_sweep(
     post_break_continuation_bonus: float = 0.0,
     stage7_king_tempo_enabled: bool = False,
     stage7_king_tempo_score: float = 25.0,
+    stage7_drive_repair_enabled: bool = False,
+    stage7_drive_repair_score: float = 28.0,
     stage7_post_king_tempo_enabled: bool = False,
     stage7_post_king_tempo_score: float = 30.0,
     early_stop_stable_suggestions: int = 0,
@@ -2615,6 +2667,8 @@ def run_counterfactual_successor_sweep(
             post_break_continuation_bonus=post_break_continuation_bonus,
             stage7_king_tempo_enabled=stage7_king_tempo_enabled,
             stage7_king_tempo_score=stage7_king_tempo_score,
+            stage7_drive_repair_enabled=stage7_drive_repair_enabled,
+            stage7_drive_repair_score=stage7_drive_repair_score,
             stage7_post_king_tempo_enabled=stage7_post_king_tempo_enabled,
             stage7_post_king_tempo_score=stage7_post_king_tempo_score,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
@@ -2743,6 +2797,8 @@ def evaluate_landmark_progress(
     post_break_continuation_bonus: float = 0.0,
     stage7_king_tempo_enabled: bool = False,
     stage7_king_tempo_score: float = 25.0,
+    stage7_drive_repair_enabled: bool = False,
+    stage7_drive_repair_score: float = 28.0,
     stage7_post_king_tempo_enabled: bool = False,
     stage7_post_king_tempo_score: float = 30.0,
     early_stop_stable_suggestions: int = 0,
@@ -3041,6 +3097,8 @@ def evaluate_landmark_progress(
                 post_break_continuation_bonus=post_break_continuation_bonus,
                 stage7_king_tempo_enabled=stage7_king_tempo_enabled,
                 stage7_king_tempo_score=stage7_king_tempo_score,
+                stage7_drive_repair_enabled=stage7_drive_repair_enabled,
+                stage7_drive_repair_score=stage7_drive_repair_score,
                 stage7_post_king_tempo_enabled=stage7_post_king_tempo_enabled,
                 stage7_post_king_tempo_score=stage7_post_king_tempo_score,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
@@ -3263,6 +3321,18 @@ def evaluate_landmark_progress(
                     "visible_stage7_king_tempo_license": successor_summary.get(
                         "visible_stage7_king_tempo_license"
                     ),
+                    "visible_stage7_drive_repair_bonus": successor_summary.get(
+                        "visible_stage7_drive_repair_bonus"
+                    ),
+                    "visible_stage7_drive_repair_license": successor_summary.get(
+                        "visible_stage7_drive_repair_license"
+                    ),
+                    "visible_stage7_post_king_tempo_bonus": successor_summary.get(
+                        "visible_stage7_post_king_tempo_bonus"
+                    ),
+                    "visible_stage7_post_king_tempo_license": successor_summary.get(
+                        "visible_stage7_post_king_tempo_license"
+                    ),
                     "selected_skill_source": successor_summary.get("selected_skill_source"),
                     "successor_skills": successor_summary["skills"],
                     "visible_terms": successor_summary["visible_terms"],
@@ -3411,6 +3481,8 @@ def evaluate_landmark_progress(
                     post_break_continuation_bonus=post_break_continuation_bonus,
                     stage7_king_tempo_enabled=stage7_king_tempo_enabled,
                     stage7_king_tempo_score=stage7_king_tempo_score,
+                    stage7_drive_repair_enabled=stage7_drive_repair_enabled,
+                    stage7_drive_repair_score=stage7_drive_repair_score,
                     stage7_post_king_tempo_enabled=stage7_post_king_tempo_enabled,
                     stage7_post_king_tempo_score=stage7_post_king_tempo_score,
                     early_stop_stable_suggestions=early_stop_stable_suggestions,
@@ -3546,6 +3618,8 @@ def evaluate_landmark_progress(
     stats["post_break_continuation_bonus"] = post_break_continuation_bonus
     stats["stage7_king_tempo_enabled"] = stage7_king_tempo_enabled
     stats["stage7_king_tempo_score"] = stage7_king_tempo_score
+    stats["stage7_drive_repair_enabled"] = stage7_drive_repair_enabled
+    stats["stage7_drive_repair_score"] = stage7_drive_repair_score
     stats["stage7_post_king_tempo_enabled"] = stage7_post_king_tempo_enabled
     stats["stage7_post_king_tempo_score"] = stage7_post_king_tempo_score
     stats["early_stop_stable_suggestions"] = int(early_stop_stable_suggestions)
@@ -4076,6 +4150,10 @@ def main() -> None:
                         help="Enable opt-in Stage 7 visible king-tempo sandbox provider")
     parser.add_argument("--stage7-king-tempo-score", type=float, default=25.0,
                         help="Score for the opt-in Stage 7 visible king-tempo sandbox provider")
+    parser.add_argument("--enable-stage7-drive-repair", action="store_true",
+                        help="Enable opt-in Stage 7 visible drive-repair sandbox provider")
+    parser.add_argument("--stage7-drive-repair-score", type=float, default=28.0,
+                        help="Score for the opt-in Stage 7 visible drive-repair sandbox provider")
     parser.add_argument("--enable-stage7-post-king-tempo", action="store_true",
                         help="Enable opt-in Stage 7 visible post-king-tempo continuation provider")
     parser.add_argument("--stage7-post-king-tempo-score", type=float, default=30.0,
@@ -4157,6 +4235,8 @@ def main() -> None:
         post_break_continuation_bonus=args.post_break_continuation_bonus,
         stage7_king_tempo_enabled=args.enable_stage7_king_tempo,
         stage7_king_tempo_score=args.stage7_king_tempo_score,
+        stage7_drive_repair_enabled=args.enable_stage7_drive_repair,
+        stage7_drive_repair_score=args.stage7_drive_repair_score,
         stage7_post_king_tempo_enabled=args.enable_stage7_post_king_tempo,
         stage7_post_king_tempo_score=args.stage7_post_king_tempo_score,
         early_stop_stable_suggestions=args.early_stop_stable_suggestions,

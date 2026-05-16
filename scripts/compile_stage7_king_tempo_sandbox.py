@@ -38,7 +38,9 @@ def compile_stage7_king_tempo_sandbox(
     topology_path: Path,
     output_path: Path,
     score: float = 25.0,
+    drive_repair_score: float = 28.0,
     post_king_tempo_score: float = 30.0,
+    include_drive_repair: bool = False,
     include_post_king_tempo: bool = False,
     enable_by_default: bool = False,
 ) -> dict[str, Any]:
@@ -72,6 +74,29 @@ def compile_stage7_king_tempo_sandbox(
     _add_edge(topology, hub_id, node_id, "SUB", 1.0, consolidate=False)
     _add_edge(topology, node_id, hub_id, "SUR", 1.0, consolidate=False)
 
+    drive_repair_node_id = "terminal.krk.stage7_drive_repair"
+    if include_drive_repair:
+        topology["nodes"][drive_repair_node_id] = {
+            "id": drive_repair_node_id,
+            "type": "TERMINAL",
+            "factory": "recon_lite_chess.krk_baseline_nodes:create_krk_stage7_drive_repair_terminal",
+            "meta": {
+                "stage7_drive_repair_provider": True,
+                "score": float(drive_repair_score),
+                "causal_status": "sandbox_opt_in",
+                "enabled_by_default": bool(enable_by_default),
+                "provider_skill_id": "krk.stage7_drive_repair",
+                "role_id": "krk.box_shrink_drive_repair_move",
+                "description": (
+                    "Opt-in visible Stage 7 drive-repair provider. It proposes "
+                    "a safe repair move only when post-box-shrink visible terms "
+                    "say the cut/fence failed and drive repair is available."
+                ),
+            },
+        }
+        _add_edge(topology, hub_id, drive_repair_node_id, "SUB", 1.0, consolidate=False)
+        _add_edge(topology, drive_repair_node_id, hub_id, "SUR", 1.0, consolidate=False)
+
     post_node_id = "terminal.krk.stage7_post_king_tempo"
     if include_post_king_tempo:
         topology["nodes"][post_node_id] = {
@@ -99,9 +124,12 @@ def compile_stage7_king_tempo_sandbox(
         "schema_version": "stage7_king_tempo_sandbox.v1",
         "source_topology": str(topology_path),
         "node_id": node_id,
+        "drive_repair_node_id": drive_repair_node_id if include_drive_repair else None,
         "post_king_tempo_node_id": post_node_id if include_post_king_tempo else None,
         "score": float(score),
+        "drive_repair_score": float(drive_repair_score),
         "post_king_tempo_score": float(post_king_tempo_score),
+        "include_drive_repair": bool(include_drive_repair),
         "include_post_king_tempo": bool(include_post_king_tempo),
         "enabled_by_default": bool(enable_by_default),
         "causal_status": "sandbox_opt_in",
@@ -110,6 +138,8 @@ def compile_stage7_king_tempo_sandbox(
         root = topology.get("nodes", {}).get("krk_entry", {})
         if isinstance(root, dict):
             root.setdefault("meta", {})["stage7_king_tempo_enabled"] = True
+            if include_drive_repair:
+                root.setdefault("meta", {})["stage7_drive_repair_enabled"] = True
             if include_post_king_tempo:
                 root.setdefault("meta", {})["stage7_post_king_tempo_enabled"] = True
 
@@ -123,7 +153,9 @@ def main() -> int:
     parser.add_argument("--topology", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--score", type=float, default=25.0)
+    parser.add_argument("--drive-repair-score", type=float, default=28.0)
     parser.add_argument("--post-king-tempo-score", type=float, default=30.0)
+    parser.add_argument("--include-drive-repair", action="store_true")
     parser.add_argument("--include-post-king-tempo", action="store_true")
     parser.add_argument("--enable-by-default", action="store_true")
     parser.add_argument("--no-json-stdout", action="store_true")
@@ -133,7 +165,9 @@ def main() -> int:
         topology_path=args.topology,
         output_path=args.output,
         score=args.score,
+        drive_repair_score=args.drive_repair_score,
         post_king_tempo_score=args.post_king_tempo_score,
+        include_drive_repair=args.include_drive_repair,
         include_post_king_tempo=args.include_post_king_tempo,
         enable_by_default=args.enable_by_default,
     )

@@ -16,10 +16,12 @@ from recon_lite_chess.krk_baseline_nodes import (
     _apply_visible_stagnation_breaker_bias,
     _compute_krk_context_terms,
     _provider_role_licenses,
+    _stage7_drive_repair_move_audit,
     _stage7_king_tempo_move_audit,
     _stage7_post_king_tempo_move_audit,
     create_krk_context_terminal,
     create_krk_role_provider_support_adapter,
+    create_krk_stage7_drive_repair_terminal,
     create_krk_stage7_king_tempo_terminal,
     create_krk_stage7_post_king_tempo_terminal,
     create_krk_successor_affordance,
@@ -1024,6 +1026,55 @@ def test_stage7_post_king_tempo_audit_selects_failed_family_converter():
     assert "post_box_area_equals_5" in converter["source_terms"]
     assert runtime_bad["stage7_post_king_tempo_candidate"] is False
     assert drawish["stage7_post_king_tempo_candidate"] is False
+
+
+def test_stage7_drive_repair_audit_selects_visible_broken_fence_repair():
+    board = chess.Board("8/8/8/8/7R/2k5/4K3/8 w - - 2 2")
+
+    checking_repair = _stage7_drive_repair_move_audit(board, chess.Move.from_uci("h4h3"))
+    quiet_king = _stage7_drive_repair_move_audit(board, chess.Move.from_uci("e2e3"))
+
+    assert checking_repair["stage7_drive_repair_candidate"] is True
+    assert checking_repair["safe_check_or_cut_repair"] is True
+    assert "box_shrink_drive_repair_available" in checking_repair["source_terms"]
+    assert "rook_safe_after_worst_reply" in checking_repair["source_terms"]
+    assert quiet_king["stage7_drive_repair_candidate"] is False
+
+
+def test_stage7_drive_repair_terminal_is_opt_in_and_scoped():
+    node = create_krk_stage7_drive_repair_terminal()
+    board = chess.Board("8/8/8/8/7R/2k5/4K3/8 w - - 2 2")
+    disabled_env = {"board": board, "blackboard": {"stage7_drive_repair_enabled": False}}
+    wrong_scope_env = {
+        "board": board,
+        "blackboard": {
+            "stage7_drive_repair_enabled": True,
+            "active_landmark_label": "fence_established",
+            "stage7_provider_scope_label": "box_shrink",
+        },
+    }
+    enabled_env = {
+        "board": board,
+        "blackboard": {
+            "stage7_drive_repair_enabled": True,
+            "stage7_drive_repair_post_reply_context": True,
+            "stage7_drive_repair_score": 28.0,
+            "active_landmark_label": "box_shrink",
+        },
+    }
+
+    assert node.predicate(node, disabled_env) == (False, True)
+    assert node.predicate(node, wrong_scope_env) == (False, True)
+    success, done = node.predicate(node, enabled_env)
+
+    assert success is True
+    assert done is True
+    assert enabled_env["suggested_move"] == "h4h3"
+    suggestion = enabled_env["actuator_suggestions"][0]
+    assert suggestion["curriculum_label"] == "stage7_drive_repair"
+    payload = suggestion["meta"]["visible_stage7_drive_repair_license"]
+    assert payload["direct_request"] is False
+    assert payload["causal_status"] == "sandbox_opt_in"
 
 
 def test_stage7_post_king_tempo_terminal_is_opt_in_and_after_king_tempo_only():
