@@ -1,0 +1,37 @@
+{
+  "schema_version": "stage7_adapter_smoke_comparison.v1",
+  "candidate_id": "cand.krk.box_shrink.edge_trap_support_adapter.v1",
+  "baseline_artifact": "reports/structural_candidates/stage7_overlay_no_adapter_10_h20.json",
+  "adapter_artifact": "reports/structural_candidates/stage7_edge_adapter_on_w005_10_h20.json",
+  "samples": 10,
+  "horizon_plies": 20,
+  "support_weight": 0.05,
+  "baseline": {
+    "playouts": {
+      "max_plies": 10
+    },
+    "shadow_candidate_count": 20,
+    "no_move": 0,
+    "optimal": 7
+  },
+  "adapter_enabled": {
+    "playouts": {
+      "max_plies": 10
+    },
+    "shadow_candidate_count": 20,
+    "no_move": 0,
+    "optimal": 7,
+    "adapter_fire_count": 12,
+    "adapter_supported_provider_by_outcome": {
+      "krk.edge_trap_close:max_plies": 12
+    },
+    "adapter_supported_move_by_outcome": {
+      "a7d7:max_plies": 12
+    }
+  },
+  "diagnosis": "adapter_traceable_but_target_neutral",
+  "candidate_status": "sandboxed_neutral_parameter_or_weight_insufficient",
+  "promotion_status": "sandboxed",
+  "causal_status": "opt_in_only",
+  "recommended_next_action": "do_not_guardrail_or_promote; compare one additional small support value or classify as neutral if still unchanged"
+}

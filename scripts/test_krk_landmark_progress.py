@@ -33,6 +33,41 @@ from recon_lite_chess.training.krk_landmarks import (
 )
 
 
+def _materialize_explicit_support_roles(graph: Graph, env: dict) -> None:
+    """Materialize compiled visible role SCRIPTs for explicit support tests.
+
+    The executor may evaluate actuator terminals before successor-role SCRIPTs
+    in short diagnostic runs. For the opt-in support-adapter sandbox, we make
+    the visible role terms available by running only compiled
+    `visible_successor_affordance` SCRIPT predicates. This does not request any
+    provider and is disabled unless explicit role-provider support is enabled.
+    """
+    blackboard = env.get("blackboard", {})
+    if not blackboard.get("explicit_role_provider_support_enabled", False):
+        return
+    board = env.get("board")
+    if board is None:
+        return
+    try:
+        from recon_lite_chess.krk_baseline_nodes import _compute_krk_context_terms
+    except Exception:
+        return
+    terms = dict(_compute_krk_context_terms(board) or {})
+    terms.update(blackboard.get("krk_dynamic_context_terms", {}) or {})
+    blackboard.setdefault("krk_visible_terms", {}).update(terms)
+    for node in graph.nodes.values():
+        meta = getattr(node, "meta", {}) or {}
+        if not meta.get("visible_successor_affordance"):
+            continue
+        predicate = getattr(node, "predicate", None)
+        if predicate is None:
+            continue
+        try:
+            predicate(node, env)
+        except Exception:
+            continue
+
+
 PROFILE_TIMER_KEYS = (
     "total_wall_time",
     "choose_move_details_time",
@@ -355,6 +390,28 @@ def _suggestion_stability_signature(
     return tuple(rows)
 
 
+def _adapter_support_summary_for_suggestions(suggestions: list[dict]) -> dict:
+    provider_counts: dict[str, int] = {}
+    move_counts: dict[str, int] = {}
+    supported = 0
+    for item in suggestions:
+        meta = item.get("meta") if isinstance(item.get("meta"), dict) else {}
+        adapter = meta.get("visible_role_provider_support_adapter")
+        if not isinstance(adapter, dict) or not adapter.get("enabled"):
+            continue
+        supported += 1
+        provider = str(adapter.get("provider_id") or _skill_id_for_suggestion(item))
+        move = item.get("move")
+        move_uci = move.uci() if hasattr(move, "uci") else str(move)
+        provider_counts[provider] = provider_counts.get(provider, 0) + 1
+        move_counts[move_uci] = move_counts.get(move_uci, 0) + 1
+    return {
+        "adapter_supported_suggestion_count": supported,
+        "adapter_supported_provider_counts": provider_counts,
+        "adapter_supported_move_counts": move_counts,
+    }
+
+
 def _suggestion_role_trace(meta: dict) -> dict:
     return {
         "visible_role_licenses": list(meta.get("visible_role_licenses", []) or []),
@@ -371,6 +428,9 @@ def _suggestion_role_trace(meta: dict) -> dict:
         ),
         "role_bonus_total": float(meta.get("role_bonus_total", 0.0) or 0.0),
         "role_bonus_by_role": dict(meta.get("role_bonus_by_role", {}) or {}),
+        "visible_role_provider_support_adapter": dict(
+            meta.get("visible_role_provider_support_adapter", {}) or {}
+        ),
         "visible_role_scoped_move_shape_bonus": float(
             meta.get("visible_role_scoped_move_shape_bonus", 0.0) or 0.0
         ),
@@ -458,6 +518,9 @@ def _successor_skill_summary(
             "role_license_present_but_provider_absent": {},
             "role_contract_met_but_provider_not_selected": {},
             "missing_afforded_skills": {},
+            "adapter_supported_suggestion_count": 0,
+            "adapter_supported_provider_counts": {},
+            "adapter_supported_move_counts": {},
         }
     visible_terms = dict(move_details.get("visible_terms", {}) or {})
     visible_affordances = dict(move_details.get("successor_affordances", {}) or {})
@@ -560,6 +623,15 @@ def _successor_skill_summary(
         "role_license_present_but_provider_absent": role_license_present_but_provider_absent,
         "role_contract_met_but_provider_not_selected": role_contract_met_but_provider_not_selected,
         "missing_afforded_skills": missing_afforded,
+        "adapter_supported_suggestion_count": int(
+            move_details.get("adapter_supported_suggestion_count", 0) or 0
+        ),
+        "adapter_supported_provider_counts": dict(
+            move_details.get("adapter_supported_provider_counts", {}) or {}
+        ),
+        "adapter_supported_move_counts": dict(
+            move_details.get("adapter_supported_move_counts", {}) or {}
+        ),
         **selected_contract,
     }
 
@@ -591,6 +663,7 @@ def _successor_contract_audit(
             "provider_selected_without_role_license": False,
             "role_bonus_total": 0.0,
             "role_bonus_by_role": {},
+            "visible_role_provider_support_adapter": {},
             "raw_score_before_role_bonus": None,
             "score_after_role_bonus": None,
             "visible_role_scoped_move_shape_bonus": 0.0,
@@ -633,6 +706,9 @@ def _successor_contract_audit(
         "provider_selected_without_role_license": bool(not role_licenses),
         "role_bonus_total": float(selected_group.get("role_bonus_total", 0.0) or 0.0),
         "role_bonus_by_role": dict(selected_group.get("role_bonus_by_role", {}) or {}),
+        "visible_role_provider_support_adapter": dict(
+            selected_group.get("visible_role_provider_support_adapter", {}) or {}
+        ),
         "raw_score_before_role_bonus": selected_group.get("raw_score_before_role_bonus"),
         "score_after_role_bonus": selected_group.get("score_after_role_bonus"),
         "visible_role_scoped_move_shape_bonus": float(
@@ -1000,6 +1076,7 @@ def choose_move_with_engine(
     successor_affordance_layer_enabled: bool = False,
     successor_contract_gate_enabled: bool = False,
     successor_role_license_enabled: bool = False,
+    explicit_role_provider_support_enabled: bool = False,
     successor_role_veto_penalty: float = 0.0,
     successor_stage0_drift_penalty: float = 0.0,
     successor_role_scoped_move_shape_enabled: bool = False,
@@ -1024,6 +1101,7 @@ def choose_move_with_engine(
         successor_affordance_layer_enabled=successor_affordance_layer_enabled,
         successor_contract_gate_enabled=successor_contract_gate_enabled,
         successor_role_license_enabled=successor_role_license_enabled,
+        explicit_role_provider_support_enabled=explicit_role_provider_support_enabled,
         successor_role_veto_penalty=successor_role_veto_penalty,
         successor_stage0_drift_penalty=successor_stage0_drift_penalty,
         successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
@@ -1050,6 +1128,7 @@ def choose_move_details(
     successor_affordance_layer_enabled: bool = False,
     successor_contract_gate_enabled: bool = False,
     successor_role_license_enabled: bool = False,
+    explicit_role_provider_support_enabled: bool = False,
     successor_role_veto_penalty: float = 0.0,
     successor_stage0_drift_penalty: float = 0.0,
     successor_role_scoped_move_shape_enabled: bool = False,
@@ -1077,6 +1156,7 @@ def choose_move_details(
             successor_affordance_layer_enabled=successor_affordance_layer_enabled,
             successor_contract_gate_enabled=successor_contract_gate_enabled,
             successor_role_license_enabled=successor_role_license_enabled,
+            explicit_role_provider_support_enabled=explicit_role_provider_support_enabled,
             successor_role_veto_penalty=successor_role_veto_penalty,
             successor_stage0_drift_penalty=successor_stage0_drift_penalty,
             successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
@@ -1105,6 +1185,7 @@ def _choose_move_details_impl(
     successor_affordance_layer_enabled: bool = False,
     successor_contract_gate_enabled: bool = False,
     successor_role_license_enabled: bool = False,
+    explicit_role_provider_support_enabled: bool = False,
     successor_role_veto_penalty: float = 0.0,
     successor_stage0_drift_penalty: float = 0.0,
     successor_role_scoped_move_shape_enabled: bool = False,
@@ -1136,6 +1217,7 @@ def _choose_move_details_impl(
     env["blackboard"]["successor_affordance_layer_enabled"] = successor_affordance_layer_enabled
     env["blackboard"]["successor_contract_gate_enabled"] = successor_contract_gate_enabled
     env["blackboard"]["successor_role_license_enabled"] = successor_role_license_enabled
+    env["blackboard"]["explicit_role_provider_support_enabled"] = explicit_role_provider_support_enabled
     env["blackboard"]["successor_role_veto_penalty"] = successor_role_veto_penalty
     env["blackboard"]["successor_stage0_drift_penalty"] = successor_stage0_drift_penalty
     env["blackboard"]["successor_role_scoped_move_shape_enabled"] = successor_role_scoped_move_shape_enabled
@@ -1174,6 +1256,8 @@ def _choose_move_details_impl(
     env["blackboard"]["post_break_continuation_bonus"] = float(post_break_continuation_bonus)
     if forced_successor_skill:
         env["blackboard"]["forced_successor_skill"] = forced_successor_skill
+
+    _materialize_explicit_support_roles(graph, env)
 
     engine.reset_states()
     root_id = "krk_entry" if "krk_entry" in graph.nodes else None
@@ -1238,6 +1322,7 @@ def _choose_move_details_impl(
         selected_actuator = env.get("suggested_actuator")
 
     suggestion_source = forced_candidates if forced_successor_skill else suggestions
+    adapter_support_summary = _adapter_support_summary_for_suggestions(suggestion_source)
     clean_suggestions = []
     for item in suggestion_source[:max(0, suggestion_limit)]:
         move = item.get("move")
@@ -1286,6 +1371,10 @@ def _choose_move_details_impl(
         "successor_provider_licenses": dict(
             env.get("blackboard", {}).get("krk_successor_provider_licenses", {}) or {}
         ),
+        "explicit_role_provider_supports": dict(
+            env.get("blackboard", {}).get("krk_explicit_role_provider_supports", {}) or {}
+        ),
+        **adapter_support_summary,
         "context_terms_cache_hits": int(
             env.get("blackboard", {}).get("krk_context_terms_cache_hits", 0) or 0
         ),
@@ -1450,6 +1539,7 @@ def play_to_mate(
     successor_affordance_layer_enabled: bool = False,
     successor_contract_gate_enabled: bool = False,
     successor_role_license_enabled: bool = False,
+    explicit_role_provider_support_enabled: bool = False,
     successor_role_veto_penalty: float = 0.0,
     successor_stage0_drift_penalty: float = 0.0,
     successor_role_scoped_move_shape_enabled: bool = False,
@@ -1545,6 +1635,7 @@ def play_to_mate(
                 successor_affordance_layer_enabled=successor_affordance_layer_enabled,
                 successor_contract_gate_enabled=successor_contract_gate_enabled,
                 successor_role_license_enabled=successor_role_license_enabled,
+                explicit_role_provider_support_enabled=explicit_role_provider_support_enabled,
                 successor_role_veto_penalty=successor_role_veto_penalty,
                 successor_stage0_drift_penalty=successor_stage0_drift_penalty,
                 successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
@@ -2350,6 +2441,7 @@ def run_counterfactual_successor_sweep(
     successor_affordance_layer_enabled: bool,
     successor_contract_gate_enabled: bool,
     successor_role_license_enabled: bool,
+    explicit_role_provider_support_enabled: bool = False,
     successor_role_veto_penalty: float = 0.0,
     successor_stage0_drift_penalty: float = 0.0,
     successor_role_scoped_move_shape_enabled: bool = False,
@@ -2389,6 +2481,7 @@ def run_counterfactual_successor_sweep(
             successor_affordance_layer_enabled=successor_affordance_layer_enabled,
             successor_contract_gate_enabled=successor_contract_gate_enabled,
             successor_role_license_enabled=successor_role_license_enabled,
+            explicit_role_provider_support_enabled=explicit_role_provider_support_enabled,
             successor_role_veto_penalty=successor_role_veto_penalty,
             successor_stage0_drift_penalty=successor_stage0_drift_penalty,
             successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
@@ -2514,6 +2607,7 @@ def evaluate_landmark_progress(
     successor_affordance_layer_enabled: bool = False,
     successor_contract_gate_enabled: bool = False,
     successor_role_license_enabled: bool = False,
+    explicit_role_provider_support_enabled: bool = False,
     successor_role_veto_penalty: float = 0.0,
     successor_stage0_drift_penalty: float = 0.0,
     successor_role_scoped_move_shape_enabled: bool = False,
@@ -2618,6 +2712,9 @@ def evaluate_landmark_progress(
         "playout_engine_ticks_total": 0,
         "playout_engine_ticks_max": 0,
         "playout_engine_early_stop_count": 0,
+        "adapter_fire_count": 0,
+        "adapter_supported_provider_by_outcome": {},
+        "adapter_supported_move_by_outcome": {},
         "one_ply_status": "not_checked",
         "conversion_status": "not_checked",
     }
@@ -2646,6 +2743,7 @@ def evaluate_landmark_progress(
             successor_affordance_layer_enabled=successor_affordance_layer_enabled,
             successor_contract_gate_enabled=successor_contract_gate_enabled,
             successor_role_license_enabled=successor_role_license_enabled,
+            explicit_role_provider_support_enabled=explicit_role_provider_support_enabled,
             successor_role_veto_penalty=successor_role_veto_penalty,
             successor_stage0_drift_penalty=successor_stage0_drift_penalty,
             successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
@@ -2799,6 +2897,7 @@ def evaluate_landmark_progress(
                 successor_affordance_layer_enabled=successor_affordance_layer_enabled,
                 successor_contract_gate_enabled=successor_contract_gate_enabled,
                 successor_role_license_enabled=successor_role_license_enabled,
+                explicit_role_provider_support_enabled=explicit_role_provider_support_enabled,
                 successor_role_veto_penalty=successor_role_veto_penalty,
                 successor_stage0_drift_penalty=successor_stage0_drift_penalty,
                 successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
@@ -2900,6 +2999,43 @@ def evaluate_landmark_progress(
                     (result.get("stagnation_summary") or {}).get("rook_oscillation_loop")
                 ),
             )
+            adapter_support = dict(
+                successor_summary.get("visible_role_provider_support_adapter", {}) or {}
+            )
+            adapter_supported_suggestion_count = int(
+                successor_summary.get("adapter_supported_suggestion_count", 0) or 0
+            )
+            if adapter_supported_suggestion_count:
+                stats["adapter_fire_count"] = (
+                    int(stats.get("adapter_fire_count", 0) or 0)
+                    + adapter_supported_suggestion_count
+                )
+                for provider, count in (
+                    successor_summary.get("adapter_supported_provider_counts", {}) or {}
+                ).items():
+                    provider_key = f"{provider}:{key}"
+                    stats["adapter_supported_provider_by_outcome"][provider_key] = (
+                        stats["adapter_supported_provider_by_outcome"].get(provider_key, 0)
+                        + int(count or 0)
+                    )
+                for move_name, count in (
+                    successor_summary.get("adapter_supported_move_counts", {}) or {}
+                ).items():
+                    move_key = f"{move_name}:{key}"
+                    stats["adapter_supported_move_by_outcome"][move_key] = (
+                        stats["adapter_supported_move_by_outcome"].get(move_key, 0)
+                        + int(count or 0)
+                    )
+            elif adapter_support:
+                stats["adapter_fire_count"] = int(stats.get("adapter_fire_count", 0) or 0) + 1
+                provider_key = f"{adapter_support.get('provider_id', 'unknown')}:{key}"
+                move_key = f"{move_uci}:{key}"
+                stats["adapter_supported_provider_by_outcome"][provider_key] = (
+                    stats["adapter_supported_provider_by_outcome"].get(provider_key, 0) + 1
+                )
+                stats["adapter_supported_move_by_outcome"][move_key] = (
+                    stats["adapter_supported_move_by_outcome"].get(move_key, 0) + 1
+                )
             post_reply_packet = HandoffPacket.create(
                 from_skill=parent_skill,
                 phase="post_opponent_reply",
@@ -2940,6 +3076,14 @@ def evaluate_landmark_progress(
                     "provider_selected_without_role_license": successor_summary.get("provider_selected_without_role_license"),
                     "role_bonus_total": successor_summary.get("role_bonus_total"),
                     "role_bonus_by_role": successor_summary.get("role_bonus_by_role"),
+                    "visible_role_provider_support_adapter": adapter_support,
+                    "adapter_supported_suggestion_count": adapter_supported_suggestion_count,
+                    "adapter_supported_provider_counts": successor_summary.get(
+                        "adapter_supported_provider_counts", {}
+                    ),
+                    "adapter_supported_move_counts": successor_summary.get(
+                        "adapter_supported_move_counts", {}
+                    ),
                     "raw_score_before_role_bonus": successor_summary.get("raw_score_before_role_bonus"),
                     "score_after_role_bonus": successor_summary.get("score_after_role_bonus"),
                     "visible_role_scoped_move_shape_bonus": successor_summary.get(
@@ -3112,6 +3256,7 @@ def evaluate_landmark_progress(
                     successor_affordance_layer_enabled=successor_affordance_layer_enabled,
                     successor_contract_gate_enabled=successor_contract_gate_enabled,
                     successor_role_license_enabled=successor_role_license_enabled,
+                    explicit_role_provider_support_enabled=explicit_role_provider_support_enabled,
                     successor_role_veto_penalty=successor_role_veto_penalty,
                     successor_stage0_drift_penalty=successor_stage0_drift_penalty,
                     successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
@@ -3436,6 +3581,7 @@ def _merge_parallel_stats(
         "handoff_packet_count",
         "shadow_candidate_count",
         "counterfactual_successor_sweep_count",
+        "adapter_fire_count",
     )
     max_keys = ("one_ply_engine_ticks_max", "playout_engine_ticks_max")
     dict_count_keys = (
@@ -3446,6 +3592,8 @@ def _merge_parallel_stats(
         "semantic_alignment_confusion_counts",
         "handoff_packet_counts_by_phase",
         "shadow_candidate_counts_by_trigger",
+        "adapter_supported_provider_by_outcome",
+        "adapter_supported_move_by_outcome",
     )
     nested_count_keys = ("conversion_by_semantic_alignment_status",)
     list_keys = (
@@ -3751,6 +3899,8 @@ def main() -> None:
                         help="Enable opt-in visible contract mismatch penalty for successor skill ownership")
     parser.add_argument("--enable-successor-role-licenses", action="store_true",
                         help="Enable additive visible role-license bonuses for successor provider skills")
+    parser.add_argument("--enable-explicit-role-provider-support", action="store_true",
+                        help="Enable sandbox explicit role-provider support adapters")
     parser.add_argument("--successor-role-veto-penalty", type=float, default=0.0,
                         help="Opt-in visible role-veto penalty applied only when another provider has a visible role license")
     parser.add_argument("--successor-stage0-drift-penalty", type=float, default=0.0,
@@ -3835,6 +3985,7 @@ def main() -> None:
         successor_affordance_layer_enabled=args.enable_successor_affordance_layer,
         successor_contract_gate_enabled=args.enable_successor_contract_gate,
         successor_role_license_enabled=args.enable_successor_role_licenses,
+        explicit_role_provider_support_enabled=args.enable_explicit_role_provider_support,
         successor_role_veto_penalty=args.successor_role_veto_penalty,
         successor_stage0_drift_penalty=args.successor_stage0_drift_penalty,
         successor_role_scoped_move_shape_enabled=args.enable_role_scoped_move_shapes,

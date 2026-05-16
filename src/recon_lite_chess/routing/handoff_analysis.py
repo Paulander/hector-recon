@@ -101,6 +101,9 @@ class HandoffAnalysis:
     counterfactual_forced_successor_available_counts: dict[str, int] = field(default_factory=dict)
     counterfactual_actual_to_forced_outcome_counts: dict[str, int] = field(default_factory=dict)
     counterfactual_best_mating_successor_counts: dict[str, int] = field(default_factory=dict)
+    adapter_fire_count: int = 0
+    adapter_supported_provider_by_outcome: dict[str, int] = field(default_factory=dict)
+    adapter_supported_move_by_outcome: dict[str, int] = field(default_factory=dict)
     handoff_gap_count: int = 0
     route_conflict_count: int = 0
     shadow_trigger_counts: dict[str, int] = field(default_factory=dict)
@@ -214,6 +217,20 @@ class HandoffAnalysis:
                 for key, count in list(self.counterfactual_actual_to_forced_outcome_counts.items())[:20]:
                     lines.append(f"- `{key}`: {count}")
 
+        if self.adapter_fire_count:
+            lines.extend(["", "## Role-Provider Support Adapter", ""])
+            lines.append(f"- Adapter support fires: {self.adapter_fire_count}")
+            if self.adapter_supported_provider_by_outcome:
+                lines.append("")
+                lines.append("Supported providers by outcome:")
+                for key, count in self.adapter_supported_provider_by_outcome.items():
+                    lines.append(f"- `{key}`: {count}")
+            if self.adapter_supported_move_by_outcome:
+                lines.append("")
+                lines.append("Supported moves by outcome:")
+                for key, count in self.adapter_supported_move_by_outcome.items():
+                    lines.append(f"- `{key}`: {count}")
+
         lines.extend(["", "## Shadow Candidates", ""])
         if self.shadow_trigger_counts:
             for trigger, count in self.shadow_trigger_counts.items():
@@ -252,6 +269,8 @@ def analyze_handoff_records(
     counterfactual_forced_availability = Counter()
     counterfactual_actual_to_forced = Counter()
     counterfactual_best_mating = Counter()
+    adapter_supported_providers = Counter()
+    adapter_supported_moves = Counter()
     shadow_triggers = Counter()
     shadow_parent_skills = Counter()
     motifs: Counter[tuple[str, str, str, bool, bool]] = Counter()
@@ -264,6 +283,7 @@ def analyze_handoff_records(
     counterfactual_sweeps = 0
     counterfactual_with_any_mate = 0
     counterfactual_without_any_mate = 0
+    adapter_fire_count = 0
     embedded_shadows: list[Mapping[str, Any]] = []
 
     for diag in diagnostics:
@@ -285,6 +305,23 @@ def analyze_handoff_records(
                 conversion[str(diag.get("conversion_status", "not_checked"))] += int(diag.get("total", 1) or 1)
         for key, value in (diag.get("playouts") or {}).items():
             playouts[str(key)] += int(value or 0)
+        diag_has_adapter_summary = any(
+            key in diag
+            for key in (
+                "adapter_fire_count",
+                "adapter_supported_provider_by_outcome",
+                "adapter_supported_move_by_outcome",
+            )
+        )
+        adapter_fire_count += int(diag.get("adapter_fire_count", 0) or 0)
+        _add_counter_values(
+            adapter_supported_providers,
+            diag.get("adapter_supported_provider_by_outcome"),
+        )
+        _add_counter_values(
+            adapter_supported_moves,
+            diag.get("adapter_supported_move_by_outcome"),
+        )
         _add_counter_values(semantic_alignment, diag.get("semantic_alignment_status_counts"))
         _add_counter_values(semantic_confusion, diag.get("semantic_alignment_confusion_counts"))
         conversion_by = diag.get("conversion_by_semantic_alignment_status")
@@ -396,6 +433,14 @@ def analyze_handoff_records(
                         visible_eligible_successors[str(skill)] += 1
                 if successor:
                     selected_successor_outcomes[f"{successor}:{outcome}"] += 1
+                if not diag_has_adapter_summary:
+                    adapter_info = evidence.get("visible_role_provider_support_adapter")
+                    if isinstance(adapter_info, Mapping) and adapter_info.get("enabled"):
+                        adapter_fire_count += 1
+                        provider = str(adapter_info.get("provider_id") or successor or "unknown")
+                        move = str(evidence.get("move") or adapter_info.get("move") or "unknown")
+                        adapter_supported_providers[f"{provider}:{outcome}"] += 1
+                        adapter_supported_moves[f"{move}:{outcome}"] += 1
                 if evidence.get("selected_despite_contract_mismatch"):
                     contract_mismatch_by_successor[str(successor or "unknown")] += 1
                 status_value = evidence.get("semantic_alignment_status")
@@ -483,6 +528,9 @@ def analyze_handoff_records(
         counterfactual_forced_successor_available_counts=_counter_dict(counterfactual_forced_availability),
         counterfactual_actual_to_forced_outcome_counts=_counter_dict(counterfactual_actual_to_forced),
         counterfactual_best_mating_successor_counts=_counter_dict(counterfactual_best_mating),
+        adapter_fire_count=adapter_fire_count,
+        adapter_supported_provider_by_outcome=_counter_dict(adapter_supported_providers),
+        adapter_supported_move_by_outcome=_counter_dict(adapter_supported_moves),
         handoff_gap_count=handoff_gaps,
         route_conflict_count=route_conflicts,
         shadow_trigger_counts=_counter_dict(shadow_triggers),

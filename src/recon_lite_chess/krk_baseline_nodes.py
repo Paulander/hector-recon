@@ -357,6 +357,12 @@ def create_krk_successor_affordance(node_id=None):
                 provider_payload[role_id] = payload
             else:
                 provider_licenses[provider_id] = {role_id: payload}
+            _record_explicit_role_provider_support(
+                role_id=role_id,
+                provider_id=provider_id,
+                role_payload=payload,
+                env=env,
+            )
         node.meta["last_successor_affordance"] = payload
         return score > float(node.meta.get("confirm_threshold", 0.0)), True
 
@@ -390,27 +396,87 @@ def create_krk_role_provider_support_adapter(node_id=None):
                 role_payload = provider_payload.get(role_id, {})
         if not isinstance(role_payload, dict) or not role_payload.get("contract_met"):
             return False, True
-        support_weight = _support_adapter_weight(node, env)
-        payload = {
-            "role_id": role_id,
-            "provider_skill_id": provider_id,
-            "score": support_weight,
-            "support_weight": support_weight,
-            "source_terms": list(role_payload.get("source_terms", [])),
-            "role_contract_met": True,
-            "causal_status": "explicit_sandbox_support",
-            "adapter_node": node.nid,
-        }
-        supports = blackboard.setdefault("krk_explicit_role_provider_supports", {})
-        provider_supports = supports.setdefault(provider_id, {})
-        if isinstance(provider_supports, dict):
-            provider_supports[role_id] = payload
-        else:
-            supports[provider_id] = {role_id: payload}
-        node.meta["last_explicit_role_provider_support"] = payload
-        return support_weight > float(node.meta.get("confirm_threshold", 0.0)), True
+        payload = _record_explicit_support_from_adapter(
+            adapter_node=node,
+            role_id=role_id,
+            provider_id=provider_id,
+            role_payload=role_payload,
+            env=env,
+        )
+        return bool(payload), True
 
     return Node(nid=actual_id, ntype=NodeType.SCRIPT, predicate=predicate)
+
+
+def _record_explicit_role_provider_support(
+    *,
+    role_id: str,
+    provider_id: str,
+    role_payload: Dict[str, Any],
+    env: Dict[str, Any],
+) -> None:
+    """Record compiled adapter support after visible role confirmation.
+
+    This avoids relying on executor traversal order: the visible role SCRIPT is
+    the source of truth, and only separately compiled adapter nodes can add
+    explicit provider support. The adapter still does not request providers.
+    """
+    blackboard = env.get("blackboard", {})
+    if not blackboard.get("explicit_role_provider_support_enabled", False):
+        return
+    if not role_payload.get("contract_met"):
+        return
+    graph = env.get("__graph__")
+    if graph is None:
+        return
+    for adapter_node in getattr(graph, "nodes", {}).values():
+        meta = getattr(adapter_node, "meta", {}) or {}
+        if not meta.get("role_provider_support_adapter"):
+            continue
+        if meta.get("role_id") != role_id or meta.get("provider_skill_id") != provider_id:
+            continue
+        _record_explicit_support_from_adapter(
+            adapter_node=adapter_node,
+            role_id=role_id,
+            provider_id=provider_id,
+            role_payload=role_payload,
+            env=env,
+        )
+
+
+def _record_explicit_support_from_adapter(
+    *,
+    adapter_node,
+    role_id: str,
+    provider_id: str,
+    role_payload: Dict[str, Any],
+    env: Dict[str, Any],
+) -> Dict[str, Any] | None:
+    blackboard = env.get("blackboard", {})
+    if not blackboard.get("explicit_role_provider_support_enabled", False):
+        return None
+    support_weight = _support_adapter_weight(adapter_node, env)
+    if support_weight <= 0.0:
+        return None
+    payload = {
+        "role_id": role_id,
+        "provider_skill_id": provider_id,
+        "score": support_weight,
+        "support_weight": support_weight,
+        "source_terms": list(role_payload.get("source_terms", [])),
+        "role_contract_met": True,
+        "causal_status": "explicit_sandbox_support",
+        "adapter_node": adapter_node.nid,
+        "direct_request": False,
+    }
+    supports = blackboard.setdefault("krk_explicit_role_provider_supports", {})
+    provider_supports = supports.setdefault(provider_id, {})
+    if isinstance(provider_supports, dict):
+        provider_supports[role_id] = payload
+    else:
+        supports[provider_id] = {role_id: payload}
+    adapter_node.meta["last_explicit_role_provider_support"] = payload
+    return payload
 
 
 def _support_adapter_weight(node, env: Dict[str, Any]) -> float:
@@ -1608,6 +1674,18 @@ def _apply_successor_affordance_bias(
         adjusted += role_bonus
         move_meta["visible_role_license_bonus"] = role_bonus
         move_meta["role_bonus_total"] = role_bonus
+        support_payload = best_license.get("explicit_role_provider_support")
+        if isinstance(support_payload, dict):
+            move_meta["visible_role_provider_support_adapter"] = {
+                "enabled": True,
+                "adapter_id": support_payload.get("adapter_node"),
+                "source_role": support_payload.get("role_id"),
+                "provider_id": support_payload.get("provider_skill_id"),
+                "role_confirmed": bool(support_payload.get("role_contract_met", False)),
+                "source_terms": list(support_payload.get("source_terms", []) or []),
+                "support_amount": float(support_payload.get("score", 0.0) or 0.0),
+                "direct_request": False,
+            }
         move_meta["role_bonus_by_role"] = {
             str(item.get("role_id") or item.get("successor") or ""): (
                 role_bonus_weight * float(item.get("score", 0.0) or 0.0)
@@ -1620,6 +1698,12 @@ def _apply_successor_affordance_bias(
                 "score": float(item.get("score", 0.0) or 0.0),
                 "source_terms": list(item.get("source_terms", [])),
                 "provider_skill_ids": list(item.get("provider_skill_ids", [])),
+                "explicit_role_provider_support_score": float(
+                    item.get("explicit_role_provider_support_score", 0.0) or 0.0
+                ),
+                "explicit_role_provider_support": dict(
+                    item.get("explicit_role_provider_support", {}) or {}
+                ),
             }
             for item in role_licenses
         ]

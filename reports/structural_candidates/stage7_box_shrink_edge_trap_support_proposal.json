@@ -1,0 +1,64 @@
+{
+  "schema_version": "role_provider_support_proposal.v1",
+  "causal_status": "non_causal",
+  "topology_source": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_drive_repair_sandbox/topology/krk_entry_topology_refreshed.json",
+  "target_role": "krk.edge_rook_transfer_recovery",
+  "target_provider": "krk.edge_trap_close",
+  "source_probe_result": "stage7_selected_successor_miscalibrated_stage0_max_plies",
+  "proposal_status": "sandbox_ready",
+  "candidate_id": "cand.krk.box_shrink.edge_trap_support_adapter.v1",
+  "proposed_support_relations": [
+    {
+      "source_role_script": "script.krk.successor.edge_rook_transfer_recovery_affordance",
+      "target_provider_skill": "skill.krk.edge_trap_close",
+      "relation_type": "visible_role_provider_support",
+      "initial_weight": 0.0,
+      "trainable": true,
+      "causal_status": "non_causal_scaffold",
+      "direct_graph_edge_emitted": false,
+      "requires_support_adapter": true,
+      "unsafe_direct_edge": {
+        "type": "SUB",
+        "reason": "Direct role SCRIPT -> provider SCRIPT SUB could request the provider while the role SCRIPT is WAITING, before role predicate confirmation."
+      },
+      "source_terms": [
+        "box_shrink_reward_confirmed",
+        "edge_rook_transfer_recovery_available",
+        "safe_rook_edge_transfer_available",
+        "rook_safe",
+        "selected_successor_miscalibrated",
+        "repeated_conversion_failure"
+      ],
+      "adapter_contract": {
+        "kind": "gated_visible_support_adapter",
+        "confirm_when": [
+          "source_role_script_confirmed",
+          "role_contract_met",
+          "provider_execution_eligible"
+        ],
+        "must_not": [
+          "request_provider_before_role_confirmation",
+          "bypass visible provider eligibility",
+          "mutate default topology"
+        ]
+      }
+    }
+  ],
+  "proposed_relation_count": 1,
+  "unsafe_direct_graph_edges_emitted": false,
+  "sandbox_compile_strategy": "compile_gated_support_adapter_not_direct_sub_edge",
+  "required_validation": [
+    "default_off_equivalence",
+    "stage7_target_smoke",
+    "stage6_drive_guardrail_if_target_improves",
+    "stage5_fence_guardrail_if_target_improves",
+    "stage1_backchain_guardrail_if_target_improves",
+    "m1_m4_preservation_if_target_improves"
+  ],
+  "hard_blocks": [
+    "do_not_insert_into_default_topology",
+    "do_not_train_stage8",
+    "do_not_promote_stage7_without_guardrails",
+    "do_not_make_probe_or_candidate_causal"
+  ]
+}

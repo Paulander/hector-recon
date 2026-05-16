@@ -156,6 +156,75 @@ def test_analyze_handoff_records_counts_repeated_packets_as_samples():
     assert analysis["failure_class_counts"] == {"selected_successor_miscalibrated": 2}
 
 
+def test_analyze_handoff_records_counts_role_provider_adapter_support():
+    diagnostic = {
+        "total": 1,
+        "handoff_packets": [
+            {
+                "from_skill": "krk.box_shrink",
+                "phase": "post_opponent_reply",
+                "status": "confirmed",
+                "observed_outcome": "mate",
+                "evidence_terms": {
+                    "move": "a4a7",
+                    "successor_selected_skill": "krk.edge_trap_close",
+                    "visible_role_provider_support_adapter": {
+                        "enabled": True,
+                        "adapter_id": "adapter.krk.box_shrink_to_edge_trap",
+                        "source_role": "krk.box_shrink_to_edge_trap_handoff",
+                        "provider_id": "krk.edge_trap_close",
+                        "role_confirmed": True,
+                        "source_terms": ["box_shrink_reward_confirmed"],
+                        "support_amount": 0.05,
+                        "direct_request": False,
+                    },
+                },
+            },
+        ],
+    }
+
+    analysis = analyze_handoff_records([diagnostic]).to_dict()
+
+    assert analysis["adapter_fire_count"] == 1
+    assert analysis["adapter_supported_provider_by_outcome"] == {
+        "krk.edge_trap_close:mate": 1
+    }
+    assert analysis["adapter_supported_move_by_outcome"] == {"a4a7:mate": 1}
+
+
+def test_analyze_handoff_records_prefers_top_level_adapter_summary():
+    diagnostic = {
+        "total": 1,
+        "adapter_fire_count": 2,
+        "adapter_supported_provider_by_outcome": {"krk.edge_trap_close:mate": 2},
+        "adapter_supported_move_by_outcome": {"a4a7:mate": 2},
+        "handoff_packets": [
+            {
+                "from_skill": "krk.box_shrink",
+                "phase": "post_opponent_reply",
+                "status": "confirmed",
+                "observed_outcome": "mate",
+                "evidence_terms": {
+                    "move": "a4a7",
+                    "successor_selected_skill": "krk.edge_trap_close",
+                    "visible_role_provider_support_adapter": {
+                        "enabled": True,
+                        "provider_id": "krk.edge_trap_close",
+                    },
+                },
+            },
+        ],
+    }
+
+    analysis = analyze_handoff_records([diagnostic]).to_dict()
+
+    assert analysis["adapter_fire_count"] == 2
+    assert analysis["adapter_supported_provider_by_outcome"] == {
+        "krk.edge_trap_close:mate": 2
+    }
+    assert analysis["adapter_supported_move_by_outcome"] == {"a4a7:mate": 2}
+
+
 def test_analyze_handoff_records_summarizes_counterfactual_sweeps():
     diagnostic = {
         "total": 2,

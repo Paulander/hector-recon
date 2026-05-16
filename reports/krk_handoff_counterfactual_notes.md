@@ -3173,3 +3173,125 @@ adapter support is explicit and opt-in
 topology loads with formal pairs
 unit/regression suite passes
 ```
+
+## Slice 69: Stage 7 Support-Adapter Behavioral Validation
+
+Validation focus:
+
+```text
+prove adapter default-off equivalence
+make adapter support traceable in diagnostics
+run small Stage 7 smoke before any guardrails or promotion
+```
+
+Important implementation correction:
+
+```text
+Stage 7 overlay topology does not currently expose `skill.krk.edge_trap_close`
+as a provider node; edge-trap ownership is represented through actuator/leg
+metadata. The support-adapter compiler was relaxed to allow provider-ID
+support without requiring a provider SCRIPT node. It still emits no direct
+provider request edge.
+```
+
+Default-off equivalence:
+
+```text
+base:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_drive_repair_sandbox/topology/krk_entry_topology_refreshed.json
+
+sandbox:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_drive_repair_sandbox/topology/krk_entry_topology_edge_trap_support_adapter_off.json
+
+artifact:
+  reports/structural_candidates/stage7_default_off_equiv_edge_adapter_3_h5.json
+
+result:
+  equivalent: true
+  packet_count: 9
+  shadow_candidate_count: 6
+  adapter_fire_count: 0
+```
+
+Adapter traceability:
+
+```text
+adapter:
+  script.krk.support.krk_edge_rook_transfer_recovery_to_krk_edge_trap_close
+
+source role:
+  krk.edge_rook_transfer_recovery
+
+provider:
+  krk.edge_trap_close
+
+trace fields:
+  adapter_id
+  source_role
+  provider_id
+  role_confirmed
+  source_terms
+  support_amount
+  direct_request=false
+```
+
+The diagnostic path now reports both selected-suggestion adapter support and
+lower-ranked adapter-supported suggestions:
+
+```text
+adapter_fire_count
+adapter_supported_provider_by_outcome
+adapter_supported_move_by_outcome
+```
+
+Small smoke matrix:
+
+```text
+baseline:
+  reports/structural_candidates/stage7_overlay_no_adapter_10_h20.json
+
+adapter 0.05:
+  reports/structural_candidates/stage7_edge_adapter_on_w005_10_h20.json
+
+adapter 0.10:
+  reports/structural_candidates/stage7_edge_adapter_on_w010_10_h20.json
+
+comparison:
+  reports/structural_candidates/stage7_edge_adapter_smoke_comparison_10_h20.json
+```
+
+Observed result:
+
+```text
+baseline:
+  playouts: {max_plies: 10}
+  shadow_candidate_count: 20
+
+0.05 adapter:
+  playouts: {max_plies: 10}
+  shadow_candidate_count: 20
+  adapter_fire_count: 12
+  supported provider: krk.edge_trap_close:max_plies = 12
+  supported move: a7d7:max_plies = 12
+
+0.10 adapter:
+  playouts: {max_plies: 10}
+  shadow_candidate_count: 20
+  adapter_fire_count: 12
+  supported provider: krk.edge_trap_close:max_plies = 12
+  supported move: a7d7:max_plies = 12
+```
+
+Diagnosis:
+
+```text
+adapter_traceable_but_target_neutral
+candidate_status: sandboxed_neutral_parameter_or_role_insufficient
+promotion_status: sandboxed
+causal_status: opt_in_only
+```
+
+No guardrails were run because the adapter did not improve Stage 7 target
+conversion. The next useful diagnostic is not stronger support by default; it
+is to inspect why the supported edge-trap move family (`a7d7`) remains
+max-plies under current continuation.

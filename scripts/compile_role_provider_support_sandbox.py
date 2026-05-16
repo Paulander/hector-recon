@@ -43,6 +43,7 @@ def compile_support_sandbox(
     proposal_path: Path,
     output_path: Path,
     enable_explicit_support_by_default: bool = False,
+    support_weight: float | None = None,
 ) -> dict[str, Any]:
     topology = _load_json(topology_path)
     proposal = _load_json(proposal_path)
@@ -63,8 +64,13 @@ def compile_support_sandbox(
         provider_id = str(proposal.get("target_provider") or "")
         source_role_script = str(relation.get("source_role_script") or "")
         target_provider_skill = str(relation.get("target_provider_skill") or "")
-        if not role_id or not provider_id or source_role_script not in topology["nodes"] or target_provider_skill not in topology["nodes"]:
+        if not role_id or not provider_id or source_role_script not in topology["nodes"]:
             continue
+        relation_weight = (
+            float(support_weight)
+            if support_weight is not None
+            else float(relation.get("initial_weight", 0.0) or 0.0)
+        )
         adapter_id = f"script.krk.support.{_safe_id(role_id)}_to_{_safe_id(provider_id)}"
         marker_id = f"terminal.krk.support.{_safe_id(role_id)}_to_{_safe_id(provider_id)}_marker"
         topology["nodes"][adapter_id] = {
@@ -78,7 +84,7 @@ def compile_support_sandbox(
                 "source_role_script": source_role_script,
                 "target_provider_skill": target_provider_skill,
                 "support_marker_id": marker_id,
-                "support_weight": float(relation.get("initial_weight", 0.0) or 0.0),
+                "support_weight": relation_weight,
                 "causal_status": "sandbox_opt_in",
                 "enabled_by_default": bool(enable_explicit_support_by_default),
                 "description": "Gated explicit role-provider support adapter; does not directly request provider skill.",
@@ -103,7 +109,7 @@ def compile_support_sandbox(
             adapter_id,
             marker_id,
             "SUB",
-            float(relation.get("initial_weight", 0.0) or 0.0),
+            relation_weight,
             consolidate=False,
             trainable=True,
             edge_kind="visible_role_provider_support_weight",
@@ -117,6 +123,7 @@ def compile_support_sandbox(
         "enabled_by_default": bool(enable_explicit_support_by_default),
         "adapter_count": len(added_adapters),
         "adapters": added_adapters,
+        "support_weight_override": support_weight,
         "causal_status": "sandbox_opt_in",
         "compile_strategy": proposal.get("sandbox_compile_strategy"),
     }
@@ -136,6 +143,8 @@ def main() -> int:
     parser.add_argument("--proposal", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--enable-explicit-support-by-default", action="store_true")
+    parser.add_argument("--support-weight", type=float, default=None,
+                        help="Override proposed initial support weight for adapter smoke tests")
     parser.add_argument("--no-json-stdout", action="store_true")
     args = parser.parse_args()
 
@@ -144,6 +153,7 @@ def main() -> int:
         proposal_path=args.proposal,
         output_path=args.output,
         enable_explicit_support_by_default=args.enable_explicit_support_by_default,
+        support_weight=args.support_weight,
     )
     summary = topology.get("meta", {}).get("role_provider_support_sandbox", {})
     if not args.no_json_stdout:
