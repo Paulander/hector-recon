@@ -14,6 +14,7 @@ Output: krk_entry_topology.json with:
 
 import json
 import pickle
+import copy
 from pathlib import Path
 from typing import Dict, List, Any
 import numpy as np
@@ -373,24 +374,56 @@ def compile_overlay_topology(
         "promotion_status": "overlay_candidate",
     }
 
+    def _next_free_actuator_id() -> int:
+        used = set()
+        for node_id in topology.get("nodes", {}):
+            for prefix in ("leg_", "precond_", "act_script_", "actuator_", "postcond_"):
+                if node_id.startswith(prefix):
+                    suffix = node_id[len(prefix):]
+                    if suffix.isdigit():
+                        used.add(int(suffix))
+        return (max(used) + 1) if used else 0
+
     added = []
+    remapped = []
     for actuator in overlay_actuators:
+        source_actuator_id = int(actuator.id)
+        target_actuator = actuator
+        existing_ids = {
+            f"leg_{source_actuator_id}",
+            f"precond_{source_actuator_id}",
+            f"act_script_{source_actuator_id}",
+            f"actuator_{source_actuator_id}",
+            f"postcond_{source_actuator_id}",
+        }
+        if existing_ids.intersection(topology.get("nodes", {})):
+            target_actuator = copy.copy(actuator)
+            target_actuator.id = _next_free_actuator_id()
+            remapped.append({
+                "source_actuator_id": source_actuator_id,
+                "overlay_actuator_id": int(target_actuator.id),
+            })
         skill_node_id = ensure_skill_node(
             topology,
-            getattr(actuator, "curriculum_label", None),
+            getattr(target_actuator, "curriculum_label", None),
             provider_metadata=overlay_metadata,
         )
         create_leg_micro_script(
             topology,
-            actuator,
+            target_actuator,
             mature_sensors,
             skill_node_id,
             provider_metadata=overlay_metadata,
             allow_existing=False,
         )
-        added.append(f"actuator_{actuator.id}")
+        for node_prefix in ("leg", "precond", "act_script", "actuator", "postcond"):
+            node_id = f"{node_prefix}_{target_actuator.id}"
+            if node_id in topology["nodes"]:
+                topology["nodes"][node_id].setdefault("meta", {})["source_actuator_id"] = source_actuator_id
+        added.append(f"actuator_{target_actuator.id}")
 
     topology["meta"]["provider_preservation"]["overlay_actuators_added"] = added
+    topology["meta"]["provider_preservation"]["overlay_actuator_id_remap"] = remapped
     topology["meta"]["provider_preservation"]["frozen_base_provider_count"] = sum(
         1
         for node in topology["nodes"].values()

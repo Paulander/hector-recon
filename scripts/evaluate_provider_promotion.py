@@ -174,6 +174,11 @@ def evaluate_promotion(
         guardrail_deltas.append(delta)
         if regressed:
             guardrail_delta_failures.append({"kind": "guardrail_delta", **delta})
+    guardrail_control_debt = [
+        {"kind": "guardrail_control_debt", **item}
+        for item in guardrail_controls
+        if not item.get("passed", False)
+    ]
 
     failures = []
     if not stage["passed"]:
@@ -182,7 +187,7 @@ def evaluate_promotion(
         failures.extend(guardrail_delta_failures)
     else:
         failures.extend({"kind": "guardrail", **item} for item in guardrails if not item["passed"])
-    if stage["passed"] and not failures:
+    if stage["passed"] and not failures and not guardrail_control_debt:
         status = "promoted"
     elif guardrail_delta_failures:
         status = "quarantine"
@@ -200,6 +205,7 @@ def evaluate_promotion(
         "guardrails": guardrails,
         "guardrail_controls": guardrail_controls,
         "guardrail_deltas_vs_control": guardrail_deltas,
+        "guardrail_control_debt": guardrail_control_debt,
         "failures": failures,
     }
 

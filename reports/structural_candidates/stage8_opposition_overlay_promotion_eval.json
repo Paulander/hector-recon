@@ -1,0 +1,207 @@
+{
+  "schema_version": "provider_promotion_eval.v1",
+  "promotion_status": "overlay_only",
+  "stage": {
+    "path": "reports/structural_candidates/stage8_opposition_overlay_target_100_h40.json",
+    "label": "opposition_tempo",
+    "total": 100,
+    "improved_rate": 1.0,
+    "worsened_rate": 0.0,
+    "mate_rate": 1.0,
+    "max_plies_rate": 0.0,
+    "shadow_candidates": 0,
+    "passed": true,
+    "failure_reasons": []
+  },
+  "stage_baseline": null,
+  "target_delta_vs_baseline": null,
+  "target_improved_vs_baseline": null,
+  "guardrails": [
+    {
+      "path": "reports/structural_candidates/stage8_opposition_guard_stage7_box_50_h40.json",
+      "label": "box_shrink",
+      "total": 50,
+      "improved_rate": 1.0,
+      "worsened_rate": 0.0,
+      "mate_rate": 0.38,
+      "max_plies_rate": 0.62,
+      "shadow_candidates": 87,
+      "passed": false,
+      "failure_reasons": [
+        "mate_rate=0.380 < 0.650",
+        "max_plies_rate=0.620 > 0.250"
+      ]
+    },
+    {
+      "path": "reports/structural_candidates/stage8_opposition_guard_stage6_drive_50_h40.json",
+      "label": "drive_to_edge",
+      "total": 50,
+      "improved_rate": 1.0,
+      "worsened_rate": 0.0,
+      "mate_rate": 1.0,
+      "max_plies_rate": 0.0,
+      "shadow_candidates": 0,
+      "passed": true,
+      "failure_reasons": []
+    },
+    {
+      "path": "reports/structural_candidates/stage8_opposition_guard_stage5_fence_50_h40.json",
+      "label": "fence_established",
+      "total": 50,
+      "improved_rate": 1.0,
+      "worsened_rate": 0.0,
+      "mate_rate": 1.0,
+      "max_plies_rate": 0.0,
+      "shadow_candidates": 0,
+      "passed": true,
+      "failure_reasons": []
+    },
+    {
+      "path": "reports/structural_candidates/stage8_opposition_guard_stage4_wrong_tempo_50_h40.json",
+      "label": "edge_trap_wrong_tempo",
+      "total": 50,
+      "improved_rate": 1.0,
+      "worsened_rate": 0.0,
+      "mate_rate": 0.94,
+      "max_plies_rate": 0.06,
+      "shadow_candidates": 6,
+      "passed": true,
+      "failure_reasons": []
+    }
+  ],
+  "guardrail_controls": [
+    {
+      "path": "reports/structural_candidates/stage8_compare_base_stage7_box_50_h40.json",
+      "label": "box_shrink",
+      "total": 50,
+      "improved_rate": 1.0,
+      "worsened_rate": 0.0,
+      "mate_rate": 0.38,
+      "max_plies_rate": 0.62,
+      "shadow_candidates": 87,
+      "passed": false,
+      "failure_reasons": [
+        "mate_rate=0.380 < 0.650",
+        "max_plies_rate=0.620 > 0.250"
+      ]
+    },
+    {
+      "path": "reports/structural_candidates/stage7_post_king_tempo_guard_stage6_drive_50_h40.json",
+      "label": "drive_to_edge",
+      "total": 50,
+      "improved_rate": 1.0,
+      "worsened_rate": 0.0,
+      "mate_rate": 1.0,
+      "max_plies_rate": 0.0,
+      "shadow_candidates": 0,
+      "passed": true,
+      "failure_reasons": []
+    },
+    {
+      "path": "reports/structural_candidates/stage7_post_king_tempo_guard_stage5_fence_50_h40.json",
+      "label": "fence_established",
+      "total": 50,
+      "improved_rate": 1.0,
+      "worsened_rate": 0.0,
+      "mate_rate": 1.0,
+      "max_plies_rate": 0.0,
+      "shadow_candidates": 0,
+      "passed": true,
+      "failure_reasons": []
+    },
+    {
+      "path": "reports/structural_candidates/stage7_post_king_tempo_scoped_guard_stage4_wrong_tempo_50_h40.json",
+      "label": "edge_trap_wrong_tempo",
+      "total": 50,
+      "improved_rate": 1.0,
+      "worsened_rate": 0.0,
+      "mate_rate": 0.72,
+      "max_plies_rate": 0.28,
+      "shadow_candidates": 28,
+      "passed": false,
+      "failure_reasons": [
+        "max_plies_rate=0.280 > 0.250"
+      ]
+    }
+  ],
+  "guardrail_deltas_vs_control": [
+    {
+      "mate_rate_delta": 0.0,
+      "max_plies_rate_delta": 0.0,
+      "improved_rate_delta": 0.0,
+      "worsened_rate_delta": 0.0,
+      "shadow_candidates_delta": 0,
+      "index": 0,
+      "candidate_path": "reports/structural_candidates/stage8_opposition_guard_stage7_box_50_h40.json",
+      "control_path": "reports/structural_candidates/stage8_compare_base_stage7_box_50_h40.json",
+      "regressed_vs_control": false
+    },
+    {
+      "mate_rate_delta": 0.0,
+      "max_plies_rate_delta": 0.0,
+      "improved_rate_delta": 0.0,
+      "worsened_rate_delta": 0.0,
+      "shadow_candidates_delta": 0,
+      "index": 1,
+      "candidate_path": "reports/structural_candidates/stage8_opposition_guard_stage6_drive_50_h40.json",
+      "control_path": "reports/structural_candidates/stage7_post_king_tempo_guard_stage6_drive_50_h40.json",
+      "regressed_vs_control": false
+    },
+    {
+      "mate_rate_delta": 0.0,
+      "max_plies_rate_delta": 0.0,
+      "improved_rate_delta": 0.0,
+      "worsened_rate_delta": 0.0,
+      "shadow_candidates_delta": 0,
+      "index": 2,
+      "candidate_path": "reports/structural_candidates/stage8_opposition_guard_stage5_fence_50_h40.json",
+      "control_path": "reports/structural_candidates/stage7_post_king_tempo_guard_stage5_fence_50_h40.json",
+      "regressed_vs_control": false
+    },
+    {
+      "mate_rate_delta": 0.21999999999999997,
+      "max_plies_rate_delta": -0.22000000000000003,
+      "improved_rate_delta": 0.0,
+      "worsened_rate_delta": 0.0,
+      "shadow_candidates_delta": -22,
+      "index": 3,
+      "candidate_path": "reports/structural_candidates/stage8_opposition_guard_stage4_wrong_tempo_50_h40.json",
+      "control_path": "reports/structural_candidates/stage7_post_king_tempo_scoped_guard_stage4_wrong_tempo_50_h40.json",
+      "regressed_vs_control": false
+    }
+  ],
+  "guardrail_control_debt": [
+    {
+      "kind": "guardrail_control_debt",
+      "path": "reports/structural_candidates/stage8_compare_base_stage7_box_50_h40.json",
+      "label": "box_shrink",
+      "total": 50,
+      "improved_rate": 1.0,
+      "worsened_rate": 0.0,
+      "mate_rate": 0.38,
+      "max_plies_rate": 0.62,
+      "shadow_candidates": 87,
+      "passed": false,
+      "failure_reasons": [
+        "mate_rate=0.380 < 0.650",
+        "max_plies_rate=0.620 > 0.250"
+      ]
+    },
+    {
+      "kind": "guardrail_control_debt",
+      "path": "reports/structural_candidates/stage7_post_king_tempo_scoped_guard_stage4_wrong_tempo_50_h40.json",
+      "label": "edge_trap_wrong_tempo",
+      "total": 50,
+      "improved_rate": 1.0,
+      "worsened_rate": 0.0,
+      "mate_rate": 0.72,
+      "max_plies_rate": 0.28,
+      "shadow_candidates": 28,
+      "passed": false,
+      "failure_reasons": [
+        "max_plies_rate=0.280 > 0.250"
+      ]
+    }
+  ],
+  "failures": []
+}

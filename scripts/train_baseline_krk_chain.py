@@ -865,6 +865,7 @@ def update_learner_from_transitions(
     curriculum_label: str | None = None,
     pruning_profile: str = "explore",
     protected_sensor_ids: set[int] | None = None,
+    prevent_cross_label_actuator_merge: bool = False,
 ) -> Dict[str, Any]:
     """Shared update logic for sensors/actuators."""
     if not transitions:
@@ -985,6 +986,7 @@ def update_learner_from_transitions(
     mature_sensors = learner.get_mature_sensors()
     newly_created_actuators = 0
     merged_actuator_ids: List[int] = []
+    cross_label_merge_guard_skipped = 0
     candidate_actuator_count = 0
     pruned_actuator_ids: List[int] = []
     if len(mature_sensors) >= 3:
@@ -1000,8 +1002,17 @@ def update_learner_from_transitions(
             )
             candidate_actuator_count = len(actuator_specs)
             for spec in actuator_specs:
+                merge_pool = learner.actuators
+                if prevent_cross_label_actuator_merge and curriculum_label is not None:
+                    before_merge_pool = len(merge_pool)
+                    merge_pool = [
+                        actuator
+                        for actuator in learner.actuators
+                        if getattr(actuator, "curriculum_label", None) in {None, curriculum_label}
+                    ]
+                    cross_label_merge_guard_skipped += before_merge_pool - len(merge_pool)
                 existing = find_similar_actuator(
-                    learner.actuators,
+                    merge_pool,
                     spec,
                     similarity_threshold=0.9,
                     delta_eps=delta_eps,
@@ -1053,6 +1064,7 @@ def update_learner_from_transitions(
         "pruned_sensor_ids": pruned_sensor_ids,
         "pruned_actuator_ids": pruned_actuator_ids,
         "merged_actuator_ids": sorted(set(merged_actuator_ids)),
+        "cross_label_merge_guard_skipped": cross_label_merge_guard_skipped,
         "candidate_actuator_count": candidate_actuator_count,
         "pre_prune_counts": pre_prune_counts,
         "post_prune_counts": {
@@ -1106,6 +1118,8 @@ def main() -> None:
     parser.add_argument("--min-mature-for-goals", type=int, default=8)
     parser.add_argument("--max-actuators-per-stage", type=int, default=30)
     parser.add_argument("--max-actuators-total", type=int, default=0)
+    parser.add_argument("--prevent-cross-label-actuator-merge", action="store_true", default=False,
+                        help="When training overlay candidates, do not merge new-stage actuator patterns into older labelled providers")
     parser.add_argument("--delta-eps", type=float, default=0.22)
     parser.add_argument("--top-k", type=int, default=3)
     parser.add_argument("--stage1-reward-scale", type=float, default=1.0,
@@ -1255,6 +1269,7 @@ def main() -> None:
                     learner,
                     allow_prune_foundation=args.allow_prune_foundation,
                 ),
+                prevent_cross_label_actuator_merge=args.prevent_cross_label_actuator_merge,
             )
             goal_sensor_ids = ensure_stage0_goal_memories(learner, teacher, args, goal_sensor_ids)
 
@@ -1399,6 +1414,7 @@ def main() -> None:
                 learner,
                 allow_prune_foundation=args.allow_prune_foundation,
             ),
+            prevent_cross_label_actuator_merge=args.prevent_cross_label_actuator_merge,
         )
 
         if args.snapshot_every and cycle % args.snapshot_every == 0:
@@ -1520,6 +1536,7 @@ def main() -> None:
                     learner,
                     allow_prune_foundation=args.allow_prune_foundation,
                 ),
+                prevent_cross_label_actuator_merge=args.prevent_cross_label_actuator_merge,
             )
 
             if args.snapshot_every and cycle % args.snapshot_every == 0:

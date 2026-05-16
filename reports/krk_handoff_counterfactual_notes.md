@@ -3864,3 +3864,67 @@ The local one-ply objective is still not fully optimal, but conversion is
 solved on this scaled validation. This reinforces the architectural separation:
 Stage 7 local reward calibration can improve later through weight/plasticity
 work, while the scoped handoff repair is currently composition-valid.
+## Stage 8 opposition-tempo overlay candidate
+
+Status: `overlay_only`, not global default.
+
+Stage 8 initially had no explicit provider in the validated Stage 7 topology:
+
+```text
+label: opposition_tempo
+stage_filter: 8
+baseline result: no_move=25/25
+```
+
+The first Stage 8 training attempt produced many positive transitions, but all
+candidate actuator patterns merged into older labelled providers. That is a
+provider-preservation problem: a later stage cannot become a versioned overlay
+if its patterns silently rewrite or reinforce lower-stage labels. I added an
+opt-in training flag:
+
+```text
+--prevent-cross-label-actuator-merge
+```
+
+With that flag enabled, Stage 8 produced 7 explicit `opposition_tempo`
+actuators. The overlay compiler then composed only those actuators onto the
+validated scoped Stage 7 topology as `stage8_opposition_overlay_v1`. The
+compiler now remaps overlay actuator IDs deterministically if they collide with
+frozen base topology IDs, preserving the original `source_actuator_id` in node
+metadata.
+
+Target validation:
+
+```text
+artifact: reports/structural_candidates/stage8_opposition_overlay_target_100_h40.json
+result: 100/100 mate
+local: 100/100 improved, 100/100 optimal
+shadow candidates: 0
+```
+
+Paired guardrails:
+
+```text
+Stage 6 drive_to_edge: 50/50 mate, 0 shadows
+Stage 5 fence_established: 50/50 mate, 0 shadows
+Stage 4 wrong_tempo: 47/50 mate, 6 shadows
+Stage 7 box_shrink: 19/50 mate, 87 shadows
+```
+
+The Stage 7 box-shrink guardrail did not regress relative to the same command
+on the validated Stage 7 base topology; the control also produced 19/50 mate and
+87 shadows. That means this is existing guardrail debt or command/provenance
+drift, not a Stage 8 overlay delta. The promotion evaluator was tightened so
+paired guardrail controls that fail absolute thresholds now block full
+promotion. The resulting status is:
+
+```text
+promotion_status: overlay_only
+reason: target passes and no paired guardrail deltas regress, but control guardrail debt exists
+artifact: reports/structural_candidates/stage8_opposition_overlay_promotion_eval.json
+manifest: reports/structural_candidates/stage8_opposition_overlay_manifest.json
+```
+
+Architectural note: Stage 8 is useful as an overlay candidate, but should not
+be treated as a globally promoted KRK base until the Stage 7/Stage 4 guardrail
+debt is resolved or explicitly scoped.

@@ -353,6 +353,51 @@ def test_annotate_provider_metadata_backfills_plasticity_masks_without_relabelin
     assert meta["can_m4_consolidate"] is True
 
 
+def test_overlay_compiler_remaps_conflicting_overlay_actuator_ids(tmp_path):
+    base_topology = {"nodes": {}, "edges": [], "meta": {}}
+    base_sensor = _dummy_sensor()
+    base_actuator = _dummy_actuator()
+    base_actuator.curriculum_label = "box_shrink"
+    create_root_node(base_topology)
+    create_hub_node(base_topology)
+    create_leg_micro_script(base_topology, base_actuator, [base_sensor])
+    base_path = tmp_path / "base_topology.json"
+    base_path.write_text(json.dumps(base_topology), encoding="utf-8")
+
+    overlay_sensor = _dummy_sensor()
+    overlay_actuator = _dummy_actuator()
+    overlay_actuator.curriculum_label = "opposition_tempo"
+    overlay_learner = SimpleNamespace(
+        sensors=[overlay_sensor],
+        actuators=[overlay_actuator],
+        feature_set="krk_rich_v1",
+        feature_names=("x", "y", "z"),
+    )
+    overlay_path = tmp_path / "overlay.pkl"
+    import pickle
+
+    with overlay_path.open("wb") as fh:
+        pickle.dump(overlay_learner, fh)
+
+    output_path = tmp_path / "composed.json"
+    topology = _baseline_to_recon.compile_overlay_topology(
+        base_topology_path=base_path,
+        overlay_learner_path=overlay_path,
+        output_path=output_path,
+        overlay_label="opposition_tempo",
+        base_provider_version="stage7_scoped_validated_v1",
+        overlay_provider_version="stage8_opposition_overlay_v1",
+    )
+
+    remap = topology["meta"]["provider_preservation"]["overlay_actuator_id_remap"]
+    assert remap == [{"source_actuator_id": 7, "overlay_actuator_id": 8}]
+    assert "actuator_7" in topology["nodes"]
+    assert "actuator_8" in topology["nodes"]
+    assert topology["nodes"]["actuator_7"]["meta"]["curriculum_label"] == "box_shrink"
+    assert topology["nodes"]["actuator_8"]["meta"]["curriculum_label"] == "opposition_tempo"
+    assert topology["nodes"]["actuator_8"]["meta"]["source_actuator_id"] == 7
+
+
 def test_provider_promotion_eval_promotes_when_stage_and_guardrails_pass(tmp_path):
     stage_path = tmp_path / "stage.json"
     guardrail_path = tmp_path / "guardrail.json"
@@ -380,6 +425,46 @@ def test_provider_promotion_eval_promotes_when_stage_and_guardrails_pass(tmp_pat
     assert result["promotion_status"] == "promoted"
     assert result["stage"]["passed"] is True
     assert result["guardrails"][0]["passed"] is True
+
+
+def test_provider_promotion_eval_keeps_overlay_only_when_control_guardrail_has_debt(tmp_path):
+    stage_path = tmp_path / "stage.json"
+    guardrail_path = tmp_path / "guardrail.json"
+    control_path = tmp_path / "control.json"
+    stage_path.write_text(
+        json.dumps({
+            "total": 100,
+            "improved": 100,
+            "worsened": 0,
+            "playouts": {"mate": 100},
+            "shadow_candidates": [],
+        }),
+        encoding="utf-8",
+    )
+    weak_guardrail = {
+        "total": 50,
+        "improved": 50,
+        "worsened": 0,
+        "playouts": {"mate": 19, "max_plies": 31},
+        "shadow_candidates": [{}] * 10,
+    }
+    guardrail_path.write_text(json.dumps(weak_guardrail), encoding="utf-8")
+    control_path.write_text(json.dumps(weak_guardrail), encoding="utf-8")
+
+    result = _provider_promotion.evaluate_promotion(
+        stage_artifact=stage_path,
+        guardrail_artifacts=[guardrail_path],
+        guardrail_control_artifacts=[control_path],
+        min_improved_rate=0.70,
+        max_worsened_rate=0.20,
+        min_mate_rate=0.65,
+        max_max_plies_rate=0.25,
+        max_shadow_candidates=100,
+    )
+
+    assert result["promotion_status"] == "overlay_only"
+    assert result["failures"] == []
+    assert result["guardrail_control_debt"][0]["path"] == str(control_path)
 
 
 def test_provider_promotion_eval_keeps_stage_as_overlay_when_guardrail_fails(tmp_path):

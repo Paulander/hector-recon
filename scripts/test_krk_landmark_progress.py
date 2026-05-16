@@ -1638,6 +1638,7 @@ def play_to_mate(
     stage7_post_king_tempo_enabled: bool = False,
     stage7_post_king_tempo_score: float = 30.0,
     early_stop_stable_suggestions: int = 0,
+    lock_stage_filter_through_playout: bool = False,
     forced_successor_skill: Optional[str] = None,
     perf_profile: dict | None = None,
     enable_diagnostic_caches: bool = False,
@@ -1698,9 +1699,16 @@ def play_to_mate(
             return finish("draw", ply)
 
         if b.turn == chess.WHITE:
-            # Use the stage filter for the tested handoff move, then allow the
-            # full topology to convert through lower-stage skills.
-            active_stage_filter = stage_filter if white_moves == 0 else None
+            # Default: use the stage filter for the tested handoff move, then
+            # allow the full topology to convert through lower-stage skills.
+            # Guardrail diagnostics can opt into keeping the protected provider
+            # version locked for the full playout so later overlays cannot
+            # silently interfere with validated lower-stage ownership.
+            active_stage_filter = (
+                stage_filter
+                if (white_moves == 0 or lock_stage_filter_through_playout)
+                else None
+            )
             active_forced_successor = forced_successor_skill if white_moves == 0 else None
             before_fen = b.fen()
             with _profile_timer(perf_profile, "stagnation_summary_time"):
@@ -2738,6 +2746,7 @@ def evaluate_landmark_progress(
     stage7_post_king_tempo_enabled: bool = False,
     stage7_post_king_tempo_score: float = 30.0,
     early_stop_stable_suggestions: int = 0,
+    lock_stage_filter_through_playout: bool = False,
     counterfactual_successors: tuple[str, ...] = (),
     max_counterfactual_sweeps: int = 0,
     counterfactual_sweeps_output: Optional[Path] = None,
@@ -3035,6 +3044,7 @@ def evaluate_landmark_progress(
                 stage7_post_king_tempo_enabled=stage7_post_king_tempo_enabled,
                 stage7_post_king_tempo_score=stage7_post_king_tempo_score,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
+                lock_stage_filter_through_playout=lock_stage_filter_through_playout,
                 perf_profile=perf_profile,
                 enable_diagnostic_caches=enable_diagnostic_caches,
             )
@@ -3539,6 +3549,7 @@ def evaluate_landmark_progress(
     stats["stage7_post_king_tempo_enabled"] = stage7_post_king_tempo_enabled
     stats["stage7_post_king_tempo_score"] = stage7_post_king_tempo_score
     stats["early_stop_stable_suggestions"] = int(early_stop_stable_suggestions)
+    stats["lock_stage_filter_through_playout"] = bool(lock_stage_filter_through_playout)
     stats["diagnostic_caches_enabled"] = bool(enable_diagnostic_caches)
     stats["deterministic_sample_seeds"] = bool(deterministic_sample_seeds)
     if sample_indices is not None:
@@ -4015,6 +4026,8 @@ def main() -> None:
                         help="Number of actuator suggestions retained per engine decision")
     parser.add_argument("--early-stop-stable-suggestions", type=int, default=0,
                         help="Diagnostic speedup: stop a ReCoN move loop after the top suggestion is stable for this many ticks (0 disables)")
+    parser.add_argument("--lock-stage-filter-through-playout", action="store_true",
+                        help="Guardrail diagnostic: keep --stage-filter active for every White playout move")
     parser.add_argument("--debug-trace-max-plies", type=int, default=None,
                         help="If set, truncate saved debug playout traces to this many ply events")
     parser.add_argument("--stop-after-conversion-failures", type=int, default=0,
@@ -4147,6 +4160,7 @@ def main() -> None:
         stage7_post_king_tempo_enabled=args.enable_stage7_post_king_tempo,
         stage7_post_king_tempo_score=args.stage7_post_king_tempo_score,
         early_stop_stable_suggestions=args.early_stop_stable_suggestions,
+        lock_stage_filter_through_playout=args.lock_stage_filter_through_playout,
         counterfactual_successors=tuple(
             item.strip()
             for item in (args.counterfactual_successors or "").split(",")
