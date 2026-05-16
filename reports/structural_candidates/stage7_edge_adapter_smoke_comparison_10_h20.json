@@ -22,13 +22,9 @@
       "shadow_candidate_count": 20,
       "no_move": 0,
       "optimal": 7,
-      "adapter_fire_count": 12,
-      "adapter_supported_provider_by_outcome": {
-        "krk.edge_trap_close:max_plies": 12
-      },
-      "adapter_supported_move_by_outcome": {
-        "a7d7:max_plies": 12
-      }
+      "adapter_fire_count": 0,
+      "adapter_supported_provider_by_outcome": {},
+      "adapter_supported_move_by_outcome": {}
     },
     "w010": {
       "artifact": "reports/structural_candidates/stage7_edge_adapter_on_w010_10_h20.json",
@@ -39,18 +35,14 @@
       "shadow_candidate_count": 20,
       "no_move": 0,
       "optimal": 7,
-      "adapter_fire_count": 12,
-      "adapter_supported_provider_by_outcome": {
-        "krk.edge_trap_close:max_plies": 12
-      },
-      "adapter_supported_move_by_outcome": {
-        "a7d7:max_plies": 12
-      }
+      "adapter_fire_count": 0,
+      "adapter_supported_provider_by_outcome": {},
+      "adapter_supported_move_by_outcome": {}
     }
   },
-  "diagnosis": "adapter_traceable_but_target_neutral",
-  "candidate_status": "sandboxed_neutral_parameter_or_role_insufficient",
+  "diagnosis": "adapter_candidate_overbroad_then_blocked_by_support_precondition",
+  "candidate_status": "sandboxed_needs_more_terms_or_downstream_capacity",
   "promotion_status": "sandboxed",
   "causal_status": "opt_in_only",
-  "recommended_next_action": "do_not_guardrail_or_promote; diagnose why supported edge_trap_close move a7d7 does not convert before adding more support or topology"
+  "recommended_next_action": "do_not_guardrail_or_promote; Stage 7 failure is not fixed by edge-trap support because supported a7d7 does not convert and stricter support terms correctly block this state"
 }

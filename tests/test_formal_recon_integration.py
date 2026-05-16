@@ -1157,6 +1157,7 @@ def test_compile_role_provider_support_sandbox_adds_adapter_not_direct_provider_
                     "target_provider_skill": "skill.krk.drive_to_edge",
                     "requires_support_adapter": True,
                     "initial_weight": 0.0,
+                    "support_required_terms": ["white_king_support_available"],
                 }
             ],
         }),
@@ -1174,6 +1175,9 @@ def test_compile_role_provider_support_sandbox_adds_adapter_not_direct_provider_
     assert meta["enabled_by_default"] is False
     adapter_id = meta["adapters"][0]
     assert topology["nodes"][adapter_id]["factory"].endswith("create_krk_role_provider_support_adapter")
+    assert topology["nodes"][adapter_id]["meta"]["support_required_terms"] == [
+        "white_king_support_available"
+    ]
     direct_edges = [
         edge for edge in topology["edges"]
         if edge["src"] == "script.krk.successor.box_shrink_to_drive_repair_affordance"

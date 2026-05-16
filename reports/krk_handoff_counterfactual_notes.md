@@ -3267,19 +3267,10 @@ baseline:
   playouts: {max_plies: 10}
   shadow_candidate_count: 20
 
-0.05 adapter:
-  playouts: {max_plies: 10}
-  shadow_candidate_count: 20
-  adapter_fire_count: 12
-  supported provider: krk.edge_trap_close:max_plies = 12
-  supported move: a7d7:max_plies = 12
-
-0.10 adapter:
-  playouts: {max_plies: 10}
-  shadow_candidate_count: 20
-  adapter_fire_count: 12
-  supported provider: krk.edge_trap_close:max_plies = 12
-  supported move: a7d7:max_plies = 12
+initial 0.05/0.10 adapter:
+  adapter fired on krk.edge_trap_close suggestions
+  supported move family: a7d7
+  conversion remained max_plies
 ```
 
 Diagnosis:
@@ -3295,3 +3286,62 @@ No guardrails were run because the adapter did not improve Stage 7 target
 conversion. The next useful diagnostic is not stronger support by default; it
 is to inspect why the supported edge-trap move family (`a7d7`) remains
 max-plies under current continuation.
+
+Follow-up targeted probe:
+
+```text
+artifact:
+  reports/structural_candidates/stage7_supported_a7d7_probe.json
+
+state:
+  6k1/R7/8/8/8/8/5K2/8 w - - 2 2
+
+result:
+  a7d7 -> max_plies at horizons 10/20/40
+  nearby sampled alternatives -> max_plies at horizons 10/20/40
+```
+
+Visible term interpretation:
+
+```text
+edge_rook_transfer_recovery_available: true
+safe_rook_edge_transfer_available: true
+white_king_can_improve_support: true
+white_king_support_available: false
+```
+
+The original adapter hypothesis was therefore overbroad. It supported an
+edge-trap transfer in a state where the white king can improve support but does
+not yet actually support the trap. The adapter contract was tightened:
+
+```text
+support_required_terms:
+  white_king_support_available
+```
+
+Post-fix smoke:
+
+```text
+0.05 adapter:
+  playouts: {max_plies: 10}
+  shadow_candidate_count: 20
+  adapter_fire_count: 0
+
+0.10 adapter:
+  playouts: {max_plies: 10}
+  shadow_candidate_count: 20
+  adapter_fire_count: 0
+```
+
+Updated diagnosis:
+
+```text
+adapter_candidate_overbroad_then_blocked_by_support_precondition
+candidate_status: sandboxed_needs_more_terms_or_downstream_capacity
+promotion_status: sandboxed
+```
+
+The edge-trap support adapter should not be guardrailed or promoted. Stage 7's
+remaining issue is not solved by first-move edge-trap support; it is either a
+missing/weak downstream continuation after box-shrink or a need for a
+king-support-before-edge-trap handoff candidate.

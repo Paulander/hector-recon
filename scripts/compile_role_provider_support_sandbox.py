@@ -85,6 +85,8 @@ def compile_support_sandbox(
                 "target_provider_skill": target_provider_skill,
                 "support_marker_id": marker_id,
                 "support_weight": relation_weight,
+                "support_required_terms": list(relation.get("support_required_terms", []) or []),
+                "support_veto_terms": list(relation.get("support_veto_terms", []) or []),
                 "causal_status": "sandbox_opt_in",
                 "enabled_by_default": bool(enable_explicit_support_by_default),
                 "description": "Gated explicit role-provider support adapter; does not directly request provider skill.",

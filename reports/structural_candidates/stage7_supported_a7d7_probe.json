@@ -1,0 +1,188 @@
+{
+  "schema_version": "stage7_supported_move_probe.v1",
+  "fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+  "rows": [
+    {
+      "move": "a7d7",
+      "legal": true,
+      "post_fen": "6k1/3R4/8/8/8/8/5K2/8 b - - 3 2",
+      "h10": {
+        "result": "max_plies",
+        "plies": 10,
+        "first_reply": "f8e7",
+        "first_successor": "d8h8",
+        "first_successor_skill": "fence_established"
+      },
+      "h20": {
+        "result": "max_plies",
+        "plies": 20,
+        "first_reply": "f8e7",
+        "first_successor": "d8h8",
+        "first_successor_skill": "fence_established"
+      },
+      "h40": {
+        "result": "max_plies",
+        "plies": 40,
+        "first_reply": "f8e7",
+        "first_successor": "d8h8",
+        "first_successor_skill": "fence_established"
+      }
+    },
+    {
+      "move": "a7a8",
+      "legal": true,
+      "post_fen": "R5k1/8/8/8/8/8/5K2/8 b - - 3 2",
+      "h10": {
+        "result": "max_plies",
+        "plies": 10,
+        "first_reply": "h7h6",
+        "first_successor": "g3h4",
+        "first_successor_skill": "stage0_basin"
+      },
+      "h20": {
+        "result": "max_plies",
+        "plies": 20,
+        "first_reply": "h7h6",
+        "first_successor": "g3h4",
+        "first_successor_skill": "stage0_basin"
+      },
+      "h40": {
+        "result": "max_plies",
+        "plies": 40,
+        "first_reply": "h7h6",
+        "first_successor": "g3h4",
+        "first_successor_skill": "stage0_basin"
+      }
+    },
+    {
+      "move": "a7a1",
+      "legal": true,
+      "post_fen": "6k1/8/8/8/8/8/5K2/R7 b - - 3 2",
+      "h10": {
+        "result": "max_plies",
+        "plies": 10,
+        "first_reply": "h8g8",
+        "first_successor": "g3h4",
+        "first_successor_skill": "stage0_basin"
+      },
+      "h20": {
+        "result": "max_plies",
+        "plies": 20,
+        "first_reply": "h8g8",
+        "first_successor": "g3h4",
+        "first_successor_skill": "stage0_basin"
+      },
+      "h40": {
+        "result": "max_plies",
+        "plies": 40,
+        "first_reply": "h8g8",
+        "first_successor": "g3h4",
+        "first_successor_skill": "stage0_basin"
+      }
+    },
+    {
+      "move": "a7e7",
+      "legal": true,
+      "post_fen": "6k1/4R3/8/8/8/8/5K2/8 b - - 3 2",
+      "h10": {
+        "result": "max_plies",
+        "plies": 10,
+        "first_reply": "f8e8",
+        "first_successor": "c7c8",
+        "first_successor_skill": "stage0_basin"
+      },
+      "h20": {
+        "result": "max_plies",
+        "plies": 20,
+        "first_reply": "f8e8",
+        "first_successor": "c7c8",
+        "first_successor_skill": "stage0_basin"
+      },
+      "h40": {
+        "result": "max_plies",
+        "plies": 40,
+        "first_reply": "f8e8",
+        "first_successor": "c7c8",
+        "first_successor_skill": "stage0_basin"
+      }
+    },
+    {
+      "move": "f2g3",
+      "legal": true,
+      "post_fen": "6k1/R7/8/8/8/6K1/8/8 b - - 3 2",
+      "h10": {
+        "result": "max_plies",
+        "plies": 10,
+        "first_reply": "f8e8",
+        "first_successor": "h4g5",
+        "first_successor_skill": "stage0_basin"
+      },
+      "h20": {
+        "result": "max_plies",
+        "plies": 20,
+        "first_reply": "f8e8",
+        "first_successor": "h4g5",
+        "first_successor_skill": "stage0_basin"
+      },
+      "h40": {
+        "result": "max_plies",
+        "plies": 40,
+        "first_reply": "f8e8",
+        "first_successor": "h4g5",
+        "first_successor_skill": "stage0_basin"
+      }
+    },
+    {
+      "move": "f2g2",
+      "legal": true,
+      "post_fen": "6k1/R7/8/8/8/8/6K1/8 b - - 3 2",
+      "h10": {
+        "result": "max_plies",
+        "plies": 10,
+        "first_reply": "f8e8",
+        "first_successor": "h3h4",
+        "first_successor_skill": "stage0_basin"
+      },
+      "h20": {
+        "result": "max_plies",
+        "plies": 20,
+        "first_reply": "f8e8",
+        "first_successor": "h3h4",
+        "first_successor_skill": "stage0_basin"
+      },
+      "h40": {
+        "result": "max_plies",
+        "plies": 40,
+        "first_reply": "f8e8",
+        "first_successor": "h3h4",
+        "first_successor_skill": "stage0_basin"
+      }
+    },
+    {
+      "move": "f2e3",
+      "legal": true,
+      "post_fen": "6k1/R7/8/8/8/4K3/8/8 b - - 3 2",
+      "h10": {
+        "result": "max_plies",
+        "plies": 10,
+        "first_reply": "f8e8",
+        "first_successor": "f4g5",
+        "first_successor_skill": "stage0_basin"
+      },
+      "h20": {
+        "result": "max_plies",
+        "plies": 20,
+        "first_reply": "f8e8",
+        "first_successor": "f4g5",
+        "first_successor_skill": "stage0_basin"
+      },
+      "h40": {
+        "result": "max_plies",
+        "plies": 40,
+        "first_reply": "f8e8",
+        "first_successor": "f4g5",
+        "first_successor_skill": "stage0_basin"
+      }
+    }
+  ]
+}

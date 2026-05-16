@@ -40,16 +40,6 @@ Conversion by semantic alignment:
 Reward/contract/reply/conversion confusion matrix:
 - `reward=true|visible_fence=true|fence_survived_reply=true|conversion=max_plies`: 10
 
-## Role-Provider Support Adapter
-
-- Adapter support fires: 12
-
-Supported providers by outcome:
-- `krk.edge_trap_close:max_plies`: 12
-
-Supported moves by outcome:
-- `a7d7:max_plies`: 12
-
 ## Shadow Candidates
 
 - `repeated_conversion_failure`: 10

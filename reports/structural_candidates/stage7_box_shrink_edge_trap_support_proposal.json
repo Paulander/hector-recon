@@ -25,10 +25,15 @@
         "box_shrink_reward_confirmed",
         "edge_rook_transfer_recovery_available",
         "safe_rook_edge_transfer_available",
+        "white_king_support_available",
         "rook_safe",
         "selected_successor_miscalibrated",
         "repeated_conversion_failure"
       ],
+      "support_required_terms": [
+        "white_king_support_available"
+      ],
+      "support_veto_terms": [],
       "adapter_contract": {
         "kind": "gated_visible_support_adapter",
         "confirm_when": [

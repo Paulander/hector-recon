@@ -455,6 +455,26 @@ def _record_explicit_support_from_adapter(
     blackboard = env.get("blackboard", {})
     if not blackboard.get("explicit_role_provider_support_enabled", False):
         return None
+    visible_terms = blackboard.get("krk_visible_terms", {}) or {}
+    required_terms = list(adapter_node.meta.get("support_required_terms", []) or [])
+    veto_terms = list(adapter_node.meta.get("support_veto_terms", []) or [])
+    missing_terms = [
+        str(term) for term in required_terms
+        if not bool(visible_terms.get(str(term), False))
+    ]
+    active_veto_terms = [
+        str(term) for term in veto_terms
+        if bool(visible_terms.get(str(term), False))
+    ]
+    if missing_terms or active_veto_terms:
+        adapter_node.meta["last_explicit_role_provider_support_blocked"] = {
+            "role_id": role_id,
+            "provider_skill_id": provider_id,
+            "missing_support_required_terms": missing_terms,
+            "active_support_veto_terms": active_veto_terms,
+            "direct_request": False,
+        }
+        return None
     support_weight = _support_adapter_weight(adapter_node, env)
     if support_weight <= 0.0:
         return None

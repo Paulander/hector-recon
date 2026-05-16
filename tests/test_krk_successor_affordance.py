@@ -124,6 +124,49 @@ def test_role_provider_support_adapter_is_inert_when_disabled():
     assert "krk_explicit_role_provider_supports" not in env["blackboard"]
 
 
+def test_role_provider_support_adapter_respects_support_required_terms():
+    env = {
+        "blackboard": {
+            "explicit_role_provider_support_enabled": True,
+            "krk_visible_terms": {"white_king_support_available": False},
+            "krk_successor_provider_licenses": {
+                "krk.edge_trap_close": {
+                    "krk.edge_rook_transfer_recovery": {
+                        "contract_met": True,
+                        "source_terms": ["edge_rook_transfer_recovery_available"],
+                    },
+                },
+            },
+        },
+    }
+    adapter = create_krk_role_provider_support_adapter("script.krk.support.edge")
+    adapter.meta.update({
+        "role_id": "krk.edge_rook_transfer_recovery",
+        "provider_skill_id": "krk.edge_trap_close",
+        "support_weight": 0.25,
+        "support_required_terms": ["white_king_support_available"],
+    })
+
+    success, done = adapter.predicate(adapter, env)
+
+    assert success is False
+    assert done is True
+    assert "krk_explicit_role_provider_supports" not in env["blackboard"]
+    blocked = adapter.meta["last_explicit_role_provider_support_blocked"]
+    assert blocked["missing_support_required_terms"] == ["white_king_support_available"]
+    assert blocked["direct_request"] is False
+
+    env["blackboard"]["krk_visible_terms"]["white_king_support_available"] = True
+    success, done = adapter.predicate(adapter, env)
+
+    assert success is True
+    assert done is True
+    support = env["blackboard"]["krk_explicit_role_provider_supports"]["krk.edge_trap_close"][
+        "krk.edge_rook_transfer_recovery"
+    ]
+    assert support["score"] == 0.25
+
+
 def test_explicit_role_provider_support_augments_visible_role_score_only_when_enabled():
     blackboard = {
         "explicit_role_provider_support_enabled": True,

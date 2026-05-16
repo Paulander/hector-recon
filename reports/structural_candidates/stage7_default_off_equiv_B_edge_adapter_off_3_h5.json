@@ -58,6 +58,9 @@
         "krk.stage0_basin": 1.0
       },
       "evidence_terms": {
+        "adapter_supported_move_counts": {},
+        "adapter_supported_provider_counts": {},
+        "adapter_supported_suggestion_count": 0,
         "black_reply": "h8g8",
         "box_area_after_own_move": 7,
         "box_area_after_reply": 7,
@@ -1386,7 +1389,7 @@
       "failed": [],
       "from_skill": "krk.box_shrink",
       "observed_outcome": "max_plies",
-      "packet_id": "packet.189472a29f97",
+      "packet_id": "packet.49a44be47d46",
       "phase": "post_opponent_reply",
       "route_selected": null,
       "schema_version": "handoff_packet.v1",
@@ -1475,6 +1478,9 @@
         "krk.stage0_basin": 1.0
       },
       "evidence_terms": {
+        "adapter_supported_move_counts": {},
+        "adapter_supported_provider_counts": {},
+        "adapter_supported_suggestion_count": 0,
         "black_reply": "e8d8",
         "box_area_after_own_move": 7,
         "box_area_after_reply": 7,
@@ -2797,7 +2803,7 @@
       "failed": [],
       "from_skill": "krk.box_shrink",
       "observed_outcome": "max_plies",
-      "packet_id": "packet.cdcb5a61bb6d",
+      "packet_id": "packet.f468594ad21c",
       "phase": "post_opponent_reply",
       "route_selected": null,
       "schema_version": "handoff_packet.v1",
@@ -2886,6 +2892,9 @@
         "krk.stage0_basin": 1.0
       },
       "evidence_terms": {
+        "adapter_supported_move_counts": {},
+        "adapter_supported_provider_counts": {},
+        "adapter_supported_suggestion_count": 0,
         "black_reply": "h8g8",
         "box_area_after_own_move": 7,
         "box_area_after_reply": 7,
@@ -4214,7 +4223,7 @@
       "failed": [],
       "from_skill": "krk.box_shrink",
       "observed_outcome": "max_plies",
-      "packet_id": "packet.189472a29f97",
+      "packet_id": "packet.49a44be47d46",
       "phase": "post_opponent_reply",
       "route_selected": null,
       "schema_version": "handoff_packet.v1",
@@ -4275,10 +4284,10 @@
       "trigger": "repeated_conversion_failure"
     },
     {
-      "candidate_id": "cand.2d667cde8862",
+      "candidate_id": "cand.ea1c41356caa",
       "observed_outcome": "max_plies",
       "owner_router": "krk.skill_hub",
-      "packet_id": "packet.189472a29f97",
+      "packet_id": "packet.49a44be47d46",
       "parent_skill": "krk.box_shrink",
       "priority": 4,
       "promotion_status": "shadow",
@@ -4307,10 +4316,10 @@
       "trigger": "repeated_conversion_failure"
     },
     {
-      "candidate_id": "cand.e934d4c38265",
+      "candidate_id": "cand.203ea1a590b9",
       "observed_outcome": "max_plies",
       "owner_router": "krk.skill_hub",
-      "packet_id": "packet.cdcb5a61bb6d",
+      "packet_id": "packet.f468594ad21c",
       "parent_skill": "krk.box_shrink",
       "priority": 4,
       "promotion_status": "shadow",
@@ -4339,10 +4348,10 @@
       "trigger": "repeated_conversion_failure"
     },
     {
-      "candidate_id": "cand.2d667cde8862",
+      "candidate_id": "cand.ea1c41356caa",
       "observed_outcome": "max_plies",
       "owner_router": "krk.skill_hub",
-      "packet_id": "packet.189472a29f97",
+      "packet_id": "packet.49a44be47d46",
       "parent_skill": "krk.box_shrink",
       "priority": 4,
       "promotion_status": "shadow",
