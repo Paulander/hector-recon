@@ -3838,3 +3838,29 @@ The key architectural lesson is that late-stage repair providers must be
 profile/domain scoped unless and until cross-stage validation proves they are
 safe globally.
 ```
+
+Scaled target validation:
+
+```text
+artifact:
+  reports/structural_candidates/stage7_post_king_tempo_scoped_on_100_h40.json
+
+analysis:
+  reports/structural_candidates/stage7_post_king_tempo_scoped_on_100_h40_analysis.md
+
+result:
+  Stage 7 box_shrink, 100 samples, h40
+  playouts: {mate: 100}
+  shadow_candidate_count: 0
+  improved: 100/100
+  local optimal: 49/100
+
+promotion eval:
+  reports/structural_candidates/stage7_post_king_tempo_scoped_100_promotion_eval.json
+  promotion_status: promoted
+```
+
+The local one-ply objective is still not fully optimal, but conversion is
+solved on this scaled validation. This reinforces the architectural separation:
+Stage 7 local reward calibration can improve later through weight/plasticity
+work, while the scoped handoff repair is currently composition-valid.
