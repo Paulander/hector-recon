@@ -264,6 +264,125 @@ def replay_post_tempo_families(
     return replay
 
 
+def run_legal_first_followup_sweep(
+    graph,
+    engine: ReConEngine,
+    *,
+    first_white_fen: str,
+    diagnostic: dict[str, Any],
+    max_plies: int,
+    seed: int,
+    black_policy: str,
+    max_ticks: int,
+    suggestion_limit: int,
+    max_moves: int = 0,
+    require_any_terms: tuple[str, ...] = (),
+    require_all_terms: tuple[str, ...] = (),
+) -> dict[str, Any]:
+    """Try each legal first follow-up from a post-tempo continuation state.
+
+    This is diagnostic-only and does not force any provider after the first
+    move. It answers whether the existing graph can convert if the first
+    follow-up move is chosen correctly.
+    """
+    board = chess.Board(first_white_fen)
+    config = _config_from_diagnostic(diagnostic)
+    results: dict[str, Any] = {}
+    candidates: list[tuple[chess.Move, dict[str, Any]]] = []
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        audit = krk_move_shape_audit(board, move, {}, include_worst_reply=True)
+        terms: set[str] = set()
+        for key in ("current_terms", "move_shape_terms", "post_move_terms", "worst_reply_terms"):
+            values = audit.get(key)
+            if isinstance(values, list):
+                terms.update(str(item) for item in values)
+        if require_any_terms and not terms.intersection(require_any_terms):
+            continue
+        if require_all_terms and not set(require_all_terms).issubset(terms):
+            continue
+        candidates.append((move, audit))
+    if max_moves > 0:
+        candidates = candidates[:max_moves]
+    for index, (move, audit) in enumerate(candidates):
+        b = board.copy(stack=False)
+        b.push(move)
+        if b.is_checkmate():
+            result = {"result": "mate", "plies": 1, "first_reply": None}
+        else:
+            continuation = play_to_mate(
+                graph,
+                engine,
+                b,
+                random.Random(seed + index * 7919),
+                label=str(diagnostic.get("label") or "box_shrink"),
+                stage_filter=None,
+                max_plies=max(0, max_plies - 1),
+                black_policy=black_policy,
+                trace=True,
+                trace_max_plies=8,
+                max_ticks=max_ticks,
+                suggestion_limit=suggestion_limit,
+                stage7_king_tempo_enabled=False,
+                **config,
+            )
+            first_white = _first_white_event(continuation)
+            result = {
+                "result": continuation.get("result"),
+                "plies": int(continuation.get("plies", 0) or 0) + 1,
+                "first_reply": continuation.get("first_reply"),
+                "next_white_move": first_white.get("move") if first_white else None,
+                "next_white_skill": _selected_skill_from_engine(
+                    first_white.get("engine") if first_white else None,
+                    first_white.get("move") if first_white else None,
+                ),
+                "stagnation_summary": continuation.get("stagnation_summary"),
+            }
+        result["move_shape_audit"] = audit
+        results[move.uci()] = result
+    return results
+
+
+def summarize_legal_first_followups(sweeps: dict[str, Any]) -> dict[str, Any]:
+    outcome_counts: Counter[str] = Counter()
+    converting_moves: dict[str, list[str]] = {}
+    selected_move_outcomes: dict[str, dict[str, int]] = {}
+    common_converting_terms: dict[str, list[str]] = {}
+    for family_id, payload in sweeps.items():
+        move_results = payload.get("legal_first_results") or {}
+        converting: list[str] = []
+        term_sets: list[set[str]] = []
+        selected_move_outcomes[family_id] = {}
+        for move, result in move_results.items():
+            outcome = str(result.get("result") or "unknown")
+            outcome_counts[outcome] += 1
+            selected_move_outcomes[family_id][outcome] = (
+                selected_move_outcomes[family_id].get(outcome, 0) + 1
+            )
+            if outcome == "mate":
+                converting.append(str(move))
+                audit = result.get("move_shape_audit") or {}
+                terms: set[str] = set()
+                for key in ("current_terms", "move_shape_terms", "post_move_terms", "worst_reply_terms"):
+                    values = audit.get(key)
+                    if isinstance(values, list):
+                        terms.update(str(item) for item in values)
+                term_sets.append(terms)
+        converting_moves[family_id] = converting
+        if term_sets:
+            common = set(term_sets[0])
+            for terms in term_sets[1:]:
+                common &= terms
+            common_converting_terms[family_id] = sorted(common)
+        else:
+            common_converting_terms[family_id] = []
+    return {
+        "outcome_counts": dict(outcome_counts),
+        "converting_moves": converting_moves,
+        "outcomes_by_family": selected_move_outcomes,
+        "common_converting_terms_by_family": common_converting_terms,
+    }
+
+
 def classify_family(family: dict[str, Any], replay: dict[str, Any] | None = None) -> str:
     outcomes = family.get("outcome_counts") or {}
     metrics = (family.get("prototype") or {}).get("metrics") or {}
@@ -286,6 +405,11 @@ def audit_post_king_tempo_continuation(
     black_policy: str = "adversarial",
     max_ticks: int = 40,
     suggestion_limit: int = 5,
+    legal_first_followup_sweep: bool = False,
+    legal_first_horizon: int = 60,
+    legal_first_max_moves: int = 0,
+    legal_first_require_any_terms: tuple[str, ...] = (),
+    legal_first_require_all_terms: tuple[str, ...] = (),
 ) -> dict[str, Any]:
     diagnostic = _load_json(diagnostic_path)
     records = extract_king_tempo_records(diagnostic)
@@ -302,6 +426,42 @@ def audit_post_king_tempo_continuation(
             max_ticks=max_ticks,
             suggestion_limit=suggestion_limit,
         )
+    legal_first_followups: dict[str, Any] = {}
+    legal_first_summary: dict[str, Any] = {}
+    if topology is not None and legal_first_followup_sweep:
+        if not replay:
+            raise ValueError("legal-first follow-up sweep requires replay data")
+        graph = build_graph_from_topology(topology)
+        engine = ReConEngine(graph)
+        for family_index, family in enumerate(families):
+            family_replay = replay.get(str(family["family_id"]), {})
+            if not family_replay:
+                continue
+            # Use the longest requested replay horizon to locate the first White
+            # continuation state after Black replies to the king-tempo move.
+            longest_horizon = max(family_replay, key=lambda item: int(item))
+            first_white_fen = family_replay[longest_horizon].get("first_white_fen")
+            if not first_white_fen:
+                continue
+            legal_results = run_legal_first_followup_sweep(
+                graph,
+                engine,
+                first_white_fen=str(first_white_fen),
+                diagnostic=diagnostic,
+                max_plies=legal_first_horizon,
+                seed=seed + family_index * 100000,
+                black_policy=black_policy,
+                max_ticks=max_ticks,
+                suggestion_limit=suggestion_limit,
+                max_moves=legal_first_max_moves,
+                require_any_terms=legal_first_require_any_terms,
+                require_all_terms=legal_first_require_all_terms,
+            )
+            legal_first_followups[str(family["family_id"])] = {
+                "first_white_fen": first_white_fen,
+                "legal_first_results": legal_results,
+            }
+        legal_first_summary = summarize_legal_first_followups(legal_first_followups)
 
     family_classes = {
         family["family_id"]: classify_family(family, replay.get(str(family["family_id"])))
@@ -340,8 +500,19 @@ def audit_post_king_tempo_continuation(
         "families": families,
         "replay_horizons": horizons or ([] if topology is None else [20, 40, 60]),
         "replay": replay,
+        "legal_first_followup_sweep": {
+            "enabled": bool(legal_first_followup_sweep),
+            "horizon": legal_first_horizon,
+            "max_moves": legal_first_max_moves,
+            "require_any_terms": list(legal_first_require_any_terms),
+            "require_all_terms": list(legal_first_require_all_terms),
+            "summary": legal_first_summary,
+            "families": legal_first_followups,
+        },
         "diagnosis": (
-            "post_king_tempo_followup_needed"
+            "post_king_tempo_followup_selection_problem"
+            if any(legal_first_summary.get("converting_moves", {}).values())
+            else "post_king_tempo_followup_needed"
             if needs_post_tempo_role and failed_support
             else "king_tempo_followup_sufficient"
         ),
@@ -371,6 +542,7 @@ def audit_post_king_tempo_continuation(
                     "post-tempo failure family. Next repair should target follow-up ownership "
                     "after the king-tempo move, not broaden the first king-tempo license."
                 ),
+                "legal_first_followup_summary": legal_first_summary,
             },
             "promotion_status": "proposed",
             "causal_status": "non_causal",
@@ -416,6 +588,24 @@ def _write_markdown(payload: dict[str, Any]) -> str:
                     f"first white `{item.get('first_white_move')}` via `{item.get('first_white_skill')}`"
                 )
             lines.append("")
+        legal_payload = payload.get("legal_first_followup_sweep", {}).get("families", {}).get(
+            str(family["family_id"]),
+            {},
+        )
+        legal_results = legal_payload.get("legal_first_results") or {}
+        if legal_results:
+            converting = [
+                move for move, result in legal_results.items()
+                if result.get("result") == "mate"
+            ]
+            lines.extend([
+                "Legal-first follow-up sweep:",
+                "",
+                f"- First White FEN: `{legal_payload.get('first_white_fen')}`",
+                f"- Tested moves: {len(legal_results)}",
+                f"- Converting moves: {converting}",
+                "",
+            ])
     lines.extend([
         "## Candidate Update",
         "",
@@ -433,6 +623,10 @@ def _parse_horizons(raw: str) -> list[int]:
     return horizons
 
 
+def _parse_terms(raw: str) -> tuple[str, ...]:
+    return tuple(item.strip() for item in raw.split(",") if item.strip())
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--diagnostic", type=Path, required=True)
@@ -442,6 +636,15 @@ def main() -> int:
     parser.add_argument("--black-policy", choices=["random", "adversarial"], default="adversarial")
     parser.add_argument("--max-ticks", type=int, default=40)
     parser.add_argument("--suggestion-limit", type=int, default=5)
+    parser.add_argument("--legal-first-followup-sweep", action="store_true",
+                        help="Try every legal first follow-up after the post-tempo Black reply")
+    parser.add_argument("--legal-first-horizon", type=int, default=60)
+    parser.add_argument("--legal-first-max-moves", type=int, default=0,
+                        help="If >0, cap legal-first follow-up moves after sorting")
+    parser.add_argument("--legal-first-require-any-terms", default="",
+                        help="Comma-separated audit terms; only replay moves matching at least one")
+    parser.add_argument("--legal-first-require-all-terms", default="",
+                        help="Comma-separated audit terms; only replay moves matching all")
     parser.add_argument("--json-output", type=Path, required=True)
     parser.add_argument("--markdown-output", type=Path)
     parser.add_argument("--no-json-stdout", action="store_true")
@@ -455,6 +658,11 @@ def main() -> int:
         black_policy=args.black_policy,
         max_ticks=args.max_ticks,
         suggestion_limit=args.suggestion_limit,
+        legal_first_followup_sweep=args.legal_first_followup_sweep,
+        legal_first_horizon=args.legal_first_horizon,
+        legal_first_max_moves=args.legal_first_max_moves,
+        legal_first_require_any_terms=_parse_terms(args.legal_first_require_any_terms),
+        legal_first_require_all_terms=_parse_terms(args.legal_first_require_all_terms),
     )
     args.json_output.parent.mkdir(parents=True, exist_ok=True)
     args.json_output.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
@@ -467,6 +675,7 @@ def main() -> int:
             "diagnosis": payload["diagnosis"],
             "counts": payload["counts"],
             "family_class_counts": payload["family_class_counts"],
+            "legal_first_followup_summary": payload["legal_first_followup_sweep"]["summary"],
         }, indent=2))
     return 0
 

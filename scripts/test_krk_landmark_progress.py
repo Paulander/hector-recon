@@ -486,6 +486,12 @@ def _suggestion_role_trace(meta: dict) -> dict:
         "visible_stage7_king_tempo_license": dict(
             meta.get("visible_stage7_king_tempo_license", {}) or {}
         ),
+        "visible_stage7_post_king_tempo_bonus": float(
+            meta.get("visible_stage7_post_king_tempo_bonus", 0.0) or 0.0
+        ),
+        "visible_stage7_post_king_tempo_license": dict(
+            meta.get("visible_stage7_post_king_tempo_license", {}) or {}
+        ),
     }
 
 
@@ -769,6 +775,12 @@ def _successor_contract_audit(
         ),
         "visible_stage7_king_tempo_license": dict(
             selected_group.get("visible_stage7_king_tempo_license", {}) or {}
+        ),
+        "visible_stage7_post_king_tempo_bonus": float(
+            selected_group.get("visible_stage7_post_king_tempo_bonus", 0.0) or 0.0
+        ),
+        "visible_stage7_post_king_tempo_license": dict(
+            selected_group.get("visible_stage7_post_king_tempo_license", {}) or {}
         ),
     }
 
@@ -1106,6 +1118,10 @@ def choose_move_with_engine(
     post_break_continuation_bonus: float = 0.0,
     stage7_king_tempo_enabled: bool = False,
     stage7_king_tempo_score: float = 25.0,
+    stage7_post_king_tempo_enabled: bool = False,
+    stage7_post_king_tempo_score: float = 30.0,
+    stage7_provider_scope_label: str = "box_shrink",
+    active_landmark_label: str | None = None,
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
 ) -> Optional[str]:
@@ -1133,6 +1149,10 @@ def choose_move_with_engine(
         post_break_continuation_bonus=post_break_continuation_bonus,
         stage7_king_tempo_enabled=stage7_king_tempo_enabled,
         stage7_king_tempo_score=stage7_king_tempo_score,
+        stage7_post_king_tempo_enabled=stage7_post_king_tempo_enabled,
+        stage7_post_king_tempo_score=stage7_post_king_tempo_score,
+        stage7_provider_scope_label=stage7_provider_scope_label,
+        active_landmark_label=active_landmark_label,
         early_stop_stable_suggestions=early_stop_stable_suggestions,
         forced_successor_skill=forced_successor_skill,
     ).get("move")
@@ -1162,9 +1182,14 @@ def choose_move_details(
     post_break_continuation_bonus: float = 0.0,
     stage7_king_tempo_enabled: bool = False,
     stage7_king_tempo_score: float = 25.0,
+    stage7_post_king_tempo_enabled: bool = False,
+    stage7_post_king_tempo_score: float = 30.0,
+    stage7_provider_scope_label: str = "box_shrink",
+    active_landmark_label: str | None = None,
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
     stage7_king_tempo_already_used: bool = False,
+    stage7_post_king_tempo_already_used: bool = False,
     perf_profile: dict | None = None,
     enable_diagnostic_caches: bool = False,
 ) -> dict:
@@ -1193,9 +1218,14 @@ def choose_move_details(
             post_break_continuation_bonus=post_break_continuation_bonus,
             stage7_king_tempo_enabled=stage7_king_tempo_enabled,
             stage7_king_tempo_score=stage7_king_tempo_score,
+            stage7_post_king_tempo_enabled=stage7_post_king_tempo_enabled,
+            stage7_post_king_tempo_score=stage7_post_king_tempo_score,
+            stage7_provider_scope_label=stage7_provider_scope_label,
+            active_landmark_label=active_landmark_label,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
             forced_successor_skill=forced_successor_skill,
             stage7_king_tempo_already_used=stage7_king_tempo_already_used,
+            stage7_post_king_tempo_already_used=stage7_post_king_tempo_already_used,
             perf_profile=perf_profile,
             enable_diagnostic_caches=enable_diagnostic_caches,
         )
@@ -1225,9 +1255,14 @@ def _choose_move_details_impl(
     post_break_continuation_bonus: float = 0.0,
     stage7_king_tempo_enabled: bool = False,
     stage7_king_tempo_score: float = 25.0,
+    stage7_post_king_tempo_enabled: bool = False,
+    stage7_post_king_tempo_score: float = 30.0,
+    stage7_provider_scope_label: str = "box_shrink",
+    active_landmark_label: str | None = None,
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
     stage7_king_tempo_already_used: bool = False,
+    stage7_post_king_tempo_already_used: bool = False,
     perf_profile: dict | None = None,
     enable_diagnostic_caches: bool = False,
 ) -> dict:
@@ -1286,6 +1321,14 @@ def _choose_move_details_impl(
     env["blackboard"]["stage7_king_tempo_enabled"] = bool(stage7_king_tempo_enabled)
     env["blackboard"]["stage7_king_tempo_score"] = float(stage7_king_tempo_score)
     env["blackboard"]["stage7_king_tempo_already_used"] = bool(stage7_king_tempo_already_used)
+    env["blackboard"]["stage7_post_king_tempo_enabled"] = bool(stage7_post_king_tempo_enabled)
+    env["blackboard"]["stage7_post_king_tempo_score"] = float(stage7_post_king_tempo_score)
+    env["blackboard"]["stage7_post_king_tempo_already_used"] = bool(
+        stage7_post_king_tempo_already_used
+    )
+    env["blackboard"]["stage7_provider_scope_label"] = str(stage7_provider_scope_label or "box_shrink")
+    if active_landmark_label:
+        env["blackboard"]["active_landmark_label"] = str(active_landmark_label)
     if forced_successor_skill:
         env["blackboard"]["forced_successor_skill"] = forced_successor_skill
 
@@ -1392,6 +1435,11 @@ def _choose_move_details_impl(
         "stage7_king_tempo_enabled": bool(stage7_king_tempo_enabled),
         "stage7_king_tempo_score": float(stage7_king_tempo_score),
         "stage7_king_tempo_already_used": bool(stage7_king_tempo_already_used),
+        "stage7_post_king_tempo_enabled": bool(stage7_post_king_tempo_enabled),
+        "stage7_post_king_tempo_score": float(stage7_post_king_tempo_score),
+        "stage7_post_king_tempo_already_used": bool(stage7_post_king_tempo_already_used),
+        "stage7_provider_scope_label": str(stage7_provider_scope_label or "box_shrink"),
+        "active_landmark_label": str(active_landmark_label or ""),
         "stagnation_context": dict(stagnation_context or {}),
         "early_stop_stable_suggestions": int(early_stop_stable_suggestions),
         "early_stopped": bool(early_stopped),
@@ -1587,6 +1635,8 @@ def play_to_mate(
     post_break_continuation_bonus: float = 0.0,
     stage7_king_tempo_enabled: bool = False,
     stage7_king_tempo_score: float = 25.0,
+    stage7_post_king_tempo_enabled: bool = False,
+    stage7_post_king_tempo_score: float = 30.0,
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
     perf_profile: dict | None = None,
@@ -1603,6 +1653,7 @@ def play_to_mate(
     first_successor: dict | None = None
     engine_perf: dict = {}
     stage7_king_tempo_used = False
+    stage7_post_king_tempo_used = False
 
     def record_event(event: dict) -> None:
         nonlocal trace_truncated_events
@@ -1689,7 +1740,11 @@ def play_to_mate(
                 post_break_continuation_bonus=post_break_continuation_bonus,
                 stage7_king_tempo_enabled=stage7_king_tempo_enabled,
                 stage7_king_tempo_score=stage7_king_tempo_score,
+                stage7_post_king_tempo_enabled=stage7_post_king_tempo_enabled,
+                stage7_post_king_tempo_score=stage7_post_king_tempo_score,
+                active_landmark_label=label,
                 stage7_king_tempo_already_used=stage7_king_tempo_used,
+                stage7_post_king_tempo_already_used=stage7_post_king_tempo_used,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
                 forced_successor_skill=active_forced_successor,
                 perf_profile=perf_profile,
@@ -1751,6 +1806,11 @@ def play_to_mate(
                 and _skill_id_for_suggestion(selected_suggestion) == "krk.stage7_king_tempo"
             ):
                 stage7_king_tempo_used = True
+            if (
+                selected_suggestion
+                and _skill_id_for_suggestion(selected_suggestion) == "krk.stage7_post_king_tempo"
+            ):
+                stage7_post_king_tempo_used = True
             if first_successor is not None and first_successor.get("fen") == before_fen:
                 first_successor["resulting_fen"] = b.fen()
             record_event({
@@ -2501,6 +2561,8 @@ def run_counterfactual_successor_sweep(
     post_break_continuation_bonus: float = 0.0,
     stage7_king_tempo_enabled: bool = False,
     stage7_king_tempo_score: float = 25.0,
+    stage7_post_king_tempo_enabled: bool = False,
+    stage7_post_king_tempo_score: float = 30.0,
     early_stop_stable_suggestions: int = 0,
     step_output: Optional[Path] = None,
     step_context: Optional[dict] = None,
@@ -2545,6 +2607,8 @@ def run_counterfactual_successor_sweep(
             post_break_continuation_bonus=post_break_continuation_bonus,
             stage7_king_tempo_enabled=stage7_king_tempo_enabled,
             stage7_king_tempo_score=stage7_king_tempo_score,
+            stage7_post_king_tempo_enabled=stage7_post_king_tempo_enabled,
+            stage7_post_king_tempo_score=stage7_post_king_tempo_score,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
             forced_successor_skill=skill_id,
         )
@@ -2671,6 +2735,8 @@ def evaluate_landmark_progress(
     post_break_continuation_bonus: float = 0.0,
     stage7_king_tempo_enabled: bool = False,
     stage7_king_tempo_score: float = 25.0,
+    stage7_post_king_tempo_enabled: bool = False,
+    stage7_post_king_tempo_score: float = 30.0,
     early_stop_stable_suggestions: int = 0,
     counterfactual_successors: tuple[str, ...] = (),
     max_counterfactual_sweeps: int = 0,
@@ -2804,6 +2870,7 @@ def evaluate_landmark_progress(
             successor_role_scoped_move_shape_require_worst_reply=(
                 successor_role_scoped_move_shape_require_worst_reply
             ),
+            active_landmark_label=label,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
             perf_profile=perf_profile,
             enable_diagnostic_caches=enable_diagnostic_caches,
@@ -2965,6 +3032,8 @@ def evaluate_landmark_progress(
                 post_break_continuation_bonus=post_break_continuation_bonus,
                 stage7_king_tempo_enabled=stage7_king_tempo_enabled,
                 stage7_king_tempo_score=stage7_king_tempo_score,
+                stage7_post_king_tempo_enabled=stage7_post_king_tempo_enabled,
+                stage7_post_king_tempo_score=stage7_post_king_tempo_score,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
                 perf_profile=perf_profile,
                 enable_diagnostic_caches=enable_diagnostic_caches,
@@ -3332,6 +3401,8 @@ def evaluate_landmark_progress(
                     post_break_continuation_bonus=post_break_continuation_bonus,
                     stage7_king_tempo_enabled=stage7_king_tempo_enabled,
                     stage7_king_tempo_score=stage7_king_tempo_score,
+                    stage7_post_king_tempo_enabled=stage7_post_king_tempo_enabled,
+                    stage7_post_king_tempo_score=stage7_post_king_tempo_score,
                     early_stop_stable_suggestions=early_stop_stable_suggestions,
                     step_output=counterfactual_steps_output,
                     step_context=step_context,
@@ -3463,6 +3534,10 @@ def evaluate_landmark_progress(
     stats["stagnation_breaker_king_support_bonus"] = stagnation_breaker_king_support_bonus
     stats["post_break_continuation_enabled"] = post_break_continuation_enabled
     stats["post_break_continuation_bonus"] = post_break_continuation_bonus
+    stats["stage7_king_tempo_enabled"] = stage7_king_tempo_enabled
+    stats["stage7_king_tempo_score"] = stage7_king_tempo_score
+    stats["stage7_post_king_tempo_enabled"] = stage7_post_king_tempo_enabled
+    stats["stage7_post_king_tempo_score"] = stage7_post_king_tempo_score
     stats["early_stop_stable_suggestions"] = int(early_stop_stable_suggestions)
     stats["diagnostic_caches_enabled"] = bool(enable_diagnostic_caches)
     stats["deterministic_sample_seeds"] = bool(deterministic_sample_seeds)
@@ -3988,6 +4063,10 @@ def main() -> None:
                         help="Enable opt-in Stage 7 visible king-tempo sandbox provider")
     parser.add_argument("--stage7-king-tempo-score", type=float, default=25.0,
                         help="Score for the opt-in Stage 7 visible king-tempo sandbox provider")
+    parser.add_argument("--enable-stage7-post-king-tempo", action="store_true",
+                        help="Enable opt-in Stage 7 visible post-king-tempo continuation provider")
+    parser.add_argument("--stage7-post-king-tempo-score", type=float, default=30.0,
+                        help="Score for the opt-in Stage 7 visible post-king-tempo continuation provider")
     parser.add_argument("--composition-profile",
                         choices=[COMPOSITION_PROFILE_NONE, COMPOSITION_PROFILE_HANDOFF_V1],
                         default=COMPOSITION_PROFILE_NONE,
@@ -4065,6 +4144,8 @@ def main() -> None:
         post_break_continuation_bonus=args.post_break_continuation_bonus,
         stage7_king_tempo_enabled=args.enable_stage7_king_tempo,
         stage7_king_tempo_score=args.stage7_king_tempo_score,
+        stage7_post_king_tempo_enabled=args.enable_stage7_post_king_tempo,
+        stage7_post_king_tempo_score=args.stage7_post_king_tempo_score,
         early_stop_stable_suggestions=args.early_stop_stable_suggestions,
         counterfactual_successors=tuple(
             item.strip()

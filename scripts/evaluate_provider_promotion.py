@@ -184,6 +184,8 @@ def evaluate_promotion(
         failures.extend({"kind": "guardrail", **item} for item in guardrails if not item["passed"])
     if stage["passed"] and not failures:
         status = "promoted"
+    elif guardrail_delta_failures:
+        status = "quarantine"
     elif stage["passed"]:
         status = "overlay_only"
     else:

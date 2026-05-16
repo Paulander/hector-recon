@@ -502,7 +502,7 @@ def test_provider_promotion_eval_blocks_guardrail_delta_regression(tmp_path):
         max_guardrail_shadow_regression=0,
     )
 
-    assert result["promotion_status"] == "overlay_only"
+    assert result["promotion_status"] == "quarantine"
     assert result["guardrail_deltas_vs_control"][0]["regressed_vs_control"] is True
     assert result["failures"][0]["kind"] == "guardrail_delta"
 

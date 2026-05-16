@@ -425,6 +425,10 @@ def create_krk_stage7_king_tempo_terminal(node_id=None):
             return False, False
         if not blackboard.get("stage7_king_tempo_enabled", False):
             return False, True
+        scope_label = str(blackboard.get("stage7_provider_scope_label", "box_shrink") or "box_shrink")
+        active_label = str(blackboard.get("active_landmark_label", "") or "")
+        if active_label and active_label != scope_label:
+            return False, True
         if blackboard.get("stage7_king_tempo_already_used", False):
             return False, True
         stage_filter = blackboard.get("stage_filter")
@@ -505,6 +509,100 @@ def create_krk_stage7_king_tempo_terminal(node_id=None):
     return Node(nid=actual_id, ntype=NodeType.TERMINAL, predicate=predicate)
 
 
+def create_krk_stage7_post_king_tempo_terminal(node_id=None):
+    """Opt-in visible Stage 7 post-king-tempo continuation provider.
+
+    This sandbox terminal is deliberately narrower than the first king-tempo
+    provider. It can only fire after the king-tempo provider has already fired
+    in the current playout, and it licenses rook follow-up shapes derived from
+    the non-causal post-king-tempo audit.
+    """
+    actual_id = node_id or "terminal.krk.stage7_post_king_tempo"
+
+    def predicate(node, env):
+        blackboard = env.get("blackboard")
+        board = env.get("board")
+        if blackboard is None or board is None or board.turn != chess.WHITE:
+            return False, False
+        if not blackboard.get("stage7_post_king_tempo_enabled", False):
+            return False, True
+        scope_label = str(blackboard.get("stage7_provider_scope_label", "box_shrink") or "box_shrink")
+        active_label = str(blackboard.get("active_landmark_label", "") or "")
+        if active_label and active_label != scope_label:
+            return False, True
+        if not blackboard.get("stage7_king_tempo_already_used", False):
+            return False, True
+        if blackboard.get("stage7_post_king_tempo_already_used", False):
+            return False, True
+        terms = blackboard.setdefault("krk_visible_terms", {})
+        terms.update(_compute_krk_context_terms(board))
+        required_context = {
+            "fence_exists",
+            "post_fence_conversion_needed",
+            "rook_safe",
+            "edge_trap_shape_available",
+        }
+        if not all(bool(terms.get(term, False)) for term in required_context):
+            return False, True
+
+        candidates = []
+        for move in board.legal_moves:
+            audit = _stage7_post_king_tempo_move_audit(board, move)
+            if not audit.get("stage7_post_king_tempo_candidate"):
+                continue
+            post_box_area = audit.get("post_box_area")
+            priority = (
+                0 if audit.get("corner_net_finish_followup") else 1,
+                0 if audit.get("box_shrink_lateral_followup") else 1,
+                int(post_box_area) if post_box_area is not None else 99,
+                move.uci(),
+            )
+            candidates.append((priority, move, audit))
+        if not candidates:
+            return False, True
+        candidates.sort(key=lambda item: item[0])
+        _, move, audit = candidates[0]
+        score = float(
+            blackboard.get("stage7_post_king_tempo_score", node.meta.get("score", 30.0)) or 30.0
+        )
+        payload = {
+            "role_id": "krk.post_king_tempo_continuation",
+            "provider_skill_id": "krk.stage7_post_king_tempo",
+            "move": move.uci(),
+            "score": score,
+            "source_terms": list(audit.get("source_terms", [])),
+            "direct_request": False,
+            "causal_status": "sandbox_opt_in",
+        }
+        meta = {
+            "is_mate": False,
+            "is_draw": False,
+            "raw_score_before_role_bonus": 0.0,
+            "visible_stage7_post_king_tempo_bonus": score,
+            "visible_stage7_post_king_tempo_license": payload,
+            "visible_move_shape_audit": audit,
+            "visible_successor_affordance": {},
+        }
+        env.setdefault("actuator_suggestions", []).append({
+            "actuator": node.nid,
+            "move": move,
+            "score": score,
+            "stage": 7,
+            "curriculum_label": "stage7_post_king_tempo",
+            "target_goal_label": "box_shrink_post_king_tempo",
+            "meta": meta,
+        })
+        suggestions = env.get("actuator_suggestions", [])
+        best = max(suggestions, key=lambda item: item["score"])
+        env["suggested_move"] = best["move"].uci()
+        env["move_confidence"] = best["score"]
+        env["suggested_actuator"] = best["actuator"]
+        node.meta["last_stage7_post_king_tempo_license"] = payload
+        return True, True
+
+    return Node(nid=actual_id, ntype=NodeType.TERMINAL, predicate=predicate)
+
+
 def _stage7_king_tempo_move_audit(board: chess.Board, move: chess.Move) -> Dict[str, Any]:
     if move not in board.legal_moves:
         return {"move": move.uci(), "legal": False, "stage7_king_tempo_candidate": False}
@@ -564,6 +662,87 @@ def _stage7_king_tempo_move_audit(board: chess.Board, move: chess.Move) -> Dict[
         "king_file_distance_to_enemy_delta": int(file_delta),
         "king_rank_distance_to_enemy_delta": int(rank_delta),
         "king_rank_delta": int(chess.square_rank(move.to_square) - chess.square_rank(move.from_square)),
+    }
+
+
+def _stage7_post_king_tempo_move_audit(board: chess.Board, move: chess.Move) -> Dict[str, Any]:
+    if move not in board.legal_moves:
+        return {"move": move.uci(), "legal": False, "stage7_post_king_tempo_candidate": False}
+    piece = board.piece_at(move.from_square)
+    if piece != chess.Piece(chess.ROOK, chess.WHITE):
+        return {"move": move.uci(), "legal": True, "stage7_post_king_tempo_candidate": False}
+    audit = krk_move_shape_audit(board, move, {}, include_worst_reply=True)
+    current_terms = set(audit.get("current_terms", []) or [])
+    move_terms = set(audit.get("move_shape_terms", []) or [])
+    post_terms = set(audit.get("post_move_terms", []) or [])
+    worst_terms = set(audit.get("worst_reply_terms", []) or [])
+    current_metrics = audit.get("current_metrics", {}) or {}
+    post_metrics = audit.get("post_move_metrics", {}) or {}
+    current_corner = current_metrics.get("enemy_corner_distance")
+    post_box_area = post_metrics.get("box_area")
+    no_draw = not _move_creates_draw(board, move)
+
+    corner_net_finish = (
+        current_corner is not None
+        and int(current_corner) <= 2
+        and "rook_to_checking_line" in move_terms
+        and "safe_check_created" in move_terms
+        and "checking_line_created" in post_terms
+        and "rook_safe_after_move" in post_terms
+        and no_draw
+    )
+    box_shrink_lateral = (
+        current_corner is not None
+        and int(current_corner) >= 3
+        and post_box_area is not None
+        and int(post_box_area) == 5
+        and "candidate_is_rook_transfer" in move_terms
+        and "rook_lateral_transfer" in move_terms
+        and "rook_destination_not_adjacent_enemy" in move_terms
+        and "box_area_decreases_after_move" in post_terms
+        and "rook_safe_after_move" in post_terms
+        and "no_draw_after_worst_reply" in worst_terms
+        and no_draw
+    )
+    matched = bool(corner_net_finish or box_shrink_lateral)
+    source_terms = sorted(
+        (
+            {
+                "candidate_is_rook_move",
+                "rook_safe_after_move",
+                "no_draw_after_move",
+            }
+            | (
+                {"rook_to_checking_line", "safe_check_created", "corner_net_pressure_available"}
+                if corner_net_finish
+                else set()
+            )
+            | (
+                {
+                    "candidate_is_rook_transfer",
+                    "rook_lateral_transfer",
+                    "box_area_decreases_after_move",
+                    "post_box_area_equals_5",
+                    "no_draw_after_worst_reply",
+                }
+                if box_shrink_lateral
+                else set()
+            )
+        )
+    )
+    return {
+        "move": move.uci(),
+        "legal": True,
+        "stage7_post_king_tempo_candidate": matched,
+        "source_terms": source_terms if matched else sorted(current_terms | move_terms | post_terms | worst_terms),
+        "move_shape_terms": sorted(move_terms),
+        "post_move_terms": sorted(post_terms),
+        "worst_reply_terms": sorted(worst_terms),
+        "corner_net_finish_followup": bool(corner_net_finish),
+        "box_shrink_lateral_followup": bool(box_shrink_lateral),
+        "current_enemy_corner_distance": current_corner,
+        "post_box_area": post_box_area,
+        "no_draw_after_move": bool(no_draw),
     }
 
 

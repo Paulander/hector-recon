@@ -17,9 +17,11 @@ from recon_lite_chess.krk_baseline_nodes import (
     _compute_krk_context_terms,
     _provider_role_licenses,
     _stage7_king_tempo_move_audit,
+    _stage7_post_king_tempo_move_audit,
     create_krk_context_terminal,
     create_krk_role_provider_support_adapter,
     create_krk_stage7_king_tempo_terminal,
+    create_krk_stage7_post_king_tempo_terminal,
     create_krk_successor_affordance,
     krk_move_shape_audit,
 )
@@ -1008,3 +1010,65 @@ def test_move_shape_audit_emits_current_candidate_post_and_worst_reply_terms():
     assert "rook_safe_after_move" in audit["post_move_terms"]
     assert "enemy_edge_distance_not_increased_after_move" in audit["post_move_terms"]
     assert "rook_safe_after_worst_reply" in audit["worst_reply_terms"]
+
+
+def test_stage7_post_king_tempo_audit_selects_failed_family_converter():
+    board = chess.Board("4k3/R7/8/8/8/8/5K2/8 w - - 4 3")
+
+    converter = _stage7_post_king_tempo_move_audit(board, chess.Move.from_uci("a7c7"))
+    runtime_bad = _stage7_post_king_tempo_move_audit(board, chess.Move.from_uci("f2g3"))
+    drawish = _stage7_post_king_tempo_move_audit(board, chess.Move.from_uci("a7d7"))
+
+    assert converter["stage7_post_king_tempo_candidate"] is True
+    assert converter["box_shrink_lateral_followup"] is True
+    assert "post_box_area_equals_5" in converter["source_terms"]
+    assert runtime_bad["stage7_post_king_tempo_candidate"] is False
+    assert drawish["stage7_post_king_tempo_candidate"] is False
+
+
+def test_stage7_post_king_tempo_terminal_is_opt_in_and_after_king_tempo_only():
+    node = create_krk_stage7_post_king_tempo_terminal()
+    board = chess.Board("4k3/R7/8/8/8/8/5K2/8 w - - 4 3")
+    disabled_env = {
+        "board": board,
+        "blackboard": {
+            "stage7_post_king_tempo_enabled": False,
+            "stage7_king_tempo_already_used": True,
+        },
+    }
+    before_tempo_env = {
+        "board": board,
+        "blackboard": {
+            "stage7_post_king_tempo_enabled": True,
+            "stage7_king_tempo_already_used": False,
+        },
+    }
+    wrong_scope_env = {
+        "board": board,
+        "blackboard": {
+            "stage7_post_king_tempo_enabled": True,
+            "stage7_king_tempo_already_used": True,
+            "active_landmark_label": "edge_trap_wrong_tempo",
+            "stage7_provider_scope_label": "box_shrink",
+        },
+    }
+    enabled_env = {
+        "board": board,
+        "blackboard": {
+            "stage7_post_king_tempo_enabled": True,
+            "stage7_post_king_tempo_score": 30.0,
+            "stage7_king_tempo_already_used": True,
+        },
+    }
+
+    assert node.predicate(node, disabled_env) == (False, True)
+    assert node.predicate(node, before_tempo_env) == (False, True)
+    assert node.predicate(node, wrong_scope_env) == (False, True)
+    success, done = node.predicate(node, enabled_env)
+
+    assert success is True
+    assert done is True
+    assert enabled_env["suggested_move"] == "a7c7"
+    suggestion = enabled_env["actuator_suggestions"][0]
+    assert suggestion["curriculum_label"] == "stage7_post_king_tempo"
+    assert suggestion["meta"]["visible_stage7_post_king_tempo_license"]["direct_request"] is False

@@ -3720,3 +3720,121 @@ post-tempo continuation ownership problem. The next repair, if attempted, should
 target a visible post_king_tempo_continuation role or a candidate-driven
 legal-first/post-tempo follow-up sweep, not a broader king-tempo bonus.
 ```
+
+Filtered legal-first follow-up sweep:
+
+```text
+filter:
+  box_area_decreases_after_move OR rook_to_checking_line
+
+failed family:
+  first White FEN: 4k3/R7/8/8/8/8/5K2/8 w - - 4 3
+  tested moves: 7
+  converting move: a7c7
+
+successful family:
+  first White FEN: 5k2/R7/8/8/8/8/4K3/8 w - - 4 3
+  tested moves: 7
+  converting move: a7a8
+
+diagnosis:
+  post_king_tempo_followup_selection_problem
+```
+
+This proves the remaining Stage 7 failure is not missing KRK motor capacity:
+the existing continuation graph converts if the first post-tempo follow-up move
+has the right visible shape.
+
+## Stage 7 Post-King-Tempo Scoped Sandbox
+
+A narrow opt-in follow-up provider was added:
+
+```text
+terminal.krk.stage7_post_king_tempo
+role: krk.post_king_tempo_continuation
+causal_status: sandbox_opt_in
+default: off
+scope: active_landmark_label == box_shrink
+temporal scope: after stage7_king_tempo has fired, single-use per playout
+```
+
+The first attempt solved Stage 7 but regressed Stage 4 because the provider was
+not label-scoped:
+
+```text
+artifact:
+  reports/structural_candidates/stage7_post_king_tempo_single_use_on_25_h40.json
+
+target:
+  Stage 7 box_shrink, 25 samples, h40
+  playouts: {mate: 25}
+  shadow_candidate_count: 0
+
+guardrail regression:
+  Stage 4 enabled:  33/50 mate, 17/50 max_plies, 34 shadows
+  Stage 4 disabled: 36/50 mate, 14/50 max_plies, 28 shadows
+  delta: -0.06 mate rate, +6 shadows
+
+promotion_status:
+  quarantine
+```
+
+The repair was not another score tweak. The Stage 7 sandbox providers are now
+explicitly label/profile scoped:
+
+```text
+active_landmark_label must equal stage7_provider_scope_label
+default scope label: box_shrink
+```
+
+Scoped result:
+
+```text
+target:
+  artifact: reports/structural_candidates/stage7_post_king_tempo_scoped_on_25_h40.json
+  playouts: {mate: 25}
+  shadow_candidate_count: 0
+
+Stage 4 scoped guard:
+  artifact: reports/structural_candidates/stage7_post_king_tempo_scoped_guard_stage4_wrong_tempo_50_h40.json
+  playouts: {mate: 36, max_plies: 14}
+  shadow_candidate_count: 28
+
+Stage 4 disabled control:
+  artifact: reports/structural_candidates/stage7_post_king_tempo_guard_stage4_wrong_tempo_50_h40_disabled.json
+  playouts: {mate: 36, max_plies: 14}
+  shadow_candidate_count: 28
+
+delta:
+  mate_rate_delta: 0.0
+  max_plies_rate_delta: 0.0
+  shadow_candidates_delta: 0
+```
+
+Baseline-aware evaluation:
+
+```text
+artifact:
+  reports/structural_candidates/stage7_post_king_tempo_scoped_promotion_eval.json
+
+target delta versus Stage 7 baseline:
+  mate_rate_delta: +1.0
+  max_plies_rate_delta: -1.0
+  shadow_candidates_delta: -50
+
+guardrail deltas versus controls:
+  Stage 6: no regression
+  Stage 5: no regression
+  Stage 4: no regression
+
+promotion_status: promoted
+```
+
+Interpretation:
+
+```text
+This is a validated scoped sandbox candidate, not a global/default policy.
+The key architectural lesson is that late-stage repair providers must be
+profile/domain scoped unless and until cross-stage validation proves they are
+safe globally.
+```
