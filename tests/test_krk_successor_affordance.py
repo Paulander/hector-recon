@@ -18,6 +18,7 @@ from recon_lite_chess.krk_baseline_nodes import (
     _provider_role_licenses,
     create_krk_context_terminal,
     create_krk_role_provider_support_adapter,
+    create_krk_stage7_king_tempo_terminal,
     create_krk_successor_affordance,
     krk_move_shape_audit,
 )
@@ -165,6 +166,36 @@ def test_role_provider_support_adapter_respects_support_required_terms():
         "krk.edge_rook_transfer_recovery"
     ]
     assert support["score"] == 0.25
+
+
+def test_stage7_king_tempo_terminal_is_default_off_and_selects_visible_quiet_tempo():
+    board = chess.Board("6k1/R7/8/8/8/8/5K2/8 w - - 2 2")
+    node = create_krk_stage7_king_tempo_terminal("terminal.krk.stage7_king_tempo")
+
+    env = {"board": board, "blackboard": {}}
+    success, done = node.predicate(node, env)
+
+    assert success is False
+    assert done is True
+    assert "actuator_suggestions" not in env
+
+    env = {
+        "board": board,
+        "blackboard": {
+            "stage7_king_tempo_enabled": True,
+            "stage7_king_tempo_score": 25.0,
+        },
+    }
+    success, done = node.predicate(node, env)
+
+    assert success is True
+    assert done is True
+    suggestion = env["actuator_suggestions"][0]
+    assert suggestion["move"].uci() == "f2e2"
+    assert suggestion["curriculum_label"] == "stage7_king_tempo"
+    license_payload = suggestion["meta"]["visible_stage7_king_tempo_license"]
+    assert license_payload["direct_request"] is False
+    assert "king_quiet_tempo_not_toward_enemy" in license_payload["source_terms"]
 
 
 def test_explicit_role_provider_support_augments_visible_role_score_only_when_enabled():

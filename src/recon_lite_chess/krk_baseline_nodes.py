@@ -408,6 +408,151 @@ def create_krk_role_provider_support_adapter(node_id=None):
     return Node(nid=actual_id, ntype=NodeType.SCRIPT, predicate=predicate)
 
 
+def create_krk_stage7_king_tempo_terminal(node_id=None):
+    """Opt-in visible Stage 7 king-tempo candidate provider.
+
+    This sandbox terminal is intentionally narrow. It only proposes a quiet king
+    move when visible terms say the edge/rook-transfer shape exists but the
+    white king is not yet supporting it. It does not fire by default and does
+    not mutate topology or stats.
+    """
+    actual_id = node_id or "terminal.krk.stage7_king_tempo"
+
+    def predicate(node, env):
+        blackboard = env.get("blackboard")
+        board = env.get("board")
+        if blackboard is None or board is None or board.turn != chess.WHITE:
+            return False, False
+        if not blackboard.get("stage7_king_tempo_enabled", False):
+            return False, True
+        stage_filter = blackboard.get("stage_filter")
+        if stage_filter is not None:
+            try:
+                if int(stage_filter) != 7:
+                    return False, True
+            except Exception:
+                return False, True
+        terms = blackboard.setdefault("krk_visible_terms", {})
+        terms.update(_compute_krk_context_terms(board))
+        required_context = {
+            "fence_exists",
+            "edge_trap_shape_available",
+            "edge_rook_transfer_recovery_available",
+            "rook_safe",
+            "post_fence_conversion_needed",
+            "king_support_improvement_move_exists",
+        }
+        if not all(bool(terms.get(term, False)) for term in required_context):
+            return False, True
+        if bool(terms.get("white_king_support_available", False)):
+            return False, True
+
+        candidates = []
+        for move in board.legal_moves:
+            audit = _stage7_king_tempo_move_audit(board, move)
+            if not audit.get("stage7_king_tempo_candidate"):
+                continue
+            # Prefer same-rank quiet tempo, then down-rank tempo. Avoid using
+            # any outcome labels here; this is purely visible move geometry.
+            priority = (
+                0 if audit.get("king_rank_delta") == 0 else 1,
+                0 if audit.get("king_file_distance_to_enemy_delta", 0) > 0 else 1,
+                move.uci(),
+            )
+            candidates.append((priority, move, audit))
+        if not candidates:
+            return False, True
+        candidates.sort(key=lambda item: item[0])
+        _, move, audit = candidates[0]
+        score = float(blackboard.get("stage7_king_tempo_score", node.meta.get("score", 25.0)) or 25.0)
+        payload = {
+            "role_id": "krk.box_shrink_king_tempo_handoff",
+            "provider_skill_id": "krk.stage0_basin",
+            "move": move.uci(),
+            "score": score,
+            "source_terms": list(audit.get("source_terms", [])),
+            "direct_request": False,
+            "causal_status": "sandbox_opt_in",
+        }
+        meta = {
+            "is_mate": False,
+            "is_draw": False,
+            "raw_score_before_role_bonus": 0.0,
+            "visible_stage7_king_tempo_bonus": score,
+            "visible_stage7_king_tempo_license": payload,
+            "visible_move_shape_audit": audit,
+            "visible_successor_affordance": {},
+        }
+        env.setdefault("actuator_suggestions", []).append({
+            "actuator": node.nid,
+            "move": move,
+            "score": score,
+            "stage": 7,
+            "curriculum_label": "stage7_king_tempo",
+            "target_goal_label": "box_shrink_king_tempo",
+            "meta": meta,
+        })
+        suggestions = env.get("actuator_suggestions", [])
+        best = max(suggestions, key=lambda item: item["score"])
+        env["suggested_move"] = best["move"].uci()
+        env["move_confidence"] = best["score"]
+        env["suggested_actuator"] = best["actuator"]
+        node.meta["last_stage7_king_tempo_license"] = payload
+        return True, True
+
+    return Node(nid=actual_id, ntype=NodeType.TERMINAL, predicate=predicate)
+
+
+def _stage7_king_tempo_move_audit(board: chess.Board, move: chess.Move) -> Dict[str, Any]:
+    if move not in board.legal_moves:
+        return {"move": move.uci(), "legal": False, "stage7_king_tempo_candidate": False}
+    piece = board.piece_at(move.from_square)
+    if piece != chess.Piece(chess.KING, chess.WHITE):
+        return {"move": move.uci(), "legal": True, "stage7_king_tempo_candidate": False}
+    bk_sq = next(iter(board.pieces(chess.KING, chess.BLACK)), None)
+    if bk_sq is None:
+        return {"move": move.uci(), "legal": True, "stage7_king_tempo_candidate": False}
+    current_file_distance = abs(chess.square_file(move.from_square) - chess.square_file(bk_sq))
+    post_file_distance = abs(chess.square_file(move.to_square) - chess.square_file(bk_sq))
+    current_rank_distance = abs(chess.square_rank(move.from_square) - chess.square_rank(bk_sq))
+    post_rank_distance = abs(chess.square_rank(move.to_square) - chess.square_rank(bk_sq))
+    file_delta = post_file_distance - current_file_distance
+    rank_delta = post_rank_distance - current_rank_distance
+    audit = krk_move_shape_audit(board, move, {}, include_worst_reply=False)
+    move_terms = set(audit.get("move_shape_terms", []) or [])
+    post_terms = set(audit.get("post_move_terms", []) or [])
+    required = {
+        "candidate_is_king_move",
+        "rook_safe_after_move",
+        "box_area_not_increased_after_move",
+        "enemy_edge_distance_not_increased_after_move",
+    }
+    quiet_tempo = file_delta >= 0 and rank_delta >= 0
+    no_draw = not _move_creates_draw(board, move)
+    matched = required <= (move_terms | post_terms) and quiet_tempo and no_draw
+    source_terms = sorted(
+        required
+        | {"king_quiet_tempo_not_toward_enemy", "no_draw_after_move"}
+    )
+    return {
+        "move": move.uci(),
+        "legal": True,
+        "stage7_king_tempo_candidate": bool(matched),
+        "source_terms": source_terms if matched else sorted(move_terms | post_terms),
+        "move_shape_terms": sorted(move_terms),
+        "post_move_terms": sorted(post_terms),
+        "king_file_distance_to_enemy_delta": int(file_delta),
+        "king_rank_distance_to_enemy_delta": int(rank_delta),
+        "king_rank_delta": int(chess.square_rank(move.to_square) - chess.square_rank(move.from_square)),
+    }
+
+
+def _move_creates_draw(board: chess.Board, move: chess.Move) -> bool:
+    b = board.copy(stack=False)
+    b.push(move)
+    return bool(b.is_stalemate() or b.is_insufficient_material())
+
+
 def _record_explicit_role_provider_support(
     *,
     role_id: str,

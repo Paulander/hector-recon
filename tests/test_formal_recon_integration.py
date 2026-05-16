@@ -134,6 +134,16 @@ assert _compile_role_provider_support.__spec__ is not None
 assert _compile_role_provider_support.__spec__.loader is not None
 _compile_role_provider_support.__spec__.loader.exec_module(_compile_role_provider_support)
 
+_compile_stage7_king_tempo = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "compile_stage7_king_tempo_sandbox",
+        Path(__file__).resolve().parents[1] / "scripts" / "compile_stage7_king_tempo_sandbox.py",
+    )
+)
+assert _compile_stage7_king_tempo.__spec__ is not None
+assert _compile_stage7_king_tempo.__spec__.loader is not None
+_compile_stage7_king_tempo.__spec__.loader.exec_module(_compile_stage7_king_tempo)
+
 
 def test_engine_selector_preserves_pragmatic_default_and_exposes_formal():
     pragmatic = create_recon_engine(Graph())
@@ -1192,6 +1202,38 @@ def test_compile_role_provider_support_sandbox_adds_adapter_not_direct_provider_
     assert support_edges[0]["weight"] == 0.0
     assert support_edges[0]["trainable"] is True
     assert topology["nodes"]["krk_entry"]["meta"].get("explicit_role_provider_support_enabled") is None
+
+
+def test_compile_stage7_king_tempo_sandbox_adds_default_off_visible_terminal(tmp_path):
+    topology_path = tmp_path / "topology.json"
+    output_path = tmp_path / "king_tempo.json"
+    topology_path.write_text(
+        json.dumps({
+            "nodes": {
+                "krk_entry": {"type": "SCRIPT", "meta": {}},
+                "krk_hub": {"type": "SCRIPT", "meta": {}},
+            },
+            "edges": [],
+            "meta": {},
+        }),
+        encoding="utf-8",
+    )
+
+    topology = _compile_stage7_king_tempo.compile_stage7_king_tempo_sandbox(
+        topology_path=topology_path,
+        output_path=output_path,
+        score=25.0,
+    )
+
+    meta = topology["meta"]["stage7_king_tempo_sandbox"]
+    node_id = meta["node_id"]
+    assert meta["enabled_by_default"] is False
+    assert meta["causal_status"] == "sandbox_opt_in"
+    assert topology["nodes"][node_id]["factory"].endswith("create_krk_stage7_king_tempo_terminal")
+    assert topology["nodes"][node_id]["meta"]["provider_skill_id"] == "krk.stage0_basin"
+    assert topology["nodes"]["krk_entry"]["meta"].get("stage7_king_tempo_enabled") is None
+    assert any(edge["src"] == "krk_hub" and edge["dst"] == node_id and edge["type"] == "SUB" for edge in topology["edges"])
+    assert any(edge["src"] == node_id and edge["dst"] == "krk_hub" and edge["type"] == "SUR" for edge in topology["edges"])
 
 
 def test_spawn_point_promoted_trial_materializes_formal_triplet_pairs():

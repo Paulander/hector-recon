@@ -3345,3 +3345,75 @@ The edge-trap support adapter should not be guardrailed or promoted. Stage 7's
 remaining issue is not solved by first-move edge-trap support; it is either a
 missing/weak downstream continuation after box-shrink or a need for a
 king-support-before-edge-trap handoff candidate.
+
+## Stage 7 King-Tempo Sandbox Outcome
+
+Artifacts:
+
+```text
+reports/structural_candidates/stage7_king_support_handoff_probe.json
+reports/structural_candidates/stage7_king_support_handoff_probe.md
+reports/structural_candidates/stage7_king_tempo_default_off_equiv_3_h5.json
+reports/structural_candidates/stage7_king_tempo_on_10_h20.json
+reports/structural_candidates/stage7_king_tempo_on_10_h20_analysis.md
+```
+
+The targeted probe found that the repeated support-gap FEN had converting
+quiet king moves:
+
+```text
+FEN: 6k1/R7/8/8/8/8/5K2/8 w - - 2 2
+
+f2e2 -> mate in 18 plies at horizons 20/40/60
+f2e1 -> mate by horizon 40/60
+f2f1 -> mate by horizon 40/60
+```
+
+This justified a narrow opt-in visible sandbox provider:
+
+```text
+terminal.krk.stage7_king_tempo
+role: krk.box_shrink_king_tempo_handoff
+causal_status: sandbox_opt_in
+default: off
+```
+
+Default-off equivalence passed:
+
+```text
+equivalent: true
+packet_count: 9
+shadow_candidate_count: 6
+adapter_fire_count: 0
+```
+
+Enabled smoke result:
+
+```text
+samples: 10
+horizon: 20
+playouts: {max_plies: 10}
+shadow_candidate_count: 20
+selected successor: krk.stage7_king_tempo in 10/10 post-reply states
+```
+
+The sandbox was therefore traceable and behaviorally isolated, but did not
+solve Stage 7. In the sampled states it licensed quiet king moves such as
+`e2d2` and `d2c2`, not the original `f2e2` state-family move. This means the
+current visible king-tempo contract is still too broad: it recognizes a
+general "quiet not-toward-enemy king tempo" shape, but not the more specific
+geometry that makes the original `f2e2` move convert.
+
+Diagnosis:
+
+```text
+candidate_status: sandbox_failed_parameter_or_ontology_miscalibrated
+diagnostic_label: selected_successor_miscalibrated
+promotion_status: sandboxed
+guardrails_run: false
+```
+
+Do not promote or guardrail this sandbox. The useful evidence is that
+converting king-tempo moves exist in at least one Stage 7 failure family, but
+the visible contract needs a more precise move-shape/audit boundary before any
+causal Stage 7 repair should be retried.
