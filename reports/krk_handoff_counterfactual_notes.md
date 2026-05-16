@@ -3089,3 +3089,87 @@ visible monitor evidence
 ```
 
 It keeps the external lab as sandbox/evaluator only; the proposed edge is sourced by visible SCRIPT evidence and remains non-causal until explicitly sandbox-compiled and guardrail validated.
+
+## Slice 68: Gated Support Adapter Sandbox
+
+Important executor finding:
+
+```text
+A direct SUB edge from a role SCRIPT to a provider SCRIPT is unsafe in the current executor,
+because SCRIPT children can be requested while the parent SCRIPT is WAITING,
+before the role predicate has confirmed.
+```
+
+The role-provider support proposal was therefore corrected:
+
+```text
+unsafe_direct_graph_edges_emitted: false
+sandbox_compile_strategy: compile_gated_support_adapter_not_direct_sub_edge
+```
+
+Added runtime factory:
+
+```text
+recon_lite_chess.krk_baseline_nodes:create_krk_role_provider_support_adapter
+```
+
+Adapter behavior:
+
+```text
+reads visible role-provider contract evidence from blackboard
+records krk_explicit_role_provider_supports only when the role contract is already met
+does not request the provider skill
+is ignored unless explicit_role_provider_support_enabled is true
+```
+
+Added sandbox compiler:
+
+```text
+scripts/compile_role_provider_support_sandbox.py
+```
+
+Compiled sandbox topology:
+
+```text
+snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_drive_repair_sandbox/topology/krk_entry_topology_support_adapter_sandbox.json
+```
+
+Compiled adapter:
+
+```text
+script.krk.support.krk_box_shrink_to_drive_repair_to_krk_drive_to_edge
+  -- SUB / weight=0.0 / trainable=true / edge_kind=visible_role_provider_support_weight -->
+terminal.krk.support.krk_box_shrink_to_drive_repair_to_krk_drive_to_edge_marker
+```
+
+The topology loads and validates formal pairs:
+
+```text
+nodes: 458
+edges: 1316
+adapter present: true
+```
+
+Minimal default-off local check:
+
+```text
+artifact:
+  reports/structural_candidates/stage7_box_shrink_support_adapter_default_off_local_1.json
+
+result:
+  no_move: 0
+  improved: 1/1
+  conversion_status: not_checked
+```
+
+The attempted 10-sample playout smoke was stopped after exceeding the intended quick-check window. That run should be repeated later with performance profiling or a smaller playout budget if needed; it was not used as acceptance evidence for this slice.
+
+Current acceptance basis:
+
+```text
+adapter is default-off
+adapter does not insert direct role->provider request edge
+adapter support is explicit and opt-in
+topology loads with formal pairs
+unit/regression suite passes
+```

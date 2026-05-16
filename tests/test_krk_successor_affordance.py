@@ -15,7 +15,9 @@ from recon_lite_chess.krk_baseline_nodes import (
     _apply_visible_rook_transfer_move_bias,
     _apply_visible_stagnation_breaker_bias,
     _compute_krk_context_terms,
+    _provider_role_licenses,
     create_krk_context_terminal,
+    create_krk_role_provider_support_adapter,
     create_krk_successor_affordance,
     krk_move_shape_audit,
 )
@@ -61,6 +63,98 @@ def test_visible_successor_affordance_records_source_terms_when_enabled():
     assert payload["score"] == 0.5
     assert payload["source_terms"] == ["rook_safe"]
     assert payload["veto_terms"] == []
+
+
+def test_role_provider_support_adapter_records_explicit_support_only_when_enabled():
+    env = {
+        "blackboard": {
+            "explicit_role_provider_support_enabled": True,
+            "krk_successor_provider_licenses": {
+                "krk.drive_to_edge": {
+                    "krk.box_shrink_to_drive_repair": {
+                        "contract_met": True,
+                        "source_terms": ["box_shrink_drive_repair_available"],
+                    },
+                },
+            },
+        },
+    }
+    adapter = create_krk_role_provider_support_adapter(
+        "script.krk.support.box_shrink_to_drive_repair_to_drive_to_edge"
+    )
+    adapter.meta.update({
+        "role_id": "krk.box_shrink_to_drive_repair",
+        "provider_skill_id": "krk.drive_to_edge",
+        "support_weight": 0.25,
+    })
+
+    success, done = adapter.predicate(adapter, env)
+
+    assert success is True
+    assert done is True
+    support = env["blackboard"]["krk_explicit_role_provider_supports"]["krk.drive_to_edge"][
+        "krk.box_shrink_to_drive_repair"
+    ]
+    assert support["score"] == 0.25
+    assert support["source_terms"] == ["box_shrink_drive_repair_available"]
+
+
+def test_role_provider_support_adapter_is_inert_when_disabled():
+    env = {
+        "blackboard": {
+            "explicit_role_provider_support_enabled": False,
+            "krk_successor_provider_licenses": {
+                "krk.drive_to_edge": {
+                    "krk.box_shrink_to_drive_repair": {"contract_met": True},
+                },
+            },
+        },
+    }
+    adapter = create_krk_role_provider_support_adapter("script.krk.support.disabled")
+    adapter.meta.update({
+        "role_id": "krk.box_shrink_to_drive_repair",
+        "provider_skill_id": "krk.drive_to_edge",
+        "support_weight": 0.25,
+    })
+
+    success, done = adapter.predicate(adapter, env)
+
+    assert success is False
+    assert done is True
+    assert "krk_explicit_role_provider_supports" not in env["blackboard"]
+
+
+def test_explicit_role_provider_support_augments_visible_role_score_only_when_enabled():
+    blackboard = {
+        "explicit_role_provider_support_enabled": True,
+        "krk_successor_provider_licenses": {
+            "krk.drive_to_edge": {
+                "krk.box_shrink_to_drive_repair": {
+                    "role_id": "krk.box_shrink_to_drive_repair",
+                    "contract_met": True,
+                    "score": 1.0,
+                },
+            },
+        },
+        "krk_explicit_role_provider_supports": {
+            "krk.drive_to_edge": {
+                "krk.box_shrink_to_drive_repair": {
+                    "role_contract_met": True,
+                    "score": 0.25,
+                },
+            },
+        },
+    }
+
+    licenses = _provider_role_licenses("krk.drive_to_edge", blackboard)
+
+    assert licenses[0]["score"] == 1.25
+    assert licenses[0]["explicit_role_provider_support_score"] == 0.25
+
+    blackboard["explicit_role_provider_support_enabled"] = False
+    licenses = _provider_role_licenses("krk.drive_to_edge", blackboard)
+    assert licenses[0]["score"] == 1.0
+    assert "explicit_role_provider_support_score" not in licenses[0]
 
 
 def test_edge_trapped_black_king_counts_as_visible_fence_contract():

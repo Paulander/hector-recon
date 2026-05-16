@@ -1,0 +1,133 @@
+{
+  "total": 1,
+  "no_move": 0,
+  "improved": 1,
+  "flat": 0,
+  "worsened": 0,
+  "optimal": 0,
+  "avg_reward": 0.39818749999999997,
+  "avg_oracle_reward": 0.43099999999999994,
+  "playouts": {},
+  "handoff_packets": [
+    {
+      "achieved": [
+        "reward_confirmed.box_shrink",
+        "visible_fence_contract_confirmed"
+      ],
+      "continuation_exports": {
+        "target_goal.box_shrink": 0.39818749999999997
+      },
+      "evidence_terms": {
+        "box_area_after_own_move": 7,
+        "chosen_reward": 0.39818749999999997,
+        "cut_axis_after_own_move": "edge",
+        "enemy_king_boxed_after_own_move": true,
+        "fen": "7k/8/8/8/R7/8/5K2/8 w - - 0 1",
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "label": "box_shrink",
+        "move": "a4a7",
+        "oracle_reward": 0.43099999999999994,
+        "reward_confirmed": true,
+        "reward_contract_mismatch": false,
+        "rook_safe_after_own_move": true,
+        "stage_filter": 7,
+        "visible_fence_contract_confirmed": true
+      },
+      "failed": [],
+      "from_skill": "krk.box_shrink",
+      "observed_outcome": "local_landmark_confirmed",
+      "packet_id": "packet.c18270adf55f",
+      "phase": "post_own_move",
+      "route_selected": null,
+      "schema_version": "handoff_packet.v1",
+      "scope": "krk.landmark_eval",
+      "source_router": null,
+      "status": "confirmed",
+      "to_skill": null
+    }
+  ],
+  "one_ply_status_counts": {
+    "failed": 1
+  },
+  "conversion_status_counts": {
+    "not_checked": 1
+  },
+  "semantic_alignment_status_counts": {},
+  "conversion_by_semantic_alignment_status": {},
+  "semantic_alignment_confusion_counts": {},
+  "semantic_alignment_snapshots": {},
+  "one_ply_engine_decision_count": 1,
+  "one_ply_engine_ticks_total": 8,
+  "one_ply_engine_ticks_max": 8,
+  "one_ply_engine_early_stop_count": 1,
+  "playout_engine_decision_count": 0,
+  "playout_engine_ticks_total": 0,
+  "playout_engine_ticks_max": 0,
+  "playout_engine_early_stop_count": 0,
+  "one_ply_status": "failed",
+  "conversion_status": "not_checked",
+  "composition_profile": {
+    "schema_version": "composition_profile.v1",
+    "profile_id": "handoff_composition_v1",
+    "domain": "KRK",
+    "experimental_profile": true,
+    "default_policy": false,
+    "description": "Stable experimental KRK handoff-composition profile: visible successor affordances, role licenses, role-scoped move shapes, stagnation breaker, post-break continuation, and stage0 drift penalty. This is opt-in and domain-scoped, not the universal Hector default policy.",
+    "settings": {
+      "successor_affordance_layer_enabled": true,
+      "successor_role_license_enabled": true,
+      "successor_role_scoped_move_shape_enabled": true,
+      "successor_role_scoped_move_shape_bonus": 0.05,
+      "stagnation_breaker_enabled": true,
+      "stagnation_breaker_bonus": 0.5,
+      "post_break_continuation_enabled": true,
+      "post_break_continuation_bonus": 0.25,
+      "successor_stage0_drift_penalty": 6.0
+    },
+    "recommended_validation_defaults": {
+      "enable_diagnostic_caches": true,
+      "parallel_workers": 8,
+      "chunk_size": 25
+    },
+    "non_causal_records": [
+      "handoff_packets",
+      "shadow_candidates",
+      "skill_contract_stats"
+    ]
+  },
+  "label": "box_shrink",
+  "source_stage_names": [
+    "Box_Shrink",
+    "Drive_To_Edge",
+    "Fence_Established"
+  ],
+  "successor_affordance_layer_enabled": true,
+  "successor_contract_gate_enabled": false,
+  "successor_role_license_enabled": true,
+  "successor_role_veto_penalty": 0.0,
+  "successor_stage0_drift_penalty": 6.0,
+  "successor_role_scoped_move_shape_enabled": true,
+  "successor_role_scoped_move_shape_bonus": 0.05,
+  "successor_role_scoped_move_shape_require_worst_reply": false,
+  "stagnation_breaker_enabled": true,
+  "stagnation_breaker_bonus": 0.5,
+  "stagnation_breaker_king_support_bonus": 0.0,
+  "post_break_continuation_enabled": true,
+  "post_break_continuation_bonus": 0.25,
+  "early_stop_stable_suggestions": 2,
+  "diagnostic_caches_enabled": false,
+  "deterministic_sample_seeds": false,
+  "target_failure_trace_state_signatures": [],
+  "conversion_failure_count": 0,
+  "handoff_packet_count": 1,
+  "shadow_candidate_count": 0,
+  "counterfactual_successor_sweep_count": 0,
+  "handoff_packet_counts_by_phase": {
+    "post_own_move": {
+      "confirmed": 1
+    }
+  },
+  "shadow_candidate_counts_by_trigger": {},
+  "handoff_packets_truncated": 0
+}

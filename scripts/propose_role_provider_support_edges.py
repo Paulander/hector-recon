@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
-"""Propose explicit visible role->provider support edges.
+"""Propose explicit visible role->provider support relations.
 
 This is a non-causal proposal generator. It does not edit the topology. It
 turns a blocked candidate-local M3 probe into a concrete structural proposal
 that can later be sandbox-compiled and guardrail-tested.
+
+Important executor safety rule: a direct SUB edge from a role SCRIPT to a
+provider SCRIPT is not emitted here. In the current executor, SCRIPT children
+can be requested while the parent is WAITING, before its predicate confirms.
+The proposal therefore emits a scaffold relation that must be compiled via a
+gated support adapter if it ever becomes causal.
 """
 
 from __future__ import annotations
@@ -62,18 +68,38 @@ def propose_role_provider_support_edges(
                 continue
             for provider_node in provider_nodes:
                 proposals.append({
-                    "src": role_node,
-                    "dst": provider_node,
-                    "type": "SUB",
+                    "source_role_script": role_node,
+                    "target_provider_skill": provider_node,
+                    "relation_type": "visible_role_provider_support",
                     "initial_weight": 0.0,
                     "trainable": True,
-                    "edge_kind": "visible_role_provider_support",
-                    "causal_status": "non_causal_until_sandbox_compiled",
+                    "causal_status": "non_causal_scaffold",
+                    "direct_graph_edge_emitted": False,
+                    "requires_support_adapter": True,
+                    "unsafe_direct_edge": {
+                        "type": "SUB",
+                        "reason": (
+                            "Direct role SCRIPT -> provider SCRIPT SUB could request the provider "
+                            "while the role SCRIPT is WAITING, before role predicate confirmation."
+                        ),
+                    },
                     "source_terms": [
                         "role_contract_met_provider_not_selected",
                         "candidate_edges_not_firing",
                     ],
-                    "activation_rule": "role_script_confirmation_may_support_provider_skill_after_sandbox_promotion",
+                    "adapter_contract": {
+                        "kind": "gated_visible_support_adapter",
+                        "confirm_when": [
+                            "source_role_script_confirmed",
+                            "role_contract_met",
+                            "provider_execution_eligible",
+                        ],
+                        "must_not": [
+                            "request_provider_before_role_confirmation",
+                            "bypass visible provider eligibility",
+                            "mutate default topology",
+                        ],
+                    },
                 })
 
     return {
@@ -86,10 +112,12 @@ def propose_role_provider_support_edges(
         "source_probe_result": probe.get("probe_result"),
         "proposal_status": "sandbox_ready" if proposals else "not_applicable",
         "candidate_id": f"cand.{role_id}.visible_provider_support.v1".replace("krk.", "krk."),
-        "proposed_edges": proposals,
-        "proposed_edge_count": len(proposals),
+        "proposed_support_relations": proposals,
+        "proposed_relation_count": len(proposals),
+        "unsafe_direct_graph_edges_emitted": False,
+        "sandbox_compile_strategy": "compile_gated_support_adapter_not_direct_sub_edge",
         "required_validation": [
-            "compile_sandbox_topology_with_support_edges",
+            "compile_sandbox_topology_with_gated_support_adapter",
             "stage7_target_smoke",
             "stage6_drive_guardrail",
             "stage5_fence_guardrail",
@@ -115,15 +143,17 @@ def _write_markdown(payload: dict[str, Any], path: Path) -> None:
         f"Target provider: `{payload['target_provider']}`",
         f"Source probe result: `{payload['source_probe_result']}`",
         f"Proposal status: `{payload['proposal_status']}`",
-        f"Proposed edge count: `{payload['proposed_edge_count']}`",
+        f"Proposed relation count: `{payload['proposed_relation_count']}`",
+        f"Sandbox compile strategy: `{payload['sandbox_compile_strategy']}`",
+        f"Unsafe direct graph edges emitted: `{payload['unsafe_direct_graph_edges_emitted']}`",
         "",
-        "## Proposed Edges",
+        "## Proposed Support Relations",
         "",
     ]
-    for edge in payload.get("proposed_edges") or []:
+    for edge in payload.get("proposed_support_relations") or []:
         lines.append(
-            f"- `{edge['src']}` --`{edge['type']}`/w={edge['initial_weight']}--> `{edge['dst']}` "
-            f"({edge['edge_kind']})"
+            f"- `{edge['source_role_script']}` --support/w={edge['initial_weight']}--> "
+            f"`{edge['target_provider_skill']}` ({edge['relation_type']}, adapter required)"
         )
     lines.extend(["", "## Required Validation", ""])
     for item in payload.get("required_validation") or []:

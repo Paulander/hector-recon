@@ -10,7 +10,7 @@ import time
 from typing import Dict, Any
 import chess
 
-from recon_lite.graph import Node, NodeType
+from recon_lite.graph import LinkType, Node, NodeType
 from recon_lite_chess.triplets import AfterCondition, cosine_similarity as terminal_cosine_similarity
 from recon_lite_hector.learning.baseline import apply_sensor
 from recon_lite_chess.baseline_teacher import KRKTeacher
@@ -248,6 +248,15 @@ def create_krk_entry_root(node_id=None):
                 ),
             )
         )
+        blackboard["explicit_role_provider_support_enabled"] = bool(
+            env.get(
+                "explicit_role_provider_support_enabled",
+                blackboard.get(
+                    "explicit_role_provider_support_enabled",
+                    node.meta.get("explicit_role_provider_support_enabled", False),
+                ),
+            )
+        )
 
         # Compute current goal distance (for handoff gating) when goal bank exists
         if blackboard.get("goal_bank") and blackboard.get("krk_features") is not None:
@@ -352,6 +361,72 @@ def create_krk_successor_affordance(node_id=None):
         return score > float(node.meta.get("confirm_threshold", 0.0)), True
 
     return Node(nid=actual_id, ntype=NodeType.SCRIPT, predicate=predicate)
+
+
+def create_krk_role_provider_support_adapter(node_id=None):
+    """Create a gated visible role-provider support adapter.
+
+    The adapter records support only after a visible role contract has already
+    confirmed in the blackboard. It does not request the provider skill. Runtime
+    scoring ignores it unless explicit_role_provider_support_enabled is set.
+    """
+    actual_id = node_id or "krk_role_provider_support_adapter"
+
+    def predicate(node, env):
+        blackboard = env.get("blackboard")
+        if not blackboard:
+            return False, False
+        if not blackboard.get("explicit_role_provider_support_enabled", False):
+            return False, True
+        role_id = node.meta.get("role_id")
+        provider_id = node.meta.get("provider_skill_id")
+        if not role_id or not provider_id:
+            return False, True
+        provider_licenses = blackboard.get("krk_successor_provider_licenses", {})
+        role_payload = {}
+        if isinstance(provider_licenses, dict):
+            provider_payload = provider_licenses.get(provider_id, {})
+            if isinstance(provider_payload, dict):
+                role_payload = provider_payload.get(role_id, {})
+        if not isinstance(role_payload, dict) or not role_payload.get("contract_met"):
+            return False, True
+        support_weight = _support_adapter_weight(node, env)
+        payload = {
+            "role_id": role_id,
+            "provider_skill_id": provider_id,
+            "score": support_weight,
+            "support_weight": support_weight,
+            "source_terms": list(role_payload.get("source_terms", [])),
+            "role_contract_met": True,
+            "causal_status": "explicit_sandbox_support",
+            "adapter_node": node.nid,
+        }
+        supports = blackboard.setdefault("krk_explicit_role_provider_supports", {})
+        provider_supports = supports.setdefault(provider_id, {})
+        if isinstance(provider_supports, dict):
+            provider_supports[role_id] = payload
+        else:
+            supports[provider_id] = {role_id: payload}
+        node.meta["last_explicit_role_provider_support"] = payload
+        return support_weight > float(node.meta.get("confirm_threshold", 0.0)), True
+
+    return Node(nid=actual_id, ntype=NodeType.SCRIPT, predicate=predicate)
+
+
+def _support_adapter_weight(node, env: Dict[str, Any]) -> float:
+    """Resolve support weight from adapter->marker edge when available."""
+    fallback = float(node.meta.get("support_weight", 0.0) or 0.0)
+    graph = env.get("__graph__")
+    marker_id = node.meta.get("support_marker_id")
+    if graph is None or not marker_id:
+        return fallback
+    try:
+        for edge in graph.edges:
+            if edge.src == node.nid and edge.dst == marker_id and edge.ltype == LinkType.SUB:
+                return float(edge.w[0]) if hasattr(edge.w, "__len__") else float(edge.w)
+    except Exception:
+        return fallback
+    return fallback
 
 
 def create_krk_affordance_marker_terminal(node_id=None):
@@ -2114,7 +2189,19 @@ def _provider_role_licenses(provider_id: str, blackboard: Dict[str, Any]) -> lis
         if not isinstance(item, dict):
             continue
         if bool(item.get("contract_met", False)) and float(item.get("score", 0.0) or 0.0) > 0.0:
-            visible.append(item)
+            payload = dict(item)
+            if blackboard.get("explicit_role_provider_support_enabled", False):
+                support = (
+                    blackboard.get("krk_explicit_role_provider_supports", {})
+                    .get(provider_id, {})
+                    .get(payload.get("role_id") or payload.get("successor"), {})
+                )
+                if isinstance(support, dict) and support.get("role_contract_met"):
+                    support_score = float(support.get("score", 0.0) or 0.0)
+                    payload["explicit_role_provider_support"] = support
+                    payload["explicit_role_provider_support_score"] = support_score
+                    payload["score"] = float(payload.get("score", 0.0) or 0.0) + support_score
+            visible.append(payload)
     return visible
 
 

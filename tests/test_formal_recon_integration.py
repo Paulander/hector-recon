@@ -124,6 +124,16 @@ assert _role_provider_support.__spec__ is not None
 assert _role_provider_support.__spec__.loader is not None
 _role_provider_support.__spec__.loader.exec_module(_role_provider_support)
 
+_compile_role_provider_support = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "compile_role_provider_support_sandbox",
+        Path(__file__).resolve().parents[1] / "scripts" / "compile_role_provider_support_sandbox.py",
+    )
+)
+assert _compile_role_provider_support.__spec__ is not None
+assert _compile_role_provider_support.__spec__.loader is not None
+_compile_role_provider_support.__spec__.loader.exec_module(_compile_role_provider_support)
+
 
 def test_engine_selector_preserves_pragmatic_default_and_exposes_formal():
     pragmatic = create_recon_engine(Graph())
@@ -1098,14 +1108,86 @@ def test_role_provider_support_proposal_remains_non_causal_and_sandbox_only(tmp_
     assert proposal["schema_version"] == "role_provider_support_proposal.v1"
     assert proposal["causal_status"] == "non_causal"
     assert proposal["proposal_status"] == "sandbox_ready"
-    assert proposal["proposed_edge_count"] == 1
-    edge = proposal["proposed_edges"][0]
-    assert edge["src"] == "script.krk.successor.box_shrink_to_drive_repair_affordance"
-    assert edge["dst"] == "skill.krk.drive_to_edge"
-    assert edge["type"] == "SUB"
+    assert proposal["proposed_relation_count"] == 1
+    assert proposal["unsafe_direct_graph_edges_emitted"] is False
+    assert proposal["sandbox_compile_strategy"] == "compile_gated_support_adapter_not_direct_sub_edge"
+    edge = proposal["proposed_support_relations"][0]
+    assert edge["source_role_script"] == "script.krk.successor.box_shrink_to_drive_repair_affordance"
+    assert edge["target_provider_skill"] == "skill.krk.drive_to_edge"
+    assert edge["relation_type"] == "visible_role_provider_support"
     assert edge["initial_weight"] == 0.0
-    assert edge["causal_status"] == "non_causal_until_sandbox_compiled"
+    assert edge["causal_status"] == "non_causal_scaffold"
+    assert edge["direct_graph_edge_emitted"] is False
+    assert edge["requires_support_adapter"] is True
+    assert "WAITING" in edge["unsafe_direct_edge"]["reason"]
     assert "do_not_insert_into_default_topology" in proposal["hard_blocks"]
+
+
+def test_compile_role_provider_support_sandbox_adds_adapter_not_direct_provider_edge(tmp_path):
+    topology_path = tmp_path / "topology.json"
+    proposal_path = tmp_path / "proposal.json"
+    output_path = tmp_path / "sandbox.json"
+    topology_path.write_text(
+        json.dumps({
+            "nodes": {
+                "krk_entry": {"type": "SCRIPT", "meta": {}},
+                "krk_successor_affordance_hub": {"type": "SCRIPT", "meta": {}},
+                "script.krk.successor.box_shrink_to_drive_repair_affordance": {
+                    "type": "SCRIPT",
+                    "meta": {"role_id": "krk.box_shrink_to_drive_repair"},
+                },
+                "skill.krk.drive_to_edge": {
+                    "type": "SCRIPT",
+                    "meta": {"skill_id": "krk.drive_to_edge"},
+                },
+            },
+            "edges": [],
+            "meta": {},
+        }),
+        encoding="utf-8",
+    )
+    proposal_path.write_text(
+        json.dumps({
+            "target_role": "krk.box_shrink_to_drive_repair",
+            "target_provider": "krk.drive_to_edge",
+            "sandbox_compile_strategy": "compile_gated_support_adapter_not_direct_sub_edge",
+            "proposed_support_relations": [
+                {
+                    "source_role_script": "script.krk.successor.box_shrink_to_drive_repair_affordance",
+                    "target_provider_skill": "skill.krk.drive_to_edge",
+                    "requires_support_adapter": True,
+                    "initial_weight": 0.0,
+                }
+            ],
+        }),
+        encoding="utf-8",
+    )
+
+    topology = _compile_role_provider_support.compile_support_sandbox(
+        topology_path=topology_path,
+        proposal_path=proposal_path,
+        output_path=output_path,
+    )
+
+    meta = topology["meta"]["role_provider_support_sandbox"]
+    assert meta["adapter_count"] == 1
+    assert meta["enabled_by_default"] is False
+    adapter_id = meta["adapters"][0]
+    assert topology["nodes"][adapter_id]["factory"].endswith("create_krk_role_provider_support_adapter")
+    direct_edges = [
+        edge for edge in topology["edges"]
+        if edge["src"] == "script.krk.successor.box_shrink_to_drive_repair_affordance"
+        and edge["dst"] == "skill.krk.drive_to_edge"
+    ]
+    assert direct_edges == []
+    support_edges = [
+        edge for edge in topology["edges"]
+        if edge["src"] == adapter_id and edge.get("edge_kind") == "visible_role_provider_support_weight"
+    ]
+    assert support_edges
+    assert support_edges[0]["weight"] == 0.0
+    assert support_edges[0]["trainable"] is True
+    assert topology["nodes"]["krk_entry"]["meta"].get("explicit_role_provider_support_enabled") is None
 
 
 def test_spawn_point_promoted_trial_materializes_formal_triplet_pairs():

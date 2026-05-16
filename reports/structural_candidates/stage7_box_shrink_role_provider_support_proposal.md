@@ -6,15 +6,17 @@ Target role: `krk.box_shrink_to_drive_repair`
 Target provider: `krk.drive_to_edge`
 Source probe result: `blocked_no_candidate_provider_eligibility`
 Proposal status: `sandbox_ready`
-Proposed edge count: `1`
+Proposed relation count: `1`
+Sandbox compile strategy: `compile_gated_support_adapter_not_direct_sub_edge`
+Unsafe direct graph edges emitted: `False`
 
-## Proposed Edges
+## Proposed Support Relations
 
-- `script.krk.successor.box_shrink_to_drive_repair_affordance` --`SUB`/w=0.0--> `skill.krk.drive_to_edge` (visible_role_provider_support)
+- `script.krk.successor.box_shrink_to_drive_repair_affordance` --support/w=0.0--> `skill.krk.drive_to_edge` (visible_role_provider_support, adapter required)
 
 ## Required Validation
 
-- `compile_sandbox_topology_with_support_edges`
+- `compile_sandbox_topology_with_gated_support_adapter`
 - `stage7_target_smoke`
 - `stage6_drive_guardrail`
 - `stage5_fence_guardrail`
