@@ -1,0 +1,143 @@
+{
+  "schema_version": "structural_candidate_outcome.v1",
+  "candidate_id": "cand.krk.box_shrink.king_tempo_handoff.v1",
+  "candidate_type": "visible_move_shape_provider",
+  "target_skill": "krk.box_shrink",
+  "parent_skill": "krk.drive_to_edge",
+  "source_monitor_script": "growth.monitor.successor_miscalibration",
+  "causal_status": "sandbox_opt_in",
+  "promotion_status": "quarantine",
+  "candidate_status": "target_improved_but_stage_incomplete",
+  "credit": 0.0,
+  "evidence_artifacts": [
+    "reports/structural_candidates/stage7_king_tempo_move_shape_audit.json",
+    "reports/structural_candidates/stage7_king_tempo_single_use_default_off_equiv_3_h5.json",
+    "reports/structural_candidates/stage7_king_tempo_baseline_10_h40.json",
+    "reports/structural_candidates/stage7_king_tempo_single_use_on_10_h40.json",
+    "reports/structural_candidates/stage7_king_tempo_baseline_25_h40.json",
+    "reports/structural_candidates/stage7_king_tempo_single_use_on_25_h40.json",
+    "reports/structural_candidates/stage7_king_tempo_guard_stage6_drive_50_h40.json",
+    "reports/structural_candidates/stage7_king_tempo_guard_stage5_fence_50_h40.json",
+    "reports/structural_candidates/stage7_king_tempo_guard_stage4_wrong_tempo_50_h40.json",
+    "reports/structural_candidates/stage7_king_tempo_guard_stage4_wrong_tempo_50_h40_disabled.json",
+    "reports/structural_candidates/stage7_king_tempo_guard_stage6_drive_50_h40_disabled.json",
+    "reports/structural_candidates/stage7_king_tempo_guard_stage5_fence_50_h40_disabled.json",
+    "reports/structural_candidates/stage7_king_tempo_baseline_aware_promotion_eval.json"
+  ],
+  "default_off_equivalence": {
+    "artifact": "reports/structural_candidates/stage7_king_tempo_single_use_default_off_equiv_3_h5.json",
+    "equivalent": true
+  },
+  "paired_smoke": {
+    "baseline": {
+      "artifact": "reports/structural_candidates/stage7_king_tempo_baseline_10_h40.json",
+      "samples": 10,
+      "horizon": 40,
+      "playouts": {
+        "max_plies": 10
+      },
+      "shadow_candidate_count": 20,
+      "selected_successor_by_outcome": {
+        "krk.stage0_basin:max_plies": 10
+      }
+    },
+    "sandbox": {
+      "artifact": "reports/structural_candidates/stage7_king_tempo_single_use_on_10_h40.json",
+      "samples": 10,
+      "horizon": 40,
+      "playouts": {
+        "mate": 3,
+        "max_plies": 7
+      },
+      "shadow_candidate_count": 14,
+      "selected_successor_by_outcome": {
+        "krk.stage7_king_tempo:mate": 3,
+        "krk.stage7_king_tempo:max_plies": 7
+      }
+    }
+  },
+  "diagnosis": "target_improves_without_guardrail_regression_but_stage_threshold_not_met",
+  "guardrails_run": true,
+  "notes": "Refined compact-box/worst-reply/single-use king-tempo sandbox improves Stage 7 target conversion from 0/25 to 13/25 at horizon 40 and reduces shadow candidates from 50 to 24. Baseline-aware guardrails show no regression versus disabled controls for Stage 6, Stage 5, or Stage 4. Promotion remains quarantined because the Stage 7 target itself is still below promotion thresholds and still emits shadow candidates.",
+  "paired_smoke_25_h40": {
+    "baseline": {
+      "artifact": "reports/structural_candidates/stage7_king_tempo_baseline_25_h40.json",
+      "samples": 25,
+      "horizon": 40,
+      "playouts": {
+        "max_plies": 25
+      },
+      "shadow_candidate_count": 50,
+      "selected_successor_by_outcome": {
+        "krk.stage0_basin:max_plies": 25
+      }
+    },
+    "sandbox": {
+      "artifact": "reports/structural_candidates/stage7_king_tempo_single_use_on_25_h40.json",
+      "samples": 25,
+      "horizon": 40,
+      "playouts": {
+        "mate": 13,
+        "max_plies": 12
+      },
+      "shadow_candidate_count": 24,
+      "selected_successor_by_outcome": {
+        "krk.stage7_king_tempo:mate": 13,
+        "krk.stage7_king_tempo:max_plies": 12
+      }
+    },
+    "target_delta": {
+      "mate_delta": 13,
+      "max_plies_delta": -13,
+      "shadow_candidate_delta": -26
+    }
+  },
+  "guardrails": {
+    "stage6_drive_to_edge_50_h40": {
+      "artifact": "reports/structural_candidates/stage7_king_tempo_guard_stage6_drive_50_h40.json",
+      "playouts": {
+        "mate": 50
+      },
+      "shadow_candidate_count": 0,
+      "status": "passed"
+    },
+    "stage5_fence_50_h40": {
+      "artifact": "reports/structural_candidates/stage7_king_tempo_guard_stage5_fence_50_h40.json",
+      "playouts": {
+        "mate": 50
+      },
+      "shadow_candidate_count": 0,
+      "status": "passed"
+    },
+    "stage4_wrong_tempo_50_h40_enabled": {
+      "artifact": "reports/structural_candidates/stage7_king_tempo_guard_stage4_wrong_tempo_50_h40.json",
+      "playouts": {
+        "mate": 43,
+        "max_plies": 7
+      },
+      "shadow_candidate_count": 14,
+      "status": "failed"
+    },
+    "stage4_wrong_tempo_50_h40_disabled": {
+      "artifact": "reports/structural_candidates/stage7_king_tempo_guard_stage4_wrong_tempo_50_h40_disabled.json",
+      "playouts": {
+        "mate": 43,
+        "max_plies": 7
+      },
+      "shadow_candidate_count": 14,
+      "status": "failed_same_as_disabled"
+    }
+  },
+  "baseline_aware_promotion_eval": {
+    "artifact": "reports/structural_candidates/stage7_king_tempo_baseline_aware_promotion_eval.json",
+    "promotion_status": "quarantine",
+    "target_improved_vs_baseline": true,
+    "target_delta_vs_baseline": {
+      "mate_rate_delta": 0.52,
+      "max_plies_rate_delta": -0.52,
+      "shadow_candidates_delta": -26
+    },
+    "guardrail_regressions_vs_control": 0,
+    "blocking_reason": "stage target still below promotion thresholds: 0.52 mate rate, 0.48 max_plies rate, 24 shadow candidates"
+  }
+}

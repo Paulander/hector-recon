@@ -144,6 +144,16 @@ assert _compile_stage7_king_tempo.__spec__ is not None
 assert _compile_stage7_king_tempo.__spec__.loader is not None
 _compile_stage7_king_tempo.__spec__.loader.exec_module(_compile_stage7_king_tempo)
 
+_stage7_king_tempo_audit = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "audit_stage7_king_tempo_move_shapes",
+        Path(__file__).resolve().parents[1] / "scripts" / "audit_stage7_king_tempo_move_shapes.py",
+    )
+)
+assert _stage7_king_tempo_audit.__spec__ is not None
+assert _stage7_king_tempo_audit.__spec__.loader is not None
+_stage7_king_tempo_audit.__spec__.loader.exec_module(_stage7_king_tempo_audit)
+
 
 def test_engine_selector_preserves_pragmatic_default_and_exposes_formal():
     pragmatic = create_recon_engine(Graph())
@@ -409,6 +419,92 @@ def test_provider_promotion_eval_keeps_stage_as_overlay_when_guardrail_fails(tmp
     assert result["promotion_status"] == "overlay_only"
     assert result["stage"]["passed"] is True
     assert result["guardrails"][0]["passed"] is False
+
+
+def test_provider_promotion_eval_can_use_guardrail_controls(tmp_path):
+    stage_path = tmp_path / "stage.json"
+    stage_baseline_path = tmp_path / "stage_baseline.json"
+    guardrail_path = tmp_path / "guardrail.json"
+    guardrail_control_path = tmp_path / "guardrail_control.json"
+    stage_path.write_text(
+        json.dumps({"total": 10, "improved": 10, "worsened": 0, "playouts": {"mate": 8, "max_plies": 2}, "shadow_candidates": []}),
+        encoding="utf-8",
+    )
+    stage_baseline_path.write_text(
+        json.dumps({"total": 10, "improved": 10, "worsened": 0, "playouts": {"max_plies": 10}, "shadow_candidates": [1, 2]}),
+        encoding="utf-8",
+    )
+    guardrail_payload = {
+        "total": 10,
+        "improved": 10,
+        "worsened": 0,
+        "playouts": {"mate": 8, "max_plies": 2},
+        "shadow_candidates": [1],
+    }
+    guardrail_path.write_text(json.dumps(guardrail_payload), encoding="utf-8")
+    guardrail_control_path.write_text(json.dumps(guardrail_payload), encoding="utf-8")
+
+    result = _provider_promotion.evaluate_promotion(
+        stage_artifact=stage_path,
+        stage_baseline_artifact=stage_baseline_path,
+        guardrail_artifacts=[guardrail_path],
+        guardrail_control_artifacts=[guardrail_control_path],
+        min_improved_rate=0.70,
+        max_worsened_rate=0.20,
+        min_mate_rate=0.65,
+        max_max_plies_rate=0.25,
+        max_shadow_candidates=1,
+        min_target_mate_delta=0.10,
+    )
+
+    assert result["promotion_status"] == "promoted"
+    assert result["target_improved_vs_baseline"] is True
+    assert result["target_delta_vs_baseline"]["mate_rate_delta"] == 0.8
+    assert result["guardrails"][0]["passed"] is True
+    assert result["guardrail_deltas_vs_control"][0]["regressed_vs_control"] is False
+
+
+def test_provider_promotion_eval_blocks_guardrail_delta_regression(tmp_path):
+    stage_path = tmp_path / "stage.json"
+    stage_baseline_path = tmp_path / "stage_baseline.json"
+    guardrail_path = tmp_path / "guardrail.json"
+    guardrail_control_path = tmp_path / "guardrail_control.json"
+    stage_path.write_text(
+        json.dumps({"total": 10, "improved": 10, "worsened": 0, "playouts": {"mate": 8, "max_plies": 2}, "shadow_candidates": []}),
+        encoding="utf-8",
+    )
+    stage_baseline_path.write_text(
+        json.dumps({"total": 10, "improved": 10, "worsened": 0, "playouts": {"max_plies": 10}, "shadow_candidates": []}),
+        encoding="utf-8",
+    )
+    guardrail_path.write_text(
+        json.dumps({"total": 10, "improved": 10, "worsened": 0, "playouts": {"mate": 7, "max_plies": 3}, "shadow_candidates": [1]}),
+        encoding="utf-8",
+    )
+    guardrail_control_path.write_text(
+        json.dumps({"total": 10, "improved": 10, "worsened": 0, "playouts": {"mate": 10}, "shadow_candidates": []}),
+        encoding="utf-8",
+    )
+
+    result = _provider_promotion.evaluate_promotion(
+        stage_artifact=stage_path,
+        stage_baseline_artifact=stage_baseline_path,
+        guardrail_artifacts=[guardrail_path],
+        guardrail_control_artifacts=[guardrail_control_path],
+        min_improved_rate=0.70,
+        max_worsened_rate=0.20,
+        min_mate_rate=0.65,
+        max_max_plies_rate=0.35,
+        max_shadow_candidates=1,
+        min_target_mate_delta=0.10,
+        max_guardrail_mate_regression=0.02,
+        max_guardrail_max_plies_regression=0.02,
+        max_guardrail_shadow_regression=0,
+    )
+
+    assert result["promotion_status"] == "overlay_only"
+    assert result["guardrail_deltas_vs_control"][0]["regressed_vs_control"] is True
+    assert result["failures"][0]["kind"] == "guardrail_delta"
 
 
 def test_stage7_growth_monitor_generates_structural_candidates(tmp_path):
@@ -1234,6 +1330,53 @@ def test_compile_stage7_king_tempo_sandbox_adds_default_off_visible_terminal(tmp
     assert topology["nodes"]["krk_entry"]["meta"].get("stage7_king_tempo_enabled") is None
     assert any(edge["src"] == "krk_hub" and edge["dst"] == node_id and edge["type"] == "SUB" for edge in topology["edges"])
     assert any(edge["src"] == node_id and edge["dst"] == "krk_hub" and edge["type"] == "SUR" for edge in topology["edges"])
+
+
+def test_stage7_king_tempo_move_shape_audit_proposes_non_causal_refinement(tmp_path):
+    probe_path = tmp_path / "probe.json"
+    diagnostic_path = tmp_path / "diagnostic.json"
+    probe_path.write_text(
+        json.dumps({
+            "source_failure_fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+            "records": [
+                {"move": "f2e2", "converts_to_mate": True},
+                {"move": "f2e3", "converts_to_mate": False},
+            ],
+        }),
+        encoding="utf-8",
+    )
+    diagnostic_path.write_text(
+        json.dumps({
+            "handoff_packets": [
+                {
+                    "phase": "post_opponent_reply",
+                    "evidence_terms": {
+                        "post_reply_fen": "6k1/8/8/8/R7/8/4K3/8 w - - 2 2",
+                        "playout_result": "max_plies",
+                        "visible_stage7_king_tempo_license": {
+                            "move": "e2d2",
+                            "direct_request": False,
+                        },
+                    },
+                }
+            ],
+        }),
+        encoding="utf-8",
+    )
+
+    audit = _stage7_king_tempo_audit.audit_king_tempo_move_shapes(
+        probe_path=probe_path,
+        diagnostic_path=diagnostic_path,
+    )
+
+    assert audit["schema_version"] == "stage7_king_tempo_move_shape_audit.v1"
+    assert audit["causal_status"] == "non_causal"
+    assert audit["diagnosis"] == "king_tempo_contract_too_broad"
+    update = audit["candidate_update"]
+    assert update["causal_status"] == "non_causal"
+    assert update["promotion_status"] == "sandboxed"
+    assert "compact_box_area_before_move" in update["proposed_change"]["required_terms"]
+    assert "box_area_large_before_move" in update["proposed_change"]["veto_terms"]
 
 
 def test_spawn_point_promoted_trial_materializes_formal_triplet_pairs():

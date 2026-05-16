@@ -85,12 +85,18 @@ def evaluate_artifact(
 def evaluate_promotion(
     *,
     stage_artifact: Path,
+    stage_baseline_artifact: Path | None = None,
     guardrail_artifacts: list[Path],
+    guardrail_control_artifacts: list[Path] | None = None,
     min_improved_rate: float,
     max_worsened_rate: float,
     min_mate_rate: float,
     max_max_plies_rate: float,
     max_shadow_candidates: int,
+    min_target_mate_delta: float = 0.0,
+    max_guardrail_mate_regression: float = 0.02,
+    max_guardrail_max_plies_regression: float = 0.02,
+    max_guardrail_shadow_regression: int = 0,
 ) -> dict[str, Any]:
     stage = evaluate_artifact(
         stage_artifact,
@@ -111,10 +117,71 @@ def evaluate_promotion(
         )
         for path in guardrail_artifacts
     ]
+    stage_baseline = (
+        evaluate_artifact(
+            stage_baseline_artifact,
+            min_improved_rate=min_improved_rate,
+            max_worsened_rate=max_worsened_rate,
+            min_mate_rate=min_mate_rate,
+            max_max_plies_rate=max_max_plies_rate,
+            max_shadow_candidates=max_shadow_candidates,
+        )
+        if stage_baseline_artifact is not None
+        else None
+    )
+    guardrail_controls = [
+        evaluate_artifact(
+            path,
+            min_improved_rate=min_improved_rate,
+            max_worsened_rate=max_worsened_rate,
+            min_mate_rate=min_mate_rate,
+            max_max_plies_rate=max_max_plies_rate,
+            max_shadow_candidates=max_shadow_candidates,
+        )
+        for path in (guardrail_control_artifacts or [])
+    ]
+    if guardrail_controls and len(guardrail_controls) != len(guardrails):
+        raise ValueError("--guardrail-control-artifact count must match --guardrail-artifact count")
+
+    target_delta = None
+    target_improved_vs_baseline = None
+    if stage_baseline is not None:
+        target_delta = _artifact_delta(stage, stage_baseline)
+        target_improved_vs_baseline = (
+            target_delta["mate_rate_delta"] >= min_target_mate_delta
+            and target_delta["max_plies_rate_delta"] <= 0.0
+            and target_delta["shadow_candidates_delta"] <= 0
+        )
+        if not target_improved_vs_baseline:
+            stage.setdefault("failure_reasons", []).append(
+                "target did not improve versus paired baseline"
+            )
+            stage["passed"] = False
+
+    guardrail_deltas = []
+    guardrail_delta_failures = []
+    for index, (guardrail, control) in enumerate(zip(guardrails, guardrail_controls)):
+        delta = _artifact_delta(guardrail, control)
+        delta["index"] = index
+        delta["candidate_path"] = guardrail["path"]
+        delta["control_path"] = control["path"]
+        regressed = (
+            delta["mate_rate_delta"] < -abs(max_guardrail_mate_regression)
+            or delta["max_plies_rate_delta"] > abs(max_guardrail_max_plies_regression)
+            or delta["shadow_candidates_delta"] > max_guardrail_shadow_regression
+        )
+        delta["regressed_vs_control"] = bool(regressed)
+        guardrail_deltas.append(delta)
+        if regressed:
+            guardrail_delta_failures.append({"kind": "guardrail_delta", **delta})
+
     failures = []
     if not stage["passed"]:
         failures.append({"kind": "stage", **stage})
-    failures.extend({"kind": "guardrail", **item} for item in guardrails if not item["passed"])
+    if guardrail_controls:
+        failures.extend(guardrail_delta_failures)
+    else:
+        failures.extend({"kind": "guardrail", **item} for item in guardrails if not item["passed"])
     if stage["passed"] and not failures:
         status = "promoted"
     elif stage["passed"]:
@@ -125,31 +192,58 @@ def evaluate_promotion(
         "schema_version": "provider_promotion_eval.v1",
         "promotion_status": status,
         "stage": stage,
+        "stage_baseline": stage_baseline,
+        "target_delta_vs_baseline": target_delta,
+        "target_improved_vs_baseline": target_improved_vs_baseline,
         "guardrails": guardrails,
+        "guardrail_controls": guardrail_controls,
+        "guardrail_deltas_vs_control": guardrail_deltas,
         "failures": failures,
+    }
+
+
+def _artifact_delta(candidate: dict[str, Any], baseline: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "mate_rate_delta": candidate["mate_rate"] - baseline["mate_rate"],
+        "max_plies_rate_delta": candidate["max_plies_rate"] - baseline["max_plies_rate"],
+        "improved_rate_delta": candidate["improved_rate"] - baseline["improved_rate"],
+        "worsened_rate_delta": candidate["worsened_rate"] - baseline["worsened_rate"],
+        "shadow_candidates_delta": candidate["shadow_candidates"] - baseline["shadow_candidates"],
     }
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Evaluate provider promotion from diagnostics")
     parser.add_argument("--stage-artifact", type=Path, required=True)
+    parser.add_argument("--stage-baseline-artifact", type=Path, default=None)
     parser.add_argument("--guardrail-artifact", type=Path, action="append", default=[])
+    parser.add_argument("--guardrail-control-artifact", type=Path, action="append", default=[])
     parser.add_argument("--min-improved-rate", type=float, default=0.70)
     parser.add_argument("--max-worsened-rate", type=float, default=0.20)
     parser.add_argument("--min-mate-rate", type=float, default=0.65)
     parser.add_argument("--max-max-plies-rate", type=float, default=0.25)
     parser.add_argument("--max-shadow-candidates", type=int, default=0)
+    parser.add_argument("--min-target-mate-delta", type=float, default=0.0)
+    parser.add_argument("--max-guardrail-mate-regression", type=float, default=0.02)
+    parser.add_argument("--max-guardrail-max-plies-regression", type=float, default=0.02)
+    parser.add_argument("--max-guardrail-shadow-regression", type=int, default=0)
     parser.add_argument("--json-output", type=Path, default=None)
     args = parser.parse_args()
 
     result = evaluate_promotion(
         stage_artifact=args.stage_artifact,
+        stage_baseline_artifact=args.stage_baseline_artifact,
         guardrail_artifacts=list(args.guardrail_artifact),
+        guardrail_control_artifacts=list(args.guardrail_control_artifact),
         min_improved_rate=args.min_improved_rate,
         max_worsened_rate=args.max_worsened_rate,
         min_mate_rate=args.min_mate_rate,
         max_max_plies_rate=args.max_max_plies_rate,
         max_shadow_candidates=args.max_shadow_candidates,
+        min_target_mate_delta=args.min_target_mate_delta,
+        max_guardrail_mate_regression=args.max_guardrail_mate_regression,
+        max_guardrail_max_plies_regression=args.max_guardrail_max_plies_regression,
+        max_guardrail_shadow_regression=args.max_guardrail_shadow_regression,
     )
     if args.json_output is not None:
         args.json_output.parent.mkdir(parents=True, exist_ok=True)

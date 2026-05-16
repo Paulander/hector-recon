@@ -1164,6 +1164,7 @@ def choose_move_details(
     stage7_king_tempo_score: float = 25.0,
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
+    stage7_king_tempo_already_used: bool = False,
     perf_profile: dict | None = None,
     enable_diagnostic_caches: bool = False,
 ) -> dict:
@@ -1194,6 +1195,7 @@ def choose_move_details(
             stage7_king_tempo_score=stage7_king_tempo_score,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
             forced_successor_skill=forced_successor_skill,
+            stage7_king_tempo_already_used=stage7_king_tempo_already_used,
             perf_profile=perf_profile,
             enable_diagnostic_caches=enable_diagnostic_caches,
         )
@@ -1225,6 +1227,7 @@ def _choose_move_details_impl(
     stage7_king_tempo_score: float = 25.0,
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
+    stage7_king_tempo_already_used: bool = False,
     perf_profile: dict | None = None,
     enable_diagnostic_caches: bool = False,
 ) -> dict:
@@ -1282,6 +1285,7 @@ def _choose_move_details_impl(
     env["blackboard"]["post_break_continuation_bonus"] = float(post_break_continuation_bonus)
     env["blackboard"]["stage7_king_tempo_enabled"] = bool(stage7_king_tempo_enabled)
     env["blackboard"]["stage7_king_tempo_score"] = float(stage7_king_tempo_score)
+    env["blackboard"]["stage7_king_tempo_already_used"] = bool(stage7_king_tempo_already_used)
     if forced_successor_skill:
         env["blackboard"]["forced_successor_skill"] = forced_successor_skill
 
@@ -1387,6 +1391,7 @@ def _choose_move_details_impl(
         "post_break_continuation_bonus": float(post_break_continuation_bonus),
         "stage7_king_tempo_enabled": bool(stage7_king_tempo_enabled),
         "stage7_king_tempo_score": float(stage7_king_tempo_score),
+        "stage7_king_tempo_already_used": bool(stage7_king_tempo_already_used),
         "stagnation_context": dict(stagnation_context or {}),
         "early_stop_stable_suggestions": int(early_stop_stable_suggestions),
         "early_stopped": bool(early_stopped),
@@ -1597,6 +1602,7 @@ def play_to_mate(
     first_reply: dict | None = None
     first_successor: dict | None = None
     engine_perf: dict = {}
+    stage7_king_tempo_used = False
 
     def record_event(event: dict) -> None:
         nonlocal trace_truncated_events
@@ -1683,6 +1689,7 @@ def play_to_mate(
                 post_break_continuation_bonus=post_break_continuation_bonus,
                 stage7_king_tempo_enabled=stage7_king_tempo_enabled,
                 stage7_king_tempo_score=stage7_king_tempo_score,
+                stage7_king_tempo_already_used=stage7_king_tempo_used,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
                 forced_successor_skill=active_forced_successor,
                 perf_profile=perf_profile,
@@ -1738,6 +1745,12 @@ def play_to_mate(
                 })
                 return finish("illegal_move", ply)
             b.push(move)
+            selected_suggestion = _selected_engine_suggestion(move_details)
+            if (
+                selected_suggestion
+                and _skill_id_for_suggestion(selected_suggestion) == "krk.stage7_king_tempo"
+            ):
+                stage7_king_tempo_used = True
             if first_successor is not None and first_successor.get("fen") == before_fen:
                 first_successor["resulting_fen"] = b.fen()
             record_event({

@@ -13,6 +13,10 @@ from sweep_krk_counterfactual_successors import (
     summarize_continuation_trace_audits,
     summarize_provider_suggestion_audits,
 )
+from audit_stage7_post_king_tempo_continuation import (
+    extract_king_tempo_records,
+    group_records,
+)
 
 
 def test_parse_terms_ignores_empty_items():
@@ -104,3 +108,49 @@ def test_continuation_trace_audit_summary_counts_results():
     assert summary["total_audits"] == 2
     assert summary["result_counts"] == {"mate": 1, "max_plies": 1}
     assert summary["first_move_counts"] == {"h7d7": 2}
+
+
+def test_stage7_post_king_tempo_audit_groups_visible_license_records():
+    diagnostic = {
+        "handoff_packets": [
+            {
+                "phase": "post_opponent_reply",
+                "evidence_terms": {
+                    "fen": "4k3/8/8/8/R7/8/4K3/8 w - - 0 1",
+                    "move": "a4a7",
+                    "black_reply": "e8d8",
+                    "post_reply_fen": "3k4/R7/8/8/8/8/4K3/8 w - - 2 2",
+                    "playout_result": "max_plies",
+                    "failure_classes": ["selected_successor_miscalibrated"],
+                    "visible_stage7_king_tempo_license": {
+                        "move": "e2f2",
+                        "source_terms": ["candidate_is_king_move"],
+                    },
+                },
+            },
+            {
+                "phase": "post_opponent_reply",
+                "evidence_terms": {
+                    "fen": "4k3/8/8/8/R7/8/4K3/8 w - - 0 1",
+                    "move": "a4a7",
+                    "black_reply": "e8d8",
+                    "post_reply_fen": "3k4/R7/8/8/8/8/4K3/8 w - - 2 2",
+                    "playout_result": "max_plies",
+                    "failure_classes": ["selected_successor_miscalibrated"],
+                    "visible_stage7_king_tempo_license": {
+                        "move": "e2f2",
+                        "source_terms": ["candidate_is_king_move"],
+                    },
+                },
+            },
+        ]
+    }
+
+    records = extract_king_tempo_records(diagnostic)
+    families = group_records(records)
+
+    assert len(records) == 2
+    assert len(families) == 1
+    assert families[0]["support"] == 2
+    assert families[0]["outcome_counts"] == {"max_plies": 2}
+    assert families[0]["prototype"]["post_tempo_fen"].startswith("3k4/R7")

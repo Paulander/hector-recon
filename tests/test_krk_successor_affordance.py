@@ -16,6 +16,7 @@ from recon_lite_chess.krk_baseline_nodes import (
     _apply_visible_stagnation_breaker_bias,
     _compute_krk_context_terms,
     _provider_role_licenses,
+    _stage7_king_tempo_move_audit,
     create_krk_context_terminal,
     create_krk_role_provider_support_adapter,
     create_krk_stage7_king_tempo_terminal,
@@ -196,6 +197,32 @@ def test_stage7_king_tempo_terminal_is_default_off_and_selects_visible_quiet_tem
     license_payload = suggestion["meta"]["visible_stage7_king_tempo_license"]
     assert license_payload["direct_request"] is False
     assert "king_quiet_tempo_not_toward_enemy" in license_payload["source_terms"]
+    assert "compact_box_area_before_move" in license_payload["source_terms"]
+    audit = suggestion["meta"]["visible_move_shape_audit"]
+    assert audit["current_box_area"] == 7
+    assert audit["veto_terms"] == []
+
+
+def test_stage7_king_tempo_terminal_blocks_large_box_toward_rook_move():
+    board = chess.Board("6k1/8/8/8/R7/8/4K3/8 w - - 2 2")
+    node = create_krk_stage7_king_tempo_terminal("terminal.krk.stage7_king_tempo")
+    env = {
+        "board": board,
+        "blackboard": {
+            "stage7_king_tempo_enabled": True,
+            "stage7_king_tempo_score": 25.0,
+        },
+    }
+
+    success, done = node.predicate(node, env)
+
+    assert success is False
+    assert done is True
+    assert "actuator_suggestions" not in env
+    audit = _stage7_king_tempo_move_audit(board, chess.Move.from_uci("e2d2"))
+    assert audit["stage7_king_tempo_candidate"] is False
+    assert "box_area_large_before_move" in audit["veto_terms"]
+    assert "king_moves_toward_rook_support" in audit["veto_terms"]
 
 
 def test_explicit_role_provider_support_augments_visible_role_score_only_when_enabled():

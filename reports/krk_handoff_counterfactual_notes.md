@@ -3417,3 +3417,306 @@ Do not promote or guardrail this sandbox. The useful evidence is that
 converting king-tempo moves exist in at least one Stage 7 failure family, but
 the visible contract needs a more precise move-shape/audit boundary before any
 causal Stage 7 repair should be retried.
+
+Follow-up move-shape audit:
+
+```text
+artifact:
+  reports/structural_candidates/stage7_king_tempo_move_shape_audit.json
+  reports/structural_candidates/stage7_king_tempo_move_shape_audit.md
+
+diagnosis:
+  king_tempo_contract_too_broad
+
+probe_converting: 3
+probe_nonconverting: 5
+failed_sandbox_unique_moves: 2
+```
+
+The audit compared the targeted converting family against the failed sandbox
+selections. It found that the converters share:
+
+```text
+compact_box_area_before_move
+fence_survives_worst_reply
+```
+
+The failed sandbox selections share:
+
+```text
+box_area_large_before_move
+king_moves_toward_rook_support
+white_king_distance_to_rook_decreases
+```
+
+Candidate update:
+
+```text
+candidate_status: needs_contract_refinement
+proposed required terms:
+  compact_box_area_before_move
+  fence_survives_worst_reply
+proposed veto terms:
+  box_area_large_before_move
+  king_moves_toward_rook_support
+causal_status: non_causal
+promotion_status: sandboxed
+```
+
+This should be treated as a candidate-driven audit result, not a runtime patch.
+The next causal attempt, if any, should first compile these terms as visible
+move-shape contract terms and repeat default-off equivalence before enabling
+the sandbox.
+
+## Stage 7 King-Tempo Refined Single-Use Sandbox
+
+The audit terms were compiled into the opt-in sandbox terminal:
+
+```text
+required:
+  compact_box_area_before_move
+  fence_survives_worst_reply
+
+veto:
+  box_area_large_before_move
+  king_moves_toward_rook_support
+
+temporal scope:
+  single use per playout
+```
+
+The single-use scope matters. Without it, the sandbox correctly selected the
+first compact king-tempo move but kept re-firing later instead of handing
+control back to the normal continuation graph.
+
+Default-off equivalence:
+
+```text
+artifact:
+  reports/structural_candidates/stage7_king_tempo_single_use_default_off_equiv_3_h5.json
+
+equivalent: true
+packet_count: 9
+shadow_candidate_count: 6
+```
+
+Paired horizon-40 smoke:
+
+```text
+baseline:
+  artifact: reports/structural_candidates/stage7_king_tempo_baseline_10_h40.json
+  playouts: {max_plies: 10}
+  shadow_candidate_count: 20
+  selected: krk.stage0_basin:max_plies = 10
+
+single-use sandbox:
+  artifact: reports/structural_candidates/stage7_king_tempo_single_use_on_10_h40.json
+  playouts: {mate: 3, max_plies: 7}
+  shadow_candidate_count: 14
+  selected: krk.stage7_king_tempo:mate = 3
+            krk.stage7_king_tempo:max_plies = 7
+```
+
+Updated diagnosis:
+
+```text
+candidate_status: sandbox_promising_not_validated
+diagnosis: visible_contract_refinement_improves_target_but_incomplete
+promotion_status: sandboxed
+guardrails_run: false
+```
+
+Do not promote yet. The next step is a larger Stage 7 target smoke, still
+opt-in, before protected Stage 6/5/1 guardrails.
+
+Larger paired target smoke:
+
+```text
+baseline:
+  artifact: reports/structural_candidates/stage7_king_tempo_baseline_25_h40.json
+  playouts: {max_plies: 25}
+  shadow_candidate_count: 50
+  selected: krk.stage0_basin:max_plies = 25
+
+sandbox:
+  artifact: reports/structural_candidates/stage7_king_tempo_single_use_on_25_h40.json
+  playouts: {mate: 13, max_plies: 12}
+  shadow_candidate_count: 24
+  selected: krk.stage7_king_tempo:mate = 13
+            krk.stage7_king_tempo:max_plies = 12
+```
+
+This is a real target improvement, so modest protected guardrails were run.
+
+Guardrails:
+
+```text
+Stage 6 drive_to_edge, 50 samples:
+  artifact: reports/structural_candidates/stage7_king_tempo_guard_stage6_drive_50_h40.json
+  playouts: {mate: 50}
+  shadow_candidate_count: 0
+  status: passed
+
+Stage 5 fence, 50 samples:
+  artifact: reports/structural_candidates/stage7_king_tempo_guard_stage5_fence_50_h40.json
+  playouts: {mate: 50}
+  shadow_candidate_count: 0
+  status: passed
+
+Stage 4 wrong-tempo, 50 samples, king-tempo enabled:
+  artifact: reports/structural_candidates/stage7_king_tempo_guard_stage4_wrong_tempo_50_h40.json
+  playouts: {mate: 43, max_plies: 7}
+  shadow_candidate_count: 14
+  status: failed
+
+Stage 4 wrong-tempo, 50 samples, king-tempo disabled:
+  artifact: reports/structural_candidates/stage7_king_tempo_guard_stage4_wrong_tempo_50_h40_disabled.json
+  playouts: {mate: 43, max_plies: 7}
+  shadow_candidate_count: 14
+  status: failed_same_as_disabled
+```
+
+Initial interpretation:
+
+```text
+candidate_status: target_improved_but_guardrail_blocked
+promotion_status: quarantined_by_existing_stage4_guardrail
+diagnosis: target_improves_but_stage7_overlay_has_preexisting_stage4_guardrail_failure
+```
+
+The candidate itself is not causing the Stage 4 regression; the enabled and
+disabled runs are identical. But promotion is still blocked because the Stage 7
+overlay/topology is not globally guardrail-safe. The next architecture step is
+not to tune this king-tempo candidate further; it is to fix the Stage 7 overlay
+composition/provider-preservation issue exposed by the Stage 4 guardrail.
+
+Baseline-aware promotion evaluation:
+
+```text
+script:
+  scripts/evaluate_provider_promotion.py
+
+artifact:
+  reports/structural_candidates/stage7_king_tempo_baseline_aware_promotion_eval.json
+
+target baseline:
+  reports/structural_candidates/stage7_king_tempo_baseline_25_h40.json
+
+target candidate:
+  reports/structural_candidates/stage7_king_tempo_single_use_on_25_h40.json
+
+guardrail controls:
+  stage6 disabled: reports/structural_candidates/stage7_king_tempo_guard_stage6_drive_50_h40_disabled.json
+  stage5 disabled: reports/structural_candidates/stage7_king_tempo_guard_stage5_fence_50_h40_disabled.json
+  stage4 disabled: reports/structural_candidates/stage7_king_tempo_guard_stage4_wrong_tempo_50_h40_disabled.json
+```
+
+Baseline-aware result:
+
+```text
+target_improved_vs_baseline: true
+target delta:
+  mate_rate_delta: +0.52
+  max_plies_rate_delta: -0.52
+  shadow_candidates_delta: -26
+
+guardrail regressions versus controls:
+  stage6: false
+  stage5: false
+  stage4: false
+
+promotion_status: quarantine
+```
+
+Updated interpretation:
+
+```text
+candidate_status: target_improved_but_stage_incomplete
+diagnosis: target_improves_without_guardrail_regression_but_stage_threshold_not_met
+promotion_status: quarantine
+```
+
+The Stage 4 result is not a new regression and should not be attributed to the
+king-tempo candidate. The candidate still cannot be promoted because the Stage
+7 target itself remains below promotion thresholds: 13/25 mate, 12/25 max_plies,
+and 24 shadow candidates.
+
+## Stage 7 Post-King-Tempo Continuation Audit
+
+The remaining Stage 7 failures were audited without changing runtime behavior.
+The audit groups the post-reply state where the opt-in king-tempo provider fires,
+applies the king-tempo move, and replays the resulting continuation at bounded
+horizons.
+
+Artifacts:
+
+```text
+script:
+  scripts/audit_stage7_post_king_tempo_continuation.py
+
+json:
+  reports/structural_candidates/stage7_post_king_tempo_continuation_audit.json
+
+markdown:
+  reports/structural_candidates/stage7_post_king_tempo_continuation_audit.md
+```
+
+Result:
+
+```text
+records: 25
+families: 2
+outcomes: {mate: 13, max_plies: 12}
+diagnosis: post_king_tempo_followup_needed
+causal_status: non_causal
+```
+
+Failure family:
+
+```text
+family: stage7.post_king_tempo.family_01
+support: 12
+post-reply FEN: 3k4/R7/8/8/8/8/4K3/8 w - - 2 2
+king-tempo move: e2f2
+post-tempo FEN: 3k4/R7/8/8/8/8/5K2/8 b - - 3 2
+class: post_king_tempo_lacks_corner_net_pressure
+
+replay:
+  h=20: max_plies, first white f2g3 via krk.stage0_basin
+  h=40: max_plies, first white f2g3 via krk.stage0_basin
+  h=60: max_plies, first white f2g3 via krk.stage0_basin
+```
+
+Successful family:
+
+```text
+family: stage7.post_king_tempo.family_02
+support: 13
+post-reply FEN: 6k1/R7/8/8/8/8/5K2/8 w - - 2 2
+king-tempo move: f2e2
+post-tempo FEN: 6k1/R7/8/8/8/8/4K3/8 b - - 3 2
+class: post_king_tempo_converts
+
+replay:
+  h=20/40/60: mate in 18 plies, first white a7a8 via krk.stage0_basin
+```
+
+Candidate update:
+
+```text
+candidate_id: cand.krk.box_shrink.post_king_tempo_continuation.v1
+candidate_status: proposed
+source_monitor_script: growth.monitor.successor_miscalibration
+promotion_status: proposed
+causal_status: non_causal
+```
+
+Interpretation:
+
+```text
+The first king-tempo move is useful but not sufficient. The remaining repeated
+failure is not a broader first-move king-tempo licensing problem; it is a
+post-tempo continuation ownership problem. The next repair, if attempted, should
+target a visible post_king_tempo_continuation role or a candidate-driven
+legal-first/post-tempo follow-up sweep, not a broader king-tempo bonus.
+```

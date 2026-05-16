@@ -425,6 +425,8 @@ def create_krk_stage7_king_tempo_terminal(node_id=None):
             return False, False
         if not blackboard.get("stage7_king_tempo_enabled", False):
             return False, True
+        if blackboard.get("stage7_king_tempo_already_used", False):
+            return False, True
         stage_filter = blackboard.get("stage_filter")
         if stage_filter is not None:
             try:
@@ -518,29 +520,47 @@ def _stage7_king_tempo_move_audit(board: chess.Board, move: chess.Move) -> Dict[
     post_rank_distance = abs(chess.square_rank(move.to_square) - chess.square_rank(bk_sq))
     file_delta = post_file_distance - current_file_distance
     rank_delta = post_rank_distance - current_rank_distance
-    audit = krk_move_shape_audit(board, move, {}, include_worst_reply=False)
+    audit = krk_move_shape_audit(board, move, {}, include_worst_reply=True)
     move_terms = set(audit.get("move_shape_terms", []) or [])
     post_terms = set(audit.get("post_move_terms", []) or [])
+    worst_terms = set(audit.get("worst_reply_terms", []) or [])
+    current_metrics = audit.get("current_metrics", {}) or {}
     required = {
         "candidate_is_king_move",
         "rook_safe_after_move",
         "box_area_not_increased_after_move",
         "enemy_edge_distance_not_increased_after_move",
+        "fence_survives_worst_reply",
     }
+    box_area = current_metrics.get("box_area")
+    compact_box = box_area is not None and int(box_area) <= 8
+    large_box = box_area is not None and int(box_area) >= 16
     quiet_tempo = file_delta >= 0 and rank_delta >= 0
     no_draw = not _move_creates_draw(board, move)
-    matched = required <= (move_terms | post_terms) and quiet_tempo and no_draw
+    active_terms = move_terms | post_terms | worst_terms
+    veto_terms = set()
+    if "king_moves_toward_rook_support" in active_terms:
+        veto_terms.add("king_moves_toward_rook_support")
+    if large_box:
+        veto_terms.add("box_area_large_before_move")
+    matched = required <= active_terms and compact_box and quiet_tempo and no_draw and not veto_terms
     source_terms = sorted(
         required
-        | {"king_quiet_tempo_not_toward_enemy", "no_draw_after_move"}
+        | {"compact_box_area_before_move", "king_quiet_tempo_not_toward_enemy", "no_draw_after_move"}
     )
     return {
         "move": move.uci(),
         "legal": True,
         "stage7_king_tempo_candidate": bool(matched),
-        "source_terms": source_terms if matched else sorted(move_terms | post_terms),
+        "source_terms": source_terms if matched else sorted(active_terms),
+        "missing_terms": sorted(required - active_terms),
+        "veto_terms": sorted(veto_terms),
         "move_shape_terms": sorted(move_terms),
         "post_move_terms": sorted(post_terms),
+        "worst_reply_terms": sorted(worst_terms),
+        "compact_box_area_before_move": bool(compact_box),
+        "box_area_large_before_move": bool(large_box),
+        "current_box_area": box_area,
         "king_file_distance_to_enemy_delta": int(file_delta),
         "king_rank_distance_to_enemy_delta": int(rank_delta),
         "king_rank_delta": int(chess.square_rank(move.to_square) - chess.square_rank(move.from_square)),
