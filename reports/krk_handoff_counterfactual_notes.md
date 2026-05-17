@@ -5284,3 +5284,128 @@ The previous unresolved bucket has split again:
   Do not call it permanently missing capacity yet, but it is now the strongest
   candidate for a deeper post-box continuation provider or higher-horizon probe.
 ```
+
+## Stage 7 0af trace-role support candidate
+
+Artifacts:
+
+```text
+proposal:
+  reports/structural_candidates/stage7_family_0af_king_opposition_support_proposal.json
+compiled topology:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_family_ff_drive_ac_fence_0af_king_support_trace_role_w005.json
+family-balanced off/on:
+  reports/structural_candidates/stage7_family_0af_trace_role_support_off_4_h40.json
+  reports/structural_candidates/stage7_family_0af_trace_role_support_on_4_h40.json
+summary:
+  reports/structural_candidates/stage7_family_0af_trace_role_support_summary.json
+```
+
+Important correction:
+
+```text
+The first 0af role proposal directly licensed krk.edge_trap_close. That was too
+causal: it changed downstream ac0b7 continuation even though the intended
+adapter was not the first-move owner.
+
+Corrected form:
+  krk.post_box_king_opposition_repair is a trace/internal role.
+  It does not directly license krk.edge_trap_close.
+  edge_trap_close receives support only through the move-shape-gated adapter.
+```
+
+Family-balanced h40 result:
+
+```text
+off:
+  0 mate / 4 max_plies
+
+on:
+  state.ff6652c8832c -> krk.drive_to_edge / e4h4 -> mate in 7
+  state.ac0b7ed500ea -> krk.fence_established / d2e3 -> mate in 13
+  state.0afbf11aa123 -> krk.edge_trap_close / e4d4 -> mate in 5
+  state.38aed2f35911 -> krk.stage0_basin / d1e2 -> max_plies
+```
+
+Smoke50 overfire check:
+
+```text
+reports/structural_candidates/stage7_smoke50_unique_maxplies_0af_trace_role_off_4_h40.json
+reports/structural_candidates/stage7_smoke50_unique_maxplies_0af_trace_role_on_4_h40.json
+
+result:
+  off: 0 mate / 4 max_plies
+  on:  0 mate / 4 max_plies
+  changed families: 0
+  adapter overfire count: 0
+```
+
+Candidate status:
+
+```text
+cand.krk.box_shrink.family_0afbf11aa123.king_opposition_edge_trap_support.v1
+  status: family_balanced_sandbox_validated_for_0af
+  remaining blocker: state.38aed2f35911
+```
+
+Stage 7 target smoke:
+
+```text
+pre-0af trace role:
+  reports/structural_candidates/stage7_pre_0af_trace_role_target_smoke_25_h40.json
+with 0af trace role:
+  reports/structural_candidates/stage7_0af_trace_role_target_smoke_25_h40.json
+comparison:
+  reports/structural_candidates/stage7_0af_trace_role_target_smoke_comparison.json
+```
+
+Result:
+
+```text
+both modes:
+  improved: 18/25
+  optimal: 14/25
+  worsened: 7/25
+  mate: 4/25
+  max_plies: 21/25
+  shadow candidates: 28
+```
+
+Interpretation:
+
+```text
+The 0af candidate does not regress this broader target smoke, but it also does
+not improve it. This target set exposes a wider Stage 7 local/composition
+problem: visible_contract_without_reward appears in 7/25 samples and conversion
+is still weak. Do not promote Stage 7 from this result.
+```
+
+Growth-monitor readout:
+
+```text
+reports/structural_candidates/stage7_target_smoke_growth_monitor_summary.json
+
+dominant target-smoke buckets:
+  visible_contract_without_reward: 7/25
+  reward_visible_fence_aligned_survived: 18/25
+    mate: 4
+    max_plies: 14
+
+shadow triggers:
+  repeated_conversion_failure: 14
+  high_score_conversion_failure: 13
+  route_conflict: 1
+
+dominant state signatures:
+  state.7b116c49a009: 20 shadow candidates
+  state.7cab65617cd8: 6 shadow candidates
+  state.dcea518838ac: 2 shadow candidates
+```
+
+Next candidate-driven work:
+
+```text
+1. Family-split state.7b116c49a009 and state.7cab65617cd8.
+2. Audit visible_contract_without_reward samples before adding causal support.
+3. Keep state.38aed2f35911 as the deeper continuation/capacity probe.
+```

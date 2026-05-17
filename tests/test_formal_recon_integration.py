@@ -1497,6 +1497,80 @@ def test_compile_role_provider_support_sandbox_adds_adapter_not_direct_provider_
     assert topology["nodes"]["krk_entry"]["meta"].get("explicit_role_provider_support_enabled") is None
 
 
+def test_compile_role_provider_support_can_add_trace_role_without_direct_provider_license(tmp_path):
+    topology_path = tmp_path / "topology.json"
+    proposal_path = tmp_path / "proposal.json"
+    output_path = tmp_path / "sandbox.json"
+    topology_path.write_text(
+        json.dumps({
+            "nodes": {
+                "krk_entry": {"type": "SCRIPT", "meta": {}},
+                "krk_successor_affordance_hub": {"type": "SCRIPT", "meta": {}},
+                "skill.krk.edge_trap_close": {
+                    "type": "SCRIPT",
+                    "meta": {"skill_id": "krk.edge_trap_close"},
+                },
+            },
+            "edges": [],
+            "meta": {},
+        }),
+        encoding="utf-8",
+    )
+    proposal_path.write_text(
+        json.dumps({
+            "target_role": "krk.post_box_king_opposition_repair",
+            "target_provider": "krk.edge_trap_close",
+            "sandbox_compile_strategy": "compile_sandbox_visible_role_plus_gated_support_adapter_not_direct_sub_edge",
+            "proposed_role": {
+                "role_id": "krk.post_box_king_opposition_repair",
+                "node_id": "script.krk.successor.post_box_king_opposition_repair_affordance",
+                "marker_id": "terminal.krk.successor.post_box_king_opposition_repair_marker",
+                "provider_skill_ids": ["krk.post_box_king_opposition_repair"],
+                "source_terms": ["enemy_king_near_edge", "rook_safe"],
+                "required_terms": ["enemy_king_near_edge", "rook_safe"],
+                "veto_terms": ["mate_in_one_available"],
+            },
+            "proposed_support_relations": [
+                {
+                    "source_role_script": "script.krk.successor.post_box_king_opposition_repair_affordance",
+                    "target_provider_skill": "skill.krk.edge_trap_close",
+                    "requires_support_adapter": True,
+                    "initial_weight": 0.05,
+                    "support_required_terms": ["enemy_king_near_edge", "rook_safe"],
+                    "support_move_shape_required_terms": ["candidate_is_king_move"],
+                    "support_post_move_required_terms": ["rook_safe_after_move"],
+                }
+            ],
+        }),
+        encoding="utf-8",
+    )
+
+    topology = _compile_role_provider_support.compile_support_sandbox(
+        topology_path=topology_path,
+        proposal_path=proposal_path,
+        output_path=output_path,
+    )
+
+    meta = topology["meta"]["role_provider_support_sandbox"]
+    assert meta["added_roles"] == [
+        "script.krk.successor.post_box_king_opposition_repair_affordance"
+    ]
+    assert meta["adapter_count"] == 1
+    role_meta = topology["nodes"][
+        "script.krk.successor.post_box_king_opposition_repair_affordance"
+    ]["meta"]
+    assert role_meta["provider_skill_ids"] == ["krk.post_box_king_opposition_repair"]
+    assert role_meta["provider_skill_ids"] != ["krk.edge_trap_close"]
+    adapter_meta = topology["nodes"][meta["adapters"][0]]["meta"]
+    assert adapter_meta["provider_skill_id"] == "krk.edge_trap_close"
+    assert adapter_meta["support_move_shape_required_terms"] == ["candidate_is_king_move"]
+    direct_edges = [
+        edge for edge in topology["edges"]
+        if edge["dst"] == "skill.krk.edge_trap_close"
+    ]
+    assert direct_edges == []
+
+
 def test_compile_role_provider_support_can_augment_role_provider_ids_in_sandbox(tmp_path):
     topology_path = tmp_path / "topology.json"
     proposal_path = tmp_path / "proposal.json"

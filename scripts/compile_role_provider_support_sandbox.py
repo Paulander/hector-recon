@@ -37,6 +37,61 @@ def _add_edge(topology: dict[str, Any], src: str, dst: str, edge_type: str, weig
     topology.setdefault("edges", []).append(edge)
 
 
+def _add_proposed_role(topology: dict[str, Any], proposal: dict[str, Any], *, hub_id: str) -> list[str]:
+    role = proposal.get("proposed_role")
+    if not isinstance(role, dict):
+        return []
+    node_id = str(role.get("node_id") or "")
+    role_id = str(role.get("role_id") or proposal.get("target_role") or "")
+    if not node_id or not role_id:
+        return []
+    provider_skill_ids = list(role.get("provider_skill_ids", []) or [])
+    if not provider_skill_ids and proposal.get("target_provider"):
+        provider_skill_ids = [str(proposal["target_provider"])]
+    marker_id = str(
+        role.get("marker_id")
+        or node_id.replace("script.", "terminal.", 1).removesuffix("_affordance") + "_marker"
+    )
+    topology["nodes"][node_id] = {
+        "id": node_id,
+        "type": "SCRIPT",
+        "factory": "recon_lite_chess.krk_baseline_nodes:create_krk_successor_affordance",
+        "meta": {
+            "successor_skill_id": role_id,
+            "role_id": role_id,
+            "provider_skill_ids": provider_skill_ids,
+            "source_terms": list(role.get("source_terms", []) or []),
+            "required_terms": list(role.get("required_terms", []) or []),
+            "veto_terms": list(role.get("veto_terms", []) or []),
+            "visible_successor_affordance": True,
+            "causal_status": "sandbox_opt_in",
+            "enabled_by_default": False,
+            "description": role.get(
+                "description",
+                f"Sandbox visible successor role {role_id} licensing {provider_skill_ids}",
+            ),
+        },
+    }
+    topology["nodes"][marker_id] = {
+        "id": marker_id,
+        "type": "TERMINAL",
+        "factory": "recon_lite_chess.krk_baseline_nodes:create_krk_affordance_marker_terminal",
+        "meta": {
+            "successor_skill_id": role_id,
+            "role_id": role_id,
+            "provider_skill_ids": provider_skill_ids,
+            "visible_successor_affordance_marker": True,
+            "causal_status": "sandbox_opt_in",
+            "description": f"Marker terminal for sandbox role {role_id}",
+        },
+    }
+    _add_edge(topology, hub_id, node_id, "SUB", 1.0, consolidate=False)
+    _add_edge(topology, node_id, hub_id, "SUR", 1.0, consolidate=False)
+    _add_edge(topology, node_id, marker_id, "SUB", 1.0, consolidate=False)
+    _add_edge(topology, marker_id, node_id, "SUR", 1.0, consolidate=False)
+    return [node_id]
+
+
 def compile_support_sandbox(
     *,
     topology_path: Path,
@@ -55,6 +110,7 @@ def compile_support_sandbox(
     if hub_id not in topology["nodes"]:
         raise ValueError(f"topology missing {hub_id}")
 
+    added_roles = _add_proposed_role(topology, proposal, hub_id=hub_id)
     added_adapters = []
     for relation in proposal.get("proposed_support_relations") or []:
         if not isinstance(relation, dict):
@@ -144,6 +200,7 @@ def compile_support_sandbox(
         "schema_version": "role_provider_support_sandbox.v1",
         "proposal_source": str(proposal_path),
         "enabled_by_default": bool(enable_explicit_support_by_default),
+        "added_roles": added_roles,
         "adapter_count": len(added_adapters),
         "adapters": added_adapters,
         "support_weight_override": support_weight,

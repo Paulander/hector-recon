@@ -1,0 +1,85 @@
+{
+  "schema_version": "stage7_target_smoke_growth_monitor_summary.v1",
+  "causal_status": "non_causal",
+  "source": "reports/structural_candidates/stage7_0af_trace_role_target_smoke_25_h40.json",
+  "stage7_status": "local_valid_composition_quarantined",
+  "summary": {
+    "total": 25,
+    "local": {
+      "improved": 18,
+      "optimal": 14,
+      "worsened": 7,
+      "one_ply_status": "failed"
+    },
+    "conversion": {
+      "mate": 4,
+      "max_plies": 21,
+      "conversion_status": "failed"
+    },
+    "semantic_alignment": {
+      "visible_contract_without_reward": 7,
+      "reward_visible_fence_aligned_survived": 18
+    },
+    "conversion_by_semantic_alignment": {
+      "visible_contract_without_reward": {"max_plies": 7},
+      "reward_visible_fence_aligned_survived": {"mate": 4, "max_plies": 14}
+    },
+    "shadow_candidate_count": 28,
+    "shadow_candidate_triggers": {
+      "repeated_conversion_failure": 14,
+      "high_score_conversion_failure": 13,
+      "route_conflict": 1
+    },
+    "dominant_shadow_state_signatures": {
+      "state.7b116c49a009": 20,
+      "state.7cab65617cd8": 6,
+      "state.dcea518838ac": 2
+    }
+  },
+  "growth_monitor_readout": [
+    {
+      "monitor": "growth.monitor.reward_contract_mismatch",
+      "status": "active",
+      "support": 7,
+      "candidate_type": "box_shrink_reward_contract_or_dataset_refinement",
+      "diagnosis": "visible_contract_without_reward caused all 7 local one-ply failures in this smoke."
+    },
+    {
+      "monitor": "growth.monitor.successor_miscalibration",
+      "status": "active",
+      "support": 27,
+      "candidate_type": "post_box_continuation_role_or_score_arbitration_refinement",
+      "diagnosis": "Reward-aligned samples still fail conversion 14/18 times, with high-score and repeated-conversion shadow candidates."
+    },
+    {
+      "monitor": "growth.monitor.stage_overlay_quarantine",
+      "status": "active",
+      "support": 1,
+      "candidate_type": "keep_stage7_quarantined",
+      "diagnosis": "Target stage is neither locally solved nor composition-ready."
+    }
+  ],
+  "candidate_updates": [
+    {
+      "candidate_id": "cand.krk.box_shrink.family_0afbf11aa123.king_opposition_edge_trap_support.v1",
+      "status": "sandboxed_family_specific_target_neutral",
+      "diagnosis": "Fixes the targeted 0af family and does not regress target smoke, but does not address dominant target-smoke failures."
+    },
+    {
+      "candidate_id": "cand.krk.box_shrink.target_smoke.reward_contract_refinement.v1",
+      "status": "proposed",
+      "diagnosis": "Seven samples confirm visible fence/box contract without reward improvement; audit whether Stage 7 position source includes states outside the intended box_shrink reward semantics."
+    },
+    {
+      "candidate_id": "cand.krk.box_shrink.target_smoke.post_box_continuation_arbitration.v1",
+      "status": "proposed",
+      "diagnosis": "Dominant conversion failures cluster into a few state signatures and should be family-split before adding another broad adapter."
+    }
+  ],
+  "next_action": [
+    "Do not promote Stage 7.",
+    "Do not train Stage 8.",
+    "Family-split state.7b116c49a009 and state.7cab65617cd8 the same way ff/ac/0af/38 were split.",
+    "Run local reward-contract audit on visible_contract_without_reward samples before adding more causal support."
+  ]
+}
