@@ -445,6 +445,60 @@ def _adapter_support_summary_for_suggestions(suggestions: list[dict]) -> dict:
     }
 
 
+def _adapter_supported_role_owned_candidates(suggestions: list[dict]) -> list[dict]:
+    """Return visible adapter-supported suggestions eligible for role-owned arbitration."""
+    candidates: list[dict] = []
+    for item in suggestions:
+        meta = item.get("meta") if isinstance(item.get("meta"), dict) else {}
+        adapter = meta.get("visible_role_provider_support_adapter")
+        if not isinstance(adapter, dict) or not adapter.get("enabled"):
+            continue
+        if adapter.get("direct_request"):
+            continue
+        # Stage 7 score-normalization experiments are intentionally narrower
+        # than provider-level support: only move-shape-confirmed adapters can
+        # own arbitration over raw cross-skill scores.
+        if not adapter.get("move_shape_gated"):
+            continue
+        candidates.append(item)
+    candidates.sort(
+        key=lambda item: (
+            float(
+                (
+                    (item.get("meta") or {}).get("visible_role_provider_support_adapter", {})
+                    if isinstance(item.get("meta"), dict)
+                    else {}
+                ).get("support_amount", 0.0)
+                or 0.0
+            ),
+            float(item.get("score", 0.0) or 0.0),
+        ),
+        reverse=True,
+    )
+    return candidates
+
+
+def _compact_selected_suggestion(item: dict | None) -> dict:
+    if not isinstance(item, dict):
+        return {}
+    move = item.get("move")
+    meta = item.get("meta") if isinstance(item.get("meta"), dict) else {}
+    return {
+        "move": move.uci() if hasattr(move, "uci") else move,
+        "skill_id": _skill_id_for_suggestion(item),
+        "score": float(item.get("score", 0.0) or 0.0),
+        "actuator": item.get("actuator"),
+        "curriculum_label": meta.get("curriculum_label") or item.get("curriculum_label"),
+        "stage": meta.get("stage") or item.get("stage"),
+        "visible_role_provider_support_adapter": dict(
+            meta.get("visible_role_provider_support_adapter", {}) or {}
+        ),
+        "visible_role_owned_score_normalization": dict(
+            meta.get("visible_role_owned_score_normalization", {}) or {}
+        ),
+    }
+
+
 def _suggestion_role_trace(meta: dict) -> dict:
     return {
         "visible_role_licenses": list(meta.get("visible_role_licenses", []) or []),
@@ -463,6 +517,9 @@ def _suggestion_role_trace(meta: dict) -> dict:
         "role_bonus_by_role": dict(meta.get("role_bonus_by_role", {}) or {}),
         "visible_role_provider_support_adapter": dict(
             meta.get("visible_role_provider_support_adapter", {}) or {}
+        ),
+        "visible_role_owned_score_normalization": dict(
+            meta.get("visible_role_owned_score_normalization", {}) or {}
         ),
         "visible_role_scoped_move_shape_bonus": float(
             meta.get("visible_role_scoped_move_shape_bonus", 0.0) or 0.0
@@ -615,8 +672,24 @@ def _successor_skill_summary(
             })
 
     ranked = sorted(grouped.items(), key=lambda kv: kv[1]["score"], reverse=True)
-    selected_skill = ranked[0][0] if ranked else None
-    best_score = float(ranked[0][1]["score"]) if ranked else None
+    raw_selected_skill = ranked[0][0] if ranked else None
+    raw_best_score = float(ranked[0][1]["score"]) if ranked else None
+    selected_suggestion = (
+        move_details.get("selected_suggestion")
+        if isinstance(move_details.get("selected_suggestion"), dict)
+        else {}
+    )
+    selected_skill = (
+        str(selected_suggestion.get("skill_id"))
+        if move_details.get("selected_by_role_owned_score_normalization")
+        and selected_suggestion.get("skill_id")
+        else raw_selected_skill
+    )
+    best_score = (
+        float(selected_suggestion.get("score"))
+        if selected_skill != raw_selected_skill and selected_suggestion.get("score") is not None
+        else raw_best_score
+    )
     second_score = float(ranked[1][1]["score"]) if len(ranked) > 1 else None
     route_conflict = (
         best_score is not None
@@ -663,6 +736,8 @@ def _successor_skill_summary(
     return {
         "selected_skill": selected_skill,
         "best_score": best_score,
+        "raw_selected_skill": raw_selected_skill,
+        "raw_best_score": raw_best_score,
         "second_score": second_score,
         "route_margin": route_margin,
         "handoff_gap": bool(handoff_gap),
@@ -717,6 +792,7 @@ def _successor_contract_audit(
             "role_bonus_total": 0.0,
             "role_bonus_by_role": {},
             "visible_role_provider_support_adapter": {},
+            "visible_role_owned_score_normalization": {},
             "raw_score_before_role_bonus": None,
             "score_after_role_bonus": None,
             "visible_role_scoped_move_shape_bonus": 0.0,
@@ -763,6 +839,9 @@ def _successor_contract_audit(
         "role_bonus_by_role": dict(selected_group.get("role_bonus_by_role", {}) or {}),
         "visible_role_provider_support_adapter": dict(
             selected_group.get("visible_role_provider_support_adapter", {}) or {}
+        ),
+        "visible_role_owned_score_normalization": dict(
+            selected_group.get("visible_role_owned_score_normalization", {}) or {}
         ),
         "raw_score_before_role_bonus": selected_group.get("raw_score_before_role_bonus"),
         "score_after_role_bonus": selected_group.get("score_after_role_bonus"),
@@ -1150,6 +1229,7 @@ def choose_move_with_engine(
     successor_contract_gate_enabled: bool = False,
     successor_role_license_enabled: bool = False,
     explicit_role_provider_support_enabled: bool = False,
+    role_owned_score_normalization_enabled: bool = False,
     successor_role_veto_penalty: float = 0.0,
     successor_stage0_drift_penalty: float = 0.0,
     successor_role_scoped_move_shape_enabled: bool = False,
@@ -1183,6 +1263,7 @@ def choose_move_with_engine(
         successor_contract_gate_enabled=successor_contract_gate_enabled,
         successor_role_license_enabled=successor_role_license_enabled,
         explicit_role_provider_support_enabled=explicit_role_provider_support_enabled,
+        role_owned_score_normalization_enabled=role_owned_score_normalization_enabled,
         successor_role_veto_penalty=successor_role_veto_penalty,
         successor_stage0_drift_penalty=successor_stage0_drift_penalty,
         successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
@@ -1218,6 +1299,7 @@ def choose_move_details(
     successor_contract_gate_enabled: bool = False,
     successor_role_license_enabled: bool = False,
     explicit_role_provider_support_enabled: bool = False,
+    role_owned_score_normalization_enabled: bool = False,
     successor_role_veto_penalty: float = 0.0,
     successor_stage0_drift_penalty: float = 0.0,
     successor_role_scoped_move_shape_enabled: bool = False,
@@ -1258,6 +1340,7 @@ def choose_move_details(
             successor_contract_gate_enabled=successor_contract_gate_enabled,
             successor_role_license_enabled=successor_role_license_enabled,
             explicit_role_provider_support_enabled=explicit_role_provider_support_enabled,
+            role_owned_score_normalization_enabled=role_owned_score_normalization_enabled,
             successor_role_veto_penalty=successor_role_veto_penalty,
             successor_stage0_drift_penalty=successor_stage0_drift_penalty,
             successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
@@ -1299,6 +1382,7 @@ def _choose_move_details_impl(
     successor_contract_gate_enabled: bool = False,
     successor_role_license_enabled: bool = False,
     explicit_role_provider_support_enabled: bool = False,
+    role_owned_score_normalization_enabled: bool = False,
     successor_role_veto_penalty: float = 0.0,
     successor_stage0_drift_penalty: float = 0.0,
     successor_role_scoped_move_shape_enabled: bool = False,
@@ -1344,6 +1428,9 @@ def _choose_move_details_impl(
     env["blackboard"]["successor_contract_gate_enabled"] = successor_contract_gate_enabled
     env["blackboard"]["successor_role_license_enabled"] = successor_role_license_enabled
     env["blackboard"]["explicit_role_provider_support_enabled"] = explicit_role_provider_support_enabled
+    env["blackboard"]["role_owned_score_normalization_enabled"] = (
+        role_owned_score_normalization_enabled
+    )
     env["blackboard"]["successor_role_veto_penalty"] = successor_role_veto_penalty
     env["blackboard"]["successor_stage0_drift_penalty"] = successor_stage0_drift_penalty
     env["blackboard"]["successor_role_scoped_move_shape_enabled"] = successor_role_scoped_move_shape_enabled
@@ -1442,6 +1529,8 @@ def _choose_move_details_impl(
     suggestions = list(env.get("actuator_suggestions", []))
     suggestions.sort(key=lambda item: item.get("score", float("-inf")), reverse=True)
     selected_suggestion = suggestions[0] if suggestions else None
+    raw_selected_suggestion = selected_suggestion
+    selected_by_role_owned_score_normalization = False
     forced_candidates = []
     if forced_successor_skill:
         forced_candidates = [
@@ -1450,6 +1539,36 @@ def _choose_move_details_impl(
         ]
         forced_candidates.sort(key=lambda item: item.get("score", float("-inf")), reverse=True)
         selected_suggestion = forced_candidates[0] if forced_candidates else None
+    elif role_owned_score_normalization_enabled:
+        adapter_candidates = _adapter_supported_role_owned_candidates(suggestions)
+        if adapter_candidates:
+            selected_suggestion = adapter_candidates[0]
+            selected_by_role_owned_score_normalization = True
+            selected_meta = selected_suggestion.setdefault("meta", {})
+            if isinstance(selected_meta, dict):
+                selected_meta["visible_role_owned_score_normalization"] = {
+                    "enabled": True,
+                    "mode": "adapter_role_priority",
+                    "raw_selected_skill": _skill_id_for_suggestion(raw_selected_suggestion or {}),
+                    "raw_selected_move": (
+                        (raw_selected_suggestion or {}).get("move").uci()
+                        if hasattr((raw_selected_suggestion or {}).get("move"), "uci")
+                        else (raw_selected_suggestion or {}).get("move")
+                    ),
+                    "raw_selected_score": float(
+                        (raw_selected_suggestion or {}).get("score", 0.0) or 0.0
+                    ),
+                    "selected_skill": _skill_id_for_suggestion(selected_suggestion),
+                    "selected_move": (
+                        selected_suggestion.get("move").uci()
+                        if hasattr(selected_suggestion.get("move"), "uci")
+                        else selected_suggestion.get("move")
+                    ),
+                    "selected_score": float(selected_suggestion.get("score", 0.0) or 0.0),
+                    "candidate_count": len(adapter_candidates),
+                    "causal_status": "sandbox_opt_in",
+                    "direct_request": False,
+                }
     selected_move = None
     selected_confidence = None
     selected_actuator = None
@@ -1468,7 +1587,14 @@ def _choose_move_details_impl(
     suggestion_source = forced_candidates if forced_successor_skill else suggestions
     adapter_support_summary = _adapter_support_summary_for_suggestions(suggestion_source)
     clean_suggestions = []
-    for item in suggestion_source[:max(0, suggestion_limit)]:
+    clean_source = list(suggestion_source)
+    if (
+        selected_by_role_owned_score_normalization
+        and selected_suggestion is not None
+        and selected_suggestion not in clean_source[:max(0, suggestion_limit)]
+    ):
+        clean_source = [selected_suggestion] + clean_source
+    for item in clean_source[:max(0, suggestion_limit)]:
         move = item.get("move")
         clean = dict(item)
         clean["move"] = move.uci() if hasattr(move, "uci") else move
@@ -1486,6 +1612,7 @@ def _choose_move_details_impl(
         "ticks": ticks,
         "confidence": selected_confidence,
         "suggested_actuator": selected_actuator,
+        "selected_suggestion": _compact_selected_suggestion(selected_suggestion),
         "suggestions": clean_suggestions,
         "forced_successor_skill": forced_successor_skill,
         "forced_successor_available": bool(forced_candidates) if forced_successor_skill else None,
@@ -1517,6 +1644,11 @@ def _choose_move_details_impl(
         "early_stop_stable_suggestions": int(early_stop_stable_suggestions),
         "early_stopped": bool(early_stopped),
         "stable_suggestion_ticks": int(stable_suggestion_ticks),
+        "role_owned_score_normalization_enabled": bool(role_owned_score_normalization_enabled),
+        "selected_by_role_owned_score_normalization": bool(
+            selected_by_role_owned_score_normalization
+        ),
+        "role_owned_raw_selected": _compact_selected_suggestion(raw_selected_suggestion),
         "visible_terms": dict(env.get("blackboard", {}).get("krk_visible_terms", {}) or {}),
         "successor_affordances": dict(
             env.get("blackboard", {}).get("krk_successor_affordances", {}) or {}
@@ -1696,6 +1828,7 @@ def play_to_mate(
     successor_contract_gate_enabled: bool = False,
     successor_role_license_enabled: bool = False,
     explicit_role_provider_support_enabled: bool = False,
+    role_owned_score_normalization_enabled: bool = False,
     successor_role_veto_penalty: float = 0.0,
     successor_stage0_drift_penalty: float = 0.0,
     successor_role_scoped_move_shape_enabled: bool = False,
@@ -1809,6 +1942,7 @@ def play_to_mate(
                 successor_contract_gate_enabled=successor_contract_gate_enabled,
                 successor_role_license_enabled=successor_role_license_enabled,
                 explicit_role_provider_support_enabled=explicit_role_provider_support_enabled,
+                role_owned_score_normalization_enabled=role_owned_score_normalization_enabled,
                 successor_role_veto_penalty=successor_role_veto_penalty,
                 successor_stage0_drift_penalty=successor_stage0_drift_penalty,
                 successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
@@ -2643,6 +2777,7 @@ def run_counterfactual_successor_sweep(
     successor_contract_gate_enabled: bool,
     successor_role_license_enabled: bool,
     explicit_role_provider_support_enabled: bool = False,
+    role_owned_score_normalization_enabled: bool = False,
     successor_role_veto_penalty: float = 0.0,
     successor_stage0_drift_penalty: float = 0.0,
     successor_role_scoped_move_shape_enabled: bool = False,
@@ -2689,6 +2824,7 @@ def run_counterfactual_successor_sweep(
             successor_contract_gate_enabled=successor_contract_gate_enabled,
             successor_role_license_enabled=successor_role_license_enabled,
             explicit_role_provider_support_enabled=explicit_role_provider_support_enabled,
+            role_owned_score_normalization_enabled=role_owned_score_normalization_enabled,
             successor_role_veto_penalty=successor_role_veto_penalty,
             successor_stage0_drift_penalty=successor_stage0_drift_penalty,
             successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
@@ -2821,6 +2957,7 @@ def evaluate_landmark_progress(
     successor_contract_gate_enabled: bool = False,
     successor_role_license_enabled: bool = False,
     explicit_role_provider_support_enabled: bool = False,
+    role_owned_score_normalization_enabled: bool = False,
     successor_role_veto_penalty: float = 0.0,
     successor_stage0_drift_penalty: float = 0.0,
     successor_role_scoped_move_shape_enabled: bool = False,
@@ -2935,6 +3072,8 @@ def evaluate_landmark_progress(
         "adapter_fire_count": 0,
         "adapter_supported_provider_by_outcome": {},
         "adapter_supported_move_by_outcome": {},
+        "role_owned_score_normalization_selected_count": 0,
+        "role_owned_score_normalization_provider_by_outcome": {},
         "one_ply_status": "not_checked",
         "conversion_status": "not_checked",
     }
@@ -2964,6 +3103,7 @@ def evaluate_landmark_progress(
             successor_contract_gate_enabled=successor_contract_gate_enabled,
             successor_role_license_enabled=successor_role_license_enabled,
             explicit_role_provider_support_enabled=explicit_role_provider_support_enabled,
+            role_owned_score_normalization_enabled=role_owned_score_normalization_enabled,
             successor_role_veto_penalty=successor_role_veto_penalty,
             successor_stage0_drift_penalty=successor_stage0_drift_penalty,
             successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
@@ -3125,6 +3265,7 @@ def evaluate_landmark_progress(
                 successor_contract_gate_enabled=successor_contract_gate_enabled,
                 successor_role_license_enabled=successor_role_license_enabled,
                 explicit_role_provider_support_enabled=explicit_role_provider_support_enabled,
+                role_owned_score_normalization_enabled=role_owned_score_normalization_enabled,
                 successor_role_veto_penalty=successor_role_veto_penalty,
                 successor_stage0_drift_penalty=successor_stage0_drift_penalty,
                 successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
@@ -3236,6 +3377,18 @@ def evaluate_landmark_progress(
             adapter_support = dict(
                 successor_summary.get("visible_role_provider_support_adapter", {}) or {}
             )
+            role_owned_support = dict(
+                successor_summary.get("visible_role_owned_score_normalization", {}) or {}
+            )
+            if role_owned_support.get("enabled"):
+                stats["role_owned_score_normalization_selected_count"] = (
+                    int(stats.get("role_owned_score_normalization_selected_count", 0) or 0) + 1
+                )
+                provider_key = f"{role_owned_support.get('selected_skill', 'unknown')}:{key}"
+                stats["role_owned_score_normalization_provider_by_outcome"][provider_key] = (
+                    stats["role_owned_score_normalization_provider_by_outcome"].get(provider_key, 0)
+                    + 1
+                )
             adapter_supported_suggestion_count = int(
                 successor_summary.get("adapter_supported_suggestion_count", 0) or 0
             )
@@ -3298,6 +3451,8 @@ def evaluate_landmark_progress(
                     "failure_classes": failure_classes,
                     "successor_selected_skill": successor_summary["selected_skill"],
                     "successor_best_score": successor_summary["best_score"],
+                    "successor_raw_selected_skill": successor_summary.get("raw_selected_skill"),
+                    "successor_raw_best_score": successor_summary.get("raw_best_score"),
                     "successor_second_score": successor_summary.get("second_score"),
                     "route_margin": successor_summary.get("route_margin"),
                     "selected_successor_visible_affordance": successor_summary.get("selected_successor_visible_affordance"),
@@ -3311,6 +3466,15 @@ def evaluate_landmark_progress(
                     "role_bonus_total": successor_summary.get("role_bonus_total"),
                     "role_bonus_by_role": successor_summary.get("role_bonus_by_role"),
                     "visible_role_provider_support_adapter": adapter_support,
+                    "visible_role_owned_score_normalization": successor_summary.get(
+                        "visible_role_owned_score_normalization", {}
+                    ),
+                    "selected_by_role_owned_score_normalization": bool(
+                        (
+                            successor_summary.get("visible_role_owned_score_normalization", {})
+                            or {}
+                        ).get("enabled", False)
+                    ),
                     "adapter_supported_suggestion_count": adapter_supported_suggestion_count,
                     "adapter_supported_provider_counts": successor_summary.get(
                         "adapter_supported_provider_counts", {}
@@ -3509,6 +3673,7 @@ def evaluate_landmark_progress(
                     successor_contract_gate_enabled=successor_contract_gate_enabled,
                     successor_role_license_enabled=successor_role_license_enabled,
                     explicit_role_provider_support_enabled=explicit_role_provider_support_enabled,
+                    role_owned_score_normalization_enabled=role_owned_score_normalization_enabled,
                     successor_role_veto_penalty=successor_role_veto_penalty,
                     successor_stage0_drift_penalty=successor_stage0_drift_penalty,
                     successor_role_scoped_move_shape_enabled=successor_role_scoped_move_shape_enabled,
@@ -3646,6 +3811,7 @@ def evaluate_landmark_progress(
     stats["successor_affordance_layer_enabled"] = successor_affordance_layer_enabled
     stats["successor_contract_gate_enabled"] = successor_contract_gate_enabled
     stats["successor_role_license_enabled"] = successor_role_license_enabled
+    stats["role_owned_score_normalization_enabled"] = role_owned_score_normalization_enabled
     stats["successor_role_veto_penalty"] = successor_role_veto_penalty
     stats["successor_stage0_drift_penalty"] = successor_stage0_drift_penalty
     stats["successor_role_scoped_move_shape_enabled"] = successor_role_scoped_move_shape_enabled
@@ -3847,6 +4013,7 @@ def _merge_parallel_stats(
         "shadow_candidate_count",
         "counterfactual_successor_sweep_count",
         "adapter_fire_count",
+        "role_owned_score_normalization_selected_count",
     )
     max_keys = ("one_ply_engine_ticks_max", "playout_engine_ticks_max")
     dict_count_keys = (
@@ -3859,6 +4026,7 @@ def _merge_parallel_stats(
         "shadow_candidate_counts_by_trigger",
         "adapter_supported_provider_by_outcome",
         "adapter_supported_move_by_outcome",
+        "role_owned_score_normalization_provider_by_outcome",
     )
     nested_count_keys = ("conversion_by_semantic_alignment_status",)
     list_keys = (
@@ -4168,6 +4336,8 @@ def main() -> None:
                         help="Enable additive visible role-license bonuses for successor provider skills")
     parser.add_argument("--enable-explicit-role-provider-support", action="store_true",
                         help="Enable sandbox explicit role-provider support adapters")
+    parser.add_argument("--enable-role-owned-score-normalization", action="store_true",
+                        help="Sandbox: let visible move-shape-gated adapter-supported suggestions own arbitration over raw cross-skill scores")
     parser.add_argument("--successor-role-veto-penalty", type=float, default=0.0,
                         help="Opt-in visible role-veto penalty applied only when another provider has a visible role license")
     parser.add_argument("--successor-stage0-drift-penalty", type=float, default=0.0,
@@ -4265,6 +4435,7 @@ def main() -> None:
         successor_contract_gate_enabled=args.enable_successor_contract_gate,
         successor_role_license_enabled=args.enable_successor_role_licenses,
         explicit_role_provider_support_enabled=args.enable_explicit_role_provider_support,
+        role_owned_score_normalization_enabled=args.enable_role_owned_score_normalization,
         successor_role_veto_penalty=args.successor_role_veto_penalty,
         successor_stage0_drift_penalty=args.successor_stage0_drift_penalty,
         successor_role_scoped_move_shape_enabled=args.enable_role_scoped_move_shapes,

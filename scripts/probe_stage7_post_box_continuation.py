@@ -159,6 +159,7 @@ def forced_provider_first_move_probe(
     enable_successor_role_licenses: bool,
     enable_role_scoped_move_shapes: bool,
     explicit_role_provider_support_enabled: bool,
+    role_owned_score_normalization_enabled: bool,
     enable_diagnostic_caches: bool,
 ) -> dict[str, Any]:
     board = chess.Board(post_reply_fen)
@@ -172,6 +173,7 @@ def forced_provider_first_move_probe(
         successor_role_license_enabled=enable_successor_role_licenses,
         successor_role_scoped_move_shape_enabled=enable_role_scoped_move_shapes,
         explicit_role_provider_support_enabled=explicit_role_provider_support_enabled,
+        role_owned_score_normalization_enabled=role_owned_score_normalization_enabled,
         forced_successor_skill=provider,
         early_stop_stable_suggestions=early_stop_stable_suggestions,
         enable_diagnostic_caches=enable_diagnostic_caches,
@@ -219,6 +221,7 @@ def forced_provider_playout_probe(
     enable_successor_role_licenses: bool,
     enable_role_scoped_move_shapes: bool,
     explicit_role_provider_support_enabled: bool,
+    role_owned_score_normalization_enabled: bool,
     enable_diagnostic_caches: bool,
 ) -> dict[str, Any]:
     board = chess.Board(post_reply_fen)
@@ -238,6 +241,7 @@ def forced_provider_playout_probe(
         successor_role_license_enabled=enable_successor_role_licenses,
         successor_role_scoped_move_shape_enabled=enable_role_scoped_move_shapes,
         explicit_role_provider_support_enabled=explicit_role_provider_support_enabled,
+        role_owned_score_normalization_enabled=role_owned_score_normalization_enabled,
         early_stop_stable_suggestions=early_stop_stable_suggestions,
         forced_successor_skill=provider,
         enable_diagnostic_caches=enable_diagnostic_caches,
@@ -282,6 +286,7 @@ def legal_first_move_probe(
     enable_successor_role_licenses: bool,
     enable_role_scoped_move_shapes: bool,
     explicit_role_provider_support_enabled: bool,
+    role_owned_score_normalization_enabled: bool,
     enable_diagnostic_caches: bool,
     require_any_terms: tuple[str, ...],
     require_all_terms: tuple[str, ...],
@@ -330,6 +335,7 @@ def legal_first_move_probe(
                 successor_role_license_enabled=enable_successor_role_licenses,
                 successor_role_scoped_move_shape_enabled=enable_role_scoped_move_shapes,
                 explicit_role_provider_support_enabled=explicit_role_provider_support_enabled,
+                role_owned_score_normalization_enabled=role_owned_score_normalization_enabled,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
                 enable_diagnostic_caches=enable_diagnostic_caches,
             )
@@ -441,6 +447,7 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
                 enable_successor_role_licenses=args.enable_successor_role_licenses,
                 enable_role_scoped_move_shapes=args.enable_role_scoped_move_shapes,
                 explicit_role_provider_support_enabled=args.enable_explicit_role_provider_support,
+                role_owned_score_normalization_enabled=args.enable_role_owned_score_normalization,
                 enable_diagnostic_caches=args.enable_diagnostic_caches,
             )
             record["first_move_probes"].append(first_probe)
@@ -473,6 +480,7 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
                     enable_successor_role_licenses=args.enable_successor_role_licenses,
                     enable_role_scoped_move_shapes=args.enable_role_scoped_move_shapes,
                     explicit_role_provider_support_enabled=args.enable_explicit_role_provider_support,
+                    role_owned_score_normalization_enabled=args.enable_role_owned_score_normalization,
                     enable_diagnostic_caches=args.enable_diagnostic_caches,
                 )
                 record["playout_probes"].append(playout_probe)
@@ -499,6 +507,7 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
                     enable_successor_role_licenses=args.enable_successor_role_licenses,
                     enable_role_scoped_move_shapes=args.enable_role_scoped_move_shapes,
                     explicit_role_provider_support_enabled=args.enable_explicit_role_provider_support,
+                    role_owned_score_normalization_enabled=args.enable_role_owned_score_normalization,
                     enable_diagnostic_caches=args.enable_diagnostic_caches,
                     require_any_terms=_parse_csv(args.legal_first_require_any_terms),
                     require_all_terms=_parse_csv(args.legal_first_require_all_terms),
@@ -532,6 +541,7 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
             "successor_role_licenses_enabled": args.enable_successor_role_licenses,
             "role_scoped_move_shapes_enabled": args.enable_role_scoped_move_shapes,
             "explicit_role_provider_support_enabled": args.enable_explicit_role_provider_support,
+            "role_owned_score_normalization_enabled": args.enable_role_owned_score_normalization,
             "diagnostic_caches_enabled": args.enable_diagnostic_caches,
             "run_legal_first_sweep": args.run_legal_first_sweep,
             "legal_first_require_any_terms": args.legal_first_require_any_terms,
@@ -575,6 +585,7 @@ def main() -> int:
     parser.add_argument("--enable-successor-role-licenses", action="store_true")
     parser.add_argument("--enable-role-scoped-move-shapes", action="store_true")
     parser.add_argument("--enable-explicit-role-provider-support", action="store_true")
+    parser.add_argument("--enable-role-owned-score-normalization", action="store_true")
     parser.add_argument("--enable-diagnostic-caches", action="store_true")
     parser.add_argument("--run-forced-playouts", action="store_true")
     parser.add_argument("--playouts-only-if-provider-available", action="store_true")

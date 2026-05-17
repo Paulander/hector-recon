@@ -4760,3 +4760,85 @@ The next causal experiment, if attempted, should be narrow:
   default-off,
   guarded by Stage 7 target + Stage 6/5/1 and bridge/M1-M4 guardrails.
 ```
+
+## Stage 7 role-owned score-normalization sandbox
+
+Implemented a default-off sandbox runtime flag:
+
+```text
+--enable-role-owned-score-normalization
+```
+
+Semantics:
+
+```text
+Only suggestions with visible_role_provider_support_adapter may enter the
+role-owned arbitration set.
+The adapter must be enabled, direct_request must be false, and move_shape_gated
+must be true.
+Provider-level adapters without move-shape confirmation are ignored.
+The raw selected provider/move/score are preserved in trace metadata.
+No oracle information is used.
+```
+
+Default-off check:
+
+```text
+artifact:
+  reports/structural_candidates/stage7_role_owned_default_off_equiv_5_h40.json
+result:
+  equivalent: true
+  adapter_fire_count: 0
+```
+
+Random 10-sample smoke:
+
+```text
+artifact:
+  reports/structural_candidates/stage7_role_owned_adapter_10_h80.json
+result:
+  5 mate / 5 max_plies
+  role_owned_score_normalization_selected_count: 0
+```
+
+Interpretation:
+
+```text
+The random smoke did not encounter a state where the move-shape-gated adapter
+was visible, so it is a non-regression check rather than a target success.
+```
+
+Targeted normal playout from the known drive-convertible family:
+
+```text
+artifact:
+  reports/structural_candidates/stage7_ff_role_owned_targeted_playout.json
+state:
+  state.ff6652c8832c
+  8/8/8/8/4R3/2k5/4K3/8 w - - 2 2
+result:
+  mate in 7
+first trace move:
+  e4h4
+raw selected before role-owned arbitration:
+  krk.stage0_basin / e4e8 / score 33.6848
+role-owned selected:
+  krk.drive_to_edge / e4h4 / score 0.2136
+```
+
+Note:
+
+```text
+The existing play_to_mate first_successor field captures the second White move
+when no forced successor is active. For the targeted first-move evidence, use
+the trace event at ply 0.
+```
+
+Current status:
+
+```text
+role-owned score normalization is a plausible sandbox candidate for the drive
+family only.
+It is not enough for the fence family because no visible support exists there.
+Stage 7 remains local_valid_composition_quarantined.
+```

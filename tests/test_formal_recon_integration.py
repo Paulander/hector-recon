@@ -184,6 +184,16 @@ assert _stage7_score_normalization.__spec__ is not None
 assert _stage7_score_normalization.__spec__.loader is not None
 _stage7_score_normalization.__spec__.loader.exec_module(_stage7_score_normalization)
 
+_landmark_progress = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "test_krk_landmark_progress",
+        Path(__file__).resolve().parents[1] / "scripts" / "test_krk_landmark_progress.py",
+    )
+)
+assert _landmark_progress.__spec__ is not None
+assert _landmark_progress.__spec__.loader is not None
+_landmark_progress.__spec__.loader.exec_module(_landmark_progress)
+
 _candidate_m3_warmup_plan = importlib.util.module_from_spec(
     importlib.util.spec_from_file_location(
         "plan_candidate_local_m3_warmup",
@@ -2336,6 +2346,46 @@ def test_stage7_score_normalization_probe_marks_role_owned_arbitration_candidate
     )
     assert payload["records"][0]["adapter_role_changes_provider"] is True
     assert "do_not_make_oracle_choice_causal" in payload["candidate_update"]["hard_blocks"]
+
+
+def test_role_owned_score_normalization_only_accepts_visible_move_shape_adapters():
+    raw_stage0 = {
+        "move": "e4e8",
+        "score": 33.0,
+        "meta": {"curriculum_label": "stage0_basin"},
+    }
+    provider_level_adapter = {
+        "move": "e4h4",
+        "score": 0.2,
+        "meta": {
+            "curriculum_label": "drive_to_edge",
+            "visible_role_provider_support_adapter": {
+                "enabled": True,
+                "direct_request": False,
+                "move_shape_gated": False,
+                "support_amount": 0.05,
+            },
+        },
+    }
+    move_shape_adapter = {
+        "move": "e4h4",
+        "score": 0.1,
+        "meta": {
+            "curriculum_label": "drive_to_edge",
+            "visible_role_provider_support_adapter": {
+                "enabled": True,
+                "direct_request": False,
+                "move_shape_gated": True,
+                "support_amount": 0.05,
+            },
+        },
+    }
+
+    candidates = _landmark_progress._adapter_supported_role_owned_candidates(
+        [raw_stage0, provider_level_adapter, move_shape_adapter]
+    )
+
+    assert candidates == [move_shape_adapter]
 
 
 def _dummy_sensor():
