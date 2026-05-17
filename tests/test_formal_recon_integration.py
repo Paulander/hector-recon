@@ -114,6 +114,16 @@ assert _stage7_post_box_probe.__spec__ is not None
 assert _stage7_post_box_probe.__spec__.loader is not None
 _stage7_post_box_probe.__spec__.loader.exec_module(_stage7_post_box_probe)
 
+_stage7_family_diagnosis = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "diagnose_stage7_post_box_families",
+        Path(__file__).resolve().parents[1] / "scripts" / "diagnose_stage7_post_box_families.py",
+    )
+)
+assert _stage7_family_diagnosis.__spec__ is not None
+assert _stage7_family_diagnosis.__spec__.loader is not None
+_stage7_family_diagnosis.__spec__.loader.exec_module(_stage7_family_diagnosis)
+
 _candidate_m3_warmup_plan = importlib.util.module_from_spec(
     importlib.util.spec_from_file_location(
         "plan_candidate_local_m3_warmup",
@@ -1713,6 +1723,150 @@ def test_stage7_post_box_probe_summarizes_weight_vs_topology_without_causality()
     assert summary["states_with_any_mating_forced_playout"] == 1
     assert summary["forced_playout_mate_by_provider"]["krk.edge_trap_close"] == 1
     assert summary["topology_weight_diagnosis"] == "topology_present_untrained_or_miscalibrated"
+
+
+def test_stage7_family_diagnosis_splits_forced_success_and_unresolved(tmp_path):
+    diagnosis_path = tmp_path / "diagnosis.json"
+    forced_path = tmp_path / "forced_h40.json"
+    unresolved_path = tmp_path / "unresolved_h80.json"
+    adapter_path = tmp_path / "adapter.json"
+    diagnosis_path.write_text(
+        json.dumps(
+            {
+                "unique_failed_post_reply_states": [
+                    {
+                        "post_reply_fen": "8/8/8/8/4R3/2k5/4K3/8 w - - 2 2",
+                        "selected_successor": "krk.stage0_basin",
+                        "selected_move": "e4e8",
+                        "conversion_result": "max_plies",
+                        "failure_classes": ["selected_successor_miscalibrated"],
+                    },
+                    {
+                        "post_reply_fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
+                        "selected_successor": "krk.stage0_basin",
+                        "selected_move": "e3a3",
+                        "conversion_result": "max_plies",
+                        "failure_classes": ["selected_successor_miscalibrated"],
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    forced_path.write_text(
+        json.dumps(
+            {
+                "records": [
+                    {
+                        "state_id": "state.ff",
+                        "post_reply_fen": "8/8/8/8/4R3/2k5/4K3/8 w - - 2 2",
+                        "first_move_probes": [
+                            {
+                                "provider": "krk.drive_to_edge",
+                                "move": "e4h4",
+                                "forced_successor_available": True,
+                                "legal": True,
+                                "move_shape_audit": {
+                                    "current_terms": ["box_shrink_drive_repair_available"],
+                                    "move_shape_terms": ["candidate_is_rook_transfer"],
+                                    "post_move_terms": ["rook_safe_after_move"],
+                                },
+                            }
+                        ],
+                        "playout_probes": [
+                            {
+                                "provider": "krk.drive_to_edge",
+                                "result": "mate",
+                                "plies": 7,
+                                "first_move": "e4h4",
+                                "horizon": 40,
+                            }
+                        ],
+                    },
+                    {
+                        "state_id": "state.0a",
+                        "post_reply_fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
+                        "first_move_probes": [
+                            {
+                                "provider": "krk.drive_to_edge",
+                                "move": "e3a3",
+                                "forced_successor_available": True,
+                                "legal": True,
+                                "move_shape_audit": {
+                                    "current_terms": ["enemy_king_near_edge"],
+                                    "move_shape_terms": ["candidate_is_rook_transfer"],
+                                    "post_move_terms": ["rook_safe_after_move"],
+                                },
+                            }
+                        ],
+                        "playout_probes": [
+                            {
+                                "provider": "krk.drive_to_edge",
+                                "result": "max_plies",
+                                "plies": 40,
+                                "first_move": "e3a3",
+                                "horizon": 40,
+                            }
+                        ],
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    unresolved_path.write_text(
+        json.dumps(
+            {
+                "records": [
+                    {
+                        "state_id": "state.0a",
+                        "post_reply_fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
+                        "playout_probes": [
+                            {
+                                "provider": "krk.drive_to_edge",
+                                "result": "max_plies",
+                                "plies": 80,
+                                "first_move": "e3a3",
+                                "horizon": 80,
+                            }
+                        ],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    adapter_path.write_text(
+        json.dumps(
+            {
+                "adapter_fire_count": 2,
+                "adapter_supported_provider_by_outcome": {"krk.drive_to_edge:max_plies": 2},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    payload = _stage7_family_diagnosis.diagnose_families(
+        diagnosis_path=diagnosis_path,
+        forced_h40_path=forced_path,
+        unresolved_h80_path=unresolved_path,
+        adapter_smoke_path=adapter_path,
+    )
+
+    assert payload["schema_version"] == "stage7_post_box_family_diagnosis.v1"
+    assert payload["causal_status"] == "non_causal"
+    assert payload["family_diagnosis_counts"] == {
+        "existing_provider_can_convert_if_family_role_selects_it": 1,
+        "unresolved_by_existing_forced_providers_at_h80": 1,
+    }
+    statuses = {item["candidate_id"]: item["status"] for item in payload["candidate_updates"]}
+    assert statuses["cand.krk.box_shrink.family_ff.drive_to_edge_adapter.v1"] == (
+        "sandbox_ready_if_terms_separate"
+    )
+    assert statuses["cand.krk.box_shrink.family_0a.unresolved_continuation.v1"] == (
+        "needs_legal_first_or_longer_horizon_sweep"
+    )
+    assert payload["overbroad_adapter_status"]["status"] == "overbroad_adapter_candidate"
 
 
 def _dummy_sensor():

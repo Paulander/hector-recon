@@ -237,13 +237,106 @@ def forced_provider_playout_probe(
     }
 
 
+def _audit_term_set(audit: dict[str, Any]) -> set[str]:
+    terms: set[str] = set()
+    for key in ("current_terms", "move_shape_terms", "post_move_terms", "worst_reply_terms"):
+        values = audit.get(key)
+        if isinstance(values, list):
+            terms.update(str(item) for item in values)
+    return terms
+
+
+def legal_first_move_probe(
+    graph,
+    engine: ReConEngine,
+    *,
+    post_reply_fen: str,
+    rng: random.Random,
+    label: str,
+    horizon: int,
+    black_policy: str,
+    max_ticks: int,
+    suggestion_limit: int,
+    early_stop_stable_suggestions: int,
+    enable_successor_affordance_layer: bool,
+    enable_successor_role_licenses: bool,
+    enable_role_scoped_move_shapes: bool,
+    explicit_role_provider_support_enabled: bool,
+    enable_diagnostic_caches: bool,
+    require_any_terms: tuple[str, ...],
+    require_all_terms: tuple[str, ...],
+    max_moves: int,
+    audit_worst_reply: bool,
+) -> list[dict[str, Any]]:
+    board = chess.Board(post_reply_fen)
+    candidates: list[tuple[chess.Move, dict[str, Any]]] = []
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        audit = krk_move_shape_audit(board, move, include_worst_reply=audit_worst_reply)
+        terms = _audit_term_set(audit)
+        if require_any_terms and not terms.intersection(require_any_terms):
+            continue
+        if require_all_terms and not set(require_all_terms).issubset(terms):
+            continue
+        candidates.append((move, audit))
+    if max_moves > 0:
+        candidates = candidates[:max_moves]
+
+    results: list[dict[str, Any]] = []
+    for move, audit in candidates:
+        b = board.copy(stack=False)
+        b.push(move)
+        if b.is_checkmate():
+            payload = {
+                "move": move.uci(),
+                "horizon": horizon,
+                "result": "mate",
+                "plies": 1,
+                "move_shape_audit": audit,
+            }
+        else:
+            continuation = play_to_mate(
+                graph,
+                engine,
+                b,
+                random.Random(rng.randrange(2**32)),
+                label,
+                None,
+                max(0, horizon - 1),
+                black_policy,
+                trace=False,
+                max_ticks=max_ticks,
+                suggestion_limit=suggestion_limit,
+                successor_affordance_layer_enabled=enable_successor_affordance_layer,
+                successor_role_license_enabled=enable_successor_role_licenses,
+                successor_role_scoped_move_shape_enabled=enable_role_scoped_move_shapes,
+                explicit_role_provider_support_enabled=explicit_role_provider_support_enabled,
+                early_stop_stable_suggestions=early_stop_stable_suggestions,
+                enable_diagnostic_caches=enable_diagnostic_caches,
+            )
+            payload = {
+                "move": move.uci(),
+                "horizon": horizon,
+                "result": continuation.get("result"),
+                "plies": int(continuation.get("plies", 0) or 0) + 1,
+                "first_successor": continuation.get("first_successor"),
+                "engine_decision_count": continuation.get("engine_decision_count"),
+                "engine_ticks_total": continuation.get("engine_ticks_total"),
+                "move_shape_audit": audit,
+            }
+        results.append(payload)
+    return results
+
+
 def summarize_probe(records: list[dict[str, Any]]) -> dict[str, Any]:
     first_move_counts = Counter()
     first_move_available = Counter()
     playout_counts = Counter()
     mate_by_provider = Counter()
+    legal_first_counts = Counter()
+    legal_first_mate_by_move = Counter()
     state_with_any_available: set[str] = set()
     state_with_any_mate: set[str] = set()
+    state_with_any_legal_first_mate: set[str] = set()
     for record in records:
         state_id = str(record.get("state_id") or "unknown")
         for probe in record.get("first_move_probes") or []:
@@ -262,6 +355,14 @@ def summarize_probe(records: list[dict[str, Any]]) -> dict[str, Any]:
             if result == "mate":
                 mate_by_provider[provider] += 1
                 state_with_any_mate.add(state_id)
+        for probe in record.get("legal_first_probes") or []:
+            result = str(probe.get("result") or "unknown")
+            move = str(probe.get("move") or "unknown")
+            horizon = str(probe.get("horizon") or "unknown")
+            legal_first_counts[f"h{horizon}:{result}"] += 1
+            if result == "mate":
+                legal_first_mate_by_move[move] += 1
+                state_with_any_legal_first_mate.add(state_id)
     diagnosis = "needs_forced_playout_probe"
     if playout_counts:
         if state_with_any_mate:
@@ -278,6 +379,9 @@ def summarize_probe(records: list[dict[str, Any]]) -> dict[str, Any]:
         "first_move_counts": dict(first_move_counts),
         "forced_playout_outcome_counts": dict(playout_counts),
         "forced_playout_mate_by_provider": dict(mate_by_provider),
+        "states_with_any_legal_first_mate": len(state_with_any_legal_first_mate),
+        "legal_first_outcome_counts": dict(legal_first_counts),
+        "legal_first_mate_by_move": dict(legal_first_mate_by_move),
         "topology_weight_diagnosis": diagnosis,
     }
 
@@ -302,6 +406,7 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
             **state,
             "first_move_probes": [],
             "playout_probes": [],
+            "legal_first_probes": [],
         }
         for provider in providers:
             first_probe = forced_provider_first_move_probe(
@@ -357,6 +462,37 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
                         "state_id": state["state_id"],
                         **playout_probe,
                     })
+        if args.run_legal_first_sweep:
+            for horizon in horizons:
+                legal_results = legal_first_move_probe(
+                    graph,
+                    engine,
+                    post_reply_fen=str(state["post_reply_fen"]),
+                    rng=random.Random(rng.randrange(2**32)),
+                    label=args.label,
+                    horizon=horizon,
+                    black_policy=args.black_policy,
+                    max_ticks=args.max_ticks,
+                    suggestion_limit=args.suggestion_limit,
+                    early_stop_stable_suggestions=args.early_stop_stable_suggestions,
+                    enable_successor_affordance_layer=args.enable_successor_affordance_layer,
+                    enable_successor_role_licenses=args.enable_successor_role_licenses,
+                    enable_role_scoped_move_shapes=args.enable_role_scoped_move_shapes,
+                    explicit_role_provider_support_enabled=args.enable_explicit_role_provider_support,
+                    enable_diagnostic_caches=args.enable_diagnostic_caches,
+                    require_any_terms=_parse_csv(args.legal_first_require_any_terms),
+                    require_all_terms=_parse_csv(args.legal_first_require_all_terms),
+                    max_moves=args.legal_first_max_moves,
+                    audit_worst_reply=not args.legal_first_audit_no_worst_reply,
+                )
+                record["legal_first_probes"].extend(legal_results)
+                if args.steps_output:
+                    for legal_probe in legal_results:
+                        _append_jsonl(args.steps_output, {
+                            "probe_kind": "legal_first_move",
+                            "state_id": state["state_id"],
+                            **legal_probe,
+                        })
         records.append(record)
     summary = summarize_probe(records)
     return {
@@ -377,6 +513,10 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
             "role_scoped_move_shapes_enabled": args.enable_role_scoped_move_shapes,
             "explicit_role_provider_support_enabled": args.enable_explicit_role_provider_support,
             "diagnostic_caches_enabled": args.enable_diagnostic_caches,
+            "run_legal_first_sweep": args.run_legal_first_sweep,
+            "legal_first_require_any_terms": args.legal_first_require_any_terms,
+            "legal_first_require_all_terms": args.legal_first_require_all_terms,
+            "legal_first_max_moves": args.legal_first_max_moves,
         },
         "summary": summary,
         "candidate_update": {
@@ -418,6 +558,11 @@ def main() -> int:
     parser.add_argument("--enable-diagnostic-caches", action="store_true")
     parser.add_argument("--run-forced-playouts", action="store_true")
     parser.add_argument("--playouts-only-if-provider-available", action="store_true")
+    parser.add_argument("--run-legal-first-sweep", action="store_true")
+    parser.add_argument("--legal-first-require-any-terms", default="")
+    parser.add_argument("--legal-first-require-all-terms", default="")
+    parser.add_argument("--legal-first-max-moves", type=int, default=0)
+    parser.add_argument("--legal-first-audit-no-worst-reply", action="store_true")
     parser.add_argument("--steps-output", type=Path, default=None)
     parser.add_argument("--json-output", type=Path, required=True)
     parser.add_argument("--no-json-stdout", action="store_true")

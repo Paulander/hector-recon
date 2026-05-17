@@ -4308,3 +4308,69 @@ The support adapter path is now wired and inspectable.
 The current drive support candidate is not the Stage 7 solution.
 It should remain sandbox/quarantined, not promoted.
 ```
+
+## Stage 7 Family-Split Continuation Diagnosis
+
+Added a non-causal family diagnosis artifact:
+
+```text
+script:
+  scripts/diagnose_stage7_post_box_families.py
+json:
+  reports/structural_candidates/stage7_post_box_family_diagnosis.json
+md:
+  reports/structural_candidates/stage7_post_box_family_diagnosis.md
+```
+
+It splits the four unique post-box-shrink failed families into:
+
+```text
+existing_provider_can_convert_if_family_role_selects_it: 2
+unresolved_by_existing_forced_providers_at_h80: 2
+```
+
+Family-specific candidates:
+
+```text
+state.ff6652c8832c
+  best forced provider: krk.drive_to_edge
+  candidate: cand.krk.box_shrink.family_ff6652c8832c.drive_to_edge_adapter.v1
+  status: sandbox_ready_if_terms_separate
+
+state.ac0b7ed500ea
+  best forced provider: krk.fence_established
+  candidate: cand.krk.box_shrink.family_ac0b7ed500ea.fence_established_adapter.v1
+  status: sandbox_ready_if_terms_separate
+
+state.0afbf11aa123
+  h80 forced providers: all max_plies
+  h40 filtered legal-first: 7 moves tested, 5 max_plies, 2 draw, 0 mate
+  candidate: cand.krk.box_shrink.family_0afbf11aa123.unresolved_continuation.v1
+  status: needs_legal_first_or_longer_horizon_sweep
+
+state.38aed2f35911
+  h80 forced providers: all max_plies
+  h40 filtered legal-first: 17 moves tested, 14 max_plies, 3 draw, 0 mate
+  candidate: cand.krk.box_shrink.family_38aed2f35911.unresolved_continuation.v1
+  status: needs_legal_first_or_longer_horizon_sweep
+```
+
+The h80 legal-first continuation probe for the two unresolved families was
+stopped because it exceeded the bounded diagnostic budget. This should not be
+treated as evidence of conversion. It means the next unresolved-family probe
+needs either stronger filtering, continuation trace profiling, or a cheaper
+oracle/tablebase-style classifier before expensive h80/h120 sweeps.
+
+Decision:
+
+```text
+Do not add a broad post-box-shrink overlay.
+Do not run M3 on the current broad drive adapter.
+Do not promote Stage 7.
+Do not train Stage 8.
+
+Proceed with role factorization:
+  family-specific adapters only if visible terms separate;
+  unresolved families require targeted legal-first / longer-horizon audit
+  before declaring provider capacity missing.
+```
