@@ -1,0 +1,76 @@
+{
+  "schema_version": "stage7_extracted_post_box_families.v1",
+  "causal_status": "non_causal_extraction",
+  "source": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_overlay_composed_smoke/stage7_box_overlay_smoke_50_seed7_h20.json",
+  "family_count": 4,
+  "families": [
+    {
+      "family_id": "stage7.smoke50.maxplies.state.069e81a609ed",
+      "state_id": "state.069e81a609ed",
+      "post_reply_fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+      "source_fen": "8/8/8/8/R7/8/2k1K3/8 w - - 0 1",
+      "source_move": "a4h4",
+      "black_reply": "c2c3",
+      "selected_successor": "krk.stage0_basin",
+      "selected_move": "e2d1",
+      "conversion_result": "max_plies",
+      "failure_classes": [
+        "selected_successor_miscalibrated"
+      ],
+      "semantic_alignment_status": "reward_contract_mismatch",
+      "reward_contract_mismatch": true,
+      "diagnosis": "stage7_smoke50_unique_maxplies_family"
+    },
+    {
+      "family_id": "stage7.smoke50.maxplies.state.bace6f82b671",
+      "state_id": "state.bace6f82b671",
+      "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "source_fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+      "source_move": "a1a5",
+      "black_reply": "d4e4",
+      "selected_successor": "krk.stage0_basin",
+      "selected_move": "a5h5",
+      "conversion_result": "max_plies",
+      "failure_classes": [
+        "selected_successor_miscalibrated"
+      ],
+      "semantic_alignment_status": "reward_contract_mismatch",
+      "reward_contract_mismatch": true,
+      "diagnosis": "stage7_smoke50_unique_maxplies_family"
+    },
+    {
+      "family_id": "stage7.smoke50.maxplies.state.0926f12f8e8f",
+      "state_id": "state.0926f12f8e8f",
+      "post_reply_fen": "8/8/8/8/4K3/8/R7/4k3 w - - 2 2",
+      "source_fen": "8/8/8/8/4K3/R7/4k3/8 w - - 0 1",
+      "source_move": "a3a2",
+      "black_reply": "e2e1",
+      "selected_successor": "krk.stage0_basin",
+      "selected_move": "e4f3",
+      "conversion_result": "max_plies",
+      "failure_classes": [
+        "selected_successor_miscalibrated"
+      ],
+      "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+      "reward_contract_mismatch": false,
+      "diagnosis": "stage7_smoke50_unique_maxplies_family"
+    },
+    {
+      "family_id": "stage7.smoke50.maxplies.state.2cc0b3e1033a",
+      "state_id": "state.2cc0b3e1033a",
+      "post_reply_fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "source_fen": "8/8/8/3k4/8/R7/8/3K4 w - - 0 1",
+      "source_move": "a3a6",
+      "black_reply": "d5c4",
+      "selected_successor": "krk.stage0_basin",
+      "selected_move": "a6a8",
+      "conversion_result": "max_plies",
+      "failure_classes": [
+        "selected_successor_miscalibrated"
+      ],
+      "semantic_alignment_status": "reward_contract_mismatch",
+      "reward_contract_mismatch": true,
+      "diagnosis": "stage7_smoke50_unique_maxplies_family"
+    }
+  ]
+}

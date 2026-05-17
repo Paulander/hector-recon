@@ -5128,3 +5128,159 @@ The next meaningful validation should be targeted/family-balanced sampling of
 post-box states that include ff6652/ac0b7-like geometry plus the unresolved
 0af/38 families. Do not promote Stage 7 from this neutral 25-sample result.
 ```
+
+Family-balanced four-state validation:
+
+```text
+role-owned off:
+  reports/structural_candidates/stage7_drive_fence_family_balanced_off_4_h80.json
+role-owned on:
+  reports/structural_candidates/stage7_drive_fence_family_balanced_on_4_h80.json
+summary:
+  reports/structural_candidates/stage7_drive_fence_family_balanced_summary.json
+```
+
+Result:
+
+```text
+role-owned off:
+  state.ff6652c8832c -> krk.stage0_basin / e4e8 -> max_plies
+  state.ac0b7ed500ea -> krk.stage0_basin / a4a8 -> max_plies
+  state.0afbf11aa123 -> krk.stage0_basin / e3a3 -> max_plies
+  state.38aed2f35911 -> krk.stage0_basin / d1e2 -> max_plies
+
+role-owned on:
+  state.ff6652c8832c -> krk.drive_to_edge / e4h4 -> mate in 7
+  state.ac0b7ed500ea -> krk.fence_established / d2e3 -> mate in 13
+  state.0afbf11aa123 -> krk.stage0_basin / e3a3 -> max_plies
+  state.38aed2f35911 -> krk.stage0_basin / d1e2 -> max_plies
+```
+
+Interpretation:
+
+```text
+The role-owned candidate fixes exactly the two forced-provider-solvable
+families and leaves the two unresolved families unchanged. This is the first
+clean evidence that role-owned arbitration is not merely a broad Stage 7
+score hack: it acts only where a visible move-shape support adapter fires.
+
+Candidate status:
+  family_balanced_sandbox_validated_for_solvable_families
+
+Remaining Stage 7 work:
+  the unresolved 0af/38 families remain unresolved_by_existing_forced_providers_at_h80
+  and need a separate capacity/horizon/continuation diagnosis.
+```
+
+Smoke50 unique max-plies overfire check:
+
+```text
+families:
+  reports/structural_candidates/stage7_smoke50_unique_maxplies_families.json
+role-owned off:
+  reports/structural_candidates/stage7_smoke50_unique_maxplies_role_owned_off_4_h80.json
+role-owned on:
+  reports/structural_candidates/stage7_smoke50_unique_maxplies_role_owned_on_4_h80.json
+summary:
+  reports/structural_candidates/stage7_smoke50_unique_maxplies_role_owned_summary.json
+```
+
+Result:
+
+```text
+four unique unrelated max-plies families:
+  role-owned off: 0 mate / 4 max_plies
+  role-owned on:  0 mate / 4 max_plies
+  changed families: 0
+  adapter overfire count: 0
+```
+
+Interpretation:
+
+```text
+No broader overfire was observed on the compact smoke50 max-plies set. The
+candidate remains narrow: it fixes the known drive/fence-solvable families and
+does not touch unrelated unresolved Stage 7 max-plies families.
+
+Horizon policy:
+  h80 was conservative and inherited from the earlier unresolved-family probe.
+  Future smoke/overfire checks should default to h40 or h50, escalating only
+  ambiguous unresolved/capacity classifications to h80.
+```
+
+H40 family-balanced confirmation:
+
+```text
+role-owned off:
+  reports/structural_candidates/stage7_drive_fence_family_balanced_off_4_h40.json
+role-owned on:
+  reports/structural_candidates/stage7_drive_fence_family_balanced_on_4_h40.json
+summary:
+  reports/structural_candidates/stage7_drive_fence_family_balanced_h40_summary.json
+```
+
+Result:
+
+```text
+h40 preserves the h80 conclusion:
+  role-owned off: 0 mate / 4 max_plies
+  role-owned on:  2 mate / 2 max_plies
+
+Fixed at h40:
+  state.ff6652c8832c -> krk.drive_to_edge / e4h4 -> mate in 7
+  state.ac0b7ed500ea -> krk.fence_established / d2e3 -> mate in 13
+
+Unchanged at h40:
+  state.0afbf11aa123 -> krk.stage0_basin / e3a3 -> max_plies
+  state.38aed2f35911 -> krk.stage0_basin / d1e2 -> max_plies
+```
+
+## Stage 7 unresolved-family legal-first diagnosis
+
+Artifacts:
+
+```text
+exhaustive h40:
+  reports/structural_candidates/stage7_unresolved_legal_first_exhaustive_h40.json
+state38 h50 escalation:
+  reports/structural_candidates/stage7_state38_legal_first_exhaustive_h50.json
+growth-monitor summary:
+  reports/structural_candidates/stage7_unresolved_legal_first_summary.json
+summarizer:
+  scripts/summarize_stage7_unresolved_legal_first.py
+```
+
+Result:
+
+```text
+state.0afbf11aa123:
+  legal-first exhaustive h40 found e4d4 -> mate in 5
+  diagnosis: legal_first_action_selection_gap
+  candidate status: sandbox_ready_if_terms_separate
+  visible terms:
+    candidate_is_king_move
+    rook_safe_after_move
+    box_area_not_increased_after_move
+    black_king_escape_count_not_increased_after_move
+    white_king_and_rook_same_rank_side_after_move
+    white_king_file_opposition_distance_two_after_move
+
+state.38aed2f35911:
+  legal-first exhaustive h40: no mate
+  legal-first exhaustive h50: no mate
+  diagnosis: no_legal_first_conversion_under_current_graph
+  candidate status: needs_longer_horizon_or_new_provider_probe
+```
+
+Interpretation:
+
+```text
+The previous unresolved bucket has split again:
+  state.0afbf11aa123 is not missing capacity; a converting first move exists
+  and the missing piece is visible action selection for a king opposition/support
+  move after box shrink.
+
+  state.38aed2f35911 remains unresolved under the current graph through h50.
+  Do not call it permanently missing capacity yet, but it is now the strongest
+  candidate for a deeper post-box continuation provider or higher-horizon probe.
+```

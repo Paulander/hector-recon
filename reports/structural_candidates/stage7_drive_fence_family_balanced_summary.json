@@ -1,0 +1,91 @@
+{
+  "schema_version": "stage7_family_balanced_role_owned_summary.v1",
+  "causal_status": "sandbox_opt_in",
+  "stage7_status": "local_valid_composition_quarantined",
+  "inputs": {
+    "off": "reports/structural_candidates/stage7_drive_fence_family_balanced_off_4_h80.json",
+    "on": "reports/structural_candidates/stage7_drive_fence_family_balanced_on_4_h80.json",
+    "family_diagnosis": "reports/structural_candidates/stage7_post_box_family_diagnosis.json",
+    "topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_family_ff_drive_ac_fence_move_shape_support_noaugment_w005.json"
+  },
+  "config": {
+    "horizon": 80,
+    "black_policy": "adversarial",
+    "explicit_role_provider_support_enabled": true,
+    "role_owned_score_normalization_enabled_off": false,
+    "role_owned_score_normalization_enabled_on": true,
+    "direct_request": false,
+    "augment_role_provider_ids": false
+  },
+  "off_summary": {
+    "mate": 0,
+    "max_plies": 4,
+    "role_owned_selected": 0,
+    "selected": {
+      "state.ff6652c8832c": "krk.stage0_basin:e4e8:max_plies",
+      "state.ac0b7ed500ea": "krk.stage0_basin:a4a8:max_plies",
+      "state.0afbf11aa123": "krk.stage0_basin:e3a3:max_plies",
+      "state.38aed2f35911": "krk.stage0_basin:d1e2:max_plies"
+    }
+  },
+  "on_summary": {
+    "mate": 2,
+    "max_plies": 2,
+    "role_owned_selected": 2,
+    "selected": {
+      "state.ff6652c8832c": "krk.drive_to_edge:e4h4:mate",
+      "state.ac0b7ed500ea": "krk.fence_established:d2e3:mate",
+      "state.0afbf11aa123": "krk.stage0_basin:e3a3:max_plies",
+      "state.38aed2f35911": "krk.stage0_basin:d1e2:max_plies"
+    }
+  },
+  "family_results": [
+    {
+      "state_id": "state.ff6652c8832c",
+      "post_reply_fen": "8/8/8/8/4R3/2k5/4K3/8 w - - 2 2",
+      "family_diagnosis": "existing_provider_can_convert_if_family_role_selects_it",
+      "off": {"provider": "krk.stage0_basin", "move": "e4e8", "result": "max_plies"},
+      "on": {"provider": "krk.drive_to_edge", "move": "e4h4", "result": "mate", "plies": 7},
+      "interpretation": "role_owned_arbitration_fixes_drive_convertible_family"
+    },
+    {
+      "state_id": "state.ac0b7ed500ea",
+      "post_reply_fen": "8/8/8/4k3/R7/8/3K4/8 w - - 2 2",
+      "family_diagnosis": "existing_provider_can_convert_if_family_role_selects_it",
+      "off": {"provider": "krk.stage0_basin", "move": "a4a8", "result": "max_plies"},
+      "on": {"provider": "krk.fence_established", "move": "d2e3", "result": "mate", "plies": 13},
+      "interpretation": "role_owned_arbitration_fixes_fence_convertible_family"
+    },
+    {
+      "state_id": "state.0afbf11aa123",
+      "post_reply_fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
+      "family_diagnosis": "unresolved_by_existing_forced_providers_at_h80",
+      "off": {"provider": "krk.stage0_basin", "move": "e3a3", "result": "max_plies"},
+      "on": {"provider": "krk.stage0_basin", "move": "e3a3", "result": "max_plies"},
+      "interpretation": "unchanged_unresolved_family_no_overfire"
+    },
+    {
+      "state_id": "state.38aed2f35911",
+      "post_reply_fen": "8/8/8/R7/4k3/8/8/3K4 w - - 2 2",
+      "family_diagnosis": "unresolved_by_existing_forced_providers_at_h80",
+      "off": {"provider": "krk.stage0_basin", "move": "d1e2", "result": "max_plies"},
+      "on": {"provider": "krk.stage0_basin", "move": "d1e2", "result": "max_plies"},
+      "interpretation": "unchanged_unresolved_family_no_overfire"
+    }
+  ],
+  "candidate_update": {
+    "candidate_id": "cand.krk.box_shrink.score_normalized_role_arbitration.v1",
+    "previous_status": "role_owned_score_normalization_sandbox_candidate",
+    "new_status": "family_balanced_sandbox_validated_for_solvable_families",
+    "diagnosis": [
+      "role_owned_arbitration_corrects_provider_score_scale_mismatch_for_two_forced-provider-solvable_families",
+      "role_owned_arbitration_does_not_fire_in_two_unresolved_families",
+      "remaining_unresolved_families_are_not_fixed_by_this_candidate"
+    ],
+    "next_action": [
+      "broaden validation with more post-box family samples if available",
+      "run target Stage 7 smoke only after family sampling includes adapter-visible states",
+      "keep Stage 7 quarantined until target improvement and protected guardrails pass"
+    ]
+  }
+}
