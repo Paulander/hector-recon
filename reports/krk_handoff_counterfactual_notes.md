@@ -4103,3 +4103,208 @@ should classify whether the remaining post-reply families need:
 2. a Stage 7 handoff into existing drive/edge providers with real adapter firing,
 3. or a broader full-KRK continuation stage rather than more box-shrink patches.
 ```
+
+## Stage 7 Topology-Vs-Weight Diagnosis Artifact
+
+Per the Plasticity Balance Protocol, I stopped local box-shrink tuning and added
+a replay-free diagnosis artifact:
+
+```text
+script: scripts/diagnose_stage7_post_box_continuation.py
+json: reports/structural_candidates/stage7_post_box_continuation_diagnosis.json
+md: reports/structural_candidates/stage7_post_box_continuation_diagnosis.md
+```
+
+It extracts one record per Stage 7 sample:
+
+```text
+start_fen
+stage7 move
+post_own_move_fen
+black_reply
+post_reply_fen
+reward_confirmed
+visible_box_area_decreased_after_own_move
+visible_box_area_not_increased_after_reply
+fence_or_cut_preserved
+rook_safe_after_reply
+enemy_king_mobility_delta
+selected_successor / selected_move
+conversion_result
+failure_classes
+```
+
+Current diagnosis from `stage7_eval_flag_wiring_25_h80.json`:
+
+```text
+Stage 7 status: local_valid_composition_quarantined
+Records: 25
+Conversion failures: 13
+Unique failed post-reply states: 4
+
+Buckets:
+  box_shrink_visible_confirmed_mate: 2
+  box_shrink_visible_confirmed_max_plies: 13
+  reward_confirmed_no_visible_shrink_mate: 10
+
+Failure class:
+  selected_successor_miscalibrated: 13
+```
+
+Candidate updates:
+
+```text
+cand.krk.box_shrink.handoff_role_refinement.v1
+  status: needs_bounded_forced_provider_probe
+  role: krk.post_box_shrink_continuation
+  diagnosis:
+    post_box_shrink_continuation_gap
+    topology_present_untrained_or_miscalibrated
+
+cand.krk.box_shrink.overlay_quarantine_confirmed.v1
+  status: local_valid_composition_quarantined
+```
+
+Runtime note: broad forced-provider / legal-first probes over the four failed
+post-reply states were too slow under current playout settings, so this artifact
+marks the bounded forced-provider/M3 probe as the next targeted step rather than
+pretending it completed. This keeps the causal boundary clean: no new topology,
+no Stage 8 training, no Stage 7 promotion.
+
+## Stage 7 Bounded Forced-Provider Probe
+
+Added a bounded, non-causal topology-vs-weight probe:
+
+```text
+script: scripts/probe_stage7_post_box_continuation.py
+first-move probe:
+  reports/structural_candidates/stage7_post_box_forced_provider_firstmove_probe.json
+h40 forced playout:
+  reports/structural_candidates/stage7_post_box_forced_provider_h40_probe.json
+unresolved h80 forced playout:
+  reports/structural_candidates/stage7_post_box_forced_provider_unresolved_h80_probe.json
+```
+
+The first-move-only probe was cheap and showed all six existing providers can
+propose legal first moves from all four unique failed post-reply families:
+
+```text
+krk.stage0_basin: available 4/4
+krk.edge_trap_close: available 4/4
+krk.edge_trap_wrong_tempo: available 4/4
+krk.edge_trap_enemy_between: available 4/4
+krk.drive_to_edge: available 4/4
+krk.fence_established: available 4/4
+```
+
+The h40 forced-playout probe found two state families where existing providers
+can convert when granted first ownership:
+
+```text
+state.ff6652c8832c
+  post-reply FEN: 8/8/8/8/4R3/2k5/4K3/8 w - - 2 2
+  forced krk.drive_to_edge -> mate in 7, first move e4h4
+
+state.ac0b7ed500ea
+  post-reply FEN: 8/8/8/4k3/R7/8/3K4/8 w - - 2 2
+  forced krk.fence_established -> mate in 13, first move d2e3
+```
+
+The remaining two families did not convert under any tested existing provider
+even at h80:
+
+```text
+state.0afbf11aa123
+  post-reply FEN: 8/8/8/8/4K3/4R3/3k4/8 w - - 2 2
+  h80 forced providers: all max_plies
+
+state.38aed2f35911
+  post-reply FEN: 8/8/8/R7/4k3/8/8/3K4 w - - 2 2
+  h80 forced providers: all max_plies
+```
+
+Diagnosis:
+
+```text
+Stage 7 is mixed.
+
+Two failed families are topology-present but miscalibrated:
+  existing providers can solve if ownership is forced.
+
+Two failed families are unresolved by current providers under h80:
+  possible provider_capacity_missing, horizon_limited, or missing
+  post-box-shrink continuation concept.
+```
+
+Implication:
+
+```text
+Do not keep tuning the local box-shrink first move.
+Do not train Stage 8.
+Do not promote Stage 7.
+
+Next safe repair is candidate-driven:
+  1. create/validate a visible post_box_shrink_continuation role or support
+     adapter for the two solvable families;
+  2. separately classify the two h80-unresolved families before adding a new
+     overlay provider.
+```
+
+## Stage 7 Support Adapter Wiring Fix
+
+While validating the existing `box_shrink_to_drive_repair -> drive_to_edge`
+support sandbox, I found a runtime wiring bug:
+
+```text
+_record_explicit_role_provider_support() expected env["__graph__"]
+choose_move_details() did not provide it
+adapter_fire_count stayed at 0 even when visible role terms matched
+```
+
+Fix:
+
+```text
+scripts/test_krk_landmark_progress.py now includes "__graph__": graph in the
+diagnostic runtime env.
+```
+
+After the fix, the existing support adapter fired, but it did not improve the
+Stage 7 smoke:
+
+```text
+artifact: reports/structural_candidates/stage7_support_adapter_graphfix_10_h80.json
+result: 5 mate / 5 max_plies
+adapter_fire_count: 12
+adapter_supported_provider_by_outcome:
+  krk.drive_to_edge:max_plies: 12
+```
+
+I then compiled a narrower support proposal requiring
+`white_king_support_available`, because that term distinguishes the h40 forced
+`drive_to_edge` converting family from several non-converting families:
+
+```text
+proposal:
+  reports/structural_candidates/stage7_box_shrink_drive_support_available_proposal.json
+topology:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_support_drive_support_available_w005.json
+smoke:
+  reports/structural_candidates/stage7_support_available_adapter_10_h80.json
+```
+
+Narrowed result:
+
+```text
+result: 5 mate / 5 max_plies
+adapter_fire_count: 9
+adapter_supported_provider_by_outcome:
+  krk.drive_to_edge:max_plies: 9
+```
+
+Interpretation:
+
+```text
+The support adapter path is now wired and inspectable.
+The current drive support candidate is not the Stage 7 solution.
+It should remain sandbox/quarantined, not promoted.
+```

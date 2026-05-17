@@ -1331,6 +1331,7 @@ def _choose_move_details_impl(
         "board": board,
         "chosen_move": None,
         "suggested_move": None,
+        "__graph__": graph,
         "blackboard": {"stage_filter": stage_filter} if stage_filter is not None else {},
         "successor_affordance_layer_enabled": successor_affordance_layer_enabled,
         "successor_contract_gate_enabled": successor_contract_gate_enabled,

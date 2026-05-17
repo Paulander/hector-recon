@@ -94,6 +94,26 @@ assert _growth_governor_plan.__spec__ is not None
 assert _growth_governor_plan.__spec__.loader is not None
 _growth_governor_plan.__spec__.loader.exec_module(_growth_governor_plan)
 
+_stage7_post_box_diagnosis = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "diagnose_stage7_post_box_continuation",
+        Path(__file__).resolve().parents[1] / "scripts" / "diagnose_stage7_post_box_continuation.py",
+    )
+)
+assert _stage7_post_box_diagnosis.__spec__ is not None
+assert _stage7_post_box_diagnosis.__spec__.loader is not None
+_stage7_post_box_diagnosis.__spec__.loader.exec_module(_stage7_post_box_diagnosis)
+
+_stage7_post_box_probe = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "probe_stage7_post_box_continuation",
+        Path(__file__).resolve().parents[1] / "scripts" / "probe_stage7_post_box_continuation.py",
+    )
+)
+assert _stage7_post_box_probe.__spec__ is not None
+assert _stage7_post_box_probe.__spec__.loader is not None
+_stage7_post_box_probe.__spec__.loader.exec_module(_stage7_post_box_probe)
+
 _candidate_m3_warmup_plan = importlib.util.module_from_spec(
     importlib.util.spec_from_file_location(
         "plan_candidate_local_m3_warmup",
@@ -1562,6 +1582,137 @@ def test_ensure_formal_pairs_adds_missing_ret_for_existing_por():
     assert ensure_formal_pairs(graph) == 1
     assert _has_edge(graph, "b", "a", LinkType.RET)
     validate_formal_pairs(graph)
+
+
+def test_stage7_post_box_continuation_diagnosis_marks_non_causal_quarantine(tmp_path):
+    diagnostic = {
+        "handoff_packets": [
+            {
+                "phase": "post_own_move",
+                "evidence_terms": {
+                    "fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+                    "move": "a1d1",
+                    "reward_confirmed": True,
+                },
+            },
+            {
+                "phase": "post_opponent_reply",
+                "evidence_terms": {
+                    "fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+                    "black_reply": "d4c4",
+                    "post_reply_fen": "8/8/8/8/2k5/8/3K4/3R4 w - - 2 2",
+                    "fence_survived_reply": True,
+                    "rook_safe_after_reply": True,
+                    "successor_selected_skill": "krk.stage0_basin",
+                    "failure_classes": ["selected_successor_miscalibrated"],
+                    "playout_result": "max_plies",
+                },
+            },
+            {
+                "phase": "playout_summary",
+                "evidence_terms": {
+                    "playout_result": "max_plies",
+                    "conversion_status": "failed",
+                    "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+                    "failure_classes": ["selected_successor_miscalibrated"],
+                    "plies": 80,
+                },
+            },
+            {
+                "phase": "post_own_move",
+                "evidence_terms": {
+                    "fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+                    "move": "a1a8",
+                    "reward_confirmed": True,
+                },
+            },
+            {
+                "phase": "post_opponent_reply",
+                "evidence_terms": {
+                    "fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+                    "black_reply": "d4c4",
+                    "post_reply_fen": "R7/8/8/8/2k5/8/3K4/8 w - - 2 2",
+                    "fence_survived_reply": False,
+                    "rook_safe_after_reply": True,
+                    "successor_selected_skill": None,
+                    "playout_result": "mate",
+                },
+            },
+            {
+                "phase": "playout_summary",
+                "evidence_terms": {
+                    "playout_result": "mate",
+                    "conversion_status": "passed",
+                    "semantic_alignment_status": "reward_contract_mismatch",
+                    "plies": 12,
+                },
+            },
+        ]
+    }
+    path = tmp_path / "stage7.json"
+    path.write_text(json.dumps(diagnostic), encoding="utf-8")
+
+    payload = _stage7_post_box_diagnosis.diagnose_stage7_post_box_continuation(
+        diagnostic_path=path
+    )
+
+    assert payload["schema_version"] == "stage7_post_box_continuation_diagnosis.v1"
+    assert payload["causal_status"] == "non_causal"
+    assert payload["stage7_status"] == "local_valid_composition_quarantined"
+    assert payload["conversion_failed_count"] == 1
+    assert payload["recommended_next_action"] == "targeted_forced_provider_probe_before_new_topology"
+    updates = {item["candidate_id"]: item for item in payload["candidate_updates"]}
+    assert updates["cand.krk.box_shrink.handoff_role_refinement.v1"]["status"] == (
+        "needs_bounded_forced_provider_probe"
+    )
+    assert updates["cand.krk.box_shrink.overlay_quarantine_confirmed.v1"]["status"] == (
+        "local_valid_composition_quarantined"
+    )
+    assert "do_not_promote_stage7" in payload["hard_blocks"]
+
+
+def test_stage7_post_box_probe_summarizes_weight_vs_topology_without_causality():
+    records = [
+        {
+            "state_id": "state.a",
+            "first_move_probes": [
+                {
+                    "provider": "krk.edge_trap_close",
+                    "forced_successor_available": True,
+                    "legal": True,
+                    "move": "a1a8",
+                },
+                {
+                    "provider": "krk.stage0_basin",
+                    "forced_successor_available": False,
+                    "legal": False,
+                    "move": None,
+                },
+            ],
+            "playout_probes": [],
+        }
+    ]
+
+    summary = _stage7_post_box_probe.summarize_probe(records)
+
+    assert summary["states_with_any_available_provider"] == 1
+    assert summary["topology_weight_diagnosis"] == (
+        "existing_provider_first_moves_available_playout_pending"
+    )
+    assert summary["first_move_available_counts"]["krk.edge_trap_close:available"] == 1
+
+    records[0]["playout_probes"] = [
+        {
+            "provider": "krk.edge_trap_close",
+            "horizon": 40,
+            "result": "mate",
+        }
+    ]
+    summary = _stage7_post_box_probe.summarize_probe(records)
+
+    assert summary["states_with_any_mating_forced_playout"] == 1
+    assert summary["forced_playout_mate_by_provider"]["krk.edge_trap_close"] == 1
+    assert summary["topology_weight_diagnosis"] == "topology_present_untrained_or_miscalibrated"
 
 
 def _dummy_sensor():
