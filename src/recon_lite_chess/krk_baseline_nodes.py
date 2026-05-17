@@ -604,12 +604,14 @@ def create_krk_stage7_post_king_tempo_terminal(node_id=None):
 
 
 def create_krk_stage7_drive_repair_terminal(node_id=None):
-    """Opt-in Stage 7 drive-repair provider for broken post-box-shrink fences.
+    """Opt-in Stage 7 box-shrink/drive-repair provider.
 
     This is narrower than the role-provider support adapter: it does not boost
-    an existing provider score. It proposes one graph-visible repair move only
-    when the current board exposes the box-shrink-to-drive-repair context and a
-    legal move satisfies visible safety/progress terms.
+    an existing provider score. It proposes one graph-visible move only when the
+    current board exposes the box-shrink/drive-repair context and a legal move
+    satisfies visible safety/progress terms. It can fire on the initial Stage 7
+    move as a visible local box-shrink repair, or after the opponent reply as a
+    handoff repair. It remains opt-in and scope-gated.
     """
     actual_id = node_id or "terminal.krk.stage7_drive_repair"
 
@@ -619,8 +621,6 @@ def create_krk_stage7_drive_repair_terminal(node_id=None):
         if blackboard is None or board is None or board.turn != chess.WHITE:
             return False, False
         if not blackboard.get("stage7_drive_repair_enabled", False):
-            return False, True
-        if not blackboard.get("stage7_drive_repair_post_reply_context", False):
             return False, True
         scope_label = str(blackboard.get("stage7_provider_scope_label", "box_shrink") or "box_shrink")
         active_label = str(blackboard.get("active_landmark_label", "") or "")
@@ -652,9 +652,11 @@ def create_krk_stage7_drive_repair_terminal(node_id=None):
             if not audit.get("stage7_drive_repair_candidate"):
                 continue
             priority = (
-                0 if audit.get("safe_check_or_cut_repair") else 1,
                 0 if audit.get("box_area_decreases_after_move") else 1,
                 int(audit.get("post_box_area", 99) or 99),
+                0 if "rook_lateral_transfer" in set(audit.get("move_shape_terms", []) or []) else 1,
+                0 if audit.get("king_support_repair") else 1,
+                0 if audit.get("safe_check_or_cut_repair") else 1,
                 move.uci(),
             )
             candidates.append((priority, move, audit))
@@ -784,6 +786,13 @@ def _stage7_drive_repair_move_audit(board: chess.Board, move: chess.Move) -> Dic
         "enemy_king_not_at_edge",
         "rook_safe",
     }
+    support_current = (
+        bool(current_terms.get("box_shrink_drive_repair_available", False))
+        or (
+            bool(current_terms.get("enemy_king_near_edge", False))
+            and bool(current_terms.get("fence_or_cut_not_preserved", False))
+        )
+    )
     required_post = {"rook_safe_after_move"}
     required_worst = {"rook_safe_after_worst_reply", "no_draw_after_worst_reply"}
     repair_terms = {
@@ -802,20 +811,46 @@ def _stage7_drive_repair_move_audit(board: chess.Board, move: chess.Move) -> Dic
         "box_area_decreases_after_move" in post_terms
         and "enemy_edge_distance_not_increased_after_move" in post_terms
     )
-    matched = (
+    king_support_repair = bool(
+        support_current
+        and bool(current_terms.get("enemy_king_not_at_edge", False))
+        and bool(current_terms.get("rook_safe", False))
+        and bool(
+            current_terms.get("white_king_support_available", False)
+            or current_terms.get("white_king_can_improve_support", False)
+            or current_terms.get("king_support_improvement_move_exists", False)
+        )
+        and "candidate_is_king_move" in move_terms
+        and "box_area_not_increased_after_move" in post_terms
+        and "enemy_edge_distance_not_increased_after_move" in post_terms
+        and required_post <= post_terms
+        and required_worst <= worst_terms
+        and no_draw
+    )
+    structural_repair = (
         all(bool(current_terms.get(term, False)) for term in required_current)
         and required_post <= post_terms
         and required_worst <= worst_terms
         and (safe_check_or_cut or box_progress)
         and no_draw
     )
+    matched = bool(structural_repair or king_support_repair)
     source_terms = sorted(
-        required_current
+        (required_current if structural_repair else {"enemy_king_not_at_edge", "rook_safe"})
         | required_post
         | required_worst
         | (repair_terms & post_terms)
         | ({"rook_to_checking_line", "safe_check_created"} & move_terms)
         | ({"candidate_is_rook_transfer", "candidate_is_king_move"} & move_terms)
+        | (
+            {
+                "king_support_repair",
+                "box_area_not_increased_after_move",
+                "enemy_edge_distance_not_increased_after_move",
+            }
+            if king_support_repair
+            else set()
+        )
     )
     return {
         "move": move.uci(),
@@ -829,6 +864,7 @@ def _stage7_drive_repair_move_audit(board: chess.Board, move: chess.Move) -> Dic
         "post_move_terms": sorted(post_terms),
         "worst_reply_terms": sorted(worst_terms),
         "safe_check_or_cut_repair": bool(safe_check_or_cut),
+        "king_support_repair": bool(king_support_repair),
         "box_area_decreases_after_move": "box_area_decreases_after_move" in post_terms,
         "post_box_area": post_box_area,
         "no_draw_after_move": bool(no_draw),

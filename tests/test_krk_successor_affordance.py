@@ -1038,7 +1038,9 @@ def test_stage7_drive_repair_audit_selects_visible_broken_fence_repair():
     assert checking_repair["safe_check_or_cut_repair"] is True
     assert "box_shrink_drive_repair_available" in checking_repair["source_terms"]
     assert "rook_safe_after_worst_reply" in checking_repair["source_terms"]
-    assert quiet_king["stage7_drive_repair_candidate"] is False
+    assert quiet_king["stage7_drive_repair_candidate"] is True
+    assert quiet_king["king_support_repair"] is True
+    assert "king_support_repair" in quiet_king["source_terms"]
 
 
 def test_stage7_drive_repair_terminal_is_opt_in_and_scoped():
@@ -1069,12 +1071,37 @@ def test_stage7_drive_repair_terminal_is_opt_in_and_scoped():
 
     assert success is True
     assert done is True
-    assert enabled_env["suggested_move"] == "h4h3"
+    assert enabled_env["suggested_move"] == "h4e4"
     suggestion = enabled_env["actuator_suggestions"][0]
     assert suggestion["curriculum_label"] == "stage7_drive_repair"
     payload = suggestion["meta"]["visible_stage7_drive_repair_license"]
     assert payload["direct_request"] is False
     assert payload["causal_status"] == "sandbox_opt_in"
+    assert "box_area_decreases_after_move" in payload["source_terms"]
+
+
+def test_stage7_drive_repair_terminal_can_license_initial_visible_box_shrink():
+    node = create_krk_stage7_drive_repair_terminal()
+    board = chess.Board("8/8/8/8/3k4/8/3K4/R7 w - - 0 1")
+    env = {
+        "board": board,
+        "blackboard": {
+            "stage7_drive_repair_enabled": True,
+            "stage7_drive_repair_score": 28.0,
+            "active_landmark_label": "box_shrink",
+        },
+    }
+
+    success, done = node.predicate(node, env)
+
+    assert success is True
+    assert done is True
+    assert env["suggested_move"] == "a1d1"
+    suggestion = env["actuator_suggestions"][0]
+    payload = suggestion["meta"]["visible_stage7_drive_repair_license"]
+    assert payload["direct_request"] is False
+    assert "box_area_decreases_after_move" in payload["source_terms"]
+    assert "fence_exists_after_move" in payload["source_terms"]
 
 
 def test_stage7_post_king_tempo_terminal_is_opt_in_and_after_king_tempo_only():

@@ -68,6 +68,39 @@ def _materialize_explicit_support_roles(graph: Graph, env: dict) -> None:
             continue
 
 
+def _materialize_stage7_sandbox_providers(graph: Graph, env: dict) -> None:
+    """Materialize compiled opt-in Stage 7 provider terminals once per decision.
+
+    These terminals are ordinary visible ReCoN nodes, but in short diagnostic
+    runs they may be reached after learned actuator suggestions have already
+    stabilized. Running only the explicitly compiled Stage 7 sandbox provider
+    predicates here makes their visible licenses available to the same
+    suggestion competition without directly selecting or requesting a provider.
+    """
+    blackboard = env.get("blackboard", {})
+    if not (
+        blackboard.get("stage7_king_tempo_enabled", False)
+        or blackboard.get("stage7_drive_repair_enabled", False)
+        or blackboard.get("stage7_post_king_tempo_enabled", False)
+    ):
+        return
+    for node in graph.nodes.values():
+        meta = getattr(node, "meta", {}) or {}
+        if not (
+            meta.get("stage7_king_tempo_provider")
+            or meta.get("stage7_drive_repair_provider")
+            or meta.get("stage7_post_king_tempo_provider")
+        ):
+            continue
+        predicate = getattr(node, "predicate", None)
+        if predicate is None:
+            continue
+        try:
+            predicate(node, env)
+        except Exception:
+            continue
+
+
 PROFILE_TIMER_KEYS = (
     "total_wall_time",
     "choose_move_details_time",
@@ -1367,6 +1400,7 @@ def _choose_move_details_impl(
         env["blackboard"]["forced_successor_skill"] = forced_successor_skill
 
     _materialize_explicit_support_roles(graph, env)
+    _materialize_stage7_sandbox_providers(graph, env)
 
     engine.reset_states()
     root_id = "krk_entry" if "krk_entry" in graph.nodes else None
@@ -1862,6 +1896,7 @@ def play_to_mate(
             if (
                 selected_suggestion
                 and _skill_id_for_suggestion(selected_suggestion) == "krk.stage7_drive_repair"
+                and white_moves > 0
             ):
                 stage7_drive_repair_used = True
             if (
@@ -2935,6 +2970,12 @@ def evaluate_landmark_progress(
             successor_role_scoped_move_shape_require_worst_reply=(
                 successor_role_scoped_move_shape_require_worst_reply
             ),
+            stage7_king_tempo_enabled=stage7_king_tempo_enabled,
+            stage7_king_tempo_score=stage7_king_tempo_score,
+            stage7_drive_repair_enabled=stage7_drive_repair_enabled,
+            stage7_drive_repair_score=stage7_drive_repair_score,
+            stage7_post_king_tempo_enabled=stage7_post_king_tempo_enabled,
+            stage7_post_king_tempo_score=stage7_post_king_tempo_score,
             active_landmark_label=label,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
             perf_profile=perf_profile,

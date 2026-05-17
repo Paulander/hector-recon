@@ -4022,3 +4022,84 @@ Likely diagnosis to verify before more code:
 post-drive-repair continuation gap / loop recurrence
 or box_shrink reward distribution mismatch on Box_Small/Box_Medium/Edge_Fence_Deep
 ```
+
+## Stage 7 Local Repair And Remaining Conversion Gap
+
+Follow-up implementation made the Stage 7 sandbox providers visible early
+enough for the one-ply evaluator:
+
+```text
+_materialize_stage7_sandbox_providers(...)
+```
+
+This is an activation adapter for compiled, opt-in visible terminals only. It
+does not directly choose a move or request a provider; it makes the terminal
+suggestions compete with the learned actuator suggestions before diagnostic
+early-stop can stabilize.
+
+The Stage 7 drive-repair terminal was also broadened from post-reply-only to a
+scoped initial/local box-shrink repair:
+
+```text
+terminal.krk.stage7_drive_repair
+scope: active_landmark_label == box_shrink
+causal_status: sandbox_opt_in
+direct_request: false
+```
+
+The visible contract remains:
+
+```text
+box_shrink_drive_repair_available or compact broken-cut support context
+enemy_king_not_at_edge
+rook_safe
+rook_safe_after_move
+rook_safe_after_worst_reply
+no_draw_after_worst_reply
+box_area_decreases_after_move or safe cut/check repair or king_support_repair
+```
+
+This fixed the local Stage 7 decision on the harder guardrail profile:
+
+```text
+artifact: reports/structural_candidates/stage7_eval_flag_wiring_25_h80.json
+local: 25/25 improved, 21/25 optimal
+previous: 21/25 improved, 16/25 optimal
+```
+
+Conversion did not solve:
+
+```text
+artifact: reports/structural_candidates/stage7_king_support_repair_25_h80.json
+conversion: 12/25 mate, 13/25 max_plies
+shadow candidates: 33
+```
+
+I tested several narrow visible refinements:
+
+```text
+edge-corner king support step: regressed the target, reverted
+initial/local visible box-shrink repair: fixed local one-ply quality
+post-reply drive-repair second use: exposed remaining continuation gap
+box-shrink-first priority and lateral-transfer tie-breaks: no conversion lift
+king-support repair mode: no conversion lift
+compiled support adapters: no useful firing on this topology/profile
+```
+
+Current interpretation:
+
+```text
+Stage 7 local box-shrink can now be made semantically aligned.
+Stage 7 conversion is still not solved.
+The remaining failures are downstream post-box-shrink continuation failures,
+not merely bad one-ply box-shrink move selection.
+```
+
+Do not promote Stage 7 yet. The next repair should be candidate-driven and
+should classify whether the remaining post-reply families need:
+
+```text
+1. a post-box-shrink continuation overlay,
+2. a Stage 7 handoff into existing drive/edge providers with real adapter firing,
+3. or a broader full-KRK continuation stage rather than more box-shrink patches.
+```
