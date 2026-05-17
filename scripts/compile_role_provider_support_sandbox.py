@@ -44,6 +44,7 @@ def compile_support_sandbox(
     output_path: Path,
     enable_explicit_support_by_default: bool = False,
     support_weight: float | None = None,
+    augment_role_provider_ids: bool = False,
 ) -> dict[str, Any]:
     topology = _load_json(topology_path)
     proposal = _load_json(proposal_path)
@@ -66,6 +67,20 @@ def compile_support_sandbox(
         target_provider_skill = str(relation.get("target_provider_skill") or "")
         if not role_id or not provider_id or source_role_script not in topology["nodes"]:
             continue
+        if augment_role_provider_ids:
+            role_node = topology["nodes"].get(source_role_script)
+            if isinstance(role_node, dict):
+                role_meta = role_node.setdefault("meta", {})
+                provider_ids = list(role_meta.get("provider_skill_ids", []) or [])
+                if provider_id not in provider_ids:
+                    provider_ids.append(provider_id)
+                    role_meta["provider_skill_ids"] = provider_ids
+                    role_meta.setdefault("provider_augmentation_sources", []).append({
+                        "provider_skill_id": provider_id,
+                        "proposal_source": str(proposal_path),
+                        "reason": "visible_role_provider_support_sandbox",
+                        "causal_status": "sandbox_opt_in",
+                    })
         relation_weight = (
             float(support_weight)
             if support_weight is not None
@@ -126,6 +141,7 @@ def compile_support_sandbox(
         "adapter_count": len(added_adapters),
         "adapters": added_adapters,
         "support_weight_override": support_weight,
+        "augment_role_provider_ids": bool(augment_role_provider_ids),
         "causal_status": "sandbox_opt_in",
         "compile_strategy": proposal.get("sandbox_compile_strategy"),
     }
@@ -147,6 +163,8 @@ def main() -> int:
     parser.add_argument("--enable-explicit-support-by-default", action="store_true")
     parser.add_argument("--support-weight", type=float, default=None,
                         help="Override proposed initial support weight for adapter smoke tests")
+    parser.add_argument("--augment-role-provider-ids", action="store_true",
+                        help="Sandbox-only: add target provider to source role provider_skill_ids")
     parser.add_argument("--no-json-stdout", action="store_true")
     args = parser.parse_args()
 
@@ -156,6 +174,7 @@ def main() -> int:
         output_path=args.output,
         enable_explicit_support_by_default=args.enable_explicit_support_by_default,
         support_weight=args.support_weight,
+        augment_role_provider_ids=args.augment_role_provider_ids,
     )
     summary = topology.get("meta", {}).get("role_provider_support_sandbox", {})
     if not args.no_json_stdout:

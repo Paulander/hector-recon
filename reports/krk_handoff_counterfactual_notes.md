@@ -4374,3 +4374,93 @@ Proceed with role factorization:
   unresolved families require targeted legal-first / longer-horizon audit
   before declaring provider capacity missing.
 ```
+
+## Stage 7 Family-Specific Adapter Attempt
+
+Added a non-causal proposal generator:
+
+```text
+script:
+  scripts/propose_stage7_family_support_adapters.py
+proposal set:
+  reports/structural_candidates/stage7_family_support_adapter_proposals.json
+split proposals:
+  reports/structural_candidates/stage7_family_support_adapter_proposals/
+```
+
+It only emits sandbox-ready adapters when current visible terms separate a
+forced-success family from non-converting families. Result:
+
+```text
+cand.krk.box_shrink.family_ff6652c8832c.drive_to_edge_visible_support.v1
+  provider: krk.drive_to_edge
+  status: sandbox_ready
+  required terms:
+    box_area_large
+    box_shrink_drive_repair_available
+    drive_to_edge_affordance_after_box_shrink
+    enemy_king_edge_distance_bin
+    king_support_improvement_move_exists
+    white_king_support_available
+
+cand.krk.box_shrink.family_ac0b7ed500ea.fence_established_visible_support.v1
+  provider: krk.fence_established
+  status: needs_more_terms
+  reason:
+    visible terms also match state.38aed2f35911
+```
+
+The sandbox compiler now supports an explicit, opt-in
+`--augment-role-provider-ids` mode so a visible role can license a new provider
+inside a sandbox without adding unsafe direct role->provider SUB edges. This was
+added for future fence-family experiments, but was not used for promotion.
+
+Compiled and tested the one sandbox-ready drive-family adapter:
+
+```text
+topology:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_family_ff_drive_support_w005.json
+default-off equivalence:
+  reports/structural_candidates/stage7_family_drive_default_off_equiv_5_h40.json
+adapter-on smoke:
+  reports/structural_candidates/stage7_family_drive_adapter_10_h80.json
+outcome:
+  reports/structural_candidates/stage7_family_drive_adapter_outcome.json
+```
+
+Default-off equivalence passed:
+
+```text
+equivalent: true
+adapter_fire_count: 0
+```
+
+Adapter-on smoke did not improve conversion:
+
+```text
+result: 5 mate / 5 max_plies
+adapter_fire_count: 9
+adapter_supported_provider_by_outcome:
+  krk.drive_to_edge:max_plies: 9
+```
+
+Candidate update:
+
+```text
+cand.krk.box_shrink.family_ff6652c8832c.drive_to_edge_visible_support.v1
+  status: overbroad_or_misdirected_candidate
+  promotion_status: quarantined
+  diagnosis:
+    adapter_fires_without_conversion
+    do_not_run_m3_on_this_adapter
+    needs_family_specific_or_move_shape_terms
+```
+
+Conclusion:
+
+```text
+Provider-level support adapters are still too coarse for Stage 7.
+The next repair should not be a stronger provider bonus.
+The next useful evidence is move-shape-level separation or a cheaper
+continuation oracle for the two unresolved families.
+```

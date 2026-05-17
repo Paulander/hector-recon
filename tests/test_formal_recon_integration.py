@@ -124,6 +124,26 @@ assert _stage7_family_diagnosis.__spec__ is not None
 assert _stage7_family_diagnosis.__spec__.loader is not None
 _stage7_family_diagnosis.__spec__.loader.exec_module(_stage7_family_diagnosis)
 
+_stage7_family_support = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "propose_stage7_family_support_adapters",
+        Path(__file__).resolve().parents[1] / "scripts" / "propose_stage7_family_support_adapters.py",
+    )
+)
+assert _stage7_family_support.__spec__ is not None
+assert _stage7_family_support.__spec__.loader is not None
+_stage7_family_support.__spec__.loader.exec_module(_stage7_family_support)
+
+_stage7_family_adapter_outcome = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "evaluate_stage7_family_adapter_outcome",
+        Path(__file__).resolve().parents[1] / "scripts" / "evaluate_stage7_family_adapter_outcome.py",
+    )
+)
+assert _stage7_family_adapter_outcome.__spec__ is not None
+assert _stage7_family_adapter_outcome.__spec__.loader is not None
+_stage7_family_adapter_outcome.__spec__.loader.exec_module(_stage7_family_adapter_outcome)
+
 _candidate_m3_warmup_plan = importlib.util.module_from_spec(
     importlib.util.spec_from_file_location(
         "plan_candidate_local_m3_warmup",
@@ -1415,6 +1435,63 @@ def test_compile_role_provider_support_sandbox_adds_adapter_not_direct_provider_
     assert topology["nodes"]["krk_entry"]["meta"].get("explicit_role_provider_support_enabled") is None
 
 
+def test_compile_role_provider_support_can_augment_role_provider_ids_in_sandbox(tmp_path):
+    topology_path = tmp_path / "topology.json"
+    proposal_path = tmp_path / "proposal.json"
+    output_path = tmp_path / "sandbox.json"
+    role_node = "script.krk.successor.box_shrink_to_drive_repair_affordance"
+    topology_path.write_text(
+        json.dumps({
+            "nodes": {
+                "krk_entry": {"type": "SCRIPT", "meta": {}},
+                "krk_successor_affordance_hub": {"type": "SCRIPT", "meta": {}},
+                role_node: {
+                    "type": "SCRIPT",
+                    "meta": {
+                        "role_id": "krk.box_shrink_to_drive_repair",
+                        "provider_skill_ids": ["krk.drive_to_edge"],
+                    },
+                },
+                "skill.krk.fence_established": {
+                    "type": "SCRIPT",
+                    "meta": {"skill_id": "krk.fence_established"},
+                },
+            },
+            "edges": [],
+            "meta": {},
+        }),
+        encoding="utf-8",
+    )
+    proposal_path.write_text(
+        json.dumps({
+            "target_role": "krk.box_shrink_to_drive_repair",
+            "target_provider": "krk.fence_established",
+            "sandbox_compile_strategy": "compile_gated_support_adapter_not_direct_sub_edge",
+            "proposed_support_relations": [
+                {
+                    "source_role_script": role_node,
+                    "target_provider_skill": "skill.krk.fence_established",
+                    "requires_support_adapter": True,
+                    "initial_weight": 0.05,
+                }
+            ],
+        }),
+        encoding="utf-8",
+    )
+
+    topology = _compile_role_provider_support.compile_support_sandbox(
+        topology_path=topology_path,
+        proposal_path=proposal_path,
+        output_path=output_path,
+        augment_role_provider_ids=True,
+    )
+
+    role_meta = topology["nodes"][role_node]["meta"]
+    assert role_meta["provider_skill_ids"] == ["krk.drive_to_edge", "krk.fence_established"]
+    assert role_meta["provider_augmentation_sources"][0]["causal_status"] == "sandbox_opt_in"
+    assert topology["meta"]["role_provider_support_sandbox"]["augment_role_provider_ids"] is True
+
+
 def test_compile_stage7_king_tempo_sandbox_adds_default_off_visible_terminal(tmp_path):
     topology_path = tmp_path / "topology.json"
     output_path = tmp_path / "king_tempo.json"
@@ -1867,6 +1944,119 @@ def test_stage7_family_diagnosis_splits_forced_success_and_unresolved(tmp_path):
         "needs_legal_first_or_longer_horizon_sweep"
     )
     assert payload["overbroad_adapter_status"]["status"] == "overbroad_adapter_candidate"
+
+
+def test_stage7_family_support_proposals_require_term_separation(tmp_path):
+    family_path = tmp_path / "family.json"
+    family_path.write_text(
+        json.dumps(
+            {
+                "families": [
+                    {
+                        "family_id": "stage7.post_box.family_ff",
+                        "state_id": "state.ff",
+                        "best_forced_provider": "krk.drive_to_edge",
+                        "forced_provider_results": {
+                            "krk.drive_to_edge": {
+                                "result": "mate",
+                                "first_move_probe": {
+                                    "current_terms": ["box", "support"],
+                                },
+                            }
+                        },
+                    },
+                    {
+                        "family_id": "stage7.post_box.family_0a",
+                        "state_id": "state.0a",
+                        "best_forced_provider": None,
+                        "forced_provider_results": {
+                            "krk.drive_to_edge": {
+                                "result": "max_plies",
+                                "first_move_probe": {
+                                    "current_terms": ["box"],
+                                },
+                            }
+                        },
+                    },
+                ],
+                "provider_term_splits": {
+                    "krk.drive_to_edge": {
+                        "current_terms": {
+                            "success_common_minus_failure_common": ["support"],
+                        }
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    payload = _stage7_family_support.propose_family_support_adapters(
+        family_diagnosis_path=family_path
+    )
+
+    assert payload["schema_version"] == "stage7_family_support_adapter_proposals.v1"
+    assert payload["causal_status"] == "non_causal"
+    assert payload["sandbox_ready_count"] == 1
+    proposal = payload["proposals"][0]
+    assert proposal["proposal_status"] == "sandbox_ready"
+    relation = proposal["proposed_support_relations"][0]
+    assert relation["support_required_terms"] == ["support"]
+    assert relation["requires_support_adapter"] is True
+
+
+def test_stage7_family_adapter_outcome_quarantines_max_only_support(tmp_path):
+    proposals_path = tmp_path / "proposals.json"
+    equivalence_path = tmp_path / "equivalence.json"
+    diagnostic_path = tmp_path / "diagnostic.json"
+    proposals_path.write_text(
+        json.dumps(
+            {
+                "proposals": [
+                    {
+                        "candidate_id": "cand.krk.box_shrink.family_ff.drive_to_edge_visible_support.v1",
+                        "proposal_status": "sandbox_ready",
+                    },
+                    {
+                        "candidate_id": "cand.krk.box_shrink.family_ac.fence_established_visible_support.v1",
+                        "proposal_status": "needs_more_terms",
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    equivalence_path.write_text(json.dumps({"equivalent": True}), encoding="utf-8")
+    diagnostic_path.write_text(
+        json.dumps(
+            {
+                "adapter_fire_count": 3,
+                "adapter_supported_provider_by_outcome": {
+                    "krk.drive_to_edge:max_plies": 3,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    payload = _stage7_family_adapter_outcome.evaluate_family_adapter_outcome(
+        proposals_path=proposals_path,
+        default_off_equivalence_path=equivalence_path,
+        adapter_on_diagnostic_path=diagnostic_path,
+    )
+
+    assert payload["schema_version"] == "stage7_family_adapter_outcome.v1"
+    assert payload["causal_status"] == "non_causal"
+    updates = {item["candidate_id"]: item for item in payload["candidate_updates"]}
+    assert updates[
+        "cand.krk.box_shrink.family_ff.drive_to_edge_visible_support.v1"
+    ]["status"] == "overbroad_or_misdirected_candidate"
+    assert updates[
+        "cand.krk.box_shrink.family_ff.drive_to_edge_visible_support.v1"
+    ]["promotion_status"] == "quarantined"
+    assert updates[
+        "cand.krk.box_shrink.family_ac.fence_established_visible_support.v1"
+    ]["status"] == "needs_more_terms"
 
 
 def _dummy_sensor():

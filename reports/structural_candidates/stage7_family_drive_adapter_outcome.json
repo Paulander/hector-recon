@@ -1,0 +1,41 @@
+{
+  "schema_version": "stage7_family_adapter_outcome.v1",
+  "causal_status": "non_causal",
+  "proposals_source": "reports/structural_candidates/stage7_family_support_adapter_proposals.json",
+  "default_off_equivalence_source": "reports/structural_candidates/stage7_family_drive_default_off_equiv_5_h40.json",
+  "adapter_on_diagnostic_source": "reports/structural_candidates/stage7_family_drive_adapter_10_h80.json",
+  "default_off_safe": true,
+  "adapter_fire_count": 9,
+  "adapter_supported_provider_by_outcome": {
+    "krk.drive_to_edge:max_plies": 9
+  },
+  "adapter_supported_mate_count": 0,
+  "adapter_supported_max_plies_count": 9,
+  "candidate_updates": [
+    {
+      "candidate_id": "cand.krk.box_shrink.family_ff6652c8832c.drive_to_edge_visible_support.v1",
+      "previous_status": "sandbox_ready",
+      "status": "overbroad_or_misdirected_candidate",
+      "diagnosis": [
+        "adapter_fires_without_conversion",
+        "do_not_run_m3_on_this_adapter",
+        "needs_family_specific_or_move_shape_terms"
+      ],
+      "next_action": "quarantine_candidate_and_collect_more_terms",
+      "causal_status": "non_causal",
+      "promotion_status": "quarantined"
+    },
+    {
+      "candidate_id": "cand.krk.box_shrink.family_ac0b7ed500ea.fence_established_visible_support.v1",
+      "previous_status": "needs_more_terms",
+      "status": "needs_more_terms",
+      "reason": "not_compiled_for_sandbox"
+    }
+  ],
+  "hard_blocks": [
+    "do_not_promote_stage7",
+    "do_not_train_stage8",
+    "do_not_run_m3_on_overbroad_adapter",
+    "do_not_make_candidate_causal_without_guardrails"
+  ]
+}
