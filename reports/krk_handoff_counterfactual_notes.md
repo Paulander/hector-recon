@@ -4547,3 +4547,216 @@ Do not increase broad support. The next diagnosis is stage0 fallback
 arbitration or candidate-local weight calibration under the Plasticity Balance
 Protocol.
 ```
+
+## Stage 7 arbitration / weight-vs-topology diagnosis
+
+Added a non-causal arbitration diagnostic:
+
+```text
+script:
+  scripts/diagnose_stage7_arbitration.py
+targeted artifact:
+  reports/structural_candidates/stage7_family_ff_arbitration_diagnosis.json
+all-family artifact:
+  reports/structural_candidates/stage7_arbitration_diagnosis_all_families.json
+```
+
+The diagnostic compares normal routing against forced-provider candidates and
+records score gaps, adapter visibility, known forced outcomes, and the support
+needed to overtake the normally selected provider.
+
+Key result for the drive-convertible family:
+
+```text
+state.ff6652c8832c
+normal selected:
+  provider: krk.stage0_basin
+  move: e4e8
+  score: 33.6848
+
+forced provider:
+  provider: krk.drive_to_edge
+  move: e4h4
+  score: 0.2136
+  known outcome: mate in 7
+  adapter fired: true
+  adapter support: 0.05
+  required support to overtake selected provider: 33.4712
+  support / required ratio: 0.00149
+```
+
+All-family summary:
+
+```text
+forced_provider_can_convert: 2
+provider_score_scale_mismatch: 1
+adapter_wired_and_visible_under_forced_provider: 1
+no_candidate_support_available: 7
+adapter_not_visible_for_forced_provider: 11
+```
+
+Second forced-success family:
+
+```text
+state.ac0b7ed500ea
+normal selected:
+  provider: krk.stage0_basin
+  move: a4a8
+
+forced provider:
+  provider: krk.fence_established
+  move: d2e3
+  known outcome: mate
+  score gap to selected: 15.099
+  adapter fired: false
+```
+
+Candidate update:
+
+```text
+cand.krk.box_shrink.stage0_fallback_arbitration.v1
+  status: needs_weight_or_score_normalization_probe
+  diagnosis:
+    forced_provider_can_convert
+    adapter_wired
+    visible_support_too_small_relative_to_provider_score_gap
+  next_action:
+    run_bounded_candidate_local_calibration_or_score_scale_audit_before_new_topology
+```
+
+Interpretation:
+
+```text
+Stage 7 should remain local_valid_composition_quarantined.
+The next repair is not new topology and not a broad stage0 penalty.
+First run a bounded score-scale / candidate-local calibration probe:
+  if score normalization or local calibration allows the existing converting
+  providers to win without guardrail regression, classify as parameter or
+  arbitration calibration;
+  if not, only then consider a narrow continuation overlay.
+```
+
+## Stage 7 score-calibration plan
+
+Added a non-causal calibration planner:
+
+```text
+script:
+  scripts/plan_stage7_score_calibration.py
+artifact:
+  reports/structural_candidates/stage7_score_calibration_plan.json
+```
+
+Result:
+
+```text
+next_phase: bounded_score_normalization_probe
+candidate_count: 2
+status_counts:
+  score_scale_normalization_probe_ready: 1
+  needs_visible_support_before_calibration: 1
+growth_status:
+  growth_blocked_by_weight_vs_topology_diagnosis
+```
+
+Candidate split:
+
+```text
+state.ff6652c8832c / krk.drive_to_edge
+  status: score_scale_normalization_probe_ready
+  reason:
+    adapter fires
+    forced provider converts
+    additive support required is too large
+    provider scores are not comparable across skills
+
+state.ac0b7ed500ea / krk.fence_established
+  status: needs_visible_support_before_calibration
+  reason:
+    forced provider converts
+    no visible adapter/support exists yet
+```
+
+Growth governor blocks:
+
+```text
+promote_stage7
+train_stage8
+add_broad_stage0_penalty
+new_post_box_topology_before_calibration_probe
+```
+
+Next safe implementation target:
+
+```text
+bounded_score_normalization_probe
+```
+
+It should remain sandbox-only and compare alternative score semantics, such as
+provider-local normalization or role-owned arbitration, without changing default
+runtime behavior. If normalization lets existing converting providers win and
+guardrails hold, Stage 7 is primarily a calibration/arbitration problem. If not,
+then a narrow post-box continuation overlay becomes better justified.
+
+## Stage 7 score-normalization probe
+
+Added a replay-only score-normalization probe:
+
+```text
+script:
+  scripts/probe_stage7_score_normalization.py
+artifact:
+  reports/structural_candidates/stage7_score_normalization_probe.json
+```
+
+It compares:
+
+```text
+raw:
+  current runtime winner
+adapter_role_priority:
+  non-causal replay where adapter-visible role ownership beats raw cross-skill score
+forced_success_oracle:
+  diagnostic upper bound from known forced-provider mates; never causal
+```
+
+Result:
+
+```text
+record_count: 4
+raw:
+  krk.stage0_basin selected in all 4 families
+adapter_role_priority:
+  selects krk.drive_to_edge -> mate for state.ff6652c8832c
+forced_success_oracle:
+  selects krk.drive_to_edge -> mate for state.ff6652c8832c
+  selects krk.fence_established -> mate for state.ac0b7ed500ea
+```
+
+Candidate update:
+
+```text
+cand.krk.box_shrink.score_normalized_role_arbitration.v1
+  status: role_owned_score_normalization_sandbox_candidate
+  next_action: sandbox_role_owned_arbitration_with_guardrails
+  hard blocks:
+    do_not_promote_stage7
+    do_not_train_stage8
+    do_not_make_oracle_choice_causal
+    do_not_use_score_normalization_without_guardrails
+```
+
+Interpretation:
+
+```text
+For the drive family, visible role-owned arbitration is enough in replay.
+For the fence family, the oracle can identify a converting provider, but no
+visible support/adapter exists yet, so a fence-family visible-support candidate
+must be derived before any calibration.
+
+The next causal experiment, if attempted, should be narrow:
+  role-owned score normalization for adapter-visible candidates only,
+  sandbox-only,
+  default-off,
+  guarded by Stage 7 target + Stage 6/5/1 and bridge/M1-M4 guardrails.
+```

@@ -154,6 +154,36 @@ assert _stage7_move_shape_separation.__spec__ is not None
 assert _stage7_move_shape_separation.__spec__.loader is not None
 _stage7_move_shape_separation.__spec__.loader.exec_module(_stage7_move_shape_separation)
 
+_stage7_arbitration = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "diagnose_stage7_arbitration",
+        Path(__file__).resolve().parents[1] / "scripts" / "diagnose_stage7_arbitration.py",
+    )
+)
+assert _stage7_arbitration.__spec__ is not None
+assert _stage7_arbitration.__spec__.loader is not None
+_stage7_arbitration.__spec__.loader.exec_module(_stage7_arbitration)
+
+_stage7_score_calibration = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "plan_stage7_score_calibration",
+        Path(__file__).resolve().parents[1] / "scripts" / "plan_stage7_score_calibration.py",
+    )
+)
+assert _stage7_score_calibration.__spec__ is not None
+assert _stage7_score_calibration.__spec__.loader is not None
+_stage7_score_calibration.__spec__.loader.exec_module(_stage7_score_calibration)
+
+_stage7_score_normalization = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "probe_stage7_score_normalization",
+        Path(__file__).resolve().parents[1] / "scripts" / "probe_stage7_score_normalization.py",
+    )
+)
+assert _stage7_score_normalization.__spec__ is not None
+assert _stage7_score_normalization.__spec__.loader is not None
+_stage7_score_normalization.__spec__.loader.exec_module(_stage7_score_normalization)
+
 _candidate_m3_warmup_plan = importlib.util.module_from_spec(
     importlib.util.spec_from_file_location(
         "plan_candidate_local_m3_warmup",
@@ -2196,6 +2226,116 @@ def test_stage7_move_shape_separation_detects_provider_adapter_overbreadth(tmp_p
     assert update["status"] == "move_shape_gate_candidate"
     assert "candidate_is_rook_transfer" in update["required_move_shape_terms"]
     assert "do_not_run_m3_on_provider_adapter" in update["hard_blocks"]
+
+
+def test_stage7_arbitration_candidate_update_prefers_weight_probe_over_topology():
+    counts = {
+        "forced_provider_can_convert": 1,
+        "adapter_wired_and_visible_under_forced_provider": 1,
+        "provider_score_scale_mismatch": 1,
+    }
+
+    update = _stage7_arbitration._candidate_update(counts)
+
+    assert update["candidate_id"] == "cand.krk.box_shrink.stage0_fallback_arbitration.v1"
+    assert update["status"] == "needs_weight_or_score_normalization_probe"
+    assert "visible_support_too_small_relative_to_provider_score_gap" in update["diagnosis"]
+    assert update["causal_status"] == "non_causal"
+    assert "do_not_add_broad_stage0_penalty" in update["hard_blocks"]
+
+
+def test_stage7_score_calibration_plan_blocks_growth_when_score_scale_dominates(tmp_path):
+    arbitration_path = tmp_path / "arbitration.json"
+    arbitration_path.write_text(
+        json.dumps(
+            {
+                "records": [
+                    {
+                        "state_id": "state.ff",
+                        "family_id": "family.ff",
+                        "normal_selected": {
+                            "skill_id": "krk.stage0_basin",
+                            "score": 33.0,
+                        },
+                        "provider_arbitration": [
+                            {
+                                "provider": "krk.drive_to_edge",
+                                "forced_known_outcome": "mate",
+                                "forced_known_plies": 7,
+                                "forced_best": {"move": "e4h4", "score": 0.2},
+                                "required_support_to_overtake_selected": 32.8,
+                                "adapter_support_amount": 0.05,
+                                "adapter_fired_under_forced_provider": True,
+                            }
+                        ],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    payload = _stage7_score_calibration.plan_stage7_score_calibration(
+        arbitration_path=arbitration_path,
+        max_additive_support=1.0,
+    )
+
+    assert payload["schema_version"] == "stage7_score_calibration_plan.v1"
+    assert payload["next_phase"] == "bounded_score_normalization_probe"
+    assert payload["growth_governor"]["growth_status"] == (
+        "growth_blocked_by_weight_vs_topology_diagnosis"
+    )
+    candidate = payload["calibration_candidates"][0]
+    assert candidate["status"] == "score_scale_normalization_probe_ready"
+    assert "provider_scores_not_comparable_across_skills" in candidate["diagnosis"]
+    assert "new_post_box_topology_before_calibration_probe" in payload["growth_governor"][
+        "blocked_actions"
+    ]
+
+
+def test_stage7_score_normalization_probe_marks_role_owned_arbitration_candidate(tmp_path):
+    arbitration_path = tmp_path / "arbitration.json"
+    arbitration_path.write_text(
+        json.dumps(
+            {
+                "records": [
+                    {
+                        "state_id": "state.ff",
+                        "family_id": "family.ff",
+                        "normal_selected": {
+                            "skill_id": "krk.stage0_basin",
+                            "move": "e4e8",
+                            "score": 33.0,
+                        },
+                        "provider_arbitration": [
+                            {
+                                "provider": "krk.drive_to_edge",
+                                "forced_known_outcome": "mate",
+                                "forced_known_plies": 7,
+                                "forced_best": {"move": "e4h4", "score": 0.2},
+                                "adapter_fired_under_forced_provider": True,
+                                "required_support_to_overtake_selected": 32.8,
+                                "adapter_support_amount": 0.05,
+                            }
+                        ],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    payload = _stage7_score_normalization.probe_stage7_score_normalization(
+        arbitration_path=arbitration_path
+    )
+
+    assert payload["schema_version"] == "stage7_score_normalization_probe.v1"
+    assert payload["adapter_role_mate_count"] == 1
+    assert payload["candidate_update"]["status"] == (
+        "role_owned_score_normalization_sandbox_candidate"
+    )
+    assert payload["records"][0]["adapter_role_changes_provider"] is True
+    assert "do_not_make_oracle_choice_causal" in payload["candidate_update"]["hard_blocks"]
 
 
 def _dummy_sensor():

@@ -1,0 +1,176 @@
+{
+  "schema_version": "stage7_score_normalization_probe.v1",
+  "causal_status": "non_causal",
+  "arbitration_source": "reports/structural_candidates/stage7_arbitration_diagnosis_all_families.json",
+  "record_count": 4,
+  "choice_counts": {
+    "raw:krk.stage0_basin:None": 4,
+    "adapter_role_priority:krk.drive_to_edge:mate": 1,
+    "forced_success_oracle:krk.drive_to_edge:mate": 1,
+    "adapter_role_priority:krk.stage0_basin:None": 3,
+    "forced_success_oracle:krk.stage0_basin:None": 2,
+    "forced_success_oracle:krk.fence_established:mate": 1
+  },
+  "adapter_role_mate_count": 1,
+  "oracle_mate_count": 2,
+  "candidate_update": {
+    "candidate_id": "cand.krk.box_shrink.score_normalized_role_arbitration.v1",
+    "candidate_type": "score_normalization_probe",
+    "status": "role_owned_score_normalization_sandbox_candidate",
+    "causal_status": "non_causal",
+    "promotion_status": "proposed",
+    "next_action": "sandbox_role_owned_arbitration_with_guardrails",
+    "hard_blocks": [
+      "do_not_promote_stage7",
+      "do_not_train_stage8",
+      "do_not_make_oracle_choice_causal",
+      "do_not_use_score_normalization_without_guardrails"
+    ]
+  },
+  "records": [
+    {
+      "state_id": "state.ff6652c8832c",
+      "family_id": "stage7.post_box.family_ff6652c8832c",
+      "post_reply_fen": "8/8/8/8/4R3/2k5/4K3/8 w - - 2 2",
+      "choices": {
+        "raw": {
+          "mode": "raw",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "e4e8",
+          "selected_score": 33.684823149275964,
+          "source": "current_runtime",
+          "known_outcome": null
+        },
+        "adapter_role_priority": {
+          "mode": "adapter_role_priority",
+          "selected_provider": "krk.drive_to_edge",
+          "selected_move": "e4h4",
+          "selected_score": 0.21362318191949053,
+          "source": "adapter_visible_role_priority",
+          "known_outcome": "mate",
+          "known_plies": 7,
+          "required_support_to_overtake_selected": 33.471200967356474,
+          "adapter_support_amount": 0.05,
+          "adapter_fired_under_forced_provider": true
+        },
+        "forced_success_oracle": {
+          "mode": "forced_success_oracle",
+          "selected_provider": "krk.drive_to_edge",
+          "selected_move": "e4h4",
+          "selected_score": 0.21362318191949053,
+          "source": "diagnostic_oracle_not_causal",
+          "known_outcome": "mate",
+          "known_plies": 7,
+          "required_support_to_overtake_selected": 33.471200967356474,
+          "adapter_support_amount": 0.05,
+          "adapter_fired_under_forced_provider": true
+        }
+      },
+      "adapter_role_changes_provider": true,
+      "oracle_changes_provider": true
+    },
+    {
+      "state_id": "state.0afbf11aa123",
+      "family_id": "stage7.post_box.family_0afbf11aa123",
+      "post_reply_fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
+      "choices": {
+        "raw": {
+          "mode": "raw",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "e3a3",
+          "selected_score": 43.07007514854148,
+          "source": "current_runtime",
+          "known_outcome": null
+        },
+        "adapter_role_priority": {
+          "mode": "raw",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "e3a3",
+          "selected_score": 43.07007514854148,
+          "source": "current_runtime",
+          "known_outcome": null
+        },
+        "forced_success_oracle": {
+          "mode": "raw",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "e3a3",
+          "selected_score": 43.07007514854148,
+          "source": "current_runtime",
+          "known_outcome": null
+        }
+      },
+      "adapter_role_changes_provider": false,
+      "oracle_changes_provider": false
+    },
+    {
+      "state_id": "state.38aed2f35911",
+      "family_id": "stage7.post_box.family_38aed2f35911",
+      "post_reply_fen": "8/8/8/R7/4k3/8/8/3K4 w - - 2 2",
+      "choices": {
+        "raw": {
+          "mode": "raw",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "d1e2",
+          "selected_score": 12.212486497306823,
+          "source": "current_runtime",
+          "known_outcome": null
+        },
+        "adapter_role_priority": {
+          "mode": "raw",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "d1e2",
+          "selected_score": 12.212486497306823,
+          "source": "current_runtime",
+          "known_outcome": null
+        },
+        "forced_success_oracle": {
+          "mode": "raw",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "d1e2",
+          "selected_score": 12.212486497306823,
+          "source": "current_runtime",
+          "known_outcome": null
+        }
+      },
+      "adapter_role_changes_provider": false,
+      "oracle_changes_provider": false
+    },
+    {
+      "state_id": "state.ac0b7ed500ea",
+      "family_id": "stage7.post_box.family_ac0b7ed500ea",
+      "post_reply_fen": "8/8/8/4k3/R7/8/3K4/8 w - - 2 2",
+      "choices": {
+        "raw": {
+          "mode": "raw",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "a4a8",
+          "selected_score": 15.11122607608512,
+          "source": "current_runtime",
+          "known_outcome": null
+        },
+        "adapter_role_priority": {
+          "mode": "raw",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "a4a8",
+          "selected_score": 15.11122607608512,
+          "source": "current_runtime",
+          "known_outcome": null
+        },
+        "forced_success_oracle": {
+          "mode": "forced_success_oracle",
+          "selected_provider": "krk.fence_established",
+          "selected_move": "d2e3",
+          "selected_score": 0.012477693292995296,
+          "source": "diagnostic_oracle_not_causal",
+          "known_outcome": "mate",
+          "known_plies": 13,
+          "required_support_to_overtake_selected": 15.098749382792125,
+          "adapter_support_amount": 0.0,
+          "adapter_fired_under_forced_provider": false
+        }
+      },
+      "adapter_role_changes_provider": false,
+      "oracle_changes_provider": true
+    }
+  ]
+}
