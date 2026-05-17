@@ -1,0 +1,217 @@
+{
+  "schema_version": "stage7_unresolved_legal_first_summary.v1",
+  "causal_status": "non_causal",
+  "inputs": [
+    "reports/structural_candidates/stage7_target_smoke_source_families_probe_h40.json",
+    "reports/structural_candidates/stage7_target_smoke_unresolved_h50.json"
+  ],
+  "state_count": 3,
+  "candidate_count": 3,
+  "candidate_status_counts": {
+    "sandbox_ready_if_terms_separate": 1,
+    "needs_longer_horizon_or_new_provider_probe": 2
+  },
+  "diagnosis_counts": {
+    "legal_first_action_selection_gap": 1,
+    "no_legal_first_conversion_under_current_graph": 2
+  },
+  "candidates": [
+    {
+      "schema_version": "structural_candidate.v1",
+      "candidate_id": "cand.krk.box_shrink.unresolved_family_1b912dd78357.move_shape_role_refinement.v1",
+      "candidate_type": "move_shape_role_refinement",
+      "source_monitor_script": "growth.monitor.stage7_unresolved_legal_first",
+      "source_terms": [
+        "selected_successor_miscalibrated",
+        "legal_first_action_selection_gap"
+      ],
+      "trigger_failure_classes": [
+        "selected_successor_miscalibrated",
+        "legal_first_action_selection_gap"
+      ],
+      "target_skill": "krk.box_shrink",
+      "parent_skill": "krk.drive_to_edge",
+      "state_id": "state.1b912dd78357",
+      "post_reply_fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+      "diagnosis": "legal_first_action_selection_gap",
+      "outcome_counts": {
+        "h40:draw": 3,
+        "h40:mate": 1,
+        "h40:max_plies": 18
+      },
+      "legal_first_mating_moves": [
+        {
+          "move": "f2e2",
+          "horizon": 40,
+          "plies": 19,
+          "move_shape_terms": [
+            "candidate_is_king_move"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_same_rank_side_after_move"
+          ],
+          "current_terms": [
+            "box_shrink_available",
+            "corner_net_pressure_available",
+            "edge_rook_transfer_recovery_available",
+            "edge_trap_shape_available",
+            "enemy_king_near_edge",
+            "enemy_king_restricted",
+            "fence_exists",
+            "fence_needs_repair",
+            "king_approach_after_fence_available",
+            "king_support_improvement_move_exists",
+            "post_fence_conversion_needed",
+            "repair_or_reestablish_cut_available",
+            "rook_has_safe_lateral_transfer",
+            "rook_safe",
+            "rook_transfer_after_fence_available",
+            "safe_check_available",
+            "safe_rook_edge_transfer_available",
+            "safe_rook_long_transfer_available",
+            "white_king_can_improve_support",
+            "wrong_tempo_detected"
+          ]
+        }
+      ],
+      "proposed_change": {
+        "kind": "visible_move_shape_role_candidate",
+        "target_skill": "krk.box_shrink",
+        "candidate_moves": [
+          {
+            "move": "f2e2",
+            "horizon": 40,
+            "plies": 19,
+            "move_shape_terms": [
+              "candidate_is_king_move"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "cut_preserved_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "fence_exists_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_and_rook_same_rank_side_after_move"
+            ],
+            "current_terms": [
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
+            ]
+          }
+        ],
+        "suggested_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_not_increased_after_move",
+          "candidate_is_king_move",
+          "cut_preserved_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_and_rook_same_rank_side_after_move"
+        ]
+      },
+      "promotion_status": "sandbox_ready_if_terms_separate",
+      "causal_status": "non_causal",
+      "credit": 0.0
+    },
+    {
+      "schema_version": "structural_candidate.v1",
+      "candidate_id": "cand.krk.box_shrink.unresolved_family_2942b4d1224f.continuation_capacity_probe.v1",
+      "candidate_type": "continuation_capacity_probe",
+      "source_monitor_script": "growth.monitor.stage7_unresolved_legal_first",
+      "source_terms": [
+        "selected_successor_miscalibrated",
+        "no_legal_first_conversion_under_current_graph"
+      ],
+      "trigger_failure_classes": [
+        "selected_successor_miscalibrated",
+        "no_legal_first_conversion_under_current_graph"
+      ],
+      "target_skill": "krk.box_shrink",
+      "parent_skill": "krk.drive_to_edge",
+      "state_id": "state.2942b4d1224f",
+      "post_reply_fen": "3k4/7R/K7/8/8/8/8/8 w - - 2 2",
+      "diagnosis": "no_legal_first_conversion_under_current_graph",
+      "outcome_counts": {
+        "h40:draw": 3,
+        "h40:max_plies": 16,
+        "h50:draw": 3,
+        "h50:max_plies": 16
+      },
+      "legal_first_mating_moves": [],
+      "proposed_change": {
+        "kind": "post_box_continuation_capacity_audit",
+        "max_tested_horizon": 50,
+        "next_probe": "forced_deeper_continuation_or_new_overlay_provider_only_if_higher_horizon_fails"
+      },
+      "promotion_status": "needs_longer_horizon_or_new_provider_probe",
+      "causal_status": "non_causal",
+      "credit": 0.0
+    },
+    {
+      "schema_version": "structural_candidate.v1",
+      "candidate_id": "cand.krk.box_shrink.unresolved_family_73530ec4170e.continuation_capacity_probe.v1",
+      "candidate_type": "continuation_capacity_probe",
+      "source_monitor_script": "growth.monitor.stage7_unresolved_legal_first",
+      "source_terms": [
+        "selected_successor_miscalibrated",
+        "no_legal_first_conversion_under_current_graph"
+      ],
+      "trigger_failure_classes": [
+        "selected_successor_miscalibrated",
+        "no_legal_first_conversion_under_current_graph"
+      ],
+      "target_skill": "krk.box_shrink",
+      "parent_skill": "krk.drive_to_edge",
+      "state_id": "state.73530ec4170e",
+      "post_reply_fen": "3k4/R7/8/8/8/8/4K3/8 w - - 2 2",
+      "diagnosis": "no_legal_first_conversion_under_current_graph",
+      "outcome_counts": {
+        "h40:draw": 3,
+        "h40:max_plies": 19,
+        "h50:draw": 3,
+        "h50:max_plies": 19
+      },
+      "legal_first_mating_moves": [],
+      "proposed_change": {
+        "kind": "post_box_continuation_capacity_audit",
+        "max_tested_horizon": 50,
+        "next_probe": "forced_deeper_continuation_or_new_overlay_provider_only_if_higher_horizon_fails"
+      },
+      "promotion_status": "needs_longer_horizon_or_new_provider_probe",
+      "causal_status": "non_causal",
+      "credit": 0.0
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "schema_version": "stage7_target_smoke_source_family_summary.v1",
+  "causal_status": "non_causal",
+  "inputs": {
+    "source_family_diagnosis": "reports/structural_candidates/stage7_target_smoke_source_family_diagnosis.json",
+    "h40_probe": "reports/structural_candidates/stage7_target_smoke_source_families_probe_h40.json",
+    "h50_probe": "reports/structural_candidates/stage7_target_smoke_unresolved_h50.json",
+    "h40_h50_summary": "reports/structural_candidates/stage7_target_smoke_source_families_legal_first_h40_h50_summary.json"
+  },
+  "summary": {
+    "state_count": 3,
+    "forced_existing_provider_mates": 0,
+    "legal_first_action_selection_gap": 1,
+    "no_legal_first_conversion_under_current_graph": 2
+  },
+  "families": [
+    {
+      "source_state_id": "state.7cab65617cd8",
+      "post_reply_state_id": "state.1b912dd78357",
+      "source_fen": "7k/8/8/8/R7/8/5K2/8 w - - 0 1",
+      "post_reply_fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+      "stage7_move": "a4a7",
+      "black_reply": "h8g8",
+      "diagnosis": "legal_first_action_provider_gap",
+      "legal_first_mating_move": {
+        "move": "f2e2",
+        "horizon": 40,
+        "plies": 19,
+        "provider_suggestion_present": false,
+        "visible_terms": [
+          "candidate_is_king_move",
+          "box_area_not_increased_after_move",
+          "cut_preserved_after_move",
+          "fence_exists_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_and_rook_same_rank_side_after_move"
+        ]
+      },
+      "candidate_update": {
+        "candidate_id": "cand.krk.box_shrink.target_smoke.7cab65617cd8.king_support_action_provider.v1",
+        "candidate_type": "new_narrow_action_provider_or_training_target",
+        "status": "proposed",
+        "causal_status": "non_causal",
+        "promotion_status": "proposed"
+      }
+    },
+    {
+      "source_state_id": "state.dcea518838ac",
+      "post_reply_state_id": "state.2942b4d1224f",
+      "source_fen": "4k3/R7/K7/8/8/8/8/8 w - - 0 1",
+      "post_reply_fen": "3k4/7R/K7/8/8/8/8/8 w - - 2 2",
+      "stage7_move": "a7h7",
+      "black_reply": "e8d8",
+      "diagnosis": "no_legal_first_conversion_under_current_graph_h40_h50",
+      "candidate_update": {
+        "candidate_id": "cand.krk.box_shrink.target_smoke.dcea518838ac.post_box_capacity_probe.v1",
+        "candidate_type": "deeper_continuation_or_provider_capacity_probe",
+        "status": "needs_longer_horizon_or_new_provider_probe",
+        "causal_status": "non_causal",
+        "promotion_status": "proposed"
+      }
+    },
+    {
+      "source_state_id": "state.7b116c49a009",
+      "post_reply_state_id": "state.73530ec4170e",
+      "source_fen": "4k3/8/8/8/R7/8/4K3/8 w - - 0 1",
+      "post_reply_fen": "3k4/R7/8/8/8/8/4K3/8 w - - 2 2",
+      "stage7_move": "a4a7",
+      "black_reply": "e8d8",
+      "diagnosis": "no_legal_first_conversion_under_current_graph_h40_h50",
+      "candidate_update": {
+        "candidate_id": "cand.krk.box_shrink.target_smoke.7b116c49a009.post_box_capacity_probe.v1",
+        "candidate_type": "deeper_continuation_or_provider_capacity_probe",
+        "status": "needs_longer_horizon_or_new_provider_probe",
+        "causal_status": "non_causal",
+        "promotion_status": "proposed"
+      }
+    }
+  ],
+  "next_action": [
+    "Do not add another broad support adapter.",
+    "For state.7cab65617cd8, sandbox a narrow visible king-support action provider or training target because the converting legal move is absent from suggestions.",
+    "For state.dcea518838ac and state.7b116c49a009, run deeper h80/h120 or tablebase-style capacity probes before declaring missing topology.",
+    "Keep Stage 7 quarantined."
+  ]
+}

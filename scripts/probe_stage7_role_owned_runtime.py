@@ -117,6 +117,12 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
             explicit_role_provider_support_enabled=args.enable_explicit_role_provider_support,
             role_owned_score_normalization_enabled=args.enable_role_owned_score_normalization,
             successor_role_scoped_move_shape_enabled=True,
+            stage7_king_tempo_enabled=args.enable_stage7_king_tempo,
+            stage7_king_tempo_score=args.stage7_king_tempo_score,
+            stage7_drive_repair_enabled=args.enable_stage7_drive_repair,
+            stage7_drive_repair_score=args.stage7_drive_repair_score,
+            stage7_post_king_tempo_enabled=args.enable_stage7_post_king_tempo,
+            stage7_post_king_tempo_score=args.stage7_post_king_tempo_score,
             early_stop_stable_suggestions=args.early_stop_stable_suggestions,
             enable_diagnostic_caches=True,
         )
@@ -153,6 +159,12 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
             "black_policy": args.black_policy,
             "explicit_role_provider_support_enabled": args.enable_explicit_role_provider_support,
             "role_owned_score_normalization_enabled": args.enable_role_owned_score_normalization,
+            "stage7_king_tempo_enabled": args.enable_stage7_king_tempo,
+            "stage7_king_tempo_score": args.stage7_king_tempo_score,
+            "stage7_drive_repair_enabled": args.enable_stage7_drive_repair,
+            "stage7_drive_repair_score": args.stage7_drive_repair_score,
+            "stage7_post_king_tempo_enabled": args.enable_stage7_post_king_tempo,
+            "stage7_post_king_tempo_score": args.stage7_post_king_tempo_score,
             "max_ticks": args.max_ticks,
             "suggestion_limit": args.suggestion_limit,
         },
@@ -177,6 +189,12 @@ def main() -> int:
     parser.add_argument("--trace-max-plies", type=int, default=12)
     parser.add_argument("--enable-explicit-role-provider-support", action="store_true")
     parser.add_argument("--enable-role-owned-score-normalization", action="store_true")
+    parser.add_argument("--enable-stage7-king-tempo", action="store_true")
+    parser.add_argument("--stage7-king-tempo-score", type=float, default=25.0)
+    parser.add_argument("--enable-stage7-drive-repair", action="store_true")
+    parser.add_argument("--stage7-drive-repair-score", type=float, default=28.0)
+    parser.add_argument("--enable-stage7-post-king-tempo", action="store_true")
+    parser.add_argument("--stage7-post-king-tempo-score", type=float, default=30.0)
     parser.add_argument("--json-output", type=Path, required=True)
     parser.add_argument("--no-json-stdout", action="store_true")
     args = parser.parse_args()

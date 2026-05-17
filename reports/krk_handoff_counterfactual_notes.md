@@ -5409,3 +5409,137 @@ Next candidate-driven work:
 2. Audit visible_contract_without_reward samples before adding causal support.
 3. Keep state.38aed2f35911 as the deeper continuation/capacity probe.
 ```
+
+## Stage 7 target-smoke dominant family split
+
+Artifacts:
+
+```text
+source-family extraction:
+  reports/structural_candidates/stage7_target_smoke_source_family_diagnosis.json
+h40 forced/legal-first probe:
+  reports/structural_candidates/stage7_target_smoke_source_families_probe_h40.json
+h50 unresolved escalation:
+  reports/structural_candidates/stage7_target_smoke_unresolved_h50.json
+h40/h50 summary:
+  reports/structural_candidates/stage7_target_smoke_source_families_legal_first_h40_h50_summary.json
+candidate summary:
+  reports/structural_candidates/stage7_target_smoke_source_family_summary.json
+```
+
+Result:
+
+```text
+state.7cab65617cd8 -> post-reply state.1b912dd78357:
+  source FEN:     7k/8/8/8/R7/8/5K2/8 w - - 0 1
+  post-reply FEN: 6k1/R7/8/8/8/8/5K2/8 w - - 2 2
+  legal-first f2e2 -> mate in 19
+  f2e2 is not present in current provider suggestions
+  diagnosis: legal_first_action_provider_gap
+
+state.dcea518838ac -> post-reply state.2942b4d1224f:
+  source FEN:     4k3/R7/K7/8/8/8/8/8 w - - 0 1
+  post-reply FEN: 3k4/7R/K7/8/8/8/8/8 w - - 2 2
+  no legal-first conversion at h40/h50
+  diagnosis: no_legal_first_conversion_under_current_graph_h40_h50
+
+state.7b116c49a009 -> post-reply state.73530ec4170e:
+  source FEN:     4k3/8/8/8/R7/8/4K3/8 w - - 0 1
+  post-reply FEN: 3k4/R7/8/8/8/8/4K3/8 w - - 2 2
+  no legal-first conversion at h40/h50
+  diagnosis: no_legal_first_conversion_under_current_graph_h40_h50
+```
+
+Interpretation:
+
+```text
+The dominant target-smoke failures are no longer one bucket:
+  one family needs a narrow king-support action provider or training target
+  because the converting move is absent from existing suggestions;
+
+  two families need deeper h80/h120 or tablebase-style capacity probes before
+  we call them missing topology.
+
+Do not add another broad adapter from this evidence.
+```
+
+## Stage 7 trace-role + king-tempo sandbox probe
+
+Artifacts:
+
+```text
+compiled king-tempo topology:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_0af_trace_role_plus_king_tempo_w25.json
+
+compiled full Stage 7 sandbox topology:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_trace_role_full_sandbox_w25_28_30.json
+
+target source-family probe:
+  reports/structural_candidates/stage7_source_families_king_tempo_probe_h40.json
+
+full sandbox target profile:
+  reports/structural_candidates/stage7_trace_role_full_sandbox_25_h40.json
+  reports/structural_candidates/stage7_trace_role_full_sandbox_25_h40_analysis.md
+
+family-split diagnosis:
+  reports/structural_candidates/stage7_full_sandbox_post_box_diagnosis.json
+  reports/structural_candidates/stage7_full_sandbox_failed_families_forced_h40_h50.json
+  reports/structural_candidates/stage7_full_sandbox_state6ed_legal_first_h50.json
+  reports/structural_candidates/stage7_full_sandbox_family_split_candidate_update.json
+```
+
+Result:
+
+```text
+Target source families, h40:
+  state.7cab65617cd8 -> krk.stage7_king_tempo f2e2 -> mate
+  state.dcea518838ac -> krk.stage7_king_tempo a6a5 -> max_plies
+  state.7b116c49a009 -> krk.stage7_king_tempo e2f2 -> max_plies
+
+Current 25-sample Stage 7 target, h40, full sandbox:
+  local improved: 25/25
+  local optimal:  21/25
+  conversion:     16/25 mate, 9/25 max_plies
+  shadows:        25
+
+Remaining failures:
+  krk.stage7_drive_repair selected 9 times
+  krk.stage7_drive_repair produced 9 max_plies
+```
+
+Family split:
+
+```text
+state.ff6652c8832c:
+  runtime selected stage7_drive_repair e2e3 -> max_plies
+  forced drive_to_edge e4h4 -> mate at h40/h50
+  diagnosis: existing provider can solve if family-specific role selects it
+
+state.38aed2f35911:
+  runtime selected stage7_drive_repair a5b5 -> max_plies
+  forced stage0_basin / edge_trap_close / edge_trap_enemy_between /
+  fence_established d1e2 -> mate at h40/h50
+  diagnosis: existing providers can solve under controlled ownership
+
+state.6ed746a91c76:
+  runtime selected stage7_drive_repair d2c1 -> max_plies
+  no existing forced provider converted at h50
+  no legal-first move converted at h50 under the current graph
+  diagnosis: capacity-or-horizon gap candidate
+```
+
+Interpretation:
+
+```text
+The current broad stage7_drive_repair provider is overbroad. It fires in all
+remaining full-sandbox failures and does not convert them.
+
+Do not promote Stage 7 from this profile.
+Do not run M3 warmup on the broad stage7_drive_repair path.
+Do not add another broad Stage 7 score bonus.
+
+Next repair should split the remaining problem:
+  1. family-specific visible roles/adapters for the two controlled-provider
+     success families;
+  2. deeper capacity/horizon or narrow overlay diagnosis for state.6ed746a91c76.
+```

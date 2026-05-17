@@ -1,0 +1,12 @@
+{
+  "schema_version": "stage7_target_smoke_dominant_failure_families.v1",
+  "causal_status": "non_causal_extraction",
+  "source": "reports/structural_candidates/stage7_0af_trace_role_target_smoke_25_h40.json",
+  "wanted_state_ids": [
+    "state.7b116c49a009",
+    "state.7cab65617cd8",
+    "state.dcea518838ac"
+  ],
+  "family_count": 0,
+  "families": []
+}
