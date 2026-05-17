@@ -1,0 +1,103 @@
+{
+  "schema_version": "stage7_069_drive_support_candidate_update.v1",
+  "causal_status": "non_causal_summary_of_sandbox_opt_in_probe",
+  "stage7_status": "local_valid_composition_quarantined",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_trace_role_king_post_no_drive_25_h40.json",
+    "reports/structural_candidates/stage7_king_post_no_drive_failed_families_forced_h40_h50.json",
+    "reports/structural_candidates/stage7_no_drive_unresolved_legal_first_h50.json",
+    "reports/structural_candidates/stage7_family_069_drive_king_support_proposal.json",
+    "reports/structural_candidates/stage7_069_drive_king_support_targeted_probe_h40.json",
+    "reports/structural_candidates/stage7_069_drive_support_target_25_h40.json"
+  ],
+  "target_delta": {
+    "before": {
+      "mate": 16,
+      "max_plies": 9
+    },
+    "after": {
+      "mate": 19,
+      "max_plies": 6
+    },
+    "before_shadow_candidate_count": 27,
+    "after_shadow_candidate_count": 21
+  },
+  "family_updates": [
+    {
+      "state_id": "state.069e81a609ed",
+      "post_reply_fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+      "runtime_selected_successor": "krk.stage0_basin",
+      "runtime_selected_move": "a4h4",
+      "controlled_mating_providers": [
+        {
+          "provider": "krk.drive_to_edge",
+          "horizon": 40,
+          "plies": 9,
+          "first_move": "e2e3"
+        },
+        {
+          "provider": "krk.drive_to_edge",
+          "horizon": 50,
+          "plies": 9,
+          "first_move": "e2e3"
+        }
+      ],
+      "legal_first_mating_moves_h50": [],
+      "status": "sandbox_validated_candidate",
+      "diagnosis": "narrow_visible_drive_support_fixes_family",
+      "next_action": "keep adapter opt-in; validate target/guardrails before promotion"
+    },
+    {
+      "state_id": "state.2cc0b3e1033a",
+      "post_reply_fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "runtime_selected_successor": "krk.stage0_basin",
+      "runtime_selected_move": "a3a6",
+      "controlled_mating_providers": [],
+      "legal_first_mating_moves_h50": [],
+      "status": "capacity_or_horizon_gap_candidate",
+      "diagnosis": "no_existing_provider_or_legal_first_conversion_at_h50",
+      "next_action": "deeper horizon/tablebase-style diagnosis or narrow post-box continuation overlay; do not broad-patch"
+    },
+    {
+      "state_id": "state.bace6f82b671",
+      "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "runtime_selected_successor": "krk.stage0_basin",
+      "runtime_selected_move": "a1a5",
+      "controlled_mating_providers": [],
+      "legal_first_mating_moves_h50": [],
+      "status": "capacity_or_horizon_gap_candidate",
+      "diagnosis": "no_existing_provider_or_legal_first_conversion_at_h50",
+      "next_action": "deeper horizon/tablebase-style diagnosis or narrow post-box continuation overlay; do not broad-patch"
+    }
+  ],
+  "candidate_updates": [
+    {
+      "candidate_id": "cand.krk.box_shrink.family_069e81a609ed.drive_to_edge_king_support.v1",
+      "status": "target_validated_sandbox_candidate",
+      "diagnosis": [
+        "targeted_family_mates",
+        "25_sample_target_improves_16_to_19_mates",
+        "shadow_candidates_reduce_27_to_21"
+      ],
+      "promotion_status": "sandboxed_not_promoted",
+      "causal_status": "sandbox_opt_in",
+      "hard_blocks": [
+        "do_not_enable_by_default",
+        "run_guardrails_before_promotion",
+        "do_not_train_stage8_from_this_alone"
+      ]
+    },
+    {
+      "candidate_id": "cand.krk.box_shrink.families_2cc_bace.unresolved_continuation.v1",
+      "status": "capacity_or_horizon_gap_candidate",
+      "diagnosis": [
+        "no_forced_provider_conversion_h50",
+        "no_legal_first_conversion_h50_under_current_graph"
+      ],
+      "promotion_status": "proposed",
+      "causal_status": "non_causal",
+      "next_action": "deeper oracle/horizon diagnosis or narrow post-box continuation overlay; avoid broad drive/stage0 patches"
+    }
+  ],
+  "recommendation": "Keep the 069 drive-support adapter as a sandbox candidate. Do not promote Stage 7 yet; the remaining two families need capacity/horizon diagnosis or a narrow continuation overlay."
+}

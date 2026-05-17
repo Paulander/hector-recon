@@ -5543,3 +5543,98 @@ Next repair should split the remaining problem:
      success families;
   2. deeper capacity/horizon or narrow overlay diagnosis for state.6ed746a91c76.
 ```
+
+## Stage 7 no-drive family refinement
+
+I tested a narrower profile that removes the broad `stage7_drive_repair`
+provider while keeping the existing trace-role/family adapters and
+king-tempo/post-king-tempo providers:
+
+```text
+topology:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_trace_role_king_post_no_drive_w25_30.json
+
+target artifact:
+  reports/structural_candidates/stage7_trace_role_king_post_no_drive_25_h40.json
+
+result:
+  16/25 mate
+  9/25 max_plies
+  27 shadow candidates
+```
+
+The failures all moved back to `stage0_basin` fallback. A bounded
+forced-provider probe split those failures:
+
+```text
+state.069e81a609ed:
+  FEN: 8/8/8/8/7R/2k5/4K3/8 w - - 2 2
+  forced drive_to_edge e2e3 -> mate at h40/h50
+
+state.2cc0b3e1033a:
+  FEN: 8/8/R7/8/2k5/8/8/3K4 w - - 2 2
+  no existing forced provider converted at h50
+  no legal-first move converted at h50 under the current graph
+
+state.bace6f82b671:
+  FEN: 8/8/8/R7/4k3/8/3K4/8 w - - 2 2
+  no existing forced provider converted at h50
+  no legal-first move converted at h50 under the current graph
+```
+
+I added a narrow, sandbox-only support adapter for the 069 family:
+
+```text
+proposal:
+  reports/structural_candidates/stage7_family_069_drive_king_support_proposal.json
+
+topology:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_trace_role_king_post_no_drive_069_support_w005.json
+
+targeted probe:
+  reports/structural_candidates/stage7_069_drive_king_support_targeted_probe_h40.json
+
+target validation:
+  reports/structural_candidates/stage7_069_drive_support_target_25_h40.json
+
+candidate update:
+  reports/structural_candidates/stage7_069_drive_support_candidate_update.json
+```
+
+Targeted result:
+
+```text
+state.069e81a609ed:
+  selected krk.drive_to_edge / e2e3
+  role-owned score normalization: true
+  adapter direct_request: false
+  mate in 9
+```
+
+25-sample target result:
+
+```text
+before:
+  16/25 mate
+  27 shadow candidates
+
+after 069 adapter:
+  19/25 mate
+  21 shadow candidates
+```
+
+Interpretation:
+
+```text
+The 069 adapter is a validated sandbox candidate for its family and improves
+the target slice. It is still opt-in and not promoted.
+
+The two remaining no-drive families are stronger capacity-or-horizon
+candidates: neither existing forced providers nor legal-first continuation
+converted at h50 under the current graph.
+
+Do not reintroduce the broad stage7_drive_repair provider.
+Do not promote Stage 7 yet.
+Next: either a deeper non-causal oracle/horizon audit for state.2cc/state.bace
+or a narrow post-box continuation overlay candidate for exactly those families.
+```
