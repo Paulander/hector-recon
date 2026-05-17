@@ -4842,3 +4842,179 @@ family only.
 It is not enough for the fence family because no visible support exists there.
 Stage 7 remains local_valid_composition_quarantined.
 ```
+
+## Stage 7 family-split continuation diagnosis
+
+Fence-family support term separation:
+
+```text
+artifact:
+  reports/structural_candidates/stage7_fence_support_term_separation.json
+target:
+  state.ac0b7ed500ea
+  forced provider krk.fence_established -> mate, first move d2e3
+result:
+  separable after adding post-move geometry vocabulary
+key separating term:
+  white_king_and_rook_same_rank_side_after_move
+example separating combo:
+  move_shape_terms:king_moves_toward_enemy
+  post_move_terms:white_king_and_rook_same_rank_side_after_move
+candidate status:
+  separable_with_existing_visible_terms
+hard block:
+  do_not_promote_stage7
+```
+
+Interpretation:
+
+```text
+The fence-convertible family now has a visible non-hash separator: a king move
+toward the enemy that leaves the white king and rook on the same rank-side of
+the black king. The previous false positive state.38aed2f35911 has split
+rank-side geometry instead.
+
+This is still non-causal. The next safe step is a sandbox-only, move-shape
+gated support adapter for this fence-family candidate, followed by default-off
+equivalence and Stage 7 target/guardrail validation.
+```
+
+Unresolved-family legal-first action sweep:
+
+```text
+artifact:
+  reports/structural_candidates/stage7_post_box_unresolved_legal_first_h40_h80_action_probe.json
+states:
+  state.0afbf11aa123
+  state.38aed2f35911
+tested:
+  action-filtered legal first moves at horizons 40 and 80
+filters:
+  checking_line_created
+  rook_to_checking_line
+  box_area_decreases_after_move
+  king_moves_toward_enemy
+  king_moves_toward_rook_support
+result:
+  states_with_any_legal_first_mate: 0
+  h40: 4 max_plies, 2 draw
+  h80: 4 max_plies, 2 draw
+diagnosis:
+  no_tested_legal_first_conversion_at_horizon
+candidate status:
+  needs_more_terms_or_capacity_probe
+```
+
+Interpretation:
+
+```text
+The two unresolved families should not be called solved by existing providers.
+The action-filtered legal-first subset did not convert by h80, and some moves
+draw immediately. This supports keeping Stage 7 quarantined and blocking broad
+post-box-shrink adapters.
+
+Next safe options:
+  add missing geometric/durability terms and rerun separation,
+  or sandbox a narrow post-box continuation capacity probe.
+
+Do not:
+  promote Stage 7,
+  train Stage 8,
+  run M3 on the broad drive adapter,
+  compile a fence adapter from the current non-separating terms.
+```
+
+## Stage 7 fence-family sandbox adapter
+
+Compiled a move-shape-gated fence-family support adapter after adding the
+same-rank-side post-move term.
+
+Important executor-safety finding:
+
+```text
+--augment-role-provider-ids is not default-off safe for targeted forced
+continuation. It changes role/provider license arbitration even when explicit
+support is disabled.
+```
+
+Fix:
+
+```text
+create_krk_role_provider_support_adapter can now read the confirmed role
+payload from krk_successor_role_affordances when the target provider is not in
+the role's provider_skill_ids.
+
+This lets sandbox adapters support a provider without mutating the visible
+role's provider list.
+```
+
+Corrected sandbox:
+
+```text
+topology:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_family_ff_drive_ac_fence_move_shape_support_noaugment_w005.json
+proposal:
+  reports/structural_candidates/stage7_family_ac_fence_support_proposal.json
+default-off:
+  reports/structural_candidates/stage7_family_ac_fence_noaugment_default_off_equiv_5_h40.json
+targeted forced replay:
+  reports/structural_candidates/stage7_family_ac_fence_noaugment_targeted_probe.json
+adapter-on smoke:
+  reports/structural_candidates/stage7_family_ac_fence_noaugment_adapter_10_h80.json
+outcome:
+  reports/structural_candidates/stage7_family_ac_fence_noaugment_adapter_outcome.json
+```
+
+Default-off equivalence:
+
+```text
+equivalent: true
+adapter_fire_count: 0
+```
+
+Targeted forced replay:
+
+```text
+state: state.ac0b7ed500ea
+provider: krk.fence_established
+first move: d2e3
+forced playout: mate in 13
+adapter:
+  enabled: true
+  direct_request: false
+  move_shape_gated: true
+  matched_move_shape_terms:
+    king_moves_toward_enemy
+  matched_post_move_terms:
+    box_area_not_increased_after_move
+    rook_safe_after_move
+    white_king_and_rook_same_rank_side_after_move
+```
+
+Adapter-on random smoke:
+
+```text
+10 samples, h80:
+  5 mate / 5 max_plies
+  adapter_fire_count: 0
+  role_owned_score_normalization_selected_count: 0
+```
+
+Interpretation:
+
+```text
+The corrected adapter is wired and traceable for the target family, but the
+small random smoke did not encounter the shape. It is a sandbox candidate, not
+a promoted repair. Next validation should be targeted or paired against known
+post-box family states before any M3 warmup or broader Stage 7 promotion.
+
+Candidate status:
+  wired_but_arbitration_dominated
+  adapter_did_not_fire_under_normal_routing
+  adapter_fires_under_forced_provider
+  forced_provider_converts
+
+This mirrors the drive-family result: visible support can identify the right
+provider/move under forced ownership, but normal routing is still dominated by
+the existing fallback/provider score scale.
+```

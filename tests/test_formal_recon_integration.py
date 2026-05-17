@@ -184,6 +184,18 @@ assert _stage7_score_normalization.__spec__ is not None
 assert _stage7_score_normalization.__spec__.loader is not None
 _stage7_score_normalization.__spec__.loader.exec_module(_stage7_score_normalization)
 
+_stage7_support_terms = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "diagnose_stage7_support_term_separation",
+        Path(__file__).resolve().parents[1]
+        / "scripts"
+        / "diagnose_stage7_support_term_separation.py",
+    )
+)
+assert _stage7_support_terms.__spec__ is not None
+assert _stage7_support_terms.__spec__.loader is not None
+_stage7_support_terms.__spec__.loader.exec_module(_stage7_support_terms)
+
 _landmark_progress = importlib.util.module_from_spec(
     importlib.util.spec_from_file_location(
         "test_krk_landmark_progress",
@@ -2386,6 +2398,107 @@ def test_role_owned_score_normalization_only_accepts_visible_move_shape_adapters
     )
 
     assert candidates == [move_shape_adapter]
+
+
+def test_stage7_support_term_separation_blocks_inseparable_fence_family(tmp_path):
+    diagnosis_path = tmp_path / "families.json"
+    diagnosis_path.write_text(
+        json.dumps(
+            {
+                "families": [
+                    {
+                        "state_id": "state.good",
+                        "forced_provider_results": {
+                            "krk.fence_established": {
+                                "result": "mate",
+                                "first_move": "d2e3",
+                                "first_move_probe": {
+                                    "current_terms": ["shared_current"],
+                                    "move_shape_terms": ["candidate_is_king_move"],
+                                    "post_move_terms": ["shared_post"],
+                                },
+                            }
+                        },
+                    },
+                    {
+                        "state_id": "state.bad",
+                        "forced_provider_results": {
+                            "krk.fence_established": {
+                                "result": "max_plies",
+                                "first_move": "d1e2",
+                                "first_move_probe": {
+                                    "current_terms": ["shared_current"],
+                                    "move_shape_terms": ["candidate_is_king_move"],
+                                    "post_move_terms": ["shared_post"],
+                                },
+                            }
+                        },
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    payload = _stage7_support_terms.diagnose_support_term_separation(
+        family_diagnosis_path=diagnosis_path,
+        target_state_id="state.good",
+        provider="krk.fence_established",
+    )
+
+    assert payload["schema_version"] == "stage7_support_term_separation.v1"
+    assert payload["candidate_update"]["status"] == "not_separable_with_existing_visible_terms"
+    assert "king_opposition_geometry" in payload["candidate_update"][
+        "suggested_missing_term_families"
+    ]
+    assert "do_not_compile_adapter_without_separating_visible_terms" in payload[
+        "candidate_update"
+    ]["hard_blocks"]
+
+
+def test_stage7_support_term_separation_uses_recomputed_geometry_terms(tmp_path):
+    diagnosis_path = tmp_path / "families.json"
+    diagnosis_path.write_text(
+        json.dumps(
+            {
+                "families": [
+                    {
+                        "state_id": "state.ac0b7ed500ea",
+                        "post_reply_fen": "8/8/8/4k3/R7/8/3K4/8 w - - 2 2",
+                        "forced_provider_results": {
+                            "krk.fence_established": {
+                                "result": "mate",
+                                "first_move": "d2e3",
+                            }
+                        },
+                    },
+                    {
+                        "state_id": "state.38aed2f35911",
+                        "post_reply_fen": "8/8/8/R7/4k3/8/8/3K4 w - - 2 2",
+                        "forced_provider_results": {
+                            "krk.fence_established": {
+                                "result": "max_plies",
+                                "first_move": "d1e2",
+                            }
+                        },
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    payload = _stage7_support_terms.diagnose_support_term_separation(
+        family_diagnosis_path=diagnosis_path,
+        target_state_id="state.ac0b7ed500ea",
+        provider="krk.fence_established",
+    )
+
+    assert payload["candidate_update"]["status"] == "separable_with_existing_visible_terms"
+    assert "white_king_and_rook_same_rank_side_after_move" in payload[
+        "target_terms_by_kind"
+    ]["post_move_terms"]
+    assert payload["false_positive_families_by_kind"]["post_move_terms"] == []
 
 
 def _dummy_sensor():

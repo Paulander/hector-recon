@@ -395,6 +395,10 @@ def create_krk_role_provider_support_adapter(node_id=None):
             if isinstance(provider_payload, dict):
                 role_payload = provider_payload.get(role_id, {})
         if not isinstance(role_payload, dict) or not role_payload.get("contract_met"):
+            role_affordances = blackboard.get("krk_successor_role_affordances", {})
+            if isinstance(role_affordances, dict):
+                role_payload = role_affordances.get(role_id, {})
+        if not isinstance(role_payload, dict) or not role_payload.get("contract_met"):
             return False, True
         payload = _record_explicit_support_from_adapter(
             adapter_node=node,
@@ -1945,7 +1949,17 @@ def _krk_geometry_metrics(board: chess.Board) -> Dict[str, int] | None:
         "enemy_corner_distance": int(corner_distance),
         "white_king_enemy_distance": int(max(abs(wk_file - bk_file), abs(wk_rank - bk_rank))),
         "white_king_rook_distance": int(max(abs(wk_file - wr_file), abs(wk_rank - wr_rank))),
+        "black_king_escape_count": int(_black_king_escape_count(board)),
     }
+
+
+def _black_king_escape_count(board: chess.Board) -> int:
+    bk_sq = next(iter(board.pieces(chess.KING, chess.BLACK)), None)
+    if bk_sq is None:
+        return 0
+    reply_board = board.copy(stack=False)
+    reply_board.turn = chess.BLACK
+    return sum(1 for move in reply_board.legal_moves if move.from_square == bk_sq)
 
 
 def _candidate_move_shape_terms(board: chess.Board, move: chess.Move) -> list[str]:
@@ -2006,6 +2020,8 @@ def _post_move_terms(
     move: chess.Move,
 ) -> list[str]:
     terms: list[str] = []
+    post = board.copy(stack=False)
+    post.push(move)
     if _rook_safe_after_white_move(board, move):
         terms.append("rook_safe_after_move")
     if post_terms.get("fence_exists"):
@@ -2029,9 +2045,46 @@ def _post_move_terms(
             terms.append("white_king_distance_to_enemy_decreases")
         if post_metrics["white_king_rook_distance"] < current_metrics["white_king_rook_distance"]:
             terms.append("white_king_distance_to_rook_decreases")
+        if post_metrics.get("black_king_escape_count", 0) <= current_metrics.get(
+            "black_king_escape_count", 0
+        ):
+            terms.append("black_king_escape_count_not_increased_after_move")
+        if post_metrics.get("black_king_escape_count", 0) < current_metrics.get(
+            "black_king_escape_count", 0
+        ):
+            terms.append("black_king_escape_count_decreases_after_move")
+    relation_terms = _white_piece_enemy_side_terms(post)
+    terms.extend(relation_terms)
     if board.gives_check(move):
         terms.append("checking_line_created")
     return sorted(set(terms))
+
+
+def _white_piece_enemy_side_terms(board: chess.Board) -> list[str]:
+    wk_sq = next(iter(board.pieces(chess.KING, chess.WHITE)), None)
+    bk_sq = next(iter(board.pieces(chess.KING, chess.BLACK)), None)
+    wr_sq = next(iter(board.pieces(chess.ROOK, chess.WHITE)), None)
+    if wk_sq is None or bk_sq is None or wr_sq is None:
+        return []
+    wk_file, wk_rank = chess.square_file(wk_sq), chess.square_rank(wk_sq)
+    bk_file, bk_rank = chess.square_file(bk_sq), chess.square_rank(bk_sq)
+    wr_file, wr_rank = chess.square_file(wr_sq), chess.square_rank(wr_sq)
+    terms: list[str] = []
+    rank_product = (wk_rank - bk_rank) * (wr_rank - bk_rank)
+    file_product = (wk_file - bk_file) * (wr_file - bk_file)
+    if rank_product > 0:
+        terms.append("white_king_and_rook_same_rank_side_after_move")
+    elif rank_product < 0:
+        terms.append("white_king_and_rook_split_rank_side_after_move")
+    if file_product > 0:
+        terms.append("white_king_and_rook_same_file_side_after_move")
+    elif file_product < 0:
+        terms.append("white_king_and_rook_split_file_side_after_move")
+    if wk_file == bk_file and abs(wk_rank - bk_rank) == 2:
+        terms.append("white_king_file_opposition_distance_two_after_move")
+    if wk_rank == bk_rank and abs(wk_file - bk_file) == 2:
+        terms.append("white_king_rank_opposition_distance_two_after_move")
+    return terms
 
 
 def _worst_reply_terms(

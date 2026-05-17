@@ -1,0 +1,215 @@
+{
+  "schema_version": "stage7_support_term_separation.v1",
+  "causal_status": "non_causal",
+  "family_diagnosis_source": "reports/structural_candidates/stage7_post_box_family_diagnosis.json",
+  "target_state_id": "state.ac0b7ed500ea",
+  "provider": "krk.fence_established",
+  "provider_result": "mate",
+  "target_first_move": "d2e3",
+  "target_terms_by_kind": {
+    "current_terms": [
+      "black_king_escape_available",
+      "box_area_large",
+      "box_shrink_drive_repair_available",
+      "drive_to_edge_affordance_after_box_shrink",
+      "enemy_king_edge_distance_bin",
+      "enemy_king_not_at_edge",
+      "fence_or_cut_not_preserved",
+      "king_support_improvement_move_exists",
+      "repair_or_reestablish_cut_available",
+      "rook_has_safe_lateral_transfer",
+      "rook_safe",
+      "safe_check_available",
+      "safe_rook_edge_transfer_available",
+      "safe_rook_long_transfer_available",
+      "white_king_can_improve_support"
+    ],
+    "move_shape_terms": [
+      "candidate_is_king_move",
+      "king_moves_toward_enemy"
+    ],
+    "post_move_terms": [
+      "black_king_escape_count_not_increased_after_move",
+      "box_area_not_increased_after_move",
+      "enemy_corner_distance_not_increased_after_move",
+      "enemy_edge_distance_not_increased_after_move",
+      "rook_safe_after_move",
+      "white_king_and_rook_same_rank_side_after_move",
+      "white_king_distance_to_enemy_decreases",
+      "white_king_file_opposition_distance_two_after_move"
+    ],
+    "worst_reply_terms": []
+  },
+  "false_positive_families_by_kind": {
+    "current_terms": [
+      "state.38aed2f35911"
+    ],
+    "move_shape_terms": [
+      "state.38aed2f35911"
+    ],
+    "post_move_terms": []
+  },
+  "separating_combos": [
+    {
+      "term_count": 2,
+      "terms_by_kind": {
+        "current_terms": [
+          "box_area_large"
+        ],
+        "post_move_terms": [
+          "white_king_and_rook_same_rank_side_after_move"
+        ]
+      },
+      "combo": [
+        "current_terms:box_area_large",
+        "post_move_terms:white_king_and_rook_same_rank_side_after_move"
+      ]
+    },
+    {
+      "term_count": 2,
+      "terms_by_kind": {
+        "current_terms": [
+          "box_shrink_drive_repair_available"
+        ],
+        "post_move_terms": [
+          "white_king_and_rook_same_rank_side_after_move"
+        ]
+      },
+      "combo": [
+        "current_terms:box_shrink_drive_repair_available",
+        "post_move_terms:white_king_and_rook_same_rank_side_after_move"
+      ]
+    },
+    {
+      "term_count": 2,
+      "terms_by_kind": {
+        "current_terms": [
+          "drive_to_edge_affordance_after_box_shrink"
+        ],
+        "post_move_terms": [
+          "white_king_and_rook_same_rank_side_after_move"
+        ]
+      },
+      "combo": [
+        "current_terms:drive_to_edge_affordance_after_box_shrink",
+        "post_move_terms:white_king_and_rook_same_rank_side_after_move"
+      ]
+    },
+    {
+      "term_count": 2,
+      "terms_by_kind": {
+        "current_terms": [
+          "enemy_king_edge_distance_bin"
+        ],
+        "post_move_terms": [
+          "white_king_and_rook_same_rank_side_after_move"
+        ]
+      },
+      "combo": [
+        "current_terms:enemy_king_edge_distance_bin",
+        "post_move_terms:white_king_and_rook_same_rank_side_after_move"
+      ]
+    },
+    {
+      "term_count": 2,
+      "terms_by_kind": {
+        "current_terms": [
+          "king_support_improvement_move_exists"
+        ],
+        "post_move_terms": [
+          "white_king_and_rook_same_rank_side_after_move"
+        ]
+      },
+      "combo": [
+        "current_terms:king_support_improvement_move_exists",
+        "post_move_terms:white_king_and_rook_same_rank_side_after_move"
+      ]
+    },
+    {
+      "term_count": 2,
+      "terms_by_kind": {
+        "current_terms": [
+          "white_king_can_improve_support"
+        ],
+        "post_move_terms": [
+          "white_king_and_rook_same_rank_side_after_move"
+        ]
+      },
+      "combo": [
+        "current_terms:white_king_can_improve_support",
+        "post_move_terms:white_king_and_rook_same_rank_side_after_move"
+      ]
+    },
+    {
+      "term_count": 2,
+      "terms_by_kind": {
+        "move_shape_terms": [
+          "candidate_is_king_move"
+        ],
+        "post_move_terms": [
+          "white_king_and_rook_same_rank_side_after_move"
+        ]
+      },
+      "combo": [
+        "move_shape_terms:candidate_is_king_move",
+        "post_move_terms:white_king_and_rook_same_rank_side_after_move"
+      ]
+    },
+    {
+      "term_count": 2,
+      "terms_by_kind": {
+        "move_shape_terms": [
+          "king_moves_toward_enemy"
+        ],
+        "post_move_terms": [
+          "white_king_and_rook_same_rank_side_after_move"
+        ]
+      },
+      "combo": [
+        "move_shape_terms:king_moves_toward_enemy",
+        "post_move_terms:white_king_and_rook_same_rank_side_after_move"
+      ]
+    },
+    {
+      "term_count": 2,
+      "terms_by_kind": {
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "white_king_and_rook_same_rank_side_after_move"
+        ]
+      },
+      "combo": [
+        "post_move_terms:black_king_escape_count_not_increased_after_move",
+        "post_move_terms:white_king_and_rook_same_rank_side_after_move"
+      ]
+    },
+    {
+      "term_count": 2,
+      "terms_by_kind": {
+        "post_move_terms": [
+          "box_area_not_increased_after_move",
+          "white_king_and_rook_same_rank_side_after_move"
+        ]
+      },
+      "combo": [
+        "post_move_terms:box_area_not_increased_after_move",
+        "post_move_terms:white_king_and_rook_same_rank_side_after_move"
+      ]
+    }
+  ],
+  "candidate_update": {
+    "candidate_id": "cand.krk.box_shrink.ac0b7ed500ea.fence_established.visible_support_terms.v1",
+    "candidate_type": "visible_support_term_separation",
+    "target_provider": "krk.fence_established",
+    "status": "separable_with_existing_visible_terms",
+    "causal_status": "non_causal",
+    "promotion_status": "proposed",
+    "next_action": "compile_move_shape_gated_support_adapter_in_sandbox",
+    "suggested_missing_term_families": [],
+    "hard_blocks": [
+      "do_not_compile_adapter_without_separating_visible_terms",
+      "do_not_promote_stage7",
+      "do_not_train_stage8"
+    ]
+  }
+}

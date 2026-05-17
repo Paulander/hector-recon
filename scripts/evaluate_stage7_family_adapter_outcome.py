@@ -82,8 +82,11 @@ def evaluate_family_adapter_outcome(
         ]
         next_action = "quarantine_candidate_and_collect_more_terms"
 
+    proposal_items = proposals.get("proposals")
+    if not isinstance(proposal_items, list):
+        proposal_items = [proposals] if proposals.get("proposed_support_relations") else []
     updates = []
-    for proposal in proposals.get("proposals") or []:
+    for proposal in proposal_items:
         if not isinstance(proposal, dict):
             continue
         if proposal.get("proposal_status") != "sandbox_ready":

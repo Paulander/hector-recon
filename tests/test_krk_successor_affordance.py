@@ -106,6 +106,47 @@ def test_role_provider_support_adapter_records_explicit_support_only_when_enable
     assert support["source_terms"] == ["box_shrink_drive_repair_available"]
 
 
+def test_role_provider_support_adapter_can_use_role_payload_without_provider_augmentation():
+    env = {
+        "blackboard": {
+            "explicit_role_provider_support_enabled": True,
+            "krk_successor_provider_licenses": {
+                "krk.drive_to_edge": {
+                    "krk.box_shrink_to_drive_repair": {
+                        "contract_met": True,
+                        "source_terms": ["box_shrink_drive_repair_available"],
+                    },
+                },
+            },
+            "krk_successor_role_affordances": {
+                "krk.box_shrink_to_drive_repair": {
+                    "contract_met": True,
+                    "source_terms": ["box_shrink_drive_repair_available"],
+                }
+            },
+        },
+    }
+    adapter = create_krk_role_provider_support_adapter(
+        "script.krk.support.box_shrink_to_drive_repair_to_fence"
+    )
+    adapter.meta.update({
+        "role_id": "krk.box_shrink_to_drive_repair",
+        "provider_skill_id": "krk.fence_established",
+        "support_weight": 0.25,
+    })
+
+    success, done = adapter.predicate(adapter, env)
+
+    assert success is True
+    assert done is True
+    assert "krk.fence_established" not in env["blackboard"]["krk_successor_provider_licenses"]
+    support = env["blackboard"]["krk_explicit_role_provider_supports"]["krk.fence_established"][
+        "krk.box_shrink_to_drive_repair"
+    ]
+    assert support["score"] == 0.25
+    assert support["direct_request"] is False
+
+
 def test_role_provider_support_adapter_is_inert_when_disabled():
     env = {
         "blackboard": {

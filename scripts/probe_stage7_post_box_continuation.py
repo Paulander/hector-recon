@@ -290,11 +290,18 @@ def legal_first_move_probe(
     enable_diagnostic_caches: bool,
     require_any_terms: tuple[str, ...],
     require_all_terms: tuple[str, ...],
+    exclude_terms: tuple[str, ...],
+    priority_terms: tuple[str, ...],
     max_moves: int,
+    stop_after_mates: int,
     audit_worst_reply: bool,
+    steps_output: Path | None = None,
+    state_id: str = "",
 ) -> list[dict[str, Any]]:
     board = chess.Board(post_reply_fen)
-    candidates: list[tuple[chess.Move, dict[str, Any]]] = []
+    candidates: list[tuple[int, chess.Move, dict[str, Any]]] = []
+    priority = set(priority_terms)
+    excluded = set(exclude_terms)
     for move in sorted(board.legal_moves, key=lambda item: item.uci()):
         audit = krk_move_shape_audit(board, move, include_worst_reply=audit_worst_reply)
         terms = _audit_term_set(audit)
@@ -302,12 +309,18 @@ def legal_first_move_probe(
             continue
         if require_all_terms and not set(require_all_terms).issubset(terms):
             continue
-        candidates.append((move, audit))
+        if excluded and terms.intersection(excluded):
+            continue
+        priority_score = len(terms.intersection(priority)) if priority else 0
+        candidates.append((priority_score, move, audit))
+    if priority:
+        candidates.sort(key=lambda item: (-item[0], item[1].uci()))
     if max_moves > 0:
         candidates = candidates[:max_moves]
 
     results: list[dict[str, Any]] = []
-    for move, audit in candidates:
+    mate_count = 0
+    for priority_score, move, audit in candidates:
         b = board.copy(stack=False)
         b.push(move)
         if b.is_checkmate():
@@ -316,6 +329,7 @@ def legal_first_move_probe(
                 "horizon": horizon,
                 "result": "mate",
                 "plies": 1,
+                "legal_first_priority_score": priority_score,
                 "move_shape_audit": audit,
             }
         else:
@@ -344,12 +358,28 @@ def legal_first_move_probe(
                 "horizon": horizon,
                 "result": continuation.get("result"),
                 "plies": int(continuation.get("plies", 0) or 0) + 1,
+                "legal_first_priority_score": priority_score,
                 "first_successor": continuation.get("first_successor"),
                 "engine_decision_count": continuation.get("engine_decision_count"),
                 "engine_ticks_total": continuation.get("engine_ticks_total"),
                 "move_shape_audit": audit,
             }
         results.append(payload)
+        if steps_output is not None:
+            _append_jsonl(steps_output, {
+                "probe_kind": "legal_first_move",
+                "state_id": state_id,
+                **payload,
+            })
+        print(
+            f"      legal-first {state_id or '?'} {move.uci()} h{horizon}: "
+            f"{payload.get('result')} plies={payload.get('plies')}",
+            flush=True,
+        )
+        if payload.get("result") == "mate":
+            mate_count += 1
+            if stop_after_mates > 0 and mate_count >= stop_after_mates:
+                break
     return results
 
 
@@ -390,12 +420,17 @@ def summarize_probe(records: list[dict[str, Any]]) -> dict[str, Any]:
                 legal_first_mate_by_move[move] += 1
                 state_with_any_legal_first_mate.add(state_id)
     diagnosis = "needs_forced_playout_probe"
+    if legal_first_counts:
+        if state_with_any_legal_first_mate:
+            diagnosis = "legal_first_action_selection_gap"
+        else:
+            diagnosis = "no_tested_legal_first_conversion_at_horizon"
     if playout_counts:
         if state_with_any_mate:
             diagnosis = "topology_present_untrained_or_miscalibrated"
         else:
             diagnosis = "provider_capacity_missing_or_horizon_limited"
-    elif state_with_any_available:
+    elif state_with_any_available and not legal_first_counts:
         diagnosis = "existing_provider_first_moves_available_playout_pending"
     return {
         "state_count": len(records),
@@ -511,17 +546,15 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
                     enable_diagnostic_caches=args.enable_diagnostic_caches,
                     require_any_terms=_parse_csv(args.legal_first_require_any_terms),
                     require_all_terms=_parse_csv(args.legal_first_require_all_terms),
+                    exclude_terms=_parse_csv(args.legal_first_exclude_terms),
+                    priority_terms=_parse_csv(args.legal_first_priority_terms),
                     max_moves=args.legal_first_max_moves,
+                    stop_after_mates=args.legal_first_stop_after_mates,
                     audit_worst_reply=not args.legal_first_audit_no_worst_reply,
+                    steps_output=args.steps_output,
+                    state_id=str(state["state_id"]),
                 )
                 record["legal_first_probes"].extend(legal_results)
-                if args.steps_output:
-                    for legal_probe in legal_results:
-                        _append_jsonl(args.steps_output, {
-                            "probe_kind": "legal_first_move",
-                            "state_id": state["state_id"],
-                            **legal_probe,
-                        })
         records.append(record)
     summary = summarize_probe(records)
     return {
@@ -546,7 +579,10 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
             "run_legal_first_sweep": args.run_legal_first_sweep,
             "legal_first_require_any_terms": args.legal_first_require_any_terms,
             "legal_first_require_all_terms": args.legal_first_require_all_terms,
+            "legal_first_exclude_terms": args.legal_first_exclude_terms,
+            "legal_first_priority_terms": args.legal_first_priority_terms,
             "legal_first_max_moves": args.legal_first_max_moves,
+            "legal_first_stop_after_mates": args.legal_first_stop_after_mates,
         },
         "summary": summary,
         "candidate_update": {
@@ -554,6 +590,10 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
             "status": (
                 "needs_bounded_m3_or_role_calibration_probe"
                 if summary["topology_weight_diagnosis"] == "topology_present_untrained_or_miscalibrated"
+                else "needs_action_selection_or_role_adapter_probe"
+                if summary["topology_weight_diagnosis"] == "legal_first_action_selection_gap"
+                else "needs_more_terms_or_capacity_probe"
+                if summary["topology_weight_diagnosis"] == "no_tested_legal_first_conversion_at_horizon"
                 else "needs_forced_playout_probe"
                 if summary["topology_weight_diagnosis"] == "existing_provider_first_moves_available_playout_pending"
                 else "possible_provider_capacity_gap"
@@ -592,7 +632,10 @@ def main() -> int:
     parser.add_argument("--run-legal-first-sweep", action="store_true")
     parser.add_argument("--legal-first-require-any-terms", default="")
     parser.add_argument("--legal-first-require-all-terms", default="")
+    parser.add_argument("--legal-first-exclude-terms", default="")
+    parser.add_argument("--legal-first-priority-terms", default="")
     parser.add_argument("--legal-first-max-moves", type=int, default=0)
+    parser.add_argument("--legal-first-stop-after-mates", type=int, default=0)
     parser.add_argument("--legal-first-audit-no-worst-reply", action="store_true")
     parser.add_argument("--steps-output", type=Path, default=None)
     parser.add_argument("--json-output", type=Path, required=True)
