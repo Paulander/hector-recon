@@ -83,7 +83,10 @@ def failed_post_box_states(
     states: list[dict[str, Any]] = []
     seen: set[str] = set()
     allowed = set(state_ids)
-    for record in diagnosis.get("unique_failed_post_reply_states") or []:
+    source_records = list(diagnosis.get("unique_failed_post_reply_states") or [])
+    if not source_records:
+        source_records = list(diagnosis.get("families") or [])
+    for record in source_records:
         if not isinstance(record, dict):
             continue
         fen = record.get("post_reply_fen")
@@ -107,6 +110,8 @@ def failed_post_box_states(
             "conversion_result": record.get("conversion_result"),
             "failure_classes": list(record.get("failure_classes") or []),
             "source_sample_index": record.get("sample_index"),
+            "family_id": record.get("family_id"),
+            "diagnosis": record.get("diagnosis"),
             "source_record": record,
         })
         if max_states > 0 and len(states) >= max_states:
@@ -116,7 +121,7 @@ def failed_post_box_states(
 
 def _compact_suggestion(item: dict[str, Any]) -> dict[str, Any]:
     meta = item.get("meta") if isinstance(item.get("meta"), dict) else {}
-    return {
+    compact = {
         "move": item.get("move"),
         "skill_id": _skill_id_for_suggestion(item),
         "score": item.get("score"),
@@ -124,6 +129,21 @@ def _compact_suggestion(item: dict[str, Any]) -> dict[str, Any]:
         "curriculum_label": meta.get("curriculum_label") or item.get("curriculum_label"),
         "stage": meta.get("stage") or item.get("stage"),
     }
+    if isinstance(meta.get("visible_role_provider_support_adapter"), dict):
+        compact["visible_role_provider_support_adapter"] = dict(
+            meta["visible_role_provider_support_adapter"]
+        )
+    if "explicit_role_provider_move_shape_support_bonus" in meta:
+        compact["explicit_role_provider_move_shape_support_bonus"] = meta.get(
+            "explicit_role_provider_move_shape_support_bonus"
+        )
+    if isinstance(meta.get("visible_move_shape_audit"), dict):
+        audit = meta["visible_move_shape_audit"]
+        compact["visible_move_shape_audit"] = {
+            "move_shape_terms": list(audit.get("move_shape_terms", []) or []),
+            "post_move_terms": list(audit.get("post_move_terms", []) or []),
+        }
+    return compact
 
 
 def forced_provider_first_move_probe(

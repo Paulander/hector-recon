@@ -4464,3 +4464,86 @@ The next repair should not be a stronger provider bonus.
 The next useful evidence is move-shape-level separation or a cheaper
 continuation oracle for the two unresolved families.
 ```
+
+## Stage 7 move-shape-gated adapter follow-up
+
+Added move-shape/post-move constraints to the explicit role-provider support
+adapter path. Constrained adapters are no longer reported at provider-license
+time; they become visible only when the candidate move itself confirms the
+required move-shape/post-move terms. This preserves the rule:
+
+```text
+visible role may support a provider,
+but a move-shape-constrained adapter only supports a concrete candidate move
+when that move confirms visible terms.
+```
+
+Compiled a constrained drive-family sandbox:
+
+```text
+topology:
+  snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_family_ff_drive_move_shape_support_w005.json
+default-off equivalence:
+  reports/structural_candidates/stage7_family_drive_moveshape_default_off_equiv_5_h40.json
+adapter-on smoke:
+  reports/structural_candidates/stage7_family_drive_moveshape_adapter_10_h80.json
+targeted forced-family probe:
+  reports/structural_candidates/stage7_family_ff_drive_moveshape_targeted_probe.json
+outcome:
+  reports/structural_candidates/stage7_family_drive_moveshape_adapter_outcome.json
+```
+
+Default-off equivalence passed:
+
+```text
+equivalent: true
+adapter_fire_count: 0
+```
+
+Adapter-on smoke was neutral and did not fire:
+
+```text
+result: 5 mate / 5 max_plies
+adapter_fire_count: 0
+```
+
+Targeted forced replay of the known drive-convertible family did fire:
+
+```text
+state.ff6652c8832c
+forced provider: krk.drive_to_edge
+first move: e4h4
+forced playout: mate
+targeted_adapter_fire_count: 3
+matched_move_shape_terms:
+  candidate_is_rook_transfer
+  rook_lateral_transfer
+  rook_to_edge_file
+matched_post_move_terms:
+  rook_safe_after_move
+direct_request: false
+```
+
+Candidate update:
+
+```text
+cand.krk.box_shrink.family_ff6652c8832c.drive_to_edge_visible_support.v1
+  status: wired_but_arbitration_dominated
+  promotion_status: proposed
+  diagnosis:
+    adapter_did_not_fire_under_normal_routing
+    adapter_fires_under_forced_provider
+    forced_provider_converts
+    provider_score_arbitration_dominates_visible_support
+```
+
+Interpretation:
+
+```text
+The adapter is ReCoN-visible and correctly move-shape-gated.
+It is not composition-sufficient because normal routing is dominated by
+high-scoring stage0_basin candidates before the drive provider can matter.
+Do not increase broad support. The next diagnosis is stage0 fallback
+arbitration or candidate-local weight calibration under the Plasticity Balance
+Protocol.
+```

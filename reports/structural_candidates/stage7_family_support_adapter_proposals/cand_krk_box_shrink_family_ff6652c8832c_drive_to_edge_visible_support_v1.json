@@ -78,6 +78,14 @@
       "support_veto_terms": [
         "mate_in_one_available"
       ],
+      "support_move_shape_required_terms": [
+        "candidate_is_rook_transfer",
+        "rook_lateral_transfer",
+        "rook_to_edge_file"
+      ],
+      "support_post_move_required_terms": [
+        "rook_safe_after_move"
+      ],
       "source_terms": [
         "box_area_large",
         "box_shrink_drive_repair_available",

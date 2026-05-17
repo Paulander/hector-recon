@@ -9,6 +9,7 @@ import chess
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from recon_lite_chess.krk_baseline_nodes import (
+    _apply_explicit_support_move_shape_bias,
     _apply_successor_affordance_bias,
     _apply_visible_post_break_continuation_bias,
     _apply_visible_stage0_drift_penalty,
@@ -171,6 +172,61 @@ def test_role_provider_support_adapter_respects_support_required_terms():
         "krk.edge_rook_transfer_recovery"
     ]
     assert support["score"] == 0.25
+
+
+def test_move_shape_gated_explicit_support_only_boosts_matching_move():
+    board = chess.Board("8/8/8/8/4R3/2k5/4K3/8 w - - 2 2")
+    support = {
+        "role_id": "krk.box_shrink_to_drive_repair",
+        "provider_skill_id": "krk.drive_to_edge",
+        "score": 0.25,
+        "source_terms": ["box_shrink_drive_repair_available"],
+        "role_contract_met": True,
+        "adapter_node": "script.krk.support.drive",
+        "direct_request": False,
+        "support_move_shape_required_terms": [
+            "candidate_is_rook_transfer",
+            "rook_lateral_transfer",
+        ],
+        "support_post_move_required_terms": ["rook_safe_after_move"],
+    }
+    blackboard = {
+        "explicit_role_provider_support_enabled": True,
+        "krk_explicit_role_provider_supports": {
+            "krk.drive_to_edge": {
+                "krk.box_shrink_to_drive_repair": support,
+            }
+        },
+    }
+
+    matching_meta = {}
+    matching_score = _apply_explicit_support_move_shape_bias(
+        1.0,
+        board=board,
+        move=chess.Move.from_uci("e4h4"),
+        skill_id="krk.drive_to_edge",
+        blackboard=blackboard,
+        move_meta=matching_meta,
+    )
+
+    assert matching_score == 1.25
+    assert matching_meta["visible_role_provider_support_adapter"]["move_shape_gated"] is True
+    assert "rook_lateral_transfer" in matching_meta[
+        "visible_role_provider_support_adapter"
+    ]["matched_move_shape_terms"]
+
+    nonmatching_meta = {}
+    nonmatching_score = _apply_explicit_support_move_shape_bias(
+        1.0,
+        board=board,
+        move=chess.Move.from_uci("e2e3"),
+        skill_id="krk.drive_to_edge",
+        blackboard=blackboard,
+        move_meta=nonmatching_meta,
+    )
+
+    assert nonmatching_score == 1.0
+    assert "visible_role_provider_support_adapter" not in nonmatching_meta
 
 
 def test_stage7_king_tempo_terminal_is_default_off_and_selects_visible_quiet_tempo():

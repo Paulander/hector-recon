@@ -1008,6 +1008,8 @@ def _record_explicit_support_from_adapter(
     visible_terms = blackboard.get("krk_visible_terms", {}) or {}
     required_terms = list(adapter_node.meta.get("support_required_terms", []) or [])
     veto_terms = list(adapter_node.meta.get("support_veto_terms", []) or [])
+    move_shape_required_terms = list(adapter_node.meta.get("support_move_shape_required_terms", []) or [])
+    post_move_required_terms = list(adapter_node.meta.get("support_post_move_required_terms", []) or [])
     missing_terms = [
         str(term) for term in required_terms
         if not bool(visible_terms.get(str(term), False))
@@ -1034,6 +1036,8 @@ def _record_explicit_support_from_adapter(
         "score": support_weight,
         "support_weight": support_weight,
         "source_terms": list(role_payload.get("source_terms", [])),
+        "support_move_shape_required_terms": move_shape_required_terms,
+        "support_post_move_required_terms": post_move_required_terms,
         "role_contract_met": True,
         "causal_status": "explicit_sandbox_support",
         "adapter_node": adapter_node.nid,
@@ -1520,6 +1524,14 @@ def create_actuator_terminal(node_id=None):
                     move_meta=move_meta[move],
                 )
                 score = _apply_visible_rook_transfer_move_bias(
+                    score,
+                    board=board,
+                    move=move,
+                    skill_id=skill_id,
+                    blackboard=blackboard,
+                    move_meta=move_meta[move],
+                )
+                score = _apply_explicit_support_move_shape_bias(
                     score,
                     board=board,
                     move=move,
@@ -2246,16 +2258,25 @@ def _apply_successor_affordance_bias(
         move_meta["role_bonus_total"] = role_bonus
         support_payload = best_license.get("explicit_role_provider_support")
         if isinstance(support_payload, dict):
-            move_meta["visible_role_provider_support_adapter"] = {
-                "enabled": True,
-                "adapter_id": support_payload.get("adapter_node"),
-                "source_role": support_payload.get("role_id"),
-                "provider_id": support_payload.get("provider_skill_id"),
-                "role_confirmed": bool(support_payload.get("role_contract_met", False)),
-                "source_terms": list(support_payload.get("source_terms", []) or []),
-                "support_amount": float(support_payload.get("score", 0.0) or 0.0),
-                "direct_request": False,
-            }
+            move_shape_terms = list(
+                support_payload.get("support_move_shape_required_terms", []) or []
+            )
+            post_move_terms = list(
+                support_payload.get("support_post_move_required_terms", []) or []
+            )
+            # Move-shape-constrained adapters are only traceable once the
+            # candidate move itself confirms the visible move/post terms.
+            if not move_shape_terms and not post_move_terms:
+                move_meta["visible_role_provider_support_adapter"] = {
+                    "enabled": True,
+                    "adapter_id": support_payload.get("adapter_node"),
+                    "source_role": support_payload.get("role_id"),
+                    "provider_id": support_payload.get("provider_skill_id"),
+                    "role_confirmed": bool(support_payload.get("role_contract_met", False)),
+                    "source_terms": list(support_payload.get("source_terms", []) or []),
+                    "support_amount": float(support_payload.get("score", 0.0) or 0.0),
+                    "direct_request": False,
+                }
         move_meta["role_bonus_by_role"] = {
             str(item.get("role_id") or item.get("successor") or ""): (
                 role_bonus_weight * float(item.get("score", 0.0) or 0.0)
@@ -2854,9 +2875,98 @@ def _provider_role_licenses(provider_id: str, blackboard: Dict[str, Any]) -> lis
                     support_score = float(support.get("score", 0.0) or 0.0)
                     payload["explicit_role_provider_support"] = support
                     payload["explicit_role_provider_support_score"] = support_score
-                    payload["score"] = float(payload.get("score", 0.0) or 0.0) + support_score
+                    move_shape_terms = list(
+                        support.get("support_move_shape_required_terms", []) or []
+                    )
+                    post_move_terms = list(
+                        support.get("support_post_move_required_terms", []) or []
+                    )
+                    if move_shape_terms or post_move_terms:
+                        payload["explicit_role_provider_support_score_pending_move_shape"] = support_score
+                    else:
+                        payload["score"] = float(payload.get("score", 0.0) or 0.0) + support_score
             visible.append(payload)
     return visible
+
+
+def _apply_explicit_support_move_shape_bias(
+    score: float,
+    *,
+    board: chess.Board,
+    move: chess.Move,
+    skill_id: str | None,
+    blackboard: Dict[str, Any],
+    move_meta: Dict[str, Any],
+) -> float:
+    """Apply move-shape-gated explicit adapter support.
+
+    Provider-level explicit support is intentionally not enough for Stage 7:
+    the adapter may fire in the right state family but support the wrong move
+    shape. This opt-in path only adds adapter support when the candidate move
+    itself confirms the adapter's visible move/post terms.
+    """
+    if not blackboard.get("explicit_role_provider_support_enabled", False):
+        return score
+    provider_id = skill_id
+    if not provider_id:
+        return score
+    supports = blackboard.get("krk_explicit_role_provider_supports", {}).get(provider_id, {})
+    if not isinstance(supports, dict):
+        return score
+
+    matching: list[dict[str, Any]] = []
+    audit = None
+    move_terms: set[str] = set()
+    post_terms: set[str] = set()
+    for role_id, support in supports.items():
+        if not isinstance(support, dict) or not support.get("role_contract_met"):
+            continue
+        required_move = {
+            str(term) for term in support.get("support_move_shape_required_terms", []) or []
+        }
+        required_post = {
+            str(term) for term in support.get("support_post_move_required_terms", []) or []
+        }
+        if not required_move and not required_post:
+            continue
+        if audit is None:
+            audit = krk_move_shape_audit(board, move, blackboard, include_worst_reply=False)
+            move_terms = set(audit.get("move_shape_terms", []) or [])
+            post_terms = set(audit.get("post_move_terms", []) or [])
+        missing_move = sorted(required_move - move_terms)
+        missing_post = sorted(required_post - post_terms)
+        if missing_move or missing_post:
+            continue
+        payload = dict(support)
+        payload["role_id"] = str(role_id)
+        payload["matched_move_shape_terms"] = sorted(required_move)
+        payload["matched_post_move_terms"] = sorted(required_post)
+        matching.append(payload)
+
+    if not matching:
+        return score
+    best = max(matching, key=lambda item: float(item.get("score", 0.0) or 0.0))
+    bonus = float(best.get("score", 0.0) or 0.0)
+    if bonus <= 0.0:
+        return score
+    move_meta["visible_role_provider_support_adapter"] = {
+        "enabled": True,
+        "adapter_id": best.get("adapter_node"),
+        "source_role": best.get("role_id"),
+        "provider_id": best.get("provider_skill_id"),
+        "role_confirmed": bool(best.get("role_contract_met", False)),
+        "source_terms": list(best.get("source_terms", []) or []),
+        "support_amount": bonus,
+        "direct_request": False,
+        "move_shape_gated": True,
+        "matched_move_shape_terms": list(best.get("matched_move_shape_terms", []) or []),
+        "matched_post_move_terms": list(best.get("matched_post_move_terms", []) or []),
+    }
+    move_meta["explicit_role_provider_move_shape_support_bonus"] = bonus
+    move_meta["visible_move_shape_audit"] = audit
+    adjusted = float(score) + bonus
+    move_meta["score_after_explicit_role_provider_move_shape_support"] = adjusted
+    return adjusted
 
 
 def _provider_role_vetoes(provider_id: str, blackboard: Dict[str, Any]) -> list[Dict[str, Any]]:

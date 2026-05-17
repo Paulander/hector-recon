@@ -144,6 +144,16 @@ assert _stage7_family_adapter_outcome.__spec__ is not None
 assert _stage7_family_adapter_outcome.__spec__.loader is not None
 _stage7_family_adapter_outcome.__spec__.loader.exec_module(_stage7_family_adapter_outcome)
 
+_stage7_move_shape_separation = importlib.util.module_from_spec(
+    importlib.util.spec_from_file_location(
+        "diagnose_stage7_move_shape_separation",
+        Path(__file__).resolve().parents[1] / "scripts" / "diagnose_stage7_move_shape_separation.py",
+    )
+)
+assert _stage7_move_shape_separation.__spec__ is not None
+assert _stage7_move_shape_separation.__spec__.loader is not None
+_stage7_move_shape_separation.__spec__.loader.exec_module(_stage7_move_shape_separation)
+
 _candidate_m3_warmup_plan = importlib.util.module_from_spec(
     importlib.util.spec_from_file_location(
         "plan_candidate_local_m3_warmup",
@@ -2057,6 +2067,135 @@ def test_stage7_family_adapter_outcome_quarantines_max_only_support(tmp_path):
     assert updates[
         "cand.krk.box_shrink.family_ac.fence_established_visible_support.v1"
     ]["status"] == "needs_more_terms"
+
+
+def test_stage7_family_adapter_outcome_distinguishes_arbitration_dominated_support(tmp_path):
+    proposals_path = tmp_path / "proposals.json"
+    equivalence_path = tmp_path / "equivalence.json"
+    diagnostic_path = tmp_path / "diagnostic.json"
+    targeted_path = tmp_path / "targeted.json"
+    proposals_path.write_text(
+        json.dumps(
+            {
+                "proposals": [
+                    {
+                        "candidate_id": "cand.krk.box_shrink.family_ff.drive_to_edge_visible_support.v1",
+                        "proposal_status": "sandbox_ready",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    equivalence_path.write_text(json.dumps({"equivalent": True}), encoding="utf-8")
+    diagnostic_path.write_text(
+        json.dumps({"adapter_fire_count": 0, "adapter_supported_provider_by_outcome": {}}),
+        encoding="utf-8",
+    )
+    targeted_path.write_text(
+        json.dumps(
+            {
+                "records": [
+                    {
+                        "first_move_probes": [
+                            {
+                                "top_suggestions": [
+                                    {
+                                        "visible_role_provider_support_adapter": {
+                                            "enabled": True,
+                                            "direct_request": False,
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        "playout_probes": [{"result": "mate"}],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    payload = _stage7_family_adapter_outcome.evaluate_family_adapter_outcome(
+        proposals_path=proposals_path,
+        default_off_equivalence_path=equivalence_path,
+        adapter_on_diagnostic_path=diagnostic_path,
+        targeted_probe_path=targeted_path,
+    )
+
+    assert payload["targeted_adapter_fire_count"] == 1
+    assert payload["targeted_forced_mate_count"] == 1
+    update = payload["candidate_updates"][0]
+    assert update["status"] == "wired_but_arbitration_dominated"
+    assert "provider_score_arbitration_dominates_visible_support" in update["diagnosis"]
+    assert update["causal_status"] == "non_causal"
+
+
+def test_stage7_move_shape_separation_detects_provider_adapter_overbreadth(tmp_path):
+    family_path = tmp_path / "family.json"
+    adapter_path = tmp_path / "adapter.json"
+    family_path.write_text(
+        json.dumps(
+            {
+                "families": [
+                    {
+                        "family_id": "stage7.post_box.family_ff",
+                        "state_id": "state.ff",
+                        "forced_provider_results": {
+                            "krk.drive_to_edge": {
+                                "result": "mate",
+                                "plies": 7,
+                                "first_move": "e4h4",
+                                "first_move_probe": {
+                                    "current_terms": ["box_shrink_drive_repair_available"],
+                                    "move_shape_terms": [
+                                        "candidate_is_rook_transfer",
+                                        "rook_lateral_transfer",
+                                    ],
+                                    "post_move_terms": ["rook_safe_after_move"],
+                                },
+                            }
+                        },
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    adapter_path.write_text(
+        json.dumps(
+            {
+                "handoff_packets": [
+                    {
+                        "packet_id": "packet.1",
+                        "evidence_terms": {
+                            "fen": "8/8/8/8/R7/8/2k1K3/8 w - - 0 1",
+                            "move": "a4h4",
+                            "successor_selected_skill": "krk.stage0_basin",
+                            "playout_result": "max_plies",
+                            "adapter_supported_provider_counts": {"krk.drive_to_edge": 1},
+                            "adapter_supported_move_counts": {"e2e3": 1},
+                        },
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    payload = _stage7_move_shape_separation.diagnose_move_shape_separation(
+        family_diagnosis_path=family_path,
+        adapter_diagnostic_path=adapter_path,
+        provider="krk.drive_to_edge",
+    )
+
+    assert payload["schema_version"] == "stage7_move_shape_separation.v1"
+    assert payload["causal_status"] == "non_causal"
+    update = payload["candidate_update"]
+    assert update["status"] == "move_shape_gate_candidate"
+    assert "candidate_is_rook_transfer" in update["required_move_shape_terms"]
+    assert "do_not_run_m3_on_provider_adapter" in update["hard_blocks"]
 
 
 def _dummy_sensor():
