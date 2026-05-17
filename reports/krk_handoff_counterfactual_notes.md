@@ -5018,3 +5018,113 @@ This mirrors the drive-family result: visible support can identify the right
 provider/move under forced ownership, but normal routing is still dominated by
 the existing fallback/provider score scale.
 ```
+
+## Stage 7 bounded role-owned arbitration probe
+
+Combined drive/fence arbitration evidence:
+
+```text
+arbitration:
+  reports/structural_candidates/stage7_drive_fence_arbitration_diagnosis.json
+score-normalization replay:
+  reports/structural_candidates/stage7_drive_fence_score_normalization_probe.json
+calibration plan:
+  reports/structural_candidates/stage7_drive_fence_score_calibration_plan.json
+runtime probe:
+  reports/structural_candidates/stage7_drive_fence_role_owned_runtime_probe.json
+```
+
+Non-causal arbitration diagnosis:
+
+```text
+records: 2
+forced_provider_can_convert: 2
+adapter_wired_and_visible_under_forced_provider: 2
+provider_score_scale_mismatch: 2
+```
+
+Score gap:
+
+```text
+state.ff6652c8832c:
+  raw selected: krk.stage0_basin / e4e8 / score ~33.68
+  adapter provider: krk.drive_to_edge / e4h4 / score ~0.21
+  required additive support: ~33.47
+
+state.ac0b7ed500ea:
+  raw selected: krk.stage0_basin / a4a8 / score ~15.11
+  adapter provider: krk.fence_established / d2e3 / score ~0.06
+  required additive support: ~15.05
+```
+
+Interpretation:
+
+```text
+This is not a missing visible support problem for the two solvable families.
+It is score-scale arbitration: provider scores are not comparable across skill
+families, and bounded additive support is not a sensible repair.
+```
+
+Runtime sandbox result:
+
+```text
+role-owned score normalization enabled, no forced provider:
+  state.ff6652c8832c -> krk.drive_to_edge -> mate
+  state.ac0b7ed500ea -> krk.fence_established -> mate
+```
+
+Candidate update:
+
+```text
+cand.krk.box_shrink.score_normalized_role_arbitration.v1
+  status: role_owned_score_normalization_sandbox_candidate
+  next_action:
+    paired Stage 7 target validation with role-owned arbitration enabled
+    then Stage 6/5/1 and bridge/M1-M4 guardrails if target improves
+```
+
+Hard blocks remain:
+
+```text
+do_not_promote_stage7
+do_not_train_stage8
+do_not_make_oracle_choice_causal
+do_not_use_score_normalization_without_guardrails
+```
+
+Paired 25-sample Stage 7 target validation:
+
+```text
+role-owned off:
+  reports/structural_candidates/stage7_drive_fence_paired_off_25_h80.json
+role-owned on:
+  reports/structural_candidates/stage7_drive_fence_role_owned_on_25_h80.json
+comparison:
+  reports/structural_candidates/stage7_drive_fence_role_owned_on_vs_off_25_h80.json
+```
+
+Result:
+
+```text
+both modes:
+  25/25 improved
+  21/25 optimal
+  12 mate / 13 max_plies
+  shadow candidates: 35
+  adapter_fire_count: 0
+  role_owned_score_normalization_selected_count: 0
+comparison:
+  equivalent: true
+```
+
+Interpretation:
+
+```text
+Role-owned arbitration is default-safe on this 25-sample target slice, but the
+sample did not hit either adapter-visible family. This is a neutral validation,
+not a target improvement.
+
+The next meaningful validation should be targeted/family-balanced sampling of
+post-box states that include ff6652/ac0b7-like geometry plus the unresolved
+0af/38 families. Do not promote Stage 7 from this neutral 25-sample result.
+```
