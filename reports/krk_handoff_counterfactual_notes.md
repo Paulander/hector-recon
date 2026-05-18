@@ -7609,3 +7609,41 @@ but it does not select the optimal DTM move. This supports a default-off
 sandbox candidate-local probe next, not promotion and not Stage 8 training.
 The current status is sandbox_protocol_phase01_complete.
 ```
+
+## 2cc protocol Phase 2
+
+Ran a non-causal replay classification of the Phase 0/1 selected move against
+the existing legal-first probe artifact:
+
+```text
+reports/structural_candidates/stage7_2cc_protocol_phase02.json
+reports/structural_candidates/stage7_2cc_protocol_phase02.md
+```
+
+Result:
+
+```text
+selected_move: d1e2
+selected_child_dtm: 28
+selected_forces_mate: true
+selected_optimal_dtm_move: false
+current_graph_replay: max_plies at h50
+legal_first_probe_count: 19
+legal_first_outcome_counts: h50:max_plies = 19
+legal_first_mating_moves: none
+```
+
+Interpretation:
+
+```text
+The frozen visible-term model can identify a tablebase-winning first move, but
+the current graph still fails after that move. Since every legal first move is
+tablebase-winning and every legal-first current-graph replay fails at h50, the
+2cc family is now classified as a downstream multi-step continuation policy
+gap rather than a CandidateMoveFrame/action-selection gap.
+
+The candidate status is sandbox_protocol_phase02_complete. The next safe work,
+if continued, is a bounded candidate-local plasticity protocol or narrow
+continuation sandbox. Stage 7 remains quarantined; this does not justify Stage
+8 training or Stage 7 promotion.
+```

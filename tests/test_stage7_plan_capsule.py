@@ -778,3 +778,84 @@ def test_stage7_2cc_protocol_phase01_uses_frozen_visible_model(tmp_path):
     assert payload["candidate_status_update"]["promotion_status"] == (
         "sandbox_protocol_phase01_complete"
     )
+
+
+def test_stage7_2cc_protocol_phase02_classifies_downstream_gap(tmp_path):
+    script = ROOT / "scripts" / "evaluate_stage7_2cc_protocol_phase02.py"
+    spec = importlib.util.spec_from_file_location("evaluate_stage7_2cc_protocol_phase02", script)
+    assert spec is not None
+    evaluator = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(evaluator)
+
+    phase01_path = tmp_path / "phase01.json"
+    phase01_path.write_text(
+        json.dumps(
+            {
+                "phase1_frozen_weight_probe": {"selected_move": "d1e2"},
+                "candidate_status_update": {
+                    "candidate_id": "cand.krk.box_shrink.family_2cc.post_box_continuation_overlay.v1"
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    alignment_path = tmp_path / "alignment.json"
+    alignment_path.write_text(
+        json.dumps(
+            {
+                "target_fen": FEN_2CC,
+                "labeled_candidate_frames": [
+                    {
+                        "move": "d1e2",
+                        "child_dtm": 28,
+                        "forces_mate": True,
+                        "optimal_dtm_move": False,
+                    },
+                    {
+                        "move": "a6a5",
+                        "child_dtm": 26,
+                        "forces_mate": True,
+                        "optimal_dtm_move": True,
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    legal_first_path = tmp_path / "legal_first.json"
+    legal_first_path.write_text(
+        json.dumps(
+            {
+                "records": [
+                    {
+                        "post_reply_fen": FEN_2CC,
+                        "legal_first_probes": [
+                            {"move": "d1e2", "horizon": 50, "result": "max_plies"},
+                            {"move": "a6a5", "horizon": 50, "result": "max_plies"},
+                        ],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    payload = evaluator.evaluate_phase02(
+        phase01_path=phase01_path,
+        alignment_path=alignment_path,
+        legal_first_path=legal_first_path,
+    )
+
+    assert payload["schema_version"] == "stage7_2cc_protocol_phase02_replay_eval.v1"
+    assert payload["causal_status"] == "non_causal"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["selected_move"] == "d1e2"
+    assert payload["selected_move_dtm"]["forces_mate"] is True
+    assert payload["selected_move_current_graph_replay"]["result"] == "max_plies"
+    assert payload["diagnosis"] == (
+        "visible_first_step_winning_but_current_graph_downstream_continuation_fails"
+    )
+    assert payload["candidate_status_update"]["promotion_status"] == (
+        "sandbox_protocol_phase02_complete"
+    )
