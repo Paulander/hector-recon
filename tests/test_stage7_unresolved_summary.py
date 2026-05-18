@@ -120,6 +120,15 @@ assert _neutral_matrix_spec.loader is not None
 _neutral_matrix = importlib.util.module_from_spec(_neutral_matrix_spec)
 _neutral_matrix_spec.loader.exec_module(_neutral_matrix)
 
+_evidence_merge_spec = importlib.util.spec_from_file_location(
+    "summarize_stage7_evidence_merge_table",
+    Path(__file__).resolve().parents[1] / "scripts" / "summarize_stage7_evidence_merge_table.py",
+)
+assert _evidence_merge_spec is not None
+assert _evidence_merge_spec.loader is not None
+_evidence_merge = importlib.util.module_from_spec(_evidence_merge_spec)
+_evidence_merge_spec.loader.exec_module(_evidence_merge)
+
 
 def test_stage7_unresolved_legal_first_summary_marks_selection_gap_and_capacity_probe(tmp_path):
     probe = {
@@ -763,3 +772,141 @@ def test_stage7_neutral_diagnostic_markdown_names_current_best_interpretation(tm
     assert "## Current Best Interpretation" in markdown
     assert "Training-objective / model-expression issue" in markdown
     assert "No runtime behavior" not in markdown
+
+
+def test_stage7_evidence_merge_table_combines_family_dtm_and_fidelity_rows(tmp_path):
+    (tmp_path / "stage7_post_box_family_diagnosis.json").write_text(
+        json.dumps(
+            {
+                "families": [
+                    {
+                        "family_id": "stage7.post_box.family_ff",
+                        "state_id": "state.ff",
+                        "post_reply_fen": "8/8/8/8/4R3/2k5/4K3/8 w - - 2 2",
+                        "selected_successor": "krk.stage0_basin",
+                        "selected_move": "e4e8",
+                        "conversion_result": "max_plies",
+                        "failure_classes": ["selected_successor_miscalibrated"],
+                        "visible_terms": {"current_terms": ["rook_safe", "box_area_large"]},
+                        "forced_provider_results": {
+                            "krk.drive_to_edge": {
+                                "result": "mate",
+                                "plies": 7,
+                                "first_move": "e4h4",
+                                "horizon": 40,
+                            },
+                            "krk.stage0_basin": {
+                                "result": "max_plies",
+                                "plies": 40,
+                                "first_move": "e4e8",
+                                "horizon": 40,
+                            },
+                        },
+                        "diagnosis": "existing_provider_can_convert_if_family_role_selects_it",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    (tmp_path / "stage7_remaining_dtm_candidate_summary.json").write_text(
+        json.dumps(
+            {
+                "candidates": [
+                    {
+                        "candidate_id": "cand.demo",
+                        "state_id": "state.dtm",
+                        "post_reply_fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+                        "diagnosis": "dtm_won_within_validation_horizon_but_current_continuation_failed",
+                        "dtm": {
+                            "state_dtm": 27,
+                            "best_dtm_plies": 27,
+                            "winning_move_count": 19,
+                            "legal_move_count": 19,
+                            "best_moves": [{"move": "a6a5"}],
+                        },
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    (tmp_path / "stage7_expanded_ranked_capsule_trajectory_fidelity_audit.json").write_text(
+        json.dumps(
+            {
+                "teacher_forced_accuracy": {
+                    "teacher_move_top1_rate": 0.2,
+                    "dtm_positive_top1_rate": 0.36,
+                    "dtm_positive_top3_rate": 0.8,
+                },
+                "top_level_diagnosis": "trajectory_ranking_and_closed_loop_gap",
+                "closed_loop_records": [
+                    {
+                        "start_fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+                        "result": "max_plies",
+                        "plies": 40,
+                        "selected_skill": "krk.post_box_shrink_continuation",
+                        "selected_move": "a6a8",
+                        "selected_is_dtm_positive": False,
+                        "teacher_move": "a6a5",
+                        "first_divergence": {"ply": 0},
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    merge = _evidence_merge.build_evidence_merge(tmp_path)
+
+    assert merge["schema_version"] == "stage7_evidence_merge_table.v1"
+    assert merge["causal_status"] == "non_causal"
+    assert merge["runtime_behavior_changed"] is False
+    assert merge["stage7_promotion_allowed"] is False
+    assert merge["stage8_training_allowed"] is False
+    assert merge["summary"]["row_count"] == 2
+    label_counts = merge["summary"]["hypothesis_label_counts"]
+    assert label_counts["already_solved_by_existing_provider_if_arbitrated"] == 1
+    assert label_counts["training_objective_model_expression_candidate"] == 1
+    assert any(
+        row["strategy_provider_evidence"]["best_forced_provider"]
+        and row["strategy_provider_evidence"]["best_forced_provider"]["provider"] == "krk.drive_to_edge"
+        for row in merge["rows"]
+    )
+
+
+def test_stage7_decision_gate_prefers_training_objective_benchmark_for_current_evidence(tmp_path):
+    merge = {
+        "schema_version": "stage7_evidence_merge_table.v1",
+        "causal_status": "non_causal",
+        "runtime_behavior_changed": False,
+        "stage7_status": "local_valid_composition_quarantined",
+        "stage8_training_allowed": False,
+        "stage7_promotion_allowed": False,
+        "rows": [],
+        "summary": {
+            "row_count": 5,
+            "hypothesis_label_counts": {
+                "training_objective_model_expression_candidate": 3,
+                "continuation_capacity_candidate": 2,
+                "missing_feature_candidate": 1,
+            },
+            "m3_trainability_summary": {
+                "probe_result": "scripted_provider_selected_but_not_trainable_for_move_policy"
+            },
+            "arbitration_probe_answers": {
+                "provider_local_normalization_outperforms_raw_global_score": False
+            },
+        },
+    }
+
+    gate = _evidence_merge.build_decision_gate(merge)
+
+    assert gate["schema_version"] == "stage7_decision_gate.v1"
+    assert gate["causal_status"] == "non_causal"
+    assert gate["selected_status"] == "proceed_to_training_objective_benchmark"
+    assert gate["stage7_promotion_allowed"] is False
+    assert gate["stage8_training_allowed"] is False
+    assert "offline-only" in gate["minimum_next_step"].lower()
+    assert "do not compile a runtime repair" in gate["minimum_next_step"].lower()
+    assert "train_stage8" in gate["blocked_next_steps"]

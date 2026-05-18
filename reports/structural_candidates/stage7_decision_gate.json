@@ -1,0 +1,92 @@
+{
+  "arbitration_probe_answers": {
+    "box_area_relevance_explains_some_failures": false,
+    "failures_suggest_box_or_stage0_over_ownership": false,
+    "provider_local_normalization_outperforms_raw_global_score": false,
+    "provider_selection_model_predicts_converting_provider": false
+  },
+  "blocked_next_steps": [
+    "train_stage8",
+    "promote_stage7",
+    "add_runtime_repair_or_causal_sandbox",
+    "add_provider_bonus_or_penalty",
+    "add_support_adapter",
+    "use_runtime_dtm_or_tablebase",
+    "mutate_topology_during_gameplay"
+  ],
+  "causal_status": "non_causal",
+  "m3_trainability_summary": {
+    "causal_status": "non_causal",
+    "counts": {
+      "candidate_provider_selected": 6,
+      "candidate_provider_selected_failed": 6,
+      "candidate_provider_selected_max_plies": 6,
+      "visible_license_met": 6
+    },
+    "diagnostic_labels": [
+      "visible_provider_ownership_available",
+      "candidate_selected_but_all_selected_outcomes_failed",
+      "no_candidate_internal_m3_edges",
+      "expressive_but_untrained_or_capacity_limited"
+    ],
+    "probe_result": "scripted_provider_selected_but_not_trainable_for_move_policy",
+    "trainable_internal_edge_count": 0
+  },
+  "minimum_next_step": "Run an offline-only training-objective/model-expression benchmark on existing DTM trajectory states: compare current learned scoring against a ranked/pairwise preference objective and a visible-term baseline; report top-k fidelity and closed-loop drift diagnostics. Do not compile a runtime repair.",
+  "rationale": [
+    "The learnable post-box provider is selected in residual closed-loop replays but still max-plies.",
+    "Trajectory fidelity remains weak after expanded DTM-margin supervision, while top-3 signal shows partial representation rather than complete absence.",
+    "M3 trainability evidence indicates the previous scripted provider path lacked useful trainable internal move-policy edges.",
+    "The first unified arbitration probe did not identify a better provider owner and did not support low box-area relevance as the main residual explanation."
+  ],
+  "runtime_behavior_changed": false,
+  "schema_version": "stage7_decision_gate.v1",
+  "secondary_hypotheses": [
+    {
+      "hypothesis": "continuation_capacity",
+      "reason": "Some states remain DTM-won/current-graph-failed and forced-provider unresolved.",
+      "status": "plausible_secondary"
+    },
+    {
+      "hypothesis": "missing_feature_ontology",
+      "reason": "Candidate-move terms separate 0926 but do not yet explain all residual families.",
+      "status": "plausible_secondary"
+    },
+    {
+      "hypothesis": "strategy_arbitration_phase_boundary",
+      "reason": "First arbitration probe found no provider-local/rank1 advantage in sampled residuals.",
+      "status": "not_currently_dominant"
+    },
+    {
+      "hypothesis": "bad_standalone_curriculum_boundary",
+      "reason": "Stage 7 remains local-valid but composition-quarantined after multiple diagnostic paths.",
+      "status": "plausible_secondary"
+    }
+  ],
+  "selected_status": "proceed_to_training_objective_benchmark",
+  "selected_status_confidence": "medium_high",
+  "source_merge_schema": "stage7_evidence_merge_table.v1",
+  "stage7_promotion_allowed": false,
+  "stage7_status": "local_valid_composition_quarantined",
+  "stage8_training_allowed": false,
+  "supported_hypothesis": {
+    "primary": "training_objective_model_expression",
+    "raw_label_counts": {
+      "already_solved_by_existing_provider_if_arbitrated": 2,
+      "bad_curriculum_boundary_candidate": 6,
+      "continuation_capacity_candidate": 4,
+      "missing_feature_candidate": 4,
+      "phase_boundary_candidate": 4,
+      "strategy_arbitration_candidate": 2,
+      "training_objective_model_expression_candidate": 2,
+      "unresolved_without_new_continuation_policy": 4
+    },
+    "weighted_evidence_scores": {
+      "bad_standalone_curriculum_boundary": 6,
+      "continuation_capacity": 6,
+      "missing_feature_ontology": 4,
+      "strategy_arbitration_phase_boundary": 1,
+      "training_objective_model_expression": 8
+    }
+  }
+}

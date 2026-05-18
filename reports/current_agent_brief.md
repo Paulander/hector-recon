@@ -72,9 +72,9 @@ The next diagnostic should distinguish these hypotheses rather than optimize onl
 
 ## Current Diagnostic Objective
 
-Produce a neutral Stage 7 diagnosis matrix that maps current evidence to the five hypotheses above.
+Produce the replay-free Stage 7 evidence merge / stratified diagnostic table recommended by the neutral matrix, then emit a decision gate.
 
-The matrix should answer:
+The evidence merge should answer:
 
 - Does provider-local/role-owned arbitration identify better ownership than raw score?
 - Do edge distance and `box_area_relevance` explain where `box_shrink` should not own?
@@ -83,7 +83,7 @@ The matrix should answer:
 - Do missing visible terms explain separable state families?
 - Is `box_shrink` itself an unstable curriculum boundary?
 
-The output should be non-causal diagnostic artifacts and candidate status updates, not a runtime change.
+The output should be non-causal diagnostic artifacts and a decision gate, not a runtime change.
 
 ## Performance Rules
 
@@ -114,14 +114,16 @@ Stop and ask for review if:
 Likely next artifacts:
 
 ```text
-reports/structural_candidates/stage7_neutral_diagnostic_matrix.json
-reports/structural_candidates/stage7_neutral_diagnostic_matrix.md
+reports/structural_candidates/stage7_evidence_merge_table.json
+reports/structural_candidates/stage7_evidence_merge_table.md
+reports/structural_candidates/stage7_decision_gate.json
+reports/structural_candidates/stage7_decision_gate.md
 ```
 
 Possible supporting code:
 
 ```text
-scripts/summarize_stage7_neutral_diagnostic_matrix.py
+scripts/summarize_stage7_evidence_merge_table.py
 tests/test_stage7_unresolved_summary.py
 ```
 
