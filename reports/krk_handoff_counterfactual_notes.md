@@ -6204,3 +6204,96 @@ provider-promotion records remain evidence only. A future causal capsule would
 require explicit sandboxing, visible SCRIPT/TERMINAL terms, bounded TTL,
 handoff exports, and Stage 7 + Stage 6/5/4/1 + bridge/M1-M4 guardrails before
 any promotion.
+
+## Stage 7 Plan Capsule sandbox protocol
+
+I added a non-causal sandbox protocol check for the proposed capsule. It does
+not compile a runtime plan owner and does not affect move selection. It checks
+whether the existing DTM/reference trajectories support the proposed bounded
+entry/progress/exit/abort semantics.
+
+Artifact:
+
+```text
+reports/structural_candidates/stage7_post_box_plan_capsule_sandbox_protocol.json
+reports/structural_candidates/stage7_post_box_plan_capsule_sandbox_protocol.md
+```
+
+Result:
+
+```text
+schema: stage7_post_box_plan_capsule_sandbox_protocol.v1
+causal_status: non_causal
+runtime_behavior_changed: false
+ttl_white_moves: 3
+reference_supported_count: 2/2
+
+8/8/R7/8/2k5/8/8/3K4 w - - 2 2:
+  DTM 27 -> 22 after 3 owned white moves
+  abort_terms: none
+
+8/8/8/R7/4k3/8/3K4/8 w - - 2 2:
+  DTM 21 -> 16 after 3 owned white moves
+  abort_terms: none
+```
+
+Interpretation:
+
+```text
+The reference trajectories support a bounded three-white-move commitment
+protocol. The next candidate action is a default-off visible capsule sandbox,
+not Stage 8 training, not Stage 7 promotion, and not a broad provider penalty.
+```
+
+## Stage 7 default-off Plan Capsule sandbox topology
+
+I compiled a default-off visible capsule sandbox marker into the Stage 7
+post-box learned-overlay topology.
+
+Artifact:
+
+```text
+snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_plan_capsule_sandbox.json
+```
+
+Sandbox metadata:
+
+```text
+schema: plan_capsule_sandbox.v1
+capsule_id: krk.post_box_shrink_continuation
+enabled_by_default: false
+causal_status: sandbox_opt_in_non_requesting
+direct_request: false
+runtime_behavior_change_when_disabled: false
+```
+
+The added marker node records capsule entry/progress/exit/abort evidence only
+if `plan_capsule_sandbox_enabled` is explicitly true. It does not request a
+provider and does not change move scores.
+
+Default-off equivalence check:
+
+```text
+base topology:
+  reports/structural_candidates/stage7_plan_capsule_default_off_base_10_h20.json
+
+capsule sandbox topology:
+  reports/structural_candidates/stage7_plan_capsule_default_off_sandbox_10_h20.json
+
+comparison:
+  reports/structural_candidates/stage7_plan_capsule_default_off_equivalence_10_h20.json
+```
+
+Result:
+
+```text
+equivalent: true
+differences: []
+packet_count: 30
+shadow_candidate_count: 14
+adapter_fire_count: 0
+```
+
+The default-off capsule topology therefore preserves observed behavior on the
+small Stage 7 smoke. Any future causal experiment still needs an explicit
+opt-in flag, visible source terms, target validation, and protected guardrails.

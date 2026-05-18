@@ -412,6 +412,58 @@ def create_krk_role_provider_support_adapter(node_id=None):
     return Node(nid=actual_id, ntype=NodeType.SCRIPT, predicate=predicate)
 
 
+def create_krk_plan_capsule_marker(node_id=None):
+    """Create a default-off visible Plan Capsule sandbox marker.
+
+    This node records capsule entry/progress/exit/abort evidence when explicitly
+    enabled, but it never requests a provider or changes move scores. It is a
+    topology-visible audit hook for later sandboxing, not a runtime controller.
+    """
+    actual_id = node_id or "krk_plan_capsule_marker"
+
+    def predicate(node, env):
+        blackboard = env.get("blackboard")
+        if not blackboard:
+            return False, False
+        if not blackboard.get("plan_capsule_sandbox_enabled", False):
+            return False, True
+        terms = dict(blackboard.get("krk_visible_terms", {}) or {})
+        terms.update(blackboard.get("krk_dynamic_context_terms", {}) or {})
+        entry_terms = list(node.meta.get("entry_terms", []) or [])
+        progress_terms = list(node.meta.get("progress_terms", []) or [])
+        exit_terms = list(node.meta.get("exit_terms", []) or [])
+        abort_terms = list(node.meta.get("abort_terms", []) or [])
+        entry_met = [term for term in entry_terms if terms.get(term, False)]
+        progress_met = [term for term in progress_terms if terms.get(term, False)]
+        exit_met = [term for term in exit_terms if terms.get(term, False)]
+        abort_met = [term for term in abort_terms if terms.get(term, False)]
+        payload = {
+            "schema_version": "plan_capsule_runtime_marker.v1",
+            "capsule_id": node.meta.get("capsule_id") or actual_id,
+            "candidate_id": node.meta.get("source_candidate_id"),
+            "enabled": True,
+            "causal_status": "sandbox_opt_in_non_requesting",
+            "direct_request": False,
+            "ttl_white_moves": int(node.meta.get("ttl_white_moves", 0) or 0),
+            "entry_terms": entry_terms,
+            "progress_terms": progress_terms,
+            "exit_terms": exit_terms,
+            "abort_terms": abort_terms,
+            "entry_terms_met": entry_met,
+            "progress_terms_met": progress_met,
+            "exit_terms_met": exit_met,
+            "abort_terms_met": abort_met,
+            "entry_confirmed": len(entry_met) == len(entry_terms) if entry_terms else False,
+            "abort_confirmed": bool(abort_met),
+        }
+        capsule_id = str(payload["capsule_id"])
+        blackboard.setdefault("krk_plan_capsule_markers", {})[capsule_id] = payload
+        node.meta["last_plan_capsule_marker"] = payload
+        return bool(payload["entry_confirmed"] and not payload["abort_confirmed"]), True
+
+    return Node(nid=actual_id, ntype=NodeType.SCRIPT, predicate=predicate)
+
+
 def create_krk_stage7_king_tempo_terminal(node_id=None):
     """Opt-in visible Stage 7 king-tempo candidate provider.
 
