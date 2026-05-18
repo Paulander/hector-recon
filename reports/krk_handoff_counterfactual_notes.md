@@ -6601,6 +6601,66 @@ diagnosis: plan_entry_valid_but_policy_insufficient
 next_action: inspect owned-provider licenses / commitment ownership strength
 ```
 
+## Stage 7 Plan Capsule support/opportunity accounting
+
+I added explicit non-causal support/opportunity counters so capsule smokes can
+distinguish these cases:
+
+```text
+plan active, but no owned-provider suggestions exist
+plan active, owned-provider suggestions exist and are licensed
+plan active, a licensed owned-provider move is selected
+plan active, licensed owned-provider moves lose arbitration
+```
+
+New summary fields include:
+
+```text
+plan_capsule_active_decision_count
+plan_capsule_supported_suggestion_count
+plan_capsule_selected_supported_count
+plan_capsule_active_without_support_count
+plan_capsule_supported_provider_by_outcome
+plan_capsule_supported_move_by_outcome
+plan_capsule_selected_supported_by_outcome
+```
+
+Smoke artifact:
+
+```text
+reports/structural_candidates/stage7_plan_capsule_support_accounting_5_h20.json
+```
+
+Result:
+
+```text
+playouts: 2 mate / 3 max_plies
+plan_capsule_active_decision_count: 3
+plan_capsule_supported_suggestion_count: 48
+plan_capsule_selected_supported_count: 0
+plan_capsule_active_without_support_count: 0
+```
+
+Provider support in max-plies windows:
+
+```text
+krk.edge_trap_close: 12
+krk.edge_trap_wrong_tempo: 6
+krk.edge_trap_enemy_between: 18
+krk.drive_to_edge: 9
+krk.fence_established: 3
+```
+
+Interpretation:
+
+```text
+The capsule is not under-entering and not lacking owned-provider candidates.
+It licenses many visible owned-provider moves, but none are selected. The next
+question is not entry/progress detection; it is whether commitment should own
+arbitration within the bounded capsule window, still with visible traceability
+and default-off semantics.
+```
+
 Hard boundary:
 
 ```text

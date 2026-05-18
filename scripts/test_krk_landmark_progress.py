@@ -633,6 +633,60 @@ def _adapter_support_summary_for_suggestions(suggestions: list[dict]) -> dict:
     }
 
 
+def _plan_capsule_support_summary_for_suggestions(
+    suggestions: list[dict],
+    *,
+    selected_suggestion: dict | None = None,
+    plan_state: dict | None = None,
+) -> dict:
+    provider_counts: dict[str, int] = {}
+    move_counts: dict[str, int] = {}
+    supported = 0
+    max_supported_score = None
+    max_supported_provider = None
+    max_supported_move = None
+    selected_license = {}
+    selected_supported = False
+    for item in suggestions:
+        meta = item.get("meta") if isinstance(item.get("meta"), dict) else {}
+        license_payload = meta.get("visible_stage7_plan_capsule_license")
+        if not isinstance(license_payload, dict) or not license_payload:
+            continue
+        if license_payload.get("direct_request"):
+            continue
+        supported += 1
+        provider = str(license_payload.get("provider_skill_id") or _skill_id_for_suggestion(item))
+        move = item.get("move")
+        move_uci = move.uci() if hasattr(move, "uci") else str(move)
+        provider_counts[provider] = provider_counts.get(provider, 0) + 1
+        move_counts[move_uci] = move_counts.get(move_uci, 0) + 1
+        score = float(item.get("score", 0.0) or 0.0)
+        if max_supported_score is None or score > max_supported_score:
+            max_supported_score = score
+            max_supported_provider = provider
+            max_supported_move = move_uci
+    if isinstance(selected_suggestion, dict):
+        selected_meta = (
+            selected_suggestion.get("meta")
+            if isinstance(selected_suggestion.get("meta"), dict)
+            else {}
+        )
+        selected_license = dict(selected_meta.get("visible_stage7_plan_capsule_license", {}) or {})
+        selected_supported = bool(selected_license) and not bool(selected_license.get("direct_request"))
+    active = bool((plan_state or {}).get("plan_status") in {"active", "progress_confirmed"})
+    return {
+        "plan_capsule_active": active,
+        "plan_capsule_supported_suggestion_count": supported,
+        "plan_capsule_supported_provider_counts": provider_counts,
+        "plan_capsule_supported_move_counts": move_counts,
+        "plan_capsule_selected_supported": selected_supported,
+        "plan_capsule_selected_license": selected_license,
+        "plan_capsule_max_supported_score": max_supported_score,
+        "plan_capsule_max_supported_provider": max_supported_provider,
+        "plan_capsule_max_supported_move": max_supported_move,
+    }
+
+
 def _adapter_supported_role_owned_candidates(suggestions: list[dict]) -> list[dict]:
     """Return visible adapter-supported suggestions eligible for role-owned arbitration."""
     candidates: list[dict] = []
@@ -840,6 +894,15 @@ def _successor_skill_summary(
             "adapter_supported_suggestion_count": 0,
             "adapter_supported_provider_counts": {},
             "adapter_supported_move_counts": {},
+            "plan_capsule_active": False,
+            "plan_capsule_supported_suggestion_count": 0,
+            "plan_capsule_supported_provider_counts": {},
+            "plan_capsule_supported_move_counts": {},
+            "plan_capsule_selected_supported": False,
+            "plan_capsule_selected_license": {},
+            "plan_capsule_max_supported_score": None,
+            "plan_capsule_max_supported_provider": None,
+            "plan_capsule_max_supported_move": None,
             "plan_capsule_markers": {},
             "visible_stage7_king_tempo_bonus": 0.0,
             "visible_stage7_king_tempo_license": {},
@@ -972,6 +1035,27 @@ def _successor_skill_summary(
         "adapter_supported_move_counts": dict(
             move_details.get("adapter_supported_move_counts", {}) or {}
         ),
+        "plan_capsule_active": bool(move_details.get("plan_capsule_active", False)),
+        "plan_capsule_supported_suggestion_count": int(
+            move_details.get("plan_capsule_supported_suggestion_count", 0) or 0
+        ),
+        "plan_capsule_supported_provider_counts": dict(
+            move_details.get("plan_capsule_supported_provider_counts", {}) or {}
+        ),
+        "plan_capsule_supported_move_counts": dict(
+            move_details.get("plan_capsule_supported_move_counts", {}) or {}
+        ),
+        "plan_capsule_selected_supported": bool(
+            move_details.get("plan_capsule_selected_supported", False)
+        ),
+        "plan_capsule_selected_license": dict(
+            move_details.get("plan_capsule_selected_license", {}) or {}
+        ),
+        "plan_capsule_max_supported_score": move_details.get("plan_capsule_max_supported_score"),
+        "plan_capsule_max_supported_provider": move_details.get(
+            "plan_capsule_max_supported_provider"
+        ),
+        "plan_capsule_max_supported_move": move_details.get("plan_capsule_max_supported_move"),
         "plan_capsule_markers": dict(move_details.get("plan_capsule_markers", {}) or {}),
         **selected_contract,
     }
@@ -1948,6 +2032,11 @@ def _choose_move_details_impl(
 
     suggestion_source = forced_candidates if forced_successor_skill else suggestions
     adapter_support_summary = _adapter_support_summary_for_suggestions(suggestion_source)
+    plan_capsule_support_summary = _plan_capsule_support_summary_for_suggestions(
+        suggestion_source,
+        selected_suggestion=selected_suggestion,
+        plan_state=env.get("blackboard", {}).get("stage7_plan_capsule_state", {}) or {},
+    )
     clean_suggestions = []
     clean_source = list(suggestion_source)
     if (
@@ -2040,6 +2129,7 @@ def _choose_move_details_impl(
             env.get("blackboard", {}).get("krk_explicit_role_provider_supports", {}) or {}
         ),
         **adapter_support_summary,
+        **plan_capsule_support_summary,
         "context_terms_cache_hits": int(
             env.get("blackboard", {}).get("krk_context_terms_cache_hits", 0) or 0
         ),
@@ -3504,6 +3594,13 @@ def evaluate_landmark_progress(
         "plan_capsule_expired_count": 0,
         "plan_capsule_progress_confirmed_count": 0,
         "plan_capsule_status_by_outcome": {},
+        "plan_capsule_active_decision_count": 0,
+        "plan_capsule_supported_suggestion_count": 0,
+        "plan_capsule_selected_supported_count": 0,
+        "plan_capsule_active_without_support_count": 0,
+        "plan_capsule_supported_provider_by_outcome": {},
+        "plan_capsule_supported_move_by_outcome": {},
+        "plan_capsule_selected_supported_by_outcome": {},
         "role_owned_score_normalization_selected_count": 0,
         "role_owned_score_normalization_provider_by_outcome": {},
         "one_ply_status": "not_checked",
@@ -3855,6 +3952,46 @@ def evaluate_landmark_progress(
                 stats["plan_capsule_status_by_outcome"][plan_key] = (
                     stats["plan_capsule_status_by_outcome"].get(plan_key, 0) + 1
                 )
+            if successor_summary.get("plan_capsule_active"):
+                stats["plan_capsule_active_decision_count"] = (
+                    int(stats.get("plan_capsule_active_decision_count", 0) or 0) + 1
+                )
+            plan_supported_count = int(
+                successor_summary.get("plan_capsule_supported_suggestion_count", 0) or 0
+            )
+            if plan_supported_count:
+                stats["plan_capsule_supported_suggestion_count"] = (
+                    int(stats.get("plan_capsule_supported_suggestion_count", 0) or 0)
+                    + plan_supported_count
+                )
+                for provider, count in (
+                    successor_summary.get("plan_capsule_supported_provider_counts", {}) or {}
+                ).items():
+                    provider_key = f"{provider}:{key}"
+                    stats["plan_capsule_supported_provider_by_outcome"][provider_key] = (
+                        stats["plan_capsule_supported_provider_by_outcome"].get(provider_key, 0)
+                        + int(count or 0)
+                    )
+                for move_name, count in (
+                    successor_summary.get("plan_capsule_supported_move_counts", {}) or {}
+                ).items():
+                    move_key = f"{move_name}:{key}"
+                    stats["plan_capsule_supported_move_by_outcome"][move_key] = (
+                        stats["plan_capsule_supported_move_by_outcome"].get(move_key, 0)
+                        + int(count or 0)
+                    )
+            elif successor_summary.get("plan_capsule_active"):
+                stats["plan_capsule_active_without_support_count"] = (
+                    int(stats.get("plan_capsule_active_without_support_count", 0) or 0) + 1
+                )
+            if successor_summary.get("plan_capsule_selected_supported"):
+                stats["plan_capsule_selected_supported_count"] = (
+                    int(stats.get("plan_capsule_selected_supported_count", 0) or 0) + 1
+                )
+                selected_key = f"{successor_summary.get('selected_skill', 'unknown')}:{key}"
+                stats["plan_capsule_selected_supported_by_outcome"][selected_key] = (
+                    stats["plan_capsule_selected_supported_by_outcome"].get(selected_key, 0) + 1
+                )
             role_owned_support = dict(
                 successor_summary.get("visible_role_owned_score_normalization", {}) or {}
             )
@@ -3947,6 +4084,31 @@ def evaluate_landmark_progress(
                     "plan_capsule_markers": plan_capsule_markers,
                     "stage7_plan_capsule_enabled": bool(stage7_plan_capsule_enabled),
                     "stage7_plan_capsule_state": plan_state,
+                    "plan_capsule_active": successor_summary.get("plan_capsule_active"),
+                    "plan_capsule_supported_suggestion_count": successor_summary.get(
+                        "plan_capsule_supported_suggestion_count"
+                    ),
+                    "plan_capsule_supported_provider_counts": successor_summary.get(
+                        "plan_capsule_supported_provider_counts"
+                    ),
+                    "plan_capsule_supported_move_counts": successor_summary.get(
+                        "plan_capsule_supported_move_counts"
+                    ),
+                    "plan_capsule_selected_supported": successor_summary.get(
+                        "plan_capsule_selected_supported"
+                    ),
+                    "plan_capsule_selected_license": successor_summary.get(
+                        "plan_capsule_selected_license"
+                    ),
+                    "plan_capsule_max_supported_score": successor_summary.get(
+                        "plan_capsule_max_supported_score"
+                    ),
+                    "plan_capsule_max_supported_provider": successor_summary.get(
+                        "plan_capsule_max_supported_provider"
+                    ),
+                    "plan_capsule_max_supported_move": successor_summary.get(
+                        "plan_capsule_max_supported_move"
+                    ),
                     "visible_stage7_plan_capsule_bonus": successor_summary.get(
                         "visible_stage7_plan_capsule_bonus"
                     ),
@@ -4513,6 +4675,10 @@ def _merge_parallel_stats(
         "plan_capsule_abort_count",
         "plan_capsule_expired_count",
         "plan_capsule_progress_confirmed_count",
+        "plan_capsule_active_decision_count",
+        "plan_capsule_supported_suggestion_count",
+        "plan_capsule_selected_supported_count",
+        "plan_capsule_active_without_support_count",
         "role_owned_score_normalization_selected_count",
     )
     max_keys = ("one_ply_engine_ticks_max", "playout_engine_ticks_max")
@@ -4528,6 +4694,9 @@ def _merge_parallel_stats(
         "adapter_supported_move_by_outcome",
         "plan_capsule_marker_by_outcome",
         "plan_capsule_status_by_outcome",
+        "plan_capsule_supported_provider_by_outcome",
+        "plan_capsule_supported_move_by_outcome",
+        "plan_capsule_selected_supported_by_outcome",
         "role_owned_score_normalization_provider_by_outcome",
     )
     nested_count_keys = ("conversion_by_semantic_alignment_status",)
