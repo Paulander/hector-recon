@@ -3,7 +3,7 @@
   "causal_status": "non_causal",
   "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
   "candidate_type": "plan_capsule",
-  "promotion_status": "sandbox_ready",
+  "promotion_status": "sandboxed",
   "structural_candidate": {
     "candidate_diagnostic_labels": [
       "continuation_topology_underexpressive",
@@ -19,7 +19,8 @@
       "reports/structural_candidates/stage7_post_box_trajectory_provider_model.json",
       "reports/structural_candidates/stage7_post_box_learned_overlay_bonus001_10_h40.json",
       "reports/structural_candidates/stage7_post_box_learned_overlay_default_off_10_h40.json",
-      "reports/structural_candidates/stage7_post_box_narrow_on_25_h40.json"
+      "reports/structural_candidates/stage7_post_box_narrow_on_25_h40.json",
+      "reports/structural_candidates/stage7_capsule_trajectory_fidelity_audit.json"
     ],
     "governor_metadata": {
       "default_runtime_behavior_changed": false,
@@ -28,7 +29,7 @@
     },
     "governor_status": "structure_insufficient",
     "parent_skill": "krk.skill_hub",
-    "promotion_status": "sandbox_ready",
+    "promotion_status": "sandboxed",
     "proposed_change": {
       "bounded_ttl_white_moves": 3,
       "capsule_id": "krk.post_box_shrink_continuation",
@@ -133,7 +134,7 @@
       "safe_check_or_cut_created",
       "stagnation_avoided"
     ],
-    "promotion_status": "sandbox_ready",
+    "promotion_status": "sandboxed",
     "record_id": "plan_capsule.0efb3bb3d93b",
     "schema_version": "plan_capsule_spec.v1",
     "self_model": {
@@ -174,7 +175,8 @@
     "reports/structural_candidates/stage7_post_box_trajectory_provider_model.json",
     "reports/structural_candidates/stage7_post_box_learned_overlay_bonus001_10_h40.json",
     "reports/structural_candidates/stage7_post_box_learned_overlay_default_off_10_h40.json",
-    "reports/structural_candidates/stage7_post_box_narrow_on_25_h40.json"
+    "reports/structural_candidates/stage7_post_box_narrow_on_25_h40.json",
+    "reports/structural_candidates/stage7_capsule_trajectory_fidelity_audit.json"
   ],
   "candidate_status_updates": [
     {
@@ -194,8 +196,9 @@
     },
     {
       "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
-      "status": "sandbox_ready",
-      "next_action": "default_off_causal_sandbox_smoke"
+      "status": "selected_but_closed_loop_fails",
+      "diagnosis": "trajectory_ranking_and_closed_loop_gap",
+      "next_action": "expand_offline_dtm_seed_and_train_ranked_imitation_before_more_runtime_repair"
     }
   ],
   "hard_blocks": [

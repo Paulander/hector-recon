@@ -8025,3 +8025,55 @@ did not solve either seeded family. The failure is now better classified as a
 trajectory-target/model-expression gap, not a simple reward-sign or ownership
 gap.
 ```
+
+## Stage 7 capsule trajectory fidelity audit
+
+I added a non-causal trajectory fidelity audit for the learnable post-box Plan
+Capsule provider:
+
+```text
+reports/structural_candidates/stage7_capsule_trajectory_fidelity_audit.json
+reports/structural_candidates/stage7_capsule_trajectory_fidelity_audit.md
+```
+
+The audit compares teacher-forced decisions on the offline DTM trajectory seed
+against the provider's current top moves, then classifies the existing closed
+loop replays. DTM/tablebase evidence remains offline-only and non-causal.
+
+Result:
+
+```text
+teacher states: 25
+teacher top-1: 0.160
+DTM-positive top-1: 0.280
+DTM-positive top-3: 0.800
+DTM-optimal top-1: 0.280
+DTM-optimal top-3: 0.800
+
+closed-loop targeted families:
+  2cc: selected a6a8, winning_nonoptimal_move, max_plies
+  bace: selected a5h5, winning_nonoptimal_move, max_plies
+
+top_level_diagnosis:
+  trajectory_ranking_and_closed_loop_gap
+```
+
+Interpretation:
+
+```text
+The capsule provider is visible, default-off safe, and can win ownership, but
+it does not yet rank DTM-positive trajectory moves reliably enough. The next
+safe step is offline seed expansion and a ranked imitation/preference target,
+not another runtime support adapter, provider bonus, Stage 8, or promotion.
+```
+
+Candidate status:
+
+```text
+cand.krk.box_shrink.post_box_continuation_capsule.v1:
+  status: selected_but_closed_loop_fails
+  diagnosis: trajectory_ranking_and_closed_loop_gap
+  next_action:
+    expand offline DTM seed and train ranked imitation before any additional
+    runtime repair
+```

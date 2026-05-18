@@ -75,6 +75,15 @@ assert _learnable_capsule_replay_spec.loader is not None
 _learnable_capsule_replay = importlib.util.module_from_spec(_learnable_capsule_replay_spec)
 _learnable_capsule_replay_spec.loader.exec_module(_learnable_capsule_replay)
 
+_capsule_fidelity_spec = importlib.util.spec_from_file_location(
+    "audit_stage7_capsule_trajectory_fidelity",
+    Path(__file__).resolve().parents[1] / "scripts" / "audit_stage7_capsule_trajectory_fidelity.py",
+)
+assert _capsule_fidelity_spec is not None
+assert _capsule_fidelity_spec.loader is not None
+_capsule_fidelity = importlib.util.module_from_spec(_capsule_fidelity_spec)
+_capsule_fidelity_spec.loader.exec_module(_capsule_fidelity)
+
 
 def test_stage7_unresolved_legal_first_summary_marks_selection_gap_and_capacity_probe(tmp_path):
     probe = {
@@ -458,3 +467,57 @@ def test_stage7_plan_capsule_default_state_owns_learnable_provider():
 
     assert "krk.post_box_shrink_continuation" in state["owned_providers"]
     assert state["ttl_white_moves"] == 4
+
+
+def test_stage7_capsule_fidelity_closed_loop_diagnosis_splits_ranking_and_followup():
+    step_by_fen = {
+        "fen.bad": {
+            "teacher_move": "a6a5",
+            "positive_moves": ["a6a5"],
+            "optimal_moves": ["a6a5"],
+            "label_by_move": {
+                "a6a8": {"target_class": "winning_nonoptimal_move", "label": 0, "child_dtm": 28}
+            },
+        },
+        "fen.goodfirst": {
+            "teacher_move": "d2c3",
+            "positive_moves": ["a5h5"],
+            "optimal_moves": ["d2c3", "a5h5"],
+            "label_by_move": {
+                "a5h5": {"target_class": "optimal_dtm_move", "label": 1, "child_dtm": 24}
+            },
+        },
+    }
+    records = _capsule_fidelity._closed_loop_records(
+        replay_payloads=[
+            {
+                "schema_version": "stage7_learnable_capsule_provider_replay.v1",
+                "records": [
+                    {"start_fen": "fen.bad", "selected_move": "a6a8", "result": "max_plies"},
+                    {"start_fen": "fen.goodfirst", "selected_move": "a5h5", "result": "max_plies"},
+                ],
+            }
+        ],
+        step_by_fen=step_by_fen,
+    )
+
+    diagnoses = _capsule_fidelity._diagnosis_by_family(records)
+
+    assert diagnoses[0]["diagnosis"] == "teacher_fidelity_ranking_gap"
+    assert diagnoses[1]["diagnosis"] == "closed_loop_compounding_or_followup_policy_gap"
+
+
+def test_stage7_capsule_fidelity_top_level_flags_top1_ranking_gap_before_compounding():
+    diagnosis, next_action = _capsule_fidelity._top_level_diagnosis(
+        accuracy={
+            "dtm_positive_top1_rate": 0.28,
+            "dtm_positive_top3_rate": 0.80,
+        },
+        closed_loop=[
+            {"result": "max_plies", "selected_is_dtm_positive": False},
+            {"result": "max_plies", "selected_is_dtm_positive": False},
+        ],
+    )
+
+    assert diagnosis == "trajectory_ranking_and_closed_loop_gap"
+    assert "ranked_imitation" in next_action
