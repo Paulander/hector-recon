@@ -7089,3 +7089,66 @@ cand.krk.box_shrink.family_2cc.post_box_continuation_overlay.v1
 
 These candidate records round-trip through `StructuralCandidate` and keep
 `causal_status = non_causal` and `credit = 0.0`.
+
+## Stage 7 Plan Capsule drive-priority sandbox negative result
+
+I tested the smallest causal follow-up suggested by the residual split:
+a default-off Plan Capsule owned-arbitration priority that lets a visible
+drive-repair king move outrank a slightly higher edge-trap candidate in
+069-like contexts.
+
+Artifacts:
+
+```text
+reports/structural_candidates/stage7_plan_capsule_drive_priority_ttl3_10_h40.json
+reports/structural_candidates/stage7_plan_capsule_drive_priority_ttl3_10_h40_rerun.json
+reports/structural_candidates/stage7_plan_capsule_drive_priority_ttl3_25_h40.json
+```
+
+Result:
+
+```text
+10-sample smoke before context merge:
+  7 mate / 3 max_plies
+  shadow candidates: 9
+  no behavior change versus prior owned-arbitration smoke
+
+10-sample smoke after context merge:
+  8 mate / 2 max_plies
+  shadow candidates: 7
+  state.069e81a609ed selected krk.drive_to_edge and converted
+
+25-sample target:
+  16 mate / 9 max_plies
+  shadow candidates: 26
+```
+
+Comparison baseline:
+
+```text
+prior owned-arbitration 25-sample:
+  17 mate / 8 max_plies
+  shadow candidates: 21
+```
+
+Interpretation:
+
+```text
+The drive-priority idea fixes the targeted 069-like family but regresses the
+25-sample target aggregate. That means the visible role boundary is still too
+coarse for a general sandbox rule. I reverted the runtime/test change and kept
+the artifacts as negative evidence.
+```
+
+Candidate status update:
+
+```text
+cand.krk.box_shrink.family_069.drive_role_refinement.v1:
+  status: rejected_as_general_priority_rule
+  diagnosis:
+    targeted_family_improves
+    25_sample_target_regresses
+    role_boundary_underseparated
+  next_action:
+    do not reintroduce priority without additional separating terms
+```
