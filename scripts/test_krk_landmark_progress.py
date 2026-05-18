@@ -596,6 +596,12 @@ def _suggestion_role_trace(meta: dict) -> dict:
         "visible_stage7_post_box_continuation_license": dict(
             meta.get("visible_stage7_post_box_continuation_license", {}) or {}
         ),
+        "visible_stage7_learned_post_box_continuation_bonus": float(
+            meta.get("visible_stage7_learned_post_box_continuation_bonus", 0.0) or 0.0
+        ),
+        "visible_stage7_learned_post_box_continuation_license": dict(
+            meta.get("visible_stage7_learned_post_box_continuation_license", {}) or {}
+        ),
     }
 
 
@@ -919,6 +925,12 @@ def _successor_contract_audit(
         ),
         "visible_stage7_post_box_continuation_license": dict(
             selected_group.get("visible_stage7_post_box_continuation_license", {}) or {}
+        ),
+        "visible_stage7_learned_post_box_continuation_bonus": float(
+            selected_group.get("visible_stage7_learned_post_box_continuation_bonus", 0.0) or 0.0
+        ),
+        "visible_stage7_learned_post_box_continuation_license": dict(
+            selected_group.get("visible_stage7_learned_post_box_continuation_license", {}) or {}
         ),
     }
 
@@ -1263,6 +1275,8 @@ def choose_move_with_engine(
     stage7_post_king_tempo_score: float = 30.0,
     stage7_post_box_continuation_enabled: bool = False,
     stage7_post_box_continuation_score: float = 32.0,
+    stage7_learned_post_box_continuation_enabled: bool = False,
+    stage7_learned_post_box_continuation_bonus: float = 0.0,
     stage7_provider_scope_label: str = "box_shrink",
     active_landmark_label: str | None = None,
     early_stop_stable_suggestions: int = 0,
@@ -1299,6 +1313,8 @@ def choose_move_with_engine(
         stage7_post_king_tempo_score=stage7_post_king_tempo_score,
         stage7_post_box_continuation_enabled=stage7_post_box_continuation_enabled,
         stage7_post_box_continuation_score=stage7_post_box_continuation_score,
+        stage7_learned_post_box_continuation_enabled=stage7_learned_post_box_continuation_enabled,
+        stage7_learned_post_box_continuation_bonus=stage7_learned_post_box_continuation_bonus,
         stage7_provider_scope_label=stage7_provider_scope_label,
         active_landmark_label=active_landmark_label,
         early_stop_stable_suggestions=early_stop_stable_suggestions,
@@ -1337,6 +1353,8 @@ def choose_move_details(
     stage7_post_king_tempo_score: float = 30.0,
     stage7_post_box_continuation_enabled: bool = False,
     stage7_post_box_continuation_score: float = 32.0,
+    stage7_learned_post_box_continuation_enabled: bool = False,
+    stage7_learned_post_box_continuation_bonus: float = 0.0,
     stage7_provider_scope_label: str = "box_shrink",
     active_landmark_label: str | None = None,
     early_stop_stable_suggestions: int = 0,
@@ -1381,6 +1399,8 @@ def choose_move_details(
             stage7_post_king_tempo_score=stage7_post_king_tempo_score,
             stage7_post_box_continuation_enabled=stage7_post_box_continuation_enabled,
             stage7_post_box_continuation_score=stage7_post_box_continuation_score,
+            stage7_learned_post_box_continuation_enabled=stage7_learned_post_box_continuation_enabled,
+            stage7_learned_post_box_continuation_bonus=stage7_learned_post_box_continuation_bonus,
             stage7_provider_scope_label=stage7_provider_scope_label,
             active_landmark_label=active_landmark_label,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
@@ -1426,6 +1446,8 @@ def _choose_move_details_impl(
     stage7_post_king_tempo_score: float = 30.0,
     stage7_post_box_continuation_enabled: bool = False,
     stage7_post_box_continuation_score: float = 32.0,
+    stage7_learned_post_box_continuation_enabled: bool = False,
+    stage7_learned_post_box_continuation_bonus: float = 0.0,
     stage7_provider_scope_label: str = "box_shrink",
     active_landmark_label: str | None = None,
     early_stop_stable_suggestions: int = 0,
@@ -1513,6 +1535,12 @@ def _choose_move_details_impl(
     )
     env["blackboard"]["stage7_post_box_continuation_score"] = float(
         stage7_post_box_continuation_score
+    )
+    env["blackboard"]["stage7_learned_post_box_continuation_enabled"] = bool(
+        stage7_learned_post_box_continuation_enabled
+    )
+    env["blackboard"]["stage7_learned_post_box_continuation_bonus"] = float(
+        stage7_learned_post_box_continuation_bonus
     )
     env["blackboard"]["stage7_post_box_post_reply_context"] = bool(
         stage7_post_box_post_reply_context
@@ -1676,6 +1704,8 @@ def _choose_move_details_impl(
         "stage7_post_king_tempo_already_used": bool(stage7_post_king_tempo_already_used),
         "stage7_post_box_continuation_enabled": bool(stage7_post_box_continuation_enabled),
         "stage7_post_box_continuation_score": float(stage7_post_box_continuation_score),
+        "stage7_learned_post_box_continuation_enabled": bool(stage7_learned_post_box_continuation_enabled),
+        "stage7_learned_post_box_continuation_bonus": float(stage7_learned_post_box_continuation_bonus),
         "stage7_post_box_post_reply_context": bool(stage7_post_box_post_reply_context),
         "stage7_provider_scope_label": str(stage7_provider_scope_label or "box_shrink"),
         "active_landmark_label": str(active_landmark_label or ""),
@@ -1886,6 +1916,8 @@ def play_to_mate(
     stage7_post_king_tempo_score: float = 30.0,
     stage7_post_box_continuation_enabled: bool = False,
     stage7_post_box_continuation_score: float = 32.0,
+    stage7_learned_post_box_continuation_enabled: bool = False,
+    stage7_learned_post_box_continuation_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     lock_stage_filter_through_playout: bool = False,
     forced_successor_skill: Optional[str] = None,
@@ -2005,6 +2037,8 @@ def play_to_mate(
                 stage7_post_king_tempo_score=stage7_post_king_tempo_score,
                 stage7_post_box_continuation_enabled=stage7_post_box_continuation_enabled,
                 stage7_post_box_continuation_score=stage7_post_box_continuation_score,
+                stage7_learned_post_box_continuation_enabled=stage7_learned_post_box_continuation_enabled,
+                stage7_learned_post_box_continuation_bonus=stage7_learned_post_box_continuation_bonus,
                 active_landmark_label=label,
                 stage7_king_tempo_already_used=stage7_king_tempo_used,
                 stage7_drive_repair_already_used=stage7_drive_repair_used,
@@ -2840,6 +2874,8 @@ def run_counterfactual_successor_sweep(
     stage7_post_king_tempo_score: float = 30.0,
     stage7_post_box_continuation_enabled: bool = False,
     stage7_post_box_continuation_score: float = 32.0,
+    stage7_learned_post_box_continuation_enabled: bool = False,
+    stage7_learned_post_box_continuation_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     step_output: Optional[Path] = None,
     step_context: Optional[dict] = None,
@@ -3022,6 +3058,8 @@ def evaluate_landmark_progress(
     stage7_post_king_tempo_score: float = 30.0,
     stage7_post_box_continuation_enabled: bool = False,
     stage7_post_box_continuation_score: float = 32.0,
+    stage7_learned_post_box_continuation_enabled: bool = False,
+    stage7_learned_post_box_continuation_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     lock_stage_filter_through_playout: bool = False,
     counterfactual_successors: tuple[str, ...] = (),
@@ -3167,6 +3205,8 @@ def evaluate_landmark_progress(
             stage7_post_king_tempo_score=stage7_post_king_tempo_score,
             stage7_post_box_continuation_enabled=stage7_post_box_continuation_enabled,
             stage7_post_box_continuation_score=stage7_post_box_continuation_score,
+            stage7_learned_post_box_continuation_enabled=stage7_learned_post_box_continuation_enabled,
+            stage7_learned_post_box_continuation_bonus=stage7_learned_post_box_continuation_bonus,
             active_landmark_label=label,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
             perf_profile=perf_profile,
@@ -3336,6 +3376,8 @@ def evaluate_landmark_progress(
                 stage7_post_king_tempo_score=stage7_post_king_tempo_score,
                 stage7_post_box_continuation_enabled=stage7_post_box_continuation_enabled,
                 stage7_post_box_continuation_score=stage7_post_box_continuation_score,
+                stage7_learned_post_box_continuation_enabled=stage7_learned_post_box_continuation_enabled,
+                stage7_learned_post_box_continuation_bonus=stage7_learned_post_box_continuation_bonus,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
                 lock_stage_filter_through_playout=lock_stage_filter_through_playout,
                 perf_profile=perf_profile,
@@ -3884,6 +3926,8 @@ def evaluate_landmark_progress(
     stats["stage7_post_king_tempo_score"] = stage7_post_king_tempo_score
     stats["stage7_post_box_continuation_enabled"] = stage7_post_box_continuation_enabled
     stats["stage7_post_box_continuation_score"] = stage7_post_box_continuation_score
+    stats["stage7_learned_post_box_continuation_enabled"] = stage7_learned_post_box_continuation_enabled
+    stats["stage7_learned_post_box_continuation_bonus"] = stage7_learned_post_box_continuation_bonus
     stats["early_stop_stable_suggestions"] = int(early_stop_stable_suggestions)
     stats["lock_stage_filter_through_playout"] = bool(lock_stage_filter_through_playout)
     stats["diagnostic_caches_enabled"] = bool(enable_diagnostic_caches)
@@ -4428,6 +4472,10 @@ def main() -> None:
                         help="Enable opt-in Stage 7 visible post-box-shrink continuation provider")
     parser.add_argument("--stage7-post-box-continuation-score", type=float, default=32.0,
                         help="Score for the opt-in Stage 7 visible post-box-shrink continuation provider")
+    parser.add_argument("--enable-stage7-learned-post-box-continuation", action="store_true",
+                        help="Enable opt-in learned Stage 7 post-box-shrink continuation overlay providers")
+    parser.add_argument("--stage7-learned-post-box-continuation-bonus", type=float, default=0.0,
+                        help="Tiny opt-in visible owner support for learned Stage 7 post-box continuation providers")
     parser.add_argument("--composition-profile",
                         choices=[COMPOSITION_PROFILE_NONE, COMPOSITION_PROFILE_HANDOFF_V1],
                         default=COMPOSITION_PROFILE_NONE,
@@ -4512,6 +4560,8 @@ def main() -> None:
         stage7_post_king_tempo_score=args.stage7_post_king_tempo_score,
         stage7_post_box_continuation_enabled=args.enable_stage7_post_box_continuation,
         stage7_post_box_continuation_score=args.stage7_post_box_continuation_score,
+        stage7_learned_post_box_continuation_enabled=args.enable_stage7_learned_post_box_continuation,
+        stage7_learned_post_box_continuation_bonus=args.stage7_learned_post_box_continuation_bonus,
         early_stop_stable_suggestions=args.early_stop_stable_suggestions,
         lock_stage_filter_through_playout=args.lock_stage_filter_through_playout,
         counterfactual_successors=tuple(

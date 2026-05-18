@@ -6050,3 +6050,85 @@ cand.krk.box_shrink.post_box_continuation_overlay_probe.v1:
     trajectory seed and normal actuator/provider machinery, then sandbox it
     with Stage 7 target validation and Stage 6/5/4/1 guardrails
 ```
+
+## Stage 7 post-box learned overlay probe
+
+I trained a normal baseline overlay learner from the DTM trajectory seed and
+compiled it as:
+
+```text
+reports/structural_candidates/stage7_post_box_overlay_learner.pkl
+reports/structural_candidates/stage7_post_box_overlay_learner_training.json
+snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_post_box_learned_overlay.json
+```
+
+Training summary:
+
+```text
+transition_count: 479
+positive_transition_count: 53
+negative_transition_count: 426
+sensor_count: 15
+overlay_actuator_count: 24
+label: post_box_shrink_continuation
+```
+
+Runtime safety change:
+
+```text
+skill.krk.post_box_shrink_continuation is gated by:
+  stage7_learned_post_box_continuation_enabled
+  stage7_post_box_post_reply_context
+  active_landmark_label == box_shrink
+
+The learned provider is default-off and cannot participate in the initial
+local box-shrink move.
+```
+
+Smoke results:
+
+```text
+learned overlay default-off, 10 samples, h40:
+  local: 10/10 improved, 8/10 optimal
+  conversion: 7 mate / 3 max_plies
+  shadows: 10
+
+learned overlay enabled, no owner bonus, 10 samples, h40:
+  local: 10/10 improved, 8/10 optimal
+  conversion: 7 mate / 3 max_plies
+  shadows: 13
+
+learned overlay enabled, owner bonus 0.01, 10 samples, h40:
+  local: 10/10 improved, 8/10 optimal
+  conversion: 7 mate / 3 max_plies
+  shadows: 10
+```
+
+Interpretation:
+
+```text
+With the tiny owner bonus, the learned provider does win ownership in the three
+remaining max-plies post-box families:
+  state.2cc0b3e1033a -> krk.post_box_shrink_continuation
+  state.bace6f82b671 -> krk.post_box_shrink_continuation
+
+But those cases still max out. Therefore the bottleneck is no longer just
+provider selection or score-scale arbitration. The learned overlay generated
+from the current DTM trajectory seed is not composition-ready.
+```
+
+Candidate status:
+
+```text
+cand.krk.box_shrink.post_box_continuation_overlay_probe.v1:
+  status: quarantined_after_bounded_overlay_training_probe
+  diagnosis:
+    default_off_safe
+    ownership_possible
+    trained_actuator_overlay_selected_but_conversion_failed
+  next action:
+    do not tune Stage 7 local box_shrink further
+    do not increase owner bonus
+    either ask for expert review or move to broader full-KRK/post-box
+    continuation design rather than another micro-patch
+```

@@ -1539,6 +1539,15 @@ def create_actuator_terminal(node_id=None):
         min_goal_overlap = float(blackboard.get("goal_min_overlap", 8))
         curriculum_label = node.meta.get("curriculum_label")
         skill_id = node.meta.get("skill_id")
+        if skill_id == "krk.post_box_shrink_continuation":
+            if not bool(blackboard.get("stage7_learned_post_box_continuation_enabled", False)):
+                return False, False
+            if not bool(blackboard.get("stage7_post_box_post_reply_context", False)):
+                return False, False
+            scope_label = str(blackboard.get("stage7_provider_scope_label", "box_shrink") or "box_shrink")
+            active_label = str(blackboard.get("active_landmark_label", "") or "")
+            if active_label and active_label != scope_label:
+                return False, False
         forced_successor_skill = blackboard.get("forced_successor_skill")
         if forced_successor_skill and skill_id != forced_successor_skill:
             return False, False
@@ -1749,6 +1758,27 @@ def create_actuator_terminal(node_id=None):
                     # Do not let raw delta-s similarity select a stalemate/draw
                     # or a tactically loose move where Black can remove the rook.
                     score -= 1_000_000.0
+
+                learned_post_box_bonus = 0.0
+                if skill_id == "krk.post_box_shrink_continuation":
+                    learned_post_box_bonus = float(
+                        blackboard.get("stage7_learned_post_box_continuation_bonus", 0.0) or 0.0
+                    )
+                    score += learned_post_box_bonus
+                    move_meta[move]["visible_stage7_learned_post_box_continuation_bonus"] = (
+                        learned_post_box_bonus
+                    )
+                    move_meta[move]["visible_stage7_learned_post_box_continuation_license"] = {
+                        "role_id": "krk.post_box_shrink_continuation",
+                        "provider_skill_id": "krk.post_box_shrink_continuation",
+                        "support_amount": learned_post_box_bonus,
+                        "direct_request": False,
+                        "source_terms": [
+                            "stage7_learned_post_box_continuation_enabled",
+                            "stage7_post_box_post_reply_context",
+                            "active_landmark_label.box_shrink",
+                        ],
+                    }
 
                 if blackboard.get("successor_affordance_layer_enabled"):
                     score = _apply_successor_affordance_bias(
