@@ -6735,6 +6735,76 @@ owned arbitration helps some windows and still needs larger target validation
 and, only if target improves, protected guardrails.
 ```
 
+## Stage 7 Plan Capsule owned-arbitration 25-sample target
+
+I ran a paired 25-sample h40 target validation with identical seed/positions and
+`suggestion_limit=20`.
+
+Artifacts:
+
+```text
+reports/structural_candidates/stage7_plan_capsule_marker_only_s20_25_h40.json
+reports/structural_candidates/stage7_plan_capsule_owned_arb_ttl3_s20_25_h40.json
+```
+
+Result:
+
+```text
+marker-only baseline:
+  12 mate / 13 max_plies
+  shadow candidates: 35
+
+owned-arbitration ttl=3:
+  17 mate / 8 max_plies
+  shadow candidates: 21
+```
+
+Owned-arbitration trace counters:
+
+```text
+plan_capsule_active_decision_count: 13
+plan_capsule_supported_suggestion_count: 208
+plan_capsule_selected_supported_count: 13
+plan_capsule_owned_arbitration_selected_count: 9
+```
+
+Guardrail spot checks with the same opt-in flags enabled:
+
+```text
+Stage 6 drive_to_edge:
+  25 mate / 0 max_plies
+  shadow candidates: 0
+  plan_capsule_active_decision_count: 0
+
+Stage 5 fence_established:
+  20 mate / 5 max_plies
+  shadow candidates: 10
+  plan_capsule_active_decision_count: 0
+
+Stage 4 edge_trap_wrong_tempo:
+  22 mate / 3 max_plies
+  shadow candidates: 6
+  plan_capsule_active_decision_count: 0
+```
+
+Interpretation:
+
+```text
+The owned-arbitration sandbox improves Stage 7 target conversion and reduces
+shadow candidates on the 25-sample paired target. The capsule does not fire on
+Stage 6/5/4 guardrail labels, so the new mechanism is label-scoped as intended.
+The Stage 5/4 guardrails are not perfect under this Stage 7 topology, but the
+plan capsule itself is not the active cause in those runs.
+```
+
+Candidate status:
+
+```text
+candidate_status: sandbox_improves_target_small_sample
+promotion_status: sandboxed
+next_action: larger Stage 7 target validation, then broader guardrail comparison
+```
+
 Hard boundary:
 
 ```text
