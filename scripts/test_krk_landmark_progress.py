@@ -24,7 +24,13 @@ import chess
 from recon_lite.engine import ReConEngine
 from recon_lite.graph import Graph, NodeState
 from recon_lite_chess.graph.builder import build_graph_from_topology
-from recon_lite_chess.routing import HandoffPacket, ShadowStemCandidate, stable_record_id
+from recon_lite_chess.routing import (
+    CandidateMoveFrame,
+    HandoffPacket,
+    MoveShapeRoleSpec,
+    ShadowStemCandidate,
+    stable_record_id,
+)
 from recon_lite_chess.training.krk_landmarks import (
     LANDMARK_LABELS,
     KRK_LANDMARK_STAGE_SPECS,
@@ -633,6 +639,50 @@ def _adapter_support_summary_for_suggestions(suggestions: list[dict]) -> dict:
     }
 
 
+def _candidate_move_role_summary_for_suggestions(
+    suggestions: list[dict],
+    *,
+    selected_suggestion: dict | None = None,
+) -> dict:
+    role_counts: dict[str, int] = {}
+    move_counts: dict[str, int] = {}
+    supported = 0
+    selected_supported = False
+    selected_payload: dict = {}
+    for item in suggestions:
+        meta = item.get("meta") if isinstance(item.get("meta"), dict) else {}
+        payload = meta.get("visible_role_scoped_candidate_move_actuator")
+        if not isinstance(payload, dict) or not payload.get("enabled"):
+            continue
+        if payload.get("direct_request"):
+            continue
+        supported += 1
+        role_id = str(payload.get("role_id") or "unknown")
+        move = item.get("move")
+        move_uci = move.uci() if hasattr(move, "uci") else str(move)
+        role_counts[role_id] = role_counts.get(role_id, 0) + 1
+        move_counts[move_uci] = move_counts.get(move_uci, 0) + 1
+    if isinstance(selected_suggestion, dict):
+        selected_meta = (
+            selected_suggestion.get("meta")
+            if isinstance(selected_suggestion.get("meta"), dict)
+            else {}
+        )
+        selected_payload = dict(
+            selected_meta.get("visible_role_scoped_candidate_move_actuator", {}) or {}
+        )
+        selected_supported = bool(selected_payload) and not bool(
+            selected_payload.get("direct_request")
+        )
+    return {
+        "candidate_move_role_supported_suggestion_count": supported,
+        "candidate_move_role_supported_role_counts": role_counts,
+        "candidate_move_role_supported_move_counts": move_counts,
+        "candidate_move_role_selected_supported": selected_supported,
+        "candidate_move_role_selected_payload": selected_payload,
+    }
+
+
 def _plan_capsule_support_summary_for_suggestions(
     suggestions: list[dict],
     *,
@@ -748,6 +798,260 @@ def _plan_capsule_supported_owned_candidates(suggestions: list[dict]) -> list[di
         reverse=True,
     )
     return candidates
+
+
+def _stage7_0926_move_shape_role_spec() -> MoveShapeRoleSpec:
+    return MoveShapeRoleSpec(
+        role_id="krk.post_box.king_support_fence_stabilizer",
+        source_candidate_id="cand.krk.box_shrink.family_0926.king_support_fence_stabilizer.v1",
+        source_monitor_script="growth.monitor.stage7_plan_capsule_residual_family_split",
+        source_terms=[
+            "legal_first_move_converts_h40",
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support",
+            "fence_stable_after_move",
+            "cut_preserved_after_move",
+        ],
+        domain="krk",
+        target_skill="krk.box_shrink",
+        parent_capsule="krk.post_box_shrink_continuation",
+        scope_terms=[
+            "active_landmark_label.box_shrink",
+            "plan_capsule_entry_confirmed",
+            "post_reply_state_reached",
+        ],
+        required_current_terms=[
+            "rook_safe",
+            "conversion_not_immediate",
+            "no_mate_in_one_available",
+        ],
+        entry_terms=[
+            "active_landmark_label.box_shrink",
+            "post_reply_state_reached",
+            "conversion_not_immediate",
+            "rook_safe",
+            "plan_capsule_entry_confirmed",
+            "no_mate_in_one_available",
+        ],
+        move_shape_required_terms=[
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support",
+        ],
+        post_move_required_terms=[
+            "rook_safe_after_move",
+            "box_area_not_increased_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "cut_preserved_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases",
+        ],
+        veto_terms=[
+            "mate_in_one_available",
+            "rook_unsafe_after_move",
+            "draw_or_stalemate_risk",
+            "box_area_increases_after_move",
+            "cut_or_fence_lost_without_repair",
+        ],
+        promotion_status="proposed",
+    )
+
+
+def _candidate_frame_for_move(
+    board: chess.Board,
+    move: chess.Move,
+    *,
+    blackboard: dict,
+    include_worst_reply: bool = False,
+    causal_status: str = "non_causal",
+) -> CandidateMoveFrame:
+    from recon_lite_chess.krk_baseline_nodes import krk_move_shape_audit
+
+    audit = krk_move_shape_audit(
+        board,
+        move,
+        blackboard,
+        include_worst_reply=include_worst_reply,
+    )
+    post = board.copy(stack=False)
+    post.push(move)
+    safety_terms: list[str] = []
+    veto_terms: list[str] = []
+    post_terms = set(audit.get("post_move_terms", []) or [])
+    worst_terms = set(audit.get("worst_reply_terms", []) or [])
+    if "rook_safe_after_move" in post_terms:
+        safety_terms.append("rook_safe_after_move")
+    if post.is_stalemate() or post.is_insufficient_material() or post.can_claim_draw():
+        veto_terms.append("draw_or_stalemate_risk")
+    if "no_draw_after_worst_reply" in worst_terms:
+        safety_terms.append("no_draw_after_worst_reply")
+    board_key = f"{board.board_fen()}:{'w' if board.turn == chess.WHITE else 'b'}"
+    return CandidateMoveFrame(
+        move_uci=move.uci(),
+        legal=move in board.legal_moves,
+        current_terms=list(audit.get("current_terms", []) or []),
+        move_shape_terms=list(audit.get("move_shape_terms", []) or []),
+        post_move_terms=list(audit.get("post_move_terms", []) or []),
+        worst_reply_terms=list(audit.get("worst_reply_terms", []) or []),
+        safety_terms=safety_terms,
+        veto_terms=veto_terms,
+        source_terms=list(audit.get("current_terms", []) or []),
+        source_terminal="terminal.krk.candidate_move_enumerator",
+        board_key=board_key,
+        fen=board.fen(),
+        causal_status=causal_status,  # type: ignore[arg-type]
+    )
+
+
+def _candidate_frame_role_match(
+    frame: CandidateMoveFrame,
+    role: MoveShapeRoleSpec,
+    *,
+    visible_terms: dict,
+    plan_marker: dict,
+) -> dict | None:
+    current_terms = set(frame.current_terms) | {
+        term for term, value in visible_terms.items() if bool(value)
+    }
+    if plan_marker.get("entry_confirmed"):
+        current_terms.add("plan_capsule_entry_confirmed")
+    move_terms = set(frame.move_shape_terms)
+    post_terms = set(frame.post_move_terms)
+    worst_terms = set(frame.worst_reply_terms)
+    all_terms = current_terms | move_terms | post_terms | worst_terms | set(frame.veto_terms)
+    missing_current = sorted(set(role.required_current_terms) - current_terms)
+    missing_scope = sorted(set(role.scope_terms) - current_terms)
+    missing_move = sorted(set(role.move_shape_required_terms) - move_terms)
+    missing_post = sorted(set(role.post_move_required_terms) - post_terms)
+    missing_worst = sorted(set(role.required_worst_reply_terms) - worst_terms)
+    veto_met = sorted(set(role.veto_terms) & all_terms)
+    if missing_current or missing_scope or missing_move or missing_post or missing_worst or veto_met:
+        return None
+    matched_terms = sorted(
+        set(role.required_current_terms)
+        | set(role.scope_terms)
+        | set(role.move_shape_required_terms)
+        | set(role.post_move_required_terms)
+        | set(role.required_worst_reply_terms)
+    )
+    return {
+        "schema_version": "candidate_move_role_match.v1",
+        "role_id": role.role_id,
+        "source_candidate_id": role.source_candidate_id,
+        "matched_terms": matched_terms,
+        "source_terms": sorted(set(role.source_terms) | set(matched_terms)),
+        "veto_terms_met": [],
+        "causal_status": "sandbox_opt_in",
+        "direct_request": False,
+    }
+
+
+def _enumerate_candidate_move_frames(
+    board: chess.Board,
+    *,
+    blackboard: dict,
+    include_worst_reply: bool = False,
+    causal_status: str = "non_causal",
+) -> list[CandidateMoveFrame]:
+    frames = [
+        _candidate_frame_for_move(
+            board,
+            move,
+            blackboard=blackboard,
+            include_worst_reply=include_worst_reply,
+            causal_status=causal_status,
+        )
+        for move in sorted(board.legal_moves, key=lambda item: item.uci())
+    ]
+    blackboard["krk_candidate_move_frames"] = [frame.to_dict() for frame in frames]
+    blackboard["krk_candidate_move_enumerator"] = {
+        "schema_version": "candidate_move_enumerator_trace.v1",
+        "source_terminal": "terminal.krk.candidate_move_enumerator",
+        "frame_count": len(frames),
+        "causal_status": causal_status,
+        "direct_request": False,
+    }
+    return frames
+
+
+def _apply_stage7_candidate_move_layer(
+    env: dict,
+    *,
+    role_enabled: bool,
+    support_amount: float,
+    include_worst_reply: bool = False,
+) -> None:
+    blackboard = env.get("blackboard", {})
+    board = env.get("board")
+    if board is None or not blackboard.get("candidate_move_layer_enabled", False):
+        return
+    frames = _enumerate_candidate_move_frames(
+        board,
+        blackboard=blackboard,
+        include_worst_reply=include_worst_reply,
+        causal_status="sandbox_opt_in" if role_enabled else "non_causal",
+    )
+    if not role_enabled:
+        return
+    role = _stage7_0926_move_shape_role_spec()
+    visible_terms = dict(blackboard.get("krk_visible_terms", {}) or {})
+    visible_terms.update(dict(blackboard.get("krk_dynamic_context_terms", {}) or {}))
+    marker = (
+        blackboard.get("krk_plan_capsule_markers", {})
+        .get("krk.post_box_shrink_continuation", {})
+        if isinstance(blackboard.get("krk_plan_capsule_markers"), dict)
+        else {}
+    )
+    suggestions = env.setdefault("actuator_suggestions", [])
+    match_count = 0
+    for frame in frames:
+        match = _candidate_frame_role_match(
+            frame,
+            role,
+            visible_terms=visible_terms,
+            plan_marker=marker,
+        )
+        if not match:
+            continue
+        frame_payload = frame.to_dict()
+        frame_payload["role_matches"] = [match]
+        match_count += 1
+        suggestions.append(
+            {
+                "move": chess.Move.from_uci(frame.move_uci),
+                "score": float(support_amount),
+                "actuator": "terminal.krk.role_scoped_candidate_move_actuator",
+                "stage": 7,
+                "curriculum_label": "candidate_move_role",
+                "meta": {
+                    "curriculum_label": "candidate_move_role",
+                    "stage": 7,
+                    "visible_role_scoped_candidate_move_actuator": {
+                        "schema_version": "role_scoped_candidate_move_suggestion.v1",
+                        "enabled": True,
+                        "role_id": role.role_id,
+                        "plan_capsule_id": role.parent_capsule,
+                        "move": frame.move_uci,
+                        "source_terms": match["source_terms"],
+                        "matched_terms": match["matched_terms"],
+                        "support_amount": float(support_amount),
+                        "direct_request": False,
+                        "causal_status": "sandbox_opt_in",
+                        "source_terminal": "terminal.krk.role_scoped_candidate_move_actuator",
+                        "candidate_frame": frame_payload,
+                    },
+                },
+            }
+        )
+    blackboard["krk_candidate_move_role_matches"] = {
+        "schema_version": "candidate_move_role_match_summary.v1",
+        "role_id": role.role_id,
+        "match_count": match_count,
+        "causal_status": "sandbox_opt_in",
+        "direct_request": False,
+    }
 
 
 def _compact_selected_suggestion(item: dict | None) -> dict:
@@ -930,6 +1234,11 @@ def _successor_skill_summary(
             "adapter_supported_suggestion_count": 0,
             "adapter_supported_provider_counts": {},
             "adapter_supported_move_counts": {},
+            "candidate_move_role_supported_suggestion_count": 0,
+            "candidate_move_role_supported_role_counts": {},
+            "candidate_move_role_supported_move_counts": {},
+            "candidate_move_role_selected_supported": False,
+            "candidate_move_role_selected_payload": {},
             "plan_capsule_active": False,
             "plan_capsule_supported_suggestion_count": 0,
             "plan_capsule_supported_provider_counts": {},
@@ -1073,6 +1382,21 @@ def _successor_skill_summary(
         ),
         "adapter_supported_move_counts": dict(
             move_details.get("adapter_supported_move_counts", {}) or {}
+        ),
+        "candidate_move_role_supported_suggestion_count": int(
+            move_details.get("candidate_move_role_supported_suggestion_count", 0) or 0
+        ),
+        "candidate_move_role_supported_role_counts": dict(
+            move_details.get("candidate_move_role_supported_role_counts", {}) or {}
+        ),
+        "candidate_move_role_supported_move_counts": dict(
+            move_details.get("candidate_move_role_supported_move_counts", {}) or {}
+        ),
+        "candidate_move_role_selected_supported": bool(
+            move_details.get("candidate_move_role_selected_supported", False)
+        ),
+        "candidate_move_role_selected_payload": dict(
+            move_details.get("candidate_move_role_selected_payload", {}) or {}
         ),
         "plan_capsule_active": bool(move_details.get("plan_capsule_active", False)),
         "plan_capsule_supported_suggestion_count": int(
@@ -1617,6 +1941,9 @@ def choose_move_with_engine(
     stage7_plan_capsule_ttl: int = 3,
     stage7_plan_capsule_support_bonus: float = 0.0,
     stage7_plan_capsule_owned_arbitration_enabled: bool = False,
+    candidate_move_layer_enabled: bool = False,
+    stage7_king_support_fence_stabilizer_enabled: bool = False,
+    candidate_move_role_support: float = 0.0,
     stage7_plan_capsule_state: dict | None = None,
     current_ply: int | None = None,
     stage7_provider_scope_label: str = "box_shrink",
@@ -1664,6 +1991,11 @@ def choose_move_with_engine(
         stage7_plan_capsule_owned_arbitration_enabled=(
             stage7_plan_capsule_owned_arbitration_enabled
         ),
+        candidate_move_layer_enabled=candidate_move_layer_enabled,
+        stage7_king_support_fence_stabilizer_enabled=(
+            stage7_king_support_fence_stabilizer_enabled
+        ),
+        candidate_move_role_support=candidate_move_role_support,
         stage7_plan_capsule_state=stage7_plan_capsule_state,
         current_ply=current_ply,
         stage7_provider_scope_label=stage7_provider_scope_label,
@@ -1711,6 +2043,9 @@ def choose_move_details(
     stage7_plan_capsule_ttl: int = 3,
     stage7_plan_capsule_support_bonus: float = 0.0,
     stage7_plan_capsule_owned_arbitration_enabled: bool = False,
+    candidate_move_layer_enabled: bool = False,
+    stage7_king_support_fence_stabilizer_enabled: bool = False,
+    candidate_move_role_support: float = 0.0,
     stage7_plan_capsule_state: dict | None = None,
     current_ply: int | None = None,
     stage7_provider_scope_label: str = "box_shrink",
@@ -1766,6 +2101,11 @@ def choose_move_details(
             stage7_plan_capsule_owned_arbitration_enabled=(
                 stage7_plan_capsule_owned_arbitration_enabled
             ),
+            candidate_move_layer_enabled=candidate_move_layer_enabled,
+            stage7_king_support_fence_stabilizer_enabled=(
+                stage7_king_support_fence_stabilizer_enabled
+            ),
+            candidate_move_role_support=candidate_move_role_support,
             stage7_plan_capsule_state=stage7_plan_capsule_state,
             current_ply=current_ply,
             stage7_provider_scope_label=stage7_provider_scope_label,
@@ -1820,6 +2160,9 @@ def _choose_move_details_impl(
     stage7_plan_capsule_ttl: int = 3,
     stage7_plan_capsule_support_bonus: float = 0.0,
     stage7_plan_capsule_owned_arbitration_enabled: bool = False,
+    candidate_move_layer_enabled: bool = False,
+    stage7_king_support_fence_stabilizer_enabled: bool = False,
+    candidate_move_role_support: float = 0.0,
     stage7_plan_capsule_state: dict | None = None,
     current_ply: int | None = None,
     stage7_provider_scope_label: str = "box_shrink",
@@ -1926,6 +2269,11 @@ def _choose_move_details_impl(
     env["blackboard"]["stage7_plan_capsule_owned_arbitration_enabled"] = bool(
         stage7_plan_capsule_owned_arbitration_enabled
     )
+    env["blackboard"]["candidate_move_layer_enabled"] = bool(candidate_move_layer_enabled)
+    env["blackboard"]["stage7_king_support_fence_stabilizer_enabled"] = bool(
+        stage7_king_support_fence_stabilizer_enabled
+    )
+    env["blackboard"]["candidate_move_role_support"] = float(candidate_move_role_support)
     if stage7_plan_capsule_state:
         env["blackboard"]["stage7_plan_capsule_state"] = dict(stage7_plan_capsule_state)
     env["blackboard"]["stage7_provider_scope_label"] = str(stage7_provider_scope_label or "box_shrink")
@@ -1948,8 +2296,10 @@ def _choose_move_details_impl(
         except Exception:
             no_mate_in_one = True
         dynamic_terms["conversion_not_immediate"] = no_mate_in_one
+        dynamic_terms["no_mate_in_one_available"] = no_mate_in_one
         dynamic_terms["no_stronger_mate_or_tactic_interrupt_available"] = no_mate_in_one
         visible_terms["conversion_not_immediate"] = no_mate_in_one
+        visible_terms["no_mate_in_one_available"] = no_mate_in_one
         visible_terms["no_stronger_mate_or_tactic_interrupt_available"] = no_mate_in_one
     if forced_successor_skill:
         env["blackboard"]["forced_successor_skill"] = forced_successor_skill
@@ -2027,6 +2377,11 @@ def _choose_move_details_impl(
         env["blackboard"].setdefault("krk_plan_capsule_markers", {}).setdefault(
             "krk.post_box_shrink_continuation", {}
         )["plan_state"] = dict(plan_state)
+    _apply_stage7_candidate_move_layer(
+        env,
+        role_enabled=bool(stage7_king_support_fence_stabilizer_enabled),
+        support_amount=float(candidate_move_role_support),
+    )
     suggestions = list(env.get("actuator_suggestions", []))
     suggestions.sort(key=lambda item: item.get("score", float("-inf")), reverse=True)
     selected_suggestion = suggestions[0] if suggestions else None
@@ -2128,6 +2483,10 @@ def _choose_move_details_impl(
 
     suggestion_source = forced_candidates if forced_successor_skill else suggestions
     adapter_support_summary = _adapter_support_summary_for_suggestions(suggestion_source)
+    candidate_move_role_summary = _candidate_move_role_summary_for_suggestions(
+        suggestion_source,
+        selected_suggestion=selected_suggestion,
+    )
     plan_capsule_support_summary = _plan_capsule_support_summary_for_suggestions(
         suggestion_source,
         selected_suggestion=selected_suggestion,
@@ -2196,6 +2555,20 @@ def _choose_move_details_impl(
         "stage7_plan_capsule_owned_arbitration_enabled": bool(
             stage7_plan_capsule_owned_arbitration_enabled
         ),
+        "candidate_move_layer_enabled": bool(candidate_move_layer_enabled),
+        "stage7_king_support_fence_stabilizer_enabled": bool(
+            stage7_king_support_fence_stabilizer_enabled
+        ),
+        "candidate_move_role_support": float(candidate_move_role_support),
+        "candidate_move_frames": list(
+            env.get("blackboard", {}).get("krk_candidate_move_frames", []) or []
+        ),
+        "candidate_move_enumerator": dict(
+            env.get("blackboard", {}).get("krk_candidate_move_enumerator", {}) or {}
+        ),
+        "candidate_move_role_matches": dict(
+            env.get("blackboard", {}).get("krk_candidate_move_role_matches", {}) or {}
+        ),
         "stage7_plan_capsule_state": dict(
             env.get("blackboard", {}).get("stage7_plan_capsule_state", {}) or {}
         ),
@@ -2231,6 +2604,7 @@ def _choose_move_details_impl(
             env.get("blackboard", {}).get("krk_explicit_role_provider_supports", {}) or {}
         ),
         **adapter_support_summary,
+        **candidate_move_role_summary,
         **plan_capsule_support_summary,
         "context_terms_cache_hits": int(
             env.get("blackboard", {}).get("krk_context_terms_cache_hits", 0) or 0
@@ -2423,6 +2797,9 @@ def play_to_mate(
     stage7_plan_capsule_ttl: int = 3,
     stage7_plan_capsule_support_bonus: float = 0.0,
     stage7_plan_capsule_owned_arbitration_enabled: bool = False,
+    candidate_move_layer_enabled: bool = False,
+    stage7_king_support_fence_stabilizer_enabled: bool = False,
+    candidate_move_role_support: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     lock_stage_filter_through_playout: bool = False,
     forced_successor_skill: Optional[str] = None,
@@ -2555,6 +2932,11 @@ def play_to_mate(
                 stage7_plan_capsule_owned_arbitration_enabled=(
                     stage7_plan_capsule_owned_arbitration_enabled
                 ),
+                candidate_move_layer_enabled=candidate_move_layer_enabled,
+                stage7_king_support_fence_stabilizer_enabled=(
+                    stage7_king_support_fence_stabilizer_enabled
+                ),
+                candidate_move_role_support=candidate_move_role_support,
                 stage7_plan_capsule_state=stage7_plan_capsule_state,
                 current_ply=ply,
                 active_landmark_label=label,
@@ -3407,6 +3789,9 @@ def run_counterfactual_successor_sweep(
     stage7_plan_capsule_ttl: int = 3,
     stage7_plan_capsule_support_bonus: float = 0.0,
     stage7_plan_capsule_owned_arbitration_enabled: bool = False,
+    candidate_move_layer_enabled: bool = False,
+    stage7_king_support_fence_stabilizer_enabled: bool = False,
+    candidate_move_role_support: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     step_output: Optional[Path] = None,
     step_context: Optional[dict] = None,
@@ -3596,6 +3981,9 @@ def evaluate_landmark_progress(
     stage7_plan_capsule_ttl: int = 3,
     stage7_plan_capsule_support_bonus: float = 0.0,
     stage7_plan_capsule_owned_arbitration_enabled: bool = False,
+    candidate_move_layer_enabled: bool = False,
+    stage7_king_support_fence_stabilizer_enabled: bool = False,
+    candidate_move_role_support: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     lock_stage_filter_through_playout: bool = False,
     counterfactual_successors: tuple[str, ...] = (),
@@ -3694,6 +4082,13 @@ def evaluate_landmark_progress(
         "adapter_fire_count": 0,
         "adapter_supported_provider_by_outcome": {},
         "adapter_supported_move_by_outcome": {},
+        "candidate_move_frame_count": 0,
+        "candidate_move_role_match_count": 0,
+        "candidate_move_role_supported_suggestion_count": 0,
+        "candidate_move_role_supported_role_by_outcome": {},
+        "candidate_move_role_supported_move_by_outcome": {},
+        "candidate_move_role_selected_supported_count": 0,
+        "candidate_move_role_selected_by_outcome": {},
         "plan_capsule_marker_count": 0,
         "plan_capsule_marker_by_outcome": {},
         "plan_capsule_entry_count": 0,
@@ -3767,10 +4162,24 @@ def evaluate_landmark_progress(
             stage7_plan_capsule_owned_arbitration_enabled=(
                 stage7_plan_capsule_owned_arbitration_enabled
             ),
+            candidate_move_layer_enabled=candidate_move_layer_enabled,
+            stage7_king_support_fence_stabilizer_enabled=(
+                stage7_king_support_fence_stabilizer_enabled
+            ),
+            candidate_move_role_support=candidate_move_role_support,
             active_landmark_label=label,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
             perf_profile=perf_profile,
             enable_diagnostic_caches=enable_diagnostic_caches,
+        )
+        stats["candidate_move_frame_count"] = (
+            int(stats.get("candidate_move_frame_count", 0) or 0)
+            + len(move_details.get("candidate_move_frames", []) or [])
+        )
+        match_summary = dict(move_details.get("candidate_move_role_matches", {}) or {})
+        stats["candidate_move_role_match_count"] = (
+            int(stats.get("candidate_move_role_match_count", 0) or 0)
+            + int(match_summary.get("match_count", 0) or 0)
         )
         _accumulate_engine_perf(stats, move_details, prefix="one_ply_engine")
         move_uci = move_details.get("move")
@@ -3945,6 +4354,11 @@ def evaluate_landmark_progress(
                 stage7_plan_capsule_owned_arbitration_enabled=(
                     stage7_plan_capsule_owned_arbitration_enabled
                 ),
+                candidate_move_layer_enabled=candidate_move_layer_enabled,
+                stage7_king_support_fence_stabilizer_enabled=(
+                    stage7_king_support_fence_stabilizer_enabled
+                ),
+                candidate_move_role_support=candidate_move_role_support,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
                 lock_stage_filter_through_playout=lock_stage_filter_through_playout,
                 perf_profile=perf_profile,
@@ -4134,6 +4548,41 @@ def evaluate_landmark_progress(
                     stats["role_owned_score_normalization_provider_by_outcome"].get(provider_key, 0)
                     + 1
                 )
+            candidate_supported_count = int(
+                successor_summary.get("candidate_move_role_supported_suggestion_count", 0) or 0
+            )
+            if candidate_supported_count:
+                stats["candidate_move_role_supported_suggestion_count"] = (
+                    int(stats.get("candidate_move_role_supported_suggestion_count", 0) or 0)
+                    + candidate_supported_count
+                )
+                for role_id, count in (
+                    successor_summary.get("candidate_move_role_supported_role_counts", {}) or {}
+                ).items():
+                    role_key = f"{role_id}:{key}"
+                    stats["candidate_move_role_supported_role_by_outcome"][role_key] = (
+                        stats["candidate_move_role_supported_role_by_outcome"].get(role_key, 0)
+                        + int(count or 0)
+                    )
+                for move_name, count in (
+                    successor_summary.get("candidate_move_role_supported_move_counts", {}) or {}
+                ).items():
+                    move_key = f"{move_name}:{key}"
+                    stats["candidate_move_role_supported_move_by_outcome"][move_key] = (
+                        stats["candidate_move_role_supported_move_by_outcome"].get(move_key, 0)
+                        + int(count or 0)
+                    )
+            if successor_summary.get("candidate_move_role_selected_supported"):
+                stats["candidate_move_role_selected_supported_count"] = (
+                    int(stats.get("candidate_move_role_selected_supported_count", 0) or 0) + 1
+                )
+                selected_payload = dict(
+                    successor_summary.get("candidate_move_role_selected_payload", {}) or {}
+                )
+                selected_key = f"{selected_payload.get('role_id', 'unknown')}:{key}"
+                stats["candidate_move_role_selected_by_outcome"][selected_key] = (
+                    stats["candidate_move_role_selected_by_outcome"].get(selected_key, 0) + 1
+                )
             adapter_supported_suggestion_count = int(
                 successor_summary.get("adapter_supported_suggestion_count", 0) or 0
             )
@@ -4259,6 +4708,19 @@ def evaluate_landmark_progress(
                             successor_summary.get("visible_role_owned_score_normalization", {})
                             or {}
                         ).get("enabled", False)
+                    ),
+                    "candidate_move_role_supported_suggestion_count": candidate_supported_count,
+                    "candidate_move_role_supported_role_counts": successor_summary.get(
+                        "candidate_move_role_supported_role_counts", {}
+                    ),
+                    "candidate_move_role_supported_move_counts": successor_summary.get(
+                        "candidate_move_role_supported_move_counts", {}
+                    ),
+                    "candidate_move_role_selected_supported": successor_summary.get(
+                        "candidate_move_role_selected_supported"
+                    ),
+                    "candidate_move_role_selected_payload": successor_summary.get(
+                        "candidate_move_role_selected_payload", {}
                     ),
                     "adapter_supported_suggestion_count": adapter_supported_suggestion_count,
                     "adapter_supported_provider_counts": successor_summary.get(
@@ -4802,6 +5264,10 @@ def _merge_parallel_stats(
         "shadow_candidate_count",
         "counterfactual_successor_sweep_count",
         "adapter_fire_count",
+        "candidate_move_frame_count",
+        "candidate_move_role_match_count",
+        "candidate_move_role_supported_suggestion_count",
+        "candidate_move_role_selected_supported_count",
         "plan_capsule_marker_count",
         "plan_capsule_entry_count",
         "plan_capsule_exit_count",
@@ -4826,6 +5292,9 @@ def _merge_parallel_stats(
         "shadow_candidate_counts_by_trigger",
         "adapter_supported_provider_by_outcome",
         "adapter_supported_move_by_outcome",
+        "candidate_move_role_supported_role_by_outcome",
+        "candidate_move_role_supported_move_by_outcome",
+        "candidate_move_role_selected_by_outcome",
         "plan_capsule_marker_by_outcome",
         "plan_capsule_status_by_outcome",
         "plan_capsule_supported_provider_by_outcome",
@@ -5040,6 +5509,8 @@ def print_landmark_results(
         print(f"Counterfactual successor summary: {stats.get('counterfactual_successor_summary', {})}")
     if stats.get("semantic_alignment_status_counts"):
         print(f"Semantic alignment: {stats['semantic_alignment_status_counts']}")
+    if stats.get("candidate_move_role_supported_suggestion_count"):
+        print(f"Candidate move role suggestions: {stats['candidate_move_role_supported_suggestion_count']}")
     if stats.get("debug_failures"):
         print("\nDebug failures")
         print("-" * 60)
@@ -5194,6 +5665,12 @@ def main() -> None:
                         help="Small opt-in support amount for candidate moves licensed by the Stage 7 Plan Capsule")
     parser.add_argument("--enable-stage7-plan-capsule-owned-arbitration", action="store_true",
                         help="Sandbox: let active Plan Capsule licensed moves own arbitration within the bounded window")
+    parser.add_argument("--enable-candidate-move-layer", action="store_true",
+                        help="Enable ephemeral CandidateMoveFrame enumeration; default-off and non-requesting")
+    parser.add_argument("--enable-stage7-king-support-fence-stabilizer", action="store_true",
+                        help="Enable sandbox 0926 king-support fence-stabilizer MoveShapeRoleSpec matching")
+    parser.add_argument("--candidate-move-role-support", type=float, default=0.0,
+                        help="Visible support amount for sandbox role-scoped candidate-move suggestions")
     parser.add_argument("--composition-profile",
                         choices=[COMPOSITION_PROFILE_NONE, COMPOSITION_PROFILE_HANDOFF_V1],
                         default=COMPOSITION_PROFILE_NONE,
@@ -5285,6 +5762,9 @@ def main() -> None:
         stage7_plan_capsule_ttl=args.stage7_plan_capsule_ttl,
         stage7_plan_capsule_support_bonus=args.stage7_plan_capsule_support_bonus,
         stage7_plan_capsule_owned_arbitration_enabled=args.enable_stage7_plan_capsule_owned_arbitration,
+        candidate_move_layer_enabled=args.enable_candidate_move_layer,
+        stage7_king_support_fence_stabilizer_enabled=args.enable_stage7_king_support_fence_stabilizer,
+        candidate_move_role_support=args.candidate_move_role_support,
         early_stop_stable_suggestions=args.early_stop_stable_suggestions,
         lock_stage_filter_through_playout=args.lock_stage_filter_through_playout,
         counterfactual_successors=tuple(

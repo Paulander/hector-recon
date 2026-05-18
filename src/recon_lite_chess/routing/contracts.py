@@ -413,9 +413,12 @@ class MoveShapeRoleSpec:
     domain: str
     target_skill: str
     parent_capsule: Optional[str] = None
+    scope_terms: List[str] = field(default_factory=list)
+    required_current_terms: List[str] = field(default_factory=list)
     entry_terms: List[str] = field(default_factory=list)
     move_shape_required_terms: List[str] = field(default_factory=list)
     post_move_required_terms: List[str] = field(default_factory=list)
+    required_worst_reply_terms: List[str] = field(default_factory=list)
     veto_terms: List[str] = field(default_factory=list)
     provider_scope: List[str] = field(default_factory=list)
     handoff_exports: Dict[str, float] = field(default_factory=dict)
@@ -451,9 +454,12 @@ class MoveShapeRoleSpec:
                     self.role_id,
                     self.source_candidate_id,
                     self.target_skill,
+                    self.scope_terms,
+                    self.required_current_terms,
                     self.entry_terms,
                     self.move_shape_required_terms,
                     self.post_move_required_terms,
+                    self.required_worst_reply_terms,
                     self.veto_terms,
                 ),
             )
@@ -463,6 +469,59 @@ class MoveShapeRoleSpec:
 
     @classmethod
     def from_dict(cls, payload: Mapping[str, Any]) -> "MoveShapeRoleSpec":
+        return cls(**dict(payload))
+
+
+@dataclass(frozen=True)
+class CandidateMoveFrame:
+    """Ephemeral visible action hypothesis for a legal move.
+
+    CandidateMoveFrame records are runtime/trace evidence only. They are not
+    durable topology nodes and must not select moves by themselves.
+    """
+
+    move_uci: str
+    legal: bool
+    current_terms: List[str] = field(default_factory=list)
+    move_shape_terms: List[str] = field(default_factory=list)
+    post_move_terms: List[str] = field(default_factory=list)
+    worst_reply_terms: List[str] = field(default_factory=list)
+    safety_terms: List[str] = field(default_factory=list)
+    veto_terms: List[str] = field(default_factory=list)
+    source_terms: List[str] = field(default_factory=list)
+    source_terminal: str = "terminal.krk.candidate_move_enumerator"
+    board_key: Optional[str] = None
+    fen: Optional[str] = None
+    role_matches: List[Dict[str, Any]] = field(default_factory=list)
+    causal_status: Literal["non_causal", "sandbox_opt_in"] = "non_causal"
+    schema_version: str = "candidate_move_frame.v1"
+    frame_id: Optional[str] = None
+
+    def __post_init__(self) -> None:
+        if self.causal_status not in {"non_causal", "sandbox_opt_in"}:
+            raise ValueError("invalid CandidateMoveFrame causal_status")
+        if self.frame_id is None:
+            object.__setattr__(
+                self,
+                "frame_id",
+                stable_record_id(
+                    "candidate_move_frame",
+                    self.move_uci,
+                    self.board_key,
+                    self.fen,
+                    self.current_terms,
+                    self.move_shape_terms,
+                    self.post_move_terms,
+                    self.worst_reply_terms,
+                    self.role_matches,
+                ),
+            )
+
+    def to_dict(self) -> Dict[str, Any]:
+        return _jsonable(asdict(self))
+
+    @classmethod
+    def from_dict(cls, payload: Mapping[str, Any]) -> "CandidateMoveFrame":
         return cls(**dict(payload))
 
 

@@ -2,6 +2,7 @@
 
 from .contracts import (
     HandoffPacket,
+    CandidateMoveFrame,
     MoveShapeRoleSpec,
     PlanCapsuleSpec,
     RouteDecision,
@@ -26,6 +27,7 @@ from .shadow_queue import (
 __all__ = [
     "HandoffAnalysis",
     "HandoffPacket",
+    "CandidateMoveFrame",
     "MoveShapeRoleSpec",
     "PlanCapsuleSpec",
     "RouteDecision",

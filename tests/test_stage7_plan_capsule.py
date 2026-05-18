@@ -5,11 +5,17 @@ import importlib.util
 import json
 from pathlib import Path
 
+import chess
+
 from recon_lite_chess.routing import PlanCapsuleSpec, StructuralCandidate
 
 
 ROOT = Path(__file__).resolve().parent.parent
 SCRIPT = ROOT / "scripts" / "audit_stage7_post_box_plan_capsule.py"
+LANDMARK_SCRIPT = ROOT / "scripts" / "test_krk_landmark_progress.py"
+FEN_069 = "8/8/8/8/7R/2k5/4K3/8 w - - 2 2"
+FEN_0926 = "8/8/8/8/4K3/8/R7/4k3 w - - 2 2"
+FEN_2CC = "8/8/R7/8/2k5/8/8/3K4 w - - 2 2"
 
 
 def _load_script_module():
@@ -19,6 +25,34 @@ def _load_script_module():
     assert spec.loader is not None
     spec.loader.exec_module(module)
     return module
+
+
+def _load_landmark_module():
+    spec = importlib.util.spec_from_file_location("test_krk_landmark_progress", LANDMARK_SCRIPT)
+    assert spec is not None
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+    return module
+
+
+def _candidate_layer_blackboard() -> dict:
+    return {
+        "candidate_move_layer_enabled": True,
+        "krk_visible_terms": {
+            "active_landmark_label.box_shrink": True,
+            "post_reply_state_reached": True,
+            "rook_safe": True,
+            "conversion_not_immediate": True,
+            "no_mate_in_one_available": True,
+        },
+        "krk_dynamic_context_terms": {},
+        "krk_plan_capsule_markers": {
+            "krk.post_box_shrink_continuation": {
+                "entry_confirmed": True,
+            }
+        },
+    }
 
 
 def test_plan_capsule_candidate_export_is_non_causal():
@@ -430,3 +464,77 @@ def test_move_shape_role_candidate_audit_matches_only_visible_terms():
         for move in record["matching_moves"]
     ]
     assert matches == ["e4d3"]
+
+
+def test_candidate_move_enumerator_emits_ephemeral_legal_frames():
+    module = _load_landmark_module()
+    board = chess.Board(FEN_0926)
+    blackboard = _candidate_layer_blackboard()
+
+    frames = module._enumerate_candidate_move_frames(board, blackboard=blackboard)
+
+    assert frames
+    assert all(frame.schema_version == "candidate_move_frame.v1" for frame in frames)
+    assert all(frame.legal for frame in frames)
+    assert all(frame.causal_status == "non_causal" for frame in frames)
+    assert blackboard["krk_candidate_move_enumerator"]["direct_request"] is False
+    assert blackboard["krk_candidate_move_enumerator"]["source_terminal"] == (
+        "terminal.krk.candidate_move_enumerator"
+    )
+
+
+def test_role_scoped_candidate_move_actuator_matches_0926_only():
+    module = _load_landmark_module()
+
+    env = {
+        "board": chess.Board(FEN_0926),
+        "blackboard": _candidate_layer_blackboard(),
+        "actuator_suggestions": [],
+    }
+    module._apply_stage7_candidate_move_layer(
+        env,
+        role_enabled=True,
+        support_amount=3.0,
+    )
+
+    suggestions = env["actuator_suggestions"]
+    assert [item["move"].uci() for item in suggestions] == ["e4d3"]
+    payload = suggestions[0]["meta"]["visible_role_scoped_candidate_move_actuator"]
+    assert payload["role_id"] == "krk.post_box.king_support_fence_stabilizer"
+    assert payload["direct_request"] is False
+    assert payload["causal_status"] == "sandbox_opt_in"
+    assert payload["support_amount"] == 3.0
+    assert "candidate_is_king_move" in payload["matched_terms"]
+    assert env["blackboard"]["krk_candidate_move_role_matches"]["match_count"] == 1
+
+    for fen in (FEN_069, FEN_2CC):
+        env = {
+            "board": chess.Board(fen),
+            "blackboard": _candidate_layer_blackboard(),
+            "actuator_suggestions": [],
+        }
+        module._apply_stage7_candidate_move_layer(
+            env,
+            role_enabled=True,
+            support_amount=3.0,
+        )
+        assert env["actuator_suggestions"] == []
+        assert env["blackboard"]["krk_candidate_move_role_matches"]["match_count"] == 0
+
+
+def test_candidate_move_layer_default_off_does_not_emit_suggestions():
+    module = _load_landmark_module()
+    env = {
+        "board": chess.Board(FEN_0926),
+        "blackboard": _candidate_layer_blackboard() | {"candidate_move_layer_enabled": False},
+        "actuator_suggestions": [],
+    }
+
+    module._apply_stage7_candidate_move_layer(
+        env,
+        role_enabled=True,
+        support_amount=3.0,
+    )
+
+    assert env["actuator_suggestions"] == []
+    assert "krk_candidate_move_frames" not in env["blackboard"]

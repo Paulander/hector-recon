@@ -7310,3 +7310,128 @@ cand.krk.box_shrink.family_069.drive_role_refinement.v1:
   next_action:
     do not reintroduce priority without additional separating terms
 ```
+
+## CandidateMoveFrame layer and 0926 sandbox result
+
+Implemented a minimal visible candidate-move layer for the 0926 family.
+This is not a durable legal-move topology expansion. Candidate moves are
+ephemeral runtime/trace records emitted by:
+
+```text
+terminal.krk.candidate_move_enumerator
+```
+
+The default-off sandbox role:
+
+```text
+krk.post_box.king_support_fence_stabilizer
+```
+
+matches legal moves using visible current, move-shape, and post-move terms.
+The role-scoped actuator emits an ordinary suggestion only when the role
+matches, with `direct_request = false` and explicit source terms.
+
+Artifacts:
+
+```text
+reports/structural_candidates/stage7_0926_king_support_fence_stabilizer_role_spec.json
+reports/structural_candidates/stage7_0926_move_shape_role_candidate_audit.json
+reports/structural_candidates/stage7_0926_candidate_move_layer_smoke.json
+reports/structural_candidates/stage7_0926_candidate_move_layer_smoke_support30.json
+reports/structural_candidates/stage7_candidate_move_layer_default_off_10_h40.json
+reports/structural_candidates/stage7_candidate_move_layer_10_h40_support30.json
+reports/structural_candidates/stage7_candidate_move_layer_default_off_25_h40.json
+reports/structural_candidates/stage7_candidate_move_layer_25_h40_support30.json
+```
+
+Non-causal audit:
+
+```text
+state.069e81a609ed: 0 matches
+state.0926f12f8e8f: 1 match, e4d3
+state.2cc0b3e1033a: 0 matches
+```
+
+Targeted runtime smoke:
+
+```text
+support 3.0:
+  role match emitted but loses arbitration to stage0 score scale
+
+support 30.0:
+  selected e4d3
+  selected_supported = true
+  source terms include:
+    candidate_is_king_move
+    king_moves_toward_enemy
+    king_moves_toward_rook_support
+    fence_exists_after_move
+    fence_stable_after_move
+    cut_preserved_after_move
+    white_king_distance_to_enemy_decreases
+    white_king_distance_to_rook_decreases
+```
+
+Paired Stage 7 results, same seed/settings:
+
+```text
+10-sample default-off:
+  5 mate / 5 max_plies
+  shadow candidates: 8
+  candidate role suggestions: 0
+
+10-sample enabled:
+  6 mate / 4 max_plies
+  shadow candidates: 6
+  candidate role suggestions: 1
+  selected e4d3 -> mate
+
+25-sample default-off:
+  12 mate / 13 max_plies
+  shadow candidates: 23
+  local improved/optimal: 21/16
+
+25-sample enabled:
+  16 mate / 9 max_plies
+  shadow candidates: 15
+  local improved/optimal: 21/16
+  candidate role suggestions: 4
+  e4d3:mate = 4
+```
+
+Interpretation:
+
+```text
+The CandidateMoveFrame layer gives the first clean visible legal-action
+hypothesis path. It does not solve Stage 7 globally, but it validates the 0926
+family repair without local one-ply regression on the paired 25-sample run.
+Stage 7 remains quarantined. The sandbox needs guardrails before any larger
+candidate status update.
+```
+
+Small guardrails with candidate flags enabled:
+
+```text
+Stage 6 drive_to_edge, 25 samples h40:
+  25 mate / 0 max_plies
+  candidate role suggestions: 0
+
+Stage 5 fence_established, 25 samples h40:
+  20 mate / 5 max_plies
+  local optimal: 25/25
+  candidate role suggestions: 0
+
+Stage 4 edge_trap_wrong_tempo, 25 samples h40:
+  22 mate / 3 max_plies
+  local optimal: 25/25
+  candidate role suggestions: 0
+```
+
+Interpretation:
+
+```text
+The role does not fire outside the Stage 7 post-box scope in these guardrails.
+Stage 6 is clean. Stage 4/5 conversion limits are inherited from the current
+Stage 7 sandbox topology/profile rather than candidate-move overfire, because
+candidate role suggestions remain zero.
+```

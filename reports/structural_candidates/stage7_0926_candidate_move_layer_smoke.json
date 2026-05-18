@@ -1,0 +1,61 @@
+{
+  "move": "e4f3",
+  "candidate_frames": 22,
+  "role_matches": {
+    "schema_version": "candidate_move_role_match_summary.v1",
+    "role_id": "krk.post_box.king_support_fence_stabilizer",
+    "match_count": 1,
+    "causal_status": "sandbox_opt_in",
+    "direct_request": false
+  },
+  "supported_count": 1,
+  "selected_supported": false,
+  "selected_payload": {},
+  "top_suggestions": [
+    {
+      "actuator": "actuator_10",
+      "move": "e4f3",
+      "score": 25.38001858575363,
+      "stage": 1,
+      "curriculum_label": "stage0_basin",
+      "target_goal_label": "mate_in_1",
+      "meta": {
+        "is_mate": false,
+        "is_draw": false,
+        "reply_draw_or_rook_loss_risk": false,
+        "goal_dist": 0.21049919724464417,
+        "goal_dist_before": 0.46426835656166077
+      }
+    },
+    {
+      "actuator": "actuator_7",
+      "move": "e4f3",
+      "score": 25.37901905670166,
+      "stage": 1,
+      "curriculum_label": "stage0_basin",
+      "target_goal_label": "mate_in_1",
+      "meta": {
+        "is_mate": false,
+        "is_draw": false,
+        "reply_draw_or_rook_loss_risk": false,
+        "goal_dist": 0.21049919724464417,
+        "goal_dist_before": 0.46426835656166077
+      }
+    },
+    {
+      "actuator": "actuator_13",
+      "move": "e4f3",
+      "score": 25.37894093170166,
+      "stage": 1,
+      "curriculum_label": "stage0_basin",
+      "target_goal_label": "mate_in_1",
+      "meta": {
+        "is_mate": false,
+        "is_draw": false,
+        "reply_draw_or_rook_loss_risk": false,
+        "goal_dist": 0.21049919724464417,
+        "goal_dist_before": 0.46426835656166077
+      }
+    }
+  ]
+}

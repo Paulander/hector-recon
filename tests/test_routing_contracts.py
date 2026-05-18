@@ -8,6 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from recon_lite_chess.routing import (
+    CandidateMoveFrame,
     HandoffPacket,
     MoveShapeRoleSpec,
     PlanCapsuleSpec,
@@ -98,6 +99,20 @@ def test_schema_round_trips():
             notes=["non-causal candidate only"],
         ),
         PlanCapsuleSpec,
+    )
+    _round_trip(
+        CandidateMoveFrame(
+            move_uci="e4d3",
+            legal=True,
+            current_terms=["rook_safe", "conversion_not_immediate"],
+            move_shape_terms=["candidate_is_king_move"],
+            post_move_terms=["rook_safe_after_move", "fence_stable_after_move"],
+            safety_terms=["rook_safe_after_move"],
+            source_terms=["terminal.krk.candidate_move_enumerator"],
+            board_key="8/8/8/8/7R/2k5/4K3/8:w",
+            fen="8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+        ),
+        CandidateMoveFrame,
     )
     _round_trip(
         MoveShapeRoleSpec(

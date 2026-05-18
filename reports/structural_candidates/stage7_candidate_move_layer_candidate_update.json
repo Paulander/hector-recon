@@ -1,0 +1,89 @@
+{
+  "schema_version": "stage7_candidate_move_layer_candidate_update.v1",
+  "causal_status": "non_causal",
+  "stage7_status": "local_valid_composition_quarantined",
+  "updated_candidate": {
+    "candidate_id": "cand.krk.box_shrink.family_0926.king_support_fence_stabilizer.v1",
+    "candidate_status": "local_family_repair_validated",
+    "promotion_status": "sandboxed",
+    "causal_status": "sandbox_opt_in",
+    "diagnosis": [
+      "candidate_move_frame_layer_matches_exactly_one_visible_0926_move",
+      "role_scoped_candidate_move_suggestion_selected_when_explicit_support_overcomes_stage0_score_scale",
+      "paired_25_sample_target_improves_without_local_one_ply_regression",
+      "stage7_not_solved_globally"
+    ],
+    "evidence_artifacts": [
+      "reports/structural_candidates/stage7_0926_move_shape_role_candidate_audit.json",
+      "reports/structural_candidates/stage7_0926_candidate_move_layer_smoke_support30.json",
+      "reports/structural_candidates/stage7_candidate_move_layer_default_off_25_h40.json",
+      "reports/structural_candidates/stage7_candidate_move_layer_25_h40_support30.json"
+    ],
+    "paired_25_sample_summary": {
+      "default_off": {
+        "playouts": {
+          "mate": 12,
+          "max_plies": 13
+        },
+        "local_improved": 21,
+        "local_optimal": 16,
+        "shadow_candidates": 23,
+        "candidate_role_suggestions": 0
+      },
+      "enabled": {
+        "playouts": {
+          "mate": 16,
+          "max_plies": 9
+        },
+        "local_improved": 21,
+        "local_optimal": 16,
+        "shadow_candidates": 15,
+        "candidate_role_suggestions": 4,
+        "candidate_role_selected": 4,
+        "candidate_supported_move_by_outcome": {
+          "e4d3:mate": 4
+        }
+      }
+    },
+    "small_guardrail_summary": {
+      "stage6_drive_to_edge_25_h40": {
+        "playouts": {
+          "mate": 25
+        },
+        "candidate_role_suggestions": 0,
+        "shadow_candidates": 0
+      },
+      "stage5_fence_established_25_h40": {
+        "playouts": {
+          "mate": 20,
+          "max_plies": 5
+        },
+        "local_optimal": 25,
+        "candidate_role_suggestions": 0,
+        "shadow_candidates": 10
+      },
+      "stage4_edge_trap_wrong_tempo_25_h40": {
+        "playouts": {
+          "mate": 22,
+          "max_plies": 3
+        },
+        "local_optimal": 25,
+        "candidate_role_suggestions": 0,
+        "shadow_candidates": 6
+      }
+    },
+    "next_action": [
+      "run larger protected guardrails before any larger status change",
+      "keep Stage 7 quarantined",
+      "do not promote candidate beyond sandbox without guardrail validation"
+    ]
+  },
+  "global_boundaries": [
+    "do_not_train_stage8",
+    "do_not_promote_stage7",
+    "candidate_move_frames_are_ephemeral_runtime_trace_records",
+    "no_persistent_topology_node_per_legal_move",
+    "no_direct_role_script_to_provider_sub_edges",
+    "handoff_stats_shadow_structural_candidates_growth_governor_plan_capsule_records_remain_non_causal"
+  ]
+}

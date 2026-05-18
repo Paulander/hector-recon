@@ -105,9 +105,20 @@
     ],
     "promotion_status": "proposed",
     "provider_scope": [],
-    "record_id": "move_shape_role.77e9c4ae5177",
+    "record_id": "move_shape_role.4ef3bf32d341",
+    "required_current_terms": [
+      "rook_safe",
+      "conversion_not_immediate",
+      "no_mate_in_one_available"
+    ],
+    "required_worst_reply_terms": [],
     "role_id": "krk.post_box.king_support_fence_stabilizer",
     "schema_version": "move_shape_role_spec.v1",
+    "scope_terms": [
+      "active_landmark_label.box_shrink",
+      "post_reply_state_reached",
+      "plan_capsule_entry_confirmed"
+    ],
     "source_candidate_id": "cand.krk.box_shrink.family_0926.king_support_fence_stabilizer.v1",
     "source_monitor_script": "growth.monitor.stage7_plan_capsule_residual_family_split",
     "source_terms": [
@@ -149,5 +160,5 @@
     "reports/structural_candidates/stage7_plan_capsule_residual_forced_provider_h40.json",
     "reports/structural_candidates/stage7_plan_capsule_residual_candidate_updates.json"
   ],
-  "next_action": "compile_default_off_sandbox_only_if_runtime_can expose candidate move generation visibly"
+  "next_action": "compile_default_off_sandbox_only_if_runtime_can_expose_candidate_move_generation_visibly"
 }

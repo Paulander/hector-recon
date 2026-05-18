@@ -39,4 +39,4 @@ Promotion status: `proposed`
 - `no_topology_mutation_during_gameplay`
 - `handoff_packets_stats_shadow_candidates_remain_non_causal`
 
-Next action: `compile_default_off_sandbox_only_if_runtime_can expose candidate move generation visibly`
+Next action: `compile_default_off_sandbox_only_if_runtime_can_expose_candidate_move_generation_visibly`

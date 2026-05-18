@@ -48,6 +48,16 @@ def build_role_spec(candidate_updates: dict[str, Any]) -> dict[str, Any]:
         domain="krk",
         target_skill="krk.box_shrink",
         parent_capsule="krk.post_box_shrink_continuation",
+        scope_terms=[
+            "active_landmark_label.box_shrink",
+            "post_reply_state_reached",
+            "plan_capsule_entry_confirmed",
+        ],
+        required_current_terms=[
+            "rook_safe",
+            "conversion_not_immediate",
+            "no_mate_in_one_available",
+        ],
         entry_terms=[
             "active_landmark_label.box_shrink",
             "post_reply_state_reached",
@@ -70,6 +80,7 @@ def build_role_spec(candidate_updates: dict[str, Any]) -> dict[str, Any]:
             "white_king_distance_to_enemy_decreases",
             "white_king_distance_to_rook_decreases",
         ],
+        required_worst_reply_terms=[],
         veto_terms=[
             "mate_in_one_available",
             "rook_unsafe_after_move",
@@ -122,7 +133,7 @@ def build_role_spec(candidate_updates: dict[str, Any]) -> dict[str, Any]:
             "reports/structural_candidates/stage7_plan_capsule_residual_forced_provider_h40.json",
             "reports/structural_candidates/stage7_plan_capsule_residual_candidate_updates.json",
         ],
-        "next_action": "compile_default_off_sandbox_only_if_runtime_can expose candidate move generation visibly",
+        "next_action": "compile_default_off_sandbox_only_if_runtime_can_expose_candidate_move_generation_visibly",
     }
 
 
