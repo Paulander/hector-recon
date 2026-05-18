@@ -7686,3 +7686,36 @@ and a frozen candidate-model sandbox. Any bounded M3-style warmup must be local
 to the candidate path and must not mutate validated providers or topology during
 gameplay.
 ```
+
+## Frozen candidate-model sandbox layer
+
+Added a default-off diagnostic actuator layer in the Stage 7 evaluation harness:
+
+```text
+terminal.krk.stage7_post_box_frozen_model_candidate
+```
+
+Behavior:
+
+```text
+enabled only by explicit sandbox flag/blackboard state
+requires post-box post-reply context
+requires a sandbox_model_non_promoted visible-term model
+reads ephemeral CandidateMoveFrame records
+emits an ordinary actuator suggestion with visible metadata
+direct_request: false
+does not mutate topology
+does not use tablebase/DTM/state-hash terms at runtime
+```
+
+The focused test confirms the default-off path emits no suggestion, while the
+explicit sandbox path chooses the visible-model top move `d1e2` in the 2cc FEN
+and records matched weighted terms such as:
+
+```text
+move_shape:king_moves_toward_enemy
+post_move:white_king_distance_to_enemy_decreases
+```
+
+This is still not promotion and not Stage 8 training. It is the runtime
+inspection hook needed before any bounded candidate-local warmup.

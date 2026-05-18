@@ -898,3 +898,64 @@ def test_stage7_2cc_phase03_plasticity_protocol_is_bounded_and_non_causal():
     assert "tablebase_lookup" in payload["runtime_forbidden_terms"]
     assert "hidden_python_router" in payload["runtime_forbidden_terms"]
     assert "default-off behavior differs" in payload["stop_conditions"]
+
+
+def test_stage7_post_box_frozen_model_candidate_layer_is_default_off_and_traceable():
+    module = _load_landmark_module()
+    env = {
+        "board": chess.Board(FEN_2CC),
+        "blackboard": _candidate_layer_blackboard()
+        | {
+            "stage7_post_box_post_reply_context": True,
+            "stage7_post_box_frozen_model_candidate_enabled": False,
+        },
+        "actuator_suggestions": [],
+    }
+    model = {
+        "schema_version": "stage7_post_box_trajectory_provider_model.v1",
+        "causal_status": "sandbox_model_non_promoted",
+        "provider_skill_id": "krk.stage7_post_box_learned_continuation",
+        "role_id": "krk.post_box_shrink_continuation",
+        "constraints": ["do_not_enable_by_default"],
+        "runtime_forbidden_terms": [
+            "tablebase_lookup",
+            "dtm_oracle_move_selection",
+            "state_hash_exception",
+        ],
+        "bias": 0.0,
+        "weights": {
+            "piece_type:king": 0.5,
+            "move_shape:king_moves_toward_enemy": 2.0,
+            "move_shape:king_moves_toward_rook_support": 2.0,
+            "post_move:white_king_distance_to_enemy_decreases": 2.0,
+            "post_move:white_king_distance_to_rook_decreases": 2.0,
+        },
+    }
+
+    module._apply_stage7_post_box_frozen_model_candidate_layer(
+        env,
+        model=model,
+        support_amount=7.0,
+    )
+    assert env["actuator_suggestions"] == []
+
+    env["blackboard"]["stage7_post_box_frozen_model_candidate_enabled"] = True
+    module._apply_stage7_post_box_frozen_model_candidate_layer(
+        env,
+        model=model,
+        support_amount=7.0,
+    )
+
+    suggestions = env["actuator_suggestions"]
+    assert len(suggestions) == 1
+    assert suggestions[0]["move"].uci() == "d1e2"
+    payload = suggestions[0]["meta"]["visible_stage7_post_box_frozen_model_candidate"]
+    assert payload["direct_request"] is False
+    assert payload["causal_status"] == "sandbox_opt_in"
+    assert payload["support_amount"] == 7.0
+    assert payload["source_terminal"] == "terminal.krk.stage7_post_box_frozen_model_candidate"
+    assert "tablebase_lookup" in payload["runtime_forbidden_terms"]
+    assert "move_shape:king_moves_toward_enemy" in payload["matched_weighted_terms"]
+    trace = env["blackboard"]["stage7_post_box_frozen_model_candidate"]
+    assert trace["emitted"] is True
+    assert trace["direct_request"] is False

@@ -1054,6 +1054,154 @@ def _apply_stage7_candidate_move_layer(
     }
 
 
+def _candidate_frame_model_features(board: chess.Board, frame: CandidateMoveFrame) -> set[str]:
+    move = chess.Move.from_uci(frame.move_uci)
+    piece = board.piece_at(move.from_square)
+    features: set[str] = set()
+    if piece is not None:
+        features.add(f"piece:{piece.symbol().upper()}")
+        if piece.piece_type == chess.KING:
+            features.add("piece_type:king")
+        if piece.piece_type == chess.ROOK:
+            features.add("piece_type:rook")
+    from_file = chess.square_file(move.from_square)
+    from_rank = chess.square_rank(move.from_square)
+    to_file = chess.square_file(move.to_square)
+    to_rank = chess.square_rank(move.to_square)
+    delta_file = to_file - from_file
+    delta_rank = to_rank - from_rank
+    for term in (
+        f"piece.{piece.symbol().upper() if piece else 'unknown'}",
+        f"from_file.{from_file}",
+        f"from_rank.{from_rank}",
+        f"to_file.{to_file}",
+        f"to_rank.{to_rank}",
+        f"delta_file_sign.{0 if delta_file == 0 else 1 if delta_file > 0 else -1}",
+        f"delta_rank_sign.{0 if delta_rank == 0 else 1 if delta_rank > 0 else -1}",
+        f"delta_file_abs.{abs(delta_file)}",
+        f"delta_rank_abs.{abs(delta_rank)}",
+    ):
+        features.add(f"coord:{term}")
+    for term in frame.move_shape_terms:
+        features.add(f"move_shape:{term}")
+    for term in frame.post_move_terms:
+        features.add(f"post_move:{term}")
+    return features
+
+
+def _apply_stage7_post_box_frozen_model_candidate_layer(
+    env: dict,
+    *,
+    model: dict | None,
+    support_amount: float,
+) -> None:
+    blackboard = env.get("blackboard", {})
+    board = env.get("board")
+    if board is None or not blackboard.get("candidate_move_layer_enabled", False):
+        return
+    if not blackboard.get("stage7_post_box_frozen_model_candidate_enabled", False):
+        return
+    if not blackboard.get("stage7_post_box_post_reply_context", False):
+        return
+    if not isinstance(model, dict) or model.get("causal_status") != "sandbox_model_non_promoted":
+        blackboard["stage7_post_box_frozen_model_candidate"] = {
+            "schema_version": "stage7_post_box_frozen_model_candidate_trace.v1",
+            "enabled": True,
+            "emitted": False,
+            "reason": "missing_or_non_sandbox_model",
+            "direct_request": False,
+            "causal_status": "sandbox_opt_in",
+        }
+        return
+    constraints = set(model.get("constraints") or [])
+    forbidden_terms = set(model.get("runtime_forbidden_terms") or [])
+    if "do_not_enable_by_default" not in constraints or not {
+        "tablebase_lookup",
+        "dtm_oracle_move_selection",
+        "state_hash_exception",
+    } <= forbidden_terms:
+        blackboard["stage7_post_box_frozen_model_candidate"] = {
+            "schema_version": "stage7_post_box_frozen_model_candidate_trace.v1",
+            "enabled": True,
+            "emitted": False,
+            "reason": "model_boundary_check_failed",
+            "direct_request": False,
+            "causal_status": "sandbox_opt_in",
+        }
+        return
+    frames_payload = blackboard.get("krk_candidate_move_frames")
+    frames = [
+        CandidateMoveFrame.from_dict(item)
+        for item in frames_payload
+        if isinstance(item, dict)
+    ] if isinstance(frames_payload, list) else _enumerate_candidate_move_frames(
+        board,
+        blackboard=blackboard,
+        causal_status="sandbox_opt_in",
+    )
+    weights = {str(key): float(value) for key, value in (model.get("weights") or {}).items()}
+    bias = float(model.get("bias", 0.0) or 0.0)
+    scored = []
+    for frame in frames:
+        if not frame.legal:
+            continue
+        features = _candidate_frame_model_features(board, frame)
+        model_score = bias + sum(weights.get(term, 0.0) for term in features)
+        matched_terms = sorted(term for term in features if term in weights)
+        scored.append((model_score, frame.move_uci, frame, matched_terms))
+    if not scored:
+        blackboard["stage7_post_box_frozen_model_candidate"] = {
+            "schema_version": "stage7_post_box_frozen_model_candidate_trace.v1",
+            "enabled": True,
+            "emitted": False,
+            "reason": "no_legal_candidate_frames",
+            "direct_request": False,
+            "causal_status": "sandbox_opt_in",
+        }
+        return
+    model_score, _, frame, matched_terms = max(scored, key=lambda item: (item[0], item[1]))
+    payload = {
+        "schema_version": "stage7_post_box_frozen_model_candidate_suggestion.v1",
+        "enabled": True,
+        "provider_skill_id": model.get("provider_skill_id", "krk.stage7_post_box_learned_continuation"),
+        "role_id": model.get("role_id", "krk.post_box_shrink_continuation"),
+        "move": frame.move_uci,
+        "model_score": float(model_score),
+        "support_amount": float(support_amount),
+        "matched_weighted_terms": matched_terms,
+        "source_terms": sorted(set(frame.current_terms) | set(frame.move_shape_terms) | set(frame.post_move_terms)),
+        "candidate_frame": frame.to_dict(),
+        "direct_request": False,
+        "causal_status": "sandbox_opt_in",
+        "runtime_forbidden_terms": sorted(forbidden_terms),
+        "source_terminal": "terminal.krk.stage7_post_box_frozen_model_candidate",
+    }
+    env.setdefault("actuator_suggestions", []).append(
+        {
+            "move": chess.Move.from_uci(frame.move_uci),
+            "score": float(support_amount),
+            "actuator": "terminal.krk.stage7_post_box_frozen_model_candidate",
+            "stage": 7,
+            "curriculum_label": "stage7_post_box_frozen_model_candidate",
+            "meta": {
+                "curriculum_label": "stage7_post_box_frozen_model_candidate",
+                "stage": 7,
+                "visible_stage7_post_box_frozen_model_candidate": payload,
+            },
+        }
+    )
+    blackboard["stage7_post_box_frozen_model_candidate"] = {
+        "schema_version": "stage7_post_box_frozen_model_candidate_trace.v1",
+        "enabled": True,
+        "emitted": True,
+        "move": frame.move_uci,
+        "model_score": float(model_score),
+        "support_amount": float(support_amount),
+        "direct_request": False,
+        "causal_status": "sandbox_opt_in",
+    }
+
+
 def _compact_selected_suggestion(item: dict | None) -> dict:
     if not isinstance(item, dict):
         return {}
@@ -1944,6 +2092,9 @@ def choose_move_with_engine(
     candidate_move_layer_enabled: bool = False,
     stage7_king_support_fence_stabilizer_enabled: bool = False,
     candidate_move_role_support: float = 0.0,
+    stage7_post_box_frozen_model_candidate_enabled: bool = False,
+    stage7_post_box_frozen_model_candidate_support: float = 0.0,
+    stage7_post_box_frozen_model: dict | None = None,
     stage7_plan_capsule_state: dict | None = None,
     current_ply: int | None = None,
     stage7_provider_scope_label: str = "box_shrink",
@@ -2106,6 +2257,13 @@ def choose_move_details(
                 stage7_king_support_fence_stabilizer_enabled
             ),
             candidate_move_role_support=candidate_move_role_support,
+            stage7_post_box_frozen_model_candidate_enabled=(
+                stage7_post_box_frozen_model_candidate_enabled
+            ),
+            stage7_post_box_frozen_model_candidate_support=(
+                stage7_post_box_frozen_model_candidate_support
+            ),
+            stage7_post_box_frozen_model=stage7_post_box_frozen_model,
             stage7_plan_capsule_state=stage7_plan_capsule_state,
             current_ply=current_ply,
             stage7_provider_scope_label=stage7_provider_scope_label,
@@ -2163,6 +2321,9 @@ def _choose_move_details_impl(
     candidate_move_layer_enabled: bool = False,
     stage7_king_support_fence_stabilizer_enabled: bool = False,
     candidate_move_role_support: float = 0.0,
+    stage7_post_box_frozen_model_candidate_enabled: bool = False,
+    stage7_post_box_frozen_model_candidate_support: float = 0.0,
+    stage7_post_box_frozen_model: dict | None = None,
     stage7_plan_capsule_state: dict | None = None,
     current_ply: int | None = None,
     stage7_provider_scope_label: str = "box_shrink",
@@ -2274,6 +2435,12 @@ def _choose_move_details_impl(
         stage7_king_support_fence_stabilizer_enabled
     )
     env["blackboard"]["candidate_move_role_support"] = float(candidate_move_role_support)
+    env["blackboard"]["stage7_post_box_frozen_model_candidate_enabled"] = bool(
+        stage7_post_box_frozen_model_candidate_enabled
+    )
+    env["blackboard"]["stage7_post_box_frozen_model_candidate_support"] = float(
+        stage7_post_box_frozen_model_candidate_support
+    )
     if stage7_plan_capsule_state:
         env["blackboard"]["stage7_plan_capsule_state"] = dict(stage7_plan_capsule_state)
     env["blackboard"]["stage7_provider_scope_label"] = str(stage7_provider_scope_label or "box_shrink")
@@ -2381,6 +2548,11 @@ def _choose_move_details_impl(
         env,
         role_enabled=bool(stage7_king_support_fence_stabilizer_enabled),
         support_amount=float(candidate_move_role_support),
+    )
+    _apply_stage7_post_box_frozen_model_candidate_layer(
+        env,
+        model=stage7_post_box_frozen_model,
+        support_amount=float(stage7_post_box_frozen_model_candidate_support),
     )
     suggestions = list(env.get("actuator_suggestions", []))
     suggestions.sort(key=lambda item: item.get("score", float("-inf")), reverse=True)
