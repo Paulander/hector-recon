@@ -7525,3 +7525,44 @@ cannot convert after any of them under h50. This supports a narrow post-box
 continuation capsule/overlay protocol rather than another single candidate-move
 role.
 ```
+
+## 2cc continuation protocol
+
+Created a non-causal protocol artifact:
+
+```text
+reports/structural_candidates/stage7_2cc_continuation_protocol.json
+reports/structural_candidates/stage7_2cc_continuation_protocol.md
+```
+
+Candidate:
+
+```text
+cand.krk.box_shrink.family_2cc.post_box_continuation_overlay.v1
+```
+
+Status:
+
+```text
+sandbox_training_protocol_ready
+```
+
+This is not training and not promotion. It defines the bounded evaluation path:
+
+```text
+static sanity
+frozen-weight probe
+bounded candidate-local plasticity
+target validation
+protected guardrails
+```
+
+Hard boundaries:
+
+```text
+do not train Stage 8
+do not promote Stage 7
+do not use tablebase/DTM at runtime
+do not use state-hash exceptions
+do not mutate topology during gameplay
+```

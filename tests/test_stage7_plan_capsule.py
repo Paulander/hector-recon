@@ -631,3 +631,29 @@ def test_candidate_move_frame_dtm_alignment_classifies_multistep_gap(tmp_path):
     assert payload["candidate_update"]["diagnosis"] == (
         "multi_step_continuation_policy_gap_not_single_move_gap"
     )
+
+
+def test_stage7_2cc_continuation_protocol_is_non_causal():
+    script = ROOT / "scripts" / "plan_stage7_2cc_continuation_protocol.py"
+    spec = importlib.util.spec_from_file_location("plan_stage7_2cc_continuation_protocol", script)
+    assert spec is not None
+    planner = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(planner)
+
+    payload = planner.build_protocol(
+        {
+            "schema_version": "candidate_move_frame_dtm_alignment.v1",
+            "candidate_update": {
+                "diagnosis": "multi_step_continuation_policy_gap_not_single_move_gap",
+            },
+        }
+    )
+
+    assert payload["schema_version"] == "stage7_2cc_continuation_protocol.v1"
+    assert payload["causal_status"] == "non_causal"
+    candidate = payload["structural_candidate"]
+    assert candidate["causal_status"] == "non_causal"
+    assert candidate["promotion_status"] == "sandbox_training_protocol_ready"
+    assert "do_not_train_stage8" in payload["hard_boundaries"]
+    assert "tablebase_lookup" in candidate["proposed_change"]["runtime_forbidden_terms"]
