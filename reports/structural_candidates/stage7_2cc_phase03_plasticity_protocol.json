@@ -1,0 +1,113 @@
+{
+  "schema_version": "stage7_2cc_phase03_plasticity_protocol.v1",
+  "causal_status": "non_causal",
+  "runtime_behavior_changed": false,
+  "source_phase02_schema": "stage7_2cc_protocol_phase02_replay_eval.v1",
+  "source_diagnosis": "visible_first_step_winning_but_current_graph_downstream_continuation_fails",
+  "structural_candidate_update": {
+    "candidate_id": "cand.krk.box_shrink.family_2cc.post_box_continuation_overlay.v1",
+    "promotion_status": "candidate_local_plasticity_protocol_ready",
+    "causal_status": "non_causal",
+    "credit": 0.0,
+    "diagnostic_label": "expressive_but_untrained_multistep_continuation"
+  },
+  "bounded_scope": {
+    "target_family": "state.2cc0b3e1033a",
+    "target_skill": "krk.box_shrink",
+    "parent_skill": "krk.post_box_shrink_continuation",
+    "selected_visible_first_move": "d1e2",
+    "selected_move_tablebase_winning": true,
+    "selected_move_current_graph_result": "max_plies",
+    "stage7_status": "local_valid_composition_quarantined"
+  },
+  "plasticity_budget": {
+    "phase": "candidate_local_m3_warmup",
+    "max_warmup_episodes": 32,
+    "max_weight_delta_l2": 0.25,
+    "max_weight_saturation_rate": 0.15,
+    "allowed_update_scope": [
+      "krk.post_box_shrink_continuation",
+      "krk.stage7_post_box_learned_continuation",
+      "candidate-local support/selection weights"
+    ],
+    "frozen_provider_versions": [
+      "stage5_validated_v1",
+      "stage6_overlay_v1"
+    ],
+    "disallowed_update_scope": [
+      "stage0_basin validated provider weights",
+      "fence_established validated provider weights",
+      "edge_trap validated provider weights",
+      "drive_to_edge validated overlay weights unless explicitly testing handoff",
+      "global successor hub weights"
+    ]
+  },
+  "training_evidence_allowed": [
+    "CandidateMoveFrame visible current/move/post terms",
+    "DTM-derived trajectory seed as offline supervision only",
+    "legal-first replay outcomes as offline labels only",
+    "current graph failure traces"
+  ],
+  "runtime_forbidden_terms": [
+    "tablebase_lookup",
+    "dtm_oracle_move_selection",
+    "state_hash_exception",
+    "legal_move_id_persistent_topology_node",
+    "hidden_python_router"
+  ],
+  "evaluation_sequence": [
+    {
+      "phase": "default_off_equivalence",
+      "acceptance": [
+        "same selected first move",
+        "same selected successor",
+        "same local result",
+        "same conversion result",
+        "same shadow candidate count"
+      ]
+    },
+    {
+      "phase": "frozen_candidate_model_probe",
+      "acceptance": [
+        "candidate suggestion visible",
+        "source CandidateMoveFrame terms cited",
+        "direct_request false",
+        "no runtime DTM/tablebase/state-hash use"
+      ]
+    },
+    {
+      "phase": "bounded_candidate_local_m3_warmup",
+      "acceptance": [
+        "target family conversion improves or failure remains classified",
+        "weight_delta_magnitude within budget",
+        "no protected provider mutation",
+        "no topology mutation during gameplay"
+      ]
+    },
+    {
+      "phase": "target_smoke",
+      "acceptance": [
+        "2cc targeted replay improves or exposes post-first-move failure class",
+        "10-sample Stage 7 h40 does not regress"
+      ]
+    },
+    {
+      "phase": "guardrails_if_target_improves",
+      "acceptance": [
+        "Stage 6 guardrail holds",
+        "Stage 5 guardrail holds",
+        "Stage 4 guardrail holds",
+        "M1-M4 preservation suite remains green"
+      ]
+    }
+  ],
+  "stop_conditions": [
+    "default-off behavior differs",
+    "candidate path needs hidden routing to win",
+    "candidate updates protected providers",
+    "guardrails regress",
+    "candidate improves only through DTM/tablebase runtime terms",
+    "candidate requires persistent topology nodes for legal moves"
+  ],
+  "next_action": "run default-off frozen candidate model sandbox and bounded candidate-local warmup"
+}

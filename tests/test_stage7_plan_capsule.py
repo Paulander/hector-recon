@@ -859,3 +859,42 @@ def test_stage7_2cc_protocol_phase02_classifies_downstream_gap(tmp_path):
     assert payload["candidate_status_update"]["promotion_status"] == (
         "sandbox_protocol_phase02_complete"
     )
+
+
+def test_stage7_2cc_phase03_plasticity_protocol_is_bounded_and_non_causal():
+    script = ROOT / "scripts" / "plan_stage7_2cc_phase03_plasticity_protocol.py"
+    spec = importlib.util.spec_from_file_location(
+        "plan_stage7_2cc_phase03_plasticity_protocol",
+        script,
+    )
+    assert spec is not None
+    planner = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(planner)
+
+    payload = planner.build_phase03_protocol(
+        {
+            "schema_version": "stage7_2cc_protocol_phase02_replay_eval.v1",
+            "diagnosis": "visible_first_step_winning_but_current_graph_downstream_continuation_fails",
+            "selected_move": "d1e2",
+            "selected_move_dtm": {"forces_mate": True},
+            "selected_move_current_graph_replay": {"result": "max_plies"},
+            "candidate_status_update": {
+                "candidate_id": "cand.krk.box_shrink.family_2cc.post_box_continuation_overlay.v1"
+            },
+        }
+    )
+
+    assert payload["schema_version"] == "stage7_2cc_phase03_plasticity_protocol.v1"
+    assert payload["causal_status"] == "non_causal"
+    assert payload["runtime_behavior_changed"] is False
+    update = payload["structural_candidate_update"]
+    assert update["promotion_status"] == "candidate_local_plasticity_protocol_ready"
+    assert update["causal_status"] == "non_causal"
+    assert update["credit"] == 0.0
+    budget = payload["plasticity_budget"]
+    assert budget["max_warmup_episodes"] == 32
+    assert "stage5_validated_v1" in budget["frozen_provider_versions"]
+    assert "tablebase_lookup" in payload["runtime_forbidden_terms"]
+    assert "hidden_python_router" in payload["runtime_forbidden_terms"]
+    assert "default-off behavior differs" in payload["stop_conditions"]

@@ -7647,3 +7647,42 @@ if continued, is a bounded candidate-local plasticity protocol or narrow
 continuation sandbox. Stage 7 remains quarantined; this does not justify Stage
 8 training or Stage 7 promotion.
 ```
+
+## 2cc phase 3 plasticity protocol
+
+Converted the Phase 2 diagnosis into a bounded, non-causal candidate-local
+plasticity protocol:
+
+```text
+reports/structural_candidates/stage7_2cc_phase03_plasticity_protocol.json
+reports/structural_candidates/stage7_2cc_phase03_plasticity_protocol.md
+```
+
+Status:
+
+```text
+candidate: cand.krk.box_shrink.family_2cc.post_box_continuation_overlay.v1
+promotion_status: candidate_local_plasticity_protocol_ready
+diagnostic_label: expressive_but_untrained_multistep_continuation
+causal_status: non_causal
+```
+
+Bounds:
+
+```text
+max_warmup_episodes: 32
+max_weight_delta_l2: 0.25
+max_weight_saturation_rate: 0.15
+frozen_provider_versions: stage5_validated_v1, stage6_overlay_v1
+forbidden: tablebase runtime lookup, DTM oracle move selection, state-hash
+exceptions, persistent legal-move topology nodes, hidden Python router
+```
+
+Interpretation:
+
+```text
+The next implementation, if pursued, must start with default-off equivalence
+and a frozen candidate-model sandbox. Any bounded M3-style warmup must be local
+to the candidate path and must not mutate validated providers or topology during
+gameplay.
+```
