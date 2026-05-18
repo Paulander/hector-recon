@@ -6874,3 +6874,68 @@ No gameplay-time topology mutation.
 HandoffPacket, stats, shadow candidates, StructuralCandidate,
 GrowthGovernor, and PlanCapsuleSpec remain non-causal.
 ```
+
+## Stage 7 Plan Capsule residual owned-failure analysis
+
+After the 50-sample owned-arbitration validation, I added a replay-free
+non-causal analyzer for the remaining max-plies cases.
+
+Artifacts:
+
+```text
+scripts/analyze_stage7_plan_capsule_owned_failures.py
+reports/structural_candidates/stage7_plan_capsule_owned_failure_analysis_50_h40.json
+reports/structural_candidates/stage7_plan_capsule_owned_failure_analysis_50_h40.md
+```
+
+Residual max-plies buckets:
+
+```text
+krk.edge_trap_close: 17
+krk.fence_established: 8
+```
+
+By semantic alignment:
+
+```text
+krk.edge_trap_close + reward_contract_mismatch: 10
+krk.edge_trap_close + reward_visible_fence_aligned_survived: 7
+krk.fence_established + reward_contract_mismatch: 8
+```
+
+Failure classes:
+
+```text
+successor_conflict: 18
+conversion_failure_unclassified: 7
+```
+
+Interpretation:
+
+```text
+The Plan Capsule is doing useful work: it enters only in the intended Stage 7
+post-box context, finds licensed owned providers, and can override raw
+stage0_basin dominance. But residual failures are now provider-specific. This
+is no longer a generic ownership problem. The remaining question is why
+edge_trap_close and fence_established fail after being visibly licensed inside
+the capsule window.
+```
+
+Candidate status:
+
+```text
+candidate_status: sandbox_improves_target_but_provider_residuals_remain
+promotion_status: sandboxed_not_promoted
+next_action: provider-specific post-owned-window audits for edge_trap_close
+             and fence_established residuals
+```
+
+Hard boundary:
+
+```text
+Do not promote the capsule.
+Do not increase broad support bonuses.
+Do not add broad provider penalties.
+Do not train Stage 8.
+Do not make the analyzer causal.
+```
