@@ -7,11 +7,18 @@ Samples: `50`
 Playouts: `{'max_plies': 25, 'mate': 25}`
 Shadow candidates: `67`
 Max-plies rows analyzed: `25`
+Unique failure families: `3`
 
 ## Provider Buckets
 
 - `krk.edge_trap_close`: 17
 - `krk.fence_established`: 8
+
+## Failure Families
+
+- `state.069e81a609ed`: support=10, provider=`krk.edge_trap_close`, move=`h4g4`, semantic={'reward_contract_mismatch': 10}, failure={'successor_conflict': 10}
+- `state.2cc0b3e1033a`: support=8, provider=`krk.fence_established`, move=`a6h6`, semantic={'reward_contract_mismatch': 8}, failure={'successor_conflict': 8}
+- `state.0926f12f8e8f`: support=7, provider=`krk.edge_trap_close`, move=`e4d4`, semantic={'reward_visible_fence_aligned_survived': 7}, failure={'conversion_failure_unclassified': 7}
 
 ## Provider By Semantic Alignment
 

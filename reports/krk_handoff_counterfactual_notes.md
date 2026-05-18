@@ -6895,6 +6895,31 @@ krk.edge_trap_close: 17
 krk.fence_established: 8
 ```
 
+The 25 max-plies rows collapse to 3 unique failure families:
+
+```text
+state.069e81a609ed:
+  support=10
+  provider=krk.edge_trap_close
+  selected_move=h4g4
+  semantic=reward_contract_mismatch
+  failure=successor_conflict
+
+state.2cc0b3e1033a:
+  support=8
+  provider=krk.fence_established
+  selected_move=a6h6
+  semantic=reward_contract_mismatch
+  failure=successor_conflict
+
+state.0926f12f8e8f:
+  support=7
+  provider=krk.edge_trap_close
+  selected_move=e4d4
+  semantic=reward_visible_fence_aligned_survived
+  failure=conversion_failure_unclassified
+```
+
 By semantic alignment:
 
 ```text
@@ -6915,10 +6940,10 @@ Interpretation:
 ```text
 The Plan Capsule is doing useful work: it enters only in the intended Stage 7
 post-box context, finds licensed owned providers, and can override raw
-stage0_basin dominance. But residual failures are now provider-specific. This
-is no longer a generic ownership problem. The remaining question is why
-edge_trap_close and fence_established fail after being visibly licensed inside
-the capsule window.
+stage0_basin dominance. But residual failures are now family-specific. This is
+no longer a generic ownership problem. The remaining question is why two
+edge_trap_close families and one fence_established family fail after being
+visibly licensed inside the capsule window.
 ```
 
 Candidate status:

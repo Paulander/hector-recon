@@ -31,6 +31,171 @@
     }
   },
   "max_plies_rows_analyzed": 25,
+  "unique_failure_family_count": 3,
+  "failure_family_buckets": [
+    {
+      "family_id": "state.069e81a609ed",
+      "support_count": 10,
+      "selected_provider": "krk.edge_trap_close",
+      "selected_move": "h4g4",
+      "raw_selected_skill": "krk.stage0_basin",
+      "raw_selected_move": "e2d1",
+      "semantic_alignment_statuses": {
+        "reward_contract_mismatch": 10
+      },
+      "failure_classes": {
+        "successor_conflict": 10
+      },
+      "license_move_shape_terms": [
+        "candidate_is_rook_move",
+        "rook_destination_far_from_enemy",
+        "rook_destination_not_adjacent_enemy",
+        "rook_lateral_transfer",
+        "rook_safe_after_candidate"
+      ],
+      "license_progress_terms": [
+        "box_area_decreases_after_move",
+        "box_area_not_increased_after_move",
+        "enemy_corner_distance_not_increased_after_move",
+        "enemy_edge_distance_not_increased_after_move",
+        "white_king_distance_to_rook_decreases"
+      ],
+      "license_post_move_terms": [
+        "black_king_escape_count_not_increased_after_move",
+        "box_area_decreases_after_move",
+        "box_area_not_increased_after_move",
+        "enemy_corner_distance_not_increased_after_move",
+        "enemy_edge_distance_not_increased_after_move",
+        "rook_safe_after_move",
+        "white_king_and_rook_same_file_side_after_move",
+        "white_king_and_rook_split_rank_side_after_move",
+        "white_king_distance_to_rook_decreases"
+      ],
+      "visible_terms": {
+        "box_shrink_drive_repair_available": true,
+        "drive_to_edge_role_confirmed": true,
+        "repair_or_reestablish_cut_available": true,
+        "fence_or_cut_restored": false,
+        "fence_or_cut_not_preserved": true,
+        "edge_trap_role_confirmed": false,
+        "safe_check_available": true,
+        "safe_followup_available": false,
+        "stagnation_avoided": false,
+        "white_king_can_improve_support": false,
+        "white_king_support_improves": true,
+        "enemy_king_mobility_decreases": false,
+        "mate_in_one_available": false
+      },
+      "post_reply_fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2"
+    },
+    {
+      "family_id": "state.2cc0b3e1033a",
+      "support_count": 8,
+      "selected_provider": "krk.fence_established",
+      "selected_move": "a6h6",
+      "raw_selected_skill": "krk.stage0_basin",
+      "raw_selected_move": "a6a8",
+      "semantic_alignment_statuses": {
+        "reward_contract_mismatch": 8
+      },
+      "failure_classes": {
+        "successor_conflict": 8
+      },
+      "license_move_shape_terms": [
+        "candidate_is_rook_move",
+        "candidate_is_rook_transfer",
+        "rook_destination_far_from_enemy",
+        "rook_destination_not_adjacent_enemy",
+        "rook_lateral_transfer",
+        "rook_safe_after_candidate",
+        "rook_to_edge_file"
+      ],
+      "license_progress_terms": [
+        "box_area_not_increased_after_move",
+        "enemy_corner_distance_not_increased_after_move",
+        "enemy_edge_distance_not_increased_after_move"
+      ],
+      "license_post_move_terms": [
+        "black_king_escape_count_not_increased_after_move",
+        "box_area_not_increased_after_move",
+        "enemy_corner_distance_not_increased_after_move",
+        "enemy_edge_distance_not_increased_after_move",
+        "rook_safe_after_move",
+        "white_king_and_rook_same_file_side_after_move",
+        "white_king_and_rook_split_rank_side_after_move"
+      ],
+      "visible_terms": {
+        "box_shrink_drive_repair_available": true,
+        "drive_to_edge_role_confirmed": true,
+        "repair_or_reestablish_cut_available": true,
+        "fence_or_cut_restored": false,
+        "fence_or_cut_not_preserved": true,
+        "edge_trap_role_confirmed": false,
+        "safe_check_available": true,
+        "safe_followup_available": false,
+        "stagnation_avoided": false,
+        "white_king_can_improve_support": true,
+        "white_king_support_improves": true,
+        "enemy_king_mobility_decreases": false,
+        "mate_in_one_available": false
+      },
+      "post_reply_fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2"
+    },
+    {
+      "family_id": "state.0926f12f8e8f",
+      "support_count": 7,
+      "selected_provider": "krk.edge_trap_close",
+      "selected_move": "e4d4",
+      "raw_selected_skill": null,
+      "raw_selected_move": null,
+      "semantic_alignment_statuses": {
+        "reward_visible_fence_aligned_survived": 7
+      },
+      "failure_classes": {
+        "conversion_failure_unclassified": 7
+      },
+      "license_move_shape_terms": [
+        "candidate_is_king_move",
+        "king_moves_toward_rook_support"
+      ],
+      "license_progress_terms": [
+        "box_area_not_increased_after_move",
+        "cut_preserved_after_move",
+        "enemy_corner_distance_not_increased_after_move",
+        "enemy_edge_distance_not_increased_after_move",
+        "fence_exists_after_move",
+        "white_king_distance_to_rook_decreases"
+      ],
+      "license_post_move_terms": [
+        "black_king_escape_count_not_increased_after_move",
+        "box_area_not_increased_after_move",
+        "cut_preserved_after_move",
+        "enemy_corner_distance_not_increased_after_move",
+        "enemy_edge_distance_not_increased_after_move",
+        "fence_exists_after_move",
+        "rook_safe_after_move",
+        "white_king_and_rook_same_file_side_after_move",
+        "white_king_and_rook_same_rank_side_after_move",
+        "white_king_distance_to_rook_decreases"
+      ],
+      "visible_terms": {
+        "box_shrink_drive_repair_available": false,
+        "drive_to_edge_role_confirmed": false,
+        "repair_or_reestablish_cut_available": true,
+        "fence_or_cut_restored": true,
+        "fence_or_cut_not_preserved": false,
+        "edge_trap_role_confirmed": true,
+        "safe_check_available": true,
+        "safe_followup_available": false,
+        "stagnation_avoided": true,
+        "white_king_can_improve_support": true,
+        "white_king_support_improves": true,
+        "enemy_king_mobility_decreases": true,
+        "mate_in_one_available": false
+      },
+      "post_reply_fen": "8/8/8/8/4K3/8/R7/4k3 w - - 2 2"
+    }
+  ],
   "selected_provider_counts": {
     "krk.edge_trap_close": 17,
     "krk.fence_established": 8

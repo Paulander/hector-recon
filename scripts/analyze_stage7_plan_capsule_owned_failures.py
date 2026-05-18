@@ -146,8 +146,53 @@ def _group_rows(rows: list[dict[str, Any]], *fields: str) -> dict[str, int]:
     return dict(counter.most_common())
 
 
+def _family_buckets(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    by_family: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        family_id = (
+            row.get("post_reply_state_signature")
+            or row.get("packet_id")
+            or f"{row.get('selected_provider')}:{row.get('selected_move')}"
+        )
+        by_family[str(family_id)].append(row)
+
+    buckets: list[dict[str, Any]] = []
+    for family_id, family_rows in by_family.items():
+        first = family_rows[0]
+        buckets.append(
+            {
+                "family_id": family_id,
+                "support_count": len(family_rows),
+                "selected_provider": first.get("selected_provider"),
+                "selected_move": first.get("selected_move"),
+                "raw_selected_skill": first.get("raw_selected_skill"),
+                "raw_selected_move": first.get("raw_selected_move"),
+                "semantic_alignment_statuses": dict(
+                    Counter(str(row.get("semantic_alignment_status") or "unknown") for row in family_rows)
+                ),
+                "failure_classes": dict(
+                    Counter(
+                        str(cls)
+                        for row in family_rows
+                        for cls in (row.get("failure_classes") or ["unclassified"])
+                    )
+                ),
+                "license_move_shape_terms": first.get("license_move_shape_terms") or [],
+                "license_progress_terms": first.get("license_progress_terms") or [],
+                "license_post_move_terms": first.get("license_post_move_terms") or [],
+                "visible_terms": first.get("visible_terms") or {},
+                "post_reply_fen": first.get("post_reply_fen") or first.get("fen"),
+            }
+        )
+    return sorted(
+        buckets,
+        key=lambda bucket: (-int(bucket.get("support_count") or 0), str(bucket.get("family_id"))),
+    )
+
+
 def analyze_owned_failures(diagnostic: dict[str, Any]) -> dict[str, Any]:
     rows = _failure_rows(diagnostic)
+    family_buckets = _family_buckets(rows)
     provider_counts = _group_rows(rows, "selected_provider")
     provider_semantic_counts = _group_rows(rows, "selected_provider", "semantic_alignment_status")
     provider_raw_counts = _group_rows(rows, "selected_provider", "raw_selected_skill")
@@ -202,6 +247,8 @@ def analyze_owned_failures(diagnostic: dict[str, Any]) -> dict[str, Any]:
             "semantic_alignment_status_counts": diagnostic.get("semantic_alignment_status_counts"),
         },
         "max_plies_rows_analyzed": len(rows),
+        "unique_failure_family_count": len(family_buckets),
+        "failure_family_buckets": family_buckets,
         "selected_provider_counts": provider_counts,
         "selected_provider_by_semantic_alignment": provider_semantic_counts,
         "selected_provider_by_raw_selected_skill": provider_raw_counts,
@@ -234,12 +281,23 @@ def _write_md(payload: dict[str, Any], path: Path) -> None:
         f"Playouts: `{payload.get('playout_results')}`",
         f"Shadow candidates: `{payload.get('shadow_candidate_count')}`",
         f"Max-plies rows analyzed: `{payload.get('max_plies_rows_analyzed')}`",
+        f"Unique failure families: `{payload.get('unique_failure_family_count')}`",
         "",
         "## Provider Buckets",
         "",
     ]
     for key, value in (payload.get("selected_provider_counts") or {}).items():
         lines.append(f"- `{key}`: {value}")
+    lines.extend(["", "## Failure Families", ""])
+    for bucket in payload.get("failure_family_buckets") or []:
+        lines.append(
+            "- "
+            f"`{bucket.get('family_id')}`: support={bucket.get('support_count')}, "
+            f"provider=`{bucket.get('selected_provider')}`, "
+            f"move=`{bucket.get('selected_move')}`, "
+            f"semantic={bucket.get('semantic_alignment_statuses')}, "
+            f"failure={bucket.get('failure_classes')}"
+        )
     lines.extend(["", "## Provider By Semantic Alignment", ""])
     for key, value in (payload.get("selected_provider_by_semantic_alignment") or {}).items():
         lines.append(f"- `{key}`: {value}")
