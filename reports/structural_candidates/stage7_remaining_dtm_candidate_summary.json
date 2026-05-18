@@ -1,0 +1,329 @@
+{
+  "schema_version": "stage7_dtm_oracle_candidate_summary.v1",
+  "causal_status": "non_causal",
+  "oracle_artifact": "reports/structural_candidates/stage7_remaining_krk_dtm_oracle.json",
+  "validation_horizon": 40,
+  "record_count": 2,
+  "candidate_count": 2,
+  "diagnosis_counts": {
+    "dtm_won_within_validation_horizon_but_current_continuation_failed": 2
+  },
+  "candidate_status_counts": {
+    "proposed": 2
+  },
+  "governor_status_counts": {
+    "growth_allowed": 2
+  },
+  "candidates": [
+    {
+      "schema_version": "structural_candidate.v1",
+      "candidate_id": "cand.krk.box_shrink.family_b6796dfb62ff.post_box_continuation_overlay_probe.v1",
+      "candidate_type": "post_box_continuation_overlay_probe",
+      "source_monitor_script": "growth.monitor.stage7_dtm_oracle",
+      "source_terms": [
+        "current_graph_legal_first_failed",
+        "forced_existing_providers_failed",
+        "krk_dtm_oracle_winning_position",
+        "dtm_within_validation_horizon"
+      ],
+      "trigger_failure_classes": [
+        "selected_successor_miscalibrated",
+        "no_legal_first_conversion_under_current_graph",
+        "unresolved_by_existing_forced_providers"
+      ],
+      "target_skill": "krk.box_shrink",
+      "parent_skill": "krk.drive_to_edge",
+      "state_id": "state.b6796dfb62ff",
+      "post_reply_fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "diagnosis": "dtm_won_within_validation_horizon_but_current_continuation_failed",
+      "dtm": {
+        "state_dtm": 27,
+        "winning_move_count": 19,
+        "legal_move_count": 19,
+        "best_dtm_plies": 27,
+        "best_moves": [
+          {
+            "move": "a6a5",
+            "plies_to_mate_if_chosen": 27,
+            "piece": "R",
+            "is_king_move": false,
+            "is_rook_move": true,
+            "is_check": false
+          },
+          {
+            "move": "a6d6",
+            "plies_to_mate_if_chosen": 27,
+            "piece": "R",
+            "is_king_move": false,
+            "is_rook_move": true,
+            "is_check": false
+          },
+          {
+            "move": "d1d2",
+            "plies_to_mate_if_chosen": 27,
+            "piece": "K",
+            "is_king_move": true,
+            "is_rook_move": false,
+            "is_check": false
+          },
+          {
+            "move": "a6a1",
+            "plies_to_mate_if_chosen": 29,
+            "piece": "R",
+            "is_king_move": false,
+            "is_rook_move": true,
+            "is_check": false
+          },
+          {
+            "move": "a6a2",
+            "plies_to_mate_if_chosen": 29,
+            "piece": "R",
+            "is_king_move": false,
+            "is_rook_move": true,
+            "is_check": false
+          },
+          {
+            "move": "a6a3",
+            "plies_to_mate_if_chosen": 29,
+            "piece": "R",
+            "is_king_move": false,
+            "is_rook_move": true,
+            "is_check": false
+          },
+          {
+            "move": "a6a4",
+            "plies_to_mate_if_chosen": 29,
+            "piece": "R",
+            "is_king_move": false,
+            "is_rook_move": true,
+            "is_check": true
+          },
+          {
+            "move": "a6a7",
+            "plies_to_mate_if_chosen": 29,
+            "piece": "R",
+            "is_king_move": false,
+            "is_rook_move": true,
+            "is_check": false
+          },
+          {
+            "move": "a6a8",
+            "plies_to_mate_if_chosen": 29,
+            "piece": "R",
+            "is_king_move": false,
+            "is_rook_move": true,
+            "is_check": false
+          },
+          {
+            "move": "a6h6",
+            "plies_to_mate_if_chosen": 29,
+            "piece": "R",
+            "is_king_move": false,
+            "is_rook_move": true,
+            "is_check": false
+          }
+        ],
+        "best_move_piece_types": [
+          "K",
+          "R"
+        ]
+      },
+      "proposed_change": {
+        "kind": "sandbox_narrow_post_box_shrink_continuation_overlay",
+        "scope": "stage7_post_box_unresolved_dtm_won_family",
+        "training_target": "preserve KRK safety and reduce DTM/progress proxy after visible box-shrink/post-reply contexts",
+        "do_not_use_tablebase_at_runtime": true,
+        "suggested_visible_terms": [
+          "box_shrink_reward_confirmed",
+          "visible_box_area_decreased_or_preserved",
+          "rook_safe_after_reply",
+          "enemy_king_not_at_edge",
+          "safe_followup_available",
+          "king_support_or_rook_cut_followup_available"
+        ]
+      },
+      "evidence_artifacts": [
+        "reports/structural_candidates/stage7_remaining_krk_dtm_oracle.json",
+        "reports/structural_candidates/stage7_target_smoke_unresolved_h50.json",
+        "reports/structural_candidates/stage7_unresolved_legal_first_summary.json"
+      ],
+      "governor_status": "growth_allowed",
+      "governor_metadata": {
+        "validation_horizon": 40,
+        "growth_monitor": "stage7_dtm_oracle",
+        "growth_blocked_by_runtime_causality": true
+      },
+      "topology_weight_diagnosis": {
+        "frozen_weight_probe_result": "current_graph_legal_first_failed",
+        "forced_oracle_probe_result": "dtm_winning_within_horizon",
+        "bounded_m3_warmup_result": "not_run",
+        "bounded_m4_consolidation_result": "not_run",
+        "candidate_locality": "stage7_post_box_shrink",
+        "candidate_complexity": "narrow_overlay_probe"
+      },
+      "candidate_diagnostic_labels": [
+        "provider_capacity_missing",
+        "expressive_but_untrained",
+        "current_provider_policy_gap"
+      ],
+      "promotion_status": "proposed",
+      "causal_status": "non_causal",
+      "credit": 0.0
+    },
+    {
+      "schema_version": "structural_candidate.v1",
+      "candidate_id": "cand.krk.box_shrink.family_4e34ad0b2f29.post_box_continuation_overlay_probe.v1",
+      "candidate_type": "post_box_continuation_overlay_probe",
+      "source_monitor_script": "growth.monitor.stage7_dtm_oracle",
+      "source_terms": [
+        "current_graph_legal_first_failed",
+        "forced_existing_providers_failed",
+        "krk_dtm_oracle_winning_position",
+        "dtm_within_validation_horizon"
+      ],
+      "trigger_failure_classes": [
+        "selected_successor_miscalibrated",
+        "no_legal_first_conversion_under_current_graph",
+        "unresolved_by_existing_forced_providers"
+      ],
+      "target_skill": "krk.box_shrink",
+      "parent_skill": "krk.drive_to_edge",
+      "state_id": "state.4e34ad0b2f29",
+      "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "diagnosis": "dtm_won_within_validation_horizon_but_current_continuation_failed",
+      "dtm": {
+        "state_dtm": 21,
+        "winning_move_count": 17,
+        "legal_move_count": 20,
+        "best_dtm_plies": 21,
+        "best_moves": [
+          {
+            "move": "d2c3",
+            "plies_to_mate_if_chosen": 21,
+            "piece": "K",
+            "is_king_move": true,
+            "is_rook_move": false,
+            "is_check": false
+          },
+          {
+            "move": "a5b5",
+            "plies_to_mate_if_chosen": 25,
+            "piece": "R",
+            "is_king_move": false,
+            "is_rook_move": true,
+            "is_check": false
+          },
+          {
+            "move": "a5c5",
+            "plies_to_mate_if_chosen": 25,
+            "piece": "R",
+            "is_king_move": false,
+            "is_rook_move": true,
+            "is_check": false
+          },
+          {
+            "move": "a5g5",
+            "plies_to_mate_if_chosen": 25,
+            "piece": "R",
+            "is_king_move": false,
+            "is_rook_move": true,
+            "is_check": false
+          },
+          {
+            "move": "a5h5",
+            "plies_to_mate_if_chosen": 25,
+            "piece": "R",
+            "is_king_move": false,
+            "is_rook_move": true,
+            "is_check": false
+          },
+          {
+            "move": "d2c2",
+            "plies_to_mate_if_chosen": 25,
+            "piece": "K",
+            "is_king_move": true,
+            "is_rook_move": false,
+            "is_check": false
+          },
+          {
+            "move": "d2d1",
+            "plies_to_mate_if_chosen": 25,
+            "piece": "K",
+            "is_king_move": true,
+            "is_rook_move": false,
+            "is_check": false
+          },
+          {
+            "move": "d2e1",
+            "plies_to_mate_if_chosen": 25,
+            "piece": "K",
+            "is_king_move": true,
+            "is_rook_move": false,
+            "is_check": false
+          },
+          {
+            "move": "d2e2",
+            "plies_to_mate_if_chosen": 25,
+            "piece": "K",
+            "is_king_move": true,
+            "is_rook_move": false,
+            "is_check": false
+          },
+          {
+            "move": "a5a1",
+            "plies_to_mate_if_chosen": 27,
+            "piece": "R",
+            "is_king_move": false,
+            "is_rook_move": true,
+            "is_check": false
+          }
+        ],
+        "best_move_piece_types": [
+          "K",
+          "R"
+        ]
+      },
+      "proposed_change": {
+        "kind": "sandbox_narrow_post_box_shrink_continuation_overlay",
+        "scope": "stage7_post_box_unresolved_dtm_won_family",
+        "training_target": "preserve KRK safety and reduce DTM/progress proxy after visible box-shrink/post-reply contexts",
+        "do_not_use_tablebase_at_runtime": true,
+        "suggested_visible_terms": [
+          "box_shrink_reward_confirmed",
+          "visible_box_area_decreased_or_preserved",
+          "rook_safe_after_reply",
+          "enemy_king_not_at_edge",
+          "safe_followup_available",
+          "king_support_or_rook_cut_followup_available"
+        ]
+      },
+      "evidence_artifacts": [
+        "reports/structural_candidates/stage7_remaining_krk_dtm_oracle.json",
+        "reports/structural_candidates/stage7_target_smoke_unresolved_h50.json",
+        "reports/structural_candidates/stage7_unresolved_legal_first_summary.json"
+      ],
+      "governor_status": "growth_allowed",
+      "governor_metadata": {
+        "validation_horizon": 40,
+        "growth_monitor": "stage7_dtm_oracle",
+        "growth_blocked_by_runtime_causality": true
+      },
+      "topology_weight_diagnosis": {
+        "frozen_weight_probe_result": "current_graph_legal_first_failed",
+        "forced_oracle_probe_result": "dtm_winning_within_horizon",
+        "bounded_m3_warmup_result": "not_run",
+        "bounded_m4_consolidation_result": "not_run",
+        "candidate_locality": "stage7_post_box_shrink",
+        "candidate_complexity": "narrow_overlay_probe"
+      },
+      "candidate_diagnostic_labels": [
+        "provider_capacity_missing",
+        "expressive_but_untrained",
+        "current_provider_policy_gap"
+      ],
+      "promotion_status": "proposed",
+      "causal_status": "non_causal",
+      "credit": 0.0
+    }
+  ]
+}

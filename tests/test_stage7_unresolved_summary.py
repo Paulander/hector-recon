@@ -12,6 +12,24 @@ assert _summary_spec.loader is not None
 _summary = importlib.util.module_from_spec(_summary_spec)
 _summary_spec.loader.exec_module(_summary)
 
+_dtm_summary_spec = importlib.util.spec_from_file_location(
+    "summarize_stage7_dtm_oracle",
+    Path(__file__).resolve().parents[1] / "scripts" / "summarize_stage7_dtm_oracle.py",
+)
+assert _dtm_summary_spec is not None
+assert _dtm_summary_spec.loader is not None
+_dtm_summary = importlib.util.module_from_spec(_dtm_summary_spec)
+_dtm_summary_spec.loader.exec_module(_dtm_summary)
+
+_training_seed_spec = importlib.util.spec_from_file_location(
+    "build_stage7_post_box_training_seed",
+    Path(__file__).resolve().parents[1] / "scripts" / "build_stage7_post_box_training_seed.py",
+)
+assert _training_seed_spec is not None
+assert _training_seed_spec.loader is not None
+_training_seed = importlib.util.module_from_spec(_training_seed_spec)
+_training_seed_spec.loader.exec_module(_training_seed)
+
 
 def test_stage7_unresolved_legal_first_summary_marks_selection_gap_and_capacity_probe(tmp_path):
     probe = {
@@ -60,3 +78,97 @@ def test_stage7_unresolved_legal_first_summary_marks_selection_gap_and_capacity_
     assert candidates["state.actiongap"]["legal_first_mating_moves"][0]["move"] == "e4d4"
     assert candidates["state.capacity"]["promotion_status"] == "needs_longer_horizon_or_new_provider_probe"
     assert candidates["state.capacity"]["proposed_change"]["max_tested_horizon"] == 50
+
+
+def test_stage7_dtm_oracle_summary_marks_won_unresolved_family_as_overlay_probe(tmp_path):
+    oracle = {
+        "schema_version": "krk_dtm_oracle_probe.v1",
+        "causal_status": "non_causal_diagnostic",
+        "records": [
+            {
+                "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+                "state_dtm": 21,
+                "winning_move_count": 17,
+                "legal_move_count": 20,
+                "best_winning_moves": [
+                    {
+                        "move": "d2c3",
+                        "plies_to_mate_if_chosen": 21,
+                        "is_check": False,
+                    }
+                ],
+            }
+        ],
+    }
+    path = tmp_path / "dtm.json"
+    path.write_text(json.dumps(oracle), encoding="utf-8")
+
+    payload = _dtm_summary.summarize_dtm_oracle(
+        oracle_path=path,
+        validation_horizon=40,
+        evidence_artifacts=["stage7_unresolved_legal_first_summary.json"],
+    )
+
+    assert payload["causal_status"] == "non_causal"
+    assert payload["diagnosis_counts"] == {
+        "dtm_won_within_validation_horizon_but_current_continuation_failed": 1
+    }
+    candidate = payload["candidates"][0]
+    assert candidate["schema_version"] == "structural_candidate.v1"
+    assert candidate["causal_status"] == "non_causal"
+    assert candidate["credit"] == 0.0
+    assert candidate["governor_status"] == "growth_allowed"
+    assert candidate["promotion_status"] == "proposed"
+    assert candidate["candidate_type"] == "post_box_continuation_overlay_probe"
+    assert candidate["proposed_change"]["do_not_use_tablebase_at_runtime"] is True
+    assert candidate["dtm"]["best_moves"][0]["move"] == "d2c3"
+
+
+def test_stage7_post_box_training_seed_is_non_causal_offline_supervision(tmp_path):
+    oracle = {
+        "schema_version": "krk_dtm_oracle_probe.v1",
+        "causal_status": "non_causal_diagnostic",
+        "records": [
+            {
+                "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+                "state_dtm": 21,
+                "best_winning_moves": [
+                    {
+                        "move": "d2c3",
+                        "plies_to_mate_if_chosen": 21,
+                        "is_check": False,
+                    }
+                ],
+                "legal_moves": [
+                    {
+                        "move": "d2c3",
+                        "forces_mate": True,
+                        "plies_to_mate_if_chosen": 21,
+                        "is_check": False,
+                    },
+                    {
+                        "move": "a5a4",
+                        "forces_mate": False,
+                        "dtm_after_move": -1,
+                        "is_check": False,
+                    },
+                ],
+            }
+        ],
+    }
+    path = tmp_path / "dtm.json"
+    path.write_text(json.dumps(oracle), encoding="utf-8")
+
+    payload = _training_seed.build_training_seed(oracle_path=path, horizon=40)
+
+    assert payload["schema_version"] == "stage7_post_box_training_seed.v1"
+    assert payload["causal_status"] == "non_causal_training_evidence"
+    assert "do_not_use_dtm_or_tablebase_at_runtime" in payload["constraints"]
+    example = payload["examples"][0]
+    assert example["target_skill"] == "krk.post_box_shrink_continuation"
+    assert example["positive_moves"][0]["move"] == "d2c3"
+    assert example["positive_moves"][0]["target_class"] == "optimal_dtm_move"
+    labels = {item["move"]: item["label"] for item in example["legal_move_labels"]}
+    assert labels["d2c3"] == 1
+    assert labels["a5a4"] == 0
+    assert "tablebase_lookup" in example["runtime_forbidden_terms"]

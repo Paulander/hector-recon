@@ -5752,3 +5752,77 @@ families, state.2cc0b3e1033a and state.bace6f82b671, should be treated as
 capacity-or-horizon candidates for a narrow post-box continuation overlay or
 deeper oracle/horizon analysis. Do not add broader score normalization.
 ```
+
+## Stage 7 DTM oracle follow-up for remaining post-box families
+
+I ran a non-causal KRK DTM oracle on the two remaining unresolved Stage 7
+post-box families after the bounded score-normalization slice.
+
+Artifacts:
+
+```text
+reports/structural_candidates/stage7_remaining_krk_dtm_oracle.json
+reports/structural_candidates/stage7_remaining_dtm_candidate_summary.json
+reports/structural_candidates/stage7_remaining_dtm_candidate_summary.md
+reports/structural_candidates/stage7_post_box_training_seed_h40.json
+reports/structural_candidates/stage7_post_box_training_seed_h40.jsonl
+```
+
+Result:
+
+```text
+state.2cc0b3e1033a / FEN 8/8/R7/8/2k5/8/8/3K4 w - - 2 2:
+  DTM = 27 plies
+  best winning moves include a6a5, a6d6, d1d2
+
+state.bace6f82b671 / FEN 8/8/8/R7/4k3/8/3K4/8 w - - 2 2:
+  DTM = 21 plies
+  best winning moves include d2c3, a5b5, a5c5, a5g5, a5h5
+```
+
+Interpretation:
+
+```text
+Both remaining families are won well inside the h40 practical validation
+horizon. Since the current graph failed under forced existing-provider and
+legal-first-current-continuation probes, these are not unwinnable or merely
+80-ply horizon cases.
+
+The correct classification is:
+  DTM-won within h40
+  current continuation providers fail to exploit the won state
+  narrow post-box continuation overlay/training candidate is justified
+
+The DTM oracle remains non-causal diagnostic evidence only. It must not become
+a runtime policy, hidden selector, or tablebase-backed controller.
+```
+
+Candidate summary:
+
+```text
+cand.krk.box_shrink.family_b6796dfb62ff.post_box_continuation_overlay_probe.v1
+cand.krk.box_shrink.family_4e34ad0b2f29.post_box_continuation_overlay_probe.v1
+```
+
+Next safe implementation step:
+
+```text
+Sandbox a narrow post-box-shrink continuation overlay/training target for these
+DTM-won unresolved families, with visible source terms and guardrails. Do not
+change defaults, do not promote Stage 7 yet, and do not use DTM/tablebase data
+at runtime.
+```
+
+Training seed generated:
+
+```text
+schema: stage7_post_box_training_seed.v1
+causal_status: non_causal_training_evidence
+examples: 2
+positive seed moves:
+  8/8/R7/8/2k5/8/8/3K4 w - - 2 2 -> a6a5, a6d6, d1d2
+  8/8/8/R7/4k3/8/3K4/8 w - - 2 2 -> d2c3
+runtime constraints:
+  do_not_use_dtm_or_tablebase_at_runtime
+  do_not_promote_without_guardrails
+```
