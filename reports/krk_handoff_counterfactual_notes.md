@@ -7858,3 +7858,20 @@ frozen_model_candidate_supported_suggestion_count: 0
 This matches the expected disabled behavior: the topology can carry the
 learnable Plan Capsule provider metadata without emitting sandbox suggestions
 or changing defaults.
+
+Paired default-off equivalence:
+
+```text
+base: reports/structural_candidates/stage7_post_box_learnable_capsule_base_smoke_5_h20.json
+overlay default-off: reports/structural_candidates/stage7_post_box_learnable_capsule_default_off_smoke_5_h20.json
+comparison: reports/structural_candidates/stage7_post_box_learnable_capsule_default_off_equivalence_5_h20.json
+equivalent: true
+differences: []
+packet_count: 15
+shadow_candidate_count: 8
+adapter_fire_count: 0
+```
+
+Phase 0 therefore passes on the small paired smoke. The next phase is targeted
+unresolved-family replay with the sandbox provider enabled, still without
+promotion.
