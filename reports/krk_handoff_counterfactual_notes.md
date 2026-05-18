@@ -5638,3 +5638,117 @@ Do not promote Stage 7 yet.
 Next: either a deeper non-causal oracle/horizon audit for state.2cc/state.bace
 or a narrow post-box continuation overlay candidate for exactly those families.
 ```
+
+## Stage 7 bounded score-normalization probe
+
+Following the expert guidance, I stopped adding Stage 7 topology and ran a
+bounded arbitration/score-scale probe on the current no-drive + 069-support
+sandbox.
+
+Artifacts:
+
+```text
+arbitration:
+  reports/structural_candidates/stage7_069_score_arbitration_diagnosis.json
+
+score normalization:
+  reports/structural_candidates/stage7_069_score_normalization_probe.json
+  reports/structural_candidates/stage7_069_score_normalization_probe.md
+
+target:
+  reports/structural_candidates/stage7_069_drive_support_target_25_h40.json
+
+guardrails:
+  reports/structural_candidates/stage7_069_guard_stage6_drive_50_h40.json
+  reports/structural_candidates/stage7_069_guard_stage5_fence_50_h40.json
+  reports/structural_candidates/stage7_069_guard_stage4_wrong_tempo_50_h40.json
+  reports/structural_candidates/stage7_069_guard_stage4_wrong_tempo_50_h40_disabled_control.json
+```
+
+Normalization modes:
+
+```text
+raw:
+  current global score winner
+
+bounded_tanh_support:
+  tanh(raw_score / 10) + visible adapter support
+
+provider_local_rank_support:
+  provider-local rank baseline + visible adapter support
+
+adapter_role_priority / role_owned_normalized:
+  only visible move-shape-gated adapter candidates can override raw global
+  score ownership
+
+forced_success_oracle:
+  non-causal upper bound from known forced-provider mates
+```
+
+Result:
+
+```text
+state.069e81a609ed:
+  raw -> stage0_basin / e2d1
+  bounded_tanh_support -> stage0_basin / e2d1
+  provider_local_rank_support -> drive_to_edge / e2e3 -> mate
+  adapter_role_priority -> drive_to_edge / e2e3 -> mate
+  role_owned_normalized -> drive_to_edge / e2e3 -> mate
+
+state.2cc0b3e1033a:
+  provider_local_rank_support would select drive_to_edge / a6a8,
+  but forced/controlled evidence says that path still max-plies.
+
+state.bace6f82b671:
+  provider_local_rank_support would select drive_to_edge / d2c3,
+  but forced/controlled evidence says that path still max-plies.
+```
+
+Interpretation:
+
+```text
+Bounded score transforms do not solve the score-scale problem.
+Naive provider-local rank normalization is too broad; it over-selects drive
+providers in unresolved families.
+
+The safe arbitration mechanism remains role-owned / adapter-priority ownership:
+only visible move-shape-gated adapter candidates can override raw cross-provider
+scores. This fixes the 069 family and does not touch unresolved families.
+```
+
+Target validation:
+
+```text
+Stage 7, 25 samples, h40:
+  19/25 mate
+  21 shadow candidates
+```
+
+Guardrails:
+
+```text
+Stage 6 drive_to_edge, 50 samples, h40:
+  50/50 mate
+  0 shadows
+
+Stage 5 fence_established, 50 samples, h40:
+  50/50 mate
+  0 shadows
+
+Stage 4 wrong_tempo, 50 samples, h40:
+  enabled:  38/50 mate, 24 shadows
+  disabled: 38/50 mate, 24 shadows
+```
+
+Conclusion:
+
+```text
+The 069 role-owned arbitration candidate improves Stage 7 and does not regress
+Stage 6/5. The Stage 4 result is not a candidate regression because enabled and
+disabled controls are identical on the same topology/profile.
+
+Stage 7 remains local_valid_composition_quarantined. The remaining two
+families, state.2cc0b3e1033a and state.bace6f82b671, should be treated as
+capacity-or-horizon candidates for a narrow post-box continuation overlay or
+deeper oracle/horizon analysis. Do not add broader score normalization.
+```

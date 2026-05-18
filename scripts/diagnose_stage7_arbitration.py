@@ -40,6 +40,49 @@ def _parse_csv(value: str) -> tuple[str, ...]:
     return tuple(item.strip() for item in value.split(",") if item.strip())
 
 
+def _load_forced_probe_results(path: Path | None) -> dict[str, dict[str, dict[str, Any]]]:
+    if path is None:
+        return {}
+    payload = _load_json(path)
+    out: dict[str, dict[str, dict[str, Any]]] = {}
+    for record in payload.get("records") or []:
+        if not isinstance(record, dict):
+            continue
+        state_id = str(record.get("state_id") or "")
+        if not state_id:
+            continue
+        provider_results: dict[str, dict[str, Any]] = {}
+        for probe in record.get("playout_probes") or []:
+            if not isinstance(probe, dict):
+                continue
+            provider = str(probe.get("provider") or "")
+            if not provider:
+                continue
+            current = provider_results.get(provider)
+            candidate = {
+                "result": probe.get("result"),
+                "plies": probe.get("plies"),
+                "first_move": probe.get("first_move"),
+                "horizon": probe.get("horizon"),
+                "source": str(path),
+            }
+            if current is None:
+                provider_results[provider] = candidate
+                continue
+            current_mate = current.get("result") == "mate"
+            candidate_mate = candidate.get("result") == "mate"
+            if candidate_mate and not current_mate:
+                provider_results[provider] = candidate
+                continue
+            if candidate_mate == current_mate:
+                current_plies = int(current.get("plies", 999999) or 999999)
+                candidate_plies = int(candidate.get("plies", 999999) or 999999)
+                if candidate_plies < current_plies:
+                    provider_results[provider] = candidate
+        out[state_id] = provider_results
+    return out
+
+
 def _canonical_skill_id(label: str | None, stage: Any = None) -> str:
     if label:
         raw = str(label)
@@ -156,11 +199,13 @@ def diagnose_stage7_arbitration(
     family_diagnosis_path: Path,
     topology_path: Path,
     providers: tuple[str, ...],
+    forced_probe_path: Path | None = None,
     state_ids: tuple[str, ...] = (),
     max_ticks: int = 40,
     suggestion_limit: int = 200,
 ) -> dict[str, Any]:
     diagnosis = _load_json(family_diagnosis_path)
+    forced_probe_results = _load_forced_probe_results(forced_probe_path)
     graph = build_graph_from_topology(topology_path)
     engine = ReConEngine(graph)
     records: list[dict[str, Any]] = []
@@ -210,6 +255,8 @@ def diagnose_stage7_arbitration(
                 if isinstance(family.get("forced_provider_results"), dict)
                 else {}
             )
+            if not forced_provider_result:
+                forced_provider_result = forced_probe_results.get(str(family.get("state_id")), {}).get(provider, {})
             row = {
                 "provider": provider,
                 "forced_successor_available": bool(forced.get("forced_successor_available")),
@@ -260,6 +307,7 @@ def diagnose_stage7_arbitration(
         "schema_version": "stage7_arbitration_diagnosis.v1",
         "causal_status": "non_causal",
         "family_diagnosis_source": str(family_diagnosis_path),
+        "forced_probe_source": str(forced_probe_path) if forced_probe_path is not None else None,
         "topology": str(topology_path),
         "providers": list(providers),
         "state_ids": list(state_ids),
@@ -338,6 +386,7 @@ def main() -> int:
     parser.add_argument("--family-diagnosis", type=Path, required=True)
     parser.add_argument("--topology", type=Path, required=True)
     parser.add_argument("--providers", default="krk.drive_to_edge")
+    parser.add_argument("--forced-probe", type=Path, default=None)
     parser.add_argument("--state-ids", default="")
     parser.add_argument("--max-ticks", type=int, default=40)
     parser.add_argument("--suggestion-limit", type=int, default=200)
@@ -349,6 +398,7 @@ def main() -> int:
         family_diagnosis_path=args.family_diagnosis,
         topology_path=args.topology,
         providers=_parse_csv(args.providers),
+        forced_probe_path=args.forced_probe,
         state_ids=_parse_csv(args.state_ids),
         max_ticks=args.max_ticks,
         suggestion_limit=args.suggestion_limit,

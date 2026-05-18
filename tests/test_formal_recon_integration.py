@@ -2426,11 +2426,18 @@ def test_stage7_score_normalization_probe_marks_role_owned_arbitration_candidate
     )
 
     assert payload["schema_version"] == "stage7_score_normalization_probe.v1"
+    assert "bounded_tanh_support" in payload["modes"]
+    assert "provider_local_rank_support" in payload["modes"]
+    assert "role_owned_normalized" in payload["modes"]
     assert payload["adapter_role_mate_count"] == 1
     assert payload["candidate_update"]["status"] == (
         "role_owned_score_normalization_sandbox_candidate"
     )
     assert payload["records"][0]["adapter_role_changes_provider"] is True
+    choices = payload["records"][0]["choices"]
+    assert choices["bounded_tanh_support"]["selected_provider"] == "krk.stage0_basin"
+    assert choices["provider_local_rank_support"]["selected_provider"] == "krk.drive_to_edge"
+    assert choices["role_owned_normalized"]["selected_provider"] == "krk.drive_to_edge"
     assert "do_not_make_oracle_choice_causal" in payload["candidate_update"]["hard_blocks"]
 
 

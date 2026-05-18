@@ -1,0 +1,257 @@
+{
+  "schema_version": "stage7_score_normalization_probe.v1",
+  "causal_status": "non_causal",
+  "arbitration_source": "reports/structural_candidates/stage7_069_score_arbitration_diagnosis.json",
+  "record_count": 3,
+  "choice_counts": {
+    "raw:krk.stage0_basin:None": 3,
+    "bounded_tanh_support:krk.stage0_basin:max_plies": 3,
+    "provider_local_rank_support:krk.drive_to_edge:mate": 1,
+    "adapter_role_priority:krk.drive_to_edge:mate": 1,
+    "role_owned_normalized:krk.drive_to_edge:mate": 1,
+    "forced_success_oracle:krk.drive_to_edge:mate": 1,
+    "provider_local_rank_support:krk.drive_to_edge:max_plies": 2,
+    "adapter_role_priority:krk.stage0_basin:None": 2,
+    "role_owned_normalized:krk.stage0_basin:None": 2,
+    "forced_success_oracle:krk.stage0_basin:None": 2
+  },
+  "modes": [
+    "raw",
+    "bounded_tanh_support",
+    "provider_local_rank_support",
+    "adapter_role_priority",
+    "role_owned_normalized",
+    "forced_success_oracle"
+  ],
+  "adapter_role_mate_count": 1,
+  "oracle_mate_count": 1,
+  "candidate_update": {
+    "candidate_id": "cand.krk.box_shrink.score_normalized_role_arbitration.v1",
+    "candidate_type": "score_normalization_probe",
+    "status": "role_owned_score_normalization_sandbox_candidate",
+    "causal_status": "non_causal",
+    "promotion_status": "proposed",
+    "next_action": "sandbox_role_owned_arbitration_with_guardrails",
+    "hard_blocks": [
+      "do_not_promote_stage7",
+      "do_not_train_stage8",
+      "do_not_make_oracle_choice_causal",
+      "do_not_use_score_normalization_without_guardrails"
+    ]
+  },
+  "records": [
+    {
+      "state_id": "state.069e81a609ed",
+      "family_id": null,
+      "post_reply_fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+      "choices": {
+        "raw": {
+          "mode": "raw",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "e2d1",
+          "selected_score": 13.163832062316127,
+          "source": "current_runtime",
+          "known_outcome": null
+        },
+        "bounded_tanh_support": {
+          "mode": "bounded_tanh_support",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "e2d1",
+          "selected_score": 13.163832062316127,
+          "transformed_score": 0.8658816595859435,
+          "adapter_support_amount": 0.0,
+          "source": "tanh_score_replay_not_causal",
+          "known_outcome": "max_plies",
+          "known_plies": 40,
+          "required_support_to_overtake_selected": 0.0,
+          "adapter_fired_under_forced_provider": false
+        },
+        "provider_local_rank_support": {
+          "mode": "provider_local_rank_support",
+          "selected_provider": "krk.drive_to_edge",
+          "selected_move": "e2e3",
+          "selected_score": 0.1940721580785863,
+          "transformed_score": 1.05,
+          "adapter_support_amount": 0.05,
+          "source": "provider_rank_score_replay_not_causal",
+          "known_outcome": "mate",
+          "known_plies": 9,
+          "required_support_to_overtake_selected": 12.969760904237539,
+          "adapter_fired_under_forced_provider": true
+        },
+        "adapter_role_priority": {
+          "mode": "adapter_role_priority",
+          "selected_provider": "krk.drive_to_edge",
+          "selected_move": "e2e3",
+          "selected_score": 0.1940721580785863,
+          "source": "adapter_visible_role_priority",
+          "known_outcome": "mate",
+          "known_plies": 9,
+          "required_support_to_overtake_selected": 12.969760904237539,
+          "adapter_support_amount": 0.05,
+          "adapter_fired_under_forced_provider": true
+        },
+        "role_owned_normalized": {
+          "mode": "role_owned_normalized",
+          "selected_provider": "krk.drive_to_edge",
+          "selected_move": "e2e3",
+          "selected_score": 0.1940721580785863,
+          "source": "visible_role_owned_provider_local_arbitration",
+          "known_outcome": "mate",
+          "known_plies": 9,
+          "required_support_to_overtake_selected": 12.969760904237539,
+          "adapter_support_amount": 0.05,
+          "adapter_fired_under_forced_provider": true
+        },
+        "forced_success_oracle": {
+          "mode": "forced_success_oracle",
+          "selected_provider": "krk.drive_to_edge",
+          "selected_move": "e2e3",
+          "selected_score": 0.1940721580785863,
+          "source": "diagnostic_oracle_not_causal",
+          "known_outcome": "mate",
+          "known_plies": 9,
+          "required_support_to_overtake_selected": 12.969760904237539,
+          "adapter_support_amount": 0.05,
+          "adapter_fired_under_forced_provider": true
+        }
+      },
+      "adapter_role_changes_provider": true,
+      "oracle_changes_provider": true
+    },
+    {
+      "state_id": "state.2cc0b3e1033a",
+      "family_id": null,
+      "post_reply_fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "choices": {
+        "raw": {
+          "mode": "raw",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "a6a8",
+          "selected_score": 1.409134501052089,
+          "source": "current_runtime",
+          "known_outcome": null
+        },
+        "bounded_tanh_support": {
+          "mode": "bounded_tanh_support",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "a6a8",
+          "selected_score": 1.409134501052089,
+          "transformed_score": 0.13998811168345318,
+          "adapter_support_amount": 0.0,
+          "source": "tanh_score_replay_not_causal",
+          "known_outcome": "max_plies",
+          "known_plies": 40,
+          "required_support_to_overtake_selected": 0.0,
+          "adapter_fired_under_forced_provider": false
+        },
+        "provider_local_rank_support": {
+          "mode": "provider_local_rank_support",
+          "selected_provider": "krk.drive_to_edge",
+          "selected_move": "a6a8",
+          "selected_score": -0.011665899415577205,
+          "transformed_score": 1.0,
+          "adapter_support_amount": 0.0,
+          "source": "provider_rank_score_replay_not_causal",
+          "known_outcome": "max_plies",
+          "known_plies": 40,
+          "required_support_to_overtake_selected": 1.4208014004676661,
+          "adapter_fired_under_forced_provider": false
+        },
+        "adapter_role_priority": {
+          "mode": "raw",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "a6a8",
+          "selected_score": 1.409134501052089,
+          "source": "current_runtime",
+          "known_outcome": null
+        },
+        "role_owned_normalized": {
+          "mode": "raw",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "a6a8",
+          "selected_score": 1.409134501052089,
+          "source": "current_runtime",
+          "known_outcome": null
+        },
+        "forced_success_oracle": {
+          "mode": "raw",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "a6a8",
+          "selected_score": 1.409134501052089,
+          "source": "current_runtime",
+          "known_outcome": null
+        }
+      },
+      "adapter_role_changes_provider": false,
+      "oracle_changes_provider": false
+    },
+    {
+      "state_id": "state.bace6f82b671",
+      "family_id": null,
+      "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "choices": {
+        "raw": {
+          "mode": "raw",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "a5h5",
+          "selected_score": 13.653305405211634,
+          "source": "current_runtime",
+          "known_outcome": null
+        },
+        "bounded_tanh_support": {
+          "mode": "bounded_tanh_support",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "a5h5",
+          "selected_score": 13.653305405211634,
+          "transformed_score": 0.87762364691784,
+          "adapter_support_amount": 0.0,
+          "source": "tanh_score_replay_not_causal",
+          "known_outcome": "max_plies",
+          "known_plies": 40,
+          "required_support_to_overtake_selected": 0.0,
+          "adapter_fired_under_forced_provider": false
+        },
+        "provider_local_rank_support": {
+          "mode": "provider_local_rank_support",
+          "selected_provider": "krk.drive_to_edge",
+          "selected_move": "d2c3",
+          "selected_score": 0.1418387483566025,
+          "transformed_score": 1.0,
+          "adapter_support_amount": 0.0,
+          "source": "provider_rank_score_replay_not_causal",
+          "known_outcome": "max_plies",
+          "known_plies": 40,
+          "required_support_to_overtake_selected": 13.51146765685503,
+          "adapter_fired_under_forced_provider": false
+        },
+        "adapter_role_priority": {
+          "mode": "raw",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "a5h5",
+          "selected_score": 13.653305405211634,
+          "source": "current_runtime",
+          "known_outcome": null
+        },
+        "role_owned_normalized": {
+          "mode": "raw",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "a5h5",
+          "selected_score": 13.653305405211634,
+          "source": "current_runtime",
+          "known_outcome": null
+        },
+        "forced_success_oracle": {
+          "mode": "raw",
+          "selected_provider": "krk.stage0_basin",
+          "selected_move": "a5h5",
+          "selected_score": 13.653305405211634,
+          "source": "current_runtime",
+          "known_outcome": null
+        }
+      },
+      "adapter_role_changes_provider": false,
+      "oracle_changes_provider": false
+    }
+  ]
+}

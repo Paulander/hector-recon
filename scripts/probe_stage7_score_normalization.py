@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 from typing import Any
 
@@ -55,6 +56,26 @@ def _provider_choice(record: dict[str, Any], mode: str) -> dict[str, Any]:
             )
             return _row_choice(mode, best, "adapter_visible_role_priority")
         return _provider_choice(record, "raw")
+    if mode == "bounded_tanh_support":
+        return _score_transformed_choice(record, mode=mode, transform="tanh")
+    if mode == "provider_local_rank_support":
+        return _score_transformed_choice(record, mode=mode, transform="provider_rank")
+    if mode == "role_owned_normalized":
+        adapter_rows = [
+            row for row in rows
+            if row.get("adapter_fired_under_forced_provider")
+            and isinstance(row.get("forced_best"), dict)
+        ]
+        if adapter_rows:
+            best = max(
+                adapter_rows,
+                key=lambda row: (
+                    float(row.get("adapter_support_amount", 0.0) or 0.0),
+                    float((row.get("forced_best") or {}).get("score", 0.0) or 0.0),
+                ),
+            )
+            return _row_choice(mode, best, "visible_role_owned_provider_local_arbitration")
+        return _provider_choice(record, "raw")
     if mode == "forced_success_oracle":
         mate_rows = [
             row for row in rows
@@ -66,6 +87,79 @@ def _provider_choice(record: dict[str, Any], mode: str) -> dict[str, Any]:
             return _row_choice(mode, best, "diagnostic_oracle_not_causal")
         return _provider_choice(record, "raw")
     raise ValueError(f"unknown mode: {mode}")
+
+
+def _score_transformed_choice(record: dict[str, Any], *, mode: str, transform: str) -> dict[str, Any]:
+    normal = record.get("normal_selected") if isinstance(record.get("normal_selected"), dict) else {}
+    rows = [row for row in record.get("provider_arbitration") or [] if isinstance(row, dict)]
+    candidates: list[dict[str, Any]] = []
+    normal_score = float(normal.get("score", 0.0) or 0.0)
+    candidates.append({
+        "kind": "raw_runtime",
+        "provider": normal.get("skill_id"),
+        "move": normal.get("move"),
+        "raw_score": normal_score,
+        "adapter_support": 0.0,
+        "transformed_score": _transform_score(normal_score, transform),
+        "known_outcome": None,
+        "known_plies": None,
+        "row": None,
+    })
+    for row in rows:
+        forced = row.get("forced_best") if isinstance(row.get("forced_best"), dict) else {}
+        if not forced:
+            continue
+        raw_score = float(forced.get("score", 0.0) or 0.0)
+        adapter_support = (
+            float(row.get("adapter_support_amount", 0.0) or 0.0)
+            if row.get("adapter_fired_under_forced_provider")
+            else 0.0
+        )
+        candidates.append({
+            "kind": "forced_provider_candidate",
+            "provider": row.get("provider"),
+            "move": forced.get("move"),
+            "raw_score": raw_score,
+            "adapter_support": adapter_support,
+            "transformed_score": _transform_score(raw_score, transform) + adapter_support,
+            "known_outcome": row.get("forced_known_outcome"),
+            "known_plies": row.get("forced_known_plies"),
+            "row": row,
+        })
+    best = max(
+        candidates,
+        key=lambda item: (
+            float(item.get("transformed_score", 0.0) or 0.0),
+            1 if item.get("adapter_support") else 0,
+            -int(item.get("known_plies", 999999) or 999999),
+        ),
+    )
+    row = best.get("row")
+    choice = {
+        "mode": mode,
+        "selected_provider": best.get("provider"),
+        "selected_move": best.get("move"),
+        "selected_score": best.get("raw_score"),
+        "transformed_score": best.get("transformed_score"),
+        "adapter_support_amount": best.get("adapter_support"),
+        "source": f"{transform}_score_replay_not_causal",
+        "known_outcome": best.get("known_outcome"),
+        "known_plies": best.get("known_plies"),
+    }
+    if isinstance(row, dict):
+        choice.update({
+            "required_support_to_overtake_selected": row.get("required_support_to_overtake_selected"),
+            "adapter_fired_under_forced_provider": row.get("adapter_fired_under_forced_provider"),
+        })
+    return choice
+
+
+def _transform_score(score: float, transform: str) -> float:
+    if transform == "tanh":
+        return math.tanh(score / 10.0)
+    if transform == "provider_rank":
+        return 1.0
+    return score
 
 
 def _row_choice(mode: str, row: dict[str, Any], source: str) -> dict[str, Any]:
@@ -91,7 +185,14 @@ def probe_stage7_score_normalization(
     arbitration = _load_json(arbitration_path)
     records: list[dict[str, Any]] = []
     counts: dict[str, int] = {}
-    modes = ("raw", "adapter_role_priority", "forced_success_oracle")
+    modes = (
+        "raw",
+        "bounded_tanh_support",
+        "provider_local_rank_support",
+        "adapter_role_priority",
+        "role_owned_normalized",
+        "forced_success_oracle",
+    )
     for record in arbitration.get("records") or []:
         if not isinstance(record, dict):
             continue
@@ -135,6 +236,7 @@ def probe_stage7_score_normalization(
         "arbitration_source": str(arbitration_path),
         "record_count": len(records),
         "choice_counts": counts,
+        "modes": list(modes),
         "adapter_role_mate_count": adapter_role_mate,
         "oracle_mate_count": oracle_mate,
         "candidate_update": {
@@ -159,15 +261,61 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Probe Stage 7 score normalization")
     parser.add_argument("--arbitration", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--markdown-output", type=Path, default=None)
     parser.add_argument("--no-json-stdout", action="store_true")
     args = parser.parse_args()
 
     payload = probe_stage7_score_normalization(arbitration_path=args.arbitration)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    if args.markdown_output is not None:
+        args.markdown_output.parent.mkdir(parents=True, exist_ok=True)
+        args.markdown_output.write_text(_to_markdown(payload), encoding="utf-8")
     if not args.no_json_stdout:
         print(json.dumps(payload, indent=2))
     return 0
+
+
+def _to_markdown(payload: dict[str, Any]) -> str:
+    lines = [
+        "# Stage 7 Score Normalization Probe",
+        "",
+        f"Schema: `{payload.get('schema_version')}`",
+        f"Causal status: `{payload.get('causal_status')}`",
+        f"Records: `{payload.get('record_count')}`",
+        "",
+        "## Candidate Update",
+        "",
+    ]
+    update = payload.get("candidate_update") if isinstance(payload.get("candidate_update"), dict) else {}
+    lines.extend([
+        f"- Candidate: `{update.get('candidate_id')}`",
+        f"- Status: `{update.get('status')}`",
+        f"- Next: `{update.get('next_action')}`",
+        "",
+        "## Choice Counts",
+        "",
+    ])
+    for key, value in sorted((payload.get("choice_counts") or {}).items()):
+        lines.append(f"- `{key}`: {value}")
+    lines.extend(["", "## Records", ""])
+    for record in payload.get("records") or []:
+        lines.extend([
+            f"### {record.get('state_id')}",
+            "",
+            f"FEN: `{record.get('post_reply_fen')}`",
+            "",
+        ])
+        choices = record.get("choices") if isinstance(record.get("choices"), dict) else {}
+        for mode in payload.get("modes") or choices.keys():
+            choice = choices.get(mode) if isinstance(choices.get(mode), dict) else {}
+            lines.append(
+                f"- `{mode}` -> `{choice.get('selected_provider')}` / "
+                f"`{choice.get('selected_move')}` outcome=`{choice.get('known_outcome')}` "
+                f"raw_score=`{choice.get('selected_score')}` transformed=`{choice.get('transformed_score')}`"
+            )
+        lines.append("")
+    return "\n".join(lines) + "\n"
 
 
 if __name__ == "__main__":
