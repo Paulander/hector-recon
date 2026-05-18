@@ -7090,6 +7090,56 @@ cand.krk.box_shrink.family_2cc.post_box_continuation_overlay.v1
 These candidate records round-trip through `StructuralCandidate` and keep
 `causal_status = non_causal` and `credit = 0.0`.
 
+## Stage 7 residual repair protocol planning
+
+I added a non-causal protocol planner that converts the residual candidate
+updates into explicit sandbox protocols.
+
+Artifacts:
+
+```text
+scripts/plan_stage7_residual_repair_protocols.py
+reports/structural_candidates/stage7_residual_repair_protocols.json
+reports/structural_candidates/stage7_residual_repair_protocols.md
+```
+
+Protocol statuses:
+
+```text
+stage7.residual.069.drive_role_refinement.rejected_general_priority:
+  source candidate: cand.krk.box_shrink.family_069.drive_role_refinement.v1
+  status: rejected_as_general_priority_rule
+  reason:
+    targeted_family_improved
+    25_sample_target_regressed
+    visible_terms_do_not_yet_separate_safe_general_use
+
+stage7.residual.0926.king_support_fence_stabilizer.sandbox_design:
+  source candidate: cand.krk.box_shrink.family_0926.king_support_fence_stabilizer.v1
+  status: sandbox_design_ready
+  repair kind: visible_move_shape_role
+
+stage7.residual.2cc.narrow_post_box_overlay.training_protocol:
+  source candidate: cand.krk.box_shrink.family_2cc.post_box_continuation_overlay.v1
+  status: training_protocol_ready_not_run
+  repair kind: narrow_overlay_training_candidate
+```
+
+Recommended order:
+
+```text
+1. Try the 0926 visible move-shape role as a default-off sandbox.
+2. Only if that does not generalize, proceed to the 2cc narrow overlay training
+   protocol.
+```
+
+Boundary:
+
+```text
+The planner is non-causal. It does not compile topology, train weights,
+promote Stage 7, or alter runtime routing.
+```
+
 ## Stage 7 Plan Capsule drive-priority sandbox negative result
 
 I tested the smallest causal follow-up suggested by the residual split:

@@ -268,3 +268,76 @@ def test_plan_capsule_owned_window_analysis_detects_ttl_failure():
     assert payload["window_count"] == 1
     assert payload["ttl_failure_count"] == 1
     assert payload["windows"][0]["ttl_failure"] is True
+
+
+def test_stage7_residual_repair_protocols_are_non_causal():
+    script = ROOT / "scripts" / "plan_stage7_residual_repair_protocols.py"
+    spec = importlib.util.spec_from_file_location("plan_stage7_residual_repair_protocols", script)
+    assert spec is not None
+    planner = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(planner)
+
+    candidate_payload = {
+        "schema_version": "stage7_plan_capsule_residual_candidate_updates.v1",
+        "structural_candidates": [
+            {
+                "schema_version": "structural_candidate.v1",
+                "candidate_id": "cand.krk.box_shrink.family_069.drive_role_refinement.v1",
+                "candidate_type": "family_specific_role_refinement",
+                "source_monitor_script": "growth.monitor.stage7_plan_capsule_residual_family_split",
+                "source_terms": ["drive_to_edge_forced_mate_h40"],
+                "trigger_failure_classes": ["wrong_owned_provider"],
+                "target_skill": "krk.box_shrink",
+                "parent_skill": "krk.post_box_shrink_continuation",
+                "proposed_change": {"kind": "visible_role_boundary_refinement"},
+                "promotion_status": "proposed",
+                "causal_status": "non_causal",
+                "credit": 0.0,
+            },
+            {
+                "schema_version": "structural_candidate.v1",
+                "candidate_id": "cand.krk.box_shrink.family_0926.king_support_fence_stabilizer.v1",
+                "candidate_type": "move_shape_role_refinement",
+                "source_monitor_script": "growth.monitor.stage7_plan_capsule_residual_family_split",
+                "source_terms": ["legal_first_move_converts_h40"],
+                "trigger_failure_classes": ["legal_first_action_selection_gap"],
+                "target_skill": "krk.box_shrink",
+                "parent_skill": "krk.post_box_shrink_continuation",
+                "proposed_change": {"kind": "visible_move_shape_contract"},
+                "promotion_status": "proposed",
+                "causal_status": "non_causal",
+                "credit": 0.0,
+            },
+            {
+                "schema_version": "structural_candidate.v1",
+                "candidate_id": "cand.krk.box_shrink.family_2cc.post_box_continuation_overlay.v1",
+                "candidate_type": "narrow_overlay_training_candidate",
+                "source_monitor_script": "growth.monitor.stage7_plan_capsule_residual_family_split",
+                "source_terms": ["dtm_won_within_h40"],
+                "trigger_failure_classes": ["provider_capacity_missing"],
+                "target_skill": "krk.box_shrink",
+                "parent_skill": "krk.post_box_shrink_continuation",
+                "proposed_change": {"kind": "narrow_post_box_continuation_overlay_probe"},
+                "promotion_status": "proposed",
+                "causal_status": "non_causal",
+                "credit": 0.0,
+            },
+        ],
+    }
+
+    payload = planner.build_residual_protocols(candidate_payload)
+
+    assert payload["schema_version"] == "stage7_residual_repair_protocols.v1"
+    assert payload["causal_status"] == "non_causal"
+    assert payload["protocol_count"] == 3
+    statuses = {item["source_candidate_id"]: item["status"] for item in payload["protocols"]}
+    assert (
+        statuses["cand.krk.box_shrink.family_069.drive_role_refinement.v1"]
+        == "rejected_as_general_priority_rule"
+    )
+    assert (
+        statuses["cand.krk.box_shrink.family_0926.king_support_fence_stabilizer.v1"]
+        == "sandbox_design_ready"
+    )
+    assert "do_not_promote_stage7" in payload["global_boundaries"]
