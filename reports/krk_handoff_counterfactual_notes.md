@@ -6964,3 +6964,128 @@ Do not add broad provider penalties.
 Do not train Stage 8.
 Do not make the analyzer causal.
 ```
+
+## Stage 7 Plan Capsule residual forced-provider / legal-first probe
+
+I ran a targeted, non-causal h40 forced-provider replay on the three residual
+Plan Capsule families.
+
+Artifacts:
+
+```text
+reports/structural_candidates/stage7_plan_capsule_residual_forced_provider_h40.json
+reports/structural_candidates/stage7_plan_capsule_residual_forced_provider_h40_steps.jsonl
+reports/structural_candidates/stage7_state0926_legal_first_h40.json
+reports/structural_candidates/stage7_state0926_legal_first_h40_steps.jsonl
+reports/structural_candidates/stage7_plan_capsule_residual_candidate_updates.json
+```
+
+Forced-provider summary:
+
+```text
+states tested: 3
+providers tested: edge_trap_close, fence_established, drive_to_edge, stage0_basin
+horizon: 40
+
+state.069e81a609ed:
+  edge_trap_close -> h4g4 -> max_plies
+  fence_established -> h4h8 -> max_plies
+  drive_to_edge -> e2e3 -> mate in 7
+  stage0_basin -> e2d1 -> max_plies
+
+state.0926f12f8e8f:
+  edge_trap_close -> e4d4 -> max_plies
+  fence_established -> e4f4 -> max_plies
+  drive_to_edge -> e4f3 -> max_plies
+  stage0_basin -> e4f3 -> max_plies
+
+state.2cc0b3e1033a:
+  edge_trap_close -> a6a7 -> max_plies
+  fence_established -> a6h6 -> max_plies
+  drive_to_edge -> a6a8 -> max_plies
+  stage0_basin -> a6a8 -> max_plies
+```
+
+The missing legal-first classification for `state.0926f12f8e8f` is now filled:
+
+```text
+state.0926f12f8e8f:
+  exhaustive legal-first h40:
+    1 mate
+    18 max_plies
+    3 draw
+  converting move:
+    e4d3 -> mate in 9
+  converting move terms:
+    candidate_is_king_move
+    king_moves_toward_enemy
+    king_moves_toward_rook_support
+    fence_exists_after_move
+    fence_stable_after_move
+    cut_preserved_after_move
+    white_king_distance_to_enemy_decreases
+    white_king_distance_to_rook_decreases
+```
+
+Existing evidence for `state.2cc0b3e1033a` still applies:
+
+```text
+legal-first h50:
+  no converting legal first move under current graph continuation
+DTM oracle:
+  won in 27 plies
+```
+
+Updated family diagnoses:
+
+```text
+state.069e81a609ed:
+  diagnosis: wrong owned provider / role boundary
+  evidence: drive_to_edge converts at h40 when forced, but capsule selected edge_trap_close
+  next action: refine visible role terms so this family licenses drive_to_edge,
+               not edge_trap_close
+
+state.0926f12f8e8f:
+  diagnosis: legal-first action-selection gap
+  evidence: no tested provider converts, but legal move e4d3 converts in 9
+  next action: add non-causal candidate for a king-support/fence-stabilizing
+               post-box move-shape, then sandbox only if visible terms separate
+
+state.2cc0b3e1033a:
+  diagnosis: current-continuation capacity gap or underexpressive topology
+  evidence: DTM-won in h40, but no existing provider or legal-first current
+            continuation converts at h50
+  next action: keep as narrow post-box continuation overlay/training candidate,
+               not a broad full-KRK patch
+```
+
+Interpretation:
+
+```text
+The residual Stage 7 failures are now split cleanly:
+  1 family is wrong-provider ownership,
+  1 family is legal-first action selection,
+  1 family is likely continuation capacity/expressivity.
+
+This argues against another broad Plan Capsule bonus. The next repair, if any,
+should be family/term specific and still sandbox-only.
+```
+
+I also emitted three non-causal StructuralCandidate updates:
+
+```text
+cand.krk.box_shrink.family_069.drive_role_refinement.v1
+  type: family_specific_role_refinement
+  diagnosis: drive_to_edge solves when forced; current capsule selected edge_trap_close
+
+cand.krk.box_shrink.family_0926.king_support_fence_stabilizer.v1
+  type: move_shape_role_refinement
+  diagnosis: legal-first e4d3 converts; no tested provider selected it
+
+cand.krk.box_shrink.family_2cc.post_box_continuation_overlay.v1
+  type: narrow_overlay_training_candidate
+  diagnosis: DTM-won but current graph cannot convert under existing providers or legal-first current continuation
+```
+
+These candidate records round-trip through `StructuralCandidate` and keep
+`causal_status = non_causal` and `credit = 0.0`.
