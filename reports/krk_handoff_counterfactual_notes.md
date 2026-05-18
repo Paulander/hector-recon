@@ -8145,3 +8145,47 @@ top-1 slightly, but did not solve the first residual family or closed-loop
 conversion. The bottleneck is still the ranking/model-expression path, not
 runtime ownership or a missing broad support bonus.
 ```
+
+## Stage 7 unified strategy arbitration probe
+
+I paused local box-shrink/capsule micro-repairs and added a first non-causal
+unified KRK strategy arbitration dataset/probe:
+
+```text
+reports/structural_candidates/stage7_unified_strategy_arbitration_dataset.json
+reports/structural_candidates/stage7_unified_strategy_arbitration_probe.json
+reports/structural_candidates/stage7_unified_strategy_arbitration_probe.md
+```
+
+The dataset records all provider suggestions for the sampled decision states,
+including raw score, provider-local rank, provider-local normalized score,
+board/terminal features, move-shape/post-move terms, and role/capsule context.
+To keep the first artifact bounded, only one provider-best candidate per state
+was labeled with h40 playout. This is analysis only; no arbitration policy is
+runtime-causal.
+
+Small probe result:
+
+```text
+states: 3
+labeled states: 3
+label_trace_mode: none
+raw global top conversion rate: 0.000
+provider-local rank1 oracle coverage: 0.000
+box_area_relevance: high in sampled states
+
+labeled provider-best outcomes:
+  krk.drive_to_edge:max_plies: 2
+  krk.fence_established:max_plies: 1
+```
+
+Interpretation:
+
+```text
+This first bounded dataset does not support a causal arbitration change. It
+also does not yet show that edge-distance / low box-area relevance explains the
+residual Stage 7 failures; the sampled residual states are still high
+box-area-relevance positions. The useful result is mostly infrastructural:
+provider suggestions can now be compared in a shared terminal/move-shape
+feature space without changing runtime behavior.
+```

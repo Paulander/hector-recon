@@ -102,6 +102,15 @@ assert _capsule_fidelity_spec.loader is not None
 _capsule_fidelity = importlib.util.module_from_spec(_capsule_fidelity_spec)
 _capsule_fidelity_spec.loader.exec_module(_capsule_fidelity)
 
+_strategy_arbitration_spec = importlib.util.spec_from_file_location(
+    "build_stage7_unified_strategy_arbitration_dataset",
+    Path(__file__).resolve().parents[1] / "scripts" / "build_stage7_unified_strategy_arbitration_dataset.py",
+)
+assert _strategy_arbitration_spec is not None
+assert _strategy_arbitration_spec.loader is not None
+_strategy_arbitration = importlib.util.module_from_spec(_strategy_arbitration_spec)
+_strategy_arbitration_spec.loader.exec_module(_strategy_arbitration)
+
 
 def test_stage7_unresolved_legal_first_summary_marks_selection_gap_and_capacity_probe(tmp_path):
     probe = {
@@ -621,3 +630,62 @@ def test_stage7_capsule_fidelity_top_level_flags_top1_ranking_gap_before_compoun
 
     assert diagnosis == "trajectory_ranking_and_closed_loop_gap"
     assert "ranked_imitation" in next_action
+
+
+def test_stage7_unified_strategy_arbitration_provider_ranks_and_relevance():
+    rows = _strategy_arbitration._provider_ranked_suggestions(
+        [
+            {"skill_id": "krk.stage0_basin", "move": "a1a2", "score": 10.0},
+            {"skill_id": "krk.stage0_basin", "move": "a1a3", "score": 5.0},
+            {"skill_id": "krk.drive_to_edge", "move": "d1d2", "score": 0.2},
+        ],
+        {"krk.stage0_basin", "krk.drive_to_edge"},
+    )
+
+    by_move = {item["move"]: item for item in rows}
+    assert by_move["a1a2"]["provider_local_rank"] == 1
+    assert by_move["a1a3"]["provider_local_rank"] == 2
+    assert by_move["a1a2"]["provider_local_normalized_score"] == 1.0
+    assert by_move["a1a3"]["provider_local_normalized_score"] == 0.0
+    assert _strategy_arbitration._box_area_relevance({"enemy_edge_distance": 0, "box_area": 30}) == "low"
+    assert _strategy_arbitration._box_area_relevance({"enemy_edge_distance": 2, "box_area": 20}) == "high"
+
+
+def test_stage7_unified_strategy_arbitration_probe_detects_normalized_shortlist_advantage():
+    dataset = {
+        "state_count": 1,
+        "records": [
+            {
+                "state_id": "state.demo",
+                "board_features": {
+                    "box_area_relevance": "low",
+                    "black_king_edge_distance": 0,
+                    "fence_exists": False,
+                    "king_support": True,
+                },
+                "suggestions": [
+                    {
+                        "provider_id": "krk.stage0_basin",
+                        "move": "a1a2",
+                        "raw_score": 10.0,
+                        "provider_local_rank": 1,
+                        "playout_label": {"result": "max_plies"},
+                    },
+                    {
+                        "provider_id": "krk.edge_trap_close",
+                        "move": "h7h8",
+                        "raw_score": 0.1,
+                        "provider_local_rank": 1,
+                        "playout_label": {"result": "mate"},
+                    },
+                ],
+            }
+        ],
+    }
+
+    probe = _strategy_arbitration.run_probe(dataset)
+
+    assert probe["raw_global_top_conversion_rate"] == 0.0
+    assert probe["provider_local_rank1_oracle_coverage"] == 1.0
+    assert probe["answers"]["provider_local_normalization_outperforms_raw_global_score"] is True
+    assert probe["answers"]["failures_suggest_box_or_stage0_over_ownership"] is True
