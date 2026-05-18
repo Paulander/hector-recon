@@ -144,3 +144,125 @@ def test_plan_capsule_sandbox_compiler_is_default_off_and_non_requesting(tmp_pat
     assert node["meta"]["direct_request"] is False
     assert node["meta"]["causal_status"] == "sandbox_opt_in_non_requesting"
     assert "plan_capsule_sandbox_enabled" not in topology["nodes"]["krk_hub"].get("meta", {})
+
+
+def test_plan_capsule_marker_analysis_recommends_progress_monitor():
+    analyzer_script = ROOT / "scripts" / "analyze_plan_capsule_markers.py"
+    spec = importlib.util.spec_from_file_location("analyze_plan_capsule_markers", analyzer_script)
+    assert spec is not None
+    analyzer = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(analyzer)
+
+    diagnostic = {
+        "handoff_packets": [
+            {
+                "phase": "post_opponent_reply",
+                "evidence_terms": {
+                    "playout_result": "max_plies",
+                    "plan_capsule_markers": {
+                        "krk.post_box_shrink_continuation": {
+                            "entry_confirmed": True,
+                            "abort_confirmed": False,
+                            "entry_terms_met": ["post_reply_state_reached"],
+                            "progress_terms_met": ["box_area_decreases_or_does_not_expand"],
+                            "exit_terms_met": [],
+                            "abort_terms_met": [],
+                        }
+                    },
+                },
+            },
+            {
+                "phase": "post_opponent_reply",
+                "evidence_terms": {
+                    "playout_result": "mate",
+                    "plan_capsule_markers": {
+                        "krk.post_box_shrink_continuation": {
+                            "entry_confirmed": False,
+                            "abort_confirmed": False,
+                            "entry_terms_met": ["post_reply_state_reached"],
+                            "progress_terms_met": ["box_area_decreases_or_does_not_expand"],
+                            "exit_terms_met": ["mate_in_one_available"],
+                            "abort_terms_met": [],
+                        }
+                    },
+                },
+            },
+        ]
+    }
+
+    payload = analyzer.analyze_markers(
+        diagnostic,
+        capsule_id="krk.post_box_shrink_continuation",
+    )
+
+    assert payload["schema_version"] == "plan_capsule_marker_analysis.v1"
+    assert payload["causal_status"] == "non_causal"
+    assert payload["diagnosis"]["entry_confirmed_max_plies_count"] == 1
+    assert payload["diagnosis"]["mate_exit_count"] == 1
+    assert "add_owned_move_progress_or_ttl_failure_monitor_before_causal_capsule" in payload["recommendations"]
+
+
+def test_plan_capsule_owned_window_analysis_detects_ttl_failure():
+    analyzer_script = ROOT / "scripts" / "analyze_plan_capsule_owned_window.py"
+    spec = importlib.util.spec_from_file_location("analyze_plan_capsule_owned_window", analyzer_script)
+    assert spec is not None
+    analyzer = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(analyzer)
+
+    diagnostic = {
+        "handoff_packets": [
+            {
+                "evidence_terms": {
+                    "post_reply_fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+                    "plan_capsule_markers": {
+                        "krk.post_box_shrink_continuation": {
+                            "entry_confirmed": True,
+                            "abort_terms_met": [],
+                        }
+                    },
+                }
+            }
+        ],
+        "debug_playouts": [
+            {
+                "sample": 1,
+                "result": "max_plies",
+                "trace": [
+                    {
+                        "turn": "white",
+                        "fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+                        "move": "e2d1",
+                        "resulting_fen": "8/8/8/8/7R/2k5/8/3K4 b - - 3 2",
+                    },
+                    {"turn": "black", "fen": "8/8/8/8/7R/2k5/8/3K4 b - - 3 2", "move": "c3d3"},
+                    {
+                        "turn": "white",
+                        "fen": "8/8/8/8/7R/3k4/8/3K4 w - - 4 3",
+                        "move": "d1c1",
+                        "resulting_fen": "8/8/8/8/7R/3k4/8/2K5 b - - 5 3",
+                    },
+                    {"turn": "black", "fen": "8/8/8/8/7R/3k4/8/2K5 b - - 5 3", "move": "d3e3"},
+                    {
+                        "turn": "white",
+                        "fen": "8/8/8/8/7R/4k3/8/2K5 w - - 6 4",
+                        "move": "c1c2",
+                        "resulting_fen": "8/8/8/8/7R/4k3/2K5/8 b - - 7 4",
+                    },
+                ],
+            }
+        ],
+    }
+
+    payload = analyzer.analyze_owned_window(
+        diagnostic,
+        capsule_id="krk.post_box_shrink_continuation",
+        ttl_white_moves=3,
+    )
+
+    assert payload["schema_version"] == "plan_capsule_owned_window_analysis.v1"
+    assert payload["causal_status"] == "non_causal"
+    assert payload["window_count"] == 1
+    assert payload["ttl_failure_count"] == 1
+    assert payload["windows"][0]["ttl_failure"] is True

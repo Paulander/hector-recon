@@ -412,6 +412,74 @@ def create_krk_role_provider_support_adapter(node_id=None):
     return Node(nid=actual_id, ntype=NodeType.SCRIPT, predicate=predicate)
 
 
+def _augment_plan_capsule_terms(terms: Dict[str, bool]) -> Dict[str, bool]:
+    """Derive capsule-level terms from graph-visible KRK context terms."""
+    augmented = dict(terms)
+    augmented["enemy_king_constrained_or_recoverable"] = bool(
+        augmented.get("enemy_king_restricted")
+        or augmented.get("edge_trap_shape_available")
+        or augmented.get("edge_rook_transfer_recovery_available")
+        or augmented.get("box_shrink_drive_repair_available")
+        or augmented.get("repair_or_reestablish_cut_available")
+    )
+    augmented["box_area_decreases_or_does_not_expand"] = bool(
+        augmented.get("box_shrink_available")
+        or not augmented.get("box_area_large", False)
+        or augmented.get("box_shrink_drive_repair_available")
+    )
+    augmented["cut_or_fence_preserved_or_restored"] = bool(
+        augmented.get("fence_exists")
+        or augmented.get("fence_stable")
+        or augmented.get("repair_or_reestablish_cut_available")
+        or augmented.get("box_shrink_drive_repair_available")
+    )
+    augmented["white_king_support_improves"] = bool(
+        augmented.get("white_king_can_improve_support")
+        or augmented.get("king_support_improvement_move_exists")
+        or augmented.get("white_king_support_available")
+    )
+    augmented["enemy_king_mobility_decreases"] = bool(
+        augmented.get("enemy_king_restricted")
+        or augmented.get("enemy_king_near_edge")
+        or augmented.get("edge_trap_shape_available")
+    )
+    augmented["corner_net_pressure_increases"] = bool(
+        augmented.get("corner_net_pressure_available")
+        or augmented.get("edge_rook_transfer_recovery_available")
+    )
+    augmented["mate_basin_proximity_improves"] = bool(
+        augmented.get("mate_in_one_available")
+        or augmented.get("enemy_king_near_edge")
+        or augmented.get("corner_net_pressure_available")
+        or augmented.get("edge_trap_close_geometry")
+    )
+    augmented["safe_check_or_cut_created"] = bool(
+        augmented.get("safe_check_available")
+        or augmented.get("fence_exists")
+        or augmented.get("repair_or_reestablish_cut_available")
+    )
+    augmented["stagnation_avoided"] = not bool(
+        augmented.get("rook_oscillation_loop")
+        or augmented.get("repeated_abstract_state")
+        or augmented.get("no_box_progress_recently")
+    )
+    augmented["fence_or_cut_restored"] = bool(
+        augmented.get("fence_exists")
+        or augmented.get("fence_stable")
+        or augmented.get("cut_stable")
+    )
+    augmented["edge_trap_role_confirmed"] = bool(
+        augmented.get("edge_trap_shape_available")
+        or augmented.get("edge_trap_close_geometry")
+        or augmented.get("edge_rook_transfer_recovery_available")
+    )
+    augmented["drive_to_edge_role_confirmed"] = bool(
+        augmented.get("drive_to_edge_affordance_after_box_shrink")
+        or augmented.get("enemy_king_not_at_edge")
+    )
+    return augmented
+
+
 def create_krk_plan_capsule_marker(node_id=None):
     """Create a default-off visible Plan Capsule sandbox marker.
 
@@ -429,6 +497,8 @@ def create_krk_plan_capsule_marker(node_id=None):
             return False, True
         terms = dict(blackboard.get("krk_visible_terms", {}) or {})
         terms.update(blackboard.get("krk_dynamic_context_terms", {}) or {})
+        terms = _augment_plan_capsule_terms(terms)
+        blackboard.setdefault("krk_visible_terms", {}).update(terms)
         entry_terms = list(node.meta.get("entry_terms", []) or [])
         progress_terms = list(node.meta.get("progress_terms", []) or [])
         exit_terms = list(node.meta.get("exit_terms", []) or [])

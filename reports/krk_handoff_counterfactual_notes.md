@@ -6357,3 +6357,166 @@ entry/progress vocabulary needs one more refinement pass so terms like
 enemy_king_constrained_or_recoverable and progress-after-owned-move are
 graph-visible in the live trace, not only in offline DTM reference artifacts.
 ```
+
+## Stage 7 Plan Capsule live-term refinement
+
+I refined the non-causal marker vocabulary so capsule-level terms are derived
+from existing graph-visible KRK context terms rather than from offline labels.
+
+Examples:
+
+```text
+enemy_king_constrained_or_recoverable
+  derives from enemy_king_restricted, edge-trap availability,
+  box_shrink_drive_repair_available, or repair_or_reestablish_cut_available
+
+cut_or_fence_preserved_or_restored
+  derives from fence_exists, fence_stable, cut_stable, or repair availability
+
+white_king_support_improves
+  derives from white_king_can_improve_support,
+  king_support_improvement_move_exists, or current support availability
+```
+
+Artifact:
+
+```text
+reports/structural_candidates/stage7_plan_capsule_marker_terms_refined_10_h20.json
+```
+
+Result:
+
+```text
+10 samples, h20:
+  local: 10/10 improved, 8/10 optimal
+  conversion: 5 mate / 5 max_plies
+  shadows: 14
+  plan_capsule_marker_count: 8
+```
+
+The behavior is unchanged from the prior marker smoke, but trace quality
+improved. In the inspected max-plies post-box state:
+
+```text
+before:
+  entry_confirmed: false
+  progress_terms_met: []
+
+after:
+  entry_confirmed: true
+  progress_terms_met:
+    box_area_decreases_or_does_not_expand
+    cut_or_fence_preserved_or_restored
+    white_king_support_improves
+    safe_check_or_cut_created
+  abort_terms_met: []
+```
+
+This keeps the capsule non-causal while making its proposed entry/progress
+conditions live-visible and auditable.
+
+## Stage 7 Plan Capsule marker analysis
+
+I added an offline marker-analysis script:
+
+```text
+scripts/analyze_plan_capsule_markers.py
+```
+
+Artifact:
+
+```text
+reports/structural_candidates/stage7_plan_capsule_marker_analysis_10_h20.json
+reports/structural_candidates/stage7_plan_capsule_marker_analysis_10_h20.md
+```
+
+Result:
+
+```text
+marker_records: 8
+outcomes:
+  mate: 3
+  max_plies: 5
+
+entry_confirmed_max_plies_count: 5
+entry_confirmed_mate_count: 0
+mate_exit_count: 3
+max_plies_without_abort_count: 5
+```
+
+Interpretation:
+
+```text
+The capsule entry terms now separate candidate ownership states from already
+successful exit states: max-plies cases enter the capsule, while mate cases
+already expose exit terms.
+
+The remaining gap is not entry gating. It is that max-plies cases enter the
+capsule without any abort firing. Before causal sandboxing, the system needs a
+non-causal owned-move progress / TTL-failure monitor so it can say whether the
+capsule would have made progress over its 3-white-move window.
+```
+
+Next action:
+
+```text
+design_non_causal_owned_move_progress_monitor
+```
+
+## Stage 7 Plan Capsule owned-window analysis
+
+I generated a trace-retaining 10-sample marker diagnostic and added an offline
+owned-window analyzer for the proposed capsule.
+
+Artifacts:
+
+```text
+reports/structural_candidates/stage7_plan_capsule_marker_terms_refined_trace10_h20.json
+reports/structural_candidates/stage7_plan_capsule_owned_window_10_h20.json
+reports/structural_candidates/stage7_plan_capsule_owned_window_10_h20.md
+```
+
+Result:
+
+```text
+capsule: krk.post_box_shrink_continuation
+ttl_white_moves: 3
+windows: 5
+ttl_failures: 3
+```
+
+Per-window summary:
+
+```text
+sample 1 max_plies:
+  moves: e2d1, d1c1, c1c2
+  progress: box preserved, edge distance not worse
+  ttl_failure: true
+
+sample 2 max_plies:
+  moves: e4f3, f3g4, g4f3
+  progress: king support improved
+  ttl_failure: false
+
+sample 3 max_plies:
+  moves: a6a8, a8d8, d1e2
+  progress: box decreased, king support improved
+  ttl_failure: false
+
+sample 6 / 9 max_plies:
+  moves: a5h5, h5h8, h8d8
+  progress: box preserved, edge/corner not worse
+  ttl_failure: true
+```
+
+Interpretation:
+
+```text
+The remaining failures split into:
+  A. capsule entry + owned-window progress, but later conversion still fails;
+  B. capsule entry + no strong owned-window progress before TTL.
+
+This is still non-causal. It gives a better sandbox criterion: a future runtime
+capsule should not merely enter; it must show owned-window progress or emit a
+visible TTL/progress failure.
+```
