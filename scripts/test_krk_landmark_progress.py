@@ -103,6 +103,38 @@ def _materialize_stage7_sandbox_providers(graph: Graph, env: dict) -> None:
             continue
 
 
+def _materialize_plan_capsule_markers(graph: Graph, env: dict) -> None:
+    """Materialize opt-in Plan Capsule marker predicates for diagnostics.
+
+    These markers are non-requesting audit nodes. They only record visible
+    entry/progress/exit/abort evidence when `plan_capsule_sandbox_enabled` is
+    explicitly true.
+    """
+    blackboard = env.get("blackboard", {})
+    if not blackboard.get("plan_capsule_sandbox_enabled", False):
+        return
+    try:
+        from recon_lite_chess.krk_baseline_nodes import _compute_krk_context_terms
+    except Exception:
+        return
+    board = env.get("board")
+    if board is not None:
+        terms = dict(_compute_krk_context_terms(board) or {})
+        terms.update(blackboard.get("krk_dynamic_context_terms", {}) or {})
+        blackboard.setdefault("krk_visible_terms", {}).update(terms)
+    for node in graph.nodes.values():
+        meta = getattr(node, "meta", {}) or {}
+        if not meta.get("plan_capsule_marker"):
+            continue
+        predicate = getattr(node, "predicate", None)
+        if predicate is None:
+            continue
+        try:
+            predicate(node, env)
+        except Exception:
+            continue
+
+
 PROFILE_TIMER_KEYS = (
     "total_wall_time",
     "choose_move_details_time",
@@ -643,6 +675,7 @@ def _successor_skill_summary(
             "adapter_supported_suggestion_count": 0,
             "adapter_supported_provider_counts": {},
             "adapter_supported_move_counts": {},
+            "plan_capsule_markers": {},
             "visible_stage7_king_tempo_bonus": 0.0,
             "visible_stage7_king_tempo_license": {},
         }
@@ -774,6 +807,7 @@ def _successor_skill_summary(
         "adapter_supported_move_counts": dict(
             move_details.get("adapter_supported_move_counts", {}) or {}
         ),
+        "plan_capsule_markers": dict(move_details.get("plan_capsule_markers", {}) or {}),
         **selected_contract,
     }
 
@@ -1277,6 +1311,7 @@ def choose_move_with_engine(
     stage7_post_box_continuation_score: float = 32.0,
     stage7_learned_post_box_continuation_enabled: bool = False,
     stage7_learned_post_box_continuation_bonus: float = 0.0,
+    plan_capsule_sandbox_enabled: bool = False,
     stage7_provider_scope_label: str = "box_shrink",
     active_landmark_label: str | None = None,
     early_stop_stable_suggestions: int = 0,
@@ -1315,6 +1350,7 @@ def choose_move_with_engine(
         stage7_post_box_continuation_score=stage7_post_box_continuation_score,
         stage7_learned_post_box_continuation_enabled=stage7_learned_post_box_continuation_enabled,
         stage7_learned_post_box_continuation_bonus=stage7_learned_post_box_continuation_bonus,
+        plan_capsule_sandbox_enabled=plan_capsule_sandbox_enabled,
         stage7_provider_scope_label=stage7_provider_scope_label,
         active_landmark_label=active_landmark_label,
         early_stop_stable_suggestions=early_stop_stable_suggestions,
@@ -1355,6 +1391,7 @@ def choose_move_details(
     stage7_post_box_continuation_score: float = 32.0,
     stage7_learned_post_box_continuation_enabled: bool = False,
     stage7_learned_post_box_continuation_bonus: float = 0.0,
+    plan_capsule_sandbox_enabled: bool = False,
     stage7_provider_scope_label: str = "box_shrink",
     active_landmark_label: str | None = None,
     early_stop_stable_suggestions: int = 0,
@@ -1401,6 +1438,7 @@ def choose_move_details(
             stage7_post_box_continuation_score=stage7_post_box_continuation_score,
             stage7_learned_post_box_continuation_enabled=stage7_learned_post_box_continuation_enabled,
             stage7_learned_post_box_continuation_bonus=stage7_learned_post_box_continuation_bonus,
+            plan_capsule_sandbox_enabled=plan_capsule_sandbox_enabled,
             stage7_provider_scope_label=stage7_provider_scope_label,
             active_landmark_label=active_landmark_label,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
@@ -1448,6 +1486,7 @@ def _choose_move_details_impl(
     stage7_post_box_continuation_score: float = 32.0,
     stage7_learned_post_box_continuation_enabled: bool = False,
     stage7_learned_post_box_continuation_bonus: float = 0.0,
+    plan_capsule_sandbox_enabled: bool = False,
     stage7_provider_scope_label: str = "box_shrink",
     active_landmark_label: str | None = None,
     early_stop_stable_suggestions: int = 0,
@@ -1545,14 +1584,36 @@ def _choose_move_details_impl(
     env["blackboard"]["stage7_post_box_post_reply_context"] = bool(
         stage7_post_box_post_reply_context
     )
+    env["blackboard"]["plan_capsule_sandbox_enabled"] = bool(plan_capsule_sandbox_enabled)
     env["blackboard"]["stage7_provider_scope_label"] = str(stage7_provider_scope_label or "box_shrink")
     if active_landmark_label:
         env["blackboard"]["active_landmark_label"] = str(active_landmark_label)
+        env["blackboard"].setdefault("krk_visible_terms", {})[
+            f"active_landmark_label.{active_landmark_label}"
+        ] = True
+    if stage7_post_box_post_reply_context:
+        dynamic_terms = env["blackboard"].setdefault("krk_dynamic_context_terms", {})
+        visible_terms = env["blackboard"].setdefault("krk_visible_terms", {})
+        for term in (
+            "post_reply_state_reached",
+            "box_shrink_attempt_confirmed_or_candidate_confirmed",
+        ):
+            dynamic_terms[term] = True
+            visible_terms[term] = True
+        try:
+            no_mate_in_one = not bool(_mate_in_one_available(board))
+        except Exception:
+            no_mate_in_one = True
+        dynamic_terms["conversion_not_immediate"] = no_mate_in_one
+        dynamic_terms["no_stronger_mate_or_tactic_interrupt_available"] = no_mate_in_one
+        visible_terms["conversion_not_immediate"] = no_mate_in_one
+        visible_terms["no_stronger_mate_or_tactic_interrupt_available"] = no_mate_in_one
     if forced_successor_skill:
         env["blackboard"]["forced_successor_skill"] = forced_successor_skill
 
     _materialize_explicit_support_roles(graph, env)
     _materialize_stage7_sandbox_providers(graph, env)
+    _materialize_plan_capsule_markers(graph, env)
 
     engine.reset_states()
     root_id = "krk_entry" if "krk_entry" in graph.nodes else None
@@ -1706,6 +1767,10 @@ def _choose_move_details_impl(
         "stage7_post_box_continuation_score": float(stage7_post_box_continuation_score),
         "stage7_learned_post_box_continuation_enabled": bool(stage7_learned_post_box_continuation_enabled),
         "stage7_learned_post_box_continuation_bonus": float(stage7_learned_post_box_continuation_bonus),
+        "plan_capsule_sandbox_enabled": bool(plan_capsule_sandbox_enabled),
+        "plan_capsule_markers": dict(
+            env.get("blackboard", {}).get("krk_plan_capsule_markers", {}) or {}
+        ),
         "stage7_post_box_post_reply_context": bool(stage7_post_box_post_reply_context),
         "stage7_provider_scope_label": str(stage7_provider_scope_label or "box_shrink"),
         "active_landmark_label": str(active_landmark_label or ""),
@@ -1918,6 +1983,7 @@ def play_to_mate(
     stage7_post_box_continuation_score: float = 32.0,
     stage7_learned_post_box_continuation_enabled: bool = False,
     stage7_learned_post_box_continuation_bonus: float = 0.0,
+    plan_capsule_sandbox_enabled: bool = False,
     early_stop_stable_suggestions: int = 0,
     lock_stage_filter_through_playout: bool = False,
     forced_successor_skill: Optional[str] = None,
@@ -2039,6 +2105,7 @@ def play_to_mate(
                 stage7_post_box_continuation_score=stage7_post_box_continuation_score,
                 stage7_learned_post_box_continuation_enabled=stage7_learned_post_box_continuation_enabled,
                 stage7_learned_post_box_continuation_bonus=stage7_learned_post_box_continuation_bonus,
+                plan_capsule_sandbox_enabled=plan_capsule_sandbox_enabled,
                 active_landmark_label=label,
                 stage7_king_tempo_already_used=stage7_king_tempo_used,
                 stage7_drive_repair_already_used=stage7_drive_repair_used,
@@ -2876,6 +2943,7 @@ def run_counterfactual_successor_sweep(
     stage7_post_box_continuation_score: float = 32.0,
     stage7_learned_post_box_continuation_enabled: bool = False,
     stage7_learned_post_box_continuation_bonus: float = 0.0,
+    plan_capsule_sandbox_enabled: bool = False,
     early_stop_stable_suggestions: int = 0,
     step_output: Optional[Path] = None,
     step_context: Optional[dict] = None,
@@ -3060,6 +3128,7 @@ def evaluate_landmark_progress(
     stage7_post_box_continuation_score: float = 32.0,
     stage7_learned_post_box_continuation_enabled: bool = False,
     stage7_learned_post_box_continuation_bonus: float = 0.0,
+    plan_capsule_sandbox_enabled: bool = False,
     early_stop_stable_suggestions: int = 0,
     lock_stage_filter_through_playout: bool = False,
     counterfactual_successors: tuple[str, ...] = (),
@@ -3158,6 +3227,8 @@ def evaluate_landmark_progress(
         "adapter_fire_count": 0,
         "adapter_supported_provider_by_outcome": {},
         "adapter_supported_move_by_outcome": {},
+        "plan_capsule_marker_count": 0,
+        "plan_capsule_marker_by_outcome": {},
         "role_owned_score_normalization_selected_count": 0,
         "role_owned_score_normalization_provider_by_outcome": {},
         "one_ply_status": "not_checked",
@@ -3207,6 +3278,7 @@ def evaluate_landmark_progress(
             stage7_post_box_continuation_score=stage7_post_box_continuation_score,
             stage7_learned_post_box_continuation_enabled=stage7_learned_post_box_continuation_enabled,
             stage7_learned_post_box_continuation_bonus=stage7_learned_post_box_continuation_bonus,
+            plan_capsule_sandbox_enabled=plan_capsule_sandbox_enabled,
             active_landmark_label=label,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
             perf_profile=perf_profile,
@@ -3378,6 +3450,7 @@ def evaluate_landmark_progress(
                 stage7_post_box_continuation_score=stage7_post_box_continuation_score,
                 stage7_learned_post_box_continuation_enabled=stage7_learned_post_box_continuation_enabled,
                 stage7_learned_post_box_continuation_bonus=stage7_learned_post_box_continuation_bonus,
+                plan_capsule_sandbox_enabled=plan_capsule_sandbox_enabled,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
                 lock_stage_filter_through_playout=lock_stage_filter_through_playout,
                 perf_profile=perf_profile,
@@ -3471,6 +3544,17 @@ def evaluate_landmark_progress(
             adapter_support = dict(
                 successor_summary.get("visible_role_provider_support_adapter", {}) or {}
             )
+            plan_capsule_markers = dict(successor_summary.get("plan_capsule_markers", {}) or {})
+            if plan_capsule_markers:
+                stats["plan_capsule_marker_count"] = (
+                    int(stats.get("plan_capsule_marker_count", 0) or 0)
+                    + len(plan_capsule_markers)
+                )
+                for capsule_id, marker in plan_capsule_markers.items():
+                    marker_key = f"{capsule_id}:{key}"
+                    stats["plan_capsule_marker_by_outcome"][marker_key] = (
+                        stats["plan_capsule_marker_by_outcome"].get(marker_key, 0) + 1
+                    )
             role_owned_support = dict(
                 successor_summary.get("visible_role_owned_score_normalization", {}) or {}
             )
@@ -3560,6 +3644,7 @@ def evaluate_landmark_progress(
                     "role_bonus_total": successor_summary.get("role_bonus_total"),
                     "role_bonus_by_role": successor_summary.get("role_bonus_by_role"),
                     "visible_role_provider_support_adapter": adapter_support,
+                    "plan_capsule_markers": plan_capsule_markers,
                     "visible_role_owned_score_normalization": successor_summary.get(
                         "visible_role_owned_score_normalization", {}
                     ),
@@ -4111,6 +4196,7 @@ def _merge_parallel_stats(
         "shadow_candidate_count",
         "counterfactual_successor_sweep_count",
         "adapter_fire_count",
+        "plan_capsule_marker_count",
         "role_owned_score_normalization_selected_count",
     )
     max_keys = ("one_ply_engine_ticks_max", "playout_engine_ticks_max")
@@ -4124,6 +4210,7 @@ def _merge_parallel_stats(
         "shadow_candidate_counts_by_trigger",
         "adapter_supported_provider_by_outcome",
         "adapter_supported_move_by_outcome",
+        "plan_capsule_marker_by_outcome",
         "role_owned_score_normalization_provider_by_outcome",
     )
     nested_count_keys = ("conversion_by_semantic_alignment_status",)
@@ -4476,6 +4563,8 @@ def main() -> None:
                         help="Enable opt-in learned Stage 7 post-box-shrink continuation overlay providers")
     parser.add_argument("--stage7-learned-post-box-continuation-bonus", type=float, default=0.0,
                         help="Tiny opt-in visible owner support for learned Stage 7 post-box continuation providers")
+    parser.add_argument("--enable-plan-capsule-sandbox", action="store_true",
+                        help="Enable non-causal Plan Capsule marker evidence recording; does not alter move scoring")
     parser.add_argument("--composition-profile",
                         choices=[COMPOSITION_PROFILE_NONE, COMPOSITION_PROFILE_HANDOFF_V1],
                         default=COMPOSITION_PROFILE_NONE,
@@ -4562,6 +4651,7 @@ def main() -> None:
         stage7_post_box_continuation_score=args.stage7_post_box_continuation_score,
         stage7_learned_post_box_continuation_enabled=args.enable_stage7_learned_post_box_continuation,
         stage7_learned_post_box_continuation_bonus=args.stage7_learned_post_box_continuation_bonus,
+        plan_capsule_sandbox_enabled=args.enable_plan_capsule_sandbox,
         early_stop_stable_suggestions=args.early_stop_stable_suggestions,
         lock_stage_filter_through_playout=args.lock_stage_filter_through_playout,
         counterfactual_successors=tuple(

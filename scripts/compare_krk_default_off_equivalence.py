@@ -30,6 +30,8 @@ TOP_LEVEL_KEYS = (
     "adapter_fire_count",
     "adapter_supported_provider_by_outcome",
     "adapter_supported_move_by_outcome",
+    "plan_capsule_marker_count",
+    "plan_capsule_marker_by_outcome",
 )
 
 

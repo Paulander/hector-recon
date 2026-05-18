@@ -6297,3 +6297,63 @@ adapter_fire_count: 0
 The default-off capsule topology therefore preserves observed behavior on the
 small Stage 7 smoke. Any future causal experiment still needs an explicit
 opt-in flag, visible source terms, target validation, and protected guardrails.
+
+## Stage 7 opt-in Plan Capsule marker smoke
+
+I added an opt-in diagnostic flag:
+
+```text
+--enable-plan-capsule-sandbox
+```
+
+This enables only the non-requesting Plan Capsule marker. It records visible
+entry/progress/exit/abort evidence into handoff packets and does not alter
+provider requests or move scores.
+
+Artifact:
+
+```text
+reports/structural_candidates/stage7_plan_capsule_marker_enabled_10_h20.json
+```
+
+Result:
+
+```text
+10 samples, h20:
+  local: 10/10 improved, 8/10 optimal
+  conversion: 5 mate / 5 max_plies
+  shadows: 14
+
+plan_capsule_marker_count: 8
+plan_capsule_marker_by_outcome:
+  krk.post_box_shrink_continuation:max_plies: 5
+  krk.post_box_shrink_continuation:mate: 3
+```
+
+The top-level behavior matches the default-off smoke. The marker trace shows
+entry evidence is close but not always complete; the first max-plies sample had:
+
+```text
+entry_terms_met:
+  active_landmark_label.box_shrink
+  box_shrink_attempt_confirmed_or_candidate_confirmed
+  post_reply_state_reached
+  conversion_not_immediate
+  rook_safe
+  no_stronger_mate_or_tactic_interrupt_available
+
+missing entry term:
+  enemy_king_constrained_or_recoverable
+
+abort_terms_met:
+  none
+```
+
+Interpretation:
+
+```text
+The marker is wired and inspectable. Before any causal capsule sandbox, the
+entry/progress vocabulary needs one more refinement pass so terms like
+enemy_king_constrained_or_recoverable and progress-after-owned-move are
+graph-visible in the live trace, not only in offline DTM reference artifacts.
+```
