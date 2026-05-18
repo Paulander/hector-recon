@@ -6805,6 +6805,65 @@ promotion_status: sandboxed
 next_action: larger Stage 7 target validation, then broader guardrail comparison
 ```
 
+## Stage 7 Plan Capsule owned-arbitration 50-sample target
+
+I scaled the owned-arbitration sandbox target to 50 samples at h40 with
+parallel validation.
+
+Artifact:
+
+```text
+reports/structural_candidates/stage7_plan_capsule_owned_arb_ttl3_s20_50_h40.json
+```
+
+Result:
+
+```text
+25 mate / 25 max_plies
+shadow candidates: 67
+parallel workers: 4
+wall time: 260.14 sec
+```
+
+Plan Capsule counters:
+
+```text
+plan_capsule_active_decision_count: 31
+plan_capsule_supported_suggestion_count: 496
+plan_capsule_selected_supported_count: 31
+plan_capsule_owned_arbitration_selected_count: 24
+plan_capsule_active_without_support_count: 0
+```
+
+Provider outcomes:
+
+```text
+krk.edge_trap_close:mate = 6
+krk.edge_trap_close:max_plies = 10-17 depending on arbitration/support count
+krk.fence_established:max_plies = 8
+```
+
+Interpretation:
+
+```text
+The mechanism remains useful but insufficient. It improves over the earlier
+Stage 7 50-sample smoke baseline (19 mate / 31 max_plies), but the larger run
+shows that bounded ownership alone does not solve Stage 7. The remaining
+failures are now sharper: the capsule enters, licensed providers exist, owned
+arbitration selects them, but many selected edge_trap_close/fence_established
+continuations still max-plies.
+```
+
+Candidate status update:
+
+```text
+candidate_status: sandbox_partially_validated_target_improvement
+promotion_status: sandboxed_not_promoted
+diagnosis: visible_commitment_ownership_helps_but_continuation_policy_insufficient
+next_action: classify residual capsule-owned max-plies by selected provider and
+             post-owned-window failure mode before any promotion or new training
+```
+
 Hard boundary:
 
 ```text
