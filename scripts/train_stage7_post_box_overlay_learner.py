@@ -78,7 +78,14 @@ def _transition_for_move(fen: str, move_uci: str, label: int, reward: float) -> 
     return TransitionData(v0=before, v1=after, label=int(label), action=move_uci, reward=float(reward))
 
 
-def _transitions(seed: dict[str, Any], *, include_nonoptimal_winning_negatives: bool) -> list[TransitionData]:
+def _transitions(
+    seed: dict[str, Any],
+    *,
+    include_nonoptimal_winning_negatives: bool,
+    positive_reward: float,
+    winning_nonoptimal_negative_reward: float,
+    non_winning_negative_reward: float,
+) -> list[TransitionData]:
     transitions: list[TransitionData] = []
     for trajectory in seed.get("trajectories") or []:
         if not isinstance(trajectory, dict):
@@ -94,9 +101,9 @@ def _transitions(seed: dict[str, Any], *, include_nonoptimal_winning_negatives: 
                 target_class = str(item.get("target_class") or "")
                 if label == 0 and target_class == "winning_nonoptimal_move" and not include_nonoptimal_winning_negatives:
                     continue
-                reward = 1.0 if label == 1 else -0.35
+                reward = float(positive_reward) if label == 1 else float(winning_nonoptimal_negative_reward)
                 if target_class == "non_winning_move":
-                    reward = -1.0
+                    reward = float(non_winning_negative_reward)
                 transition = _transition_for_move(fen, str(item["move"]), label, reward)
                 if transition is not None:
                     transitions.append(transition)
@@ -116,6 +123,9 @@ def train_overlay_learner(
     delta_eps: float = 0.03,
     max_actuators: int = 24,
     include_nonoptimal_winning_negatives: bool = True,
+    positive_reward: float = 1.0,
+    winning_nonoptimal_negative_reward: float = -0.35,
+    non_winning_negative_reward: float = -1.0,
 ) -> dict[str, Any]:
     seed = _load_json(trajectory_seed_path)
     learner = BaselineLearner(
@@ -130,6 +140,9 @@ def train_overlay_learner(
     transitions = _transitions(
         seed,
         include_nonoptimal_winning_negatives=include_nonoptimal_winning_negatives,
+        positive_reward=positive_reward,
+        winning_nonoptimal_negative_reward=winning_nonoptimal_negative_reward,
+        non_winning_negative_reward=non_winning_negative_reward,
     )
     if not transitions:
         raise ValueError("trajectory seed produced no transitions")
@@ -226,6 +239,12 @@ def train_overlay_learner(
         "transition_count": len(transitions),
         "positive_transition_count": sum(1 for item in transitions if item.label == 1),
         "negative_transition_count": sum(1 for item in transitions if item.label == 0),
+        "transition_reward_policy": {
+            "positive_reward": float(positive_reward),
+            "winning_nonoptimal_negative_reward": float(winning_nonoptimal_negative_reward),
+            "non_winning_negative_reward": float(non_winning_negative_reward),
+            "include_nonoptimal_winning_negatives": bool(include_nonoptimal_winning_negatives),
+        },
         "sensor_count": len(learner.sensors),
         "overlay_actuator_count": len(overlay_actuators),
         "actuator_ids": [int(actuator.id) for actuator in overlay_actuators],
@@ -257,6 +276,9 @@ def main() -> int:
     parser.add_argument("--first-sensor-id", type=int, default=7000)
     parser.add_argument("--first-actuator-id", type=int, default=9000)
     parser.add_argument("--exclude-nonoptimal-winning-negatives", action="store_true")
+    parser.add_argument("--positive-reward", type=float, default=1.0)
+    parser.add_argument("--winning-nonoptimal-negative-reward", type=float, default=-0.35)
+    parser.add_argument("--non-winning-negative-reward", type=float, default=-1.0)
     parser.add_argument("--no-json-stdout", action="store_true")
     args = parser.parse_args()
 
@@ -271,6 +293,9 @@ def main() -> int:
         delta_eps=args.delta_eps,
         max_actuators=args.max_actuators,
         include_nonoptimal_winning_negatives=not args.exclude_nonoptimal_winning_negatives,
+        positive_reward=args.positive_reward,
+        winning_nonoptimal_negative_reward=args.winning_nonoptimal_negative_reward,
+        non_winning_negative_reward=args.non_winning_negative_reward,
     )
     if not args.no_json_stdout:
         print(json.dumps(summary, indent=2))

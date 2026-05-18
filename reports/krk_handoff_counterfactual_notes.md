@@ -7961,3 +7961,67 @@ cand.krk.box_shrink.post_box_learnable_capsule_provider.v1:
     refine the candidate-local training protocol / trajectory target, not
     Stage 8, not promotion, and not another broad score bonus
 ```
+
+## Stage 7 strict-negative candidate-local training probe
+
+I tested one bounded candidate-local training refinement: make DTM-winning but
+nonoptimal moves fully negative during offline overlay training.
+
+Training command produced:
+
+```text
+reports/structural_candidates/stage7_post_box_overlay_learner_strict_neg.pkl
+reports/structural_candidates/stage7_post_box_overlay_learner_strict_neg_training.json
+```
+
+Reward policy:
+
+```text
+positive_reward: 1.0
+winning_nonoptimal_negative_reward: -1.0
+non_winning_negative_reward: -1.5
+cycles: 5
+top_k: 8
+max_actuators: 32
+```
+
+Compiled as another default-off sandbox candidate and verified default-off
+equivalence:
+
+```text
+reports/structural_candidates/stage7_strict_neg_capsule_default_off_smoke_5_h20.json
+reports/structural_candidates/stage7_strict_neg_capsule_default_off_equivalence_5_h20.json
+equivalent: true
+```
+
+Targeted h40 replay:
+
+```text
+reports/structural_candidates/stage7_strict_neg_capsule_phase1_replay_h40.json
+reports/structural_candidates/stage7_strict_neg_capsule_phase1_replay_h40.md
+```
+
+Result:
+
+```text
+result_counts:
+  max_plies: 2
+
+selected_skill_counts:
+  krk.post_box_shrink_continuation: 2
+
+selected moves:
+  2cc state -> a6a8
+  bace state -> a5h5
+
+plan_owned_record_count: 2
+```
+
+Interpretation:
+
+```text
+Stronger nonoptimal-negative weighting did not change the first owned moves and
+did not solve either seeded family. The failure is now better classified as a
+trajectory-target/model-expression gap, not a simple reward-sign or ownership
+gap.
+```
