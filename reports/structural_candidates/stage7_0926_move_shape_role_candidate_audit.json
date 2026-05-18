@@ -1,0 +1,2021 @@
+{
+  "schema_version": "move_shape_role_candidate_audit.v1",
+  "causal_status": "non_causal",
+  "role_id": "krk.post_box.king_support_fence_stabilizer",
+  "source_candidate_id": "cand.krk.box_shrink.family_0926.king_support_fence_stabilizer.v1",
+  "include_worst_reply": false,
+  "record_count": 3,
+  "records": [
+    {
+      "fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+      "state_signature": "state.069e81a609ed",
+      "legal_move_count": 20,
+      "matching_move_count": 0,
+      "matching_moves": [],
+      "all_moves": [
+        {
+          "move": "e2d1",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "e2e1",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move"
+          ],
+          "post_move_terms": [
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "e2e3",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_rank_opposition_distance_two_after_move"
+          ]
+        },
+        {
+          "move": "e2f1",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move"
+          ],
+          "post_move_terms": [
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "e2f2",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "king_moves_toward_enemy"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_rook_support"
+          ],
+          "post_move_terms": [
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "e2f3",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "king_moves_toward_enemy"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_rook_support"
+          ],
+          "post_move_terms": [
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "h4a4",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_not_adjacent_enemy",
+            "rook_lateral_transfer",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_split_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "h4b4",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "rook_safe_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_lateral_transfer"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_decreases_after_move",
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "white_king_and_rook_split_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "h4c4",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "rook_safe_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_lateral_transfer",
+            "rook_to_checking_line"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "checking_line_created",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "white_king_and_rook_split_rank_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "h4d4",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "rook_safe_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_lateral_transfer"
+          ],
+          "post_move_terms": [
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "h4e4",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_not_adjacent_enemy",
+            "rook_lateral_transfer",
+            "rook_safe_after_candidate"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "h4f4",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_lateral_transfer",
+            "rook_safe_after_candidate"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "h4g4",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_lateral_transfer",
+            "rook_safe_after_candidate"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "h4h1",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_to_edge_rank",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_same_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "h4h2",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_same_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "h4h3",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_checking_line",
+            "rook_to_edge_file",
+            "rook_transfer_vertical",
+            "safe_check_created"
+          ],
+          "post_move_terms": [
+            "checking_line_created",
+            "cut_created_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move"
+          ]
+        },
+        {
+          "move": "h4h5",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "h4h6",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "h4h7",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "h4h8",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_to_edge_rank",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        }
+      ]
+    },
+    {
+      "fen": "8/8/8/8/4K3/8/R7/4k3 w - - 2 2",
+      "state_signature": "state.0926f12f8e8f",
+      "legal_move_count": 22,
+      "matching_move_count": 1,
+      "matching_moves": [
+        {
+          "move": "e4d3",
+          "matched": true,
+          "missing_move_shape_terms": [],
+          "missing_post_move_terms": [],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_same_rank_side_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ]
+        }
+      ],
+      "all_moves": [
+        {
+          "move": "a2a1",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "box_area_not_increased_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_checking_line",
+            "rook_to_edge_file",
+            "rook_to_edge_rank",
+            "rook_transfer_vertical",
+            "safe_check_created"
+          ],
+          "post_move_terms": [
+            "checking_line_created",
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "rook_safe_after_move"
+          ]
+        },
+        {
+          "move": "a2a3",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "box_area_not_increased_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "a2a4",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "box_area_not_increased_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "a2a5",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "box_area_not_increased_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "a2a6",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "box_area_not_increased_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "a2a7",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "box_area_not_increased_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "a2a8",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "box_area_not_increased_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_to_edge_rank",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "a2b2",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_lateral_transfer",
+            "rook_safe_after_candidate"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_rank_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "a2c2",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_not_adjacent_enemy",
+            "rook_lateral_transfer",
+            "rook_safe_after_candidate"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_rank_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "a2d2",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "rook_safe_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_lateral_transfer"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "white_king_and_rook_same_rank_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "a2e2",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "rook_safe_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_lateral_transfer",
+            "rook_to_checking_line"
+          ],
+          "post_move_terms": [
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "checking_line_created",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "white_king_and_rook_same_rank_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "a2f2",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "rook_safe_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_lateral_transfer"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "white_king_and_rook_same_rank_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "a2g2",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_not_adjacent_enemy",
+            "rook_lateral_transfer",
+            "rook_safe_after_candidate"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_rank_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "a2h2",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_lateral_transfer",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_rank_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "e4d3",
+          "matched": true,
+          "missing_move_shape_terms": [],
+          "missing_post_move_terms": [],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_same_rank_side_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "e4d4",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "king_moves_toward_enemy"
+          ],
+          "missing_post_move_terms": [
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_rook_support"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_same_rank_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "e4d5",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "king_moves_toward_enemy"
+          ],
+          "missing_post_move_terms": [
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_rook_support"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_same_rank_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "e4e3",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_rank_side_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_file_opposition_distance_two_after_move"
+          ]
+        },
+        {
+          "move": "e4e5",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "e4f3",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_rank_side_after_move",
+            "white_king_and_rook_split_file_side_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ]
+        },
+        {
+          "move": "e4f4",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_rank_side_after_move",
+            "white_king_and_rook_split_file_side_after_move"
+          ]
+        },
+        {
+          "move": "e4f5",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_rank_side_after_move",
+            "white_king_and_rook_split_file_side_after_move"
+          ]
+        }
+      ]
+    },
+    {
+      "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "state_signature": "state.2cc0b3e1033a",
+      "legal_move_count": 19,
+      "matching_move_count": 0,
+      "matching_moves": [],
+      "all_moves": [
+        {
+          "move": "a6a1",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_to_edge_rank",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_rank_side_after_move",
+            "white_king_and_rook_split_file_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "a6a2",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_rank_side_after_move",
+            "white_king_and_rook_split_file_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "a6a3",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_decreases_after_move",
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_rank_side_after_move",
+            "white_king_and_rook_split_file_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "a6a4",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_checking_line",
+            "rook_to_edge_file",
+            "rook_transfer_vertical",
+            "safe_check_created"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_decreases_after_move",
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "checking_line_created",
+            "cut_created_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_split_file_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "a6a5",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_decreases_after_move",
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_split_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "a6a7",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_split_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "a6a8",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "box_area_not_increased_after_move",
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_to_edge_rank",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_split_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "a6b6",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "rook_destination_not_adjacent_enemy",
+            "rook_lateral_transfer",
+            "rook_safe_after_candidate"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_decreases_after_move",
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_split_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "a6c6",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_not_adjacent_enemy",
+            "rook_lateral_transfer",
+            "rook_safe_after_candidate",
+            "rook_to_checking_line",
+            "safe_check_created"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_decreases_after_move",
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "checking_line_created",
+            "cut_created_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "fence_exists_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "a6d6",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_not_adjacent_enemy",
+            "rook_lateral_transfer",
+            "rook_safe_after_candidate"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_decreases_after_move",
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "a6e6",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_not_adjacent_enemy",
+            "rook_lateral_transfer",
+            "rook_safe_after_candidate"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "a6f6",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_lateral_transfer",
+            "rook_safe_after_candidate"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "a6g6",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_lateral_transfer",
+            "rook_safe_after_candidate"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "a6h6",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_lateral_transfer",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "d1c1",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "d1c2",
+          "matched": false,
+          "missing_move_shape_terms": [],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_decreases_after_move",
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_split_rank_side_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases",
+            "white_king_file_opposition_distance_two_after_move"
+          ]
+        },
+        {
+          "move": "d1d2",
+          "matched": false,
+          "missing_move_shape_terms": [],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_decreases_after_move",
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_split_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "move": "d1e1",
+          "matched": false,
+          "missing_move_shape_terms": [
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_split_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "move": "d1e2",
+          "matched": false,
+          "missing_move_shape_terms": [],
+          "missing_post_move_terms": [
+            "cut_preserved_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move"
+          ],
+          "veto_terms_met": [],
+          "move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_decreases_after_move",
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_split_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ]
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "states_with_matches": 1,
+    "total_matching_moves": 1
+  }
+}

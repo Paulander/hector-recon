@@ -380,3 +380,53 @@ def test_stage7_0926_move_shape_role_export_is_non_causal():
     assert role["causal_status"] == "non_causal"
     assert "candidate_is_king_move" in role["move_shape_required_terms"]
     assert "no_state_hash_exception" in role["guardrails"]
+
+
+def test_move_shape_role_candidate_audit_matches_only_visible_terms():
+    script = ROOT / "scripts" / "audit_move_shape_role_candidates.py"
+    spec = importlib.util.spec_from_file_location("audit_move_shape_role_candidates", script)
+    assert spec is not None
+    auditor = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(auditor)
+
+    role = auditor.MoveShapeRoleSpec(
+        role_id="krk.post_box.king_support_fence_stabilizer",
+        source_candidate_id="cand.krk.box_shrink.family_0926.king_support_fence_stabilizer.v1",
+        source_monitor_script="growth.monitor.stage7_plan_capsule_residual_family_split",
+        source_terms=["legal_first_move_converts_h40"],
+        domain="krk",
+        target_skill="krk.box_shrink",
+        move_shape_required_terms=[
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support",
+        ],
+        post_move_required_terms=[
+            "rook_safe_after_move",
+            "box_area_not_increased_after_move",
+            "fence_exists_after_move",
+            "fence_stable_after_move",
+            "cut_preserved_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases",
+        ],
+    )
+
+    payload = auditor.build_audit(
+        role,
+        fens=[
+            "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+            "8/8/8/8/4K3/8/R7/4k3 w - - 2 2",
+            "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+        ],
+    )
+
+    assert payload["causal_status"] == "non_causal"
+    assert payload["summary"]["states_with_matches"] == 1
+    matches = [
+        move["move"]
+        for record in payload["records"]
+        for move in record["matching_moves"]
+    ]
+    assert matches == ["e4d3"]

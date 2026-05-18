@@ -7197,6 +7197,57 @@ It does not use a state hash exception.
 It must not be compiled until default-off sandbox and traceability tests exist.
 ```
 
+## Stage 7 0926 move-shape role candidate audit
+
+I added a replay-free role candidate auditor:
+
+```text
+scripts/audit_move_shape_role_candidates.py
+```
+
+It evaluates legal moves against a non-causal `MoveShapeRoleSpec` using visible
+move-shape and post-move terms. It does not change play.
+
+Artifact:
+
+```text
+reports/structural_candidates/stage7_0926_move_shape_role_candidate_audit.json
+reports/structural_candidates/stage7_0926_move_shape_role_candidate_audit.md
+```
+
+Audit inputs:
+
+```text
+state.069e81a609ed
+state.0926f12f8e8f
+state.2cc0b3e1033a
+```
+
+Result:
+
+```text
+states with matches: 1 / 3
+total matching moves: 1
+
+state.069e81a609ed:
+  matches: 0
+
+state.0926f12f8e8f:
+  matches: 1
+  move: e4d3
+
+state.2cc0b3e1033a:
+  matches: 0
+```
+
+Interpretation:
+
+```text
+The 0926 role terms are not obviously overbroad on the current residual family
+set. They recover exactly the legal-first converting move e4d3 and do not fire
+on the 069 or 2cc families.
+```
+
 ## Stage 7 Plan Capsule drive-priority sandbox negative result
 
 I tested the smallest causal follow-up suggested by the residual split:
