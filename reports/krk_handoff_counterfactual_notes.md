@@ -7472,3 +7472,56 @@ it supplies the candidate-frame vocabulary needed to compare DTM/reference,
 legal-first, and provider-continuation traces without adding persistent
 topology nodes for legal moves.
 ```
+
+## 2cc CandidateMoveFrame / DTM alignment
+
+I aligned the 2cc CandidateMoveFrames with the DTM oracle, DTM trajectory seed,
+and current-graph legal-first probes:
+
+```text
+reports/structural_candidates/stage7_2cc_candidate_move_dtm_alignment.json
+reports/structural_candidates/stage7_2cc_candidate_move_dtm_alignment.md
+```
+
+Result:
+
+```text
+diagnosis:
+  multi_step_continuation_policy_gap_not_single_move_gap
+
+state DTM:
+  27
+
+legal moves:
+  19
+
+tablebase-winning legal moves:
+  19
+
+current graph legal-first h50:
+  19 max_plies
+  0 mate
+
+best DTM first moves:
+  a6a5
+  a6d6
+  d1d2
+```
+
+Reference trajectory begins:
+
+```text
+a6a5
+a5f5
+d1e2
+```
+
+Interpretation:
+
+```text
+2cc is not analogous to 0926. It is not missing one visibly separable legal
+first move; every legal first move is tablebase-winning, but the current graph
+cannot convert after any of them under h50. This supports a narrow post-box
+continuation capsule/overlay protocol rather than another single candidate-move
+role.
+```

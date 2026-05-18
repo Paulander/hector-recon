@@ -557,3 +557,77 @@ def test_candidate_move_frame_audit_is_non_causal():
     frames = payload["records"][0]["candidate_move_frames"]
     assert all(frame["schema_version"] == "candidate_move_frame.v1" for frame in frames)
     assert all(frame["causal_status"] == "non_causal" for frame in frames)
+
+
+def test_candidate_move_frame_dtm_alignment_classifies_multistep_gap(tmp_path):
+    audit_script = ROOT / "scripts" / "audit_candidate_move_frames.py"
+    audit_spec = importlib.util.spec_from_file_location("audit_candidate_move_frames", audit_script)
+    assert audit_spec is not None
+    auditor = importlib.util.module_from_spec(audit_spec)
+    assert audit_spec.loader is not None
+    audit_spec.loader.exec_module(auditor)
+
+    align_script = ROOT / "scripts" / "diagnose_candidate_move_frame_dtm_alignment.py"
+    align_spec = importlib.util.spec_from_file_location(
+        "diagnose_candidate_move_frame_dtm_alignment",
+        align_script,
+    )
+    assert align_spec is not None
+    aligner = importlib.util.module_from_spec(align_spec)
+    assert align_spec.loader is not None
+    align_spec.loader.exec_module(aligner)
+
+    frames_path = tmp_path / "frames.json"
+    frames_path.write_text(json.dumps(auditor.audit_fens([FEN_2CC])), encoding="utf-8")
+    dtm_path = tmp_path / "dtm.json"
+    dtm_path.write_text(
+        json.dumps(
+            {
+                "records": [
+                    {
+                        "fen": FEN_2CC,
+                        "state_dtm": 27,
+                        "legal_move_count": 2,
+                        "winning_move_count": 2,
+                        "best_winning_moves": [
+                            {"move": "a6a5", "child_dtm": 26},
+                        ],
+                        "legal_moves": [
+                            {"move": "a6a5", "child_dtm": 26, "forces_mate": True},
+                            {"move": "d1d2", "child_dtm": 26, "forces_mate": True},
+                        ],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    legal_path = tmp_path / "legal.json"
+    legal_path.write_text(
+        json.dumps(
+            {
+                "records": [
+                    {
+                        "post_reply_fen": FEN_2CC,
+                        "legal_first_probes": [
+                            {"move": "a6a5", "horizon": 40, "result": "max_plies"},
+                        ],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    payload = aligner.diagnose_alignment(
+        candidate_frames_path=frames_path,
+        dtm_oracle_path=dtm_path,
+        legal_first_path=legal_path,
+    )
+
+    assert payload["schema_version"] == "candidate_move_frame_dtm_alignment.v1"
+    assert payload["causal_status"] == "non_causal"
+    assert payload["candidate_update"]["causal_status"] == "non_causal"
+    assert payload["candidate_update"]["diagnosis"] == (
+        "multi_step_continuation_policy_gap_not_single_move_gap"
+    )
