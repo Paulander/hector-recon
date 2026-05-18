@@ -683,6 +683,46 @@ def _candidate_move_role_summary_for_suggestions(
     }
 
 
+def _frozen_model_candidate_summary_for_suggestions(
+    suggestions: list[dict],
+    *,
+    selected_suggestion: dict | None = None,
+) -> dict:
+    move_counts: dict[str, int] = {}
+    supported = 0
+    selected_supported = False
+    selected_payload: dict = {}
+    for item in suggestions:
+        meta = item.get("meta") if isinstance(item.get("meta"), dict) else {}
+        payload = meta.get("visible_stage7_post_box_frozen_model_candidate")
+        if not isinstance(payload, dict) or not payload.get("enabled"):
+            continue
+        if payload.get("direct_request"):
+            continue
+        supported += 1
+        move = item.get("move")
+        move_uci = move.uci() if hasattr(move, "uci") else str(move)
+        move_counts[move_uci] = move_counts.get(move_uci, 0) + 1
+    if isinstance(selected_suggestion, dict):
+        selected_meta = (
+            selected_suggestion.get("meta")
+            if isinstance(selected_suggestion.get("meta"), dict)
+            else {}
+        )
+        selected_payload = dict(
+            selected_meta.get("visible_stage7_post_box_frozen_model_candidate", {}) or {}
+        )
+        selected_supported = bool(selected_payload) and not bool(
+            selected_payload.get("direct_request")
+        )
+    return {
+        "stage7_post_box_frozen_model_candidate_supported_suggestion_count": supported,
+        "stage7_post_box_frozen_model_candidate_supported_move_counts": move_counts,
+        "stage7_post_box_frozen_model_candidate_selected_supported": selected_supported,
+        "stage7_post_box_frozen_model_candidate_selected_payload": selected_payload,
+    }
+
+
 def _plan_capsule_support_summary_for_suggestions(
     suggestions: list[dict],
     *,
@@ -1223,6 +1263,9 @@ def _compact_selected_suggestion(item: dict | None) -> dict:
         "visible_stage7_plan_capsule_owned_arbitration": dict(
             meta.get("visible_stage7_plan_capsule_owned_arbitration", {}) or {}
         ),
+        "visible_stage7_post_box_frozen_model_candidate": dict(
+            meta.get("visible_stage7_post_box_frozen_model_candidate", {}) or {}
+        ),
     }
 
 
@@ -1327,6 +1370,9 @@ def _suggestion_role_trace(meta: dict) -> dict:
         "visible_stage7_learned_post_box_continuation_license": dict(
             meta.get("visible_stage7_learned_post_box_continuation_license", {}) or {}
         ),
+        "visible_stage7_post_box_frozen_model_candidate": dict(
+            meta.get("visible_stage7_post_box_frozen_model_candidate", {}) or {}
+        ),
         "visible_stage7_plan_capsule_bonus": float(
             meta.get("visible_stage7_plan_capsule_bonus", 0.0) or 0.0
         ),
@@ -1387,6 +1433,10 @@ def _successor_skill_summary(
             "candidate_move_role_supported_move_counts": {},
             "candidate_move_role_selected_supported": False,
             "candidate_move_role_selected_payload": {},
+            "stage7_post_box_frozen_model_candidate_supported_suggestion_count": 0,
+            "stage7_post_box_frozen_model_candidate_supported_move_counts": {},
+            "stage7_post_box_frozen_model_candidate_selected_supported": False,
+            "stage7_post_box_frozen_model_candidate_selected_payload": {},
             "plan_capsule_active": False,
             "plan_capsule_supported_suggestion_count": 0,
             "plan_capsule_supported_provider_counts": {},
@@ -1545,6 +1595,33 @@ def _successor_skill_summary(
         ),
         "candidate_move_role_selected_payload": dict(
             move_details.get("candidate_move_role_selected_payload", {}) or {}
+        ),
+        "stage7_post_box_frozen_model_candidate_supported_suggestion_count": int(
+            move_details.get(
+                "stage7_post_box_frozen_model_candidate_supported_suggestion_count",
+                0,
+            )
+            or 0
+        ),
+        "stage7_post_box_frozen_model_candidate_supported_move_counts": dict(
+            move_details.get(
+                "stage7_post_box_frozen_model_candidate_supported_move_counts",
+                {},
+            )
+            or {}
+        ),
+        "stage7_post_box_frozen_model_candidate_selected_supported": bool(
+            move_details.get(
+                "stage7_post_box_frozen_model_candidate_selected_supported",
+                False,
+            )
+        ),
+        "stage7_post_box_frozen_model_candidate_selected_payload": dict(
+            move_details.get(
+                "stage7_post_box_frozen_model_candidate_selected_payload",
+                {},
+            )
+            or {}
         ),
         "plan_capsule_active": bool(move_details.get("plan_capsule_active", False)),
         "plan_capsule_supported_suggestion_count": int(
@@ -2084,6 +2161,9 @@ def choose_move_with_engine(
     stage7_post_box_continuation_score: float = 32.0,
     stage7_learned_post_box_continuation_enabled: bool = False,
     stage7_learned_post_box_continuation_bonus: float = 0.0,
+    stage7_post_box_frozen_model_candidate_enabled: bool = False,
+    stage7_post_box_frozen_model_candidate_support: float = 0.0,
+    stage7_post_box_frozen_model: dict | None = None,
     plan_capsule_sandbox_enabled: bool = False,
     stage7_plan_capsule_enabled: bool = False,
     stage7_plan_capsule_ttl: int = 3,
@@ -2092,9 +2172,6 @@ def choose_move_with_engine(
     candidate_move_layer_enabled: bool = False,
     stage7_king_support_fence_stabilizer_enabled: bool = False,
     candidate_move_role_support: float = 0.0,
-    stage7_post_box_frozen_model_candidate_enabled: bool = False,
-    stage7_post_box_frozen_model_candidate_support: float = 0.0,
-    stage7_post_box_frozen_model: dict | None = None,
     stage7_plan_capsule_state: dict | None = None,
     current_ply: int | None = None,
     stage7_provider_scope_label: str = "box_shrink",
@@ -2189,6 +2266,9 @@ def choose_move_details(
     stage7_post_box_continuation_score: float = 32.0,
     stage7_learned_post_box_continuation_enabled: bool = False,
     stage7_learned_post_box_continuation_bonus: float = 0.0,
+    stage7_post_box_frozen_model_candidate_enabled: bool = False,
+    stage7_post_box_frozen_model_candidate_support: float = 0.0,
+    stage7_post_box_frozen_model: dict | None = None,
     plan_capsule_sandbox_enabled: bool = False,
     stage7_plan_capsule_enabled: bool = False,
     stage7_plan_capsule_ttl: int = 3,
@@ -2245,6 +2325,13 @@ def choose_move_details(
             stage7_post_box_continuation_score=stage7_post_box_continuation_score,
             stage7_learned_post_box_continuation_enabled=stage7_learned_post_box_continuation_enabled,
             stage7_learned_post_box_continuation_bonus=stage7_learned_post_box_continuation_bonus,
+            stage7_post_box_frozen_model_candidate_enabled=(
+                stage7_post_box_frozen_model_candidate_enabled
+            ),
+            stage7_post_box_frozen_model_candidate_support=(
+                stage7_post_box_frozen_model_candidate_support
+            ),
+            stage7_post_box_frozen_model=stage7_post_box_frozen_model,
             plan_capsule_sandbox_enabled=plan_capsule_sandbox_enabled,
             stage7_plan_capsule_enabled=stage7_plan_capsule_enabled,
             stage7_plan_capsule_ttl=stage7_plan_capsule_ttl,
@@ -2257,13 +2344,6 @@ def choose_move_details(
                 stage7_king_support_fence_stabilizer_enabled
             ),
             candidate_move_role_support=candidate_move_role_support,
-            stage7_post_box_frozen_model_candidate_enabled=(
-                stage7_post_box_frozen_model_candidate_enabled
-            ),
-            stage7_post_box_frozen_model_candidate_support=(
-                stage7_post_box_frozen_model_candidate_support
-            ),
-            stage7_post_box_frozen_model=stage7_post_box_frozen_model,
             stage7_plan_capsule_state=stage7_plan_capsule_state,
             current_ply=current_ply,
             stage7_provider_scope_label=stage7_provider_scope_label,
@@ -2659,6 +2739,10 @@ def _choose_move_details_impl(
         suggestion_source,
         selected_suggestion=selected_suggestion,
     )
+    frozen_model_candidate_summary = _frozen_model_candidate_summary_for_suggestions(
+        suggestion_source,
+        selected_suggestion=selected_suggestion,
+    )
     plan_capsule_support_summary = _plan_capsule_support_summary_for_suggestions(
         suggestion_source,
         selected_suggestion=selected_suggestion,
@@ -2720,6 +2804,15 @@ def _choose_move_details_impl(
         "stage7_post_box_continuation_score": float(stage7_post_box_continuation_score),
         "stage7_learned_post_box_continuation_enabled": bool(stage7_learned_post_box_continuation_enabled),
         "stage7_learned_post_box_continuation_bonus": float(stage7_learned_post_box_continuation_bonus),
+        "stage7_post_box_frozen_model_candidate_enabled": bool(
+            stage7_post_box_frozen_model_candidate_enabled
+        ),
+        "stage7_post_box_frozen_model_candidate_support": float(
+            stage7_post_box_frozen_model_candidate_support
+        ),
+        "stage7_post_box_frozen_model_candidate": dict(
+            env.get("blackboard", {}).get("stage7_post_box_frozen_model_candidate", {}) or {}
+        ),
         "plan_capsule_sandbox_enabled": bool(plan_capsule_sandbox_enabled),
         "stage7_plan_capsule_enabled": bool(stage7_plan_capsule_enabled),
         "stage7_plan_capsule_ttl": int(stage7_plan_capsule_ttl),
@@ -2777,6 +2870,7 @@ def _choose_move_details_impl(
         ),
         **adapter_support_summary,
         **candidate_move_role_summary,
+        **frozen_model_candidate_summary,
         **plan_capsule_support_summary,
         "context_terms_cache_hits": int(
             env.get("blackboard", {}).get("krk_context_terms_cache_hits", 0) or 0
@@ -2972,6 +3066,9 @@ def play_to_mate(
     candidate_move_layer_enabled: bool = False,
     stage7_king_support_fence_stabilizer_enabled: bool = False,
     candidate_move_role_support: float = 0.0,
+    stage7_post_box_frozen_model_candidate_enabled: bool = False,
+    stage7_post_box_frozen_model_candidate_support: float = 0.0,
+    stage7_post_box_frozen_model: dict | None = None,
     early_stop_stable_suggestions: int = 0,
     lock_stage_filter_through_playout: bool = False,
     forced_successor_skill: Optional[str] = None,
@@ -3109,6 +3206,13 @@ def play_to_mate(
                     stage7_king_support_fence_stabilizer_enabled
                 ),
                 candidate_move_role_support=candidate_move_role_support,
+                stage7_post_box_frozen_model_candidate_enabled=(
+                    stage7_post_box_frozen_model_candidate_enabled
+                ),
+                stage7_post_box_frozen_model_candidate_support=(
+                    stage7_post_box_frozen_model_candidate_support
+                ),
+                stage7_post_box_frozen_model=stage7_post_box_frozen_model,
                 stage7_plan_capsule_state=stage7_plan_capsule_state,
                 current_ply=ply,
                 active_landmark_label=label,
@@ -3964,6 +4068,9 @@ def run_counterfactual_successor_sweep(
     candidate_move_layer_enabled: bool = False,
     stage7_king_support_fence_stabilizer_enabled: bool = False,
     candidate_move_role_support: float = 0.0,
+    stage7_post_box_frozen_model_candidate_enabled: bool = False,
+    stage7_post_box_frozen_model_candidate_support: float = 0.0,
+    stage7_post_box_frozen_model: dict | None = None,
     early_stop_stable_suggestions: int = 0,
     step_output: Optional[Path] = None,
     step_context: Optional[dict] = None,
@@ -4156,6 +4263,9 @@ def evaluate_landmark_progress(
     candidate_move_layer_enabled: bool = False,
     stage7_king_support_fence_stabilizer_enabled: bool = False,
     candidate_move_role_support: float = 0.0,
+    stage7_post_box_frozen_model_candidate_enabled: bool = False,
+    stage7_post_box_frozen_model_candidate_support: float = 0.0,
+    stage7_post_box_frozen_model: dict | None = None,
     early_stop_stable_suggestions: int = 0,
     lock_stage_filter_through_playout: bool = False,
     counterfactual_successors: tuple[str, ...] = (),
@@ -4261,6 +4371,10 @@ def evaluate_landmark_progress(
         "candidate_move_role_supported_move_by_outcome": {},
         "candidate_move_role_selected_supported_count": 0,
         "candidate_move_role_selected_by_outcome": {},
+        "stage7_post_box_frozen_model_candidate_supported_suggestion_count": 0,
+        "stage7_post_box_frozen_model_candidate_supported_move_by_outcome": {},
+        "stage7_post_box_frozen_model_candidate_selected_supported_count": 0,
+        "stage7_post_box_frozen_model_candidate_selected_by_outcome": {},
         "plan_capsule_marker_count": 0,
         "plan_capsule_marker_by_outcome": {},
         "plan_capsule_entry_count": 0,
@@ -4327,6 +4441,13 @@ def evaluate_landmark_progress(
             stage7_post_box_continuation_score=stage7_post_box_continuation_score,
             stage7_learned_post_box_continuation_enabled=stage7_learned_post_box_continuation_enabled,
             stage7_learned_post_box_continuation_bonus=stage7_learned_post_box_continuation_bonus,
+            stage7_post_box_frozen_model_candidate_enabled=(
+                stage7_post_box_frozen_model_candidate_enabled
+            ),
+            stage7_post_box_frozen_model_candidate_support=(
+                stage7_post_box_frozen_model_candidate_support
+            ),
+            stage7_post_box_frozen_model=stage7_post_box_frozen_model,
             plan_capsule_sandbox_enabled=plan_capsule_sandbox_enabled,
             stage7_plan_capsule_enabled=stage7_plan_capsule_enabled,
             stage7_plan_capsule_ttl=stage7_plan_capsule_ttl,
@@ -4519,6 +4640,13 @@ def evaluate_landmark_progress(
                 stage7_post_box_continuation_score=stage7_post_box_continuation_score,
                 stage7_learned_post_box_continuation_enabled=stage7_learned_post_box_continuation_enabled,
                 stage7_learned_post_box_continuation_bonus=stage7_learned_post_box_continuation_bonus,
+                stage7_post_box_frozen_model_candidate_enabled=(
+                    stage7_post_box_frozen_model_candidate_enabled
+                ),
+                stage7_post_box_frozen_model_candidate_support=(
+                    stage7_post_box_frozen_model_candidate_support
+                ),
+                stage7_post_box_frozen_model=stage7_post_box_frozen_model,
                 plan_capsule_sandbox_enabled=plan_capsule_sandbox_enabled,
                 stage7_plan_capsule_enabled=stage7_plan_capsule_enabled,
                 stage7_plan_capsule_ttl=stage7_plan_capsule_ttl,
@@ -4754,6 +4882,68 @@ def evaluate_landmark_progress(
                 selected_key = f"{selected_payload.get('role_id', 'unknown')}:{key}"
                 stats["candidate_move_role_selected_by_outcome"][selected_key] = (
                     stats["candidate_move_role_selected_by_outcome"].get(selected_key, 0) + 1
+                )
+            frozen_candidate_count = int(
+                successor_summary.get(
+                    "stage7_post_box_frozen_model_candidate_supported_suggestion_count",
+                    0,
+                )
+                or 0
+            )
+            if frozen_candidate_count:
+                stats["stage7_post_box_frozen_model_candidate_supported_suggestion_count"] = (
+                    int(
+                        stats.get(
+                            "stage7_post_box_frozen_model_candidate_supported_suggestion_count",
+                            0,
+                        )
+                        or 0
+                    )
+                    + frozen_candidate_count
+                )
+                for move_name, count in (
+                    successor_summary.get(
+                        "stage7_post_box_frozen_model_candidate_supported_move_counts",
+                        {},
+                    )
+                    or {}
+                ).items():
+                    move_key = f"{move_name}:{key}"
+                    stats[
+                        "stage7_post_box_frozen_model_candidate_supported_move_by_outcome"
+                    ][move_key] = (
+                        stats[
+                            "stage7_post_box_frozen_model_candidate_supported_move_by_outcome"
+                        ].get(move_key, 0)
+                        + int(count or 0)
+                    )
+            if successor_summary.get("stage7_post_box_frozen_model_candidate_selected_supported"):
+                stats["stage7_post_box_frozen_model_candidate_selected_supported_count"] = (
+                    int(
+                        stats.get(
+                            "stage7_post_box_frozen_model_candidate_selected_supported_count",
+                            0,
+                        )
+                        or 0
+                    )
+                    + 1
+                )
+                selected_payload = dict(
+                    successor_summary.get(
+                        "stage7_post_box_frozen_model_candidate_selected_payload",
+                        {},
+                    )
+                    or {}
+                )
+                selected_key = f"{selected_payload.get('move', 'unknown')}:{key}"
+                stats[
+                    "stage7_post_box_frozen_model_candidate_selected_by_outcome"
+                ][selected_key] = (
+                    stats["stage7_post_box_frozen_model_candidate_selected_by_outcome"].get(
+                        selected_key,
+                        0,
+                    )
+                    + 1
                 )
             adapter_supported_suggestion_count = int(
                 successor_summary.get("adapter_supported_suggestion_count", 0) or 0
@@ -5253,6 +5443,12 @@ def evaluate_landmark_progress(
     stats["stage7_post_box_continuation_score"] = stage7_post_box_continuation_score
     stats["stage7_learned_post_box_continuation_enabled"] = stage7_learned_post_box_continuation_enabled
     stats["stage7_learned_post_box_continuation_bonus"] = stage7_learned_post_box_continuation_bonus
+    stats["stage7_post_box_frozen_model_candidate_enabled"] = (
+        stage7_post_box_frozen_model_candidate_enabled
+    )
+    stats["stage7_post_box_frozen_model_candidate_support"] = (
+        stage7_post_box_frozen_model_candidate_support
+    )
     stats["early_stop_stable_suggestions"] = int(early_stop_stable_suggestions)
     stats["lock_stage_filter_through_playout"] = bool(lock_stage_filter_through_playout)
     stats["diagnostic_caches_enabled"] = bool(enable_diagnostic_caches)
@@ -5440,6 +5636,8 @@ def _merge_parallel_stats(
         "candidate_move_role_match_count",
         "candidate_move_role_supported_suggestion_count",
         "candidate_move_role_selected_supported_count",
+        "stage7_post_box_frozen_model_candidate_supported_suggestion_count",
+        "stage7_post_box_frozen_model_candidate_selected_supported_count",
         "plan_capsule_marker_count",
         "plan_capsule_entry_count",
         "plan_capsule_exit_count",
@@ -5467,6 +5665,8 @@ def _merge_parallel_stats(
         "candidate_move_role_supported_role_by_outcome",
         "candidate_move_role_supported_move_by_outcome",
         "candidate_move_role_selected_by_outcome",
+        "stage7_post_box_frozen_model_candidate_supported_move_by_outcome",
+        "stage7_post_box_frozen_model_candidate_selected_by_outcome",
         "plan_capsule_marker_by_outcome",
         "plan_capsule_status_by_outcome",
         "plan_capsule_supported_provider_by_outcome",
@@ -5683,6 +5883,11 @@ def print_landmark_results(
         print(f"Semantic alignment: {stats['semantic_alignment_status_counts']}")
     if stats.get("candidate_move_role_supported_suggestion_count"):
         print(f"Candidate move role suggestions: {stats['candidate_move_role_supported_suggestion_count']}")
+    if stats.get("stage7_post_box_frozen_model_candidate_supported_suggestion_count"):
+        print(
+            "Stage7 frozen model candidate suggestions: "
+            f"{stats['stage7_post_box_frozen_model_candidate_supported_suggestion_count']}"
+        )
     if stats.get("debug_failures"):
         print("\nDebug failures")
         print("-" * 60)
@@ -5827,6 +6032,12 @@ def main() -> None:
                         help="Enable opt-in learned Stage 7 post-box-shrink continuation overlay providers")
     parser.add_argument("--stage7-learned-post-box-continuation-bonus", type=float, default=0.0,
                         help="Tiny opt-in visible owner support for learned Stage 7 post-box continuation providers")
+    parser.add_argument("--enable-stage7-post-box-frozen-model-candidate", action="store_true",
+                        help="Enable opt-in frozen visible-term CandidateMoveFrame sandbox suggestion for Stage 7 post-box states")
+    parser.add_argument("--stage7-post-box-frozen-model-candidate-support", type=float, default=0.0,
+                        help="Visible support amount for the opt-in frozen model candidate suggestion")
+    parser.add_argument("--stage7-post-box-frozen-model", type=Path, default=None,
+                        help="Path to non-promoted stage7_post_box_trajectory_provider_model JSON")
     parser.add_argument("--enable-plan-capsule-sandbox", action="store_true",
                         help="Enable non-causal Plan Capsule marker evidence recording; does not alter move scoring")
     parser.add_argument("--enable-stage7-plan-capsule", action="store_true",
@@ -5872,6 +6083,9 @@ def main() -> None:
         if args.source_stage_names
         else None
     )
+    frozen_model = None
+    if args.stage7_post_box_frozen_model is not None:
+        frozen_model = json.loads(args.stage7_post_box_frozen_model.read_text(encoding="utf-8"))
     eval_kwargs = dict(
         topology=args.topology,
         label=args.label,
@@ -5929,6 +6143,13 @@ def main() -> None:
         stage7_post_box_continuation_score=args.stage7_post_box_continuation_score,
         stage7_learned_post_box_continuation_enabled=args.enable_stage7_learned_post_box_continuation,
         stage7_learned_post_box_continuation_bonus=args.stage7_learned_post_box_continuation_bonus,
+        stage7_post_box_frozen_model_candidate_enabled=(
+            args.enable_stage7_post_box_frozen_model_candidate
+        ),
+        stage7_post_box_frozen_model_candidate_support=(
+            args.stage7_post_box_frozen_model_candidate_support
+        ),
+        stage7_post_box_frozen_model=frozen_model,
         plan_capsule_sandbox_enabled=args.enable_plan_capsule_sandbox,
         stage7_plan_capsule_enabled=args.enable_stage7_plan_capsule,
         stage7_plan_capsule_ttl=args.stage7_plan_capsule_ttl,

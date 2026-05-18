@@ -7719,3 +7719,36 @@ post_move:white_king_distance_to_enemy_decreases
 
 This is still not promotion and not Stage 8 training. It is the runtime
 inspection hook needed before any bounded candidate-local warmup.
+
+Small smoke with the existing Stage 7 learned-overlay topology:
+
+```text
+reports/structural_candidates/stage7_2cc_frozen_model_default_off_smoke_5_h20.json
+reports/structural_candidates/stage7_2cc_frozen_model_enabled_smoke_5_h20.json
+```
+
+Default-off:
+
+```text
+playouts: 2 mate / 3 max_plies
+frozen_model_candidate_supported_suggestion_count: 0
+```
+
+Explicit sandbox on with support `7.0`:
+
+```text
+playouts: 2 mate / 2 max_plies / 1 draw
+frozen_model_candidate_supported_suggestion_count: 4
+frozen_model_candidate_selected_supported_count: 1
+selected supported move/outcome: d1e2:draw
+```
+
+Interpretation:
+
+```text
+The CLI wiring and trace accounting work: default-off emits no frozen-model
+candidate suggestions, while explicit-on emits visible suggestions. The tiny
+smoke is not a validation improvement; the selected candidate can still lead to
+draw/max_plies, which is consistent with the Phase 2 diagnosis that 2cc needs a
+bounded multi-step continuation protocol rather than just a first-move model.
+```
