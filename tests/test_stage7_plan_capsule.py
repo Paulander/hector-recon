@@ -538,3 +538,22 @@ def test_candidate_move_layer_default_off_does_not_emit_suggestions():
 
     assert env["actuator_suggestions"] == []
     assert "krk_candidate_move_frames" not in env["blackboard"]
+
+
+def test_candidate_move_frame_audit_is_non_causal():
+    script = ROOT / "scripts" / "audit_candidate_move_frames.py"
+    spec = importlib.util.spec_from_file_location("audit_candidate_move_frames", script)
+    assert spec is not None
+    auditor = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(auditor)
+
+    payload = auditor.audit_fens([FEN_2CC])
+
+    assert payload["schema_version"] == "candidate_move_frame_audit.v1"
+    assert payload["causal_status"] == "non_causal"
+    assert payload["direct_request"] is False
+    assert payload["records"][0]["legal_move_count"] > 0
+    frames = payload["records"][0]["candidate_move_frames"]
+    assert all(frame["schema_version"] == "candidate_move_frame.v1" for frame in frames)
+    assert all(frame["causal_status"] == "non_causal" for frame in frames)

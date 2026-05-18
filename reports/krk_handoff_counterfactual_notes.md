@@ -7435,3 +7435,40 @@ Stage 6 is clean. Stage 4/5 conversion limits are inherited from the current
 Stage 7 sandbox topology/profile rather than candidate-move overfire, because
 candidate role suggestions remain zero.
 ```
+
+## 2cc CandidateMoveFrame audit
+
+After adding the candidate-move layer, I generated a non-causal frame audit for
+the unresolved 2cc family:
+
+```text
+reports/structural_candidates/stage7_2cc_candidate_move_frame_audit.json
+reports/structural_candidates/stage7_2cc_candidate_move_frame_audit.md
+```
+
+Summary:
+
+```text
+state.2cc0b3e1033a:
+  legal CandidateMoveFrames: 19
+
+common visible move shapes:
+  candidate_is_rook_move: 14
+  rook_safe_after_candidate: 14
+  candidate_is_rook_transfer: 11
+  rook_to_edge_file: 8
+  rook_lateral_transfer: 7
+  rook_transfer_vertical: 7
+  candidate_is_king_move: 5
+  safe_check_created: 2
+```
+
+Interpretation:
+
+```text
+The unresolved 2cc family now has visible legal-action hypotheses available
+for the next non-causal diagnosis. This does not classify capacity by itself;
+it supplies the candidate-frame vocabulary needed to compare DTM/reference,
+legal-first, and provider-continuation traces without adding persistent
+topology nodes for legal moves.
+```
