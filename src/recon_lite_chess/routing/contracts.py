@@ -274,6 +274,7 @@ class StructuralCandidate:
     promotion_status: Literal[
         "shadow",
         "proposed",
+        "sandbox_ready",
         "sandboxed",
         "validated",
         "promoted",
@@ -347,6 +348,7 @@ class PlanCapsuleSpec:
     owned_roles: List[str] = field(default_factory=list)
     owned_providers: List[str] = field(default_factory=list)
     handoff_exports: Dict[str, float] = field(default_factory=dict)
+    self_model: Dict[str, Any] = field(default_factory=dict)
     training_source: Optional[str] = None
     validation_protocol: Dict[str, Any] = field(default_factory=dict)
     guardrails: List[str] = field(default_factory=list)
@@ -354,6 +356,7 @@ class PlanCapsuleSpec:
     causal_status: Literal["non_causal"] = "non_causal"
     promotion_status: Literal[
         "proposed",
+        "sandbox_ready",
         "sandboxed",
         "validated",
         "promoted",

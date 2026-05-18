@@ -3,7 +3,7 @@
   "causal_status": "non_causal",
   "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
   "candidate_type": "plan_capsule",
-  "promotion_status": "proposed",
+  "promotion_status": "sandbox_ready",
   "structural_candidate": {
     "candidate_diagnostic_labels": [
       "continuation_topology_underexpressive",
@@ -28,7 +28,7 @@
     },
     "governor_status": "structure_insufficient",
     "parent_skill": "krk.skill_hub",
-    "promotion_status": "proposed",
+    "promotion_status": "sandbox_ready",
     "proposed_change": {
       "bounded_ttl_white_moves": 3,
       "capsule_id": "krk.post_box_shrink_continuation",
@@ -133,9 +133,24 @@
       "safe_check_or_cut_created",
       "stagnation_avoided"
     ],
-    "promotion_status": "proposed",
+    "promotion_status": "sandbox_ready",
     "record_id": "plan_capsule.0efb3bb3d93b",
     "schema_version": "plan_capsule_spec.v1",
+    "self_model": {
+      "abort_rate": null,
+      "avg_plies_to_exit": null,
+      "avg_progress_per_owned_move": null,
+      "causal_status": "trace_only",
+      "commitment_bias": 0.0,
+      "confidence": 0.0,
+      "handoff_success_rate": null,
+      "long_term_conversion_weight": 0.75,
+      "overcommitment_rate": null,
+      "premature_abort_rate": null,
+      "reliability_by_context": {},
+      "schema_version": "plan_capsule_self_model.v1",
+      "short_term_reward_weight": 0.25
+    },
     "source_candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
     "source_monitor_script": "growth.monitor.stage7_post_box_continuation_gap",
     "source_terms": [
@@ -179,8 +194,8 @@
     },
     {
       "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
-      "status": "proposed",
-      "next_action": "trajectory_gap_audit"
+      "status": "sandbox_ready",
+      "next_action": "default_off_causal_sandbox_smoke"
     }
   ],
   "hard_blocks": [

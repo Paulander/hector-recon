@@ -135,6 +135,160 @@ def _materialize_plan_capsule_markers(graph: Graph, env: dict) -> None:
             continue
 
 
+def _stage7_plan_capsule_default_state(*, ttl: int) -> dict:
+    return {
+        "plan_id": "krk.post_box_shrink_continuation",
+        "plan_status": "candidate",
+        "plan_started_ply": None,
+        "ttl_remaining": int(ttl),
+        "ttl_white_moves": int(ttl),
+        "owned_white_move_count": 0,
+        "progress_terms_confirmed": [],
+        "entry_terms_confirmed": [],
+        "exit_terms_confirmed": [],
+        "abort_terms_confirmed": [],
+        "selected_owned_provider": None,
+        "selected_owned_move": None,
+        "owned_roles": [
+            "krk.post_box_shrink_continuation",
+            "krk.box_shrink_to_drive_repair",
+            "krk.box_shrink_to_fence_repair",
+        ],
+        "owned_providers": [
+            "krk.drive_to_edge",
+            "krk.fence_established",
+            "krk.edge_trap_close",
+            "krk.edge_trap_enemy_between",
+            "krk.edge_trap_wrong_tempo",
+        ],
+        "handoff_exports": {
+            "krk.drive_to_edge": 1.0,
+            "krk.fence_established": 0.75,
+            "krk.edge_trap_close": 0.75,
+        },
+        "handoff_target": None,
+        "abort_reason": None,
+        "exit_reason": None,
+        "causal_status": "sandbox_opt_in",
+        "self_model": {
+            "reliability_by_context": {},
+            "avg_plies_to_exit": None,
+            "avg_progress_per_owned_move": None,
+            "abort_rate": None,
+            "handoff_success_rate": None,
+            "overcommitment_rate": None,
+            "premature_abort_rate": None,
+            "short_term_reward_weight": 0.25,
+            "long_term_conversion_weight": 0.75,
+            "commitment_bias": 0.0,
+            "confidence": 0.0,
+        },
+    }
+
+
+def _prepare_stage7_plan_capsule_state(
+    *,
+    current_state: dict | None,
+    marker: dict | None,
+    ttl: int,
+    current_ply: int | None = None,
+) -> dict:
+    state = dict(current_state or _stage7_plan_capsule_default_state(ttl=ttl))
+    state.setdefault("plan_id", "krk.post_box_shrink_continuation")
+    state.setdefault("ttl_white_moves", int(ttl))
+    state.setdefault("ttl_remaining", int(ttl))
+    state.setdefault("owned_white_move_count", 0)
+    marker = marker if isinstance(marker, dict) else {}
+    state["entry_terms_confirmed"] = list(marker.get("entry_terms_met", []) or [])
+    state["exit_terms_confirmed"] = list(marker.get("exit_terms_met", []) or [])
+    state["abort_terms_confirmed"] = list(marker.get("abort_terms_met", []) or [])
+    status = str(state.get("plan_status") or "candidate")
+    if status in {"exited", "aborted", "expired"}:
+        return state
+    entry_confirmed = bool(marker.get("entry_confirmed"))
+    exit_terms_met = list(marker.get("exit_terms_met", []) or [])
+    owned_count = int(state.get("owned_white_move_count", 0) or 0)
+    strong_exit = bool(
+        {
+            "mate_in_one_available",
+            "mate_basin_or_stage0_finish_visibly_licensed",
+        }.intersection(exit_terms_met)
+    )
+    exit_allowed = (
+        bool(exit_terms_met)
+        and (
+            (status == "candidate" and not entry_confirmed and strong_exit)
+            or (
+                status in {"active", "progress_confirmed"}
+                and (owned_count > 0 or strong_exit)
+            )
+        )
+    )
+    if exit_allowed:
+        state["plan_status"] = "exited"
+        state["exit_reason"] = "exit_terms_confirmed"
+        state["handoff_target"] = ",".join(exit_terms_met)
+        return state
+    if marker.get("abort_terms_met") or marker.get("abort_confirmed"):
+        state["plan_status"] = "aborted"
+        state["abort_reason"] = "abort_terms_confirmed"
+        return state
+    if int(state.get("ttl_remaining", 0) or 0) <= 0 and status != "candidate":
+        state["plan_status"] = "expired"
+        state["exit_reason"] = "ttl_expired"
+        return state
+    if status == "candidate" and entry_confirmed:
+        state["plan_status"] = "active"
+        state["plan_started_ply"] = current_ply
+        state["ttl_remaining"] = int(ttl)
+        state["ttl_white_moves"] = int(ttl)
+    return state
+
+
+def _advance_stage7_plan_capsule_state_after_decision(
+    state: dict | None,
+    move_details: dict,
+    *,
+    current_ply: int,
+) -> dict | None:
+    if not state:
+        return state
+    updated = dict(state)
+    if updated.get("plan_status") not in {"active", "progress_confirmed"}:
+        return updated
+    selected = move_details.get("selected_suggestion")
+    meta = selected.get("meta", {}) if isinstance(selected, dict) else {}
+    if not isinstance(meta, dict):
+        meta = {}
+    license_payload = (
+        meta.get("visible_stage7_plan_capsule_license")
+        or (
+            selected.get("visible_stage7_plan_capsule_license")
+            if isinstance(selected, dict)
+            else None
+        )
+        or {}
+    )
+    if not isinstance(license_payload, dict) or not license_payload:
+        updated["last_unowned_ply"] = current_ply
+        return updated
+    updated["plan_status"] = "progress_confirmed"
+    updated["owned_white_move_count"] = int(updated.get("owned_white_move_count", 0) or 0) + 1
+    updated["ttl_remaining"] = max(0, int(updated.get("ttl_remaining", 0) or 0) - 1)
+    updated["selected_owned_provider"] = license_payload.get("provider_skill_id")
+    updated["selected_owned_move"] = license_payload.get("move")
+    progress_terms = list(updated.get("progress_terms_confirmed", []) or [])
+    for term in license_payload.get("progress_terms", []) or []:
+        if term not in progress_terms:
+            progress_terms.append(term)
+    updated["progress_terms_confirmed"] = progress_terms
+    updated["last_owned_ply"] = current_ply
+    if updated["ttl_remaining"] <= 0:
+        updated["plan_status"] = "expired"
+        updated["exit_reason"] = "ttl_expired_after_owned_window"
+    return updated
+
+
 PROFILE_TIMER_KEYS = (
     "total_wall_time",
     "choose_move_details_time",
@@ -634,6 +788,17 @@ def _suggestion_role_trace(meta: dict) -> dict:
         "visible_stage7_learned_post_box_continuation_license": dict(
             meta.get("visible_stage7_learned_post_box_continuation_license", {}) or {}
         ),
+        "visible_stage7_plan_capsule_bonus": float(
+            meta.get("visible_stage7_plan_capsule_bonus", 0.0) or 0.0
+        ),
+        "visible_stage7_plan_capsule_license": dict(
+            meta.get("visible_stage7_plan_capsule_license", {}) or {}
+        ),
+        "score_after_stage7_plan_capsule_bonus": (
+            float(meta.get("score_after_stage7_plan_capsule_bonus"))
+            if meta.get("score_after_stage7_plan_capsule_bonus") is not None
+            else None
+        ),
     }
 
 
@@ -965,6 +1130,15 @@ def _successor_contract_audit(
         ),
         "visible_stage7_learned_post_box_continuation_license": dict(
             selected_group.get("visible_stage7_learned_post_box_continuation_license", {}) or {}
+        ),
+        "visible_stage7_plan_capsule_bonus": float(
+            selected_group.get("visible_stage7_plan_capsule_bonus", 0.0) or 0.0
+        ),
+        "visible_stage7_plan_capsule_license": dict(
+            selected_group.get("visible_stage7_plan_capsule_license", {}) or {}
+        ),
+        "score_after_stage7_plan_capsule_bonus": selected_group.get(
+            "score_after_stage7_plan_capsule_bonus"
         ),
     }
 
@@ -1312,6 +1486,11 @@ def choose_move_with_engine(
     stage7_learned_post_box_continuation_enabled: bool = False,
     stage7_learned_post_box_continuation_bonus: float = 0.0,
     plan_capsule_sandbox_enabled: bool = False,
+    stage7_plan_capsule_enabled: bool = False,
+    stage7_plan_capsule_ttl: int = 3,
+    stage7_plan_capsule_support_bonus: float = 0.0,
+    stage7_plan_capsule_state: dict | None = None,
+    current_ply: int | None = None,
     stage7_provider_scope_label: str = "box_shrink",
     active_landmark_label: str | None = None,
     early_stop_stable_suggestions: int = 0,
@@ -1351,6 +1530,11 @@ def choose_move_with_engine(
         stage7_learned_post_box_continuation_enabled=stage7_learned_post_box_continuation_enabled,
         stage7_learned_post_box_continuation_bonus=stage7_learned_post_box_continuation_bonus,
         plan_capsule_sandbox_enabled=plan_capsule_sandbox_enabled,
+        stage7_plan_capsule_enabled=stage7_plan_capsule_enabled,
+        stage7_plan_capsule_ttl=stage7_plan_capsule_ttl,
+        stage7_plan_capsule_support_bonus=stage7_plan_capsule_support_bonus,
+        stage7_plan_capsule_state=stage7_plan_capsule_state,
+        current_ply=current_ply,
         stage7_provider_scope_label=stage7_provider_scope_label,
         active_landmark_label=active_landmark_label,
         early_stop_stable_suggestions=early_stop_stable_suggestions,
@@ -1392,6 +1576,11 @@ def choose_move_details(
     stage7_learned_post_box_continuation_enabled: bool = False,
     stage7_learned_post_box_continuation_bonus: float = 0.0,
     plan_capsule_sandbox_enabled: bool = False,
+    stage7_plan_capsule_enabled: bool = False,
+    stage7_plan_capsule_ttl: int = 3,
+    stage7_plan_capsule_support_bonus: float = 0.0,
+    stage7_plan_capsule_state: dict | None = None,
+    current_ply: int | None = None,
     stage7_provider_scope_label: str = "box_shrink",
     active_landmark_label: str | None = None,
     early_stop_stable_suggestions: int = 0,
@@ -1439,6 +1628,11 @@ def choose_move_details(
             stage7_learned_post_box_continuation_enabled=stage7_learned_post_box_continuation_enabled,
             stage7_learned_post_box_continuation_bonus=stage7_learned_post_box_continuation_bonus,
             plan_capsule_sandbox_enabled=plan_capsule_sandbox_enabled,
+            stage7_plan_capsule_enabled=stage7_plan_capsule_enabled,
+            stage7_plan_capsule_ttl=stage7_plan_capsule_ttl,
+            stage7_plan_capsule_support_bonus=stage7_plan_capsule_support_bonus,
+            stage7_plan_capsule_state=stage7_plan_capsule_state,
+            current_ply=current_ply,
             stage7_provider_scope_label=stage7_provider_scope_label,
             active_landmark_label=active_landmark_label,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
@@ -1487,6 +1681,11 @@ def _choose_move_details_impl(
     stage7_learned_post_box_continuation_enabled: bool = False,
     stage7_learned_post_box_continuation_bonus: float = 0.0,
     plan_capsule_sandbox_enabled: bool = False,
+    stage7_plan_capsule_enabled: bool = False,
+    stage7_plan_capsule_ttl: int = 3,
+    stage7_plan_capsule_support_bonus: float = 0.0,
+    stage7_plan_capsule_state: dict | None = None,
+    current_ply: int | None = None,
     stage7_provider_scope_label: str = "box_shrink",
     active_landmark_label: str | None = None,
     early_stop_stable_suggestions: int = 0,
@@ -1585,6 +1784,11 @@ def _choose_move_details_impl(
         stage7_post_box_post_reply_context
     )
     env["blackboard"]["plan_capsule_sandbox_enabled"] = bool(plan_capsule_sandbox_enabled)
+    env["blackboard"]["stage7_plan_capsule_enabled"] = bool(stage7_plan_capsule_enabled)
+    env["blackboard"]["stage7_plan_capsule_ttl"] = int(stage7_plan_capsule_ttl)
+    env["blackboard"]["stage7_plan_capsule_support_bonus"] = float(stage7_plan_capsule_support_bonus)
+    if stage7_plan_capsule_state:
+        env["blackboard"]["stage7_plan_capsule_state"] = dict(stage7_plan_capsule_state)
     env["blackboard"]["stage7_provider_scope_label"] = str(stage7_provider_scope_label or "box_shrink")
     if active_landmark_label:
         env["blackboard"]["active_landmark_label"] = str(active_landmark_label)
@@ -1614,6 +1818,22 @@ def _choose_move_details_impl(
     _materialize_explicit_support_roles(graph, env)
     _materialize_stage7_sandbox_providers(graph, env)
     _materialize_plan_capsule_markers(graph, env)
+    if stage7_plan_capsule_enabled:
+        marker = (
+            env.get("blackboard", {})
+            .get("krk_plan_capsule_markers", {})
+            .get("krk.post_box_shrink_continuation", {})
+        )
+        plan_state = _prepare_stage7_plan_capsule_state(
+            current_state=stage7_plan_capsule_state,
+            marker=marker,
+            ttl=int(stage7_plan_capsule_ttl),
+            current_ply=current_ply,
+        )
+        env["blackboard"]["stage7_plan_capsule_state"] = plan_state
+        env["blackboard"].setdefault("krk_plan_capsule_markers", {}).setdefault(
+            "krk.post_box_shrink_continuation", {}
+        )["plan_state"] = dict(plan_state)
 
     engine.reset_states()
     root_id = "krk_entry" if "krk_entry" in graph.nodes else None
@@ -1651,6 +1871,23 @@ def _choose_move_details_impl(
             if stable_suggestion_ticks >= early_stop_stable_suggestions:
                 early_stopped = True
                 break
+    _materialize_plan_capsule_markers(graph, env)
+    if stage7_plan_capsule_enabled:
+        marker = (
+            env.get("blackboard", {})
+            .get("krk_plan_capsule_markers", {})
+            .get("krk.post_box_shrink_continuation", {})
+        )
+        plan_state = _prepare_stage7_plan_capsule_state(
+            current_state=env.get("blackboard", {}).get("stage7_plan_capsule_state", {}),
+            marker=marker,
+            ttl=int(stage7_plan_capsule_ttl),
+            current_ply=current_ply,
+        )
+        env["blackboard"]["stage7_plan_capsule_state"] = plan_state
+        env["blackboard"].setdefault("krk_plan_capsule_markers", {}).setdefault(
+            "krk.post_box_shrink_continuation", {}
+        )["plan_state"] = dict(plan_state)
     suggestions = list(env.get("actuator_suggestions", []))
     suggestions.sort(key=lambda item: item.get("score", float("-inf")), reverse=True)
     selected_suggestion = suggestions[0] if suggestions else None
@@ -1768,6 +2005,12 @@ def _choose_move_details_impl(
         "stage7_learned_post_box_continuation_enabled": bool(stage7_learned_post_box_continuation_enabled),
         "stage7_learned_post_box_continuation_bonus": float(stage7_learned_post_box_continuation_bonus),
         "plan_capsule_sandbox_enabled": bool(plan_capsule_sandbox_enabled),
+        "stage7_plan_capsule_enabled": bool(stage7_plan_capsule_enabled),
+        "stage7_plan_capsule_ttl": int(stage7_plan_capsule_ttl),
+        "stage7_plan_capsule_support_bonus": float(stage7_plan_capsule_support_bonus),
+        "stage7_plan_capsule_state": dict(
+            env.get("blackboard", {}).get("stage7_plan_capsule_state", {}) or {}
+        ),
         "plan_capsule_markers": dict(
             env.get("blackboard", {}).get("krk_plan_capsule_markers", {}) or {}
         ),
@@ -1984,6 +2227,9 @@ def play_to_mate(
     stage7_learned_post_box_continuation_enabled: bool = False,
     stage7_learned_post_box_continuation_bonus: float = 0.0,
     plan_capsule_sandbox_enabled: bool = False,
+    stage7_plan_capsule_enabled: bool = False,
+    stage7_plan_capsule_ttl: int = 3,
+    stage7_plan_capsule_support_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     lock_stage_filter_through_playout: bool = False,
     forced_successor_skill: Optional[str] = None,
@@ -2003,6 +2249,9 @@ def play_to_mate(
     stage7_king_tempo_used = False
     stage7_drive_repair_used = False
     stage7_post_king_tempo_used = False
+    stage7_plan_capsule_state = _stage7_plan_capsule_default_state(
+        ttl=int(stage7_plan_capsule_ttl)
+    )
 
     def record_event(event: dict) -> None:
         nonlocal trace_truncated_events
@@ -2021,6 +2270,7 @@ def play_to_mate(
             "engine_ticks_total": int(engine_perf.get("engine_ticks_total", 0)),
             "engine_ticks_max": int(engine_perf.get("engine_ticks_max", 0)),
             "engine_early_stop_count": int(engine_perf.get("engine_early_stop_count", 0)),
+            "stage7_plan_capsule_state": dict(stage7_plan_capsule_state),
             "final_turn": "white" if b.turn == chess.WHITE else "black",
             "final_mate_in_one_available": _mate_in_one_available(b),
         })
@@ -2106,6 +2356,11 @@ def play_to_mate(
                 stage7_learned_post_box_continuation_enabled=stage7_learned_post_box_continuation_enabled,
                 stage7_learned_post_box_continuation_bonus=stage7_learned_post_box_continuation_bonus,
                 plan_capsule_sandbox_enabled=plan_capsule_sandbox_enabled,
+                stage7_plan_capsule_enabled=stage7_plan_capsule_enabled,
+                stage7_plan_capsule_ttl=stage7_plan_capsule_ttl,
+                stage7_plan_capsule_support_bonus=stage7_plan_capsule_support_bonus,
+                stage7_plan_capsule_state=stage7_plan_capsule_state,
+                current_ply=ply,
                 active_landmark_label=label,
                 stage7_king_tempo_already_used=stage7_king_tempo_used,
                 stage7_drive_repair_already_used=stage7_drive_repair_used,
@@ -2118,6 +2373,14 @@ def play_to_mate(
                 enable_diagnostic_caches=enable_diagnostic_caches,
             )
             _accumulate_engine_perf(engine_perf, move_details, prefix="engine")
+            returned_plan_state = move_details.get("stage7_plan_capsule_state")
+            if isinstance(returned_plan_state, dict) and returned_plan_state:
+                stage7_plan_capsule_state = dict(returned_plan_state)
+            stage7_plan_capsule_state = _advance_stage7_plan_capsule_state_after_decision(
+                stage7_plan_capsule_state,
+                move_details,
+                current_ply=ply,
+            ) or stage7_plan_capsule_state
             move_uci = move_details.get("move")
             capture_successor_now = (
                 (forced_successor_skill is not None and white_moves == 0)
@@ -2944,6 +3207,9 @@ def run_counterfactual_successor_sweep(
     stage7_learned_post_box_continuation_enabled: bool = False,
     stage7_learned_post_box_continuation_bonus: float = 0.0,
     plan_capsule_sandbox_enabled: bool = False,
+    stage7_plan_capsule_enabled: bool = False,
+    stage7_plan_capsule_ttl: int = 3,
+    stage7_plan_capsule_support_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     step_output: Optional[Path] = None,
     step_context: Optional[dict] = None,
@@ -3129,6 +3395,9 @@ def evaluate_landmark_progress(
     stage7_learned_post_box_continuation_enabled: bool = False,
     stage7_learned_post_box_continuation_bonus: float = 0.0,
     plan_capsule_sandbox_enabled: bool = False,
+    stage7_plan_capsule_enabled: bool = False,
+    stage7_plan_capsule_ttl: int = 3,
+    stage7_plan_capsule_support_bonus: float = 0.0,
     early_stop_stable_suggestions: int = 0,
     lock_stage_filter_through_playout: bool = False,
     counterfactual_successors: tuple[str, ...] = (),
@@ -3229,6 +3498,12 @@ def evaluate_landmark_progress(
         "adapter_supported_move_by_outcome": {},
         "plan_capsule_marker_count": 0,
         "plan_capsule_marker_by_outcome": {},
+        "plan_capsule_entry_count": 0,
+        "plan_capsule_exit_count": 0,
+        "plan_capsule_abort_count": 0,
+        "plan_capsule_expired_count": 0,
+        "plan_capsule_progress_confirmed_count": 0,
+        "plan_capsule_status_by_outcome": {},
         "role_owned_score_normalization_selected_count": 0,
         "role_owned_score_normalization_provider_by_outcome": {},
         "one_ply_status": "not_checked",
@@ -3279,6 +3554,9 @@ def evaluate_landmark_progress(
             stage7_learned_post_box_continuation_enabled=stage7_learned_post_box_continuation_enabled,
             stage7_learned_post_box_continuation_bonus=stage7_learned_post_box_continuation_bonus,
             plan_capsule_sandbox_enabled=plan_capsule_sandbox_enabled,
+            stage7_plan_capsule_enabled=stage7_plan_capsule_enabled,
+            stage7_plan_capsule_ttl=stage7_plan_capsule_ttl,
+            stage7_plan_capsule_support_bonus=stage7_plan_capsule_support_bonus,
             active_landmark_label=label,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
             perf_profile=perf_profile,
@@ -3451,6 +3729,9 @@ def evaluate_landmark_progress(
                 stage7_learned_post_box_continuation_enabled=stage7_learned_post_box_continuation_enabled,
                 stage7_learned_post_box_continuation_bonus=stage7_learned_post_box_continuation_bonus,
                 plan_capsule_sandbox_enabled=plan_capsule_sandbox_enabled,
+                stage7_plan_capsule_enabled=stage7_plan_capsule_enabled,
+                stage7_plan_capsule_ttl=stage7_plan_capsule_ttl,
+                stage7_plan_capsule_support_bonus=stage7_plan_capsule_support_bonus,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
                 lock_stage_filter_through_playout=lock_stage_filter_through_playout,
                 perf_profile=perf_profile,
@@ -3555,6 +3836,25 @@ def evaluate_landmark_progress(
                     stats["plan_capsule_marker_by_outcome"][marker_key] = (
                         stats["plan_capsule_marker_by_outcome"].get(marker_key, 0) + 1
                     )
+            plan_state = dict(result.get("stage7_plan_capsule_state", {}) or {})
+            plan_status = str(plan_state.get("plan_status") or "")
+            if plan_status in {"active", "progress_confirmed", "exited", "aborted", "expired"}:
+                stats["plan_capsule_entry_count"] = int(stats.get("plan_capsule_entry_count", 0) or 0) + 1
+            if plan_status == "progress_confirmed" or plan_state.get("progress_terms_confirmed"):
+                stats["plan_capsule_progress_confirmed_count"] = (
+                    int(stats.get("plan_capsule_progress_confirmed_count", 0) or 0) + 1
+                )
+            if plan_status == "exited":
+                stats["plan_capsule_exit_count"] = int(stats.get("plan_capsule_exit_count", 0) or 0) + 1
+            if plan_status == "aborted":
+                stats["plan_capsule_abort_count"] = int(stats.get("plan_capsule_abort_count", 0) or 0) + 1
+            if plan_status == "expired":
+                stats["plan_capsule_expired_count"] = int(stats.get("plan_capsule_expired_count", 0) or 0) + 1
+            if plan_status:
+                plan_key = f"{plan_status}:{key}"
+                stats["plan_capsule_status_by_outcome"][plan_key] = (
+                    stats["plan_capsule_status_by_outcome"].get(plan_key, 0) + 1
+                )
             role_owned_support = dict(
                 successor_summary.get("visible_role_owned_score_normalization", {}) or {}
             )
@@ -3645,6 +3945,17 @@ def evaluate_landmark_progress(
                     "role_bonus_by_role": successor_summary.get("role_bonus_by_role"),
                     "visible_role_provider_support_adapter": adapter_support,
                     "plan_capsule_markers": plan_capsule_markers,
+                    "stage7_plan_capsule_enabled": bool(stage7_plan_capsule_enabled),
+                    "stage7_plan_capsule_state": plan_state,
+                    "visible_stage7_plan_capsule_bonus": successor_summary.get(
+                        "visible_stage7_plan_capsule_bonus"
+                    ),
+                    "visible_stage7_plan_capsule_license": successor_summary.get(
+                        "visible_stage7_plan_capsule_license"
+                    ),
+                    "score_after_stage7_plan_capsule_bonus": successor_summary.get(
+                        "score_after_stage7_plan_capsule_bonus"
+                    ),
                     "visible_role_owned_score_normalization": successor_summary.get(
                         "visible_role_owned_score_normalization", {}
                     ),
@@ -4197,6 +4508,11 @@ def _merge_parallel_stats(
         "counterfactual_successor_sweep_count",
         "adapter_fire_count",
         "plan_capsule_marker_count",
+        "plan_capsule_entry_count",
+        "plan_capsule_exit_count",
+        "plan_capsule_abort_count",
+        "plan_capsule_expired_count",
+        "plan_capsule_progress_confirmed_count",
         "role_owned_score_normalization_selected_count",
     )
     max_keys = ("one_ply_engine_ticks_max", "playout_engine_ticks_max")
@@ -4211,6 +4527,7 @@ def _merge_parallel_stats(
         "adapter_supported_provider_by_outcome",
         "adapter_supported_move_by_outcome",
         "plan_capsule_marker_by_outcome",
+        "plan_capsule_status_by_outcome",
         "role_owned_score_normalization_provider_by_outcome",
     )
     nested_count_keys = ("conversion_by_semantic_alignment_status",)
@@ -4565,6 +4882,12 @@ def main() -> None:
                         help="Tiny opt-in visible owner support for learned Stage 7 post-box continuation providers")
     parser.add_argument("--enable-plan-capsule-sandbox", action="store_true",
                         help="Enable non-causal Plan Capsule marker evidence recording; does not alter move scoring")
+    parser.add_argument("--enable-stage7-plan-capsule", action="store_true",
+                        help="Enable opt-in Stage 7 Plan Capsule v0 bounded support sandbox")
+    parser.add_argument("--stage7-plan-capsule-ttl", type=int, default=3,
+                        help="White-move TTL for the opt-in Stage 7 Plan Capsule v0 sandbox")
+    parser.add_argument("--stage7-plan-capsule-support-bonus", type=float, default=0.0,
+                        help="Small opt-in support amount for candidate moves licensed by the Stage 7 Plan Capsule")
     parser.add_argument("--composition-profile",
                         choices=[COMPOSITION_PROFILE_NONE, COMPOSITION_PROFILE_HANDOFF_V1],
                         default=COMPOSITION_PROFILE_NONE,
@@ -4652,6 +4975,9 @@ def main() -> None:
         stage7_learned_post_box_continuation_enabled=args.enable_stage7_learned_post_box_continuation,
         stage7_learned_post_box_continuation_bonus=args.stage7_learned_post_box_continuation_bonus,
         plan_capsule_sandbox_enabled=args.enable_plan_capsule_sandbox,
+        stage7_plan_capsule_enabled=args.enable_stage7_plan_capsule,
+        stage7_plan_capsule_ttl=args.stage7_plan_capsule_ttl,
+        stage7_plan_capsule_support_bonus=args.stage7_plan_capsule_support_bonus,
         early_stop_stable_suggestions=args.early_stop_stable_suggestions,
         lock_stage_filter_through_playout=args.lock_stage_filter_through_playout,
         counterfactual_successors=tuple(

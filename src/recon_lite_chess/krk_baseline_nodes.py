@@ -1902,6 +1902,15 @@ def create_actuator_terminal(node_id=None):
                         ],
                     }
 
+                score = _apply_stage7_plan_capsule_support(
+                    score,
+                    board=board,
+                    move=move,
+                    skill_id=skill_id,
+                    blackboard=blackboard,
+                    move_meta=move_meta[move],
+                )
+
                 if blackboard.get("successor_affordance_layer_enabled"):
                     score = _apply_successor_affordance_bias(
                     score,
@@ -3040,6 +3049,96 @@ def _apply_visible_post_break_continuation_bias(
     move_meta["visible_post_break_continuation_bonus"] = float(weight)
     move_meta["visible_post_break_continuation_license"] = license_payload
     move_meta["score_after_post_break_continuation_bonus"] = adjusted
+    return adjusted
+
+
+def _apply_stage7_plan_capsule_support(
+    score: float,
+    *,
+    board: chess.Board,
+    move: chess.Move,
+    skill_id: str | None,
+    blackboard: Dict[str, Any],
+    move_meta: Dict[str, Any],
+) -> float:
+    """Opt-in bounded support from the Stage 7 Plan Capsule sandbox.
+
+    This is not a hidden provider lock. It only adds support when the diagnostic
+    harness exposes an active plan state, the plan marker has confirmed entry,
+    no abort/exit is active, TTL remains, and the candidate move itself exposes
+    visible progress/safety terms.
+    """
+    if not blackboard.get("stage7_plan_capsule_enabled", False):
+        return score
+    bonus = float(blackboard.get("stage7_plan_capsule_support_bonus", 0.0) or 0.0)
+    if bonus <= 0.0:
+        return score
+    state = blackboard.get("stage7_plan_capsule_state", {}) or {}
+    if state.get("plan_status") not in {"active", "progress_confirmed"}:
+        return score
+    capsule_id = str(state.get("plan_id") or "krk.post_box_shrink_continuation")
+    marker = (blackboard.get("krk_plan_capsule_markers", {}) or {}).get(capsule_id, {})
+    if not isinstance(marker, dict) or not marker.get("entry_confirmed", False):
+        return score
+    exit_terms_met = set(marker.get("exit_terms_met", []) or [])
+    strong_exit = bool(
+        {
+            "mate_in_one_available",
+            "mate_basin_or_stage0_finish_visibly_licensed",
+        } & exit_terms_met
+    )
+    if marker.get("abort_confirmed") or strong_exit:
+        return score
+    if int(state.get("ttl_remaining", 0) or 0) <= 0:
+        return score
+    canonical = _canonical_krk_skill_id(skill_id)
+    owned = set(state.get("owned_providers") or marker.get("owned_providers") or [])
+    if owned and canonical not in owned:
+        return score
+
+    audit = krk_move_shape_audit(board, move, blackboard, include_worst_reply=False)
+    move_terms = set(audit.get("move_shape_terms", []) or [])
+    post_terms = set(audit.get("post_move_terms", []) or [])
+    required_post = {"rook_safe_after_move"}
+    progress_terms = {
+        "box_area_decreases_after_move",
+        "box_area_not_increased_after_move",
+        "fence_exists_after_move",
+        "fence_stable_after_move",
+        "cut_preserved_after_move",
+        "cut_replaced_after_move",
+        "white_king_distance_to_enemy_decreases",
+        "white_king_distance_to_rook_decreases",
+        "black_king_escape_count_decreases_after_move",
+        "enemy_edge_distance_not_increased_after_move",
+        "enemy_corner_distance_not_increased_after_move",
+        "safe_check_created",
+        "checking_line_created",
+    }
+    matched_progress = progress_terms & (move_terms | post_terms)
+    if not required_post <= post_terms:
+        return score
+    if not matched_progress:
+        return score
+    adjusted = float(score) + bonus
+    license_payload = {
+        "schema_version": "stage7_plan_capsule_license.v1",
+        "plan_id": capsule_id,
+        "plan_status": state.get("plan_status"),
+        "provider_skill_id": canonical,
+        "move": move.uci(),
+        "support_amount": bonus,
+        "direct_request": False,
+        "ttl_remaining": int(state.get("ttl_remaining", 0) or 0),
+        "owned_white_move_count": int(state.get("owned_white_move_count", 0) or 0),
+        "source_terms": sorted(set(marker.get("entry_terms_met", []) or []) | matched_progress),
+        "progress_terms": sorted(matched_progress),
+        "move_shape_terms": sorted(move_terms),
+        "post_move_terms": sorted(post_terms),
+    }
+    move_meta["visible_stage7_plan_capsule_bonus"] = bonus
+    move_meta["visible_stage7_plan_capsule_license"] = license_payload
+    move_meta["score_after_stage7_plan_capsule_bonus"] = adjusted
     return adjusted
 
 

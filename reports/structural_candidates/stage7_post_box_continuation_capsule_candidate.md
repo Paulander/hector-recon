@@ -3,7 +3,7 @@
 Candidate: `cand.krk.box_shrink.post_box_continuation_capsule.v1`
 Capsule: `krk.post_box_shrink_continuation`
 Causal status: `non_causal`
-Promotion status: `proposed`
+Promotion status: `sandbox_ready`
 
 This is not a new fixed curriculum stage. It is a proposed bounded
 Plan Capsule / Commitment Bias structure for multi-step continuation.

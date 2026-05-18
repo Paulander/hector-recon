@@ -32,6 +32,12 @@ TOP_LEVEL_KEYS = (
     "adapter_supported_move_by_outcome",
     "plan_capsule_marker_count",
     "plan_capsule_marker_by_outcome",
+    "plan_capsule_entry_count",
+    "plan_capsule_exit_count",
+    "plan_capsule_abort_count",
+    "plan_capsule_expired_count",
+    "plan_capsule_progress_confirmed_count",
+    "plan_capsule_status_by_outcome",
 )
 
 

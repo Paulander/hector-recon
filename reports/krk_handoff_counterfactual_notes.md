@@ -6520,3 +6520,94 @@ This is still non-causal. It gives a better sandbox criterion: a future runtime
 capsule should not merely enter; it must show owned-window progress or emit a
 visible TTL/progress failure.
 ```
+
+## Stage 7 Plan Capsule v0 default-off sandbox
+
+I implemented the first default-off Plan Capsule runtime sandbox for:
+
+```text
+cand.krk.box_shrink.post_box_continuation_capsule.v1
+capsule_id: krk.post_box_shrink_continuation
+```
+
+This is still not Stage 7.5 and not promoted topology. It is an opt-in
+bounded commitment-bias experiment with explicit state:
+
+```text
+candidate -> active -> progress_confirmed -> exited / aborted / expired
+```
+
+The sandbox remains disabled by default and only runs with:
+
+```text
+--enable-plan-capsule-sandbox
+--enable-stage7-plan-capsule
+--stage7-plan-capsule-ttl {3,4}
+--stage7-plan-capsule-support-bonus 0.05
+```
+
+Default-off equivalence passed:
+
+```text
+reports/structural_candidates/stage7_plan_capsule_default_off_equivalence_10_h20_rerun.json
+equivalent: true
+differences: []
+```
+
+Larger non-causal marker audit:
+
+```text
+reports/structural_candidates/stage7_plan_capsule_marker_trace25_h40.json
+reports/structural_candidates/stage7_plan_capsule_marker_analysis_25_h40.json
+reports/structural_candidates/stage7_plan_capsule_owned_window_25_h40.json
+```
+
+Result:
+
+```text
+marker_records: 23
+entry_confirmed_max_plies_count: 13
+entry_confirmed_mate_count: 0
+mate_exit_count: 10
+owned_windows: 13
+ttl_failures: 8
+```
+
+Tiny causal smoke:
+
+```text
+marker-only h40: 5 mate / 5 max_plies
+ttl=3 h40:      5 mate / 5 max_plies
+ttl=4 h40:      5 mate / 5 max_plies
+shadow candidates: 14 in all three
+```
+
+Interpretation:
+
+```text
+The capsule entry terms remain meaningful and separate failure windows from
+already-successful exits. The default-off topology is behavior-preserving.
+The opt-in runtime state now enters the max-plies windows and exits mate
+windows, but the small support amount does not yet create selected owned-window
+progress or improve conversion.
+```
+
+Current candidate status:
+
+```text
+promotion_status: sandbox_ready
+runtime_status: sandbox_opt_in
+diagnosis: plan_entry_valid_but_policy_insufficient
+next_action: inspect owned-provider licenses / commitment ownership strength
+```
+
+Hard boundary:
+
+```text
+No promotion.
+No Stage 8.
+No hidden controller.
+No gameplay-time topology mutation.
+HandoffPacket, stats, shadow candidates, StructuralCandidate,
+GrowthGovernor, and PlanCapsuleSpec remain non-causal.
+```
