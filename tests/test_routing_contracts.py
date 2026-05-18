@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from recon_lite_chess.routing import (
     HandoffPacket,
+    MoveShapeRoleSpec,
     PlanCapsuleSpec,
     RouteDecision,
     ShadowStemCandidate,
@@ -97,6 +98,31 @@ def test_schema_round_trips():
             notes=["non-causal candidate only"],
         ),
         PlanCapsuleSpec,
+    )
+    _round_trip(
+        MoveShapeRoleSpec(
+            role_id="krk.post_box.king_support_fence_stabilizer",
+            source_candidate_id="cand.krk.box_shrink.family_0926.king_support_fence_stabilizer.v1",
+            source_monitor_script="growth.monitor.stage7_plan_capsule_residual_family_split",
+            source_terms=["legal_first_move_converts_h40"],
+            domain="krk",
+            target_skill="krk.box_shrink",
+            parent_capsule="krk.post_box_shrink_continuation",
+            entry_terms=["plan_capsule_entry_confirmed"],
+            move_shape_required_terms=[
+                "candidate_is_king_move",
+                "king_moves_toward_enemy",
+            ],
+            post_move_required_terms=[
+                "rook_safe_after_move",
+                "fence_stable_after_move",
+            ],
+            veto_terms=["mate_in_one_available"],
+            validation_protocol={"target": "state.0926 h40"},
+            guardrails=["stage6_drive_to_edge"],
+            notes=["non-causal candidate only"],
+        ),
+        MoveShapeRoleSpec,
     )
 
 

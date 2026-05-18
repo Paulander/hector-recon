@@ -7140,6 +7140,63 @@ The planner is non-causal. It does not compile topology, train weights,
 promote Stage 7, or alter runtime routing.
 ```
 
+## Stage 7 0926 move-shape role spec
+
+I added a general non-causal schema for visible move-shape roles:
+
+```text
+MoveShapeRoleSpec
+```
+
+This is deliberately not a move selector. It records the visible entry,
+candidate-move, post-move, veto, validation, and guardrail terms that would be
+required before a later sandbox can compile a role into explicit topology or
+adapter metadata.
+
+Stage 7 0926 export artifacts:
+
+```text
+scripts/export_stage7_0926_move_shape_role.py
+reports/structural_candidates/stage7_0926_king_support_fence_stabilizer_role_spec.json
+reports/structural_candidates/stage7_0926_king_support_fence_stabilizer_role_spec.md
+```
+
+Role:
+
+```text
+krk.post_box.king_support_fence_stabilizer
+```
+
+Required move-shape terms:
+
+```text
+candidate_is_king_move
+king_moves_toward_enemy
+king_moves_toward_rook_support
+```
+
+Required post-move terms:
+
+```text
+rook_safe_after_move
+box_area_not_increased_after_move
+fence_exists_after_move
+fence_stable_after_move
+cut_preserved_after_move
+white_king_distance_to_enemy_decreases
+white_king_distance_to_rook_decreases
+```
+
+Boundary:
+
+```text
+The role spec is non-causal.
+It does not generate moves.
+It does not request providers.
+It does not use a state hash exception.
+It must not be compiled until default-off sandbox and traceability tests exist.
+```
+
 ## Stage 7 Plan Capsule drive-priority sandbox negative result
 
 I tested the smallest causal follow-up suggested by the residual split:

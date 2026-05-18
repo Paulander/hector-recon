@@ -1,0 +1,153 @@
+{
+  "schema_version": "stage7_0926_move_shape_role_export.v1",
+  "causal_status": "non_causal",
+  "structural_candidate": {
+    "schema_version": "structural_candidate.v1",
+    "candidate_id": "cand.krk.box_shrink.family_0926.king_support_fence_stabilizer.v1",
+    "candidate_type": "move_shape_role_refinement",
+    "source_monitor_script": "growth.monitor.stage7_plan_capsule_residual_family_split",
+    "source_terms": [
+      "plan_capsule_entry_confirmed",
+      "no_existing_forced_provider_mates_h40",
+      "legal_first_move_converts_h40",
+      "king_moves_toward_enemy",
+      "king_moves_toward_rook_support",
+      "fence_stable_after_move"
+    ],
+    "trigger_failure_classes": [
+      "conversion_failure_unclassified",
+      "legal_first_action_selection_gap"
+    ],
+    "target_skill": "krk.box_shrink",
+    "parent_skill": "krk.post_box_shrink_continuation",
+    "proposed_change": {
+      "kind": "visible_move_shape_contract",
+      "family_id": "state.0926f12f8e8f",
+      "converting_legal_first_move": "e4d3",
+      "converting_plies": 9,
+      "suggested_terms": [
+        "candidate_is_king_move",
+        "king_moves_toward_enemy",
+        "king_moves_toward_rook_support",
+        "fence_exists_after_move",
+        "fence_stable_after_move",
+        "cut_preserved_after_move",
+        "white_king_distance_to_enemy_decreases",
+        "white_king_distance_to_rook_decreases"
+      ],
+      "required_next_audit": "derive a non-hash king-support/fence-stabilizing post-box move-shape role and test default-off"
+    },
+    "evidence_artifacts": [
+      "reports/structural_candidates/stage7_state0926_legal_first_h40.json",
+      "reports/structural_candidates/stage7_plan_capsule_residual_forced_provider_h40.json"
+    ],
+    "governor_status": "growth_allowed",
+    "governor_metadata": {
+      "active_candidate_limit_ok": true,
+      "guardrails_required_before_promotion": true,
+      "default_runtime_behavior_changed": false
+    },
+    "topology_weight_diagnosis": {
+      "frozen_weight_probe_result": "existing forced providers do not mate at h40",
+      "forced_oracle_probe_result": "legal-first e4d3 mates at h40 under current continuation",
+      "diagnosis": "action_selection_gap"
+    },
+    "candidate_diagnostic_labels": [
+      "provider_capacity_missing_for_selected_providers",
+      "legal_first_action_selection_gap",
+      "trainable_candidate"
+    ],
+    "promotion_status": "proposed",
+    "causal_status": "non_causal",
+    "credit": 0.0
+  },
+  "move_shape_role": {
+    "causal_status": "non_causal",
+    "domain": "krk",
+    "entry_terms": [
+      "active_landmark_label.box_shrink",
+      "post_reply_state_reached",
+      "conversion_not_immediate",
+      "rook_safe",
+      "plan_capsule_entry_confirmed",
+      "no_mate_in_one_available"
+    ],
+    "guardrails": [
+      "no_runtime_default_change",
+      "no_direct_request",
+      "no_state_hash_exception",
+      "no_topology_mutation_during_gameplay",
+      "handoff_packets_stats_shadow_candidates_remain_non_causal"
+    ],
+    "handoff_exports": {
+      "krk.post_box_shrink_continuation": 1.0,
+      "krk.stage0_basin": 0.25
+    },
+    "move_shape_required_terms": [
+      "candidate_is_king_move",
+      "king_moves_toward_enemy",
+      "king_moves_toward_rook_support"
+    ],
+    "notes": [
+      "This role is a visible move-shape hypothesis, not a hidden legal-move selector.",
+      "Stage 7 0926 is the first test case; the role must generalize by visible terms.",
+      "Do not compile this role unless default-off and traceability tests are added first."
+    ],
+    "parent_capsule": "krk.post_box_shrink_continuation",
+    "post_move_required_terms": [
+      "rook_safe_after_move",
+      "box_area_not_increased_after_move",
+      "fence_exists_after_move",
+      "fence_stable_after_move",
+      "cut_preserved_after_move",
+      "white_king_distance_to_enemy_decreases",
+      "white_king_distance_to_rook_decreases"
+    ],
+    "promotion_status": "proposed",
+    "provider_scope": [],
+    "record_id": "move_shape_role.77e9c4ae5177",
+    "role_id": "krk.post_box.king_support_fence_stabilizer",
+    "schema_version": "move_shape_role_spec.v1",
+    "source_candidate_id": "cand.krk.box_shrink.family_0926.king_support_fence_stabilizer.v1",
+    "source_monitor_script": "growth.monitor.stage7_plan_capsule_residual_family_split",
+    "source_terms": [
+      "plan_capsule_entry_confirmed",
+      "legal_first_move_converts_h40",
+      "candidate_is_king_move",
+      "king_moves_toward_enemy",
+      "king_moves_toward_rook_support",
+      "fence_stable_after_move",
+      "cut_preserved_after_move"
+    ],
+    "target_skill": "krk.box_shrink",
+    "validation_protocol": {
+      "default_off_equivalence": true,
+      "guardrails_after_target_improves": [
+        "stage6_drive_to_edge",
+        "stage5_fence_established",
+        "stage4_wrong_tempo",
+        "stage1_backchain",
+        "m1_m4_preservation"
+      ],
+      "smoke_samples": 10,
+      "target_samples": 25,
+      "targeted_expected_move": "e4d3",
+      "targeted_expected_result": "mate",
+      "targeted_horizon": 40,
+      "targeted_state": "state.0926f12f8e8f"
+    },
+    "veto_terms": [
+      "mate_in_one_available",
+      "rook_unsafe_after_move",
+      "draw_or_stalemate_risk",
+      "box_area_increases_after_move",
+      "cut_or_fence_lost_without_repair"
+    ]
+  },
+  "evidence_artifacts": [
+    "reports/structural_candidates/stage7_state0926_legal_first_h40.json",
+    "reports/structural_candidates/stage7_plan_capsule_residual_forced_provider_h40.json",
+    "reports/structural_candidates/stage7_plan_capsule_residual_candidate_updates.json"
+  ],
+  "next_action": "compile_default_off_sandbox_only_if_runtime_can expose candidate move generation visibly"
+}

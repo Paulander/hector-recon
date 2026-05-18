@@ -396,6 +396,76 @@ class PlanCapsuleSpec:
         return cls(**dict(payload))
 
 
+@dataclass(frozen=True)
+class MoveShapeRoleSpec:
+    """Non-causal candidate for a visible move-shape role.
+
+    A move-shape role describes why a candidate move should be considered inside
+    an already-visible plan/skill context. It is not a move selector by itself;
+    it must remain evidence until compiled into explicit sandbox/promoted
+    topology or adapter metadata.
+    """
+
+    role_id: str
+    source_candidate_id: str
+    source_monitor_script: str
+    source_terms: List[str]
+    domain: str
+    target_skill: str
+    parent_capsule: Optional[str] = None
+    entry_terms: List[str] = field(default_factory=list)
+    move_shape_required_terms: List[str] = field(default_factory=list)
+    post_move_required_terms: List[str] = field(default_factory=list)
+    veto_terms: List[str] = field(default_factory=list)
+    provider_scope: List[str] = field(default_factory=list)
+    handoff_exports: Dict[str, float] = field(default_factory=dict)
+    validation_protocol: Dict[str, Any] = field(default_factory=dict)
+    guardrails: List[str] = field(default_factory=list)
+    notes: List[str] = field(default_factory=list)
+    causal_status: Literal["non_causal"] = "non_causal"
+    promotion_status: Literal[
+        "proposed",
+        "sandbox_ready",
+        "sandboxed",
+        "validated",
+        "promoted",
+        "quarantined",
+        "rejected",
+    ] = "proposed"
+    schema_version: str = "move_shape_role_spec.v1"
+    record_id: Optional[str] = None
+
+    def __post_init__(self) -> None:
+        if self.causal_status != "non_causal":
+            raise ValueError("MoveShapeRoleSpec must remain non_causal until compiled/promoted")
+        if not self.move_shape_required_terms:
+            raise ValueError("MoveShapeRoleSpec requires visible move-shape terms")
+        if not self.post_move_required_terms:
+            raise ValueError("MoveShapeRoleSpec requires visible post-move terms")
+        if self.record_id is None:
+            object.__setattr__(
+                self,
+                "record_id",
+                stable_record_id(
+                    "move_shape_role",
+                    self.role_id,
+                    self.source_candidate_id,
+                    self.target_skill,
+                    self.entry_terms,
+                    self.move_shape_required_terms,
+                    self.post_move_required_terms,
+                    self.veto_terms,
+                ),
+            )
+
+    def to_dict(self) -> Dict[str, Any]:
+        return _jsonable(asdict(self))
+
+    @classmethod
+    def from_dict(cls, payload: Mapping[str, Any]) -> "MoveShapeRoleSpec":
+        return cls(**dict(payload))
+
+
 def record_handoff_composition_event(
     episode_summary: Any,
     *,

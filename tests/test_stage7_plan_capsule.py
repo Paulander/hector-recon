@@ -341,3 +341,42 @@ def test_stage7_residual_repair_protocols_are_non_causal():
         == "sandbox_design_ready"
     )
     assert "do_not_promote_stage7" in payload["global_boundaries"]
+
+
+def test_stage7_0926_move_shape_role_export_is_non_causal():
+    script = ROOT / "scripts" / "export_stage7_0926_move_shape_role.py"
+    spec = importlib.util.spec_from_file_location("export_stage7_0926_move_shape_role", script)
+    assert spec is not None
+    exporter = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(exporter)
+
+    candidate_payload = {
+        "structural_candidates": [
+            {
+                "schema_version": "structural_candidate.v1",
+                "candidate_id": "cand.krk.box_shrink.family_0926.king_support_fence_stabilizer.v1",
+                "candidate_type": "move_shape_role_refinement",
+                "source_monitor_script": "growth.monitor.stage7_plan_capsule_residual_family_split",
+                "source_terms": ["legal_first_move_converts_h40"],
+                "trigger_failure_classes": ["legal_first_action_selection_gap"],
+                "target_skill": "krk.box_shrink",
+                "parent_skill": "krk.post_box_shrink_continuation",
+                "proposed_change": {"kind": "visible_move_shape_contract"},
+                "promotion_status": "proposed",
+                "causal_status": "non_causal",
+                "credit": 0.0,
+            }
+        ]
+    }
+
+    payload = exporter.build_role_spec(candidate_payload)
+
+    assert payload["schema_version"] == "stage7_0926_move_shape_role_export.v1"
+    assert payload["causal_status"] == "non_causal"
+    role = payload["move_shape_role"]
+    assert role["schema_version"] == "move_shape_role_spec.v1"
+    assert role["role_id"] == "krk.post_box.king_support_fence_stabilizer"
+    assert role["causal_status"] == "non_causal"
+    assert "candidate_is_king_move" in role["move_shape_required_terms"]
+    assert "no_state_hash_exception" in role["guardrails"]
