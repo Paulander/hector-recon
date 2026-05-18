@@ -8077,3 +8077,71 @@ cand.krk.box_shrink.post_box_continuation_capsule.v1:
     expand offline DTM seed and train ranked imitation before any additional
     runtime repair
 ```
+
+## Stage 7 expanded seed and DTM-margin ranking probe
+
+I added an offline DAgger-style seed expansion pass. It collects White-to-move
+states from failed capsule rollout traces, queries the offline KRK DTM oracle,
+and emits new non-causal DTM trajectories. This remains training evidence only;
+runtime still has no tablebase/DTM lookup.
+
+Artifacts:
+
+```text
+reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_expanded_h40.json
+reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_expanded_h40.jsonl
+reports/structural_candidates/stage7_post_box_overlay_learner_expanded_ranked.pkl
+reports/structural_candidates/stage7_post_box_overlay_learner_expanded_ranked_training.json
+```
+
+Expanded seed:
+
+```text
+base trajectories: 2
+expanded trajectories: 16
+total trajectories: 18
+white training steps: 195
+```
+
+Candidate-local training used `reward_mode = dtm_margin`, so winning
+nonoptimal moves are penalized by DTM gap rather than treated as a single
+flat class.
+
+Targeted h40 replay:
+
+```text
+reports/structural_candidates/stage7_expanded_ranked_capsule_phase1_replay_h40.json
+reports/structural_candidates/stage7_expanded_ranked_capsule_phase1_replay_h40.md
+
+result_counts:
+  max_plies: 2
+
+selected_skill_counts:
+  krk.post_box_shrink_continuation: 2
+
+selected moves:
+  2cc state -> a6a8
+  bace state -> d2e2
+```
+
+Fidelity audit:
+
+```text
+reports/structural_candidates/stage7_expanded_ranked_capsule_trajectory_fidelity_audit.json
+reports/structural_candidates/stage7_expanded_ranked_capsule_trajectory_fidelity_audit.md
+
+teacher top-1: 0.200
+DTM-positive top-1: 0.360
+DTM-positive top-3: 0.800
+diagnosis:
+  trajectory_ranking_and_closed_loop_gap
+```
+
+Interpretation:
+
+```text
+Expanded offline supervision and DTM-margin rewards improved teacher/positive
+top-1 slightly, but did not solve the first residual family or closed-loop
+conversion. The bottleneck is still the ranking/model-expression path, not
+runtime ownership or a missing broad support bonus.
+```

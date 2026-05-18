@@ -85,6 +85,8 @@ def _transitions(
     positive_reward: float,
     winning_nonoptimal_negative_reward: float,
     non_winning_negative_reward: float,
+    reward_mode: str,
+    dtm_gap_scale: float,
 ) -> list[TransitionData]:
     transitions: list[TransitionData] = []
     for trajectory in seed.get("trajectories") or []:
@@ -94,6 +96,12 @@ def _transitions(
             if not isinstance(step, dict):
                 continue
             fen = str(step.get("fen") or "")
+            child_dtms = [
+                int(item.get("child_dtm", -1) or -1)
+                for item in step.get("legal_move_labels") or []
+                if isinstance(item, dict) and int(item.get("child_dtm", -1) or -1) >= 0
+            ]
+            best_child_dtm = min(child_dtms) if child_dtms else -1
             for item in step.get("legal_move_labels") or []:
                 if not isinstance(item, dict) or not item.get("move"):
                     continue
@@ -101,9 +109,19 @@ def _transitions(
                 target_class = str(item.get("target_class") or "")
                 if label == 0 and target_class == "winning_nonoptimal_move" and not include_nonoptimal_winning_negatives:
                     continue
-                reward = float(positive_reward) if label == 1 else float(winning_nonoptimal_negative_reward)
-                if target_class == "non_winning_move":
+                if label == 1:
+                    reward = float(positive_reward)
+                elif target_class == "non_winning_move":
                     reward = float(non_winning_negative_reward)
+                elif reward_mode == "dtm_margin" and best_child_dtm >= 0:
+                    child_dtm = int(item.get("child_dtm", best_child_dtm) or best_child_dtm)
+                    dtm_gap = max(1, child_dtm - best_child_dtm)
+                    reward = min(
+                        -abs(float(dtm_gap_scale)) * float(dtm_gap),
+                        float(winning_nonoptimal_negative_reward),
+                    )
+                else:
+                    reward = float(winning_nonoptimal_negative_reward)
                 transition = _transition_for_move(fen, str(item["move"]), label, reward)
                 if transition is not None:
                     transitions.append(transition)
@@ -126,6 +144,8 @@ def train_overlay_learner(
     positive_reward: float = 1.0,
     winning_nonoptimal_negative_reward: float = -0.35,
     non_winning_negative_reward: float = -1.0,
+    reward_mode: str = "binary",
+    dtm_gap_scale: float = 0.25,
 ) -> dict[str, Any]:
     seed = _load_json(trajectory_seed_path)
     learner = BaselineLearner(
@@ -143,6 +163,8 @@ def train_overlay_learner(
         positive_reward=positive_reward,
         winning_nonoptimal_negative_reward=winning_nonoptimal_negative_reward,
         non_winning_negative_reward=non_winning_negative_reward,
+        reward_mode=reward_mode,
+        dtm_gap_scale=dtm_gap_scale,
     )
     if not transitions:
         raise ValueError("trajectory seed produced no transitions")
@@ -244,6 +266,8 @@ def train_overlay_learner(
             "winning_nonoptimal_negative_reward": float(winning_nonoptimal_negative_reward),
             "non_winning_negative_reward": float(non_winning_negative_reward),
             "include_nonoptimal_winning_negatives": bool(include_nonoptimal_winning_negatives),
+            "reward_mode": str(reward_mode),
+            "dtm_gap_scale": float(dtm_gap_scale),
         },
         "sensor_count": len(learner.sensors),
         "overlay_actuator_count": len(overlay_actuators),
@@ -279,6 +303,8 @@ def main() -> int:
     parser.add_argument("--positive-reward", type=float, default=1.0)
     parser.add_argument("--winning-nonoptimal-negative-reward", type=float, default=-0.35)
     parser.add_argument("--non-winning-negative-reward", type=float, default=-1.0)
+    parser.add_argument("--reward-mode", choices=["binary", "dtm_margin"], default="binary")
+    parser.add_argument("--dtm-gap-scale", type=float, default=0.25)
     parser.add_argument("--no-json-stdout", action="store_true")
     args = parser.parse_args()
 
@@ -296,6 +322,8 @@ def main() -> int:
         positive_reward=args.positive_reward,
         winning_nonoptimal_negative_reward=args.winning_nonoptimal_negative_reward,
         non_winning_negative_reward=args.non_winning_negative_reward,
+        reward_mode=args.reward_mode,
+        dtm_gap_scale=args.dtm_gap_scale,
     )
     if not args.no_json_stdout:
         print(json.dumps(summary, indent=2))

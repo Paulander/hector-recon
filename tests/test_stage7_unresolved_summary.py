@@ -57,6 +57,24 @@ assert _trajectory_provider_spec.loader is not None
 _trajectory_provider = importlib.util.module_from_spec(_trajectory_provider_spec)
 _trajectory_provider_spec.loader.exec_module(_trajectory_provider)
 
+_trajectory_expansion_spec = importlib.util.spec_from_file_location(
+    "expand_stage7_post_box_dtm_trajectory_seed",
+    Path(__file__).resolve().parents[1] / "scripts" / "expand_stage7_post_box_dtm_trajectory_seed.py",
+)
+assert _trajectory_expansion_spec is not None
+assert _trajectory_expansion_spec.loader is not None
+_trajectory_expansion = importlib.util.module_from_spec(_trajectory_expansion_spec)
+_trajectory_expansion_spec.loader.exec_module(_trajectory_expansion)
+
+_overlay_learner_spec = importlib.util.spec_from_file_location(
+    "train_stage7_post_box_overlay_learner",
+    Path(__file__).resolve().parents[1] / "scripts" / "train_stage7_post_box_overlay_learner.py",
+)
+assert _overlay_learner_spec is not None
+assert _overlay_learner_spec.loader is not None
+_overlay_learner = importlib.util.module_from_spec(_overlay_learner_spec)
+_overlay_learner_spec.loader.exec_module(_overlay_learner)
+
 _learnable_capsule_provider_spec = importlib.util.spec_from_file_location(
     "plan_stage7_post_box_learnable_capsule_provider",
     Path(__file__).resolve().parents[1] / "scripts" / "plan_stage7_post_box_learnable_capsule_provider.py",
@@ -364,6 +382,88 @@ def test_stage7_post_box_trajectory_provider_model_is_sandbox_non_promoted(tmp_p
     assert "dtm_oracle_move_selection" in payload["runtime_forbidden_terms"]
     assert payload["positive_count"] == 1
     assert payload["negative_count"] == 1
+
+
+def test_stage7_dagger_seed_expansion_collects_failed_rollout_white_fens(monkeypatch):
+    monkeypatch.setattr(_trajectory_expansion, "build_krk_dtm", lambda: (None, {}, []))
+    monkeypatch.setattr(_trajectory_expansion, "_dtm_for_fen", lambda fen, index, dtm: 27)
+    payloads = [
+        {
+            "schema_version": "stage7_learnable_capsule_provider_replay.v1",
+            "records": [
+                {
+                    "result": "max_plies",
+                    "trace": [
+                        {
+                            "ply": 0,
+                            "turn": "white",
+                            "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+                            "move": "a6a8",
+                        },
+                        {
+                            "ply": 1,
+                            "turn": "black",
+                            "fen": "R7/8/8/8/2k5/8/8/3K4 b - - 3 2",
+                            "move": "c4c3",
+                        },
+                    ],
+                }
+            ],
+        }
+    ]
+
+    rows = _trajectory_expansion.collect_rollout_fens(
+        replay_payloads=payloads,
+        exclude_fens=set(),
+        max_new_starts=4,
+        max_start_dtm=40,
+    )
+
+    assert rows[0]["fen"] == "8/8/R7/8/2k5/8/8/3K4 w - - 2 2"
+    assert rows[0]["source_result"] == "max_plies"
+    assert rows[0]["state_dtm"] > 0
+
+
+def test_stage7_overlay_learner_dtm_margin_reward_penalizes_dtm_gap():
+    seed = {
+        "trajectories": [
+            {
+                "white_training_steps": [
+                    {
+                        "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+                        "legal_move_labels": [
+                            {
+                                "move": "a6a5",
+                                "label": 1,
+                                "target_class": "optimal_dtm_move",
+                                "child_dtm": 26,
+                            },
+                            {
+                                "move": "a6a8",
+                                "label": 0,
+                                "target_class": "winning_nonoptimal_move",
+                                "child_dtm": 30,
+                            },
+                        ],
+                    }
+                ]
+            }
+        ]
+    }
+
+    rows = _overlay_learner._transitions(
+        seed,
+        include_nonoptimal_winning_negatives=True,
+        positive_reward=1.0,
+        winning_nonoptimal_negative_reward=-0.35,
+        non_winning_negative_reward=-1.0,
+        reward_mode="dtm_margin",
+        dtm_gap_scale=0.25,
+    )
+    rewards = {item.action: item.reward for item in rows}
+
+    assert rewards["a6a5"] == 1.0
+    assert rewards["a6a8"] == -1.0
 
 
 def test_stage7_post_box_learnable_capsule_provider_plan_is_bounded_and_default_off(tmp_path):

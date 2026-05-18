@@ -1,0 +1,2904 @@
+{
+  "schema_version": "stage7_capsule_trajectory_fidelity_audit.v1",
+  "causal_status": "non_causal",
+  "runtime_behavior_changed": false,
+  "topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_expanded_ranked_capsule_sandbox.json",
+  "trajectory_seed": "reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_h40.json",
+  "replay_sources": [
+    "reports/structural_candidates/stage7_expanded_ranked_capsule_phase1_replay_h40.json"
+  ],
+  "learned_bonus": 0.01,
+  "teacher_forced_accuracy": {
+    "total_teacher_forced_states": 25,
+    "teacher_move_top1_rate": 0.2,
+    "dtm_positive_top1_rate": 0.36,
+    "dtm_optimal_top1_rate": 0.36,
+    "teacher_move_top3_rate": 0.6,
+    "dtm_positive_top3_rate": 0.8,
+    "dtm_optimal_top3_rate": 0.8,
+    "positive_rank_mean": 1.6,
+    "optimal_rank_mean": 1.6,
+    "positive_rank_distribution": {
+      "2": 10,
+      "1": 9,
+      "3": 1
+    },
+    "optimal_rank_distribution": {
+      "2": 10,
+      "1": 9,
+      "3": 1
+    },
+    "selected_non_positive_count": 16,
+    "selected_non_positive_rate": 0.64,
+    "first_teacher_miss": {
+      "trajectory_index": 0,
+      "step_index": 0,
+      "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "selected_move": "a6a8",
+      "teacher_move": "a6a5",
+      "positive_moves": [
+        "a6a5",
+        "a6d6",
+        "d1d2"
+      ],
+      "optimal_moves": [
+        "a6a5",
+        "a6d6",
+        "d1d2"
+      ]
+    },
+    "first_positive_miss": {
+      "trajectory_index": 0,
+      "step_index": 0,
+      "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "selected_move": "a6a8",
+      "teacher_move": "a6a5",
+      "positive_moves": [
+        "a6a5",
+        "a6d6",
+        "d1d2"
+      ],
+      "optimal_moves": [
+        "a6a5",
+        "a6d6",
+        "d1d2"
+      ]
+    },
+    "first_optimal_miss": {
+      "trajectory_index": 0,
+      "step_index": 0,
+      "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "selected_move": "a6a8",
+      "teacher_move": "a6a5",
+      "positive_moves": [
+        "a6a5",
+        "a6d6",
+        "d1d2"
+      ],
+      "optimal_moves": [
+        "a6a5",
+        "a6d6",
+        "d1d2"
+      ]
+    }
+  },
+  "teacher_forced_records": [
+    {
+      "trajectory_index": 0,
+      "step_index": 0,
+      "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "teacher_move": "a6a5",
+      "teacher_child_dtm": 26,
+      "positive_moves": [
+        "a6a5",
+        "a6d6",
+        "d1d2"
+      ],
+      "optimal_moves": [
+        "a6a5",
+        "a6d6",
+        "d1d2"
+      ],
+      "selected_move": "a6a8",
+      "selected_score": 1.418431847000122,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "winning_nonoptimal_move",
+      "selected_child_dtm": 28,
+      "selected_label": 0,
+      "teacher_move_rank": null,
+      "positive_move_rank": null,
+      "optimal_move_rank": null,
+      "teacher_move_score": null,
+      "positive_move_score": null,
+      "optimal_move_score": null,
+      "selected_minus_teacher_score": null,
+      "selected_minus_positive_score": null,
+      "selected_minus_optimal_score": null,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_safe_after_candidate",
+          "rook_to_edge_file",
+          "rook_to_edge_rank",
+          "rook_transfer_vertical"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_split_file_side_after_move",
+          "white_king_and_rook_split_rank_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "winning_nonoptimal_move",
+        "label": 0,
+        "child_dtm": 28
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "rook_destination_not_adjacent_enemy",
+          "rook_safe_after_candidate",
+          "rook_to_edge_file",
+          "rook_transfer_vertical"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_decreases_after_move",
+          "box_area_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_split_file_side_after_move",
+          "white_king_and_rook_split_rank_side_after_move",
+          "white_king_distance_to_rook_decreases"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 26
+      },
+      "teacher_in_top_k": false,
+      "positive_in_top_k": false,
+      "optimal_in_top_k": false,
+      "top_moves": [
+        {
+          "move": "a6a8",
+          "score": 1.418431847000122,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 28
+        },
+        {
+          "move": "a6f6",
+          "score": 0.020982536690394897,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 30
+        },
+        {
+          "move": "a6h6",
+          "score": 0.01880987303654353,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 28
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 0,
+      "step_index": 1,
+      "fen": "8/8/8/R7/1k6/8/8/3K4 w - - 4 3",
+      "teacher_move": "a5f5",
+      "teacher_child_dtm": 24,
+      "positive_moves": [
+        "a5f5",
+        "a5g5",
+        "a5h5"
+      ],
+      "optimal_moves": [
+        "a5f5",
+        "a5g5",
+        "a5h5"
+      ],
+      "selected_move": "a5a8",
+      "selected_score": 8.783452956581115,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "winning_nonoptimal_move",
+      "selected_child_dtm": 28,
+      "selected_label": 0,
+      "teacher_move_rank": null,
+      "positive_move_rank": 2,
+      "optimal_move_rank": 2,
+      "teacher_move_score": null,
+      "positive_move_score": 0.13012893722057345,
+      "optimal_move_score": 0.13012893722057345,
+      "selected_minus_teacher_score": null,
+      "selected_minus_positive_score": 8.653324019360541,
+      "selected_minus_optimal_score": 8.653324019360541,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_safe_after_candidate",
+          "rook_to_edge_file",
+          "rook_to_edge_rank",
+          "rook_transfer_vertical"
+        ],
+        "post_move_terms": [
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_split_file_side_after_move",
+          "white_king_and_rook_split_rank_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "winning_nonoptimal_move",
+        "label": 0,
+        "child_dtm": 28
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_lateral_transfer",
+          "rook_safe_after_candidate"
+        ],
+        "post_move_terms": [
+          "box_area_decreases_after_move",
+          "box_area_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_and_rook_split_rank_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 24
+      },
+      "teacher_in_top_k": false,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "a5a8",
+          "score": 8.783452956581115,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 28
+        },
+        {
+          "move": "a5h5",
+          "score": 0.13012893722057345,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 24
+        },
+        {
+          "move": "a5e5",
+          "score": 0.08291364901016154,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 26
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 0,
+      "step_index": 2,
+      "fen": "8/8/8/5R2/2k5/8/8/3K4 w - - 6 4",
+      "teacher_move": "d1e2",
+      "teacher_child_dtm": 22,
+      "positive_moves": [
+        "d1e2"
+      ],
+      "optimal_moves": [
+        "d1e2"
+      ],
+      "selected_move": "f5f8",
+      "selected_score": 13.272099940681457,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "winning_nonoptimal_move",
+      "selected_child_dtm": 30,
+      "selected_label": 0,
+      "teacher_move_rank": null,
+      "positive_move_rank": null,
+      "optimal_move_rank": null,
+      "teacher_move_score": null,
+      "positive_move_score": null,
+      "optimal_move_score": null,
+      "selected_minus_teacher_score": null,
+      "selected_minus_positive_score": null,
+      "selected_minus_optimal_score": null,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_safe_after_candidate",
+          "rook_to_edge_rank",
+          "rook_transfer_vertical"
+        ],
+        "post_move_terms": [
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_and_rook_split_rank_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "winning_nonoptimal_move",
+        "label": 0,
+        "child_dtm": 30
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_king_move",
+          "king_moves_toward_enemy",
+          "king_moves_toward_rook_support"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_and_rook_split_rank_side_after_move",
+          "white_king_distance_to_enemy_decreases",
+          "white_king_distance_to_rook_decreases"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 22
+      },
+      "teacher_in_top_k": false,
+      "positive_in_top_k": false,
+      "optimal_in_top_k": false,
+      "top_moves": [
+        {
+          "move": "f5f8",
+          "score": 13.272099940681457,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 30
+        },
+        {
+          "move": "d1e1",
+          "score": 0.02537534387604478,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 26
+        },
+        {
+          "move": "f5h5",
+          "score": 0.0247134538213412,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 26
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 0,
+      "step_index": 3,
+      "fen": "8/8/8/5R2/3k4/8/4K3/8 w - - 8 5",
+      "teacher_move": "e2f3",
+      "teacher_child_dtm": 20,
+      "positive_moves": [
+        "e2f3"
+      ],
+      "optimal_moves": [
+        "e2f3"
+      ],
+      "selected_move": "f5f8",
+      "selected_score": 17.17951521148682,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "winning_nonoptimal_move",
+      "selected_child_dtm": 26,
+      "selected_label": 0,
+      "teacher_move_rank": 2,
+      "positive_move_rank": 2,
+      "optimal_move_rank": 2,
+      "teacher_move_score": 0.1063240895394236,
+      "positive_move_score": 0.1063240895394236,
+      "optimal_move_score": 0.1063240895394236,
+      "selected_minus_teacher_score": 17.073191121947396,
+      "selected_minus_positive_score": 17.073191121947396,
+      "selected_minus_optimal_score": 17.073191121947396,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_safe_after_candidate",
+          "rook_to_edge_rank",
+          "rook_transfer_vertical"
+        ],
+        "post_move_terms": [
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_and_rook_split_rank_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "winning_nonoptimal_move",
+        "label": 0,
+        "child_dtm": 26
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_king_move",
+          "king_moves_toward_rook_support"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_and_rook_split_rank_side_after_move",
+          "white_king_distance_to_rook_decreases"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 20
+      },
+      "teacher_in_top_k": true,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "f5f8",
+          "score": 17.17951521148682,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 26
+        },
+        {
+          "move": "e2f3",
+          "score": 0.1063240895394236,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 20
+        },
+        {
+          "move": "f5a5",
+          "score": 0.0198524239992102,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 24
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 0,
+      "step_index": 4,
+      "fen": "8/8/8/5R2/8/3k1K2/8/8 w - - 10 6",
+      "teacher_move": "f5f4",
+      "teacher_child_dtm": 18,
+      "positive_moves": [
+        "f5f4"
+      ],
+      "optimal_moves": [
+        "f5f4"
+      ],
+      "selected_move": "f5a5",
+      "selected_score": 30.921491234493256,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "winning_nonoptimal_move",
+      "selected_child_dtm": 22,
+      "selected_label": 0,
+      "teacher_move_rank": 2,
+      "positive_move_rank": 2,
+      "optimal_move_rank": 2,
+      "teacher_move_score": 0.026808861819723626,
+      "positive_move_score": 0.026808861819723626,
+      "optimal_move_score": 0.026808861819723626,
+      "selected_minus_teacher_score": 30.894682372673532,
+      "selected_minus_positive_score": 30.894682372673532,
+      "selected_minus_optimal_score": 30.894682372673532,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_lateral_transfer",
+          "rook_safe_after_candidate",
+          "rook_to_edge_file"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_split_file_side_after_move",
+          "white_king_rank_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "winning_nonoptimal_move",
+        "label": 0,
+        "child_dtm": 22
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "rook_destination_not_adjacent_enemy",
+          "rook_safe_after_candidate",
+          "rook_transfer_vertical"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_decreases_after_move",
+          "box_area_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_distance_to_rook_decreases",
+          "white_king_rank_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 18
+      },
+      "teacher_in_top_k": true,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "f5a5",
+          "score": 30.921491234493256,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 22
+        },
+        {
+          "move": "f5f4",
+          "score": 0.026808861819723626,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 18
+        },
+        {
+          "move": "f5f8",
+          "score": -0.969948434829712,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 24
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 0,
+      "step_index": 5,
+      "fen": "8/8/8/8/5R2/5K2/3k4/8 w - - 12 7",
+      "teacher_move": "f3e4",
+      "teacher_child_dtm": 16,
+      "positive_moves": [
+        "f3e4",
+        "f4d4"
+      ],
+      "optimal_moves": [
+        "f3e4",
+        "f4d4"
+      ],
+      "selected_move": "f4a4",
+      "selected_score": 54.85361739864349,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "winning_nonoptimal_move",
+      "selected_child_dtm": 18,
+      "selected_label": 0,
+      "teacher_move_rank": null,
+      "positive_move_rank": null,
+      "optimal_move_rank": null,
+      "teacher_move_score": null,
+      "positive_move_score": null,
+      "optimal_move_score": null,
+      "selected_minus_teacher_score": null,
+      "selected_minus_positive_score": null,
+      "selected_minus_optimal_score": null,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_lateral_transfer",
+          "rook_safe_after_candidate",
+          "rook_to_edge_file"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_rank_side_after_move",
+          "white_king_and_rook_split_file_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "winning_nonoptimal_move",
+        "label": 0,
+        "child_dtm": 18
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_king_move"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_and_rook_same_rank_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 16
+      },
+      "teacher_in_top_k": false,
+      "positive_in_top_k": false,
+      "optimal_in_top_k": false,
+      "top_moves": [
+        {
+          "move": "f4a4",
+          "score": 54.85361739864349,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 18
+        },
+        {
+          "move": "f4f8",
+          "score": -0.020900628665187056,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 20
+        },
+        {
+          "move": "f4g4",
+          "score": -0.04069124893546104,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 18
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 0,
+      "step_index": 6,
+      "fen": "8/8/8/8/4KR2/8/4k3/8 w - - 14 8",
+      "teacher_move": "e4d4",
+      "teacher_child_dtm": 14,
+      "positive_moves": [
+        "e4d4"
+      ],
+      "optimal_moves": [
+        "e4d4"
+      ],
+      "selected_move": "f4f8",
+      "selected_score": 39.11586031217575,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "winning_nonoptimal_move",
+      "selected_child_dtm": 16,
+      "selected_label": 0,
+      "teacher_move_rank": 2,
+      "positive_move_rank": 2,
+      "optimal_move_rank": 2,
+      "teacher_move_score": 0.09799299688832049,
+      "positive_move_score": 0.09799299688832049,
+      "optimal_move_score": 0.09799299688832049,
+      "selected_minus_teacher_score": 39.017867315287425,
+      "selected_minus_positive_score": 39.017867315287425,
+      "selected_minus_optimal_score": 39.017867315287425,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_safe_after_candidate",
+          "rook_to_edge_rank",
+          "rook_transfer_vertical"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_rank_side_after_move",
+          "white_king_file_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "winning_nonoptimal_move",
+        "label": 0,
+        "child_dtm": 16
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_king_move"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_rank_side_after_move",
+          "white_king_and_rook_split_file_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 14
+      },
+      "teacher_in_top_k": true,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "f4f8",
+          "score": 39.11586031217575,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 16
+        },
+        {
+          "move": "e4d4",
+          "score": 0.09799299688832049,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 14
+        },
+        {
+          "move": "f4f3",
+          "score": 0.02680859562541854,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 18
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 0,
+      "step_index": 7,
+      "fen": "8/8/8/8/3K1R2/8/3k4/8 w - - 16 9",
+      "teacher_move": "f4f2",
+      "teacher_child_dtm": 12,
+      "positive_moves": [
+        "f4f2"
+      ],
+      "optimal_moves": [
+        "f4f2"
+      ],
+      "selected_move": "f4h4",
+      "selected_score": 17.519818990421296,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "winning_nonoptimal_move",
+      "selected_child_dtm": 16,
+      "selected_label": 0,
+      "teacher_move_rank": null,
+      "positive_move_rank": null,
+      "optimal_move_rank": null,
+      "teacher_move_score": null,
+      "positive_move_score": null,
+      "optimal_move_score": null,
+      "selected_minus_teacher_score": null,
+      "selected_minus_positive_score": null,
+      "selected_minus_optimal_score": null,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_lateral_transfer",
+          "rook_safe_after_candidate",
+          "rook_to_edge_file"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_rank_side_after_move",
+          "white_king_file_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "winning_nonoptimal_move",
+        "label": 0,
+        "child_dtm": 16
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_not_adjacent_enemy",
+          "rook_safe_after_candidate",
+          "rook_to_checking_line",
+          "rook_transfer_vertical",
+          "safe_check_created"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "checking_line_created",
+          "cut_created_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "fence_stable_after_move",
+          "rook_safe_after_move",
+          "white_king_file_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 12
+      },
+      "teacher_in_top_k": false,
+      "positive_in_top_k": false,
+      "optimal_in_top_k": false,
+      "top_moves": [
+        {
+          "move": "f4h4",
+          "score": 17.519818990421296,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 16
+        },
+        {
+          "move": "f4f8",
+          "score": 0.0723264967410782,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 16
+        },
+        {
+          "move": "f4e4",
+          "score": 0.03195547844953835,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 16
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 0,
+      "step_index": 8,
+      "fen": "8/8/8/8/3K4/8/5R2/4k3 w - - 18 10",
+      "teacher_move": "d4e3",
+      "teacher_child_dtm": 10,
+      "positive_moves": [
+        "d4e3",
+        "f2h2"
+      ],
+      "optimal_moves": [
+        "d4e3",
+        "f2h2"
+      ],
+      "selected_move": "f2h2",
+      "selected_score": 32.06028267612457,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "optimal_dtm_move",
+      "selected_child_dtm": 10,
+      "selected_label": 1,
+      "teacher_move_rank": 2,
+      "positive_move_rank": 1,
+      "optimal_move_rank": 1,
+      "teacher_move_score": 0.17369191264361136,
+      "positive_move_score": 32.06028267612457,
+      "optimal_move_score": 32.06028267612457,
+      "selected_minus_teacher_score": 31.88659076348096,
+      "selected_minus_positive_score": 0.0,
+      "selected_minus_optimal_score": 0.0,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_lateral_transfer",
+          "rook_safe_after_candidate",
+          "rook_to_edge_file"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "cut_created_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_rank_side_after_move",
+          "white_king_and_rook_split_file_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 10
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_king_move",
+          "king_moves_toward_enemy",
+          "king_moves_toward_rook_support"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_not_increased_after_move",
+          "cut_created_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "fence_stable_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_rank_side_after_move",
+          "white_king_distance_to_enemy_decreases",
+          "white_king_distance_to_rook_decreases",
+          "white_king_file_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 10
+      },
+      "teacher_in_top_k": true,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "f2h2",
+          "score": 32.06028267612457,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 10
+        },
+        {
+          "move": "d4e3",
+          "score": 0.17369191264361136,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 10
+        },
+        {
+          "move": "f2a2",
+          "score": 0.17261241489350795,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 12
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 0,
+      "step_index": 9,
+      "fen": "8/8/8/8/8/4K3/5R2/3k4 w - - 20 11",
+      "teacher_move": "e3d3",
+      "teacher_child_dtm": 8,
+      "positive_moves": [
+        "e3d3",
+        "f2e2",
+        "f2g2",
+        "f2h2"
+      ],
+      "optimal_moves": [
+        "e3d3",
+        "f2e2",
+        "f2g2",
+        "f2h2"
+      ],
+      "selected_move": "f2a2",
+      "selected_score": 59.885259716415405,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "winning_nonoptimal_move",
+      "selected_child_dtm": 10,
+      "selected_label": 0,
+      "teacher_move_rank": null,
+      "positive_move_rank": null,
+      "optimal_move_rank": null,
+      "teacher_move_score": null,
+      "positive_move_score": null,
+      "optimal_move_score": null,
+      "selected_minus_teacher_score": null,
+      "selected_minus_positive_score": null,
+      "selected_minus_optimal_score": null,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_lateral_transfer",
+          "rook_safe_after_candidate",
+          "rook_to_edge_file"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "cut_preserved_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "fence_stable_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_rank_side_after_move",
+          "white_king_and_rook_split_file_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "winning_nonoptimal_move",
+        "label": 0,
+        "child_dtm": 10
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_king_move"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_not_increased_after_move",
+          "cut_preserved_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "fence_stable_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_rank_side_after_move",
+          "white_king_file_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 8
+      },
+      "teacher_in_top_k": false,
+      "positive_in_top_k": false,
+      "optimal_in_top_k": false,
+      "top_moves": [
+        {
+          "move": "f2a2",
+          "score": 59.885259716415405,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 10
+        },
+        {
+          "move": "e3f3",
+          "score": 0.030858751064538954,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 12
+        },
+        {
+          "move": "f2d2",
+          "score": 0.029734336781501773,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 10
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 0,
+      "step_index": 10,
+      "fen": "8/8/8/8/8/3K4/5R2/2k5 w - - 22 12",
+      "teacher_move": "f2e2",
+      "teacher_child_dtm": 6,
+      "positive_moves": [
+        "f2e2",
+        "f2g2",
+        "f2h2"
+      ],
+      "optimal_moves": [
+        "f2e2",
+        "f2g2",
+        "f2h2"
+      ],
+      "selected_move": "f2h2",
+      "selected_score": 30.671366302871707,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "optimal_dtm_move",
+      "selected_child_dtm": 6,
+      "selected_label": 1,
+      "teacher_move_rank": null,
+      "positive_move_rank": 1,
+      "optimal_move_rank": 1,
+      "teacher_move_score": null,
+      "positive_move_score": 30.671366302871707,
+      "optimal_move_score": 30.671366302871707,
+      "selected_minus_teacher_score": null,
+      "selected_minus_positive_score": 0.0,
+      "selected_minus_optimal_score": 0.0,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_lateral_transfer",
+          "rook_safe_after_candidate",
+          "rook_to_edge_file"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "cut_preserved_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "fence_stable_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_and_rook_same_rank_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 6
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "rook_destination_not_adjacent_enemy",
+          "rook_lateral_transfer",
+          "rook_safe_after_candidate"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_decreases_after_move",
+          "box_area_not_increased_after_move",
+          "cut_preserved_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "fence_stable_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_and_rook_same_rank_side_after_move",
+          "white_king_distance_to_rook_decreases"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 6
+      },
+      "teacher_in_top_k": false,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "f2h2",
+          "score": 30.671366302871707,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 6
+        },
+        {
+          "move": "d3c3",
+          "score": 0.12973979911104921,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 10
+        },
+        {
+          "move": "d3e3",
+          "score": 0.05468073698282237,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 10
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 0,
+      "step_index": 11,
+      "fen": "8/8/8/8/8/3K4/4R3/3k4 w - - 24 13",
+      "teacher_move": "e2e4",
+      "teacher_child_dtm": 4,
+      "positive_moves": [
+        "e2e4",
+        "e2e5",
+        "e2e6",
+        "e2e7",
+        "e2e8"
+      ],
+      "optimal_moves": [
+        "e2e4",
+        "e2e5",
+        "e2e6",
+        "e2e7",
+        "e2e8"
+      ],
+      "selected_move": "e2e8",
+      "selected_score": 61.54068335790634,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "optimal_dtm_move",
+      "selected_child_dtm": 4,
+      "selected_label": 1,
+      "teacher_move_rank": 3,
+      "positive_move_rank": 1,
+      "optimal_move_rank": 1,
+      "teacher_move_score": 0.03085918579548602,
+      "positive_move_score": 61.54068335790634,
+      "optimal_move_score": 61.54068335790634,
+      "selected_minus_teacher_score": 61.509824172110854,
+      "selected_minus_positive_score": 0.0,
+      "selected_minus_optimal_score": 0.0,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_safe_after_candidate",
+          "rook_to_edge_rank",
+          "rook_transfer_vertical"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "cut_preserved_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "fence_stable_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_rank_side_after_move",
+          "white_king_file_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 4
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_safe_after_candidate",
+          "rook_transfer_vertical"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "cut_preserved_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "fence_stable_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_rank_side_after_move",
+          "white_king_file_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 4
+      },
+      "teacher_in_top_k": true,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "e2e8",
+          "score": 61.54068335790634,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 4
+        },
+        {
+          "move": "e2h2",
+          "score": 0.2638604473163295,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 10
+        },
+        {
+          "move": "e2e4",
+          "score": 0.03085918579548602,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 4
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 0,
+      "step_index": 12,
+      "fen": "8/8/8/8/4R3/3K4/8/2k5 w - - 26 14",
+      "teacher_move": "e4b4",
+      "teacher_child_dtm": 2,
+      "positive_moves": [
+        "e4b4"
+      ],
+      "optimal_moves": [
+        "e4b4"
+      ],
+      "selected_move": "e4b4",
+      "selected_score": 87.00602650513649,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "optimal_dtm_move",
+      "selected_child_dtm": 2,
+      "selected_label": 1,
+      "teacher_move_rank": 1,
+      "positive_move_rank": 1,
+      "optimal_move_rank": 1,
+      "teacher_move_score": 87.00602650513649,
+      "positive_move_score": 87.00602650513649,
+      "optimal_move_score": 87.00602650513649,
+      "selected_minus_teacher_score": 0.0,
+      "selected_minus_positive_score": 0.0,
+      "selected_minus_optimal_score": 0.0,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_lateral_transfer",
+          "rook_safe_after_candidate"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "cut_preserved_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "fence_stable_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_rank_side_after_move",
+          "white_king_and_rook_split_file_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 2
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_lateral_transfer",
+          "rook_safe_after_candidate"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "cut_preserved_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "fence_stable_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_rank_side_after_move",
+          "white_king_and_rook_split_file_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 2
+      },
+      "teacher_in_top_k": true,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "e4b4",
+          "score": 87.00602650513649,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 2
+        },
+        {
+          "move": "e4e8",
+          "score": -0.969948434829712,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 10
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 0,
+      "step_index": 13,
+      "fen": "8/8/8/8/1R6/3K4/8/3k4 w - - 28 15",
+      "teacher_move": "b4b1",
+      "teacher_child_dtm": 0,
+      "positive_moves": [
+        "b4b1"
+      ],
+      "optimal_moves": [
+        "b4b1"
+      ],
+      "selected_move": "b4b1",
+      "selected_score": 1000004.3087510646,
+      "selected_skill": "krk.edge_trap_close",
+      "selected_target_class": "optimal_dtm_move",
+      "selected_child_dtm": 0,
+      "selected_label": 1,
+      "teacher_move_rank": 1,
+      "positive_move_rank": 1,
+      "optimal_move_rank": 1,
+      "teacher_move_score": 1000004.3087510646,
+      "positive_move_score": 1000004.3087510646,
+      "optimal_move_score": 1000004.3087510646,
+      "selected_minus_teacher_score": 0.0,
+      "selected_minus_positive_score": 0.0,
+      "selected_minus_optimal_score": 0.0,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_not_adjacent_enemy",
+          "rook_safe_after_candidate",
+          "rook_to_checking_line",
+          "rook_to_edge_rank",
+          "rook_transfer_vertical",
+          "safe_check_created"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "checking_line_created",
+          "cut_preserved_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "fence_stable_after_move",
+          "rook_safe_after_move",
+          "white_king_file_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 0
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_not_adjacent_enemy",
+          "rook_safe_after_candidate",
+          "rook_to_checking_line",
+          "rook_to_edge_rank",
+          "rook_transfer_vertical",
+          "safe_check_created"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "checking_line_created",
+          "cut_preserved_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "fence_stable_after_move",
+          "rook_safe_after_move",
+          "white_king_file_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 0
+      },
+      "teacher_in_top_k": true,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "b4b1",
+          "score": 1000004.3087510646,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 0
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 1,
+      "step_index": 0,
+      "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "teacher_move": "d2c3",
+      "teacher_child_dtm": 20,
+      "positive_moves": [
+        "d2c3"
+      ],
+      "optimal_moves": [
+        "d2c3"
+      ],
+      "selected_move": "d2e2",
+      "selected_score": 13.66260275144577,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "winning_nonoptimal_move",
+      "selected_child_dtm": 24,
+      "selected_label": 0,
+      "teacher_move_rank": 3,
+      "positive_move_rank": 3,
+      "optimal_move_rank": 3,
+      "teacher_move_score": 0.1063240895394236,
+      "positive_move_score": 0.1063240895394236,
+      "optimal_move_score": 0.1063240895394236,
+      "selected_minus_teacher_score": 13.556278661906346,
+      "selected_minus_positive_score": 13.556278661906346,
+      "selected_minus_optimal_score": 13.556278661906346,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_king_move"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_split_rank_side_after_move",
+          "white_king_file_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "winning_nonoptimal_move",
+        "label": 0,
+        "child_dtm": 24
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_king_move",
+          "king_moves_toward_rook_support"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_and_rook_split_rank_side_after_move",
+          "white_king_distance_to_rook_decreases"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 20
+      },
+      "teacher_in_top_k": true,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "d2e2",
+          "score": 13.66260275144577,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 24
+        },
+        {
+          "move": "a5h5",
+          "score": 13.662602751159667,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 24
+        },
+        {
+          "move": "d2c3",
+          "score": 0.1063240895394236,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 20
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 1,
+      "step_index": 1,
+      "fen": "8/8/8/R7/8/2K2k2/8/8 w - - 4 3",
+      "teacher_move": "a5a4",
+      "teacher_child_dtm": 18,
+      "positive_moves": [
+        "a5a4",
+        "c3d3",
+        "c3d4"
+      ],
+      "optimal_moves": [
+        "a5a4",
+        "c3d3",
+        "c3d4"
+      ],
+      "selected_move": "a5g5",
+      "selected_score": 31.202640383148196,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "winning_nonoptimal_move",
+      "selected_child_dtm": 24,
+      "selected_label": 0,
+      "teacher_move_rank": 4,
+      "positive_move_rank": 2,
+      "optimal_move_rank": 2,
+      "teacher_move_score": 0.024980374415963888,
+      "positive_move_score": 0.12221038641929628,
+      "optimal_move_score": 0.12221038641929628,
+      "selected_minus_teacher_score": 31.177660008732232,
+      "selected_minus_positive_score": 31.0804299967289,
+      "selected_minus_optimal_score": 31.0804299967289,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_not_adjacent_enemy",
+          "rook_lateral_transfer",
+          "rook_safe_after_candidate"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_decreases_after_move",
+          "box_area_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_split_file_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "winning_nonoptimal_move",
+        "label": 0,
+        "child_dtm": 24
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_safe_after_candidate",
+          "rook_to_edge_file",
+          "rook_transfer_vertical"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_decreases_after_move",
+          "box_area_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 18
+      },
+      "teacher_in_top_k": false,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "a5g5",
+          "score": 31.202640383148196,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 24
+        },
+        {
+          "move": "c3d4",
+          "score": 0.12221038641929628,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 18
+        },
+        {
+          "move": "c3d3",
+          "score": 0.12114383589426678,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 18
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 1,
+      "step_index": 2,
+      "fen": "8/8/8/8/R7/2K1k3/8/8 w - - 6 4",
+      "teacher_move": "a4d4",
+      "teacher_child_dtm": 16,
+      "positive_moves": [
+        "a4d4",
+        "c3c2"
+      ],
+      "optimal_moves": [
+        "a4d4",
+        "c3c2"
+      ],
+      "selected_move": "a4h4",
+      "selected_score": 27.650140969944,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "winning_nonoptimal_move",
+      "selected_child_dtm": 18,
+      "selected_label": 0,
+      "teacher_move_rank": 2,
+      "positive_move_rank": 2,
+      "optimal_move_rank": 2,
+      "teacher_move_score": 0.03195547809787095,
+      "positive_move_score": 0.03195547809787095,
+      "optimal_move_score": 0.03195547809787095,
+      "selected_minus_teacher_score": 27.61818549184613,
+      "selected_minus_positive_score": 27.61818549184613,
+      "selected_minus_optimal_score": 27.61818549184613,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_lateral_transfer",
+          "rook_safe_after_candidate",
+          "rook_to_edge_file"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_split_file_side_after_move",
+          "white_king_rank_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "winning_nonoptimal_move",
+        "label": 0,
+        "child_dtm": 18
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_lateral_transfer",
+          "rook_safe_after_candidate"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_decreases_after_move",
+          "box_area_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_distance_to_rook_decreases",
+          "white_king_rank_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 16
+      },
+      "teacher_in_top_k": true,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "a4h4",
+          "score": 27.650140969944,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 18
+        },
+        {
+          "move": "a4d4",
+          "score": 0.03195547809787095,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 16
+        },
+        {
+          "move": "a4a8",
+          "score": -0.969948434829712,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 24
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 1,
+      "step_index": 3,
+      "fen": "8/8/8/8/3R4/2K5/5k2/8 w - - 8 5",
+      "teacher_move": "c3d2",
+      "teacher_child_dtm": 14,
+      "positive_moves": [
+        "c3d2",
+        "c3d3",
+        "d4d3"
+      ],
+      "optimal_moves": [
+        "c3d2",
+        "c3d3",
+        "d4d3"
+      ],
+      "selected_move": "d4g4",
+      "selected_score": 53.849416224861145,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "winning_nonoptimal_move",
+      "selected_child_dtm": 20,
+      "selected_label": 0,
+      "teacher_move_rank": 2,
+      "positive_move_rank": 2,
+      "optimal_move_rank": 2,
+      "teacher_move_score": 0.1485818865776062,
+      "positive_move_score": 0.1485818865776062,
+      "optimal_move_score": 0.1485818865776062,
+      "selected_minus_teacher_score": 53.700834338283535,
+      "selected_minus_positive_score": 53.700834338283535,
+      "selected_minus_optimal_score": 53.700834338283535,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_not_adjacent_enemy",
+          "rook_lateral_transfer",
+          "rook_safe_after_candidate"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_rank_side_after_move",
+          "white_king_and_rook_split_file_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "winning_nonoptimal_move",
+        "label": 0,
+        "child_dtm": 20
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_king_move",
+          "king_moves_toward_enemy"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_distance_to_enemy_decreases",
+          "white_king_rank_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 14
+      },
+      "teacher_in_top_k": true,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "d4g4",
+          "score": 53.849416224861145,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 20
+        },
+        {
+          "move": "c3d2",
+          "score": 0.1485818865776062,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 14
+        },
+        {
+          "move": "d4d8",
+          "score": 0.047658948275446894,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 20
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 1,
+      "step_index": 4,
+      "fen": "8/8/8/8/3R4/5k2/3K4/8 w - - 10 6",
+      "teacher_move": "d4a4",
+      "teacher_child_dtm": 12,
+      "positive_moves": [
+        "d4a4",
+        "d4b4",
+        "d4c4"
+      ],
+      "optimal_moves": [
+        "d4a4",
+        "d4b4",
+        "d4c4"
+      ],
+      "selected_move": "d4d8",
+      "selected_score": 33.694120495224,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "winning_nonoptimal_move",
+      "selected_child_dtm": 26,
+      "selected_label": 0,
+      "teacher_move_rank": 2,
+      "positive_move_rank": 2,
+      "optimal_move_rank": 2,
+      "teacher_move_score": 0.11362321470204519,
+      "positive_move_score": 0.11362321470204519,
+      "optimal_move_score": 0.11362321470204519,
+      "selected_minus_teacher_score": 33.58049728052195,
+      "selected_minus_positive_score": 33.58049728052195,
+      "selected_minus_optimal_score": 33.58049728052195,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_safe_after_candidate",
+          "rook_to_edge_rank",
+          "rook_transfer_vertical"
+        ],
+        "post_move_terms": [
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_and_rook_split_rank_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "winning_nonoptimal_move",
+        "label": 0,
+        "child_dtm": 26
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_lateral_transfer",
+          "rook_safe_after_candidate",
+          "rook_to_edge_file"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_and_rook_split_rank_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 12
+      },
+      "teacher_in_top_k": true,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "d4d8",
+          "score": 33.694120495224,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 26
+        },
+        {
+          "move": "d4a4",
+          "score": 0.11362321470204519,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 12
+        },
+        {
+          "move": "d2d3",
+          "score": 0.09945547809787096,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 14
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 1,
+      "step_index": 5,
+      "fen": "8/8/8/8/R7/8/3K2k1/8 w - - 12 7",
+      "teacher_move": "d2e2",
+      "teacher_child_dtm": 10,
+      "positive_moves": [
+        "d2e2",
+        "d2e3"
+      ],
+      "optimal_moves": [
+        "d2e2",
+        "d2e3"
+      ],
+      "selected_move": "d2e2",
+      "selected_score": 13.58216330308914,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "optimal_dtm_move",
+      "selected_child_dtm": 10,
+      "selected_label": 1,
+      "teacher_move_rank": 1,
+      "positive_move_rank": 1,
+      "optimal_move_rank": 1,
+      "teacher_move_score": 13.58216330308914,
+      "positive_move_score": 13.58216330308914,
+      "optimal_move_score": 13.58216330308914,
+      "selected_minus_teacher_score": 0.0,
+      "selected_minus_positive_score": 0.0,
+      "selected_minus_optimal_score": 0.0,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_king_move",
+          "king_moves_toward_enemy"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_distance_to_enemy_decreases",
+          "white_king_rank_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 10
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_king_move",
+          "king_moves_toward_enemy"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_distance_to_enemy_decreases",
+          "white_king_rank_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 10
+      },
+      "teacher_in_top_k": true,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "d2e2",
+          "score": 13.58216330308914,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 10
+        },
+        {
+          "move": "a4h4",
+          "score": 13.582163302803039,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 16
+        },
+        {
+          "move": "d2e3",
+          "score": 13.581725802803039,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 10
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 1,
+      "step_index": 6,
+      "fen": "8/8/8/8/R7/6k1/4K3/8 w - - 14 8",
+      "teacher_move": "a4b4",
+      "teacher_child_dtm": 8,
+      "positive_moves": [
+        "a4b4",
+        "a4c4",
+        "a4d4",
+        "a4e4"
+      ],
+      "optimal_moves": [
+        "a4b4",
+        "a4c4",
+        "a4d4",
+        "a4e4"
+      ],
+      "selected_move": "e2f1",
+      "selected_score": 9.172826259040832,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "winning_nonoptimal_move",
+      "selected_child_dtm": 22,
+      "selected_label": 0,
+      "teacher_move_rank": null,
+      "positive_move_rank": 2,
+      "optimal_move_rank": 2,
+      "teacher_move_score": null,
+      "positive_move_score": 0.02800610979758203,
+      "optimal_move_score": 0.02800610979758203,
+      "selected_minus_teacher_score": null,
+      "selected_minus_positive_score": 9.14482014924325,
+      "selected_minus_optimal_score": 9.14482014924325,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_king_move"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_and_rook_split_rank_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "winning_nonoptimal_move",
+        "label": 0,
+        "child_dtm": 22
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_lateral_transfer",
+          "rook_safe_after_candidate"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_decreases_after_move",
+          "box_area_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_and_rook_split_rank_side_after_move",
+          "white_king_distance_to_rook_decreases"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 8
+      },
+      "teacher_in_top_k": false,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "e2f1",
+          "score": 9.172826259040832,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 22
+        },
+        {
+          "move": "a4e4",
+          "score": 0.02800610979758203,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 8
+        },
+        {
+          "move": "e2e3",
+          "score": 0.024831197163365192,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 10
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 1,
+      "step_index": 7,
+      "fen": "8/8/8/8/1R6/8/4K1k1/8 w - - 16 9",
+      "teacher_move": "b4b3",
+      "teacher_child_dtm": 6,
+      "positive_moves": [
+        "b4b3"
+      ],
+      "optimal_moves": [
+        "b4b3"
+      ],
+      "selected_move": "b4b8",
+      "selected_score": 8.153107016277312,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "winning_nonoptimal_move",
+      "selected_child_dtm": 10,
+      "selected_label": 0,
+      "teacher_move_rank": 2,
+      "positive_move_rank": 2,
+      "optimal_move_rank": 2,
+      "teacher_move_score": 0.42119976946214843,
+      "positive_move_score": 0.42119976946214843,
+      "optimal_move_score": 0.42119976946214843,
+      "selected_minus_teacher_score": 7.7319072468151635,
+      "selected_minus_positive_score": 7.7319072468151635,
+      "selected_minus_optimal_score": 7.7319072468151635,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_safe_after_candidate",
+          "rook_to_edge_rank",
+          "rook_transfer_vertical"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_rank_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "winning_nonoptimal_move",
+        "label": 0,
+        "child_dtm": 10
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "rook_destination_far_from_enemy",
+          "rook_destination_not_adjacent_enemy",
+          "rook_safe_after_candidate",
+          "rook_transfer_vertical"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_decreases_after_move",
+          "box_area_not_increased_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_rank_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 6
+      },
+      "teacher_in_top_k": true,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "b4b8",
+          "score": 8.153107016277312,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 10
+        },
+        {
+          "move": "b4b3",
+          "score": 0.42119976946214843,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 6
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 1,
+      "step_index": 8,
+      "fen": "8/8/8/8/8/1R6/4K3/7k w - - 18 10",
+      "teacher_move": "b3g3",
+      "teacher_child_dtm": 4,
+      "positive_moves": [
+        "b3g3",
+        "e2f1",
+        "e2f2"
+      ],
+      "optimal_moves": [
+        "b3g3",
+        "e2f1",
+        "e2f2"
+      ],
+      "selected_move": "e2f1",
+      "selected_score": 30.230613796901704,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "optimal_dtm_move",
+      "selected_child_dtm": 4,
+      "selected_label": 1,
+      "teacher_move_rank": null,
+      "positive_move_rank": 1,
+      "optimal_move_rank": 1,
+      "teacher_move_score": null,
+      "positive_move_score": 30.230613796901704,
+      "optimal_move_score": 30.230613796901704,
+      "selected_minus_teacher_score": null,
+      "selected_minus_positive_score": 0.0,
+      "selected_minus_optimal_score": 0.0,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_king_move",
+          "king_moves_toward_enemy"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_not_increased_after_move",
+          "cut_preserved_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "fence_stable_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_distance_to_enemy_decreases",
+          "white_king_rank_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 4
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "candidate_is_rook_transfer",
+          "rook_destination_not_adjacent_enemy",
+          "rook_lateral_transfer",
+          "rook_safe_after_candidate"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_decreases_after_move",
+          "box_area_not_increased_after_move",
+          "cut_preserved_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "fence_stable_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_and_rook_same_rank_side_after_move",
+          "white_king_distance_to_rook_decreases"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 4
+      },
+      "teacher_in_top_k": false,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "e2f1",
+          "score": 30.230613796901704,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 4
+        },
+        {
+          "move": "e2f3",
+          "score": 30.230613796615604,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 6
+        },
+        {
+          "move": "e2f2",
+          "score": 0.04817408749749453,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 4
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 1,
+      "step_index": 9,
+      "fen": "8/8/8/8/8/6R1/4K2k/8 w - - 20 11",
+      "teacher_move": "e2f2",
+      "teacher_child_dtm": 2,
+      "positive_moves": [
+        "e2f2"
+      ],
+      "optimal_moves": [
+        "e2f2"
+      ],
+      "selected_move": "e2f2",
+      "selected_score": 72.5984171022892,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_target_class": "optimal_dtm_move",
+      "selected_child_dtm": 2,
+      "selected_label": 1,
+      "teacher_move_rank": 1,
+      "positive_move_rank": 1,
+      "optimal_move_rank": 1,
+      "teacher_move_score": 72.5984171022892,
+      "positive_move_score": 72.5984171022892,
+      "optimal_move_score": 72.5984171022892,
+      "selected_minus_teacher_score": 0.0,
+      "selected_minus_positive_score": 0.0,
+      "selected_minus_optimal_score": 0.0,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_king_move",
+          "king_moves_toward_enemy",
+          "king_moves_toward_rook_support"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_not_increased_after_move",
+          "cut_created_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "fence_stable_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_distance_to_enemy_decreases",
+          "white_king_distance_to_rook_decreases",
+          "white_king_rank_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 2
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_king_move",
+          "king_moves_toward_enemy",
+          "king_moves_toward_rook_support"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_not_increased_after_move",
+          "cut_created_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "fence_stable_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_file_side_after_move",
+          "white_king_distance_to_enemy_decreases",
+          "white_king_distance_to_rook_decreases",
+          "white_king_rank_opposition_distance_two_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 2
+      },
+      "teacher_in_top_k": true,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "e2f2",
+          "score": 72.5984171022892,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 2
+        },
+        {
+          "move": "g3g8",
+          "score": 0.6173900602817536,
+          "skill_id": null,
+          "target_class": "winning_nonoptimal_move",
+          "label": 0,
+          "child_dtm": 14
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    },
+    {
+      "trajectory_index": 1,
+      "step_index": 10,
+      "fen": "8/8/8/8/8/6R1/5K2/7k w - - 22 12",
+      "teacher_move": "g3h3",
+      "teacher_child_dtm": 0,
+      "positive_moves": [
+        "g3h3"
+      ],
+      "optimal_moves": [
+        "g3h3"
+      ],
+      "selected_move": "g3h3",
+      "selected_score": 1000004.3087510646,
+      "selected_skill": "krk.edge_trap_close",
+      "selected_target_class": "optimal_dtm_move",
+      "selected_child_dtm": 0,
+      "selected_label": 1,
+      "teacher_move_rank": 1,
+      "positive_move_rank": 1,
+      "optimal_move_rank": 1,
+      "teacher_move_score": 1000004.3087510646,
+      "positive_move_score": 1000004.3087510646,
+      "optimal_move_score": 1000004.3087510646,
+      "selected_minus_teacher_score": 0.0,
+      "selected_minus_positive_score": 0.0,
+      "selected_minus_optimal_score": 0.0,
+      "selected_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "rook_destination_not_adjacent_enemy",
+          "rook_lateral_transfer",
+          "rook_safe_after_candidate",
+          "rook_to_checking_line",
+          "rook_to_edge_file",
+          "safe_check_created"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_not_increased_after_move",
+          "checking_line_created",
+          "cut_preserved_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "fence_stable_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_rank_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 0
+      },
+      "teacher_visible_terms": {
+        "move_shape_terms": [
+          "candidate_is_rook_move",
+          "rook_destination_not_adjacent_enemy",
+          "rook_lateral_transfer",
+          "rook_safe_after_candidate",
+          "rook_to_checking_line",
+          "rook_to_edge_file",
+          "safe_check_created"
+        ],
+        "post_move_terms": [
+          "black_king_escape_count_decreases_after_move",
+          "black_king_escape_count_not_increased_after_move",
+          "box_area_not_increased_after_move",
+          "checking_line_created",
+          "cut_preserved_after_move",
+          "enemy_corner_distance_not_increased_after_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "fence_exists_after_move",
+          "fence_stable_after_move",
+          "rook_safe_after_move",
+          "white_king_and_rook_same_rank_side_after_move"
+        ],
+        "worst_reply_terms": [],
+        "safety_terms": [],
+        "target_class": "optimal_dtm_move",
+        "label": 1,
+        "child_dtm": 0
+      },
+      "teacher_in_top_k": true,
+      "positive_in_top_k": true,
+      "optimal_in_top_k": true,
+      "top_moves": [
+        {
+          "move": "g3h3",
+          "score": 1000004.3087510646,
+          "skill_id": null,
+          "target_class": "optimal_dtm_move",
+          "label": 1,
+          "child_dtm": 0
+        }
+      ],
+      "plan_capsule_supported_suggestion_count": 0,
+      "selected_by_stage7_plan_capsule_owned_arbitration": false
+    }
+  ],
+  "closed_loop_records": [
+    {
+      "source": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_expanded_ranked_capsule_sandbox.json",
+      "start_fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "result": "max_plies",
+      "plies": 40,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_move": "a6a8",
+      "selected_target_class": "winning_nonoptimal_move",
+      "selected_label": 0,
+      "selected_child_dtm": 28,
+      "selected_is_dtm_positive": false,
+      "selected_is_dtm_optimal": false,
+      "teacher_move": "a6a5",
+      "positive_moves": [
+        "a6a5",
+        "a6d6",
+        "d1d2"
+      ],
+      "optimal_moves": [
+        "a6a5",
+        "a6d6",
+        "d1d2"
+      ],
+      "first_divergence": {
+        "ply": 0,
+        "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+        "selected_move": "a6a8",
+        "positive_moves": [
+          "a6a5",
+          "a6d6",
+          "d1d2"
+        ],
+        "optimal_moves": [
+          "a6a5",
+          "a6d6",
+          "d1d2"
+        ]
+      },
+      "plan_owned_record": false,
+      "plan_progress_terms": []
+    },
+    {
+      "source": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_expanded_ranked_capsule_sandbox.json",
+      "start_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "result": "max_plies",
+      "plies": 40,
+      "selected_skill": "krk.post_box_shrink_continuation",
+      "selected_move": "d2e2",
+      "selected_target_class": "winning_nonoptimal_move",
+      "selected_label": 0,
+      "selected_child_dtm": 24,
+      "selected_is_dtm_positive": false,
+      "selected_is_dtm_optimal": false,
+      "teacher_move": "d2c3",
+      "positive_moves": [
+        "d2c3"
+      ],
+      "optimal_moves": [
+        "d2c3"
+      ],
+      "first_divergence": {
+        "ply": 0,
+        "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+        "selected_move": "d2e2",
+        "positive_moves": [
+          "d2c3"
+        ],
+        "optimal_moves": [
+          "d2c3"
+        ]
+      },
+      "plan_owned_record": false,
+      "plan_progress_terms": []
+    }
+  ],
+  "diagnosis_by_family": [
+    {
+      "start_fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "selected_move": "a6a8",
+      "selected_target_class": "winning_nonoptimal_move",
+      "result": "max_plies",
+      "diagnosis": "teacher_fidelity_ranking_gap"
+    },
+    {
+      "start_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "selected_move": "d2e2",
+      "selected_target_class": "winning_nonoptimal_move",
+      "result": "max_plies",
+      "diagnosis": "teacher_fidelity_ranking_gap"
+    }
+  ],
+  "top_level_diagnosis": "trajectory_ranking_and_closed_loop_gap",
+  "recommended_next_action": "expand_offline_dtm_seed_and_train_ranked_imitation_before_more_runtime_repair",
+  "candidate_status_update": {
+    "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
+    "status": "selected_but_closed_loop_fails",
+    "diagnosis": "trajectory_target_or_model_expression_gap",
+    "next_action": "trajectory_fidelity_audit_complete",
+    "causal_status": "non_causal",
+    "credit": 0.0
+  },
+  "hard_constraints": [
+    "do_not_train_stage8",
+    "do_not_promote_stage7",
+    "do_not_use_dtm_or_tablebase_at_runtime",
+    "do_not_add_hidden_python_routing",
+    "do_not_mutate_topology_during_gameplay",
+    "keep_plan_capsule_sandbox_default_off"
+  ]
+}
