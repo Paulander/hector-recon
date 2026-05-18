@@ -720,6 +720,36 @@ def _adapter_supported_role_owned_candidates(suggestions: list[dict]) -> list[di
     return candidates
 
 
+def _plan_capsule_supported_owned_candidates(suggestions: list[dict]) -> list[dict]:
+    """Return suggestions licensed by an active Plan Capsule window."""
+    candidates: list[dict] = []
+    for item in suggestions:
+        meta = item.get("meta") if isinstance(item.get("meta"), dict) else {}
+        license_payload = meta.get("visible_stage7_plan_capsule_license")
+        if not isinstance(license_payload, dict) or not license_payload:
+            continue
+        if license_payload.get("direct_request"):
+            continue
+        if license_payload.get("plan_status") not in {"active", "progress_confirmed"}:
+            continue
+        candidates.append(item)
+    candidates.sort(
+        key=lambda item: (
+            float(
+                (
+                    (item.get("meta") or {}).get("visible_stage7_plan_capsule_license", {})
+                    if isinstance(item.get("meta"), dict)
+                    else {}
+                ).get("support_amount", 0.0)
+                or 0.0
+            ),
+            float(item.get("score", 0.0) or 0.0),
+        ),
+        reverse=True,
+    )
+    return candidates
+
+
 def _compact_selected_suggestion(item: dict | None) -> dict:
     if not isinstance(item, dict):
         return {}
@@ -737,6 +767,9 @@ def _compact_selected_suggestion(item: dict | None) -> dict:
         ),
         "visible_role_owned_score_normalization": dict(
             meta.get("visible_role_owned_score_normalization", {}) or {}
+        ),
+        "visible_stage7_plan_capsule_owned_arbitration": dict(
+            meta.get("visible_stage7_plan_capsule_owned_arbitration", {}) or {}
         ),
     }
 
@@ -848,6 +881,9 @@ def _suggestion_role_trace(meta: dict) -> dict:
         "visible_stage7_plan_capsule_license": dict(
             meta.get("visible_stage7_plan_capsule_license", {}) or {}
         ),
+        "visible_stage7_plan_capsule_owned_arbitration": dict(
+            meta.get("visible_stage7_plan_capsule_owned_arbitration", {}) or {}
+        ),
         "score_after_stage7_plan_capsule_bonus": (
             float(meta.get("score_after_stage7_plan_capsule_bonus"))
             if meta.get("score_after_stage7_plan_capsule_bonus") is not None
@@ -956,7 +992,10 @@ def _successor_skill_summary(
     )
     selected_skill = (
         str(selected_suggestion.get("skill_id"))
-        if move_details.get("selected_by_role_owned_score_normalization")
+        if (
+            move_details.get("selected_by_role_owned_score_normalization")
+            or move_details.get("selected_by_stage7_plan_capsule_owned_arbitration")
+        )
         and selected_suggestion.get("skill_id")
         else raw_selected_skill
     )
@@ -1090,6 +1129,7 @@ def _successor_contract_audit(
             "role_bonus_by_role": {},
             "visible_role_provider_support_adapter": {},
             "visible_role_owned_score_normalization": {},
+            "visible_stage7_plan_capsule_owned_arbitration": {},
             "raw_score_before_role_bonus": None,
             "score_after_role_bonus": None,
             "visible_role_scoped_move_shape_bonus": 0.0,
@@ -1139,6 +1179,9 @@ def _successor_contract_audit(
         ),
         "visible_role_owned_score_normalization": dict(
             selected_group.get("visible_role_owned_score_normalization", {}) or {}
+        ),
+        "visible_stage7_plan_capsule_owned_arbitration": dict(
+            selected_group.get("visible_stage7_plan_capsule_owned_arbitration", {}) or {}
         ),
         "raw_score_before_role_bonus": selected_group.get("raw_score_before_role_bonus"),
         "score_after_role_bonus": selected_group.get("score_after_role_bonus"),
@@ -1573,6 +1616,7 @@ def choose_move_with_engine(
     stage7_plan_capsule_enabled: bool = False,
     stage7_plan_capsule_ttl: int = 3,
     stage7_plan_capsule_support_bonus: float = 0.0,
+    stage7_plan_capsule_owned_arbitration_enabled: bool = False,
     stage7_plan_capsule_state: dict | None = None,
     current_ply: int | None = None,
     stage7_provider_scope_label: str = "box_shrink",
@@ -1617,6 +1661,9 @@ def choose_move_with_engine(
         stage7_plan_capsule_enabled=stage7_plan_capsule_enabled,
         stage7_plan_capsule_ttl=stage7_plan_capsule_ttl,
         stage7_plan_capsule_support_bonus=stage7_plan_capsule_support_bonus,
+        stage7_plan_capsule_owned_arbitration_enabled=(
+            stage7_plan_capsule_owned_arbitration_enabled
+        ),
         stage7_plan_capsule_state=stage7_plan_capsule_state,
         current_ply=current_ply,
         stage7_provider_scope_label=stage7_provider_scope_label,
@@ -1663,6 +1710,7 @@ def choose_move_details(
     stage7_plan_capsule_enabled: bool = False,
     stage7_plan_capsule_ttl: int = 3,
     stage7_plan_capsule_support_bonus: float = 0.0,
+    stage7_plan_capsule_owned_arbitration_enabled: bool = False,
     stage7_plan_capsule_state: dict | None = None,
     current_ply: int | None = None,
     stage7_provider_scope_label: str = "box_shrink",
@@ -1715,6 +1763,9 @@ def choose_move_details(
             stage7_plan_capsule_enabled=stage7_plan_capsule_enabled,
             stage7_plan_capsule_ttl=stage7_plan_capsule_ttl,
             stage7_plan_capsule_support_bonus=stage7_plan_capsule_support_bonus,
+            stage7_plan_capsule_owned_arbitration_enabled=(
+                stage7_plan_capsule_owned_arbitration_enabled
+            ),
             stage7_plan_capsule_state=stage7_plan_capsule_state,
             current_ply=current_ply,
             stage7_provider_scope_label=stage7_provider_scope_label,
@@ -1768,6 +1819,7 @@ def _choose_move_details_impl(
     stage7_plan_capsule_enabled: bool = False,
     stage7_plan_capsule_ttl: int = 3,
     stage7_plan_capsule_support_bonus: float = 0.0,
+    stage7_plan_capsule_owned_arbitration_enabled: bool = False,
     stage7_plan_capsule_state: dict | None = None,
     current_ply: int | None = None,
     stage7_provider_scope_label: str = "box_shrink",
@@ -1871,6 +1923,9 @@ def _choose_move_details_impl(
     env["blackboard"]["stage7_plan_capsule_enabled"] = bool(stage7_plan_capsule_enabled)
     env["blackboard"]["stage7_plan_capsule_ttl"] = int(stage7_plan_capsule_ttl)
     env["blackboard"]["stage7_plan_capsule_support_bonus"] = float(stage7_plan_capsule_support_bonus)
+    env["blackboard"]["stage7_plan_capsule_owned_arbitration_enabled"] = bool(
+        stage7_plan_capsule_owned_arbitration_enabled
+    )
     if stage7_plan_capsule_state:
         env["blackboard"]["stage7_plan_capsule_state"] = dict(stage7_plan_capsule_state)
     env["blackboard"]["stage7_provider_scope_label"] = str(stage7_provider_scope_label or "box_shrink")
@@ -1977,6 +2032,7 @@ def _choose_move_details_impl(
     selected_suggestion = suggestions[0] if suggestions else None
     raw_selected_suggestion = selected_suggestion
     selected_by_role_owned_score_normalization = False
+    selected_by_stage7_plan_capsule_owned_arbitration = False
     forced_candidates = []
     if forced_successor_skill:
         forced_candidates = [
@@ -2012,6 +2068,46 @@ def _choose_move_details_impl(
                     ),
                     "selected_score": float(selected_suggestion.get("score", 0.0) or 0.0),
                     "candidate_count": len(adapter_candidates),
+                    "causal_status": "sandbox_opt_in",
+                    "direct_request": False,
+                }
+    if (
+        not forced_successor_skill
+        and stage7_plan_capsule_owned_arbitration_enabled
+    ):
+        plan_candidates = _plan_capsule_supported_owned_candidates(suggestions)
+        if plan_candidates:
+            selected_suggestion = plan_candidates[0]
+            selected_by_stage7_plan_capsule_owned_arbitration = True
+            selected_meta = selected_suggestion.setdefault("meta", {})
+            if isinstance(selected_meta, dict):
+                selected_meta["visible_stage7_plan_capsule_owned_arbitration"] = {
+                    "enabled": True,
+                    "mode": "bounded_plan_capsule_owned_window",
+                    "plan_id": (
+                        selected_meta.get("visible_stage7_plan_capsule_license", {})
+                        if isinstance(
+                            selected_meta.get("visible_stage7_plan_capsule_license"), dict
+                        )
+                        else {}
+                    ).get("plan_id", "krk.post_box_shrink_continuation"),
+                    "raw_selected_skill": _skill_id_for_suggestion(raw_selected_suggestion or {}),
+                    "raw_selected_move": (
+                        (raw_selected_suggestion or {}).get("move").uci()
+                        if hasattr((raw_selected_suggestion or {}).get("move"), "uci")
+                        else (raw_selected_suggestion or {}).get("move")
+                    ),
+                    "raw_selected_score": float(
+                        (raw_selected_suggestion or {}).get("score", 0.0) or 0.0
+                    ),
+                    "selected_skill": _skill_id_for_suggestion(selected_suggestion),
+                    "selected_move": (
+                        selected_suggestion.get("move").uci()
+                        if hasattr(selected_suggestion.get("move"), "uci")
+                        else selected_suggestion.get("move")
+                    ),
+                    "selected_score": float(selected_suggestion.get("score", 0.0) or 0.0),
+                    "candidate_count": len(plan_candidates),
                     "causal_status": "sandbox_opt_in",
                     "direct_request": False,
                 }
@@ -2097,6 +2193,9 @@ def _choose_move_details_impl(
         "stage7_plan_capsule_enabled": bool(stage7_plan_capsule_enabled),
         "stage7_plan_capsule_ttl": int(stage7_plan_capsule_ttl),
         "stage7_plan_capsule_support_bonus": float(stage7_plan_capsule_support_bonus),
+        "stage7_plan_capsule_owned_arbitration_enabled": bool(
+            stage7_plan_capsule_owned_arbitration_enabled
+        ),
         "stage7_plan_capsule_state": dict(
             env.get("blackboard", {}).get("stage7_plan_capsule_state", {}) or {}
         ),
@@ -2113,6 +2212,9 @@ def _choose_move_details_impl(
         "role_owned_score_normalization_enabled": bool(role_owned_score_normalization_enabled),
         "selected_by_role_owned_score_normalization": bool(
             selected_by_role_owned_score_normalization
+        ),
+        "selected_by_stage7_plan_capsule_owned_arbitration": bool(
+            selected_by_stage7_plan_capsule_owned_arbitration
         ),
         "role_owned_raw_selected": _compact_selected_suggestion(raw_selected_suggestion),
         "visible_terms": dict(env.get("blackboard", {}).get("krk_visible_terms", {}) or {}),
@@ -2320,6 +2422,7 @@ def play_to_mate(
     stage7_plan_capsule_enabled: bool = False,
     stage7_plan_capsule_ttl: int = 3,
     stage7_plan_capsule_support_bonus: float = 0.0,
+    stage7_plan_capsule_owned_arbitration_enabled: bool = False,
     early_stop_stable_suggestions: int = 0,
     lock_stage_filter_through_playout: bool = False,
     forced_successor_skill: Optional[str] = None,
@@ -2449,6 +2552,9 @@ def play_to_mate(
                 stage7_plan_capsule_enabled=stage7_plan_capsule_enabled,
                 stage7_plan_capsule_ttl=stage7_plan_capsule_ttl,
                 stage7_plan_capsule_support_bonus=stage7_plan_capsule_support_bonus,
+                stage7_plan_capsule_owned_arbitration_enabled=(
+                    stage7_plan_capsule_owned_arbitration_enabled
+                ),
                 stage7_plan_capsule_state=stage7_plan_capsule_state,
                 current_ply=ply,
                 active_landmark_label=label,
@@ -3300,6 +3406,7 @@ def run_counterfactual_successor_sweep(
     stage7_plan_capsule_enabled: bool = False,
     stage7_plan_capsule_ttl: int = 3,
     stage7_plan_capsule_support_bonus: float = 0.0,
+    stage7_plan_capsule_owned_arbitration_enabled: bool = False,
     early_stop_stable_suggestions: int = 0,
     step_output: Optional[Path] = None,
     step_context: Optional[dict] = None,
@@ -3488,6 +3595,7 @@ def evaluate_landmark_progress(
     stage7_plan_capsule_enabled: bool = False,
     stage7_plan_capsule_ttl: int = 3,
     stage7_plan_capsule_support_bonus: float = 0.0,
+    stage7_plan_capsule_owned_arbitration_enabled: bool = False,
     early_stop_stable_suggestions: int = 0,
     lock_stage_filter_through_playout: bool = False,
     counterfactual_successors: tuple[str, ...] = (),
@@ -3598,9 +3706,11 @@ def evaluate_landmark_progress(
         "plan_capsule_supported_suggestion_count": 0,
         "plan_capsule_selected_supported_count": 0,
         "plan_capsule_active_without_support_count": 0,
+        "plan_capsule_owned_arbitration_selected_count": 0,
         "plan_capsule_supported_provider_by_outcome": {},
         "plan_capsule_supported_move_by_outcome": {},
         "plan_capsule_selected_supported_by_outcome": {},
+        "plan_capsule_owned_arbitration_provider_by_outcome": {},
         "role_owned_score_normalization_selected_count": 0,
         "role_owned_score_normalization_provider_by_outcome": {},
         "one_ply_status": "not_checked",
@@ -3654,6 +3764,9 @@ def evaluate_landmark_progress(
             stage7_plan_capsule_enabled=stage7_plan_capsule_enabled,
             stage7_plan_capsule_ttl=stage7_plan_capsule_ttl,
             stage7_plan_capsule_support_bonus=stage7_plan_capsule_support_bonus,
+            stage7_plan_capsule_owned_arbitration_enabled=(
+                stage7_plan_capsule_owned_arbitration_enabled
+            ),
             active_landmark_label=label,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
             perf_profile=perf_profile,
@@ -3829,6 +3942,9 @@ def evaluate_landmark_progress(
                 stage7_plan_capsule_enabled=stage7_plan_capsule_enabled,
                 stage7_plan_capsule_ttl=stage7_plan_capsule_ttl,
                 stage7_plan_capsule_support_bonus=stage7_plan_capsule_support_bonus,
+                stage7_plan_capsule_owned_arbitration_enabled=(
+                    stage7_plan_capsule_owned_arbitration_enabled
+                ),
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
                 lock_stage_filter_through_playout=lock_stage_filter_through_playout,
                 perf_profile=perf_profile,
@@ -3992,6 +4108,20 @@ def evaluate_landmark_progress(
                 stats["plan_capsule_selected_supported_by_outcome"][selected_key] = (
                     stats["plan_capsule_selected_supported_by_outcome"].get(selected_key, 0) + 1
                 )
+            plan_owned_arbitration = dict(
+                successor_summary.get("visible_stage7_plan_capsule_owned_arbitration", {}) or {}
+            )
+            if plan_owned_arbitration.get("enabled"):
+                stats["plan_capsule_owned_arbitration_selected_count"] = (
+                    int(stats.get("plan_capsule_owned_arbitration_selected_count", 0) or 0) + 1
+                )
+                provider_key = f"{plan_owned_arbitration.get('selected_skill', 'unknown')}:{key}"
+                stats["plan_capsule_owned_arbitration_provider_by_outcome"][provider_key] = (
+                    stats["plan_capsule_owned_arbitration_provider_by_outcome"].get(
+                        provider_key, 0
+                    )
+                    + 1
+                )
             role_owned_support = dict(
                 successor_summary.get("visible_role_owned_score_normalization", {}) or {}
             )
@@ -4108,6 +4238,9 @@ def evaluate_landmark_progress(
                     ),
                     "plan_capsule_max_supported_move": successor_summary.get(
                         "plan_capsule_max_supported_move"
+                    ),
+                    "visible_stage7_plan_capsule_owned_arbitration": successor_summary.get(
+                        "visible_stage7_plan_capsule_owned_arbitration"
                     ),
                     "visible_stage7_plan_capsule_bonus": successor_summary.get(
                         "visible_stage7_plan_capsule_bonus"
@@ -4679,6 +4812,7 @@ def _merge_parallel_stats(
         "plan_capsule_supported_suggestion_count",
         "plan_capsule_selected_supported_count",
         "plan_capsule_active_without_support_count",
+        "plan_capsule_owned_arbitration_selected_count",
         "role_owned_score_normalization_selected_count",
     )
     max_keys = ("one_ply_engine_ticks_max", "playout_engine_ticks_max")
@@ -4697,6 +4831,7 @@ def _merge_parallel_stats(
         "plan_capsule_supported_provider_by_outcome",
         "plan_capsule_supported_move_by_outcome",
         "plan_capsule_selected_supported_by_outcome",
+        "plan_capsule_owned_arbitration_provider_by_outcome",
         "role_owned_score_normalization_provider_by_outcome",
     )
     nested_count_keys = ("conversion_by_semantic_alignment_status",)
@@ -5057,6 +5192,8 @@ def main() -> None:
                         help="White-move TTL for the opt-in Stage 7 Plan Capsule v0 sandbox")
     parser.add_argument("--stage7-plan-capsule-support-bonus", type=float, default=0.0,
                         help="Small opt-in support amount for candidate moves licensed by the Stage 7 Plan Capsule")
+    parser.add_argument("--enable-stage7-plan-capsule-owned-arbitration", action="store_true",
+                        help="Sandbox: let active Plan Capsule licensed moves own arbitration within the bounded window")
     parser.add_argument("--composition-profile",
                         choices=[COMPOSITION_PROFILE_NONE, COMPOSITION_PROFILE_HANDOFF_V1],
                         default=COMPOSITION_PROFILE_NONE,
@@ -5147,6 +5284,7 @@ def main() -> None:
         stage7_plan_capsule_enabled=args.enable_stage7_plan_capsule,
         stage7_plan_capsule_ttl=args.stage7_plan_capsule_ttl,
         stage7_plan_capsule_support_bonus=args.stage7_plan_capsule_support_bonus,
+        stage7_plan_capsule_owned_arbitration_enabled=args.enable_stage7_plan_capsule_owned_arbitration,
         early_stop_stable_suggestions=args.early_stop_stable_suggestions,
         lock_stage_filter_through_playout=args.lock_stage_filter_through_playout,
         counterfactual_successors=tuple(

@@ -6661,6 +6661,80 @@ arbitration within the bounded capsule window, still with visible traceability
 and default-off semantics.
 ```
 
+## Stage 7 Plan Capsule owned-arbitration sandbox
+
+I added a second default-off sandbox flag:
+
+```text
+--enable-stage7-plan-capsule-owned-arbitration
+```
+
+This does not add a hidden provider request and does not use packet/stat/candidate
+metadata causally. It only lets an active Plan Capsule select among already
+visible, licensed plan-capsule suggestions inside the bounded TTL window.
+Every selected override records:
+
+```text
+visible_stage7_plan_capsule_owned_arbitration.enabled
+mode = bounded_plan_capsule_owned_window
+raw_selected_skill / raw_selected_move / raw_selected_score
+selected_skill / selected_move / selected_score
+candidate_count
+causal_status = sandbox_opt_in
+direct_request = false
+```
+
+Default-off check:
+
+```text
+reports/structural_candidates/stage7_plan_capsule_owned_arb_default_off_equivalence_5_h10.json
+equivalent: true
+differences: []
+```
+
+Opt-in 10-sample h40 smoke:
+
+```text
+reports/structural_candidates/stage7_plan_capsule_owned_arb_ttl3_10_h40.json
+reports/structural_candidates/stage7_plan_capsule_owned_arb_ttl4_10_h40.json
+```
+
+Result:
+
+```text
+marker-only baseline: 5 mate / 5 max_plies, shadow candidates 14
+ttl=3 owned arbitration: 7 mate / 3 max_plies, shadow candidates 9
+ttl=4 owned arbitration: 7 mate / 3 max_plies, shadow candidates 9
+```
+
+TTL=3 support details:
+
+```text
+plan_capsule_active_decision_count: 5
+plan_capsule_supported_suggestion_count: 80
+plan_capsule_selected_supported_count: 5
+plan_capsule_owned_arbitration_selected_count: 4
+plan_capsule_active_without_support_count: 0
+```
+
+Provider outcomes:
+
+```text
+krk.edge_trap_close:mate = 2
+krk.edge_trap_close:max_plies = 1-2 depending on selected/support count
+krk.fence_established:max_plies = 1
+```
+
+Interpretation:
+
+```text
+Bounded visible commitment ownership is now a plausible Stage 7 repair
+hypothesis. It improves the small target smoke without changing defaults, but
+it is not validated or promoted. The remaining max-plies cases show that
+owned arbitration helps some windows and still needs larger target validation
+and, only if target improves, protected guardrails.
+```
+
 Hard boundary:
 
 ```text

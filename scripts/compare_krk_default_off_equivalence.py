@@ -42,9 +42,11 @@ TOP_LEVEL_KEYS = (
     "plan_capsule_supported_suggestion_count",
     "plan_capsule_selected_supported_count",
     "plan_capsule_active_without_support_count",
+    "plan_capsule_owned_arbitration_selected_count",
     "plan_capsule_supported_provider_by_outcome",
     "plan_capsule_supported_move_by_outcome",
     "plan_capsule_selected_supported_by_outcome",
+    "plan_capsule_owned_arbitration_provider_by_outcome",
 )
 
 
