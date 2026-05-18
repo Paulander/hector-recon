@@ -5999,3 +5999,54 @@ post-box continuation sequence after the first correct move.
 These trajectories are offline supervision only. They must not be read by
 runtime policy as a tablebase, DTM oracle, or state-hash exception.
 ```
+
+## Stage 7 post-box visible-term model probe
+
+I trained a small sandbox visible-term scorer from the DTM trajectory seed.
+
+Artifact:
+
+```text
+reports/structural_candidates/stage7_post_box_trajectory_provider_model.json
+```
+
+Model:
+
+```text
+schema: stage7_post_box_trajectory_provider_model.v1
+causal_status: sandbox_model_non_promoted
+model_kind: visible_term_log_odds_linear_scorer
+positive legal-move labels: 53
+negative legal-move labels: 426
+features: 90
+train positions: 25
+train top-1 accuracy: 0.44
+```
+
+Interpretation:
+
+```text
+The simple visible-term linear model is not good enough to compile as a runtime
+provider. It fails to identify the DTM-optimal move on more than half of the
+offline training positions.
+
+This is a useful bounded training result: the issue is not merely activation
+or first-move ownership. The post-box continuation provider needs either a
+richer learned representation or a proper actuator/overlay training run, not a
+hand-written terminal and not a weak linear visible-term scorer.
+```
+
+Candidate status:
+
+```text
+cand.krk.box_shrink.post_box_continuation_overlay_probe.v1:
+  status: trainable_candidate_but_linear_visible_term_probe_failed
+  diagnosis:
+    visible ownership works
+    scripted provider has no trainable move-policy edges
+    simple visible-term model underfits trajectory labels
+  next action:
+    train a narrow post_box_shrink_continuation overlay provider using the
+    trajectory seed and normal actuator/provider machinery, then sandbox it
+    with Stage 7 target validation and Stage 6/5/4/1 guardrails
+```

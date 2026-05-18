@@ -48,6 +48,15 @@ assert _trajectory_seed_spec.loader is not None
 _trajectory_seed = importlib.util.module_from_spec(_trajectory_seed_spec)
 _trajectory_seed_spec.loader.exec_module(_trajectory_seed)
 
+_trajectory_provider_spec = importlib.util.spec_from_file_location(
+    "train_stage7_post_box_trajectory_provider",
+    Path(__file__).resolve().parents[1] / "scripts" / "train_stage7_post_box_trajectory_provider.py",
+)
+assert _trajectory_provider_spec is not None
+assert _trajectory_provider_spec.loader is not None
+_trajectory_provider = importlib.util.module_from_spec(_trajectory_provider_spec)
+_trajectory_provider_spec.loader.exec_module(_trajectory_provider)
+
 
 def test_stage7_unresolved_legal_first_summary_marks_selection_gap_and_capacity_probe(tmp_path):
     probe = {
@@ -266,6 +275,8 @@ def test_stage7_post_box_dtm_trajectory_step_is_non_causal_training_evidence():
         chess.Move.from_uci("a6a5"),
         child_dtm=26,
         ply_index=0,
+        index={},
+        dtm=[],
     )
 
     assert step["schema_version"] == "stage7_post_box_dtm_trajectory_step.v1"
@@ -275,3 +286,50 @@ def test_stage7_post_box_dtm_trajectory_step_is_non_causal_training_evidence():
     assert step["label"] == 1
     assert "dtm_oracle_move_selection" in step["runtime_forbidden_terms"]
     assert "state_hash_exception" in step["runtime_forbidden_terms"]
+
+
+def test_stage7_post_box_trajectory_provider_model_is_sandbox_non_promoted(tmp_path):
+    seed = {
+        "schema_version": "stage7_post_box_dtm_trajectory_seed.v1",
+        "trajectories": [
+            {
+                "white_training_steps": [
+                    {
+                        "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+                        "legal_move_labels": [
+                            {
+                                "move": "a6d6",
+                                "label": 1,
+                                "piece": "R",
+                                "is_rook_move": True,
+                                "coordinate_terms": ["piece.R", "delta_file_abs.3"],
+                                "move_shape_terms": ["candidate_is_rook_move"],
+                                "post_move_terms": ["box_area_decreases_after_move"],
+                            },
+                            {
+                                "move": "a6a1",
+                                "label": 0,
+                                "piece": "R",
+                                "is_rook_move": True,
+                                "coordinate_terms": ["piece.R", "delta_rank_abs.5"],
+                                "move_shape_terms": ["candidate_is_rook_move"],
+                                "post_move_terms": [],
+                            },
+                        ],
+                    }
+                ]
+            }
+        ],
+    }
+    path = tmp_path / "seed.json"
+    path.write_text(json.dumps(seed), encoding="utf-8")
+
+    payload = _trajectory_provider.train_model(seed_path=path)
+
+    assert payload["schema_version"] == "stage7_post_box_trajectory_provider_model.v1"
+    assert payload["causal_status"] == "sandbox_model_non_promoted"
+    assert payload["provider_skill_id"] == "krk.stage7_post_box_learned_continuation"
+    assert "do_not_enable_by_default" in payload["constraints"]
+    assert "dtm_oracle_move_selection" in payload["runtime_forbidden_terms"]
+    assert payload["positive_count"] == 1
+    assert payload["negative_count"] == 1

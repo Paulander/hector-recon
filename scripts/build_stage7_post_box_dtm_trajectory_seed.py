@@ -68,8 +68,57 @@ def _white_training_step(
     move: chess.Move,
     child_dtm: int,
     ply_index: int,
+    index: dict[Any, int],
+    dtm: list[int],
 ) -> dict[str, Any]:
     audit = krk_move_shape_audit(board, move, {}, include_worst_reply=False)
+    legal_labels: list[dict[str, Any]] = []
+    legal_child_dtms = {
+        legal_move.uci(): _move_dtm(board, legal_move, index, dtm)
+        for legal_move in board.legal_moves
+    }
+    winning_dtms = [value for value in legal_child_dtms.values() if value >= 0]
+    best_child_dtm = min(winning_dtms) if winning_dtms else -1
+    for legal_move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        legal_audit = krk_move_shape_audit(board, legal_move, {}, include_worst_reply=False)
+        legal_child_dtm = legal_child_dtms[legal_move.uci()]
+        piece = board.piece_at(legal_move.from_square)
+        from_file = chess.square_file(legal_move.from_square)
+        from_rank = chess.square_rank(legal_move.from_square)
+        to_file = chess.square_file(legal_move.to_square)
+        to_rank = chess.square_rank(legal_move.to_square)
+        df = to_file - from_file
+        dr = to_rank - from_rank
+        coordinate_terms = [
+            f"piece.{piece.symbol().upper() if piece else 'unknown'}",
+            f"from_file.{from_file}",
+            f"from_rank.{from_rank}",
+            f"to_file.{to_file}",
+            f"to_rank.{to_rank}",
+            f"delta_file_sign.{0 if df == 0 else 1 if df > 0 else -1}",
+            f"delta_rank_sign.{0 if dr == 0 else 1 if dr > 0 else -1}",
+            f"delta_file_abs.{abs(df)}",
+            f"delta_rank_abs.{abs(dr)}",
+        ]
+        legal_labels.append({
+            "move": legal_move.uci(),
+            "piece": piece.symbol().upper() if piece else None,
+            "is_king_move": bool(piece and piece.piece_type == chess.KING),
+            "is_rook_move": bool(piece and piece.piece_type == chess.ROOK),
+            "label": 1 if legal_child_dtm == best_child_dtm and legal_child_dtm >= 0 else 0,
+            "target_class": (
+                "optimal_dtm_move"
+                if legal_child_dtm == best_child_dtm and legal_child_dtm >= 0
+                else "winning_nonoptimal_move"
+                if legal_child_dtm >= 0
+                else "non_winning_move"
+            ),
+            "child_dtm": legal_child_dtm,
+            "plies_to_mate_if_chosen": legal_child_dtm + 1 if legal_child_dtm >= 0 else None,
+            "coordinate_terms": coordinate_terms,
+            "move_shape_terms": legal_audit.get("move_shape_terms") or [],
+            "post_move_terms": legal_audit.get("post_move_terms") or [],
+        })
     return {
         "schema_version": "stage7_post_box_dtm_trajectory_step.v1",
         "ply_index": ply_index,
@@ -83,6 +132,7 @@ def _white_training_step(
         "plies_to_mate_if_chosen": child_dtm + 1 if child_dtm >= 0 else None,
         "move_shape_terms": audit.get("move_shape_terms") or [],
         "post_move_terms": audit.get("post_move_terms") or [],
+        "legal_move_labels": legal_labels,
         "runtime_forbidden_terms": [
             "tablebase_lookup",
             "dtm_oracle_move_selection",
@@ -123,7 +173,7 @@ def build_trajectory_seed(
             }
             plies.append(step)
             if board.turn == chess.WHITE:
-                white_steps.append(_white_training_step(board, move, child_dtm, ply_index))
+                white_steps.append(_white_training_step(board, move, child_dtm, ply_index, index, dtm))
             board.push(move)
         trajectories.append({
             "schema_version": "stage7_post_box_dtm_trajectory.v1",
