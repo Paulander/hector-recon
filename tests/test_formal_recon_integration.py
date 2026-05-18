@@ -1647,17 +1647,28 @@ def test_compile_stage7_king_tempo_sandbox_adds_default_off_visible_terminal(tmp
         topology_path=topology_path,
         output_path=output_path,
         score=25.0,
+        include_post_box_continuation=True,
+        post_box_continuation_score=32.0,
     )
 
     meta = topology["meta"]["stage7_king_tempo_sandbox"]
     node_id = meta["node_id"]
+    post_box_id = meta["post_box_continuation_node_id"]
     assert meta["enabled_by_default"] is False
     assert meta["causal_status"] == "sandbox_opt_in"
+    assert meta["include_post_box_continuation"] is True
     assert topology["nodes"][node_id]["factory"].endswith("create_krk_stage7_king_tempo_terminal")
+    assert topology["nodes"][post_box_id]["factory"].endswith(
+        "create_krk_stage7_post_box_continuation_terminal"
+    )
+    assert topology["nodes"][post_box_id]["meta"]["provider_skill_id"] == "krk.stage7_post_box_continuation"
+    assert "dtm_oracle_move_selection" in topology["nodes"][post_box_id]["meta"]["runtime_forbidden_terms"]
     assert topology["nodes"][node_id]["meta"]["provider_skill_id"] == "krk.stage0_basin"
     assert topology["nodes"]["krk_entry"]["meta"].get("stage7_king_tempo_enabled") is None
+    assert topology["nodes"]["krk_entry"]["meta"].get("stage7_post_box_continuation_enabled") is None
     assert any(edge["src"] == "krk_hub" and edge["dst"] == node_id and edge["type"] == "SUB" for edge in topology["edges"])
     assert any(edge["src"] == node_id and edge["dst"] == "krk_hub" and edge["type"] == "SUR" for edge in topology["edges"])
+    assert any(edge["src"] == "krk_hub" and edge["dst"] == post_box_id and edge["type"] == "SUB" for edge in topology["edges"])
 
 
 def test_stage7_king_tempo_move_shape_audit_proposes_non_causal_refinement(tmp_path):

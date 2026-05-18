@@ -707,6 +707,113 @@ def create_krk_stage7_drive_repair_terminal(node_id=None):
     return Node(nid=actual_id, ntype=NodeType.TERMINAL, predicate=predicate)
 
 
+def create_krk_stage7_post_box_continuation_terminal(node_id=None):
+    """Opt-in Stage 7 post-box continuation provider.
+
+    This provider is the sandbox counterpart to the DTM-won unresolved-family
+    candidates. It does not read DTM/tablebases or state hashes. It proposes
+    visible king-support or rook-confinement follow-up shapes only in the
+    post-box repair context where current providers failed to convert.
+    """
+    actual_id = node_id or "terminal.krk.stage7_post_box_continuation"
+
+    def predicate(node, env):
+        blackboard = env.get("blackboard")
+        board = env.get("board")
+        if blackboard is None or board is None or board.turn != chess.WHITE:
+            return False, False
+        if not blackboard.get("stage7_post_box_continuation_enabled", False):
+            return False, True
+        scope_label = str(blackboard.get("stage7_provider_scope_label", "box_shrink") or "box_shrink")
+        active_label = str(blackboard.get("active_landmark_label", "") or "")
+        if active_label and active_label != scope_label:
+            return False, True
+        # This is a continuation provider, not the first local box-shrink move.
+        if not blackboard.get("stage7_post_box_post_reply_context", False):
+            return False, True
+
+        terms = blackboard.setdefault("krk_visible_terms", {})
+        terms.update(_compute_krk_context_terms(board))
+        required_context = {
+            "box_shrink_drive_repair_available",
+            "enemy_king_not_at_edge",
+            "rook_safe",
+        }
+        if not all(bool(terms.get(term, False)) for term in required_context):
+            return False, True
+
+        metrics = _krk_geometry_metrics(board) or {}
+        current_box_area = int(metrics.get("box_area", 0) or 0)
+        if current_box_area < int(node.meta.get("min_box_area", 28) or 28):
+            return False, True
+        king_support_available = bool(terms.get("white_king_support_available", False))
+        candidates = []
+        for move in board.legal_moves:
+            audit = _stage7_post_box_continuation_move_audit(board, move)
+            if not audit.get("stage7_post_box_continuation_candidate"):
+                continue
+            priority = (
+                0 if (king_support_available and audit.get("king_support_followup")) else 1,
+                0 if ((not king_support_available) and audit.get("rook_box_confinement_followup")) else 1,
+                int(audit.get("post_box_area", 99) or 99),
+                -int(audit.get("black_escape_delta", 0) or 0),
+                move.uci(),
+            )
+            candidates.append((priority, move, audit))
+        if not candidates:
+            return False, True
+        candidates.sort(key=lambda item: item[0])
+        _, move, audit = candidates[0]
+        score = float(
+            blackboard.get(
+                "stage7_post_box_continuation_score",
+                node.meta.get("score", 32.0),
+            )
+            or 32.0
+        )
+        payload = {
+            "role_id": "krk.post_box_shrink_continuation",
+            "provider_skill_id": "krk.stage7_post_box_continuation",
+            "move": move.uci(),
+            "score": score,
+            "source_terms": list(audit.get("source_terms", [])),
+            "direct_request": False,
+            "causal_status": "sandbox_opt_in",
+            "runtime_forbidden_terms": [
+                "tablebase_lookup",
+                "dtm_oracle_move_selection",
+                "state_hash_exception",
+            ],
+        }
+        meta = {
+            "is_mate": False,
+            "is_draw": False,
+            "raw_score_before_role_bonus": 0.0,
+            "visible_stage7_post_box_continuation_bonus": score,
+            "visible_stage7_post_box_continuation_license": payload,
+            "visible_move_shape_audit": audit,
+            "visible_successor_affordance": {},
+        }
+        env.setdefault("actuator_suggestions", []).append({
+            "actuator": node.nid,
+            "move": move,
+            "score": score,
+            "stage": 7,
+            "curriculum_label": "stage7_post_box_continuation",
+            "target_goal_label": "box_shrink_post_box_continuation",
+            "meta": meta,
+        })
+        suggestions = env.get("actuator_suggestions", [])
+        best = max(suggestions, key=lambda item: item["score"])
+        env["suggested_move"] = best["move"].uci()
+        env["move_confidence"] = best["score"]
+        env["suggested_actuator"] = best["actuator"]
+        node.meta["last_stage7_post_box_continuation_license"] = payload
+        return True, True
+
+    return Node(nid=actual_id, ntype=NodeType.TERMINAL, predicate=predicate)
+
+
 def _stage7_king_tempo_move_audit(board: chess.Board, move: chess.Move) -> Dict[str, Any]:
     if move not in board.legal_moves:
         return {"move": move.uci(), "legal": False, "stage7_king_tempo_candidate": False}
@@ -953,6 +1060,138 @@ def _stage7_post_king_tempo_move_audit(board: chess.Board, move: chess.Move) -> 
         "current_enemy_corner_distance": current_corner,
         "post_box_area": post_box_area,
         "no_draw_after_move": bool(no_draw),
+    }
+
+
+def _stage7_post_box_continuation_move_audit(board: chess.Board, move: chess.Move) -> Dict[str, Any]:
+    if move not in board.legal_moves:
+        return {"move": move.uci(), "legal": False, "stage7_post_box_continuation_candidate": False}
+    piece = board.piece_at(move.from_square)
+    if piece not in {chess.Piece(chess.ROOK, chess.WHITE), chess.Piece(chess.KING, chess.WHITE)}:
+        return {"move": move.uci(), "legal": True, "stage7_post_box_continuation_candidate": False}
+
+    current_terms = _compute_krk_context_terms(board)
+    audit = krk_move_shape_audit(board, move, {}, include_worst_reply=True)
+    move_terms = set(audit.get("move_shape_terms", []) or [])
+    post_terms = set(audit.get("post_move_terms", []) or [])
+    worst_terms = set(audit.get("worst_reply_terms", []) or [])
+    current_metrics = audit.get("current_metrics", {}) or {}
+    post_metrics = audit.get("post_move_metrics", {}) or {}
+    current_box_area = int((current_metrics or {}).get("box_area", 0) or 0)
+    no_draw = not _move_creates_draw(board, move)
+
+    required_current = {
+        "box_shrink_drive_repair_available",
+        "enemy_king_not_at_edge",
+        "rook_safe",
+    }
+    required_post = {
+        "rook_safe_after_move",
+        "box_area_not_increased_after_move",
+        "enemy_edge_distance_not_increased_after_move",
+    }
+    required_worst = {"box_area_not_increased_after_worst_reply", "no_draw_after_worst_reply"}
+    if not all(bool(current_terms.get(term, False)) for term in required_current):
+        context_ok = False
+    else:
+        context_ok = current_box_area >= 28
+
+    black_escape_delta = 0
+    if current_metrics and post_metrics:
+        black_escape_delta = int(current_metrics.get("black_king_escape_count", 0)) - int(
+            post_metrics.get("black_king_escape_count", 0)
+        )
+
+    king_support_followup = bool(
+        context_ok
+        and "candidate_is_king_move" in move_terms
+        and (
+            "king_moves_toward_enemy" in move_terms
+            or "king_moves_toward_rook_support" in move_terms
+            or "white_king_distance_to_enemy_decreases" in post_terms
+            or "white_king_distance_to_rook_decreases" in post_terms
+        )
+        and required_post <= post_terms
+        and required_worst <= worst_terms
+        and no_draw
+    )
+    rook_box_confinement_followup = bool(
+        context_ok
+        and "candidate_is_rook_move" in move_terms
+        and "rook_safe_after_move" in post_terms
+        and "box_area_not_increased_after_move" in post_terms
+        and (
+            "box_area_decreases_after_move" in post_terms
+            or "black_king_escape_count_decreases_after_move" in post_terms
+            or "rook_to_checking_line" in move_terms
+            or "safe_check_created" in move_terms
+        )
+        and required_worst <= worst_terms
+        and no_draw
+    )
+    matched = bool(king_support_followup or rook_box_confinement_followup)
+    source_terms = sorted(
+        required_current
+        | {"no_draw_after_move"}
+        | (required_post if matched else set())
+        | (required_worst if matched else set())
+        | (
+            {
+                "candidate_is_king_move",
+                "king_support_followup",
+            }
+            if king_support_followup
+            else set()
+        )
+        | (
+            {
+                "candidate_is_rook_move",
+                "rook_box_confinement_followup",
+            }
+            if rook_box_confinement_followup
+            else set()
+        )
+        | (
+            {
+                term
+                for term in (
+                    "king_moves_toward_enemy",
+                    "king_moves_toward_rook_support",
+                    "white_king_distance_to_enemy_decreases",
+                    "white_king_distance_to_rook_decreases",
+                    "box_area_decreases_after_move",
+                    "black_king_escape_count_decreases_after_move",
+                    "rook_to_checking_line",
+                    "safe_check_created",
+                )
+                if term in move_terms or term in post_terms
+            }
+        )
+    )
+    return {
+        "move": move.uci(),
+        "legal": True,
+        "stage7_post_box_continuation_candidate": matched,
+        "source_terms": source_terms if matched else sorted(
+            set(k for k, v in current_terms.items() if v) | move_terms | post_terms | worst_terms
+        ),
+        "missing_current_terms": sorted(term for term in required_current if not current_terms.get(term, False)),
+        "missing_post_terms": sorted(required_post - post_terms),
+        "missing_worst_reply_terms": sorted(required_worst - worst_terms),
+        "move_shape_terms": sorted(move_terms),
+        "post_move_terms": sorted(post_terms),
+        "worst_reply_terms": sorted(worst_terms),
+        "king_support_followup": bool(king_support_followup),
+        "rook_box_confinement_followup": bool(rook_box_confinement_followup),
+        "post_box_area": (post_metrics or {}).get("box_area"),
+        "current_box_area": current_box_area,
+        "black_escape_delta": int(black_escape_delta),
+        "no_draw_after_move": bool(no_draw),
+        "runtime_forbidden_terms": [
+            "tablebase_lookup",
+            "dtm_oracle_move_selection",
+            "state_hash_exception",
+        ],
     }
 
 

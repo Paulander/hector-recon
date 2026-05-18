@@ -30,6 +30,24 @@ assert _training_seed_spec.loader is not None
 _training_seed = importlib.util.module_from_spec(_training_seed_spec)
 _training_seed_spec.loader.exec_module(_training_seed)
 
+_m3_trainability_spec = importlib.util.spec_from_file_location(
+    "assess_stage7_post_box_m3_trainability",
+    Path(__file__).resolve().parents[1] / "scripts" / "assess_stage7_post_box_m3_trainability.py",
+)
+assert _m3_trainability_spec is not None
+assert _m3_trainability_spec.loader is not None
+_m3_trainability = importlib.util.module_from_spec(_m3_trainability_spec)
+_m3_trainability_spec.loader.exec_module(_m3_trainability)
+
+_trajectory_seed_spec = importlib.util.spec_from_file_location(
+    "build_stage7_post_box_dtm_trajectory_seed",
+    Path(__file__).resolve().parents[1] / "scripts" / "build_stage7_post_box_dtm_trajectory_seed.py",
+)
+assert _trajectory_seed_spec is not None
+assert _trajectory_seed_spec.loader is not None
+_trajectory_seed = importlib.util.module_from_spec(_trajectory_seed_spec)
+_trajectory_seed_spec.loader.exec_module(_trajectory_seed)
+
 
 def test_stage7_unresolved_legal_first_summary_marks_selection_gap_and_capacity_probe(tmp_path):
     probe = {
@@ -172,3 +190,88 @@ def test_stage7_post_box_training_seed_is_non_causal_offline_supervision(tmp_pat
     assert labels["d2c3"] == 1
     assert labels["a5a4"] == 0
     assert "tablebase_lookup" in example["runtime_forbidden_terms"]
+
+
+def test_stage7_post_box_m3_trainability_blocks_scripted_provider_without_internal_edges(tmp_path):
+    topology = {
+        "nodes": {
+            "krk_hub": {"id": "krk_hub", "type": "SCRIPT", "meta": {}},
+            "terminal.krk.stage7_post_box_continuation": {
+                "id": "terminal.krk.stage7_post_box_continuation",
+                "type": "TERMINAL",
+                "meta": {
+                    "role_id": "krk.post_box_shrink_continuation",
+                    "provider_skill_id": "krk.stage7_post_box_continuation",
+                    "stage7_post_box_continuation_provider": True,
+                    "overlay_provider": True,
+                    "can_m3_update": True,
+                },
+            },
+        },
+        "edges": [
+            {
+                "src": "krk_hub",
+                "dst": "terminal.krk.stage7_post_box_continuation",
+                "type": "SUB",
+                "weight": 1.0,
+            }
+        ],
+    }
+    diagnostic = {
+        "handoff_packets": [
+            {
+                "phase": "post_opponent_reply",
+                "packet_id": "packet.1",
+                "evidence_terms": {
+                    "post_reply_fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+                    "post_reply_state_signature": "state.2cc0b3e1033a",
+                    "successor_selected_skill": "krk.stage7_post_box_continuation",
+                    "playout_result": "max_plies",
+                    "successor_skills": {
+                        "krk.stage7_post_box_continuation": {
+                            "visible_stage7_post_box_continuation_license": {
+                                "move": "a6d6",
+                                "source_terms": ["box_area_decreases_after_move"],
+                            }
+                        }
+                    },
+                },
+            }
+        ]
+    }
+    topology_path = tmp_path / "topology.json"
+    diagnostic_path = tmp_path / "diagnostic.json"
+    topology_path.write_text(json.dumps(topology), encoding="utf-8")
+    diagnostic_path.write_text(json.dumps(diagnostic), encoding="utf-8")
+
+    payload = _m3_trainability.assess_stage7_post_box_m3_trainability(
+        topology_path=topology_path,
+        diagnostic_path=diagnostic_path,
+    )
+
+    assert payload["causal_status"] == "non_causal"
+    assert payload["probe_result"] == "scripted_provider_selected_but_not_trainable_for_move_policy"
+    assert payload["recommended_next_action"] == "train_or_compile_learned_candidate_provider_before_m3_warmup"
+    assert payload["trainable_internal_edge_count"] == 0
+    assert payload["activation_edge_count"] == 1
+    assert "do_not_promote_stage7" in payload["safety"]["hard_blocks"]
+
+
+def test_stage7_post_box_dtm_trajectory_step_is_non_causal_training_evidence():
+    import chess
+
+    board = chess.Board("8/8/R7/8/2k5/8/8/3K4 w - - 2 2")
+    step = _trajectory_seed._white_training_step(
+        board,
+        chess.Move.from_uci("a6a5"),
+        child_dtm=26,
+        ply_index=0,
+    )
+
+    assert step["schema_version"] == "stage7_post_box_dtm_trajectory_step.v1"
+    assert step["target_skill"] == "krk.post_box_shrink_continuation"
+    assert step["target_class"] == "dtm_trajectory_white_move"
+    assert step["move"] == "a6a5"
+    assert step["label"] == 1
+    assert "dtm_oracle_move_selection" in step["runtime_forbidden_terms"]
+    assert "state_hash_exception" in step["runtime_forbidden_terms"]

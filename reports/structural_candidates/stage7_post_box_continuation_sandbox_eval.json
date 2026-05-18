@@ -1,0 +1,40 @@
+{
+  "schema_version": "stage7_post_box_continuation_sandbox_eval.v1",
+  "causal_status": "non_causal_evaluation_summary",
+  "candidate_id": "cand.krk.box_shrink.post_box_continuation_overlay_probe.v1",
+  "sandbox_topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_post_box_continuation_sandbox.json",
+  "target_artifact": "reports/structural_candidates/stage7_post_box_narrow_on_25_h40.json",
+  "baseline_artifact": "reports/structural_candidates/stage7_069_drive_support_target_25_h40.json",
+  "target_result": {
+    "mate": 19,
+    "max_plies": 6
+  },
+  "baseline_result": {
+    "mate": 19,
+    "max_plies": 6
+  },
+  "target_shadow_candidates": 21,
+  "baseline_shadow_candidates": 21,
+  "diagnosis": "visible_provider_ownership_replaces_stage0_failures_but_does_not_convert",
+  "candidate_status": "quarantined_after_frozen_weight_probe",
+  "governor_status": "needs_more_weight_training",
+  "topology_weight_diagnosis": {
+    "frozen_weight_probe_result": "no_target_improvement_vs_069_baseline",
+    "forced_oracle_probe_result": "dtm_winning_within_h40",
+    "bounded_m3_warmup_result": "not_run",
+    "bounded_m4_consolidation_result": "not_run",
+    "candidate_locality": "stage7_post_box_shrink",
+    "candidate_complexity": "narrow_visible_scripted_overlay"
+  },
+  "candidate_diagnostic_labels": [
+    "expressive_but_untrained",
+    "provider_capacity_missing",
+    "scripted_visible_rule_insufficient"
+  ],
+  "next_action": "run_bounded_candidate_local_training_probe_for_krk.post_box_shrink_continuation",
+  "constraints": [
+    "do_not_promote_stage7",
+    "do_not_enable_by_default",
+    "do_not_use_dtm_or_tablebase_at_runtime"
+  ]
+}

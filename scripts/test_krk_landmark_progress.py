@@ -82,6 +82,7 @@ def _materialize_stage7_sandbox_providers(graph: Graph, env: dict) -> None:
         blackboard.get("stage7_king_tempo_enabled", False)
         or blackboard.get("stage7_drive_repair_enabled", False)
         or blackboard.get("stage7_post_king_tempo_enabled", False)
+        or blackboard.get("stage7_post_box_continuation_enabled", False)
     ):
         return
     for node in graph.nodes.values():
@@ -90,6 +91,7 @@ def _materialize_stage7_sandbox_providers(graph: Graph, env: dict) -> None:
             meta.get("stage7_king_tempo_provider")
             or meta.get("stage7_drive_repair_provider")
             or meta.get("stage7_post_king_tempo_provider")
+            or meta.get("stage7_post_box_continuation_provider")
         ):
             continue
         predicate = getattr(node, "predicate", None)
@@ -588,6 +590,12 @@ def _suggestion_role_trace(meta: dict) -> dict:
         "visible_stage7_post_king_tempo_license": dict(
             meta.get("visible_stage7_post_king_tempo_license", {}) or {}
         ),
+        "visible_stage7_post_box_continuation_bonus": float(
+            meta.get("visible_stage7_post_box_continuation_bonus", 0.0) or 0.0
+        ),
+        "visible_stage7_post_box_continuation_license": dict(
+            meta.get("visible_stage7_post_box_continuation_license", {}) or {}
+        ),
     }
 
 
@@ -905,6 +913,12 @@ def _successor_contract_audit(
         ),
         "visible_stage7_post_king_tempo_license": dict(
             selected_group.get("visible_stage7_post_king_tempo_license", {}) or {}
+        ),
+        "visible_stage7_post_box_continuation_bonus": float(
+            selected_group.get("visible_stage7_post_box_continuation_bonus", 0.0) or 0.0
+        ),
+        "visible_stage7_post_box_continuation_license": dict(
+            selected_group.get("visible_stage7_post_box_continuation_license", {}) or {}
         ),
     }
 
@@ -1247,6 +1261,8 @@ def choose_move_with_engine(
     stage7_drive_repair_score: float = 28.0,
     stage7_post_king_tempo_enabled: bool = False,
     stage7_post_king_tempo_score: float = 30.0,
+    stage7_post_box_continuation_enabled: bool = False,
+    stage7_post_box_continuation_score: float = 32.0,
     stage7_provider_scope_label: str = "box_shrink",
     active_landmark_label: str | None = None,
     early_stop_stable_suggestions: int = 0,
@@ -1281,6 +1297,8 @@ def choose_move_with_engine(
         stage7_drive_repair_score=stage7_drive_repair_score,
         stage7_post_king_tempo_enabled=stage7_post_king_tempo_enabled,
         stage7_post_king_tempo_score=stage7_post_king_tempo_score,
+        stage7_post_box_continuation_enabled=stage7_post_box_continuation_enabled,
+        stage7_post_box_continuation_score=stage7_post_box_continuation_score,
         stage7_provider_scope_label=stage7_provider_scope_label,
         active_landmark_label=active_landmark_label,
         early_stop_stable_suggestions=early_stop_stable_suggestions,
@@ -1317,6 +1335,8 @@ def choose_move_details(
     stage7_drive_repair_score: float = 28.0,
     stage7_post_king_tempo_enabled: bool = False,
     stage7_post_king_tempo_score: float = 30.0,
+    stage7_post_box_continuation_enabled: bool = False,
+    stage7_post_box_continuation_score: float = 32.0,
     stage7_provider_scope_label: str = "box_shrink",
     active_landmark_label: str | None = None,
     early_stop_stable_suggestions: int = 0,
@@ -1325,6 +1345,7 @@ def choose_move_details(
     stage7_drive_repair_already_used: bool = False,
     stage7_drive_repair_post_reply_context: bool = False,
     stage7_post_king_tempo_already_used: bool = False,
+    stage7_post_box_post_reply_context: bool = False,
     perf_profile: dict | None = None,
     enable_diagnostic_caches: bool = False,
 ) -> dict:
@@ -1358,6 +1379,8 @@ def choose_move_details(
             stage7_drive_repair_score=stage7_drive_repair_score,
             stage7_post_king_tempo_enabled=stage7_post_king_tempo_enabled,
             stage7_post_king_tempo_score=stage7_post_king_tempo_score,
+            stage7_post_box_continuation_enabled=stage7_post_box_continuation_enabled,
+            stage7_post_box_continuation_score=stage7_post_box_continuation_score,
             stage7_provider_scope_label=stage7_provider_scope_label,
             active_landmark_label=active_landmark_label,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
@@ -1366,6 +1389,7 @@ def choose_move_details(
             stage7_drive_repair_already_used=stage7_drive_repair_already_used,
             stage7_drive_repair_post_reply_context=stage7_drive_repair_post_reply_context,
             stage7_post_king_tempo_already_used=stage7_post_king_tempo_already_used,
+            stage7_post_box_post_reply_context=stage7_post_box_post_reply_context,
             perf_profile=perf_profile,
             enable_diagnostic_caches=enable_diagnostic_caches,
         )
@@ -1400,6 +1424,8 @@ def _choose_move_details_impl(
     stage7_drive_repair_score: float = 28.0,
     stage7_post_king_tempo_enabled: bool = False,
     stage7_post_king_tempo_score: float = 30.0,
+    stage7_post_box_continuation_enabled: bool = False,
+    stage7_post_box_continuation_score: float = 32.0,
     stage7_provider_scope_label: str = "box_shrink",
     active_landmark_label: str | None = None,
     early_stop_stable_suggestions: int = 0,
@@ -1408,6 +1434,7 @@ def _choose_move_details_impl(
     stage7_drive_repair_already_used: bool = False,
     stage7_drive_repair_post_reply_context: bool = False,
     stage7_post_king_tempo_already_used: bool = False,
+    stage7_post_box_post_reply_context: bool = False,
     perf_profile: dict | None = None,
     enable_diagnostic_caches: bool = False,
 ) -> dict:
@@ -1480,6 +1507,15 @@ def _choose_move_details_impl(
     env["blackboard"]["stage7_post_king_tempo_score"] = float(stage7_post_king_tempo_score)
     env["blackboard"]["stage7_post_king_tempo_already_used"] = bool(
         stage7_post_king_tempo_already_used
+    )
+    env["blackboard"]["stage7_post_box_continuation_enabled"] = bool(
+        stage7_post_box_continuation_enabled
+    )
+    env["blackboard"]["stage7_post_box_continuation_score"] = float(
+        stage7_post_box_continuation_score
+    )
+    env["blackboard"]["stage7_post_box_post_reply_context"] = bool(
+        stage7_post_box_post_reply_context
     )
     env["blackboard"]["stage7_provider_scope_label"] = str(stage7_provider_scope_label or "box_shrink")
     if active_landmark_label:
@@ -1638,6 +1674,9 @@ def _choose_move_details_impl(
         "stage7_post_king_tempo_enabled": bool(stage7_post_king_tempo_enabled),
         "stage7_post_king_tempo_score": float(stage7_post_king_tempo_score),
         "stage7_post_king_tempo_already_used": bool(stage7_post_king_tempo_already_used),
+        "stage7_post_box_continuation_enabled": bool(stage7_post_box_continuation_enabled),
+        "stage7_post_box_continuation_score": float(stage7_post_box_continuation_score),
+        "stage7_post_box_post_reply_context": bool(stage7_post_box_post_reply_context),
         "stage7_provider_scope_label": str(stage7_provider_scope_label or "box_shrink"),
         "active_landmark_label": str(active_landmark_label or ""),
         "stagnation_context": dict(stagnation_context or {}),
@@ -1845,6 +1884,8 @@ def play_to_mate(
     stage7_drive_repair_score: float = 28.0,
     stage7_post_king_tempo_enabled: bool = False,
     stage7_post_king_tempo_score: float = 30.0,
+    stage7_post_box_continuation_enabled: bool = False,
+    stage7_post_box_continuation_score: float = 32.0,
     early_stop_stable_suggestions: int = 0,
     lock_stage_filter_through_playout: bool = False,
     forced_successor_skill: Optional[str] = None,
@@ -1962,11 +2003,14 @@ def play_to_mate(
                 stage7_drive_repair_score=stage7_drive_repair_score,
                 stage7_post_king_tempo_enabled=stage7_post_king_tempo_enabled,
                 stage7_post_king_tempo_score=stage7_post_king_tempo_score,
+                stage7_post_box_continuation_enabled=stage7_post_box_continuation_enabled,
+                stage7_post_box_continuation_score=stage7_post_box_continuation_score,
                 active_landmark_label=label,
                 stage7_king_tempo_already_used=stage7_king_tempo_used,
                 stage7_drive_repair_already_used=stage7_drive_repair_used,
                 stage7_drive_repair_post_reply_context=white_moves > 0,
                 stage7_post_king_tempo_already_used=stage7_post_king_tempo_used,
+                stage7_post_box_post_reply_context=white_moves > 0,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
                 forced_successor_skill=active_forced_successor,
                 perf_profile=perf_profile,
@@ -2794,6 +2838,8 @@ def run_counterfactual_successor_sweep(
     stage7_drive_repair_score: float = 28.0,
     stage7_post_king_tempo_enabled: bool = False,
     stage7_post_king_tempo_score: float = 30.0,
+    stage7_post_box_continuation_enabled: bool = False,
+    stage7_post_box_continuation_score: float = 32.0,
     early_stop_stable_suggestions: int = 0,
     step_output: Optional[Path] = None,
     step_context: Optional[dict] = None,
@@ -2974,6 +3020,8 @@ def evaluate_landmark_progress(
     stage7_drive_repair_score: float = 28.0,
     stage7_post_king_tempo_enabled: bool = False,
     stage7_post_king_tempo_score: float = 30.0,
+    stage7_post_box_continuation_enabled: bool = False,
+    stage7_post_box_continuation_score: float = 32.0,
     early_stop_stable_suggestions: int = 0,
     lock_stage_filter_through_playout: bool = False,
     counterfactual_successors: tuple[str, ...] = (),
@@ -3117,6 +3165,8 @@ def evaluate_landmark_progress(
             stage7_drive_repair_score=stage7_drive_repair_score,
             stage7_post_king_tempo_enabled=stage7_post_king_tempo_enabled,
             stage7_post_king_tempo_score=stage7_post_king_tempo_score,
+            stage7_post_box_continuation_enabled=stage7_post_box_continuation_enabled,
+            stage7_post_box_continuation_score=stage7_post_box_continuation_score,
             active_landmark_label=label,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
             perf_profile=perf_profile,
@@ -3284,6 +3334,8 @@ def evaluate_landmark_progress(
                 stage7_drive_repair_score=stage7_drive_repair_score,
                 stage7_post_king_tempo_enabled=stage7_post_king_tempo_enabled,
                 stage7_post_king_tempo_score=stage7_post_king_tempo_score,
+                stage7_post_box_continuation_enabled=stage7_post_box_continuation_enabled,
+                stage7_post_box_continuation_score=stage7_post_box_continuation_score,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
                 lock_stage_filter_through_playout=lock_stage_filter_through_playout,
                 perf_profile=perf_profile,
@@ -3830,6 +3882,8 @@ def evaluate_landmark_progress(
     stats["stage7_drive_repair_score"] = stage7_drive_repair_score
     stats["stage7_post_king_tempo_enabled"] = stage7_post_king_tempo_enabled
     stats["stage7_post_king_tempo_score"] = stage7_post_king_tempo_score
+    stats["stage7_post_box_continuation_enabled"] = stage7_post_box_continuation_enabled
+    stats["stage7_post_box_continuation_score"] = stage7_post_box_continuation_score
     stats["early_stop_stable_suggestions"] = int(early_stop_stable_suggestions)
     stats["lock_stage_filter_through_playout"] = bool(lock_stage_filter_through_playout)
     stats["diagnostic_caches_enabled"] = bool(enable_diagnostic_caches)
@@ -4370,6 +4424,10 @@ def main() -> None:
                         help="Enable opt-in Stage 7 visible post-king-tempo continuation provider")
     parser.add_argument("--stage7-post-king-tempo-score", type=float, default=30.0,
                         help="Score for the opt-in Stage 7 visible post-king-tempo continuation provider")
+    parser.add_argument("--enable-stage7-post-box-continuation", action="store_true",
+                        help="Enable opt-in Stage 7 visible post-box-shrink continuation provider")
+    parser.add_argument("--stage7-post-box-continuation-score", type=float, default=32.0,
+                        help="Score for the opt-in Stage 7 visible post-box-shrink continuation provider")
     parser.add_argument("--composition-profile",
                         choices=[COMPOSITION_PROFILE_NONE, COMPOSITION_PROFILE_HANDOFF_V1],
                         default=COMPOSITION_PROFILE_NONE,
@@ -4452,6 +4510,8 @@ def main() -> None:
         stage7_drive_repair_score=args.stage7_drive_repair_score,
         stage7_post_king_tempo_enabled=args.enable_stage7_post_king_tempo,
         stage7_post_king_tempo_score=args.stage7_post_king_tempo_score,
+        stage7_post_box_continuation_enabled=args.enable_stage7_post_box_continuation,
+        stage7_post_box_continuation_score=args.stage7_post_box_continuation_score,
         early_stop_stable_suggestions=args.early_stop_stable_suggestions,
         lock_stage_filter_through_playout=args.lock_stage_filter_through_playout,
         counterfactual_successors=tuple(

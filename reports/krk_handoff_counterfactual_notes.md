@@ -5826,3 +5826,176 @@ runtime constraints:
   do_not_use_dtm_or_tablebase_at_runtime
   do_not_promote_without_guardrails
 ```
+
+## Stage 7 post-box continuation sandbox result
+
+I added an opt-in visible provider:
+
+```text
+terminal.krk.stage7_post_box_continuation
+provider_skill_id: krk.stage7_post_box_continuation
+role_id: krk.post_box_shrink_continuation
+causal_status: sandbox_opt_in
+runtime forbidden terms:
+  tablebase_lookup
+  dtm_oracle_move_selection
+  state_hash_exception
+```
+
+The provider is compiled default-off into:
+
+```text
+snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_post_box_continuation_sandbox.json
+```
+
+Default-off equivalence:
+
+```text
+base topology, 10 samples, h40:
+  7 mate / 3 max_plies
+  10 shadow candidates
+
+post-box sandbox topology with provider disabled, 10 samples, h40:
+  7 mate / 3 max_plies
+  10 shadow candidates
+
+equivalence result:
+  equivalent = true
+```
+
+Provider-on smoke:
+
+```text
+broad first attempt, 25 samples, h40:
+  17 mate / 8 max_plies
+  25 shadow candidates
+  result: regressed, overbroad
+
+narrowed provider, 25 samples, h40:
+  19 mate / 6 max_plies
+  21 shadow candidates
+  result: no regression versus the current 069 support baseline, but no gain
+```
+
+Selected-successor comparison against the current 069 support baseline:
+
+```text
+current 069 support baseline:
+  edge_trap_close -> mate: 10
+  stage0_basin -> max_plies: 6
+  stage7_king_tempo -> mate: 4
+  drive_to_edge -> mate: 3
+  None -> mate: 2
+
+narrow post-box provider enabled:
+  edge_trap_close -> mate: 10
+  stage7_post_box_continuation -> max_plies: 6
+  stage7_king_tempo -> mate: 4
+  drive_to_edge -> mate: 3
+  None -> mate: 2
+```
+
+Interpretation:
+
+```text
+The narrowed provider is default-off safe and no longer causes broad damage,
+but it only replaces stage0_basin ownership in the remaining failures. It does
+not convert those failures.
+
+This means the visible owner/first-move scaffolding is wired, but the provider
+is expressive_but_untrained / capacity-limited under current hand-written
+terms. Stage 7 remains local_valid_composition_quarantined.
+```
+
+Next safe step:
+
+```text
+Stop hand-tuning post-box move rules. Use the generated DTM seed as offline,
+non-causal training evidence for a bounded M3/sandbox warmup of
+krk.post_box_shrink_continuation. Keep validated providers frozen, keep the
+candidate opt-in, and require Stage 7 target validation plus Stage 6/5/4/1
+guardrails before any promotion.
+```
+
+## Stage 7 post-box M3 trainability assessment
+
+I ran a non-causal M3 trainability assessment on the narrowed sandbox result.
+
+Artifacts:
+
+```text
+reports/structural_candidates/stage7_post_box_narrow_continuation_diagnosis.json
+reports/structural_candidates/stage7_post_box_narrow_continuation_diagnosis.md
+reports/structural_candidates/stage7_post_box_m3_trainability_assessment.json
+reports/structural_candidates/stage7_post_box_m3_trainability_assessment.md
+```
+
+Result:
+
+```text
+target_role: krk.post_box_shrink_continuation
+target_provider: krk.stage7_post_box_continuation
+visible_license_met: 6
+candidate_provider_selected: 6
+candidate_provider_selected_max_plies: 6
+trainable_internal_edge_count: 0
+activation_edge_count: 1 observe-only hub->terminal edge
+probe_result: scripted_provider_selected_but_not_trainable_for_move_policy
+```
+
+Interpretation:
+
+```text
+This is not a useful candidate-local M3 warmup target as currently compiled.
+The visible terminal can own the remaining families, but it has no internal
+trainable move-selection edge. Updating its activation edge would not teach it
+which continuation moves to play after the first DTM-seeded move.
+
+The correct next step is to compile or train a learnable
+krk.post_box_shrink_continuation provider from the offline seed, then run a
+bounded candidate-local warmup/validation. Do not M3-warm the current scripted
+terminal and do not promote Stage 7 from this result.
+```
+
+## Stage 7 post-box DTM trajectory seed
+
+Because the narrowed provider selected good first moves but still failed the
+continuation, I generated multi-ply offline DTM trajectories for the two
+remaining unresolved families.
+
+Artifacts:
+
+```text
+reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_h40.json
+reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_h40.jsonl
+```
+
+Result:
+
+```text
+trajectory_count: 2
+white_training_step_count: 25
+
+8/8/R7/8/2k5/8/8/3K4 w - - 2 2:
+  DTM 27
+  trajectory plies 27
+  ended in checkmate true
+  white training steps 14
+
+8/8/8/R7/4k3/8/3K4/8 w - - 2 2:
+  DTM 21
+  trajectory plies 21
+  ended in checkmate true
+  white training steps 11
+```
+
+Interpretation:
+
+```text
+The remaining Stage 7 issue is now a candidate-provider learning problem, not
+another visible first-move patch. A useful training target must cover the
+post-box continuation sequence after the first correct move.
+
+These trajectories are offline supervision only. They must not be read by
+runtime policy as a tablebase, DTM oracle, or state-hash exception.
+```

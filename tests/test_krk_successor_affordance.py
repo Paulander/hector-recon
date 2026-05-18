@@ -19,11 +19,13 @@ from recon_lite_chess.krk_baseline_nodes import (
     _provider_role_licenses,
     _stage7_drive_repair_move_audit,
     _stage7_king_tempo_move_audit,
+    _stage7_post_box_continuation_move_audit,
     _stage7_post_king_tempo_move_audit,
     create_krk_context_terminal,
     create_krk_role_provider_support_adapter,
     create_krk_stage7_drive_repair_terminal,
     create_krk_stage7_king_tempo_terminal,
+    create_krk_stage7_post_box_continuation_terminal,
     create_krk_stage7_post_king_tempo_terminal,
     create_krk_successor_affordance,
     krk_move_shape_audit,
@@ -1247,3 +1249,53 @@ def test_stage7_post_king_tempo_terminal_is_opt_in_and_after_king_tempo_only():
     suggestion = enabled_env["actuator_suggestions"][0]
     assert suggestion["curriculum_label"] == "stage7_post_king_tempo"
     assert suggestion["meta"]["visible_stage7_post_king_tempo_license"]["direct_request"] is False
+
+
+def test_stage7_post_box_continuation_terminal_is_opt_in_and_post_reply_scoped():
+    node = create_krk_stage7_post_box_continuation_terminal()
+    board = chess.Board("8/8/8/R7/4k3/8/3K4/8 w - - 2 2")
+    disabled_env = {
+        "board": board,
+        "blackboard": {
+            "stage7_post_box_continuation_enabled": False,
+            "stage7_post_box_post_reply_context": True,
+        },
+    }
+    before_reply_env = {
+        "board": board,
+        "blackboard": {
+            "stage7_post_box_continuation_enabled": True,
+            "stage7_post_box_post_reply_context": False,
+        },
+    }
+    enabled_env = {
+        "board": board,
+        "blackboard": {
+            "stage7_post_box_continuation_enabled": True,
+            "stage7_post_box_post_reply_context": True,
+            "stage7_post_box_continuation_score": 32.0,
+        },
+    }
+
+    assert node.predicate(node, disabled_env) == (False, True)
+    assert node.predicate(node, before_reply_env) == (False, True)
+    success, done = node.predicate(node, enabled_env)
+
+    assert success is True
+    assert done is True
+    assert enabled_env["suggested_move"] == "d2c3"
+    suggestion = enabled_env["actuator_suggestions"][0]
+    assert suggestion["curriculum_label"] == "stage7_post_box_continuation"
+    payload = suggestion["meta"]["visible_stage7_post_box_continuation_license"]
+    assert payload["direct_request"] is False
+    assert "dtm_oracle_move_selection" in payload["runtime_forbidden_terms"]
+
+
+def test_stage7_post_box_continuation_move_audit_has_no_state_hash_or_oracle_terms():
+    board = chess.Board("8/8/R7/8/2k5/8/8/3K4 w - - 2 2")
+    audit = _stage7_post_box_continuation_move_audit(board, chess.Move.from_uci("a6d6"))
+
+    assert audit["stage7_post_box_continuation_candidate"] is True
+    assert "box_area_decreases_after_move" in audit["source_terms"]
+    assert "dtm_oracle_move_selection" in audit["runtime_forbidden_terms"]
+    assert "state_hash_exception" in audit["runtime_forbidden_terms"]
