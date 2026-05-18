@@ -31,7 +31,9 @@ Current interpretation:
 - Stage 7 must not be promoted.
 - Stage 8 must not be trained from unresolved Stage 7.
 - The current task is diagnostic, not a runtime patch.
+- The learnable post-box Plan Capsule can own residual states, but closed-loop h40 replay still fails; expanded offline DTM-margin supervision improved DTM-positive top-1 only modestly and left the diagnosis as a trajectory-ranking/model-expression gap.
 - The latest arbitration probe established shared terminal-space provider comparison infrastructure but did not justify a causal arbitration change.
+- The first unified arbitration sample was intentionally small and underpowered; its sampled residuals were high `box_area_relevance`, so low box relevance / near-edge phase boundary is not yet established as the explanation.
 
 ## Hard Invariants
 

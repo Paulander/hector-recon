@@ -111,6 +111,15 @@ assert _strategy_arbitration_spec.loader is not None
 _strategy_arbitration = importlib.util.module_from_spec(_strategy_arbitration_spec)
 _strategy_arbitration_spec.loader.exec_module(_strategy_arbitration)
 
+_neutral_matrix_spec = importlib.util.spec_from_file_location(
+    "summarize_stage7_neutral_diagnostic_matrix",
+    Path(__file__).resolve().parents[1] / "scripts" / "summarize_stage7_neutral_diagnostic_matrix.py",
+)
+assert _neutral_matrix_spec is not None
+assert _neutral_matrix_spec.loader is not None
+_neutral_matrix = importlib.util.module_from_spec(_neutral_matrix_spec)
+_neutral_matrix_spec.loader.exec_module(_neutral_matrix)
+
 
 def test_stage7_unresolved_legal_first_summary_marks_selection_gap_and_capacity_probe(tmp_path):
     probe = {
@@ -689,3 +698,68 @@ def test_stage7_unified_strategy_arbitration_probe_detects_normalized_shortlist_
     assert probe["provider_local_rank1_oracle_coverage"] == 1.0
     assert probe["answers"]["provider_local_normalization_outperforms_raw_global_score"] is True
     assert probe["answers"]["failures_suggest_box_or_stage0_over_ownership"] is True
+
+
+def test_stage7_neutral_diagnostic_matrix_keeps_all_hypotheses_non_causal(tmp_path):
+    (tmp_path / "stage7_post_box_family_diagnosis.json").write_text(
+        json.dumps(
+            {
+                "family_diagnosis_counts": {
+                    "existing_provider_can_convert_if_family_role_selects_it": 2,
+                    "unresolved_by_existing_forced_providers_at_h80": 2,
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    (tmp_path / "stage7_expanded_ranked_capsule_trajectory_fidelity_audit.json").write_text(
+        json.dumps(
+            {
+                "teacher_forced_accuracy": {
+                    "dtm_positive_top1_rate": 0.36,
+                    "dtm_positive_top3_rate": 0.80,
+                },
+                "top_level_diagnosis": "trajectory_ranking_and_closed_loop_gap",
+            }
+        ),
+        encoding="utf-8",
+    )
+    (tmp_path / "stage7_unified_strategy_arbitration_probe.json").write_text(
+        json.dumps(
+            {
+                "dataset_state_count": 3,
+                "labeled_state_count": 3,
+                "raw_global_top_conversion_rate": 0.0,
+                "provider_local_rank1_oracle_coverage": 0.0,
+                "box_area_relevance_outcome_counts": {"high:any_mate=False": 3},
+                "answers": {
+                    "provider_selection_model_predicts_converting_provider": False,
+                    "provider_local_normalization_outperforms_raw_global_score": False,
+                    "box_area_relevance_explains_some_failures": False,
+                    "failures_suggest_box_or_stage0_over_ownership": False,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    matrix = _neutral_matrix.build_matrix(tmp_path)
+
+    assert matrix["schema_version"] == "stage7_neutral_diagnostic_matrix.v1"
+    assert matrix["causal_status"] == "non_causal"
+    assert matrix["runtime_behavior_changed"] is False
+    assert matrix["stage7_status"] == "local_valid_composition_quarantined"
+    assert len(matrix["hypotheses"]) == 5
+    assert all(item["next_test_causal_status"] == "non_causal" for item in matrix["hypotheses"])
+    assert {item["confidence"] for item in matrix["hypotheses"]} <= {"low", "medium", "high"}
+    assert "repair" not in matrix["current_best_interpretation"]["next_proposed_step"].lower()
+
+
+def test_stage7_neutral_diagnostic_markdown_names_current_best_interpretation(tmp_path):
+    matrix = _neutral_matrix.build_matrix(tmp_path)
+    markdown = _neutral_matrix.render_markdown(matrix)
+
+    assert "# Stage 7 Neutral Diagnostic Matrix" in markdown
+    assert "## Current Best Interpretation" in markdown
+    assert "Training-objective / model-expression issue" in markdown
+    assert "No runtime behavior" not in markdown
