@@ -7566,3 +7566,46 @@ do not use tablebase/DTM at runtime
 do not use state-hash exceptions
 do not mutate topology during gameplay
 ```
+
+## 2cc protocol Phase 0/1
+
+Ran the first two protocol phases without changing runtime behavior:
+
+```text
+reports/structural_candidates/stage7_2cc_protocol_phase01.json
+reports/structural_candidates/stage7_2cc_protocol_phase01.md
+```
+
+Phase 0 static sanity passed:
+
+```text
+protocol_non_causal: true
+candidate_non_causal: true
+candidate_not_promoted: true
+tablebase_forbidden: true
+dtm_runtime_forbidden: true
+state_hash_forbidden: true
+model_non_promoted: true
+model_default_off: true
+```
+
+Phase 1 scored the 2cc CandidateMoveFrames with the existing frozen visible-term
+trajectory model:
+
+```text
+selected_move: d1e2
+selected_child_dtm: 28
+selected_forces_mate: true
+selected_optimal_dtm_move: false
+optimal_dtm_moves: a6a5, a6d6, d1d2
+status: frozen_model_selects_winning_nonoptimal_move
+```
+
+Interpretation:
+
+```text
+The frozen visible-term model has an expressive first-step signal for 2cc,
+but it does not select the optimal DTM move. This supports a default-off
+sandbox candidate-local probe next, not promotion and not Stage 8 training.
+The current status is sandbox_protocol_phase01_complete.
+```

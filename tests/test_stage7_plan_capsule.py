@@ -657,3 +657,124 @@ def test_stage7_2cc_continuation_protocol_is_non_causal():
     assert candidate["promotion_status"] == "sandbox_training_protocol_ready"
     assert "do_not_train_stage8" in payload["hard_boundaries"]
     assert "tablebase_lookup" in candidate["proposed_change"]["runtime_forbidden_terms"]
+
+
+def test_stage7_2cc_protocol_phase01_uses_frozen_visible_model(tmp_path):
+    script = ROOT / "scripts" / "evaluate_stage7_2cc_protocol_phase01.py"
+    spec = importlib.util.spec_from_file_location("evaluate_stage7_2cc_protocol_phase01", script)
+    assert spec is not None
+    evaluator = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(evaluator)
+
+    protocol_path = tmp_path / "protocol.json"
+    protocol_path.write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal",
+                "structural_candidate": {
+                    "candidate_id": "cand.krk.box_shrink.family_2cc.post_box_continuation_overlay.v1",
+                    "causal_status": "non_causal",
+                    "promotion_status": "sandbox_training_protocol_ready",
+                    "proposed_change": {
+                        "runtime_forbidden_terms": [
+                            "tablebase_lookup",
+                            "dtm_oracle_move_selection",
+                            "state_hash_exception",
+                        ]
+                    },
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    frames_path = tmp_path / "frames.json"
+    frames_path.write_text(
+        json.dumps(
+            {
+                "records": [
+                    {
+                        "fen": FEN_2CC,
+                        "candidate_move_frames": [
+                            {
+                                "move_uci": "d1e2",
+                                "move_shape_terms": ["candidate_is_king_move"],
+                                "post_move_terms": ["white_king_distance_to_enemy_decreases"],
+                            },
+                            {
+                                "move_uci": "a6a5",
+                                "move_shape_terms": ["candidate_is_rook_move"],
+                                "post_move_terms": ["rook_safe_after_move"],
+                            },
+                        ],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    alignment_path = tmp_path / "alignment.json"
+    alignment_path.write_text(
+        json.dumps(
+            {
+                "labeled_candidate_frames": [
+                    {
+                        "move": "d1e2",
+                        "child_dtm": 28,
+                        "forces_mate": True,
+                        "optimal_dtm_move": False,
+                    },
+                    {
+                        "move": "a6a5",
+                        "child_dtm": 26,
+                        "forces_mate": True,
+                        "optimal_dtm_move": True,
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    model_path = tmp_path / "model.json"
+    model_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "stage7_post_box_trajectory_provider_model.v1",
+                "causal_status": "sandbox_model_non_promoted",
+                "provider_skill_id": "krk.stage7_post_box_learned_continuation",
+                "constraints": ["do_not_enable_by_default"],
+                "runtime_forbidden_terms": [
+                    "tablebase_lookup",
+                    "dtm_oracle_move_selection",
+                    "state_hash_exception",
+                ],
+                "bias": 0.0,
+                "weights": {
+                    "move_shape:candidate_is_king_move": 2.0,
+                    "post_move:white_king_distance_to_enemy_decreases": 2.0,
+                    "move_shape:candidate_is_rook_move": 0.5,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    payload = evaluator.evaluate_phase01(
+        protocol_path=protocol_path,
+        alignment_path=alignment_path,
+        candidate_frames_path=frames_path,
+        model_path=model_path,
+    )
+
+    assert payload["schema_version"] == "stage7_2cc_protocol_phase01_eval.v1"
+    assert payload["causal_status"] == "non_causal"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["phase0_static_sanity"]["passed"] is True
+    probe = payload["phase1_frozen_weight_probe"]
+    assert probe["selected_move"] == "d1e2"
+    assert probe["selected_forces_mate"] is True
+    assert probe["selected_optimal_dtm_move"] is False
+    assert probe["status"] == "frozen_model_selects_winning_nonoptimal_move"
+    assert payload["candidate_status_update"]["promotion_status"] == (
+        "sandbox_protocol_phase01_complete"
+    )
