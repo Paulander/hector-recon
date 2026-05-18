@@ -510,6 +510,63 @@ def test_overlay_compiler_remaps_conflicting_overlay_actuator_ids(tmp_path):
     assert topology["nodes"]["actuator_8"]["meta"]["source_actuator_id"] == 7
 
 
+def test_overlay_compiler_can_mark_plan_capsule_provider_default_off(tmp_path):
+    base_topology = {"nodes": {}, "edges": [], "meta": {}}
+    base_sensor = _dummy_sensor()
+    base_actuator = _dummy_actuator()
+    base_actuator.curriculum_label = "box_shrink"
+    create_root_node(base_topology)
+    create_hub_node(base_topology)
+    create_leg_micro_script(base_topology, base_actuator, [base_sensor])
+    base_path = tmp_path / "base_topology.json"
+    base_path.write_text(json.dumps(base_topology), encoding="utf-8")
+
+    overlay_sensor = _dummy_sensor()
+    overlay_actuator = _dummy_actuator()
+    overlay_actuator.curriculum_label = "post_box_shrink_continuation"
+    overlay_learner = SimpleNamespace(
+        sensors=[overlay_sensor],
+        actuators=[overlay_actuator],
+        feature_set="krk_rich_v1",
+        feature_names=("x", "y", "z"),
+    )
+    overlay_path = tmp_path / "overlay.pkl"
+    import pickle
+
+    with overlay_path.open("wb") as fh:
+        pickle.dump(overlay_learner, fh)
+
+    topology = _baseline_to_recon.compile_overlay_topology(
+        base_topology_path=base_path,
+        overlay_learner_path=overlay_path,
+        output_path=tmp_path / "composed.json",
+        overlay_label="post_box_shrink_continuation",
+        overlay_provider_version="stage7_post_box_continuation_overlay_v1",
+        overlay_provider_maturity="candidate_high_plasticity",
+        overlay_plasticity_scope="candidate_local",
+        overlay_can_m3_update=True,
+        overlay_can_m4_consolidate=False,
+        overlay_plan_capsule_id="krk.post_box_shrink_continuation",
+        overlay_causal_status="sandbox_opt_in",
+        overlay_default_enabled=False,
+        overlay_ttl_white_moves=4,
+    )
+
+    preservation = topology["meta"]["provider_preservation"]
+    assert preservation["overlay_plan_capsule_id"] == "krk.post_box_shrink_continuation"
+    assert preservation["overlay_can_m4_consolidate"] is False
+    assert preservation["overlay_default_enabled"] is False
+    meta = topology["nodes"]["actuator_8"]["meta"]
+    assert meta["provider_version"] == "stage7_post_box_continuation_overlay_v1"
+    assert meta["plan_capsule_id"] == "krk.post_box_shrink_continuation"
+    assert meta["causal_status"] == "sandbox_opt_in"
+    assert meta["default_enabled"] is False
+    assert meta["ttl_white_moves"] == 4
+    assert meta["plasticity_scope"] == "candidate_local"
+    assert meta["can_m3_update"] is True
+    assert meta["can_m4_consolidate"] is False
+
+
 def test_provider_promotion_eval_promotes_when_stage_and_guardrails_pass(tmp_path):
     stage_path = tmp_path / "stage.json"
     guardrail_path = tmp_path / "guardrail.json"

@@ -32,6 +32,8 @@ from train_baseline_krk_chain import update_learner_from_transitions
 
 LABEL = "post_box_shrink_continuation"
 SKILL_ID = "krk.post_box_shrink_continuation"
+PROVIDER_VERSION = "stage7_post_box_continuation_overlay_v1"
+PLAN_CAPSULE_ID = "krk.post_box_shrink_continuation"
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -168,6 +170,57 @@ def train_overlay_learner(
         "learner_output": str(output_learner_path),
         "target_label": LABEL,
         "target_skill": SKILL_ID,
+        "provider_skill_id": SKILL_ID,
+        "provider_version": PROVIDER_VERSION,
+        "plan_capsule_id": PLAN_CAPSULE_ID,
+        "provider_maturity": "candidate_high_plasticity",
+        "plasticity_scope": "candidate_local",
+        "can_m3_update": True,
+        "can_m4_consolidate": False,
+        "default_enabled": False,
+        "promotion_status": "sandbox_candidate",
+        "bounded_plan_ownership": {
+            "ttl_white_moves": 4,
+            "entry_terms": [
+                "active_landmark_label.box_shrink",
+                "post_box_shrink_continuation_needed",
+                "stage7_post_box_post_reply_context",
+                "rook_safe",
+                "mate_in_one_available.false",
+            ],
+            "progress_terms": [
+                "cut_or_fence_preserved_or_restored",
+                "box_area_not_expanded",
+                "white_king_support_improves",
+                "enemy_king_mobility_decreases",
+                "mate_basin_proximity_improves",
+                "stagnation_avoided",
+            ],
+            "exit_terms": [
+                "mate_in_one_available",
+                "stage0_finish_licensed",
+                "edge_trap_role_confirmed",
+                "drive_to_edge_role_confirmed",
+                "fence_or_cut_restored",
+            ],
+            "abort_terms": [
+                "rook_unsafe",
+                "draw_or_stalemate_risk",
+                "box_expansion",
+                "stagnation_loop",
+                "no_progress_after_ttl",
+            ],
+        },
+        "trainable_internal_components": [
+            "sensor_context_terms",
+            "candidate_move_shape_terms",
+            "post_move_terms",
+            "trajectory_target_memory",
+            "actuator_legs",
+            "learned_scoring_head",
+            "bounded_plan_ownership_trace",
+            "exit_abort_monitoring",
+        ],
         "stage": stage,
         "feature_set": "krk_rich_v1",
         "transition_count": len(transitions),
@@ -183,6 +236,8 @@ def train_overlay_learner(
             "do_not_enable_by_default",
             "do_not_promote_without_guardrails",
             "prevent_cross_label_actuator_merge",
+            "freeze_validated_base_providers",
+            "disable_m4_consolidation_initially",
         ],
     }
     summary_path.parent.mkdir(parents=True, exist_ok=True)

@@ -4,7 +4,46 @@
   "training_seed_source": "reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_h40.json",
   "target_skill": "krk.post_box_shrink_continuation",
   "provider_skill_id": "krk.stage7_post_box_learned_continuation",
+  "provider_version": "stage7_post_box_continuation_overlay_v1",
   "role_id": "krk.post_box_shrink_continuation",
+  "plan_capsule_id": "krk.post_box_shrink_continuation",
+  "default_enabled": false,
+  "promotion_status": "sandbox_candidate",
+  "provider_maturity": "candidate_high_plasticity",
+  "plasticity_scope": "candidate_local",
+  "can_m3_update": true,
+  "can_m4_consolidate": false,
+  "bounded_plan_ownership": {
+    "ttl_white_moves": 4,
+    "entry_terms": [
+      "active_landmark_label.box_shrink",
+      "post_box_shrink_continuation_needed",
+      "stage7_post_box_post_reply_context",
+      "rook_safe",
+      "mate_in_one_available.false"
+    ],
+    "progress_terms": [
+      "cut_or_fence_preserved_or_restored",
+      "box_area_not_expanded",
+      "king_support_improves",
+      "mate_basin_proximity_improves",
+      "stagnation_avoided"
+    ],
+    "exit_terms": [
+      "mate_in_one_available",
+      "stage0_finish_licensed",
+      "edge_trap_role_confirmed",
+      "drive_to_edge_role_confirmed",
+      "fence_or_cut_restored"
+    ],
+    "abort_terms": [
+      "rook_unsafe",
+      "draw_or_stalemate_risk",
+      "box_expansion",
+      "stagnation_loop",
+      "no_progress_after_ttl"
+    ]
+  },
   "model_kind": "visible_term_log_odds_linear_scorer",
   "bias": -2.0677999666643503,
   "weights": {

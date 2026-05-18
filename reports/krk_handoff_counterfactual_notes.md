@@ -7767,3 +7767,94 @@ diagnosis: selected_candidate_move_still_insufficient_for_multistep_conversion
 promotion_status: sandbox_hook_smoke_complete
 next_action: run bounded candidate-local continuation warmup only if guardrails remain scoped
 ```
+
+## Stage 7 learnable Plan Capsule provider
+
+Updated the Stage 7 plan after the frozen candidate-model smoke:
+
+```text
+current diagnosis:
+  candidate-move visibility works
+  first-move support is insufficient
+  scripted post-box continuation can own failures but still max-plies
+  M3 trainability assessment found no useful trainable internal move-policy edge
+  offline DTM multi-ply trajectory seed exists
+
+next target:
+  learnable multi-step post-box Plan Capsule provider
+```
+
+This is not Stage 8, not Stage 7 promotion, and not runtime tablebase use.
+The new provider remains a default-off sandbox overlay:
+
+```text
+provider_skill_id: krk.post_box_shrink_continuation
+provider_version: stage7_post_box_continuation_overlay_v1
+plan_capsule_id: krk.post_box_shrink_continuation
+causal_status: sandbox_opt_in
+default_enabled: false
+ttl_white_moves: 4
+plasticity_scope: candidate_local
+can_m3_update: true
+can_m4_consolidate: false
+```
+
+Regenerated artifacts:
+
+```text
+reports/structural_candidates/stage7_post_box_overlay_learner.pkl
+reports/structural_candidates/stage7_post_box_overlay_learner_training.json
+reports/structural_candidates/stage7_post_box_trajectory_provider_model.json
+snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_post_box_learned_overlay.json
+reports/structural_candidates/stage7_post_box_learnable_capsule_provider_plan.json
+reports/structural_candidates/stage7_post_box_learnable_capsule_provider_plan.md
+```
+
+The overlay topology now records the provider as a bounded Plan Capsule
+candidate and disables M4 consolidation until sandbox validation justifies it.
+DTM/tablebase information remains offline supervision only:
+
+```text
+runtime forbidden:
+  tablebase_lookup
+  dtm_oracle_move_selection
+  state_hash_exception
+```
+
+Evaluation protocol recorded in the plan artifact:
+
+```text
+0. default-off equivalence
+1. targeted unresolved-family replay
+2. 10-sample Stage 7 h40 smoke
+3. 25-sample Stage 7 h40 validation
+4. protected guardrails only after target improvement
+5. larger Stage 7 validation only after guardrails hold
+```
+
+The candidate status is:
+
+```text
+cand.krk.box_shrink.post_box_learnable_capsule_provider.v1:
+  promotion_status: learnable_capsule_provider_protocol_ready
+  causal_status: non_causal
+  credit: 0.0
+  next_action: run_default_off_equivalence_then_targeted_unresolved_family_replay
+```
+
+Tiny default-off smoke on the recompiled topology:
+
+```text
+artifact: reports/structural_candidates/stage7_post_box_learnable_capsule_default_off_smoke_5_h20.json
+samples: 5
+horizon: 20
+local: 5/5 improved, 3/5 optimal
+conversion: 2 mate / 3 max_plies
+learned_post_box_enabled: false
+frozen_model_candidate_enabled: false
+frozen_model_candidate_supported_suggestion_count: 0
+```
+
+This matches the expected disabled behavior: the topology can carry the
+learnable Plan Capsule provider metadata without emitting sandbox suggestions
+or changing defaults.

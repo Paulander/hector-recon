@@ -57,6 +57,15 @@ assert _trajectory_provider_spec.loader is not None
 _trajectory_provider = importlib.util.module_from_spec(_trajectory_provider_spec)
 _trajectory_provider_spec.loader.exec_module(_trajectory_provider)
 
+_learnable_capsule_provider_spec = importlib.util.spec_from_file_location(
+    "plan_stage7_post_box_learnable_capsule_provider",
+    Path(__file__).resolve().parents[1] / "scripts" / "plan_stage7_post_box_learnable_capsule_provider.py",
+)
+assert _learnable_capsule_provider_spec is not None
+assert _learnable_capsule_provider_spec.loader is not None
+_learnable_capsule_provider = importlib.util.module_from_spec(_learnable_capsule_provider_spec)
+_learnable_capsule_provider_spec.loader.exec_module(_learnable_capsule_provider)
+
 
 def test_stage7_unresolved_legal_first_summary_marks_selection_gap_and_capacity_probe(tmp_path):
     probe = {
@@ -329,7 +338,67 @@ def test_stage7_post_box_trajectory_provider_model_is_sandbox_non_promoted(tmp_p
     assert payload["schema_version"] == "stage7_post_box_trajectory_provider_model.v1"
     assert payload["causal_status"] == "sandbox_model_non_promoted"
     assert payload["provider_skill_id"] == "krk.stage7_post_box_learned_continuation"
+    assert payload["provider_version"] == "stage7_post_box_continuation_overlay_v1"
+    assert payload["plan_capsule_id"] == "krk.post_box_shrink_continuation"
+    assert payload["default_enabled"] is False
+    assert payload["can_m4_consolidate"] is False
     assert "do_not_enable_by_default" in payload["constraints"]
     assert "dtm_oracle_move_selection" in payload["runtime_forbidden_terms"]
     assert payload["positive_count"] == 1
     assert payload["negative_count"] == 1
+
+
+def test_stage7_post_box_learnable_capsule_provider_plan_is_bounded_and_default_off(tmp_path):
+    seed_path = tmp_path / "seed.json"
+    seed_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "stage7_post_box_dtm_trajectory_seed.v1",
+                "trajectories": [
+                    {
+                        "white_training_steps": [
+                            {"fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2"},
+                            {"fen": "8/8/8/R7/2k5/8/8/3K4 w - - 4 3"},
+                        ]
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    summary_path = tmp_path / "training.json"
+    summary_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "stage7_post_box_overlay_learner_training.v1",
+                "causal_status": "offline_training_non_promoted",
+                "provider_version": "stage7_post_box_continuation_overlay_v1",
+                "plan_capsule_id": "krk.post_box_shrink_continuation",
+                "transition_count": 12,
+                "overlay_actuator_count": 4,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    payload = _learnable_capsule_provider.build_plan(
+        trajectory_seed_path=seed_path,
+        overlay_training_summary_path=summary_path,
+    )
+
+    assert payload["schema_version"] == "stage7_post_box_learnable_capsule_provider_plan.v1"
+    assert payload["causal_status"] == "non_causal"
+    assert payload["runtime_behavior_changed"] is False
+    provider = payload["provider"]
+    assert provider["provider_skill_id"] == "krk.post_box_shrink_continuation"
+    assert provider["provider_version"] == "stage7_post_box_continuation_overlay_v1"
+    assert provider["plan_capsule_id"] == "krk.post_box_shrink_continuation"
+    assert provider["default_enabled"] is False
+    assert provider["causal_status"] == "sandbox_opt_in"
+    assert provider["can_m3_update"] is True
+    assert provider["can_m4_consolidate"] is False
+    assert provider["ttl_white_moves"] == 4
+    assert "learned_scoring_head" in provider["trainable_internal_components"]
+    assert payload["candidate_local_training_protocol"]["m4_consolidation_enabled"] is False
+    assert payload["candidate_local_training_protocol"]["runtime_dtm_or_tablebase_lookup"] is False
+    assert "do_not_train_stage8" in payload["hard_constraints"]

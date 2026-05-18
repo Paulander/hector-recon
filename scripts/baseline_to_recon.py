@@ -111,6 +111,10 @@ def _provider_metadata_payload(
         ),
         "guardrail_status": dict(metadata.get("guardrail_status", {}) or {}),
         "promotion_status": metadata.get("promotion_status"),
+        "plan_capsule_id": metadata.get("plan_capsule_id"),
+        "causal_status": metadata.get("causal_status"),
+        "default_enabled": metadata.get("default_enabled"),
+        "ttl_white_moves": metadata.get("ttl_white_moves"),
     }
 
 
@@ -162,6 +166,10 @@ def annotate_provider_metadata(
                     "can_m4_consolidate": meta.get("can_m4_consolidate"),
                     "guardrail_status": meta.get("guardrail_status", {}),
                     "promotion_status": meta.get("promotion_status"),
+                    "plan_capsule_id": meta.get("plan_capsule_id"),
+                    "causal_status": meta.get("causal_status"),
+                    "default_enabled": meta.get("default_enabled"),
+                    "ttl_white_moves": meta.get("ttl_white_moves"),
                 },
                 source_stage=meta.get("source_stage", meta.get("stage")) if meta.get("source_stage", meta.get("stage")) is not None else None,
             )
@@ -309,6 +317,14 @@ def compile_overlay_topology(
     base_source_checkpoint: str | None = None,
     overlay_source_checkpoint: str | None = None,
     validated_profile: str | None = "handoff_composition_v1",
+    overlay_provider_maturity: str = "candidate_high_plasticity",
+    overlay_plasticity_scope: str = "overlay_local",
+    overlay_can_m3_update: bool = True,
+    overlay_can_m4_consolidate: bool = True,
+    overlay_plan_capsule_id: str | None = None,
+    overlay_causal_status: str = "sandbox_opt_in",
+    overlay_default_enabled: bool = False,
+    overlay_ttl_white_moves: int | None = None,
 ) -> Dict[str, Any]:
     """Compose a frozen validated topology with an additive later-stage overlay.
 
@@ -331,6 +347,14 @@ def compile_overlay_topology(
         "overlay_provider_version": overlay_provider_version,
         "overlay_label": overlay_label,
         "validated_profile": validated_profile,
+        "overlay_provider_maturity": overlay_provider_maturity,
+        "overlay_plasticity_scope": overlay_plasticity_scope,
+        "overlay_can_m3_update": bool(overlay_can_m3_update),
+        "overlay_can_m4_consolidate": bool(overlay_can_m4_consolidate),
+        "overlay_plan_capsule_id": overlay_plan_capsule_id,
+        "overlay_causal_status": overlay_causal_status,
+        "overlay_default_enabled": bool(overlay_default_enabled),
+        "overlay_ttl_white_moves": overlay_ttl_white_moves,
         "promotion_status": "overlay_candidate",
     })
     annotate_provider_metadata(
@@ -366,12 +390,16 @@ def compile_overlay_topology(
         "frozen_provider": False,
         "overlay_provider": True,
         "validated_profile": validated_profile,
-        "provider_maturity": "candidate_high_plasticity",
-        "plasticity_scope": "overlay_local",
-        "can_m3_update": True,
-        "can_m4_consolidate": True,
+        "provider_maturity": overlay_provider_maturity,
+        "plasticity_scope": overlay_plasticity_scope,
+        "can_m3_update": bool(overlay_can_m3_update),
+        "can_m4_consolidate": bool(overlay_can_m4_consolidate),
         "guardrail_status": {},
         "promotion_status": "overlay_candidate",
+        "plan_capsule_id": overlay_plan_capsule_id,
+        "causal_status": overlay_causal_status,
+        "default_enabled": bool(overlay_default_enabled),
+        "ttl_white_moves": overlay_ttl_white_moves,
     }
 
     def _next_free_actuator_id() -> int:
@@ -1448,6 +1476,14 @@ if __name__ == "__main__":
     parser.add_argument("--overlay-provider-version", default="stage6_overlay_v1")
     parser.add_argument("--base-source-checkpoint", default=None)
     parser.add_argument("--overlay-source-checkpoint", default=None)
+    parser.add_argument("--overlay-provider-maturity", default="candidate_high_plasticity")
+    parser.add_argument("--overlay-plasticity-scope", default="overlay_local")
+    parser.add_argument("--overlay-disable-m3-update", action="store_true")
+    parser.add_argument("--overlay-disable-m4-consolidation", action="store_true")
+    parser.add_argument("--overlay-plan-capsule-id", default=None)
+    parser.add_argument("--overlay-causal-status", default="sandbox_opt_in")
+    parser.add_argument("--overlay-default-enabled", action="store_true")
+    parser.add_argument("--overlay-ttl-white-moves", type=int, default=None)
     
     args = parser.parse_args()
     
@@ -1470,6 +1506,14 @@ if __name__ == "__main__":
             base_source_checkpoint=args.base_source_checkpoint,
             overlay_source_checkpoint=args.overlay_source_checkpoint,
             validated_profile=args.validated_profile,
+            overlay_provider_maturity=args.overlay_provider_maturity,
+            overlay_plasticity_scope=args.overlay_plasticity_scope,
+            overlay_can_m3_update=not args.overlay_disable_m3_update,
+            overlay_can_m4_consolidate=not args.overlay_disable_m4_consolidation,
+            overlay_plan_capsule_id=args.overlay_plan_capsule_id,
+            overlay_causal_status=args.overlay_causal_status,
+            overlay_default_enabled=args.overlay_default_enabled,
+            overlay_ttl_white_moves=args.overlay_ttl_white_moves,
         )
     else:
         if args.learner is None:
