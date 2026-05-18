@@ -6132,3 +6132,75 @@ cand.krk.box_shrink.post_box_continuation_overlay_probe.v1:
     either ask for expert review or move to broader full-KRK/post-box
     continuation design rather than another micro-patch
 ```
+
+## Stage 7 Plan Capsule candidate
+
+The next Stage 7 step is no longer a local move-shape, score-arbitration, or
+single-provider patch. Stage 7 remains:
+
+```text
+local_valid_composition_quarantined
+```
+
+The new non-causal candidate is:
+
+```text
+cand.krk.box_shrink.post_box_continuation_capsule.v1
+capsule_id: krk.post_box_shrink_continuation
+schema: plan_capsule_spec.v1
+causal_status: non_causal
+promotion_status: proposed
+ttl_white_moves: 3
+```
+
+Artifacts:
+
+```text
+reports/structural_candidates/stage7_post_box_continuation_capsule_candidate.json
+reports/structural_candidates/stage7_post_box_continuation_capsule_candidate.md
+reports/structural_candidates/stage7_post_box_plan_capsule_audit.json
+reports/structural_candidates/stage7_post_box_plan_capsule_audit.md
+```
+
+This is not a new fixed `Stage 7.5` curriculum step. It is the first proposed
+Plan Capsule / Commitment Bias test case: a bounded multi-ply continuation with
+visible entry, progress, exit, and abort terms. The broader lesson is that local
+skill success sometimes needs short visible commitment rather than another
+single-move provider or broad score adjustment.
+
+Audit result:
+
+```text
+post_reply_records: 45
+wrong_first_post_box_move: not_sufficient
+wrong_second_or_third_move: likely
+missing_plan_commitment: likely
+premature_stage0_fallback: observed_but_not_sufficient_after_ownership_tests
+provider_capacity_gap: likely_for_current_providers
+```
+
+Candidate status updates:
+
+```text
+learned post-box overlay:
+  status: quarantined
+  diagnosis: selected_provider_still_cannot_convert / continuation_topology_underexpressive
+
+broad drive support adapter:
+  status: quarantined_or_overbroad
+  diagnosis: adapter fires but supported provider outcome remains max_plies
+
+local box-shrink repairs:
+  status: local_semantic_alignment_improved_but_conversion_insufficient
+
+plan capsule:
+  status: proposed
+  next_action: trajectory_gap_audit
+```
+
+No runtime behavior changed in this slice. The capsule, StructuralCandidate,
+HandoffPacket, SkillContractStats, ShadowStemCandidate, GrowthGovernor, and
+provider-promotion records remain evidence only. A future causal capsule would
+require explicit sandboxing, visible SCRIPT/TERMINAL terms, bounded TTL,
+handoff exports, and Stage 7 + Stage 6/5/4/1 + bridge/M1-M4 guardrails before
+any promotion.

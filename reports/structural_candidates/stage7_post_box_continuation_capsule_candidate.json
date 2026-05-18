@@ -1,0 +1,193 @@
+{
+  "schema_version": "plan_capsule_candidate.v1",
+  "causal_status": "non_causal",
+  "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
+  "candidate_type": "plan_capsule",
+  "promotion_status": "proposed",
+  "structural_candidate": {
+    "candidate_diagnostic_labels": [
+      "continuation_topology_underexpressive",
+      "selected_provider_still_cannot_convert",
+      "expressive_but_untrained_or_undercommitted"
+    ],
+    "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
+    "candidate_type": "plan_capsule",
+    "causal_status": "non_causal",
+    "credit": 0.0,
+    "evidence_artifacts": [
+      "reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_h40.json",
+      "reports/structural_candidates/stage7_post_box_trajectory_provider_model.json",
+      "reports/structural_candidates/stage7_post_box_learned_overlay_bonus001_10_h40.json",
+      "reports/structural_candidates/stage7_post_box_learned_overlay_default_off_10_h40.json",
+      "reports/structural_candidates/stage7_post_box_narrow_on_25_h40.json"
+    ],
+    "governor_metadata": {
+      "default_runtime_behavior_changed": false,
+      "growth_policy": "candidate_requires_trajectory_gap_audit_before_sandbox",
+      "stage_status": "local_valid_composition_quarantined"
+    },
+    "governor_status": "structure_insufficient",
+    "parent_skill": "krk.skill_hub",
+    "promotion_status": "proposed",
+    "proposed_change": {
+      "bounded_ttl_white_moves": 3,
+      "capsule_id": "krk.post_box_shrink_continuation",
+      "kind": "plan_capsule_commitment_bias",
+      "not_fixed_curriculum_stage": true,
+      "runtime_default": "disabled"
+    },
+    "schema_version": "structural_candidate.v1",
+    "source_monitor_script": "growth.monitor.stage7_post_box_continuation_gap",
+    "source_terms": [
+      "local_valid_composition_quarantined",
+      "learned_provider_selected_but_conversion_failed",
+      "dtm_won_within_h40",
+      "single_move_repairs_exhausted"
+    ],
+    "target_skill": "krk.box_shrink",
+    "topology_weight_diagnosis": {
+      "bounded_m3_warmup_result": "not_run_for_plan_capsule",
+      "bounded_m4_consolidation_result": "not_run_for_plan_capsule",
+      "diagnosis": "multi_step_commitment_gap",
+      "forced_oracle_probe_result": "dtm_reference_trajectories_convert_h40",
+      "frozen_weight_probe_result": "learned_overlay_can_win_ownership_but_still_max_plies"
+    },
+    "trigger_failure_classes": [
+      "selected_provider_still_cannot_convert",
+      "repeated_conversion_failure",
+      "continuation_topology_underexpressive"
+    ]
+  },
+  "plan_capsule": {
+    "abort_terms": [
+      "rook_unsafe",
+      "draw_or_stalemate_risk",
+      "box_expands_badly",
+      "cut_or_fence_lost_without_repair",
+      "repeated_abstract_state_or_stagnation_loop",
+      "no_progress_after_owned_moves",
+      "stronger_interrupt_available",
+      "illegal_or_no_move_failure"
+    ],
+    "capsule_id": "krk.post_box_shrink_continuation",
+    "causal_status": "non_causal",
+    "domain": "krk",
+    "entry_terms": [
+      "active_landmark_label.box_shrink",
+      "box_shrink_attempt_confirmed_or_candidate_confirmed",
+      "post_reply_state_reached",
+      "conversion_not_immediate",
+      "rook_safe",
+      "enemy_king_constrained_or_recoverable",
+      "no_stronger_mate_or_tactic_interrupt_available"
+    ],
+    "exit_terms": [
+      "mate_in_one_available",
+      "mate_basin_or_stage0_finish_visibly_licensed",
+      "edge_trap_role_confirmed",
+      "drive_to_edge_role_confirmed",
+      "fence_or_cut_restored",
+      "full_krk_continuation_role_confirmed",
+      "ttl_expired_with_successful_handoff"
+    ],
+    "guardrails": [
+      "stage6_drive_to_edge",
+      "stage5_fence_established",
+      "stage4_wrong_tempo",
+      "stage1_backchain",
+      "krk_entry",
+      "kpk_to_kqk_bridge",
+      "m1_m4_preservation"
+    ],
+    "handoff_exports": {
+      "krk.drive_to_edge": 0.3,
+      "krk.edge_trap_close": 0.4,
+      "krk.fence_established": 0.2,
+      "krk.stage0_basin": 0.1
+    },
+    "notes": [
+      "This is not a fixed Stage 7.5 curriculum stage.",
+      "This is a general bounded plan capsule / commitment-bias candidate.",
+      "Stage 7 is the first test case because single-move providers and ownership repairs failed.",
+      "The capsule is non-causal until sandboxed and promoted through visible topology."
+    ],
+    "owned_providers": [
+      "krk.post_box_shrink_continuation",
+      "krk.drive_to_edge",
+      "krk.fence_established",
+      "krk.edge_trap_close"
+    ],
+    "owned_roles": [
+      "krk.post_box_shrink_continuation",
+      "krk.post_box_drive_repair",
+      "krk.post_box_fence_or_cut_repair",
+      "krk.post_box_king_support"
+    ],
+    "progress_terms": [
+      "box_area_decreases_or_does_not_expand",
+      "cut_or_fence_preserved_or_restored",
+      "white_king_support_improves",
+      "enemy_king_mobility_decreases",
+      "corner_net_pressure_increases",
+      "mate_basin_proximity_improves",
+      "safe_check_or_cut_created",
+      "stagnation_avoided"
+    ],
+    "promotion_status": "proposed",
+    "record_id": "plan_capsule.0efb3bb3d93b",
+    "schema_version": "plan_capsule_spec.v1",
+    "source_candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
+    "source_monitor_script": "growth.monitor.stage7_post_box_continuation_gap",
+    "source_terms": [
+      "local_valid_composition_quarantined",
+      "learned_provider_selected_but_conversion_failed",
+      "dtm_won_within_h40",
+      "single_move_repairs_exhausted"
+    ],
+    "target_skill": "krk.box_shrink",
+    "training_source": "reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_h40.json",
+    "ttl_white_moves": 3,
+    "validation_protocol": {
+      "default": "disabled",
+      "first_validation": "25 samples seed 7",
+      "large_validation": "100+ samples if 25-sample target improves",
+      "target": "Stage 7 box_shrink conversion h40"
+    }
+  },
+  "evidence_artifacts": [
+    "reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_h40.json",
+    "reports/structural_candidates/stage7_post_box_trajectory_provider_model.json",
+    "reports/structural_candidates/stage7_post_box_learned_overlay_bonus001_10_h40.json",
+    "reports/structural_candidates/stage7_post_box_learned_overlay_default_off_10_h40.json",
+    "reports/structural_candidates/stage7_post_box_narrow_on_25_h40.json"
+  ],
+  "candidate_status_updates": [
+    {
+      "candidate_id": "cand.krk.box_shrink.post_box_continuation_overlay_probe.v1",
+      "status": "quarantined",
+      "diagnosis": "selected_provider_still_cannot_convert / continuation_topology_underexpressive"
+    },
+    {
+      "candidate_id": "cand.krk.box_shrink_to_drive_repair.visible_provider_support.v1",
+      "status": "quarantined_or_overbroad",
+      "diagnosis": "adapter fires but supported provider outcome remains max_plies"
+    },
+    {
+      "candidate_id": "cand.krk.box_shrink.local_semantic_repairs.v1",
+      "status": "local_semantic_alignment_improved_but_conversion_insufficient",
+      "diagnosis": "local move quality no longer explains remaining conversion failures"
+    },
+    {
+      "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
+      "status": "proposed",
+      "next_action": "trajectory_gap_audit"
+    }
+  ],
+  "hard_blocks": [
+    "do_not_train_stage8",
+    "do_not_promote_stage7",
+    "do_not_add_causal_capsule_runtime",
+    "do_not_make_candidates_causal",
+    "do_not_mutate_topology_during_gameplay"
+  ]
+}

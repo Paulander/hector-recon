@@ -324,6 +324,75 @@ class StructuralCandidate:
         return cls(**dict(payload))
 
 
+@dataclass(frozen=True)
+class PlanCapsuleSpec:
+    """Non-causal multi-step plan/commitment candidate specification.
+
+    A plan capsule describes a bounded continuation hypothesis with visible
+    entry/progress/exit/abort terms. It is design and training evidence only
+    until explicitly sandboxed and promoted into visible topology.
+    """
+
+    capsule_id: str
+    source_candidate_id: str
+    source_monitor_script: str
+    source_terms: List[str]
+    domain: str
+    target_skill: str
+    entry_terms: List[str] = field(default_factory=list)
+    progress_terms: List[str] = field(default_factory=list)
+    exit_terms: List[str] = field(default_factory=list)
+    abort_terms: List[str] = field(default_factory=list)
+    ttl_white_moves: int = 3
+    owned_roles: List[str] = field(default_factory=list)
+    owned_providers: List[str] = field(default_factory=list)
+    handoff_exports: Dict[str, float] = field(default_factory=dict)
+    training_source: Optional[str] = None
+    validation_protocol: Dict[str, Any] = field(default_factory=dict)
+    guardrails: List[str] = field(default_factory=list)
+    notes: List[str] = field(default_factory=list)
+    causal_status: Literal["non_causal"] = "non_causal"
+    promotion_status: Literal[
+        "proposed",
+        "sandboxed",
+        "validated",
+        "promoted",
+        "quarantined",
+        "rejected",
+    ] = "proposed"
+    schema_version: str = "plan_capsule_spec.v1"
+    record_id: Optional[str] = None
+
+    def __post_init__(self) -> None:
+        if self.causal_status != "non_causal":
+            raise ValueError("PlanCapsuleSpec must remain non_causal until promoted topology exists")
+        if int(self.ttl_white_moves) <= 0:
+            raise ValueError("PlanCapsuleSpec ttl_white_moves must be positive and bounded")
+        if self.record_id is None:
+            object.__setattr__(
+                self,
+                "record_id",
+                stable_record_id(
+                    "plan_capsule",
+                    self.capsule_id,
+                    self.source_candidate_id,
+                    self.target_skill,
+                    self.entry_terms,
+                    self.progress_terms,
+                    self.exit_terms,
+                    self.abort_terms,
+                    self.ttl_white_moves,
+                ),
+            )
+
+    def to_dict(self) -> Dict[str, Any]:
+        return _jsonable(asdict(self))
+
+    @classmethod
+    def from_dict(cls, payload: Mapping[str, Any]) -> "PlanCapsuleSpec":
+        return cls(**dict(payload))
+
+
 def record_handoff_composition_event(
     episode_summary: Any,
     *,
@@ -485,6 +554,35 @@ def record_structural_candidate_event(
         event_type="structural_candidate_event",
         subject_id=str(candidate_payload.get("candidate_id")),
         parent_id=str(candidate_payload.get("parent_skill")),
+        credit=0.0,
+        meta=payload,
+    )
+
+
+def record_plan_capsule_event(
+    episode_summary: Any,
+    *,
+    tick: int,
+    capsule: PlanCapsuleSpec | Mapping[str, Any],
+    meta: Optional[Mapping[str, Any]] = None,
+) -> None:
+    """Export a non-causal plan capsule candidate into an EpisodeSummary."""
+    if not hasattr(episode_summary, "record_learning_event"):
+        raise TypeError("episode_summary must provide record_learning_event")
+
+    capsule_payload = capsule.to_dict() if hasattr(capsule, "to_dict") else dict(capsule)
+    payload: Dict[str, Any] = {
+        "schema_version": "plan_capsule_event.v1",
+        "plan_capsule": capsule_payload,
+    }
+    if meta:
+        payload["meta"] = dict(meta)
+    payload = _jsonable(payload)
+    episode_summary.record_learning_event(
+        tick=tick,
+        event_type="plan_capsule_event",
+        subject_id=str(capsule_payload.get("capsule_id")),
+        parent_id=str(capsule_payload.get("target_skill")),
         credit=0.0,
         meta=payload,
     )

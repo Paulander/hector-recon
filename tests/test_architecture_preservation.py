@@ -11,10 +11,12 @@ from recon_lite.graph import Graph, LinkType, Node, NodeState, NodeType
 from recon_lite.trace_db import EpisodeSummary
 from recon_lite_chess.routing.contracts import (
     HandoffPacket,
+    PlanCapsuleSpec,
     ShadowStemCandidate,
     SkillContractStats,
     StructuralCandidate,
     record_handoff_composition_event,
+    record_plan_capsule_event,
     record_provider_promotion_event,
     record_structural_candidate_event,
 )
@@ -292,3 +294,58 @@ def test_structural_candidate_event_exports_without_m4_or_topology_effect():
     assert len(graph.edges) == before_edges
     assert set(engine.edge_states) == {"phase1->phase2:POR"}
     assert engine.edge_states["phase1->phase2:POR"].accumulated_weighted_delta == 0.45
+
+
+def test_plan_capsule_event_exports_without_m4_or_topology_effect():
+    graph = _make_graph()
+    before_nodes = set(graph.nodes)
+    before_edges = len(graph.edges)
+    capsule = PlanCapsuleSpec(
+        capsule_id="krk.post_box_shrink_continuation",
+        source_candidate_id="cand.krk.box_shrink.post_box_continuation_capsule.v1",
+        source_monitor_script="growth.monitor.stage7_post_box_continuation_gap",
+        source_terms=["local_valid_composition_quarantined", "single_move_repairs_exhausted"],
+        domain="krk",
+        target_skill="krk.box_shrink",
+        entry_terms=["active_landmark_label.box_shrink", "post_reply_state_reached"],
+        progress_terms=["box_area_decreases_or_does_not_expand"],
+        exit_terms=["edge_trap_role_confirmed", "drive_to_edge_role_confirmed"],
+        abort_terms=["rook_unsafe", "no_progress_after_owned_moves"],
+        ttl_white_moves=3,
+        owned_roles=["krk.post_box_shrink_continuation"],
+        owned_providers=["krk.drive_to_edge", "krk.edge_trap_close"],
+        handoff_exports={"krk.edge_trap_close": 0.4, "krk.drive_to_edge": 0.3},
+        training_source="reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_h40.json",
+        validation_protocol={"target": "Stage 7 h40", "default": "disabled"},
+        guardrails=["stage6_drive_to_edge", "stage5_fence_established"],
+        notes=["not a fixed Stage 7.5 curriculum stage"],
+    )
+    summary = EpisodeSummary(
+        edge_delta_sums={"phase1->phase2:POR": 0.55},
+        avg_reward_tick=1.0,
+        outcome_score=1.0,
+    )
+
+    record_plan_capsule_event(summary, tick=44, capsule=capsule)
+
+    restored = EpisodeSummary.from_dict(summary.to_dict())
+    event = restored.learning_events[0]
+    assert event.event_type == "plan_capsule_event"
+    assert event.credit == 0.0
+    assert event.meta["schema_version"] == "plan_capsule_event.v1"
+    assert event.meta["plan_capsule"]["schema_version"] == "plan_capsule_spec.v1"
+    assert event.meta["plan_capsule"]["causal_status"] == "non_causal"
+
+    engine = ConsolidationEngine(
+        ConsolidationConfig(min_episodes=1, outcome_weight=0.5)
+    )
+    engine.edge_states["phase1->phase2:POR"] = EdgeConsolidationState(
+        edge_key="phase1->phase2:POR",
+        w_base=1.0,
+    )
+    engine.accumulate_episode(restored)
+
+    assert set(graph.nodes) == before_nodes
+    assert len(graph.edges) == before_edges
+    assert set(engine.edge_states) == {"phase1->phase2:POR"}
+    assert engine.edge_states["phase1->phase2:POR"].accumulated_weighted_delta == 0.55

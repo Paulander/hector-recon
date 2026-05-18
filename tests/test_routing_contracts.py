@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from recon_lite_chess.routing import (
     HandoffPacket,
+    PlanCapsuleSpec,
     RouteDecision,
     ShadowStemCandidate,
     SkillContractSpec,
@@ -73,6 +74,29 @@ def test_schema_round_trips():
             priority=2,
         ),
         ShadowStemCandidate,
+    )
+    _round_trip(
+        PlanCapsuleSpec(
+            capsule_id="krk.post_box_shrink_continuation",
+            source_candidate_id="cand.krk.box_shrink.post_box_continuation_capsule.v1",
+            source_monitor_script="growth.monitor.stage7_post_box_continuation_gap",
+            source_terms=["local_valid_composition_quarantined"],
+            domain="krk",
+            target_skill="krk.box_shrink",
+            entry_terms=["active_landmark_label.box_shrink", "post_reply_state_reached"],
+            progress_terms=["box_area_decreases_or_does_not_expand"],
+            exit_terms=["edge_trap_role_confirmed"],
+            abort_terms=["rook_unsafe", "no_progress_after_owned_moves"],
+            ttl_white_moves=3,
+            owned_roles=["krk.post_box_shrink_continuation"],
+            owned_providers=["krk.drive_to_edge", "krk.edge_trap_close"],
+            handoff_exports={"krk.edge_trap_close": 0.4},
+            training_source="reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_h40.json",
+            validation_protocol={"target": "Stage 7 h40"},
+            guardrails=["stage6_drive_to_edge", "stage5_fence_established"],
+            notes=["non-causal candidate only"],
+        ),
+        PlanCapsuleSpec,
     )
 
 

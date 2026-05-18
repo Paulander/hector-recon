@@ -1,0 +1,348 @@
+{
+  "schema_version": "stage7_post_box_plan_capsule_audit.v1",
+  "causal_status": "non_causal",
+  "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
+  "capsule_id": "krk.post_box_shrink_continuation",
+  "post_reply_record_count": 45,
+  "outcome_by_successor": {
+    "none:mate": 6,
+    "krk.drive_to_edge:mate": 5,
+    "krk.stage7_king_tempo:mate": 6,
+    "krk.post_box_shrink_continuation:max_plies": 3,
+    "krk.edge_trap_close:mate": 16,
+    "krk.stage0_basin:max_plies": 3,
+    "krk.stage7_post_box_continuation:max_plies": 6
+  },
+  "failure_by_state": {
+    "state.2cc0b3e1033a": {
+      "selected_successor_miscalibrated": 3
+    },
+    "state.bace6f82b671": {
+      "selected_successor_miscalibrated": 9
+    }
+  },
+  "reference_trajectory_summary": {
+    "common_reference_move_shape_terms": {
+      "candidate_is_rook_move": 15,
+      "rook_safe_after_candidate": 15,
+      "rook_destination_not_adjacent_enemy": 14,
+      "candidate_is_king_move": 10,
+      "candidate_is_rook_transfer": 8,
+      "rook_lateral_transfer": 8,
+      "rook_transfer_vertical": 7,
+      "rook_destination_far_from_enemy": 7,
+      "king_moves_toward_enemy": 5,
+      "king_moves_toward_rook_support": 5,
+      "rook_to_edge_file": 4,
+      "rook_to_checking_line": 3
+    },
+    "common_reference_post_move_terms": {
+      "enemy_corner_distance_not_increased_after_move": 25,
+      "enemy_edge_distance_not_increased_after_move": 25,
+      "rook_safe_after_move": 25,
+      "black_king_escape_count_not_increased_after_move": 24,
+      "box_area_not_increased_after_move": 20,
+      "white_king_and_rook_same_file_side_after_move": 16,
+      "black_king_escape_count_decreases_after_move": 14,
+      "white_king_distance_to_rook_decreases": 11,
+      "fence_exists_after_move": 10,
+      "fence_stable_after_move": 10,
+      "box_area_decreases_after_move": 9,
+      "white_king_and_rook_same_rank_side_after_move": 9
+    },
+    "reference_by_start_fen": {
+      "8/8/R7/8/2k5/8/8/3K4 w - - 2 2": {
+        "start_dtm": 27,
+        "ply_count": 27,
+        "white_training_step_count": 14,
+        "ended_in_checkmate": true,
+        "first_white_moves": [
+          {
+            "move": "a6a5",
+            "child_dtm": 26,
+            "move_shape_terms": [
+              "candidate_is_rook_move",
+              "rook_destination_not_adjacent_enemy",
+              "rook_safe_after_candidate",
+              "rook_to_edge_file",
+              "rook_transfer_vertical"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_decreases_after_move",
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_decreases_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_split_file_side_after_move",
+              "white_king_and_rook_split_rank_side_after_move",
+              "white_king_distance_to_rook_decreases"
+            ]
+          },
+          {
+            "move": "a5f5",
+            "child_dtm": 24,
+            "move_shape_terms": [
+              "candidate_is_rook_move",
+              "candidate_is_rook_transfer",
+              "rook_destination_far_from_enemy",
+              "rook_destination_not_adjacent_enemy",
+              "rook_lateral_transfer",
+              "rook_safe_after_candidate"
+            ],
+            "post_move_terms": [
+              "box_area_decreases_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_and_rook_split_rank_side_after_move"
+            ]
+          },
+          {
+            "move": "d1e2",
+            "child_dtm": 22,
+            "move_shape_terms": [
+              "candidate_is_king_move",
+              "king_moves_toward_enemy",
+              "king_moves_toward_rook_support"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_decreases_after_move",
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_and_rook_split_rank_side_after_move",
+              "white_king_distance_to_enemy_decreases",
+              "white_king_distance_to_rook_decreases"
+            ]
+          },
+          {
+            "move": "e2f3",
+            "child_dtm": 20,
+            "move_shape_terms": [
+              "candidate_is_king_move",
+              "king_moves_toward_rook_support"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_and_rook_split_rank_side_after_move",
+              "white_king_distance_to_rook_decreases"
+            ]
+          },
+          {
+            "move": "f5f4",
+            "child_dtm": 18,
+            "move_shape_terms": [
+              "candidate_is_rook_move",
+              "rook_destination_not_adjacent_enemy",
+              "rook_safe_after_candidate",
+              "rook_transfer_vertical"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_decreases_after_move",
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_decreases_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_distance_to_rook_decreases",
+              "white_king_rank_opposition_distance_two_after_move"
+            ]
+          }
+        ]
+      },
+      "8/8/8/R7/4k3/8/3K4/8 w - - 2 2": {
+        "start_dtm": 21,
+        "ply_count": 21,
+        "white_training_step_count": 11,
+        "ended_in_checkmate": true,
+        "first_white_moves": [
+          {
+            "move": "d2c3",
+            "child_dtm": 20,
+            "move_shape_terms": [
+              "candidate_is_king_move",
+              "king_moves_toward_rook_support"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_and_rook_split_rank_side_after_move",
+              "white_king_distance_to_rook_decreases"
+            ]
+          },
+          {
+            "move": "a5a4",
+            "child_dtm": 18,
+            "move_shape_terms": [
+              "candidate_is_rook_move",
+              "rook_destination_far_from_enemy",
+              "rook_destination_not_adjacent_enemy",
+              "rook_safe_after_candidate",
+              "rook_to_edge_file",
+              "rook_transfer_vertical"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_decreases_after_move",
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_decreases_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move"
+            ]
+          },
+          {
+            "move": "a4d4",
+            "child_dtm": 16,
+            "move_shape_terms": [
+              "candidate_is_rook_move",
+              "candidate_is_rook_transfer",
+              "rook_lateral_transfer",
+              "rook_safe_after_candidate"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_decreases_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_distance_to_rook_decreases",
+              "white_king_rank_opposition_distance_two_after_move"
+            ]
+          },
+          {
+            "move": "c3d2",
+            "child_dtm": 14,
+            "move_shape_terms": [
+              "candidate_is_king_move",
+              "king_moves_toward_enemy"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_decreases_after_move",
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_distance_to_enemy_decreases",
+              "white_king_rank_opposition_distance_two_after_move"
+            ]
+          },
+          {
+            "move": "d4a4",
+            "child_dtm": 12,
+            "move_shape_terms": [
+              "candidate_is_rook_move",
+              "candidate_is_rook_transfer",
+              "rook_destination_far_from_enemy",
+              "rook_destination_not_adjacent_enemy",
+              "rook_lateral_transfer",
+              "rook_safe_after_candidate",
+              "rook_to_edge_file"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_and_rook_split_rank_side_after_move"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "learned_overlay_model_summary": {
+    "model_kind": "visible_term_log_odds_linear_scorer",
+    "train_top1_accuracy": 0.44,
+    "train_position_count": 25,
+    "diagnosis": "simple visible-term model underfits trajectory labels"
+  },
+  "diagnosis": {
+    "wrong_first_post_box_move": "not_sufficient",
+    "wrong_second_or_third_move": "likely",
+    "loss_of_cut_or_fence": "possible_context_dependent",
+    "missing_king_support": "possible_context_dependent",
+    "premature_stage0_fallback": "observed_but_not_sufficient_after_ownership_tests",
+    "missing_plan_commitment": "likely",
+    "stagnation_or_repetition": "possible_downstream",
+    "provider_capacity_gap": "likely_for_current_providers"
+  },
+  "visible_distinguishing_terms": {
+    "reference_move_shape_terms": {
+      "candidate_is_rook_move": 15,
+      "rook_safe_after_candidate": 15,
+      "rook_destination_not_adjacent_enemy": 14,
+      "candidate_is_king_move": 10,
+      "candidate_is_rook_transfer": 8,
+      "rook_lateral_transfer": 8,
+      "rook_transfer_vertical": 7,
+      "rook_destination_far_from_enemy": 7,
+      "king_moves_toward_enemy": 5,
+      "king_moves_toward_rook_support": 5,
+      "rook_to_edge_file": 4,
+      "rook_to_checking_line": 3
+    },
+    "reference_post_move_terms": {
+      "enemy_corner_distance_not_increased_after_move": 25,
+      "enemy_edge_distance_not_increased_after_move": 25,
+      "rook_safe_after_move": 25,
+      "black_king_escape_count_not_increased_after_move": 24,
+      "box_area_not_increased_after_move": 20,
+      "white_king_and_rook_same_file_side_after_move": 16,
+      "black_king_escape_count_decreases_after_move": 14,
+      "white_king_distance_to_rook_decreases": 11,
+      "fence_exists_after_move": 10,
+      "fence_stable_after_move": 10,
+      "box_area_decreases_after_move": 9,
+      "white_king_and_rook_same_rank_side_after_move": 9
+    }
+  },
+  "useful_existing_subroles": [
+    "krk.drive_to_edge",
+    "krk.fence_established",
+    "krk.edge_trap_close",
+    "krk.stage0_basin_as_exit_only"
+  ],
+  "capsule_ownership_recommendation": {
+    "own_until": [
+      "ttl_white_moves_exhausted",
+      "exit_role_confirmed",
+      "abort_term_confirmed"
+    ],
+    "owned_move_count": "3_or_4_white_moves_initially",
+    "do_not_own": [
+      "mate_in_one_finish",
+      "tactical_interrupt",
+      "rook_unsafe_state"
+    ]
+  },
+  "hard_blocks": [
+    "do_not_implement_causal_capsule_from_this_audit",
+    "do_not_train_stage8",
+    "do_not_promote_stage7"
+  ]
+}

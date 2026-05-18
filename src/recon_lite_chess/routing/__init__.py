@@ -2,12 +2,14 @@
 
 from .contracts import (
     HandoffPacket,
+    PlanCapsuleSpec,
     RouteDecision,
     ShadowStemCandidate,
     SkillContractSpec,
     SkillContractStats,
     StructuralCandidate,
     record_handoff_composition_event,
+    record_plan_capsule_event,
     record_provider_promotion_event,
     record_structural_candidate_event,
     stable_record_id,
@@ -23,6 +25,7 @@ from .shadow_queue import (
 __all__ = [
     "HandoffAnalysis",
     "HandoffPacket",
+    "PlanCapsuleSpec",
     "RouteDecision",
     "ShadowStemCandidate",
     "ShadowStemQueue",
@@ -35,6 +38,7 @@ __all__ = [
     "build_shadow_stem_queue",
     "build_shadow_stem_queue_from_files",
     "record_handoff_composition_event",
+    "record_plan_capsule_event",
     "record_provider_promotion_event",
     "record_structural_candidate_event",
     "stable_record_id",
