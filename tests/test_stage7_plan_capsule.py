@@ -959,3 +959,39 @@ def test_stage7_post_box_frozen_model_candidate_layer_is_default_off_and_traceab
     trace = env["blackboard"]["stage7_post_box_frozen_model_candidate"]
     assert trace["emitted"] is True
     assert trace["direct_request"] is False
+
+
+def test_stage7_2cc_frozen_model_sandbox_summary_is_non_causal():
+    script = ROOT / "scripts" / "summarize_stage7_2cc_frozen_model_sandbox.py"
+    spec = importlib.util.spec_from_file_location(
+        "summarize_stage7_2cc_frozen_model_sandbox",
+        script,
+    )
+    assert spec is not None
+    summarizer = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(summarizer)
+
+    payload = summarizer.summarize_sandbox(
+        default_off={
+            "playouts": {"mate": 2, "max_plies": 3},
+            "stage7_post_box_frozen_model_candidate_supported_suggestion_count": 0,
+        },
+        enabled={
+            "playouts": {"mate": 2, "max_plies": 2, "draw": 1},
+            "stage7_post_box_frozen_model_candidate_supported_suggestion_count": 4,
+            "stage7_post_box_frozen_model_candidate_selected_supported_count": 1,
+            "stage7_post_box_frozen_model_candidate_selected_by_outcome": {"d1e2:draw": 1},
+        },
+    )
+
+    assert payload["schema_version"] == "stage7_2cc_frozen_model_sandbox_summary.v1"
+    assert payload["causal_status"] == "non_causal"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["default_off"]["supported_suggestion_count"] == 0
+    assert payload["enabled"]["supported_suggestion_count"] == 4
+    assert payload["candidate_status_update"]["diagnosis"] == (
+        "selected_candidate_move_still_insufficient_for_multistep_conversion"
+    )
+    assert payload["candidate_status_update"]["credit"] == 0.0
+    assert "do_not_promote_stage7" in payload["guardrails"]

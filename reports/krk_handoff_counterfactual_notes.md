@@ -7752,3 +7752,18 @@ smoke is not a validation improvement; the selected candidate can still lead to
 draw/max_plies, which is consistent with the Phase 2 diagnosis that 2cc needs a
 bounded multi-step continuation protocol rather than just a first-move model.
 ```
+
+Generated a non-causal candidate status summary:
+
+```text
+reports/structural_candidates/stage7_2cc_frozen_model_sandbox_summary.json
+reports/structural_candidates/stage7_2cc_frozen_model_sandbox_summary.md
+```
+
+Candidate update:
+
+```text
+diagnosis: selected_candidate_move_still_insufficient_for_multistep_conversion
+promotion_status: sandbox_hook_smoke_complete
+next_action: run bounded candidate-local continuation warmup only if guardrails remain scoped
+```
