@@ -129,6 +129,15 @@ assert _evidence_merge_spec.loader is not None
 _evidence_merge = importlib.util.module_from_spec(_evidence_merge_spec)
 _evidence_merge_spec.loader.exec_module(_evidence_merge)
 
+_training_benchmark_spec = importlib.util.spec_from_file_location(
+    "benchmark_stage7_training_objectives",
+    Path(__file__).resolve().parents[1] / "scripts" / "benchmark_stage7_training_objectives.py",
+)
+assert _training_benchmark_spec is not None
+assert _training_benchmark_spec.loader is not None
+_training_benchmark = importlib.util.module_from_spec(_training_benchmark_spec)
+_training_benchmark_spec.loader.exec_module(_training_benchmark)
+
 
 def test_stage7_unresolved_legal_first_summary_marks_selection_gap_and_capacity_probe(tmp_path):
     probe = {
@@ -910,3 +919,142 @@ def test_stage7_decision_gate_prefers_training_objective_benchmark_for_current_e
     assert "offline-only" in gate["minimum_next_step"].lower()
     assert "do not compile a runtime repair" in gate["minimum_next_step"].lower()
     assert "train_stage8" in gate["blocked_next_steps"]
+
+
+def test_stage7_training_objective_benchmark_is_non_causal_and_compares_required_models(tmp_path):
+    seed = {
+        "schema_version": "stage7_post_box_dtm_trajectory_seed.v1",
+        "trajectory_count": 2,
+        "trajectories": [
+            {
+                "white_training_steps": [
+                    {
+                        "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+                        "move": "a6a5",
+                        "legal_move_labels": [
+                            {
+                                "move": "a6a5",
+                                "label": 1,
+                                "target_class": "optimal_dtm_move",
+                                "child_dtm": 26,
+                                "piece": "R",
+                                "move_shape_terms": ["candidate_is_rook_move"],
+                                "post_move_terms": ["box_area_decreases_after_move", "rook_safe_after_move"],
+                            },
+                            {
+                                "move": "a6a8",
+                                "label": 0,
+                                "target_class": "winning_nonoptimal_move",
+                                "child_dtm": 28,
+                                "piece": "R",
+                                "move_shape_terms": ["candidate_is_rook_move"],
+                                "post_move_terms": ["rook_safe_after_move"],
+                            },
+                        ],
+                    }
+                ]
+            },
+            {
+                "white_training_steps": [
+                    {
+                        "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+                        "move": "d2c3",
+                        "legal_move_labels": [
+                            {
+                                "move": "d2c3",
+                                "label": 1,
+                                "target_class": "optimal_dtm_move",
+                                "child_dtm": 20,
+                                "piece": "K",
+                                "move_shape_terms": ["candidate_is_king_move", "king_moves_toward_enemy"],
+                                "post_move_terms": ["white_king_distance_to_enemy_decreases", "rook_safe_after_move"],
+                            },
+                            {
+                                "move": "a5h5",
+                                "label": 0,
+                                "target_class": "winning_nonoptimal_move",
+                                "child_dtm": 24,
+                                "piece": "R",
+                                "move_shape_terms": ["candidate_is_rook_move"],
+                                "post_move_terms": ["rook_safe_after_move"],
+                            },
+                            {
+                                "move": "a5a1",
+                                "label": 0,
+                                "target_class": "non_winning_move",
+                                "child_dtm": -1,
+                                "piece": "R",
+                                "move_shape_terms": ["candidate_is_rook_move"],
+                                "post_move_terms": ["rook_safe_after_move"],
+                            },
+                        ],
+                    }
+                ]
+            },
+        ],
+    }
+    fidelity = {
+        "teacher_forced_records": [
+            {
+                "trajectory_index": 0,
+                "step_index": 0,
+                "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+                "top_moves": [
+                    {"move": "a6a8", "label": 0, "target_class": "winning_nonoptimal_move", "score": 1.0},
+                    {"move": "a6a5", "label": 1, "target_class": "optimal_dtm_move", "score": 0.5},
+                ],
+                "positive_move_rank": 2,
+                "optimal_move_rank": 2,
+            },
+            {
+                "trajectory_index": 1,
+                "step_index": 0,
+                "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+                "top_moves": [
+                    {"move": "d2c3", "label": 1, "target_class": "optimal_dtm_move", "score": 1.0},
+                    {"move": "a5h5", "label": 0, "target_class": "winning_nonoptimal_move", "score": 0.5},
+                ],
+                "positive_move_rank": 1,
+                "optimal_move_rank": 1,
+            },
+        ]
+    }
+    (tmp_path / "stage7_post_box_dtm_trajectory_seed_expanded_h40.json").write_text(
+        json.dumps(seed), encoding="utf-8"
+    )
+    (tmp_path / "stage7_expanded_ranked_capsule_trajectory_fidelity_audit.json").write_text(
+        json.dumps(fidelity), encoding="utf-8"
+    )
+
+    benchmark = _training_benchmark.build_benchmark(tmp_path)
+
+    assert benchmark["schema_version"] == "stage7_training_objective_benchmark.v1"
+    assert benchmark["causal_status"] == "non_causal_offline_benchmark"
+    assert benchmark["runtime_behavior_changed"] is False
+    assert benchmark["runtime_dtm_or_tablebase_lookup"] is False
+    assert benchmark["stage7_promotion_allowed"] is False
+    assert benchmark["stage8_training_allowed"] is False
+    model_ids = {model["model_id"] for model in benchmark["models"]}
+    assert "current_learned_post_box_scorer" in model_ids
+    assert "visible_term_log_odds_scorer" in model_ids
+    assert "pairwise_ranked_preference_scorer" in model_ids
+    assert "heuristic_safety_non_draw_rook_safe" in model_ids
+    assert "oracle_dtm_positive_topk_ceiling" in model_ids
+    assert benchmark["decision"]["candidate_status"] in {
+        "training_objective_benchmark_supports_ranked_sequence_policy",
+        "model_expression_gap_not_solved_by_simple_ranking",
+        "missing_feature_or_ontology_candidate",
+        "ranking_calibration_gap",
+        "continuation_capacity_or_harness_gap",
+    }
+
+
+def test_stage7_training_benchmark_tie_breaks_without_label_leakage():
+    labels = [
+        {"move": "b1b2", "label": 1, "target_class": "optimal_dtm_move"},
+        {"move": "a1a2", "label": 0, "target_class": "winning_nonoptimal_move"},
+    ]
+
+    ranked = _training_benchmark._rank_labels(labels, lambda _label: 0.0)
+
+    assert [item["move"] for item in ranked] == ["a1a2", "b1b2"]
