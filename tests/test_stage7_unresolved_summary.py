@@ -66,6 +66,15 @@ assert _learnable_capsule_provider_spec.loader is not None
 _learnable_capsule_provider = importlib.util.module_from_spec(_learnable_capsule_provider_spec)
 _learnable_capsule_provider_spec.loader.exec_module(_learnable_capsule_provider)
 
+_learnable_capsule_replay_spec = importlib.util.spec_from_file_location(
+    "replay_stage7_learnable_capsule_provider",
+    Path(__file__).resolve().parents[1] / "scripts" / "replay_stage7_learnable_capsule_provider.py",
+)
+assert _learnable_capsule_replay_spec is not None
+assert _learnable_capsule_replay_spec.loader is not None
+_learnable_capsule_replay = importlib.util.module_from_spec(_learnable_capsule_replay_spec)
+_learnable_capsule_replay_spec.loader.exec_module(_learnable_capsule_replay)
+
 
 def test_stage7_unresolved_legal_first_summary_marks_selection_gap_and_capacity_probe(tmp_path):
     probe = {
@@ -402,3 +411,50 @@ def test_stage7_post_box_learnable_capsule_provider_plan_is_bounded_and_default_
     assert payload["candidate_local_training_protocol"]["m4_consolidation_enabled"] is False
     assert payload["candidate_local_training_protocol"]["runtime_dtm_or_tablebase_lookup"] is False
     assert "do_not_train_stage8" in payload["hard_constraints"]
+
+
+def test_stage7_learnable_capsule_replay_extracts_unique_seed_start_fens():
+    payload = {
+        "trajectories": [
+            {
+                "white_training_steps": [
+                    {
+                        "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+                        "move": "a6a5",
+                        "child_dtm": 26,
+                    },
+                    {
+                        "fen": "8/8/8/R7/2k5/8/8/3K4 w - - 4 3",
+                        "move": "d1e2",
+                    },
+                ]
+            },
+            {
+                "white_training_steps": [
+                    {
+                        "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+                        "move": "a6d6",
+                    }
+                ]
+            },
+        ]
+    }
+
+    rows = _learnable_capsule_replay._seed_start_fens(payload)
+
+    assert rows == [
+        {
+            "trajectory_index": 0,
+            "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+            "dtm_step_count": 2,
+            "first_dtm_move": "a6a5",
+            "first_child_dtm": 26,
+        }
+    ]
+
+
+def test_stage7_plan_capsule_default_state_owns_learnable_provider():
+    state = _learnable_capsule_replay.diag._stage7_plan_capsule_default_state(ttl=4)
+
+    assert "krk.post_box_shrink_continuation" in state["owned_providers"]
+    assert state["ttl_white_moves"] == 4

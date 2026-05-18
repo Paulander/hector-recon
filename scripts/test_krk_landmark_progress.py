@@ -161,6 +161,7 @@ def _stage7_plan_capsule_default_state(*, ttl: int) -> dict:
             "krk.box_shrink_to_fence_repair",
         ],
         "owned_providers": [
+            "krk.post_box_shrink_continuation",
             "krk.drive_to_edge",
             "krk.fence_established",
             "krk.edge_trap_close",
@@ -1262,6 +1263,9 @@ def _compact_selected_suggestion(item: dict | None) -> dict:
         ),
         "visible_stage7_plan_capsule_owned_arbitration": dict(
             meta.get("visible_stage7_plan_capsule_owned_arbitration", {}) or {}
+        ),
+        "visible_stage7_plan_capsule_license": dict(
+            meta.get("visible_stage7_plan_capsule_license", {}) or {}
         ),
         "visible_stage7_post_box_frozen_model_candidate": dict(
             meta.get("visible_stage7_post_box_frozen_model_candidate", {}) or {}
@@ -3074,11 +3078,12 @@ def play_to_mate(
     forced_successor_skill: Optional[str] = None,
     perf_profile: dict | None = None,
     enable_diagnostic_caches: bool = False,
+    initial_white_moves: int = 0,
 ) -> dict:
     """Run a simple KRK playout using the compiled topology for White moves."""
     _profile_add_count(perf_profile, "board_copy_calls")
     b = board.copy()
-    white_moves = 0
+    white_moves = int(initial_white_moves)
     events = []
     all_events = []
     trace_truncated_events = 0

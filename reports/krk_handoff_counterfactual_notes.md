@@ -7875,3 +7875,89 @@ adapter_fire_count: 0
 Phase 0 therefore passes on the small paired smoke. The next phase is targeted
 unresolved-family replay with the sandbox provider enabled, still without
 promotion.
+
+## Stage 7 learnable capsule Phase 1 replay
+
+First targeted replay attempt exposed a setup issue: the learned overlay
+topology carried provider metadata but did not include visible Plan Capsule
+marker nodes, so the capsule state never entered. I compiled a combined
+default-off marker topology:
+
+```text
+first attempt:
+  reports/structural_candidates/stage7_post_box_learnable_capsule_phase1_replay_h40.json
+  reports/structural_candidates/stage7_post_box_learnable_capsule_phase1_replay_h40.md
+
+combined topology:
+snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_learnable_capsule_sandbox.json
+```
+
+Default-off equivalence for the combined topology still passed:
+
+```text
+artifact: reports/structural_candidates/stage7_learnable_capsule_marker_default_off_equivalence_5_h20.json
+equivalent: true
+differences: []
+packet_count: 15
+shadow_candidate_count: 8
+adapter_fire_count: 0
+```
+
+I then reran targeted Phase 1 on the two DTM-seeded post-box states:
+
+```text
+artifact: reports/structural_candidates/stage7_learnable_capsule_marker_phase1_replay_h40.json
+markdown: reports/structural_candidates/stage7_learnable_capsule_marker_phase1_replay_h40.md
+target_state_count: 2
+horizon: 40
+learned_bonus: 0.01
+plan_capsule_support_bonus: 0.01
+plan_capsule_owned_arbitration_enabled: true
+```
+
+Result:
+
+```text
+result_counts:
+  max_plies: 2
+
+selected_skill_counts:
+  krk.post_box_shrink_continuation: 2
+
+selected moves:
+  2cc state -> a6a8
+  bace state -> a5h5
+
+plan-supported suggestions:
+  40 / state
+
+plan ownership:
+  selected_by_stage7_plan_capsule_owned_arbitration: true
+  owned_white_move_count: 1
+  owned_provider: krk.post_box_shrink_continuation
+```
+
+Interpretation:
+
+```text
+The visible Plan Capsule can now enter, license the learnable provider, and own
+the first continuation move through traceable sandbox metadata. The remaining
+failure is not ownership, first-move visibility, or default-off wiring. It is
+the learned multi-step policy itself: the current DTM-seeded provider chooses
+visible/progress-preserving moves but still fails to convert at h40.
+```
+
+Candidate status:
+
+```text
+cand.krk.box_shrink.post_box_learnable_capsule_provider.v1:
+  promotion_status: phase1_targeted_replay_still_failing
+  diagnosis:
+    plan_entry_confirmed
+    provider_selected_by_visible_plan_capsule
+    plan_progress_terms_confirmed
+    conversion_still_max_plies
+  next_action:
+    refine the candidate-local training protocol / trajectory target, not
+    Stage 8, not promotion, and not another broad score bonus
+```
