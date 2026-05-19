@@ -211,6 +211,13 @@ KRK self-expansion architecture gate v0:
 
 The gate synthesizes the protected Stage 1/4/5/6 stack, Stage 7 hard stop, strategy-arbitration decision gate, internal-terminal review, and sequence-policy redesign note. It selects `krk_control_plane_evidence_contract_v0` as the next architecture goal: a non-causal data contract that unifies protected provider provenance, strategy proposal frames, internal monitor records, plan-capsule windows, sequence training examples, guardrail summaries, GrowthGovernor status, and promotion-gate status. This is the path toward arbitrary KRK coverage without reopening Stage 7 micro-repairs or implementing a runtime arbiter.
 
+KRK control-plane evidence contract v0:
+
+- `reports/krk_control_plane_evidence_contract_v0.json`
+- `reports/krk_control_plane_evidence_contract_v0.md`
+
+The contract defines non-causal `ControlPlaneEvidenceFrame` evidence and required subschemas: protected provider provenance, strategy proposal frames, internal monitor evidence, plan-capsule window evidence, sequence training examples, guardrail summaries, GrowthGovernor status, and PromotionGate status. Its recommended next slice is `control_plane_manifest_from_existing_artifacts_v0`: map existing artifacts into the contract replay-free, with no new playouts, no runtime consumers, no Stage 7 promotion, and no Stage 8 training.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -288,6 +295,8 @@ reports/krk_protected_stage_status.json
 reports/krk_protected_stage_status.md
 reports/krk_self_expansion_architecture_gate_v0.json
 reports/krk_self_expansion_architecture_gate_v0.md
+reports/krk_control_plane_evidence_contract_v0.json
+reports/krk_control_plane_evidence_contract_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

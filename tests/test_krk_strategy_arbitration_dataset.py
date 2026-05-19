@@ -129,6 +129,15 @@ assert _self_expansion_gate_spec.loader is not None
 _self_expansion_gate = importlib.util.module_from_spec(_self_expansion_gate_spec)
 _self_expansion_gate_spec.loader.exec_module(_self_expansion_gate)
 
+_control_plane_contract_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_control_plane_contract",
+    Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_control_plane_contract.py",
+)
+assert _control_plane_contract_spec is not None
+assert _control_plane_contract_spec.loader is not None
+_control_plane_contract = importlib.util.module_from_spec(_control_plane_contract_spec)
+_control_plane_contract_spec.loader.exec_module(_control_plane_contract)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -1346,3 +1355,58 @@ def test_krk_self_expansion_architecture_gate_selects_non_causal_contract(tmp_pa
     assert "control_plane_schema_design_v0" in {
         item["slice_id"] for item in gate["allowed_next_slices"]
     }
+
+
+def test_krk_control_plane_contract_is_non_causal_schema(tmp_path):
+    root = tmp_path
+    report_path = root / _control_plane_contract.ARCHITECTURE_GATE
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_architecture_review",
+                "runtime_behavior_changed": False,
+                "runtime_defaults_changed": False,
+                "runtime_dtm_or_tablebase_lookup": False,
+                "gameplay_topology_mutation": False,
+                "stage7_promotion_allowed": False,
+                "stage8_training_allowed": False,
+                "selected_next_architecture_goal": {
+                    "goal_id": "krk_control_plane_evidence_contract_v0"
+                },
+                "forbidden_next_steps": ["stage7_runtime_repair", "runtime_arbiter"],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    contract = _control_plane_contract.build_contract(root)
+
+    assert contract["schema_version"] == "krk_control_plane_evidence_contract.v0"
+    assert contract["causal_status"] == "non_causal_schema_contract"
+    assert contract["runtime_behavior_changed"] is False
+    assert contract["runtime_arbiter_added"] is False
+    assert contract["runtime_terminals_added"] is False
+    assert contract["stage7_promotion_allowed"] is False
+    assert contract["stage8_training_allowed"] is False
+    assert contract["primary_frame"]["schema_version"] == "control_plane_evidence_frame.v1"
+    assert "runtime_move_override" in contract["primary_frame"]["forbidden_fields"]
+    assert "runtime_move_selector" in contract["forbidden_consumers"]
+    assert "offline_sequence_policy_benchmark" in contract["allowed_consumers"]
+    assert contract["first_manifest_scope"]["records_from_existing_artifacts_only"] is True
+    assert contract["first_manifest_scope"]["new_playouts_allowed"] is False
+    assert contract["recommended_next_slice"] == (
+        "control_plane_manifest_from_existing_artifacts_v0"
+    )
+
+    subschemas = {item["name"] for item in contract["subschemas"]}
+    assert {
+        "ProtectedProviderProvenance",
+        "StrategyProposalFrame",
+        "InternalMonitorEvidence",
+        "PlanCapsuleWindowEvidence",
+        "SequenceTrainingExample",
+        "GuardrailResultSummary",
+        "GrowthGovernorStatus",
+        "PromotionGateStatus",
+    } == subschemas
