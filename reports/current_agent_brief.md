@@ -322,6 +322,13 @@ Updated KRK strategy arbiter stratified probe v2:
 
 The stratified probe now uses the augmented forced-control evidence. Protected selected-control and forced-control labels are both promising (`1.0` best positive-hit rates), while forced Stage7 residual labels remain weaker (`0.5`). Decision: `protected_forced_controls_promising_stage7_gap_confirmed`. Runtime sandbox remains blocked until architecture review, and Stage7 residuals should stay held out from tuning.
 
+KRK strategy arbiter architecture review v1:
+
+- `reports/krk_strategy_arbiter_architecture_review_v1.json`
+- `reports/krk_strategy_arbiter_architecture_review_v1.md`
+
+The review allows only a default-off, trace-only `krk_strategy_arbiter_observability_skeleton_v0`. It explicitly does not authorize runtime provider selection, score changes, support adapters, Stage 7 repair, Stage 7 promotion, Stage 8 training, runtime DTM/tablebase, gameplay-time topology mutation, or M3/M4 arbitration updates. The next implementation, if attempted, must prove default-off equivalence and may attach only non-causal observation metadata when explicitly enabled.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -415,6 +422,8 @@ reports/krk_control_plane_strategy_arbitration_probe_v0.json
 reports/krk_control_plane_strategy_arbitration_probe_v0.md
 reports/krk_provider_label_coverage_plan_v0.json
 reports/krk_provider_label_coverage_plan_v0.md
+reports/krk_strategy_arbiter_architecture_review_v1.json
+reports/krk_strategy_arbiter_architecture_review_v1.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

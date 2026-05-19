@@ -1,0 +1,111 @@
+{
+  "schema_version": "krk_strategy_arbiter_architecture_review.v1",
+  "review_id": "krk.strategy_arbiter.architecture_review.v1",
+  "created_for": "default_off_observability_gate",
+  "causal_status": "non_causal_review",
+  "decision_status": "trace_only_observability_skeleton_allowed",
+  "stage7_status": "local_valid_composition_quarantined",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "runtime_arbiter_allowed": false,
+  "runtime_defaults_may_change": false,
+  "source_artifacts": [
+    "reports/current_agent_brief.md",
+    "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+    "reports/krk_forced_provider_control_labels_v0.json",
+    "reports/krk_strategy_arbiter_stratified_probe_v2.json",
+    "reports/krk_strategy_arbiter_evidence_risk_review_v0.json",
+    "reports/krk_strategy_arbiter_sandbox_design_v0.json"
+  ],
+  "evidence_summary": {
+    "protected_selected_provider_labels": {
+      "status": "promising",
+      "best_positive_hit_rate": 1.0,
+      "caveat": "selected-provider playout labels are useful controls but do not prove safe runtime arbitration"
+    },
+    "protected_forced_provider_controls": {
+      "status": "promising",
+      "label_count": 12,
+      "result_counts": {
+        "mate": 9,
+        "max_plies": 3
+      },
+      "stage_result_counts": {
+        "stage5:mate": 6,
+        "stage6:mate": 3,
+        "stage6:max_plies": 3
+      },
+      "best_positive_hit_rate": 1.0,
+      "caveat": "Stage6 forced edge-trap controls include max_plies caveats and require guardrail interpretation before causal use"
+    },
+    "stage7_forced_provider_residuals": {
+      "status": "held_out_challenge_gap",
+      "best_positive_hit_rate": 0.5,
+      "interpretation": "Stage7 remains useful as a challenge set but must not drive local repair or promotion"
+    }
+  },
+  "hard_invariants": [
+    "no_hidden_python_controller",
+    "no_runtime_dtm_or_tablebase_policy",
+    "no_gameplay_time_topology_mutation",
+    "handoff_packets_stats_shadow_candidates_structural_candidates_growth_governor_provider_promotion_plan_capsule_and_internal_terminal_records_remain_non_causal",
+    "preserve_m1_m4_semantics",
+    "validated_stage5_stage6_providers_remain_protected",
+    "later_stage_skills_are_overlays_not_monolithic_replacements",
+    "runtime_defaults_do_not_change"
+  ],
+  "blocked_implementation": [
+    "runtime_provider_selection_arbiter",
+    "score_bonus_or_provider_penalty",
+    "provider_support_adapter",
+    "stage7_runtime_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase_lookup",
+    "topology_mutation_during_gameplay",
+    "direct_role_script_to_provider_sub_edge",
+    "m3_or_m4_arbitration_updates"
+  ],
+  "allowed_next_implementation": {
+    "name": "krk_strategy_arbiter_observability_skeleton_v0",
+    "scope": "default_off_trace_only",
+    "default_enabled": false,
+    "may_attach_metadata_when_enabled": true,
+    "may_change_scores": false,
+    "may_change_selected_move": false,
+    "may_change_selected_provider": false,
+    "may_request_provider": false,
+    "may_mutate_topology": false,
+    "may_update_m3_m4": false,
+    "requires_default_off_equivalence_test": true,
+    "required_trace_fields": [
+      "schema_version",
+      "arbiter_id",
+      "causal_status",
+      "direct_request",
+      "score_delta",
+      "selected_provider_before_observation",
+      "recommendation_only",
+      "source_terms",
+      "proposal_count",
+      "provider_candidates"
+    ]
+  },
+  "success_criteria_for_next_slice": [
+    "default-off behavior is byte-or-semantically equivalent for selected move and result metadata used by validators",
+    "when enabled, observation metadata is visible and explicitly non-causal",
+    "when enabled, scores and selected move are unchanged",
+    "no runtime DTM/tablebase or hidden routing is introduced",
+    "focused tests pass",
+    "full suite passes if shared diagnostic harness code changes"
+  ],
+  "stop_conditions": [
+    "default_off_equivalence_fails",
+    "implementation_requires_score_or_provider_selection_change",
+    "trace_cannot_explain_observation_source",
+    "stage7_repair_pressure_reappears",
+    "protected_provider_behavior_regresses",
+    "runtime_defaults_change"
+  ],
+  "recommended_next_step": "implement_default_off_trace_only_strategy_arbiter_observability_skeleton_v0"
+}
