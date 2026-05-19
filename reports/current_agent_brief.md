@@ -570,6 +570,14 @@ KRK selector readiness v2 plan:
 
 The v2 readiness plan blocks future selector sandbox review unless evidence has label balance, provider diversity, explicit label-semantics splits, Stage 4/5/6 protected coverage, Stage 7 held-out status, and selector improvement over non-selector baselines. Current blockers are class imbalance, selected-provider dominance, insufficient non-stage0 conversion-positive ownership examples, and missing same-move compatibility execution. Decision: `selector_readiness_v2_defined_runtime_sandbox_blocked`. The next allowed evidence slice is a non-causal `strategy_owner_contrast_dataset_v0`.
 
+KRK strategy-owner contrast dataset v0:
+
+- `scripts/build_krk_strategy_owner_contrast_dataset.py`
+- `reports/krk_strategy_owner_contrast_dataset_v0.json`
+- `reports/krk_strategy_owner_contrast_dataset_v0.md`
+
+The replay-free contrast dataset found `8` provider-contrast rows: `4` protected training-eligible rows and `4` Stage 7 held-out challenge rows. Stage 7 remains excluded from training (`stage7_training_rows = 0`). The useful Stage 7 contrast rows include two held-out non-stage0-positive failures, but protected controls contain only one non-stage0-positive row and one positive provider family. Readiness v2 blockers remain: insufficient label balance, insufficient protected non-stage0-positive rows, insufficient positive-provider family diversity, insufficient selected-provider family diversity, and no Stage 4 contrast rows. Decision: `strategy_owner_contrast_dataset_underpowered_no_selector_sandbox`. Runtime arbiter, selector sandbox, Stage 7 repair/promotion, and Stage 8 training remain blocked.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -735,6 +743,8 @@ reports/krk_strategy_arbiter_out_of_sample_architecture_review_v0.json
 reports/krk_strategy_arbiter_out_of_sample_architecture_review_v0.md
 reports/krk_selector_readiness_v2_plan.json
 reports/krk_selector_readiness_v2_plan.md
+reports/krk_strategy_owner_contrast_dataset_v0.json
+reports/krk_strategy_owner_contrast_dataset_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

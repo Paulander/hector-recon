@@ -311,6 +311,15 @@ assert _selector_readiness_v2_spec.loader is not None
 _selector_readiness_v2 = importlib.util.module_from_spec(_selector_readiness_v2_spec)
 _selector_readiness_v2_spec.loader.exec_module(_selector_readiness_v2)
 
+_strategy_owner_contrast_spec = importlib.util.spec_from_file_location(
+    "build_krk_strategy_owner_contrast_dataset",
+    Path(__file__).resolve().parents[1] / "scripts" / "build_krk_strategy_owner_contrast_dataset.py",
+)
+assert _strategy_owner_contrast_spec is not None
+assert _strategy_owner_contrast_spec.loader is not None
+_strategy_owner_contrast = importlib.util.module_from_spec(_strategy_owner_contrast_spec)
+_strategy_owner_contrast_spec.loader.exec_module(_strategy_owner_contrast)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -2954,3 +2963,92 @@ def test_krk_selector_readiness_v2_plan_requires_provider_diversity(tmp_path, mo
     assert requirements["held_out_challenge_boundary"]["minimum"]["stage7_training_rows"] == 0
     assert plan["decision"]["selector_sandbox_ready"] is False
     assert plan["decision"]["recommended_next_step"] == "build_non_causal_strategy_owner_contrast_dataset_v0"
+
+
+def test_krk_strategy_owner_contrast_dataset_preserves_stage7_holdout(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    (reports / "krk_selector_readiness_v2_plan.json").write_text(
+        json.dumps({"causal_status": "non_causal_design_plan"}),
+        encoding="utf-8",
+    )
+    (reports / "krk_control_plane_filtered_frames_with_forced_controls_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_augmented_frame_export",
+                "frames": [
+                    {
+                        "state_id": "state.stage5_positive",
+                        "frame_id": "cp.krk.state.stage5_positive",
+                        "source_stage": "stage5",
+                        "active_landmark_label": "fence_established",
+                        "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                        "strategy_proposal_frames": [
+                            {
+                                "provider_id": "krk.edge_trap_close",
+                                "move_uci": "a1a2",
+                                "known_outcome_label": {
+                                    "playout_result": "mate",
+                                    "selected": True,
+                                },
+                            },
+                            {
+                                "provider_id": "krk.stage0_basin",
+                                "move_uci": "a1a2",
+                                "known_outcome_label": {
+                                    "playout_result": "max_plies",
+                                    "selected": False,
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        "state_id": "state.stage7_heldout",
+                        "frame_id": "cp.krk.state.stage7_heldout",
+                        "source_stage": "stage7",
+                        "active_landmark_label": "box_shrink",
+                        "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                        "strategy_proposal_frames": [
+                            {
+                                "provider_id": "krk.drive_to_edge",
+                                "move_uci": "a1a2",
+                                "known_outcome_label": {
+                                    "source": "forced_provider_result",
+                                    "result": "mate",
+                                },
+                            },
+                            {
+                                "provider_id": "krk.stage0_basin",
+                                "move_uci": "a1a3",
+                                "known_outcome_label": {
+                                    "source": "forced_provider_result",
+                                    "result": "max_plies",
+                                },
+                            },
+                        ],
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_strategy_owner_contrast, "ROOT", root)
+
+    dataset = _strategy_owner_contrast.build_dataset()
+
+    assert dataset["schema_version"] == "krk_strategy_owner_contrast_dataset.v0"
+    assert dataset["causal_status"] == "non_causal_dataset"
+    assert dataset["runtime_behavior_changed"] is False
+    assert dataset["runtime_arbiter_implemented"] is False
+    assert dataset["stage7_promotion_allowed"] is False
+    assert dataset["stage8_training_allowed"] is False
+    assert dataset["summary"]["stage7_training_rows"] == 0
+    assert dataset["summary"]["training_non_stage0_positive_rows"] == 1
+    assert dataset["summary"]["heldout_non_stage0_positive_rows"] == 1
+    rows_by_state = {row["state_id"]: row for row in dataset["rows"]}
+    assert rows_by_state["state.stage7_heldout"]["held_out_challenge"] is True
+    assert rows_by_state["state.stage7_heldout"]["training_eligible"] is False
+    assert dataset["readiness_v2_assessment"]["selector_sandbox_ready"] is False
+    assert "insufficient_protected_non_stage0_positive_rows" in dataset["readiness_v2_assessment"]["blockers"]
+    assert dataset["decision"]["status"] == "strategy_owner_contrast_dataset_underpowered_no_selector_sandbox"
