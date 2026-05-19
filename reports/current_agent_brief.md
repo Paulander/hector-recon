@@ -281,6 +281,13 @@ KRK strategy arbiter sandbox design v0:
 
 The design records the next architecture-review package for a possible future default-off KRK strategy arbiter. It is design-only and explicitly blocks runtime implementation without review. Open risks are mixed provider-label semantics, max-only frames that may indicate capacity or missing-proposal gaps, weak context-only heuristics, and Stage 7 overfit risk. Recommended next step: `architecture_review_before_any_runtime_sandbox`.
 
+KRK strategy arbiter evidence risk review v0:
+
+- `reports/krk_strategy_arbiter_evidence_risk_review_v0.json`
+- `reports/krk_strategy_arbiter_evidence_risk_review_v0.md`
+
+The pre-sandbox risk review separates provider-label semantics and max-only frame types. It finds mixed label semantics: `24` forced-provider outcomes, `24` selected-provider playouts, and `18` same-move unselected-provider playouts. The `14` max-only frames split into `2` Stage7 forced existing-provider capacity/horizon gaps and `12` protected-stage selected-playout guardrail/horizon caveats. Decision: `runtime_sandbox_blocked_pending_semantics_review`; next step is `stratified_non_causal_arbiter_evaluation_v2`, not runtime implementation.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.

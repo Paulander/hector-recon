@@ -1,0 +1,657 @@
+{
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "runtime_internal_terminal",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_review",
+  "decision": {
+    "interpretation": "Provider labels are useful for offline design, but selected-playout, same-move unselected-provider, and forced-provider semantics are mixed. A runtime sandbox should not be implemented until the arbiter evaluation separates those semantics.",
+    "recommended_next_step": "stratified_non_causal_arbiter_evaluation_v2",
+    "runtime_sandbox_allowed": false,
+    "status": "runtime_sandbox_blocked_pending_semantics_review"
+  },
+  "gameplay_topology_mutation": false,
+  "max_only_frames": [
+    {
+      "active_landmark_label": "box_shrink",
+      "frame_id": "cp.krk.state.0afbf11aa123",
+      "has_provider_mate": false,
+      "max_only": true,
+      "max_only_classification": "forced_existing_provider_capacity_or_horizon_gap",
+      "outcome": "max_plies",
+      "providers_by_result": {
+        "max_plies": [
+          "krk.drive_to_edge",
+          "krk.edge_trap_close",
+          "krk.edge_trap_enemy_between",
+          "krk.edge_trap_wrong_tempo",
+          "krk.fence_established",
+          "krk.stage0_basin"
+        ]
+      },
+      "result_counts": {
+        "max_plies": 6
+      },
+      "semantic_counts": {
+        "forced_provider_outcome": 6
+      },
+      "source_stage": "stage7",
+      "state_id": "state.0afbf11aa123"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "frame_id": "cp.krk.state.38aed2f35911",
+      "has_provider_mate": false,
+      "max_only": true,
+      "max_only_classification": "forced_existing_provider_capacity_or_horizon_gap",
+      "outcome": "max_plies",
+      "providers_by_result": {
+        "max_plies": [
+          "krk.drive_to_edge",
+          "krk.edge_trap_close",
+          "krk.edge_trap_enemy_between",
+          "krk.edge_trap_wrong_tempo",
+          "krk.fence_established",
+          "krk.stage0_basin"
+        ]
+      },
+      "result_counts": {
+        "max_plies": 6
+      },
+      "semantic_counts": {
+        "forced_provider_outcome": 6
+      },
+      "source_stage": "stage7",
+      "state_id": "state.38aed2f35911"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "frame_id": "cp.krk.state.02feb8593cc6",
+      "has_provider_mate": false,
+      "max_only": true,
+      "max_only_classification": "selected_playout_guardrail_or_horizon_caveat",
+      "outcome": "max_plies",
+      "providers_by_result": {
+        "max_plies": [
+          "krk.edge_trap_close",
+          "krk.edge_trap_enemy_between",
+          "krk.edge_trap_wrong_tempo"
+        ]
+      },
+      "result_counts": {
+        "max_plies": 3
+      },
+      "semantic_counts": {
+        "same_move_unselected_provider_playout": 2,
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage5",
+      "state_id": "state.02feb8593cc6"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "frame_id": "cp.krk.state.326222aefdf1",
+      "has_provider_mate": false,
+      "max_only": true,
+      "max_only_classification": "selected_playout_guardrail_or_horizon_caveat",
+      "outcome": "max_plies",
+      "providers_by_result": {
+        "max_plies": [
+          "krk.edge_trap_close",
+          "krk.edge_trap_enemy_between",
+          "krk.edge_trap_wrong_tempo"
+        ]
+      },
+      "result_counts": {
+        "max_plies": 3
+      },
+      "semantic_counts": {
+        "same_move_unselected_provider_playout": 2,
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage5",
+      "state_id": "state.326222aefdf1"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "frame_id": "cp.krk.state.3dca34326fca",
+      "has_provider_mate": false,
+      "max_only": true,
+      "max_only_classification": "selected_playout_guardrail_or_horizon_caveat",
+      "outcome": "max_plies",
+      "providers_by_result": {
+        "max_plies": [
+          "krk.stage0_basin"
+        ]
+      },
+      "result_counts": {
+        "max_plies": 1
+      },
+      "semantic_counts": {
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage5",
+      "state_id": "state.3dca34326fca"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "frame_id": "cp.krk.state.02feb8593cc6",
+      "has_provider_mate": false,
+      "max_only": true,
+      "max_only_classification": "selected_playout_guardrail_or_horizon_caveat",
+      "outcome": "max_plies",
+      "providers_by_result": {
+        "max_plies": [
+          "krk.edge_trap_close",
+          "krk.edge_trap_enemy_between",
+          "krk.edge_trap_wrong_tempo"
+        ]
+      },
+      "result_counts": {
+        "max_plies": 3
+      },
+      "semantic_counts": {
+        "same_move_unselected_provider_playout": 2,
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage5",
+      "state_id": "state.02feb8593cc6"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "frame_id": "cp.krk.state.699f0003a511",
+      "has_provider_mate": false,
+      "max_only": true,
+      "max_only_classification": "selected_playout_guardrail_or_horizon_caveat",
+      "outcome": "max_plies",
+      "providers_by_result": {
+        "max_plies": [
+          "krk.edge_trap_close",
+          "krk.edge_trap_enemy_between",
+          "krk.edge_trap_wrong_tempo"
+        ]
+      },
+      "result_counts": {
+        "max_plies": 3
+      },
+      "semantic_counts": {
+        "same_move_unselected_provider_playout": 2,
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "frame_id": "cp.krk.state.699f0003a511",
+      "has_provider_mate": false,
+      "max_only": true,
+      "max_only_classification": "selected_playout_guardrail_or_horizon_caveat",
+      "outcome": "max_plies",
+      "providers_by_result": {
+        "max_plies": [
+          "krk.edge_trap_close",
+          "krk.edge_trap_enemy_between",
+          "krk.edge_trap_wrong_tempo"
+        ]
+      },
+      "result_counts": {
+        "max_plies": 3
+      },
+      "semantic_counts": {
+        "same_move_unselected_provider_playout": 2,
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "frame_id": "cp.krk.state.699f0003a511",
+      "has_provider_mate": false,
+      "max_only": true,
+      "max_only_classification": "selected_playout_guardrail_or_horizon_caveat",
+      "outcome": "max_plies",
+      "providers_by_result": {
+        "max_plies": [
+          "krk.edge_trap_close",
+          "krk.edge_trap_enemy_between",
+          "krk.edge_trap_wrong_tempo"
+        ]
+      },
+      "result_counts": {
+        "max_plies": 3
+      },
+      "semantic_counts": {
+        "same_move_unselected_provider_playout": 2,
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "frame_id": "cp.krk.state.699f0003a511",
+      "has_provider_mate": false,
+      "max_only": true,
+      "max_only_classification": "selected_playout_guardrail_or_horizon_caveat",
+      "outcome": "max_plies",
+      "providers_by_result": {
+        "max_plies": [
+          "krk.edge_trap_close",
+          "krk.edge_trap_enemy_between",
+          "krk.edge_trap_wrong_tempo"
+        ]
+      },
+      "result_counts": {
+        "max_plies": 3
+      },
+      "semantic_counts": {
+        "same_move_unselected_provider_playout": 2,
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "frame_id": "cp.krk.state.699f0003a511",
+      "has_provider_mate": false,
+      "max_only": true,
+      "max_only_classification": "selected_playout_guardrail_or_horizon_caveat",
+      "outcome": "max_plies",
+      "providers_by_result": {
+        "max_plies": [
+          "krk.edge_trap_close",
+          "krk.edge_trap_enemy_between",
+          "krk.edge_trap_wrong_tempo"
+        ]
+      },
+      "result_counts": {
+        "max_plies": 3
+      },
+      "semantic_counts": {
+        "same_move_unselected_provider_playout": 2,
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "frame_id": "cp.krk.state.256a3da30f0f",
+      "has_provider_mate": false,
+      "max_only": true,
+      "max_only_classification": "selected_playout_guardrail_or_horizon_caveat",
+      "outcome": "max_plies",
+      "providers_by_result": {
+        "max_plies": [
+          "krk.stage0_basin"
+        ]
+      },
+      "result_counts": {
+        "max_plies": 1
+      },
+      "semantic_counts": {
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage4",
+      "state_id": "state.256a3da30f0f"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "frame_id": "cp.krk.state.b11124d658cf",
+      "has_provider_mate": false,
+      "max_only": true,
+      "max_only_classification": "selected_playout_guardrail_or_horizon_caveat",
+      "outcome": "max_plies",
+      "providers_by_result": {
+        "max_plies": [
+          "krk.stage0_basin"
+        ]
+      },
+      "result_counts": {
+        "max_plies": 1
+      },
+      "semantic_counts": {
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage4",
+      "state_id": "state.b11124d658cf"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "frame_id": "cp.krk.state.256a3da30f0f",
+      "has_provider_mate": false,
+      "max_only": true,
+      "max_only_classification": "selected_playout_guardrail_or_horizon_caveat",
+      "outcome": "max_plies",
+      "providers_by_result": {
+        "max_plies": [
+          "krk.stage0_basin"
+        ]
+      },
+      "result_counts": {
+        "max_plies": 1
+      },
+      "semantic_counts": {
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage4",
+      "state_id": "state.256a3da30f0f"
+    }
+  ],
+  "provider_mate_frame_examples": [
+    {
+      "active_landmark_label": "box_shrink",
+      "frame_id": "cp.krk.state.ac0b7ed500ea",
+      "has_provider_mate": true,
+      "max_only": false,
+      "outcome": "max_plies",
+      "providers_by_result": {
+        "mate": [
+          "krk.fence_established"
+        ],
+        "max_plies": [
+          "krk.drive_to_edge",
+          "krk.edge_trap_close",
+          "krk.edge_trap_enemy_between",
+          "krk.edge_trap_wrong_tempo",
+          "krk.stage0_basin"
+        ]
+      },
+      "result_counts": {
+        "mate": 1,
+        "max_plies": 5
+      },
+      "semantic_counts": {
+        "forced_provider_outcome": 6
+      },
+      "source_stage": "stage7",
+      "state_id": "state.ac0b7ed500ea"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "frame_id": "cp.krk.state.ff6652c8832c",
+      "has_provider_mate": true,
+      "max_only": false,
+      "outcome": "max_plies",
+      "providers_by_result": {
+        "mate": [
+          "krk.drive_to_edge"
+        ],
+        "max_plies": [
+          "krk.edge_trap_close",
+          "krk.edge_trap_enemy_between",
+          "krk.edge_trap_wrong_tempo",
+          "krk.fence_established",
+          "krk.stage0_basin"
+        ]
+      },
+      "result_counts": {
+        "mate": 1,
+        "max_plies": 5
+      },
+      "semantic_counts": {
+        "forced_provider_outcome": 6
+      },
+      "source_stage": "stage7",
+      "state_id": "state.ff6652c8832c"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "frame_id": "cp.krk.state.7bd8961882ad",
+      "has_provider_mate": true,
+      "max_only": false,
+      "outcome": "mate",
+      "providers_by_result": {
+        "mate": [
+          "krk.stage0_basin"
+        ]
+      },
+      "result_counts": {
+        "mate": 1
+      },
+      "semantic_counts": {
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage5",
+      "state_id": "state.7bd8961882ad"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "frame_id": "cp.krk.state.87b1160e68b9",
+      "has_provider_mate": true,
+      "max_only": false,
+      "outcome": "mate",
+      "providers_by_result": {
+        "mate": [
+          "krk.edge_trap_close",
+          "krk.edge_trap_enemy_between",
+          "krk.edge_trap_wrong_tempo"
+        ]
+      },
+      "result_counts": {
+        "mate": 3
+      },
+      "semantic_counts": {
+        "same_move_unselected_provider_playout": 2,
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage5",
+      "state_id": "state.87b1160e68b9"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "frame_id": "cp.krk.state.2c1d6da27ea1",
+      "has_provider_mate": true,
+      "max_only": false,
+      "outcome": "mate",
+      "providers_by_result": {
+        "mate": [
+          "krk.stage0_basin"
+        ]
+      },
+      "result_counts": {
+        "mate": 1
+      },
+      "semantic_counts": {
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage5",
+      "state_id": "state.2c1d6da27ea1"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "frame_id": "cp.krk.state.2c1d6da27ea1",
+      "has_provider_mate": true,
+      "max_only": false,
+      "outcome": "mate",
+      "providers_by_result": {
+        "mate": [
+          "krk.stage0_basin"
+        ]
+      },
+      "result_counts": {
+        "mate": 1
+      },
+      "semantic_counts": {
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage5",
+      "state_id": "state.2c1d6da27ea1"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "frame_id": "cp.krk.state.d1f052d2cab2",
+      "has_provider_mate": true,
+      "max_only": false,
+      "outcome": "mate",
+      "providers_by_result": {
+        "mate": [
+          "krk.stage0_basin"
+        ]
+      },
+      "result_counts": {
+        "mate": 1
+      },
+      "semantic_counts": {
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage6",
+      "state_id": "state.d1f052d2cab2"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "frame_id": "cp.krk.state.52085d244e9d",
+      "has_provider_mate": true,
+      "max_only": false,
+      "outcome": "mate",
+      "providers_by_result": {
+        "mate": [
+          "krk.stage0_basin"
+        ]
+      },
+      "result_counts": {
+        "mate": 1
+      },
+      "semantic_counts": {
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage6",
+      "state_id": "state.52085d244e9d"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "frame_id": "cp.krk.state.69711173114a",
+      "has_provider_mate": true,
+      "max_only": false,
+      "outcome": "mate",
+      "providers_by_result": {
+        "mate": [
+          "krk.stage0_basin"
+        ]
+      },
+      "result_counts": {
+        "mate": 1
+      },
+      "semantic_counts": {
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage6",
+      "state_id": "state.69711173114a"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "frame_id": "cp.krk.state.d1f052d2cab2",
+      "has_provider_mate": true,
+      "max_only": false,
+      "outcome": "mate",
+      "providers_by_result": {
+        "mate": [
+          "krk.stage0_basin"
+        ]
+      },
+      "result_counts": {
+        "mate": 1
+      },
+      "semantic_counts": {
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage6",
+      "state_id": "state.d1f052d2cab2"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "frame_id": "cp.krk.state.69711173114a",
+      "has_provider_mate": true,
+      "max_only": false,
+      "outcome": "mate",
+      "providers_by_result": {
+        "mate": [
+          "krk.stage0_basin"
+        ]
+      },
+      "result_counts": {
+        "mate": 1
+      },
+      "semantic_counts": {
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage6",
+      "state_id": "state.69711173114a"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "frame_id": "cp.krk.state.1e4f48a672e8",
+      "has_provider_mate": true,
+      "max_only": false,
+      "outcome": "mate",
+      "providers_by_result": {
+        "mate": [
+          "krk.stage0_basin"
+        ]
+      },
+      "result_counts": {
+        "mate": 1
+      },
+      "semantic_counts": {
+        "selected_provider_playout": 1
+      },
+      "source_stage": "stage4",
+      "state_id": "state.1e4f48a672e8"
+    }
+  ],
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_strategy_arbiter_evidence_risk_review.v0",
+  "source_artifacts": [
+    "reports/krk_control_plane_filtered_frames_v0.json",
+    "reports/krk_control_plane_strategy_arbitration_baseline_v1.json",
+    "reports/krk_strategy_arbiter_sandbox_design_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "benchmark_frame_count": 28,
+    "label_semantic_counts": {
+      "forced_provider_outcome": 24,
+      "same_move_unselected_provider_playout": 18,
+      "selected_provider_playout": 24
+    },
+    "label_semantic_result_counts": {
+      "forced_provider_outcome:mate": 2,
+      "forced_provider_outcome:max_plies": 22,
+      "same_move_unselected_provider_playout:mate": 2,
+      "same_move_unselected_provider_playout:max_plies": 16,
+      "selected_provider_playout:mate": 12,
+      "selected_provider_playout:max_plies": 12
+    },
+    "label_semantic_stage_counts": {
+      "stage4:selected_provider_playout": 6,
+      "stage5:same_move_unselected_provider_playout": 8,
+      "stage5:selected_provider_playout": 8,
+      "stage6:same_move_unselected_provider_playout": 10,
+      "stage6:selected_provider_playout": 10,
+      "stage7:forced_provider_outcome": 24
+    },
+    "max_only_classification_counts": {
+      "forced_existing_provider_capacity_or_horizon_gap": 2,
+      "selected_playout_guardrail_or_horizon_caveat": 12
+    },
+    "max_only_frame_count": 14,
+    "provider_mate_frame_count": 14,
+    "provider_mate_frames_by_semantic": {
+      "forced_provider_outcome": 2,
+      "same_move_unselected_provider_playout": 1,
+      "selected_provider_playout": 12
+    }
+  }
+}

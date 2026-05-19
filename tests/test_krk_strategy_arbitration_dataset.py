@@ -205,6 +205,17 @@ _control_plane_strategy_baseline = importlib.util.module_from_spec(
 )
 _control_plane_strategy_baseline_spec.loader.exec_module(_control_plane_strategy_baseline)
 
+_strategy_arbiter_risk_review_spec = importlib.util.spec_from_file_location(
+    "review_krk_strategy_arbiter_evidence_risks",
+    Path(__file__).resolve().parents[1] / "scripts" / "review_krk_strategy_arbiter_evidence_risks.py",
+)
+assert _strategy_arbiter_risk_review_spec is not None
+assert _strategy_arbiter_risk_review_spec.loader is not None
+_strategy_arbiter_risk_review = importlib.util.module_from_spec(
+    _strategy_arbiter_risk_review_spec
+)
+_strategy_arbiter_risk_review_spec.loader.exec_module(_strategy_arbiter_risk_review)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -2151,3 +2162,92 @@ def test_krk_control_plane_strategy_baseline_is_non_causal_and_reads_labels(tmp_
     )
     assert normalized["selected_label_counts"]["mate"] == 1
     assert baseline["decision"]["causal_next_step_allowed"] is False
+
+
+def test_krk_strategy_arbiter_risk_review_separates_label_semantics(tmp_path):
+    root = tmp_path
+
+    def write_json(relative_path, payload):
+        path = root / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload), encoding="utf-8")
+
+    write_json(
+        _strategy_arbiter_risk_review.FILTERED_FRAMES,
+        {
+            "causal_status": "non_causal_filtered_frame_export",
+            "frames": [
+                {
+                    "frame_id": "cp.forced",
+                    "state_id": "state.forced",
+                    "source_stage": "stage7",
+                    "active_landmark_label": "box_shrink",
+                    "outcome": "max_plies",
+                    "filter_metadata": {
+                        "benchmark_roles": ["strategy_arbitration_benchmark"]
+                    },
+                    "strategy_proposal_frames": [
+                        {
+                            "provider_id": "krk.drive_to_edge",
+                            "known_outcome_label": {
+                                "result": "mate",
+                                "source": "forced_provider_result",
+                            },
+                        },
+                    ],
+                },
+                {
+                    "frame_id": "cp.selected",
+                    "state_id": "state.selected",
+                    "source_stage": "stage5",
+                    "active_landmark_label": "fence_established",
+                    "outcome": "max_plies",
+                    "filter_metadata": {
+                        "benchmark_roles": ["strategy_arbitration_benchmark"]
+                    },
+                    "strategy_proposal_frames": [
+                        {
+                            "provider_id": "krk.edge_trap_close",
+                            "known_outcome_label": {
+                                "playout_result": "max_plies",
+                                "selected": True,
+                            },
+                        },
+                        {
+                            "provider_id": "krk.edge_trap_enemy_between",
+                            "known_outcome_label": {
+                                "playout_result": "max_plies",
+                                "selected": False,
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+    )
+    write_json(
+        _strategy_arbiter_risk_review.BASELINE,
+        {"causal_status": "non_causal_probe"},
+    )
+    write_json(
+        _strategy_arbiter_risk_review.DESIGN,
+        {"causal_status": "non_causal_design"},
+    )
+
+    review = _strategy_arbiter_risk_review.build_review(root)
+
+    assert review["schema_version"] == "krk_strategy_arbiter_evidence_risk_review.v0"
+    assert review["causal_status"] == "non_causal_review"
+    assert review["runtime_behavior_changed"] is False
+    assert review["runtime_arbiter_implemented"] is False
+    assert review["stage7_promotion_allowed"] is False
+    assert review["stage8_training_allowed"] is False
+    assert review["summary"]["label_semantic_counts"] == {
+        "forced_provider_outcome": 1,
+        "selected_provider_playout": 1,
+        "same_move_unselected_provider_playout": 1,
+    }
+    assert review["summary"]["max_only_classification_counts"] == {
+        "selected_playout_guardrail_or_horizon_caveat": 1
+    }
+    assert review["decision"]["runtime_sandbox_allowed"] is False
