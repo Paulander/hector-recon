@@ -192,6 +192,15 @@ assert _control_plane_strategy_probe_spec.loader is not None
 _control_plane_strategy_probe = importlib.util.module_from_spec(_control_plane_strategy_probe_spec)
 _control_plane_strategy_probe_spec.loader.exec_module(_control_plane_strategy_probe)
 
+_provider_label_plan_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_provider_label_coverage_plan",
+    Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
+)
+assert _provider_label_plan_spec is not None
+assert _provider_label_plan_spec.loader is not None
+_provider_label_plan = importlib.util.module_from_spec(_provider_label_plan_spec)
+_provider_label_plan_spec.loader.exec_module(_provider_label_plan)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -1987,3 +1996,74 @@ def test_krk_control_plane_strategy_probe_stays_non_causal_and_reports_label_gap
         item for item in probe["selector_results"] if item["selector"] == "normalized_score"
     )
     assert normalized["selected_mate_count"] == 1
+
+
+def test_krk_provider_label_coverage_plan_is_bounded_and_non_causal(tmp_path):
+    root = tmp_path
+
+    def write_json(relative_path, payload):
+        path = root / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload), encoding="utf-8")
+
+    write_json(
+        _provider_label_plan.FILTERED_FRAMES,
+        {
+            "causal_status": "non_causal_filtered_frame_export",
+            "frames": [
+                {
+                    "frame_id": "cp.stage5",
+                    "source_stage": "stage5",
+                    "filter_metadata": {
+                        "benchmark_roles": ["strategy_arbitration_benchmark"]
+                    },
+                    "strategy_proposal_frames": [
+                        {"provider_id": "krk.fence", "move_uci": "a1a2", "known_outcome_label": {}}
+                    ],
+                },
+                {
+                    "frame_id": "cp.stage7",
+                    "source_stage": "stage7",
+                    "filter_metadata": {
+                        "benchmark_roles": ["strategy_arbitration_benchmark"]
+                    },
+                    "strategy_proposal_frames": [
+                        {
+                            "provider_id": "krk.drive",
+                            "move_uci": "a1a3",
+                            "known_outcome_label": {"result": "mate"},
+                        }
+                    ],
+                },
+            ],
+        },
+    )
+    write_json(
+        _provider_label_plan.STRATEGY_PROBE,
+        {
+            "causal_status": "non_causal_probe",
+            "label_coverage": {
+                "provider_labeled_frame_count": 1,
+                "frames_with_known_provider_mate": 1,
+            },
+        },
+    )
+
+    plan = _provider_label_plan.build_plan(root)
+
+    assert plan["schema_version"] == "krk_provider_label_coverage_plan.v0"
+    assert plan["causal_status"] == "non_causal_label_plan"
+    assert plan["runtime_behavior_changed"] is False
+    assert plan["labels_generated_in_this_slice"] is False
+    assert plan["runtime_arbiter_added"] is False
+    assert plan["stage7_promotion_allowed"] is False
+    assert plan["stage8_training_allowed"] is False
+    assert plan["current_label_coverage"]["unknown_provider_label_count_by_stage"] == {
+        "stage5": 1
+    }
+    assert plan["current_label_coverage"]["known_provider_label_count_by_stage"] == {
+        "stage7": 1
+    }
+    assert plan["bounded_labeling_plan"][0]["phase"] == "p0_protected_success_controls"
+    assert plan["bounded_labeling_plan"][0]["new_runtime_behavior"] is False
+    assert plan["recommended_next_slice"] == "review_or_run_bounded_provider_label_p0"

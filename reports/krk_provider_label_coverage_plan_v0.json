@@ -1,0 +1,175 @@
+{
+  "acceptance_for_future_label_run": [
+    "no_runtime_behavior_change",
+    "no_stage7_promotion",
+    "no_stage8_training",
+    "no_runtime_dtm_or_tablebase",
+    "no_exhaustive_legal_first_sweeps",
+    "provider_labels_are_written_as_non_causal_outcome_labels",
+    "run_stops_if_projected_to_hours"
+  ],
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "runtime_internal_terminal",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "bounded_labeling_plan": [
+    {
+      "diagnostic_caches_required": true,
+      "horizon": 40,
+      "max_frames": 8,
+      "max_provider_suggestions_per_frame": 2,
+      "new_runtime_behavior": false,
+      "phase": "p0_protected_success_controls",
+      "purpose": "Add provider-level h40 labels to protected Stage 5/6 success frames so arbitration has positive controls outside Stage 7.",
+      "target_stages": [
+        "stage5",
+        "stage6"
+      ],
+      "trace_mode": "failures_only"
+    },
+    {
+      "diagnostic_caches_required": true,
+      "horizon": 40,
+      "max_frames": 4,
+      "max_provider_suggestions_per_frame": 2,
+      "new_runtime_behavior": false,
+      "phase": "p1_stage4_caveat_controls",
+      "purpose": "Label Stage 4 caveat provider suggestions to separate guardrail-definition debt from provider-selection failure.",
+      "target_stages": [
+        "stage4"
+      ],
+      "trace_mode": "failures_only"
+    },
+    {
+      "diagnostic_caches_required": true,
+      "horizon": 40,
+      "max_frames": 4,
+      "max_provider_suggestions_per_frame": 2,
+      "new_runtime_behavior": false,
+      "phase": "p2_stage7_challenge_balance",
+      "purpose": "Only after protected controls exist, add balanced labels for Stage 7 challenge frames without reopening Stage 7 repair.",
+      "target_stages": [
+        "stage7"
+      ],
+      "trace_mode": "failures_only"
+    }
+  ],
+  "causal_status": "non_causal_label_plan",
+  "current_label_coverage": {
+    "benchmark_frame_count": 28,
+    "frames_with_known_provider_mate": 2,
+    "known_provider_label_count_by_stage": {
+      "stage7": 24
+    },
+    "proposal_count_by_stage": {
+      "stage4": 6,
+      "stage5": 16,
+      "stage6": 20,
+      "stage7": 24
+    },
+    "provider_labeled_frame_count": 4,
+    "unknown_examples": [
+      {
+        "frame_id": "cp.krk.state.7bd8961882ad",
+        "move_uci": "f2g3",
+        "provider_id": "krk.stage0_basin",
+        "source_stage": "stage5"
+      },
+      {
+        "frame_id": "cp.krk.state.87b1160e68b9",
+        "move_uci": "e7e8",
+        "provider_id": "krk.edge_trap_close",
+        "source_stage": "stage5"
+      },
+      {
+        "frame_id": "cp.krk.state.87b1160e68b9",
+        "move_uci": "e7e8",
+        "provider_id": "krk.edge_trap_enemy_between",
+        "source_stage": "stage5"
+      },
+      {
+        "frame_id": "cp.krk.state.87b1160e68b9",
+        "move_uci": "e7e8",
+        "provider_id": "krk.edge_trap_wrong_tempo",
+        "source_stage": "stage5"
+      },
+      {
+        "frame_id": "cp.krk.state.2c1d6da27ea1",
+        "move_uci": "a7a8",
+        "provider_id": "krk.stage0_basin",
+        "source_stage": "stage5"
+      },
+      {
+        "frame_id": "cp.krk.state.2c1d6da27ea1",
+        "move_uci": "a7a8",
+        "provider_id": "krk.stage0_basin",
+        "source_stage": "stage5"
+      },
+      {
+        "frame_id": "cp.krk.state.02feb8593cc6",
+        "move_uci": "h7c7",
+        "provider_id": "krk.edge_trap_close",
+        "source_stage": "stage5"
+      },
+      {
+        "frame_id": "cp.krk.state.02feb8593cc6",
+        "move_uci": "h7c7",
+        "provider_id": "krk.edge_trap_enemy_between",
+        "source_stage": "stage5"
+      },
+      {
+        "frame_id": "cp.krk.state.02feb8593cc6",
+        "move_uci": "h7c7",
+        "provider_id": "krk.edge_trap_wrong_tempo",
+        "source_stage": "stage5"
+      },
+      {
+        "frame_id": "cp.krk.state.326222aefdf1",
+        "move_uci": "h7c7",
+        "provider_id": "krk.edge_trap_close",
+        "source_stage": "stage5"
+      },
+      {
+        "frame_id": "cp.krk.state.326222aefdf1",
+        "move_uci": "h7c7",
+        "provider_id": "krk.edge_trap_enemy_between",
+        "source_stage": "stage5"
+      },
+      {
+        "frame_id": "cp.krk.state.326222aefdf1",
+        "move_uci": "h7c7",
+        "provider_id": "krk.edge_trap_wrong_tempo",
+        "source_stage": "stage5"
+      }
+    ],
+    "unknown_provider_label_count_by_stage": {
+      "stage4": 6,
+      "stage5": 16,
+      "stage6": 20
+    }
+  },
+  "gameplay_topology_mutation": false,
+  "labels_generated_in_this_slice": false,
+  "post_label_decision_gate": [
+    "if protected-stage provider labels are sufficient, rerun offline strategy-arbitration probe",
+    "if labels remain sparse, do not train arbiter; report evidence gap",
+    "if Stage7 labels dominate, freeze as challenge set and collect broader controls first"
+  ],
+  "recommended_next_slice": "review_or_run_bounded_provider_label_p0",
+  "runtime_arbiter_added": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_provider_label_coverage_plan.v0",
+  "source_artifacts": [
+    "reports/krk_control_plane_filtered_frames_v0.json",
+    "reports/krk_control_plane_strategy_arbitration_probe_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}
