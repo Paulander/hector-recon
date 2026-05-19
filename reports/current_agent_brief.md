@@ -445,6 +445,13 @@ KRK selector provenance feature dataset/probe v0:
 
 The provenance probe decomposes the provider-prior signal into explicit non-causal fields. `provider_family`, `provider_maturity`, `provider_source_stage`, and `family_maturity` all match the raw provider-id LOO accuracy of `0.833` on the current selected-playout control labels. This supports keeping provenance/maturity in evidence records, but it still does not authorize a runtime arbiter or selector sandbox because the labels are small and can encode horizon/control artifacts. Current decision: `provenance_features_explain_provider_prior_non_causal`; next step requires architecture review of selector objective or more labels before any sandbox.
 
+KRK selector objective architecture review v1:
+
+- `reports/krk_selector_objective_architecture_review_v1.json`
+- `reports/krk_selector_objective_architecture_review_v1.md`
+
+The review closes the selector-prior branch. Decision: `selector_objective_needs_stratified_label_expansion_before_sandbox`. The next safe slice is a bounded non-causal stratified label plan (`collect_small_stratified_selector_labels_v1`) that separates selected-playout success, forced-provider conversion, same-move compatibility, and guardrail-safe ownership while keeping Stage 7 held out. Runtime arbiter, selector sandbox, Stage 7 repair/promotion, and Stage 8 training remain blocked.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -574,6 +581,8 @@ reports/krk_selector_provenance_feature_dataset_v0.json
 reports/krk_selector_provenance_feature_dataset_v0.md
 reports/krk_selector_provenance_feature_probe_v0.json
 reports/krk_selector_provenance_feature_probe_v0.md
+reports/krk_selector_objective_architecture_review_v1.json
+reports/krk_selector_objective_architecture_review_v1.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
