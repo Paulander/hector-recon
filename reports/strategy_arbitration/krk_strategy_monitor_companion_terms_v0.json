@@ -1,0 +1,162 @@
+{
+  "schema_version": "krk_strategy_monitor_companion_terms.v0",
+  "causal_status": "non_causal_design",
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "gameplay_topology_mutation": false,
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_feature_candidate_validation_v0.json",
+    "reports/strategy_arbitration/krk_strategy_monitor_v0_plan.json",
+    "reports/strategy_arbitration/krk_strategy_monitor_records_v0.json"
+  ],
+  "summary": {
+    "purpose": "Define companion terms needed before mixed or failure-oriented monitors can be considered for future sandbox design.",
+    "causal_terms_authorized": false,
+    "runtime_arbiter_authorized": false,
+    "stage7_repair_authorized": false,
+    "recommended_next_step": "replay_free_companion_term_availability_audit_or_architecture_review"
+  },
+  "companion_sets": [
+    {
+      "set_id": "phase_boundary_companions",
+      "target_monitor_types": [
+        "PhaseBoundaryMonitor"
+      ],
+      "source_concepts": [
+        "edge_net_affordance",
+        "phase_boundary_near_edge"
+      ],
+      "candidate_terms": [
+        "current_owner",
+        "successful_next_provider",
+        "safe_edge_net_tighten_move_exists",
+        "safe_check_or_cut_tighten_move_exists",
+        "edge_net_pressure_increases_after_move",
+        "draw_risk_absent_after_edge_net_move",
+        "king_support_aligned_with_edge_net"
+      ],
+      "purpose": "Separate neutral near-edge phase context from productive edge-net ownership.",
+      "minimum_next_evidence": [
+        "current owner/provider labels",
+        "successful-next-provider labels",
+        "small h40 owner-specific labels only if replay-free labels are insufficient"
+      ],
+      "causal_status": "non_causal"
+    },
+    {
+      "set_id": "owner_exit_companions",
+      "target_monitor_types": [
+        "OwnerExitMonitor"
+      ],
+      "source_concepts": [
+        "box_shrink_exit_condition"
+      ],
+      "candidate_terms": [
+        "active_landmark_label == box_shrink",
+        "box_shrink_goal_satisfied",
+        "box_area_no_longer_decision_relevant",
+        "edge_net_affordance_scoped",
+        "mate_basin_readiness",
+        "validated_handoff_target_available",
+        "box_shrink_owner_repeats_without_progress"
+      ],
+      "purpose": "Detect when box_shrink should release ownership without deciding the next provider.",
+      "minimum_next_evidence": [
+        "active owner label",
+        "next selected provider label",
+        "known successful continuation evidence for any proposed handoff target"
+      ],
+      "causal_status": "non_causal"
+    },
+    {
+      "set_id": "repair_needed_companions",
+      "target_monitor_types": [
+        "RepairNeededMonitor"
+      ],
+      "source_concepts": [
+        "fence_or_cut_repair_affordance"
+      ],
+      "candidate_terms": [
+        "repair_or_reestablish_cut_available",
+        "safe_repair_move_exists",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply",
+        "cut_or_fence_restored_after_move",
+        "repair_preserves_mate_basin_progress",
+        "repair_needed_but_no_safe_repair_available"
+      ],
+      "purpose": "Separate repair pressure from repair affordance.",
+      "minimum_next_evidence": [
+        "safe repair move availability",
+        "post-repair rook safety",
+        "post-reply box/cut/fence preservation"
+      ],
+      "causal_status": "non_causal"
+    },
+    {
+      "set_id": "plan_selection_companions",
+      "target_monitor_types": [
+        "PlanSelectionNeededMonitor"
+      ],
+      "source_concepts": [
+        "plan_selection_needed"
+      ],
+      "candidate_terms": [
+        "plan_capsule_context",
+        "handoff_success_after_plan",
+        "post_plan_stagnation",
+        "local_provider_competition_failed",
+        "selected_provider_closed_loop_failed",
+        "multi_step_progress_required",
+        "single_move_affordance_insufficient",
+        "growth_pressure_repeated_family"
+      ],
+      "purpose": "Identify when local provider competition is insufficient and higher-level plan/strategy selection should be audited.",
+      "minimum_next_evidence": [
+        "cross-stage plan-selection examples",
+        "separate plan-entry-needed labels from plan-policy-success labels",
+        "post-plan handoff/stagnation labels"
+      ],
+      "causal_status": "non_causal"
+    },
+    {
+      "set_id": "king_support_redesign",
+      "target_monitor_types": [
+        "RejectedFeatureDefinition"
+      ],
+      "source_concepts": [
+        "king_support_conversion_affordance"
+      ],
+      "candidate_terms": [
+        "king_support_improvement_move_exists",
+        "king_support_improves_after_move",
+        "king_support_improves_after_reply",
+        "king_support_aligned_with_cut_or_edge_net",
+        "king_support_needed_for_current_phase"
+      ],
+      "purpose": "Replace static king-support availability with action-relevant king-support progress.",
+      "minimum_next_evidence": [
+        "move-level support-improvement labels",
+        "phase labels showing when king support matters"
+      ],
+      "causal_status": "non_causal"
+    }
+  ],
+  "proposed_next_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_monitor_companion_audit_v0.json",
+    "reports/strategy_arbitration/krk_strategy_monitor_companion_audit_v0.md"
+  ],
+  "blocked_next_steps": [
+    "runtime_terminals",
+    "runtime_arbiter",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "topology_mutation",
+    "monitor_to_provider_routing"
+  ]
+}

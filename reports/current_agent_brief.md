@@ -154,6 +154,13 @@ KRK Strategy Monitor records v0:
 
 The replay-free extraction produced five monitor definitions, one rejected definition, and `108` non-causal StrategyMonitorRecord entries over the existing arbitration dataset. `PhaseBoundaryMonitor` and `OwnerExitMonitor` remain mixed-outcome and require companion terms before any sandbox; `RepairNeededMonitor` and `PlanSelectionNeededMonitor` are failure-oriented internal monitors. The extraction does not authorize runtime terminals, provider routing, Stage 7 repair, Stage 7 promotion, or Stage 8 training. The next step is architecture review or targeted companion-term design.
 
+KRK Strategy Monitor companion terms v0:
+
+- `reports/strategy_arbitration/krk_strategy_monitor_companion_terms_v0.json`
+- `reports/strategy_arbitration/krk_strategy_monitor_companion_terms_v0.md`
+
+The companion-term design proposes non-causal term sets for phase-boundary, owner-exit, repair-needed, plan-selection, and king-support redesign tracks. It explicitly keeps all terms non-causal and recommends only a replay-free companion-term availability audit or architecture review next. It does not authorize runtime terminals, a runtime arbiter, monitor-to-provider routing, Stage 7 repair, Stage 7 promotion, or Stage 8 training.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -203,6 +210,8 @@ reports/strategy_arbitration/krk_strategy_monitor_v0_plan.json
 reports/strategy_arbitration/krk_strategy_monitor_v0_plan.md
 reports/strategy_arbitration/krk_strategy_monitor_records_v0.json
 reports/strategy_arbitration/krk_strategy_monitor_records_v0.md
+reports/strategy_arbitration/krk_strategy_monitor_companion_terms_v0.json
+reports/strategy_arbitration/krk_strategy_monitor_companion_terms_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
