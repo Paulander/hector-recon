@@ -546,6 +546,14 @@ KRK strategy arbiter out-of-sample control labels v0:
 
 The bounded non-causal h40 label run completed `12` protected-control jobs in about `126` seconds. Selected playouts were `11` mate / `1` max_plies, and forced-selected-provider playouts were also `11` mate / `1` max_plies. Stage 5 and Stage 6 controls were `4/4` mate; Stage 4 was `3/4` mate with one max_plies. Stage 7 training rows remain `0`. The next allowed step is a replay-free probe of these out-of-sample labels before any selector sandbox review. Runtime arbiter, selector sandbox, Stage 7 repair/promotion, and Stage 8 training remain blocked.
 
+KRK strategy arbiter out-of-sample control probe v0:
+
+- `scripts/probe_krk_strategy_arbiter_out_of_sample_controls.py`
+- `reports/krk_strategy_arbiter_out_of_sample_control_probe_v0.json`
+- `reports/krk_strategy_arbiter_out_of_sample_control_probe_v0.md`
+
+The replay-free probe finds the new controls mostly confirm protected-stack conversion (`11/12` mate, forced-selected agreement `1.0`) but do not provide enough selector evidence. All `12` selected providers are `krk.stage0_basin`, and labels are imbalanced (`11` mate / `1` max_plies). Decision: `out_of_sample_controls_guardrail_positive_selector_sandbox_blocked`. The next step should be architecture review of selector signal/readiness before any runtime sandbox, not implementation.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -705,6 +713,8 @@ reports/krk_strategy_arbiter_out_of_sample_execution_manifest_review_v0.json
 reports/krk_strategy_arbiter_out_of_sample_execution_manifest_review_v0.md
 reports/krk_strategy_arbiter_out_of_sample_control_labels_v0.json
 reports/krk_strategy_arbiter_out_of_sample_control_labels_v0.md
+reports/krk_strategy_arbiter_out_of_sample_control_probe_v0.json
+reports/krk_strategy_arbiter_out_of_sample_control_probe_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

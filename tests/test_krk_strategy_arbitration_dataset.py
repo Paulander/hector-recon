@@ -280,6 +280,17 @@ assert _out_of_sample_label_run_spec.loader is not None
 _out_of_sample_label_run = importlib.util.module_from_spec(_out_of_sample_label_run_spec)
 _out_of_sample_label_run_spec.loader.exec_module(_out_of_sample_label_run)
 
+_out_of_sample_probe_spec = importlib.util.spec_from_file_location(
+    "probe_krk_strategy_arbiter_out_of_sample_controls",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "probe_krk_strategy_arbiter_out_of_sample_controls.py",
+)
+assert _out_of_sample_probe_spec is not None
+assert _out_of_sample_probe_spec.loader is not None
+_out_of_sample_probe = importlib.util.module_from_spec(_out_of_sample_probe_spec)
+_out_of_sample_probe_spec.loader.exec_module(_out_of_sample_probe)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -2800,3 +2811,51 @@ def test_krk_out_of_sample_control_label_run_is_non_causal(tmp_path, monkeypatch
     assert payload["summary"]["label_count"] == 1
     assert payload["summary"]["selected_result_counts"] == {"mate": 1}
     assert payload["recommended_next_step"] == "probe_out_of_sample_control_labels_before_any_selector_sandbox"
+
+
+def test_krk_out_of_sample_control_probe_blocks_selector_when_provider_dominates(tmp_path, monkeypatch):
+    root = tmp_path
+    labels_path = root / _out_of_sample_probe.LABELS
+    labels_path.parent.mkdir(parents=True, exist_ok=True)
+    labels_path.write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_label_run",
+                "labels": [
+                    {
+                        "source_stage": "stage4",
+                        "selected_provider": "krk.stage0_basin",
+                        "selected_playout_success": {"result": "mate"},
+                        "forced_provider_conversion_for_selected_provider": {"result": "mate"},
+                    },
+                    {
+                        "source_stage": "stage5",
+                        "selected_provider": "krk.stage0_basin",
+                        "selected_playout_success": {"result": "mate"},
+                        "forced_provider_conversion_for_selected_provider": {"result": "mate"},
+                    },
+                    {
+                        "source_stage": "stage6",
+                        "selected_provider": "krk.stage0_basin",
+                        "selected_playout_success": {"result": "max_plies"},
+                        "forced_provider_conversion_for_selected_provider": {"result": "max_plies"},
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_out_of_sample_probe, "ROOT", root)
+
+    probe = _out_of_sample_probe.build_probe()
+
+    assert probe["schema_version"] == "krk_strategy_arbiter_out_of_sample_control_probe.v0"
+    assert probe["causal_status"] == "non_causal_probe"
+    assert probe["runtime_behavior_changed"] is False
+    assert probe["runtime_arbiter_implemented"] is False
+    assert probe["stage7_promotion_allowed"] is False
+    assert probe["stage8_training_allowed"] is False
+    assert probe["metrics"]["selected_provider_dominance"] == 1.0
+    assert "selected_provider_dominance" in probe["decision"]["sandbox_blockers"]
+    assert probe["decision"]["runtime_arbiter_allowed"] is False
+    assert probe["decision"]["selector_sandbox_ready"] is False
