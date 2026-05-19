@@ -192,6 +192,19 @@ assert _control_plane_strategy_probe_spec.loader is not None
 _control_plane_strategy_probe = importlib.util.module_from_spec(_control_plane_strategy_probe_spec)
 _control_plane_strategy_probe_spec.loader.exec_module(_control_plane_strategy_probe)
 
+_control_plane_strategy_baseline_spec = importlib.util.spec_from_file_location(
+    "probe_krk_control_plane_strategy_arbitration_baseline",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "probe_krk_control_plane_strategy_arbitration_baseline.py",
+)
+assert _control_plane_strategy_baseline_spec is not None
+assert _control_plane_strategy_baseline_spec.loader is not None
+_control_plane_strategy_baseline = importlib.util.module_from_spec(
+    _control_plane_strategy_baseline_spec
+)
+_control_plane_strategy_baseline_spec.loader.exec_module(_control_plane_strategy_baseline)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -2072,3 +2085,69 @@ def test_krk_provider_label_coverage_plan_is_bounded_and_non_causal(tmp_path):
     assert plan["bounded_labeling_plan"][0]["phase"] == "p0_protected_success_controls"
     assert plan["bounded_labeling_plan"][0]["new_runtime_behavior"] is False
     assert plan["recommended_next_slice"] == "offline_strategy_arbitration_baseline_v1"
+
+
+def test_krk_control_plane_strategy_baseline_is_non_causal_and_reads_labels(tmp_path):
+    root = tmp_path
+    filtered_path = root / _control_plane_strategy_baseline.FILTERED_FRAMES
+    filtered_path.parent.mkdir(parents=True, exist_ok=True)
+    filtered_path.write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_filtered_frame_export",
+                "frames": [
+                    {
+                        "frame_id": "cp.test",
+                        "state_id": "state.test",
+                        "source_stage": "stage5",
+                        "active_landmark_label": "fence_established",
+                        "fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+                        "outcome": "mate",
+                        "filter_metadata": {
+                            "benchmark_roles": ["strategy_arbitration_benchmark"]
+                        },
+                        "strategy_proposal_frames": [
+                            {
+                                "provider_id": "krk.stage0_basin",
+                                "move_uci": "f2g3",
+                                "raw_score": 1.0,
+                                "normalized_score": 1.0,
+                                "provider_local_rank": 1,
+                                "known_outcome_label": {"playout_result": "mate"},
+                            },
+                            {
+                                "provider_id": "krk.edge_trap_close",
+                                "move_uci": "a7a8",
+                                "raw_score": 2.0,
+                                "normalized_score": 0.5,
+                                "provider_local_rank": 2,
+                                "known_outcome_label": {"result": "max_plies"},
+                            },
+                        ],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    baseline = _control_plane_strategy_baseline.build_baseline(root)
+
+    assert baseline["schema_version"] == "krk_control_plane_strategy_arbitration_baseline.v1"
+    assert baseline["causal_status"] == "non_causal_probe"
+    assert baseline["runtime_behavior_changed"] is False
+    assert baseline["runtime_arbiter_added"] is False
+    assert baseline["runtime_terminals_added"] is False
+    assert baseline["stage7_promotion_allowed"] is False
+    assert baseline["stage8_training_allowed"] is False
+    assert baseline["frame_summary"]["proposal_label_counts"] == {
+        "mate": 1,
+        "max_plies": 1,
+    }
+    raw = next(item for item in baseline["selector_results"] if item["selector"] == "raw_global_score")
+    assert raw["selected_label_counts"]["max_plies"] == 1
+    normalized = next(
+        item for item in baseline["selector_results"] if item["selector"] == "normalized_score"
+    )
+    assert normalized["selected_label_counts"]["mate"] == 1
+    assert baseline["decision"]["causal_next_step_allowed"] is False

@@ -267,6 +267,13 @@ KRK provider label coverage plan v0:
 
 The corrected coverage plan now reports provider labels for all benchmark proposals: `24` Stage7, `16` Stage5, `20` Stage6, and `6` Stage4 labels. There are no unknown provider labels in the current filtered-frame artifact. The bounded p0/p1/p2 label plan remains documented as a fallback if future coverage gaps reopen, but no p0 label run is needed before the next non-causal arbitration baseline.
 
+KRK control-plane strategy arbitration baseline v1:
+
+- `reports/krk_control_plane_strategy_arbitration_baseline_v1.json`
+- `reports/krk_control_plane_strategy_arbitration_baseline_v1.md`
+
+The baseline is a non-causal selector comparison over the `28` filtered control-plane benchmark frames. It finds `14` frames with a known provider-mate option and `14` frames where all labeled provider proposals max out. Raw score, normalized score, provider-local rank, and stage-prior heuristics recover most converting providers when one is present, but selected mate rate remains about half because many frames have no labeled converting provider. The decision is `strategy_arbitration_promising`, with next class `non_causal_strategy_arbiter_sandbox_design`. This does not authorize implementing a runtime arbiter, runtime terminals, Stage 7 promotion, or Stage 8 training.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
