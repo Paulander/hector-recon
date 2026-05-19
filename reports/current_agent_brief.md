@@ -232,6 +232,13 @@ KRK control-plane gap report v0:
 
 The gap report keeps the architecture work non-causal and selects `export_replay_free_control_plane_frames_v0` as the next implementation slice. It defers new sequence data collection, runtime strategy arbiter sandboxing, runtime internal-terminal sandboxing, Stage 8 training, and Stage 7 promotion until after unified per-state control-plane frames exist.
 
+KRK control-plane frames v0:
+
+- `reports/krk_control_plane_frames_v0.json`
+- `reports/krk_control_plane_frames_v0.md`
+
+The frame export creates `33` non-causal `ControlPlaneEvidenceFrame` records from existing artifacts only, with `87` strategy proposal frames, `224` attached monitor records, `13` plan-capsule window records, and `5` matched offline sequence-training examples. It adds no playouts and no runtime consumers. Remaining gaps: sequence examples and plan windows are Stage7-only, GrowthGovernor status is inferred from summary/design artifacts rather than runtime-exported frame status, and cross-domain bridge frames are not exported yet. Recommended next slice: `control_plane_frame_quality_report_v0`.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -315,6 +322,8 @@ reports/krk_control_plane_manifest_v0.json
 reports/krk_control_plane_manifest_v0.md
 reports/krk_control_plane_gap_report_v0.json
 reports/krk_control_plane_gap_report_v0.md
+reports/krk_control_plane_frames_v0.json
+reports/krk_control_plane_frames_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

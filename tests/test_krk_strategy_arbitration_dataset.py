@@ -156,6 +156,15 @@ assert _control_plane_gap_spec.loader is not None
 _control_plane_gap = importlib.util.module_from_spec(_control_plane_gap_spec)
 _control_plane_gap_spec.loader.exec_module(_control_plane_gap)
 
+_control_plane_frames_spec = importlib.util.spec_from_file_location(
+    "export_krk_control_plane_frames",
+    Path(__file__).resolve().parents[1] / "scripts" / "export_krk_control_plane_frames.py",
+)
+assert _control_plane_frames_spec is not None
+assert _control_plane_frames_spec.loader is not None
+_control_plane_frames = importlib.util.module_from_spec(_control_plane_frames_spec)
+_control_plane_frames_spec.loader.exec_module(_control_plane_frames)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -1601,3 +1610,140 @@ def test_krk_control_plane_gap_report_recommends_replay_free_frame_export(tmp_pa
         gap["gap_id"] for gap in report["stratified_gaps"]
     }
     assert "stage8_training" in report["deferred_until_after_frame_export"]
+
+
+def test_krk_control_plane_frame_export_is_replay_free_and_non_causal(tmp_path):
+    root = tmp_path
+
+    def write_json(relative_path, payload):
+        path = root / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload), encoding="utf-8")
+
+    def write_text(relative_path, text):
+        path = root / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+
+    write_json(_control_plane_frames.CONTRACT, {"causal_status": "non_causal_schema_contract"})
+    write_json(
+        _control_plane_frames.GAP_REPORT,
+        {"recommended_next_slice": {"slice_id": "export_replay_free_control_plane_frames_v0"}},
+    )
+    write_json(
+        _control_plane_frames.PROTECTED_STATUS,
+        {
+            "stage_statuses": [
+                {
+                    "stage": "stage5_fence",
+                    "evidence": {
+                        "profile": {
+                            "total": 1,
+                            "playouts": {"mate": 1},
+                            "shadow_candidate_count": 0,
+                        }
+                    },
+                }
+            ]
+        },
+    )
+    write_json(
+        _control_plane_frames.STRATEGY_DATASET,
+        {
+            "records": [
+                {
+                    "state_id": "state.test",
+                    "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                    "source_stage": "stage7",
+                    "active_landmark_label": "box_shrink",
+                    "strategy_proposals": [
+                        {
+                            "provider_id": "krk.box_shrink",
+                            "move_uci": "a1a2",
+                            "raw_score": 1.0,
+                            "provider_local_rank": 1,
+                        }
+                    ],
+                    "result_label": {"current_graph_h40": "max_plies"},
+                    "hypothesis_labels": ["training_objective_model_expression_candidate"],
+                    "source_artifacts": ["fixture.json"],
+                }
+            ]
+        },
+    )
+    write_json(
+        _control_plane_frames.MONITOR_RECORDS,
+        {
+            "records": [
+                {
+                    "state_id": "state.test",
+                    "monitor_id": "monitor.test",
+                    "monitor_type": "PlanSelectionNeededMonitor",
+                    "source_terms": ["local_provider_competition_failed"],
+                    "missing_terms": [],
+                    "confidence": 1.0,
+                    "associated_outcome": "max_plies",
+                    "promotion_status": "proposed",
+                }
+            ]
+        },
+    )
+    write_json(
+        _control_plane_frames.PLAN_WINDOWS,
+        {
+            "windows": [
+                {
+                    "start_fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                    "ttl_white_moves": 3,
+                    "owned_white_move_count": 3,
+                    "entry_confirmed": True,
+                    "progress_terms": ["box_area_preserved"],
+                    "result": "max_plies",
+                }
+            ]
+        },
+    )
+    write_text(
+        _control_plane_frames.DTM_SEED_JSONL,
+        json.dumps(
+            {
+                "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                "ply_index": 0,
+                "target_skill": "krk.post_box_shrink_continuation",
+                "legal_move_labels": [
+                    {"move": "a1a2", "label": 1, "target_class": "optimal_dtm_move"},
+                    {"move": "a1a3", "label": 0, "target_class": "winning_nonoptimal_move"},
+                ],
+            }
+        )
+        + "\n",
+    )
+    write_text(_control_plane_frames.DTM_EXPANDED_JSONL, "")
+    write_json(_control_plane_frames.STAGE6_PROMOTION, {"promotion_status": "promoted"})
+    write_json(
+        _control_plane_frames.STAGE7_CLOSURE,
+        {"decision": {"benchmark_status": "model_expression_gap_persists"}},
+    )
+
+    export = _control_plane_frames.build_frames(root)
+
+    assert export["schema_version"] == "krk_control_plane_frames_export.v0"
+    assert export["causal_status"] == "non_causal_frame_export"
+    assert export["runtime_behavior_changed"] is False
+    assert export["runtime_arbiter_added"] is False
+    assert export["runtime_terminals_added"] is False
+    assert export["stage7_promotion_allowed"] is False
+    assert export["stage8_training_allowed"] is False
+    assert export["summary"]["frame_count"] == 1
+    assert export["summary"]["strategy_proposal_frame_count"] == 1
+    assert export["summary"]["internal_monitor_record_count"] == 1
+    assert export["summary"]["plan_capsule_window_record_count"] == 1
+    assert export["summary"]["sequence_training_example_count"] == 1
+    assert export["summary"]["new_playouts_added"] == 0
+
+    frame = export["frames"][0]
+    assert frame["causal_status"] == "non_causal"
+    assert frame["promotion_gate_status"]["promotion_status"] == "quarantined"
+    assert frame["strategy_proposal_frames"][0]["causal_status"] == "non_causal"
+    assert frame["internal_monitor_records"][0]["causal_ready"] is False
+    assert frame["sequence_training_examples"][0]["offline_only"] is True
