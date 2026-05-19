@@ -369,6 +369,17 @@ KRK strategy arbiter observation selector probe v0:
 
 The replay-free selector probe found the observation rows are still under-labeled for sandbox review. Only `3/12` rows have provider labels, Stage 7 held-out rows are unlabeled, and the probe status is `observation_selector_probe_underlabeled`. Runtime arbiter work remains blocked. The next allowed evidence slice is small labeled observation controls before any sandbox review, not a runtime selector.
 
+KRK strategy arbiter labeled observation controls v0:
+
+- `scripts/collect_krk_strategy_arbiter_labeled_observation_controls.py`
+- `reports/krk_strategy_arbiter_labeled_observation_controls_v0.json`
+- `reports/krk_strategy_arbiter_labeled_observation_controls_v0.md`
+- `scripts/probe_krk_strategy_arbiter_labeled_controls.py`
+- `reports/krk_strategy_arbiter_labeled_controls_probe_v0.json`
+- `reports/krk_strategy_arbiter_labeled_controls_probe_v0.md`
+
+The labeled control export collected `21` trace-only records: `5` Stage 4, `6` Stage 5, `4` Stage 6, and `6` Stage 7 held-out rows. The replay-free probe found `14` labeled controls, with selected labels `9` positive, `5` negative, and `7` unknown. Stage 7 remains unlabeled holdout (`6` unknown). Status: `labeled_controls_mixed_no_sandbox`. Runtime arbitration is still blocked; the next step must be architecture review of selector objective/label semantics or more labels, not implementation of a runtime selector.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -472,6 +483,10 @@ reports/krk_strategy_arbiter_observation_separability_review_v0.json
 reports/krk_strategy_arbiter_observation_separability_review_v0.md
 reports/krk_strategy_arbiter_observation_selector_probe_v0.json
 reports/krk_strategy_arbiter_observation_selector_probe_v0.md
+reports/krk_strategy_arbiter_labeled_observation_controls_v0.json
+reports/krk_strategy_arbiter_labeled_observation_controls_v0.md
+reports/krk_strategy_arbiter_labeled_controls_probe_v0.json
+reports/krk_strategy_arbiter_labeled_controls_probe_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
