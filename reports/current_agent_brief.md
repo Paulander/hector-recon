@@ -246,6 +246,13 @@ KRK control-plane frame quality report v0:
 
 The quality report says the frame export is ready for non-causal strategy-arbitration probing only with dedupe and missing-proposal caveats. It is not ready for a general KRK sequence-policy benchmark because sequence examples and plan windows remain Stage7-only. Runtime sandboxing, Stage 7 promotion, and Stage 8 training remain blocked. Recommended next slice: `control_plane_frame_dedupe_and_quality_filters_v0`.
 
+KRK control-plane filtered frames v0:
+
+- `reports/krk_control_plane_filtered_frames_v0.json`
+- `reports/krk_control_plane_filtered_frames_v0.md`
+
+The filtered export adds non-causal benchmark-role and dedupe metadata to the `33` control-plane frames. It identifies `28` frames ready for offline strategy-arbitration probing (`10` Stage6, `8` Stage5, `6` Stage4, `4` Stage7), keeps `5` frames as context-only, and confirms sequence-policy benchmarking remains blocked for general KRK because sequence examples are Stage7-only. Runtime sandboxing, Stage 7 promotion, and Stage 8 training remain blocked. Recommended next slice: `offline_strategy_arbitration_probe_filtered_v0`.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -333,6 +340,8 @@ reports/krk_control_plane_frames_v0.json
 reports/krk_control_plane_frames_v0.md
 reports/krk_control_plane_frame_quality_report_v0.json
 reports/krk_control_plane_frame_quality_report_v0.md
+reports/krk_control_plane_filtered_frames_v0.json
+reports/krk_control_plane_filtered_frames_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
