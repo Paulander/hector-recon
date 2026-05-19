@@ -269,6 +269,17 @@ assert _out_of_sample_manifest_review_spec.loader is not None
 _out_of_sample_manifest_review = importlib.util.module_from_spec(_out_of_sample_manifest_review_spec)
 _out_of_sample_manifest_review_spec.loader.exec_module(_out_of_sample_manifest_review)
 
+_out_of_sample_label_run_spec = importlib.util.spec_from_file_location(
+    "run_krk_strategy_arbiter_out_of_sample_control_labels",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "run_krk_strategy_arbiter_out_of_sample_control_labels.py",
+)
+assert _out_of_sample_label_run_spec is not None
+assert _out_of_sample_label_run_spec.loader is not None
+_out_of_sample_label_run = importlib.util.module_from_spec(_out_of_sample_label_run_spec)
+_out_of_sample_label_run_spec.loader.exec_module(_out_of_sample_label_run)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -2726,3 +2737,66 @@ def test_krk_out_of_sample_execution_manifest_review_allows_only_bounded_labels(
     assert review["decision"]["bounded_label_run_allowed_after_review"] is True
     assert review["decision"]["runtime_arbiter_allowed"] is False
     assert review["decision"]["selector_sandbox_ready"] is False
+
+
+def test_krk_out_of_sample_control_label_run_is_non_causal(tmp_path, monkeypatch):
+    root = tmp_path
+    manifest_path = root / _out_of_sample_label_run.MANIFEST
+    review_path = root / _out_of_sample_label_run.REVIEW
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    job = {
+        "job_id": "job.stage5",
+        "frame_id": "cp.stage5",
+        "state_id": "state.stage5",
+        "source_stage": "stage5",
+        "active_landmark_label": "fence_established",
+        "fen": "1k6/7R/2K5/8/8/8/8/8 w - - 2 2",
+        "horizon": 40,
+        "execution_binding": {"topology_path": "topology.json"},
+    }
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_execution_manifest",
+                "binding_summary": {"all_bindings_valid": True},
+                "jobs": [job],
+            }
+        ),
+        encoding="utf-8",
+    )
+    review_path.write_text(
+        json.dumps(
+            {
+                "decision": {
+                    "bounded_label_run_allowed_after_review": True,
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_out_of_sample_label_run, "_run_job", lambda repo_root, job, cache: {
+        "schema_version": "krk_strategy_arbiter_out_of_sample_control_label.v0",
+        "causal_status": "non_causal_outcome_label",
+        "job_id": job["job_id"],
+        "state_id": job["state_id"],
+        "source_stage": job["source_stage"],
+        "selected_provider": "krk.stage0_basin",
+        "selected_move": "c6b6",
+        "selected_playout_success": {"result": "mate"},
+        "forced_provider_conversion_for_selected_provider": {"result": "mate"},
+        "labels_generated": True,
+        "runtime_behavior_changed": False,
+    })
+
+    payload = _out_of_sample_label_run.run_labels(root)
+
+    assert payload["schema_version"] == "krk_strategy_arbiter_out_of_sample_control_labels.v0"
+    assert payload["causal_status"] == "non_causal_label_run"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_arbiter_implemented"] is False
+    assert payload["runtime_terminals_added"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["summary"]["label_count"] == 1
+    assert payload["summary"]["selected_result_counts"] == {"mate": 1}
+    assert payload["recommended_next_step"] == "probe_out_of_sample_control_labels_before_any_selector_sandbox"

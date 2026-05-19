@@ -538,6 +538,14 @@ KRK strategy arbiter out-of-sample execution manifest review v0:
 
 The review validates manifest structure only. It found full Stage 4/5/6 coverage, all required target semantics present on all `12` jobs, no missing topology/checkpoint paths, no invalid jobs, and Stage 7 training rows `0`. Decision: `execution_manifest_review_passed_bounded_label_run_allowed`. The next allowed step is a bounded non-causal h40 label run from the reviewed manifest, stopping if runtime projects to hours. Runtime arbiter, selector sandbox, Stage 7 repair/promotion, and Stage 8 training remain blocked.
 
+KRK strategy arbiter out-of-sample control labels v0:
+
+- `scripts/run_krk_strategy_arbiter_out_of_sample_control_labels.py`
+- `reports/krk_strategy_arbiter_out_of_sample_control_labels_v0.json`
+- `reports/krk_strategy_arbiter_out_of_sample_control_labels_v0.md`
+
+The bounded non-causal h40 label run completed `12` protected-control jobs in about `126` seconds. Selected playouts were `11` mate / `1` max_plies, and forced-selected-provider playouts were also `11` mate / `1` max_plies. Stage 5 and Stage 6 controls were `4/4` mate; Stage 4 was `3/4` mate with one max_plies. Stage 7 training rows remain `0`. The next allowed step is a replay-free probe of these out-of-sample labels before any selector sandbox review. Runtime arbiter, selector sandbox, Stage 7 repair/promotion, and Stage 8 training remain blocked.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -695,6 +703,8 @@ reports/krk_strategy_arbiter_out_of_sample_execution_manifest_v0.json
 reports/krk_strategy_arbiter_out_of_sample_execution_manifest_v0.md
 reports/krk_strategy_arbiter_out_of_sample_execution_manifest_review_v0.json
 reports/krk_strategy_arbiter_out_of_sample_execution_manifest_review_v0.md
+reports/krk_strategy_arbiter_out_of_sample_control_labels_v0.json
+reports/krk_strategy_arbiter_out_of_sample_control_labels_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
