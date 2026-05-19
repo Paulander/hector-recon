@@ -291,6 +291,17 @@ assert _out_of_sample_probe_spec.loader is not None
 _out_of_sample_probe = importlib.util.module_from_spec(_out_of_sample_probe_spec)
 _out_of_sample_probe_spec.loader.exec_module(_out_of_sample_probe)
 
+_out_of_sample_arch_review_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_strategy_arbiter_out_of_sample_architecture_review",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "summarize_krk_strategy_arbiter_out_of_sample_architecture_review.py",
+)
+assert _out_of_sample_arch_review_spec is not None
+assert _out_of_sample_arch_review_spec.loader is not None
+_out_of_sample_arch_review = importlib.util.module_from_spec(_out_of_sample_arch_review_spec)
+_out_of_sample_arch_review_spec.loader.exec_module(_out_of_sample_arch_review)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -2859,3 +2870,53 @@ def test_krk_out_of_sample_control_probe_blocks_selector_when_provider_dominates
     assert "selected_provider_dominance" in probe["decision"]["sandbox_blockers"]
     assert probe["decision"]["runtime_arbiter_allowed"] is False
     assert probe["decision"]["selector_sandbox_ready"] is False
+
+
+def test_krk_out_of_sample_architecture_review_blocks_runtime_selector(tmp_path, monkeypatch):
+    root = tmp_path
+
+    def write_json(relative_path, payload):
+        path = root / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload), encoding="utf-8")
+
+    write_json(
+        _out_of_sample_arch_review.PROBE,
+        {
+            "metrics": {
+                "label_count": 12,
+                "selected_result_counts": {"mate": 11, "max_plies": 1},
+                "forced_selected_provider_result_counts": {"mate": 11, "max_plies": 1},
+                "selected_provider_counts": {"krk.stage0_basin": 12},
+                "stage_result_counts": {"stage4:max_plies": 1, "stage5:mate": 4},
+            },
+            "decision": {
+                "status": "out_of_sample_controls_guardrail_positive_selector_sandbox_blocked",
+                "sandbox_blockers": ["class_imbalance", "selected_provider_dominance"],
+            },
+        },
+    )
+    write_json(
+        _out_of_sample_arch_review.READINESS,
+        {"decision": {"status": "readiness_criteria_defined_sandbox_still_blocked"}},
+    )
+    write_json(
+        _out_of_sample_arch_review.BALANCED_REVIEW,
+        {"decision": {"status": "selector_signal_promising_sandbox_blocked_pending_readiness_criteria"}},
+    )
+    monkeypatch.setattr(_out_of_sample_arch_review, "ROOT", root)
+
+    review = _out_of_sample_arch_review.build_review()
+
+    assert review["schema_version"] == "krk_strategy_arbiter_out_of_sample_architecture_review.v0"
+    assert review["causal_status"] == "non_causal_architecture_review"
+    assert review["runtime_behavior_changed"] is False
+    assert review["runtime_arbiter_implemented"] is False
+    assert review["stage7_promotion_allowed"] is False
+    assert review["stage8_training_allowed"] is False
+    assert review["decision"]["status"] == "selector_sandbox_blocked_out_of_sample_controls_not_selector_diverse"
+    assert review["decision"]["runtime_arbiter_allowed"] is False
+    assert review["decision"]["selector_sandbox_ready"] is False
+    assert review["decision"]["recommended_next_step"] == (
+        "design_selector_readiness_v2_or_strategy_owner_contrast_dataset"
+    )
