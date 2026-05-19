@@ -522,6 +522,14 @@ KRK strategy arbiter out-of-sample plan review v0:
 
 The plan review found the plan is consistent with invariants, but replay-free out-of-sample coverage is insufficient after excluding balanced-label states: only `2` replay-free candidates remain (`1` Stage 5 negative, `1` Stage 6 positive) and Stage 4 has no replay-free out-of-sample candidate. Decision: `plan_review_passed_execution_manifest_needed`. The next step is to generate a concrete non-causal execution manifest with topology/profile/checkpoint bindings before any h40 label execution. Runtime arbiter, selector sandbox, Stage 7 repair/promotion, and Stage 8 training remain blocked.
 
+KRK strategy arbiter out-of-sample execution manifest v0:
+
+- `scripts/generate_krk_strategy_arbiter_out_of_sample_execution_manifest.py`
+- `reports/krk_strategy_arbiter_out_of_sample_execution_manifest_v0.json`
+- `reports/krk_strategy_arbiter_out_of_sample_execution_manifest_v0.md`
+
+The manifest defines `12` non-causal protected-control label jobs: `4` Stage 4, `4` Stage 5, and `4` Stage 6. It keeps `2` replay-free controls and fills missing coverage with `10` deterministic curriculum samples while excluding balanced-label states. All jobs bind to `handoff_composition_v1` on the Stage 6 overlay-composed topology with explicit protected provider/checkpoint metadata. Decision: `execution_manifest_ready_for_review`. It does not execute labels; h40 collection must be reviewed before running. Runtime arbiter, selector sandbox, Stage 7 repair/promotion, and Stage 8 training remain blocked.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -675,6 +683,8 @@ reports/krk_strategy_arbiter_out_of_sample_control_plan_v0.json
 reports/krk_strategy_arbiter_out_of_sample_control_plan_v0.md
 reports/krk_strategy_arbiter_out_of_sample_plan_review_v0.json
 reports/krk_strategy_arbiter_out_of_sample_plan_review_v0.md
+reports/krk_strategy_arbiter_out_of_sample_execution_manifest_v0.json
+reports/krk_strategy_arbiter_out_of_sample_execution_manifest_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

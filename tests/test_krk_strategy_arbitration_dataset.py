@@ -247,6 +247,17 @@ assert _forced_provider_binding_spec.loader is not None
 _forced_provider_binding = importlib.util.module_from_spec(_forced_provider_binding_spec)
 _forced_provider_binding_spec.loader.exec_module(_forced_provider_binding)
 
+_out_of_sample_manifest_spec = importlib.util.spec_from_file_location(
+    "generate_krk_strategy_arbiter_out_of_sample_execution_manifest",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "generate_krk_strategy_arbiter_out_of_sample_execution_manifest.py",
+)
+assert _out_of_sample_manifest_spec is not None
+assert _out_of_sample_manifest_spec.loader is not None
+_out_of_sample_manifest = importlib.util.module_from_spec(_out_of_sample_manifest_spec)
+_out_of_sample_manifest_spec.loader.exec_module(_out_of_sample_manifest)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -2501,3 +2512,135 @@ def test_krk_forced_provider_execution_manifest_binds_topologies(tmp_path, monke
     )
     assert manifest["jobs"][1]["execution_binding"]["topology_version"] == "stage6_overlay_composed_v1"
     assert manifest["recommended_next_step"] == "run_bounded_forced_provider_control_labels"
+
+
+def test_krk_out_of_sample_execution_manifest_is_bounded_and_non_causal(tmp_path, monkeypatch):
+    root = tmp_path
+
+    def write_json(relative_path, payload):
+        path = root / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload), encoding="utf-8")
+
+    write_json(
+        _out_of_sample_manifest.PLAN,
+        {
+            "causal_status": "non_causal_collection_plan",
+            "collection_bounds": {"max_states": 6, "per_stage_max": 2, "horizon": 40},
+        },
+    )
+    write_json(
+        _out_of_sample_manifest.PLAN_REVIEW,
+        {"causal_status": "non_causal_plan_review"},
+    )
+    write_json(
+        _out_of_sample_manifest.BALANCED,
+        {"rows": [{"state_id": "state.used"}]},
+    )
+    write_json(
+        _out_of_sample_manifest.FRAMES_WITH_FORCED,
+        {
+            "causal_status": "non_causal_augmented_frame_export",
+            "frames": [
+                {
+                    "frame_id": "cp.stage5",
+                    "state_id": "state.stage5.existing",
+                    "source_stage": "stage5",
+                    "active_landmark_label": "fence_established",
+                    "fen": "1k6/7R/2K5/8/8/8/8/8 w - - 2 2",
+                    "strategy_proposal_frames": [
+                        {
+                            "provider_id": "krk.stage0_basin",
+                            "move_uci": "c6b6",
+                            "known_outcome_label": {"result": "max_plies"},
+                        }
+                    ],
+                },
+                {
+                    "frame_id": "cp.used",
+                    "state_id": "state.used",
+                    "source_stage": "stage6",
+                    "active_landmark_label": "drive_to_edge",
+                    "fen": "2k5/8/1K6/8/8/8/8/R7 w - - 2 2",
+                    "strategy_proposal_frames": [
+                        {
+                            "provider_id": "krk.stage0_basin",
+                            "move_uci": "a1d1",
+                            "known_outcome_label": {"result": "mate"},
+                        }
+                    ],
+                },
+            ],
+        },
+    )
+    topology = Path("topology/krk_entry_topology.json")
+    stage4_checkpoint = Path("stage4.pkl")
+    stage5_checkpoint = Path("stage5.pkl")
+    stage6_checkpoint = Path("stage6.pkl")
+    for path in (topology, stage4_checkpoint, stage5_checkpoint, stage6_checkpoint):
+        full = root / path
+        full.parent.mkdir(parents=True, exist_ok=True)
+        full.write_text("{}", encoding="utf-8")
+    monkeypatch.setattr(_out_of_sample_manifest, "STAGE6_COMPOSED_TOPOLOGY", topology)
+    monkeypatch.setitem(
+        _out_of_sample_manifest.STAGE_CONFIGS["stage4"],
+        "source_checkpoint",
+        stage4_checkpoint,
+    )
+    monkeypatch.setitem(
+        _out_of_sample_manifest.STAGE_CONFIGS["stage5"],
+        "source_checkpoint",
+        stage5_checkpoint,
+    )
+    monkeypatch.setitem(
+        _out_of_sample_manifest.STAGE_CONFIGS["stage6"],
+        "source_checkpoint",
+        stage6_checkpoint,
+    )
+
+    monkeypatch.setattr(
+        _out_of_sample_manifest,
+        "_generated_candidates",
+        lambda **_: [
+            {
+                "source_kind": "deterministic_curriculum_sample",
+                "state_id": "state.stage4.generated",
+                "frame_id": "cp.stage4",
+                "source_stage": "stage4",
+                "active_landmark_label": "edge_trap_wrong_tempo",
+                "fen": "1R6/2K5/k7/8/8/8/8/8 w - - 0 1",
+                "generation": {"sample_index": 0},
+                "prior_label": None,
+            },
+            {
+                "source_kind": "deterministic_curriculum_sample",
+                "state_id": "state.stage6.generated",
+                "frame_id": "cp.stage6",
+                "source_stage": "stage6",
+                "active_landmark_label": "drive_to_edge",
+                "fen": "4k3/8/3K4/8/8/8/8/R7 w - - 0 1",
+                "generation": {"sample_index": 0},
+                "prior_label": None,
+            },
+        ],
+    )
+
+    manifest = _out_of_sample_manifest.build_manifest(root)
+
+    assert manifest["schema_version"] == "krk_strategy_arbiter_out_of_sample_execution_manifest.v0"
+    assert manifest["causal_status"] == "non_causal_execution_manifest"
+    assert manifest["runtime_behavior_changed"] is False
+    assert manifest["runtime_arbiter_implemented"] is False
+    assert manifest["labels_generated_in_this_slice"] is False
+    assert manifest["stage7_promotion_allowed"] is False
+    assert manifest["stage8_training_allowed"] is False
+    assert manifest["binding_summary"]["all_bindings_valid"] is True
+    assert manifest["binding_summary"]["job_count_by_stage"] == {
+        "stage4": 1,
+        "stage5": 1,
+        "stage6": 1,
+    }
+    assert all(job["source_stage"] != "stage7" for job in manifest["jobs"])
+    assert all(job["execution_binding"]["composition_profile"] == "handoff_composition_v1" for job in manifest["jobs"])
+    assert manifest["decision"]["execute_labels_now"] is False
+    assert manifest["decision"]["recommended_next_step"] == "review_execution_manifest_before_any_h40_label_run"
