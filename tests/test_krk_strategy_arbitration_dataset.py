@@ -320,6 +320,15 @@ assert _strategy_owner_contrast_spec.loader is not None
 _strategy_owner_contrast = importlib.util.module_from_spec(_strategy_owner_contrast_spec)
 _strategy_owner_contrast_spec.loader.exec_module(_strategy_owner_contrast)
 
+_strategy_owner_label_plan_spec = importlib.util.spec_from_file_location(
+    "plan_krk_strategy_owner_contrast_labels",
+    Path(__file__).resolve().parents[1] / "scripts" / "plan_krk_strategy_owner_contrast_labels.py",
+)
+assert _strategy_owner_label_plan_spec is not None
+assert _strategy_owner_label_plan_spec.loader is not None
+_strategy_owner_label_plan = importlib.util.module_from_spec(_strategy_owner_label_plan_spec)
+_strategy_owner_label_plan_spec.loader.exec_module(_strategy_owner_label_plan)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -3052,3 +3061,77 @@ def test_krk_strategy_owner_contrast_dataset_preserves_stage7_holdout(tmp_path, 
     assert dataset["readiness_v2_assessment"]["selector_sandbox_ready"] is False
     assert "insufficient_protected_non_stage0_positive_rows" in dataset["readiness_v2_assessment"]["blockers"]
     assert dataset["decision"]["status"] == "strategy_owner_contrast_dataset_underpowered_no_selector_sandbox"
+
+
+def test_krk_strategy_owner_contrast_label_plan_excludes_stage7(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    (reports / "krk_strategy_owner_contrast_dataset_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_dataset",
+                "rows": [
+                    {
+                        "state_id": "state.stage5_existing",
+                        "provider_labels": [{"provider_id": "krk.edge_trap_close"}],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reports / "krk_selector_readiness_v2_plan.json").write_text(
+        json.dumps({"causal_status": "non_causal_design_plan"}),
+        encoding="utf-8",
+    )
+    frames = []
+    balanced_rows = []
+    for stage, state_id, landmark in (
+        ("stage4", "state.stage4_a", "wrong_tempo_control"),
+        ("stage5", "state.stage5_existing", "fence_established"),
+        ("stage6", "state.stage6_a", "drive_to_edge"),
+        ("stage7", "state.stage7_a", "box_shrink"),
+    ):
+        frames.append(
+            {
+                "state_id": state_id,
+                "frame_id": f"cp.krk.{state_id}",
+                "source_stage": stage,
+                "active_landmark_label": landmark,
+                "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+            }
+        )
+        balanced_rows.append(
+            {
+                "state_id": state_id,
+                "source_stage": stage,
+                "provider_id": "krk.stage0_basin",
+                "target_kind": "guardrail_safe_selected_playout",
+                "label": "positive",
+            }
+        )
+    (reports / "krk_control_plane_filtered_frames_with_forced_controls_v0.json").write_text(
+        json.dumps({"causal_status": "non_causal_augmented_frame_export", "frames": frames}),
+        encoding="utf-8",
+    )
+    (reports / "krk_selector_balanced_label_dataset_v1.json").write_text(
+        json.dumps({"causal_status": "non_causal_balanced_label_dataset", "rows": balanced_rows}),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_strategy_owner_label_plan, "ROOT", root)
+
+    plan = _strategy_owner_label_plan.build_plan(max_jobs=8, max_jobs_per_stage=3)
+
+    assert plan["schema_version"] == "krk_strategy_owner_contrast_label_plan.v0"
+    assert plan["causal_status"] == "non_causal_label_plan"
+    assert plan["runtime_behavior_changed"] is False
+    assert plan["runtime_arbiter_implemented"] is False
+    assert plan["stage7_promotion_allowed"] is False
+    assert plan["stage8_training_allowed"] is False
+    assert plan["job_selection"]["stage7_jobs"] == 0
+    assert all(job["source_stage"] != "stage7" for job in plan["jobs"])
+    assert all(job["labels_generated"] is False for job in plan["jobs"])
+    assert all(job["provider_id"] != "krk.edge_trap_close" for job in plan["jobs"] if job["state_id"] == "state.stage5_existing")
+    assert plan["decision"]["selector_sandbox_ready"] is False
+    assert plan["decision"]["recommended_next_step"] == "review_and_bind_bounded_contrast_label_plan_before_execution"

@@ -1,0 +1,332 @@
+{
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "selector_sandbox",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_label_plan",
+  "decision": {
+    "recommended_next_step": "review_and_bind_bounded_contrast_label_plan_before_execution",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "protected_strategy_owner_contrast_label_plan_defined_execution_review_required"
+  },
+  "execution_preconditions": [
+    "review_plan_before_execution",
+    "bind_all_jobs_to_handoff_composition_v1_or_stage6_overlay_composed_topology",
+    "confirm_stage4_forced-provider binding is explicit and visible",
+    "run h40 only",
+    "trace failures only",
+    "diagnostic caches enabled",
+    "stop if projected runtime is hours"
+  ],
+  "gameplay_topology_mutation": false,
+  "job_selection": {
+    "max_jobs": 12,
+    "max_jobs_per_stage": 4,
+    "selected_job_count": 12,
+    "selected_job_count_by_stage": {
+      "stage4": 4,
+      "stage5": 4,
+      "stage6": 4
+    },
+    "stage7_jobs": 0
+  },
+  "jobs": [
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_label_job",
+      "diagnostic_caches_required": true,
+      "fen": "8/1RK5/8/k7/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.1e4f48a672e8",
+      "horizon": 40,
+      "job_id": "job.krk.strategy_owner_contrast.6ca3b85ce53a",
+      "labels_generated": false,
+      "provider_id": "krk.edge_trap_wrong_tempo",
+      "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_selected_label": {
+        "label": "positive",
+        "provider_id": "krk.stage0_basin",
+        "target_kind": "guardrail_safe_selected_playout"
+      },
+      "source_stage": "stage4",
+      "state_id": "state.1e4f48a672e8",
+      "target_label_semantics": "forced_provider_first_white_move_then_release",
+      "trace_mode": "failures_only"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_label_job",
+      "diagnostic_caches_required": true,
+      "fen": "8/1RK5/8/k7/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.1e4f48a672e8",
+      "horizon": 40,
+      "job_id": "job.krk.strategy_owner_contrast.14c4d6d395bb",
+      "labels_generated": false,
+      "provider_id": "krk.edge_trap_close",
+      "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_selected_label": {
+        "label": "positive",
+        "provider_id": "krk.stage0_basin",
+        "target_kind": "guardrail_safe_selected_playout"
+      },
+      "source_stage": "stage4",
+      "state_id": "state.1e4f48a672e8",
+      "target_label_semantics": "forced_provider_first_white_move_then_release",
+      "trace_mode": "failures_only"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_label_job",
+      "diagnostic_caches_required": true,
+      "fen": "8/1RK5/8/k7/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.1e4f48a672e8",
+      "horizon": 40,
+      "job_id": "job.krk.strategy_owner_contrast.1a9dfe565e76",
+      "labels_generated": false,
+      "provider_id": "krk.fence_established",
+      "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_selected_label": {
+        "label": "positive",
+        "provider_id": "krk.stage0_basin",
+        "target_kind": "guardrail_safe_selected_playout"
+      },
+      "source_stage": "stage4",
+      "state_id": "state.1e4f48a672e8",
+      "target_label_semantics": "forced_provider_first_white_move_then_release",
+      "trace_mode": "failures_only"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_label_job",
+      "diagnostic_caches_required": true,
+      "fen": "8/8/8/8/8/3K4/3R4/6k1 w - - 2 2",
+      "frame_id": "cp.krk.state.f17117682948",
+      "horizon": 40,
+      "job_id": "job.krk.strategy_owner_contrast.d1744cd54930",
+      "labels_generated": false,
+      "provider_id": "krk.edge_trap_wrong_tempo",
+      "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_selected_label": {
+        "label": "positive",
+        "provider_id": "krk.stage0_basin",
+        "target_kind": "guardrail_safe_selected_playout"
+      },
+      "source_stage": "stage4",
+      "state_id": "state.f17117682948",
+      "target_label_semantics": "forced_provider_first_white_move_then_release",
+      "trace_mode": "failures_only"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_label_job",
+      "diagnostic_caches_required": true,
+      "fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+      "frame_id": "cp.krk.state.7bd8961882ad",
+      "horizon": 40,
+      "job_id": "job.krk.strategy_owner_contrast.eae6955cdd41",
+      "labels_generated": false,
+      "provider_id": "krk.edge_trap_close",
+      "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_selected_label": {
+        "label": "positive",
+        "provider_id": "krk.stage0_basin",
+        "target_kind": "guardrail_safe_selected_playout"
+      },
+      "source_stage": "stage5",
+      "state_id": "state.7bd8961882ad",
+      "target_label_semantics": "forced_provider_first_white_move_then_release",
+      "trace_mode": "failures_only"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_label_job",
+      "diagnostic_caches_required": true,
+      "fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+      "frame_id": "cp.krk.state.7bd8961882ad",
+      "horizon": 40,
+      "job_id": "job.krk.strategy_owner_contrast.fca927c317d8",
+      "labels_generated": false,
+      "provider_id": "krk.edge_trap_enemy_between",
+      "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_selected_label": {
+        "label": "positive",
+        "provider_id": "krk.stage0_basin",
+        "target_kind": "guardrail_safe_selected_playout"
+      },
+      "source_stage": "stage5",
+      "state_id": "state.7bd8961882ad",
+      "target_label_semantics": "forced_provider_first_white_move_then_release",
+      "trace_mode": "failures_only"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_label_job",
+      "diagnostic_caches_required": true,
+      "fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+      "frame_id": "cp.krk.state.7bd8961882ad",
+      "horizon": 40,
+      "job_id": "job.krk.strategy_owner_contrast.40d0a6e04b05",
+      "labels_generated": false,
+      "provider_id": "krk.edge_trap_wrong_tempo",
+      "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_selected_label": {
+        "label": "positive",
+        "provider_id": "krk.stage0_basin",
+        "target_kind": "guardrail_safe_selected_playout"
+      },
+      "source_stage": "stage5",
+      "state_id": "state.7bd8961882ad",
+      "target_label_semantics": "forced_provider_first_white_move_then_release",
+      "trace_mode": "failures_only"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_label_job",
+      "diagnostic_caches_required": true,
+      "fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+      "frame_id": "cp.krk.state.7bd8961882ad",
+      "horizon": 40,
+      "job_id": "job.krk.strategy_owner_contrast.829c9b9fe98b",
+      "labels_generated": false,
+      "provider_id": "krk.fence_established",
+      "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_selected_label": {
+        "label": "positive",
+        "provider_id": "krk.stage0_basin",
+        "target_kind": "guardrail_safe_selected_playout"
+      },
+      "source_stage": "stage5",
+      "state_id": "state.7bd8961882ad",
+      "target_label_semantics": "forced_provider_first_white_move_then_release",
+      "trace_mode": "failures_only"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_label_job",
+      "diagnostic_caches_required": true,
+      "fen": "5k2/8/4K3/8/8/8/8/R7 w - - 2 2",
+      "frame_id": "cp.krk.state.d1f052d2cab2",
+      "horizon": 40,
+      "job_id": "job.krk.strategy_owner_contrast.e14d23798e77",
+      "labels_generated": false,
+      "provider_id": "krk.drive_to_edge",
+      "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_selected_label": {
+        "label": "positive",
+        "provider_id": "krk.stage0_basin",
+        "target_kind": "guardrail_safe_selected_playout"
+      },
+      "source_stage": "stage6",
+      "state_id": "state.d1f052d2cab2",
+      "target_label_semantics": "forced_provider_first_white_move_then_release",
+      "trace_mode": "failures_only"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_label_job",
+      "diagnostic_caches_required": true,
+      "fen": "5k2/8/4K3/8/8/8/8/R7 w - - 2 2",
+      "frame_id": "cp.krk.state.d1f052d2cab2",
+      "horizon": 40,
+      "job_id": "job.krk.strategy_owner_contrast.5e053ab0baa8",
+      "labels_generated": false,
+      "provider_id": "krk.fence_established",
+      "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_selected_label": {
+        "label": "positive",
+        "provider_id": "krk.stage0_basin",
+        "target_kind": "guardrail_safe_selected_playout"
+      },
+      "source_stage": "stage6",
+      "state_id": "state.d1f052d2cab2",
+      "target_label_semantics": "forced_provider_first_white_move_then_release",
+      "trace_mode": "failures_only"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_label_job",
+      "diagnostic_caches_required": true,
+      "fen": "5k2/8/4K3/8/8/8/8/R7 w - - 2 2",
+      "frame_id": "cp.krk.state.d1f052d2cab2",
+      "horizon": 40,
+      "job_id": "job.krk.strategy_owner_contrast.4dcd4cc180e8",
+      "labels_generated": false,
+      "provider_id": "krk.edge_trap_close",
+      "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_selected_label": {
+        "label": "positive",
+        "provider_id": "krk.stage0_basin",
+        "target_kind": "guardrail_safe_selected_playout"
+      },
+      "source_stage": "stage6",
+      "state_id": "state.d1f052d2cab2",
+      "target_label_semantics": "forced_provider_first_white_move_then_release",
+      "trace_mode": "failures_only"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_label_job",
+      "diagnostic_caches_required": true,
+      "fen": "R7/7k/5K2/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.52085d244e9d",
+      "horizon": 40,
+      "job_id": "job.krk.strategy_owner_contrast.82e91a823777",
+      "labels_generated": false,
+      "provider_id": "krk.drive_to_edge",
+      "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_selected_label": {
+        "label": "positive",
+        "provider_id": "krk.stage0_basin",
+        "target_kind": "guardrail_safe_selected_playout"
+      },
+      "source_stage": "stage6",
+      "state_id": "state.52085d244e9d",
+      "target_label_semantics": "forced_provider_first_white_move_then_release",
+      "trace_mode": "failures_only"
+    }
+  ],
+  "labels_generated_in_this_slice": false,
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_strategy_owner_contrast_label_plan.v0",
+  "source_artifacts": [
+    "reports/krk_strategy_owner_contrast_dataset_v0.json",
+    "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+    "reports/krk_selector_balanced_label_dataset_v1.json",
+    "reports/krk_selector_readiness_v2_plan.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}
