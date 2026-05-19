@@ -258,6 +258,17 @@ assert _out_of_sample_manifest_spec.loader is not None
 _out_of_sample_manifest = importlib.util.module_from_spec(_out_of_sample_manifest_spec)
 _out_of_sample_manifest_spec.loader.exec_module(_out_of_sample_manifest)
 
+_out_of_sample_manifest_review_spec = importlib.util.spec_from_file_location(
+    "review_krk_strategy_arbiter_out_of_sample_execution_manifest",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_strategy_arbiter_out_of_sample_execution_manifest.py",
+)
+assert _out_of_sample_manifest_review_spec is not None
+assert _out_of_sample_manifest_review_spec.loader is not None
+_out_of_sample_manifest_review = importlib.util.module_from_spec(_out_of_sample_manifest_review_spec)
+_out_of_sample_manifest_review_spec.loader.exec_module(_out_of_sample_manifest_review)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -2644,3 +2655,74 @@ def test_krk_out_of_sample_execution_manifest_is_bounded_and_non_causal(tmp_path
     assert all(job["execution_binding"]["composition_profile"] == "handoff_composition_v1" for job in manifest["jobs"])
     assert manifest["decision"]["execute_labels_now"] is False
     assert manifest["decision"]["recommended_next_step"] == "review_execution_manifest_before_any_h40_label_run"
+
+
+def test_krk_out_of_sample_execution_manifest_review_allows_only_bounded_labels(tmp_path, monkeypatch):
+    root = tmp_path
+    manifest_path = root / _out_of_sample_manifest_review.MANIFEST
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    topology = Path("topology/krk_entry_topology.json")
+    checkpoint = Path("checkpoint.pkl")
+    for path in (topology, checkpoint):
+        full = root / path
+        full.parent.mkdir(parents=True, exist_ok=True)
+        full.write_text("{}", encoding="utf-8")
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_execution_manifest",
+                "runtime_behavior_changed": False,
+                "runtime_defaults_changed": False,
+                "runtime_arbiter_implemented": False,
+                "runtime_terminals_added": False,
+                "runtime_dtm_or_tablebase_lookup": False,
+                "gameplay_topology_mutation": False,
+                "labels_generated_in_this_slice": False,
+                "stage7_promotion_allowed": False,
+                "stage8_training_allowed": False,
+                "binding_summary": {"all_bindings_valid": True},
+                "jobs": [
+                    {
+                        "job_id": f"job.{stage}",
+                        "state_id": f"state.{stage}",
+                        "source_stage": stage,
+                        "causal_status": "non_causal_label_job",
+                        "labels_generated": False,
+                        "stage7_training_row": False,
+                        "target_label_semantics": [
+                            "selected_playout_success",
+                            "forced_provider_conversion_for_selected_provider",
+                            "same_move_provider_compatibility_when_available",
+                            "guardrail_safe_ownership",
+                            "shadow_candidate_delta",
+                        ],
+                        "execution_binding": {
+                            "topology_path": str(topology),
+                            "source_checkpoint": str(checkpoint),
+                            "composition_profile": "handoff_composition_v1",
+                            "selected_provider_resolved_at_execution": True,
+                        },
+                    }
+                    for stage in ("stage4", "stage5", "stage6")
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_out_of_sample_manifest_review, "ROOT", root)
+
+    review = _out_of_sample_manifest_review.build_review()
+
+    assert review["schema_version"] == "krk_strategy_arbiter_out_of_sample_execution_manifest_review.v0"
+    assert review["causal_status"] == "non_causal_manifest_review"
+    assert review["runtime_behavior_changed"] is False
+    assert review["labels_generated_in_this_slice"] is False
+    assert review["stage7_promotion_allowed"] is False
+    assert review["stage8_training_allowed"] is False
+    assert review["summary"]["missing_stage_coverage"] == []
+    assert review["summary"]["missing_target_semantics"] == []
+    assert review["summary"]["invalid_job_count"] == 0
+    assert review["summary"]["stage7_training_rows"] == 0
+    assert review["decision"]["bounded_label_run_allowed_after_review"] is True
+    assert review["decision"]["runtime_arbiter_allowed"] is False
+    assert review["decision"]["selector_sandbox_ready"] is False

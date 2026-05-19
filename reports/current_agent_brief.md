@@ -530,6 +530,14 @@ KRK strategy arbiter out-of-sample execution manifest v0:
 
 The manifest defines `12` non-causal protected-control label jobs: `4` Stage 4, `4` Stage 5, and `4` Stage 6. It keeps `2` replay-free controls and fills missing coverage with `10` deterministic curriculum samples while excluding balanced-label states. All jobs bind to `handoff_composition_v1` on the Stage 6 overlay-composed topology with explicit protected provider/checkpoint metadata. Decision: `execution_manifest_ready_for_review`. It does not execute labels; h40 collection must be reviewed before running. Runtime arbiter, selector sandbox, Stage 7 repair/promotion, and Stage 8 training remain blocked.
 
+KRK strategy arbiter out-of-sample execution manifest review v0:
+
+- `scripts/review_krk_strategy_arbiter_out_of_sample_execution_manifest.py`
+- `reports/krk_strategy_arbiter_out_of_sample_execution_manifest_review_v0.json`
+- `reports/krk_strategy_arbiter_out_of_sample_execution_manifest_review_v0.md`
+
+The review validates manifest structure only. It found full Stage 4/5/6 coverage, all required target semantics present on all `12` jobs, no missing topology/checkpoint paths, no invalid jobs, and Stage 7 training rows `0`. Decision: `execution_manifest_review_passed_bounded_label_run_allowed`. The next allowed step is a bounded non-causal h40 label run from the reviewed manifest, stopping if runtime projects to hours. Runtime arbiter, selector sandbox, Stage 7 repair/promotion, and Stage 8 training remain blocked.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -685,6 +693,8 @@ reports/krk_strategy_arbiter_out_of_sample_plan_review_v0.json
 reports/krk_strategy_arbiter_out_of_sample_plan_review_v0.md
 reports/krk_strategy_arbiter_out_of_sample_execution_manifest_v0.json
 reports/krk_strategy_arbiter_out_of_sample_execution_manifest_v0.md
+reports/krk_strategy_arbiter_out_of_sample_execution_manifest_review_v0.json
+reports/krk_strategy_arbiter_out_of_sample_execution_manifest_review_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
