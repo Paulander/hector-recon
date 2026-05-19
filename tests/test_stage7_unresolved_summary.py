@@ -165,6 +165,15 @@ assert _visible_term_refinement_spec.loader is not None
 _visible_term_refinement = importlib.util.module_from_spec(_visible_term_refinement_spec)
 _visible_term_refinement_spec.loader.exec_module(_visible_term_refinement)
 
+_scoped_interaction_benchmark_spec = importlib.util.spec_from_file_location(
+    "benchmark_stage7_scoped_interactions",
+    Path(__file__).resolve().parents[1] / "scripts" / "benchmark_stage7_scoped_interactions.py",
+)
+assert _scoped_interaction_benchmark_spec is not None
+assert _scoped_interaction_benchmark_spec.loader is not None
+_scoped_interaction_benchmark = importlib.util.module_from_spec(_scoped_interaction_benchmark_spec)
+_scoped_interaction_benchmark_spec.loader.exec_module(_scoped_interaction_benchmark)
+
 
 def test_stage7_unresolved_legal_first_summary_marks_selection_gap_and_capacity_probe(tmp_path):
     probe = {
@@ -1301,3 +1310,118 @@ def test_stage7_visible_term_refinement_audit_keeps_candidates_non_causal(tmp_pa
     assert audit["ambiguous_terms_requiring_scope"][0]["term"] == (
         "post_move_terms.box_area_decreases_after_move"
     )
+
+
+def test_stage7_scoped_interaction_benchmark_is_non_causal(tmp_path):
+    seed = {
+        "trajectories": [
+            {
+                "white_training_steps": [
+                    {
+                        "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+                        "move": "a6a5",
+                        "legal_move_labels": [
+                            {
+                                "move": "a6a5",
+                                "label": 1,
+                                "target_class": "optimal_dtm_move",
+                                "move_shape_terms": ["candidate_is_rook_move"],
+                                "post_move_terms": ["box_area_decreases_after_move", "rook_safe_after_move"],
+                            },
+                            {
+                                "move": "a6a4",
+                                "label": 0,
+                                "target_class": "winning_nonoptimal_move",
+                                "move_shape_terms": ["candidate_is_rook_move"],
+                                "post_move_terms": ["rook_safe_after_move"],
+                            },
+                        ],
+                    }
+                ]
+            },
+            {
+                "white_training_steps": [
+                    {
+                        "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+                        "move": "d1c2",
+                        "legal_move_labels": [
+                            {
+                                "move": "d1c2",
+                                "label": 1,
+                                "target_class": "optimal_dtm_move",
+                                "move_shape_terms": ["candidate_is_king_move"],
+                                "post_move_terms": ["white_king_distance_to_enemy_decreases"],
+                            },
+                            {
+                                "move": "a6a4",
+                                "label": 0,
+                                "target_class": "winning_nonoptimal_move",
+                                "move_shape_terms": ["candidate_is_rook_move"],
+                                "post_move_terms": ["rook_safe_after_move"],
+                            },
+                        ],
+                    }
+                ]
+            },
+        ]
+    }
+    (tmp_path / "stage7_post_box_dtm_trajectory_seed_expanded_h40.json").write_text(
+        json.dumps(seed), encoding="utf-8"
+    )
+    current_test = {
+        "top1_dtm_positive_accuracy": 0.0,
+        "top3_dtm_positive_accuracy": 0.0,
+        "hard_negative_above_positive_rate": 1.0,
+    }
+    visible_test = {
+        "top1_dtm_positive_accuracy": 0.0,
+        "top3_dtm_positive_accuracy": 0.0,
+        "hard_negative_above_positive_rate": 1.0,
+    }
+    (tmp_path / "stage7_training_objective_benchmark.json").write_text(
+        json.dumps(
+            {
+                "models": [
+                    {"model_id": "current_learned_post_box_scorer", "test": current_test},
+                    {"model_id": "visible_term_log_odds_scorer", "test": visible_test},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    (tmp_path / "stage7_visible_term_refinement_audit.json").write_text(
+        json.dumps(
+            {
+                "positive_term_refinement_candidates": [
+                    {"term": "post_move_terms.box_area_decreases_after_move"},
+                    {"term": "post_move_terms.white_king_distance_to_enemy_decreases"},
+                ],
+                "ambiguous_terms_requiring_scope": [
+                    {"term": "post_move_terms.box_area_decreases_after_move"}
+                ],
+                "hard_negative_or_veto_context_candidates": [
+                    {"term": "move_shape_terms.rook_to_edge_file"}
+                ],
+                "interaction_refinement_candidates": [
+                    {
+                        "term_a": "move_shape_terms.candidate_is_rook_move",
+                        "term_b": "post_move_terms.box_area_decreases_after_move",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    benchmark = _scoped_interaction_benchmark.build_benchmark(tmp_path)
+
+    assert benchmark["schema_version"] == "stage7_scoped_interaction_benchmark.v1"
+    assert benchmark["causal_status"] == "non_causal_offline_benchmark"
+    assert benchmark["runtime_behavior_changed"] is False
+    assert benchmark["stage7_promotion_allowed"] is False
+    assert benchmark["stage8_training_allowed"] is False
+    assert {model["model_id"] for model in benchmark["models"]} == {
+        "scoped_interaction_log_odds_scorer",
+        "scoped_interaction_ranked_scorer",
+        "state_local_refinement_vote_scorer",
+    }
