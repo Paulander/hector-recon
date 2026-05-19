@@ -227,6 +227,17 @@ _strategy_arbiter_stratified = importlib.util.module_from_spec(
 )
 _strategy_arbiter_stratified_spec.loader.exec_module(_strategy_arbiter_stratified)
 
+_forced_provider_control_plan_spec = importlib.util.spec_from_file_location(
+    "plan_krk_forced_provider_control_labels",
+    Path(__file__).resolve().parents[1] / "scripts" / "plan_krk_forced_provider_control_labels.py",
+)
+assert _forced_provider_control_plan_spec is not None
+assert _forced_provider_control_plan_spec.loader is not None
+_forced_provider_control_plan = importlib.util.module_from_spec(
+    _forced_provider_control_plan_spec
+)
+_forced_provider_control_plan_spec.loader.exec_module(_forced_provider_control_plan)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -2348,3 +2359,79 @@ def test_krk_strategy_arbiter_stratified_probe_blocks_runtime_sandbox(tmp_path):
     assert probe["summary"]["best_selected_provider_positive_hit_rate"] == 1.0
     assert probe["summary"]["best_forced_provider_positive_hit_rate"] == 0.0
     assert probe["decision"]["runtime_sandbox_allowed"] is False
+
+
+def test_krk_forced_provider_control_label_plan_is_bounded_and_non_causal(tmp_path):
+    root = tmp_path
+
+    def write_json(relative_path, payload):
+        path = root / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload), encoding="utf-8")
+
+    write_json(
+        _forced_provider_control_plan.FILTERED_FRAMES,
+        {
+            "causal_status": "non_causal_filtered_frame_export",
+            "frames": [
+                {
+                    "frame_id": "cp.stage5",
+                    "state_id": "state.stage5",
+                    "source_stage": "stage5",
+                    "active_landmark_label": "fence_established",
+                    "fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+                    "filter_metadata": {
+                        "benchmark_roles": ["strategy_arbitration_benchmark"]
+                    },
+                    "strategy_proposal_frames": [
+                        {
+                            "provider_id": "krk.stage0_basin",
+                            "move_uci": "f2g3",
+                            "known_outcome_label": {
+                                "playout_result": "mate",
+                                "selected": True,
+                            },
+                        },
+                    ],
+                },
+                {
+                    "frame_id": "cp.stage7",
+                    "state_id": "state.stage7",
+                    "source_stage": "stage7",
+                    "active_landmark_label": "box_shrink",
+                    "fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
+                    "filter_metadata": {
+                        "benchmark_roles": ["strategy_arbitration_benchmark"]
+                    },
+                    "strategy_proposal_frames": [
+                        {
+                            "provider_id": "krk.drive_to_edge",
+                            "move_uci": "e3a3",
+                            "known_outcome_label": {
+                                "result": "max_plies",
+                                "source": "forced_provider_result",
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+    )
+    write_json(
+        _forced_provider_control_plan.STRATIFIED_PROBE,
+        {"causal_status": "non_causal_probe"},
+    )
+
+    plan = _forced_provider_control_plan.build_plan(root, max_jobs=4, max_jobs_per_stage=2)
+
+    assert plan["schema_version"] == "krk_forced_provider_control_label_plan.v0"
+    assert plan["causal_status"] == "non_causal_label_plan"
+    assert plan["runtime_behavior_changed"] is False
+    assert plan["runtime_arbiter_implemented"] is False
+    assert plan["stage7_promotion_allowed"] is False
+    assert plan["stage8_training_allowed"] is False
+    assert plan["labels_generated_in_this_slice"] is False
+    assert plan["job_selection"]["selected_job_count"] == 1
+    assert plan["jobs"][0]["source_stage"] == "stage5"
+    assert plan["jobs"][0]["target_label_semantics"] == "forced_provider_outcome"
+    assert plan["jobs"][0]["labels_generated"] is False

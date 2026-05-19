@@ -295,6 +295,13 @@ KRK strategy arbiter stratified probe v2:
 
 The stratified probe evaluates selected-provider playout labels, forced-provider labels, and same-move unselected-provider labels separately. Selected protected-control labels are easy for simple selectors (`1.0` best positive-hit rate), but forced Stage7 provider labels remain weak (`0.5` best positive-hit rate) and sparse. Decision: `selected_playout_controls_promising_forced_stage7_still_weak`; runtime sandbox remains blocked. Recommended next step: `collect_or_review_forced_provider_controls_before_sandbox`.
 
+KRK forced provider control label plan v0:
+
+- `reports/krk_forced_provider_control_label_plan_v0.json`
+- `reports/krk_forced_provider_control_label_plan_v0.md`
+
+The plan creates `12` bounded non-causal label jobs for protected Stage5/6 frames (`6` per stage) so future evidence can compare protected controls using the same forced-provider semantics as the Stage7 residual labels. It generates no labels and changes no runtime behavior. Recommended next step: `run_bounded_forced_provider_control_labels_if_runner_available`; runtime arbiter implementation remains blocked until these controls are reviewed or collected.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
