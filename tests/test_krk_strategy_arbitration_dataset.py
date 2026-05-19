@@ -238,6 +238,15 @@ _forced_provider_control_plan = importlib.util.module_from_spec(
 )
 _forced_provider_control_plan_spec.loader.exec_module(_forced_provider_control_plan)
 
+_forced_provider_binding_spec = importlib.util.spec_from_file_location(
+    "bind_krk_forced_provider_control_labels",
+    Path(__file__).resolve().parents[1] / "scripts" / "bind_krk_forced_provider_control_labels.py",
+)
+assert _forced_provider_binding_spec is not None
+assert _forced_provider_binding_spec.loader is not None
+_forced_provider_binding = importlib.util.module_from_spec(_forced_provider_binding_spec)
+_forced_provider_binding_spec.loader.exec_module(_forced_provider_binding)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -2435,3 +2444,56 @@ def test_krk_forced_provider_control_label_plan_is_bounded_and_non_causal(tmp_pa
     assert plan["jobs"][0]["source_stage"] == "stage5"
     assert plan["jobs"][0]["target_label_semantics"] == "forced_provider_outcome"
     assert plan["jobs"][0]["labels_generated"] is False
+
+
+def test_krk_forced_provider_execution_manifest_binds_topologies(tmp_path, monkeypatch):
+    root = tmp_path
+    plan_path = root / _forced_provider_binding.PLAN
+    plan_path.parent.mkdir(parents=True, exist_ok=True)
+    plan_path.write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_label_plan",
+                "jobs": [
+                    {
+                        "job_id": "job.stage5",
+                        "causal_status": "non_causal_label_job",
+                        "source_stage": "stage5",
+                        "provider_id": "krk.stage0_basin",
+                    },
+                    {
+                        "job_id": "job.stage6",
+                        "causal_status": "non_causal_label_job",
+                        "source_stage": "stage6",
+                        "provider_id": "krk.drive_to_edge",
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    stage5_topology = Path("stage5/topology.json")
+    stage6_topology = Path("stage6/topology.json")
+    stage5_checkpoint = Path("stage5/checkpoint.pkl")
+    stage6_checkpoint = Path("stage6/checkpoint.pkl")
+    for path in (stage5_topology, stage6_topology, stage5_checkpoint, stage6_checkpoint):
+        full = root / path
+        full.parent.mkdir(parents=True, exist_ok=True)
+        full.write_text("{}", encoding="utf-8")
+    monkeypatch.setattr(_forced_provider_binding, "STAGE5_TOPOLOGY", stage5_topology)
+    monkeypatch.setattr(_forced_provider_binding, "STAGE6_TOPOLOGY", stage6_topology)
+    monkeypatch.setattr(_forced_provider_binding, "STAGE5_CHECKPOINT", stage5_checkpoint)
+    monkeypatch.setattr(_forced_provider_binding, "STAGE6_CHECKPOINT", stage6_checkpoint)
+
+    manifest = _forced_provider_binding.build_manifest(root)
+
+    assert manifest["schema_version"] == "krk_forced_provider_label_execution_manifest.v0"
+    assert manifest["causal_status"] == "non_causal_execution_manifest"
+    assert manifest["runtime_behavior_changed"] is False
+    assert manifest["labels_generated_in_this_slice"] is False
+    assert manifest["stage7_promotion_allowed"] is False
+    assert manifest["stage8_training_allowed"] is False
+    assert manifest["binding_summary"]["all_bindings_valid"] is True
+    assert manifest["jobs"][0]["execution_binding"]["topology_version"] == "stage5_validated_v1"
+    assert manifest["jobs"][1]["execution_binding"]["topology_version"] == "stage6_overlay_composed_v1"
+    assert manifest["recommended_next_step"] == "run_bounded_forced_provider_control_labels"

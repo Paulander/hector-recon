@@ -302,6 +302,13 @@ KRK forced provider control label plan v0:
 
 The plan creates `12` bounded non-causal label jobs for protected Stage5/6 frames (`6` per stage) so future evidence can compare protected controls using the same forced-provider semantics as the Stage7 residual labels. It generates no labels and changes no runtime behavior. Recommended next step: `run_bounded_forced_provider_control_labels_if_runner_available`; runtime arbiter implementation remains blocked until these controls are reviewed or collected.
 
+KRK forced provider label execution manifest v0:
+
+- `reports/krk_forced_provider_label_execution_manifest_v0.json`
+- `reports/krk_forced_provider_label_execution_manifest_v0.md`
+
+The execution manifest binds all `12` planned forced-provider control-label jobs to explicit topology/profile/checkpoint metadata. Stage5 jobs bind to the frozen Stage5 topology; Stage6 jobs bind to the promoted Stage6 overlay-composed topology. All bindings are valid and use `handoff_composition_v1`. The manifest generates no labels and changes no runtime behavior. Recommended next step: `run_bounded_forced_provider_control_labels`.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
