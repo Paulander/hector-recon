@@ -479,6 +479,20 @@ KRK selector stratified label dataset/balance v1:
 
 The replay-free stratified dataset contains `11` protected-control rows but is underbalanced (`10` positive / `1` negative). Decision: `stratified_labels_underbalanced_no_selector_probe`. It is useful guardrail-positive evidence, but it is not enough to train/evaluate a selector or justify a sandbox. The next safe evidence step is to identify or collect negative protected-control labels, not use Stage 7 residuals as training labels.
 
+KRK selector negative controls / balanced labels v1:
+
+- `scripts/build_krk_selector_negative_control_manifest_v1.py`
+- `reports/krk_selector_negative_control_manifest_v1.json`
+- `reports/krk_selector_negative_control_manifest_v1.md`
+- `scripts/build_krk_selector_balanced_label_dataset_v1.py`
+- `reports/krk_selector_balanced_label_dataset_v1.json`
+- `reports/krk_selector_balanced_label_dataset_v1.md`
+- `scripts/probe_krk_selector_balanced_labels.py`
+- `reports/krk_selector_balanced_label_probe_v1.json`
+- `reports/krk_selector_balanced_label_probe_v1.md`
+
+Replay-free negative protected controls were identified from existing selector labels (`9` controls across Stage 4/5/6). The balanced dataset has `18` rows (`9` positive / `9` negative), with Stage 7 training rows still `0`. The balanced probe finds a non-causal provider/provenance signal (`provider_id`, `provider_family`, and `provider_maturity` LOO accuracy `0.778`), while active-landmark/stage-only baselines are weak. Decision: `balanced_labels_support_non_causal_selector_signal`. This still does not authorize a runtime arbiter or selector sandbox; it requires architecture review and explicit guardrail criteria first.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -618,6 +632,12 @@ reports/krk_selector_stratified_label_dataset_v1.json
 reports/krk_selector_stratified_label_dataset_v1.md
 reports/krk_selector_stratified_label_balance_probe_v1.json
 reports/krk_selector_stratified_label_balance_probe_v1.md
+reports/krk_selector_negative_control_manifest_v1.json
+reports/krk_selector_negative_control_manifest_v1.md
+reports/krk_selector_balanced_label_dataset_v1.json
+reports/krk_selector_balanced_label_dataset_v1.md
+reports/krk_selector_balanced_label_probe_v1.json
+reports/krk_selector_balanced_label_probe_v1.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
