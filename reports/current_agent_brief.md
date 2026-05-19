@@ -452,6 +452,14 @@ KRK selector objective architecture review v1:
 
 The review closes the selector-prior branch. Decision: `selector_objective_needs_stratified_label_expansion_before_sandbox`. The next safe slice is a bounded non-causal stratified label plan (`collect_small_stratified_selector_labels_v1`) that separates selected-playout success, forced-provider conversion, same-move compatibility, and guardrail-safe ownership while keeping Stage 7 held out. Runtime arbiter, selector sandbox, Stage 7 repair/promotion, and Stage 8 training remain blocked.
 
+KRK selector stratified label plan v1:
+
+- `scripts/plan_krk_selector_stratified_labels_v1.py`
+- `reports/krk_selector_stratified_label_plan_v1.json`
+- `reports/krk_selector_stratified_label_plan_v1.md`
+
+The label plan is bounded and non-causal. It proposes `11` h40 protected-control jobs across Stage 4/5/6, keeps Stage 7 training rows at `0`, and does not execute labels. Existing evidence already contains selected-playout, forced-provider, and held-out challenge labels, but it still needs cleaner guardrail/same-move compatibility labels before sandbox review. Runtime arbiter and selector sandbox remain blocked; the plan should be reviewed or replay-free extraction should be preferred before any label execution.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -583,6 +591,8 @@ reports/krk_selector_provenance_feature_probe_v0.json
 reports/krk_selector_provenance_feature_probe_v0.md
 reports/krk_selector_objective_architecture_review_v1.json
 reports/krk_selector_objective_architecture_review_v1.md
+reports/krk_selector_stratified_label_plan_v1.json
+reports/krk_selector_stratified_label_plan_v1.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
