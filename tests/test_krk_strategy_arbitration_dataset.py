@@ -216,6 +216,17 @@ _strategy_arbiter_risk_review = importlib.util.module_from_spec(
 )
 _strategy_arbiter_risk_review_spec.loader.exec_module(_strategy_arbiter_risk_review)
 
+_strategy_arbiter_stratified_spec = importlib.util.spec_from_file_location(
+    "probe_krk_strategy_arbiter_stratified_v2",
+    Path(__file__).resolve().parents[1] / "scripts" / "probe_krk_strategy_arbiter_stratified_v2.py",
+)
+assert _strategy_arbiter_stratified_spec is not None
+assert _strategy_arbiter_stratified_spec.loader is not None
+_strategy_arbiter_stratified = importlib.util.module_from_spec(
+    _strategy_arbiter_stratified_spec
+)
+_strategy_arbiter_stratified_spec.loader.exec_module(_strategy_arbiter_stratified)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -2251,3 +2262,89 @@ def test_krk_strategy_arbiter_risk_review_separates_label_semantics(tmp_path):
         "selected_playout_guardrail_or_horizon_caveat": 1
     }
     assert review["decision"]["runtime_sandbox_allowed"] is False
+
+
+def test_krk_strategy_arbiter_stratified_probe_blocks_runtime_sandbox(tmp_path):
+    root = tmp_path
+
+    def write_json(relative_path, payload):
+        path = root / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload), encoding="utf-8")
+
+    write_json(
+        _strategy_arbiter_stratified.FILTERED_FRAMES,
+        {
+            "causal_status": "non_causal_filtered_frame_export",
+            "frames": [
+                {
+                    "frame_id": "cp.selected",
+                    "source_stage": "stage5",
+                    "active_landmark_label": "fence_established",
+                    "filter_metadata": {
+                        "benchmark_roles": ["strategy_arbitration_benchmark"]
+                    },
+                    "strategy_proposal_frames": [
+                        {
+                            "provider_id": "krk.stage0_basin",
+                            "normalized_score": 1.0,
+                            "provider_local_rank": 1,
+                            "known_outcome_label": {
+                                "playout_result": "mate",
+                                "selected": True,
+                            },
+                        }
+                    ],
+                },
+                {
+                    "frame_id": "cp.forced",
+                    "source_stage": "stage7",
+                    "active_landmark_label": "box_shrink",
+                    "filter_metadata": {
+                        "benchmark_roles": ["strategy_arbitration_benchmark"]
+                    },
+                    "strategy_proposal_frames": [
+                        {
+                            "provider_id": "krk.drive_to_edge",
+                            "normalized_score": 1.0,
+                            "provider_local_rank": 1,
+                            "known_outcome_label": {
+                                "result": "max_plies",
+                                "source": "forced_provider_result",
+                            },
+                        },
+                        {
+                            "provider_id": "krk.fence_established",
+                            "normalized_score": 0.5,
+                            "provider_local_rank": 2,
+                            "known_outcome_label": {
+                                "result": "mate",
+                                "source": "forced_provider_result",
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+    )
+    write_json(
+        _strategy_arbiter_stratified.RISK_REVIEW,
+        {"causal_status": "non_causal_review"},
+    )
+    write_json(
+        _strategy_arbiter_stratified.BASELINE,
+        {"causal_status": "non_causal_probe"},
+    )
+
+    probe = _strategy_arbiter_stratified.build_probe(root)
+
+    assert probe["schema_version"] == "krk_strategy_arbiter_stratified_probe.v2"
+    assert probe["causal_status"] == "non_causal_probe"
+    assert probe["runtime_behavior_changed"] is False
+    assert probe["runtime_arbiter_implemented"] is False
+    assert probe["runtime_terminals_added"] is False
+    assert probe["stage7_promotion_allowed"] is False
+    assert probe["stage8_training_allowed"] is False
+    assert probe["summary"]["best_selected_provider_positive_hit_rate"] == 1.0
+    assert probe["summary"]["best_forced_provider_positive_hit_rate"] == 0.0
+    assert probe["decision"]["runtime_sandbox_allowed"] is False

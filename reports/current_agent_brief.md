@@ -288,6 +288,13 @@ KRK strategy arbiter evidence risk review v0:
 
 The pre-sandbox risk review separates provider-label semantics and max-only frame types. It finds mixed label semantics: `24` forced-provider outcomes, `24` selected-provider playouts, and `18` same-move unselected-provider playouts. The `14` max-only frames split into `2` Stage7 forced existing-provider capacity/horizon gaps and `12` protected-stage selected-playout guardrail/horizon caveats. Decision: `runtime_sandbox_blocked_pending_semantics_review`; next step is `stratified_non_causal_arbiter_evaluation_v2`, not runtime implementation.
 
+KRK strategy arbiter stratified probe v2:
+
+- `reports/krk_strategy_arbiter_stratified_probe_v2.json`
+- `reports/krk_strategy_arbiter_stratified_probe_v2.md`
+
+The stratified probe evaluates selected-provider playout labels, forced-provider labels, and same-move unselected-provider labels separately. Selected protected-control labels are easy for simple selectors (`1.0` best positive-hit rate), but forced Stage7 provider labels remain weak (`0.5` best positive-hit rate) and sparse. Decision: `selected_playout_controls_promising_forced_stage7_still_weak`; runtime sandbox remains blocked. Recommended next step: `collect_or_review_forced_provider_controls_before_sandbox`.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.

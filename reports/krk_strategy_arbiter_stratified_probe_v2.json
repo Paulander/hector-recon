@@ -1,0 +1,429 @@
+{
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "runtime_internal_terminal",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_probe",
+  "decision": {
+    "interpretation": "Selected protected-control playout labels are easy for simple selectors, but forced-provider Stage7 labels remain the harder and smaller stratum.",
+    "recommended_next_step": "collect_or_review_forced_provider_controls_before_sandbox",
+    "runtime_sandbox_allowed": false,
+    "status": "selected_playout_controls_promising_forced_stage7_still_weak"
+  },
+  "gameplay_topology_mutation": false,
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_strategy_arbiter_stratified_probe.v2",
+  "source_artifacts": [
+    "reports/krk_control_plane_filtered_frames_v0.json",
+    "reports/krk_strategy_arbiter_evidence_risk_review_v0.json",
+    "reports/krk_control_plane_strategy_arbitration_baseline_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "stratified_selector_results": [
+    {
+      "eligible_frame_count": 24,
+      "eligible_stage_counts": {
+        "stage4": 6,
+        "stage5": 8,
+        "stage6": 10
+      },
+      "label_semantics": "selected_provider_playout",
+      "miss_examples": [],
+      "no_selection_count": 0,
+      "positive_available_frame_count": 12,
+      "positive_hit_count": 12,
+      "positive_hit_rate": 1.0,
+      "selected_count": 24,
+      "selected_label_counts": {
+        "mate": 12,
+        "max_plies": 12
+      },
+      "selected_mate_rate": 0.5,
+      "selector": "raw_global_score"
+    },
+    {
+      "eligible_frame_count": 24,
+      "eligible_stage_counts": {
+        "stage4": 6,
+        "stage5": 8,
+        "stage6": 10
+      },
+      "label_semantics": "selected_provider_playout",
+      "miss_examples": [],
+      "no_selection_count": 0,
+      "positive_available_frame_count": 12,
+      "positive_hit_count": 12,
+      "positive_hit_rate": 1.0,
+      "selected_count": 24,
+      "selected_label_counts": {
+        "mate": 12,
+        "max_plies": 12
+      },
+      "selected_mate_rate": 0.5,
+      "selector": "normalized_score"
+    },
+    {
+      "eligible_frame_count": 24,
+      "eligible_stage_counts": {
+        "stage4": 6,
+        "stage5": 8,
+        "stage6": 10
+      },
+      "label_semantics": "selected_provider_playout",
+      "miss_examples": [],
+      "no_selection_count": 0,
+      "positive_available_frame_count": 12,
+      "positive_hit_count": 12,
+      "positive_hit_rate": 1.0,
+      "selected_count": 24,
+      "selected_label_counts": {
+        "mate": 12,
+        "max_plies": 12
+      },
+      "selected_mate_rate": 0.5,
+      "selector": "provider_local_rank"
+    },
+    {
+      "eligible_frame_count": 24,
+      "eligible_stage_counts": {
+        "stage4": 6,
+        "stage5": 8,
+        "stage6": 10
+      },
+      "label_semantics": "selected_provider_playout",
+      "miss_examples": [],
+      "no_selection_count": 0,
+      "positive_available_frame_count": 12,
+      "positive_hit_count": 12,
+      "positive_hit_rate": 1.0,
+      "selected_count": 24,
+      "selected_label_counts": {
+        "mate": 12,
+        "max_plies": 12
+      },
+      "selected_mate_rate": 0.5,
+      "selector": "stage_prior_heuristic"
+    },
+    {
+      "eligible_frame_count": 4,
+      "eligible_stage_counts": {
+        "stage7": 4
+      },
+      "label_semantics": "forced_provider_outcome",
+      "miss_examples": [],
+      "no_selection_count": 4,
+      "positive_available_frame_count": 2,
+      "positive_hit_count": 0,
+      "positive_hit_rate": 0.0,
+      "selected_count": 0,
+      "selected_label_counts": {},
+      "selected_mate_rate": null,
+      "selector": "raw_global_score"
+    },
+    {
+      "eligible_frame_count": 4,
+      "eligible_stage_counts": {
+        "stage7": 4
+      },
+      "label_semantics": "forced_provider_outcome",
+      "miss_examples": [
+        {
+          "frame_id": "cp.krk.state.ac0b7ed500ea",
+          "mate_providers": [
+            "krk.fence_established"
+          ],
+          "selected_provider": "krk.drive_to_edge",
+          "selected_result": "max_plies",
+          "selector": "normalized_score",
+          "source_stage": "stage7"
+        }
+      ],
+      "no_selection_count": 0,
+      "positive_available_frame_count": 2,
+      "positive_hit_count": 1,
+      "positive_hit_rate": 0.5,
+      "selected_count": 4,
+      "selected_label_counts": {
+        "mate": 1,
+        "max_plies": 3
+      },
+      "selected_mate_rate": 0.25,
+      "selector": "normalized_score"
+    },
+    {
+      "eligible_frame_count": 4,
+      "eligible_stage_counts": {
+        "stage7": 4
+      },
+      "label_semantics": "forced_provider_outcome",
+      "miss_examples": [
+        {
+          "frame_id": "cp.krk.state.ac0b7ed500ea",
+          "mate_providers": [
+            "krk.fence_established"
+          ],
+          "selected_provider": "krk.drive_to_edge",
+          "selected_result": "max_plies",
+          "selector": "provider_local_rank",
+          "source_stage": "stage7"
+        }
+      ],
+      "no_selection_count": 0,
+      "positive_available_frame_count": 2,
+      "positive_hit_count": 1,
+      "positive_hit_rate": 0.5,
+      "selected_count": 4,
+      "selected_label_counts": {
+        "mate": 1,
+        "max_plies": 3
+      },
+      "selected_mate_rate": 0.25,
+      "selector": "provider_local_rank"
+    },
+    {
+      "eligible_frame_count": 4,
+      "eligible_stage_counts": {
+        "stage7": 4
+      },
+      "label_semantics": "forced_provider_outcome",
+      "miss_examples": [
+        {
+          "frame_id": "cp.krk.state.ac0b7ed500ea",
+          "mate_providers": [
+            "krk.fence_established"
+          ],
+          "selected_provider": "krk.drive_to_edge",
+          "selected_result": "max_plies",
+          "selector": "stage_prior_heuristic",
+          "source_stage": "stage7"
+        }
+      ],
+      "no_selection_count": 0,
+      "positive_available_frame_count": 2,
+      "positive_hit_count": 1,
+      "positive_hit_rate": 0.5,
+      "selected_count": 4,
+      "selected_label_counts": {
+        "mate": 1,
+        "max_plies": 3
+      },
+      "selected_mate_rate": 0.25,
+      "selector": "stage_prior_heuristic"
+    },
+    {
+      "eligible_frame_count": 9,
+      "eligible_stage_counts": {
+        "stage5": 4,
+        "stage6": 5
+      },
+      "label_semantics": "same_move_unselected_provider_playout",
+      "miss_examples": [],
+      "no_selection_count": 0,
+      "positive_available_frame_count": 1,
+      "positive_hit_count": 1,
+      "positive_hit_rate": 1.0,
+      "selected_count": 9,
+      "selected_label_counts": {
+        "mate": 1,
+        "max_plies": 8
+      },
+      "selected_mate_rate": 0.1111111111111111,
+      "selector": "raw_global_score"
+    },
+    {
+      "eligible_frame_count": 9,
+      "eligible_stage_counts": {
+        "stage5": 4,
+        "stage6": 5
+      },
+      "label_semantics": "same_move_unselected_provider_playout",
+      "miss_examples": [],
+      "no_selection_count": 0,
+      "positive_available_frame_count": 1,
+      "positive_hit_count": 1,
+      "positive_hit_rate": 1.0,
+      "selected_count": 9,
+      "selected_label_counts": {
+        "mate": 1,
+        "max_plies": 8
+      },
+      "selected_mate_rate": 0.1111111111111111,
+      "selector": "normalized_score"
+    },
+    {
+      "eligible_frame_count": 9,
+      "eligible_stage_counts": {
+        "stage5": 4,
+        "stage6": 5
+      },
+      "label_semantics": "same_move_unselected_provider_playout",
+      "miss_examples": [],
+      "no_selection_count": 0,
+      "positive_available_frame_count": 1,
+      "positive_hit_count": 1,
+      "positive_hit_rate": 1.0,
+      "selected_count": 9,
+      "selected_label_counts": {
+        "mate": 1,
+        "max_plies": 8
+      },
+      "selected_mate_rate": 0.1111111111111111,
+      "selector": "provider_local_rank"
+    },
+    {
+      "eligible_frame_count": 9,
+      "eligible_stage_counts": {
+        "stage5": 4,
+        "stage6": 5
+      },
+      "label_semantics": "same_move_unselected_provider_playout",
+      "miss_examples": [],
+      "no_selection_count": 0,
+      "positive_available_frame_count": 1,
+      "positive_hit_count": 1,
+      "positive_hit_rate": 1.0,
+      "selected_count": 9,
+      "selected_label_counts": {
+        "mate": 1,
+        "max_plies": 8
+      },
+      "selected_mate_rate": 0.1111111111111111,
+      "selector": "stage_prior_heuristic"
+    }
+  ],
+  "summary": {
+    "benchmark_frame_count": 28,
+    "best_forced_provider_positive_hit_rate": 0.5,
+    "best_selected_provider_positive_hit_rate": 1.0,
+    "max_only_summary": {
+      "classification_counts": {
+        "forced_existing_provider_capacity_or_horizon_gap": 2,
+        "selected_playout_guardrail_or_horizon_caveat": 12
+      },
+      "examples": [
+        {
+          "classification": "forced_existing_provider_capacity_or_horizon_gap",
+          "frame_id": "cp.krk.state.0afbf11aa123",
+          "label_semantics": [
+            "forced_provider_outcome"
+          ],
+          "providers": [
+            "krk.drive_to_edge",
+            "krk.edge_trap_close",
+            "krk.edge_trap_enemy_between",
+            "krk.edge_trap_wrong_tempo",
+            "krk.fence_established",
+            "krk.stage0_basin"
+          ],
+          "source_stage": "stage7"
+        },
+        {
+          "classification": "forced_existing_provider_capacity_or_horizon_gap",
+          "frame_id": "cp.krk.state.38aed2f35911",
+          "label_semantics": [
+            "forced_provider_outcome"
+          ],
+          "providers": [
+            "krk.drive_to_edge",
+            "krk.edge_trap_close",
+            "krk.edge_trap_enemy_between",
+            "krk.edge_trap_wrong_tempo",
+            "krk.fence_established",
+            "krk.stage0_basin"
+          ],
+          "source_stage": "stage7"
+        },
+        {
+          "classification": "selected_playout_guardrail_or_horizon_caveat",
+          "frame_id": "cp.krk.state.02feb8593cc6",
+          "label_semantics": [
+            "same_move_unselected_provider_playout",
+            "selected_provider_playout"
+          ],
+          "providers": [
+            "krk.edge_trap_close",
+            "krk.edge_trap_enemy_between",
+            "krk.edge_trap_wrong_tempo"
+          ],
+          "source_stage": "stage5"
+        },
+        {
+          "classification": "selected_playout_guardrail_or_horizon_caveat",
+          "frame_id": "cp.krk.state.326222aefdf1",
+          "label_semantics": [
+            "same_move_unselected_provider_playout",
+            "selected_provider_playout"
+          ],
+          "providers": [
+            "krk.edge_trap_close",
+            "krk.edge_trap_enemy_between",
+            "krk.edge_trap_wrong_tempo"
+          ],
+          "source_stage": "stage5"
+        },
+        {
+          "classification": "selected_playout_guardrail_or_horizon_caveat",
+          "frame_id": "cp.krk.state.3dca34326fca",
+          "label_semantics": [
+            "selected_provider_playout"
+          ],
+          "providers": [
+            "krk.stage0_basin"
+          ],
+          "source_stage": "stage5"
+        },
+        {
+          "classification": "selected_playout_guardrail_or_horizon_caveat",
+          "frame_id": "cp.krk.state.02feb8593cc6",
+          "label_semantics": [
+            "same_move_unselected_provider_playout",
+            "selected_provider_playout"
+          ],
+          "providers": [
+            "krk.edge_trap_close",
+            "krk.edge_trap_enemy_between",
+            "krk.edge_trap_wrong_tempo"
+          ],
+          "source_stage": "stage5"
+        },
+        {
+          "classification": "selected_playout_guardrail_or_horizon_caveat",
+          "frame_id": "cp.krk.state.699f0003a511",
+          "label_semantics": [
+            "same_move_unselected_provider_playout",
+            "selected_provider_playout"
+          ],
+          "providers": [
+            "krk.edge_trap_close",
+            "krk.edge_trap_enemy_between",
+            "krk.edge_trap_wrong_tempo"
+          ],
+          "source_stage": "stage6"
+        },
+        {
+          "classification": "selected_playout_guardrail_or_horizon_caveat",
+          "frame_id": "cp.krk.state.699f0003a511",
+          "label_semantics": [
+            "same_move_unselected_provider_playout",
+            "selected_provider_playout"
+          ],
+          "providers": [
+            "krk.edge_trap_close",
+            "krk.edge_trap_enemy_between",
+            "krk.edge_trap_wrong_tempo"
+          ],
+          "source_stage": "stage6"
+        }
+      ]
+    }
+  }
+}
