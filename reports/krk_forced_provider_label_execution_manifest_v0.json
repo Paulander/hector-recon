@@ -43,8 +43,9 @@
         "provider_version": "stage5_validated_v1",
         "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
         "suggestion_limit": 10,
-        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/topology/krk_entry_topology.json",
-        "topology_version": "stage5_validated_v1"
+        "topology_component": "stage5_frozen_base_provider_pack_with_skill_ids",
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
       },
       "fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
       "frame_id": "cp.krk.state.7bd8961882ad",
@@ -88,8 +89,9 @@
         "provider_version": "stage5_validated_v1",
         "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
         "suggestion_limit": 10,
-        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/topology/krk_entry_topology.json",
-        "topology_version": "stage5_validated_v1"
+        "topology_component": "stage5_frozen_base_provider_pack_with_skill_ids",
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
       },
       "fen": "6k1/4R3/6K1/8/8/8/8/8 w - - 2 2",
       "frame_id": "cp.krk.state.87b1160e68b9",
@@ -133,8 +135,9 @@
         "provider_version": "stage5_validated_v1",
         "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
         "suggestion_limit": 10,
-        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/topology/krk_entry_topology.json",
-        "topology_version": "stage5_validated_v1"
+        "topology_component": "stage5_frozen_base_provider_pack_with_skill_ids",
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
       },
       "fen": "6k1/4R3/6K1/8/8/8/8/8 w - - 2 2",
       "frame_id": "cp.krk.state.87b1160e68b9",
@@ -178,8 +181,9 @@
         "provider_version": "stage5_validated_v1",
         "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
         "suggestion_limit": 10,
-        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/topology/krk_entry_topology.json",
-        "topology_version": "stage5_validated_v1"
+        "topology_component": "stage5_frozen_base_provider_pack_with_skill_ids",
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
       },
       "fen": "6k1/4R3/6K1/8/8/8/8/8 w - - 2 2",
       "frame_id": "cp.krk.state.87b1160e68b9",
@@ -223,8 +227,9 @@
         "provider_version": "stage5_validated_v1",
         "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
         "suggestion_limit": 10,
-        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/topology/krk_entry_topology.json",
-        "topology_version": "stage5_validated_v1"
+        "topology_component": "stage5_frozen_base_provider_pack_with_skill_ids",
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
       },
       "fen": "5k2/R7/8/8/8/8/4K3/8 w - - 2 2",
       "frame_id": "cp.krk.state.2c1d6da27ea1",
@@ -268,8 +273,9 @@
         "provider_version": "stage5_validated_v1",
         "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
         "suggestion_limit": 10,
-        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/topology/krk_entry_topology.json",
-        "topology_version": "stage5_validated_v1"
+        "topology_component": "stage5_frozen_base_provider_pack_with_skill_ids",
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
       },
       "fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
       "frame_id": "cp.krk.state.02feb8593cc6",
@@ -313,6 +319,7 @@
         "provider_version": "stage5_validated_v1",
         "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
         "suggestion_limit": 10,
+        "topology_component": "stage6_overlay_composed",
         "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
         "topology_version": "stage6_overlay_composed_v1"
       },
@@ -358,6 +365,7 @@
         "provider_version": "stage5_validated_v1",
         "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
         "suggestion_limit": 10,
+        "topology_component": "stage6_overlay_composed",
         "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
         "topology_version": "stage6_overlay_composed_v1"
       },
@@ -403,6 +411,7 @@
         "provider_version": "stage5_validated_v1",
         "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
         "suggestion_limit": 10,
+        "topology_component": "stage6_overlay_composed",
         "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
         "topology_version": "stage6_overlay_composed_v1"
       },
@@ -448,6 +457,7 @@
         "provider_version": "stage5_validated_v1",
         "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
         "suggestion_limit": 10,
+        "topology_component": "stage6_overlay_composed",
         "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
         "topology_version": "stage6_overlay_composed_v1"
       },
@@ -493,6 +503,7 @@
         "provider_version": "stage5_validated_v1",
         "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
         "suggestion_limit": 10,
+        "topology_component": "stage6_overlay_composed",
         "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
         "topology_version": "stage6_overlay_composed_v1"
       },
@@ -538,6 +549,7 @@
         "provider_version": "stage5_validated_v1",
         "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
         "suggestion_limit": 10,
+        "topology_component": "stage6_overlay_composed",
         "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
         "topology_version": "stage6_overlay_composed_v1"
       },

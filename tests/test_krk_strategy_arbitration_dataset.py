@@ -2494,6 +2494,10 @@ def test_krk_forced_provider_execution_manifest_binds_topologies(tmp_path, monke
     assert manifest["stage7_promotion_allowed"] is False
     assert manifest["stage8_training_allowed"] is False
     assert manifest["binding_summary"]["all_bindings_valid"] is True
-    assert manifest["jobs"][0]["execution_binding"]["topology_version"] == "stage5_validated_v1"
+    assert manifest["jobs"][0]["execution_binding"]["topology_version"] == "stage6_overlay_composed_v1"
+    assert (
+        manifest["jobs"][0]["execution_binding"]["topology_component"]
+        == "stage5_frozen_base_provider_pack_with_skill_ids"
+    )
     assert manifest["jobs"][1]["execution_binding"]["topology_version"] == "stage6_overlay_composed_v1"
     assert manifest["recommended_next_step"] == "run_bounded_forced_provider_control_labels"

@@ -43,6 +43,8 @@ def _semantics(proposal: dict[str, Any]) -> str:
         return "unknown"
     if label.get("source") == "forced_provider_result":
         return "forced_provider_outcome"
+    if label.get("source") == "forced_provider_control_label":
+        return "forced_provider_control_outcome"
     if "playout_result" in label:
         if label.get("selected") is True:
             return "selected_provider_playout"
@@ -137,11 +139,17 @@ SELECTORS: dict[str, Selector] = {
 
 
 def _eligible_proposals(frame: dict[str, Any], semantic: str) -> list[dict[str, Any]]:
-    return [
-        proposal
-        for proposal in frame.get("strategy_proposal_frames") or []
-        if _semantics(proposal) == semantic
-    ]
+    proposals = []
+    for proposal in frame.get("strategy_proposal_frames") or []:
+        if semantic == "forced_provider_control_outcome" and isinstance(
+            proposal.get("forced_control_outcome_label"), dict
+        ):
+            clone = dict(proposal)
+            clone["known_outcome_label"] = dict(proposal["forced_control_outcome_label"])
+            proposals.append(clone)
+        elif _semantics(proposal) == semantic:
+            proposals.append(proposal)
+    return proposals
 
 
 def _evaluate_stratum(
@@ -237,22 +245,27 @@ def _max_only_summary(frames: list[dict[str, Any]]) -> dict[str, Any]:
     return {"classification_counts": dict(counts), "examples": examples}
 
 
-def build_probe(repo_root: Path) -> dict[str, Any]:
-    filtered = _load_json(repo_root, FILTERED_FRAMES)
+def build_probe(repo_root: Path, *, filtered_frames_path: Path = FILTERED_FRAMES) -> dict[str, Any]:
+    filtered = _load_json(repo_root, filtered_frames_path)
     risk_review = _load_json(repo_root, RISK_REVIEW)
     baseline = _load_json(repo_root, BASELINE)
     for name, payload, expected in (
-        ("filtered", filtered, "non_causal_filtered_frame_export"),
         ("risk_review", risk_review, "non_causal_review"),
         ("baseline", baseline, "non_causal_probe"),
     ):
         if payload.get("causal_status") != expected:
             raise ValueError(f"{name} artifact must remain {expected}")
+    if filtered.get("causal_status") not in {
+        "non_causal_filtered_frame_export",
+        "non_causal_augmented_frame_export",
+    }:
+        raise ValueError("filtered frame artifact must remain non-causal")
 
     frames = _benchmark_frames(filtered)
     strata = [
         "selected_provider_playout",
         "forced_provider_outcome",
+        "forced_provider_control_outcome",
         "same_move_unselected_provider_playout",
     ]
     evaluations = [
@@ -261,14 +274,21 @@ def build_probe(repo_root: Path) -> dict[str, Any]:
         for name, selector in SELECTORS.items()
     ]
     forced = [item for item in evaluations if item["label_semantics"] == "forced_provider_outcome"]
+    forced_controls = [
+        item for item in evaluations if item["label_semantics"] == "forced_provider_control_outcome"
+    ]
     selected = [item for item in evaluations if item["label_semantics"] == "selected_provider_playout"]
     best_forced = max((item["positive_hit_rate"] or 0.0 for item in forced), default=0.0)
+    best_forced_control = max((item["positive_hit_rate"] or 0.0 for item in forced_controls), default=0.0)
     best_selected = max((item["positive_hit_rate"] or 0.0 for item in selected), default=0.0)
     max_only = _max_only_summary(frames)
 
     if best_forced >= 0.75 and best_selected >= 0.75:
         status = "stratified_strategy_arbitration_promising"
         next_step = "architecture_review_for_default_off_sandbox_skeleton"
+    elif best_forced_control >= 0.75 and best_selected >= 0.75 and best_forced < 0.75:
+        status = "protected_forced_controls_promising_stage7_gap_confirmed"
+        next_step = "architecture_review_for_default_off_sandbox_skeleton_with_stage7_holdout"
     elif best_selected >= 0.75 and best_forced < 0.75:
         status = "selected_playout_controls_promising_forced_stage7_still_weak"
         next_step = "collect_or_review_forced_provider_controls_before_sandbox"
@@ -287,10 +307,11 @@ def build_probe(repo_root: Path) -> dict[str, Any]:
         "gameplay_topology_mutation": False,
         "stage7_promotion_allowed": False,
         "stage8_training_allowed": False,
-        "source_artifacts": [str(FILTERED_FRAMES), str(RISK_REVIEW), str(BASELINE)],
+        "source_artifacts": [str(filtered_frames_path), str(RISK_REVIEW), str(BASELINE)],
         "summary": {
             "benchmark_frame_count": len(frames),
             "best_forced_provider_positive_hit_rate": best_forced,
+            "best_forced_provider_control_positive_hit_rate": best_forced_control,
             "best_selected_provider_positive_hit_rate": best_selected,
             "max_only_summary": max_only,
         },
@@ -300,6 +321,11 @@ def build_probe(repo_root: Path) -> dict[str, Any]:
             "runtime_sandbox_allowed": False,
             "recommended_next_step": next_step,
             "interpretation": (
+                "Protected selected and forced-control labels are promising, while "
+                "Stage7 forced-provider residuals remain a held-out challenge gap."
+            )
+            if status == "protected_forced_controls_promising_stage7_gap_confirmed"
+            else (
                 "Selected protected-control playout labels are easy for simple selectors, "
                 "but forced-provider Stage7 labels remain the harder and smaller stratum."
             )
@@ -352,6 +378,7 @@ def render_markdown(probe: dict[str, Any]) -> str:
         "",
         f"- Benchmark frames: `{summary['benchmark_frame_count']}`",
         f"- Best selected-provider positive hit rate: `{summary['best_selected_provider_positive_hit_rate']}`",
+        f"- Best forced-provider-control positive hit rate: `{summary['best_forced_provider_control_positive_hit_rate']}`",
         f"- Best forced-provider positive hit rate: `{summary['best_forced_provider_positive_hit_rate']}`",
         f"- Max-only classification counts: `{summary['max_only_summary']['classification_counts']}`",
         "",
@@ -399,13 +426,14 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=Path("."))
     parser.add_argument("--report-root", type=Path, default=Path("reports"))
+    parser.add_argument("--filtered-frames", type=Path, default=FILTERED_FRAMES)
     args = parser.parse_args()
 
     repo_root = args.repo_root.resolve()
     report_root = args.report_root
     if not report_root.is_absolute():
         report_root = repo_root / report_root
-    probe = build_probe(repo_root)
+    probe = build_probe(repo_root, filtered_frames_path=args.filtered_frames)
     write_outputs(probe, report_root)
     print(json.dumps(probe["decision"], indent=2, sort_keys=True))
 

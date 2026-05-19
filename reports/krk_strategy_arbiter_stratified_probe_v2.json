@@ -9,10 +9,10 @@
   ],
   "causal_status": "non_causal_probe",
   "decision": {
-    "interpretation": "Selected protected-control playout labels are easy for simple selectors, but forced-provider Stage7 labels remain the harder and smaller stratum.",
-    "recommended_next_step": "collect_or_review_forced_provider_controls_before_sandbox",
+    "interpretation": "Protected selected and forced-control labels are promising, while Stage7 forced-provider residuals remain a held-out challenge gap.",
+    "recommended_next_step": "architecture_review_for_default_off_sandbox_skeleton_with_stage7_holdout",
     "runtime_sandbox_allowed": false,
-    "status": "selected_playout_controls_promising_forced_stage7_still_weak"
+    "status": "protected_forced_controls_promising_stage7_gap_confirmed"
   },
   "gameplay_topology_mutation": false,
   "runtime_arbiter_implemented": false,
@@ -22,7 +22,7 @@
   "runtime_terminals_added": false,
   "schema_version": "krk_strategy_arbiter_stratified_probe.v2",
   "source_artifacts": [
-    "reports/krk_control_plane_filtered_frames_v0.json",
+    "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
     "reports/krk_strategy_arbiter_evidence_risk_review_v0.json",
     "reports/krk_control_plane_strategy_arbitration_baseline_v1.json"
   ],
@@ -220,6 +220,86 @@
       "selector": "stage_prior_heuristic"
     },
     {
+      "eligible_frame_count": 8,
+      "eligible_stage_counts": {
+        "stage5": 4,
+        "stage6": 4
+      },
+      "label_semantics": "forced_provider_control_outcome",
+      "miss_examples": [],
+      "no_selection_count": 0,
+      "positive_available_frame_count": 7,
+      "positive_hit_count": 7,
+      "positive_hit_rate": 1.0,
+      "selected_count": 8,
+      "selected_label_counts": {
+        "mate": 7,
+        "max_plies": 1
+      },
+      "selected_mate_rate": 0.875,
+      "selector": "raw_global_score"
+    },
+    {
+      "eligible_frame_count": 8,
+      "eligible_stage_counts": {
+        "stage5": 4,
+        "stage6": 4
+      },
+      "label_semantics": "forced_provider_control_outcome",
+      "miss_examples": [],
+      "no_selection_count": 0,
+      "positive_available_frame_count": 7,
+      "positive_hit_count": 7,
+      "positive_hit_rate": 1.0,
+      "selected_count": 8,
+      "selected_label_counts": {
+        "mate": 7,
+        "max_plies": 1
+      },
+      "selected_mate_rate": 0.875,
+      "selector": "normalized_score"
+    },
+    {
+      "eligible_frame_count": 8,
+      "eligible_stage_counts": {
+        "stage5": 4,
+        "stage6": 4
+      },
+      "label_semantics": "forced_provider_control_outcome",
+      "miss_examples": [],
+      "no_selection_count": 0,
+      "positive_available_frame_count": 7,
+      "positive_hit_count": 7,
+      "positive_hit_rate": 1.0,
+      "selected_count": 8,
+      "selected_label_counts": {
+        "mate": 7,
+        "max_plies": 1
+      },
+      "selected_mate_rate": 0.875,
+      "selector": "provider_local_rank"
+    },
+    {
+      "eligible_frame_count": 8,
+      "eligible_stage_counts": {
+        "stage5": 4,
+        "stage6": 4
+      },
+      "label_semantics": "forced_provider_control_outcome",
+      "miss_examples": [],
+      "no_selection_count": 0,
+      "positive_available_frame_count": 7,
+      "positive_hit_count": 7,
+      "positive_hit_rate": 1.0,
+      "selected_count": 8,
+      "selected_label_counts": {
+        "mate": 7,
+        "max_plies": 1
+      },
+      "selected_mate_rate": 0.875,
+      "selector": "stage_prior_heuristic"
+    },
+    {
       "eligible_frame_count": 9,
       "eligible_stage_counts": {
         "stage5": 4,
@@ -302,6 +382,7 @@
   ],
   "summary": {
     "benchmark_frame_count": 28,
+    "best_forced_provider_control_positive_hit_rate": 1.0,
     "best_forced_provider_positive_hit_rate": 0.5,
     "best_selected_provider_positive_hit_rate": 1.0,
     "max_only_summary": {

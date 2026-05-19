@@ -53,8 +53,13 @@ def _binding_for_job(job: dict[str, Any]) -> dict[str, Any]:
     stage = str(job.get("source_stage") or "")
     provider_id = str(job.get("provider_id") or "")
     if stage == "stage5":
-        topology = STAGE5_TOPOLOGY
-        topology_version = "stage5_validated_v1"
+        # The raw frozen Stage 5 topology predates provider skill_id metadata,
+        # so forced_successor_skill cannot match its providers directly. The
+        # promoted Stage 6 overlay-composed topology preserves the Stage 5
+        # provider pack and adds canonical skill_id metadata, which makes the
+        # forced-provider diagnostic executable without hidden routing.
+        topology = STAGE6_TOPOLOGY
+        topology_version = "stage6_overlay_composed_v1"
         provider_version = "stage5_validated_v1"
         source_checkpoint = STAGE5_CHECKPOINT
     elif stage == "stage6":
@@ -69,6 +74,11 @@ def _binding_for_job(job: dict[str, Any]) -> dict[str, Any]:
         "topology_version": topology_version,
         "composition_profile": "handoff_composition_v1",
         "provider_version": provider_version,
+        "topology_component": (
+            "stage5_frozen_base_provider_pack_with_skill_ids"
+            if stage == "stage5"
+            else "stage6_overlay_composed"
+        ),
         "source_checkpoint": str(source_checkpoint),
         "execution_mode": "force_provider_first_white_move_then_release",
         "black_policy": "adversarial",

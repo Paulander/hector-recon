@@ -10,12 +10,12 @@ This is a non-causal execution-binding manifest. It does not run labels, change 
 
 ## Bound Jobs
 
-- `job.krk.forced_provider_control.c715487480c5` stage=`stage5` provider=`krk.stage0_basin` topology=`stage5_validated_v1` profile=`handoff_composition_v1`
-- `job.krk.forced_provider_control.150c41c3b1ad` stage=`stage5` provider=`krk.edge_trap_close` topology=`stage5_validated_v1` profile=`handoff_composition_v1`
-- `job.krk.forced_provider_control.7ab58d03a5bc` stage=`stage5` provider=`krk.edge_trap_enemy_between` topology=`stage5_validated_v1` profile=`handoff_composition_v1`
-- `job.krk.forced_provider_control.adde0e92f3a3` stage=`stage5` provider=`krk.edge_trap_wrong_tempo` topology=`stage5_validated_v1` profile=`handoff_composition_v1`
-- `job.krk.forced_provider_control.7474bd7cf9de` stage=`stage5` provider=`krk.stage0_basin` topology=`stage5_validated_v1` profile=`handoff_composition_v1`
-- `job.krk.forced_provider_control.cd9c093a0c99` stage=`stage5` provider=`krk.edge_trap_close` topology=`stage5_validated_v1` profile=`handoff_composition_v1`
+- `job.krk.forced_provider_control.c715487480c5` stage=`stage5` provider=`krk.stage0_basin` topology=`stage6_overlay_composed_v1` profile=`handoff_composition_v1`
+- `job.krk.forced_provider_control.150c41c3b1ad` stage=`stage5` provider=`krk.edge_trap_close` topology=`stage6_overlay_composed_v1` profile=`handoff_composition_v1`
+- `job.krk.forced_provider_control.7ab58d03a5bc` stage=`stage5` provider=`krk.edge_trap_enemy_between` topology=`stage6_overlay_composed_v1` profile=`handoff_composition_v1`
+- `job.krk.forced_provider_control.adde0e92f3a3` stage=`stage5` provider=`krk.edge_trap_wrong_tempo` topology=`stage6_overlay_composed_v1` profile=`handoff_composition_v1`
+- `job.krk.forced_provider_control.7474bd7cf9de` stage=`stage5` provider=`krk.stage0_basin` topology=`stage6_overlay_composed_v1` profile=`handoff_composition_v1`
+- `job.krk.forced_provider_control.cd9c093a0c99` stage=`stage5` provider=`krk.edge_trap_close` topology=`stage6_overlay_composed_v1` profile=`handoff_composition_v1`
 - `job.krk.forced_provider_control.6a22ba706f91` stage=`stage6` provider=`krk.stage0_basin` topology=`stage6_overlay_composed_v1` profile=`handoff_composition_v1`
 - `job.krk.forced_provider_control.5b9da3b441ec` stage=`stage6` provider=`krk.stage0_basin` topology=`stage6_overlay_composed_v1` profile=`handoff_composition_v1`
 - `job.krk.forced_provider_control.772216e525ec` stage=`stage6` provider=`krk.stage0_basin` topology=`stage6_overlay_composed_v1` profile=`handoff_composition_v1`

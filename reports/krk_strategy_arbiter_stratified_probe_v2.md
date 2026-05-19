@@ -6,6 +6,7 @@ This is a non-causal, replay-free probe. It evaluates strategy-arbiter selectors
 
 - Benchmark frames: `28`
 - Best selected-provider positive hit rate: `1.0`
+- Best forced-provider-control positive hit rate: `1.0`
 - Best forced-provider positive hit rate: `0.5`
 - Max-only classification counts: `{'forced_existing_provider_capacity_or_horizon_gap': 2, 'selected_playout_guardrail_or_horizon_caveat': 12}`
 
@@ -75,6 +76,38 @@ This is a non-causal, replay-free probe. It evaluates strategy-arbiter selectors
 - Positive hit rate: `0.5`
 - Selected mate rate: `0.25`
 
+### forced_provider_control_outcome / raw_global_score
+
+- Eligible frames: `8`
+- Eligible stage counts: `{'stage5': 4, 'stage6': 4}`
+- Selected labels: `{'mate': 7, 'max_plies': 1}`
+- Positive hit rate: `1.0`
+- Selected mate rate: `0.875`
+
+### forced_provider_control_outcome / normalized_score
+
+- Eligible frames: `8`
+- Eligible stage counts: `{'stage5': 4, 'stage6': 4}`
+- Selected labels: `{'mate': 7, 'max_plies': 1}`
+- Positive hit rate: `1.0`
+- Selected mate rate: `0.875`
+
+### forced_provider_control_outcome / provider_local_rank
+
+- Eligible frames: `8`
+- Eligible stage counts: `{'stage5': 4, 'stage6': 4}`
+- Selected labels: `{'mate': 7, 'max_plies': 1}`
+- Positive hit rate: `1.0`
+- Selected mate rate: `0.875`
+
+### forced_provider_control_outcome / stage_prior_heuristic
+
+- Eligible frames: `8`
+- Eligible stage counts: `{'stage5': 4, 'stage6': 4}`
+- Selected labels: `{'mate': 7, 'max_plies': 1}`
+- Positive hit rate: `1.0`
+- Selected mate rate: `0.875`
+
 ### same_move_unselected_provider_playout / raw_global_score
 
 - Eligible frames: `9`
@@ -109,7 +142,7 @@ This is a non-causal, replay-free probe. It evaluates strategy-arbiter selectors
 
 ## Decision
 
-- Status: `selected_playout_controls_promising_forced_stage7_still_weak`
+- Status: `protected_forced_controls_promising_stage7_gap_confirmed`
 - Runtime sandbox allowed: `False`
-- Recommended next step: `collect_or_review_forced_provider_controls_before_sandbox`
-- Interpretation: Selected protected-control playout labels are easy for simple selectors, but forced-provider Stage7 labels remain the harder and smaller stratum.
+- Recommended next step: `architecture_review_for_default_off_sandbox_skeleton_with_stage7_holdout`
+- Interpretation: Protected selected and forced-control labels are promising, while Stage7 forced-provider residuals remain a held-out challenge gap.

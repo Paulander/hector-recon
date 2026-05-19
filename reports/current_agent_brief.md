@@ -307,7 +307,20 @@ KRK forced provider label execution manifest v0:
 - `reports/krk_forced_provider_label_execution_manifest_v0.json`
 - `reports/krk_forced_provider_label_execution_manifest_v0.md`
 
-The execution manifest binds all `12` planned forced-provider control-label jobs to explicit topology/profile/checkpoint metadata. Stage5 jobs bind to the frozen Stage5 topology; Stage6 jobs bind to the promoted Stage6 overlay-composed topology. All bindings are valid and use `handoff_composition_v1`. The manifest generates no labels and changes no runtime behavior. Recommended next step: `run_bounded_forced_provider_control_labels`.
+The execution manifest binds all `12` planned forced-provider control-label jobs to explicit topology/profile/checkpoint metadata. Stage5 jobs bind to the Stage5 frozen provider pack as carried inside the promoted Stage6 overlay-composed topology, because the raw Stage5 topology predates canonical `skill_id` metadata and cannot be safely forced by `krk.*` provider id. Stage6 jobs also bind to the promoted Stage6 overlay-composed topology. All bindings are valid and use `handoff_composition_v1`. The manifest generates no labels and changes no runtime behavior. Recommended next step: `run_bounded_forced_provider_control_labels`.
+
+KRK forced provider control labels v0:
+
+- `reports/krk_forced_provider_control_labels_v0.json`
+- `reports/krk_forced_provider_control_labels_v0.md`
+- `reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json`
+- `reports/krk_control_plane_filtered_frames_with_forced_controls_v0.md`
+
+The bounded label run generated `12` non-causal forced-provider control labels. Stage5 controls are `6/6` mate and Stage6 controls are `3` mate / `3` max_plies. The original filtered frames remain unchanged; the labels are attached only in the separate augmented evidence artifact.
+
+Updated KRK strategy arbiter stratified probe v2:
+
+The stratified probe now uses the augmented forced-control evidence. Protected selected-control and forced-control labels are both promising (`1.0` best positive-hit rates), while forced Stage7 residual labels remain weaker (`0.5`). Decision: `protected_forced_controls_promising_stage7_gap_confirmed`. Runtime sandbox remains blocked until architecture review, and Stage7 residuals should stay held out from tuning.
 
 ## Performance Rules
 
