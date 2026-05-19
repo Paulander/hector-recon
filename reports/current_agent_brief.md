@@ -460,6 +460,14 @@ KRK selector stratified label plan v1:
 
 The label plan is bounded and non-causal. It proposes `11` h40 protected-control jobs across Stage 4/5/6, keeps Stage 7 training rows at `0`, and does not execute labels. Existing evidence already contains selected-playout, forced-provider, and held-out challenge labels, but it still needs cleaner guardrail/same-move compatibility labels before sandbox review. Runtime arbiter and selector sandbox remain blocked; the plan should be reviewed or replay-free extraction should be preferred before any label execution.
 
+KRK selector label plan replay-free review v1:
+
+- `scripts/review_krk_selector_label_plan_replay_free.py`
+- `reports/krk_selector_label_plan_replay_free_review_v1.json`
+- `reports/krk_selector_label_plan_replay_free_review_v1.md`
+
+The review found all `11` planned protected-control label jobs can be filled from existing artifacts (`compatible_target_label_available`) and require no new playouts. Decision: `planned_labels_replay_free_fillable`. The next safe step is to build a replay-free stratified selector label dataset from existing labels, not execute h40 jobs. Runtime arbiter, selector sandbox, Stage 7 repair/promotion, and Stage 8 training remain blocked.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -593,6 +601,8 @@ reports/krk_selector_objective_architecture_review_v1.json
 reports/krk_selector_objective_architecture_review_v1.md
 reports/krk_selector_stratified_label_plan_v1.json
 reports/krk_selector_stratified_label_plan_v1.md
+reports/krk_selector_label_plan_replay_free_review_v1.json
+reports/krk_selector_label_plan_replay_free_review_v1.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
