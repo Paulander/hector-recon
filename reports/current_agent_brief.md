@@ -634,6 +634,14 @@ KRK selector readiness after contrast probe review v0:
 
 The architecture review accepts that protected strategy-owner contrast signal is now present, but it still blocks selector sandbox/runtime arbiter work because selected-provider evidence is not diverse and Stage 7 held-out rows remain unresolved challenge cases. Decision: `selector_sandbox_blocked_selected_provider_evidence_missing`. The next allowed options are design-only selected-provider diversity evidence planning, a non-causal strategy-owner feature probe v2, or pausing runtime selector work.
 
+KRK selected-provider diversity evidence plan v0:
+
+- `scripts/plan_krk_selected_provider_diversity_evidence.py`
+- `reports/krk_selected_provider_diversity_evidence_plan_v0.json`
+- `reports/krk_selected_provider_diversity_evidence_plan_v0.md`
+
+The design-only plan scopes the remaining selector-readiness gap: find protected Stage 4/5/6 states where normal arbitration selects diverse validated provider families, with Stage 7 training rows still `0`. It permits only a replay-free scan first; any bounded sampling or label execution still requires a separate manifest and review. Decision: `selected_provider_diversity_evidence_plan_defined`.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -815,6 +823,8 @@ reports/krk_strategy_owner_contrast_probe_v0.json
 reports/krk_strategy_owner_contrast_probe_v0.md
 reports/krk_selector_readiness_after_contrast_probe_review_v0.json
 reports/krk_selector_readiness_after_contrast_probe_review_v0.md
+reports/krk_selected_provider_diversity_evidence_plan_v0.json
+reports/krk_selected_provider_diversity_evidence_plan_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

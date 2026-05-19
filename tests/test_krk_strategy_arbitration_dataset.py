@@ -387,6 +387,17 @@ assert _selector_after_contrast_review_spec.loader is not None
 _selector_after_contrast_review = importlib.util.module_from_spec(_selector_after_contrast_review_spec)
 _selector_after_contrast_review_spec.loader.exec_module(_selector_after_contrast_review)
 
+_selected_provider_diversity_plan_spec = importlib.util.spec_from_file_location(
+    "plan_krk_selected_provider_diversity_evidence",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "plan_krk_selected_provider_diversity_evidence.py",
+)
+assert _selected_provider_diversity_plan_spec is not None
+assert _selected_provider_diversity_plan_spec.loader is not None
+_selected_provider_diversity_plan = importlib.util.module_from_spec(_selected_provider_diversity_plan_spec)
+_selected_provider_diversity_plan_spec.loader.exec_module(_selected_provider_diversity_plan)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -3612,3 +3623,33 @@ def test_krk_selector_readiness_after_contrast_probe_review_blocks_sandbox(tmp_p
     assert review["decision"]["status"] == "selector_sandbox_blocked_selected_provider_evidence_missing"
     assert review["decision"]["selector_sandbox_ready"] is False
     assert review["decision"]["recommended_next_step"] == "design_non_causal_selected_provider_diversity_evidence_plan"
+
+
+def test_krk_selected_provider_diversity_evidence_plan_is_design_only(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    (reports / "krk_selector_readiness_after_contrast_probe_review_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_architecture_review",
+                "evidence": {"selected_training_provider_families": ["edge_trap"]},
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_selected_provider_diversity_plan, "ROOT", root)
+
+    plan = _selected_provider_diversity_plan.build_plan()
+
+    assert plan["schema_version"] == "krk_selected_provider_diversity_evidence_plan.v0"
+    assert plan["causal_status"] == "non_causal_design_plan"
+    assert plan["runtime_behavior_changed"] is False
+    assert plan["runtime_arbiter_implemented"] is False
+    assert plan["stage7_promotion_allowed"] is False
+    assert plan["stage8_training_allowed"] is False
+    assert plan["labels_generated_in_this_slice"] is False
+    assert plan["evidence_gap"]["current_selected_training_provider_families"] == ["edge_trap"]
+    assert plan["minimum_future_evidence"]["stage7_training_rows"] == 0
+    assert plan["decision"]["selector_sandbox_ready"] is False
+    assert plan["decision"]["recommended_next_step"] == "run_replay_free_selected_provider_diversity_scan"

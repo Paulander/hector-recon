@@ -1,0 +1,74 @@
+{
+  "allowed_collection_phases": [
+    {
+      "description": "Search existing Stage4/5/6 artifacts for selected provider families beyond stage0_basin/edge_trap.",
+      "phase": "replay_free_scan",
+      "status": "allowed"
+    },
+    {
+      "description": "If replay-free scan fails, propose small h40 protected-only sampling jobs with no Stage7 rows.",
+      "phase": "bounded_protected_sampling_manifest",
+      "status": "design_only_until_reviewed"
+    },
+    {
+      "description": "Run labels only after an explicit manifest and review, with diagnostic caches and failure traces only.",
+      "phase": "label_execution",
+      "status": "blocked_until_manifest_review"
+    }
+  ],
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "selector_sandbox",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_design_plan",
+  "decision": {
+    "recommended_next_step": "run_replay_free_selected_provider_diversity_scan",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "selected_provider_diversity_evidence_plan_defined"
+  },
+  "evidence_gap": {
+    "current_selected_training_provider_families": [
+      "edge_trap"
+    ],
+    "gap_id": "selected_provider_family_diversity_missing",
+    "required_selected_provider_families": 3,
+    "stage7_training_rows_allowed": 0
+  },
+  "gameplay_topology_mutation": false,
+  "labels_generated_in_this_slice": false,
+  "minimum_future_evidence": {
+    "distinct_selected_provider_families": 3,
+    "horizon": 40,
+    "max_selected_provider_family_dominance": 0.7,
+    "protected_stages": [
+      "stage4",
+      "stage5",
+      "stage6"
+    ],
+    "stage7_training_rows": 0
+  },
+  "purpose": "Fill the remaining selector-readiness gap by finding protected Stage4/5/6 states where normal arbitration selects diverse validated providers, without using Stage7 training rows.",
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_selected_provider_diversity_evidence_plan.v0",
+  "source_artifacts": [
+    "reports/krk_selector_readiness_after_contrast_probe_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "target_provider_families": [
+    "stage0_basin",
+    "edge_trap",
+    "fence_established",
+    "drive_to_edge"
+  ]
+}
