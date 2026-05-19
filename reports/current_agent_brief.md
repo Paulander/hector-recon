@@ -35,6 +35,7 @@ Current interpretation:
 - The latest arbitration probe established shared terminal-space provider comparison infrastructure but did not justify a causal arbitration change.
 - The first unified arbitration sample was intentionally small and underpowered; its sampled residuals were high `box_area_relevance`, so low box relevance / near-edge phase boundary is not yet established as the explanation.
 - The offline training-objective benchmark did not justify a runtime sandbox: simple pairwise/ranked visible-term scoring underperformed the current learned scorer, visible log-odds/box heuristics improved top-1 only modestly while worsening hard-negative/draw behavior, and oracle ceilings remain high; current status is `ranking_calibration_gap`.
+- The ranking calibration audit refined that to `term_collision_and_state_local_ranking_gap`: winning-nonoptimal hard negatives heavily outnumber positives and share broad visible progress/safety terms, so another runtime repair should wait for a state-local contrastive/interaction diagnosis or architecture review.
 
 ## Hard Invariants
 

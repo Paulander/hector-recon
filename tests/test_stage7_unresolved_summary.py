@@ -138,6 +138,15 @@ assert _training_benchmark_spec.loader is not None
 _training_benchmark = importlib.util.module_from_spec(_training_benchmark_spec)
 _training_benchmark_spec.loader.exec_module(_training_benchmark)
 
+_ranking_calibration_spec = importlib.util.spec_from_file_location(
+    "audit_stage7_ranking_calibration",
+    Path(__file__).resolve().parents[1] / "scripts" / "audit_stage7_ranking_calibration.py",
+)
+assert _ranking_calibration_spec is not None
+assert _ranking_calibration_spec.loader is not None
+_ranking_calibration = importlib.util.module_from_spec(_ranking_calibration_spec)
+_ranking_calibration_spec.loader.exec_module(_ranking_calibration)
+
 
 def test_stage7_unresolved_legal_first_summary_marks_selection_gap_and_capacity_probe(tmp_path):
     probe = {
@@ -1058,3 +1067,72 @@ def test_stage7_training_benchmark_tie_breaks_without_label_leakage():
     ranked = _training_benchmark._rank_labels(labels, lambda _label: 0.0)
 
     assert [item["move"] for item in ranked] == ["a1a2", "b1b2"]
+
+
+def test_stage7_ranking_calibration_audit_identifies_term_collision(tmp_path):
+    seed = {
+        "trajectories": [
+            {
+                "white_training_steps": [
+                    {
+                        "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+                        "move": "a6a5",
+                        "legal_move_labels": [
+                            {
+                                "move": "a6a5",
+                                "label": 1,
+                                "target_class": "optimal_dtm_move",
+                                "move_shape_terms": ["candidate_is_rook_move"],
+                                "post_move_terms": ["box_area_decreases_after_move", "rook_safe_after_move"],
+                            },
+                            {
+                                "move": "a6a4",
+                                "label": 0,
+                                "target_class": "winning_nonoptimal_move",
+                                "move_shape_terms": ["candidate_is_rook_move"],
+                                "post_move_terms": ["box_area_decreases_after_move", "rook_safe_after_move"],
+                            },
+                        ],
+                    }
+                ]
+            }
+        ]
+    }
+    benchmark = {
+        "schema_version": "stage7_training_objective_benchmark.v1",
+        "models": [
+            {
+                "model_id": "visible_term_log_odds_scorer",
+                "test": {
+                    "top1_dtm_positive_accuracy": 0.5,
+                    "top3_dtm_positive_accuracy": 1.0,
+                    "dtm_optimal_top1_accuracy": 0.5,
+                    "hard_negative_above_positive_rate": 0.5,
+                    "draw_stalemate_candidate_top1_rate": 0.0,
+                    "first_miss": {
+                        "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+                        "selected_move": "a6a4",
+                        "selected_target_class": "winning_nonoptimal_move",
+                        "positive_rank": 2,
+                    },
+                },
+            }
+        ],
+    }
+    (tmp_path / "stage7_post_box_dtm_trajectory_seed_expanded_h40.json").write_text(
+        json.dumps(seed), encoding="utf-8"
+    )
+    (tmp_path / "stage7_training_objective_benchmark.json").write_text(
+        json.dumps(benchmark), encoding="utf-8"
+    )
+
+    audit = _ranking_calibration.build_audit(tmp_path)
+
+    assert audit["schema_version"] == "stage7_ranking_calibration_audit.v1"
+    assert audit["causal_status"] == "non_causal_offline_audit"
+    assert audit["runtime_behavior_changed"] is False
+    assert audit["stage7_promotion_allowed"] is False
+    assert audit["stage8_training_allowed"] is False
+    assert audit["candidate_status"] == "term_collision_and_state_local_ranking_gap"
+    terms = audit["term_collision_summary"]["high_collision_terms"]
+    assert any(item["term"] == "post_move_terms.box_area_decreases_after_move" for item in terms)
