@@ -147,6 +147,15 @@ assert _ranking_calibration_spec.loader is not None
 _ranking_calibration = importlib.util.module_from_spec(_ranking_calibration_spec)
 _ranking_calibration_spec.loader.exec_module(_ranking_calibration)
 
+_state_local_contrast_spec = importlib.util.spec_from_file_location(
+    "audit_stage7_state_local_contrast",
+    Path(__file__).resolve().parents[1] / "scripts" / "audit_stage7_state_local_contrast.py",
+)
+assert _state_local_contrast_spec is not None
+assert _state_local_contrast_spec.loader is not None
+_state_local_contrast = importlib.util.module_from_spec(_state_local_contrast_spec)
+_state_local_contrast_spec.loader.exec_module(_state_local_contrast)
+
 
 def test_stage7_unresolved_legal_first_summary_marks_selection_gap_and_capacity_probe(tmp_path):
     probe = {
@@ -1136,3 +1145,51 @@ def test_stage7_ranking_calibration_audit_identifies_term_collision(tmp_path):
     assert audit["candidate_status"] == "term_collision_and_state_local_ranking_gap"
     terms = audit["term_collision_summary"]["high_collision_terms"]
     assert any(item["term"] == "post_move_terms.box_area_decreases_after_move" for item in terms)
+
+
+def test_stage7_state_local_contrast_audit_marks_single_term_separability(tmp_path):
+    seed = {
+        "trajectories": [
+            {
+                "white_training_steps": [
+                    {
+                        "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+                        "move": "a6a5",
+                        "legal_move_labels": [
+                            {
+                                "move": "a6a5",
+                                "label": 1,
+                                "target_class": "optimal_dtm_move",
+                                "move_shape_terms": ["candidate_is_rook_move"],
+                                "post_move_terms": ["box_area_decreases_after_move", "rook_safe_after_move"],
+                            },
+                            {
+                                "move": "a6a4",
+                                "label": 0,
+                                "target_class": "winning_nonoptimal_move",
+                                "move_shape_terms": ["candidate_is_rook_move"],
+                                "post_move_terms": ["rook_safe_after_move"],
+                            },
+                        ],
+                    }
+                ]
+            }
+        ]
+    }
+    (tmp_path / "stage7_post_box_dtm_trajectory_seed_expanded_h40.json").write_text(
+        json.dumps(seed), encoding="utf-8"
+    )
+    (tmp_path / "stage7_ranking_calibration_audit.json").write_text(
+        json.dumps({"candidate_status": "term_collision_and_state_local_ranking_gap"}), encoding="utf-8"
+    )
+
+    audit = _state_local_contrast.build_audit(tmp_path)
+
+    assert audit["schema_version"] == "stage7_state_local_contrast_audit.v1"
+    assert audit["causal_status"] == "non_causal_offline_audit"
+    assert audit["runtime_behavior_changed"] is False
+    assert audit["stage7_promotion_allowed"] is False
+    assert audit["stage8_training_allowed"] is False
+    assert audit["candidate_status"] == "state_local_single_terms_available"
+    assert audit["diagnosis_counts"]["single_terms_separate_positive_from_hard_negative"] == 1
+    assert audit["recommended_next_step"] == "non-causal visible term refinement audit before any runtime patch"
