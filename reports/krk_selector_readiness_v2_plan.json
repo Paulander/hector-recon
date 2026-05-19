@@ -1,0 +1,95 @@
+{
+  "blocked_by_current_evidence": [
+    "class_imbalance",
+    "selected_provider_family_dominance",
+    "insufficient_non_stage0_conversion_positive_ownership_examples",
+    "same_move_compatibility_not_executed_in_bounded_out_of_sample_run"
+  ],
+  "causal_status": "non_causal_design_plan",
+  "decision": {
+    "recommended_next_step": "build_non_causal_strategy_owner_contrast_dataset_v0",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "selector_readiness_v2_defined_runtime_sandbox_blocked"
+  },
+  "gameplay_topology_mutation": false,
+  "next_allowed_evidence_slice": {
+    "causal_status": "non_causal_only",
+    "forbidden": [
+      "runtime_arbiter",
+      "selector_sandbox",
+      "stage7_repair",
+      "stage7_promotion",
+      "stage8_training"
+    ],
+    "goal": "Find or collect small protected-control states where multiple providers are plausible and non-stage0 provider ownership has conversion evidence.",
+    "name": "strategy_owner_contrast_dataset_v0"
+  },
+  "purpose": "Prevent future selector sandbox reviews from treating guardrail-positive, single-provider evidence as strategy-arbitration evidence.",
+  "readiness_requirements_v2": [
+    {
+      "description": "Protected-control labels must include enough positive and negative examples per target semantics.",
+      "minimum": {
+        "min_positive_negative_ratio": 0.5,
+        "overall_negative_count": 6,
+        "overall_positive_count": 6
+      },
+      "requirement_id": "label_balance"
+    },
+    {
+      "description": "Selected and candidate provider evidence must not be dominated by one provider family.",
+      "minimum": {
+        "distinct_conversion_positive_provider_families": 2,
+        "distinct_selected_provider_families": 3,
+        "max_selected_provider_family_dominance": 0.7
+      },
+      "requirement_id": "provider_diversity"
+    },
+    {
+      "description": "Evaluate selected playout, forced-provider conversion, and same-move compatibility separately.",
+      "minimum": {
+        "forced_provider_rows": 12,
+        "same_move_compatibility_rows_if_available": 4,
+        "selected_playout_rows": 12
+      },
+      "requirement_id": "label_semantics_split"
+    },
+    {
+      "description": "Protected controls must span Stage 4, Stage 5, and Stage 6 without using Stage 7 training rows.",
+      "minimum": {
+        "stage4_rows": 4,
+        "stage5_rows": 4,
+        "stage6_rows": 4,
+        "stage7_training_rows": 0
+      },
+      "requirement_id": "stage_coverage"
+    },
+    {
+      "description": "Stage 7 residuals remain held-out challenge cases unless explicitly reclassified by architecture review.",
+      "minimum": {
+        "stage7_runtime_repair_allowed": false,
+        "stage7_training_rows": 0
+      },
+      "requirement_id": "held_out_challenge_boundary"
+    },
+    {
+      "description": "A proposed selector must beat provider-prior/stage-prior/simple-score baselines on held-out protected controls.",
+      "minimum": {
+        "guardrail_regression_allowed": false,
+        "held_out_positive_hit_rate_margin": 0.1
+      },
+      "requirement_id": "selector_outperforms_non_selector_baselines"
+    }
+  ],
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_selector_readiness_v2_plan.v0",
+  "source_artifacts": [
+    "reports/krk_strategy_arbiter_out_of_sample_architecture_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

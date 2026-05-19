@@ -302,6 +302,15 @@ assert _out_of_sample_arch_review_spec.loader is not None
 _out_of_sample_arch_review = importlib.util.module_from_spec(_out_of_sample_arch_review_spec)
 _out_of_sample_arch_review_spec.loader.exec_module(_out_of_sample_arch_review)
 
+_selector_readiness_v2_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_selector_readiness_v2_plan",
+    Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_selector_readiness_v2_plan.py",
+)
+assert _selector_readiness_v2_spec is not None
+assert _selector_readiness_v2_spec.loader is not None
+_selector_readiness_v2 = importlib.util.module_from_spec(_selector_readiness_v2_spec)
+_selector_readiness_v2_spec.loader.exec_module(_selector_readiness_v2)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -2920,3 +2929,28 @@ def test_krk_out_of_sample_architecture_review_blocks_runtime_selector(tmp_path,
     assert review["decision"]["recommended_next_step"] == (
         "design_selector_readiness_v2_or_strategy_owner_contrast_dataset"
     )
+
+
+def test_krk_selector_readiness_v2_plan_requires_provider_diversity(tmp_path, monkeypatch):
+    root = tmp_path
+    review_path = root / _selector_readiness_v2.ARCH_REVIEW
+    review_path.parent.mkdir(parents=True, exist_ok=True)
+    review_path.write_text(
+        json.dumps({"causal_status": "non_causal_architecture_review"}),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_selector_readiness_v2, "ROOT", root)
+
+    plan = _selector_readiness_v2.build_plan()
+
+    assert plan["schema_version"] == "krk_selector_readiness_v2_plan.v0"
+    assert plan["causal_status"] == "non_causal_design_plan"
+    assert plan["runtime_behavior_changed"] is False
+    assert plan["runtime_arbiter_implemented"] is False
+    assert plan["stage7_promotion_allowed"] is False
+    assert plan["stage8_training_allowed"] is False
+    requirements = {item["requirement_id"]: item for item in plan["readiness_requirements_v2"]}
+    assert requirements["provider_diversity"]["minimum"]["distinct_selected_provider_families"] == 3
+    assert requirements["held_out_challenge_boundary"]["minimum"]["stage7_training_rows"] == 0
+    assert plan["decision"]["selector_sandbox_ready"] is False
+    assert plan["decision"]["recommended_next_step"] == "build_non_causal_strategy_owner_contrast_dataset_v0"

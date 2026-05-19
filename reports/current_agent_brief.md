@@ -562,6 +562,14 @@ KRK strategy arbiter out-of-sample architecture review v0:
 
 The review closes the current selector-readiness branch. It concludes the protected stack mostly converts on bounded out-of-sample controls, but the evidence does not establish a general strategy arbiter because selected-provider labels are class-imbalanced and dominated by `krk.stage0_basin`. Decision: `selector_sandbox_blocked_out_of_sample_controls_not_selector_diverse`. Next options are design-only `selector_readiness_v2` or a non-causal strategy-owner contrast dataset; runtime arbiter, selector sandbox, Stage 7 repair/promotion, and Stage 8 training remain blocked.
 
+KRK selector readiness v2 plan:
+
+- `scripts/summarize_krk_selector_readiness_v2_plan.py`
+- `reports/krk_selector_readiness_v2_plan.json`
+- `reports/krk_selector_readiness_v2_plan.md`
+
+The v2 readiness plan blocks future selector sandbox review unless evidence has label balance, provider diversity, explicit label-semantics splits, Stage 4/5/6 protected coverage, Stage 7 held-out status, and selector improvement over non-selector baselines. Current blockers are class imbalance, selected-provider dominance, insufficient non-stage0 conversion-positive ownership examples, and missing same-move compatibility execution. Decision: `selector_readiness_v2_defined_runtime_sandbox_blocked`. The next allowed evidence slice is a non-causal `strategy_owner_contrast_dataset_v0`.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -725,6 +733,8 @@ reports/krk_strategy_arbiter_out_of_sample_control_probe_v0.json
 reports/krk_strategy_arbiter_out_of_sample_control_probe_v0.md
 reports/krk_strategy_arbiter_out_of_sample_architecture_review_v0.json
 reports/krk_strategy_arbiter_out_of_sample_architecture_review_v0.md
+reports/krk_selector_readiness_v2_plan.json
+reports/krk_selector_readiness_v2_plan.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
