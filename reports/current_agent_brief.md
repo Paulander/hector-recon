@@ -353,6 +353,14 @@ KRK strategy arbiter observation frames v0:
 
 The collector performs one-ply trace-only observation over existing control-plane FENs using `handoff_composition_v1`. It generated `12` non-causal records: `9` Stage 7 held-out challenge rows, `2` Stage 4 control rows, and `1` Stage 5 control row. It ran no conversion playouts, training, runtime routing, DTM/tablebase lookup, topology mutation, or default changes. The selected providers were mostly `krk.stage0_basin` (`11/12`), with one `krk.fence_established` control row. The next allowed step is review of observation-frame separability before any sandbox.
 
+KRK strategy arbiter observation separability review v0:
+
+- `scripts/review_krk_strategy_arbiter_observation_separability.py`
+- `reports/krk_strategy_arbiter_observation_separability_review_v0.json`
+- `reports/krk_strategy_arbiter_observation_separability_review_v0.md`
+
+The review found the observation layer is audit-useful but under-instrumented for sandbox design. All `12` records had only one source term, and `11/12` records exposed only one provider family in retained proposals. Status: `observation_context_underinstrumented`. Runtime arbitration remains blocked. The next allowed implementation is trace-only enrichment of observation metadata with existing KRK context terms; no provider support, score changes, Stage 7 repair, Stage 7 promotion, or Stage 8 training is authorized.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -452,6 +460,8 @@ reports/krk_strategy_arbiter_observability_smoke_v0.json
 reports/krk_strategy_arbiter_observability_smoke_v0.md
 reports/krk_strategy_arbiter_observation_frames_v0.json
 reports/krk_strategy_arbiter_observation_frames_v0.md
+reports/krk_strategy_arbiter_observation_separability_review_v0.json
+reports/krk_strategy_arbiter_observation_separability_review_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
