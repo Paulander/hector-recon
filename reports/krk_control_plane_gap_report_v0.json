@@ -1,0 +1,126 @@
+{
+  "blocked_next_steps": [
+    "stage7_runtime_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_arbiter",
+    "runtime_internal_terminal",
+    "support_adapter_or_score_bonus",
+    "provider_penalty_or_stage0_suppression",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation",
+    "monolithic_later_stage_replacement"
+  ],
+  "causal_status": "non_causal_gap_report",
+  "coverage_snapshot": {
+    "monitor_record_count": 108,
+    "new_playouts_added": 0,
+    "plan_window_count": 13,
+    "records_by_source_stage": {
+      "stage4": 6,
+      "stage5": 8,
+      "stage6": 10,
+      "stage7": 9
+    },
+    "sequence_expanded_step_count": 195,
+    "sequence_seed_step_count": 25,
+    "strategy_proposal_count": 87,
+    "strategy_record_count": 33
+  },
+  "deferred_until_after_frame_export": [
+    "new_sequence_training_data_collection",
+    "runtime_strategy_arbiter_sandbox",
+    "runtime_internal_terminal_sandbox",
+    "stage8_training",
+    "stage7_promotion"
+  ],
+  "gameplay_topology_mutation": false,
+  "recommended_next_slice": {
+    "allowed": true,
+    "causal": false,
+    "new_playouts_allowed": false,
+    "reason": "Before collecting new data or sandboxing any mechanism, existing evidence should be exported into unified per-state frames so strategy, monitor, sequence, and guardrail tracks can be compared without Stage 7-specific scripts.",
+    "slice_id": "export_replay_free_control_plane_frames_v0"
+  },
+  "runtime_arbiter_added": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_control_plane_gap_report.v0",
+  "source_artifacts": [
+    "reports/krk_control_plane_manifest_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "stratified_gaps": [
+    {
+      "affected_tracks": [
+        "strategy_arbitration",
+        "internal_monitors",
+        "sequence_policy",
+        "promotion_review"
+      ],
+      "causal_allowed": false,
+      "evidence": "Manifest coverage is field-level; downstream probes still need per-state ControlPlaneEvidenceFrame exports.",
+      "gap_id": "no_unified_control_plane_frames",
+      "minimum_next_step": "export_replay_free_control_plane_frames_v0",
+      "priority": "p0"
+    },
+    {
+      "affected_tracks": [
+        "sequence_policy",
+        "curriculum_boundary_review"
+      ],
+      "causal_allowed": false,
+      "evidence": "Sequence labels have 25 seed steps and 195 expanded steps, concentrated in Stage 7 residuals.",
+      "gap_id": "sequence_labels_stage7_only",
+      "minimum_next_step": "design_stratified_sequence_data_plan_before_training",
+      "priority": "p1"
+    },
+    {
+      "affected_tracks": [
+        "plan_capsule_self_monitoring",
+        "strategy_arbitration"
+      ],
+      "causal_allowed": false,
+      "evidence": "Plan-window evidence currently has 13 windows, primarily Stage 7.",
+      "gap_id": "plan_window_evidence_stage7_only",
+      "minimum_next_step": "define_cross_stage_plan_window_export_requirements",
+      "priority": "p1"
+    },
+    {
+      "affected_tracks": [
+        "structural_growth",
+        "promotion_review"
+      ],
+      "causal_allowed": false,
+      "evidence": "GrowthGovernor status exists as plan/design evidence, not per-frame status.",
+      "gap_id": "growth_governor_not_frame_level",
+      "minimum_next_step": "non_causal_growth_governor_frame_status_design",
+      "priority": "p1"
+    },
+    {
+      "affected_tracks": [
+        "guardrail_definition",
+        "arbitrary_krk_validation"
+      ],
+      "causal_allowed": false,
+      "evidence": "Stage 4 is clean in the 500-sample profile but has an h40 overlay/base-control caveat.",
+      "gap_id": "stage4_h40_caveat_not_explained",
+      "minimum_next_step": "keep_as_guardrail_definition_caveat_until_control_frames_exist",
+      "priority": "p2"
+    },
+    {
+      "affected_tracks": [
+        "kpk_kqk_transfer",
+        "domain_generalization"
+      ],
+      "causal_allowed": false,
+      "evidence": "KPK/KQK bridge sanity is referenced historically but not exported as control-plane frames.",
+      "gap_id": "cross_domain_transfer_not_in_frame_contract_yet",
+      "minimum_next_step": "add_cross_domain_frame_requirements_after_krk_frame_export",
+      "priority": "p2"
+    }
+  ]
+}

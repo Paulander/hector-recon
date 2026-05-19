@@ -225,6 +225,13 @@ KRK control-plane manifest v0:
 
 The manifest maps existing artifacts into the control-plane contract without adding playouts. Existing coverage includes `33` strategy records, `87` StrategyProposalFrame entries, `108` monitor records, `13` Stage7 plan windows, `25` seed sequence steps, and `195` expanded sequence steps. The main gaps are: no unified per-state `ControlPlaneEvidenceFrame` export yet, GrowthGovernor status is not frame-level, sequence examples are Stage7-only, and plan windows are Stage7-only. Recommended next slice: `stratified_control_plane_gap_report_v0`.
 
+KRK control-plane gap report v0:
+
+- `reports/krk_control_plane_gap_report_v0.json`
+- `reports/krk_control_plane_gap_report_v0.md`
+
+The gap report keeps the architecture work non-causal and selects `export_replay_free_control_plane_frames_v0` as the next implementation slice. It defers new sequence data collection, runtime strategy arbiter sandboxing, runtime internal-terminal sandboxing, Stage 8 training, and Stage 7 promotion until after unified per-state control-plane frames exist.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -306,6 +313,8 @@ reports/krk_control_plane_evidence_contract_v0.json
 reports/krk_control_plane_evidence_contract_v0.md
 reports/krk_control_plane_manifest_v0.json
 reports/krk_control_plane_manifest_v0.md
+reports/krk_control_plane_gap_report_v0.json
+reports/krk_control_plane_gap_report_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

@@ -147,6 +147,15 @@ assert _control_plane_manifest_spec.loader is not None
 _control_plane_manifest = importlib.util.module_from_spec(_control_plane_manifest_spec)
 _control_plane_manifest_spec.loader.exec_module(_control_plane_manifest)
 
+_control_plane_gap_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_control_plane_gap_report",
+    Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_control_plane_gap_report.py",
+)
+assert _control_plane_gap_spec is not None
+assert _control_plane_gap_spec.loader is not None
+_control_plane_gap = importlib.util.module_from_spec(_control_plane_gap_spec)
+_control_plane_gap_spec.loader.exec_module(_control_plane_gap)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -1537,3 +1546,58 @@ def test_krk_control_plane_manifest_maps_existing_artifacts_without_playouts(tmp
     assert "strategy_proposal_frames" in manifest["summary"]["covered_contract_fields"]
     assert "internal_monitor_records" in manifest["summary"]["covered_contract_fields"]
     assert "unified_frame_export_missing" in {gap["gap_id"] for gap in manifest["gaps"]}
+
+
+def test_krk_control_plane_gap_report_recommends_replay_free_frame_export(tmp_path):
+    root = tmp_path
+    manifest_path = root / _control_plane_gap.MANIFEST
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_manifest",
+                "runtime_behavior_changed": False,
+                "runtime_defaults_changed": False,
+                "runtime_dtm_or_tablebase_lookup": False,
+                "gameplay_topology_mutation": False,
+                "stage7_promotion_allowed": False,
+                "stage8_training_allowed": False,
+                "summary": {
+                    "strategy_record_count": 2,
+                    "strategy_proposal_count": 3,
+                    "monitor_record_count": 4,
+                    "plan_window_count": 1,
+                    "sequence_seed_step_count": 2,
+                    "sequence_expanded_step_count": 5,
+                    "new_playouts_added": 0,
+                },
+                "field_coverage": [
+                    {
+                        "field": "strategy_proposal_frames",
+                        "summary": {"records_by_source_stage": {"stage5": 1, "stage7": 1}},
+                    }
+                ],
+                "blocked_next_steps": ["stage7_runtime_repair", "runtime_arbiter"],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    report = _control_plane_gap.build_gap_report(root)
+
+    assert report["schema_version"] == "krk_control_plane_gap_report.v0"
+    assert report["causal_status"] == "non_causal_gap_report"
+    assert report["runtime_behavior_changed"] is False
+    assert report["runtime_arbiter_added"] is False
+    assert report["runtime_terminals_added"] is False
+    assert report["stage7_promotion_allowed"] is False
+    assert report["stage8_training_allowed"] is False
+    assert report["recommended_next_slice"]["slice_id"] == (
+        "export_replay_free_control_plane_frames_v0"
+    )
+    assert report["recommended_next_slice"]["causal"] is False
+    assert report["recommended_next_slice"]["new_playouts_allowed"] is False
+    assert "no_unified_control_plane_frames" in {
+        gap["gap_id"] for gap in report["stratified_gaps"]
+    }
+    assert "stage8_training" in report["deferred_until_after_frame_export"]
