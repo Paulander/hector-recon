@@ -39,6 +39,15 @@ assert _decision_gate_spec.loader is not None
 _decision_gate = importlib.util.module_from_spec(_decision_gate_spec)
 _decision_gate_spec.loader.exec_module(_decision_gate)
 
+_missing_feature_audit_spec = importlib.util.spec_from_file_location(
+    "audit_krk_strategy_missing_features",
+    Path(__file__).resolve().parents[1] / "scripts" / "audit_krk_strategy_missing_features.py",
+)
+assert _missing_feature_audit_spec is not None
+assert _missing_feature_audit_spec.loader is not None
+_missing_feature_audit = importlib.util.module_from_spec(_missing_feature_audit_spec)
+_missing_feature_audit_spec.loader.exec_module(_missing_feature_audit)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -253,3 +262,50 @@ def test_krk_strategy_arbitration_decision_gate_selects_missing_feature(tmp_path
     assert gate["stage8_training_allowed"] is False
     assert gate["selected_status"] == "missing_feature_first"
     assert gate["recommendation"]["next_class"] == "non_causal_terminal_affordance_candidate_audit"
+
+
+def test_krk_strategy_missing_feature_audit_proposes_non_causal_candidates(tmp_path):
+    report_root = tmp_path / "reports" / "strategy_arbitration"
+    report_root.mkdir(parents=True)
+    (report_root / "krk_strategy_arbitration_dataset_v0.json").write_text(
+        json.dumps(
+            {
+                "summary": {"record_count": 1, "proposal_count": 1},
+                "records": [
+                    {
+                        "state_id": "state.edge",
+                        "source_stage": "stage7",
+                        "result_label": {"current_graph_h40": "max_plies"},
+                        "terminal_space_context": {
+                            "black_king_edge_bucket": "at_edge",
+                            "box_area_relevance": "low",
+                            "edge_net_pressure_proxy": True,
+                            "white_king_can_improve_support": True,
+                        },
+                        "strategy_proposals": [{"provider_id": "krk.stage0_basin"}],
+                        "hypothesis_labels": ["missing_feature_candidate"],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (report_root / "krk_strategy_arbitration_probe_v0.json").write_text(
+        json.dumps({"decision": {"status": "missing_feature_first"}}), encoding="utf-8"
+    )
+    (report_root / "stage7_challenge_set_manifest.json").write_text(
+        json.dumps({"summary": {"challenge_family_count": 6}}), encoding="utf-8"
+    )
+
+    audit = _missing_feature_audit.build_audit(report_root)
+
+    assert audit["schema_version"] == "krk_strategy_missing_feature_audit.v0"
+    assert audit["causal_status"] == "non_causal_audit"
+    assert audit["runtime_behavior_changed"] is False
+    assert audit["stage7_promotion_allowed"] is False
+    assert audit["stage8_training_allowed"] is False
+    assert audit["recommended_next_step"] == (
+        "stop_for_architecture_review_before_any_terminal_or_affordance_runtime_sandbox"
+    )
+    assert {candidate["causal_status"] for candidate in audit["candidates"]} == {"non_causal"}
+    assert {candidate["promotion_status"] for candidate in audit["candidates"]} == {"proposed"}

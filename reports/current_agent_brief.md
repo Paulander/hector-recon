@@ -126,6 +126,13 @@ Strategy arbitration decision gate:
 
 The gate selected `missing_feature_first`. The next and final allowed slice before review is a non-causal terminal/affordance candidate audit and separability report. Runtime arbiter implementation remains blocked.
 
+Missing-feature candidate audit:
+
+- `reports/strategy_arbitration/krk_strategy_missing_feature_candidates.json`
+- `reports/strategy_arbitration/krk_strategy_missing_feature_candidates.md`
+
+The audit proposed six non-causal terminal/affordance candidates: `edge_net_affordance`, `king_support_conversion_affordance`, `box_shrink_exit_condition`, `phase_boundary_near_edge`, `fence_or_cut_repair_affordance`, and `plan_selection_needed`. These remain `proposed` and non-causal. The next step is architecture review before any terminal/affordance runtime sandbox.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -167,6 +174,8 @@ reports/strategy_arbitration/stage7_challenge_set_manifest.json
 reports/strategy_arbitration/stage7_challenge_set_manifest.md
 reports/strategy_arbitration/krk_strategy_arbitration_decision_gate.json
 reports/strategy_arbitration/krk_strategy_arbitration_decision_gate.md
+reports/strategy_arbitration/krk_strategy_missing_feature_candidates.json
+reports/strategy_arbitration/krk_strategy_missing_feature_candidates.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
