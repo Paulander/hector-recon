@@ -479,6 +479,17 @@ assert _default_off_design_review_spec.loader is not None
 _default_off_design_review = importlib.util.module_from_spec(_default_off_design_review_spec)
 _default_off_design_review_spec.loader.exec_module(_default_off_design_review)
 
+_runtime_review_packet_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_strategy_arbiter_runtime_review_packet_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "summarize_krk_strategy_arbiter_runtime_review_packet_v1.py",
+)
+assert _runtime_review_packet_spec is not None
+assert _runtime_review_packet_spec.loader is not None
+_runtime_review_packet = importlib.util.module_from_spec(_runtime_review_packet_spec)
+_runtime_review_packet_spec.loader.exec_module(_runtime_review_packet)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -4193,3 +4204,77 @@ def test_krk_strategy_arbiter_default_off_design_review_blocks_implementation(tm
     assert review["decision"]["runtime_arbiter_allowed"] is False
     assert review["decision"]["selector_sandbox_ready"] is False
     assert review["decision"]["implementation_allowed"] is False
+
+
+def test_krk_strategy_arbiter_runtime_review_packet_keeps_implementation_blocked(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    (reports / "krk_protected_stage_status.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_status_audit",
+                "stage7_status": "local_valid_composition_quarantined",
+                "summary": {"current_architecture_profile": "handoff_composition_v1"},
+                "stage_statuses": [
+                    {
+                        "stage": "stage5_fence",
+                        "status": "protected_solved_conversion_profile",
+                        "solved_under_current_architecture": True,
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reports / "krk_selector_readiness_v3_plan.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_design_plan",
+                "decision": {"runtime_arbiter_allowed": False},
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reports / "krk_strategy_arbiter_default_off_design_review_v1.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_design_review",
+                "decision": {"implementation_allowed": False},
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reports / "krk_strategy_owner_contrast_probe_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_probe",
+                "metrics": {
+                    "training_provider_family_rates": {
+                        "drive_to_edge": {"positive": 1},
+                        "edge_trap": {"positive": 1},
+                    },
+                    "training_positive_label_count": 2,
+                    "training_negative_label_count": 1,
+                    "heldout_row_count": 0,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_runtime_review_packet, "ROOT", root)
+
+    packet = _runtime_review_packet.build_packet()
+
+    assert packet["schema_version"] == "krk_strategy_arbiter_runtime_review_packet.v1"
+    assert packet["causal_status"] == "non_causal_review_packet"
+    assert packet["runtime_behavior_changed"] is False
+    assert packet["runtime_arbiter_implemented"] is False
+    assert packet["selector_sandbox_implemented"] is False
+    assert packet["stage7_promotion_allowed"] is False
+    assert packet["stage8_training_allowed"] is False
+    assert packet["implementation_blocked_until_review"] is True
+    assert packet["decision"]["status"] == "runtime_review_packet_ready"
+    assert packet["decision"]["implementation_allowed"] is False
+    assert packet["decision"]["runtime_arbiter_allowed"] is False
+    assert packet["decision"]["recommended_next_step"] == "external_architecture_review_decision"

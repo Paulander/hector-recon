@@ -693,6 +693,14 @@ KRK strategy arbiter default-off design review v1:
 
 The design review converts selector-readiness v3 into a future sandbox contract for external review only. It defines default-off requirements, allowed/forbidden inputs and outputs, default-off equivalence checks, enabled-smoke constraints, and promotion gates. Decision: `default_off_strategy_arbiter_design_ready_for_external_review`. Runtime arbiter implementation, selector sandbox implementation, Stage 7 repair/promotion, Stage 8 training, runtime DTM/tablebase, and gameplay topology mutation remain blocked.
 
+KRK strategy arbiter runtime review packet v1:
+
+- `scripts/summarize_krk_strategy_arbiter_runtime_review_packet_v1.py`
+- `reports/krk_strategy_arbiter_runtime_review_packet_v1.json`
+- `reports/krk_strategy_arbiter_runtime_review_packet_v1.md`
+
+The runtime review packet packages the protected-stage status, selector-readiness v3, default-off sandbox design review, and strategy-owner contrast probe into a single external-review decision point. Decision: `runtime_review_packet_ready`. It asks whether to approve a future default-off strategy-arbiter sandbox implementation, request one bounded non-causal evidence slice, or reject the sandbox path for now. Implementation remains blocked until review.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -890,6 +898,8 @@ reports/krk_selector_readiness_v3_plan.json
 reports/krk_selector_readiness_v3_plan.md
 reports/krk_strategy_arbiter_default_off_design_review_v1.json
 reports/krk_strategy_arbiter_default_off_design_review_v1.md
+reports/krk_strategy_arbiter_runtime_review_packet_v1.json
+reports/krk_strategy_arbiter_runtime_review_packet_v1.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
