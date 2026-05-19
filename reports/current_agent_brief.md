@@ -405,6 +405,14 @@ KRK selector target dataset/probe v0:
 
 The replay-free dataset maps existing labels into explicit target kinds. It has `63` rows: `42` selected-playout examples, `12` forced-provider diagnostic examples, and `9` held-out Stage 7 challenge rows. Stage 7 contributes `0` training rows. The target probe reports training label counts `28` negative / `14` positive and status `target_dataset_ready_for_non_causal_baseline_probe`. Runtime arbiter and sandbox work remain blocked.
 
+KRK selector baseline probe v0:
+
+- `scripts/probe_krk_selector_baselines.py`
+- `reports/krk_selector_baseline_probe_v0.json`
+- `reports/krk_selector_baseline_probe_v0.md`
+
+The non-causal baseline probe evaluates only `selected_playout_success` target rows. It has `42` rows with label counts `28` negative / `14` positive. Majority-label accuracy is `0.667`; provider-prior leave-one-out accuracy is `0.833`; stage and active-landmark priors are `0.595`. Status: `simple_selector_baseline_promising_non_causal`. This suggests provider identity carries useful control-plane signal, but it does not authorize a runtime arbiter. The next non-causal step is to join selector targets with trace-only observation features.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -520,6 +528,8 @@ reports/krk_selector_target_dataset_v0.json
 reports/krk_selector_target_dataset_v0.md
 reports/krk_selector_target_probe_v0.json
 reports/krk_selector_target_probe_v0.md
+reports/krk_selector_baseline_probe_v0.json
+reports/krk_selector_baseline_probe_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
