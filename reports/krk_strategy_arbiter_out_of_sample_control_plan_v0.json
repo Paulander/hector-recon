@@ -1,0 +1,58 @@
+{
+  "schema_version": "krk_strategy_arbiter_out_of_sample_control_plan.v0",
+  "causal_status": "non_causal_collection_plan",
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_arbiter_implemented": false,
+  "source_artifacts": [
+    "reports/krk_strategy_arbiter_sandbox_readiness_criteria_v0.json",
+    "reports/krk_selector_balanced_label_dataset_v1.json",
+    "reports/krk_protected_stage_status.json"
+  ],
+  "purpose": "Define a small out-of-sample protected-control evidence slice before any strategy-arbiter sandbox review.",
+  "collection_bounds": {
+    "max_states": 12,
+    "per_stage_max": 4,
+    "stages": [
+      "stage4_wrong_tempo_control",
+      "stage5_fence_handoff",
+      "stage6_drive_to_edge"
+    ],
+    "horizon": 40,
+    "diagnostic_caches": true,
+    "trace_mode": "failures_only",
+    "parallel_workers_allowed": true,
+    "stage7_training_rows": 0,
+    "stage7_challenge_eval_optional": true,
+    "exhaustive_legal_first_sweeps": false
+  },
+  "required_labels": [
+    "selected_playout_success",
+    "forced_provider_conversion_for_selected_provider",
+    "same_move_provider_compatibility_when_available",
+    "guardrail_safe_ownership",
+    "shadow_candidate_delta"
+  ],
+  "state_selection_rules": [
+    "Exclude states already present in reports/krk_selector_balanced_label_dataset_v1.json.",
+    "Prefer protected Stage4/5/6 states from existing guardrail/sample artifacts.",
+    "Preserve Stage7 residuals as held-out challenge cases only.",
+    "Balance positive and negative selected-playout outcomes if replay-free labels are available.",
+    "If new labels are required, generate an execution manifest first and stop for review."
+  ],
+  "acceptance_for_future_execution": [
+    "No runtime arbiter or selector sandbox is implemented.",
+    "No Stage7 promotion or Stage8 training.",
+    "No runtime DTM/tablebase.",
+    "No topology mutation.",
+    "All jobs cite topology/profile/checkpoint metadata.",
+    "All outputs remain non-causal evidence."
+  ],
+  "decision": {
+    "status": "out_of_sample_control_plan_defined_execution_blocked",
+    "execute_collection_now": false,
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "recommended_next_step": "review_plan_then_generate_execution_manifest_if_needed"
+  }
+}

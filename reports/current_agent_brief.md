@@ -507,6 +507,13 @@ KRK strategy arbiter sandbox readiness criteria v0:
 
 The readiness criteria are now explicit. Current status: `readiness_criteria_defined_sandbox_still_blocked`. The main evidence gap is out-of-sample protected controls; any future sandbox must be default-off, KRK/profile scoped, traceable through `StrategyProposalFrame` plus provider provenance/maturity metadata, and guardrail-validated against Stage 4/5/6/1 and M1-M4. Runtime arbiter implementation remains blocked until architecture review or out-of-sample control collection.
 
+KRK strategy arbiter out-of-sample control plan v0:
+
+- `reports/krk_strategy_arbiter_out_of_sample_control_plan_v0.json`
+- `reports/krk_strategy_arbiter_out_of_sample_control_plan_v0.md`
+
+The out-of-sample plan defines a bounded protected-control evidence slice (`max_states=12`, h40, Stage 4/5/6 only, Stage 7 training rows `0`) but does not execute it. Decision: `out_of_sample_control_plan_defined_execution_blocked`. The next step should be review, then an execution manifest only if new labels are truly needed.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -656,6 +663,8 @@ reports/krk_selector_balanced_architecture_review_v1.json
 reports/krk_selector_balanced_architecture_review_v1.md
 reports/krk_strategy_arbiter_sandbox_readiness_criteria_v0.json
 reports/krk_strategy_arbiter_sandbox_readiness_criteria_v0.md
+reports/krk_strategy_arbiter_out_of_sample_control_plan_v0.json
+reports/krk_strategy_arbiter_out_of_sample_control_plan_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
