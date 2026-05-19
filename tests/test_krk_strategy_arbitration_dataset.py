@@ -21,6 +21,15 @@ assert _probe_spec.loader is not None
 _probe = importlib.util.module_from_spec(_probe_spec)
 _probe_spec.loader.exec_module(_probe)
 
+_challenge_manifest_spec = importlib.util.spec_from_file_location(
+    "summarize_stage7_challenge_set_manifest",
+    Path(__file__).resolve().parents[1] / "scripts" / "summarize_stage7_challenge_set_manifest.py",
+)
+assert _challenge_manifest_spec is not None
+assert _challenge_manifest_spec.loader is not None
+_challenge_manifest = importlib.util.module_from_spec(_challenge_manifest_spec)
+_challenge_manifest_spec.loader.exec_module(_challenge_manifest)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -173,3 +182,31 @@ def test_krk_strategy_arbitration_probe_v0_is_non_causal(tmp_path):
     assert probe["stage8_training_allowed"] is False
     assert probe["metrics"]["raw_global_provider_score"]["hit_rate"] == 0.0
     assert probe["metrics"]["provider_local_rank1_coverage"]["coverage_rate"] == 1.0
+
+
+def test_stage7_challenge_set_manifest_is_non_causal(tmp_path, monkeypatch):
+    artifact_root = tmp_path / "reports" / "structural_candidates"
+    strategy_root = tmp_path / "reports" / "strategy_arbitration"
+    artifact_root.mkdir(parents=True)
+    strategy_root.mkdir(parents=True)
+    (artifact_root / "stage7_evidence_merge_table.json").write_text(
+        json.dumps({"rows": [{"hypothesis_labels": ["strategy_arbitration_candidate"]}]}),
+        encoding="utf-8",
+    )
+    (artifact_root / "stage7_0926_move_shape_role_candidate_audit.json").write_text(
+        json.dumps({"schema_version": "x"}), encoding="utf-8"
+    )
+    (strategy_root / "krk_strategy_arbitration_dataset_v0.json").write_text(
+        json.dumps({"records": [{"state_id": "state.test"}]}), encoding="utf-8"
+    )
+    monkeypatch.chdir(tmp_path)
+
+    manifest = _challenge_manifest.build_manifest(artifact_root)
+
+    assert manifest["schema_version"] == "stage7_challenge_set_manifest.v1"
+    assert manifest["causal_status"] == "non_causal_manifest"
+    assert manifest["runtime_behavior_changed"] is False
+    assert manifest["stage7_promotion_allowed"] is False
+    assert manifest["stage8_training_allowed"] is False
+    assert manifest["summary"]["challenge_family_count"] >= 6
+    assert all(family["held_out_challenge_case"] for family in manifest["families"])

@@ -112,6 +112,13 @@ Probe v0 status:
 
 Probe v0 selected `missing_feature_first`: raw/normalized provider scores hit existing labels often, but the simple visible heuristic failed badly. The next allowed step is non-causal terminal/affordance candidate proposal plus separability audit, not a runtime arbiter.
 
+Stage 7 challenge set manifest:
+
+- `reports/strategy_arbitration/stage7_challenge_set_manifest.json`
+- `reports/strategy_arbitration/stage7_challenge_set_manifest.md`
+
+The manifest defines six held-out challenge families for strategy arbitration: 0926-like candidate moves, 069-like drive/fence arbitration, 2cc-like post-box continuation, Plan Capsule owned residuals, reward/contract mismatch, and `stage0_basin` fallback failures.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -149,6 +156,8 @@ reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.json
 reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.md
 reports/strategy_arbitration/krk_strategy_arbitration_probe_v0.json
 reports/strategy_arbitration/krk_strategy_arbitration_probe_v0.md
+reports/strategy_arbitration/stage7_challenge_set_manifest.json
+reports/strategy_arbitration/stage7_challenge_set_manifest.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
