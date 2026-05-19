@@ -98,6 +98,13 @@ reports/krk_strategy_arbitration_plan.json
 
 That plan specifies the first future implementation slice as a non-causal KRK strategy arbitration dataset/probe v0. It does not authorize a runtime arbiter, Stage 7 repair, Stage 7 promotion, or Stage 8 training.
 
+Phase 1 dataset status:
+
+- `reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.json`
+- `reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.md`
+
+Dataset v0 is replay-free and non-causal. It currently contains a small stratified set of Stage 7 challenge records plus Stage 5/6/4 validation records, with `33` records and `87` StrategyProposalFrame entries. It added no new h40 labels.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -131,6 +138,8 @@ reports/structural_candidates/stage7_pause_and_architecture_review.json
 reports/structural_candidates/stage7_pause_and_architecture_review.md
 reports/krk_strategy_arbitration_plan.json
 reports/krk_strategy_arbitration_plan.md
+reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.json
+reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
