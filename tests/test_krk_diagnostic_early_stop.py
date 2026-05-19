@@ -15,6 +15,7 @@ from scripts.test_krk_landmark_progress import (
     _compact_playout_trace,
     _composition_profile_metadata,
     _finalize_perf_profile,
+    _krk_strategy_arbiter_observation_for_suggestions,
     _merge_count_dict,
     _mate_in_one_available,
     _new_perf_profile,
@@ -97,6 +98,81 @@ def test_compact_playout_trace_keeps_selected_skill_and_top_suggestions():
     assert compact[0]["top_suggestions"] == [
         {"move": "h7d7", "skill_id": "krk.edge_trap_close", "score": 0.14}
     ]
+    assert "krk_strategy_arbiter_observation" not in compact[0]
+
+
+def test_strategy_arbiter_observation_is_trace_only_and_non_causal():
+    suggestions = [
+        {
+            "move": chess.Move.from_uci("h7d7"),
+            "score": 0.14,
+            "actuator": "actuator_1",
+            "meta": {"curriculum_label": "edge_trap_close"},
+        },
+        {
+            "move": chess.Move.from_uci("e1f2"),
+            "score": 33.0,
+            "actuator": "actuator_2",
+            "meta": {"curriculum_label": "stage0_basin"},
+        },
+    ]
+
+    observation = _krk_strategy_arbiter_observation_for_suggestions(
+        suggestions,
+        selected_suggestion=suggestions[1],
+        active_landmark_label="box_shrink",
+        visible_terms={
+            "active_landmark_label.box_shrink": True,
+            "irrelevant_false_term": False,
+        },
+    )
+
+    assert observation["schema_version"] == "krk_strategy_arbiter_observation.v0"
+    assert observation["causal_status"] == "non_causal_observation"
+    assert observation["direct_request"] is False
+    assert observation["score_delta"] == 0.0
+    assert observation["recommendation_only"] is True
+    assert observation["selected_provider_before_observation"] == "krk.stage0_basin"
+    assert observation["selected_move_before_observation"] == "e1f2"
+    assert observation["proposal_count"] == 2
+    assert observation["provider_candidates"][0]["provider_id"] == "krk.edge_trap_close"
+    assert observation["provider_candidates"][1]["provider_id"] == "krk.stage0_basin"
+    assert "provider_selection" in observation["blocked_causal_actions"]
+
+
+def test_compact_trace_preserves_strategy_arbiter_observation_metadata():
+    observation = {
+        "schema_version": "krk_strategy_arbiter_observation.v0",
+        "causal_status": "non_causal_observation",
+        "direct_request": False,
+        "score_delta": 0.0,
+    }
+
+    compact = _compact_playout_trace([
+        {
+            "ply": 0,
+            "turn": "white",
+            "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+            "move": "h7d7",
+            "resulting_fen": "8/8/8/8/8/8/8/8 b - - 1 1",
+            "engine": {
+                "move": "h7d7",
+                "confidence": 0.14,
+                "ticks": 8,
+                "suggestions": [
+                    {
+                        "move": "h7d7",
+                        "score": 0.14,
+                        "actuator": "actuator_1",
+                        "meta": {"curriculum_label": "edge_trap_close"},
+                    }
+                ],
+                "krk_strategy_arbiter_observation": observation,
+            },
+        }
+    ])
+
+    assert compact[0]["krk_strategy_arbiter_observation"] == observation
 
 
 def test_horizon_mate_in_one_available_detects_white_mate_at_limit():

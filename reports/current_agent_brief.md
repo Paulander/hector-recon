@@ -329,6 +329,15 @@ KRK strategy arbiter architecture review v1:
 
 The review allows only a default-off, trace-only `krk_strategy_arbiter_observability_skeleton_v0`. It explicitly does not authorize runtime provider selection, score changes, support adapters, Stage 7 repair, Stage 7 promotion, Stage 8 training, runtime DTM/tablebase, gameplay-time topology mutation, or M3/M4 arbitration updates. The next implementation, if attempted, must prove default-off equivalence and may attach only non-causal observation metadata when explicitly enabled.
 
+KRK strategy arbiter observability skeleton v0:
+
+- Implemented in `scripts/test_krk_landmark_progress.py` behind `--enable-krk-strategy-arbiter-observability`.
+- Default off means no `krk_strategy_arbiter_observation` metadata is emitted.
+- When explicitly enabled, the harness records non-causal `krk_strategy_arbiter_observation.v0` metadata after normal move selection.
+- The observation records already-materialized provider candidates, selected provider before observation, visible source terms, `direct_request=false`, `score_delta=0.0`, and blocked causal actions.
+- It does not change scores, selected moves, selected providers, topology, runtime defaults, DTM/tablebase use, or M1-M4 behavior.
+- A tiny paired evaluator check showed identical one-ply/conversion outcome metrics with the flag off vs on; the enabled run only added observation count.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
