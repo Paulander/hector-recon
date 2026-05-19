@@ -57,6 +57,15 @@ assert _feature_validation_spec.loader is not None
 _feature_validation = importlib.util.module_from_spec(_feature_validation_spec)
 _feature_validation_spec.loader.exec_module(_feature_validation)
 
+_monitor_records_spec = importlib.util.spec_from_file_location(
+    "extract_krk_strategy_monitor_records",
+    Path(__file__).resolve().parents[1] / "scripts" / "extract_krk_strategy_monitor_records.py",
+)
+assert _monitor_records_spec is not None
+assert _monitor_records_spec.loader is not None
+_monitor_records = importlib.util.module_from_spec(_monitor_records_spec)
+_monitor_records_spec.loader.exec_module(_monitor_records)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -402,3 +411,125 @@ def test_krk_feature_candidate_validation_types_candidates_without_runtime_effec
         "edge_net_affordance": "sandbox-blocked",
         "plan_selection_needed": "non-causal only",
     }
+
+
+def test_strategy_monitor_record_validation_roundtrip():
+    record = {
+        "schema_version": "strategy_monitor_record.v1",
+        "monitor_id": "monitor.krk.phase.state.test.0",
+        "monitor_type": "PhaseBoundaryMonitor",
+        "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+        "active_landmark_label": "box_shrink",
+        "state_id": "state.test",
+        "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+        "source_terms": ["black_king_edge_bucket in {at_edge, near_edge}"],
+        "missing_terms": ["successful_next_provider"],
+        "confidence": 0.5,
+        "associated_outcome": "max_plies",
+        "suggested_action_class": "audit_owner_phase",
+        "causal_status": "non_causal",
+        "promotion_status": "proposed",
+        "notes": "roundtrip",
+    }
+
+    _monitor_records.validate_strategy_monitor_record(json.loads(json.dumps(record)))
+
+
+def test_krk_strategy_monitor_record_extraction_is_non_causal(tmp_path):
+    report_root = tmp_path / "reports" / "strategy_arbitration"
+    report_root.mkdir(parents=True)
+    (report_root / "krk_strategy_arbitration_dataset_v0.json").write_text(
+        json.dumps(
+            {
+                "records": [
+                    {
+                        "state_id": "state.edge.fail",
+                        "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                        "active_landmark_label": "box_shrink",
+                        "source_stage": "stage7",
+                        "result_label": {"current_graph_h40": "max_plies"},
+                        "terminal_space_context": {
+                            "black_king_edge_bucket": "at_edge",
+                            "box_area_relevance": "low",
+                            "edge_net_pressure_proxy": True,
+                            "fence_exists": True,
+                            "fence_stable": False,
+                        },
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    (report_root / "krk_feature_candidate_validation_v0.json").write_text(
+        json.dumps(
+            {
+                "candidate_validations": [
+                    {
+                        "candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+                        "target_concept": "phase_boundary_near_edge",
+                        "typed_as": "needs refinement / companion terms",
+                        "mate_precision": 0.48,
+                        "max_plies_failure_precision": 0.52,
+                        "required_scope_or_companion_terms": ["successful_next_provider"],
+                        "typing_rationale": "mixed",
+                    },
+                    {
+                        "candidate_id": "cand.krk.strategy.king_support_conversion_affordance.v0",
+                        "target_concept": "king_support_conversion_affordance",
+                        "typed_as": "too broad / reject",
+                        "mate_precision": 0.4,
+                        "max_plies_failure_precision": 0.6,
+                        "required_scope_or_companion_terms": ["king_support_improvement_move_exists"],
+                        "typing_rationale": "too broad",
+                    },
+                    {
+                        "candidate_id": "cand.krk.strategy.plan_selection_needed.v0",
+                        "target_concept": "plan_selection_needed",
+                        "typed_as": "growth-pressure/internal monitor",
+                        "mate_precision": 0.0,
+                        "max_plies_failure_precision": 1.0,
+                        "required_scope_or_companion_terms": ["plan_capsule_context"],
+                        "typing_rationale": "stage7 only",
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    (report_root / "krk_strategy_missing_feature_candidates.json").write_text(
+        json.dumps(
+            {
+                "candidates": [
+                    {
+                        "candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+                        "proposed_change": {"target_concept": "phase_boundary_near_edge"},
+                        "source_terms": ["black_king_edge_bucket in {at_edge, near_edge}"],
+                    },
+                    {
+                        "candidate_id": "cand.krk.strategy.king_support_conversion_affordance.v0",
+                        "proposed_change": {"target_concept": "king_support_conversion_affordance"},
+                        "source_terms": ["white_king_support_available"],
+                    },
+                    {
+                        "candidate_id": "cand.krk.strategy.plan_selection_needed.v0",
+                        "proposed_change": {"target_concept": "plan_selection_needed"},
+                        "source_terms": ["stage7 residual"],
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    payload = _monitor_records.build_monitor_records(report_root)
+
+    assert payload["schema_version"] == "krk_strategy_monitor_records.v0"
+    assert payload["causal_status"] == "non_causal_monitor_extraction"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_defaults_changed"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["summary"]["rejected_definition_count"] == 1
+    assert {record["causal_status"] for record in payload["records"]} == {"non_causal"}
+    assert "RejectedFeatureDefinition" not in {record["monitor_type"] for record in payload["records"]}

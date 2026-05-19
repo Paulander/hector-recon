@@ -147,6 +147,13 @@ KRK Strategy Monitor v0 plan:
 
 The accepted interpretation is that the six candidates are monitor/internal-terminal candidates, not causal move-support affordances. The next non-causal direction is StrategyMonitorRecord extraction over existing artifacts if it can be done replay-free and cheaply. The monitor classes are `PhaseBoundaryMonitor`, `OwnerExitMonitor`, `RepairNeededMonitor`, `PlanSelectionNeededMonitor`, and `GrowthPressureMonitor`. No monitor is authorized to route providers, choose moves, mutate topology, or change runtime defaults.
 
+KRK Strategy Monitor records v0:
+
+- `reports/strategy_arbitration/krk_strategy_monitor_records_v0.json`
+- `reports/strategy_arbitration/krk_strategy_monitor_records_v0.md`
+
+The replay-free extraction produced five monitor definitions, one rejected definition, and `108` non-causal StrategyMonitorRecord entries over the existing arbitration dataset. `PhaseBoundaryMonitor` and `OwnerExitMonitor` remain mixed-outcome and require companion terms before any sandbox; `RepairNeededMonitor` and `PlanSelectionNeededMonitor` are failure-oriented internal monitors. The extraction does not authorize runtime terminals, provider routing, Stage 7 repair, Stage 7 promotion, or Stage 8 training. The next step is architecture review or targeted companion-term design.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -194,6 +201,8 @@ reports/strategy_arbitration/krk_feature_candidate_validation_v0.json
 reports/strategy_arbitration/krk_feature_candidate_validation_v0.md
 reports/strategy_arbitration/krk_strategy_monitor_v0_plan.json
 reports/strategy_arbitration/krk_strategy_monitor_v0_plan.md
+reports/strategy_arbitration/krk_strategy_monitor_records_v0.json
+reports/strategy_arbitration/krk_strategy_monitor_records_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
