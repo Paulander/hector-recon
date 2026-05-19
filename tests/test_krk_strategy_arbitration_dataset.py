@@ -376,6 +376,17 @@ assert _strategy_owner_probe_spec.loader is not None
 _strategy_owner_probe = importlib.util.module_from_spec(_strategy_owner_probe_spec)
 _strategy_owner_probe_spec.loader.exec_module(_strategy_owner_probe)
 
+_selector_after_contrast_review_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_selector_readiness_after_contrast_probe",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "summarize_krk_selector_readiness_after_contrast_probe.py",
+)
+assert _selector_after_contrast_review_spec is not None
+assert _selector_after_contrast_review_spec.loader is not None
+_selector_after_contrast_review = importlib.util.module_from_spec(_selector_after_contrast_review_spec)
+_selector_after_contrast_review_spec.loader.exec_module(_selector_after_contrast_review)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -3543,3 +3554,61 @@ def test_krk_strategy_owner_contrast_probe_blocks_selector_sandbox(tmp_path, mon
     assert probe["decision"]["status"] == "strategy_owner_contrast_signal_present_selector_sandbox_blocked"
     assert probe["decision"]["selector_sandbox_ready"] is False
     assert "heldout_stage7_contains_unresolved_all_negative_rows" in probe["findings"]
+
+
+def test_krk_selector_readiness_after_contrast_probe_review_blocks_sandbox(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    (reports / "krk_strategy_owner_contrast_dataset_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_dataset",
+                "decision": {
+                    "status": "strategy_owner_contrast_dataset_ready_for_non_causal_probe_selector_sandbox_blocked"
+                },
+                "readiness_v2_assessment": {
+                    "blockers": ["insufficient_selected_provider_family_diversity"],
+                    "contrast_probe_ready": True,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reports / "krk_strategy_owner_contrast_probe_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_probe",
+                "decision": {
+                    "status": "strategy_owner_contrast_signal_present_selector_sandbox_blocked"
+                },
+                "findings": [
+                    "protected_conversion_positive_provider_diversity_present",
+                    "protected_label_balance_present",
+                    "selected_provider_family_diversity_still_missing",
+                ],
+                "metrics": {
+                    "training_row_count": 9,
+                    "heldout_row_count": 4,
+                    "training_positive_label_count": 13,
+                    "training_negative_label_count": 11,
+                    "selected_training_provider_families": ["edge_trap"],
+                    "readiness_blockers": ["insufficient_selected_provider_family_diversity"],
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_selector_after_contrast_review, "ROOT", root)
+
+    review = _selector_after_contrast_review.build_review()
+
+    assert review["schema_version"] == "krk_selector_readiness_after_contrast_probe_review.v0"
+    assert review["causal_status"] == "non_causal_architecture_review"
+    assert review["runtime_behavior_changed"] is False
+    assert review["runtime_arbiter_implemented"] is False
+    assert review["stage7_promotion_allowed"] is False
+    assert review["stage8_training_allowed"] is False
+    assert review["decision"]["status"] == "selector_sandbox_blocked_selected_provider_evidence_missing"
+    assert review["decision"]["selector_sandbox_ready"] is False
+    assert review["decision"]["recommended_next_step"] == "design_non_causal_selected_provider_diversity_evidence_plan"

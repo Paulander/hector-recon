@@ -626,6 +626,14 @@ KRK strategy-owner contrast probe v0:
 
 The non-causal probe finds protected conversion-positive provider diversity and label balance are now present. It also confirms selector sandbox remains blocked: selected-provider evidence is still not diverse (`edge_trap` only), and held-out Stage 7 retains unresolved all-negative rows. Decision: `strategy_owner_contrast_signal_present_selector_sandbox_blocked`. The next step should be architecture review of selector readiness after contrast evidence, not runtime arbiter implementation.
 
+KRK selector readiness after contrast probe review v0:
+
+- `scripts/summarize_krk_selector_readiness_after_contrast_probe.py`
+- `reports/krk_selector_readiness_after_contrast_probe_review_v0.json`
+- `reports/krk_selector_readiness_after_contrast_probe_review_v0.md`
+
+The architecture review accepts that protected strategy-owner contrast signal is now present, but it still blocks selector sandbox/runtime arbiter work because selected-provider evidence is not diverse and Stage 7 held-out rows remain unresolved challenge cases. Decision: `selector_sandbox_blocked_selected_provider_evidence_missing`. The next allowed options are design-only selected-provider diversity evidence planning, a non-causal strategy-owner feature probe v2, or pausing runtime selector work.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -805,6 +813,8 @@ reports/krk_strategy_owner_contrast_control_labels_v0.json
 reports/krk_strategy_owner_contrast_control_labels_v0.md
 reports/krk_strategy_owner_contrast_probe_v0.json
 reports/krk_strategy_owner_contrast_probe_v0.md
+reports/krk_selector_readiness_after_contrast_probe_review_v0.json
+reports/krk_selector_readiness_after_contrast_probe_review_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
