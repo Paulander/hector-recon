@@ -493,6 +493,13 @@ KRK selector negative controls / balanced labels v1:
 
 Replay-free negative protected controls were identified from existing selector labels (`9` controls across Stage 4/5/6). The balanced dataset has `18` rows (`9` positive / `9` negative), with Stage 7 training rows still `0`. The balanced probe finds a non-causal provider/provenance signal (`provider_id`, `provider_family`, and `provider_maturity` LOO accuracy `0.778`), while active-landmark/stage-only baselines are weak. Decision: `balanced_labels_support_non_causal_selector_signal`. This still does not authorize a runtime arbiter or selector sandbox; it requires architecture review and explicit guardrail criteria first.
 
+KRK selector balanced architecture review v1:
+
+- `reports/krk_selector_balanced_architecture_review_v1.json`
+- `reports/krk_selector_balanced_architecture_review_v1.md`
+
+The balanced-label architecture review records the current selector status as `selector_signal_promising_sandbox_blocked_pending_readiness_criteria`. Explicit provider provenance/maturity can explain the useful signal, but the evidence remains too small and control-derived for runtime use. The next allowed slice is a design-only sandbox readiness criteria document. Runtime arbiter, selector sandbox implementation, Stage 7 repair/promotion, Stage 8 training, and M3/M4 arbitration updates remain blocked.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -638,6 +645,8 @@ reports/krk_selector_balanced_label_dataset_v1.json
 reports/krk_selector_balanced_label_dataset_v1.md
 reports/krk_selector_balanced_label_probe_v1.json
 reports/krk_selector_balanced_label_probe_v1.md
+reports/krk_selector_balanced_architecture_review_v1.json
+reports/krk_selector_balanced_architecture_review_v1.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
