@@ -66,6 +66,15 @@ assert _monitor_records_spec.loader is not None
 _monitor_records = importlib.util.module_from_spec(_monitor_records_spec)
 _monitor_records_spec.loader.exec_module(_monitor_records)
 
+_companion_audit_spec = importlib.util.spec_from_file_location(
+    "audit_krk_strategy_monitor_companion_terms",
+    Path(__file__).resolve().parents[1] / "scripts" / "audit_krk_strategy_monitor_companion_terms.py",
+)
+assert _companion_audit_spec is not None
+assert _companion_audit_spec.loader is not None
+_companion_audit = importlib.util.module_from_spec(_companion_audit_spec)
+_companion_audit_spec.loader.exec_module(_companion_audit)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -533,3 +542,61 @@ def test_krk_strategy_monitor_record_extraction_is_non_causal(tmp_path):
     assert payload["summary"]["rejected_definition_count"] == 1
     assert {record["causal_status"] for record in payload["records"]} == {"non_causal"}
     assert "RejectedFeatureDefinition" not in {record["monitor_type"] for record in payload["records"]}
+
+
+def test_krk_strategy_monitor_companion_audit_is_replay_free_and_non_causal(tmp_path):
+    report_root = tmp_path / "reports" / "strategy_arbitration"
+    report_root.mkdir(parents=True)
+    (report_root / "krk_strategy_monitor_companion_terms_v0.json").write_text(
+        json.dumps(
+            {
+                "companion_sets": [
+                    {
+                        "set_id": "phase_boundary_companions",
+                        "target_monitor_types": ["PhaseBoundaryMonitor"],
+                        "source_concepts": ["phase_boundary_near_edge"],
+                        "candidate_terms": [
+                            "current_owner",
+                            "safe_edge_net_tighten_move_exists",
+                            "active_landmark_label == box_shrink",
+                        ],
+                    }
+                ],
+                "blocked_next_steps": ["runtime_arbiter"],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (report_root / "krk_strategy_arbitration_dataset_v0.json").write_text(
+        json.dumps(
+            {
+                "records": [
+                    {
+                        "state_id": "state.test",
+                        "active_landmark_label": "box_shrink",
+                        "terminal_space_context": {
+                            "active_terminal_terms": ["safe_check_available"],
+                        },
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    payload = _companion_audit.build_audit(report_root)
+
+    assert payload["schema_version"] == "krk_strategy_monitor_companion_audit.v0"
+    assert payload["causal_status"] == "non_causal_audit"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_defaults_changed"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    statuses = {
+        term["term"]: term["availability_status"]
+        for companion_set in payload["companion_sets"]
+        for term in companion_set["terms"]
+    }
+    assert statuses["current_owner"] == "proxy_available"
+    assert statuses["active_landmark_label == box_shrink"] == "available_expression"
+    assert statuses["safe_edge_net_tighten_move_exists"] == "missing_requires_visible_extraction"
