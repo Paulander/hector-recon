@@ -218,6 +218,13 @@ KRK control-plane evidence contract v0:
 
 The contract defines non-causal `ControlPlaneEvidenceFrame` evidence and required subschemas: protected provider provenance, strategy proposal frames, internal monitor evidence, plan-capsule window evidence, sequence training examples, guardrail summaries, GrowthGovernor status, and PromotionGate status. Its recommended next slice is `control_plane_manifest_from_existing_artifacts_v0`: map existing artifacts into the contract replay-free, with no new playouts, no runtime consumers, no Stage 7 promotion, and no Stage 8 training.
 
+KRK control-plane manifest v0:
+
+- `reports/krk_control_plane_manifest_v0.json`
+- `reports/krk_control_plane_manifest_v0.md`
+
+The manifest maps existing artifacts into the control-plane contract without adding playouts. Existing coverage includes `33` strategy records, `87` StrategyProposalFrame entries, `108` monitor records, `13` Stage7 plan windows, `25` seed sequence steps, and `195` expanded sequence steps. The main gaps are: no unified per-state `ControlPlaneEvidenceFrame` export yet, GrowthGovernor status is not frame-level, sequence examples are Stage7-only, and plan windows are Stage7-only. Recommended next slice: `stratified_control_plane_gap_report_v0`.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -297,6 +304,8 @@ reports/krk_self_expansion_architecture_gate_v0.json
 reports/krk_self_expansion_architecture_gate_v0.md
 reports/krk_control_plane_evidence_contract_v0.json
 reports/krk_control_plane_evidence_contract_v0.md
+reports/krk_control_plane_manifest_v0.json
+reports/krk_control_plane_manifest_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

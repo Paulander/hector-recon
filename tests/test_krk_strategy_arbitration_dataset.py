@@ -138,6 +138,15 @@ assert _control_plane_contract_spec.loader is not None
 _control_plane_contract = importlib.util.module_from_spec(_control_plane_contract_spec)
 _control_plane_contract_spec.loader.exec_module(_control_plane_contract)
 
+_control_plane_manifest_spec = importlib.util.spec_from_file_location(
+    "build_krk_control_plane_manifest",
+    Path(__file__).resolve().parents[1] / "scripts" / "build_krk_control_plane_manifest.py",
+)
+assert _control_plane_manifest_spec is not None
+assert _control_plane_manifest_spec.loader is not None
+_control_plane_manifest = importlib.util.module_from_spec(_control_plane_manifest_spec)
+_control_plane_manifest_spec.loader.exec_module(_control_plane_manifest)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -1410,3 +1419,121 @@ def test_krk_control_plane_contract_is_non_causal_schema(tmp_path):
         "GrowthGovernorStatus",
         "PromotionGateStatus",
     } == subschemas
+
+
+def test_krk_control_plane_manifest_maps_existing_artifacts_without_playouts(tmp_path):
+    root = tmp_path
+
+    def write_json(relative_path, payload):
+        path = root / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload), encoding="utf-8")
+
+    def write_text(relative_path, text):
+        path = root / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+
+    write_json(
+        _control_plane_manifest.CONTRACT,
+        {
+            "causal_status": "non_causal_schema_contract",
+            "primary_frame": {
+                "required_fields": [
+                    "frame_id",
+                    "domain",
+                    "state_id",
+                    "fen",
+                    "source_stage",
+                    "active_landmark_label",
+                    "protected_provider_provenance",
+                    "strategy_proposal_frames",
+                    "internal_monitor_records",
+                    "plan_capsule_window_records",
+                    "sequence_training_examples",
+                    "outcome_labels",
+                    "guardrail_result_summaries",
+                    "growth_governor_status",
+                    "promotion_gate_status",
+                    "source_artifacts",
+                    "causal_status",
+                ]
+            },
+            "blocked_next_steps": ["stage7_runtime_repair"],
+        },
+    )
+    write_json(
+        _control_plane_manifest.PROTECTED_STATUS,
+        {
+            "stage7_status": "local_valid_composition_quarantined",
+            "summary": {
+                "yes_protected_or_promoted": ["stage1_backchain", "stage5_fence"],
+                "cleanest_solved_components": ["stage1_backchain", "stage5_fence"],
+                "solved_with_caveat": ["stage4_wrong_tempo"],
+            },
+        },
+    )
+    write_text(_control_plane_manifest.STAGE6_MANIFEST, "# manifest\n")
+    write_json(
+        _control_plane_manifest.STRATEGY_DATASET,
+        {
+            "summary": {
+                "record_count": 2,
+                "proposal_count": 3,
+                "records_by_source_stage": {"stage5": 1, "stage7": 1},
+            }
+        },
+    )
+    write_json(
+        _control_plane_manifest.MONITOR_RECORDS,
+        {"summary": {"monitor_record_count": 4}},
+    )
+    write_json(
+        _control_plane_manifest.INTERNAL_TERMINAL_EVIDENCE,
+        {
+            "summary": {
+                "terminal_count": 2,
+                "causal_ready_terminals": [],
+                "strongest_internal_terminal_candidates": [
+                    "terminal.krk.local_provider_competition_failed"
+                ],
+            }
+        },
+    )
+    write_json(_control_plane_manifest.PLAN_WINDOW, {"windows": [{}, {}]})
+    write_json(_control_plane_manifest.PLAN_AUDIT, {"schema_version": "audit.v1"})
+    write_json(_control_plane_manifest.DTM_TRAJECTORY_SEED, {"trajectories": [{}, {}]})
+    write_text(_control_plane_manifest.DTM_TRAJECTORY_SEED_JSONL, "{}\n{}\n")
+    write_json(_control_plane_manifest.DTM_TRAJECTORY_EXPANDED, {"trajectories": [{}]})
+    write_text(_control_plane_manifest.DTM_TRAJECTORY_EXPANDED_JSONL, "{}\n")
+    write_json(
+        _control_plane_manifest.TRAINING_OBJECTIVE_BENCHMARK,
+        {"final_decision": "model_expression_gap_persists"},
+    )
+    write_json(
+        _control_plane_manifest.TRAINING_OBJECTIVE_GATE,
+        {"selected_outcome": "model_expression_gap_persists_stage7_micro_work_stops"},
+    )
+    write_json(_control_plane_manifest.GROWTH_GOVERNOR_PLAN, {"schema_version": "plan.v1"})
+    write_json(_control_plane_manifest.STAGE6_PROMOTION, {"promotion_status": "promoted"})
+    write_json(_control_plane_manifest.STAGE7_CLOSURE, {"decision": "stopped"})
+
+    manifest = _control_plane_manifest.build_manifest(root)
+
+    assert manifest["schema_version"] == "krk_control_plane_manifest.v0"
+    assert manifest["causal_status"] == "non_causal_manifest"
+    assert manifest["runtime_behavior_changed"] is False
+    assert manifest["runtime_arbiter_added"] is False
+    assert manifest["runtime_terminals_added"] is False
+    assert manifest["stage7_promotion_allowed"] is False
+    assert manifest["stage8_training_allowed"] is False
+    assert manifest["summary"]["new_playouts_added"] == 0
+    assert manifest["summary"]["records_from_existing_artifacts_only"] is True
+    assert manifest["summary"]["strategy_record_count"] == 2
+    assert manifest["summary"]["strategy_proposal_count"] == 3
+    assert manifest["summary"]["monitor_record_count"] == 4
+    assert manifest["summary"]["sequence_seed_step_count"] == 2
+    assert manifest["summary"]["sequence_expanded_step_count"] == 1
+    assert "strategy_proposal_frames" in manifest["summary"]["covered_contract_fields"]
+    assert "internal_monitor_records" in manifest["summary"]["covered_contract_fields"]
+    assert "unified_frame_export_missing" in {gap["gap_id"] for gap in manifest["gaps"]}
