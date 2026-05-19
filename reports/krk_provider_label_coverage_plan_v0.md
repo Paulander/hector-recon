@@ -6,12 +6,15 @@ This is a non-causal plan. It does not run provider labels, add playouts, change
 
 - Benchmark frames: `28`
 - Proposal count by stage: `{'stage7': 24, 'stage5': 16, 'stage6': 20, 'stage4': 6}`
-- Known provider labels by stage: `{'stage7': 24}`
-- Unknown provider labels by stage: `{'stage5': 16, 'stage6': 20, 'stage4': 6}`
-- Provider-labeled frames: `4`
-- Frames with known provider mate: `2`
+- Known provider labels by stage: `{'stage7': 24, 'stage5': 16, 'stage6': 20, 'stage4': 6}`
+- Unknown provider labels by stage: `{}`
+- Provider-labeled frames: `28`
+- Frames with known provider mate: `14`
+- Coverage status: `sufficient_for_current_small_probe`
 
 ## Bounded Labeling Plan
+
+The current filtered frames already contain provider-level labels for the small offline probe. The bounded labeling plan remains as a future fallback, but no p0 label run is needed before the next non-causal arbitration baseline.
 
 ### p0_protected_success_controls
 
@@ -55,4 +58,4 @@ This is a non-causal plan. It does not run provider labels, add playouts, change
 
 ## Recommended Next Slice
 
-`review_or_run_bounded_provider_label_p0`
+`offline_strategy_arbitration_baseline_v1`

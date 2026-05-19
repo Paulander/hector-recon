@@ -25,7 +25,7 @@ def _load_json(root: Path, relative_path: Path) -> dict[str, Any]:
 def _known_provider_result(proposal: dict[str, Any]) -> str:
     label = proposal.get("known_outcome_label") or {}
     if isinstance(label, dict):
-        result = label.get("result")
+        result = label.get("result") or label.get("playout_result")
         if result in {"mate", "max_plies", "draw", "stagnation"}:
             return str(result)
     return "unknown"

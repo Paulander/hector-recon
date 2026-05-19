@@ -258,14 +258,14 @@ KRK control-plane strategy arbitration probe v0:
 - `reports/krk_control_plane_strategy_arbitration_probe_v0.json`
 - `reports/krk_control_plane_strategy_arbitration_probe_v0.md`
 
-The filtered offline probe remains non-causal and does not justify a runtime arbiter. It found `28` strategy-benchmark frames but only `4` provider-labeled frames and only `2` frames with a known provider-mate option, so the result is `provider_labels_underpowered`. Normalized score / provider-rank selectors hit `1/4` known provider mates; raw-score evaluation has no provider-labeled raw-score coverage. Recommended next slice: `provider_label_coverage_plan_v0`, not a sandbox.
+The filtered offline probe remains non-causal and does not justify a runtime arbiter. A label-parser correction now recognizes both `known_outcome_label.result` and `known_outcome_label.playout_result`. With that correction, all `28` strategy-benchmark frames have provider-level labels and `14` frames have a known provider-mate option, so the result is `provider_labels_sufficient_for_small_probe`. Raw-score, normalized-score, and provider-rank selectors remain mixed rather than promotion evidence. Recommended next slice: `offline_strategy_arbitration_baseline_v1`, not a sandbox.
 
 KRK provider label coverage plan v0:
 
 - `reports/krk_provider_label_coverage_plan_v0.json`
 - `reports/krk_provider_label_coverage_plan_v0.md`
 
-The plan identifies the current label imbalance: Stage7 has `24` known provider labels, while protected Stage5/6/4 strategy proposals have `42` unknown provider labels (`16` Stage5, `20` Stage6, `6` Stage4). It defines a bounded future label plan: first label protected Stage5/6 success controls, then Stage4 caveat controls, then only later balance Stage7 challenge labels. The plan itself generates no labels and keeps runtime behavior unchanged.
+The corrected coverage plan now reports provider labels for all benchmark proposals: `24` Stage7, `16` Stage5, `20` Stage6, and `6` Stage4 labels. There are no unknown provider labels in the current filtered-frame artifact. The bounded p0/p1/p2 label plan remains documented as a fallback if future coverage gaps reopen, but no p0 label run is needed before the next non-causal arbitration baseline.
 
 ## Performance Rules
 

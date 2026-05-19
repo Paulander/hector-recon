@@ -10,21 +10,21 @@
   "causal_status": "non_causal_probe",
   "decision": {
     "causal_next_step_allowed": false,
-    "interpretation": "The filtered control-plane frames are useful as a common evidence substrate, but provider-level conversion labels are too sparse for a reliable learned strategy-arbitration benchmark.",
-    "recommended_next_slice": "provider_label_coverage_plan_v0",
-    "selected_status": "provider_labels_underpowered"
+    "interpretation": "Provider labels are sufficient for a small non-causal arbitration benchmark.",
+    "recommended_next_slice": "offline_strategy_arbitration_baseline_v1",
+    "selected_status": "provider_labels_sufficient_for_small_probe"
   },
   "gameplay_topology_mutation": false,
   "label_coverage": {
-    "frames_with_known_provider_mate": 2,
+    "frames_with_known_provider_mate": 14,
     "frames_with_normalized_scores": 28,
     "frames_with_raw_scores": 24,
-    "label_status": "provider_labels_underpowered",
-    "provider_labeled_frame_count": 4,
+    "label_status": "provider_labels_sufficient_for_small_probe",
+    "provider_labeled_frame_count": 28,
     "strategy_benchmark_frame_count": 28
   },
   "oracle_ceilings": {
-    "known_provider_mate_available_count": 2,
+    "known_provider_mate_available_count": 14,
     "known_provider_mate_available_rate": 0.5
   },
   "runtime_arbiter_added": false,
@@ -35,19 +35,68 @@
   "schema_version": "krk_control_plane_strategy_arbitration_probe.v0",
   "selector_results": [
     {
-      "known_selected_count": 0,
-      "known_selected_mate_rate": null,
-      "selected_count": 0,
-      "selected_examples": [],
-      "selected_mate_count": 0,
-      "selected_max_plies_count": 0,
+      "known_selected_count": 24,
+      "known_selected_mate_rate": 0.5,
+      "selected_count": 24,
+      "selected_examples": [
+        {
+          "frame_id": "cp.krk.state.7bd8961882ad",
+          "known_provider_result": "mate",
+          "move_uci": "f2g3",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.87b1160e68b9",
+          "known_provider_result": "mate",
+          "move_uci": "e7e8",
+          "provider_id": "krk.edge_trap_close"
+        },
+        {
+          "frame_id": "cp.krk.state.2c1d6da27ea1",
+          "known_provider_result": "mate",
+          "move_uci": "a7a8",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.2c1d6da27ea1",
+          "known_provider_result": "mate",
+          "move_uci": "a7a8",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.02feb8593cc6",
+          "known_provider_result": "max_plies",
+          "move_uci": "h7c7",
+          "provider_id": "krk.edge_trap_close"
+        },
+        {
+          "frame_id": "cp.krk.state.326222aefdf1",
+          "known_provider_result": "max_plies",
+          "move_uci": "h7c7",
+          "provider_id": "krk.edge_trap_close"
+        },
+        {
+          "frame_id": "cp.krk.state.3dca34326fca",
+          "known_provider_result": "max_plies",
+          "move_uci": "c6b6",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.02feb8593cc6",
+          "known_provider_result": "max_plies",
+          "move_uci": "h7c7",
+          "provider_id": "krk.edge_trap_close"
+        }
+      ],
+      "selected_mate_count": 12,
+      "selected_max_plies_count": 12,
       "selected_unknown_count": 0,
       "selector": "raw_global_score"
     },
     {
-      "known_selected_count": 4,
-      "known_selected_mate_rate": 0.25,
-      "selected_count": 4,
+      "known_selected_count": 28,
+      "known_selected_mate_rate": 0.4642857142857143,
+      "selected_count": 28,
       "selected_examples": [
         {
           "frame_id": "cp.krk.state.0afbf11aa123",
@@ -72,17 +121,41 @@
           "known_provider_result": "mate",
           "move_uci": "e4h4",
           "provider_id": "krk.drive_to_edge"
+        },
+        {
+          "frame_id": "cp.krk.state.7bd8961882ad",
+          "known_provider_result": "mate",
+          "move_uci": "f2g3",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.87b1160e68b9",
+          "known_provider_result": "mate",
+          "move_uci": "e7e8",
+          "provider_id": "krk.edge_trap_close"
+        },
+        {
+          "frame_id": "cp.krk.state.2c1d6da27ea1",
+          "known_provider_result": "mate",
+          "move_uci": "a7a8",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.2c1d6da27ea1",
+          "known_provider_result": "mate",
+          "move_uci": "a7a8",
+          "provider_id": "krk.stage0_basin"
         }
       ],
-      "selected_mate_count": 1,
-      "selected_max_plies_count": 3,
+      "selected_mate_count": 13,
+      "selected_max_plies_count": 15,
       "selected_unknown_count": 0,
       "selector": "normalized_score"
     },
     {
-      "known_selected_count": 4,
-      "known_selected_mate_rate": 0.25,
-      "selected_count": 4,
+      "known_selected_count": 28,
+      "known_selected_mate_rate": 0.4642857142857143,
+      "selected_count": 28,
       "selected_examples": [
         {
           "frame_id": "cp.krk.state.0afbf11aa123",
@@ -107,10 +180,34 @@
           "known_provider_result": "mate",
           "move_uci": "e4h4",
           "provider_id": "krk.drive_to_edge"
+        },
+        {
+          "frame_id": "cp.krk.state.7bd8961882ad",
+          "known_provider_result": "mate",
+          "move_uci": "f2g3",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.87b1160e68b9",
+          "known_provider_result": "mate",
+          "move_uci": "e7e8",
+          "provider_id": "krk.edge_trap_close"
+        },
+        {
+          "frame_id": "cp.krk.state.2c1d6da27ea1",
+          "known_provider_result": "mate",
+          "move_uci": "a7a8",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.2c1d6da27ea1",
+          "known_provider_result": "mate",
+          "move_uci": "a7a8",
+          "provider_id": "krk.stage0_basin"
         }
       ],
-      "selected_mate_count": 1,
-      "selected_max_plies_count": 3,
+      "selected_mate_count": 13,
+      "selected_max_plies_count": 15,
       "selected_unknown_count": 0,
       "selector": "provider_local_rank"
     }

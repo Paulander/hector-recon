@@ -25,7 +25,8 @@ def _load_json(root: Path, relative_path: Path) -> dict[str, Any]:
 
 
 def _known_provider_result(proposal: dict[str, Any]) -> str:
-    result = (proposal.get("known_outcome_label") or {}).get("result")
+    label = proposal.get("known_outcome_label") or {}
+    result = label.get("result") or label.get("playout_result")
     return str(result) if result in {"mate", "max_plies", "draw", "stagnation"} else "unknown"
 
 
@@ -64,6 +65,19 @@ def build_plan(repo_root: Path) -> dict[str, Any]:
             else:
                 known_by_stage[stage] += 1
 
+    probe_status = str((probe.get("label_coverage") or {}).get("label_status") or "")
+    unknown_count = sum(unknown_by_stage.values())
+    recommended_next_slice = (
+        "offline_strategy_arbitration_baseline_v1"
+        if unknown_count == 0 and probe_status == "provider_labels_sufficient_for_small_probe"
+        else "review_or_run_bounded_provider_label_p0"
+    )
+    coverage_status = (
+        "sufficient_for_current_small_probe"
+        if recommended_next_slice == "offline_strategy_arbitration_baseline_v1"
+        else "bounded_provider_label_run_needed"
+    )
+
     plan = {
         "schema_version": "krk_provider_label_coverage_plan.v0",
         "causal_status": "non_causal_label_plan",
@@ -89,6 +103,7 @@ def build_plan(repo_root: Path) -> dict[str, Any]:
                 "frames_with_known_provider_mate"
             ),
             "unknown_examples": unknown_examples,
+            "coverage_status": coverage_status,
         },
         "bounded_labeling_plan": [
             {
@@ -139,7 +154,7 @@ def build_plan(repo_root: Path) -> dict[str, Any]:
             "if labels remain sparse, do not train arbiter; report evidence gap",
             "if Stage7 labels dominate, freeze as challenge set and collect broader controls first",
         ],
-        "recommended_next_slice": "review_or_run_bounded_provider_label_p0",
+        "recommended_next_slice": recommended_next_slice,
         "blocked_next_steps": [
             "runtime_arbiter",
             "runtime_internal_terminal",
@@ -169,7 +184,10 @@ def validate_plan(plan: dict[str, Any]) -> None:
     ):
         if plan.get(key) is not False:
             raise ValueError(f"{key} must be false")
-    if plan.get("recommended_next_slice") != "review_or_run_bounded_provider_label_p0":
+    if plan.get("recommended_next_slice") not in {
+        "review_or_run_bounded_provider_label_p0",
+        "offline_strategy_arbitration_baseline_v1",
+    }:
         raise ValueError("unexpected recommended next slice")
 
 
@@ -189,10 +207,20 @@ def render_markdown(plan: dict[str, Any]) -> str:
         f"- Unknown provider labels by stage: `{coverage['unknown_provider_label_count_by_stage']}`",
         f"- Provider-labeled frames: `{coverage['provider_labeled_frame_count']}`",
         f"- Frames with known provider mate: `{coverage['frames_with_known_provider_mate']}`",
+        f"- Coverage status: `{coverage['coverage_status']}`",
         "",
         "## Bounded Labeling Plan",
         "",
     ]
+    if coverage.get("coverage_status") == "sufficient_for_current_small_probe":
+        lines.extend(
+            [
+                "The current filtered frames already contain provider-level labels for the "
+                "small offline probe. The bounded labeling plan remains as a future fallback, "
+                "but no p0 label run is needed before the next non-causal arbitration baseline.",
+                "",
+            ]
+        )
     for phase in plan["bounded_labeling_plan"]:
         lines.extend(
             [

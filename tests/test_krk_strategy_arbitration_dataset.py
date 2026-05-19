@@ -1958,7 +1958,7 @@ def test_krk_control_plane_strategy_probe_stays_non_causal_and_reports_label_gap
                                 "raw_score": 2.0,
                                 "normalized_score": 1.0,
                                 "provider_local_rank": 1,
-                                "known_outcome_label": {"result": "mate"},
+                                "known_outcome_label": {"playout_result": "mate"},
                             },
                             {
                                 "provider_id": "krk.b",
@@ -2018,7 +2018,11 @@ def test_krk_provider_label_coverage_plan_is_bounded_and_non_causal(tmp_path):
                         "benchmark_roles": ["strategy_arbitration_benchmark"]
                     },
                     "strategy_proposal_frames": [
-                        {"provider_id": "krk.fence", "move_uci": "a1a2", "known_outcome_label": {}}
+                        {
+                            "provider_id": "krk.fence",
+                            "move_uci": "a1a2",
+                            "known_outcome_label": {"playout_result": "max_plies"},
+                        }
                     ],
                 },
                 {
@@ -2043,8 +2047,9 @@ def test_krk_provider_label_coverage_plan_is_bounded_and_non_causal(tmp_path):
         {
             "causal_status": "non_causal_probe",
             "label_coverage": {
-                "provider_labeled_frame_count": 1,
+                "provider_labeled_frame_count": 2,
                 "frames_with_known_provider_mate": 1,
+                "label_status": "provider_labels_sufficient_for_small_probe",
             },
         },
     )
@@ -2058,12 +2063,12 @@ def test_krk_provider_label_coverage_plan_is_bounded_and_non_causal(tmp_path):
     assert plan["runtime_arbiter_added"] is False
     assert plan["stage7_promotion_allowed"] is False
     assert plan["stage8_training_allowed"] is False
-    assert plan["current_label_coverage"]["unknown_provider_label_count_by_stage"] == {
-        "stage5": 1
-    }
+    assert plan["current_label_coverage"]["unknown_provider_label_count_by_stage"] == {}
     assert plan["current_label_coverage"]["known_provider_label_count_by_stage"] == {
+        "stage5": 1,
         "stage7": 1
     }
+    assert plan["current_label_coverage"]["coverage_status"] == "sufficient_for_current_small_probe"
     assert plan["bounded_labeling_plan"][0]["phase"] == "p0_protected_success_controls"
     assert plan["bounded_labeling_plan"][0]["new_runtime_behavior"] is False
-    assert plan["recommended_next_slice"] == "review_or_run_bounded_provider_label_p0"
+    assert plan["recommended_next_slice"] == "offline_strategy_arbitration_baseline_v1"
