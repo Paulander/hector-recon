@@ -138,6 +138,15 @@ assert _training_benchmark_spec.loader is not None
 _training_benchmark = importlib.util.module_from_spec(_training_benchmark_spec)
 _training_benchmark_spec.loader.exec_module(_training_benchmark)
 
+_training_decision_gate_spec = importlib.util.spec_from_file_location(
+    "summarize_stage7_training_objective_decision_gate",
+    Path(__file__).resolve().parents[1] / "scripts" / "summarize_stage7_training_objective_decision_gate.py",
+)
+assert _training_decision_gate_spec is not None
+assert _training_decision_gate_spec.loader is not None
+_training_decision_gate = importlib.util.module_from_spec(_training_decision_gate_spec)
+_training_decision_gate_spec.loader.exec_module(_training_decision_gate)
+
 _ranking_calibration_spec = importlib.util.spec_from_file_location(
     "audit_stage7_ranking_calibration",
     Path(__file__).resolve().parents[1] / "scripts" / "audit_stage7_ranking_calibration.py",
@@ -1217,6 +1226,106 @@ def test_stage7_training_benchmark_uses_internal_terminal_features_non_causally(
         "terminal.krk.local_provider_competition_failed"
     ] == 1
     assert internal["contribution_summary"]["runtime_causal"] is False
+
+
+def test_stage7_training_objective_decision_gate_stops_micro_work_on_model_gap(tmp_path):
+    benchmark_path = tmp_path / "stage7_training_objective_benchmark.json"
+    benchmark_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "stage7_training_objective_benchmark.v1",
+                "causal_status": "non_causal_offline_benchmark",
+                "runtime_behavior_changed": False,
+                "stage7_promotion_allowed": False,
+                "stage8_training_allowed": False,
+                "decision": {
+                    "candidate_status": "model_expression_gap_persists",
+                    "ranked_top1_improvement_over_current": -0.1,
+                    "visible_top1_improvement_over_current": 0.1,
+                    "internal_monitor_top1_improvement_over_visible": 0.0,
+                },
+                "dataset": {"benchmark_underpowered": False},
+                "models": [
+                    {
+                        "model_id": "current_learned_post_box_scorer",
+                        "test": {
+                            "top1_dtm_positive_accuracy": 0.35,
+                            "top3_dtm_positive_accuracy": 0.64,
+                            "hard_negative_above_positive_rate": 0.28,
+                        },
+                    },
+                    {
+                        "model_id": "visible_term_log_odds_scorer",
+                        "test": {
+                            "top1_dtm_positive_accuracy": 0.48,
+                            "top3_dtm_positive_accuracy": 0.76,
+                            "hard_negative_above_positive_rate": 0.5,
+                        },
+                    },
+                    {
+                        "model_id": "pairwise_ranked_preference_scorer",
+                        "test": {
+                            "top1_dtm_positive_accuracy": 0.19,
+                            "top3_dtm_positive_accuracy": 0.31,
+                            "hard_negative_above_positive_rate": 0.79,
+                        },
+                    },
+                    {
+                        "model_id": "internal_monitor_augmented_visible_term_scorer",
+                        "test": {
+                            "top1_dtm_positive_accuracy": 0.48,
+                            "top3_dtm_positive_accuracy": 0.76,
+                            "hard_negative_above_positive_rate": 0.5,
+                        },
+                    },
+                    {
+                        "model_id": "oracle_dtm_positive_topk_ceiling",
+                        "test": {"top1_dtm_positive_accuracy": 1.0},
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    gate = _training_decision_gate.build_gate(benchmark_path)
+
+    assert gate["schema_version"] == "stage7_training_objective_decision_gate.v1"
+    assert gate["causal_status"] == "non_causal_decision_gate"
+    assert gate["runtime_behavior_changed"] is False
+    assert gate["runtime_terminals_added"] is False
+    assert gate["stage7_promotion_allowed"] is False
+    assert gate["stage8_training_allowed"] is False
+    assert gate["selected_outcome"] == "model_expression_gap_persists_stage7_micro_work_stops"
+    assert gate["recommended_action_class"] == "stop_stage7_micro_work_pending_architecture_review"
+    assert "no_new_broad_diagnostic_branch_without_explicit_review" in gate["stop_conditions_reaffirmed"]
+
+
+def test_stage7_training_objective_decision_gate_maps_internal_monitor_help(tmp_path):
+    benchmark_path = tmp_path / "stage7_training_objective_benchmark.json"
+    benchmark_path.write_text(
+        json.dumps(
+            {
+                "decision": {
+                    "candidate_status": "internal_monitor_features_help_offline",
+                    "ranked_top1_improvement_over_current": 0.0,
+                    "visible_top1_improvement_over_current": 0.0,
+                    "internal_monitor_top1_improvement_over_visible": 0.1,
+                },
+                "dataset": {"benchmark_underpowered": False},
+                "models": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    gate = _training_decision_gate.build_gate(benchmark_path)
+
+    assert gate["selected_outcome"] == (
+        "internal_monitor_features_justify_non_causal_runtime_visible_monitor_sandbox"
+    )
+    assert gate["runtime_behavior_changed"] is False
+    assert gate["runtime_terminals_added"] is False
 
 
 def test_stage7_training_benchmark_tie_breaks_without_label_leakage():

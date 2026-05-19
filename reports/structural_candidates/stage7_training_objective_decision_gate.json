@@ -1,0 +1,68 @@
+{
+  "allowed_outcomes": [
+    "curriculum_boundary_reframe_box_shrink_as_exit_handoff",
+    "internal_monitor_features_justify_non_causal_runtime_visible_monitor_sandbox",
+    "mixed_evidence_freeze_stage7_known_residual",
+    "model_expression_gap_persists_stage7_micro_work_stops",
+    "ranked_pairwise_objective_supports_default_off_sandbox"
+  ],
+  "benchmark_decision": {
+    "candidate_status": "model_expression_gap_persists",
+    "internal_monitor_features_improve_offline": false,
+    "internal_monitor_top1_improvement_over_visible": 0.0,
+    "next_action": "design stronger ranked sequence-policy candidate",
+    "ranked_top1_improvement_over_current": -0.16748768472906406,
+    "thresholds": {
+      "hard_negative_rate_should_not_increase": true,
+      "internal_monitor_material_top1_improvement": 0.05,
+      "material_top1_improvement": 0.15,
+      "top3_should_remain_high": 0.8
+    },
+    "visible_top1_improvement_over_current": 0.12561576354679804
+  },
+  "blocked_next_steps": [
+    "implement_runtime_repair",
+    "promote_stage7",
+    "train_stage8",
+    "make_internal_terminals_causal",
+    "add_runtime_terminal_topology",
+    "use_runtime_dtm_or_tablebase",
+    "mutate_topology_during_gameplay",
+    "start_broad_diagnostic_branch_without_review"
+  ],
+  "causal_status": "non_causal_decision_gate",
+  "gameplay_topology_mutation": false,
+  "rationale": "Simple ranked/pairwise objectives underperform, internal monitor features do not improve the visible baseline, and oracle ceiling remains high.",
+  "recommended_action_class": "stop_stage7_micro_work_pending_architecture_review",
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "stage7_training_objective_decision_gate.v1",
+  "selected_outcome": "model_expression_gap_persists_stage7_micro_work_stops",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_training_objective_benchmark.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage7_status": "local_valid_composition_quarantined",
+  "stage8_training_allowed": false,
+  "stop_conditions_reaffirmed": [
+    "no_runtime_repairs",
+    "no_stage7_promotion",
+    "no_stage8_training",
+    "no_runtime_dtm_or_tablebase",
+    "no_gameplay_topology_mutation",
+    "no_internal_terminal_causal_use",
+    "no_new_broad_diagnostic_branch_without_explicit_review"
+  ],
+  "supporting_evidence": [
+    "benchmark_status=model_expression_gap_persists",
+    "ranked_top1_improvement=-0.16748768472906406",
+    "visible_top1_improvement=0.12561576354679804",
+    "internal_monitor_top1_improvement_over_visible=0.0",
+    "current_hard_negative_rate=0.2857142857142857",
+    "ranked_hard_negative_rate=0.7931034482758621",
+    "internal_hard_negative_rate=0.5",
+    "oracle_top1=1.0"
+  ]
+}
