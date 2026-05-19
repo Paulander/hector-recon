@@ -345,6 +345,14 @@ KRK strategy arbiter observability smoke v0:
 
 The smoke records the paired default-off check. Behavior/outcome metrics matched between the default-off and enabled runs; the only intended delta was one non-causal observation frame. This supports collecting small non-causal observation frames next, but still does not authorize runtime arbitration, score changes, provider routing, Stage 7 repair, Stage 7 promotion, or Stage 8 training.
 
+KRK strategy arbiter observation frames v0:
+
+- `scripts/collect_krk_strategy_arbiter_observation_frames.py`
+- `reports/krk_strategy_arbiter_observation_frames_v0.json`
+- `reports/krk_strategy_arbiter_observation_frames_v0.md`
+
+The collector performs one-ply trace-only observation over existing control-plane FENs using `handoff_composition_v1`. It generated `12` non-causal records: `9` Stage 7 held-out challenge rows, `2` Stage 4 control rows, and `1` Stage 5 control row. It ran no conversion playouts, training, runtime routing, DTM/tablebase lookup, topology mutation, or default changes. The selected providers were mostly `krk.stage0_basin` (`11/12`), with one `krk.fence_established` control row. The next allowed step is review of observation-frame separability before any sandbox.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -442,6 +450,8 @@ reports/krk_strategy_arbiter_architecture_review_v1.json
 reports/krk_strategy_arbiter_architecture_review_v1.md
 reports/krk_strategy_arbiter_observability_smoke_v0.json
 reports/krk_strategy_arbiter_observability_smoke_v0.md
+reports/krk_strategy_arbiter_observation_frames_v0.json
+reports/krk_strategy_arbiter_observation_frames_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
