@@ -468,6 +468,17 @@ assert _selector_readiness_v3_spec.loader is not None
 _selector_readiness_v3 = importlib.util.module_from_spec(_selector_readiness_v3_spec)
 _selector_readiness_v3_spec.loader.exec_module(_selector_readiness_v3)
 
+_default_off_design_review_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_strategy_arbiter_default_off_design_review_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "summarize_krk_strategy_arbiter_default_off_design_review_v1.py",
+)
+assert _default_off_design_review_spec is not None
+assert _default_off_design_review_spec.loader is not None
+_default_off_design_review = importlib.util.module_from_spec(_default_off_design_review_spec)
+_default_off_design_review_spec.loader.exec_module(_default_off_design_review)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -4131,3 +4142,54 @@ def test_krk_selector_readiness_v3_allows_design_review_not_runtime(tmp_path, mo
     assert plan["decision"]["runtime_arbiter_allowed"] is False
     assert plan["decision"]["selector_sandbox_ready"] is False
     assert plan["decision"]["recommended_next_step"] == "design_default_off_strategy_arbiter_sandbox_for_review"
+
+
+def test_krk_strategy_arbiter_default_off_design_review_blocks_implementation(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    (reports / "krk_selector_readiness_v3_plan.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_design_plan",
+                "reason": "test",
+                "readiness_checks_v3": [
+                    {"requirement_id": "proposal_family_diversity", "status": "passed"},
+                    {
+                        "requirement_id": "current_selected_provider_diversity",
+                        "status": "diagnostic_only_not_sandbox_blocker",
+                    },
+                ],
+                "decision": {
+                    "hard_blockers": [],
+                    "runtime_arbiter_allowed": False,
+                    "selector_sandbox_ready": False,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reports / "krk_strategy_owner_contrast_probe_v0.json").write_text(
+        json.dumps({"causal_status": "non_causal_probe"}),
+        encoding="utf-8",
+    )
+    (reports / "krk_selected_provider_diversity_architecture_review_v0.json").write_text(
+        json.dumps({"causal_status": "non_causal_architecture_review"}),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_default_off_design_review, "ROOT", root)
+
+    review = _default_off_design_review.build_review()
+
+    assert review["schema_version"] == "krk_strategy_arbiter_default_off_design_review.v1"
+    assert review["causal_status"] == "non_causal_design_review"
+    assert review["runtime_behavior_changed"] is False
+    assert review["runtime_arbiter_implemented"] is False
+    assert review["selector_sandbox_implemented"] is False
+    assert review["runtime_terminals_added"] is False
+    assert review["stage7_promotion_allowed"] is False
+    assert review["stage8_training_allowed"] is False
+    assert review["decision"]["status"] == "default_off_strategy_arbiter_design_ready_for_external_review"
+    assert review["decision"]["runtime_arbiter_allowed"] is False
+    assert review["decision"]["selector_sandbox_ready"] is False
+    assert review["decision"]["implementation_allowed"] is False

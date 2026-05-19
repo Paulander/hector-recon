@@ -685,6 +685,14 @@ KRK selector readiness v3 plan:
 
 The v3 plan reframes selector readiness after selected-provider sampling showed the current raw arbiter is stage0-dominant. It treats current selected-provider diversity as diagnostic-only rather than a sandbox hard blocker, because requiring the current raw arbiter to already select diverse providers blocks the mechanism intended to correct that dominance. Proposal-family diversity, conversion-positive provider-family diversity, label balance, protected Stage 4/5/6 coverage, and Stage 7 held-out boundary all pass. Decision: `selector_readiness_v3_sandbox_design_review_allowed`. Runtime arbiter and selector sandbox are still not implemented or allowed; the next permitted step is only a default-off strategy-arbiter sandbox design review.
 
+KRK strategy arbiter default-off design review v1:
+
+- `scripts/summarize_krk_strategy_arbiter_default_off_design_review_v1.py`
+- `reports/krk_strategy_arbiter_default_off_design_review_v1.json`
+- `reports/krk_strategy_arbiter_default_off_design_review_v1.md`
+
+The design review converts selector-readiness v3 into a future sandbox contract for external review only. It defines default-off requirements, allowed/forbidden inputs and outputs, default-off equivalence checks, enabled-smoke constraints, and promotion gates. Decision: `default_off_strategy_arbiter_design_ready_for_external_review`. Runtime arbiter implementation, selector sandbox implementation, Stage 7 repair/promotion, Stage 8 training, runtime DTM/tablebase, and gameplay topology mutation remain blocked.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -880,6 +888,8 @@ reports/krk_selected_provider_diversity_architecture_review_v0.json
 reports/krk_selected_provider_diversity_architecture_review_v0.md
 reports/krk_selector_readiness_v3_plan.json
 reports/krk_selector_readiness_v3_plan.md
+reports/krk_strategy_arbiter_default_off_design_review_v1.json
+reports/krk_strategy_arbiter_default_off_design_review_v1.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
