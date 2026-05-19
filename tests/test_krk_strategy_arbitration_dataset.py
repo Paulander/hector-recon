@@ -435,6 +435,19 @@ _selected_provider_sampling_review = importlib.util.module_from_spec(
 )
 _selected_provider_sampling_review_spec.loader.exec_module(_selected_provider_sampling_review)
 
+_selected_provider_observation_scan_spec = importlib.util.spec_from_file_location(
+    "run_krk_selected_provider_diversity_observation_scan",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "run_krk_selected_provider_diversity_observation_scan.py",
+)
+assert _selected_provider_observation_scan_spec is not None
+assert _selected_provider_observation_scan_spec.loader is not None
+_selected_provider_observation_scan = importlib.util.module_from_spec(
+    _selected_provider_observation_scan_spec
+)
+_selected_provider_observation_scan_spec.loader.exec_module(_selected_provider_observation_scan)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -3908,3 +3921,82 @@ def test_krk_selected_provider_diversity_sampling_manifest_review_allows_observa
     assert review["stage8_training_allowed"] is False
     assert review["review_summary"]["observations_allowed"] is True
     assert review["decision"]["recommended_next_step"] == "run_bounded_selected_provider_observation_scan"
+
+
+def test_krk_selected_provider_diversity_observation_scan_is_non_causal(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    (reports / "krk_selected_provider_diversity_sampling_manifest_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_sampling_manifest",
+                "jobs": [
+                    {
+                        "job_id": "job.stage4",
+                        "source_stage": "stage4",
+                        "state_id": "state.stage4",
+                        "active_landmark_label": "edge_trap_wrong_tempo",
+                        "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                        "execution_binding": {"topology_path": "topology.json"},
+                    },
+                    {
+                        "job_id": "job.stage5",
+                        "source_stage": "stage5",
+                        "state_id": "state.stage5",
+                        "active_landmark_label": "fence_established",
+                        "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                        "execution_binding": {"topology_path": "topology.json"},
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reports / "krk_selected_provider_diversity_sampling_manifest_review_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_manifest_review",
+                "decision": {"observations_allowed": True},
+            }
+        ),
+        encoding="utf-8",
+    )
+    observations = {
+        "job.stage4": {
+            "schema_version": "krk_selected_provider_observation.v0",
+            "causal_status": "non_causal_selected_provider_observation",
+            "job_id": "job.stage4",
+            "source_stage": "stage4",
+            "selected_provider_family": "edge_trap",
+        },
+        "job.stage5": {
+            "schema_version": "krk_selected_provider_observation.v0",
+            "causal_status": "non_causal_selected_provider_observation",
+            "job_id": "job.stage5",
+            "source_stage": "stage5",
+            "selected_provider_family": "fence_established",
+        },
+    }
+
+    def fake_observe_job(job, cache):
+        return observations[job["job_id"]]
+
+    monkeypatch.setattr(_selected_provider_observation_scan, "ROOT", root)
+    monkeypatch.setattr(_selected_provider_observation_scan, "_observe_job", fake_observe_job)
+
+    payload = _selected_provider_observation_scan.run_observations()
+
+    assert payload["schema_version"] == "krk_selected_provider_diversity_observation_scan.v0"
+    assert payload["causal_status"] == "non_causal_observation_scan"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_arbiter_implemented"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["labels_generated_in_this_slice"] is False
+    assert payload["summary"]["stage7_observations"] == 0
+    assert payload["summary"]["selected_provider_family_counts"] == {
+        "edge_trap": 1,
+        "fence_established": 1,
+    }
+    assert payload["decision"]["selector_sandbox_ready"] is False

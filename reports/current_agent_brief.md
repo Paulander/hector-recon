@@ -661,6 +661,14 @@ KRK selected-provider diversity sampling manifest/review v0:
 
 The bounded selection-only manifest contains `20` protected observation jobs across Stage 4/5/6 and `0` Stage 7 jobs. The review passes with `0` violations and authorizes only a selection-observation scan, not playout labels or selector work. Runtime arbiter, selector sandbox, Stage 7 repair/promotion, and Stage 8 training remain blocked.
 
+KRK selected-provider diversity observation scan v0:
+
+- `scripts/run_krk_selected_provider_diversity_observation_scan.py`
+- `reports/krk_selected_provider_diversity_observation_scan_v0.json`
+- `reports/krk_selected_provider_diversity_observation_scan_v0.md`
+
+The bounded selection-only scan completed `20` protected observations in `7.293` seconds. All `20` selected `krk.stage0_basin`; distinct selected provider families = `1`, dominance = `1.0`, and Stage 7 observations remain `0`. Decision: `selected_provider_diversity_observation_insufficient`. This strengthens the diagnosis that normal arbitration is stage0-dominant on sampled protected controls; runtime arbiter and selector sandbox remain blocked.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -850,6 +858,8 @@ reports/krk_selected_provider_diversity_sampling_manifest_v0.json
 reports/krk_selected_provider_diversity_sampling_manifest_v0.md
 reports/krk_selected_provider_diversity_sampling_manifest_review_v0.json
 reports/krk_selected_provider_diversity_sampling_manifest_review_v0.md
+reports/krk_selected_provider_diversity_observation_scan_v0.json
+reports/krk_selected_provider_diversity_observation_scan_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

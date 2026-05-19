@@ -1,0 +1,1789 @@
+{
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "selector_sandbox",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_observation_scan",
+  "decision": {
+    "recommended_next_step": "review_sampling_strategy_or_pause_selector_work",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "selected_provider_diversity_observation_insufficient"
+  },
+  "gameplay_topology_mutation": false,
+  "labels_generated_in_this_slice": false,
+  "observations": [
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "1R6/2K5/k7/8/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.ea634c29ece7",
+      "job_id": "job.krk.selected_provider_diversity.34b0d038977c",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "b8b1",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 73.7653138576271,
+      "source_stage": "stage4",
+      "state_id": "state.ea634c29ece7",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "b8b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 73.7653138576271
+        },
+        {
+          "move_uci": "b8b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 73.76431432857514
+        },
+        {
+          "move_uci": "b8b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 73.76357786297172
+        },
+        {
+          "move_uci": "b8b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 73.76349192605913
+        },
+        {
+          "move_uci": "b8b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 73.76307370360941
+        },
+        {
+          "move_uci": "b8b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 73.76221120357513
+        },
+        {
+          "move_uci": "b8b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 73.76221120357513
+        },
+        {
+          "move_uci": "b8b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 73.76221120357513
+        },
+        {
+          "move_uci": "b8b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 73.76221120357513
+        },
+        {
+          "move_uci": "b8b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 73.76221120357513
+        }
+      ]
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "8/8/8/8/8/8/R2K4/5k2 w - - 0 1",
+      "frame_id": "cp.krk.state.c732b2d6dc56",
+      "job_id": "job.krk.selected_provider_diversity.a175497dbc10",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "d2e3",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 12.17762255055923,
+      "source_stage": "stage4",
+      "state_id": "state.c732b2d6dc56",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "d2e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 12.17762255055923
+        },
+        {
+          "move_uci": "d2e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 12.176623021507263
+        },
+        {
+          "move_uci": "d2e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 12.175886555775076
+        },
+        {
+          "move_uci": "d2e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 12.17580061891079
+        },
+        {
+          "move_uci": "d2e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 12.175382396541536
+        },
+        {
+          "move_uci": "d2e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 12.174519896507263
+        },
+        {
+          "move_uci": "d2e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 12.174519896507263
+        },
+        {
+          "move_uci": "d2e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 12.174519896507263
+        },
+        {
+          "move_uci": "d2e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 12.174519896507263
+        },
+        {
+          "move_uci": "d2e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 12.174519896507263
+        }
+      ]
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "6k1/4R3/5K2/8/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.6ed5d7581360",
+      "job_id": "job.krk.selected_provider_diversity.725022b11f71",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "e7a7",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 68.03646110875626,
+      "source_stage": "stage4",
+      "state_id": "state.6ed5d7581360",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "e7a7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 68.03646110875626
+        },
+        {
+          "move_uci": "e7a7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 68.03546157970429
+        },
+        {
+          "move_uci": "e7a7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 68.0347251139721
+        },
+        {
+          "move_uci": "e7a7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 68.0346391771078
+        },
+        {
+          "move_uci": "e7a7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 68.03422095473856
+        },
+        {
+          "move_uci": "e7a7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 68.03335845470428
+        },
+        {
+          "move_uci": "e7a7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 68.03335845470428
+        },
+        {
+          "move_uci": "e7a7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 68.03335845470428
+        },
+        {
+          "move_uci": "e7a7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 68.03335845470428
+        },
+        {
+          "move_uci": "e7a7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 68.03335845470428
+        }
+      ]
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "1R6/1K6/8/k7/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.44938ccb8ab7",
+      "job_id": "job.krk.selected_provider_diversity.e9f72a79a31b",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "b8h8",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 47.76268624646682,
+      "source_stage": "stage4",
+      "state_id": "state.44938ccb8ab7",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "b8h8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 47.76268624646682
+        },
+        {
+          "move_uci": "b8h8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 47.761686717414854
+        },
+        {
+          "move_uci": "b8h8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 47.76095025181144
+        },
+        {
+          "move_uci": "b8h8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 47.760864314898846
+        },
+        {
+          "move_uci": "b8h8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 47.76044609244913
+        },
+        {
+          "move_uci": "b8h8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 47.759583592414856
+        },
+        {
+          "move_uci": "b8h8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 47.759583592414856
+        },
+        {
+          "move_uci": "b8h8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 47.759583592414856
+        },
+        {
+          "move_uci": "b8h8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 47.759583592414856
+        },
+        {
+          "move_uci": "b8h8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 47.759583592414856
+        }
+      ]
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "7k/5KR1/8/8/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.cc83524289f3",
+      "job_id": "job.krk.selected_provider_diversity.049ff635599b",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "g7g4",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 85.29419922215958,
+      "source_stage": "stage4",
+      "state_id": "state.cc83524289f3",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "g7g4",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 85.29419922215958
+        },
+        {
+          "move_uci": "g7g4",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 85.29319969310761
+        },
+        {
+          "move_uci": "g7g4",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 85.29246322737542
+        },
+        {
+          "move_uci": "g7g4",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 85.29237729051113
+        },
+        {
+          "move_uci": "g7g4",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 85.29195906814188
+        },
+        {
+          "move_uci": "g7g4",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 85.2910965681076
+        },
+        {
+          "move_uci": "g7g4",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 85.2910965681076
+        },
+        {
+          "move_uci": "g7g4",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 85.2910965681076
+        },
+        {
+          "move_uci": "g7g4",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 85.2910965681076
+        },
+        {
+          "move_uci": "g7g4",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 85.2910965681076
+        }
+      ]
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "1K6/1R6/k7/8/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.80080a9a826d",
+      "job_id": "job.krk.selected_provider_diversity.a2957fc9a7fe",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "b7b1",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 65.65724485536292,
+      "source_stage": "stage4",
+      "state_id": "state.80080a9a826d",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "b7b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 65.65724485536292
+        },
+        {
+          "move_uci": "b7b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 65.65624532594681
+        },
+        {
+          "move_uci": "b7b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 65.65550886021462
+        },
+        {
+          "move_uci": "b7b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 65.65542292335033
+        },
+        {
+          "move_uci": "b7b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 65.65500470098108
+        },
+        {
+          "move_uci": "b7b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 65.65414220094681
+        },
+        {
+          "move_uci": "b7b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 65.65414220094681
+        },
+        {
+          "move_uci": "b7b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 65.65414220094681
+        },
+        {
+          "move_uci": "b7b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 65.65414220094681
+        },
+        {
+          "move_uci": "b7b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 65.65414220094681
+        }
+      ]
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "8/8/k7/2K5/8/1R6/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.e99b2e731810",
+      "job_id": "job.krk.selected_provider_diversity.86993aaa7d40",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "b3b1",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 30.662068956923672,
+      "source_stage": "stage4",
+      "state_id": "state.e99b2e731810",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "b3b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 30.662068956923672
+        },
+        {
+          "move_uci": "b3b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 30.661069427871706
+        },
+        {
+          "move_uci": "b3b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 30.660332962139517
+        },
+        {
+          "move_uci": "b3b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 30.66024702527523
+        },
+        {
+          "move_uci": "b3b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 30.659828802905977
+        },
+        {
+          "move_uci": "b3b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 30.658966302871704
+        },
+        {
+          "move_uci": "b3b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 30.658966302871704
+        },
+        {
+          "move_uci": "b3b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 30.658966302871704
+        },
+        {
+          "move_uci": "b3b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 30.658966302871704
+        },
+        {
+          "move_uci": "b3b1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 30.658966302871704
+        }
+      ]
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "8/7k/5K2/8/8/8/8/6R1 w - - 0 1",
+      "frame_id": "cp.krk.state.aa04e7a0d891",
+      "job_id": "job.krk.selected_provider_diversity.64ede1440eda",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "f6f7",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 5.731955402922816,
+      "source_stage": "stage4",
+      "state_id": "state.aa04e7a0d891",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 5.731955402922816
+        },
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 5.730955873870849
+        },
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 5.7302194081386615
+        },
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 5.730133471274376
+        },
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 5.729715248905122
+        },
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 5.72885274887085
+        },
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 5.72885274887085
+        },
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 5.72885274887085
+        },
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 5.72885274887085
+        },
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 5.72885274887085
+        }
+      ]
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "8/8/8/8/8/4K3/3R4/5k2 w - - 0 1",
+      "frame_id": "cp.krk.state.2f5f57c82e5b",
+      "job_id": "job.krk.selected_provider_diversity.b44072f6fc82",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "d2d8",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 61.531386011672204,
+      "source_stage": "stage4",
+      "state_id": "state.2f5f57c82e5b",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "d2d8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 61.531386011672204
+        },
+        {
+          "move_uci": "d2d8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 61.53038648262024
+        },
+        {
+          "move_uci": "d2d8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 61.52965001688805
+        },
+        {
+          "move_uci": "d2d8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 61.52956408002377
+        },
+        {
+          "move_uci": "d2d8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 61.52914585765451
+        },
+        {
+          "move_uci": "d2d8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 61.52828335762024
+        },
+        {
+          "move_uci": "d2d8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 61.52828335762024
+        },
+        {
+          "move_uci": "d2d8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 61.52828335762024
+        },
+        {
+          "move_uci": "d2d8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 61.52828335762024
+        },
+        {
+          "move_uci": "d2d8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 61.52828335762024
+        }
+      ]
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "k7/2K1R3/8/8/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.545c508c6a40",
+      "job_id": "job.krk.selected_provider_diversity.91274a6e5e1b",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "e7e3",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 58.19503222538251,
+      "source_stage": "stage4",
+      "state_id": "state.545c508c6a40",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "e7e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 58.19503222538251
+        },
+        {
+          "move_uci": "e7e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 58.194032696330545
+        },
+        {
+          "move_uci": "e7e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 58.19329623059836
+        },
+        {
+          "move_uci": "e7e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 58.193210293734076
+        },
+        {
+          "move_uci": "e7e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 58.19279207136482
+        },
+        {
+          "move_uci": "e7e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 58.19192957133055
+        },
+        {
+          "move_uci": "e7e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 58.19192957133055
+        },
+        {
+          "move_uci": "e7e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 58.19192957133055
+        },
+        {
+          "move_uci": "e7e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 58.19192957133055
+        },
+        {
+          "move_uci": "e7e3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 58.19192957133055
+        }
+      ]
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "7k/8/8/8/R7/8/5K2/8 w - - 0 1",
+      "frame_id": "cp.krk.state.7cab65617cd8",
+      "job_id": "job.krk.selected_provider_diversity.6ba7f4b2aa1f",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "f2g3",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 16.709497803282925,
+      "source_stage": "stage5",
+      "state_id": "state.7cab65617cd8",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "f2g3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 16.709497803282925
+        },
+        {
+          "move_uci": "f2g3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 16.70849827423096
+        },
+        {
+          "move_uci": "f2g3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 16.708420149230957
+        },
+        {
+          "move_uci": "f2g3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 16.70776180849877
+        },
+        {
+          "move_uci": "f2g3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 16.707675871634482
+        },
+        {
+          "move_uci": "f2g3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 16.70725764926523
+        },
+        {
+          "move_uci": "f2g3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 16.706808124188253
+        },
+        {
+          "move_uci": "f2g3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 16.706395149230957
+        },
+        {
+          "move_uci": "f2g3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 16.706395149230957
+        },
+        {
+          "move_uci": "f2g3",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 16.706395149230957
+        }
+      ]
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "7k/4RK2/8/8/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.18cfccc9c4c1",
+      "job_id": "job.krk.selected_provider_diversity.580cc3fc6ff8",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "e7e1",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 85.68969652934094,
+      "source_stage": "stage5",
+      "state_id": "state.18cfccc9c4c1",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "e7e1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 85.68969652934094
+        },
+        {
+          "move_uci": "e7e1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 85.68869700028897
+        },
+        {
+          "move_uci": "e7e1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 85.68796053468554
+        },
+        {
+          "move_uci": "e7e1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 85.68787459777296
+        },
+        {
+          "move_uci": "e7e1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 85.68745637532324
+        },
+        {
+          "move_uci": "e7e1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 85.68659387528896
+        },
+        {
+          "move_uci": "e7e1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 85.68659387528896
+        },
+        {
+          "move_uci": "e7e1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 85.68659387528896
+        },
+        {
+          "move_uci": "e7e1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 85.68659387528896
+        },
+        {
+          "move_uci": "e7e1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 85.68659387528896
+        }
+      ]
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "4k3/1R6/1K6/8/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.388d05197dd9",
+      "job_id": "job.krk.selected_provider_diversity.8d07ea5b140d",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "b7h7",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 60.91247224195022,
+      "source_stage": "stage5",
+      "state_id": "state.388d05197dd9",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "b7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 60.91247224195022
+        },
+        {
+          "move_uci": "b7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 60.91147271289825
+        },
+        {
+          "move_uci": "b7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 60.910736247294835
+        },
+        {
+          "move_uci": "b7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 60.910650310382245
+        },
+        {
+          "move_uci": "b7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 60.91023208793253
+        },
+        {
+          "move_uci": "b7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 60.909369587898254
+        },
+        {
+          "move_uci": "b7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 60.909369587898254
+        },
+        {
+          "move_uci": "b7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 60.909369587898254
+        },
+        {
+          "move_uci": "b7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 60.909369587898254
+        },
+        {
+          "move_uci": "b7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 60.909369587898254
+        }
+      ]
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "4k3/8/8/8/R7/8/4K3/8 w - - 0 1",
+      "frame_id": "cp.krk.state.7b116c49a009",
+      "job_id": "job.krk.selected_provider_diversity.57ba90256e8d",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "a4a8",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 22.631862991881558,
+      "source_stage": "stage5",
+      "state_id": "state.7b116c49a009",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "a4a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 22.631862991881558
+        },
+        {
+          "move_uci": "a4a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 22.63086346282959
+        },
+        {
+          "move_uci": "a4a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 22.630490425258873
+        },
+        {
+          "move_uci": "a4a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 22.630426999803383
+        },
+        {
+          "move_uci": "a4a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 22.630126997226167
+        },
+        {
+          "move_uci": "a4a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 22.630041060313584
+        },
+        {
+          "move_uci": "a4a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 22.629622837863863
+        },
+        {
+          "move_uci": "a4a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 22.62876033782959
+        },
+        {
+          "move_uci": "a4a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 22.62876033782959
+        },
+        {
+          "move_uci": "a4a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 22.62876033782959
+        }
+      ]
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "k7/2R5/2K5/8/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.ce89fbc790e3",
+      "job_id": "job.krk.selected_provider_diversity.363b38c7b92c",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "c7h7",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 68.03646110875626,
+      "source_stage": "stage5",
+      "state_id": "state.ce89fbc790e3",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "c7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 68.03646110875626
+        },
+        {
+          "move_uci": "c7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 68.03546157970429
+        },
+        {
+          "move_uci": "c7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 68.0347251139721
+        },
+        {
+          "move_uci": "c7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 68.0346391771078
+        },
+        {
+          "move_uci": "c7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 68.03422095473856
+        },
+        {
+          "move_uci": "c7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 68.03335845470428
+        },
+        {
+          "move_uci": "c7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 68.03335845470428
+        },
+        {
+          "move_uci": "c7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 68.03335845470428
+        },
+        {
+          "move_uci": "c7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 68.03335845470428
+        },
+        {
+          "move_uci": "c7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 68.03335845470428
+        }
+      ]
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "4k3/R7/K7/8/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.dcea518838ac",
+      "job_id": "job.krk.selected_provider_diversity.5480d9817e0e",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "a7h7",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 64.72545289416983,
+      "source_stage": "stage5",
+      "state_id": "state.dcea518838ac",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 64.72545289416983
+        },
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 64.72445336475373
+        },
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 64.72371689902154
+        },
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 64.72363096215724
+        },
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 64.723212739788
+        },
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 64.72235023975372
+        },
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 64.72235023975372
+        },
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 64.72235023975372
+        },
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 64.72235023975372
+        },
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 64.72235023975372
+        }
+      ]
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "4k3/8/3K4/8/8/8/8/R7 w - - 0 1",
+      "frame_id": "cp.krk.state.e65bbd1e9f0c",
+      "job_id": "job.krk.selected_provider_diversity.e100bc297488",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "a1f1",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 43.40482810512185,
+      "source_stage": "stage6",
+      "state_id": "state.e65bbd1e9f0c",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "a1f1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 43.40482810512185
+        },
+        {
+          "move_uci": "a1f1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 43.40482810512185
+        },
+        {
+          "move_uci": "a1f1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 43.40482810512185
+        },
+        {
+          "move_uci": "a1f1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 43.40482810512185
+        },
+        {
+          "move_uci": "a1f1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 43.40482810512185
+        },
+        {
+          "move_uci": "a1f1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 43.40482810512185
+        },
+        {
+          "move_uci": "a1f1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 43.40482810512185
+        },
+        {
+          "move_uci": "a1f1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 43.40482810512185
+        },
+        {
+          "move_uci": "a1f1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 43.40482810512185
+        },
+        {
+          "move_uci": "a1f1",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 43.40482810512185
+        }
+      ]
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "4k3/R7/8/K7/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.67a88e3b1dd2",
+      "job_id": "job.krk.selected_provider_diversity.36f55490b2c3",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "a7h7",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 45.58298611028213,
+      "source_stage": "stage6",
+      "state_id": "state.67a88e3b1dd2",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 45.58298611028213
+        },
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 45.58198658123016
+        },
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 45.581250115626744
+        },
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 45.581164178714154
+        },
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 45.58074595626444
+        },
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 45.579883456230164
+        },
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 45.579883456230164
+        },
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 45.579883456230164
+        },
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 45.579883456230164
+        },
+        {
+          "move_uci": "a7h7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 45.579883456230164
+        }
+      ]
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "1k6/8/2K5/8/8/8/8/R7 w - - 0 1",
+      "frame_id": "cp.krk.state.df10abc0731f",
+      "job_id": "job.krk.selected_provider_diversity.f8e9d4d6c320",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "a1a6",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 40.74213501104899,
+      "source_stage": "stage6",
+      "state_id": "state.df10abc0731f",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "a1a6",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 40.74213501104899
+        },
+        {
+          "move_uci": "a1a6",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 40.74179259871455
+        },
+        {
+          "move_uci": "a1a6",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 40.7396573045969
+        },
+        {
+          "move_uci": "a1a6",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 40.739449727958444
+        },
+        {
+          "move_uci": "a1a6",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 40.738505970342736
+        },
+        {
+          "move_uci": "a1a6",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 40.7380823045969
+        },
+        {
+          "move_uci": "a1a6",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 40.7380823045969
+        },
+        {
+          "move_uci": "a1a6",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 40.7380823045969
+        },
+        {
+          "move_uci": "a1a6",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 40.7380823045969
+        },
+        {
+          "move_uci": "a1a6",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 40.7380823045969
+        }
+      ]
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_selected_provider_observation",
+      "fen": "7k/8/5K2/8/8/8/8/R7 w - - 0 1",
+      "frame_id": "cp.krk.state.cb9f8eea01fd",
+      "job_id": "job.krk.selected_provider_diversity.12735a378b9b",
+      "schema_version": "krk_selected_provider_observation.v0",
+      "selected_move": "f6f7",
+      "selected_provider_family": "stage0_basin",
+      "selected_provider_id": "krk.stage0_basin",
+      "selected_score": 37.83216350657958,
+      "source_stage": "stage6",
+      "state_id": "state.cb9f8eea01fd",
+      "suggestion_count": 10,
+      "top_suggestions": [
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 1,
+          "score": 37.83216350657958
+        },
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 2,
+          "score": 37.831163977527616
+        },
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 3,
+          "score": 37.83042751179543
+        },
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 4,
+          "score": 37.83034157493115
+        },
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 5,
+          "score": 37.82992335256189
+        },
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 6,
+          "score": 37.82906085252762
+        },
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 7,
+          "score": 37.82906085252762
+        },
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 8,
+          "score": 37.82906085252762
+        },
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 9,
+          "score": 37.82906085252762
+        },
+        {
+          "move_uci": "f6f7",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "rank": 10,
+          "score": 37.82906085252762
+        }
+      ]
+    }
+  ],
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_selected_provider_diversity_observation_scan.v0",
+  "source_artifacts": [
+    "reports/krk_selected_provider_diversity_sampling_manifest_v0.json",
+    "reports/krk_selected_provider_diversity_sampling_manifest_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "distinct_selected_provider_families": 1,
+    "max_selected_provider_family_dominance": 1.0,
+    "observation_count": 20,
+    "selected_provider_family_counts": {
+      "stage0_basin": 20
+    },
+    "selected_stage_counts": {
+      "stage4": 10,
+      "stage5": 6,
+      "stage6": 4
+    },
+    "stage7_observations": 0,
+    "wall_time_seconds": 7.293
+  }
+}
