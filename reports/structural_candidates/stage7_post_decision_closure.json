@@ -1,0 +1,61 @@
+{
+  "artifact_verification": {
+    "all_checks_passed": true,
+    "benchmark_status": "model_expression_gap_persists",
+    "checks": {
+      "benchmark_non_causal": true,
+      "benchmark_schema_ok": true,
+      "benchmark_status_matches_expected": true,
+      "gate_non_causal": true,
+      "gate_outcome_matches_expected": true,
+      "gate_schema_ok": true,
+      "runtime_behavior_unchanged": true,
+      "stage7_promotion_blocked": true,
+      "stage7_quarantined": true,
+      "stage8_training_blocked": true
+    },
+    "gate_outcome": "model_expression_gap_persists_stage7_micro_work_stops"
+  },
+  "blocked_next_steps": [
+    "stage7_runtime_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "causal_internal_terminals",
+    "support_adapters_or_score_bonuses",
+    "new_broad_stage7_diagnostic_branch_without_review"
+  ],
+  "causal_status": "non_causal_closure_report",
+  "decision": {
+    "benchmark_status": "model_expression_gap_persists",
+    "next_implementation_requires_explicit_review": true,
+    "required_conclusion": "Stage 7 micro-work is stopped pending architecture review.",
+    "selected_outcome": "model_expression_gap_persists_stage7_micro_work_stops"
+  },
+  "evidence_summary": {
+    "current_top1": 0.35714285714285715,
+    "internal_monitor_features_improve_offline": false,
+    "internal_monitor_top1": 0.4827586206896552,
+    "oracle_top1": 1.0,
+    "ranked_hard_negative_rate": 0.7931034482758621,
+    "ranked_top1": 0.1896551724137931,
+    "visible_top1": 0.4827586206896552
+  },
+  "gameplay_topology_mutation": false,
+  "minimum_future_data_requirements": [
+    "more_family_held_out_post_box_trajectories",
+    "successful_post_box_control_trajectories",
+    "closed_loop_labels_beyond_stage7",
+    "hard_negative_contrast_sets"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "stage7_post_decision_closure.v1",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_training_objective_benchmark.json",
+    "reports/structural_candidates/stage7_training_objective_decision_gate.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage7_status": "local_valid_composition_quarantined",
+  "stage8_training_allowed": false
+}

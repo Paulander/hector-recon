@@ -147,6 +147,15 @@ assert _training_decision_gate_spec.loader is not None
 _training_decision_gate = importlib.util.module_from_spec(_training_decision_gate_spec)
 _training_decision_gate_spec.loader.exec_module(_training_decision_gate)
 
+_post_decision_closure_spec = importlib.util.spec_from_file_location(
+    "summarize_stage7_post_decision_closure",
+    Path(__file__).resolve().parents[1] / "scripts" / "summarize_stage7_post_decision_closure.py",
+)
+assert _post_decision_closure_spec is not None
+assert _post_decision_closure_spec.loader is not None
+_post_decision_closure = importlib.util.module_from_spec(_post_decision_closure_spec)
+_post_decision_closure_spec.loader.exec_module(_post_decision_closure)
+
 _ranking_calibration_spec = importlib.util.spec_from_file_location(
     "audit_stage7_ranking_calibration",
     Path(__file__).resolve().parents[1] / "scripts" / "audit_stage7_ranking_calibration.py",
@@ -1326,6 +1335,81 @@ def test_stage7_training_objective_decision_gate_maps_internal_monitor_help(tmp_
     )
     assert gate["runtime_behavior_changed"] is False
     assert gate["runtime_terminals_added"] is False
+
+
+def test_stage7_post_decision_closure_verifies_hard_stop(tmp_path):
+    benchmark = {
+        "schema_version": "stage7_training_objective_benchmark.v1",
+        "causal_status": "non_causal_offline_benchmark",
+        "runtime_behavior_changed": False,
+        "stage7_status": "local_valid_composition_quarantined",
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+        "decision": {
+            "candidate_status": "model_expression_gap_persists",
+            "internal_monitor_features_improve_offline": False,
+        },
+        "models": [
+            {
+                "model_id": "current_learned_post_box_scorer",
+                "test": {
+                    "top1_dtm_positive_accuracy": 0.35,
+                    "hard_negative_above_positive_rate": 0.28,
+                },
+            },
+            {
+                "model_id": "pairwise_ranked_preference_scorer",
+                "test": {
+                    "top1_dtm_positive_accuracy": 0.19,
+                    "hard_negative_above_positive_rate": 0.79,
+                },
+            },
+            {
+                "model_id": "internal_monitor_augmented_visible_term_scorer",
+                "test": {"top1_dtm_positive_accuracy": 0.48},
+            },
+            {
+                "model_id": "oracle_dtm_positive_topk_ceiling",
+                "test": {"top1_dtm_positive_accuracy": 1.0},
+            },
+        ],
+    }
+    gate = {
+        "schema_version": "stage7_training_objective_decision_gate.v1",
+        "causal_status": "non_causal_decision_gate",
+        "runtime_behavior_changed": False,
+        "stage7_status": "local_valid_composition_quarantined",
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+        "selected_outcome": "model_expression_gap_persists_stage7_micro_work_stops",
+    }
+    (tmp_path / "stage7_training_objective_benchmark.json").write_text(
+        json.dumps(benchmark), encoding="utf-8"
+    )
+    (tmp_path / "stage7_training_objective_decision_gate.json").write_text(
+        json.dumps(gate), encoding="utf-8"
+    )
+
+    closure = _post_decision_closure.build_closure(tmp_path)
+    design = _post_decision_closure.build_sequence_policy_note(closure)
+
+    assert closure["schema_version"] == "stage7_post_decision_closure.v1"
+    assert closure["causal_status"] == "non_causal_closure_report"
+    assert closure["artifact_verification"]["all_checks_passed"] is True
+    assert closure["decision"]["selected_outcome"] == "model_expression_gap_persists_stage7_micro_work_stops"
+    assert closure["decision"]["next_implementation_requires_explicit_review"] is True
+    assert closure["runtime_behavior_changed"] is False
+    assert closure["stage7_promotion_allowed"] is False
+    assert closure["stage8_training_allowed"] is False
+    assert "new_broad_stage7_diagnostic_branch_without_review" in closure["blocked_next_steps"]
+
+    assert design["schema_version"] == "stage7_sequence_policy_redesign_note.v1"
+    assert design["causal_status"] == "non_causal_design_note"
+    assert design["runtime_behavior_changed"] is False
+    assert design["stage7_promotion_allowed"] is False
+    assert design["stage8_training_allowed"] is False
+    assert "training_new_model_in_this_slice" in design["not_authorized"]
+    assert "hard_negative_contrast_sets" in design["minimum_future_data_requirements"]
 
 
 def test_stage7_training_benchmark_tie_breaks_without_label_leakage():

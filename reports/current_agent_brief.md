@@ -35,6 +35,7 @@ Current interpretation:
 - The latest arbitration probe established shared terminal-space provider comparison infrastructure but did not justify a causal arbitration change.
 - The first unified arbitration sample was intentionally small and underpowered; its sampled residuals were high `box_area_relevance`, so low box relevance / near-edge phase boundary is not yet established as the explanation.
 - The offline training-objective benchmark did not justify a runtime sandbox: simple pairwise/ranked visible-term scoring underperformed the current learned scorer, visible log-odds/box heuristics improved top-1 only modestly while worsening hard-negative/draw behavior, and oracle ceilings remain high. The internal-monitor-augmented offline scorer used non-causal `InternalTerminalSpec` evidence only as diagnostic features and did not improve over the visible-term baseline. The hard decision gate selected `model_expression_gap_persists_stage7_micro_work_stops`; Stage 7 micro-work should stop pending architecture review.
+- Stage 7 post-decision closure is complete. The closure verified the benchmark/gate artifacts and records `model_expression_gap_persists_stage7_micro_work_stops` as the current hard stop. Any future sequence-policy/model-expression redesign requires explicit architecture review before implementation.
 - The ranking calibration audit refined that to `term_collision_and_state_local_ranking_gap`: winning-nonoptimal hard negatives heavily outnumber positives and share broad visible progress/safety terms, so another runtime repair should wait for a state-local contrastive/interaction diagnosis or architecture review.
 - The state-local contrast audit found positives are separable from hard negatives by single visible terms in most states and by term interactions in many others; current status is `state_local_single_terms_available`, with next step limited to non-causal visible-term refinement audit.
 - The visible-term refinement audit found candidate positive terms, but several high-value terms are globally ambiguous and require companion/phase scope; current status is `visible_term_refinement_candidates_non_causal`, with no runtime patch justified.
@@ -271,6 +272,10 @@ reports/strategy_arbitration/krk_internal_terminal_design_review_v1.json
 reports/strategy_arbitration/krk_internal_terminal_design_review_v1.md
 reports/structural_candidates/stage7_training_objective_decision_gate.json
 reports/structural_candidates/stage7_training_objective_decision_gate.md
+reports/structural_candidates/stage7_post_decision_closure.json
+reports/structural_candidates/stage7_post_decision_closure.md
+reports/structural_candidates/stage7_sequence_policy_redesign_note.json
+reports/structural_candidates/stage7_sequence_policy_redesign_note.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
