@@ -1,0 +1,112 @@
+{
+  "schema_version": "krk_strategy_arbiter_sandbox_readiness_criteria.v0",
+  "causal_status": "non_causal_design_review",
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_arbiter_implemented": false,
+  "source_artifacts": [
+    "reports/krk_selector_balanced_architecture_review_v1.json",
+    "reports/krk_selector_balanced_label_probe_v1.json",
+    "reports/krk_strategy_arbiter_architecture_review_v1.json",
+    "reports/current_agent_brief.md"
+  ],
+  "readiness_status": "sandbox_not_ready_criteria_defined",
+  "minimum_evidence_requirements": [
+    {
+      "id": "balanced_protected_controls",
+      "requirement": "At least one balanced protected-control selector dataset with positive and negative examples across Stage4/5/6.",
+      "current_status": "partially_met",
+      "evidence": "reports/krk_selector_balanced_label_dataset_v1.json"
+    },
+    {
+      "id": "held_out_stage7_challenges",
+      "requirement": "Stage7 residuals remain held out and are never used as selector training rows before review.",
+      "current_status": "met",
+      "evidence": "stage7_training_rows == 0 in selector datasets"
+    },
+    {
+      "id": "provider_provenance_features",
+      "requirement": "Selector evidence uses explicit provider family/maturity/source-stage/validation fields, not hidden raw provider-id priors.",
+      "current_status": "partially_met",
+      "evidence": "reports/krk_selector_provenance_feature_probe_v0.json"
+    },
+    {
+      "id": "out_of_sample_controls",
+      "requirement": "A future selector must be evaluated on protected states not used to derive the prior.",
+      "current_status": "missing",
+      "evidence": null
+    },
+    {
+      "id": "route_evidence_contract",
+      "requirement": "Every selector suggestion must cite StrategyProposalFrame inputs, provider provenance, source terms, score delta, direct_request=false, and blocked causal actions.",
+      "current_status": "design_only",
+      "evidence": "reports/krk_strategy_arbiter_architecture_review_v1.json"
+    }
+  ],
+  "required_default_off_tests": [
+    "baseline_vs_flag_off_equivalence_selected_move",
+    "baseline_vs_flag_off_equivalence_selected_provider",
+    "baseline_vs_flag_off_equivalence_local_result",
+    "baseline_vs_flag_off_equivalence_conversion_result",
+    "baseline_vs_flag_off_equivalence_shadow_candidates",
+    "no_metadata_emitted_when_flag_off",
+    "metadata_only_delta_when_observability_on"
+  ],
+  "required_sandbox_tests": [
+    "selector_suggestions_are_traceable",
+    "selector_never_uses_runtime_dtm_or_tablebase",
+    "selector_never_mutates_topology",
+    "selector_never_directly_requests_provider_without_visible_contract",
+    "selector_score_delta_is_explicit_and_bounded",
+    "stage7_residuals_are_challenge_only",
+    "m1_m4_causal_inputs_unchanged",
+    "promotion_gate_defaults_to_blocked"
+  ],
+  "required_guardrails": [
+    "Stage4 wrong-tempo paired controls",
+    "Stage5 fence/handoff controls",
+    "Stage6 drive_to_edge controls",
+    "Stage1/KRK entry if cheap",
+    "M1-M4 preservation suite",
+    "KPK-to-KQK bridge sanity if cross-domain routing is touched"
+  ],
+  "sandbox_profile_constraints": {
+    "default_off": true,
+    "domain_scoped": "KRK only",
+    "profile_scoped": "handoff_composition_v1 only until review",
+    "allowed_input_records": [
+      "StrategyProposalFrame",
+      "provider provenance/maturity metadata",
+      "visible source terms",
+      "non-causal internal monitor summaries as metadata only"
+    ],
+    "forbidden_inputs": [
+      "runtime DTM/tablebase",
+      "state hash exceptions",
+      "HandoffPacket causal fields",
+      "SkillContractStats causal fields",
+      "ShadowStemCandidate causal fields",
+      "StructuralCandidate causal fields",
+      "GrowthGovernor causal fields",
+      "PlanCapsuleSpec causal fields",
+      "InternalTerminalSpec causal fields"
+    ]
+  },
+  "promotion_rules": [
+    "No promotion from selector target improvement alone.",
+    "Must improve or preserve protected Stage4/5/6 controls.",
+    "Must not use Stage7 residuals as training rows.",
+    "Must not regress M1-M4 preservation tests.",
+    "Must produce readable route evidence for every affected suggestion.",
+    "Must be quarantined if any protected guardrail regresses."
+  ],
+  "decision": {
+    "status": "readiness_criteria_defined_sandbox_still_blocked",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "stage7_repair_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "recommended_next_step": "architecture_review_or_out_of_sample_control_collection"
+  }
+}
