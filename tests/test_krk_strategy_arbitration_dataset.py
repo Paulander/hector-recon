@@ -338,6 +338,15 @@ assert _strategy_owner_label_plan_review_spec.loader is not None
 _strategy_owner_label_plan_review = importlib.util.module_from_spec(_strategy_owner_label_plan_review_spec)
 _strategy_owner_label_plan_review_spec.loader.exec_module(_strategy_owner_label_plan_review)
 
+_strategy_owner_bind_spec = importlib.util.spec_from_file_location(
+    "bind_krk_strategy_owner_contrast_labels",
+    Path(__file__).resolve().parents[1] / "scripts" / "bind_krk_strategy_owner_contrast_labels.py",
+)
+assert _strategy_owner_bind_spec is not None
+assert _strategy_owner_bind_spec.loader is not None
+_strategy_owner_bind = importlib.util.module_from_spec(_strategy_owner_bind_spec)
+_strategy_owner_bind_spec.loader.exec_module(_strategy_owner_bind)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -3209,3 +3218,97 @@ def test_krk_strategy_owner_contrast_label_plan_review_blocks_label_run(tmp_path
     assert review["review_summary"]["allowed_to_run_labels"] is False
     assert review["decision"]["labels_allowed_now"] is False
     assert review["decision"]["recommended_next_step"] == "bind_contrast_label_jobs_to_explicit_topologies"
+
+
+def test_krk_strategy_owner_contrast_binding_manifest_is_non_causal(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    topology = (
+        root
+        / "snapshots"
+        / "krk_triplet_pipeline"
+        / "adaptive_krk_stage6_drive_overlay_composed"
+        / "topology"
+        / "krk_entry_topology.json"
+    )
+    stage5_checkpoint = (
+        root
+        / "snapshots"
+        / "krk_triplet_pipeline"
+        / "adaptive_krk_stage5_fence_clean"
+        / "baseline"
+        / "best_by_stage"
+        / "fence_established.pkl"
+    )
+    stage6_checkpoint = (
+        root
+        / "snapshots"
+        / "krk_triplet_pipeline"
+        / "adaptive_krk_stage6_drive_profile_king_support"
+        / "baseline"
+        / "best_by_stage"
+        / "drive_to_edge.pkl"
+    )
+    topology.parent.mkdir(parents=True, exist_ok=True)
+    stage5_checkpoint.parent.mkdir(parents=True, exist_ok=True)
+    stage6_checkpoint.parent.mkdir(parents=True, exist_ok=True)
+    topology.write_text(
+        json.dumps({"skills": ["krk.edge_trap_wrong_tempo", "krk.drive_to_edge"]}),
+        encoding="utf-8",
+    )
+    stage5_checkpoint.write_text("stage5", encoding="utf-8")
+    stage6_checkpoint.write_text("stage6", encoding="utf-8")
+    (reports / "krk_strategy_owner_contrast_label_plan_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_label_plan",
+                "jobs": [
+                    {
+                        "job_id": "job.stage4",
+                        "causal_status": "non_causal_label_job",
+                        "labels_generated": False,
+                        "source_stage": "stage4",
+                        "provider_id": "krk.edge_trap_wrong_tempo",
+                        "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                        "horizon": 40,
+                    },
+                    {
+                        "job_id": "job.stage6",
+                        "causal_status": "non_causal_label_job",
+                        "labels_generated": False,
+                        "source_stage": "stage6",
+                        "provider_id": "krk.drive_to_edge",
+                        "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                        "horizon": 40,
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reports / "krk_strategy_owner_contrast_label_plan_review_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_plan_review",
+                "review_summary": {"allowed_to_bind_execution_manifest": True},
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_strategy_owner_bind, "ROOT", root)
+
+    manifest = _strategy_owner_bind.build_manifest()
+
+    assert manifest["schema_version"] == "krk_strategy_owner_contrast_execution_manifest.v0"
+    assert manifest["causal_status"] == "non_causal_execution_manifest"
+    assert manifest["runtime_behavior_changed"] is False
+    assert manifest["runtime_arbiter_implemented"] is False
+    assert manifest["stage7_promotion_allowed"] is False
+    assert manifest["stage8_training_allowed"] is False
+    assert manifest["binding_summary"]["all_bindings_valid"] is True
+    assert manifest["binding_summary"]["stage7_jobs"] == 0
+    assert manifest["decision"]["labels_allowed_now"] is False
+    bound = {job["provider_id"]: job["execution_binding"] for job in manifest["jobs"]}
+    assert bound["krk.edge_trap_wrong_tempo"]["provider_version"] == "stage5_validated_v1"
+    assert bound["krk.drive_to_edge"]["provider_version"] == "stage6_overlay_v1"

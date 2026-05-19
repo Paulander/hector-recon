@@ -594,6 +594,14 @@ KRK strategy-owner contrast label plan review v0:
 
 The review passes the bounded label plan with `0` violations and confirms it may proceed only to an explicit execution-binding manifest. Labels are still not allowed until binding is reviewed. Required binding properties are explicit topology/profile per job, visible Stage 4 forced-provider skill matching, frozen Stage 5/6 provider metadata preservation, provider versions/checkpoints, and a separate binding-manifest review. Decision: `contrast_label_plan_review_passed_binding_required`.
 
+KRK strategy-owner contrast execution manifest v0:
+
+- `scripts/bind_krk_strategy_owner_contrast_labels.py`
+- `reports/krk_strategy_owner_contrast_execution_manifest_v0.json`
+- `reports/krk_strategy_owner_contrast_execution_manifest_v0.md`
+
+The non-causal execution manifest binds all `12` reviewed jobs to `handoff_composition_v1` / `stage6_overlay_composed_v1` with explicit provider versions and checkpoints. All target provider skill IDs are present in the topology, missing path count is `0`, and Stage 7 jobs remain `0`. Labels are still not allowed until the manifest is reviewed. Decision: `contrast_execution_manifest_bound_review_required`.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -765,6 +773,8 @@ reports/krk_strategy_owner_contrast_label_plan_v0.json
 reports/krk_strategy_owner_contrast_label_plan_v0.md
 reports/krk_strategy_owner_contrast_label_plan_review_v0.json
 reports/krk_strategy_owner_contrast_label_plan_review_v0.md
+reports/krk_strategy_owner_contrast_execution_manifest_v0.json
+reports/krk_strategy_owner_contrast_execution_manifest_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
