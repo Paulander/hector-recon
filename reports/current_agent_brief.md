@@ -193,6 +193,15 @@ KRK internal-terminal candidates v0:
 
 Four non-causal `InternalTerminalSpec` candidates are defined: `terminal.krk.local_provider_competition_failed`, `terminal.krk.post_plan_stagnation`, `terminal.krk.box_shrink_owner_exit_pressure`, and `terminal.krk.repair_needed_monitor`. Replay-free validation keeps `local_provider_competition_failed` and `post_plan_stagnation` as the strongest internal-terminal candidates, but both are sparse and Stage7-only. `box_shrink_owner_exit_pressure` and `repair_needed_monitor` remain monitoring-only / companion-dependent. No runtime terminal, causal affordance, routing change, Stage 7 repair, Stage 7 promotion, or Stage 8 training is authorized.
 
+KRK internal-terminal evidence/design review v1:
+
+- `reports/strategy_arbitration/krk_internal_terminal_evidence_v1.json`
+- `reports/strategy_arbitration/krk_internal_terminal_evidence_v1.md`
+- `reports/strategy_arbitration/krk_internal_terminal_design_review_v1.json`
+- `reports/strategy_arbitration/krk_internal_terminal_design_review_v1.md`
+
+The v1 evidence aggregation broadens the non-causal review without new playouts. `local_provider_competition_failed` and `post_plan_stagnation` remain the closest future runtime-visible non-causal internal-terminal candidates, but they are still sparse and Stage7-only. `repair_needed_monitor` has broader cross-stage evidence but is noisy, and `box_shrink_owner_exit_pressure` still needs companion handoff-target terms. No terminal is causal-ready; the next safe direction is broader replay-free evidence collection or review, not runtime implementation.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -256,6 +265,10 @@ reports/strategy_arbitration/krk_internal_terminal_candidates_v0.json
 reports/strategy_arbitration/krk_internal_terminal_candidates_v0.md
 reports/strategy_arbitration/krk_internal_terminal_validation_v0.json
 reports/strategy_arbitration/krk_internal_terminal_validation_v0.md
+reports/strategy_arbitration/krk_internal_terminal_evidence_v1.json
+reports/strategy_arbitration/krk_internal_terminal_evidence_v1.md
+reports/strategy_arbitration/krk_internal_terminal_design_review_v1.json
+reports/strategy_arbitration/krk_internal_terminal_design_review_v1.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

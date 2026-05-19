@@ -102,6 +102,15 @@ assert _internal_terminal_spec.loader is not None
 _internal_terminal = importlib.util.module_from_spec(_internal_terminal_spec)
 _internal_terminal_spec.loader.exec_module(_internal_terminal)
 
+_internal_terminal_evidence_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_internal_terminal_evidence",
+    Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_internal_terminal_evidence.py",
+)
+assert _internal_terminal_evidence_spec is not None
+assert _internal_terminal_evidence_spec.loader is not None
+_internal_terminal_evidence = importlib.util.module_from_spec(_internal_terminal_evidence_spec)
+_internal_terminal_evidence_spec.loader.exec_module(_internal_terminal_evidence)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -940,3 +949,138 @@ def test_krk_internal_terminal_candidates_and_validation_are_non_causal(tmp_path
         "terminal.krk.post_plan_stagnation",
     ]
     assert all(item["causal_use_blocked"] is True for item in validation["terminal_validations"])
+
+
+def test_krk_internal_terminal_evidence_and_review_are_non_causal(tmp_path):
+    report_root = tmp_path / "reports" / "strategy_arbitration"
+    structural_root = tmp_path / "reports" / "structural_candidates"
+    report_root.mkdir(parents=True)
+    structural_root.mkdir(parents=True)
+    candidates = _internal_terminal.build_candidates(report_root)
+    (report_root / "krk_internal_terminal_candidates_v0.json").write_text(
+        json.dumps(candidates), encoding="utf-8"
+    )
+    (report_root / "krk_visible_monitor_terms_v0.json").write_text(
+        json.dumps(
+            {
+                "records": [
+                    {
+                        "state_id": "state.fail",
+                        "source_stage": "stage7",
+                        "active_landmark_label": "box_shrink",
+                        "associated_outcome": "max_plies",
+                        "terms": {
+                            "local_provider_competition_failed": {"value": True},
+                            "post_plan_stagnation": {"value": True},
+                            "box_area_no_longer_decision_relevant": {"value": True},
+                            "cut_or_fence_restored_after_move": {"value": True},
+                            "safe_repair_move_exists": {"value": True},
+                        },
+                    },
+                    {
+                        "state_id": "state.mate",
+                        "source_stage": "stage5",
+                        "active_landmark_label": "fence_established",
+                        "associated_outcome": "mate",
+                        "terms": {
+                            "local_provider_competition_failed": {"value": False},
+                            "post_plan_stagnation": {"value": False},
+                            "box_area_no_longer_decision_relevant": {"value": False},
+                            "cut_or_fence_restored_after_move": {"value": False},
+                            "safe_repair_move_exists": {"value": True},
+                        },
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    validation = _internal_terminal.build_validation(report_root, candidates)
+    (report_root / "krk_internal_terminal_validation_v0.json").write_text(
+        json.dumps(validation), encoding="utf-8"
+    )
+    (report_root / "krk_strategy_arbitration_dataset_v0.json").write_text(
+        json.dumps(
+            {
+                "records": [
+                    {
+                        "state_id": "state.fail",
+                        "source_stage": "stage7",
+                        "active_landmark_label": "box_shrink",
+                        "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                        "result_label": {"current_graph_h40": "max_plies"},
+                        "hypothesis_labels": ["strategy_arbitration_candidate"],
+                        "terminal_space_context": {"fence_stable": False},
+                        "strategy_proposals": [
+                            {
+                                "provider_id": "krk.stage0_basin",
+                                "move_uci": "a1a2",
+                                "raw_score": 10.0,
+                            },
+                            {
+                                "provider_id": "krk.drive_to_edge",
+                                "move_uci": "a1a3",
+                                "raw_score": 0.2,
+                            },
+                        ],
+                    },
+                    {
+                        "state_id": "state.mate",
+                        "source_stage": "stage5",
+                        "active_landmark_label": "fence_established",
+                        "result_label": {"playout_result": "mate"},
+                        "hypothesis_labels": [],
+                        "terminal_space_context": {"fence_stable": True},
+                        "strategy_proposals": [],
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    (report_root / "krk_strategy_monitor_records_v0.json").write_text(
+        json.dumps(
+            {
+                "summary": {
+                    "outcomes_by_monitor_type": {
+                        "PlanSelectionNeededMonitor": {"max_plies": 1},
+                        "RepairNeededMonitor": {"mate": 1, "max_plies": 1},
+                    },
+                    "records_by_monitor_type": {
+                        "PlanSelectionNeededMonitor": 1,
+                        "RepairNeededMonitor": 2,
+                    },
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    (structural_root / "stage7_evidence_merge_table.json").write_text(
+        json.dumps({"rows": []}), encoding="utf-8"
+    )
+
+    evidence = _internal_terminal_evidence.build_evidence(report_root, structural_root)
+    review = _internal_terminal_evidence.build_design_review(evidence)
+
+    assert evidence["schema_version"] == "krk_internal_terminal_evidence.v1"
+    assert evidence["causal_status"] == "non_causal_evidence"
+    assert evidence["runtime_behavior_changed"] is False
+    assert evidence["runtime_defaults_changed"] is False
+    assert evidence["stage7_promotion_allowed"] is False
+    assert evidence["stage8_training_allowed"] is False
+    assert evidence["summary"]["causal_ready_terminals"] == []
+    assert all(item["causal_ready"] is False for item in evidence["terminal_evidence"])
+    assert any(
+        item["terminal_id"] == "terminal.krk.local_provider_competition_failed"
+        and item["associated_provider_strategy_patterns"]["raw_top_provider_counts"]["krk.stage0_basin"] == 1
+        for item in evidence["terminal_evidence"]
+    )
+
+    assert review["schema_version"] == "krk_internal_terminal_design_review.v1"
+    assert review["causal_status"] == "non_causal_design_review"
+    assert review["runtime_behavior_changed"] is False
+    assert review["runtime_defaults_changed"] is False
+    assert review["summary"]["causal_ready_terminals"] == []
+    assert all(item["causal_ready"] is False for item in review["terminal_readiness"])
+    assert "no_hidden_controller" in review["runtime_promotion_readiness_checklist"]
+    assert "no_topology_mutation_during_gameplay" in review["runtime_promotion_readiness_checklist"]
