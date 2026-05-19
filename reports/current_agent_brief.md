@@ -37,6 +37,7 @@ Current interpretation:
 - The offline training-objective benchmark did not justify a runtime sandbox: simple pairwise/ranked visible-term scoring underperformed the current learned scorer, visible log-odds/box heuristics improved top-1 only modestly while worsening hard-negative/draw behavior, and oracle ceilings remain high; current status is `ranking_calibration_gap`.
 - The ranking calibration audit refined that to `term_collision_and_state_local_ranking_gap`: winning-nonoptimal hard negatives heavily outnumber positives and share broad visible progress/safety terms, so another runtime repair should wait for a state-local contrastive/interaction diagnosis or architecture review.
 - The state-local contrast audit found positives are separable from hard negatives by single visible terms in most states and by term interactions in many others; current status is `state_local_single_terms_available`, with next step limited to non-causal visible-term refinement audit.
+- The visible-term refinement audit found candidate positive terms, but several high-value terms are globally ambiguous and require companion/phase scope; current status is `visible_term_refinement_candidates_non_causal`, with no runtime patch justified.
 
 ## Hard Invariants
 

@@ -156,6 +156,15 @@ assert _state_local_contrast_spec.loader is not None
 _state_local_contrast = importlib.util.module_from_spec(_state_local_contrast_spec)
 _state_local_contrast_spec.loader.exec_module(_state_local_contrast)
 
+_visible_term_refinement_spec = importlib.util.spec_from_file_location(
+    "audit_stage7_visible_term_refinement",
+    Path(__file__).resolve().parents[1] / "scripts" / "audit_stage7_visible_term_refinement.py",
+)
+assert _visible_term_refinement_spec is not None
+assert _visible_term_refinement_spec.loader is not None
+_visible_term_refinement = importlib.util.module_from_spec(_visible_term_refinement_spec)
+_visible_term_refinement_spec.loader.exec_module(_visible_term_refinement)
+
 
 def test_stage7_unresolved_legal_first_summary_marks_selection_gap_and_capacity_probe(tmp_path):
     probe = {
@@ -1193,3 +1202,102 @@ def test_stage7_state_local_contrast_audit_marks_single_term_separability(tmp_pa
     assert audit["candidate_status"] == "state_local_single_terms_available"
     assert audit["diagnosis_counts"]["single_terms_separate_positive_from_hard_negative"] == 1
     assert audit["recommended_next_step"] == "non-causal visible term refinement audit before any runtime patch"
+
+
+def test_stage7_visible_term_refinement_audit_keeps_candidates_non_causal(tmp_path):
+    seed = {
+        "trajectories": [
+            {
+                "white_training_steps": [
+                    {
+                        "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+                        "move": "a6a5",
+                        "legal_move_labels": [
+                            {
+                                "move": "a6a5",
+                                "label": 1,
+                                "target_class": "optimal_dtm_move",
+                                "move_shape_terms": ["candidate_is_rook_move"],
+                                "post_move_terms": ["box_area_decreases_after_move", "rook_safe_after_move"],
+                            },
+                            {
+                                "move": "a6a4",
+                                "label": 0,
+                                "target_class": "winning_nonoptimal_move",
+                                "move_shape_terms": ["candidate_is_rook_move"],
+                                "post_move_terms": ["box_area_decreases_after_move", "rook_safe_after_move"],
+                            },
+                            {
+                                "move": "d1c2",
+                                "label": 1,
+                                "target_class": "optimal_dtm_move",
+                                "move_shape_terms": ["candidate_is_king_move"],
+                                "post_move_terms": ["white_king_distance_to_enemy_decreases"],
+                            },
+                        ],
+                    }
+                ]
+            }
+        ]
+    }
+    (tmp_path / "stage7_post_box_dtm_trajectory_seed_expanded_h40.json").write_text(
+        json.dumps(seed), encoding="utf-8"
+    )
+    (tmp_path / "stage7_ranking_calibration_audit.json").write_text(
+        json.dumps(
+            {
+                "candidate_status": "term_collision_and_state_local_ranking_gap",
+                "term_collision_summary": {
+                    "high_collision_terms": [
+                        {
+                            "term": "post_move_terms.box_area_decreases_after_move",
+                            "positive_count": 1,
+                            "hard_negative_count": 1,
+                            "non_winning_count": 0,
+                        }
+                    ],
+                    "safety_veto_candidates": [],
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    (tmp_path / "stage7_state_local_contrast_audit.json").write_text(
+        json.dumps(
+            {
+                "candidate_status": "state_local_single_terms_available",
+                "top_positive_unique_terms": [
+                    {"term": "post_move_terms.white_king_distance_to_enemy_decreases", "count": 1}
+                ],
+                "top_hard_negative_unique_terms": [
+                    {"term": "move_shape_terms.rook_to_edge_file", "count": 2}
+                ],
+                "top_positive_unique_pair_terms": [
+                    {
+                        "term_a": "move_shape_terms.candidate_is_king_move",
+                        "term_b": "post_move_terms.white_king_distance_to_enemy_decreases",
+                        "count": 1,
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    audit = _visible_term_refinement.build_audit(tmp_path)
+
+    assert audit["schema_version"] == "stage7_visible_term_refinement_audit.v1"
+    assert audit["causal_status"] == "non_causal_offline_audit"
+    assert audit["runtime_behavior_changed"] is False
+    assert audit["stage7_promotion_allowed"] is False
+    assert audit["stage8_training_allowed"] is False
+    assert audit["candidate_status"] in {
+        "visible_term_refinement_candidates_non_causal",
+        "visible_term_refinement_candidates_require_scoped_interactions",
+    }
+    assert audit["positive_term_refinement_candidates"][0]["term"] == (
+        "post_move_terms.white_king_distance_to_enemy_decreases"
+    )
+    assert audit["ambiguous_terms_requiring_scope"][0]["term"] == (
+        "post_move_terms.box_area_decreases_after_move"
+    )
