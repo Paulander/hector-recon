@@ -1,0 +1,125 @@
+{
+  "schema_version": "krk_selector_objective_label_semantics.v0",
+  "causal_status": "non_causal_label_contract",
+  "source_review": "reports/krk_strategy_arbiter_control_plane_review_v0.json",
+  "purpose": "Separate KRK strategy-arbiter selector target labels before any sandbox or runtime selector.",
+  "runtime_arbiter_allowed": false,
+  "sandbox_ready": false,
+  "stage7_status": "held_out_challenge",
+  "target_kinds": [
+    {
+      "target_kind": "selected_playout_success",
+      "meaning": "The currently selected provider/move converted under the normal graph within the validation horizon.",
+      "positive_label": "selected_provider_mate_h40",
+      "negative_label": "selected_provider_max_plies_or_draw_h40",
+      "allowed_use": "measure current policy quality and guardrail regressions",
+      "not_equivalent_to": [
+        "provider_capacity",
+        "forced_provider_conversion"
+      ]
+    },
+    {
+      "target_kind": "forced_provider_conversion",
+      "meaning": "A provider converted when forced for the first White move and then released to normal topology.",
+      "positive_label": "forced_provider_mate_h40",
+      "negative_label": "forced_provider_max_plies_or_draw_h40",
+      "allowed_use": "measure provider expressivity or candidate ownership opportunity",
+      "not_equivalent_to": [
+        "safe_runtime_selection",
+        "selected_playout_success"
+      ]
+    },
+    {
+      "target_kind": "same_move_provider_compatibility",
+      "meaning": "A provider produced or endorsed the same move as another provider but may not own the correct continuation.",
+      "positive_label": "same_move_compatible",
+      "negative_label": "same_move_incompatible_or_unproven",
+      "allowed_use": "diagnose score-scale and provider-identity ambiguity",
+      "not_equivalent_to": [
+        "conversion_success",
+        "handoff_success"
+      ]
+    },
+    {
+      "target_kind": "guardrail_safety",
+      "meaning": "A selection preserves protected lower-stage behavior and bridge tests.",
+      "positive_label": "guardrail_preserved",
+      "negative_label": "guardrail_regressed",
+      "allowed_use": "promotion or sandbox safety gate",
+      "not_equivalent_to": [
+        "target_stage_improvement"
+      ]
+    },
+    {
+      "target_kind": "handoff_or_plan_success",
+      "meaning": "The strategy selected a bounded handoff/plan window that exited or handed off successfully.",
+      "positive_label": "handoff_or_plan_exit_success",
+      "negative_label": "handoff_gap_or_plan_stagnation",
+      "allowed_use": "future Plan Capsule and strategy-monitor training labels",
+      "not_equivalent_to": [
+        "one_ply_reward",
+        "raw_provider_score"
+      ]
+    },
+    {
+      "target_kind": "held_out_challenge",
+      "meaning": "A state is reserved for architecture validation and must not be used as a direct optimization target.",
+      "positive_label": null,
+      "negative_label": null,
+      "allowed_use": "post-design challenge evaluation only",
+      "not_equivalent_to": [
+        "training_example",
+        "promotion_label"
+      ]
+    }
+  ],
+  "selector_objective_options": [
+    {
+      "objective_id": "objective.krk.strategy.selected_playout_policy_quality",
+      "primary_target_kind": "selected_playout_success",
+      "required_companions": [
+        "guardrail_safety"
+      ],
+      "status": "diagnostic_only"
+    },
+    {
+      "objective_id": "objective.krk.strategy.provider_capacity_opportunity",
+      "primary_target_kind": "forced_provider_conversion",
+      "required_companions": [
+        "selected_playout_success",
+        "guardrail_safety"
+      ],
+      "status": "diagnostic_only"
+    },
+    {
+      "objective_id": "objective.krk.strategy.plan_or_handoff_control",
+      "primary_target_kind": "handoff_or_plan_success",
+      "required_companions": [
+        "selected_playout_success",
+        "guardrail_safety"
+      ],
+      "status": "needs_more_evidence"
+    }
+  ],
+  "dataset_rules": [
+    "Every selector example must cite exactly one primary target_kind.",
+    "Forced-provider conversion labels must not be treated as direct runtime-selection labels.",
+    "Selected playout failures must not be treated as provider incapacity without forced-provider evidence.",
+    "Stage7 held-out challenge rows must remain excluded from training objectives until a review explicitly reclassifies them.",
+    "Guardrail safety must remain a separate gate, not a score target alone."
+  ],
+  "recommended_next_step": {
+    "step_id": "build_krk_selector_target_dataset_v0",
+    "description": "Replay-free dataset that maps existing labels into explicit target_kind buckets and excludes held-out Stage7 challenge rows from training targets.",
+    "must_remain_non_causal": true
+  },
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "default_off_selector_sandbox",
+    "provider_support_adapter",
+    "score_bonus_or_penalty",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training"
+  ]
+}

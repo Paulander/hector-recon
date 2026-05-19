@@ -387,6 +387,13 @@ KRK strategy arbiter control-plane review v0:
 
 The review closes the current observability/control-label package. Decision: `selector_objective_and_label_semantics_review_required`. The observation layer is now useful for offline selector research, but the target label space mixes selected playout success, forced-provider conversion, same-move provider compatibility, held-out Stage 7 challenge status, and guardrail safety. Runtime arbiter and sandbox work remain blocked. The next non-causal architecture step is `krk_selector_objective_label_semantics_v0`.
 
+KRK selector objective label semantics v0:
+
+- `reports/krk_selector_objective_label_semantics_v0.json`
+- `reports/krk_selector_objective_label_semantics_v0.md`
+
+The label contract separates `selected_playout_success`, `forced_provider_conversion`, `same_move_provider_compatibility`, `guardrail_safety`, `handoff_or_plan_success`, and `held_out_challenge`. It explicitly states that forced-provider conversion is not a direct runtime-selection label, selected playout failure is not provider incapacity by itself, and Stage 7 held-out rows must stay excluded from training targets until review reclassifies them. The next allowed slice is `build_krk_selector_target_dataset_v0`, replay-free and non-causal.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -496,6 +503,8 @@ reports/krk_strategy_arbiter_labeled_controls_probe_v0.json
 reports/krk_strategy_arbiter_labeled_controls_probe_v0.md
 reports/krk_strategy_arbiter_control_plane_review_v0.json
 reports/krk_strategy_arbiter_control_plane_review_v0.md
+reports/krk_selector_objective_label_semantics_v0.json
+reports/krk_selector_objective_label_semantics_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
