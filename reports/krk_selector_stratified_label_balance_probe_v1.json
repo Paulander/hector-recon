@@ -1,0 +1,58 @@
+{
+  "by_provider": {
+    "krk.edge_trap_close": {
+      "positive": 1
+    },
+    "krk.edge_trap_enemy_between": {
+      "positive": 1
+    },
+    "krk.stage0_basin": {
+      "negative": 1,
+      "positive": 8
+    }
+  },
+  "by_stage": {
+    "stage4": {
+      "negative": 1,
+      "positive": 3
+    },
+    "stage5": {
+      "positive": 4
+    },
+    "stage6": {
+      "positive": 3
+    }
+  },
+  "by_target_kind": {
+    "guardrail_safe_selected_playout": {
+      "negative": 1,
+      "positive": 9
+    },
+    "same_move_provider_compatibility_or_forced_alternative": {
+      "positive": 1
+    }
+  },
+  "causal_status": "non_causal_probe",
+  "decision": {
+    "recommended_next_step": "collect_or_identify_negative_protected_controls",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "stratified_labels_underbalanced_no_selector_probe"
+  },
+  "interpretation": [
+    "Replay-free planned labels are mostly positive protected-control examples.",
+    "They are useful as guardrail-positive evidence but are not balanced enough to train or evaluate a selector.",
+    "No runtime arbiter or sandbox is justified from this label set."
+  ],
+  "label_counts": {
+    "negative": 1,
+    "positive": 10
+  },
+  "row_count": 11,
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "schema_version": "krk_selector_stratified_label_balance_probe.v1",
+  "source_artifact": "reports/krk_selector_stratified_label_dataset_v1.json",
+  "underbalanced": true
+}

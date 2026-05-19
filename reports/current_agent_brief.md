@@ -468,6 +468,17 @@ KRK selector label plan replay-free review v1:
 
 The review found all `11` planned protected-control label jobs can be filled from existing artifacts (`compatible_target_label_available`) and require no new playouts. Decision: `planned_labels_replay_free_fillable`. The next safe step is to build a replay-free stratified selector label dataset from existing labels, not execute h40 jobs. Runtime arbiter, selector sandbox, Stage 7 repair/promotion, and Stage 8 training remain blocked.
 
+KRK selector stratified label dataset/balance v1:
+
+- `scripts/build_krk_selector_stratified_label_dataset_v1.py`
+- `reports/krk_selector_stratified_label_dataset_v1.json`
+- `reports/krk_selector_stratified_label_dataset_v1.md`
+- `scripts/probe_krk_selector_stratified_label_balance.py`
+- `reports/krk_selector_stratified_label_balance_probe_v1.json`
+- `reports/krk_selector_stratified_label_balance_probe_v1.md`
+
+The replay-free stratified dataset contains `11` protected-control rows but is underbalanced (`10` positive / `1` negative). Decision: `stratified_labels_underbalanced_no_selector_probe`. It is useful guardrail-positive evidence, but it is not enough to train/evaluate a selector or justify a sandbox. The next safe evidence step is to identify or collect negative protected-control labels, not use Stage 7 residuals as training labels.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -603,6 +614,10 @@ reports/krk_selector_stratified_label_plan_v1.json
 reports/krk_selector_stratified_label_plan_v1.md
 reports/krk_selector_label_plan_replay_free_review_v1.json
 reports/krk_selector_label_plan_replay_free_review_v1.md
+reports/krk_selector_stratified_label_dataset_v1.json
+reports/krk_selector_stratified_label_dataset_v1.md
+reports/krk_selector_stratified_label_balance_probe_v1.json
+reports/krk_selector_stratified_label_balance_probe_v1.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
