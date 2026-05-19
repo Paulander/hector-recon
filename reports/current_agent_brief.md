@@ -204,6 +204,13 @@ KRK internal-terminal evidence/design review v1:
 
 The v1 evidence aggregation broadens the non-causal review without new playouts. `local_provider_competition_failed` and `post_plan_stagnation` remain the closest future runtime-visible non-causal internal-terminal candidates, but they are still sparse and Stage7-only. `repair_needed_monitor` has broader cross-stage evidence but is noisy, and `box_shrink_owner_exit_pressure` still needs companion handoff-target terms. No terminal is causal-ready; the next safe direction is broader replay-free evidence collection or review, not runtime implementation.
 
+KRK self-expansion architecture gate v0:
+
+- `reports/krk_self_expansion_architecture_gate_v0.json`
+- `reports/krk_self_expansion_architecture_gate_v0.md`
+
+The gate synthesizes the protected Stage 1/4/5/6 stack, Stage 7 hard stop, strategy-arbitration decision gate, internal-terminal review, and sequence-policy redesign note. It selects `krk_control_plane_evidence_contract_v0` as the next architecture goal: a non-causal data contract that unifies protected provider provenance, strategy proposal frames, internal monitor records, plan-capsule windows, sequence training examples, guardrail summaries, GrowthGovernor status, and promotion-gate status. This is the path toward arbitrary KRK coverage without reopening Stage 7 micro-repairs or implementing a runtime arbiter.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -279,6 +286,8 @@ reports/structural_candidates/stage7_sequence_policy_redesign_note.json
 reports/structural_candidates/stage7_sequence_policy_redesign_note.md
 reports/krk_protected_stage_status.json
 reports/krk_protected_stage_status.md
+reports/krk_self_expansion_architecture_gate_v0.json
+reports/krk_self_expansion_architecture_gate_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

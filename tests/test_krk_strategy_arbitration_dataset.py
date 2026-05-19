@@ -120,6 +120,15 @@ assert _protected_stage_status_spec.loader is not None
 _protected_stage_status = importlib.util.module_from_spec(_protected_stage_status_spec)
 _protected_stage_status_spec.loader.exec_module(_protected_stage_status)
 
+_self_expansion_gate_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_self_expansion_architecture_gate",
+    Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_self_expansion_architecture_gate.py",
+)
+assert _self_expansion_gate_spec is not None
+assert _self_expansion_gate_spec.loader is not None
+_self_expansion_gate = importlib.util.module_from_spec(_self_expansion_gate_spec)
+_self_expansion_gate_spec.loader.exec_module(_self_expansion_gate)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -1237,3 +1246,103 @@ def test_krk_protected_stage_status_preserves_stage4_caveat(tmp_path):
     assert stages["stage4_wrong_tempo"]["evidence"]["overlay_probe_300_seed7_h40"][
         "playouts"
     ] == {"mate": 247, "max_plies": 53}
+
+
+def test_krk_self_expansion_architecture_gate_selects_non_causal_contract(tmp_path):
+    root = tmp_path
+
+    def write_json(relative_path, payload):
+        path = root / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload), encoding="utf-8")
+
+    non_causal_flags = {
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+    }
+    write_json(
+        _self_expansion_gate.PROTECTED_STAGE_STATUS,
+        {
+            "causal_status": "non_causal_status_audit",
+            **non_causal_flags,
+            "stage7_status": "local_valid_composition_quarantined",
+            "summary": {
+                "current_architecture_profile": "handoff_composition_v1",
+                "yes_protected_or_promoted": [
+                    "stage1_backchain",
+                    "stage4_wrong_tempo",
+                    "stage5_fence",
+                    "stage6_drive_overlay",
+                ],
+                "cleanest_solved_components": [
+                    "stage1_backchain",
+                    "stage5_fence",
+                    "stage6_drive_overlay",
+                ],
+                "solved_with_caveat": ["stage4_wrong_tempo"],
+                "stage6_overlay_status": "promoted",
+            },
+        },
+    )
+    write_json(
+        _self_expansion_gate.STRATEGY_ARBITRATION_GATE,
+        {
+            "causal_status": "non_causal_decision_gate",
+            **non_causal_flags,
+            "selected_status": "missing_feature_first",
+            "missing_evidence": ["more stratified records"],
+        },
+    )
+    write_json(
+        _self_expansion_gate.INTERNAL_TERMINAL_REVIEW,
+        {
+            "causal_status": "non_causal_design_review",
+            **non_causal_flags,
+            "summary": {
+                "main_conclusion": "Internal terminals are useful monitor/evidence objects.",
+                "causal_ready_terminals": [],
+            },
+            "answers": {"safest_next_evidence_step": "broader replay-free evidence"},
+        },
+    )
+    write_json(
+        _self_expansion_gate.TRAINING_OBJECTIVE_GATE,
+        {
+            "causal_status": "non_causal_decision_gate",
+            **non_causal_flags,
+            "selected_outcome": "model_expression_gap_persists_stage7_micro_work_stops",
+        },
+    )
+    write_json(
+        _self_expansion_gate.SEQUENCE_POLICY_NOTE,
+        {
+            "causal_status": "non_causal_design_note",
+            **non_causal_flags,
+            "minimum_future_data_requirements": ["family held-out trajectories"],
+        },
+    )
+    brief = root / _self_expansion_gate.CURRENT_BRIEF
+    brief.parent.mkdir(parents=True, exist_ok=True)
+    brief.write_text("# brief\n", encoding="utf-8")
+
+    gate = _self_expansion_gate.build_gate(root)
+
+    assert gate["schema_version"] == "krk_self_expansion_architecture_gate.v0"
+    assert gate["causal_status"] == "non_causal_architecture_review"
+    assert gate["runtime_behavior_changed"] is False
+    assert gate["runtime_arbiter_added"] is False
+    assert gate["runtime_terminals_added"] is False
+    assert gate["stage7_promotion_allowed"] is False
+    assert gate["stage8_training_allowed"] is False
+    assert gate["selected_next_architecture_goal"]["goal_id"] == (
+        "krk_control_plane_evidence_contract_v0"
+    )
+    assert gate["selected_next_architecture_goal"]["must_remain_non_causal"] is True
+    assert "stage7_runtime_repair" in gate["forbidden_next_steps"]
+    assert "control_plane_schema_design_v0" in {
+        item["slice_id"] for item in gate["allowed_next_slices"]
+    }
