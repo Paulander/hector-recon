@@ -514,6 +514,14 @@ KRK strategy arbiter out-of-sample control plan v0:
 
 The out-of-sample plan defines a bounded protected-control evidence slice (`max_states=12`, h40, Stage 4/5/6 only, Stage 7 training rows `0`) but does not execute it. Decision: `out_of_sample_control_plan_defined_execution_blocked`. The next step should be review, then an execution manifest only if new labels are truly needed.
 
+KRK strategy arbiter out-of-sample plan review v0:
+
+- `scripts/review_krk_strategy_arbiter_out_of_sample_plan.py`
+- `reports/krk_strategy_arbiter_out_of_sample_plan_review_v0.json`
+- `reports/krk_strategy_arbiter_out_of_sample_plan_review_v0.md`
+
+The plan review found the plan is consistent with invariants, but replay-free out-of-sample coverage is insufficient after excluding balanced-label states: only `2` replay-free candidates remain (`1` Stage 5 negative, `1` Stage 6 positive) and Stage 4 has no replay-free out-of-sample candidate. Decision: `plan_review_passed_execution_manifest_needed`. The next step is to generate a concrete non-causal execution manifest with topology/profile/checkpoint bindings before any h40 label execution. Runtime arbiter, selector sandbox, Stage 7 repair/promotion, and Stage 8 training remain blocked.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -665,6 +673,8 @@ reports/krk_strategy_arbiter_sandbox_readiness_criteria_v0.json
 reports/krk_strategy_arbiter_sandbox_readiness_criteria_v0.md
 reports/krk_strategy_arbiter_out_of_sample_control_plan_v0.json
 reports/krk_strategy_arbiter_out_of_sample_control_plan_v0.md
+reports/krk_strategy_arbiter_out_of_sample_plan_review_v0.json
+reports/krk_strategy_arbiter_out_of_sample_plan_review_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
