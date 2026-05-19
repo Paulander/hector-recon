@@ -1,0 +1,43 @@
+{
+  "causal_status": "non_causal_decision_gate",
+  "evidence": [
+    "Dataset v0 has 33 records and 87 proposal frames.",
+    "Probe v0 selected missing_feature_first.",
+    "Raw global hit rate: 0.9285714285714286.",
+    "Provider-local rank1 coverage: 1.0.",
+    "Visible heuristic hit rate: 0.07142857142857142.",
+    "Challenge manifest has 6 held-out Stage 7 families."
+  ],
+  "forbidden_next_steps": [
+    "train_stage8",
+    "promote_stage7",
+    "implement_runtime_arbiter",
+    "add_stage7_runtime_repair",
+    "add_support_adapter",
+    "add_score_bonus_or_provider_penalty",
+    "use_runtime_dtm_or_tablebase",
+    "mutate_topology_during_gameplay"
+  ],
+  "gameplay_topology_mutation": false,
+  "missing_evidence": [
+    "More successful Stage 5/6/7 provider-labeled records with terminal-space context.",
+    "A separability audit for candidate terminal/affordance terms before any sandbox.",
+    "Better visible heuristic features for edge-net, king-support, phase-boundary, and box-shrink exit conditions."
+  ],
+  "recommendation": {
+    "next_class": "non_causal_terminal_affordance_candidate_audit",
+    "next_step": "Propose non-causal terminal/affordance candidates and a separability audit; do not implement them causally.",
+    "stop_after_next_class": true
+  },
+  "runtime_behavior_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_strategy_arbitration_decision_gate.v0",
+  "selected_status": "missing_feature_first",
+  "source_artifacts": {
+    "challenge_manifest": "reports/strategy_arbitration/stage7_challenge_set_manifest.json",
+    "dataset": "reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.json",
+    "probe": "reports/strategy_arbitration/krk_strategy_arbitration_probe_v0.json"
+  },
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

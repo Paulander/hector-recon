@@ -30,6 +30,15 @@ assert _challenge_manifest_spec.loader is not None
 _challenge_manifest = importlib.util.module_from_spec(_challenge_manifest_spec)
 _challenge_manifest_spec.loader.exec_module(_challenge_manifest)
 
+_decision_gate_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_strategy_arbitration_decision_gate",
+    Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_strategy_arbitration_decision_gate.py",
+)
+assert _decision_gate_spec is not None
+assert _decision_gate_spec.loader is not None
+_decision_gate = importlib.util.module_from_spec(_decision_gate_spec)
+_decision_gate_spec.loader.exec_module(_decision_gate)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -210,3 +219,37 @@ def test_stage7_challenge_set_manifest_is_non_causal(tmp_path, monkeypatch):
     assert manifest["stage8_training_allowed"] is False
     assert manifest["summary"]["challenge_family_count"] >= 6
     assert all(family["held_out_challenge_case"] for family in manifest["families"])
+
+
+def test_krk_strategy_arbitration_decision_gate_selects_missing_feature(tmp_path):
+    report_root = tmp_path / "reports" / "strategy_arbitration"
+    report_root.mkdir(parents=True)
+    (report_root / "krk_strategy_arbitration_dataset_v0.json").write_text(
+        json.dumps({"summary": {"record_count": 3, "proposal_count": 5}}), encoding="utf-8"
+    )
+    (report_root / "krk_strategy_arbitration_probe_v0.json").write_text(
+        json.dumps(
+            {
+                "decision": {"status": "missing_feature_first"},
+                "metrics": {
+                    "raw_global_provider_score": {"hit_rate": 0.9},
+                    "provider_local_rank1_coverage": {"coverage_rate": 1.0},
+                    "visible_heuristic_arbiter": {"hit_rate": 0.1},
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    (report_root / "stage7_challenge_set_manifest.json").write_text(
+        json.dumps({"summary": {"challenge_family_count": 6}}), encoding="utf-8"
+    )
+
+    gate = _decision_gate.build_gate(report_root)
+
+    assert gate["schema_version"] == "krk_strategy_arbitration_decision_gate.v0"
+    assert gate["causal_status"] == "non_causal_decision_gate"
+    assert gate["runtime_behavior_changed"] is False
+    assert gate["stage7_promotion_allowed"] is False
+    assert gate["stage8_training_allowed"] is False
+    assert gate["selected_status"] == "missing_feature_first"
+    assert gate["recommendation"]["next_class"] == "non_causal_terminal_affordance_candidate_audit"

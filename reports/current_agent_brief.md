@@ -119,6 +119,13 @@ Stage 7 challenge set manifest:
 
 The manifest defines six held-out challenge families for strategy arbitration: 0926-like candidate moves, 069-like drive/fence arbitration, 2cc-like post-box continuation, Plan Capsule owned residuals, reward/contract mismatch, and `stage0_basin` fallback failures.
 
+Strategy arbitration decision gate:
+
+- `reports/strategy_arbitration/krk_strategy_arbitration_decision_gate.json`
+- `reports/strategy_arbitration/krk_strategy_arbitration_decision_gate.md`
+
+The gate selected `missing_feature_first`. The next and final allowed slice before review is a non-causal terminal/affordance candidate audit and separability report. Runtime arbiter implementation remains blocked.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -158,6 +165,8 @@ reports/strategy_arbitration/krk_strategy_arbitration_probe_v0.json
 reports/strategy_arbitration/krk_strategy_arbitration_probe_v0.md
 reports/strategy_arbitration/stage7_challenge_set_manifest.json
 reports/strategy_arbitration/stage7_challenge_set_manifest.md
+reports/strategy_arbitration/krk_strategy_arbitration_decision_gate.json
+reports/strategy_arbitration/krk_strategy_arbitration_decision_gate.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
