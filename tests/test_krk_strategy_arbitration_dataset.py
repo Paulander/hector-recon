@@ -84,6 +84,15 @@ assert _visible_monitor_terms_spec.loader is not None
 _visible_monitor_terms = importlib.util.module_from_spec(_visible_monitor_terms_spec)
 _visible_monitor_terms_spec.loader.exec_module(_visible_monitor_terms)
 
+_maturity_gate_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_strategy_monitor_maturity_gate",
+    Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_strategy_monitor_maturity_gate.py",
+)
+assert _maturity_gate_spec is not None
+assert _maturity_gate_spec.loader is not None
+_maturity_gate = importlib.util.module_from_spec(_maturity_gate_spec)
+_maturity_gate_spec.loader.exec_module(_maturity_gate)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -731,3 +740,97 @@ def test_krk_strategy_monitor_companion_audit_v1_uses_visible_terms(tmp_path):
     assert {term["availability_status"] for term in payload["companion_sets"][0]["terms"]} == {
         "available_extracted"
     }
+
+
+def test_krk_strategy_monitor_maturity_gate_blocks_causal_use(tmp_path):
+    report_root = tmp_path / "reports" / "strategy_arbitration"
+    report_root.mkdir(parents=True)
+    (report_root / "krk_visible_monitor_terms_v0.json").write_text(
+        json.dumps(
+            {
+                "summary": {
+                    "term_names": [
+                        "king_support_improves_after_move",
+                        "cut_or_fence_restored_after_move",
+                        "safe_repair_move_exists",
+                        "box_area_no_longer_decision_relevant",
+                        "post_plan_stagnation",
+                        "local_provider_competition_failed",
+                    ]
+                },
+                "records": [
+                    {
+                        "state_id": "state.fail",
+                        "source_stage": "stage7",
+                        "associated_outcome": "max_plies",
+                        "terms": {
+                            "king_support_improves_after_move": {"value": True},
+                            "cut_or_fence_restored_after_move": {"value": True},
+                            "safe_repair_move_exists": {"value": True},
+                            "box_area_no_longer_decision_relevant": {"value": True},
+                            "post_plan_stagnation": {"value": True},
+                            "local_provider_competition_failed": {"value": True},
+                        },
+                    },
+                    {
+                        "state_id": "state.mate",
+                        "source_stage": "stage5",
+                        "associated_outcome": "mate",
+                        "terms": {
+                            "king_support_improves_after_move": {"value": True},
+                            "cut_or_fence_restored_after_move": {"value": False},
+                            "safe_repair_move_exists": {"value": True},
+                            "box_area_no_longer_decision_relevant": {"value": True},
+                            "post_plan_stagnation": {"value": False},
+                            "local_provider_competition_failed": {"value": False},
+                        },
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (report_root / "krk_strategy_monitor_records_v0.json").write_text(
+        json.dumps(
+            {
+                "summary": {
+                    "outcomes_by_monitor_type": {
+                        "PlanSelectionNeededMonitor": {"max_plies": 1},
+                        "OwnerExitMonitor": {"mate": 1, "max_plies": 1},
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    (report_root / "krk_strategy_monitor_companion_audit_v1.json").write_text(
+        json.dumps(
+            {
+                "summary": {
+                    "still_missing_terms": [
+                        "safe_edge_net_tighten_move_exists",
+                        "king_support_improves_after_reply",
+                    ]
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    gate = _maturity_gate.build_gate(report_root)
+
+    assert gate["schema_version"] == "krk_strategy_monitor_maturity_gate.v0"
+    assert gate["causal_status"] == "non_causal_maturity_gate"
+    assert gate["runtime_behavior_changed"] is False
+    assert gate["runtime_defaults_changed"] is False
+    assert gate["stage7_promotion_allowed"] is False
+    assert gate["stage8_training_allowed"] is False
+    assert gate["summary"]["causal_ready_terms"] == []
+    assert gate["summary"]["strongest_internal_terminal_candidates"] == [
+        "post_plan_stagnation",
+        "local_provider_competition_failed",
+    ]
+    assert all(item["causal_use_blocked"] is True for item in gate["term_maturity"])
+    assert {
+        item["term"]: item["maturity_status"] for item in gate["term_maturity"]
+    }["post_plan_stagnation"] == "internal_terminal_candidate"
