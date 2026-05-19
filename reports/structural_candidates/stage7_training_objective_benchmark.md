@@ -4,10 +4,12 @@ This benchmark is offline-only and non-causal. It does not implement a runtime r
 
 ## Decision
 
-- Candidate status: `ranking_calibration_gap`
-- Next action: improve ranking objective / data, not topology
+- Candidate status: `model_expression_gap_persists`
+- Next action: design stronger ranked sequence-policy candidate
 - Ranked top-1 improvement over current: `-0.167`
 - Visible top-1 improvement over current: `0.126`
+- Internal-monitor top-1 improvement over visible: `0.000`
+- Internal-monitor features improve offline: `False`
 
 ## Dataset
 
@@ -16,6 +18,13 @@ This benchmark is offline-only and non-causal. It does not implement a runtime r
 - Legal move labels: `3838`
 - Train/test: `137` / `58`
 - Target classes: `{'winning_nonoptimal_move': 2922, 'optimal_dtm_move': 431, 'non_winning_move': 485}`
+- Benchmark underpowered: `False`
+
+## Internal-Terminal Diagnostic Features
+
+- Causal status: `non_causal_diagnostic_features`
+- FENs with features: `24`
+- Feature support counts: `{'terminal.krk.repair_needed_monitor': 15, 'terminal.krk.box_shrink_owner_exit_pressure': 2, 'terminal.krk.post_plan_stagnation': 4, 'terminal.krk.local_provider_competition_failed': 2}`
 
 ## Model Metrics
 
@@ -54,6 +63,15 @@ This benchmark is offline-only and non-causal. It does not implement a runtime r
 - Test draw/stalemate top1 rate: `0.017`
 - Test hard-negative-above-positive rate: `0.724`
 - First miss: `{'trajectory_index': 0, 'step_index': 0, 'fen': '8/8/R7/8/2k5/8/8/3K4 w - - 2 2', 'selected_move': 'a6h6', 'selected_target_class': 'winning_nonoptimal_move', 'positive_rank': 9, 'top_moves': [{'move': 'a6h6', 'score': 2.3019175064007835, 'target_class': 'winning_nonoptimal_move', 'label': 0, 'child_dtm': 28, 'is_positive': False, 'is_optimal': False, 'is_hard_negative': True, 'is_bad_safety': False}, {'move': 'd1c2', 'score': 2.041711412166916, 'target_class': 'winning_nonoptimal_move', 'label': 0, 'child_dtm': 28, 'is_positive': False, 'is_optimal': False, 'is_hard_negative': True, 'is_bad_safety': False}, {'move': 'a6a2', 'score': 1.898398879132755, 'target_class': 'winning_nonoptimal_move', 'label': 0, 'child_dtm': 28, 'is_positive': False, 'is_optimal': False, 'is_hard_negative': True, 'is_bad_safety': False}, {'move': 'a6a1', 'score': 1.8765878144552488, 'target_class': 'winning_nonoptimal_move', 'label': 0, 'child_dtm': 28, 'is_positive': False, 'is_optimal': False, 'is_hard_negative': True, 'is_bad_safety': False}, {'move': 'a6f6', 'score': 1.6944991076657727, 'target_class': 'winning_nonoptimal_move', 'label': 0, 'child_dtm': 30, 'is_positive': False, 'is_optimal': False, 'is_hard_negative': True, 'is_bad_safety': False}]}`
+
+### internal_monitor_augmented_visible_term_scorer
+
+- Train top1/top3 DTM-positive: `0.562` / `0.723`
+- Test top1/top3 DTM-positive: `0.483` / `0.759`
+- Test optimal top1/top3: `0.483` / `0.759`
+- Test draw/stalemate top1 rate: `0.034`
+- Test hard-negative-above-positive rate: `0.500`
+- First miss: `{'trajectory_index': 0, 'step_index': 0, 'fen': '8/8/R7/8/2k5/8/8/3K4 w - - 2 2', 'selected_move': 'd1c2', 'selected_target_class': 'winning_nonoptimal_move', 'positive_rank': 2, 'top_moves': [{'move': 'd1c2', 'score': 22.62256573126468, 'target_class': 'winning_nonoptimal_move', 'label': 0, 'child_dtm': 28, 'is_positive': False, 'is_optimal': False, 'is_hard_negative': True, 'is_bad_safety': False}, {'move': 'd1d2', 'score': 20.519428166215537, 'target_class': 'optimal_dtm_move', 'label': 1, 'child_dtm': 26, 'is_positive': True, 'is_optimal': True, 'is_hard_negative': False, 'is_bad_safety': False}, {'move': 'd1e2', 'score': 20.519428166215537, 'target_class': 'winning_nonoptimal_move', 'label': 0, 'child_dtm': 28, 'is_positive': False, 'is_optimal': False, 'is_hard_negative': True, 'is_bad_safety': False}, {'move': 'a6a4', 'score': 13.678238888392656, 'target_class': 'winning_nonoptimal_move', 'label': 0, 'child_dtm': 28, 'is_positive': False, 'is_optimal': False, 'is_hard_negative': True, 'is_bad_safety': False}, {'move': 'a6c6', 'score': 6.641676816352016, 'target_class': 'winning_nonoptimal_move', 'label': 0, 'child_dtm': 30, 'is_positive': False, 'is_optimal': False, 'is_hard_negative': True, 'is_bad_safety': False}]}`
 
 ### heuristic_king_support_improvement
 
@@ -132,3 +150,4 @@ This benchmark is offline-only and non-causal. It does not implement a runtime r
 - add_score_bonus_or_provider_penalty
 - use_runtime_dtm_or_tablebase
 - mutate_topology_during_gameplay
+- promote_internal_terminals

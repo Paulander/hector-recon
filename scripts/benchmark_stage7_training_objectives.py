@@ -12,6 +12,7 @@ import argparse
 import json
 import math
 from collections import Counter, defaultdict
+from copy import deepcopy
 from pathlib import Path
 from statistics import mean
 from typing import Any, Callable
@@ -32,6 +33,14 @@ DEFAULT_ARTIFACTS = {
 }
 
 
+INTERNAL_TERMINAL_IDS = {
+    "local_provider_competition_failed": "terminal.krk.local_provider_competition_failed",
+    "post_plan_stagnation": "terminal.krk.post_plan_stagnation",
+    "box_shrink_owner_exit_pressure": "terminal.krk.box_shrink_owner_exit_pressure",
+    "repair_needed_monitor": "terminal.krk.repair_needed_monitor",
+}
+
+
 def _load_optional_json(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {}
@@ -41,7 +50,13 @@ def _load_optional_json(path: Path) -> dict[str, Any]:
     return payload
 
 
-def _all_terms(label: dict[str, Any], *, include_coordinate_terms: bool = False) -> set[str]:
+def _all_terms(
+    label: dict[str, Any],
+    *,
+    include_coordinate_terms: bool = False,
+    include_internal_monitor_terms: bool = False,
+    include_internal_monitor_interactions: bool = False,
+) -> set[str]:
     keys = ["move_shape_terms", "post_move_terms", "worst_reply_terms", "safety_terms"]
     if include_coordinate_terms:
         keys.append("coordinate_terms")
@@ -52,6 +67,14 @@ def _all_terms(label: dict[str, Any], *, include_coordinate_terms: bool = False)
     piece = label.get("piece")
     if piece:
         terms.add(f"piece.{piece}")
+    if include_internal_monitor_terms:
+        internal_terms = {f"internal_monitor.{term}" for term in label.get("internal_monitor_terms") or []}
+        terms.update(internal_terms)
+        if include_internal_monitor_interactions:
+            base_terms = set(terms) - internal_terms
+            for internal_term in internal_terms:
+                for base_term in base_terms:
+                    terms.add(f"internal_monitor_interaction.{internal_term}__{base_term}")
     return terms
 
 
@@ -126,14 +149,111 @@ def _split_steps(steps: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], lis
     return train, test
 
 
-def _fit_log_odds(train_steps: list[dict[str, Any]], *, include_coordinate_terms: bool = False) -> dict[str, float]:
+def _term_value(record: dict[str, Any], term_name: str) -> bool:
+    return bool(((record.get("terms") or {}).get(term_name) or {}).get("value") is True)
+
+
+def _internal_terminal_terms_from_record(record: dict[str, Any]) -> list[str]:
+    terms: list[str] = []
+    if _term_value(record, "local_provider_competition_failed"):
+        terms.append(INTERNAL_TERMINAL_IDS["local_provider_competition_failed"])
+    if _term_value(record, "post_plan_stagnation"):
+        terms.append(INTERNAL_TERMINAL_IDS["post_plan_stagnation"])
+    if record.get("active_landmark_label") == "box_shrink" and _term_value(
+        record, "box_area_no_longer_decision_relevant"
+    ):
+        terms.append(INTERNAL_TERMINAL_IDS["box_shrink_owner_exit_pressure"])
+    if _term_value(record, "cut_or_fence_restored_after_move") and _term_value(
+        record, "safe_repair_move_exists"
+    ):
+        terms.append(INTERNAL_TERMINAL_IDS["repair_needed_monitor"])
+    return sorted(set(terms))
+
+
+def _internal_terminal_feature_map(strategy_root: Path) -> tuple[dict[str, list[str]], dict[str, Any]]:
+    visible = _load_optional_json(strategy_root / "krk_visible_monitor_terms_v0.json")
+    evidence = _load_optional_json(strategy_root / "krk_internal_terminal_evidence_v1.json")
+    feature_by_fen: dict[str, set[str]] = defaultdict(set)
+    feature_by_state: dict[str, set[str]] = defaultdict(set)
+    for record in visible.get("records") or []:
+        if not isinstance(record, dict):
+            continue
+        terms = _internal_terminal_terms_from_record(record)
+        fen = record.get("fen")
+        state_id = record.get("state_id")
+        if fen:
+            feature_by_fen[str(fen)].update(terms)
+        if state_id:
+            feature_by_state[str(state_id)].update(terms)
+    # The v1 evidence artifact is terminal-level, not full state-level data.
+    # Use examples only to keep the benchmark replay-free and non-causal.
+    for item in evidence.get("terminal_evidence") or []:
+        terminal_id = item.get("terminal_id")
+        if not terminal_id:
+            continue
+        for key in [
+            "examples_of_firing_states",
+            "false_positive_examples",
+        ]:
+            for example in item.get(key) or []:
+                if not isinstance(example, dict):
+                    continue
+                fen = example.get("fen")
+                state_id = example.get("state_id")
+                if fen:
+                    feature_by_fen[str(fen)].add(str(terminal_id))
+                if state_id:
+                    feature_by_state[str(state_id)].add(str(terminal_id))
+    summary_counts = Counter()
+    for values in feature_by_fen.values():
+        summary_counts.update(values)
+    return (
+        {fen: sorted(values) for fen, values in feature_by_fen.items()},
+        {
+            "source_artifacts": [
+                str(strategy_root / "krk_visible_monitor_terms_v0.json"),
+                str(strategy_root / "krk_internal_terminal_evidence_v1.json"),
+            ],
+            "causal_status": "non_causal_diagnostic_features",
+            "fen_with_internal_terminal_features": len(feature_by_fen),
+            "state_with_internal_terminal_features": len(feature_by_state),
+            "feature_support_counts_by_fen": dict(summary_counts),
+            "note": "Internal-terminal features are offline state diagnostics only; they do not become runtime terminals.",
+        },
+    )
+
+
+def _attach_internal_monitor_features(
+    steps: list[dict[str, Any]], feature_by_fen: dict[str, list[str]]
+) -> list[dict[str, Any]]:
+    enriched = deepcopy(steps)
+    for step in enriched:
+        internal_terms = feature_by_fen.get(str(step.get("fen") or ""), [])
+        step["internal_monitor_terms"] = internal_terms
+        for label in step.get("labels") or []:
+            label["internal_monitor_terms"] = internal_terms
+    return enriched
+
+
+def _fit_log_odds(
+    train_steps: list[dict[str, Any]],
+    *,
+    include_coordinate_terms: bool = False,
+    include_internal_monitor_terms: bool = False,
+    include_internal_monitor_interactions: bool = False,
+) -> dict[str, float]:
     pos_counts: Counter[str] = Counter()
     neg_counts: Counter[str] = Counter()
     pos_total = 0
     neg_total = 0
     for step in train_steps:
         for label in step["labels"]:
-            terms = _all_terms(label, include_coordinate_terms=include_coordinate_terms)
+            terms = _all_terms(
+                label,
+                include_coordinate_terms=include_coordinate_terms,
+                include_internal_monitor_terms=include_internal_monitor_terms,
+                include_internal_monitor_interactions=include_internal_monitor_interactions,
+            )
             if _is_positive(label):
                 pos_total += 1
                 pos_counts.update(terms)
@@ -149,21 +269,47 @@ def _fit_log_odds(train_steps: list[dict[str, Any]], *, include_coordinate_terms
     return weights
 
 
-def _fit_ranked_weights(train_steps: list[dict[str, Any]], *, include_coordinate_terms: bool = False) -> dict[str, float]:
+def _fit_ranked_weights(
+    train_steps: list[dict[str, Any]],
+    *,
+    include_coordinate_terms: bool = False,
+    include_internal_monitor_terms: bool = False,
+    include_internal_monitor_interactions: bool = False,
+) -> dict[str, float]:
     values: defaultdict[str, list[float]] = defaultdict(list)
     all_values: list[float] = []
     for step in train_steps:
         for label in step["labels"]:
             value = _target_value(label)
             all_values.append(value)
-            for term in _all_terms(label, include_coordinate_terms=include_coordinate_terms):
+            for term in _all_terms(
+                label,
+                include_coordinate_terms=include_coordinate_terms,
+                include_internal_monitor_terms=include_internal_monitor_terms,
+                include_internal_monitor_interactions=include_internal_monitor_interactions,
+            ):
                 values[term].append(value)
     baseline = mean(all_values) if all_values else 0.0
     return {term: mean(vals) - baseline for term, vals in values.items() if vals}
 
 
-def _score_with_weights(weights: dict[str, float], label: dict[str, Any], *, include_coordinate_terms: bool = False) -> float:
-    return sum(weights.get(term, 0.0) for term in _all_terms(label, include_coordinate_terms=include_coordinate_terms))
+def _score_with_weights(
+    weights: dict[str, float],
+    label: dict[str, Any],
+    *,
+    include_coordinate_terms: bool = False,
+    include_internal_monitor_terms: bool = False,
+    include_internal_monitor_interactions: bool = False,
+) -> float:
+    return sum(
+        weights.get(term, 0.0)
+        for term in _all_terms(
+            label,
+            include_coordinate_terms=include_coordinate_terms,
+            include_internal_monitor_terms=include_internal_monitor_terms,
+            include_internal_monitor_interactions=include_internal_monitor_interactions,
+        )
+    )
 
 
 def _heuristic_score(kind: str, label: dict[str, Any]) -> float:
@@ -479,7 +625,9 @@ def _controls(artifact_root: Path) -> dict[str, Any]:
     }
 
 
-def build_benchmark(artifact_root: Path) -> dict[str, Any]:
+def build_benchmark(artifact_root: Path, strategy_root: Path | None = None) -> dict[str, Any]:
+    if strategy_root is None:
+        strategy_root = Path("reports/strategy_arbitration")
     expanded_seed = _load_optional_json(artifact_root / DEFAULT_ARTIFACTS["expanded_trajectory_seed"])
     if not expanded_seed:
         expanded_seed = _load_optional_json(artifact_root / DEFAULT_ARTIFACTS["trajectory_seed"])
@@ -489,10 +637,18 @@ def build_benchmark(artifact_root: Path) -> dict[str, Any]:
 
     steps = _trajectory_steps(expanded_seed)
     train_steps, test_steps = _split_steps(steps)
+    internal_feature_by_fen, internal_feature_summary = _internal_terminal_feature_map(strategy_root)
+    internal_steps = _attach_internal_monitor_features(steps, internal_feature_by_fen)
+    internal_train_steps, internal_test_steps = _split_steps(internal_steps)
 
     log_odds_weights = _fit_log_odds(train_steps)
     ranked_weights = _fit_ranked_weights(train_steps)
     ranked_coord_weights = _fit_ranked_weights(train_steps, include_coordinate_terms=True)
+    internal_monitor_weights = _fit_log_odds(
+        internal_train_steps,
+        include_internal_monitor_terms=True,
+        include_internal_monitor_interactions=True,
+    )
 
     models: list[dict[str, Any]] = []
     models.append(_evaluate_current_scorer(fidelity))
@@ -525,6 +681,24 @@ def build_benchmark(artifact_root: Path) -> dict[str, Any]:
             contribution_summary=_top_weights(ranked_coord_weights),
         )
     )
+    models.append(
+        _evaluate_ranker(
+            model_id="internal_monitor_augmented_visible_term_scorer",
+            train_steps=internal_train_steps,
+            test_steps=internal_test_steps,
+            score_fn=lambda label: _score_with_weights(
+                internal_monitor_weights,
+                label,
+                include_internal_monitor_terms=True,
+                include_internal_monitor_interactions=True,
+            ),
+            contribution_summary={
+                **_top_weights(internal_monitor_weights),
+                "internal_terminal_feature_summary": internal_feature_summary,
+                "runtime_causal": False,
+            },
+        )
+    )
     for heuristic_id in [
         "king_support_improvement",
         "fence_cut_preservation",
@@ -550,6 +724,8 @@ def build_benchmark(artifact_root: Path) -> dict[str, Any]:
     ranked_test = ranked["test"]
     visible = next(model for model in models if model["model_id"] == "visible_term_log_odds_scorer")
     visible_test = visible["test"]
+    internal = next(model for model in models if model["model_id"] == "internal_monitor_augmented_visible_term_scorer")
+    internal_test = internal["test"]
 
     ranked_improvement = (
         ranked_test["top1_dtm_positive_accuracy"] - learned_test["top1_dtm_positive_accuracy"]
@@ -557,25 +733,40 @@ def build_benchmark(artifact_root: Path) -> dict[str, Any]:
     visible_improvement = (
         visible_test["top1_dtm_positive_accuracy"] - learned_test["top1_dtm_positive_accuracy"]
     )
+    internal_improvement = (
+        internal_test["top1_dtm_positive_accuracy"] - visible_test["top1_dtm_positive_accuracy"]
+    )
+    robust_internal_help = (
+        internal_improvement >= 0.05
+        and internal_test["hard_negative_above_positive_rate"] <= visible_test["hard_negative_above_positive_rate"]
+    )
+    robust_visible_help = (
+        visible_improvement >= 0.15
+        and visible_test["hard_negative_above_positive_rate"] <= learned_test["hard_negative_above_positive_rate"]
+    )
+    benchmark_underpowered = len(steps) < 25 or len(test_steps) < 5
     if ranked_improvement >= 0.15 and ranked_test["hard_negative_above_positive_rate"] <= learned_test[
         "hard_negative_above_positive_rate"
     ]:
-        candidate_status = "training_objective_benchmark_supports_ranked_sequence_policy"
-        next_action = "design default-off ranked Plan Capsule sandbox, not promotion"
-    elif visible_improvement >= 0.15 and visible_test["top1_dtm_positive_accuracy"] >= ranked_test[
-        "top1_dtm_positive_accuracy"
+        candidate_status = "ranked_objective_supported"
+        next_action = "design stronger ranked sequence-policy candidate"
+    elif robust_internal_help:
+        candidate_status = "internal_monitor_features_help_offline"
+        next_action = "collect more stratified arbitration evidence"
+    elif benchmark_underpowered:
+        candidate_status = "data_too_small_for_conclusion"
+        next_action = "expand offline trajectory dataset"
+    elif robust_visible_help:
+        candidate_status = "missing_feature_or_ontology_more_likely"
+        next_action = "propose missing feature candidates"
+    elif ranked_improvement <= 0.0 and visible_test["hard_negative_above_positive_rate"] > learned_test[
+        "hard_negative_above_positive_rate"
     ]:
-        candidate_status = "missing_feature_or_ontology_candidate"
-        next_action = "propose non-causal visible term refinement, not runtime patch"
-    elif ranked_test["top3_dtm_positive_accuracy"] >= 0.8 and ranked_test["top1_dtm_positive_accuracy"] < 0.5:
-        candidate_status = "ranking_calibration_gap"
-        next_action = "improve ranking objective / data, not topology"
-    elif ranked_improvement <= 0.0 and visible_improvement <= 0.0:
-        candidate_status = "model_expression_gap_not_solved_by_simple_ranking"
-        next_action = "consider broader representation / curriculum-boundary / continuation-capacity diagnosis"
+        candidate_status = "model_expression_gap_persists"
+        next_action = "design stronger ranked sequence-policy candidate"
     else:
-        candidate_status = "ranking_calibration_gap"
-        next_action = "improve ranking objective / data, not topology"
+        candidate_status = "model_expression_gap_persists"
+        next_action = "design stronger ranked sequence-policy candidate"
 
     benchmark = {
         "schema_version": "stage7_training_objective_benchmark.v1",
@@ -601,7 +792,16 @@ def build_benchmark(artifact_root: Path) -> dict[str, Any]:
                     for label in step["labels"]
                 )
             ),
+            "benchmark_underpowered": benchmark_underpowered,
+            "missing_evidence_if_underpowered": [
+                "more family-held-out residual trajectories",
+                "more successful post-box controls",
+                "more closed-loop labels for non-Stage7 contexts",
+            ]
+            if benchmark_underpowered
+            else [],
         },
+        "internal_terminal_features": internal_feature_summary,
         "models": models,
         "known_failed_move_analysis": _known_failed_move_analysis(models),
         "controls": _controls(artifact_root),
@@ -610,8 +810,11 @@ def build_benchmark(artifact_root: Path) -> dict[str, Any]:
             "next_action": next_action,
             "ranked_top1_improvement_over_current": ranked_improvement,
             "visible_top1_improvement_over_current": visible_improvement,
+            "internal_monitor_top1_improvement_over_visible": internal_improvement,
+            "internal_monitor_features_improve_offline": robust_internal_help,
             "thresholds": {
                 "material_top1_improvement": 0.15,
+                "internal_monitor_material_top1_improvement": 0.05,
                 "top3_should_remain_high": 0.8,
                 "hard_negative_rate_should_not_increase": True,
             },
@@ -624,6 +827,7 @@ def build_benchmark(artifact_root: Path) -> dict[str, Any]:
             "add_score_bonus_or_provider_penalty",
             "use_runtime_dtm_or_tablebase",
             "mutate_topology_during_gameplay",
+            "promote_internal_terminals",
         ],
     }
     validate_benchmark(benchmark)
@@ -646,6 +850,7 @@ def validate_benchmark(benchmark: dict[str, Any]) -> None:
         "current_learned_post_box_scorer",
         "visible_term_log_odds_scorer",
         "pairwise_ranked_preference_scorer",
+        "internal_monitor_augmented_visible_term_scorer",
         "heuristic_king_support_improvement",
         "heuristic_fence_cut_preservation",
         "heuristic_edge_corner_net_pressure",
@@ -656,6 +861,11 @@ def validate_benchmark(benchmark: dict[str, Any]) -> None:
     missing = required - model_ids
     if missing:
         raise ValueError(f"benchmark missing models: {sorted(missing)}")
+    if benchmark.get("internal_terminal_features", {}).get("causal_status") not in {
+        "non_causal_diagnostic_features",
+        None,
+    }:
+        raise ValueError("internal-terminal features must remain non-causal")
 
 
 def render_markdown(benchmark: dict[str, Any]) -> str:
@@ -670,6 +880,8 @@ def render_markdown(benchmark: dict[str, Any]) -> str:
         f"- Next action: {benchmark['decision']['next_action']}",
         f"- Ranked top-1 improvement over current: `{benchmark['decision']['ranked_top1_improvement_over_current']:.3f}`",
         f"- Visible top-1 improvement over current: `{benchmark['decision']['visible_top1_improvement_over_current']:.3f}`",
+        f"- Internal-monitor top-1 improvement over visible: `{benchmark['decision']['internal_monitor_top1_improvement_over_visible']:.3f}`",
+        f"- Internal-monitor features improve offline: `{benchmark['decision']['internal_monitor_features_improve_offline']}`",
         "",
         "## Dataset",
         "",
@@ -678,6 +890,13 @@ def render_markdown(benchmark: dict[str, Any]) -> str:
         f"- Legal move labels: `{benchmark['dataset']['legal_move_label_count']}`",
         f"- Train/test: `{benchmark['dataset']['train_step_count']}` / `{benchmark['dataset']['test_step_count']}`",
         f"- Target classes: `{benchmark['dataset']['target_class_counts']}`",
+        f"- Benchmark underpowered: `{benchmark['dataset']['benchmark_underpowered']}`",
+        "",
+        "## Internal-Terminal Diagnostic Features",
+        "",
+        f"- Causal status: `{benchmark['internal_terminal_features'].get('causal_status')}`",
+        f"- FENs with features: `{benchmark['internal_terminal_features'].get('fen_with_internal_terminal_features')}`",
+        f"- Feature support counts: `{benchmark['internal_terminal_features'].get('feature_support_counts_by_fen')}`",
         "",
         "## Model Metrics",
         "",
@@ -717,12 +936,13 @@ def render_markdown(benchmark: dict[str, Any]) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--artifact-root", type=Path, default=Path("reports/structural_candidates"))
+    parser.add_argument("--strategy-root", type=Path, default=Path("reports/strategy_arbitration"))
     parser.add_argument("--json-output", type=Path, required=True)
     parser.add_argument("--markdown-output", type=Path, required=True)
     parser.add_argument("--no-json-stdout", action="store_true")
     args = parser.parse_args()
 
-    benchmark = build_benchmark(args.artifact_root)
+    benchmark = build_benchmark(args.artifact_root, strategy_root=args.strategy_root)
     args.json_output.parent.mkdir(parents=True, exist_ok=True)
     args.markdown_output.parent.mkdir(parents=True, exist_ok=True)
     args.json_output.write_text(json.dumps(benchmark, indent=2, sort_keys=True) + "\n", encoding="utf-8")

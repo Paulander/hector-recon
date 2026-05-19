@@ -1074,15 +1074,149 @@ def test_stage7_training_objective_benchmark_is_non_causal_and_compares_required
     assert "current_learned_post_box_scorer" in model_ids
     assert "visible_term_log_odds_scorer" in model_ids
     assert "pairwise_ranked_preference_scorer" in model_ids
+    assert "internal_monitor_augmented_visible_term_scorer" in model_ids
     assert "heuristic_safety_non_draw_rook_safe" in model_ids
     assert "oracle_dtm_positive_topk_ceiling" in model_ids
+    assert benchmark["internal_terminal_features"]["causal_status"] == "non_causal_diagnostic_features"
     assert benchmark["decision"]["candidate_status"] in {
-        "training_objective_benchmark_supports_ranked_sequence_policy",
-        "model_expression_gap_not_solved_by_simple_ranking",
-        "missing_feature_or_ontology_candidate",
-        "ranking_calibration_gap",
-        "continuation_capacity_or_harness_gap",
+        "ranked_objective_supported",
+        "internal_monitor_features_help_offline",
+        "model_expression_gap_persists",
+        "data_too_small_for_conclusion",
+        "missing_feature_or_ontology_more_likely",
+        "continuation_capacity_more_likely",
+        "curriculum_boundary_more_likely",
     }
+
+
+def test_stage7_training_benchmark_uses_internal_terminal_features_non_causally(tmp_path):
+    artifact_root = tmp_path / "reports" / "structural_candidates"
+    strategy_root = tmp_path / "reports" / "strategy_arbitration"
+    artifact_root.mkdir(parents=True)
+    strategy_root.mkdir(parents=True)
+    fen = "8/8/R7/8/2k5/8/8/3K4 w - - 2 2"
+    (artifact_root / "stage7_post_box_dtm_trajectory_seed_expanded_h40.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "stage7_post_box_dtm_trajectory_seed.v1",
+                "trajectory_count": 2,
+                "trajectories": [
+                    {
+                        "white_training_steps": [
+                            {
+                                "fen": fen,
+                                "move": "a6a5",
+                                "legal_move_labels": [
+                                    {
+                                        "move": "a6a5",
+                                        "label": 1,
+                                        "target_class": "optimal_dtm_move",
+                                        "piece": "R",
+                                        "move_shape_terms": ["candidate_is_rook_move"],
+                                        "post_move_terms": ["box_area_decreases_after_move"],
+                                    },
+                                    {
+                                        "move": "a6a8",
+                                        "label": 0,
+                                        "target_class": "winning_nonoptimal_move",
+                                        "piece": "R",
+                                        "move_shape_terms": ["candidate_is_rook_move"],
+                                        "post_move_terms": [],
+                                    },
+                                ],
+                            }
+                        ]
+                    },
+                    {
+                        "white_training_steps": [
+                            {
+                                "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+                                "move": "d2c3",
+                                "legal_move_labels": [
+                                    {
+                                        "move": "d2c3",
+                                        "label": 1,
+                                        "target_class": "optimal_dtm_move",
+                                        "piece": "K",
+                                        "move_shape_terms": ["candidate_is_king_move"],
+                                        "post_move_terms": ["white_king_distance_to_enemy_decreases"],
+                                    }
+                                ],
+                            }
+                        ]
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (artifact_root / "stage7_expanded_ranked_capsule_trajectory_fidelity_audit.json").write_text(
+        json.dumps(
+            {
+                "teacher_forced_records": [
+                    {
+                        "trajectory_index": 0,
+                        "step_index": 0,
+                        "fen": fen,
+                        "top_moves": [
+                            {"move": "a6a8", "label": 0, "target_class": "winning_nonoptimal_move"},
+                            {"move": "a6a5", "label": 1, "target_class": "optimal_dtm_move"},
+                        ],
+                        "positive_move_rank": 2,
+                        "optimal_move_rank": 2,
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    (strategy_root / "krk_visible_monitor_terms_v0.json").write_text(
+        json.dumps(
+            {
+                "records": [
+                    {
+                        "state_id": "state.fail",
+                        "fen": fen,
+                        "source_stage": "stage7",
+                        "active_landmark_label": "box_shrink",
+                        "associated_outcome": "max_plies",
+                        "terms": {
+                            "local_provider_competition_failed": {"value": True},
+                            "post_plan_stagnation": {"value": True},
+                            "box_area_no_longer_decision_relevant": {"value": True},
+                            "cut_or_fence_restored_after_move": {"value": True},
+                            "safe_repair_move_exists": {"value": True},
+                        },
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    (strategy_root / "krk_internal_terminal_evidence_v1.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "krk_internal_terminal_evidence.v1",
+                "causal_status": "non_causal_evidence",
+                "terminal_evidence": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    benchmark = _training_benchmark.build_benchmark(artifact_root, strategy_root=strategy_root)
+
+    internal = next(
+        model for model in benchmark["models"] if model["model_id"] == "internal_monitor_augmented_visible_term_scorer"
+    )
+    assert benchmark["runtime_behavior_changed"] is False
+    assert benchmark["stage7_promotion_allowed"] is False
+    assert benchmark["stage8_training_allowed"] is False
+    assert benchmark["internal_terminal_features"]["causal_status"] == "non_causal_diagnostic_features"
+    assert benchmark["internal_terminal_features"]["feature_support_counts_by_fen"][
+        "terminal.krk.local_provider_competition_failed"
+    ] == 1
+    assert internal["contribution_summary"]["runtime_causal"] is False
 
 
 def test_stage7_training_benchmark_tie_breaks_without_label_leakage():
