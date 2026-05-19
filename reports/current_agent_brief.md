@@ -602,6 +602,14 @@ KRK strategy-owner contrast execution manifest v0:
 
 The non-causal execution manifest binds all `12` reviewed jobs to `handoff_composition_v1` / `stage6_overlay_composed_v1` with explicit provider versions and checkpoints. All target provider skill IDs are present in the topology, missing path count is `0`, and Stage 7 jobs remain `0`. Labels are still not allowed until the manifest is reviewed. Decision: `contrast_execution_manifest_bound_review_required`.
 
+KRK strategy-owner contrast execution manifest review v0:
+
+- `scripts/review_krk_strategy_owner_contrast_execution_manifest.py`
+- `reports/krk_strategy_owner_contrast_execution_manifest_review_v0.json`
+- `reports/krk_strategy_owner_contrast_execution_manifest_review_v0.md`
+
+The manifest review passes with `0` violations. It authorizes only a bounded offline h40 label run with `12` jobs, failure traces only, diagnostic caches, and no Stage 7 jobs. Runtime arbiter, selector sandbox, Stage 7 repair/promotion, and Stage 8 training remain blocked. Decision: `contrast_execution_manifest_review_passed_labels_allowed`.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -775,6 +783,8 @@ reports/krk_strategy_owner_contrast_label_plan_review_v0.json
 reports/krk_strategy_owner_contrast_label_plan_review_v0.md
 reports/krk_strategy_owner_contrast_execution_manifest_v0.json
 reports/krk_strategy_owner_contrast_execution_manifest_v0.md
+reports/krk_strategy_owner_contrast_execution_manifest_review_v0.json
+reports/krk_strategy_owner_contrast_execution_manifest_review_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

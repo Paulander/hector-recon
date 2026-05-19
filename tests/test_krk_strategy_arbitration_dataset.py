@@ -347,6 +347,17 @@ assert _strategy_owner_bind_spec.loader is not None
 _strategy_owner_bind = importlib.util.module_from_spec(_strategy_owner_bind_spec)
 _strategy_owner_bind_spec.loader.exec_module(_strategy_owner_bind)
 
+_strategy_owner_manifest_review_spec = importlib.util.spec_from_file_location(
+    "review_krk_strategy_owner_contrast_execution_manifest",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_strategy_owner_contrast_execution_manifest.py",
+)
+assert _strategy_owner_manifest_review_spec is not None
+assert _strategy_owner_manifest_review_spec.loader is not None
+_strategy_owner_manifest_review = importlib.util.module_from_spec(_strategy_owner_manifest_review_spec)
+_strategy_owner_manifest_review_spec.loader.exec_module(_strategy_owner_manifest_review)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -3312,3 +3323,62 @@ def test_krk_strategy_owner_contrast_binding_manifest_is_non_causal(tmp_path, mo
     bound = {job["provider_id"]: job["execution_binding"] for job in manifest["jobs"]}
     assert bound["krk.edge_trap_wrong_tempo"]["provider_version"] == "stage5_validated_v1"
     assert bound["krk.drive_to_edge"]["provider_version"] == "stage6_overlay_v1"
+
+
+def test_krk_strategy_owner_contrast_manifest_review_allows_only_labels(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    job = {
+        "job_id": "job.stage4",
+        "source_stage": "stage4",
+        "provider_id": "krk.edge_trap_wrong_tempo",
+        "horizon": 40,
+        "trace_mode": "failures_only",
+        "diagnostic_caches_required": True,
+        "execution_binding": {
+            "composition_profile": "handoff_composition_v1",
+            "execution_mode": "force_provider_first_white_move_then_release",
+            "enable_diagnostic_caches": True,
+            "topology_version": "stage6_overlay_composed_v1",
+            "provider_version": "stage5_validated_v1",
+            "source_checkpoint": "checkpoint.pkl",
+        },
+    }
+    (reports / "krk_strategy_owner_contrast_execution_manifest_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_execution_manifest",
+                "binding_summary": {"all_bindings_valid": True},
+                "jobs": [
+                    job,
+                    {**job, "job_id": "job.stage5", "source_stage": "stage5"},
+                    {
+                        **job,
+                        "job_id": "job.stage6",
+                        "source_stage": "stage6",
+                        "provider_id": "krk.drive_to_edge",
+                        "execution_binding": {
+                            **job["execution_binding"],
+                            "provider_version": "stage6_overlay_v1",
+                        },
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_strategy_owner_manifest_review, "ROOT", root)
+
+    review = _strategy_owner_manifest_review.build_review()
+
+    assert review["schema_version"] == "krk_strategy_owner_contrast_execution_manifest_review.v0"
+    assert review["causal_status"] == "non_causal_manifest_review"
+    assert review["runtime_behavior_changed"] is False
+    assert review["runtime_arbiter_implemented"] is False
+    assert review["stage7_promotion_allowed"] is False
+    assert review["stage8_training_allowed"] is False
+    assert review["review_summary"]["labels_allowed"] is False
+    assert "stage4_job_count_not_4" in review["review_summary"]["violations"]
+    assert review["decision"]["runtime_arbiter_allowed"] is False
+    assert review["decision"]["selector_sandbox_ready"] is False

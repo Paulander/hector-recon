@@ -1,0 +1,54 @@
+{
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "selector_sandbox",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_manifest_review",
+  "decision": {
+    "labels_allowed": true,
+    "recommended_next_step": "run_bounded_contrast_control_labels",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "contrast_execution_manifest_review_passed_labels_allowed"
+  },
+  "gameplay_topology_mutation": false,
+  "label_run_bounds": {
+    "diagnostic_caches_required": true,
+    "horizon": 40,
+    "max_jobs": 12,
+    "stop_if_projected_to_hours": true,
+    "trace_mode": "failures_only"
+  },
+  "labels_generated_in_this_slice": false,
+  "review_summary": {
+    "job_count": 12,
+    "job_count_by_stage": {
+      "stage4": 4,
+      "stage5": 4,
+      "stage6": 4
+    },
+    "labels_allowed": true,
+    "provider_versions": {
+      "stage5_validated_v1": 10,
+      "stage6_overlay_v1": 2
+    },
+    "stage7_jobs": 0,
+    "violations": []
+  },
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_strategy_owner_contrast_execution_manifest_review.v0",
+  "source_artifacts": [
+    "reports/krk_strategy_owner_contrast_execution_manifest_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}
