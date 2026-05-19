@@ -1,0 +1,48 @@
+{
+  "schema_version": "krk_selector_feature_architecture_review.v0",
+  "causal_status": "non_causal_architecture_review",
+  "decision_status": "provider_prior_remains_best_no_selector_sandbox",
+  "source_artifacts": [
+    "reports/krk_selector_feature_dataset_v0.json",
+    "reports/krk_selector_feature_baseline_probe_v0.json",
+    "reports/krk_selector_baseline_probe_v0.json"
+  ],
+  "summary": {
+    "selector_target_rows": 42,
+    "label_counts": {
+      "negative": 28,
+      "positive": 14
+    },
+    "best_baseline": "provider_prior_loo",
+    "best_baseline_accuracy": 0.8333333333333334,
+    "observation_features_improved_over_provider_prior": false
+  },
+  "interpretation": [
+    "Provider identity is currently the strongest non-causal selector signal.",
+    "Trace-only context terms are useful audit metadata but do not yet improve over provider-prior baselines.",
+    "This does not authorize a runtime arbiter because provider-prior success can encode dataset bias and does not prove guardrail-safe ownership.",
+    "The next step should be an architecture review of whether to add more labeled controls, define state-local contrast labels, or move back to broader curriculum integration."
+  ],
+  "allowed_next_work": [
+    "collect_more_labeled_controls_if_review_authorizes",
+    "define_state_local_contrastive_selector_labels",
+    "design_non_causal_provider_maturity_prior",
+    "broader_curriculum_integration_review"
+  ],
+  "blocked_next_work": [
+    "runtime_arbiter",
+    "default_off_selector_sandbox",
+    "provider_support_adapter",
+    "score_bonus_or_penalty",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "recommended_next_step": {
+    "step_id": "review_provider_prior_vs_more_labels",
+    "description": "Decide whether to expand protected-control labels, create state-local contrastive labels, or pause selector work and return to broader curriculum integration.",
+    "must_remain_non_causal": true
+  }
+}

@@ -413,6 +413,19 @@ KRK selector baseline probe v0:
 
 The non-causal baseline probe evaluates only `selected_playout_success` target rows. It has `42` rows with label counts `28` negative / `14` positive. Majority-label accuracy is `0.667`; provider-prior leave-one-out accuracy is `0.833`; stage and active-landmark priors are `0.595`. Status: `simple_selector_baseline_promising_non_causal`. This suggests provider identity carries useful control-plane signal, but it does not authorize a runtime arbiter. The next non-causal step is to join selector targets with trace-only observation features.
 
+KRK selector feature dataset/probe/review v0:
+
+- `scripts/build_krk_selector_feature_dataset.py`
+- `reports/krk_selector_feature_dataset_v0.json`
+- `reports/krk_selector_feature_dataset_v0.md`
+- `scripts/probe_krk_selector_feature_baselines.py`
+- `reports/krk_selector_feature_baseline_probe_v0.json`
+- `reports/krk_selector_feature_baseline_probe_v0.md`
+- `reports/krk_selector_feature_architecture_review_v0.json`
+- `reports/krk_selector_feature_architecture_review_v0.md`
+
+The joined feature dataset adds trace-only observation terms and provider summaries to explicit selector targets. The feature baseline probe did not improve over the provider-prior baseline: best remains `provider_prior_loo` at `0.833`. Decision: `provider_prior_remains_best_no_selector_sandbox`. Runtime arbiter and selector sandbox work remain blocked. The next decision is whether to expand protected-control labels, define state-local contrastive selector labels, or pause selector work and return to broader curriculum integration.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -530,6 +543,12 @@ reports/krk_selector_target_probe_v0.json
 reports/krk_selector_target_probe_v0.md
 reports/krk_selector_baseline_probe_v0.json
 reports/krk_selector_baseline_probe_v0.md
+reports/krk_selector_feature_dataset_v0.json
+reports/krk_selector_feature_dataset_v0.md
+reports/krk_selector_feature_baseline_probe_v0.json
+reports/krk_selector_feature_baseline_probe_v0.md
+reports/krk_selector_feature_architecture_review_v0.json
+reports/krk_selector_feature_architecture_review_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
