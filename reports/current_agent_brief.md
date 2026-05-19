@@ -39,6 +39,7 @@ Current interpretation:
 - The state-local contrast audit found positives are separable from hard negatives by single visible terms in most states and by term interactions in many others; current status is `state_local_single_terms_available`, with next step limited to non-causal visible-term refinement audit.
 - The visible-term refinement audit found candidate positive terms, but several high-value terms are globally ambiguous and require companion/phase scope; current status is `visible_term_refinement_candidates_non_causal`, with no runtime patch justified.
 - The scoped interaction benchmark was inconclusive: scoped models did not beat the visible-term baseline and increased hard-negative ranking relative to current/visible baselines. Current status is `scoped_interaction_benchmark_inconclusive`; pause Stage 7 runtime work or request architecture review.
+- Stage 7 runtime repair is now paused pending an architecture-level decision. Stage 7 residuals should be treated as challenge cases for general KRK strategy arbitration / plan selection, not as the sole optimization target.
 
 ## Hard Invariants
 
@@ -77,18 +78,16 @@ The next diagnostic should distinguish these hypotheses rather than optimize onl
 
 ## Current Diagnostic Objective
 
-Produce the replay-free Stage 7 evidence merge / stratified diagnostic table recommended by the neutral matrix, then emit a decision gate.
+Stage 7-specific runtime implementation is paused. The current objective is to preserve the Stage 7 evidence as an architecture review and decide the next direction outside the local-repair loop.
 
-The evidence merge should answer:
+The next architecture decision should choose among:
 
-- Does provider-local/role-owned arbitration identify better ownership than raw score?
-- Do edge distance and `box_area_relevance` explain where `box_shrink` should not own?
-- Do forced-provider or bounded playout probes show existing continuation capacity?
-- Do trajectory fidelity audits show training-objective or representation failure?
-- Do missing visible terms explain separable state families?
-- Is `box_shrink` itself an unstable curriculum boundary?
+- a general KRK strategy-arbitration / plan-selection experiment,
+- a stronger sequence-policy / Plan Capsule learner,
+- a curriculum-boundary redesign where `box_shrink` becomes local evidence plus handoff trigger,
+- or a broader KRK integration track that freezes Stage 7 as a known residual.
 
-The output should be non-causal diagnostic artifacts and a decision gate, not a runtime change.
+The recommended direction is to design a general KRK strategy-arbitration / plan-selection experiment and use Stage 7 residuals as held-out challenge cases. Do not implement a new Stage 7 runtime patch without a new explicit architecture decision.
 
 ## Performance Rules
 
@@ -116,20 +115,11 @@ Stop and ask for review if:
 
 ## Expected Next Artifacts
 
-Likely next artifacts:
+Current pause/review artifacts:
 
 ```text
-reports/structural_candidates/stage7_evidence_merge_table.json
-reports/structural_candidates/stage7_evidence_merge_table.md
-reports/structural_candidates/stage7_decision_gate.json
-reports/structural_candidates/stage7_decision_gate.md
+reports/structural_candidates/stage7_pause_and_architecture_review.json
+reports/structural_candidates/stage7_pause_and_architecture_review.md
 ```
 
-Possible supporting code:
-
-```text
-scripts/summarize_stage7_evidence_merge_table.py
-tests/test_stage7_unresolved_summary.py
-```
-
-No runtime behavior should change for the next diagnostic slice.
+No runtime behavior should change while Stage 7 is paused.
