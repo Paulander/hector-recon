@@ -338,6 +338,13 @@ KRK strategy arbiter observability skeleton v0:
 - It does not change scores, selected moves, selected providers, topology, runtime defaults, DTM/tablebase use, or M1-M4 behavior.
 - A tiny paired evaluator check showed identical one-ply/conversion outcome metrics with the flag off vs on; the enabled run only added observation count.
 
+KRK strategy arbiter observability smoke v0:
+
+- `reports/krk_strategy_arbiter_observability_smoke_v0.json`
+- `reports/krk_strategy_arbiter_observability_smoke_v0.md`
+
+The smoke records the paired default-off check. Behavior/outcome metrics matched between the default-off and enabled runs; the only intended delta was one non-causal observation frame. This supports collecting small non-causal observation frames next, but still does not authorize runtime arbitration, score changes, provider routing, Stage 7 repair, Stage 7 promotion, or Stage 8 training.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -433,6 +440,8 @@ reports/krk_provider_label_coverage_plan_v0.json
 reports/krk_provider_label_coverage_plan_v0.md
 reports/krk_strategy_arbiter_architecture_review_v1.json
 reports/krk_strategy_arbiter_architecture_review_v1.md
+reports/krk_strategy_arbiter_observability_smoke_v0.json
+reports/krk_strategy_arbiter_observability_smoke_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
