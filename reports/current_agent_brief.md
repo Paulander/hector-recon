@@ -14,6 +14,7 @@ The near-term KRK goal is to preserve the validated handoff/composition stack wh
 - Stage 5 fence/handoff machinery is validated enough to serve as protected base behavior.
 - Stage 6 `drive_to_edge` is validated enough to serve as an overlay component when composed with frozen lower-stage providers.
 - Stage 5/6 provider preservation uses frozen base providers plus later-stage overlays, not monolithic replacement topology.
+- A replay-free protected-stage audit is recorded in `reports/krk_protected_stage_status.md` and `reports/krk_protected_stage_status.json`: Stage 1, Stage 5, and Stage 6 are clean protected/promoted components; Stage 4 is clean in the 500-sample `handoff_composition_v1` profile but carries a separate h40 overlay-control caveat that reproduces on the frozen Stage 5 base and is not Stage 6 interference.
 - M1-M4 plasticity/consolidation semantics must remain intact.
 
 ## Stage 7 Status
@@ -276,6 +277,8 @@ reports/structural_candidates/stage7_post_decision_closure.json
 reports/structural_candidates/stage7_post_decision_closure.md
 reports/structural_candidates/stage7_sequence_policy_redesign_note.json
 reports/structural_candidates/stage7_sequence_policy_redesign_note.md
+reports/krk_protected_stage_status.json
+reports/krk_protected_stage_status.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

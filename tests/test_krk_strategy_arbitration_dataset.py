@@ -111,6 +111,15 @@ assert _internal_terminal_evidence_spec.loader is not None
 _internal_terminal_evidence = importlib.util.module_from_spec(_internal_terminal_evidence_spec)
 _internal_terminal_evidence_spec.loader.exec_module(_internal_terminal_evidence)
 
+_protected_stage_status_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_protected_stage_status",
+    Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_protected_stage_status.py",
+)
+assert _protected_stage_status_spec is not None
+assert _protected_stage_status_spec.loader is not None
+_protected_stage_status = importlib.util.module_from_spec(_protected_stage_status_spec)
+_protected_stage_status_spec.loader.exec_module(_protected_stage_status)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -1084,3 +1093,147 @@ def test_krk_internal_terminal_evidence_and_review_are_non_causal(tmp_path):
     assert all(item["causal_ready"] is False for item in review["terminal_readiness"])
     assert "no_hidden_controller" in review["runtime_promotion_readiness_checklist"]
     assert "no_topology_mutation_during_gameplay" in review["runtime_promotion_readiness_checklist"]
+
+
+def test_krk_protected_stage_status_preserves_stage4_caveat(tmp_path):
+    root = tmp_path
+
+    def write_json(relative_path, payload):
+        path = root / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload), encoding="utf-8")
+
+    validation_profile = {
+        "schema_version": "composition_profile.v1",
+        "profile_id": "handoff_composition_v1",
+    }
+    write_json(
+        _protected_stage_status.STAGE1_MANIFEST,
+        {
+            "formal_validation": {
+                "mode": "strict_pairs",
+                "validated": True,
+                "nodes": 257,
+                "edges": 796,
+            },
+            "evaluation": {"stage1_eval_samples": 50},
+            "learner_readiness": {"ready": True},
+        },
+    )
+    write_json(
+        _protected_stage_status.STAGE4_PROFILE,
+        {
+            "total": 500,
+            "improved": 500,
+            "optimal": 500,
+            "worsened": 0,
+            "no_move": 0,
+            "playouts": {"mate": 500},
+            "conversion_status_counts": {"passed": 500},
+            "one_ply_status_counts": {"passed": 500},
+            "shadow_candidates": [],
+            "composition_profile": validation_profile,
+        },
+    )
+    write_json(
+        _protected_stage_status.STAGE5_PROFILE,
+        {
+            "total": 1000,
+            "improved": 1000,
+            "optimal": 1000,
+            "worsened": 0,
+            "no_move": 0,
+            "playouts": {"mate": 1000},
+            "conversion_status_counts": {"passed": 1000},
+            "one_ply_status_counts": {"passed": 1000},
+            "shadow_candidates": [],
+            "composition_profile": validation_profile,
+        },
+    )
+    write_json(
+        _protected_stage_status.STAGE6_CANDIDATE,
+        {
+            "total": 300,
+            "improved": 300,
+            "optimal": 217,
+            "worsened": 0,
+            "no_move": 0,
+            "playouts": {"mate": 300},
+            "conversion_status_counts": {"passed": 300},
+            "one_ply_status_counts": {"passed": 217, "failed": 83},
+            "shadow_candidates": [],
+            "composition_profile": validation_profile,
+        },
+    )
+    write_json(
+        _protected_stage_status.STAGE5_OVERLAY_GUARD,
+        {
+            "total": 300,
+            "improved": 300,
+            "optimal": 300,
+            "worsened": 0,
+            "no_move": 0,
+            "playouts": {"mate": 300},
+            "conversion_status_counts": {"passed": 300},
+            "one_ply_status_counts": {"passed": 300},
+            "shadow_candidates": [],
+            "composition_profile": validation_profile,
+        },
+    )
+    stage4_caveat_payload = {
+        "total": 300,
+        "improved": 300,
+        "optimal": 300,
+        "worsened": 0,
+        "no_move": 0,
+        "playouts": {"mate": 247, "max_plies": 53},
+        "conversion_status_counts": {"passed": 247, "failed": 53},
+        "one_ply_status_counts": {"passed": 300},
+        "shadow_candidates": [{}] * 106,
+        "composition_profile": validation_profile,
+    }
+    write_json(_protected_stage_status.STAGE4_OVERLAY_PROBE, stage4_caveat_payload)
+    write_json(_protected_stage_status.STAGE4_BASE_CONTROL, stage4_caveat_payload)
+    write_json(
+        _protected_stage_status.STAGE6_PROMOTION,
+        {
+            "promotion_status": "promoted",
+            "stage": {"mate_rate": 1.0, "passed": True},
+            "guardrails": [{"label": "fence_established", "mate_rate": 1.0, "passed": True}],
+        },
+    )
+    notes = root / _protected_stage_status.HANDOFF_NOTES
+    notes.parent.mkdir(parents=True, exist_ok=True)
+    notes.write_text(
+        "Stage 1 regression:\n\n"
+        "```text\n"
+        "samples: 500\n"
+        "result: 500/500 improved, 500/500 optimal, 0 worsened, 0 no-move\n"
+        "```\n",
+        encoding="utf-8",
+    )
+
+    status = _protected_stage_status.build_status(root)
+
+    assert status["schema_version"] == "krk_protected_stage_status.v1"
+    assert status["causal_status"] == "non_causal_status_audit"
+    assert status["runtime_behavior_changed"] is False
+    assert status["runtime_defaults_changed"] is False
+    assert status["stage7_promotion_allowed"] is False
+    assert status["stage8_training_allowed"] is False
+
+    stages = {item["stage"]: item for item in status["stage_statuses"]}
+    assert stages["stage1_backchain"]["evidence"]["documented_500_sample_regression"] is True
+    assert stages["stage5_fence"]["evidence"]["profile_1000_seed7_h40"]["playouts"] == {
+        "mate": 1000
+    }
+    assert (
+        stages["stage6_drive_overlay"]["evidence"]["promotion_eval"]["promotion_status"]
+        == "promoted"
+    )
+    assert stages["stage4_wrong_tempo"]["evidence"][
+        "overlay_caveat_reproduces_on_base_control"
+    ] is True
+    assert stages["stage4_wrong_tempo"]["evidence"]["overlay_probe_300_seed7_h40"][
+        "playouts"
+    ] == {"mate": 247, "max_plies": 53}
