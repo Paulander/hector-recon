@@ -329,6 +329,15 @@ assert _strategy_owner_label_plan_spec.loader is not None
 _strategy_owner_label_plan = importlib.util.module_from_spec(_strategy_owner_label_plan_spec)
 _strategy_owner_label_plan_spec.loader.exec_module(_strategy_owner_label_plan)
 
+_strategy_owner_label_plan_review_spec = importlib.util.spec_from_file_location(
+    "review_krk_strategy_owner_contrast_label_plan",
+    Path(__file__).resolve().parents[1] / "scripts" / "review_krk_strategy_owner_contrast_label_plan.py",
+)
+assert _strategy_owner_label_plan_review_spec is not None
+assert _strategy_owner_label_plan_review_spec.loader is not None
+_strategy_owner_label_plan_review = importlib.util.module_from_spec(_strategy_owner_label_plan_review_spec)
+_strategy_owner_label_plan_review_spec.loader.exec_module(_strategy_owner_label_plan_review)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -3135,3 +3144,68 @@ def test_krk_strategy_owner_contrast_label_plan_excludes_stage7(tmp_path, monkey
     assert all(job["provider_id"] != "krk.edge_trap_close" for job in plan["jobs"] if job["state_id"] == "state.stage5_existing")
     assert plan["decision"]["selector_sandbox_ready"] is False
     assert plan["decision"]["recommended_next_step"] == "review_and_bind_bounded_contrast_label_plan_before_execution"
+
+
+def test_krk_strategy_owner_contrast_label_plan_review_blocks_label_run(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    (reports / "krk_strategy_owner_contrast_label_plan_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_label_plan",
+                "labels_generated_in_this_slice": False,
+                "jobs": [
+                    {
+                        "job_id": "job.stage4",
+                        "causal_status": "non_causal_label_job",
+                        "labels_generated": False,
+                        "source_stage": "stage4",
+                        "provider_id": "krk.edge_trap_wrong_tempo",
+                        "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                        "horizon": 40,
+                        "trace_mode": "failures_only",
+                        "diagnostic_caches_required": True,
+                    },
+                    {
+                        "job_id": "job.stage5",
+                        "causal_status": "non_causal_label_job",
+                        "labels_generated": False,
+                        "source_stage": "stage5",
+                        "provider_id": "krk.edge_trap_close",
+                        "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                        "horizon": 40,
+                        "trace_mode": "failures_only",
+                        "diagnostic_caches_required": True,
+                    },
+                    {
+                        "job_id": "job.stage6",
+                        "causal_status": "non_causal_label_job",
+                        "labels_generated": False,
+                        "source_stage": "stage6",
+                        "provider_id": "krk.drive_to_edge",
+                        "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                        "horizon": 40,
+                        "trace_mode": "failures_only",
+                        "diagnostic_caches_required": True,
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_strategy_owner_label_plan_review, "ROOT", root)
+
+    review = _strategy_owner_label_plan_review.build_review()
+
+    assert review["schema_version"] == "krk_strategy_owner_contrast_label_plan_review.v0"
+    assert review["causal_status"] == "non_causal_plan_review"
+    assert review["runtime_behavior_changed"] is False
+    assert review["runtime_arbiter_implemented"] is False
+    assert review["stage7_promotion_allowed"] is False
+    assert review["stage8_training_allowed"] is False
+    assert review["review_summary"]["violations"] == []
+    assert review["review_summary"]["allowed_to_bind_execution_manifest"] is True
+    assert review["review_summary"]["allowed_to_run_labels"] is False
+    assert review["decision"]["labels_allowed_now"] is False
+    assert review["decision"]["recommended_next_step"] == "bind_contrast_label_jobs_to_explicit_topologies"

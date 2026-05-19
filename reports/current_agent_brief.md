@@ -586,6 +586,14 @@ KRK strategy-owner contrast label plan v0:
 
 The bounded non-causal plan proposes `12` protected forced-provider contrast label jobs: `4` Stage 4, `4` Stage 5, and `4` Stage 6, with `0` Stage 7 jobs. It does not run labels. Execution remains review/binding-gated because Stage 4 forced-provider binding must be explicit and visible before any h40 label run. Decision: `protected_strategy_owner_contrast_label_plan_defined_execution_review_required`. Runtime arbiter, selector sandbox, Stage 7 repair/promotion, and Stage 8 training remain blocked.
 
+KRK strategy-owner contrast label plan review v0:
+
+- `scripts/review_krk_strategy_owner_contrast_label_plan.py`
+- `reports/krk_strategy_owner_contrast_label_plan_review_v0.json`
+- `reports/krk_strategy_owner_contrast_label_plan_review_v0.md`
+
+The review passes the bounded label plan with `0` violations and confirms it may proceed only to an explicit execution-binding manifest. Labels are still not allowed until binding is reviewed. Required binding properties are explicit topology/profile per job, visible Stage 4 forced-provider skill matching, frozen Stage 5/6 provider metadata preservation, provider versions/checkpoints, and a separate binding-manifest review. Decision: `contrast_label_plan_review_passed_binding_required`.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -755,6 +763,8 @@ reports/krk_strategy_owner_contrast_dataset_v0.json
 reports/krk_strategy_owner_contrast_dataset_v0.md
 reports/krk_strategy_owner_contrast_label_plan_v0.json
 reports/krk_strategy_owner_contrast_label_plan_v0.md
+reports/krk_strategy_owner_contrast_label_plan_review_v0.json
+reports/krk_strategy_owner_contrast_label_plan_review_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

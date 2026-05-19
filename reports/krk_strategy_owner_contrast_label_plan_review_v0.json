@@ -1,0 +1,59 @@
+{
+  "binding_requirements": [
+    "bind every job to explicit handoff_composition_v1 or stage6_overlay_composed topology",
+    "make Stage4 forced-provider skill matching explicit and visible",
+    "preserve frozen Stage5/6 provider metadata",
+    "include source checkpoint/provider_version per job",
+    "review binding manifest before running labels"
+  ],
+  "blocked_next_steps": [
+    "run_labels_without_binding_review",
+    "runtime_arbiter",
+    "selector_sandbox",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_plan_review",
+  "decision": {
+    "labels_allowed_now": false,
+    "recommended_next_step": "bind_contrast_label_jobs_to_explicit_topologies",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "contrast_label_plan_review_passed_binding_required"
+  },
+  "gameplay_topology_mutation": false,
+  "labels_generated_in_this_slice": false,
+  "review_summary": {
+    "allowed_to_bind_execution_manifest": true,
+    "allowed_to_run_labels": false,
+    "job_count": 12,
+    "job_count_by_stage": {
+      "stage4": 4,
+      "stage5": 4,
+      "stage6": 4
+    },
+    "provider_counts": {
+      "krk.drive_to_edge": 2,
+      "krk.edge_trap_close": 3,
+      "krk.edge_trap_enemy_between": 1,
+      "krk.edge_trap_wrong_tempo": 3,
+      "krk.fence_established": 3
+    },
+    "stage7_jobs": 0,
+    "violations": []
+  },
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_strategy_owner_contrast_label_plan_review.v0",
+  "source_artifacts": [
+    "reports/krk_strategy_owner_contrast_label_plan_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}
