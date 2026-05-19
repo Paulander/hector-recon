@@ -576,7 +576,7 @@ KRK strategy-owner contrast dataset v0:
 - `reports/krk_strategy_owner_contrast_dataset_v0.json`
 - `reports/krk_strategy_owner_contrast_dataset_v0.md`
 
-The replay-free contrast dataset found `8` provider-contrast rows: `4` protected training-eligible rows and `4` Stage 7 held-out challenge rows. Stage 7 remains excluded from training (`stage7_training_rows = 0`). The useful Stage 7 contrast rows include two held-out non-stage0-positive failures, but protected controls contain only one non-stage0-positive row and one positive provider family. Readiness v2 blockers remain: insufficient label balance, insufficient protected non-stage0-positive rows, insufficient positive-provider family diversity, insufficient selected-provider family diversity, and no Stage 4 contrast rows. Decision: `strategy_owner_contrast_dataset_underpowered_no_selector_sandbox`. Runtime arbiter, selector sandbox, Stage 7 repair/promotion, and Stage 8 training remain blocked.
+After merging the bounded contrast-control labels, the dataset contains `13` provider-contrast rows: `9` protected training-eligible rows and `4` Stage 7 held-out challenge rows. Stage 7 remains excluded from training (`stage7_training_rows = 0`). Protected controls now include `6` non-stage0-positive rows and positive provider families across `drive_to_edge`, `edge_trap`, and `fence_established`. The dataset is ready for a non-causal strategy-owner contrast probe, but selector sandbox remains blocked because selected-provider family diversity is still insufficient. Decision: `strategy_owner_contrast_dataset_ready_for_non_causal_probe_selector_sandbox_blocked`.
 
 KRK strategy-owner contrast label plan v0:
 

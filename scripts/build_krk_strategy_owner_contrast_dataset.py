@@ -12,6 +12,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 FRAMES = Path("reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json")
 READINESS = Path("reports/krk_selector_readiness_v2_plan.json")
+CONTRAST_LABELS = Path("reports/krk_strategy_owner_contrast_control_labels_v0.json")
 OUT_JSON = Path("reports/krk_strategy_owner_contrast_dataset_v0.json")
 OUT_MD = Path("reports/krk_strategy_owner_contrast_dataset_v0.md")
 
@@ -56,6 +57,54 @@ def _proposal_row(proposal: dict[str, Any]) -> dict[str, Any] | None:
     }
 
 
+def _label_row(label: dict[str, Any]) -> dict[str, Any] | None:
+    result = str(label.get("result") or "")
+    provider_id = str(label.get("provider_id") or "")
+    if result not in {"mate", "max_plies", "draw", "stagnation"} or not provider_id:
+        return None
+    return {
+        "provider_id": provider_id,
+        "provider_family": _provider_family(provider_id),
+        "move_uci": label.get("forced_first_move"),
+        "result": result,
+        "positive": result == "mate",
+        "label_source": "strategy_owner_contrast_control_label_run",
+        "selected": None,
+        "plies": label.get("plies"),
+        "job_id": label.get("job_id"),
+    }
+
+
+def _ensure_row(
+    rows_by_state: dict[str, dict[str, Any]],
+    frame_by_state: dict[str, dict[str, Any]],
+    state_id: str,
+    *,
+    stage: str | None = None,
+) -> dict[str, Any] | None:
+    existing = rows_by_state.get(state_id)
+    if existing:
+        return existing
+    frame = frame_by_state.get(state_id)
+    if not frame:
+        return None
+    source_stage = str(stage or frame.get("source_stage") or "unknown")
+    row = {
+        "schema_version": "krk_strategy_owner_contrast_row.v0",
+        "causal_status": "non_causal_contrast_row",
+        "state_id": state_id,
+        "frame_id": frame.get("frame_id"),
+        "source_stage": source_stage,
+        "active_landmark_label": frame.get("active_landmark_label"),
+        "fen": frame.get("fen"),
+        "training_eligible": source_stage in {"stage4", "stage5", "stage6"},
+        "held_out_challenge": source_stage == "stage7",
+        "provider_labels": [],
+    }
+    rows_by_state[state_id] = row
+    return row
+
+
 def build_dataset() -> dict[str, Any]:
     frames = _load_json(FRAMES)
     readiness = _load_json(READINESS)
@@ -63,7 +112,17 @@ def build_dataset() -> dict[str, Any]:
         raise ValueError("frames must remain non-causal")
     if readiness.get("causal_status") != "non_causal_design_plan":
         raise ValueError("readiness plan must remain non-causal")
+    contrast_labels: dict[str, Any] | None = None
+    if (ROOT / CONTRAST_LABELS).exists():
+        contrast_labels = _load_json(CONTRAST_LABELS)
+        if contrast_labels.get("causal_status") != "non_causal_label_run":
+            raise ValueError("contrast labels must remain non-causal")
     rows_by_state: dict[str, dict[str, Any]] = {}
+    frame_by_state = {
+        str(frame.get("state_id") or ""): frame
+        for frame in frames.get("frames") or []
+        if frame.get("state_id")
+    }
     for frame in frames.get("frames") or []:
         proposals = [
             row
@@ -77,7 +136,7 @@ def build_dataset() -> dict[str, Any]:
         state_id = str(frame.get("state_id") or "")
         if not state_id:
             continue
-        existing = rows_by_state.get(state_id)
+        existing = _ensure_row(rows_by_state, frame_by_state, state_id)
         if existing:
             known = {(row["provider_id"], row.get("move_uci"), row["result"]) for row in existing["provider_labels"]}
             for row in proposals:
@@ -86,19 +145,24 @@ def build_dataset() -> dict[str, Any]:
                     existing["provider_labels"].append(row)
                     known.add(key)
             continue
-        stage = str(frame.get("source_stage") or "unknown")
-        rows_by_state[state_id] = {
-            "schema_version": "krk_strategy_owner_contrast_row.v0",
-            "causal_status": "non_causal_contrast_row",
-            "state_id": state_id,
-            "frame_id": frame.get("frame_id"),
-            "source_stage": stage,
-            "active_landmark_label": frame.get("active_landmark_label"),
-            "fen": frame.get("fen"),
-            "training_eligible": stage in {"stage4", "stage5", "stage6"},
-            "held_out_challenge": stage == "stage7",
-            "provider_labels": proposals,
-        }
+    if contrast_labels:
+        for label in contrast_labels.get("labels") or []:
+            state_id = str(label.get("state_id") or "")
+            if not state_id:
+                continue
+            row = _ensure_row(
+                rows_by_state,
+                frame_by_state,
+                state_id,
+                stage=str(label.get("source_stage") or ""),
+            )
+            label_item = _label_row(label)
+            if not row or not label_item:
+                continue
+            known = {(item["provider_id"], item.get("move_uci"), item["result"]) for item in row["provider_labels"]}
+            key = (label_item["provider_id"], label_item.get("move_uci"), label_item["result"])
+            if key not in known:
+                row["provider_labels"].append(label_item)
     rows = list(rows_by_state.values())
     for row in rows:
         positives = [item for item in row["provider_labels"] if item["positive"]]
@@ -166,10 +230,17 @@ def build_dataset() -> dict[str, Any]:
     if any(row["source_stage"] == "stage7" and row["training_eligible"] for row in rows):
         readiness_blockers.append("stage7_training_rows_present")
 
+    contrast_probe_ready = (
+        training_non_stage0_positive >= 4
+        and len(training_positive_families) >= 2
+        and all(stage_counts.get(stage, 0) > 0 for stage in ("stage4", "stage5", "stage6"))
+        and len(training_positive_labels) >= 6
+        and len(training_negative_labels) >= 2
+    )
     selected_status = (
-        "strategy_owner_contrast_dataset_underpowered_no_selector_sandbox"
-        if readiness_blockers
-        else "strategy_owner_contrast_dataset_ready_for_non_causal_probe"
+        "strategy_owner_contrast_dataset_ready_for_non_causal_probe_selector_sandbox_blocked"
+        if contrast_probe_ready
+        else "strategy_owner_contrast_dataset_underpowered_no_selector_sandbox"
     )
     return {
         "schema_version": "krk_strategy_owner_contrast_dataset.v0",
@@ -182,7 +253,8 @@ def build_dataset() -> dict[str, Any]:
         "gameplay_topology_mutation": False,
         "stage7_promotion_allowed": False,
         "stage8_training_allowed": False,
-        "source_artifacts": [str(FRAMES), str(READINESS)],
+        "source_artifacts": [str(FRAMES), str(READINESS)]
+        + ([str(CONTRAST_LABELS)] if contrast_labels else []),
         "summary": {
             "row_count": len(rows),
             "row_count_by_stage": dict(sorted(stage_counts.items())),
@@ -201,6 +273,7 @@ def build_dataset() -> dict[str, Any]:
             "schema_version": "krk_selector_readiness_v2_assessment.v0",
             "selector_sandbox_ready": not readiness_blockers,
             "blockers": readiness_blockers,
+            "contrast_probe_ready": contrast_probe_ready,
             "stage7_training_rows": 0,
             "held_out_challenge_boundary_preserved": True,
         },
@@ -210,9 +283,9 @@ def build_dataset() -> dict[str, Any]:
             "runtime_arbiter_allowed": False,
             "selector_sandbox_ready": False,
             "recommended_next_step": (
-                "collect_or_derive_more_protected_non_stage0_contrast_rows"
-                if training_non_stage0_positive < 4
-                else "run_non_causal_strategy_owner_contrast_probe"
+                "run_non_causal_strategy_owner_contrast_probe"
+                if contrast_probe_ready
+                else "collect_or_derive_more_protected_non_stage0_contrast_rows"
             ),
         },
     }
