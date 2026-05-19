@@ -89,6 +89,15 @@ The next architecture decision should choose among:
 
 The recommended direction is to design a general KRK strategy-arbitration / plan-selection experiment and use Stage 7 residuals as held-out challenge cases. Do not implement a new Stage 7 runtime patch without a new explicit architecture decision.
 
+The next architecture document is:
+
+```text
+reports/krk_strategy_arbitration_plan.md
+reports/krk_strategy_arbitration_plan.json
+```
+
+That plan specifies the first future implementation slice as a non-causal KRK strategy arbitration dataset/probe v0. It does not authorize a runtime arbiter, Stage 7 repair, Stage 7 promotion, or Stage 8 training.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -120,6 +129,8 @@ Current pause/review artifacts:
 ```text
 reports/structural_candidates/stage7_pause_and_architecture_review.json
 reports/structural_candidates/stage7_pause_and_architecture_review.md
+reports/krk_strategy_arbitration_plan.json
+reports/krk_strategy_arbitration_plan.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

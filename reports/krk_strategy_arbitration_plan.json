@@ -1,0 +1,261 @@
+{
+  "schema_version": "krk_strategy_arbitration_plan.v1",
+  "causal_status": "architecture_plan_non_causal",
+  "runtime_behavior_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "gameplay_topology_mutation": false,
+  "stage7_status": "local_valid_composition_quarantined",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "purpose": {
+    "summary": "Pause Stage 7 box_shrink as a local repair target and move up one level to a general KRK strategy arbitration / plan-selection layer.",
+    "goal": "Learn from shared terminal-space context when each KRK strategy/provider/plan should own a position.",
+    "not_a_runtime_policy_yet": true
+  },
+  "candidate_strategies": [
+    "krk.stage0_basin",
+    "krk.edge_trap_close",
+    "krk.edge_trap_enemy_between",
+    "krk.edge_trap_wrong_tempo",
+    "krk.fence_established",
+    "krk.drive_to_edge",
+    "krk.box_shrink",
+    "krk.plan_capsule_or_post_box_continuation",
+    "future.edge_net_or_king_support_continuation"
+  ],
+  "hard_invariants": [
+    "no_hidden_python_controller",
+    "no_runtime_dtm_or_tablebase_policy",
+    "no_gameplay_time_topology_mutation",
+    "no_stage7_promotion",
+    "no_stage8_training_from_unresolved_stage7",
+    "no_broad_stage7_support_bonus_provider_penalty_or_stage0_suppression",
+    "no_direct_unsafe_role_script_to_provider_sub_edge",
+    "m1_m4_plasticity_consolidation_semantics_preserved",
+    "validated_stage5_stage6_providers_protected"
+  ],
+  "non_causal_evidence_records": [
+    "HandoffPacket",
+    "SkillContractStats",
+    "ShadowStemCandidate",
+    "StructuralCandidate",
+    "GrowthGovernor",
+    "provider_promotion_events",
+    "PlanCapsuleSpec"
+  ],
+  "stage7_challenge_set": [
+    "0926_like_candidate_move_family",
+    "069_like_drive_fence_arbitration_families",
+    "2cc_like_continuation_families",
+    "plan_capsule_owned_arbitration_residuals",
+    "box_shrink_reward_contract_mismatch_cases",
+    "known_stage0_basin_fallback_failures"
+  ],
+  "strategy_proposal_frame": {
+    "schema_version": "strategy_proposal_frame.v1",
+    "causal_status": "non_causal",
+    "fields": [
+      "schema_version",
+      "state_id",
+      "fen",
+      "active_landmark_label",
+      "provider_id",
+      "skill_id",
+      "provider_version",
+      "move_uci",
+      "raw_score",
+      "provider_local_rank",
+      "normalized_score",
+      "source_terms",
+      "role_licenses",
+      "plan_capsule_context",
+      "move_shape_terms",
+      "post_move_terms",
+      "safety_terms",
+      "known_outcome_label",
+      "shadow_or_failure_labels",
+      "causal_status"
+    ],
+    "runtime_controller": false
+  },
+  "terminal_space_features": [
+    "black_king_edge_distance",
+    "black_king_edge_bucket",
+    "box_area",
+    "box_area_delta_possible",
+    "box_area_relevance",
+    "rook_safe",
+    "fence_exists",
+    "fence_stable",
+    "cut_stable",
+    "white_king_support_available",
+    "white_king_can_improve_support",
+    "enemy_king_mobility",
+    "mate_in_one_available",
+    "mate_basin_readiness",
+    "edge_net_pressure_proxy",
+    "corner_net_pressure_proxy",
+    "stalemate_or_draw_risk",
+    "plan_capsule_active",
+    "recent_handoff_context"
+  ],
+  "important_candidate_terms": [
+    "box_area_relevance",
+    "box_shrink_exit_condition",
+    "edge_net_affordance",
+    "king_support_conversion_affordance",
+    "phase_boundary_near_edge"
+  ],
+  "dataset_v0": {
+    "causal_status": "non_causal",
+    "include_sources": [
+      "stage5_successful_fence_handoff_states",
+      "stage6_successful_drive_to_edge_states",
+      "stage7_successful_cases",
+      "stage7_residual_failure_families",
+      "stage4_wrong_tempo_debt_cases_if_useful",
+      "kpk_to_kqk_bridge_examples_as_cross_domain_sanity_only"
+    ],
+    "labels": [
+      "conversion_result",
+      "forced_provider_result",
+      "candidate_move_result",
+      "legal_first_result",
+      "dtm_diagnostic_result",
+      "shadow_failure_class",
+      "handoff_capsule_state"
+    ],
+    "add_new_labels_policy": "Add new h40 labels only for small missing cells."
+  },
+  "performance_rules": [
+    "small_and_stratified_first",
+    "use_h40_as_practical_horizon",
+    "use_h80_plus_only_for_classification_not_promotion",
+    "no_exhaustive_legal_first_sweeps_by_default",
+    "cap_provider_suggestions_per_state",
+    "use_diagnostic_caches",
+    "use_parallel_workers_when_available",
+    "use_thin_traces",
+    "stop_if_run_projects_to_hours"
+  ],
+  "arbiter_tracks": [
+    {
+      "track": "A",
+      "name": "Visible Heuristic Arbiter",
+      "causal_status": "non_causal_baseline",
+      "purpose": "Check whether simple visible terms explain when box_shrink should yield.",
+      "features": [
+        "edge_distance",
+        "box_relevance",
+        "fence_cut_state",
+        "king_support",
+        "mate_basin_readiness",
+        "draw_stalemate_risk"
+      ]
+    },
+    {
+      "track": "B",
+      "name": "Provider-Ranking Arbiter",
+      "causal_status": "non_causal_model",
+      "purpose": "Check whether a model over StrategyProposalFrames predicts better provider ownership than raw global scores.",
+      "targets": [
+        "conversion_positive_provider",
+        "handoff_success_provider",
+        "provider_avoids_shadow_candidates",
+        "provider_avoids_stagnation_or_max_plies"
+      ]
+    },
+    {
+      "track": "C",
+      "name": "Plan-Selection Arbiter",
+      "causal_status": "non_causal_model",
+      "purpose": "Check whether plan commitment can be selected only when it helps.",
+      "choices": [
+        "single_provider_ownership",
+        "bounded_plan_capsule_commitment",
+        "handoff_to_existing_validated_provider",
+        "exit_or_abort_plan"
+      ]
+    },
+    {
+      "track": "D",
+      "name": "Curriculum Boundary Audit",
+      "causal_status": "non_causal_audit",
+      "purpose": "Determine whether Stage 7 is a bad independent curriculum boundary.",
+      "box_shrink_role": "local_evidence_plus_handoff_trigger"
+    }
+  ],
+  "evaluation_questions": [
+    "does_raw_provider_score_fail_because_scores_are_not_comparable",
+    "does_provider_local_rank_help",
+    "do_visible_terms_predict_provider_ownership",
+    "does_box_area_relevance_fall_near_edge",
+    "do_edge_net_king_support_fence_terms_dominate_near_edge",
+    "are_stage7_residuals_phase_boundary_failures",
+    "are_missing_visible_terms_main_blocker",
+    "is_current_training_objective_insufficient_even_with_good_features",
+    "should_box_shrink_be_demoted_to_handoff_evidence"
+  ],
+  "first_slice_outputs": [
+    "reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.json",
+    "reports/strategy_arbitration/krk_strategy_arbitration_probe_v0.json",
+    "reports/strategy_arbitration/krk_strategy_arbitration_probe_v0.md"
+  ],
+  "optional_first_slice_code": [
+    "scripts/build_krk_strategy_arbitration_dataset.py",
+    "scripts/probe_krk_strategy_arbitration.py",
+    "tests/test_krk_strategy_arbitration_dataset.py"
+  ],
+  "decision_gate_statuses": [
+    "strategy_arbitration_promising",
+    "missing_feature_first",
+    "curriculum_boundary_likely",
+    "continuation_capacity_dominant",
+    "training_objective_dominant",
+    "inconclusive_need_more_stratified_data"
+  ],
+  "future_sandbox_criteria": {
+    "default_off": true,
+    "domain_or_profile_scoped": true,
+    "traceable": true,
+    "visible_term_justified": true,
+    "guardrail_validated": true,
+    "runtime_dtm_or_tablebase_allowed": false,
+    "gameplay_topology_mutation_allowed": false,
+    "guardrails": [
+      "stage6_drive_to_edge",
+      "stage5_fence",
+      "stage4_wrong_tempo_debt_with_paired_controls",
+      "stage1_or_krk_entry_if_cheap",
+      "m1_m4_preservation",
+      "kpk_to_kqk_bridge_sanity_if_relevant"
+    ]
+  },
+  "plasticity_consolidation_relationship": {
+    "m3": "temporary_provider_arbitration_adaptation",
+    "m4": "slow_consolidation_of_stable_arbitration_preferences",
+    "m5": "structural_promotion_only_after_sandbox_and_guardrails",
+    "changes_now": false
+  },
+  "structural_growth_relationship": {
+    "growth_governor_compatible": true,
+    "shift": "local_repair_to_strategy_ownership_learning",
+    "stage7_residuals": "challenge_cases"
+  },
+  "stop_conditions": [
+    "probe_becomes_runtime_arbiter",
+    "probe_changes_defaults",
+    "probe_uses_dtm_or_tablebase_at_runtime",
+    "probe_mutates_topology_during_gameplay",
+    "probe_requires_hidden_controller_logic",
+    "probe_cannot_cite_visible_source_terms",
+    "run_becomes_too_slow",
+    "dataset_too_stage7_only_to_generalize"
+  ],
+  "recommended_next_step": {
+    "action": "implement_non_causal_dataset_probe_v0",
+    "do_not_implement_runtime_arbiter": true,
+    "do_not_resume_stage7_repair": true,
+    "do_not_train_stage8": true
+  }
+}
