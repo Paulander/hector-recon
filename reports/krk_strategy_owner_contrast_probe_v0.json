@@ -1,0 +1,311 @@
+{
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "selector_sandbox",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_probe",
+  "decision": {
+    "recommended_next_step": "architecture_review_selector_readiness_after_contrast_probe",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "strategy_owner_contrast_signal_present_selector_sandbox_blocked"
+  },
+  "findings": [
+    "protected_conversion_positive_provider_diversity_present",
+    "protected_label_balance_present",
+    "selected_provider_family_diversity_still_missing",
+    "heldout_stage7_contains_unresolved_all_negative_rows"
+  ],
+  "gameplay_topology_mutation": false,
+  "metrics": {
+    "heldout_provider_family_rates": {
+      "drive_to_edge": {
+        "negative": 3,
+        "positive": 1,
+        "positive_rate": 0.25,
+        "total": 4
+      },
+      "edge_trap": {
+        "negative": 12,
+        "positive": 0,
+        "positive_rate": 0.0,
+        "total": 12
+      },
+      "fence_established": {
+        "negative": 3,
+        "positive": 1,
+        "positive_rate": 0.25,
+        "total": 4
+      },
+      "stage0_basin": {
+        "negative": 4,
+        "positive": 0,
+        "positive_rate": 0.0,
+        "total": 4
+      }
+    },
+    "heldout_row_count": 4,
+    "readiness_blockers": [
+      "insufficient_selected_provider_family_diversity"
+    ],
+    "row_count": 13,
+    "selected_training_provider_families": [
+      "edge_trap"
+    ],
+    "training_negative_label_count": 11,
+    "training_positive_label_count": 13,
+    "training_provider_family_rates": {
+      "drive_to_edge": {
+        "negative": 0,
+        "positive": 2,
+        "positive_rate": 1.0,
+        "total": 2
+      },
+      "edge_trap": {
+        "negative": 11,
+        "positive": 8,
+        "positive_rate": 0.4211,
+        "total": 19
+      },
+      "fence_established": {
+        "negative": 0,
+        "positive": 3,
+        "positive_rate": 1.0,
+        "total": 3
+      }
+    },
+    "training_row_count": 9
+  },
+  "row_summaries": [
+    {
+      "all_negative": true,
+      "has_non_stage0_positive": false,
+      "held_out_challenge": true,
+      "negative_count": 6,
+      "negative_provider_families": [
+        "drive_to_edge",
+        "edge_trap",
+        "fence_established",
+        "stage0_basin"
+      ],
+      "positive_count": 0,
+      "positive_provider_families": [],
+      "provider_count": 6,
+      "source_stage": "stage7",
+      "state_id": "state.0afbf11aa123",
+      "training_eligible": false
+    },
+    {
+      "all_negative": true,
+      "has_non_stage0_positive": false,
+      "held_out_challenge": true,
+      "negative_count": 6,
+      "negative_provider_families": [
+        "drive_to_edge",
+        "edge_trap",
+        "fence_established",
+        "stage0_basin"
+      ],
+      "positive_count": 0,
+      "positive_provider_families": [],
+      "provider_count": 6,
+      "source_stage": "stage7",
+      "state_id": "state.38aed2f35911",
+      "training_eligible": false
+    },
+    {
+      "all_negative": false,
+      "has_non_stage0_positive": true,
+      "held_out_challenge": true,
+      "negative_count": 5,
+      "negative_provider_families": [
+        "drive_to_edge",
+        "edge_trap",
+        "stage0_basin"
+      ],
+      "positive_count": 1,
+      "positive_provider_families": [
+        "fence_established"
+      ],
+      "provider_count": 6,
+      "source_stage": "stage7",
+      "state_id": "state.ac0b7ed500ea",
+      "training_eligible": false
+    },
+    {
+      "all_negative": false,
+      "has_non_stage0_positive": true,
+      "held_out_challenge": true,
+      "negative_count": 5,
+      "negative_provider_families": [
+        "edge_trap",
+        "fence_established",
+        "stage0_basin"
+      ],
+      "positive_count": 1,
+      "positive_provider_families": [
+        "drive_to_edge"
+      ],
+      "provider_count": 6,
+      "source_stage": "stage7",
+      "state_id": "state.ff6652c8832c",
+      "training_eligible": false
+    },
+    {
+      "all_negative": false,
+      "has_non_stage0_positive": true,
+      "held_out_challenge": false,
+      "negative_count": 0,
+      "negative_provider_families": [],
+      "positive_count": 3,
+      "positive_provider_families": [
+        "edge_trap"
+      ],
+      "provider_count": 3,
+      "source_stage": "stage5",
+      "state_id": "state.87b1160e68b9",
+      "training_eligible": true
+    },
+    {
+      "all_negative": true,
+      "has_non_stage0_positive": false,
+      "held_out_challenge": false,
+      "negative_count": 3,
+      "negative_provider_families": [
+        "edge_trap"
+      ],
+      "positive_count": 0,
+      "positive_provider_families": [],
+      "provider_count": 3,
+      "source_stage": "stage5",
+      "state_id": "state.02feb8593cc6",
+      "training_eligible": true
+    },
+    {
+      "all_negative": true,
+      "has_non_stage0_positive": false,
+      "held_out_challenge": false,
+      "negative_count": 3,
+      "negative_provider_families": [
+        "edge_trap"
+      ],
+      "positive_count": 0,
+      "positive_provider_families": [],
+      "provider_count": 3,
+      "source_stage": "stage5",
+      "state_id": "state.326222aefdf1",
+      "training_eligible": true
+    },
+    {
+      "all_negative": true,
+      "has_non_stage0_positive": false,
+      "held_out_challenge": false,
+      "negative_count": 3,
+      "negative_provider_families": [
+        "edge_trap"
+      ],
+      "positive_count": 0,
+      "positive_provider_families": [],
+      "provider_count": 3,
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511",
+      "training_eligible": true
+    },
+    {
+      "all_negative": false,
+      "has_non_stage0_positive": true,
+      "held_out_challenge": false,
+      "negative_count": 2,
+      "negative_provider_families": [
+        "edge_trap"
+      ],
+      "positive_count": 1,
+      "positive_provider_families": [
+        "fence_established"
+      ],
+      "provider_count": 3,
+      "source_stage": "stage4",
+      "state_id": "state.1e4f48a672e8",
+      "training_eligible": true
+    },
+    {
+      "all_negative": false,
+      "has_non_stage0_positive": true,
+      "held_out_challenge": false,
+      "negative_count": 0,
+      "negative_provider_families": [],
+      "positive_count": 1,
+      "positive_provider_families": [
+        "edge_trap"
+      ],
+      "provider_count": 1,
+      "source_stage": "stage4",
+      "state_id": "state.f17117682948",
+      "training_eligible": true
+    },
+    {
+      "all_negative": false,
+      "has_non_stage0_positive": true,
+      "held_out_challenge": false,
+      "negative_count": 0,
+      "negative_provider_families": [],
+      "positive_count": 4,
+      "positive_provider_families": [
+        "edge_trap",
+        "fence_established"
+      ],
+      "provider_count": 4,
+      "source_stage": "stage5",
+      "state_id": "state.7bd8961882ad",
+      "training_eligible": true
+    },
+    {
+      "all_negative": false,
+      "has_non_stage0_positive": true,
+      "held_out_challenge": false,
+      "negative_count": 0,
+      "negative_provider_families": [],
+      "positive_count": 3,
+      "positive_provider_families": [
+        "drive_to_edge",
+        "edge_trap",
+        "fence_established"
+      ],
+      "provider_count": 3,
+      "source_stage": "stage6",
+      "state_id": "state.d1f052d2cab2",
+      "training_eligible": true
+    },
+    {
+      "all_negative": false,
+      "has_non_stage0_positive": true,
+      "held_out_challenge": false,
+      "negative_count": 0,
+      "negative_provider_families": [],
+      "positive_count": 1,
+      "positive_provider_families": [
+        "drive_to_edge"
+      ],
+      "provider_count": 1,
+      "source_stage": "stage6",
+      "state_id": "state.52085d244e9d",
+      "training_eligible": true
+    }
+  ],
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_strategy_owner_contrast_probe.v0",
+  "source_artifacts": [
+    "reports/krk_strategy_owner_contrast_dataset_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

@@ -367,6 +367,15 @@ assert _strategy_owner_label_run_spec.loader is not None
 _strategy_owner_label_run = importlib.util.module_from_spec(_strategy_owner_label_run_spec)
 _strategy_owner_label_run_spec.loader.exec_module(_strategy_owner_label_run)
 
+_strategy_owner_probe_spec = importlib.util.spec_from_file_location(
+    "probe_krk_strategy_owner_contrast_dataset",
+    Path(__file__).resolve().parents[1] / "scripts" / "probe_krk_strategy_owner_contrast_dataset.py",
+)
+assert _strategy_owner_probe_spec is not None
+assert _strategy_owner_probe_spec.loader is not None
+_strategy_owner_probe = importlib.util.module_from_spec(_strategy_owner_probe_spec)
+_strategy_owner_probe_spec.loader.exec_module(_strategy_owner_probe)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -3454,3 +3463,83 @@ def test_krk_strategy_owner_contrast_label_run_is_non_causal(tmp_path, monkeypat
     assert payload["summary"]["stage7_labels"] == 0
     assert payload["summary"]["result_counts"] == {"mate": 2}
     assert payload["recommended_next_step"] == "merge_contrast_labels_and_rebuild_strategy_owner_contrast_dataset"
+
+
+def test_krk_strategy_owner_contrast_probe_blocks_selector_sandbox(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    rows = [
+        {
+            "state_id": "state.stage4",
+            "source_stage": "stage4",
+            "training_eligible": True,
+            "held_out_challenge": False,
+            "contrast_summary": {"provider_count": 2, "has_non_stage0_positive": True},
+            "provider_labels": [
+                {"provider_family": "edge_trap", "provider_id": "krk.edge_trap_close", "positive": True},
+                {"provider_family": "edge_trap", "provider_id": "krk.edge_trap_wrong_tempo", "positive": False},
+            ],
+        },
+        {
+            "state_id": "state.stage5",
+            "source_stage": "stage5",
+            "training_eligible": True,
+            "held_out_challenge": False,
+            "contrast_summary": {"provider_count": 2, "has_non_stage0_positive": True},
+            "provider_labels": [
+                {"provider_family": "fence_established", "provider_id": "krk.fence_established", "positive": True},
+                {"provider_family": "edge_trap", "provider_id": "krk.edge_trap_close", "positive": False},
+            ],
+        },
+        {
+            "state_id": "state.stage6",
+            "source_stage": "stage6",
+            "training_eligible": True,
+            "held_out_challenge": False,
+            "contrast_summary": {"provider_count": 2, "has_non_stage0_positive": True},
+            "provider_labels": [
+                {"provider_family": "drive_to_edge", "provider_id": "krk.drive_to_edge", "positive": True},
+                {"provider_family": "edge_trap", "provider_id": "krk.edge_trap_close", "positive": False},
+            ],
+        },
+        {
+            "state_id": "state.stage7",
+            "source_stage": "stage7",
+            "training_eligible": False,
+            "held_out_challenge": True,
+            "contrast_summary": {"provider_count": 2, "has_non_stage0_positive": False},
+            "provider_labels": [
+                {"provider_family": "drive_to_edge", "provider_id": "krk.drive_to_edge", "positive": False},
+                {"provider_family": "stage0_basin", "provider_id": "krk.stage0_basin", "positive": False},
+            ],
+        },
+    ]
+    # Duplicate rows provide enough labels for the probe-ready threshold while
+    # keeping selected-provider evidence absent.
+    expanded_rows = rows[:3] + [{**row, "state_id": row["state_id"] + ".b"} for row in rows[:3]] + [rows[3]]
+    (reports / "krk_strategy_owner_contrast_dataset_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_dataset",
+                "readiness_v2_assessment": {
+                    "blockers": ["insufficient_selected_provider_family_diversity"]
+                },
+                "rows": expanded_rows,
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_strategy_owner_probe, "ROOT", root)
+
+    probe = _strategy_owner_probe.build_probe()
+
+    assert probe["schema_version"] == "krk_strategy_owner_contrast_probe.v0"
+    assert probe["causal_status"] == "non_causal_probe"
+    assert probe["runtime_behavior_changed"] is False
+    assert probe["runtime_arbiter_implemented"] is False
+    assert probe["stage7_promotion_allowed"] is False
+    assert probe["stage8_training_allowed"] is False
+    assert probe["decision"]["status"] == "strategy_owner_contrast_signal_present_selector_sandbox_blocked"
+    assert probe["decision"]["selector_sandbox_ready"] is False
+    assert "heldout_stage7_contains_unresolved_all_negative_rows" in probe["findings"]

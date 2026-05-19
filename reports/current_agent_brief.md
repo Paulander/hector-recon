@@ -618,6 +618,14 @@ KRK strategy-owner contrast control labels v0:
 
 The bounded offline label run completed `12` protected jobs in `35.217` seconds. Results: `10` mate / `2` max_plies. Stage 5 and Stage 6 contrast jobs were all mate; Stage 4 produced `2` mate / `2` max_plies. Stage 7 labels remain `0`. These are non-causal outcome labels only. The next step is to merge the labels into the strategy-owner contrast dataset and reassess selector readiness; runtime arbiter, selector sandbox, Stage 7 repair/promotion, and Stage 8 training remain blocked.
 
+KRK strategy-owner contrast probe v0:
+
+- `scripts/probe_krk_strategy_owner_contrast_dataset.py`
+- `reports/krk_strategy_owner_contrast_probe_v0.json`
+- `reports/krk_strategy_owner_contrast_probe_v0.md`
+
+The non-causal probe finds protected conversion-positive provider diversity and label balance are now present. It also confirms selector sandbox remains blocked: selected-provider evidence is still not diverse (`edge_trap` only), and held-out Stage 7 retains unresolved all-negative rows. Decision: `strategy_owner_contrast_signal_present_selector_sandbox_blocked`. The next step should be architecture review of selector readiness after contrast evidence, not runtime arbiter implementation.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -795,6 +803,8 @@ reports/krk_strategy_owner_contrast_execution_manifest_review_v0.json
 reports/krk_strategy_owner_contrast_execution_manifest_review_v0.md
 reports/krk_strategy_owner_contrast_control_labels_v0.json
 reports/krk_strategy_owner_contrast_control_labels_v0.md
+reports/krk_strategy_owner_contrast_probe_v0.json
+reports/krk_strategy_owner_contrast_probe_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
