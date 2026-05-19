@@ -677,6 +677,14 @@ KRK selected-provider diversity architecture review v0:
 
 The architecture review concludes the v2 selected-provider diversity requirement should be reframed. Current normal arbitration selects `stage0_basin` too dominantly to provide diverse selected-provider training evidence, while forced/proposal contrast already shows conversion-positive provider diversity. Decision: `selected_provider_diversity_requirement_should_be_reframed`. Next step is to define selector-readiness v3 around proposal diversity, forced/compatible conversion-positive provider diversity, held-out Stage 7 preservation, default-off equivalence, and guardrail preservation. Runtime arbiter and selector sandbox remain blocked until v3 criteria and review.
 
+KRK selector readiness v3 plan:
+
+- `scripts/summarize_krk_selector_readiness_v3_plan.py`
+- `reports/krk_selector_readiness_v3_plan.json`
+- `reports/krk_selector_readiness_v3_plan.md`
+
+The v3 plan reframes selector readiness after selected-provider sampling showed the current raw arbiter is stage0-dominant. It treats current selected-provider diversity as diagnostic-only rather than a sandbox hard blocker, because requiring the current raw arbiter to already select diverse providers blocks the mechanism intended to correct that dominance. Proposal-family diversity, conversion-positive provider-family diversity, label balance, protected Stage 4/5/6 coverage, and Stage 7 held-out boundary all pass. Decision: `selector_readiness_v3_sandbox_design_review_allowed`. Runtime arbiter and selector sandbox are still not implemented or allowed; the next permitted step is only a default-off strategy-arbiter sandbox design review.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -870,6 +878,8 @@ reports/krk_selected_provider_diversity_observation_scan_v0.json
 reports/krk_selected_provider_diversity_observation_scan_v0.md
 reports/krk_selected_provider_diversity_architecture_review_v0.json
 reports/krk_selected_provider_diversity_architecture_review_v0.md
+reports/krk_selector_readiness_v3_plan.json
+reports/krk_selector_readiness_v3_plan.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

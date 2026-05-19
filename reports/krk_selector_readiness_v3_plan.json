@@ -1,0 +1,130 @@
+{
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "selector_sandbox_without_design_review",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_design_plan",
+  "decision": {
+    "hard_blockers": [],
+    "recommended_next_step": "design_default_off_strategy_arbiter_sandbox_for_review",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "selector_readiness_v3_sandbox_design_review_allowed"
+  },
+  "gameplay_topology_mutation": false,
+  "promotion_still_requires": [
+    "target_improvement",
+    "protected_stage4_5_6_guardrails_hold",
+    "selected_provider_dominance_not_regressed",
+    "M1_M4_preserved",
+    "no_hidden_controller"
+  ],
+  "readiness_checks_v3": [
+    {
+      "minimum": {
+        "distinct_strategy_proposal_families": 3
+      },
+      "observed": {
+        "distinct_strategy_proposal_families": 3
+      },
+      "requirement_id": "proposal_family_diversity",
+      "status": "passed"
+    },
+    {
+      "minimum": {
+        "distinct_conversion_positive_provider_families": 3
+      },
+      "observed": {
+        "distinct_conversion_positive_provider_families": 3,
+        "families": [
+          "drive_to_edge",
+          "edge_trap",
+          "fence_established"
+        ]
+      },
+      "requirement_id": "conversion_positive_provider_diversity",
+      "status": "passed"
+    },
+    {
+      "minimum": {
+        "negative": 6,
+        "positive": 6
+      },
+      "observed": {
+        "negative": 11,
+        "positive": 13
+      },
+      "requirement_id": "label_balance",
+      "status": "passed"
+    },
+    {
+      "minimum": {
+        "stages": [
+          "stage4",
+          "stage5",
+          "stage6"
+        ]
+      },
+      "observed": {
+        "row_count_by_stage": {
+          "stage4": 2,
+          "stage5": 4,
+          "stage6": 3,
+          "stage7": 4
+        }
+      },
+      "requirement_id": "protected_stage_coverage",
+      "status": "passed"
+    },
+    {
+      "minimum": {
+        "stage7_training_rows": 0
+      },
+      "observed": {
+        "stage7_training_rows": 0
+      },
+      "requirement_id": "stage7_heldout_boundary",
+      "status": "passed"
+    },
+    {
+      "minimum": {
+        "promotion_requires_no_stage0_dominance_regression": true
+      },
+      "observed": {
+        "v2_blockers": [
+          "insufficient_selected_provider_family_diversity"
+        ]
+      },
+      "requirement_id": "current_selected_provider_diversity",
+      "status": "diagnostic_only_not_sandbox_blocker"
+    }
+  ],
+  "reason": "Selected-provider diversity from the current raw arbiter is stage0-dominant; requiring it as a pre-sandbox hard gate blocks the mechanism meant to correct that dominance.",
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "sandbox_design_requirements": [
+    "default_off",
+    "default_off_equivalence_before_enabled_tests",
+    "visible_source_terms_and_provider_metadata",
+    "no_runtime_dtm_or_tablebase",
+    "no_gameplay_topology_mutation",
+    "stage7_held_out_challenge_only",
+    "guardrail_validation_before_promotion"
+  ],
+  "schema_version": "krk_selector_readiness_v3_plan.v0",
+  "source_artifacts": [
+    "reports/krk_selected_provider_diversity_architecture_review_v0.json",
+    "reports/krk_strategy_owner_contrast_dataset_v0.json",
+    "reports/krk_strategy_owner_contrast_probe_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

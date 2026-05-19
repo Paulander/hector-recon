@@ -459,6 +459,15 @@ assert _selected_provider_arch_review_spec.loader is not None
 _selected_provider_arch_review = importlib.util.module_from_spec(_selected_provider_arch_review_spec)
 _selected_provider_arch_review_spec.loader.exec_module(_selected_provider_arch_review)
 
+_selector_readiness_v3_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_selector_readiness_v3_plan",
+    Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_selector_readiness_v3_plan.py",
+)
+assert _selector_readiness_v3_spec is not None
+assert _selector_readiness_v3_spec.loader is not None
+_selector_readiness_v3 = importlib.util.module_from_spec(_selector_readiness_v3_spec)
+_selector_readiness_v3_spec.loader.exec_module(_selector_readiness_v3)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -4066,3 +4075,59 @@ def test_krk_selected_provider_diversity_architecture_review_reframes_requiremen
     assert review["decision"]["status"] == "selected_provider_diversity_requirement_should_be_reframed"
     assert review["decision"]["selector_sandbox_ready"] is False
     assert review["proposed_readiness_v3_direction"]["replace_hard_requirement"] == "distinct_current_selected_provider_families"
+
+
+def test_krk_selector_readiness_v3_allows_design_review_not_runtime(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    (reports / "krk_selected_provider_diversity_architecture_review_v0.json").write_text(
+        json.dumps({"causal_status": "non_causal_architecture_review"}),
+        encoding="utf-8",
+    )
+    (reports / "krk_strategy_owner_contrast_dataset_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_dataset",
+                "summary": {
+                    "training_positive_provider_label_count": 6,
+                    "training_negative_provider_label_count": 6,
+                    "row_count_by_stage": {"stage4": 1, "stage5": 1, "stage6": 1},
+                    "stage7_training_rows": 0,
+                },
+                "readiness_v2_assessment": {
+                    "blockers": ["insufficient_selected_provider_family_diversity"]
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reports / "krk_strategy_owner_contrast_probe_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_probe",
+                "metrics": {
+                    "training_provider_family_rates": {
+                        "drive_to_edge": {"positive": 1},
+                        "edge_trap": {"positive": 1},
+                        "fence_established": {"positive": 1},
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_selector_readiness_v3, "ROOT", root)
+
+    plan = _selector_readiness_v3.build_plan()
+
+    assert plan["schema_version"] == "krk_selector_readiness_v3_plan.v0"
+    assert plan["causal_status"] == "non_causal_design_plan"
+    assert plan["runtime_behavior_changed"] is False
+    assert plan["runtime_arbiter_implemented"] is False
+    assert plan["stage7_promotion_allowed"] is False
+    assert plan["stage8_training_allowed"] is False
+    assert plan["decision"]["status"] == "selector_readiness_v3_sandbox_design_review_allowed"
+    assert plan["decision"]["runtime_arbiter_allowed"] is False
+    assert plan["decision"]["selector_sandbox_ready"] is False
+    assert plan["decision"]["recommended_next_step"] == "design_default_off_strategy_arbiter_sandbox_for_review"
