@@ -105,6 +105,13 @@ Phase 1 dataset status:
 
 Dataset v0 is replay-free and non-causal. It currently contains a small stratified set of Stage 7 challenge records plus Stage 5/6/4 validation records, with `33` records and `87` StrategyProposalFrame entries. It added no new h40 labels.
 
+Probe v0 status:
+
+- `reports/strategy_arbitration/krk_strategy_arbitration_probe_v0.json`
+- `reports/strategy_arbitration/krk_strategy_arbitration_probe_v0.md`
+
+Probe v0 selected `missing_feature_first`: raw/normalized provider scores hit existing labels often, but the simple visible heuristic failed badly. The next allowed step is non-causal terminal/affordance candidate proposal plus separability audit, not a runtime arbiter.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -140,6 +147,8 @@ reports/krk_strategy_arbitration_plan.json
 reports/krk_strategy_arbitration_plan.md
 reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.json
 reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.md
+reports/strategy_arbitration/krk_strategy_arbitration_probe_v0.json
+reports/strategy_arbitration/krk_strategy_arbitration_probe_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

@@ -12,6 +12,15 @@ assert _dataset_spec.loader is not None
 _dataset = importlib.util.module_from_spec(_dataset_spec)
 _dataset_spec.loader.exec_module(_dataset)
 
+_probe_spec = importlib.util.spec_from_file_location(
+    "probe_krk_strategy_arbitration",
+    Path(__file__).resolve().parents[1] / "scripts" / "probe_krk_strategy_arbitration.py",
+)
+assert _probe_spec is not None
+assert _probe_spec.loader is not None
+_probe = importlib.util.module_from_spec(_probe_spec)
+_probe_spec.loader.exec_module(_probe)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -106,3 +115,61 @@ def test_krk_strategy_arbitration_dataset_v0_from_stage7_merge(tmp_path):
     assert record["causal_status"] == "non_causal"
     assert len(record["strategy_proposals"]) == 2
     assert {frame["causal_status"] for frame in record["strategy_proposals"]} == {"non_causal"}
+
+
+def test_krk_strategy_arbitration_probe_v0_is_non_causal(tmp_path):
+    dataset = {
+        "schema_version": "krk_strategy_arbitration_dataset.v0",
+        "causal_status": "non_causal_dataset",
+        "runtime_behavior_changed": False,
+        "summary": {"record_count": 1, "proposal_count": 2},
+        "records": [
+            {
+                "state_id": "state.test",
+                "source_stage": "stage7",
+                "result_label": {"current_graph_h40": "max_plies"},
+                "terminal_space_context": {
+                    "black_king_edge_bucket": "central_or_midboard",
+                    "box_area_relevance": "high",
+                    "white_king_can_improve_support": True,
+                    "active_terminal_terms": ["rook_safe"],
+                },
+                "strategy_proposals": [
+                    {
+                        "schema_version": "strategy_proposal_frame.v1",
+                        "state_id": "state.test",
+                        "provider_id": "krk.stage0_basin",
+                        "move_uci": "a5a8",
+                        "raw_score": 10.0,
+                        "provider_local_rank": 1,
+                        "normalized_score": 1.0,
+                        "known_outcome_label": {"result": "max_plies"},
+                        "causal_status": "non_causal",
+                    },
+                    {
+                        "schema_version": "strategy_proposal_frame.v1",
+                        "state_id": "state.test",
+                        "provider_id": "krk.drive_to_edge",
+                        "move_uci": "a5h5",
+                        "raw_score": 0.1,
+                        "provider_local_rank": 1,
+                        "normalized_score": 1.0,
+                        "known_outcome_label": {"result": "mate"},
+                        "causal_status": "non_causal",
+                    },
+                ],
+            }
+        ],
+    }
+    path = tmp_path / "dataset.json"
+    path.write_text(json.dumps(dataset), encoding="utf-8")
+
+    probe = _probe.build_probe(path)
+
+    assert probe["schema_version"] == "krk_strategy_arbitration_probe.v0"
+    assert probe["causal_status"] == "non_causal_probe"
+    assert probe["runtime_behavior_changed"] is False
+    assert probe["stage7_promotion_allowed"] is False
+    assert probe["stage8_training_allowed"] is False
+    assert probe["metrics"]["raw_global_provider_score"]["hit_rate"] == 0.0
+    assert probe["metrics"]["provider_local_rank1_coverage"]["coverage_rate"] == 1.0
