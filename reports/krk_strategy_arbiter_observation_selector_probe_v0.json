@@ -1,0 +1,201 @@
+{
+  "causal_status": "non_causal_selector_probe",
+  "decision": {
+    "recommended_next_step": "add_small_labeled_observation_controls_before_sandbox_review",
+    "runtime_arbiter_allowed": false,
+    "sandbox_ready": false,
+    "status": "observation_selector_probe_underlabeled"
+  },
+  "labeled_row_count": 3,
+  "record_count": 12,
+  "rows": [
+    {
+      "active_landmark_label": "box_shrink",
+      "known_label_proposal_count": 0,
+      "negative_providers": [],
+      "observation_source_term_count": 16,
+      "observation_unique_provider_count": 7,
+      "positive_providers": [],
+      "selected_label": "unknown",
+      "selected_move": "e2d1",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage7",
+      "state_id": "state.069e81a609ed"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "known_label_proposal_count": 0,
+      "negative_providers": [],
+      "observation_source_term_count": 20,
+      "observation_unique_provider_count": 7,
+      "positive_providers": [],
+      "selected_label": "unknown",
+      "selected_move": "e4f3",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage7",
+      "state_id": "state.0926f12f8e8f"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "known_label_proposal_count": 6,
+      "negative_providers": [],
+      "observation_source_term_count": 13,
+      "observation_unique_provider_count": 7,
+      "positive_providers": [],
+      "selected_label": "unknown",
+      "selected_move": "e3a3",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage7",
+      "state_id": "state.0afbf11aa123"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "known_label_proposal_count": 6,
+      "negative_providers": [],
+      "observation_source_term_count": 16,
+      "observation_unique_provider_count": 7,
+      "positive_providers": [],
+      "selected_label": "unknown",
+      "selected_move": "d1e2",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage7",
+      "state_id": "state.38aed2f35911"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "known_label_proposal_count": 7,
+      "negative_providers": [],
+      "observation_source_term_count": 16,
+      "observation_unique_provider_count": 7,
+      "positive_providers": [],
+      "selected_label": "unknown",
+      "selected_move": "a8d8",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage7",
+      "state_id": "state.4a464b782ecb"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "known_label_proposal_count": 7,
+      "negative_providers": [],
+      "observation_source_term_count": 16,
+      "observation_unique_provider_count": 7,
+      "positive_providers": [],
+      "selected_label": "unknown",
+      "selected_move": "a5h5",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage7",
+      "state_id": "state.4e34ad0b2f29"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "known_label_proposal_count": 6,
+      "negative_providers": [],
+      "observation_source_term_count": 16,
+      "observation_unique_provider_count": 7,
+      "positive_providers": [],
+      "selected_label": "unknown",
+      "selected_move": "a4a8",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage7",
+      "state_id": "state.ac0b7ed500ea"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "known_label_proposal_count": 7,
+      "negative_providers": [],
+      "observation_source_term_count": 16,
+      "observation_unique_provider_count": 7,
+      "positive_providers": [],
+      "selected_label": "unknown",
+      "selected_move": "a6a8",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage7",
+      "state_id": "state.b6796dfb62ff"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "known_label_proposal_count": 6,
+      "negative_providers": [],
+      "observation_source_term_count": 16,
+      "observation_unique_provider_count": 7,
+      "positive_providers": [],
+      "selected_label": "unknown",
+      "selected_move": "e4e8",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage7",
+      "state_id": "state.ff6652c8832c"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "known_label_proposal_count": 1,
+      "negative_providers": [],
+      "observation_source_term_count": 21,
+      "observation_unique_provider_count": 7,
+      "positive_providers": [
+        "krk.stage0_basin"
+      ],
+      "selected_label": "positive",
+      "selected_move": "f6f7",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.02cfd843a2cf"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "known_label_proposal_count": 6,
+      "negative_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "observation_source_term_count": 21,
+      "observation_unique_provider_count": 7,
+      "positive_providers": [
+        "krk.edge_trap_close"
+      ],
+      "selected_label": "unknown",
+      "selected_move": "h7c7",
+      "selected_provider": "krk.fence_established",
+      "source_stage": "stage5",
+      "state_id": "state.02feb8593cc6"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "known_label_proposal_count": 1,
+      "negative_providers": [],
+      "observation_source_term_count": 20,
+      "observation_unique_provider_count": 7,
+      "positive_providers": [
+        "krk.stage0_basin"
+      ],
+      "selected_label": "positive",
+      "selected_move": "b7b1",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.1e4f48a672e8"
+    }
+  ],
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "schema_version": "krk_strategy_arbiter_observation_selector_probe.v0",
+  "selected_label_counts": {
+    "positive": 2,
+    "unknown": 10
+  },
+  "selected_negative_count": 0,
+  "selected_positive_count": 2,
+  "selected_positive_hit_rate_on_labeled_rows": 0.6666666666666666,
+  "selected_unknown_count": 10,
+  "source_artifacts": [
+    "reports/krk_strategy_arbiter_observation_frames_v0.json",
+    "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json"
+  ],
+  "stage_counts": {
+    "stage4": 2,
+    "stage5": 1,
+    "stage7": 9
+  },
+  "underlabeled": true
+}

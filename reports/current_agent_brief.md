@@ -361,6 +361,14 @@ KRK strategy arbiter observation separability review v0:
 
 The first review found the observation layer was audit-useful but under-instrumented. The trace-only observation was then enriched with existing KRK context terms and all-provider summaries without writing those terms back to runtime blackboard state or affecting selection. The regenerated review now reports source-term counts between `13` and `21`, `7` provider families in each observation summary, and status `observation_frames_ready_for_non_causal_selector_probe`. Runtime arbitration remains blocked. The next allowed step is a replay-free observation selector probe only; no provider support, score changes, Stage 7 repair, Stage 7 promotion, or Stage 8 training is authorized.
 
+KRK strategy arbiter observation selector probe v0:
+
+- `scripts/probe_krk_strategy_arbiter_observation_selector.py`
+- `reports/krk_strategy_arbiter_observation_selector_probe_v0.json`
+- `reports/krk_strategy_arbiter_observation_selector_probe_v0.md`
+
+The replay-free selector probe found the observation rows are still under-labeled for sandbox review. Only `3/12` rows have provider labels, Stage 7 held-out rows are unlabeled, and the probe status is `observation_selector_probe_underlabeled`. Runtime arbiter work remains blocked. The next allowed evidence slice is small labeled observation controls before any sandbox review, not a runtime selector.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -462,6 +470,8 @@ reports/krk_strategy_arbiter_observation_frames_v0.json
 reports/krk_strategy_arbiter_observation_frames_v0.md
 reports/krk_strategy_arbiter_observation_separability_review_v0.json
 reports/krk_strategy_arbiter_observation_separability_review_v0.md
+reports/krk_strategy_arbiter_observation_selector_probe_v0.json
+reports/krk_strategy_arbiter_observation_selector_probe_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
