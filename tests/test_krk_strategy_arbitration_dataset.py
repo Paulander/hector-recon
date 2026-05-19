@@ -358,6 +358,15 @@ assert _strategy_owner_manifest_review_spec.loader is not None
 _strategy_owner_manifest_review = importlib.util.module_from_spec(_strategy_owner_manifest_review_spec)
 _strategy_owner_manifest_review_spec.loader.exec_module(_strategy_owner_manifest_review)
 
+_strategy_owner_label_run_spec = importlib.util.spec_from_file_location(
+    "run_krk_strategy_owner_contrast_control_labels",
+    Path(__file__).resolve().parents[1] / "scripts" / "run_krk_strategy_owner_contrast_control_labels.py",
+)
+assert _strategy_owner_label_run_spec is not None
+assert _strategy_owner_label_run_spec.loader is not None
+_strategy_owner_label_run = importlib.util.module_from_spec(_strategy_owner_label_run_spec)
+_strategy_owner_label_run_spec.loader.exec_module(_strategy_owner_label_run)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -3382,3 +3391,66 @@ def test_krk_strategy_owner_contrast_manifest_review_allows_only_labels(tmp_path
     assert "stage4_job_count_not_4" in review["review_summary"]["violations"]
     assert review["decision"]["runtime_arbiter_allowed"] is False
     assert review["decision"]["selector_sandbox_ready"] is False
+
+
+def test_krk_strategy_owner_contrast_label_run_is_non_causal(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    (reports / "krk_strategy_owner_contrast_execution_manifest_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_execution_manifest",
+                "jobs": [
+                    {
+                        "job_id": "job.stage4",
+                        "source_stage": "stage4",
+                        "provider_id": "krk.edge_trap_wrong_tempo",
+                    },
+                    {
+                        "job_id": "job.stage6",
+                        "source_stage": "stage6",
+                        "provider_id": "krk.drive_to_edge",
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reports / "krk_strategy_owner_contrast_execution_manifest_review_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_manifest_review",
+                "decision": {"labels_allowed": True},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    def fake_run_job(repo_root, job, cache):
+        return {
+            "schema_version": "krk_forced_provider_control_label.v0",
+            "causal_status": "non_causal_outcome_label",
+            "job_id": job["job_id"],
+            "source_stage": job["source_stage"],
+            "provider_id": job["provider_id"],
+            "forced_first_move": "a1a2",
+            "result": "mate",
+            "plies": 3,
+        }
+
+    monkeypatch.setattr(_strategy_owner_label_run, "ROOT", root)
+    monkeypatch.setattr(_strategy_owner_label_run.forced_labels, "_run_job", fake_run_job)
+
+    payload = _strategy_owner_label_run.run_labels()
+
+    assert payload["schema_version"] == "krk_strategy_owner_contrast_control_labels.v0"
+    assert payload["causal_status"] == "non_causal_label_run"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_arbiter_implemented"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["summary"]["label_count"] == 2
+    assert payload["summary"]["stage7_labels"] == 0
+    assert payload["summary"]["result_counts"] == {"mate": 2}
+    assert payload["recommended_next_step"] == "merge_contrast_labels_and_rebuild_strategy_owner_contrast_dataset"

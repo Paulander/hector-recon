@@ -38,7 +38,7 @@
   },
   "jobs": [
     {
-      "active_landmark_label": "wrong_tempo_control",
+      "active_landmark_label": "edge_trap_wrong_tempo",
       "causal_status": "non_causal_label_job",
       "diagnostic_caches_required": true,
       "fen": "8/1RK5/8/k7/8/8/8/8 w - - 2 2",
@@ -50,6 +50,7 @@
       "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
       "runtime_behavior_changed": false,
       "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_active_landmark_label": "wrong_tempo_control",
       "source_selected_label": {
         "label": "positive",
         "provider_id": "krk.stage0_basin",
@@ -61,7 +62,7 @@
       "trace_mode": "failures_only"
     },
     {
-      "active_landmark_label": "wrong_tempo_control",
+      "active_landmark_label": "edge_trap_wrong_tempo",
       "causal_status": "non_causal_label_job",
       "diagnostic_caches_required": true,
       "fen": "8/1RK5/8/k7/8/8/8/8 w - - 2 2",
@@ -73,6 +74,7 @@
       "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
       "runtime_behavior_changed": false,
       "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_active_landmark_label": "wrong_tempo_control",
       "source_selected_label": {
         "label": "positive",
         "provider_id": "krk.stage0_basin",
@@ -84,7 +86,7 @@
       "trace_mode": "failures_only"
     },
     {
-      "active_landmark_label": "wrong_tempo_control",
+      "active_landmark_label": "edge_trap_wrong_tempo",
       "causal_status": "non_causal_label_job",
       "diagnostic_caches_required": true,
       "fen": "8/1RK5/8/k7/8/8/8/8 w - - 2 2",
@@ -96,6 +98,7 @@
       "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
       "runtime_behavior_changed": false,
       "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_active_landmark_label": "wrong_tempo_control",
       "source_selected_label": {
         "label": "positive",
         "provider_id": "krk.stage0_basin",
@@ -107,7 +110,7 @@
       "trace_mode": "failures_only"
     },
     {
-      "active_landmark_label": "wrong_tempo_control",
+      "active_landmark_label": "edge_trap_wrong_tempo",
       "causal_status": "non_causal_label_job",
       "diagnostic_caches_required": true,
       "fen": "8/8/8/8/8/3K4/3R4/6k1 w - - 2 2",
@@ -119,6 +122,7 @@
       "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
       "runtime_behavior_changed": false,
       "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_active_landmark_label": "wrong_tempo_control",
       "source_selected_label": {
         "label": "positive",
         "provider_id": "krk.stage0_basin",
@@ -142,6 +146,7 @@
       "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
       "runtime_behavior_changed": false,
       "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_active_landmark_label": "fence_established",
       "source_selected_label": {
         "label": "positive",
         "provider_id": "krk.stage0_basin",
@@ -165,6 +170,7 @@
       "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
       "runtime_behavior_changed": false,
       "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_active_landmark_label": "fence_established",
       "source_selected_label": {
         "label": "positive",
         "provider_id": "krk.stage0_basin",
@@ -188,6 +194,7 @@
       "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
       "runtime_behavior_changed": false,
       "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_active_landmark_label": "fence_established",
       "source_selected_label": {
         "label": "positive",
         "provider_id": "krk.stage0_basin",
@@ -211,6 +218,7 @@
       "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
       "runtime_behavior_changed": false,
       "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_active_landmark_label": "fence_established",
       "source_selected_label": {
         "label": "positive",
         "provider_id": "krk.stage0_basin",
@@ -234,6 +242,7 @@
       "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
       "runtime_behavior_changed": false,
       "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_active_landmark_label": "drive_to_edge",
       "source_selected_label": {
         "label": "positive",
         "provider_id": "krk.stage0_basin",
@@ -257,6 +266,7 @@
       "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
       "runtime_behavior_changed": false,
       "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_active_landmark_label": "drive_to_edge",
       "source_selected_label": {
         "label": "positive",
         "provider_id": "krk.stage0_basin",
@@ -280,6 +290,7 @@
       "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
       "runtime_behavior_changed": false,
       "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_active_landmark_label": "drive_to_edge",
       "source_selected_label": {
         "label": "positive",
         "provider_id": "krk.stage0_basin",
@@ -303,6 +314,7 @@
       "purpose": "Fill protected non-stage0 strategy-owner contrast evidence without using Stage 7 training rows.",
       "runtime_behavior_changed": false,
       "schema_version": "krk_strategy_owner_contrast_label_job.v0",
+      "source_active_landmark_label": "drive_to_edge",
       "source_selected_label": {
         "label": "positive",
         "provider_id": "krk.stage0_basin",

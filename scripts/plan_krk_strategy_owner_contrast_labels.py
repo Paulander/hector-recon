@@ -42,6 +42,12 @@ PROTECTED_PROVIDERS_BY_STAGE = {
     ],
 }
 
+EXECUTION_LANDMARK_BY_STAGE = {
+    "stage4": "edge_trap_wrong_tempo",
+    "stage5": "fence_established",
+    "stage6": "drive_to_edge",
+}
+
 
 def _load_json(path: Path) -> dict[str, Any]:
     payload = json.loads((ROOT / path).read_text(encoding="utf-8"))
@@ -130,7 +136,8 @@ def build_plan(*, max_jobs: int = 12, max_jobs_per_stage: int = 4) -> dict[str, 
                     "state_id": state["state_id"],
                     "frame_id": state["frame_id"],
                     "source_stage": stage,
-                    "active_landmark_label": state["active_landmark_label"],
+                    "active_landmark_label": EXECUTION_LANDMARK_BY_STAGE[stage],
+                    "source_active_landmark_label": state["active_landmark_label"],
                     "fen": state["fen"],
                     "provider_id": provider_id,
                     "horizon": 40,
