@@ -1,0 +1,78 @@
+{
+  "schema_version": "krk_strategy_arbiter_control_plane_review.v0",
+  "causal_status": "non_causal_architecture_review",
+  "decision_status": "selector_objective_and_label_semantics_review_required",
+  "source_artifacts": [
+    "reports/krk_strategy_arbiter_architecture_review_v1.json",
+    "reports/krk_strategy_arbiter_observability_smoke_v0.json",
+    "reports/krk_strategy_arbiter_observation_frames_v0.json",
+    "reports/krk_strategy_arbiter_observation_separability_review_v0.json",
+    "reports/krk_strategy_arbiter_observation_selector_probe_v0.json",
+    "reports/krk_strategy_arbiter_labeled_observation_controls_v0.json",
+    "reports/krk_strategy_arbiter_labeled_controls_probe_v0.json"
+  ],
+  "current_status": {
+    "observability_skeleton": "implemented_default_off_trace_only",
+    "observation_context": "enriched_with_trace_only_context_terms",
+    "labeled_controls": "mixed",
+    "stage7": "held_out_unlabeled_challenge",
+    "runtime_arbiter_allowed": false,
+    "sandbox_ready": false
+  },
+  "evidence": {
+    "observability_smoke": {
+      "status": "passed",
+      "behavior_metrics_match": true,
+      "only_expected_delta": "non_causal_observation_count"
+    },
+    "observation_separability": {
+      "status": "observation_frames_ready_for_non_causal_selector_probe",
+      "source_term_count_range": [
+        13,
+        21
+      ],
+      "unique_provider_count": 7
+    },
+    "labeled_controls_probe": {
+      "status": "labeled_controls_mixed_no_sandbox",
+      "record_count": 21,
+      "labeled_record_count": 14,
+      "selected_label_counts": {
+        "negative": 5,
+        "positive": 9,
+        "unknown": 7
+      },
+      "selected_positive_rate_on_labeled_controls": 0.6428571428571429,
+      "stage7_unknown_count": 6
+    }
+  },
+  "interpretation": [
+    "Trace-only observability is now good enough for offline selector research.",
+    "The current raw-selected provider is not reliable enough on labeled controls to become a selector objective.",
+    "The label space mixes selected playout labels, forced-provider control labels, and Stage7 held-out unknowns.",
+    "A runtime arbiter would be premature until the selector target is specified: selected conversion, forced-provider conversion, handoff success, guardrail safety, or plan-entry/exit correctness."
+  ],
+  "allowed_next_work": [
+    "non_causal_selector_objective_design",
+    "label_semantics_split_review",
+    "small_replay_free_selector_dataset_with_explicit_target_kind",
+    "additional_bounded_labels_only_if_review_authorizes"
+  ],
+  "blocked_next_work": [
+    "runtime_arbiter",
+    "default_off_selector_sandbox",
+    "score_bonus_or_provider_penalty",
+    "provider_support_adapter",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation",
+    "m3_m4_arbitration_update"
+  ],
+  "recommended_next_step": {
+    "step_id": "krk_selector_objective_label_semantics_v0",
+    "description": "Define and separate selector target types before any sandbox: selected playout success, forced-provider conversion, same-move provider compatibility, held-out challenge status, and guardrail safety.",
+    "must_remain_non_causal": true
+  }
+}
