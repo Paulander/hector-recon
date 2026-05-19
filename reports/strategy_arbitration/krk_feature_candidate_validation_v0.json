@@ -1,0 +1,396 @@
+{
+  "candidate_validations": [
+    {
+      "association": "both",
+      "candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "candidate_type": "terminal_affordance_refinement",
+      "causal_recommendation": "sandbox-blocked",
+      "cross_stage_generality": {
+        "label": "cross_stage_broad",
+        "non_stage7_matching_count": 24,
+        "source_stage_count": 4
+      },
+      "known_outcome_count": 25,
+      "matching_record_count": 26,
+      "mate_max_plies_unknown_distribution": {
+        "mate": 12,
+        "max_plies": 13,
+        "unknown": 1
+      },
+      "mate_precision": 0.48,
+      "max_plies_failure_precision": 0.52,
+      "required_scope_or_companion_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "sample_state_ids": [
+        "state.0926f12f8e8f",
+        "state.0afbf11aa123",
+        "state.7bd8961882ad",
+        "state.87b1160e68b9",
+        "state.2c1d6da27ea1",
+        "state.2c1d6da27ea1",
+        "state.02feb8593cc6",
+        "state.326222aefdf1"
+      ],
+      "source_stage_distribution": {
+        "stage4": 6,
+        "stage5": 8,
+        "stage6": 10,
+        "stage7": 2
+      },
+      "stage7_only_precision": {
+        "failure_precision": 1.0,
+        "matching_record_count": 2,
+        "mate_precision": 0.0,
+        "result_distribution": {
+          "max_plies": 1,
+          "unknown": 1
+        },
+        "unknown_count": 1
+      },
+      "suggested_refinement_terms": [
+        "separate edge-net pressure from edge-net action availability",
+        "require specific net-tightening or safe checking/cut move existence"
+      ],
+      "target_concept": "edge_net_affordance",
+      "typed_as": "needs refinement / companion terms",
+      "typing_rationale": "matches successful and failed edge states similarly; not a positive affordance yet"
+    },
+    {
+      "association": "both",
+      "candidate_id": "cand.krk.strategy.king_support_conversion_affordance.v0",
+      "candidate_type": "terminal_affordance_refinement",
+      "causal_recommendation": "sandbox-blocked",
+      "cross_stage_generality": {
+        "label": "cross_stage_broad",
+        "non_stage7_matching_count": 24,
+        "source_stage_count": 4
+      },
+      "known_outcome_count": 30,
+      "matching_record_count": 33,
+      "mate_max_plies_unknown_distribution": {
+        "mate": 12,
+        "max_plies": 18,
+        "unknown": 3
+      },
+      "mate_precision": 0.4,
+      "max_plies_failure_precision": 0.6,
+      "required_scope_or_companion_terms": [
+        "king_support_improvement_move_exists",
+        "white_king_distance_to_enemy_decreases_after_move"
+      ],
+      "sample_state_ids": [
+        "state.069e81a609ed",
+        "state.0926f12f8e8f",
+        "state.4a464b782ecb",
+        "state.4e34ad0b2f29",
+        "state.b6796dfb62ff",
+        "state.0afbf11aa123",
+        "state.38aed2f35911",
+        "state.ac0b7ed500ea"
+      ],
+      "source_stage_distribution": {
+        "stage4": 6,
+        "stage5": 8,
+        "stage6": 10,
+        "stage7": 9
+      },
+      "stage7_only_precision": {
+        "failure_precision": 1.0,
+        "matching_record_count": 9,
+        "mate_precision": 0.0,
+        "result_distribution": {
+          "max_plies": 6,
+          "unknown": 3
+        },
+        "unknown_count": 3
+      },
+      "suggested_refinement_terms": [
+        "split static support availability from action-relevant support improvement",
+        "require move-level king-support improvement or provider ownership label"
+      ],
+      "target_concept": "king_support_conversion_affordance",
+      "typed_as": "too broad / reject",
+      "typing_rationale": "matches nearly all records and is not separable enough as currently defined"
+    },
+    {
+      "association": "both",
+      "candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "candidate_type": "terminal_affordance_refinement",
+      "causal_recommendation": "needs-more-evidence",
+      "cross_stage_generality": {
+        "label": "cross_stage_broad",
+        "non_stage7_matching_count": 24,
+        "source_stage_count": 4
+      },
+      "known_outcome_count": 24,
+      "matching_record_count": 25,
+      "mate_max_plies_unknown_distribution": {
+        "mate": 12,
+        "max_plies": 12,
+        "unknown": 1
+      },
+      "mate_precision": 0.5,
+      "max_plies_failure_precision": 0.5,
+      "required_scope_or_companion_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "sample_state_ids": [
+        "state.0926f12f8e8f",
+        "state.7bd8961882ad",
+        "state.87b1160e68b9",
+        "state.2c1d6da27ea1",
+        "state.2c1d6da27ea1",
+        "state.02feb8593cc6",
+        "state.326222aefdf1",
+        "state.3dca34326fca"
+      ],
+      "source_stage_distribution": {
+        "stage4": 6,
+        "stage5": 8,
+        "stage6": 10,
+        "stage7": 1
+      },
+      "stage7_only_precision": {
+        "failure_precision": null,
+        "matching_record_count": 1,
+        "mate_precision": null,
+        "result_distribution": {
+          "unknown": 1
+        },
+        "unknown_count": 1
+      },
+      "suggested_refinement_terms": [
+        "distinguish box-shrink exit from edge-net success",
+        "add current owner and next-provider success labels"
+      ],
+      "target_concept": "box_shrink_exit_condition",
+      "typed_as": "exit condition",
+      "typing_rationale": "mixed success/failure near edge; potential owner-release signal, not provider boost"
+    },
+    {
+      "association": "both",
+      "candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "candidate_type": "terminal_affordance_refinement",
+      "causal_recommendation": "sandbox-blocked",
+      "cross_stage_generality": {
+        "label": "cross_stage_broad",
+        "non_stage7_matching_count": 24,
+        "source_stage_count": 4
+      },
+      "known_outcome_count": 25,
+      "matching_record_count": 26,
+      "mate_max_plies_unknown_distribution": {
+        "mate": 12,
+        "max_plies": 13,
+        "unknown": 1
+      },
+      "mate_precision": 0.48,
+      "max_plies_failure_precision": 0.52,
+      "required_scope_or_companion_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "sample_state_ids": [
+        "state.0926f12f8e8f",
+        "state.0afbf11aa123",
+        "state.7bd8961882ad",
+        "state.87b1160e68b9",
+        "state.2c1d6da27ea1",
+        "state.2c1d6da27ea1",
+        "state.02feb8593cc6",
+        "state.326222aefdf1"
+      ],
+      "source_stage_distribution": {
+        "stage4": 6,
+        "stage5": 8,
+        "stage6": 10,
+        "stage7": 2
+      },
+      "stage7_only_precision": {
+        "failure_precision": 1.0,
+        "matching_record_count": 2,
+        "mate_precision": 0.0,
+        "result_distribution": {
+          "max_plies": 1,
+          "unknown": 1
+        },
+        "unknown_count": 1
+      },
+      "suggested_refinement_terms": [
+        "add owner-specific phase-boundary labels",
+        "pair edge bucket with box relevance and edge-net pressure"
+      ],
+      "target_concept": "phase_boundary_near_edge",
+      "typed_as": "needs refinement / companion terms",
+      "typing_rationale": "near-edge context is broadly cross-stage and mixed-outcome"
+    },
+    {
+      "association": "failure",
+      "candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "candidate_type": "terminal_affordance_refinement",
+      "causal_recommendation": "sandbox-blocked",
+      "cross_stage_generality": {
+        "label": "cross_stage_broad",
+        "non_stage7_matching_count": 13,
+        "source_stage_count": 4
+      },
+      "known_outcome_count": 19,
+      "matching_record_count": 22,
+      "mate_max_plies_unknown_distribution": {
+        "mate": 3,
+        "max_plies": 16,
+        "unknown": 3
+      },
+      "mate_precision": 0.15789473684210525,
+      "max_plies_failure_precision": 0.8421052631578947,
+      "required_scope_or_companion_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "sample_state_ids": [
+        "state.069e81a609ed",
+        "state.0926f12f8e8f",
+        "state.4a464b782ecb",
+        "state.4e34ad0b2f29",
+        "state.b6796dfb62ff",
+        "state.0afbf11aa123",
+        "state.38aed2f35911",
+        "state.ac0b7ed500ea"
+      ],
+      "source_stage_distribution": {
+        "stage4": 2,
+        "stage5": 6,
+        "stage6": 5,
+        "stage7": 9
+      },
+      "stage7_only_precision": {
+        "failure_precision": 1.0,
+        "matching_record_count": 9,
+        "mate_precision": 0.0,
+        "result_distribution": {
+          "max_plies": 6,
+          "unknown": 3
+        },
+        "unknown_count": 3
+      },
+      "suggested_refinement_terms": [
+        "split broken-fence detection from safe repair availability",
+        "require explicit repair move existence before calling it an affordance"
+      ],
+      "target_concept": "fence_or_cut_repair_affordance",
+      "typed_as": "risk/failure monitor",
+      "typing_rationale": "failure-correlated; currently better as repair-pressure evidence than positive affordance"
+    },
+    {
+      "association": "failure",
+      "candidate_id": "cand.krk.strategy.plan_selection_needed.v0",
+      "candidate_type": "terminal_affordance_refinement",
+      "causal_recommendation": "non-causal only",
+      "cross_stage_generality": {
+        "label": "stage7_only",
+        "non_stage7_matching_count": 0,
+        "source_stage_count": 1
+      },
+      "known_outcome_count": 6,
+      "matching_record_count": 9,
+      "mate_max_plies_unknown_distribution": {
+        "max_plies": 6,
+        "unknown": 3
+      },
+      "mate_precision": 0.0,
+      "max_plies_failure_precision": 1.0,
+      "required_scope_or_companion_terms": [
+        "plan_capsule_context",
+        "handoff_success_after_plan",
+        "post_plan_stagnation"
+      ],
+      "sample_state_ids": [
+        "state.069e81a609ed",
+        "state.0926f12f8e8f",
+        "state.4a464b782ecb",
+        "state.4e34ad0b2f29",
+        "state.b6796dfb62ff",
+        "state.0afbf11aa123",
+        "state.38aed2f35911",
+        "state.ac0b7ed500ea"
+      ],
+      "source_stage_distribution": {
+        "stage7": 9
+      },
+      "stage7_only_precision": {
+        "failure_precision": 1.0,
+        "matching_record_count": 9,
+        "mate_precision": 0.0,
+        "result_distribution": {
+          "max_plies": 6,
+          "unknown": 3
+        },
+        "unknown_count": 3
+      },
+      "suggested_refinement_terms": [
+        "separate plan-entry marker from plan-policy quality",
+        "add post-plan handoff success/failure companion label"
+      ],
+      "target_concept": "plan_selection_needed",
+      "typed_as": "growth-pressure/internal monitor",
+      "typing_rationale": "stage7-only failure-oriented term; useful as a monitor, not a move-support affordance"
+    }
+  ],
+  "causal_status": "non_causal_validation",
+  "dataset_summary": {
+    "proposal_count": 87,
+    "record_count": 33,
+    "records_by_source_stage": {
+      "stage4": 6,
+      "stage5": 8,
+      "stage6": 10,
+      "stage7": 9
+    },
+    "records_with_terminal_context": 33,
+    "result_label_counts": {
+      "None": 5,
+      "mate": 12,
+      "max_plies": 16
+    }
+  },
+  "gameplay_topology_mutation": false,
+  "overall_conclusion": "No candidate is causal-ready. The current candidates are useful as monitors, exit/handoff hypotheses, or scoped ontology candidates, but their current predicates are either mixed-outcome, failure-correlated, Stage7-only, or too broad.",
+  "recommended_next_step": "architecture_review_or_refine_companion_terms_before_any_runtime_sandbox",
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_feature_candidate_validation.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_missing_feature_candidates.json",
+    "reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.json",
+    "reports/strategy_arbitration/krk_strategy_arbitration_probe_v0.json"
+  ],
+  "source_decision_status": "missing_feature_first",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "all_candidates_remain_non_causal": true,
+    "candidate_count": 6,
+    "causal_recommendation_counts": {
+      "needs-more-evidence": 1,
+      "non-causal only": 1,
+      "sandbox-blocked": 4
+    },
+    "sandbox_ready_candidate_ids": [],
+    "typed_counts": {
+      "exit condition": 1,
+      "growth-pressure/internal monitor": 1,
+      "needs refinement / companion terms": 2,
+      "risk/failure monitor": 1,
+      "too broad / reject": 1
+    }
+  }
+}

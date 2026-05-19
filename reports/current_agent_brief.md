@@ -133,6 +133,13 @@ Missing-feature candidate audit:
 
 The audit proposed six non-causal terminal/affordance candidates: `edge_net_affordance`, `king_support_conversion_affordance`, `box_shrink_exit_condition`, `phase_boundary_near_edge`, `fence_or_cut_repair_affordance`, and `plan_selection_needed`. These remain `proposed` and non-causal. The next step is architecture review before any terminal/affordance runtime sandbox.
 
+Feature candidate validation:
+
+- `reports/strategy_arbitration/krk_feature_candidate_validation_v0.json`
+- `reports/strategy_arbitration/krk_feature_candidate_validation_v0.md`
+
+The validation typed all six candidates without finding any sandbox-ready term. `edge_net_affordance` and `phase_boundary_near_edge` need companion terms, `king_support_conversion_affordance` is too broad as defined, `box_shrink_exit_condition` is only a possible owner-release condition needing more evidence, `fence_or_cut_repair_affordance` is failure-correlated and should be treated as a risk/repair-pressure monitor, and `plan_selection_needed` is a Stage7-only growth-pressure/internal monitor. No candidate authorizes runtime arbiter work, causal terminals, Stage 7 repair, Stage 7 promotion, or Stage 8 training.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -176,6 +183,8 @@ reports/strategy_arbitration/krk_strategy_arbitration_decision_gate.json
 reports/strategy_arbitration/krk_strategy_arbitration_decision_gate.md
 reports/strategy_arbitration/krk_strategy_missing_feature_candidates.json
 reports/strategy_arbitration/krk_strategy_missing_feature_candidates.md
+reports/strategy_arbitration/krk_feature_candidate_validation_v0.json
+reports/strategy_arbitration/krk_feature_candidate_validation_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

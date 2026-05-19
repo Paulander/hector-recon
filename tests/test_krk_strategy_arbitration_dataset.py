@@ -48,6 +48,15 @@ assert _missing_feature_audit_spec.loader is not None
 _missing_feature_audit = importlib.util.module_from_spec(_missing_feature_audit_spec)
 _missing_feature_audit_spec.loader.exec_module(_missing_feature_audit)
 
+_feature_validation_spec = importlib.util.spec_from_file_location(
+    "validate_krk_feature_candidates",
+    Path(__file__).resolve().parents[1] / "scripts" / "validate_krk_feature_candidates.py",
+)
+assert _feature_validation_spec is not None
+assert _feature_validation_spec.loader is not None
+_feature_validation = importlib.util.module_from_spec(_feature_validation_spec)
+_feature_validation_spec.loader.exec_module(_feature_validation)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -309,3 +318,87 @@ def test_krk_strategy_missing_feature_audit_proposes_non_causal_candidates(tmp_p
     )
     assert {candidate["causal_status"] for candidate in audit["candidates"]} == {"non_causal"}
     assert {candidate["promotion_status"] for candidate in audit["candidates"]} == {"proposed"}
+
+
+def test_krk_feature_candidate_validation_types_candidates_without_runtime_effects(tmp_path):
+    report_root = tmp_path / "reports" / "strategy_arbitration"
+    report_root.mkdir(parents=True)
+    (report_root / "krk_strategy_missing_feature_candidates.json").write_text(
+        json.dumps(
+            {
+                "candidates": [
+                    {
+                        "candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+                        "candidate_type": "terminal_affordance_refinement",
+                        "proposed_change": {"target_concept": "edge_net_affordance"},
+                    },
+                    {
+                        "candidate_id": "cand.krk.strategy.plan_selection_needed.v0",
+                        "candidate_type": "terminal_affordance_refinement",
+                        "proposed_change": {"target_concept": "plan_selection_needed"},
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    (report_root / "krk_strategy_arbitration_dataset_v0.json").write_text(
+        json.dumps(
+            {
+                "summary": {"record_count": 3, "proposal_count": 3},
+                "records": [
+                    {
+                        "state_id": "state.edge.mate",
+                        "source_stage": "stage5",
+                        "result_label": {"playout_result": "mate"},
+                        "terminal_space_context": {
+                            "black_king_edge_bucket": "at_edge",
+                            "edge_net_pressure_proxy": True,
+                            "box_area_relevance": "low",
+                        },
+                    },
+                    {
+                        "state_id": "state.edge.fail",
+                        "source_stage": "stage7",
+                        "result_label": {"current_graph_h40": "max_plies"},
+                        "terminal_space_context": {
+                            "black_king_edge_bucket": "at_edge",
+                            "edge_net_pressure_proxy": True,
+                            "box_area_relevance": "low",
+                        },
+                    },
+                    {
+                        "state_id": "state.stage7.unknown",
+                        "source_stage": "stage7",
+                        "result_label": {"current_graph_h40": None},
+                        "terminal_space_context": {
+                            "black_king_edge_bucket": "central_or_midboard",
+                            "box_area_relevance": "high",
+                        },
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (report_root / "krk_strategy_arbitration_probe_v0.json").write_text(
+        json.dumps({"decision": {"status": "missing_feature_first"}}), encoding="utf-8"
+    )
+
+    validation = _feature_validation.build_validation(report_root)
+
+    assert validation["schema_version"] == "krk_feature_candidate_validation.v0"
+    assert validation["causal_status"] == "non_causal_validation"
+    assert validation["runtime_behavior_changed"] is False
+    assert validation["runtime_defaults_changed"] is False
+    assert validation["stage7_promotion_allowed"] is False
+    assert validation["stage8_training_allowed"] is False
+    assert validation["summary"]["all_candidates_remain_non_causal"] is True
+    assert validation["summary"]["sandbox_ready_candidate_ids"] == []
+    assert {
+        item["target_concept"]: item["causal_recommendation"]
+        for item in validation["candidate_validations"]
+    } == {
+        "edge_net_affordance": "sandbox-blocked",
+        "plan_selection_needed": "non-causal only",
+    }
