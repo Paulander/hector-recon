@@ -140,6 +140,13 @@ Feature candidate validation:
 
 The validation typed all six candidates without finding any sandbox-ready term. `edge_net_affordance` and `phase_boundary_near_edge` need companion terms, `king_support_conversion_affordance` is too broad as defined, `box_shrink_exit_condition` is only a possible owner-release condition needing more evidence, `fence_or_cut_repair_affordance` is failure-correlated and should be treated as a risk/repair-pressure monitor, and `plan_selection_needed` is a Stage7-only growth-pressure/internal monitor. No candidate authorizes runtime arbiter work, causal terminals, Stage 7 repair, Stage 7 promotion, or Stage 8 training.
 
+KRK Strategy Monitor v0 plan:
+
+- `reports/strategy_arbitration/krk_strategy_monitor_v0_plan.json`
+- `reports/strategy_arbitration/krk_strategy_monitor_v0_plan.md`
+
+The accepted interpretation is that the six candidates are monitor/internal-terminal candidates, not causal move-support affordances. The next non-causal direction is StrategyMonitorRecord extraction over existing artifacts if it can be done replay-free and cheaply. The monitor classes are `PhaseBoundaryMonitor`, `OwnerExitMonitor`, `RepairNeededMonitor`, `PlanSelectionNeededMonitor`, and `GrowthPressureMonitor`. No monitor is authorized to route providers, choose moves, mutate topology, or change runtime defaults.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -185,6 +192,8 @@ reports/strategy_arbitration/krk_strategy_missing_feature_candidates.json
 reports/strategy_arbitration/krk_strategy_missing_feature_candidates.md
 reports/strategy_arbitration/krk_feature_candidate_validation_v0.json
 reports/strategy_arbitration/krk_feature_candidate_validation_v0.md
+reports/strategy_arbitration/krk_strategy_monitor_v0_plan.json
+reports/strategy_arbitration/krk_strategy_monitor_v0_plan.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
