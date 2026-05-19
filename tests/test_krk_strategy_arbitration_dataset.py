@@ -183,6 +183,15 @@ assert _control_plane_filter_spec.loader is not None
 _control_plane_filter = importlib.util.module_from_spec(_control_plane_filter_spec)
 _control_plane_filter_spec.loader.exec_module(_control_plane_filter)
 
+_control_plane_strategy_probe_spec = importlib.util.spec_from_file_location(
+    "probe_krk_control_plane_strategy_arbitration",
+    Path(__file__).resolve().parents[1] / "scripts" / "probe_krk_control_plane_strategy_arbitration.py",
+)
+assert _control_plane_strategy_probe_spec is not None
+assert _control_plane_strategy_probe_spec.loader is not None
+_control_plane_strategy_probe = importlib.util.module_from_spec(_control_plane_strategy_probe_spec)
+_control_plane_strategy_probe_spec.loader.exec_module(_control_plane_strategy_probe)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -1917,3 +1926,64 @@ def test_krk_control_plane_filter_marks_strategy_ready_and_dedupes(tmp_path):
     assert first["filter_metadata"]["causal_status"] == "non_causal"
     assert len(first["internal_monitor_records"]) == 1
     assert len(first["plan_capsule_window_records"]) == 1
+
+
+def test_krk_control_plane_strategy_probe_stays_non_causal_and_reports_label_gap(tmp_path):
+    root = tmp_path
+    filtered_path = root / _control_plane_strategy_probe.FILTERED_FRAMES
+    filtered_path.parent.mkdir(parents=True, exist_ok=True)
+    filtered_path.write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_filtered_frame_export",
+                "frames": [
+                    {
+                        "frame_id": "cp.a",
+                        "filter_metadata": {
+                            "benchmark_roles": ["strategy_arbitration_benchmark"]
+                        },
+                        "strategy_proposal_frames": [
+                            {
+                                "provider_id": "krk.a",
+                                "move_uci": "a1a2",
+                                "raw_score": 2.0,
+                                "normalized_score": 1.0,
+                                "provider_local_rank": 1,
+                                "known_outcome_label": {"result": "mate"},
+                            },
+                            {
+                                "provider_id": "krk.b",
+                                "move_uci": "a1a3",
+                                "raw_score": 3.0,
+                                "normalized_score": 0.5,
+                                "provider_local_rank": 2,
+                                "known_outcome_label": {"result": "max_plies"},
+                            },
+                        ],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    probe = _control_plane_strategy_probe.build_probe(root)
+
+    assert probe["schema_version"] == "krk_control_plane_strategy_arbitration_probe.v0"
+    assert probe["causal_status"] == "non_causal_probe"
+    assert probe["runtime_behavior_changed"] is False
+    assert probe["runtime_arbiter_added"] is False
+    assert probe["runtime_terminals_added"] is False
+    assert probe["stage7_promotion_allowed"] is False
+    assert probe["stage8_training_allowed"] is False
+    assert probe["label_coverage"]["strategy_benchmark_frame_count"] == 1
+    assert probe["label_coverage"]["provider_labeled_frame_count"] == 1
+    assert probe["label_coverage"]["frames_with_known_provider_mate"] == 1
+    assert probe["decision"]["selected_status"] == "provider_labels_underpowered"
+    assert probe["decision"]["causal_next_step_allowed"] is False
+    raw = next(item for item in probe["selector_results"] if item["selector"] == "raw_global_score")
+    assert raw["selected_max_plies_count"] == 1
+    normalized = next(
+        item for item in probe["selector_results"] if item["selector"] == "normalized_score"
+    )
+    assert normalized["selected_mate_count"] == 1

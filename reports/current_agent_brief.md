@@ -253,6 +253,13 @@ KRK control-plane filtered frames v0:
 
 The filtered export adds non-causal benchmark-role and dedupe metadata to the `33` control-plane frames. It identifies `28` frames ready for offline strategy-arbitration probing (`10` Stage6, `8` Stage5, `6` Stage4, `4` Stage7), keeps `5` frames as context-only, and confirms sequence-policy benchmarking remains blocked for general KRK because sequence examples are Stage7-only. Runtime sandboxing, Stage 7 promotion, and Stage 8 training remain blocked. Recommended next slice: `offline_strategy_arbitration_probe_filtered_v0`.
 
+KRK control-plane strategy arbitration probe v0:
+
+- `reports/krk_control_plane_strategy_arbitration_probe_v0.json`
+- `reports/krk_control_plane_strategy_arbitration_probe_v0.md`
+
+The filtered offline probe remains non-causal and does not justify a runtime arbiter. It found `28` strategy-benchmark frames but only `4` provider-labeled frames and only `2` frames with a known provider-mate option, so the result is `provider_labels_underpowered`. Normalized score / provider-rank selectors hit `1/4` known provider mates; raw-score evaluation has no provider-labeled raw-score coverage. Recommended next slice: `provider_label_coverage_plan_v0`, not a sandbox.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -342,6 +349,8 @@ reports/krk_control_plane_frame_quality_report_v0.json
 reports/krk_control_plane_frame_quality_report_v0.md
 reports/krk_control_plane_filtered_frames_v0.json
 reports/krk_control_plane_filtered_frames_v0.md
+reports/krk_control_plane_strategy_arbitration_probe_v0.json
+reports/krk_control_plane_strategy_arbitration_probe_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

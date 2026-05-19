@@ -1,0 +1,123 @@
+{
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "runtime_internal_terminal",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_probe",
+  "decision": {
+    "causal_next_step_allowed": false,
+    "interpretation": "The filtered control-plane frames are useful as a common evidence substrate, but provider-level conversion labels are too sparse for a reliable learned strategy-arbitration benchmark.",
+    "recommended_next_slice": "provider_label_coverage_plan_v0",
+    "selected_status": "provider_labels_underpowered"
+  },
+  "gameplay_topology_mutation": false,
+  "label_coverage": {
+    "frames_with_known_provider_mate": 2,
+    "frames_with_normalized_scores": 28,
+    "frames_with_raw_scores": 24,
+    "label_status": "provider_labels_underpowered",
+    "provider_labeled_frame_count": 4,
+    "strategy_benchmark_frame_count": 28
+  },
+  "oracle_ceilings": {
+    "known_provider_mate_available_count": 2,
+    "known_provider_mate_available_rate": 0.5
+  },
+  "runtime_arbiter_added": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_control_plane_strategy_arbitration_probe.v0",
+  "selector_results": [
+    {
+      "known_selected_count": 0,
+      "known_selected_mate_rate": null,
+      "selected_count": 0,
+      "selected_examples": [],
+      "selected_mate_count": 0,
+      "selected_max_plies_count": 0,
+      "selected_unknown_count": 0,
+      "selector": "raw_global_score"
+    },
+    {
+      "known_selected_count": 4,
+      "known_selected_mate_rate": 0.25,
+      "selected_count": 4,
+      "selected_examples": [
+        {
+          "frame_id": "cp.krk.state.0afbf11aa123",
+          "known_provider_result": "max_plies",
+          "move_uci": "e3a3",
+          "provider_id": "krk.drive_to_edge"
+        },
+        {
+          "frame_id": "cp.krk.state.38aed2f35911",
+          "known_provider_result": "max_plies",
+          "move_uci": "a5a8",
+          "provider_id": "krk.drive_to_edge"
+        },
+        {
+          "frame_id": "cp.krk.state.ac0b7ed500ea",
+          "known_provider_result": "max_plies",
+          "move_uci": "a4a8",
+          "provider_id": "krk.drive_to_edge"
+        },
+        {
+          "frame_id": "cp.krk.state.ff6652c8832c",
+          "known_provider_result": "mate",
+          "move_uci": "e4h4",
+          "provider_id": "krk.drive_to_edge"
+        }
+      ],
+      "selected_mate_count": 1,
+      "selected_max_plies_count": 3,
+      "selected_unknown_count": 0,
+      "selector": "normalized_score"
+    },
+    {
+      "known_selected_count": 4,
+      "known_selected_mate_rate": 0.25,
+      "selected_count": 4,
+      "selected_examples": [
+        {
+          "frame_id": "cp.krk.state.0afbf11aa123",
+          "known_provider_result": "max_plies",
+          "move_uci": "e3a3",
+          "provider_id": "krk.drive_to_edge"
+        },
+        {
+          "frame_id": "cp.krk.state.38aed2f35911",
+          "known_provider_result": "max_plies",
+          "move_uci": "a5a8",
+          "provider_id": "krk.drive_to_edge"
+        },
+        {
+          "frame_id": "cp.krk.state.ac0b7ed500ea",
+          "known_provider_result": "max_plies",
+          "move_uci": "a4a8",
+          "provider_id": "krk.drive_to_edge"
+        },
+        {
+          "frame_id": "cp.krk.state.ff6652c8832c",
+          "known_provider_result": "mate",
+          "move_uci": "e4h4",
+          "provider_id": "krk.drive_to_edge"
+        }
+      ],
+      "selected_mate_count": 1,
+      "selected_max_plies_count": 3,
+      "selected_unknown_count": 0,
+      "selector": "provider_local_rank"
+    }
+  ],
+  "source_artifacts": [
+    "reports/krk_control_plane_filtered_frames_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}
