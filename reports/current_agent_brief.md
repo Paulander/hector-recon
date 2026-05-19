@@ -168,6 +168,15 @@ KRK Strategy Monitor companion audit v0:
 
 The replay-free audit found `3` exact terms, `1` expression term, `16` proxy-only terms, and `14` terms missing from the current dataset. Phase-boundary and plan-selection companions are proxy-only; owner-exit, repair-needed, and king-support redesign are only partly available. The audit recommends architecture review before adding new visible extraction terms. It does not authorize runtime terminals, runtime arbitration, monitor-to-provider routing, Stage 7 repair, Stage 7 promotion, or Stage 8 training.
 
+KRK visible monitor terms v0 and companion audit v1:
+
+- `reports/strategy_arbitration/krk_visible_monitor_terms_v0.json`
+- `reports/strategy_arbitration/krk_visible_monitor_terms_v0.md`
+- `reports/strategy_arbitration/krk_strategy_monitor_companion_audit_v1.json`
+- `reports/strategy_arbitration/krk_strategy_monitor_companion_audit_v1.md`
+
+The Tier 1 diagnostic extraction added six non-causal visible monitor terms: `king_support_improves_after_move`, `cut_or_fence_restored_after_move`, `safe_repair_move_exists`, `box_area_no_longer_decision_relevant`, `post_plan_stagnation`, and `local_provider_competition_failed`. The v1 companion audit moved six terms to extracted status and better grounded owner-exit, repair-needed, plan-selection, and king-support redesign monitors. It still leaves `11` terms missing, keeps phase-boundary companions proxy-only, and identifies `safe_repair_move_exists`, `king_support_improves_after_move`, and `box_area_no_longer_decision_relevant` as broad monitor evidence rather than affordances. The sparse terms `post_plan_stagnation` and `local_provider_competition_failed` are possible future internal-terminal candidates, but no runtime use is authorized.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -221,6 +230,10 @@ reports/strategy_arbitration/krk_strategy_monitor_companion_terms_v0.json
 reports/strategy_arbitration/krk_strategy_monitor_companion_terms_v0.md
 reports/strategy_arbitration/krk_strategy_monitor_companion_audit_v0.json
 reports/strategy_arbitration/krk_strategy_monitor_companion_audit_v0.md
+reports/strategy_arbitration/krk_visible_monitor_terms_v0.json
+reports/strategy_arbitration/krk_visible_monitor_terms_v0.md
+reports/strategy_arbitration/krk_strategy_monitor_companion_audit_v1.json
+reports/strategy_arbitration/krk_strategy_monitor_companion_audit_v1.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

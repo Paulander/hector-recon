@@ -82,13 +82,38 @@ def _exact_availability(term: str, records: list[dict[str, Any]]) -> tuple[int, 
     return count, "exact"
 
 
-def _availability_for_term(term: str, records: list[dict[str, Any]]) -> dict[str, Any]:
+def _visible_term_index(payload: dict[str, Any] | None) -> dict[str, dict[str, Any]]:
+    if not payload:
+        return {}
+    index: dict[str, dict[str, Any]] = {}
+    for record in payload.get("records") or []:
+        if not isinstance(record, dict):
+            continue
+        for term, term_payload in (record.get("terms") or {}).items():
+            if not isinstance(term_payload, dict):
+                continue
+            item = index.setdefault(term, {"record_count": 0, "true_count": 0, "confidence_counts": Counter()})
+            item["record_count"] += 1
+            if term_payload.get("value") is True:
+                item["true_count"] += 1
+            item["confidence_counts"][str(term_payload.get("confidence"))] += 1
+    for item in index.values():
+        item["confidence_counts"] = dict(item["confidence_counts"])
+    return index
+
+
+def _availability_for_term(
+    term: str, records: list[dict[str, Any]], visible_term_index: dict[str, dict[str, Any]] | None = None
+) -> dict[str, Any]:
     exact_count, exact_kind = _exact_availability(term, records)
     proxy_hits: dict[str, int] = {}
     for proxy in PROXY_TERMS.get(term, []):
         proxy_hits[proxy] = sum(1 for record in records if _has_path(record, proxy))
     proxy_count = max(proxy_hits.values()) if proxy_hits else 0
-    if exact_count:
+    extracted = (visible_term_index or {}).get(term)
+    if extracted:
+        status = "available_extracted"
+    elif exact_count:
         status = "available_exact" if exact_kind == "exact" else "available_expression"
     elif proxy_count:
         status = "proxy_available"
@@ -99,21 +124,41 @@ def _availability_for_term(term: str, records: list[dict[str, Any]]) -> dict[str
         "availability_status": status,
         "exact_or_expression_record_count": exact_count,
         "proxy_record_counts": proxy_hits,
-        "best_available_record_count": max(exact_count, proxy_count),
+        "extracted_record_count": (extracted or {}).get("record_count", 0),
+        "extracted_true_count": (extracted or {}).get("true_count", 0),
+        "extracted_confidence_counts": (extracted or {}).get("confidence_counts", {}),
+        "best_available_record_count": max(exact_count, proxy_count, (extracted or {}).get("record_count", 0)),
     }
 
 
-def build_audit(report_root: Path) -> dict[str, Any]:
+def build_audit(
+    report_root: Path,
+    *,
+    visible_terms_path: Path | None = None,
+    schema_version: str = "krk_strategy_monitor_companion_audit.v0",
+) -> dict[str, Any]:
     companion_plan = _load_json(report_root / "krk_strategy_monitor_companion_terms_v0.json")
     dataset = _load_json(report_root / "krk_strategy_arbitration_dataset_v0.json")
+    visible_terms = _load_json(visible_terms_path) if visible_terms_path and visible_terms_path.exists() else None
+    visible_terms_index = _visible_term_index(visible_terms)
     records = [item for item in dataset.get("records") or [] if isinstance(item, dict)]
     audited_sets: list[dict[str, Any]] = []
     status_counts: Counter[str] = Counter()
+    extracted_terms: list[dict[str, Any]] = []
+    still_missing_terms: list[str] = []
     for companion_set in companion_plan.get("companion_sets") or []:
-        term_results = [_availability_for_term(term, records) for term in companion_set.get("candidate_terms") or []]
+        term_results = [
+            _availability_for_term(term, records, visible_terms_index) for term in companion_set.get("candidate_terms") or []
+        ]
         local_counts = Counter(item["availability_status"] for item in term_results)
         status_counts.update(local_counts)
-        if local_counts["available_exact"] or local_counts["available_expression"]:
+        extracted_terms.extend(item for item in term_results if item["availability_status"] == "available_extracted")
+        still_missing_terms.extend(
+            item["term"] for item in term_results if item["availability_status"] == "missing_requires_visible_extraction"
+        )
+        if local_counts["available_extracted"]:
+            set_status = "improved_by_visible_extraction"
+        elif local_counts["available_exact"] or local_counts["available_expression"]:
             set_status = "partly_available"
         elif local_counts["proxy_available"]:
             set_status = "proxy_only"
@@ -131,8 +176,18 @@ def build_audit(report_root: Path) -> dict[str, Any]:
             }
         )
 
+    broad_extracted_terms = [
+        item["term"]
+        for item in extracted_terms
+        if item["extracted_record_count"] and item["extracted_true_count"] / item["extracted_record_count"] >= 0.75
+    ]
+    sparse_extracted_terms = [
+        item["term"]
+        for item in extracted_terms
+        if item["extracted_record_count"] and item["extracted_true_count"] / item["extracted_record_count"] <= 0.25
+    ]
     payload = {
-        "schema_version": "krk_strategy_monitor_companion_audit.v0",
+        "schema_version": schema_version,
         "causal_status": "non_causal_audit",
         "runtime_behavior_changed": False,
         "runtime_defaults_changed": False,
@@ -143,13 +198,34 @@ def build_audit(report_root: Path) -> dict[str, Any]:
         "source_artifacts": [
             "reports/strategy_arbitration/krk_strategy_monitor_companion_terms_v0.json",
             "reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.json",
+            *(
+                ["reports/strategy_arbitration/krk_visible_monitor_terms_v0.json"]
+                if visible_terms_path is not None
+                else []
+            ),
         ],
         "dataset_record_count": len(records),
         "summary": {
             "companion_set_count": len(audited_sets),
             "term_status_counts": dict(status_counts),
             "all_terms_available_without_new_extraction": status_counts["missing_requires_visible_extraction"] == 0,
-            "recommended_next_step": "architecture_review_before_new_visible_extraction",
+            "visible_terms_applied": visible_terms is not None,
+            "visible_term_count": len(visible_terms_index),
+            "terms_moved_to_extracted": [item["term"] for item in extracted_terms],
+            "still_missing_terms": sorted(set(still_missing_terms)),
+            "broad_extracted_terms": sorted(set(broad_extracted_terms)),
+            "sparse_extracted_terms": sorted(set(sparse_extracted_terms)),
+            "monitors_better_grounded": [
+                companion_set["set_id"]
+                for companion_set in audited_sets
+                if companion_set["set_availability_status"] == "improved_by_visible_extraction"
+            ],
+            "potential_future_internal_terminal_candidates": sorted(set(sparse_extracted_terms)),
+            "recommended_next_step": (
+                "architecture_review_before_runtime_or_new_extraction"
+                if visible_terms is not None
+                else "architecture_review_before_new_visible_extraction"
+            ),
         },
         "companion_sets": audited_sets,
         "blocked_next_steps": companion_plan.get("blocked_next_steps") or [],
@@ -159,7 +235,10 @@ def build_audit(report_root: Path) -> dict[str, Any]:
 
 
 def validate_audit(payload: dict[str, Any]) -> None:
-    if payload.get("schema_version") != "krk_strategy_monitor_companion_audit.v0":
+    if payload.get("schema_version") not in {
+        "krk_strategy_monitor_companion_audit.v0",
+        "krk_strategy_monitor_companion_audit.v1",
+    }:
         raise ValueError("unexpected companion audit schema")
     if payload.get("causal_status") != "non_causal_audit":
         raise ValueError("companion audit must be non-causal")
@@ -181,7 +260,7 @@ def validate_audit(payload: dict[str, Any]) -> None:
 def render_markdown(payload: dict[str, Any]) -> str:
     summary = payload["summary"]
     lines = [
-        "# KRK Strategy Monitor Companion Audit v0",
+        f"# KRK Strategy Monitor Companion Audit {payload['schema_version'].rsplit('.', 1)[-1].upper()}",
         "",
         "This replay-free audit checks whether proposed companion terms are already available in the existing strategy-arbitration dataset, only proxied, or missing.",
         "",
@@ -191,6 +270,14 @@ def render_markdown(payload: dict[str, Any]) -> str:
         f"- Companion sets: `{summary['companion_set_count']}`",
         f"- Term status counts: `{summary['term_status_counts']}`",
         f"- All terms available without new extraction: `{summary['all_terms_available_without_new_extraction']}`",
+        f"- Visible terms applied: `{summary.get('visible_terms_applied', False)}`",
+        f"- Visible term count: `{summary.get('visible_term_count', 0)}`",
+        f"- Terms moved to extracted: `{summary.get('terms_moved_to_extracted', [])}`",
+        f"- Still missing terms: `{summary.get('still_missing_terms', [])}`",
+        f"- Broad extracted terms: `{summary.get('broad_extracted_terms', [])}`",
+        f"- Sparse extracted terms: `{summary.get('sparse_extracted_terms', [])}`",
+        f"- Monitors better grounded: `{summary.get('monitors_better_grounded', [])}`",
+        f"- Potential future internal-terminal candidates: `{summary.get('potential_future_internal_terminal_candidates', [])}`",
         f"- Recommended next step: `{summary['recommended_next_step']}`",
         f"- Runtime behavior changed: `{payload['runtime_behavior_changed']}`",
         f"- Stage 7 promotion allowed: `{payload['stage7_promotion_allowed']}`",
@@ -209,20 +296,20 @@ def render_markdown(payload: dict[str, Any]) -> str:
                 f"- Availability status: `{companion_set['set_availability_status']}`",
                 f"- Term status counts: `{companion_set['term_status_counts']}`",
                 "",
-                "| Term | Status | Exact/expression count | Proxies |",
-                "| --- | --- | ---: | --- |",
+                "| Term | Status | Exact/expression count | Extracted true/records | Proxies |",
+                "| --- | --- | ---: | ---: | --- |",
             ]
         )
         for term in companion_set["terms"]:
             lines.append(
-                f"| `{term['term']}` | `{term['availability_status']}` | {term['exact_or_expression_record_count']} | `{term['proxy_record_counts']}` |"
+                f"| `{term['term']}` | `{term['availability_status']}` | {term['exact_or_expression_record_count']} | {term['extracted_true_count']}/{term['extracted_record_count']} | `{term['proxy_record_counts']}` |"
             )
         lines.append("")
     lines.extend(
         [
             "## Conclusion",
             "",
-            "Several useful companion concepts have only proxies or are missing from the current dataset. This audit does not justify runtime terminals or sandbox behavior. The next step is architecture review before adding new visible extraction terms.",
+            "The extracted Tier 1 diagnostic terms improve monitor grounding but do not justify runtime terminals or sandbox behavior. Several terms are still missing, and some extracted terms are broad enough to remain monitor evidence rather than affordances. The next step is architecture review before runtime use or additional visible extraction.",
             "",
             "No runtime arbiter, causal terminal, Stage 7 repair, Stage 8 training, Stage 7 promotion, runtime DTM/tablebase, topology mutation, or monitor-to-provider routing is authorized.",
             "",
@@ -234,12 +321,14 @@ def render_markdown(payload: dict[str, Any]) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--report-root", type=Path, default=Path("reports/strategy_arbitration"))
+    parser.add_argument("--visible-terms", type=Path, default=None)
+    parser.add_argument("--schema-version", default="krk_strategy_monitor_companion_audit.v0")
     parser.add_argument("--json-output", type=Path, required=True)
     parser.add_argument("--markdown-output", type=Path, required=True)
     parser.add_argument("--no-json-stdout", action="store_true")
     args = parser.parse_args()
 
-    payload = build_audit(args.report_root)
+    payload = build_audit(args.report_root, visible_terms_path=args.visible_terms, schema_version=args.schema_version)
     args.json_output.parent.mkdir(parents=True, exist_ok=True)
     args.json_output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     args.markdown_output.write_text(render_markdown(payload), encoding="utf-8")

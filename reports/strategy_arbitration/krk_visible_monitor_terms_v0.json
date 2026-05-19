@@ -1,0 +1,2491 @@
+{
+  "blocked_next_steps": [
+    "runtime_terminals",
+    "causal_affordances",
+    "runtime_arbiter",
+    "stage7_repair",
+    "stage8_training",
+    "stage7_promotion",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation",
+    "monitor_to_provider_routing"
+  ],
+  "causal_status": "non_causal_diagnostic_terms",
+  "gameplay_topology_mutation": false,
+  "records": [
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "unknown",
+      "causal_status": "non_causal",
+      "fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage7",
+      "state_id": "state.069e81a609ed",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=central_or_midboard",
+            "box_area_relevance=high"
+          ],
+          "value": false
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "unknown",
+      "causal_status": "non_causal",
+      "fen": "8/8/8/8/4K3/8/R7/4k3 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage7",
+      "state_id": "state.0926f12f8e8f",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy",
+            "mate_basin_readiness"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "unknown",
+      "causal_status": "non_causal",
+      "fen": "R7/8/8/8/8/2k5/8/3K4 w - - 4 3",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage7",
+      "state_id": "state.4a464b782ecb",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=central_or_midboard",
+            "box_area_relevance=high"
+          ],
+          "value": false
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage7",
+      "state_id": "state.4e34ad0b2f29",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=central_or_midboard",
+            "box_area_relevance=high"
+          ],
+          "value": false
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "current_result=max_plies"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_trace_window",
+          "notes": "Closed-loop capsule ownership failed to convert within h40.",
+          "scope": "trace_window",
+          "source_terms": [
+            "closed_loop_capsule.result=max_plies"
+          ],
+          "value": true
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage7",
+      "state_id": "state.b6796dfb62ff",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=central_or_midboard",
+            "box_area_relevance=high"
+          ],
+          "value": false
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "current_result=max_plies"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_trace_window",
+          "notes": "Closed-loop capsule ownership failed to convert within h40.",
+          "scope": "trace_window",
+          "source_terms": [
+            "closed_loop_capsule.result=max_plies"
+          ],
+          "value": true
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage7",
+      "state_id": "state.0afbf11aa123",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=near_edge",
+            "box_area_relevance=medium",
+            "edge_net_pressure_proxy",
+            "mate_basin_readiness"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "Static support availability alone is not counted as improvement.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "white_king_support_available"
+          ],
+          "value": false
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "current_result=max_plies"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_failure_family_labels",
+          "notes": "Failure-family labels indicate post-plan or continuation stagnation risk.",
+          "scope": "trace_window",
+          "source_terms": [
+            "continuation_capacity_candidate",
+            "unresolved_without_new_continuation_policy"
+          ],
+          "value": true
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "fen": "8/8/8/R7/4k3/8/8/3K4 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage7",
+      "state_id": "state.38aed2f35911",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=central_or_midboard",
+            "box_area_relevance=high"
+          ],
+          "value": false
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "current_result=max_plies"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_failure_family_labels",
+          "notes": "Failure-family labels indicate post-plan or continuation stagnation risk.",
+          "scope": "trace_window",
+          "source_terms": [
+            "continuation_capacity_candidate",
+            "unresolved_without_new_continuation_policy"
+          ],
+          "value": true
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "fen": "8/8/8/4k3/R7/8/3K4/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage7",
+      "state_id": "state.ac0b7ed500ea",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=central_or_midboard",
+            "box_area_relevance=high"
+          ],
+          "value": false
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "current_result=max_plies",
+            "alternative_provider_known_mate",
+            "strategy_arbitration_or_forced_success_label"
+          ],
+          "value": true
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "fen": "8/8/8/8/4R3/2k5/4K3/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage7",
+      "state_id": "state.ff6652c8832c",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=central_or_midboard",
+            "box_area_relevance=high"
+          ],
+          "value": false
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "current_result=max_plies",
+            "alternative_provider_known_mate",
+            "strategy_arbitration_or_forced_success_label"
+          ],
+          "value": true
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage5",
+      "state_id": "state.7bd8961882ad",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "alternative_provider_known_mate"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "fen": "6k1/4R3/6K1/8/8/8/8/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage5",
+      "state_id": "state.87b1160e68b9",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy",
+            "mate_basin_readiness"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No existing candidate/post-move restoration evidence.",
+          "scope": "post_move",
+          "source_terms": [],
+          "value": false
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "alternative_provider_known_mate"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "fen": "5k2/R7/8/8/8/8/4K3/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage5",
+      "state_id": "state.2c1d6da27ea1",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "alternative_provider_known_mate"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "fen": "5k2/R7/8/8/8/8/4K3/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage5",
+      "state_id": "state.2c1d6da27ea1",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "alternative_provider_known_mate"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage5",
+      "state_id": "state.02feb8593cc6",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "current_result=max_plies"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "fen": "5k2/7R/K7/8/8/8/8/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage5",
+      "state_id": "state.326222aefdf1",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "current_result=max_plies"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "fen": "1k6/7R/2K5/8/8/8/8/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage5",
+      "state_id": "state.3dca34326fca",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No existing candidate/post-move restoration evidence.",
+          "scope": "post_move",
+          "source_terms": [],
+          "value": false
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "current_result=max_plies"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage5",
+      "state_id": "state.02feb8593cc6",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "current_result=max_plies"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "fen": "5k2/8/4K3/8/8/8/8/R7 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage6",
+      "state_id": "state.d1f052d2cab2",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No existing candidate/post-move restoration evidence.",
+          "scope": "post_move",
+          "source_terms": [],
+          "value": false
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "alternative_provider_known_mate"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "fen": "R7/7k/5K2/8/8/8/8/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage6",
+      "state_id": "state.52085d244e9d",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No existing candidate/post-move restoration evidence.",
+          "scope": "post_move",
+          "source_terms": [],
+          "value": false
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "alternative_provider_known_mate"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "fen": "2k5/8/1K6/8/8/8/8/R7 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage6",
+      "state_id": "state.69711173114a",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No existing candidate/post-move restoration evidence.",
+          "scope": "post_move",
+          "source_terms": [],
+          "value": false
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "alternative_provider_known_mate"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "fen": "5k2/8/4K3/8/8/8/8/R7 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage6",
+      "state_id": "state.d1f052d2cab2",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No existing candidate/post-move restoration evidence.",
+          "scope": "post_move",
+          "source_terms": [],
+          "value": false
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "alternative_provider_known_mate"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "fen": "2k5/8/1K6/8/8/8/8/R7 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage6",
+      "state_id": "state.69711173114a",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No existing candidate/post-move restoration evidence.",
+          "scope": "post_move",
+          "source_terms": [],
+          "value": false
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "alternative_provider_known_mate"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "current_result=max_plies"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "current_result=max_plies"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "current_result=max_plies"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "current_result=max_plies"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "current_result=max_plies"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "fen": "8/1RK5/8/k7/8/8/8/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage4",
+      "state_id": "state.1e4f48a672e8",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No existing candidate/post-move restoration evidence.",
+          "scope": "post_move",
+          "source_terms": [],
+          "value": false
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "Static support availability alone is not counted as improvement.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "white_king_support_available"
+          ],
+          "value": false
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "alternative_provider_known_mate"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "fen": "8/8/8/8/8/3K4/3R4/6k1 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage4",
+      "state_id": "state.f17117682948",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No existing candidate/post-move restoration evidence.",
+          "scope": "post_move",
+          "source_terms": [],
+          "value": false
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "alternative_provider_known_mate"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "fen": "7k/8/5K2/4R3/8/8/8/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage4",
+      "state_id": "state.02cfd843a2cf",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No existing candidate/post-move restoration evidence.",
+          "scope": "post_move",
+          "source_terms": [],
+          "value": false
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "Static support availability alone is not counted as improvement.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "white_king_support_available"
+          ],
+          "value": false
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "alternative_provider_known_mate"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "fen": "8/k7/3K4/8/8/1R6/8/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage4",
+      "state_id": "state.256a3da30f0f",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "current_result=max_plies"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "fen": "2K5/1R6/8/k7/8/8/8/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage4",
+      "state_id": "state.b11124d658cf",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No existing candidate/post-move restoration evidence.",
+          "scope": "post_move",
+          "source_terms": [],
+          "value": false
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "current_result=max_plies"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "fen": "8/k7/3K4/8/8/1R6/8/8 w - - 2 2",
+      "schema_version": "krk_visible_monitor_terms_record.v1",
+      "source_stage": "stage4",
+      "state_id": "state.256a3da30f0f",
+      "terms": {
+        "box_area_no_longer_decision_relevant": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Owner-exit diagnostic only; does not select next provider.",
+          "scope": "current_state",
+          "source_terms": [
+            "black_king_edge_bucket=at_edge",
+            "box_area_relevance=low",
+            "edge_net_pressure_proxy"
+          ],
+          "value": true
+        },
+        "cut_or_fence_restored_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "proxy_from_current_state_repair_availability",
+          "notes": "Repair availability exists while cut/fence is unstable; restoration after move is not directly proven.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "not fence_stable/cut_stable"
+          ],
+          "value": true
+        },
+        "king_support_improves_after_move": {
+          "causal_status": "non_causal",
+          "confidence": "extracted_from_existing_candidate_or_context_terms",
+          "notes": "Action-relevant king-support improvement is present in existing terms.",
+          "scope": "candidate_move_or_current_state",
+          "source_terms": [
+            "king_support_improvement_move_exists"
+          ],
+          "value": true
+        },
+        "local_provider_competition_failed": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_provider_outcome_evidence",
+          "notes": "Non-causal arbitration failure monitor; does not route providers.",
+          "scope": "decision_or_family",
+          "source_terms": [
+            "current_result=max_plies"
+          ],
+          "value": false
+        },
+        "post_plan_stagnation": {
+          "causal_status": "non_causal",
+          "confidence": "not_observed",
+          "notes": "No post-plan stagnation evidence in current artifacts.",
+          "scope": "trace_window",
+          "source_terms": [],
+          "value": false
+        },
+        "safe_repair_move_exists": {
+          "causal_status": "non_causal",
+          "confidence": "expression_from_current_state_terms",
+          "notes": "Bounded diagnostic expression; no worst-reply search.",
+          "scope": "current_state",
+          "source_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe",
+            "not stalemate_or_draw_risk"
+          ],
+          "value": true
+        }
+      }
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_visible_monitor_terms.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "confidence_counts": {
+      "expression_from_current_state_terms": 66,
+      "expression_from_provider_outcome_evidence": 33,
+      "extracted_from_existing_candidate_or_context_terms": 30,
+      "extracted_from_trace_window": 2,
+      "not_observed": 43,
+      "proxy_from_current_state_repair_availability": 22,
+      "proxy_from_failure_family_labels": 2
+    },
+    "record_count": 33,
+    "scope_counts": {
+      "candidate_move_or_current_state": 33,
+      "current_state": 88,
+      "decision_or_family": 33,
+      "post_move": 11,
+      "trace_window": 33
+    },
+    "term_names": [
+      "king_support_improves_after_move",
+      "cut_or_fence_restored_after_move",
+      "safe_repair_move_exists",
+      "box_area_no_longer_decision_relevant",
+      "post_plan_stagnation",
+      "local_provider_competition_failed"
+    ],
+    "true_false_counts_by_term": {
+      "box_area_no_longer_decision_relevant": {
+        "False": 7,
+        "True": 26
+      },
+      "cut_or_fence_restored_after_move": {
+        "False": 11,
+        "True": 22
+      },
+      "king_support_improves_after_move": {
+        "False": 3,
+        "True": 30
+      },
+      "local_provider_competition_failed": {
+        "False": 31,
+        "True": 2
+      },
+      "post_plan_stagnation": {
+        "False": 29,
+        "True": 4
+      },
+      "safe_repair_move_exists": {
+        "True": 33
+      }
+    }
+  }
+}

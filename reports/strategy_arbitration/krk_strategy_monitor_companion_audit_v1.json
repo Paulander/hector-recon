@@ -1,0 +1,574 @@
+{
+  "blocked_next_steps": [
+    "runtime_terminals",
+    "runtime_arbiter",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "topology_mutation",
+    "monitor_to_provider_routing"
+  ],
+  "causal_status": "non_causal_audit",
+  "companion_sets": [
+    {
+      "causal_status": "non_causal",
+      "set_availability_status": "proxy_only",
+      "set_id": "phase_boundary_companions",
+      "source_concepts": [
+        "edge_net_affordance",
+        "phase_boundary_near_edge"
+      ],
+      "target_monitor_types": [
+        "PhaseBoundaryMonitor"
+      ],
+      "term_status_counts": {
+        "missing_requires_visible_extraction": 3,
+        "proxy_available": 4
+      },
+      "terms": [
+        {
+          "availability_status": "proxy_available",
+          "best_available_record_count": 33,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {
+            "active_landmark_label": 33
+          },
+          "term": "current_owner"
+        },
+        {
+          "availability_status": "proxy_available",
+          "best_available_record_count": 31,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {
+            "strategy_proposals.known_outcome_label": 31
+          },
+          "term": "successful_next_provider"
+        },
+        {
+          "availability_status": "missing_requires_visible_extraction",
+          "best_available_record_count": 0,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {},
+          "term": "safe_edge_net_tighten_move_exists"
+        },
+        {
+          "availability_status": "proxy_available",
+          "best_available_record_count": 33,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {
+            "repair_or_reestablish_cut_available": 33,
+            "safe_check_available": 33
+          },
+          "term": "safe_check_or_cut_tighten_move_exists"
+        },
+        {
+          "availability_status": "missing_requires_visible_extraction",
+          "best_available_record_count": 0,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {},
+          "term": "edge_net_pressure_increases_after_move"
+        },
+        {
+          "availability_status": "proxy_available",
+          "best_available_record_count": 33,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {
+            "stalemate_or_draw_risk": 33
+          },
+          "term": "draw_risk_absent_after_edge_net_move"
+        },
+        {
+          "availability_status": "missing_requires_visible_extraction",
+          "best_available_record_count": 0,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {},
+          "term": "king_support_aligned_with_edge_net"
+        }
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "set_availability_status": "improved_by_visible_extraction",
+      "set_id": "owner_exit_companions",
+      "source_concepts": [
+        "box_shrink_exit_condition"
+      ],
+      "target_monitor_types": [
+        "OwnerExitMonitor"
+      ],
+      "term_status_counts": {
+        "available_exact": 1,
+        "available_expression": 1,
+        "available_extracted": 1,
+        "missing_requires_visible_extraction": 2,
+        "proxy_available": 2
+      },
+      "terms": [
+        {
+          "availability_status": "available_expression",
+          "best_available_record_count": 33,
+          "exact_or_expression_record_count": 9,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {
+            "active_landmark_label": 33
+          },
+          "term": "active_landmark_label == box_shrink"
+        },
+        {
+          "availability_status": "missing_requires_visible_extraction",
+          "best_available_record_count": 0,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {},
+          "term": "box_shrink_goal_satisfied"
+        },
+        {
+          "availability_status": "available_extracted",
+          "best_available_record_count": 33,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {
+            "expression_from_current_state_terms": 33
+          },
+          "extracted_record_count": 33,
+          "extracted_true_count": 26,
+          "proxy_record_counts": {
+            "box_area_relevance": 33
+          },
+          "term": "box_area_no_longer_decision_relevant"
+        },
+        {
+          "availability_status": "proxy_available",
+          "best_available_record_count": 33,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {
+            "black_king_edge_bucket": 33,
+            "edge_net_pressure_proxy": 33
+          },
+          "term": "edge_net_affordance_scoped"
+        },
+        {
+          "availability_status": "available_exact",
+          "best_available_record_count": 33,
+          "exact_or_expression_record_count": 33,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {},
+          "term": "mate_basin_readiness"
+        },
+        {
+          "availability_status": "proxy_available",
+          "best_available_record_count": 31,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {
+            "strategy_proposals.known_outcome_label": 31
+          },
+          "term": "validated_handoff_target_available"
+        },
+        {
+          "availability_status": "missing_requires_visible_extraction",
+          "best_available_record_count": 0,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {},
+          "term": "box_shrink_owner_repeats_without_progress"
+        }
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "set_availability_status": "improved_by_visible_extraction",
+      "set_id": "repair_needed_companions",
+      "source_concepts": [
+        "fence_or_cut_repair_affordance"
+      ],
+      "target_monitor_types": [
+        "RepairNeededMonitor"
+      ],
+      "term_status_counts": {
+        "available_exact": 1,
+        "available_extracted": 2,
+        "missing_requires_visible_extraction": 2,
+        "proxy_available": 2
+      },
+      "terms": [
+        {
+          "availability_status": "available_exact",
+          "best_available_record_count": 33,
+          "exact_or_expression_record_count": 33,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {
+            "repair_or_reestablish_cut_available": 33
+          },
+          "term": "repair_or_reestablish_cut_available"
+        },
+        {
+          "availability_status": "available_extracted",
+          "best_available_record_count": 33,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {
+            "expression_from_current_state_terms": 33
+          },
+          "extracted_record_count": 33,
+          "extracted_true_count": 33,
+          "proxy_record_counts": {
+            "repair_or_reestablish_cut_available": 33
+          },
+          "term": "safe_repair_move_exists"
+        },
+        {
+          "availability_status": "proxy_available",
+          "best_available_record_count": 33,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {
+            "rook_safe": 33
+          },
+          "term": "rook_safe_after_repair"
+        },
+        {
+          "availability_status": "proxy_available",
+          "best_available_record_count": 33,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {
+            "box_area_relevance": 33
+          },
+          "term": "box_area_not_expanded_after_reply"
+        },
+        {
+          "availability_status": "available_extracted",
+          "best_available_record_count": 33,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {
+            "not_observed": 11,
+            "proxy_from_current_state_repair_availability": 22
+          },
+          "extracted_record_count": 33,
+          "extracted_true_count": 22,
+          "proxy_record_counts": {},
+          "term": "cut_or_fence_restored_after_move"
+        },
+        {
+          "availability_status": "missing_requires_visible_extraction",
+          "best_available_record_count": 0,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {},
+          "term": "repair_preserves_mate_basin_progress"
+        },
+        {
+          "availability_status": "missing_requires_visible_extraction",
+          "best_available_record_count": 0,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {},
+          "term": "repair_needed_but_no_safe_repair_available"
+        }
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "set_availability_status": "improved_by_visible_extraction",
+      "set_id": "plan_selection_companions",
+      "source_concepts": [
+        "plan_selection_needed"
+      ],
+      "target_monitor_types": [
+        "PlanSelectionNeededMonitor"
+      ],
+      "term_status_counts": {
+        "available_extracted": 2,
+        "missing_requires_visible_extraction": 2,
+        "proxy_available": 4
+      },
+      "terms": [
+        {
+          "availability_status": "proxy_available",
+          "best_available_record_count": 33,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {
+            "role_capsule_context": 33
+          },
+          "term": "plan_capsule_context"
+        },
+        {
+          "availability_status": "missing_requires_visible_extraction",
+          "best_available_record_count": 0,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {},
+          "term": "handoff_success_after_plan"
+        },
+        {
+          "availability_status": "available_extracted",
+          "best_available_record_count": 33,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {
+            "extracted_from_trace_window": 2,
+            "not_observed": 29,
+            "proxy_from_failure_family_labels": 2
+          },
+          "extracted_record_count": 33,
+          "extracted_true_count": 4,
+          "proxy_record_counts": {},
+          "term": "post_plan_stagnation"
+        },
+        {
+          "availability_status": "available_extracted",
+          "best_available_record_count": 33,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {
+            "expression_from_provider_outcome_evidence": 33
+          },
+          "extracted_record_count": 33,
+          "extracted_true_count": 2,
+          "proxy_record_counts": {
+            "result_label.current_graph_h40": 4,
+            "strategy_proposals": 31
+          },
+          "term": "local_provider_competition_failed"
+        },
+        {
+          "availability_status": "proxy_available",
+          "best_available_record_count": 2,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {
+            "result_label.closed_loop_capsule": 2
+          },
+          "term": "selected_provider_closed_loop_failed"
+        },
+        {
+          "availability_status": "missing_requires_visible_extraction",
+          "best_available_record_count": 0,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {},
+          "term": "multi_step_progress_required"
+        },
+        {
+          "availability_status": "proxy_available",
+          "best_available_record_count": 9,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {
+            "hypothesis_labels": 9
+          },
+          "term": "single_move_affordance_insufficient"
+        },
+        {
+          "availability_status": "proxy_available",
+          "best_available_record_count": 9,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {
+            "hypothesis_labels": 9
+          },
+          "term": "growth_pressure_repeated_family"
+        }
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "set_availability_status": "improved_by_visible_extraction",
+      "set_id": "king_support_redesign",
+      "source_concepts": [
+        "king_support_conversion_affordance"
+      ],
+      "target_monitor_types": [
+        "RejectedFeatureDefinition"
+      ],
+      "term_status_counts": {
+        "available_exact": 1,
+        "available_extracted": 1,
+        "missing_requires_visible_extraction": 2,
+        "proxy_available": 1
+      },
+      "terms": [
+        {
+          "availability_status": "available_exact",
+          "best_available_record_count": 30,
+          "exact_or_expression_record_count": 30,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {
+            "king_support_improvement_move_exists": 30
+          },
+          "term": "king_support_improvement_move_exists"
+        },
+        {
+          "availability_status": "available_extracted",
+          "best_available_record_count": 33,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {
+            "extracted_from_existing_candidate_or_context_terms": 30,
+            "not_observed": 3
+          },
+          "extracted_record_count": 33,
+          "extracted_true_count": 30,
+          "proxy_record_counts": {},
+          "term": "king_support_improves_after_move"
+        },
+        {
+          "availability_status": "missing_requires_visible_extraction",
+          "best_available_record_count": 0,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {},
+          "term": "king_support_improves_after_reply"
+        },
+        {
+          "availability_status": "missing_requires_visible_extraction",
+          "best_available_record_count": 0,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {},
+          "term": "king_support_aligned_with_cut_or_edge_net"
+        },
+        {
+          "availability_status": "proxy_available",
+          "best_available_record_count": 33,
+          "exact_or_expression_record_count": 0,
+          "extracted_confidence_counts": {},
+          "extracted_record_count": 0,
+          "extracted_true_count": 0,
+          "proxy_record_counts": {
+            "black_king_edge_bucket": 33,
+            "white_king_support_available": 33
+          },
+          "term": "king_support_needed_for_current_phase"
+        }
+      ]
+    }
+  ],
+  "dataset_record_count": 33,
+  "gameplay_topology_mutation": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_strategy_monitor_companion_audit.v1",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_monitor_companion_terms_v0.json",
+    "reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.json",
+    "reports/strategy_arbitration/krk_visible_monitor_terms_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "all_terms_available_without_new_extraction": false,
+    "broad_extracted_terms": [
+      "box_area_no_longer_decision_relevant",
+      "king_support_improves_after_move",
+      "safe_repair_move_exists"
+    ],
+    "companion_set_count": 5,
+    "monitors_better_grounded": [
+      "owner_exit_companions",
+      "repair_needed_companions",
+      "plan_selection_companions",
+      "king_support_redesign"
+    ],
+    "potential_future_internal_terminal_candidates": [
+      "local_provider_competition_failed",
+      "post_plan_stagnation"
+    ],
+    "recommended_next_step": "architecture_review_before_runtime_or_new_extraction",
+    "sparse_extracted_terms": [
+      "local_provider_competition_failed",
+      "post_plan_stagnation"
+    ],
+    "still_missing_terms": [
+      "box_shrink_goal_satisfied",
+      "box_shrink_owner_repeats_without_progress",
+      "edge_net_pressure_increases_after_move",
+      "handoff_success_after_plan",
+      "king_support_aligned_with_cut_or_edge_net",
+      "king_support_aligned_with_edge_net",
+      "king_support_improves_after_reply",
+      "multi_step_progress_required",
+      "repair_needed_but_no_safe_repair_available",
+      "repair_preserves_mate_basin_progress",
+      "safe_edge_net_tighten_move_exists"
+    ],
+    "term_status_counts": {
+      "available_exact": 3,
+      "available_expression": 1,
+      "available_extracted": 6,
+      "missing_requires_visible_extraction": 11,
+      "proxy_available": 13
+    },
+    "terms_moved_to_extracted": [
+      "box_area_no_longer_decision_relevant",
+      "safe_repair_move_exists",
+      "cut_or_fence_restored_after_move",
+      "post_plan_stagnation",
+      "local_provider_competition_failed",
+      "king_support_improves_after_move"
+    ],
+    "visible_term_count": 6,
+    "visible_terms_applied": true
+  }
+}

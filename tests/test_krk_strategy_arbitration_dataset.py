@@ -75,6 +75,15 @@ assert _companion_audit_spec.loader is not None
 _companion_audit = importlib.util.module_from_spec(_companion_audit_spec)
 _companion_audit_spec.loader.exec_module(_companion_audit)
 
+_visible_monitor_terms_spec = importlib.util.spec_from_file_location(
+    "extract_krk_visible_monitor_terms",
+    Path(__file__).resolve().parents[1] / "scripts" / "extract_krk_visible_monitor_terms.py",
+)
+assert _visible_monitor_terms_spec is not None
+assert _visible_monitor_terms_spec.loader is not None
+_visible_monitor_terms = importlib.util.module_from_spec(_visible_monitor_terms_spec)
+_visible_monitor_terms_spec.loader.exec_module(_visible_monitor_terms)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -600,3 +609,125 @@ def test_krk_strategy_monitor_companion_audit_is_replay_free_and_non_causal(tmp_
     assert statuses["current_owner"] == "proxy_available"
     assert statuses["active_landmark_label == box_shrink"] == "available_expression"
     assert statuses["safe_edge_net_tighten_move_exists"] == "missing_requires_visible_extraction"
+
+
+def test_krk_visible_monitor_terms_are_diagnostic_only(tmp_path):
+    report_root = tmp_path / "reports" / "strategy_arbitration"
+    report_root.mkdir(parents=True)
+    (report_root / "krk_strategy_arbitration_dataset_v0.json").write_text(
+        json.dumps(
+            {
+                "records": [
+                    {
+                        "state_id": "state.test",
+                        "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                        "source_stage": "stage7",
+                        "active_landmark_label": "box_shrink",
+                        "result_label": {"current_graph_h40": "max_plies"},
+                        "hypothesis_labels": ["strategy_arbitration_candidate"],
+                        "terminal_space_context": {
+                            "black_king_edge_bucket": "at_edge",
+                            "box_area_relevance": "low",
+                            "edge_net_pressure_proxy": True,
+                            "mate_basin_readiness": False,
+                            "rook_safe": True,
+                            "stalemate_or_draw_risk": False,
+                            "active_terminal_terms": [
+                                "repair_or_reestablish_cut_available",
+                                "king_support_improvement_move_exists",
+                            ],
+                        },
+                        "strategy_proposals": [
+                            {
+                                "known_outcome_label": {"result": "mate"},
+                                "post_move_terms": ["cut_restored_after_move"],
+                            }
+                        ],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    payload = _visible_monitor_terms.build_visible_terms(report_root)
+
+    assert payload["schema_version"] == "krk_visible_monitor_terms.v0"
+    assert payload["causal_status"] == "non_causal_diagnostic_terms"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_defaults_changed"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    terms = payload["records"][0]["terms"]
+    assert terms["king_support_improves_after_move"]["value"] is True
+    assert terms["cut_or_fence_restored_after_move"]["value"] is True
+    assert terms["safe_repair_move_exists"]["value"] is True
+    assert terms["box_area_no_longer_decision_relevant"]["value"] is True
+    assert terms["local_provider_competition_failed"]["value"] is True
+    assert {term_payload["causal_status"] for term_payload in terms.values()} == {"non_causal"}
+
+
+def test_krk_strategy_monitor_companion_audit_v1_uses_visible_terms(tmp_path):
+    report_root = tmp_path / "reports" / "strategy_arbitration"
+    report_root.mkdir(parents=True)
+    (report_root / "krk_strategy_monitor_companion_terms_v0.json").write_text(
+        json.dumps(
+            {
+                "companion_sets": [
+                    {
+                        "set_id": "repair_needed_companions",
+                        "target_monitor_types": ["RepairNeededMonitor"],
+                        "source_concepts": ["fence_or_cut_repair_affordance"],
+                        "candidate_terms": ["safe_repair_move_exists", "cut_or_fence_restored_after_move"],
+                    }
+                ],
+                "blocked_next_steps": ["runtime_arbiter"],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (report_root / "krk_strategy_arbitration_dataset_v0.json").write_text(
+        json.dumps({"records": [{"state_id": "state.test", "terminal_space_context": {}}]}),
+        encoding="utf-8",
+    )
+    visible_path = report_root / "krk_visible_monitor_terms_v0.json"
+    visible_path.write_text(
+        json.dumps(
+            {
+                "records": [
+                    {
+                        "state_id": "state.test",
+                        "terms": {
+                            "safe_repair_move_exists": {
+                                "value": True,
+                                "confidence": "expression_from_current_state_terms",
+                            },
+                            "cut_or_fence_restored_after_move": {
+                                "value": False,
+                                "confidence": "not_observed",
+                            },
+                        },
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    payload = _companion_audit.build_audit(
+        report_root,
+        visible_terms_path=visible_path,
+        schema_version="krk_strategy_monitor_companion_audit.v1",
+    )
+
+    assert payload["schema_version"] == "krk_strategy_monitor_companion_audit.v1"
+    assert payload["summary"]["visible_terms_applied"] is True
+    assert payload["summary"]["visible_term_count"] == 2
+    assert payload["summary"]["terms_moved_to_extracted"] == [
+        "safe_repair_move_exists",
+        "cut_or_fence_restored_after_move",
+    ]
+    assert payload["companion_sets"][0]["set_availability_status"] == "improved_by_visible_extraction"
+    assert {term["availability_status"] for term in payload["companion_sets"][0]["terms"]} == {
+        "available_extracted"
+    }
