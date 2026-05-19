@@ -274,6 +274,13 @@ KRK control-plane strategy arbitration baseline v1:
 
 The baseline is a non-causal selector comparison over the `28` filtered control-plane benchmark frames. It finds `14` frames with a known provider-mate option and `14` frames where all labeled provider proposals max out. Raw score, normalized score, provider-local rank, and stage-prior heuristics recover most converting providers when one is present, but selected mate rate remains about half because many frames have no labeled converting provider. The decision is `strategy_arbitration_promising`, with next class `non_causal_strategy_arbiter_sandbox_design`. This does not authorize implementing a runtime arbiter, runtime terminals, Stage 7 promotion, or Stage 8 training.
 
+KRK strategy arbiter sandbox design v0:
+
+- `reports/krk_strategy_arbiter_sandbox_design_v0.json`
+- `reports/krk_strategy_arbiter_sandbox_design_v0.md`
+
+The design records the next architecture-review package for a possible future default-off KRK strategy arbiter. It is design-only and explicitly blocks runtime implementation without review. Open risks are mixed provider-label semantics, max-only frames that may indicate capacity or missing-proposal gaps, weak context-only heuristics, and Stage 7 overfit risk. Recommended next step: `architecture_review_before_any_runtime_sandbox`.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
