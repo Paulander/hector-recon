@@ -239,6 +239,13 @@ KRK control-plane frames v0:
 
 The frame export creates `33` non-causal `ControlPlaneEvidenceFrame` records from existing artifacts only, with `87` strategy proposal frames, `224` attached monitor records, `13` plan-capsule window records, and `5` matched offline sequence-training examples. It adds no playouts and no runtime consumers. Remaining gaps: sequence examples and plan windows are Stage7-only, GrowthGovernor status is inferred from summary/design artifacts rather than runtime-exported frame status, and cross-domain bridge frames are not exported yet. Recommended next slice: `control_plane_frame_quality_report_v0`.
 
+KRK control-plane frame quality report v0:
+
+- `reports/krk_control_plane_frame_quality_report_v0.json`
+- `reports/krk_control_plane_frame_quality_report_v0.md`
+
+The quality report says the frame export is ready for non-causal strategy-arbitration probing only with dedupe and missing-proposal caveats. It is not ready for a general KRK sequence-policy benchmark because sequence examples and plan windows remain Stage7-only. Runtime sandboxing, Stage 7 promotion, and Stage 8 training remain blocked. Recommended next slice: `control_plane_frame_dedupe_and_quality_filters_v0`.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -324,6 +331,8 @@ reports/krk_control_plane_gap_report_v0.json
 reports/krk_control_plane_gap_report_v0.md
 reports/krk_control_plane_frames_v0.json
 reports/krk_control_plane_frames_v0.md
+reports/krk_control_plane_frame_quality_report_v0.json
+reports/krk_control_plane_frame_quality_report_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

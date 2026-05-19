@@ -165,6 +165,15 @@ assert _control_plane_frames_spec.loader is not None
 _control_plane_frames = importlib.util.module_from_spec(_control_plane_frames_spec)
 _control_plane_frames_spec.loader.exec_module(_control_plane_frames)
 
+_control_plane_quality_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_control_plane_frame_quality",
+    Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_control_plane_frame_quality.py",
+)
+assert _control_plane_quality_spec is not None
+assert _control_plane_quality_spec.loader is not None
+_control_plane_quality = importlib.util.module_from_spec(_control_plane_quality_spec)
+_control_plane_quality_spec.loader.exec_module(_control_plane_quality)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -1747,3 +1756,65 @@ def test_krk_control_plane_frame_export_is_replay_free_and_non_causal(tmp_path):
     assert frame["strategy_proposal_frames"][0]["causal_status"] == "non_causal"
     assert frame["internal_monitor_records"][0]["causal_ready"] is False
     assert frame["sequence_training_examples"][0]["offline_only"] is True
+
+
+def test_krk_control_plane_frame_quality_blocks_runtime_and_recommends_filters(tmp_path):
+    root = tmp_path
+    frames_path = root / _control_plane_quality.FRAMES
+    frames_path.parent.mkdir(parents=True, exist_ok=True)
+    frames_path.write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_frame_export",
+                "frames": [
+                    {
+                        "frame_id": "cp.a",
+                        "source_stage": "stage7",
+                        "outcome_labels": {"result_label": {"current_graph_h40": "max_plies"}},
+                        "strategy_proposal_frames": [],
+                        "internal_monitor_records": [
+                            {"monitor_id": "m1"},
+                            {"monitor_id": "m1"},
+                        ],
+                        "plan_capsule_window_records": [
+                            {
+                                "progress_terms_confirmed": ["p"],
+                                "window_outcome": "max_plies",
+                            }
+                        ],
+                        "sequence_training_examples": [{"offline_only": True}],
+                    },
+                    {
+                        "frame_id": "cp.b",
+                        "source_stage": "stage5",
+                        "outcome_labels": {"result_label": {"current_graph_h40": "mate"}},
+                        "strategy_proposal_frames": [{"move_uci": "a1a2"}],
+                        "internal_monitor_records": [],
+                        "plan_capsule_window_records": [],
+                        "sequence_training_examples": [],
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    report = _control_plane_quality.build_quality_report(root)
+
+    assert report["schema_version"] == "krk_control_plane_frame_quality_report.v0"
+    assert report["causal_status"] == "non_causal_quality_report"
+    assert report["runtime_behavior_changed"] is False
+    assert report["runtime_arbiter_added"] is False
+    assert report["runtime_terminals_added"] is False
+    assert report["stage7_promotion_allowed"] is False
+    assert report["stage8_training_allowed"] is False
+    assert report["readiness"]["runtime_sandbox"] == "blocked"
+    assert report["readiness"]["stage8_training"] == "blocked"
+    assert report["recommended_next_slice"]["slice_id"] == (
+        "control_plane_frame_dedupe_and_quality_filters_v0"
+    )
+    assert report["recommended_next_slice"]["causal"] is False
+    assert any(
+        flag["flag_id"] == "some_frames_lack_strategy_proposals" and flag["count"] == 1
+        for flag in report["quality_flags"]
+    )
