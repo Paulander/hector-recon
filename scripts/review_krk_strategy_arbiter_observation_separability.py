@@ -31,6 +31,9 @@ def _record_term_counts(record: dict[str, Any]) -> int:
 
 def _proposal_provider_count(record: dict[str, Any]) -> int:
     observation = record.get("observation") if isinstance(record.get("observation"), dict) else {}
+    unique_provider_count = observation.get("unique_provider_count")
+    if unique_provider_count is not None:
+        return int(unique_provider_count or 0)
     providers = {
         str(candidate.get("provider_id") or "unknown")
         for candidate in list(observation.get("provider_candidates", []) or [])
@@ -68,12 +71,38 @@ def build_review(root: Path = ROOT) -> dict[str, Any]:
     ]
     sandbox_ready = False
     status = "observation_context_underinstrumented"
-    if records and not underinstrumented_records and not single_provider_records:
+    if records and not underinstrumented_records and single_provider_records:
+        status = "observation_provider_diversity_underinstrumented"
+    elif records and not underinstrumented_records and not single_provider_records:
         status = "observation_frames_ready_for_non_causal_selector_probe"
     recommended_next = (
         "enrich_trace_only_observation_with_existing_context_terms"
         if status == "observation_context_underinstrumented"
+        else "enrich_trace_only_observation_with_provider_summary"
+        if status == "observation_provider_diversity_underinstrumented"
         else "run_replay_free_observation_selector_probe"
+    )
+    findings = [
+        "Stage7 holdout rows are visible and mostly selected by krk.stage0_basin.",
+    ]
+    if underinstrumented_records:
+        findings.append(
+            "Observation source terms are under-instrumented; most records expose only active_landmark_label."
+        )
+    else:
+        findings.append(
+            "Trace-only KRK context terms are now present in observation source terms."
+        )
+    if single_provider_records:
+        findings.append(
+            "Several rows expose only one provider family in the retained proposals, limiting strategy separability."
+        )
+    else:
+        findings.append(
+            "Provider summaries expose multiple provider families for selector analysis."
+        )
+    findings.append(
+        "The current observation export is useful for auditability but is not a causal sandbox."
     )
     return {
         "schema_version": "krk_strategy_arbiter_observation_separability_review.v0",
@@ -92,12 +121,7 @@ def build_review(root: Path = ROOT) -> dict[str, Any]:
         "underinstrumented_records": underinstrumented_records,
         "single_provider_record_count": len(single_provider_records),
         "single_provider_records": single_provider_records,
-        "findings": [
-            "Stage7 holdout rows are visible and mostly selected by krk.stage0_basin.",
-            "Observation source terms are under-instrumented; most records expose only active_landmark_label.",
-            "Several rows expose only one provider in the retained top suggestions, limiting strategy separability.",
-            "The current observation export is useful for auditability but not enough for sandbox arbiter design."
-        ],
+        "findings": findings,
         "decision": {
             "status": status,
             "sandbox_ready": sandbox_ready,

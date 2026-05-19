@@ -359,7 +359,7 @@ KRK strategy arbiter observation separability review v0:
 - `reports/krk_strategy_arbiter_observation_separability_review_v0.json`
 - `reports/krk_strategy_arbiter_observation_separability_review_v0.md`
 
-The review found the observation layer is audit-useful but under-instrumented for sandbox design. All `12` records had only one source term, and `11/12` records exposed only one provider family in retained proposals. Status: `observation_context_underinstrumented`. Runtime arbitration remains blocked. The next allowed implementation is trace-only enrichment of observation metadata with existing KRK context terms; no provider support, score changes, Stage 7 repair, Stage 7 promotion, or Stage 8 training is authorized.
+The first review found the observation layer was audit-useful but under-instrumented. The trace-only observation was then enriched with existing KRK context terms and all-provider summaries without writing those terms back to runtime blackboard state or affecting selection. The regenerated review now reports source-term counts between `13` and `21`, `7` provider families in each observation summary, and status `observation_frames_ready_for_non_causal_selector_probe`. Runtime arbitration remains blocked. The next allowed step is a replay-free observation selector probe only; no provider support, score changes, Stage 7 repair, Stage 7 promotion, or Stage 8 training is authorized.
 
 ## Performance Rules
 

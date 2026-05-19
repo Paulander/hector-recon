@@ -599,12 +599,26 @@ def _suggestion_move_uci(item: dict) -> str | None:
     return move.uci() if hasattr(move, "uci") else str(move)
 
 
+def _trace_only_krk_context_terms(board: chess.Board | None) -> dict:
+    if board is None:
+        return {}
+    try:
+        from recon_lite_chess.krk_baseline_nodes import _compute_krk_context_terms
+    except Exception:
+        return {}
+    try:
+        return dict(_compute_krk_context_terms(board) or {})
+    except Exception:
+        return {}
+
+
 def _krk_strategy_arbiter_observation_for_suggestions(
     suggestions: list[dict],
     *,
     selected_suggestion: dict | None = None,
     active_landmark_label: str | None = None,
     visible_terms: dict | None = None,
+    board: chess.Board | None = None,
     limit: int = 10,
 ) -> dict:
     """Build a trace-only strategy-arbiter observation after normal selection.
@@ -614,7 +628,18 @@ def _krk_strategy_arbiter_observation_for_suggestions(
     suggestion frame so later validators can compare strategy ownership.
     """
     provider_rank_counts: dict[str, int] = {}
+    all_provider_counts: dict[str, int] = {}
+    for item in suggestions:
+        skill_id = _skill_id_for_suggestion(item)
+        all_provider_counts[skill_id] = all_provider_counts.get(skill_id, 0) + 1
     provider_candidates = []
+    trace_terms = dict(_trace_only_krk_context_terms(board))
+    trace_terms.update(visible_terms or {})
+    active_source_terms = sorted(
+        str(term)
+        for term, value in trace_terms.items()
+        if bool(value)
+    )[:32]
     for item in suggestions[:max(0, limit)]:
         skill_id = _skill_id_for_suggestion(item)
         provider_rank_counts[skill_id] = provider_rank_counts.get(skill_id, 0) + 1
@@ -629,11 +654,7 @@ def _krk_strategy_arbiter_observation_for_suggestions(
             "raw_score": raw_score,
             "provider_local_rank": provider_local_rank,
             "normalized_score": 1.0 / float(provider_local_rank),
-            "source_terms": sorted(
-                str(term)
-                for term, value in (visible_terms or {}).items()
-                if bool(value)
-            )[:32],
+            "source_terms": active_source_terms,
             "role_licenses": sorted(
                 str(key)
                 for key in meta.keys()
@@ -662,12 +683,12 @@ def _krk_strategy_arbiter_observation_for_suggestions(
         "active_landmark_label": str(active_landmark_label or ""),
         "selected_provider_before_observation": selected_skill,
         "selected_move_before_observation": selected_move,
-        "source_terms": sorted(
-            str(term)
-            for term, value in (visible_terms or {}).items()
-            if bool(value)
-        )[:32],
+        "source_terms": active_source_terms,
+        "trace_only_context_term_count": len(trace_terms),
         "proposal_count": len(provider_candidates),
+        "all_suggestion_count": len(suggestions),
+        "unique_provider_count": len(all_provider_counts),
+        "provider_summary": dict(sorted(all_provider_counts.items())),
         "provider_candidates": provider_candidates,
         "blocked_causal_actions": [
             "provider_selection",
@@ -2854,6 +2875,7 @@ def _choose_move_details_impl(
             selected_suggestion=selected_suggestion,
             active_landmark_label=active_landmark_label,
             visible_terms=env.get("blackboard", {}).get("krk_visible_terms", {}) or {},
+            board=board,
             limit=suggestion_limit,
         )
     clean_suggestions = []

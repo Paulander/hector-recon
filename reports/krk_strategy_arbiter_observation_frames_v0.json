@@ -19,6 +19,7 @@
       "frame_id": "cp.krk.state.069e81a609ed",
       "observation": {
         "active_landmark_label": "box_shrink",
+        "all_suggestion_count": 37,
         "arbiter_id": "krk.strategy_arbiter.trace_only.v0",
         "blocked_causal_actions": [
           "provider_selection",
@@ -46,7 +47,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -63,7 +79,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -80,7 +111,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -97,7 +143,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -114,7 +175,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -131,7 +207,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -148,7 +239,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -165,7 +271,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -182,7 +303,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -199,18 +335,59 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           }
         ],
+        "provider_summary": {
+          "krk.drive_to_edge": 3,
+          "krk.edge_trap_close": 4,
+          "krk.edge_trap_enemy_between": 6,
+          "krk.edge_trap_wrong_tempo": 2,
+          "krk.fence_established": 1,
+          "krk.mate_in_1": 2,
+          "krk.stage0_basin": 19
+        },
         "recommendation_only": true,
         "schema_version": "krk_strategy_arbiter_observation.v0",
         "score_delta": 0.0,
         "selected_move_before_observation": "e2d1",
         "selected_provider_before_observation": "krk.stage0_basin",
         "source_terms": [
-          "active_landmark_label.box_shrink"
-        ]
+          "active_landmark_label.box_shrink",
+          "black_king_escape_available",
+          "box_area_large",
+          "box_shrink_drive_repair_available",
+          "drive_to_edge_affordance_after_box_shrink",
+          "enemy_king_edge_distance_bin",
+          "enemy_king_not_at_edge",
+          "fence_or_cut_not_preserved",
+          "king_support_improvement_move_exists",
+          "repair_or_reestablish_cut_available",
+          "rook_has_safe_lateral_transfer",
+          "rook_safe",
+          "safe_check_available",
+          "safe_rook_edge_transfer_available",
+          "safe_rook_long_transfer_available",
+          "white_king_support_available"
+        ],
+        "trace_only_context_term_count": 45,
+        "unique_provider_count": 7
       },
       "schema_version": "krk_strategy_arbiter_observation_record.v0",
       "selected_move": "e2d1",
@@ -226,6 +403,7 @@
       "frame_id": "cp.krk.state.0926f12f8e8f",
       "observation": {
         "active_landmark_label": "box_shrink",
+        "all_suggestion_count": 37,
         "arbiter_id": "krk.strategy_arbiter.trace_only.v0",
         "blocked_causal_actions": [
           "provider_selection",
@@ -253,7 +431,26 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "box_shrink_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           },
           {
@@ -270,7 +467,26 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "box_shrink_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           },
           {
@@ -287,7 +503,26 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "box_shrink_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           },
           {
@@ -304,7 +539,26 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "box_shrink_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           },
           {
@@ -321,7 +575,26 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "box_shrink_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           },
           {
@@ -338,7 +611,26 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "box_shrink_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           },
           {
@@ -355,7 +647,26 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "box_shrink_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           },
           {
@@ -372,7 +683,26 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "box_shrink_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           },
           {
@@ -389,7 +719,26 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "box_shrink_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           },
           {
@@ -406,18 +755,67 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "box_shrink_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           }
         ],
+        "provider_summary": {
+          "krk.drive_to_edge": 3,
+          "krk.edge_trap_close": 4,
+          "krk.edge_trap_enemy_between": 6,
+          "krk.edge_trap_wrong_tempo": 2,
+          "krk.fence_established": 1,
+          "krk.mate_in_1": 2,
+          "krk.stage0_basin": 19
+        },
         "recommendation_only": true,
         "schema_version": "krk_strategy_arbiter_observation.v0",
         "score_delta": 0.0,
         "selected_move_before_observation": "e4f3",
         "selected_provider_before_observation": "krk.stage0_basin",
         "source_terms": [
-          "active_landmark_label.box_shrink"
-        ]
+          "active_landmark_label.box_shrink",
+          "box_shrink_available",
+          "edge_rook_transfer_recovery_available",
+          "edge_trap_shape_available",
+          "enemy_king_near_edge",
+          "enemy_king_restricted",
+          "fence_exists",
+          "fence_needs_repair",
+          "king_approach_after_fence_available",
+          "king_support_improvement_move_exists",
+          "post_fence_conversion_needed",
+          "repair_or_reestablish_cut_available",
+          "rook_has_safe_lateral_transfer",
+          "rook_safe",
+          "rook_transfer_after_fence_available",
+          "safe_check_available",
+          "safe_rook_edge_transfer_available",
+          "safe_rook_long_transfer_available",
+          "white_king_can_improve_support",
+          "wrong_tempo_detected"
+        ],
+        "trace_only_context_term_count": 45,
+        "unique_provider_count": 7
       },
       "schema_version": "krk_strategy_arbiter_observation_record.v0",
       "selected_move": "e4f3",
@@ -433,6 +831,7 @@
       "frame_id": "cp.krk.state.0afbf11aa123",
       "observation": {
         "active_landmark_label": "box_shrink",
+        "all_suggestion_count": 37,
         "arbiter_id": "krk.strategy_arbiter.trace_only.v0",
         "blocked_causal_actions": [
           "provider_selection",
@@ -460,7 +859,19 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "enemy_king_near_edge",
+              "enemy_king_not_at_edge",
+              "enemy_king_restricted",
+              "fence_or_cut_not_preserved",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -477,7 +888,19 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "enemy_king_near_edge",
+              "enemy_king_not_at_edge",
+              "enemy_king_restricted",
+              "fence_or_cut_not_preserved",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -494,7 +917,19 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "enemy_king_near_edge",
+              "enemy_king_not_at_edge",
+              "enemy_king_restricted",
+              "fence_or_cut_not_preserved",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -511,7 +946,19 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "enemy_king_near_edge",
+              "enemy_king_not_at_edge",
+              "enemy_king_restricted",
+              "fence_or_cut_not_preserved",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -528,7 +975,19 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "enemy_king_near_edge",
+              "enemy_king_not_at_edge",
+              "enemy_king_restricted",
+              "fence_or_cut_not_preserved",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -545,7 +1004,19 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "enemy_king_near_edge",
+              "enemy_king_not_at_edge",
+              "enemy_king_restricted",
+              "fence_or_cut_not_preserved",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -562,7 +1033,19 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "enemy_king_near_edge",
+              "enemy_king_not_at_edge",
+              "enemy_king_restricted",
+              "fence_or_cut_not_preserved",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -579,7 +1062,19 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "enemy_king_near_edge",
+              "enemy_king_not_at_edge",
+              "enemy_king_restricted",
+              "fence_or_cut_not_preserved",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -596,7 +1091,19 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "enemy_king_near_edge",
+              "enemy_king_not_at_edge",
+              "enemy_king_restricted",
+              "fence_or_cut_not_preserved",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -613,18 +1120,53 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "enemy_king_near_edge",
+              "enemy_king_not_at_edge",
+              "enemy_king_restricted",
+              "fence_or_cut_not_preserved",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           }
         ],
+        "provider_summary": {
+          "krk.drive_to_edge": 3,
+          "krk.edge_trap_close": 4,
+          "krk.edge_trap_enemy_between": 6,
+          "krk.edge_trap_wrong_tempo": 2,
+          "krk.fence_established": 1,
+          "krk.mate_in_1": 2,
+          "krk.stage0_basin": 19
+        },
         "recommendation_only": true,
         "schema_version": "krk_strategy_arbiter_observation.v0",
         "score_delta": 0.0,
         "selected_move_before_observation": "e3a3",
         "selected_provider_before_observation": "krk.stage0_basin",
         "source_terms": [
-          "active_landmark_label.box_shrink"
-        ]
+          "active_landmark_label.box_shrink",
+          "black_king_escape_available",
+          "enemy_king_near_edge",
+          "enemy_king_not_at_edge",
+          "enemy_king_restricted",
+          "fence_or_cut_not_preserved",
+          "repair_or_reestablish_cut_available",
+          "rook_has_safe_lateral_transfer",
+          "rook_safe",
+          "safe_check_available",
+          "safe_rook_edge_transfer_available",
+          "safe_rook_long_transfer_available",
+          "white_king_support_available"
+        ],
+        "trace_only_context_term_count": 45,
+        "unique_provider_count": 7
       },
       "schema_version": "krk_strategy_arbiter_observation_record.v0",
       "selected_move": "e3a3",
@@ -640,6 +1182,7 @@
       "frame_id": "cp.krk.state.38aed2f35911",
       "observation": {
         "active_landmark_label": "box_shrink",
+        "all_suggestion_count": 37,
         "arbiter_id": "krk.strategy_arbiter.trace_only.v0",
         "blocked_causal_actions": [
           "provider_selection",
@@ -667,7 +1210,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -684,7 +1242,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -701,7 +1274,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -718,7 +1306,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -735,7 +1338,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -752,7 +1370,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -769,7 +1402,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -786,7 +1434,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -803,7 +1466,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -820,18 +1498,59 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           }
         ],
+        "provider_summary": {
+          "krk.drive_to_edge": 3,
+          "krk.edge_trap_close": 4,
+          "krk.edge_trap_enemy_between": 6,
+          "krk.edge_trap_wrong_tempo": 2,
+          "krk.fence_established": 1,
+          "krk.mate_in_1": 2,
+          "krk.stage0_basin": 19
+        },
         "recommendation_only": true,
         "schema_version": "krk_strategy_arbiter_observation.v0",
         "score_delta": 0.0,
         "selected_move_before_observation": "d1e2",
         "selected_provider_before_observation": "krk.stage0_basin",
         "source_terms": [
-          "active_landmark_label.box_shrink"
-        ]
+          "active_landmark_label.box_shrink",
+          "black_king_escape_available",
+          "box_area_large",
+          "box_shrink_drive_repair_available",
+          "drive_to_edge_affordance_after_box_shrink",
+          "enemy_king_edge_distance_bin",
+          "enemy_king_not_at_edge",
+          "fence_or_cut_not_preserved",
+          "king_support_improvement_move_exists",
+          "repair_or_reestablish_cut_available",
+          "rook_has_safe_lateral_transfer",
+          "rook_safe",
+          "safe_check_available",
+          "safe_rook_edge_transfer_available",
+          "safe_rook_long_transfer_available",
+          "white_king_can_improve_support"
+        ],
+        "trace_only_context_term_count": 45,
+        "unique_provider_count": 7
       },
       "schema_version": "krk_strategy_arbiter_observation_record.v0",
       "selected_move": "d1e2",
@@ -847,6 +1566,7 @@
       "frame_id": "cp.krk.state.4a464b782ecb",
       "observation": {
         "active_landmark_label": "box_shrink",
+        "all_suggestion_count": 37,
         "arbiter_id": "krk.strategy_arbiter.trace_only.v0",
         "blocked_causal_actions": [
           "provider_selection",
@@ -874,7 +1594,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -891,7 +1626,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -908,7 +1658,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -925,7 +1690,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -942,7 +1722,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -959,7 +1754,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -976,7 +1786,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -993,7 +1818,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1010,7 +1850,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1027,18 +1882,59 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           }
         ],
+        "provider_summary": {
+          "krk.drive_to_edge": 3,
+          "krk.edge_trap_close": 4,
+          "krk.edge_trap_enemy_between": 6,
+          "krk.edge_trap_wrong_tempo": 2,
+          "krk.fence_established": 1,
+          "krk.mate_in_1": 2,
+          "krk.stage0_basin": 19
+        },
         "recommendation_only": true,
         "schema_version": "krk_strategy_arbiter_observation.v0",
         "score_delta": 0.0,
         "selected_move_before_observation": "a8d8",
         "selected_provider_before_observation": "krk.stage0_basin",
         "source_terms": [
-          "active_landmark_label.box_shrink"
-        ]
+          "active_landmark_label.box_shrink",
+          "black_king_escape_available",
+          "box_area_large",
+          "box_shrink_drive_repair_available",
+          "drive_to_edge_affordance_after_box_shrink",
+          "enemy_king_edge_distance_bin",
+          "enemy_king_not_at_edge",
+          "fence_or_cut_not_preserved",
+          "king_support_improvement_move_exists",
+          "repair_or_reestablish_cut_available",
+          "rook_has_safe_lateral_transfer",
+          "rook_safe",
+          "safe_check_available",
+          "safe_rook_edge_transfer_available",
+          "safe_rook_long_transfer_available",
+          "white_king_support_available"
+        ],
+        "trace_only_context_term_count": 45,
+        "unique_provider_count": 7
       },
       "schema_version": "krk_strategy_arbiter_observation_record.v0",
       "selected_move": "a8d8",
@@ -1054,6 +1950,7 @@
       "frame_id": "cp.krk.state.4e34ad0b2f29",
       "observation": {
         "active_landmark_label": "box_shrink",
+        "all_suggestion_count": 37,
         "arbiter_id": "krk.strategy_arbiter.trace_only.v0",
         "blocked_causal_actions": [
           "provider_selection",
@@ -1081,7 +1978,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1098,7 +2010,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1115,7 +2042,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1132,7 +2074,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1149,7 +2106,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1166,7 +2138,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1183,7 +2170,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1200,7 +2202,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1217,7 +2234,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1234,18 +2266,59 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           }
         ],
+        "provider_summary": {
+          "krk.drive_to_edge": 3,
+          "krk.edge_trap_close": 4,
+          "krk.edge_trap_enemy_between": 6,
+          "krk.edge_trap_wrong_tempo": 2,
+          "krk.fence_established": 1,
+          "krk.mate_in_1": 2,
+          "krk.stage0_basin": 19
+        },
         "recommendation_only": true,
         "schema_version": "krk_strategy_arbiter_observation.v0",
         "score_delta": 0.0,
         "selected_move_before_observation": "a5h5",
         "selected_provider_before_observation": "krk.stage0_basin",
         "source_terms": [
-          "active_landmark_label.box_shrink"
-        ]
+          "active_landmark_label.box_shrink",
+          "black_king_escape_available",
+          "box_area_large",
+          "box_shrink_drive_repair_available",
+          "drive_to_edge_affordance_after_box_shrink",
+          "enemy_king_edge_distance_bin",
+          "enemy_king_not_at_edge",
+          "fence_or_cut_not_preserved",
+          "king_support_improvement_move_exists",
+          "repair_or_reestablish_cut_available",
+          "rook_has_safe_lateral_transfer",
+          "rook_safe",
+          "safe_check_available",
+          "safe_rook_edge_transfer_available",
+          "safe_rook_long_transfer_available",
+          "white_king_support_available"
+        ],
+        "trace_only_context_term_count": 45,
+        "unique_provider_count": 7
       },
       "schema_version": "krk_strategy_arbiter_observation_record.v0",
       "selected_move": "a5h5",
@@ -1261,6 +2334,7 @@
       "frame_id": "cp.krk.state.ac0b7ed500ea",
       "observation": {
         "active_landmark_label": "box_shrink",
+        "all_suggestion_count": 37,
         "arbiter_id": "krk.strategy_arbiter.trace_only.v0",
         "blocked_causal_actions": [
           "provider_selection",
@@ -1288,7 +2362,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -1305,7 +2394,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -1322,7 +2426,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -1339,7 +2458,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -1356,7 +2490,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -1373,7 +2522,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -1390,7 +2554,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -1407,7 +2586,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -1424,7 +2618,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -1441,18 +2650,59 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           }
         ],
+        "provider_summary": {
+          "krk.drive_to_edge": 3,
+          "krk.edge_trap_close": 4,
+          "krk.edge_trap_enemy_between": 6,
+          "krk.edge_trap_wrong_tempo": 2,
+          "krk.fence_established": 1,
+          "krk.mate_in_1": 2,
+          "krk.stage0_basin": 19
+        },
         "recommendation_only": true,
         "schema_version": "krk_strategy_arbiter_observation.v0",
         "score_delta": 0.0,
         "selected_move_before_observation": "a4a8",
         "selected_provider_before_observation": "krk.stage0_basin",
         "source_terms": [
-          "active_landmark_label.box_shrink"
-        ]
+          "active_landmark_label.box_shrink",
+          "black_king_escape_available",
+          "box_area_large",
+          "box_shrink_drive_repair_available",
+          "drive_to_edge_affordance_after_box_shrink",
+          "enemy_king_edge_distance_bin",
+          "enemy_king_not_at_edge",
+          "fence_or_cut_not_preserved",
+          "king_support_improvement_move_exists",
+          "repair_or_reestablish_cut_available",
+          "rook_has_safe_lateral_transfer",
+          "rook_safe",
+          "safe_check_available",
+          "safe_rook_edge_transfer_available",
+          "safe_rook_long_transfer_available",
+          "white_king_can_improve_support"
+        ],
+        "trace_only_context_term_count": 45,
+        "unique_provider_count": 7
       },
       "schema_version": "krk_strategy_arbiter_observation_record.v0",
       "selected_move": "a4a8",
@@ -1468,6 +2718,7 @@
       "frame_id": "cp.krk.state.b6796dfb62ff",
       "observation": {
         "active_landmark_label": "box_shrink",
+        "all_suggestion_count": 37,
         "arbiter_id": "krk.strategy_arbiter.trace_only.v0",
         "blocked_causal_actions": [
           "provider_selection",
@@ -1495,7 +2746,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -1512,7 +2778,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -1529,7 +2810,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -1546,7 +2842,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -1563,7 +2874,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -1580,7 +2906,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -1597,7 +2938,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -1614,7 +2970,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -1631,7 +3002,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           },
           {
@@ -1648,18 +3034,59 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
             ]
           }
         ],
+        "provider_summary": {
+          "krk.drive_to_edge": 3,
+          "krk.edge_trap_close": 4,
+          "krk.edge_trap_enemy_between": 6,
+          "krk.edge_trap_wrong_tempo": 2,
+          "krk.fence_established": 1,
+          "krk.mate_in_1": 2,
+          "krk.stage0_basin": 19
+        },
         "recommendation_only": true,
         "schema_version": "krk_strategy_arbiter_observation.v0",
         "score_delta": 0.0,
         "selected_move_before_observation": "a6a8",
         "selected_provider_before_observation": "krk.stage0_basin",
         "source_terms": [
-          "active_landmark_label.box_shrink"
-        ]
+          "active_landmark_label.box_shrink",
+          "black_king_escape_available",
+          "box_area_large",
+          "box_shrink_drive_repair_available",
+          "drive_to_edge_affordance_after_box_shrink",
+          "enemy_king_edge_distance_bin",
+          "enemy_king_not_at_edge",
+          "fence_or_cut_not_preserved",
+          "king_support_improvement_move_exists",
+          "repair_or_reestablish_cut_available",
+          "rook_has_safe_lateral_transfer",
+          "rook_safe",
+          "safe_check_available",
+          "safe_rook_edge_transfer_available",
+          "safe_rook_long_transfer_available",
+          "white_king_can_improve_support"
+        ],
+        "trace_only_context_term_count": 45,
+        "unique_provider_count": 7
       },
       "schema_version": "krk_strategy_arbiter_observation_record.v0",
       "selected_move": "a6a8",
@@ -1675,6 +3102,7 @@
       "frame_id": "cp.krk.state.ff6652c8832c",
       "observation": {
         "active_landmark_label": "box_shrink",
+        "all_suggestion_count": 37,
         "arbiter_id": "krk.strategy_arbiter.trace_only.v0",
         "blocked_causal_actions": [
           "provider_selection",
@@ -1702,7 +3130,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1719,7 +3162,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1736,7 +3194,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1753,7 +3226,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1770,7 +3258,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1787,7 +3290,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1804,7 +3322,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1821,7 +3354,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1838,7 +3386,22 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1855,18 +3418,59 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.box_shrink"
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           }
         ],
+        "provider_summary": {
+          "krk.drive_to_edge": 3,
+          "krk.edge_trap_close": 4,
+          "krk.edge_trap_enemy_between": 6,
+          "krk.edge_trap_wrong_tempo": 2,
+          "krk.fence_established": 1,
+          "krk.mate_in_1": 2,
+          "krk.stage0_basin": 19
+        },
         "recommendation_only": true,
         "schema_version": "krk_strategy_arbiter_observation.v0",
         "score_delta": 0.0,
         "selected_move_before_observation": "e4e8",
         "selected_provider_before_observation": "krk.stage0_basin",
         "source_terms": [
-          "active_landmark_label.box_shrink"
-        ]
+          "active_landmark_label.box_shrink",
+          "black_king_escape_available",
+          "box_area_large",
+          "box_shrink_drive_repair_available",
+          "drive_to_edge_affordance_after_box_shrink",
+          "enemy_king_edge_distance_bin",
+          "enemy_king_not_at_edge",
+          "fence_or_cut_not_preserved",
+          "king_support_improvement_move_exists",
+          "repair_or_reestablish_cut_available",
+          "rook_has_safe_lateral_transfer",
+          "rook_safe",
+          "safe_check_available",
+          "safe_rook_edge_transfer_available",
+          "safe_rook_long_transfer_available",
+          "white_king_support_available"
+        ],
+        "trace_only_context_term_count": 45,
+        "unique_provider_count": 7
       },
       "schema_version": "krk_strategy_arbiter_observation_record.v0",
       "selected_move": "e4e8",
@@ -1882,6 +3486,7 @@
       "frame_id": "cp.krk.state.02cfd843a2cf",
       "observation": {
         "active_landmark_label": "wrong_tempo_control",
+        "all_suggestion_count": 37,
         "arbiter_id": "krk.strategy_arbiter.trace_only.v0",
         "blocked_causal_actions": [
           "provider_selection",
@@ -1909,7 +3514,27 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1926,7 +3551,27 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1943,7 +3588,27 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1960,7 +3625,27 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1977,7 +3662,27 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -1994,7 +3699,27 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -2011,7 +3736,27 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -2028,7 +3773,27 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -2045,7 +3810,27 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -2062,18 +3847,69 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           }
         ],
+        "provider_summary": {
+          "krk.drive_to_edge": 3,
+          "krk.edge_trap_close": 4,
+          "krk.edge_trap_enemy_between": 6,
+          "krk.edge_trap_wrong_tempo": 2,
+          "krk.fence_established": 1,
+          "krk.mate_in_1": 2,
+          "krk.stage0_basin": 19
+        },
         "recommendation_only": true,
         "schema_version": "krk_strategy_arbiter_observation.v0",
         "score_delta": 0.0,
         "selected_move_before_observation": "f6f7",
         "selected_provider_before_observation": "krk.stage0_basin",
         "source_terms": [
-          "active_landmark_label.wrong_tempo_control"
-        ]
+          "active_landmark_label.wrong_tempo_control",
+          "box_shrink_available",
+          "corner_net_pressure_available",
+          "cut_stable",
+          "edge_rook_transfer_recovery_available",
+          "edge_trap_close_geometry",
+          "edge_trap_shape_available",
+          "enemy_king_near_edge",
+          "enemy_king_restricted",
+          "fence_already_satisfied",
+          "fence_exists",
+          "fence_stable",
+          "post_fence_conversion_needed",
+          "repair_or_reestablish_cut_available",
+          "rook_has_safe_lateral_transfer",
+          "rook_safe",
+          "rook_transfer_after_fence_available",
+          "safe_check_available",
+          "safe_rook_edge_transfer_available",
+          "safe_rook_long_transfer_available",
+          "white_king_support_available"
+        ],
+        "trace_only_context_term_count": 45,
+        "unique_provider_count": 7
       },
       "schema_version": "krk_strategy_arbiter_observation_record.v0",
       "selected_move": "f6f7",
@@ -2089,6 +3925,7 @@
       "frame_id": "cp.krk.state.02feb8593cc6",
       "observation": {
         "active_landmark_label": "fence_established",
+        "all_suggestion_count": 37,
         "arbiter_id": "krk.strategy_arbiter.trace_only.v0",
         "blocked_causal_actions": [
           "provider_selection",
@@ -2109,14 +3946,34 @@
             "provider_id": "krk.fence_established",
             "provider_local_rank": 1,
             "provider_version": "",
-            "raw_score": -0.013539902069667974,
+            "raw_score": -0.013539836504558722,
             "role_licenses": [
               "raw_score_before_role_bonus",
               "score_after_role_bonus"
             ],
             "skill_id": "krk.fence_established",
             "source_terms": [
-              "active_landmark_label.fence_established"
+              "active_landmark_label.fence_established",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           },
           {
@@ -2133,7 +3990,27 @@
             ],
             "skill_id": "krk.edge_trap_close",
             "source_terms": [
-              "active_landmark_label.fence_established"
+              "active_landmark_label.fence_established",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           },
           {
@@ -2150,7 +4027,27 @@
             ],
             "skill_id": "krk.edge_trap_wrong_tempo",
             "source_terms": [
-              "active_landmark_label.fence_established"
+              "active_landmark_label.fence_established",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           },
           {
@@ -2167,7 +4064,27 @@
             ],
             "skill_id": "krk.edge_trap_close",
             "source_terms": [
-              "active_landmark_label.fence_established"
+              "active_landmark_label.fence_established",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           },
           {
@@ -2184,7 +4101,27 @@
             ],
             "skill_id": "krk.edge_trap_enemy_between",
             "source_terms": [
-              "active_landmark_label.fence_established"
+              "active_landmark_label.fence_established",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           },
           {
@@ -2201,7 +4138,27 @@
             ],
             "skill_id": "krk.edge_trap_wrong_tempo",
             "source_terms": [
-              "active_landmark_label.fence_established"
+              "active_landmark_label.fence_established",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           },
           {
@@ -2218,7 +4175,27 @@
             ],
             "skill_id": "krk.edge_trap_enemy_between",
             "source_terms": [
-              "active_landmark_label.fence_established"
+              "active_landmark_label.fence_established",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           },
           {
@@ -2235,7 +4212,27 @@
             ],
             "skill_id": "krk.edge_trap_enemy_between",
             "source_terms": [
-              "active_landmark_label.fence_established"
+              "active_landmark_label.fence_established",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           },
           {
@@ -2252,7 +4249,27 @@
             ],
             "skill_id": "krk.edge_trap_enemy_between",
             "source_terms": [
-              "active_landmark_label.fence_established"
+              "active_landmark_label.fence_established",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           },
           {
@@ -2269,23 +4286,74 @@
             ],
             "skill_id": "krk.edge_trap_enemy_between",
             "source_terms": [
-              "active_landmark_label.fence_established"
+              "active_landmark_label.fence_established",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_exists",
+              "fence_needs_repair",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "wrong_tempo_detected"
             ]
           }
         ],
+        "provider_summary": {
+          "krk.drive_to_edge": 3,
+          "krk.edge_trap_close": 4,
+          "krk.edge_trap_enemy_between": 6,
+          "krk.edge_trap_wrong_tempo": 2,
+          "krk.fence_established": 1,
+          "krk.mate_in_1": 2,
+          "krk.stage0_basin": 19
+        },
         "recommendation_only": true,
         "schema_version": "krk_strategy_arbiter_observation.v0",
         "score_delta": 0.0,
         "selected_move_before_observation": "h7c7",
         "selected_provider_before_observation": "krk.fence_established",
         "source_terms": [
-          "active_landmark_label.fence_established"
-        ]
+          "active_landmark_label.fence_established",
+          "box_shrink_available",
+          "corner_net_pressure_available",
+          "edge_rook_transfer_recovery_available",
+          "edge_trap_shape_available",
+          "enemy_king_near_edge",
+          "enemy_king_restricted",
+          "fence_exists",
+          "fence_needs_repair",
+          "king_approach_after_fence_available",
+          "king_support_improvement_move_exists",
+          "post_fence_conversion_needed",
+          "repair_or_reestablish_cut_available",
+          "rook_has_safe_lateral_transfer",
+          "rook_safe",
+          "rook_transfer_after_fence_available",
+          "safe_check_available",
+          "safe_rook_edge_transfer_available",
+          "safe_rook_long_transfer_available",
+          "white_king_can_improve_support",
+          "wrong_tempo_detected"
+        ],
+        "trace_only_context_term_count": 45,
+        "unique_provider_count": 7
       },
       "schema_version": "krk_strategy_arbiter_observation_record.v0",
       "selected_move": "h7c7",
       "selected_provider": "krk.fence_established",
-      "selected_score": -0.013539902069667974,
+      "selected_score": -0.013539836504558722,
       "source_stage": "stage5",
       "state_id": "state.02feb8593cc6"
     },
@@ -2296,6 +4364,7 @@
       "frame_id": "cp.krk.state.1e4f48a672e8",
       "observation": {
         "active_landmark_label": "wrong_tempo_control",
+        "all_suggestion_count": 37,
         "arbiter_id": "krk.strategy_arbiter.trace_only.v0",
         "blocked_causal_actions": [
           "provider_selection",
@@ -2323,7 +4392,26 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -2340,7 +4428,26 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -2357,7 +4464,26 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -2374,7 +4500,26 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -2391,7 +4536,26 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -2408,7 +4572,26 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -2425,7 +4608,26 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -2442,7 +4644,26 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -2459,7 +4680,26 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           },
           {
@@ -2476,18 +4716,67 @@
             ],
             "skill_id": "krk.stage0_basin",
             "source_terms": [
-              "active_landmark_label.wrong_tempo_control"
+              "active_landmark_label.wrong_tempo_control",
+              "box_shrink_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
             ]
           }
         ],
+        "provider_summary": {
+          "krk.drive_to_edge": 3,
+          "krk.edge_trap_close": 4,
+          "krk.edge_trap_enemy_between": 6,
+          "krk.edge_trap_wrong_tempo": 2,
+          "krk.fence_established": 1,
+          "krk.mate_in_1": 2,
+          "krk.stage0_basin": 19
+        },
         "recommendation_only": true,
         "schema_version": "krk_strategy_arbiter_observation.v0",
         "score_delta": 0.0,
         "selected_move_before_observation": "b7b1",
         "selected_provider_before_observation": "krk.stage0_basin",
         "source_terms": [
-          "active_landmark_label.wrong_tempo_control"
-        ]
+          "active_landmark_label.wrong_tempo_control",
+          "box_shrink_available",
+          "cut_stable",
+          "edge_rook_transfer_recovery_available",
+          "edge_trap_close_geometry",
+          "edge_trap_shape_available",
+          "enemy_king_near_edge",
+          "enemy_king_restricted",
+          "fence_already_satisfied",
+          "fence_exists",
+          "fence_stable",
+          "post_fence_conversion_needed",
+          "repair_or_reestablish_cut_available",
+          "rook_has_safe_lateral_transfer",
+          "rook_safe",
+          "rook_transfer_after_fence_available",
+          "safe_check_available",
+          "safe_rook_edge_transfer_available",
+          "safe_rook_long_transfer_available",
+          "white_king_support_available"
+        ],
+        "trace_only_context_term_count": 45,
+        "unique_provider_count": 7
       },
       "schema_version": "krk_strategy_arbiter_observation_record.v0",
       "selected_move": "b7b1",
