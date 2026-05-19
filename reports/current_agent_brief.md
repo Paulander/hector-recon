@@ -184,6 +184,15 @@ KRK Strategy Monitor maturity gate v0:
 
 The maturity gate classifies extracted terms before any runtime/sandbox work. `box_area_no_longer_decision_relevant` and `king_support_improves_after_move` are context features, `safe_repair_move_exists` is too broad, `cut_or_fence_restored_after_move` is a repair monitor candidate, and `post_plan_stagnation` plus `local_provider_competition_failed` are the strongest sparse internal-terminal candidates. No term is causal-ready. High-priority backlog terms remain `edge_net_pressure_increases_after_move`, `safe_edge_net_tighten_move_exists`, `king_support_aligned_with_edge_net`, `handoff_success_after_plan`, and `multi_step_progress_required`.
 
+KRK internal-terminal candidates v0:
+
+- `reports/strategy_arbitration/krk_internal_terminal_candidates_v0.json`
+- `reports/strategy_arbitration/krk_internal_terminal_candidates_v0.md`
+- `reports/strategy_arbitration/krk_internal_terminal_validation_v0.json`
+- `reports/strategy_arbitration/krk_internal_terminal_validation_v0.md`
+
+Four non-causal `InternalTerminalSpec` candidates are defined: `terminal.krk.local_provider_competition_failed`, `terminal.krk.post_plan_stagnation`, `terminal.krk.box_shrink_owner_exit_pressure`, and `terminal.krk.repair_needed_monitor`. Replay-free validation keeps `local_provider_competition_failed` and `post_plan_stagnation` as the strongest internal-terminal candidates, but both are sparse and Stage7-only. `box_shrink_owner_exit_pressure` and `repair_needed_monitor` remain monitoring-only / companion-dependent. No runtime terminal, causal affordance, routing change, Stage 7 repair, Stage 7 promotion, or Stage 8 training is authorized.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -243,6 +252,10 @@ reports/strategy_arbitration/krk_strategy_monitor_companion_audit_v1.json
 reports/strategy_arbitration/krk_strategy_monitor_companion_audit_v1.md
 reports/strategy_arbitration/krk_strategy_monitor_maturity_gate_v0.json
 reports/strategy_arbitration/krk_strategy_monitor_maturity_gate_v0.md
+reports/strategy_arbitration/krk_internal_terminal_candidates_v0.json
+reports/strategy_arbitration/krk_internal_terminal_candidates_v0.md
+reports/strategy_arbitration/krk_internal_terminal_validation_v0.json
+reports/strategy_arbitration/krk_internal_terminal_validation_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

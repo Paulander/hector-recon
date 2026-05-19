@@ -93,6 +93,15 @@ assert _maturity_gate_spec.loader is not None
 _maturity_gate = importlib.util.module_from_spec(_maturity_gate_spec)
 _maturity_gate_spec.loader.exec_module(_maturity_gate)
 
+_internal_terminal_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_internal_terminal_candidates",
+    Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_internal_terminal_candidates.py",
+)
+assert _internal_terminal_spec is not None
+assert _internal_terminal_spec.loader is not None
+_internal_terminal = importlib.util.module_from_spec(_internal_terminal_spec)
+_internal_terminal_spec.loader.exec_module(_internal_terminal)
+
 
 def test_strategy_proposal_frame_validation_roundtrip():
     frame = {
@@ -834,3 +843,100 @@ def test_krk_strategy_monitor_maturity_gate_blocks_causal_use(tmp_path):
     assert {
         item["term"]: item["maturity_status"] for item in gate["term_maturity"]
     }["post_plan_stagnation"] == "internal_terminal_candidate"
+
+
+def test_internal_terminal_spec_validation_roundtrip():
+    spec = {
+        "schema_version": "internal_terminal_spec.v1",
+        "terminal_id": "terminal.krk.test_monitor",
+        "monitor_type": "internal_control_test_monitor",
+        "source_monitor_candidates": ["test_monitor"],
+        "source_terms": ["test_term"],
+        "missing_terms": ["missing_term"],
+        "intended_scope": "diagnostic only",
+        "forbidden_causal_uses": ["choose_provider"],
+        "potential_future_consumers": ["GrowthMonitor"],
+        "validation_requirements": ["broader evidence"],
+        "maturity_status": "internal_terminal_candidate",
+        "causal_status": "non_causal",
+        "promotion_status": "monitoring_only",
+    }
+
+    _internal_terminal.validate_internal_terminal_spec(json.loads(json.dumps(spec)))
+
+
+def test_internal_terminal_validation_record_roundtrip():
+    record = {
+        "schema_version": "internal_terminal_validation_record.v1",
+        "terminal_id": "terminal.krk.test_monitor",
+        "state_id": "state.test",
+        "family_id": "state.test",
+        "active_landmark_label": "box_shrink",
+        "source_terms_met": ["local_provider_competition_failed"],
+        "missing_terms": ["route_conflict"],
+        "associated_outcome": "max_plies",
+        "stage": "stage7",
+        "confidence": "replay_free_existing_artifact",
+        "false_positive_risk": "unknown",
+        "false_negative_risk": "unknown",
+        "notes": "roundtrip",
+    }
+
+    _internal_terminal.validate_internal_terminal_validation_record(json.loads(json.dumps(record)))
+
+
+def test_krk_internal_terminal_candidates_and_validation_are_non_causal(tmp_path):
+    report_root = tmp_path / "reports" / "strategy_arbitration"
+    report_root.mkdir(parents=True)
+    (report_root / "krk_visible_monitor_terms_v0.json").write_text(
+        json.dumps(
+            {
+                "records": [
+                    {
+                        "state_id": "state.fail",
+                        "source_stage": "stage7",
+                        "active_landmark_label": "box_shrink",
+                        "associated_outcome": "max_plies",
+                        "terms": {
+                            "local_provider_competition_failed": {"value": True},
+                            "post_plan_stagnation": {"value": True},
+                            "box_area_no_longer_decision_relevant": {"value": True},
+                            "cut_or_fence_restored_after_move": {"value": True},
+                            "safe_repair_move_exists": {"value": True},
+                        },
+                    },
+                    {
+                        "state_id": "state.mate",
+                        "source_stage": "stage5",
+                        "active_landmark_label": "fence_established",
+                        "associated_outcome": "mate",
+                        "terms": {
+                            "local_provider_competition_failed": {"value": False},
+                            "post_plan_stagnation": {"value": False},
+                            "box_area_no_longer_decision_relevant": {"value": False},
+                            "cut_or_fence_restored_after_move": {"value": False},
+                            "safe_repair_move_exists": {"value": True},
+                        },
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    candidates = _internal_terminal.build_candidates(report_root)
+    validation = _internal_terminal.build_validation(report_root, candidates)
+
+    assert candidates["schema_version"] == "krk_internal_terminal_candidates.v0"
+    assert candidates["causal_status"] == "non_causal_design"
+    assert validation["schema_version"] == "krk_internal_terminal_validation.v0"
+    assert validation["causal_status"] == "non_causal_validation"
+    assert validation["runtime_behavior_changed"] is False
+    assert validation["stage7_promotion_allowed"] is False
+    assert validation["stage8_training_allowed"] is False
+    assert validation["summary"]["causal_ready_terminals"] == []
+    assert validation["summary"]["strongest_internal_terminal_candidates"] == [
+        "terminal.krk.local_provider_competition_failed",
+        "terminal.krk.post_plan_stagnation",
+    ]
+    assert all(item["causal_use_blocked"] is True for item in validation["terminal_validations"])
