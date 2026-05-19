@@ -409,6 +409,32 @@ assert _selected_provider_scan_spec.loader is not None
 _selected_provider_scan = importlib.util.module_from_spec(_selected_provider_scan_spec)
 _selected_provider_scan_spec.loader.exec_module(_selected_provider_scan)
 
+_selected_provider_sampling_manifest_spec = importlib.util.spec_from_file_location(
+    "generate_krk_selected_provider_diversity_sampling_manifest",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "generate_krk_selected_provider_diversity_sampling_manifest.py",
+)
+assert _selected_provider_sampling_manifest_spec is not None
+assert _selected_provider_sampling_manifest_spec.loader is not None
+_selected_provider_sampling_manifest = importlib.util.module_from_spec(
+    _selected_provider_sampling_manifest_spec
+)
+_selected_provider_sampling_manifest_spec.loader.exec_module(_selected_provider_sampling_manifest)
+
+_selected_provider_sampling_review_spec = importlib.util.spec_from_file_location(
+    "review_krk_selected_provider_diversity_sampling_manifest",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_selected_provider_diversity_sampling_manifest.py",
+)
+assert _selected_provider_sampling_review_spec is not None
+assert _selected_provider_sampling_review_spec.loader is not None
+_selected_provider_sampling_review = importlib.util.module_from_spec(
+    _selected_provider_sampling_review_spec
+)
+_selected_provider_sampling_review_spec.loader.exec_module(_selected_provider_sampling_review)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -3748,3 +3774,137 @@ def test_krk_selected_provider_diversity_scan_is_replay_free_and_non_causal(tmp_
         "stage0_basin": 1,
     }
     assert scan["decision"]["selector_sandbox_ready"] is False
+
+
+def test_krk_selected_provider_diversity_sampling_manifest_is_selection_only(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    topology = (
+        root
+        / "snapshots"
+        / "krk_triplet_pipeline"
+        / "adaptive_krk_stage6_drive_overlay_composed"
+        / "topology"
+        / "krk_entry_topology.json"
+    )
+    stage5_checkpoint = (
+        root
+        / "snapshots"
+        / "krk_triplet_pipeline"
+        / "adaptive_krk_stage5_fence_clean"
+        / "baseline"
+        / "best_by_stage"
+        / "fence_established.pkl"
+    )
+    stage6_checkpoint = (
+        root
+        / "snapshots"
+        / "krk_triplet_pipeline"
+        / "adaptive_krk_stage6_drive_profile_king_support"
+        / "baseline"
+        / "best_by_stage"
+        / "drive_to_edge.pkl"
+    )
+    topology.parent.mkdir(parents=True, exist_ok=True)
+    stage5_checkpoint.parent.mkdir(parents=True, exist_ok=True)
+    stage6_checkpoint.parent.mkdir(parents=True, exist_ok=True)
+    topology.write_text("{}", encoding="utf-8")
+    stage5_checkpoint.write_text("stage5", encoding="utf-8")
+    stage6_checkpoint.write_text("stage6", encoding="utf-8")
+    (reports / "krk_selected_provider_diversity_evidence_plan_v0.json").write_text(
+        json.dumps({"causal_status": "non_causal_design_plan"}),
+        encoding="utf-8",
+    )
+    (reports / "krk_selected_provider_diversity_replay_free_scan_v0.json").write_text(
+        json.dumps({"causal_status": "non_causal_scan"}),
+        encoding="utf-8",
+    )
+
+    class FakeBoard:
+        turn = True
+
+        def __init__(self, name):
+            self.name = name
+
+        def board_fen(self):
+            return f"8/8/8/8/8/8/8/{self.name}"
+
+        def fen(self):
+            return f"8/8/8/8/8/8/8/{self.name} w - - 0 1"
+
+    def fake_select_eval_position(sample_rng, label, position_mode, source_names):
+        return FakeBoard(label[0])
+
+    monkeypatch.setattr(_selected_provider_sampling_manifest, "ROOT", root)
+    monkeypatch.setattr(
+        _selected_provider_sampling_manifest.diag,
+        "source_stage_names_for_label",
+        lambda label: (label,),
+    )
+    monkeypatch.setattr(
+        _selected_provider_sampling_manifest.diag,
+        "select_eval_position",
+        fake_select_eval_position,
+    )
+
+    manifest = _selected_provider_sampling_manifest.build_manifest(
+        max_jobs=3,
+        per_stage_max=1,
+        max_sample_index=1,
+    )
+
+    assert manifest["schema_version"] == "krk_selected_provider_diversity_sampling_manifest.v0"
+    assert manifest["causal_status"] == "non_causal_sampling_manifest"
+    assert manifest["runtime_behavior_changed"] is False
+    assert manifest["runtime_arbiter_implemented"] is False
+    assert manifest["stage7_promotion_allowed"] is False
+    assert manifest["stage8_training_allowed"] is False
+    assert manifest["binding_summary"]["job_count"] == 3
+    assert manifest["selection_policy"]["playout_labels"] is False
+    assert all(job["source_stage"] != "stage7" for job in manifest["jobs"])
+    assert all(
+        job["execution_binding"]["execution_mode"] == "observe_selected_provider_only"
+        for job in manifest["jobs"]
+    )
+
+
+def test_krk_selected_provider_diversity_sampling_manifest_review_allows_observation_only(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    base_job = {
+        "causal_status": "non_causal_selection_observation_job",
+        "source_stage": "stage4",
+        "execution_binding": {
+            "execution_mode": "observe_selected_provider_only",
+            "composition_profile": "handoff_composition_v1",
+            "enable_diagnostic_caches": True,
+        },
+    }
+    (reports / "krk_selected_provider_diversity_sampling_manifest_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_sampling_manifest",
+                "binding_summary": {"all_bindings_valid": True},
+                "jobs": [
+                    {**base_job, "job_id": "job.stage4", "source_stage": "stage4"},
+                    {**base_job, "job_id": "job.stage5", "source_stage": "stage5"},
+                    {**base_job, "job_id": "job.stage6", "source_stage": "stage6"},
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_selected_provider_sampling_review, "ROOT", root)
+
+    review = _selected_provider_sampling_review.build_review()
+
+    assert review["schema_version"] == "krk_selected_provider_diversity_sampling_manifest_review.v0"
+    assert review["causal_status"] == "non_causal_manifest_review"
+    assert review["runtime_behavior_changed"] is False
+    assert review["runtime_arbiter_implemented"] is False
+    assert review["stage7_promotion_allowed"] is False
+    assert review["stage8_training_allowed"] is False
+    assert review["review_summary"]["observations_allowed"] is True
+    assert review["decision"]["recommended_next_step"] == "run_bounded_selected_provider_observation_scan"
