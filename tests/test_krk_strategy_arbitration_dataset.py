@@ -398,6 +398,17 @@ assert _selected_provider_diversity_plan_spec.loader is not None
 _selected_provider_diversity_plan = importlib.util.module_from_spec(_selected_provider_diversity_plan_spec)
 _selected_provider_diversity_plan_spec.loader.exec_module(_selected_provider_diversity_plan)
 
+_selected_provider_scan_spec = importlib.util.spec_from_file_location(
+    "scan_krk_selected_provider_diversity_replay_free",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "scan_krk_selected_provider_diversity_replay_free.py",
+)
+assert _selected_provider_scan_spec is not None
+assert _selected_provider_scan_spec.loader is not None
+_selected_provider_scan = importlib.util.module_from_spec(_selected_provider_scan_spec)
+_selected_provider_scan_spec.loader.exec_module(_selected_provider_scan)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -3653,3 +3664,87 @@ def test_krk_selected_provider_diversity_evidence_plan_is_design_only(tmp_path, 
     assert plan["minimum_future_evidence"]["stage7_training_rows"] == 0
     assert plan["decision"]["selector_sandbox_ready"] is False
     assert plan["decision"]["recommended_next_step"] == "run_replay_free_selected_provider_diversity_scan"
+
+
+def test_krk_selected_provider_diversity_scan_is_replay_free_and_non_causal(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    (reports / "krk_selected_provider_diversity_evidence_plan_v0.json").write_text(
+        json.dumps({"causal_status": "non_causal_design_plan"}),
+        encoding="utf-8",
+    )
+    (reports / "krk_control_plane_filtered_frames_with_forced_controls_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_augmented_frame_export",
+                "frames": [
+                    {
+                        "state_id": "state.stage4",
+                        "source_stage": "stage4",
+                        "active_landmark_label": "edge_trap_wrong_tempo",
+                        "strategy_proposal_frames": [
+                            {
+                                "provider_id": "krk.edge_trap_close",
+                                "move_uci": "a1a2",
+                                "known_outcome_label": {
+                                    "playout_result": "mate",
+                                    "selected": True,
+                                },
+                            }
+                        ],
+                    },
+                    {
+                        "state_id": "state.stage7",
+                        "source_stage": "stage7",
+                        "active_landmark_label": "box_shrink",
+                        "strategy_proposal_frames": [
+                            {
+                                "provider_id": "krk.drive_to_edge",
+                                "move_uci": "a1a2",
+                                "known_outcome_label": {
+                                    "playout_result": "mate",
+                                    "selected": True,
+                                },
+                            }
+                        ],
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reports / "krk_selector_balanced_label_dataset_v1.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_balanced_label_dataset",
+                "rows": [
+                    {
+                        "state_id": "state.stage5",
+                        "source_stage": "stage5",
+                        "provider_id": "krk.stage0_basin",
+                        "target_kind": "guardrail_safe_selected_playout",
+                        "label": "positive",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_selected_provider_scan, "ROOT", root)
+
+    scan = _selected_provider_scan.build_scan()
+
+    assert scan["schema_version"] == "krk_selected_provider_diversity_replay_free_scan.v0"
+    assert scan["causal_status"] == "non_causal_scan"
+    assert scan["runtime_behavior_changed"] is False
+    assert scan["runtime_arbiter_implemented"] is False
+    assert scan["stage7_promotion_allowed"] is False
+    assert scan["stage8_training_allowed"] is False
+    assert scan["labels_generated_in_this_slice"] is False
+    assert scan["summary"]["stage7_records"] == 0
+    assert scan["summary"]["selected_provider_family_counts"] == {
+        "edge_trap": 1,
+        "stage0_basin": 1,
+    }
+    assert scan["decision"]["selector_sandbox_ready"] is False

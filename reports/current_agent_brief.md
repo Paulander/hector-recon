@@ -642,6 +642,14 @@ KRK selected-provider diversity evidence plan v0:
 
 The design-only plan scopes the remaining selector-readiness gap: find protected Stage 4/5/6 states where normal arbitration selects diverse validated provider families, with Stage 7 training rows still `0`. It permits only a replay-free scan first; any bounded sampling or label execution still requires a separate manifest and review. Decision: `selected_provider_diversity_evidence_plan_defined`.
 
+KRK selected-provider diversity replay-free scan v0:
+
+- `scripts/scan_krk_selected_provider_diversity_replay_free.py`
+- `reports/krk_selected_provider_diversity_replay_free_scan_v0.json`
+- `reports/krk_selected_provider_diversity_replay_free_scan_v0.md`
+
+The replay-free scan confirms the remaining gap cannot be closed from existing selected-provider records. It found `23` protected selected records across Stage 4/5/6 and `0` Stage 7 records, but only two selected provider families: `stage0_basin` (`18`) and `edge_trap` (`5`), with dominance `0.7826`. Decision: `selected_provider_diversity_replay_free_insufficient`. Any next step would be a bounded protected sampling manifest, not runtime selector work.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -825,6 +833,8 @@ reports/krk_selector_readiness_after_contrast_probe_review_v0.json
 reports/krk_selector_readiness_after_contrast_probe_review_v0.md
 reports/krk_selected_provider_diversity_evidence_plan_v0.json
 reports/krk_selected_provider_diversity_evidence_plan_v0.md
+reports/krk_selected_provider_diversity_replay_free_scan_v0.json
+reports/krk_selected_provider_diversity_replay_free_scan_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

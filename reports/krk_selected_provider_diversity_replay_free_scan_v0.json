@@ -1,0 +1,331 @@
+{
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "selector_sandbox",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_scan",
+  "decision": {
+    "recommended_next_step": "design_bounded_protected_sampling_manifest_for_selected_provider_diversity",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "selected_provider_diversity_replay_free_insufficient"
+  },
+  "gameplay_topology_mutation": false,
+  "labels_generated_in_this_slice": false,
+  "records": [
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "f2g3",
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "result": "mate",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+      "source_stage": "stage5",
+      "state_id": "state.7bd8961882ad"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "e7e8",
+      "provider_family": "edge_trap",
+      "provider_id": "krk.edge_trap_close",
+      "result": "mate",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+      "source_stage": "stage5",
+      "state_id": "state.87b1160e68b9"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "a7a8",
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "result": "mate",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+      "source_stage": "stage5",
+      "state_id": "state.2c1d6da27ea1"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "h7c7",
+      "provider_family": "edge_trap",
+      "provider_id": "krk.edge_trap_close",
+      "result": "max_plies",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+      "source_stage": "stage5",
+      "state_id": "state.02feb8593cc6"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "h7c7",
+      "provider_family": "edge_trap",
+      "provider_id": "krk.edge_trap_close",
+      "result": "max_plies",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+      "source_stage": "stage5",
+      "state_id": "state.326222aefdf1"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "c6b6",
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "result": "max_plies",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+      "source_stage": "stage5",
+      "state_id": "state.3dca34326fca"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "a1g1",
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "result": "mate",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+      "source_stage": "stage6",
+      "state_id": "state.d1f052d2cab2"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "a8f8",
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "result": "mate",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+      "source_stage": "stage6",
+      "state_id": "state.52085d244e9d"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "a1d1",
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "result": "mate",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+      "source_stage": "stage6",
+      "state_id": "state.69711173114a"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "h7c7",
+      "provider_family": "edge_trap",
+      "provider_id": "krk.edge_trap_close",
+      "result": "max_plies",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "b7b1",
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "result": "mate",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+      "source_stage": "stage4",
+      "state_id": "state.1e4f48a672e8"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "d2a2",
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "result": "mate",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+      "source_stage": "stage4",
+      "state_id": "state.f17117682948"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "f6f7",
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "result": "mate",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+      "source_stage": "stage4",
+      "state_id": "state.02cfd843a2cf"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "d6c7",
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "result": "max_plies",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+      "source_stage": "stage4",
+      "state_id": "state.256a3da30f0f"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "b7b1",
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "result": "max_plies",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+      "source_stage": "stage4",
+      "state_id": "state.b11124d658cf"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "b7b1",
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "result": "positive",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_selector_balanced_label_dataset_v1.json",
+      "source_stage": "stage4",
+      "state_id": "state.1e4f48a672e8"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "d2a2",
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "result": "positive",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_selector_balanced_label_dataset_v1.json",
+      "source_stage": "stage4",
+      "state_id": "state.f17117682948"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "f6f7",
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "result": "positive",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_selector_balanced_label_dataset_v1.json",
+      "source_stage": "stage4",
+      "state_id": "state.02cfd843a2cf"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "f2g3",
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "result": "positive",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_selector_balanced_label_dataset_v1.json",
+      "source_stage": "stage5",
+      "state_id": "state.7bd8961882ad"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "e7e8",
+      "provider_family": "edge_trap",
+      "provider_id": "krk.edge_trap_close",
+      "result": "positive",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_selector_balanced_label_dataset_v1.json",
+      "source_stage": "stage5",
+      "state_id": "state.87b1160e68b9"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "a7a8",
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "result": "positive",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_selector_balanced_label_dataset_v1.json",
+      "source_stage": "stage5",
+      "state_id": "state.2c1d6da27ea1"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "a1g1",
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "result": "positive",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_selector_balanced_label_dataset_v1.json",
+      "source_stage": "stage6",
+      "state_id": "state.d1f052d2cab2"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_selected_provider_evidence",
+      "move_uci": "a8f8",
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "result": "positive",
+      "schema_version": "krk_selected_provider_record.v0",
+      "source_artifact": "reports/krk_selector_balanced_label_dataset_v1.json",
+      "source_stage": "stage6",
+      "state_id": "state.52085d244e9d"
+    }
+  ],
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_selected_provider_diversity_replay_free_scan.v0",
+  "source_artifacts": [
+    "reports/krk_selected_provider_diversity_evidence_plan_v0.json",
+    "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+    "reports/krk_selector_balanced_label_dataset_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "distinct_selected_provider_families": 2,
+    "max_selected_provider_family_dominance": 0.7826,
+    "selected_provider_family_counts": {
+      "edge_trap": 5,
+      "stage0_basin": 18
+    },
+    "selected_record_count": 23,
+    "selected_result_counts": {
+      "mate": 9,
+      "max_plies": 6,
+      "positive": 8
+    },
+    "selected_stage_counts": {
+      "stage4": 8,
+      "stage5": 9,
+      "stage6": 6
+    },
+    "stage7_records": 0
+  }
+}
