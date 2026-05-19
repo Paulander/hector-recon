@@ -448,6 +448,17 @@ _selected_provider_observation_scan = importlib.util.module_from_spec(
 )
 _selected_provider_observation_scan_spec.loader.exec_module(_selected_provider_observation_scan)
 
+_selected_provider_arch_review_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_selected_provider_diversity_architecture_review",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "summarize_krk_selected_provider_diversity_architecture_review.py",
+)
+assert _selected_provider_arch_review_spec is not None
+assert _selected_provider_arch_review_spec.loader is not None
+_selected_provider_arch_review = importlib.util.module_from_spec(_selected_provider_arch_review_spec)
+_selected_provider_arch_review_spec.loader.exec_module(_selected_provider_arch_review)
+
 _provider_label_plan_spec = importlib.util.spec_from_file_location(
     "summarize_krk_provider_label_coverage_plan",
     Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_provider_label_coverage_plan.py",
@@ -4000,3 +4011,58 @@ def test_krk_selected_provider_diversity_observation_scan_is_non_causal(tmp_path
         "fence_established": 1,
     }
     assert payload["decision"]["selector_sandbox_ready"] is False
+
+
+def test_krk_selected_provider_diversity_architecture_review_reframes_requirement(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    (reports / "krk_selected_provider_diversity_replay_free_scan_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_scan",
+                "summary": {
+                    "selected_provider_family_counts": {"stage0_basin": 4, "edge_trap": 1},
+                    "distinct_selected_provider_families": 2,
+                    "max_selected_provider_family_dominance": 0.8,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reports / "krk_selected_provider_diversity_observation_scan_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_observation_scan",
+                "summary": {
+                    "selected_provider_family_counts": {"stage0_basin": 20},
+                    "distinct_selected_provider_families": 1,
+                    "max_selected_provider_family_dominance": 1.0,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reports / "krk_strategy_owner_contrast_probe_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_probe",
+                "metrics": {"training_provider_family_rates": {}},
+                "findings": ["protected_conversion_positive_provider_diversity_present"],
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_selected_provider_arch_review, "ROOT", root)
+
+    review = _selected_provider_arch_review.build_review()
+
+    assert review["schema_version"] == "krk_selected_provider_diversity_architecture_review.v0"
+    assert review["causal_status"] == "non_causal_architecture_review"
+    assert review["runtime_behavior_changed"] is False
+    assert review["runtime_arbiter_implemented"] is False
+    assert review["stage7_promotion_allowed"] is False
+    assert review["stage8_training_allowed"] is False
+    assert review["decision"]["status"] == "selected_provider_diversity_requirement_should_be_reframed"
+    assert review["decision"]["selector_sandbox_ready"] is False
+    assert review["proposed_readiness_v3_direction"]["replace_hard_requirement"] == "distinct_current_selected_provider_families"

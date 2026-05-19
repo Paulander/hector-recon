@@ -669,6 +669,14 @@ KRK selected-provider diversity observation scan v0:
 
 The bounded selection-only scan completed `20` protected observations in `7.293` seconds. All `20` selected `krk.stage0_basin`; distinct selected provider families = `1`, dominance = `1.0`, and Stage 7 observations remain `0`. Decision: `selected_provider_diversity_observation_insufficient`. This strengthens the diagnosis that normal arbitration is stage0-dominant on sampled protected controls; runtime arbiter and selector sandbox remain blocked.
 
+KRK selected-provider diversity architecture review v0:
+
+- `scripts/summarize_krk_selected_provider_diversity_architecture_review.py`
+- `reports/krk_selected_provider_diversity_architecture_review_v0.json`
+- `reports/krk_selected_provider_diversity_architecture_review_v0.md`
+
+The architecture review concludes the v2 selected-provider diversity requirement should be reframed. Current normal arbitration selects `stage0_basin` too dominantly to provide diverse selected-provider training evidence, while forced/proposal contrast already shows conversion-positive provider diversity. Decision: `selected_provider_diversity_requirement_should_be_reframed`. Next step is to define selector-readiness v3 around proposal diversity, forced/compatible conversion-positive provider diversity, held-out Stage 7 preservation, default-off equivalence, and guardrail preservation. Runtime arbiter and selector sandbox remain blocked until v3 criteria and review.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -860,6 +868,8 @@ reports/krk_selected_provider_diversity_sampling_manifest_review_v0.json
 reports/krk_selected_provider_diversity_sampling_manifest_review_v0.md
 reports/krk_selected_provider_diversity_observation_scan_v0.json
 reports/krk_selected_provider_diversity_observation_scan_v0.md
+reports/krk_selected_provider_diversity_architecture_review_v0.json
+reports/krk_selected_provider_diversity_architecture_review_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

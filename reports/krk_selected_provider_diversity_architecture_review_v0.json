@@ -1,0 +1,88 @@
+{
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "selector_sandbox",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_architecture_review",
+  "decision": {
+    "recommended_next_step": "define_selector_readiness_v3_proposal_diversity_criteria",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "selected_provider_diversity_requirement_should_be_reframed"
+  },
+  "evidence": {
+    "contrast_findings": [
+      "protected_conversion_positive_provider_diversity_present",
+      "protected_label_balance_present",
+      "selected_provider_family_diversity_still_missing",
+      "heldout_stage7_contains_unresolved_all_negative_rows"
+    ],
+    "contrast_training_family_rates": {
+      "drive_to_edge": {
+        "negative": 0,
+        "positive": 2,
+        "positive_rate": 1.0,
+        "total": 2
+      },
+      "edge_trap": {
+        "negative": 11,
+        "positive": 8,
+        "positive_rate": 0.4211,
+        "total": 19
+      },
+      "fence_established": {
+        "negative": 0,
+        "positive": 3,
+        "positive_rate": 1.0,
+        "total": 3
+      }
+    },
+    "replay_free_distinct_families": 2,
+    "replay_free_max_dominance": 0.7826,
+    "replay_free_selected_provider_families": {
+      "edge_trap": 5,
+      "stage0_basin": 18
+    },
+    "sampled_distinct_families": 1,
+    "sampled_max_dominance": 1.0,
+    "sampled_selected_provider_families": {
+      "stage0_basin": 20
+    }
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "contrast_evidence_status": "provider_contrast_signal_present",
+    "current_selected_provider_diversity_status": "failed_by_current_arbitration_stage0_dominance",
+    "readiness_v2_issue": "Requiring diverse normal selected providers before testing an arbiter may be too hard, because the proposed arbiter is intended to correct current selected-provider dominance.",
+    "reason": "Replay-free selected records only show stage0_basin/edge_trap, and bounded protected selection sampling selected stage0_basin for every sampled state. This is a property of the current raw arbitration policy, not evidence that other providers lack conversion value."
+  },
+  "proposed_readiness_v3_direction": {
+    "replace_hard_requirement": "distinct_current_selected_provider_families",
+    "selected_provider_dominance_role": "diagnostic blocker for promotion, but not necessarily a blocker for a default-off sandbox design review if proposal/forced contrast evidence is strong.",
+    "with_requirements": [
+      "diverse_strategy_proposal_families_present",
+      "diverse_forced_or_compatible_conversion_positive_families_present",
+      "stage7_held_out_challenge_preserved",
+      "default_off_equivalence_required_before_any_sandbox",
+      "guardrail_regression_zero_tolerance_for_protected_stack"
+    ]
+  },
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_selected_provider_diversity_architecture_review.v0",
+  "source_artifacts": [
+    "reports/krk_selected_provider_diversity_replay_free_scan_v0.json",
+    "reports/krk_selected_provider_diversity_observation_scan_v0.json",
+    "reports/krk_strategy_owner_contrast_probe_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}
