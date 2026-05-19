@@ -1,0 +1,279 @@
+{
+  "active_landmark_summary": [
+    {
+      "active_landmark_distribution": {
+        "drive_to_edge": 20
+      },
+      "active_landmark_label": "drive_to_edge",
+      "count": 20,
+      "label_counts": {
+        "negative": 15,
+        "positive": 5
+      },
+      "metadata": {},
+      "negative_rate": 0.75,
+      "positive_rate": 0.25,
+      "stage_distribution": {
+        "stage6": 20
+      }
+    },
+    {
+      "active_landmark_distribution": {
+        "fence_established": 16
+      },
+      "active_landmark_label": "fence_established",
+      "count": 16,
+      "label_counts": {
+        "negative": 10,
+        "positive": 6
+      },
+      "metadata": {},
+      "negative_rate": 0.625,
+      "positive_rate": 0.375,
+      "stage_distribution": {
+        "stage5": 16
+      }
+    },
+    {
+      "active_landmark_distribution": {
+        "wrong_tempo_control": 6
+      },
+      "active_landmark_label": "wrong_tempo_control",
+      "count": 6,
+      "label_counts": {
+        "negative": 3,
+        "positive": 3
+      },
+      "metadata": {},
+      "negative_rate": 0.5,
+      "positive_rate": 0.5,
+      "stage_distribution": {
+        "stage4": 6
+      }
+    }
+  ],
+  "best_feature_probe_baseline": {
+    "accuracy": 0.8333333333333334,
+    "name": "provider_prior_loo"
+  },
+  "blocked_next_work": [
+    "runtime_arbiter",
+    "selector_sandbox",
+    "raw_provider_id_runtime_prior",
+    "provider_support_adapter",
+    "score_bonus_or_penalty",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_architecture_review",
+  "decision": {
+    "recommended_next_step": "add_provider_provenance_maturity_features_non_causal",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "stage7_repair_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "provider_identity_signal_requires_provenance_decomposition"
+  },
+  "interpretation": {
+    "edge_trap_positive_rates": [
+      0.1111111111111111,
+      0.1111111111111111,
+      0.1111111111111111
+    ],
+    "provider_identity_signal": "strong_but_not_causal_ready",
+    "raw_provider_id_is_principled_runtime_signal": false,
+    "reason": [
+      "Provider identity currently beats trace-only observation terms on selected-playout labels.",
+      "The signal is mostly a maturity/provenance prior: stage0_basin selected-playout controls are often positive while edge-trap variants are often negative in this dataset.",
+      "Raw provider id can encode dataset and label bias, so it should be decomposed into explicit provenance, maturity, scope, and validation-status features before any future sandbox.",
+      "Stage7 rows remain held out and should not be used to tune a selector."
+    ],
+    "stage0_basin_positive_rate": 0.7333333333333333
+  },
+  "provider_prior_accuracy": 0.8333333333333334,
+  "provider_summary": [
+    {
+      "active_landmark_distribution": {
+        "drive_to_edge": 5,
+        "fence_established": 4
+      },
+      "count": 9,
+      "label_counts": {
+        "negative": 8,
+        "positive": 1
+      },
+      "metadata": {
+        "overlay_provider": false,
+        "protected_provider": true,
+        "provider_family": "edge_trap",
+        "provider_maturity": "validated_low_plasticity",
+        "source_stage": "stage5",
+        "validated_role": "edge_trap_close"
+      },
+      "negative_rate": 0.8888888888888888,
+      "positive_rate": 0.1111111111111111,
+      "provider_id": "krk.edge_trap_close",
+      "stage_distribution": {
+        "stage5": 4,
+        "stage6": 5
+      }
+    },
+    {
+      "active_landmark_distribution": {
+        "drive_to_edge": 5,
+        "fence_established": 4
+      },
+      "count": 9,
+      "label_counts": {
+        "negative": 8,
+        "positive": 1
+      },
+      "metadata": {
+        "overlay_provider": false,
+        "protected_provider": true,
+        "provider_family": "edge_trap",
+        "provider_maturity": "validated_low_plasticity",
+        "source_stage": "stage5",
+        "validated_role": "edge_trap_enemy_between"
+      },
+      "negative_rate": 0.8888888888888888,
+      "positive_rate": 0.1111111111111111,
+      "provider_id": "krk.edge_trap_enemy_between",
+      "stage_distribution": {
+        "stage5": 4,
+        "stage6": 5
+      }
+    },
+    {
+      "active_landmark_distribution": {
+        "drive_to_edge": 5,
+        "fence_established": 4
+      },
+      "count": 9,
+      "label_counts": {
+        "negative": 8,
+        "positive": 1
+      },
+      "metadata": {
+        "overlay_provider": false,
+        "protected_provider": true,
+        "provider_family": "edge_trap",
+        "provider_maturity": "validated_low_plasticity",
+        "source_stage": "stage5",
+        "validated_role": "edge_trap_wrong_tempo"
+      },
+      "negative_rate": 0.8888888888888888,
+      "positive_rate": 0.1111111111111111,
+      "provider_id": "krk.edge_trap_wrong_tempo",
+      "stage_distribution": {
+        "stage5": 4,
+        "stage6": 5
+      }
+    },
+    {
+      "active_landmark_distribution": {
+        "drive_to_edge": 5,
+        "fence_established": 4,
+        "wrong_tempo_control": 6
+      },
+      "count": 15,
+      "label_counts": {
+        "negative": 4,
+        "positive": 11
+      },
+      "metadata": {
+        "overlay_provider": false,
+        "protected_provider": true,
+        "provider_family": "stage0_basin",
+        "provider_maturity": "foundation_frozen",
+        "source_stage": "stage0",
+        "validated_role": "mate_basin_finish"
+      },
+      "negative_rate": 0.26666666666666666,
+      "positive_rate": 0.7333333333333333,
+      "provider_id": "krk.stage0_basin",
+      "stage_distribution": {
+        "stage4": 6,
+        "stage5": 4,
+        "stage6": 5
+      }
+    }
+  ],
+  "required_future_features": [
+    "provider_maturity",
+    "provider_version",
+    "source_stage",
+    "validated_profile",
+    "frozen_provider",
+    "overlay_provider",
+    "guardrail_status",
+    "plasticity_scope",
+    "promotion_status",
+    "protected_provider"
+  ],
+  "row_count": 42,
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "schema_version": "krk_provider_identity_maturity_review.v0",
+  "source_artifacts": [
+    "reports/krk_selector_feature_dataset_v0.json",
+    "reports/krk_selector_feature_baseline_probe_v0.json"
+  ],
+  "stage_summary": [
+    {
+      "active_landmark_distribution": {
+        "wrong_tempo_control": 6
+      },
+      "count": 6,
+      "label_counts": {
+        "negative": 3,
+        "positive": 3
+      },
+      "metadata": {},
+      "negative_rate": 0.5,
+      "positive_rate": 0.5,
+      "source_stage": "stage4",
+      "stage_distribution": {
+        "stage4": 6
+      }
+    },
+    {
+      "active_landmark_distribution": {
+        "fence_established": 16
+      },
+      "count": 16,
+      "label_counts": {
+        "negative": 10,
+        "positive": 6
+      },
+      "metadata": {},
+      "negative_rate": 0.625,
+      "positive_rate": 0.375,
+      "source_stage": "stage5",
+      "stage_distribution": {
+        "stage5": 16
+      }
+    },
+    {
+      "active_landmark_distribution": {
+        "drive_to_edge": 20
+      },
+      "count": 20,
+      "label_counts": {
+        "negative": 15,
+        "positive": 5
+      },
+      "metadata": {},
+      "negative_rate": 0.75,
+      "positive_rate": 0.25,
+      "source_stage": "stage6",
+      "stage_distribution": {
+        "stage6": 20
+      }
+    }
+  ]
+}

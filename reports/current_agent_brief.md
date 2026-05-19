@@ -426,6 +426,14 @@ KRK selector feature dataset/probe/review v0:
 
 The joined feature dataset adds trace-only observation terms and provider summaries to explicit selector targets. The feature baseline probe did not improve over the provider-prior baseline: best remains `provider_prior_loo` at `0.833`. Decision: `provider_prior_remains_best_no_selector_sandbox`. Runtime arbiter and selector sandbox work remain blocked. The next decision is whether to expand protected-control labels, define state-local contrastive selector labels, or pause selector work and return to broader curriculum integration.
 
+KRK provider identity / maturity review v0:
+
+- `scripts/review_krk_provider_identity_maturity_signal.py`
+- `reports/krk_provider_identity_maturity_review_v0.json`
+- `reports/krk_provider_identity_maturity_review_v0.md`
+
+The review explains the provider-prior result as a strong but non-causal provider identity/provenance signal. Raw provider ID is not a principled runtime selector; it can encode dataset and label bias. Decision: `provider_identity_signal_requires_provenance_decomposition`. Runtime arbiter and selector sandbox work remain blocked. The next safe slice is to add explicit non-causal provider provenance/maturity fields to selector evidence before any further selector baseline or sandbox review.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -549,6 +557,8 @@ reports/krk_selector_feature_baseline_probe_v0.json
 reports/krk_selector_feature_baseline_probe_v0.md
 reports/krk_selector_feature_architecture_review_v0.json
 reports/krk_selector_feature_architecture_review_v0.md
+reports/krk_provider_identity_maturity_review_v0.json
+reports/krk_provider_identity_maturity_review_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
