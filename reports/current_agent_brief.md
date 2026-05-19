@@ -434,6 +434,17 @@ KRK provider identity / maturity review v0:
 
 The review explains the provider-prior result as a strong but non-causal provider identity/provenance signal. Raw provider ID is not a principled runtime selector; it can encode dataset and label bias. Decision: `provider_identity_signal_requires_provenance_decomposition`. Runtime arbiter and selector sandbox work remain blocked. The next safe slice is to add explicit non-causal provider provenance/maturity fields to selector evidence before any further selector baseline or sandbox review.
 
+KRK selector provenance feature dataset/probe v0:
+
+- `scripts/build_krk_selector_provenance_feature_dataset.py`
+- `reports/krk_selector_provenance_feature_dataset_v0.json`
+- `reports/krk_selector_provenance_feature_dataset_v0.md`
+- `scripts/probe_krk_selector_provenance_features.py`
+- `reports/krk_selector_provenance_feature_probe_v0.json`
+- `reports/krk_selector_provenance_feature_probe_v0.md`
+
+The provenance probe decomposes the provider-prior signal into explicit non-causal fields. `provider_family`, `provider_maturity`, `provider_source_stage`, and `family_maturity` all match the raw provider-id LOO accuracy of `0.833` on the current selected-playout control labels. This supports keeping provenance/maturity in evidence records, but it still does not authorize a runtime arbiter or selector sandbox because the labels are small and can encode horizon/control artifacts. Current decision: `provenance_features_explain_provider_prior_non_causal`; next step requires architecture review of selector objective or more labels before any sandbox.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -559,6 +570,10 @@ reports/krk_selector_feature_architecture_review_v0.json
 reports/krk_selector_feature_architecture_review_v0.md
 reports/krk_provider_identity_maturity_review_v0.json
 reports/krk_provider_identity_maturity_review_v0.md
+reports/krk_selector_provenance_feature_dataset_v0.json
+reports/krk_selector_provenance_feature_dataset_v0.md
+reports/krk_selector_provenance_feature_probe_v0.json
+reports/krk_selector_provenance_feature_probe_v0.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.
