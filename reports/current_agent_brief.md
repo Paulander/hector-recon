@@ -757,6 +757,14 @@ KRK strategy arbiter runtime-test review v2:
 
 The runtime-test review packages the default-off smoke, protected-control matrix, Stage 7 holdout lock, explicit Stage 7 challenge probe, and support sensitivity. Decision: `runtime_sandbox_safe_but_additive_support_not_ready_to_scale`. The sandbox contract and trace evidence are working, but additive support is not effective for Stage 7 at low support and is not safe to scale blindly because high support can perturb protected one-ply ownership. Next step should be non-causal arbitration-objective review before more runtime tests.
 
+KRK arbitration objective review v1:
+
+- `scripts/summarize_krk_arbitration_objective_review_v1.py`
+- `reports/krk_arbitration_objective_review_v1.json`
+- `reports/krk_arbitration_objective_review_v1.md`
+
+The objective review rejects broad additive support as the next runtime objective. Provider provenance/maturity remains a promising non-causal feature family, while selected-playout labels alone remain insufficient because the raw arbiter is stage0-dominant. Decision: `additive_support_objective_rejected_design_normalized_selector_objective`. The next allowed class is design-only: a normalized contrastive strategy-selector objective using StrategyProposalFrame-compatible proposals, provider-local rank/normalized score, separated label semantics, protected Stage 4/5/6 controls, and Stage 7 held out as challenge cases.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
