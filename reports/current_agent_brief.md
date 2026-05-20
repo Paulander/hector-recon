@@ -61,6 +61,7 @@ Current interpretation:
 - `stage7_selected_path_target_probe_v0` found the split targets are separable offline, but the sequence target is source-biased because all recovered success controls are from prior sandbox artifacts. Decision: `split_targets_separable_but_source_biased_no_runtime`. Next step should be architecture review or clean sequence-control collection before any runtime work.
 - `stage7_selected_path_architecture_review_v0` closes the selected-path runtime follow-up with `runtime_no_go_architecture_review_required`. The next allowed slice is a non-causal clean-control collection plan; runtime arbiter/selector work remains blocked.
 - `stage7_clean_control_collection_plan_v0` defines the next evidence path: classify Stage 7 artifacts by clean/default-off versus repair-sandbox source, then recover clean h40 post-box controls before any runtime review. Next allowed slice: `implement_replay_free_clean_artifact_manifest`.
+- `stage7_clean_artifact_manifest_v0` found no clean replay-free Stage 7 control artifacts; existing outcome artifacts are either metadata/design-only or repair-sandbox-sourced. Next step is a bounded clean h40 label job or architecture review, not recovery from existing artifacts.
 
 ## Hard Invariants
 

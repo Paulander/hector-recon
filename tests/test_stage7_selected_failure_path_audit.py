@@ -180,3 +180,24 @@ def test_stage7_selected_path_architecture_review_blocks_runtime() -> None:
     assert payload["stage8_training_allowed"] is False
     assert payload["decision"]["status"] == "runtime_no_go_architecture_review_required"
     assert payload["decision"]["next_allowed_slice"] == "non_causal_clean_control_collection_plan"
+
+
+def test_stage7_clean_artifact_manifest_finds_no_replay_free_clean_controls() -> None:
+    subprocess.run(
+        [sys.executable, "scripts/build_stage7_clean_artifact_manifest.py"],
+        cwd=ROOT,
+        check=True,
+    )
+    payload = json.loads(
+        (ROOT / "reports/structural_candidates/stage7_clean_artifact_manifest_v0.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["summary"]["clean_candidate_count"] == 0
+    assert payload["decision"]["status"] == "no_clean_replay_free_artifacts_found"
+    assert payload["decision"]["runtime_work_allowed"] is False
