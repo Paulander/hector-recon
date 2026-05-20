@@ -53,6 +53,10 @@ context_review_module = _load_module(
     "review_krk_ownership_context_feature_results_v0",
     "review_krk_ownership_context_feature_results_v0.py",
 )
+ownership_v3_module = _load_module(
+    "build_krk_ownership_selection_label_dataset_v3",
+    "build_krk_ownership_selection_label_dataset_v3.py",
+)
 
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
@@ -443,3 +447,51 @@ def test_ownership_context_dataset_and_probe_are_non_causal(tmp_path, monkeypatc
     assert "best_balanced_result" in probe
     assert review["runtime_selector_implemented"] is False
     assert review["decision"]["runtime_work_allowed"] is False
+
+
+def test_ownership_v3_recovers_selected_provider_group_label(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(ownership_v3_module, "ROOT", root)
+    _write_json(
+        root,
+        ownership_v3_module.OWNERSHIP_V2,
+        {
+            "causal_status": "non_causal_ownership_label_dataset",
+            "rows": [],
+        },
+    )
+    _write_json(
+        root,
+        ownership_v3_module.SELECTOR_FEATURES,
+        {
+            "causal_status": "non_causal_feature_dataset",
+            "rows": [
+                {
+                    "target_kind": "selected_playout_success",
+                    "usable_for_training": True,
+                    "source_stage": "stage5",
+                    "state_id": "state.fence",
+                    "frame_id": "cp.krk.state.fence",
+                    "active_landmark_label": "fence_established",
+                    "provider_id": "krk.edge_trap_close",
+                    "selected_provider_before_observation": "krk.fence_established",
+                    "selected_provider_matches_target": False,
+                    "move_uci": "h7c7",
+                    "label": "negative",
+                    "provider_summary": {"krk.fence_established": 1},
+                    "unique_provider_count": 2,
+                    "all_suggestion_count": 3,
+                    "source_terms": ["fence_needs_repair"],
+                    "source_term_count": 1,
+                }
+            ],
+        },
+    )
+
+    dataset = ownership_v3_module.build_dataset()
+
+    assert dataset["summary"]["supplemental_row_count"] == 1
+    assert dataset["summary"]["provider_family_counts"] == {"fence_established": 1}
+    assert dataset["rows"][0]["target_label"] == "selected_owner_failed"
+    assert dataset["rows"][0]["usable_for_selector_training"] is False
+    assert dataset["decision"]["runtime_work_allowed"] is False

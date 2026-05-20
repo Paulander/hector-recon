@@ -89,7 +89,7 @@ def build_review() -> dict[str, Any]:
         },
         "interpretation": [
             "FEN-derived context is useful for positive-owner preservation: the balanced context result raises positive recall to 0.88.",
-            "The same context does not yet suppress enough unsafe selected owners: negative suppression remains 0.444 on the balanced result.",
+            f"The same context does not yet suppress enough unsafe selected owners: negative suppression remains {balanced.get('negative_suppression')} on the balanced result.",
             "The ownership evidence is still provider-family narrow: most rows are stage0_basin, so this should not be trained into a runtime selector.",
             "The next improvement should target source/provider diversity and normal-routing ownership labels, not another Stage 7 repair.",
         ],
