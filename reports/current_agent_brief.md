@@ -84,6 +84,7 @@ Current interpretation:
 - `krk_protected_missing_provider_capacity_audit_plan_v0` defines a non-causal reviewed-label plan for that bottleneck: `16` h40 forced-provider jobs across `6` protected max-only frames, with `0` Stage 7 jobs. It does not execute labels or authorize runtime behavior.
 - `krk_protected_missing_provider_capacity_execution_manifest_v0` binds those jobs to the Stage 6 overlay-composed topology and `handoff_composition_v1`; `krk_protected_missing_provider_capacity_execution_manifest_review_v0` passes with `0` violations and allows only bounded non-causal label execution. Runtime work remains blocked.
 - `krk_protected_missing_provider_capacity_labels_v0` executes the reviewed offline labels: `16` protected h40 forced-provider jobs, `11` mate / `5` max_plies, and `0` Stage 7 labels or training rows. This improves protected-control label coverage but remains non-causal; runtime selector/internal-terminal work is still blocked. Next allowed slice: merge these labels and refresh the strategy/sequence inventory.
+- `krk_state_local_contrast_labels_v2` now includes the protected missing-provider label artifact as a source, but `krk_protected_missing_provider_label_merge_review_v0` shows all `16` protected labels are unmatched by the current ranked proposal-frame keys. The refreshed selector probe remains `state_local_contrast_signal_not_ready`; the next bottleneck is proposal-frame coverage for protected missing-provider states, not runtime selector tuning.
 
 ## Hard Invariants
 

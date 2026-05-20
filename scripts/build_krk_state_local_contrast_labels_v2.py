@@ -15,6 +15,7 @@ FORCED_LABELS = (
     Path("reports/krk_forced_provider_control_labels_v0.json"),
     Path("reports/krk_strategy_owner_contrast_control_labels_v0.json"),
     Path("reports/krk_diverse_contrast_labels_v1.json"),
+    Path("reports/krk_protected_missing_provider_capacity_labels_v0.json"),
 )
 OUT_JSON = Path("reports/krk_state_local_contrast_labels_v2.json")
 OUT_MD = Path("reports/krk_state_local_contrast_labels_v2.md")

@@ -538,7 +538,8 @@
     "reports/krk_ranked_strategy_proposal_frames_v1.json",
     "reports/krk_forced_provider_control_labels_v0.json",
     "reports/krk_strategy_owner_contrast_control_labels_v0.json",
-    "reports/krk_diverse_contrast_labels_v1.json"
+    "reports/krk_diverse_contrast_labels_v1.json",
+    "reports/krk_protected_missing_provider_capacity_labels_v0.json"
   ],
   "stage7_promotion_allowed": false,
   "stage8_training_allowed": false,
@@ -552,7 +553,7 @@
       "mate": 9,
       "max_plies": 11
     },
-    "label_key_count": 32,
+    "label_key_count": 48,
     "matched_forced_label_count": 20,
     "proposal_key_count": 68,
     "provider_family_counts": {
@@ -577,8 +578,24 @@
       "positive": 9
     },
     "training_state_count": 8,
-    "unmatched_forced_label_count": 12,
+    "unmatched_forced_label_count": 28,
     "unmatched_forced_label_job_ids": [
+      "job.krk.protected_missing_provider.01f7ab28aca7",
+      "job.krk.protected_missing_provider.104cb87db2f9",
+      "job.krk.protected_missing_provider.38d0a11daf0c",
+      "job.krk.protected_missing_provider.4dca16fc81b3",
+      "job.krk.protected_missing_provider.54fd6c4dd136",
+      "job.krk.protected_missing_provider.5f9c11521077",
+      "job.krk.protected_missing_provider.6262bf8a2534",
+      "job.krk.protected_missing_provider.75babbcc6000",
+      "job.krk.protected_missing_provider.8343f8b595ba",
+      "job.krk.protected_missing_provider.8bd0028955fa",
+      "job.krk.protected_missing_provider.8d58e5a5f72c",
+      "job.krk.protected_missing_provider.9a4cc895c68d",
+      "job.krk.protected_missing_provider.9df1f2680cbc",
+      "job.krk.protected_missing_provider.a306768e24a0",
+      "job.krk.protected_missing_provider.abcf6fafb467",
+      "job.krk.protected_missing_provider.ac1e25bed37b",
       "job.krk.strategy_owner_contrast.14c4d6d395bb",
       "job.krk.strategy_owner_contrast.1a9dfe565e76",
       "job.krk.strategy_owner_contrast.40d0a6e04b05",
