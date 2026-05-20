@@ -17,6 +17,7 @@ OUT_MD = Path("reports/structural_candidates/stage7_clean_artifact_manifest_v0.m
 GENERATED_ARTIFACT_NAMES = {
     OUT_JSON.name,
     "stage7_clean_sequence_control_recovery_v0.json",
+    "stage7_clean_h40_label_manifest_v0.json",
 }
 
 
