@@ -725,6 +725,14 @@ KRK strategy arbiter Stage 7 holdout lock v1:
 
 The Stage 7 holdout-lock runtime test ran one h20 `box_shrink` sample with sandbox support enabled but `allow_stage7_challenge=false`. The enabled-blocked result matched baseline exactly and support count remained `0`. Decision: `stage7_holdout_lock_passed`. Stage 7 remains held out by default; any explicit Stage 7 challenge test must use a separate review/flag and must not be treated as promotion.
 
+KRK strategy arbiter protected-control matrix v2:
+
+- `scripts/run_krk_strategy_arbiter_protected_control_matrix_v2.py`
+- `reports/krk_strategy_arbiter_protected_control_matrix_v2.json`
+- `reports/krk_strategy_arbiter_protected_control_matrix_v2.md`
+
+The scaled protected runtime-test matrix ran three h20 samples per protected label (`edge_trap_wrong_tempo`, `fence_established`, `drive_to_edge`) with Stage 7 rows still `0`. Default-off equivalence passed for all rows, enabled support was trace-visible (`45` supported proposals total), and there was no no-move/draw/conversion regression. Outcomes were unchanged: Stage 4 `3/3` mate, Stage 5 `2/3` mate and `1/3` max_plies, Stage 6 `0/3` mate and `3/3` max_plies under this small h20 sample. Decision: `protected_control_matrix_v2_passed`. The result supports sandbox safety at small scale, but not effectiveness or promotion.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -930,6 +938,8 @@ reports/krk_strategy_arbiter_protected_control_matrix_v1.json
 reports/krk_strategy_arbiter_protected_control_matrix_v1.md
 reports/krk_strategy_arbiter_stage7_holdout_lock_v1.json
 reports/krk_strategy_arbiter_stage7_holdout_lock_v1.md
+reports/krk_strategy_arbiter_protected_control_matrix_v2.json
+reports/krk_strategy_arbiter_protected_control_matrix_v2.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

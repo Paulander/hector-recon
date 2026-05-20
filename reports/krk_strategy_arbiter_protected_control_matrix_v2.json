@@ -1,0 +1,272 @@
+{
+  "causal_status": "runtime_test_protected_control_matrix",
+  "decision": {
+    "recommended_next_step": "architecture_review_before_stage7_challenge_or_scale_guardrails",
+    "status": "protected_control_matrix_v2_passed"
+  },
+  "gameplay_topology_mutation": false,
+  "profile": "handoff_composition_v1",
+  "rows": [
+    {
+      "baseline": {
+        "conversion_status_counts": {
+          "passed": 3
+        },
+        "improved": 3,
+        "krk_strategy_arbiter_sandbox_selected_by_outcome": {},
+        "krk_strategy_arbiter_sandbox_selected_supported_count": 0,
+        "krk_strategy_arbiter_sandbox_supported_count": 0,
+        "krk_strategy_arbiter_sandbox_supported_provider_by_outcome": {},
+        "no_move": 0,
+        "one_ply_status_counts": {
+          "passed": 3
+        },
+        "optimal": 3,
+        "playouts": {
+          "mate": 3
+        },
+        "shadow_candidate_count": 0,
+        "total": 3,
+        "worsened": 0
+      },
+      "default_off_equivalence": true,
+      "enabled_conversion_delta": 0,
+      "enabled_has_no_no_move_or_draw_spike": true,
+      "enabled_support_0_05": {
+        "conversion_status_counts": {
+          "passed": 3
+        },
+        "improved": 3,
+        "krk_strategy_arbiter_sandbox_selected_by_outcome": {
+          "krk.edge_trap_close:mate": 3
+        },
+        "krk_strategy_arbiter_sandbox_selected_supported_count": 3,
+        "krk_strategy_arbiter_sandbox_supported_count": 15,
+        "krk_strategy_arbiter_sandbox_supported_provider_by_outcome": {
+          "drive_to_edge:mate": 3,
+          "edge_trap:mate": 9,
+          "fence_established:mate": 3
+        },
+        "no_move": 0,
+        "one_ply_status_counts": {
+          "passed": 3
+        },
+        "optimal": 3,
+        "playouts": {
+          "mate": 3
+        },
+        "shadow_candidate_count": 0,
+        "total": 3,
+        "worsened": 0
+      },
+      "flag_present_default_off": {
+        "conversion_status_counts": {
+          "passed": 3
+        },
+        "improved": 3,
+        "krk_strategy_arbiter_sandbox_selected_by_outcome": {},
+        "krk_strategy_arbiter_sandbox_selected_supported_count": 0,
+        "krk_strategy_arbiter_sandbox_supported_count": 0,
+        "krk_strategy_arbiter_sandbox_supported_provider_by_outcome": {},
+        "no_move": 0,
+        "one_ply_status_counts": {
+          "passed": 3
+        },
+        "optimal": 3,
+        "playouts": {
+          "mate": 3
+        },
+        "shadow_candidate_count": 0,
+        "total": 3,
+        "worsened": 0
+      },
+      "label": "edge_trap_wrong_tempo"
+    },
+    {
+      "baseline": {
+        "conversion_status_counts": {
+          "failed": 1,
+          "passed": 2
+        },
+        "improved": 1,
+        "krk_strategy_arbiter_sandbox_selected_by_outcome": {},
+        "krk_strategy_arbiter_sandbox_selected_supported_count": 0,
+        "krk_strategy_arbiter_sandbox_supported_count": 0,
+        "krk_strategy_arbiter_sandbox_supported_provider_by_outcome": {},
+        "no_move": 0,
+        "one_ply_status_counts": {
+          "failed": 2,
+          "passed": 1
+        },
+        "optimal": 1,
+        "playouts": {
+          "mate": 2,
+          "max_plies": 1
+        },
+        "shadow_candidate_count": 2,
+        "total": 3,
+        "worsened": 2
+      },
+      "default_off_equivalence": true,
+      "enabled_conversion_delta": 0,
+      "enabled_has_no_no_move_or_draw_spike": true,
+      "enabled_support_0_05": {
+        "conversion_status_counts": {
+          "failed": 1,
+          "passed": 2
+        },
+        "improved": 1,
+        "krk_strategy_arbiter_sandbox_selected_by_outcome": {
+          "krk.edge_trap_close:mate": 2
+        },
+        "krk_strategy_arbiter_sandbox_selected_supported_count": 2,
+        "krk_strategy_arbiter_sandbox_supported_count": 15,
+        "krk_strategy_arbiter_sandbox_supported_provider_by_outcome": {
+          "drive_to_edge:mate": 2,
+          "drive_to_edge:max_plies": 1,
+          "edge_trap:mate": 6,
+          "edge_trap:max_plies": 3,
+          "fence_established:mate": 2,
+          "fence_established:max_plies": 1
+        },
+        "no_move": 0,
+        "one_ply_status_counts": {
+          "failed": 2,
+          "passed": 1
+        },
+        "optimal": 1,
+        "playouts": {
+          "mate": 2,
+          "max_plies": 1
+        },
+        "shadow_candidate_count": 2,
+        "total": 3,
+        "worsened": 2
+      },
+      "flag_present_default_off": {
+        "conversion_status_counts": {
+          "failed": 1,
+          "passed": 2
+        },
+        "improved": 1,
+        "krk_strategy_arbiter_sandbox_selected_by_outcome": {},
+        "krk_strategy_arbiter_sandbox_selected_supported_count": 0,
+        "krk_strategy_arbiter_sandbox_supported_count": 0,
+        "krk_strategy_arbiter_sandbox_supported_provider_by_outcome": {},
+        "no_move": 0,
+        "one_ply_status_counts": {
+          "failed": 2,
+          "passed": 1
+        },
+        "optimal": 1,
+        "playouts": {
+          "mate": 2,
+          "max_plies": 1
+        },
+        "shadow_candidate_count": 2,
+        "total": 3,
+        "worsened": 2
+      },
+      "label": "fence_established"
+    },
+    {
+      "baseline": {
+        "conversion_status_counts": {
+          "failed": 3
+        },
+        "improved": 3,
+        "krk_strategy_arbiter_sandbox_selected_by_outcome": {},
+        "krk_strategy_arbiter_sandbox_selected_supported_count": 0,
+        "krk_strategy_arbiter_sandbox_supported_count": 0,
+        "krk_strategy_arbiter_sandbox_supported_provider_by_outcome": {},
+        "no_move": 0,
+        "one_ply_status_counts": {
+          "failed": 3
+        },
+        "optimal": 0,
+        "playouts": {
+          "max_plies": 3
+        },
+        "shadow_candidate_count": 6,
+        "total": 3,
+        "worsened": 0
+      },
+      "default_off_equivalence": true,
+      "enabled_conversion_delta": 0,
+      "enabled_has_no_no_move_or_draw_spike": true,
+      "enabled_support_0_05": {
+        "conversion_status_counts": {
+          "failed": 3
+        },
+        "improved": 3,
+        "krk_strategy_arbiter_sandbox_selected_by_outcome": {
+          "krk.edge_trap_close:max_plies": 3
+        },
+        "krk_strategy_arbiter_sandbox_selected_supported_count": 3,
+        "krk_strategy_arbiter_sandbox_supported_count": 15,
+        "krk_strategy_arbiter_sandbox_supported_provider_by_outcome": {
+          "drive_to_edge:max_plies": 3,
+          "edge_trap:max_plies": 9,
+          "fence_established:max_plies": 3
+        },
+        "no_move": 0,
+        "one_ply_status_counts": {
+          "failed": 3
+        },
+        "optimal": 0,
+        "playouts": {
+          "max_plies": 3
+        },
+        "shadow_candidate_count": 6,
+        "total": 3,
+        "worsened": 0
+      },
+      "flag_present_default_off": {
+        "conversion_status_counts": {
+          "failed": 3
+        },
+        "improved": 3,
+        "krk_strategy_arbiter_sandbox_selected_by_outcome": {},
+        "krk_strategy_arbiter_sandbox_selected_supported_count": 0,
+        "krk_strategy_arbiter_sandbox_supported_count": 0,
+        "krk_strategy_arbiter_sandbox_supported_provider_by_outcome": {},
+        "no_move": 0,
+        "one_ply_status_counts": {
+          "failed": 3
+        },
+        "optimal": 0,
+        "playouts": {
+          "max_plies": 3
+        },
+        "shadow_candidate_count": 6,
+        "total": 3,
+        "worsened": 0
+      },
+      "label": "drive_to_edge"
+    }
+  ],
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "sample": {
+    "labels": [
+      "edge_trap_wrong_tempo",
+      "fence_established",
+      "drive_to_edge"
+    ],
+    "playout_max_plies": 20,
+    "samples_per_label": 3,
+    "seed": 11,
+    "stage7_rows": 0,
+    "support_amount": 0.05
+  },
+  "schema_version": "krk_strategy_arbiter_protected_control_matrix.v2",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "default_off_equivalence_passed": true,
+    "enabled_has_no_conversion_regression": true,
+    "enabled_has_no_no_move_or_draw_spike": true,
+    "enabled_support_total": 45
+  },
+  "topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json"
+}
