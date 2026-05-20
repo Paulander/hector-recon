@@ -58,3 +58,35 @@ def test_stage7_selected_path_target_spec_keeps_targets_split() -> None:
     assert target_by_id["stage7.selected_path.strategy_ownership_gap.v0"]["state_count"] == 2
     assert target_by_id["stage7.selected_path.sequence_continuation_gap.v0"]["state_count"] == 2
     assert payload["decision_gate"]["status"] == "non_causal_targets_defined_no_runtime_work"
+
+
+def test_stage7_selected_path_target_dataset_blocks_underpowered_sequence_target() -> None:
+    subprocess.run(
+        [sys.executable, "scripts/summarize_stage7_selected_failure_path_audit.py"],
+        cwd=ROOT,
+        check=True,
+    )
+    subprocess.run(
+        [sys.executable, "scripts/summarize_stage7_selected_path_target_spec.py"],
+        cwd=ROOT,
+        check=True,
+    )
+    subprocess.run(
+        [sys.executable, "scripts/build_stage7_selected_path_target_dataset.py"],
+        cwd=ROOT,
+        check=True,
+    )
+    payload = json.loads(
+        (ROOT / "reports/structural_candidates/stage7_selected_path_target_dataset_v0.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["summary"]["ownership_target_minimally_trainable"] is True
+    assert payload["summary"]["sequence_target_minimally_trainable"] is False
+    assert payload["summary"]["benchmark_underpowered"] is True
+    assert payload["decision"]["status"] == "ownership_target_minimal_sequence_target_underpowered"
