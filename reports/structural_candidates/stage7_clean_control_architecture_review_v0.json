@@ -1,0 +1,62 @@
+{
+  "blocked_next_steps": [
+    "unreviewed additional Stage 7 h40 labels",
+    "Stage 7 runtime repair",
+    "Stage 7 promotion",
+    "Stage 8 training from unresolved Stage 7",
+    "runtime selector/arbiter implementation from this evidence",
+    "support bonus or provider penalty tuning"
+  ],
+  "causal_status": "non_causal_architecture_review",
+  "conclusions": [
+    "Stage 7 clean hard negatives are available, but clean success controls remain below the minimum threshold.",
+    "A bounded current-default h40 label job produced mates but no novel de-duplicated controls, indicating sampling overlap in the current curriculum slice.",
+    "More unreviewed Stage 7 label runs are unlikely to be a principled next step and risk re-entering Stage 7 micro-work.",
+    "Runtime selector/arbiter work remains blocked by insufficient clean Stage 7 success-control evidence and unresolved curriculum-boundary concerns."
+  ],
+  "decision": {
+    "recommended_next_step": "return_to_broader_krk_strategy_or_sequence_architecture_review",
+    "runtime_work_allowed": false,
+    "status": "stage7_clean_control_collection_paused_architecture_review_required"
+  },
+  "evidence": {
+    "bounded_label_run_novel_controls": 0,
+    "bounded_label_run_playouts": {
+      "mate": 3,
+      "max_plies": 7
+    },
+    "clean_candidate_count": 34,
+    "clean_sequence_hard_negatives": 8,
+    "clean_sequence_success_controls": 2,
+    "clean_sequence_success_required": 5,
+    "sampling_overlap_detected": true
+  },
+  "gameplay_topology_mutation": false,
+  "recommended_paths": [
+    {
+      "description": "Use Stage 7 as a held-out challenge while designing broader KRK strategy ownership / sequence-policy evidence across stages.",
+      "path_id": "broader_krk_strategy_sequence_architecture_review",
+      "preferred": true,
+      "runtime_behavior_allowed": false
+    },
+    {
+      "description": "Only if more Stage 7 data is essential, design explicit disjoint source-stage/position sampling before any further labels.",
+      "path_id": "reviewed_diverse_stage7_sampling_manifest",
+      "preferred": false,
+      "runtime_behavior_allowed": false
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "stage7_clean_control_architecture_review.v0",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_clean_artifact_manifest_v0.json",
+    "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json",
+    "reports/structural_candidates/stage7_clean_h40_label_run_review_v0.json",
+    "reports/structural_candidates/stage7_clean_control_sampling_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

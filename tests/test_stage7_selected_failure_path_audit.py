@@ -327,3 +327,30 @@ def test_stage7_clean_control_sampling_review_blocks_unreviewed_more_labels() ->
         "architecture_review_before_more_stage7_clean_labels",
         "build_clean_selected_path_dataset_and_source_bias_audit",
     }
+
+
+def test_stage7_clean_control_architecture_review_pauses_stage7_collection() -> None:
+    for script in (
+        "scripts/build_stage7_clean_artifact_manifest.py",
+        "scripts/recover_stage7_clean_sequence_controls.py",
+        "scripts/summarize_stage7_clean_h40_label_manifest.py",
+        "scripts/summarize_stage7_clean_h40_label_run_review.py",
+        "scripts/summarize_stage7_clean_control_sampling_review.py",
+        "scripts/summarize_stage7_clean_control_architecture_review.py",
+    ):
+        subprocess.run([sys.executable, script], cwd=ROOT, check=True)
+    payload = json.loads(
+        (ROOT / "reports/structural_candidates/stage7_clean_control_architecture_review_v0.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["decision"]["runtime_work_allowed"] is False
+    assert payload["decision"]["status"] == "stage7_clean_control_collection_paused_architecture_review_required"
+    assert "unreviewed additional Stage 7 h40 labels" in payload["blocked_next_steps"]
+    preferred = [path for path in payload["recommended_paths"] if path["preferred"] is True]
+    assert preferred[0]["path_id"] == "broader_krk_strategy_sequence_architecture_review"
