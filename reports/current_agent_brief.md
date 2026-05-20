@@ -789,6 +789,14 @@ KRK normalized selector probe review v1:
 
 The review finds a real but insufficient normalized-selector signal: `family_rank_score_bucket` improves over the family/maturity provenance baseline by about `0.093` accuracy on existing provenance rows. It is still not runtime-ready because the dataset is small, balanced rows lack rank/score fields, and Stage 7 remains held out. Decision: `normalized_selector_signal_promising_more_ranked_frames_required`; next step is to build ranked StrategyProposalFrame rows for balanced/protected controls before any further runtime test.
 
+KRK ranked StrategyProposalFrame dataset v1:
+
+- `scripts/build_krk_ranked_strategy_proposal_frames_v1.py`
+- `reports/krk_ranked_strategy_proposal_frames_v1.json`
+- `reports/krk_ranked_strategy_proposal_frames_v1.md`
+
+The replay-free dataset exports existing `StrategyProposalFrame` records from control-plane frames with `provider_local_rank` and `normalized_score`. It contains `87` proposal rows across `22` frames, with `42` non-Stage7 usable context rows and `45` Stage7 challenge rows held out. No row is missing rank or normalized score. Labels are frame-level context only; the export explicitly does not treat every proposal in a mate frame as a positive owner. Decision: `ranked_strategy_proposal_frames_exported`; next step is an offline ranked-frame probe, not a runtime test.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
