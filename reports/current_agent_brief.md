@@ -773,6 +773,14 @@ KRK normalized strategy selector objective v1:
 
 The normalized selector objective design defines a non-causal offline objective contract. It separates selected-playout, forced-provider, same-move compatibility, and Stage 7 held-out challenge labels; requires StrategyProposalFrame-compatible proposal rows, provider provenance/maturity, provider-local rank, and normalized score; and explicitly blocks runtime support, Stage 7 repair, promotion, Stage 8, runtime DTM/tablebase, and topology mutation. Decision: `normalized_selector_objective_design_ready_for_offline_probe`; the next permitted step is an offline normalized selector objective probe, not a runtime test.
 
+KRK normalized strategy selector objective probe v1:
+
+- `scripts/probe_krk_normalized_strategy_selector_objective_v1.py`
+- `reports/krk_normalized_strategy_selector_objective_probe_v1.json`
+- `reports/krk_normalized_strategy_selector_objective_probe_v1.md`
+
+The offline probe replays existing balanced/provenance labels without new playouts. Provenance-style baselines remain useful (`0.889` balanced LOO accuracy and `0.815` provenance LOO accuracy for `family_maturity_target_kind`), with no Stage 7 training leakage. However, all `72` labeled rows are missing the objective-critical `provider_local_rank` and `normalized_score` fields, so the full normalized objective cannot yet be tested. Decision: `normalized_objective_probe_underpowered_missing_rank_fields`; next step is to export StrategyProposalFrame-compatible rows with provider-local rank and normalized score.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
