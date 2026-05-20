@@ -1,0 +1,82 @@
+{
+  "allowed_uses": [
+    "proposal_coverage_audit",
+    "candidate_generator_evaluation",
+    "capacity_map_diagnostic",
+    "state_provider_contrast_review"
+  ],
+  "blocked_uses": [
+    "direct_selector_training_positive",
+    "runtime_provider_boost",
+    "runtime_provider_penalty",
+    "runtime_candidate_generation",
+    "topology_edge_creation",
+    "stage7_repair_or_promotion",
+    "stage8_training"
+  ],
+  "causal_status": "non_causal_semantics_review",
+  "decision": {
+    "recommended_next_step": "design_non_causal_candidate_generator_coverage_audit",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "capacity_frames_diagnostic_not_selector_training_ready"
+  },
+  "gameplay_topology_mutation": false,
+  "requirements_before_training_use": [
+    "define a separate candidate-generator target or runtime-proposal target",
+    "separate forced-provider capacity labels from selected-playout and runtime-proposal labels",
+    "validate false positives with protected guardrails",
+    "include negative-capacity labels and same-state alternatives",
+    "keep Stage 7 held out unless explicitly reclassified",
+    "run a non-causal review before any sandbox"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_protected_provider_capacity_frame_training_semantics_review.v0",
+  "semantic_findings": [
+    {
+      "evidence": "Rows were generated from forced-provider playouts for providers absent from runtime proposal frames.",
+      "finding": "forced_provider_capacity_is_not_direct_selector_supervision",
+      "implication": "Positive capacity labels should not become selector positives without a separate proposal-generation or ownership review."
+    },
+    {
+      "evidence": "11 converting protected labels were missing from proposal frames.",
+      "finding": "candidate_generation_gap_precedes_selector_gap",
+      "implication": "The architecture needs non-causal proposal/candidate coverage evidence before selector training can be evaluated fairly."
+    },
+    {
+      "evidence": "5 protected forced-provider labels still max_plies at h40.",
+      "finding": "negative_capacity_labels_are_useful_hard_negatives_but_not_runtime_vetoes",
+      "implication": "They can test capacity limits, but must not suppress providers at runtime."
+    }
+  ],
+  "source_artifacts": [
+    "reports/krk_protected_provider_coverage_frames_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "negative_capacity_count": 5,
+    "positive_capacity_count": 11,
+    "provider_family_counts": {
+      "drive_to_edge": 1,
+      "edge_trap": 9,
+      "fence_established": 3,
+      "stage0_basin": 3
+    },
+    "row_count": 16,
+    "runtime_proposal_row_count": 0,
+    "source_stage_counts": {
+      "stage4": 6,
+      "stage5": 7,
+      "stage6": 3
+    },
+    "stage7_row_count": 0,
+    "training_row_count": 0
+  }
+}

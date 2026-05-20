@@ -66,6 +66,20 @@ assert COVERAGE_FRAMES_SPEC.loader is not None
 coverage_frames_module = importlib.util.module_from_spec(COVERAGE_FRAMES_SPEC)
 COVERAGE_FRAMES_SPEC.loader.exec_module(coverage_frames_module)
 
+CAPACITY_SEMANTICS_SCRIPT = (
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_protected_provider_capacity_frame_training_semantics.py"
+)
+CAPACITY_SEMANTICS_SPEC = importlib.util.spec_from_file_location(
+    "review_krk_protected_provider_capacity_frame_training_semantics",
+    CAPACITY_SEMANTICS_SCRIPT,
+)
+assert CAPACITY_SEMANTICS_SPEC is not None
+assert CAPACITY_SEMANTICS_SPEC.loader is not None
+capacity_semantics_module = importlib.util.module_from_spec(CAPACITY_SEMANTICS_SPEC)
+CAPACITY_SEMANTICS_SPEC.loader.exec_module(capacity_semantics_module)
+
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
     path = root / relative
@@ -336,3 +350,45 @@ def test_protected_provider_coverage_frames_are_capacity_evidence_not_training(t
     assert row["proposal_source"] == "offline_forced_provider_label_not_runtime_proposal"
     assert row["usable_for_training"] is False
     assert row["has_runtime_proposal_frame"] is False
+
+
+def test_capacity_frame_training_semantics_review_blocks_selector_training(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(capacity_semantics_module, "ROOT", root)
+    _write_json(
+        root,
+        capacity_semantics_module.COVERAGE_FRAMES,
+        {
+            "causal_status": "non_causal_capacity_frame_dataset",
+            "rows": [
+                {
+                    "source_stage": "stage6",
+                    "provider_family": "drive_to_edge",
+                    "capacity_label": "positive_capacity",
+                    "usable_for_training": False,
+                    "has_runtime_proposal_frame": False,
+                },
+                {
+                    "source_stage": "stage5",
+                    "provider_family": "edge_trap",
+                    "capacity_label": "negative_capacity",
+                    "usable_for_training": False,
+                    "has_runtime_proposal_frame": False,
+                },
+            ],
+        },
+    )
+
+    review = capacity_semantics_module.build_review()
+
+    assert review["schema_version"] == "krk_protected_provider_capacity_frame_training_semantics_review.v0"
+    assert review["causal_status"] == "non_causal_semantics_review"
+    assert review["runtime_behavior_changed"] is False
+    assert review["runtime_selector_implemented"] is False
+    assert review["stage7_promotion_allowed"] is False
+    assert review["stage8_training_allowed"] is False
+    assert review["summary"]["positive_capacity_count"] == 1
+    assert review["summary"]["negative_capacity_count"] == 1
+    assert "direct_selector_training_positive" in review["blocked_uses"]
+    assert review["decision"]["selector_training_allowed"] is False
+    assert review["decision"]["status"] == "capacity_frames_diagnostic_not_selector_training_ready"

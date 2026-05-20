@@ -88,6 +88,7 @@ Current interpretation:
 - `krk_ranked_proposal_frame_protected_provider_coverage_review_v0` confirms the coverage issue: all `16` protected label frames/states are present, but `0/16` forced providers are present in the current proposal frames. This includes `11` converting labels. Next allowed slice: design a non-causal proposal-coverage expansion for protected states; do not implement runtime selection.
 - `krk_protected_proposal_coverage_expansion_plan_v0` defines that expansion as non-causal evidence rows only: create `16` protected provider candidate frames from forced labels plus existing state context, with `usable_for_training = false` initially and no runtime selector/topology effect. Next allowed slice: build `krk_protected_provider_coverage_frames_v0` and review whether those rows should remain capacity-only or become a separate training/evaluation channel.
 - `krk_protected_provider_coverage_frames_v0` materializes those `16` rows as non-causal capacity evidence (`11` positive_capacity / `5` negative_capacity), with `0` Stage 7 rows, `0` training rows, and `0` runtime proposal rows. Next allowed slice: review capacity-frame training semantics before any selector use.
+- `krk_protected_provider_capacity_frame_training_semantics_review_v0` blocks direct selector training from those rows. Forced-provider capacity is useful proposal/candidate-generation evidence, but it is not a runtime-proposal or ownership label. Next allowed slice: design a non-causal candidate-generator coverage audit.
 
 ## Hard Invariants
 
