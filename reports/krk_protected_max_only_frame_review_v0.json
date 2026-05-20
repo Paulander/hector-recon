@@ -1,0 +1,205 @@
+{
+  "causal_status": "non_causal_artifact_review",
+  "decision": {
+    "recommended_next_step": "define_protected_missing_provider_capacity_audit",
+    "runtime_work_allowed": false,
+    "status": "protected_max_only_frames_block_runtime_selector"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": [
+    "The protected strategy selector can only choose among materialized/labeled provider proposals.",
+    "Current selectors recover mate when a labeled converting provider is present, but half of protected benchmark frames have no labeled mate provider.",
+    "This makes the next broader bottleneck a missing-provider / continuation-capacity / label-coverage problem, not a selector-score problem."
+  ],
+  "max_only_frames": [
+    {
+      "active_landmark_label": "fence_established",
+      "fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.02feb8593cc6",
+      "max_only_provider_counts": {
+        "krk.edge_trap_close": 1,
+        "krk.edge_trap_enemy_between": 1,
+        "krk.edge_trap_wrong_tempo": 1
+      },
+      "outcome": "max_plies",
+      "proposal_count": 3,
+      "source_stage": "stage5",
+      "state_id": "state.02feb8593cc6"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "fen": "5k2/7R/K7/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.326222aefdf1",
+      "max_only_provider_counts": {
+        "krk.edge_trap_close": 1,
+        "krk.edge_trap_enemy_between": 1,
+        "krk.edge_trap_wrong_tempo": 1
+      },
+      "outcome": "max_plies",
+      "proposal_count": 3,
+      "source_stage": "stage5",
+      "state_id": "state.326222aefdf1"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "fen": "1k6/7R/2K5/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.3dca34326fca",
+      "max_only_provider_counts": {
+        "krk.stage0_basin": 1
+      },
+      "outcome": "max_plies",
+      "proposal_count": 1,
+      "source_stage": "stage5",
+      "state_id": "state.3dca34326fca"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.02feb8593cc6",
+      "max_only_provider_counts": {
+        "krk.edge_trap_close": 1,
+        "krk.edge_trap_enemy_between": 1,
+        "krk.edge_trap_wrong_tempo": 1
+      },
+      "outcome": "max_plies",
+      "proposal_count": 3,
+      "source_stage": "stage5",
+      "state_id": "state.02feb8593cc6"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.699f0003a511",
+      "max_only_provider_counts": {
+        "krk.edge_trap_close": 1,
+        "krk.edge_trap_enemy_between": 1,
+        "krk.edge_trap_wrong_tempo": 1
+      },
+      "outcome": "max_plies",
+      "proposal_count": 3,
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.699f0003a511",
+      "max_only_provider_counts": {
+        "krk.edge_trap_close": 1,
+        "krk.edge_trap_enemy_between": 1,
+        "krk.edge_trap_wrong_tempo": 1
+      },
+      "outcome": "max_plies",
+      "proposal_count": 3,
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.699f0003a511",
+      "max_only_provider_counts": {
+        "krk.edge_trap_close": 1,
+        "krk.edge_trap_enemy_between": 1,
+        "krk.edge_trap_wrong_tempo": 1
+      },
+      "outcome": "max_plies",
+      "proposal_count": 3,
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.699f0003a511",
+      "max_only_provider_counts": {
+        "krk.edge_trap_close": 1,
+        "krk.edge_trap_enemy_between": 1,
+        "krk.edge_trap_wrong_tempo": 1
+      },
+      "outcome": "max_plies",
+      "proposal_count": 3,
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.699f0003a511",
+      "max_only_provider_counts": {
+        "krk.edge_trap_close": 1,
+        "krk.edge_trap_enemy_between": 1,
+        "krk.edge_trap_wrong_tempo": 1
+      },
+      "outcome": "max_plies",
+      "proposal_count": 3,
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "fen": "8/k7/3K4/8/8/1R6/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.256a3da30f0f",
+      "max_only_provider_counts": {
+        "krk.stage0_basin": 1
+      },
+      "outcome": "max_plies",
+      "proposal_count": 1,
+      "source_stage": "stage4",
+      "state_id": "state.256a3da30f0f"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "fen": "2K5/1R6/8/k7/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.b11124d658cf",
+      "max_only_provider_counts": {
+        "krk.stage0_basin": 1
+      },
+      "outcome": "max_plies",
+      "proposal_count": 1,
+      "source_stage": "stage4",
+      "state_id": "state.b11124d658cf"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "fen": "8/k7/3K4/8/8/1R6/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.256a3da30f0f",
+      "max_only_provider_counts": {
+        "krk.stage0_basin": 1
+      },
+      "outcome": "max_plies",
+      "proposal_count": 1,
+      "source_stage": "stage4",
+      "state_id": "state.256a3da30f0f"
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_protected_max_only_frame_review.v0",
+  "source_artifacts": [
+    "reports/krk_control_plane_filtered_frames_v0.json",
+    "reports/krk_control_plane_strategy_arbitration_baseline_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "baseline_selected_status": "strategy_arbitration_promising",
+    "frames_with_labeled_mate_provider": 12,
+    "frames_with_only_labeled_max_plies_providers": 12,
+    "max_only_by_stage": {
+      "stage4": 3,
+      "stage5": 4,
+      "stage6": 5
+    },
+    "max_only_provider_counts": {
+      "krk.edge_trap_close": 8,
+      "krk.edge_trap_enemy_between": 8,
+      "krk.edge_trap_wrong_tempo": 8,
+      "krk.stage0_basin": 4
+    },
+    "runtime_work_allowed": false,
+    "strategy_benchmark_frame_count": 24
+  }
+}

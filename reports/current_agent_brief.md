@@ -80,6 +80,7 @@ Current interpretation:
 - `stage7_curriculum_boundary_decision_v0` records the architecture decision to stop treating Stage 7 as a standalone problem to crack. `box_shrink` is now local evidence / handoff trigger / phase-boundary signal; Stage 7 rows may be used as held-out challenge evidence, not as training rows or promotion criteria.
 - `krk_control_plane_stage7_boundary_refresh_v0` refreshes the broader control-plane strategy artifacts to honor that decision: Stage 7 contributes `7` held-out boundary frames and `0` strategy-ready training frames; protected Stage 4/5/6 provide `24` strategy-arbitration benchmark frames.
 - After the refresh, `krk_control_plane_strategy_arbitration_baseline_v1` is computed only over protected Stage 4/5/6 strategy benchmark frames (`24` total). It still reports `strategy_arbitration_promising`, but remains non-causal and too small for runtime promotion.
+- `krk_protected_max_only_frame_review_v0` shows the next broader bottleneck: `12/24` protected strategy frames have a labeled mate provider available, while `12/24` have only labeled max-plies provider proposals. The selector cannot solve missing-provider/capacity/label-coverage gaps; next step is a protected missing-provider capacity audit, not selector tuning.
 
 ## Hard Invariants
 

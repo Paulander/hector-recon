@@ -218,6 +218,17 @@ _control_plane_stage7_boundary_refresh = importlib.util.module_from_spec(
 )
 _control_plane_stage7_boundary_refresh_spec.loader.exec_module(_control_plane_stage7_boundary_refresh)
 
+_protected_max_only_review_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_protected_max_only_frame_review",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "summarize_krk_protected_max_only_frame_review.py",
+)
+assert _protected_max_only_review_spec is not None
+assert _protected_max_only_review_spec.loader is not None
+_protected_max_only_review = importlib.util.module_from_spec(_protected_max_only_review_spec)
+_protected_max_only_review_spec.loader.exec_module(_protected_max_only_review)
+
 _strategy_arbiter_risk_review_spec = importlib.util.spec_from_file_location(
     "review_krk_strategy_arbiter_evidence_risks",
     Path(__file__).resolve().parents[1] / "scripts" / "review_krk_strategy_arbiter_evidence_risks.py",
@@ -2524,6 +2535,62 @@ def test_krk_control_plane_stage7_boundary_refresh_keeps_stage7_heldout(tmp_path
     assert review["decision"]["status"] == "control_plane_respects_stage7_boundary"
     assert review["filtered_frame_summary"]["strategy_ready_by_stage"] == {"stage5": 1}
     assert review["filtered_frame_summary"]["stage7_boundary_heldout_frame_count"] == 1
+
+
+def test_krk_protected_max_only_review_identifies_capacity_gap(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    (reports / "krk_control_plane_filtered_frames_v0.json").write_text(
+        json.dumps(
+            {
+                "frames": [
+                    {
+                        "frame_id": "cp.mate",
+                        "state_id": "state.mate",
+                        "source_stage": "stage5",
+                        "active_landmark_label": "fence_established",
+                        "outcome": "mate",
+                        "filter_metadata": {"benchmark_roles": ["strategy_arbitration_benchmark"]},
+                        "strategy_proposal_frames": [
+                            {"provider_id": "krk.edge_trap_close", "known_outcome_label": {"result": "mate"}}
+                        ],
+                    },
+                    {
+                        "frame_id": "cp.max",
+                        "state_id": "state.max",
+                        "source_stage": "stage6",
+                        "active_landmark_label": "drive_to_edge",
+                        "outcome": "max_plies",
+                        "filter_metadata": {"benchmark_roles": ["strategy_arbitration_benchmark"]},
+                        "strategy_proposal_frames": [
+                            {
+                                "provider_id": "krk.stage0_basin",
+                                "known_outcome_label": {"result": "max_plies"},
+                            }
+                        ],
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reports / "krk_control_plane_strategy_arbitration_baseline_v1.json").write_text(
+        json.dumps({"decision": {"selected_status": "strategy_arbitration_promising"}}),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_protected_max_only_review, "ROOT", root)
+
+    review = _protected_max_only_review.build_review()
+
+    assert review["schema_version"] == "krk_protected_max_only_frame_review.v0"
+    assert review["causal_status"] == "non_causal_artifact_review"
+    assert review["runtime_behavior_changed"] is False
+    assert review["stage7_promotion_allowed"] is False
+    assert review["stage8_training_allowed"] is False
+    assert review["summary"]["frames_with_labeled_mate_provider"] == 1
+    assert review["summary"]["frames_with_only_labeled_max_plies_providers"] == 1
+    assert review["decision"]["status"] == "protected_max_only_frames_block_runtime_selector"
 
 
 def test_krk_strategy_arbiter_risk_review_separates_label_semantics(tmp_path):
