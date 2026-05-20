@@ -41,6 +41,18 @@ selected_diversity_labels_module = _load_module(
     "run_krk_selected_provider_diversity_ownership_labels_v0",
     "run_krk_selected_provider_diversity_ownership_labels_v0.py",
 )
+context_dataset_module = _load_module(
+    "build_krk_ownership_selection_context_dataset_v0",
+    "build_krk_ownership_selection_context_dataset_v0.py",
+)
+context_probe_module = _load_module(
+    "probe_krk_ownership_selection_context_features_v0",
+    "probe_krk_ownership_selection_context_features_v0.py",
+)
+context_review_module = _load_module(
+    "review_krk_ownership_context_feature_results_v0",
+    "review_krk_ownership_context_feature_results_v0.py",
+)
 
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
@@ -331,3 +343,103 @@ def test_ownership_v1_merges_diversity_negatives_without_training_rows(tmp_path,
     }
     assert dataset["summary"]["selector_training_row_count"] == 0
     assert dataset["decision"]["selector_training_allowed"] is False
+
+
+def test_ownership_context_dataset_and_probe_are_non_causal(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(context_dataset_module, "ROOT", root)
+    monkeypatch.setattr(context_probe_module, "ROOT", root)
+    monkeypatch.setattr(context_review_module, "ROOT", root)
+    reports = root / "reports"
+    reports.mkdir()
+    _write_json(
+        root,
+        context_dataset_module.OWNERSHIP,
+        {
+            "causal_status": "non_causal_ownership_label_dataset",
+            "rows": [
+                {
+                    "causal_status": "non_causal_ownership_label",
+                    "state_id": "state.a",
+                    "frame_id": "cp.krk.state.a",
+                    "source_stage": "stage5",
+                    "active_landmark_label": "fence_established",
+                    "provider_id": "krk.stage0_basin",
+                    "provider_family": "stage0_basin",
+                    "move_uci": "h7h8",
+                    "target_label": "selected_owner_converted",
+                    "owner_positive": True,
+                    "target_provider_best_raw_score": 12.0,
+                    "unique_provider_count": 1,
+                    "target_provider_summary_count": 1,
+                    "source_terms": [],
+                    "usable_for_selector_training": False,
+                },
+                {
+                    "causal_status": "non_causal_ownership_label",
+                    "state_id": "state.b",
+                    "frame_id": "cp.krk.state.b",
+                    "source_stage": "stage6",
+                    "active_landmark_label": "drive_to_edge",
+                    "provider_id": "krk.stage0_basin",
+                    "provider_family": "stage0_basin",
+                    "move_uci": "a4a8",
+                    "target_label": "selected_owner_failed",
+                    "owner_positive": False,
+                    "target_provider_best_raw_score": 8.0,
+                    "unique_provider_count": 1,
+                    "target_provider_summary_count": 1,
+                    "source_terms": [],
+                    "usable_for_selector_training": False,
+                },
+            ],
+        },
+    )
+    for source in context_dataset_module.LABEL_SOURCES:
+        _write_json(root, source, {"causal_status": "non_causal_label_run", "labels": []})
+    for source in context_dataset_module.FRAME_SOURCES:
+        _write_json(
+            root,
+            source,
+            {
+                "causal_status": "non_causal_frame_export",
+                "frames": [
+                    {
+                        "state_id": "state.a",
+                        "fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+                    },
+                    {
+                        "state_id": "state.b",
+                        "fen": "8/8/8/8/R7/2k5/4K3/8 w - - 2 2",
+                    },
+                ],
+            },
+        )
+
+    dataset = context_dataset_module.build_dataset()
+    (reports / "krk_ownership_selection_context_dataset_v0.json").write_text(
+        json.dumps(dataset),
+        encoding="utf-8",
+    )
+    probe = context_probe_module.build_probe()
+    (reports / "krk_ownership_selection_context_feature_probe_v0.json").write_text(
+        json.dumps(probe),
+        encoding="utf-8",
+    )
+    _write_json(
+        root,
+        context_review_module.BASE_PROBE,
+        {
+            "causal_status": "non_causal_offline_probe",
+            "best_result": {"negative_suppression": 0.0, "positive_recall": 0.0},
+        },
+    )
+    review = context_review_module.build_review()
+
+    assert dataset["summary"]["fen_join_count"] == 2
+    assert dataset["summary"]["selector_training_row_count"] == 0
+    assert probe["causal_status"] == "non_causal_offline_probe"
+    assert probe["decision"]["selector_training_allowed"] is False
+    assert "best_balanced_result" in probe
+    assert review["runtime_selector_implemented"] is False
+    assert review["decision"]["runtime_work_allowed"] is False
