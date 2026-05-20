@@ -266,6 +266,19 @@ _protected_missing_provider_manifest_review = importlib.util.module_from_spec(
 )
 _protected_missing_provider_manifest_review_spec.loader.exec_module(_protected_missing_provider_manifest_review)
 
+_protected_missing_provider_label_run_spec = importlib.util.spec_from_file_location(
+    "run_krk_protected_missing_provider_capacity_labels",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "run_krk_protected_missing_provider_capacity_labels.py",
+)
+assert _protected_missing_provider_label_run_spec is not None
+assert _protected_missing_provider_label_run_spec.loader is not None
+_protected_missing_provider_label_run = importlib.util.module_from_spec(
+    _protected_missing_provider_label_run_spec
+)
+_protected_missing_provider_label_run_spec.loader.exec_module(_protected_missing_provider_label_run)
+
 _strategy_arbiter_risk_review_spec = importlib.util.spec_from_file_location(
     "review_krk_strategy_arbiter_evidence_risks",
     Path(__file__).resolve().parents[1] / "scripts" / "review_krk_strategy_arbiter_evidence_risks.py",
@@ -2723,6 +2736,91 @@ def test_krk_protected_missing_provider_capacity_manifest_review_allows_labels(t
     assert review["review_summary"]["violation_count"] == 0
     assert review["decision"]["labels_allowed"] is True
     assert review["decision"]["runtime_work_allowed"] is False
+
+
+def test_krk_protected_missing_provider_capacity_labels_are_non_causal(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    (reports / "krk_protected_missing_provider_capacity_execution_manifest_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_execution_manifest",
+                "binding_summary": {"all_bindings_valid": True},
+                "jobs": [
+                    {
+                        "job_id": "job.stage6",
+                        "frame_id": "cp.stage6",
+                        "state_id": "state.stage6",
+                        "source_stage": "stage6",
+                        "active_landmark_label": "drive_to_edge",
+                        "provider_id": "krk.drive_to_edge",
+                        "stage7_training_row": False,
+                        "execution_binding": {"provider_version": "stage6_overlay_v1"},
+                    },
+                    {
+                        "job_id": "job.stage4",
+                        "frame_id": "cp.stage4",
+                        "state_id": "state.stage4",
+                        "source_stage": "stage4",
+                        "active_landmark_label": "wrong_tempo_control",
+                        "provider_id": "krk.edge_trap_wrong_tempo",
+                        "stage7_training_row": False,
+                        "execution_binding": {"provider_version": "stage5_validated_v1"},
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reports / "krk_protected_missing_provider_capacity_execution_manifest_review_v0.json").write_text(
+        json.dumps(
+            {
+                "causal_status": "non_causal_manifest_review",
+                "decision": {"labels_allowed": True},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    def fake_run_job(repo_root, job, cache):
+        return {
+            "schema_version": "krk_forced_provider_control_label.v0",
+            "causal_status": "non_causal_outcome_label",
+            "job_id": job["job_id"],
+            "source_stage": job["source_stage"],
+            "provider_id": job["provider_id"],
+            "forced_first_move": "a1a2",
+            "result": "max_plies",
+            "plies": 40,
+            "trace": [{"fen": "start"}, {"fen": "end"}],
+            "stagnation_summary": {"no_progress_plies": 4},
+        }
+
+    monkeypatch.setattr(_protected_missing_provider_label_run, "ROOT", root)
+    monkeypatch.setattr(_protected_missing_provider_label_run.forced_labels, "_run_job", fake_run_job)
+
+    payload = _protected_missing_provider_label_run.run_labels()
+
+    assert payload["schema_version"] == "krk_protected_missing_provider_capacity_labels.v0"
+    assert payload["causal_status"] == "non_causal_label_run"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_defaults_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_terminals_added"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["summary"]["label_count"] == 2
+    assert payload["summary"]["stage7_labels"] == 0
+    assert payload["summary"]["stage7_training_labels"] == 0
+    label = payload["labels"][0]
+    assert label["label_channel"] == "protected_missing_provider_capacity"
+    assert label["full_trace_elided"] is True
+    assert "trace" not in label
+    assert label["provider_version"] == "stage6_overlay_v1"
+    assert payload["labels"][1]["source_active_landmark_label"] == "wrong_tempo_control"
+    assert payload["labels"][1]["execution_landmark_label"] == "edge_trap_wrong_tempo"
+    assert payload["decision"]["runtime_work_allowed"] is False
 
 
 def test_krk_strategy_arbiter_risk_review_separates_label_semantics(tmp_path):
