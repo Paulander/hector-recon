@@ -1,0 +1,105 @@
+{
+  "causal_status": "non_causal_label_plan",
+  "decision": {
+    "recommended_next_step": "run_bounded_diverse_contrast_label_slice_if_budget_allows",
+    "runtime_test_allowed_next": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "diverse_contrast_label_plan_ready"
+  },
+  "gameplay_topology_mutation": false,
+  "label_budget": {
+    "diagnostic_caches": true,
+    "horizon": 40,
+    "max_forced_provider_labels": 24,
+    "max_new_states": 8,
+    "parallel_workers_if_available": true,
+    "trace_failures_only": true
+  },
+  "purpose": "Collect a small, balanced, state-local provider contrast set that can test normalized selector objectives without relying on frame-level outcome labels.",
+  "required_fields": [
+    "state_id",
+    "fen",
+    "source_stage",
+    "active_landmark_label",
+    "provider_id",
+    "provider_family",
+    "provider_maturity",
+    "provider_local_rank",
+    "normalized_score",
+    "forced_result_h40",
+    "forced_plies",
+    "forced_first_move",
+    "frame_outcome",
+    "label_channel=forced_provider_state_local_contrast",
+    "stage7_challenge_row",
+    "causal_status=non_causal"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_diverse_contrast_label_plan.v1",
+  "source_artifact": "reports/krk_runtime_selector_readiness_review_v1.json",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "stop_conditions": [
+    "projected runtime exceeds practical bounded h40 label budget",
+    "labels require runtime DTM/tablebase",
+    "labeling starts tuning Stage7",
+    "protected Stage5/6 behavior is modified",
+    "proposal would become a runtime selector"
+  ],
+  "strata": [
+    {
+      "provider_families": [
+        "stage0_basin",
+        "edge_trap",
+        "fence_established"
+      ],
+      "purpose": "add non-stage5/6 contrast and negative controls",
+      "stratum_id": "protected_stage4_wrong_tempo",
+      "target_state_count": 2
+    },
+    {
+      "provider_families": [
+        "stage0_basin",
+        "edge_trap",
+        "fence_established",
+        "drive_to_edge"
+      ],
+      "purpose": "separate fence finish from edge-trap alternatives",
+      "stratum_id": "protected_stage5_fence",
+      "target_state_count": 2
+    },
+    {
+      "provider_families": [
+        "stage0_basin",
+        "drive_to_edge",
+        "edge_trap",
+        "fence_established"
+      ],
+      "purpose": "separate drive ownership from stage0 and edge/fence fallbacks",
+      "stratum_id": "protected_stage6_drive",
+      "target_state_count": 2
+    },
+    {
+      "provider_families": [
+        "stage0_basin",
+        "drive_to_edge",
+        "edge_trap",
+        "fence_established"
+      ],
+      "purpose": "held-out evaluation only; never training",
+      "stratum_id": "stage7_challenge_eval_only",
+      "target_state_count": 2,
+      "training_allowed": false
+    }
+  ],
+  "success_criteria": [
+    "at least 40 non-Stage7 contrast rows",
+    "at least 3 provider families with positive and negative examples where possible",
+    "negative labels not dominated by one repeated state/provider family",
+    "leave-state-out negative_suppression improves over 0.0",
+    "Stage7 rows remain held-out evaluation only"
+  ]
+}

@@ -824,6 +824,14 @@ KRK runtime selector readiness review v1:
 
 The readiness review closes the current runtime-selector evidence branch. Positive results: default-off sandbox mechanics are trace-visible/default-safe, protected runtime tests showed no small-scale regression, Stage 7 is blocked by default, normalized rank/score has a non-causal signal, and ranked proposal frames can be exported replay-free. Blocking results: additive support is unsafe to scale blindly, frame-level labels are too coarse, state-local contrast labels are sparse and fail negative suppression, and Stage 7 remains unresolved/held out. Decision: `runtime_selector_not_ready_collect_better_contrast_labels`; next step is a small diverse state-local contrast label plan, not runtime behavior.
 
+KRK diverse contrast label plan v1:
+
+- `scripts/summarize_krk_diverse_contrast_label_plan_v1.py`
+- `reports/krk_diverse_contrast_label_plan_v1.json`
+- `reports/krk_diverse_contrast_label_plan_v1.md`
+
+The plan defines the next non-causal evidence slice: at most `8` new states and `24` forced-provider h40 labels across protected Stage 4/5/6 plus Stage 7 challenge evaluation-only rows. It requires provider-local rank/normalized score, separated state-local contrast labels, diagnostic caches, trace failures only, and no runtime DTM/tablebase. Stage 7 rows remain held out and not training. Decision: `diverse_contrast_label_plan_ready`; runtime selector, Stage 7 promotion, and Stage 8 remain blocked.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
