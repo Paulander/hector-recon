@@ -47,6 +47,7 @@ Current interpretation:
 - Replay-free abstention reconstruction (`krk_abstention_training_dataset_v0` / `krk_abstention_training_probe_v0`) recovered `28` protected rows but only `5` unsafe-owner examples. Leave-state-out negative suppression remains `0.0`; runtime selector work remains blocked until more protected negative controls or a better non-causal objective is available.
 - Abstention v1 added selected-playout labels replay-free and reached the raw evidence threshold (`51` protected rows, `17` unsafe-owner examples), but the best leave-state-out negative suppression is only `0.176` with safe preservation `0.618`. This confirms that count alone is not enough; the abstention objective needs better state/context features or cleaner label semantics before any runtime review.
 - `krk_abstention_feature_gap_review_v0` concludes the next safe step is replay-free only: join abstention labels with ControlPlaneEvidenceFrame terminal-space/proposal/monitor context. Runtime selector work remains blocked.
+- `krk_abstention_context_feature_dataset_v0` / `krk_abstention_context_feature_probe_v0` joined all `51` abstention rows to replay-free control-plane context. Context features help negative suppression (`0.824` best via king-support bucket + provider family vs `0.176` baseline) but safe preservation is only `0.647`, below the `0.7` runtime-review threshold. Runtime selector work remains blocked; the next work, if any, must refine context labels/features non-causally or go back to architecture review.
 
 ## Hard Invariants
 
