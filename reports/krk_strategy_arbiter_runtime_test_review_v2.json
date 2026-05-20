@@ -1,0 +1,69 @@
+{
+  "blocked_next_steps": [
+    "increase_broad_additive_support",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "runtime_test_review_non_promoting",
+  "decision": {
+    "recommended_next_step": "non_causal_arbitration_objective_review_before_more_runtime_tests",
+    "runtime_promotion_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "runtime_sandbox_safe_but_additive_support_not_ready_to_scale"
+  },
+  "evidence_statuses": {
+    "protected_control_matrix_v2": "protected_control_matrix_v2_passed",
+    "smoke": "runtime_sandbox_smoke_passed",
+    "stage7_challenge_probe": "stage7_challenge_probe_no_regression",
+    "stage7_holdout_lock": "stage7_holdout_lock_passed",
+    "support_sensitivity": "support_sensitivity_measured"
+  },
+  "findings": {
+    "default_off_equivalence_passed": true,
+    "high_support_scale_risk": true,
+    "low_support_cap": 5.0,
+    "protected_labels_with_high_support_change": [
+      "drive_to_edge"
+    ],
+    "small_support_protected_no_regression": true,
+    "small_support_stage7_effective": false,
+    "small_support_trace_visible": true,
+    "stage7_challenge_conversion_delta": 0,
+    "stage7_challenge_selected_supported_count": 0,
+    "stage7_changes_under_low_support_cap": false,
+    "stage7_holdout_locked_by_default": true
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "blocked_path": "raise_additive_support_bonus",
+    "not_validated": [
+      "Stage7 effectiveness",
+      "promotion",
+      "higher additive support scale",
+      "runtime strategy arbiter as a solved ownership mechanism"
+    ],
+    "reason": "Low support is trace-visible but not effective for Stage7 ownership; high support can perturb protected one-ply ownership before there is safe Stage7 conversion evidence.",
+    "validated": [
+      "default-off runtime-test contract",
+      "trace-visible bounded support metadata",
+      "Stage7 challenge holdout lock",
+      "small protected-control no-regression behavior"
+    ]
+  },
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_strategy_arbiter_runtime_test_review.v2",
+  "source_artifacts": [
+    "reports/krk_strategy_arbiter_runtime_sandbox_smoke_v1.json",
+    "reports/krk_strategy_arbiter_protected_control_matrix_v2.json",
+    "reports/krk_strategy_arbiter_stage7_holdout_lock_v1.json",
+    "reports/krk_strategy_arbiter_stage7_challenge_probe_v1.json",
+    "reports/krk_strategy_arbiter_support_sensitivity_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

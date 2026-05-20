@@ -749,6 +749,14 @@ KRK strategy arbiter support sensitivity v1:
 
 The one-ply support sensitivity runtime-test measured support values `0.0`, `0.05`, `1.0`, `5.0`, `20.0`, and `50.0` on protected labels plus the explicit Stage 7 challenge label. Low support up to `5.0` did not change Stage 7 ownership. At high support, protected `drive_to_edge` ownership changed before there was safe Stage 7 evidence. Decision: `support_sensitivity_measured`; recommended next step is `do_not_raise_support_without_arbitration_objective_review`. This blocks simply increasing the additive support bonus as the next repair.
 
+KRK strategy arbiter runtime-test review v2:
+
+- `scripts/summarize_krk_strategy_arbiter_runtime_test_review_v2.py`
+- `reports/krk_strategy_arbiter_runtime_test_review_v2.json`
+- `reports/krk_strategy_arbiter_runtime_test_review_v2.md`
+
+The runtime-test review packages the default-off smoke, protected-control matrix, Stage 7 holdout lock, explicit Stage 7 challenge probe, and support sensitivity. Decision: `runtime_sandbox_safe_but_additive_support_not_ready_to_scale`. The sandbox contract and trace evidence are working, but additive support is not effective for Stage 7 at low support and is not safe to scale blindly because high support can perturb protected one-ply ownership. Next step should be non-causal arbitration-objective review before more runtime tests.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
