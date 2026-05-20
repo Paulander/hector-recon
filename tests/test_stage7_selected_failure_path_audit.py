@@ -273,3 +273,30 @@ def test_stage7_clean_h40_label_manifest_is_bounded_and_non_causal() -> None:
     assert "--enable-stage7-king-tempo" not in command
     assert "--enable-krk-strategy-arbiter-sandbox" not in command
     assert "--enable-krk-two-stage-abstention-selector" not in command
+
+
+def test_stage7_clean_h40_label_run_review_blocks_runtime_work() -> None:
+    for script in (
+        "scripts/build_stage7_clean_artifact_manifest.py",
+        "scripts/recover_stage7_clean_sequence_controls.py",
+        "scripts/summarize_stage7_clean_h40_label_manifest.py",
+        "scripts/summarize_stage7_clean_h40_label_run_review.py",
+    ):
+        subprocess.run([sys.executable, script], cwd=ROOT, check=True)
+    payload = json.loads(
+        (ROOT / "reports/structural_candidates/stage7_clean_h40_label_run_review_v0.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["summary"]["no_runtime_repair_flags_detected"] is True
+    assert payload["decision"]["runtime_work_allowed"] is False
+    assert payload["decision"]["status"] in {
+        "bounded_label_run_no_novel_clean_success_controls",
+        "bounded_label_run_closed_clean_success_gap",
+        "bounded_label_run_clean_gap_still_open",
+    }

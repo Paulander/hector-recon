@@ -265,7 +265,7 @@
   "source_artifacts": [
     "reports/structural_candidates/stage7_clean_artifact_manifest_v0.json"
   ],
-  "source_candidate_count": 33,
+  "source_candidate_count": 34,
   "stage7_promotion_allowed": false,
   "stage8_training_allowed": false,
   "summary": {
@@ -285,7 +285,7 @@
       "krk.stage0_basin": 7
     },
     "skipped_counts": {
-      "duplicate_control": 127,
+      "duplicate_control": 137,
       "horizon_above_h40": 25,
       "non_mate_not_h40": 68
     },

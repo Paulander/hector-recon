@@ -6,9 +6,9 @@ Replay-free classification of existing Stage 7 artifacts for clean-control recov
 
 ## Summary
 
-- artifact_count: `336`
-- classification_counts: `{'metadata_or_design_only': 184, 'clean_current_profile_candidate': 8, 'repair_sandbox_sourced': 118, 'ambiguous_needs_manual_review': 1, 'clean_default_off_candidate': 23, 'clean_baseline_candidate': 2}`
-- clean_candidate_count: `33`
+- artifact_count: `338`
+- classification_counts: `{'metadata_or_design_only': 185, 'clean_current_profile_candidate': 8, 'repair_sandbox_sourced': 118, 'ambiguous_needs_manual_review': 1, 'clean_default_off_candidate': 23, 'clean_baseline_candidate': 3}`
+- clean_candidate_count: `34`
 - repair_sandbox_sourced_count: `118`
 - ambiguous_count: `1`
 
@@ -19,6 +19,7 @@ Replay-free classification of existing Stage 7 artifacts for clean-control recov
 - `reports/structural_candidates/stage7_box_shrink_support_adapter_default_off_local_1.json`: `clean_default_off_candidate`, playouts=`{}`
 - `reports/structural_candidates/stage7_candidate_move_layer_default_off_10_h40.json`: `clean_default_off_candidate`, playouts=`{'mate': 5, 'max_plies': 5}`
 - `reports/structural_candidates/stage7_candidate_move_layer_default_off_25_h40.json`: `clean_default_off_candidate`, playouts=`{'mate': 12, 'max_plies': 13}`
+- `reports/structural_candidates/stage7_clean_h40_label_run_seed17_10_h40.json`: `clean_baseline_candidate`, playouts=`{'max_plies': 7, 'mate': 3}`
 - `reports/structural_candidates/stage7_default_off_equiv_A_no_adapter_3_h5.json`: `clean_default_off_candidate`, playouts=`{'max_plies': 3}`
 - `reports/structural_candidates/stage7_default_off_equiv_B_edge_adapter_off_3_h5.json`: `clean_default_off_candidate`, playouts=`{'max_plies': 3}`
 - `reports/structural_candidates/stage7_default_off_equiv_B_support_adapter_off_3_h5.json`: `clean_default_off_candidate`, playouts=`{'max_plies': 3}`

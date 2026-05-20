@@ -1,0 +1,69 @@
+{
+  "causal_status": "non_causal_label_run_review",
+  "decision": {
+    "recommended_next_step": "review_sampling_diversity_or_architecture_boundary_before_more_labels",
+    "runtime_work_allowed": false,
+    "status": "bounded_label_run_no_novel_clean_success_controls"
+  },
+  "gameplay_topology_mutation": false,
+  "recovery_after_run": {
+    "clean_success_gap_closed": false,
+    "control_count": 10,
+    "controls_recovered_from_run": 0,
+    "role_counts": {
+      "clean_sequence_hard_negative": 8,
+      "clean_sequence_success_control": 2
+    },
+    "source_artifact_counts": {
+      "reports/krk_two_stage_abstention_stage7_baseline_3_seed11_h40.json": 3,
+      "reports/structural_candidates/stage7_2cc_frozen_model_default_off_smoke_5_h20.json": 1,
+      "reports/structural_candidates/stage7_candidate_move_layer_default_off_10_h40.json": 2,
+      "reports/structural_candidates/stage7_family_ac_fence_noaugment_default_off_5_h40.json": 2,
+      "reports/structural_candidates/stage7_king_tempo_baseline_10_h40.json": 2
+    }
+  },
+  "run": {
+    "artifact": "reports/structural_candidates/stage7_clean_h40_label_run_seed17_10_h40.json",
+    "conversion_status_counts": {
+      "failed": 7,
+      "passed": 3
+    },
+    "enabled_stage7_or_runtime_flags": [],
+    "one_ply_status_counts": {
+      "failed": 6,
+      "passed": 4
+    },
+    "playouts": {
+      "mate": 3,
+      "max_plies": 7
+    },
+    "semantic_alignment_status_counts": {
+      "neither_reward_nor_visible_contract": 4,
+      "reward_contract_mismatch": 2,
+      "reward_visible_fence_aligned_reply_not_checked": 3,
+      "reward_visible_fence_aligned_survived": 1
+    },
+    "shadow_candidate_count": 8,
+    "total": 10
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "stage7_clean_h40_label_run_review.v0",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_clean_h40_label_manifest_v0.json",
+    "reports/structural_candidates/stage7_clean_h40_label_run_seed17_10_h40.json",
+    "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "enabled_stage7_or_runtime_flag_count": 0,
+    "label_job_added_novel_controls": false,
+    "no_runtime_repair_flags_detected": true,
+    "recovered_from_run": 0,
+    "run_mate_count": 3,
+    "run_max_plies_count": 7
+  }
+}
