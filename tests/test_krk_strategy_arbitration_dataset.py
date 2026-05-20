@@ -240,6 +240,32 @@ assert _protected_missing_provider_plan_spec.loader is not None
 _protected_missing_provider_plan = importlib.util.module_from_spec(_protected_missing_provider_plan_spec)
 _protected_missing_provider_plan_spec.loader.exec_module(_protected_missing_provider_plan)
 
+_protected_missing_provider_manifest_spec = importlib.util.spec_from_file_location(
+    "build_krk_protected_missing_provider_capacity_execution_manifest",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "build_krk_protected_missing_provider_capacity_execution_manifest.py",
+)
+assert _protected_missing_provider_manifest_spec is not None
+assert _protected_missing_provider_manifest_spec.loader is not None
+_protected_missing_provider_manifest = importlib.util.module_from_spec(
+    _protected_missing_provider_manifest_spec
+)
+_protected_missing_provider_manifest_spec.loader.exec_module(_protected_missing_provider_manifest)
+
+_protected_missing_provider_manifest_review_spec = importlib.util.spec_from_file_location(
+    "review_krk_protected_missing_provider_capacity_execution_manifest",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_protected_missing_provider_capacity_execution_manifest.py",
+)
+assert _protected_missing_provider_manifest_review_spec is not None
+assert _protected_missing_provider_manifest_review_spec.loader is not None
+_protected_missing_provider_manifest_review = importlib.util.module_from_spec(
+    _protected_missing_provider_manifest_review_spec
+)
+_protected_missing_provider_manifest_review_spec.loader.exec_module(_protected_missing_provider_manifest_review)
+
 _strategy_arbiter_risk_review_spec = importlib.util.spec_from_file_location(
     "review_krk_strategy_arbiter_evidence_risks",
     Path(__file__).resolve().parents[1] / "scripts" / "review_krk_strategy_arbiter_evidence_risks.py",
@@ -2647,6 +2673,56 @@ def test_krk_protected_missing_provider_capacity_plan_is_bounded(tmp_path, monke
     assert plan["summary"]["job_count"] == 3
     assert plan["decision"]["status"] == "protected_missing_provider_capacity_audit_plan_ready"
     assert len({job["job_id"] for job in plan["jobs"]}) == len(plan["jobs"])
+
+
+def test_krk_protected_missing_provider_capacity_manifest_review_allows_labels(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    topology = root / _protected_missing_provider_manifest.TOPOLOGY
+    topology.parent.mkdir(parents=True, exist_ok=True)
+    topology.write_text(json.dumps({"nodes": {"x": {"meta": {"skill": "krk.drive_to_edge"}}}}), encoding="utf-8")
+    (reports / "krk_protected_missing_provider_capacity_audit_plan_v0.json").write_text(
+        json.dumps(
+            {
+                "jobs": [
+                    {
+                        "job_id": "job.a",
+                        "frame_id": "cp.a",
+                        "state_id": "state.a",
+                        "source_stage": "stage6",
+                        "active_landmark_label": "drive_to_edge",
+                        "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                        "provider_id": "krk.drive_to_edge",
+                        "horizon": 40,
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_protected_missing_provider_manifest, "ROOT", root)
+    manifest = _protected_missing_provider_manifest.build_manifest()
+    (reports / "krk_protected_missing_provider_capacity_execution_manifest_v0.json").write_text(
+        json.dumps(manifest),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_protected_missing_provider_manifest_review, "ROOT", root)
+
+    review = _protected_missing_provider_manifest_review.build_review()
+
+    assert manifest["schema_version"] == "krk_protected_missing_provider_capacity_execution_manifest.v0"
+    assert manifest["causal_status"] == "non_causal_execution_manifest"
+    assert manifest["binding_summary"]["all_bindings_valid"] is True
+    assert manifest["decision"]["labels_allowed_now"] is False
+    assert review["schema_version"] == "krk_protected_missing_provider_capacity_execution_manifest_review.v0"
+    assert review["causal_status"] == "non_causal_manifest_review"
+    assert review["runtime_behavior_changed"] is False
+    assert review["stage7_promotion_allowed"] is False
+    assert review["stage8_training_allowed"] is False
+    assert review["review_summary"]["violation_count"] == 0
+    assert review["decision"]["labels_allowed"] is True
+    assert review["decision"]["runtime_work_allowed"] is False
 
 
 def test_krk_strategy_arbiter_risk_review_separates_label_semantics(tmp_path):

@@ -82,6 +82,7 @@ Current interpretation:
 - After the refresh, `krk_control_plane_strategy_arbitration_baseline_v1` is computed only over protected Stage 4/5/6 strategy benchmark frames (`24` total). It still reports `strategy_arbitration_promising`, but remains non-causal and too small for runtime promotion.
 - `krk_protected_max_only_frame_review_v0` shows the next broader bottleneck: `12/24` protected strategy frames have a labeled mate provider available, while `12/24` have only labeled max-plies provider proposals. The selector cannot solve missing-provider/capacity/label-coverage gaps; next step is a protected missing-provider capacity audit, not selector tuning.
 - `krk_protected_missing_provider_capacity_audit_plan_v0` defines a non-causal reviewed-label plan for that bottleneck: `16` h40 forced-provider jobs across `6` protected max-only frames, with `0` Stage 7 jobs. It does not execute labels or authorize runtime behavior.
+- `krk_protected_missing_provider_capacity_execution_manifest_v0` binds those jobs to the Stage 6 overlay-composed topology and `handoff_composition_v1`; `krk_protected_missing_provider_capacity_execution_manifest_review_v0` passes with `0` violations and allows only bounded non-causal label execution. Runtime work remains blocked.
 
 ## Hard Invariants
 
