@@ -10,6 +10,7 @@ from scripts.test_krk_landmark_progress import (
     COMPOSITION_PROFILE_HANDOFF_V1,
     COMPOSITION_PROFILE_NONE,
     _apply_composition_profile_to_eval_kwargs,
+    _apply_krk_strategy_arbiter_sandbox_support,
     _classify_successor_failure,
     _cli_option_provided,
     _compact_playout_trace,
@@ -138,6 +139,91 @@ def test_strategy_arbiter_observation_is_trace_only_and_non_causal():
     assert observation["provider_candidates"][0]["provider_id"] == "krk.edge_trap_close"
     assert observation["provider_candidates"][1]["provider_id"] == "krk.stage0_basin"
     assert "provider_selection" in observation["blocked_causal_actions"]
+
+
+def test_strategy_arbiter_sandbox_support_is_default_off():
+    suggestions = [
+        {
+            "move": chess.Move.from_uci("h7d7"),
+            "score": 0.14,
+            "actuator": "actuator_1",
+            "meta": {"curriculum_label": "edge_trap_close"},
+        }
+    ]
+
+    summary = _apply_krk_strategy_arbiter_sandbox_support(
+        suggestions,
+        enabled=False,
+        support_amount=10.0,
+        active_landmark_label="fence_established",
+    )
+
+    assert summary["enabled"] is False
+    assert summary["blocked_reason"] == "disabled"
+    assert suggestions[0]["score"] == 0.14
+    assert "krk_strategy_arbiter_sandbox_support" not in suggestions[0]["meta"]
+
+
+def test_strategy_arbiter_sandbox_support_is_visible_and_bounded():
+    suggestions = [
+        {
+            "move": chess.Move.from_uci("h7d7"),
+            "score": 0.14,
+            "actuator": "actuator_1",
+            "meta": {"curriculum_label": "edge_trap_close"},
+        },
+        {
+            "move": chess.Move.from_uci("e1f2"),
+            "score": 33.0,
+            "actuator": "actuator_2",
+            "meta": {"curriculum_label": "stage0_basin"},
+        },
+    ]
+
+    summary = _apply_krk_strategy_arbiter_sandbox_support(
+        suggestions,
+        enabled=True,
+        support_amount=0.25,
+        active_landmark_label="fence_established",
+        visible_terms={"fence_exists": True},
+    )
+
+    assert summary["causal_status"] == "sandbox_opt_in"
+    assert summary["direct_request"] is False
+    assert summary["supported_count"] == 1
+    assert summary["supported_provider_counts"] == {"edge_trap": 1}
+    assert suggestions[0]["score"] == 0.39
+    payload = suggestions[0]["meta"]["krk_strategy_arbiter_sandbox_support"]
+    assert payload["schema_version"] == "krk_strategy_arbiter_sandbox_support.v0"
+    assert payload["provider_family"] == "edge_trap"
+    assert payload["support_amount"] == 0.25
+    assert payload["raw_score_before"] == 0.14
+    assert payload["direct_request"] is False
+    assert payload["causal_status"] == "sandbox_opt_in"
+    assert "direct_move_selection" in payload["forbidden_actions"]
+    assert "krk_strategy_arbiter_sandbox_support" not in suggestions[1]["meta"]
+
+
+def test_strategy_arbiter_sandbox_blocks_stage7_challenge_by_default():
+    suggestions = [
+        {
+            "move": chess.Move.from_uci("a5a6"),
+            "score": 0.5,
+            "actuator": "actuator_1",
+            "meta": {"curriculum_label": "drive_to_edge"},
+        }
+    ]
+
+    summary = _apply_krk_strategy_arbiter_sandbox_support(
+        suggestions,
+        enabled=True,
+        support_amount=1.0,
+        active_landmark_label="box_shrink",
+    )
+
+    assert summary["blocked_reason"] == "stage7_challenge_held_out"
+    assert summary["supported_count"] == 0
+    assert suggestions[0]["score"] == 0.5
 
 
 def test_compact_trace_preserves_strategy_arbiter_observation_metadata():

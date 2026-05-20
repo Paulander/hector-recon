@@ -700,6 +700,121 @@ def _krk_strategy_arbiter_observation_for_suggestions(
     }
 
 
+def _krk_strategy_provider_family(skill_id: str) -> str:
+    if "stage0_basin" in skill_id:
+        return "stage0_basin"
+    if "drive_to_edge" in skill_id:
+        return "drive_to_edge"
+    if "fence_established" in skill_id:
+        return "fence_established"
+    if "edge_trap" in skill_id:
+        return "edge_trap"
+    if "box_shrink" in skill_id:
+        return "box_shrink"
+    if "mate" in skill_id:
+        return "mate_basin"
+    return "other"
+
+
+def _apply_krk_strategy_arbiter_sandbox_support(
+    suggestions: list[dict],
+    *,
+    enabled: bool = False,
+    support_amount: float = 0.0,
+    active_landmark_label: str | None = None,
+    visible_terms: dict | None = None,
+    board: chess.Board | None = None,
+    allow_stage7_challenge: bool = False,
+    eligible_provider_families: tuple[str, ...] = (
+        "drive_to_edge",
+        "edge_trap",
+        "fence_established",
+    ),
+) -> dict:
+    """Apply an opt-in bounded strategy-arbiter support signal.
+
+    This is the first causal sandbox surface for the KRK strategy arbiter. It
+    does not directly select a move, request a provider, or mutate topology. It
+    only adds an explicitly traced support amount to already-materialized
+    provider suggestions when the sandbox is enabled.
+    """
+    summary = {
+        "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+        "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+        "enabled": bool(enabled),
+        "causal_status": "sandbox_opt_in" if enabled else "inactive",
+        "direct_request": False,
+        "support_amount": float(support_amount),
+        "supported_count": 0,
+        "supported_provider_counts": {},
+        "blocked_reason": None,
+        "allow_stage7_challenge": bool(allow_stage7_challenge),
+    }
+    if not enabled:
+        summary["blocked_reason"] = "disabled"
+        return summary
+    if float(support_amount) <= 0.0:
+        summary["blocked_reason"] = "non_positive_support"
+        return summary
+    if str(active_landmark_label or "") == "box_shrink" and not allow_stage7_challenge:
+        summary["blocked_reason"] = "stage7_challenge_held_out"
+        return summary
+    trace_terms = dict(_trace_only_krk_context_terms(board))
+    trace_terms.update(visible_terms or {})
+    if active_landmark_label:
+        trace_terms[f"active_landmark_label.{active_landmark_label}"] = True
+    source_terms = sorted(str(term) for term, value in trace_terms.items() if bool(value))[:32]
+
+    raw_sorted = sorted(
+        enumerate(suggestions),
+        key=lambda pair: float(pair[1].get("score", 0.0) or 0.0),
+        reverse=True,
+    )
+    provider_rank_counts: dict[str, int] = {}
+    support_counts: dict[str, int] = {}
+    for _, item in raw_sorted:
+        provider_id = _skill_id_for_suggestion(item)
+        provider_family = _krk_strategy_provider_family(provider_id)
+        provider_rank_counts[provider_id] = provider_rank_counts.get(provider_id, 0) + 1
+        provider_local_rank = provider_rank_counts[provider_id]
+        if provider_local_rank != 1:
+            continue
+        if provider_family not in eligible_provider_families:
+            continue
+        raw_score = float(item.get("score", 0.0) or 0.0)
+        updated_score = raw_score + float(support_amount)
+        item["score"] = updated_score
+        meta = item.setdefault("meta", {})
+        if isinstance(meta, dict):
+            meta["krk_strategy_arbiter_sandbox_support"] = {
+                "schema_version": "krk_strategy_arbiter_sandbox_support.v0",
+                "enabled": True,
+                "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+                "mode": "provider_family_maturity_prior",
+                "provider_id": provider_id,
+                "provider_family": provider_family,
+                "provider_local_rank": provider_local_rank,
+                "source_terms": source_terms,
+                "support_amount": float(support_amount),
+                "raw_score_before": raw_score,
+                "score_after_support": updated_score,
+                "direct_request": False,
+                "causal_status": "sandbox_opt_in",
+                "forbidden_actions": [
+                    "direct_move_selection",
+                    "direct_provider_request",
+                    "topology_mutation",
+                    "runtime_dtm_or_tablebase",
+                ],
+            }
+        support_counts[provider_family] = support_counts.get(provider_family, 0) + 1
+    summary["supported_count"] = sum(support_counts.values())
+    summary["supported_provider_counts"] = dict(sorted(support_counts.items()))
+    if not support_counts:
+        summary["blocked_reason"] = "no_eligible_provider_proposals"
+    return summary
+
+
 def _suggestion_stability_signature(
     suggestions: list[dict],
     *,
@@ -1499,6 +1614,9 @@ def _suggestion_role_trace(meta: dict) -> dict:
             if meta.get("score_after_stage7_plan_capsule_bonus") is not None
             else None
         ),
+        "krk_strategy_arbiter_sandbox_support": dict(
+            meta.get("krk_strategy_arbiter_sandbox_support", {}) or {}
+        ),
     }
 
 
@@ -1559,6 +1677,10 @@ def _successor_skill_summary(
             "plan_capsule_max_supported_provider": None,
             "plan_capsule_max_supported_move": None,
             "plan_capsule_markers": {},
+            "krk_strategy_arbiter_sandbox_supported_count": 0,
+            "krk_strategy_arbiter_sandbox_supported_provider_counts": {},
+            "krk_strategy_arbiter_sandbox_selected_supported": False,
+            "krk_strategy_arbiter_sandbox_selected_payload": {},
             "visible_stage7_king_tempo_bonus": 0.0,
             "visible_stage7_king_tempo_license": {},
         }
@@ -1757,6 +1879,26 @@ def _successor_skill_summary(
         ),
         "plan_capsule_max_supported_move": move_details.get("plan_capsule_max_supported_move"),
         "plan_capsule_markers": dict(move_details.get("plan_capsule_markers", {}) or {}),
+        "krk_strategy_arbiter_sandbox_supported_count": int(
+            (move_details.get("krk_strategy_arbiter_sandbox_summary", {}) or {}).get(
+                "supported_count",
+                0,
+            )
+            or 0
+        ),
+        "krk_strategy_arbiter_sandbox_supported_provider_counts": dict(
+            (move_details.get("krk_strategy_arbiter_sandbox_summary", {}) or {}).get(
+                "supported_provider_counts",
+                {},
+            )
+            or {}
+        ),
+        "krk_strategy_arbiter_sandbox_selected_supported": bool(
+            selected_contract.get("krk_strategy_arbiter_sandbox_support", {})
+        ),
+        "krk_strategy_arbiter_sandbox_selected_payload": dict(
+            selected_contract.get("krk_strategy_arbiter_sandbox_support", {}) or {}
+        ),
         **selected_contract,
     }
 
@@ -1791,6 +1933,7 @@ def _successor_contract_audit(
             "visible_role_provider_support_adapter": {},
             "visible_role_owned_score_normalization": {},
             "visible_stage7_plan_capsule_owned_arbitration": {},
+            "krk_strategy_arbiter_sandbox_support": {},
             "raw_score_before_role_bonus": None,
             "score_after_role_bonus": None,
             "visible_role_scoped_move_shape_bonus": 0.0,
@@ -1843,6 +1986,9 @@ def _successor_contract_audit(
         ),
         "visible_stage7_plan_capsule_owned_arbitration": dict(
             selected_group.get("visible_stage7_plan_capsule_owned_arbitration", {}) or {}
+        ),
+        "krk_strategy_arbiter_sandbox_support": dict(
+            selected_group.get("krk_strategy_arbiter_sandbox_support", {}) or {}
         ),
         "raw_score_before_role_bonus": selected_group.get("raw_score_before_role_bonus"),
         "score_after_role_bonus": selected_group.get("score_after_role_bonus"),
@@ -2396,6 +2542,9 @@ def choose_move_details(
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
     krk_strategy_arbiter_observability_enabled: bool = False,
+    krk_strategy_arbiter_sandbox_enabled: bool = False,
+    krk_strategy_arbiter_support: float = 0.0,
+    krk_strategy_arbiter_allow_stage7_challenge: bool = False,
     stage7_king_tempo_already_used: bool = False,
     stage7_drive_repair_already_used: bool = False,
     stage7_drive_repair_post_reply_context: bool = False,
@@ -2466,6 +2615,11 @@ def choose_move_details(
             krk_strategy_arbiter_observability_enabled=(
                 krk_strategy_arbiter_observability_enabled
             ),
+            krk_strategy_arbiter_sandbox_enabled=krk_strategy_arbiter_sandbox_enabled,
+            krk_strategy_arbiter_support=krk_strategy_arbiter_support,
+            krk_strategy_arbiter_allow_stage7_challenge=(
+                krk_strategy_arbiter_allow_stage7_challenge
+            ),
             stage7_king_tempo_already_used=stage7_king_tempo_already_used,
             stage7_drive_repair_already_used=stage7_drive_repair_already_used,
             stage7_drive_repair_post_reply_context=stage7_drive_repair_post_reply_context,
@@ -2527,6 +2681,9 @@ def _choose_move_details_impl(
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
     krk_strategy_arbiter_observability_enabled: bool = False,
+    krk_strategy_arbiter_sandbox_enabled: bool = False,
+    krk_strategy_arbiter_support: float = 0.0,
+    krk_strategy_arbiter_allow_stage7_challenge: bool = False,
     stage7_king_tempo_already_used: bool = False,
     stage7_drive_repair_already_used: bool = False,
     stage7_drive_repair_post_reply_context: bool = False,
@@ -2670,6 +2827,15 @@ def _choose_move_details_impl(
     env["blackboard"]["krk_strategy_arbiter_observability_enabled"] = bool(
         krk_strategy_arbiter_observability_enabled
     )
+    env["blackboard"]["krk_strategy_arbiter_sandbox_enabled"] = bool(
+        krk_strategy_arbiter_sandbox_enabled
+    )
+    env["blackboard"]["krk_strategy_arbiter_support"] = float(
+        krk_strategy_arbiter_support
+    )
+    env["blackboard"]["krk_strategy_arbiter_allow_stage7_challenge"] = bool(
+        krk_strategy_arbiter_allow_stage7_challenge
+    )
 
     _materialize_explicit_support_roles(graph, env)
     _materialize_stage7_sandbox_providers(graph, env)
@@ -2755,6 +2921,15 @@ def _choose_move_details_impl(
         support_amount=float(stage7_post_box_frozen_model_candidate_support),
     )
     suggestions = list(env.get("actuator_suggestions", []))
+    strategy_arbiter_sandbox_summary = _apply_krk_strategy_arbiter_sandbox_support(
+        suggestions,
+        enabled=bool(krk_strategy_arbiter_sandbox_enabled),
+        support_amount=float(krk_strategy_arbiter_support),
+        active_landmark_label=active_landmark_label,
+        visible_terms=env.get("blackboard", {}).get("krk_visible_terms", {}) or {},
+        board=board,
+        allow_stage7_challenge=bool(krk_strategy_arbiter_allow_stage7_challenge),
+    )
     suggestions.sort(key=lambda item: item.get("score", float("-inf")), reverse=True)
     selected_suggestion = suggestions[0] if suggestions else None
     raw_selected_suggestion = selected_suggestion
@@ -2985,6 +3160,12 @@ def _choose_move_details_impl(
             if strategy_arbiter_observation
             else {}
         ),
+        "krk_strategy_arbiter_sandbox_enabled": bool(krk_strategy_arbiter_sandbox_enabled),
+        "krk_strategy_arbiter_support": float(krk_strategy_arbiter_support),
+        "krk_strategy_arbiter_allow_stage7_challenge": bool(
+            krk_strategy_arbiter_allow_stage7_challenge
+        ),
+        "krk_strategy_arbiter_sandbox_summary": strategy_arbiter_sandbox_summary,
         "role_owned_score_normalization_enabled": bool(role_owned_score_normalization_enabled),
         "selected_by_role_owned_score_normalization": bool(
             selected_by_role_owned_score_normalization
@@ -3211,6 +3392,9 @@ def play_to_mate(
     lock_stage_filter_through_playout: bool = False,
     forced_successor_skill: Optional[str] = None,
     krk_strategy_arbiter_observability_enabled: bool = False,
+    krk_strategy_arbiter_sandbox_enabled: bool = False,
+    krk_strategy_arbiter_support: float = 0.0,
+    krk_strategy_arbiter_allow_stage7_challenge: bool = False,
     perf_profile: dict | None = None,
     enable_diagnostic_caches: bool = False,
     initial_white_moves: int = 0,
@@ -3365,6 +3549,11 @@ def play_to_mate(
                 forced_successor_skill=active_forced_successor,
                 krk_strategy_arbiter_observability_enabled=(
                     krk_strategy_arbiter_observability_enabled
+                ),
+                krk_strategy_arbiter_sandbox_enabled=krk_strategy_arbiter_sandbox_enabled,
+                krk_strategy_arbiter_support=krk_strategy_arbiter_support,
+                krk_strategy_arbiter_allow_stage7_challenge=(
+                    krk_strategy_arbiter_allow_stage7_challenge
                 ),
                 perf_profile=perf_profile,
                 enable_diagnostic_caches=enable_diagnostic_caches,
@@ -4416,6 +4605,9 @@ def evaluate_landmark_progress(
     early_stop_stable_suggestions: int = 0,
     lock_stage_filter_through_playout: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
+    krk_strategy_arbiter_sandbox_enabled: bool = False,
+    krk_strategy_arbiter_support: float = 0.0,
+    krk_strategy_arbiter_allow_stage7_challenge: bool = False,
     counterfactual_successors: tuple[str, ...] = (),
     max_counterfactual_sweeps: int = 0,
     counterfactual_sweeps_output: Optional[Path] = None,
@@ -4543,6 +4735,10 @@ def evaluate_landmark_progress(
         "role_owned_score_normalization_selected_count": 0,
         "role_owned_score_normalization_provider_by_outcome": {},
         "krk_strategy_arbiter_observation_count": 0,
+        "krk_strategy_arbiter_sandbox_supported_count": 0,
+        "krk_strategy_arbiter_sandbox_supported_provider_by_outcome": {},
+        "krk_strategy_arbiter_sandbox_selected_supported_count": 0,
+        "krk_strategy_arbiter_sandbox_selected_by_outcome": {},
         "one_ply_status": "not_checked",
         "conversion_status": "not_checked",
     }
@@ -4614,12 +4810,24 @@ def evaluate_landmark_progress(
             krk_strategy_arbiter_observability_enabled=(
                 krk_strategy_arbiter_observability_enabled
             ),
+            krk_strategy_arbiter_sandbox_enabled=krk_strategy_arbiter_sandbox_enabled,
+            krk_strategy_arbiter_support=krk_strategy_arbiter_support,
+            krk_strategy_arbiter_allow_stage7_challenge=(
+                krk_strategy_arbiter_allow_stage7_challenge
+            ),
             perf_profile=perf_profile,
             enable_diagnostic_caches=enable_diagnostic_caches,
         )
         if move_details.get("krk_strategy_arbiter_observation"):
             stats["krk_strategy_arbiter_observation_count"] = (
                 int(stats.get("krk_strategy_arbiter_observation_count", 0) or 0) + 1
+            )
+        sandbox_summary = dict(move_details.get("krk_strategy_arbiter_sandbox_summary", {}) or {})
+        sandbox_supported_count = int(sandbox_summary.get("supported_count", 0) or 0)
+        if sandbox_supported_count:
+            stats["krk_strategy_arbiter_sandbox_supported_count"] = (
+                int(stats.get("krk_strategy_arbiter_sandbox_supported_count", 0) or 0)
+                + sandbox_supported_count
             )
         stats["candidate_move_frame_count"] = (
             int(stats.get("candidate_move_frame_count", 0) or 0)
@@ -4820,6 +5028,11 @@ def evaluate_landmark_progress(
                 krk_strategy_arbiter_observability_enabled=(
                     krk_strategy_arbiter_observability_enabled
                 ),
+                krk_strategy_arbiter_sandbox_enabled=krk_strategy_arbiter_sandbox_enabled,
+                krk_strategy_arbiter_support=krk_strategy_arbiter_support,
+                krk_strategy_arbiter_allow_stage7_challenge=(
+                    krk_strategy_arbiter_allow_stage7_challenge
+                ),
                 perf_profile=perf_profile,
                 enable_diagnostic_caches=enable_diagnostic_caches,
             )
@@ -4911,6 +5124,41 @@ def evaluate_landmark_progress(
             adapter_support = dict(
                 successor_summary.get("visible_role_provider_support_adapter", {}) or {}
             )
+            arbiter_supported_count = int(
+                successor_summary.get("krk_strategy_arbiter_sandbox_supported_count", 0)
+                or 0
+            )
+            if arbiter_supported_count:
+                for provider, count in (
+                    successor_summary.get(
+                        "krk_strategy_arbiter_sandbox_supported_provider_counts",
+                        {},
+                    )
+                    or {}
+                ).items():
+                    provider_key = f"{provider}:{key}"
+                    stats["krk_strategy_arbiter_sandbox_supported_provider_by_outcome"][
+                        provider_key
+                    ] = (
+                        stats["krk_strategy_arbiter_sandbox_supported_provider_by_outcome"].get(
+                            provider_key,
+                            0,
+                        )
+                        + int(count or 0)
+                    )
+            if successor_summary.get("krk_strategy_arbiter_sandbox_selected_supported"):
+                stats["krk_strategy_arbiter_sandbox_selected_supported_count"] = (
+                    int(stats.get("krk_strategy_arbiter_sandbox_selected_supported_count", 0) or 0)
+                    + 1
+                )
+                selected_key = f"{successor_summary.get('selected_skill', 'unknown')}:{key}"
+                stats["krk_strategy_arbiter_sandbox_selected_by_outcome"][selected_key] = (
+                    stats["krk_strategy_arbiter_sandbox_selected_by_outcome"].get(
+                        selected_key,
+                        0,
+                    )
+                    + 1
+                )
             plan_capsule_markers = dict(successor_summary.get("plan_capsule_markers", {}) or {})
             if plan_capsule_markers:
                 stats["plan_capsule_marker_count"] = (
@@ -6220,6 +6468,12 @@ def main() -> None:
                         help="Visible support amount for sandbox role-scoped candidate-move suggestions")
     parser.add_argument("--enable-krk-strategy-arbiter-observability", action="store_true",
                         help="Enable default-off trace-only KRK strategy-arbiter observation metadata; does not alter scores or move selection")
+    parser.add_argument("--enable-krk-strategy-arbiter-sandbox", action="store_true",
+                        help="Runtime test: enable default-off KRK strategy-arbiter bounded support sandbox")
+    parser.add_argument("--krk-strategy-arbiter-support", type=float, default=0.0,
+                        help="Runtime test: bounded visible support amount for eligible strategy-arbiter provider families")
+    parser.add_argument("--allow-krk-strategy-arbiter-stage7-challenge", action="store_true",
+                        help="Runtime test: allow strategy-arbiter sandbox support on held-out Stage 7 box_shrink contexts")
     parser.add_argument("--composition-profile",
                         choices=[COMPOSITION_PROFILE_NONE, COMPOSITION_PROFILE_HANDOFF_V1],
                         default=COMPOSITION_PROFILE_NONE,
@@ -6325,6 +6579,11 @@ def main() -> None:
         stage7_king_support_fence_stabilizer_enabled=args.enable_stage7_king_support_fence_stabilizer,
         candidate_move_role_support=args.candidate_move_role_support,
         krk_strategy_arbiter_observability_enabled=args.enable_krk_strategy_arbiter_observability,
+        krk_strategy_arbiter_sandbox_enabled=args.enable_krk_strategy_arbiter_sandbox,
+        krk_strategy_arbiter_support=args.krk_strategy_arbiter_support,
+        krk_strategy_arbiter_allow_stage7_challenge=(
+            args.allow_krk_strategy_arbiter_stage7_challenge
+        ),
         early_stop_stable_suggestions=args.early_stop_stable_suggestions,
         lock_stage_filter_through_playout=args.lock_stage_filter_through_playout,
         counterfactual_successors=tuple(
