@@ -1,0 +1,55 @@
+{
+  "schema_version": "krk_two_stage_abstention_runtime_go_no_go.v0",
+  "decision": "no_go_for_scaling_or_promotion",
+  "allowed_status": "keep_default_off_runtime_test_code_and_artifacts",
+  "runtime_defaults_changed": false,
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "gameplay_topology_mutation": false,
+  "rollback_tag": "pre-two-stage-abstention-runtime",
+  "evidence": {
+    "default_off_equivalence": {
+      "artifact": "reports/krk_two_stage_abstention_default_off_equivalence_v0.json",
+      "status": "default_off_equivalent"
+    },
+    "protected_enabled_smoke": {
+      "artifact": "reports/krk_two_stage_abstention_enabled_smoke_v0.json",
+      "status": "enabled_tiny_smoke_no_behavior_delta",
+      "total_penalized_count": 24,
+      "total_selected_penalized_count": 0,
+      "labels_with_conversion_regression": []
+    },
+    "stage7_challenge_smoke": {
+      "artifact": "reports/krk_two_stage_abstention_stage7_challenge_smoke_v0.json",
+      "status": "stage7_challenge_no_target_improvement",
+      "penalized_count": 12,
+      "selected_penalized_count": 0,
+      "conversion_delta_mates": 0
+    }
+  },
+  "go_reasons": [
+    "Default-off behavior is equivalent on the protected Stage 5 sample.",
+    "Enabled protected-control smoke produced no paired metric delta or shadow regression.",
+    "Selector evidence is visible and bounded to already materialized suggestions.",
+    "Rollback tag exists before runtime-test commits."
+  ],
+  "no_go_reasons": [
+    "The selector did not select or suppress the actual chosen move in protected or Stage 7 smoke.",
+    "Stage 7 challenge conversion did not improve.",
+    "Scaling larger validation now would mostly measure a no-op selector path.",
+    "Raising penalties would not help when penalized suggestions are not selected."
+  ],
+  "recommendation": {
+    "primary": "Do not scale, promote, or tune this two-stage abstention selector now.",
+    "secondary": "Keep the default-off implementation as a reversible runtime-test scaffold because it passed default-off and protected smoke checks.",
+    "next_architecture_class": "return_to_strategy_ownership_or_sequence_policy_design_before another runtime selector attempt"
+  },
+  "stop_conditions": {
+    "runtime_repair_not_promoted": true,
+    "stage7_remains_quarantined": true,
+    "stage8_remains_blocked": true,
+    "no_hidden_controller": true,
+    "m1_m4_unchanged": true
+  }
+}
