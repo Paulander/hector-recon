@@ -17,6 +17,7 @@ from scripts.test_krk_landmark_progress import (
     _composition_profile_metadata,
     _finalize_perf_profile,
     _krk_strategy_arbiter_observation_for_suggestions,
+    _apply_krk_two_stage_abstention_selector,
     _merge_count_dict,
     _mate_in_one_available,
     _new_perf_profile,
@@ -224,6 +225,99 @@ def test_strategy_arbiter_sandbox_blocks_stage7_challenge_by_default():
     assert summary["blocked_reason"] == "stage7_challenge_held_out"
     assert summary["supported_count"] == 0
     assert suggestions[0]["score"] == 0.5
+
+
+def test_two_stage_abstention_selector_is_default_off():
+    suggestions = [
+        {
+            "move": chess.Move.from_uci("h7c7"),
+            "score": 0.14,
+            "actuator": "actuator_1",
+            "meta": {"curriculum_label": "edge_trap_close"},
+        }
+    ]
+    board = chess.Board("5k2/7R/1K6/8/8/8/8/8 w - - 2 2")
+
+    summary = _apply_krk_two_stage_abstention_selector(
+        suggestions,
+        enabled=False,
+        penalty=100.0,
+        active_landmark_label="fence_established",
+        board=board,
+    )
+
+    assert summary["enabled"] is False
+    assert summary["blocked_reason"] == "disabled"
+    assert suggestions[0]["score"] == 0.14
+    assert "krk_two_stage_abstention_selector" not in suggestions[0]["meta"]
+
+
+def test_two_stage_abstention_selector_is_visible_and_bounded():
+    suggestions = [
+        {
+            "move": chess.Move.from_uci("h7c7"),
+            "score": 3.0,
+            "actuator": "actuator_1",
+            "meta": {"curriculum_label": "edge_trap_close"},
+        },
+        {
+            "move": chess.Move.from_uci("e2e3"),
+            "score": 2.0,
+            "actuator": "actuator_2",
+            "meta": {"curriculum_label": "stage0_basin"},
+        },
+    ]
+    board = chess.Board("5k2/7R/1K6/8/8/8/8/8 w - - 2 2")
+
+    summary = _apply_krk_two_stage_abstention_selector(
+        suggestions,
+        enabled=True,
+        unsafe_threshold=0.45,
+        preserve_threshold=0.5,
+        penalty=1.25,
+        active_landmark_label="fence_established",
+        board=board,
+    )
+
+    assert summary["causal_status"] == "sandbox_opt_in"
+    assert summary["direct_request"] is False
+    assert summary["penalized_count"] == 1
+    assert summary["penalized_provider_counts"] == {"edge_trap": 1}
+    assert suggestions[0]["score"] == 1.75
+    payload = suggestions[0]["meta"]["krk_two_stage_abstention_selector"]
+    assert payload["schema_version"] == "krk_two_stage_abstention_selector.v0"
+    assert payload["provider_family"] == "edge_trap"
+    assert payload["unsafe_score"] >= 0.45
+    assert payload["preserve_score"] < 0.5
+    assert payload["penalty"] == 1.25
+    assert payload["direct_request"] is False
+    assert payload["causal_status"] == "sandbox_opt_in"
+    assert "direct_move_selection" in payload["forbidden_actions"]
+    assert "krk_two_stage_abstention_selector" not in suggestions[1]["meta"]
+
+
+def test_two_stage_abstention_selector_blocks_stage7_challenge_by_default():
+    suggestions = [
+        {
+            "move": chess.Move.from_uci("h7c7"),
+            "score": 3.0,
+            "actuator": "actuator_1",
+            "meta": {"curriculum_label": "edge_trap_close"},
+        }
+    ]
+    board = chess.Board("5k2/7R/1K6/8/8/8/8/8 w - - 2 2")
+
+    summary = _apply_krk_two_stage_abstention_selector(
+        suggestions,
+        enabled=True,
+        penalty=1.25,
+        active_landmark_label="box_shrink",
+        board=board,
+    )
+
+    assert summary["blocked_reason"] == "stage7_challenge_held_out"
+    assert summary["penalized_count"] == 0
+    assert suggestions[0]["score"] == 3.0
 
 
 def test_compact_trace_preserves_strategy_arbiter_observation_metadata():

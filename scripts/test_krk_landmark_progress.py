@@ -716,6 +716,170 @@ def _krk_strategy_provider_family(skill_id: str) -> str:
     return "other"
 
 
+_KRK_TWO_STAGE_ABSTENTION_UNSAFE_PRIORS = {
+    ("close", "drive_to_edge"): 0.0,
+    ("close", "edge_trap"): 0.2222222222222222,
+    ("close", "fence_established"): 0.0,
+    ("close", "stage0_basin"): 0.09090909090909091,
+    ("far", "edge_trap"): 0.7058823529411765,
+    ("far", "fence_established"): 0.0,
+    ("far", "stage0_basin"): 0.0,
+    ("medium", "edge_trap"): 0.0,
+    ("medium", "stage0_basin"): 0.6666666666666666,
+}
+
+_KRK_TWO_STAGE_ABSTENTION_PRESERVE_PRIORS = {
+    ("OwnerExitMonitor+PhaseBoundaryMonitor", "drive_to_edge"): 1.0,
+    ("OwnerExitMonitor+PhaseBoundaryMonitor", "edge_trap"): 0.8,
+    ("OwnerExitMonitor+PhaseBoundaryMonitor", "fence_established"): 1.0,
+    ("OwnerExitMonitor+PhaseBoundaryMonitor", "stage0_basin"): 0.8461538461538461,
+    ("OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor", "edge_trap"): 0.2941176470588235,
+    ("OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor", "fence_established"): 1.0,
+    ("OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor", "stage0_basin"): 0.8333333333333334,
+}
+
+
+def _krk_white_king_support_bucket(board: chess.Board | None) -> str:
+    if board is None:
+        return "unknown"
+    wk = board.king(chess.WHITE)
+    bk = board.king(chess.BLACK)
+    if wk is None or bk is None:
+        return "unknown"
+    wk_file = chess.square_file(wk)
+    wk_rank = chess.square_rank(wk)
+    bk_file = chess.square_file(bk)
+    bk_rank = chess.square_rank(bk)
+    distance = max(abs(wk_file - bk_file), abs(wk_rank - bk_rank))
+    if distance <= 2:
+        return "close"
+    if distance <= 3:
+        return "medium"
+    return "far"
+
+
+def _krk_abstention_monitor_signature(trace_terms: dict | None) -> str:
+    terms = trace_terms or {}
+    monitor_types = ["OwnerExitMonitor", "PhaseBoundaryMonitor"]
+    repair_needed = bool(
+        terms.get("fence_needs_repair")
+        or terms.get("repair_or_reestablish_cut_available")
+        or terms.get("not fence_stable")
+        or terms.get("not cut_stable")
+    )
+    if repair_needed:
+        monitor_types.append("RepairNeededMonitor")
+    return "+".join(monitor_types)
+
+
+def _apply_krk_two_stage_abstention_selector(
+    suggestions: list[dict],
+    *,
+    enabled: bool = False,
+    unsafe_threshold: float = 0.45,
+    preserve_threshold: float = 0.5,
+    penalty: float = 0.0,
+    active_landmark_label: str | None = None,
+    visible_terms: dict | None = None,
+    board: chess.Board | None = None,
+    allow_stage7_challenge: bool = False,
+) -> dict:
+    """Apply a default-off two-stage abstention selector penalty.
+
+    This is a runtime-test sandbox, not a hidden router. It only adjusts scores
+    on already-materialized suggestions when explicitly enabled, and every
+    adjustment includes visible evidence and the frozen offline objective id.
+    """
+    summary = {
+        "schema_version": "krk_two_stage_abstention_selector_summary.v0",
+        "selector_id": "sandbox.krk.two_stage_abstention_v0",
+        "source_artifact": "reports/krk_two_stage_abstention_objective_probe_v0.json",
+        "enabled": bool(enabled),
+        "causal_status": "sandbox_opt_in" if enabled else "inactive",
+        "direct_request": False,
+        "unsafe_threshold": float(unsafe_threshold),
+        "preserve_threshold": float(preserve_threshold),
+        "penalty": float(penalty),
+        "penalized_count": 0,
+        "penalized_provider_counts": {},
+        "blocked_reason": None,
+        "allow_stage7_challenge": bool(allow_stage7_challenge),
+    }
+    if not enabled:
+        summary["blocked_reason"] = "disabled"
+        return summary
+    if float(penalty) <= 0.0:
+        summary["blocked_reason"] = "non_positive_penalty"
+        return summary
+    if str(active_landmark_label or "") == "box_shrink" and not allow_stage7_challenge:
+        summary["blocked_reason"] = "stage7_challenge_held_out"
+        return summary
+
+    trace_terms = dict(_trace_only_krk_context_terms(board))
+    trace_terms.update(visible_terms or {})
+    if active_landmark_label:
+        trace_terms[f"active_landmark_label.{active_landmark_label}"] = True
+    source_terms = sorted(str(term) for term, value in trace_terms.items() if bool(value))[:32]
+    support_bucket = _krk_white_king_support_bucket(board)
+    monitor_signature = _krk_abstention_monitor_signature(trace_terms)
+    penalized_counts: dict[str, int] = {}
+    for item in suggestions:
+        provider_id = _skill_id_for_suggestion(item)
+        provider_family = _krk_strategy_provider_family(provider_id)
+        unsafe_score = _KRK_TWO_STAGE_ABSTENTION_UNSAFE_PRIORS.get(
+            (support_bucket, provider_family),
+            0.3333333333333333,
+        )
+        preserve_score = _KRK_TWO_STAGE_ABSTENTION_PRESERVE_PRIORS.get(
+            (monitor_signature, provider_family),
+            0.6666666666666667,
+        )
+        predicted_unsafe = (
+            unsafe_score >= float(unsafe_threshold)
+            and preserve_score < float(preserve_threshold)
+        )
+        if not predicted_unsafe:
+            continue
+        raw_score = float(item.get("score", 0.0) or 0.0)
+        updated_score = raw_score - float(penalty)
+        item["score"] = updated_score
+        meta = item.setdefault("meta", {})
+        if isinstance(meta, dict):
+            meta["krk_two_stage_abstention_selector"] = {
+                "schema_version": "krk_two_stage_abstention_selector.v0",
+                "enabled": True,
+                "selector_id": "sandbox.krk.two_stage_abstention_v0",
+                "objective_id": "king_support_provider_family__preserve_monitor_provider_family__u0.45_p0.5",
+                "provider_id": provider_id,
+                "provider_family": provider_family,
+                "support_bucket": support_bucket,
+                "monitor_signature": monitor_signature,
+                "unsafe_score": unsafe_score,
+                "preserve_score": preserve_score,
+                "unsafe_threshold": float(unsafe_threshold),
+                "preserve_threshold": float(preserve_threshold),
+                "penalty": float(penalty),
+                "raw_score_before": raw_score,
+                "score_after_penalty": updated_score,
+                "source_terms": source_terms,
+                "direct_request": False,
+                "causal_status": "sandbox_opt_in",
+                "forbidden_actions": [
+                    "direct_move_selection",
+                    "direct_provider_request",
+                    "topology_mutation",
+                    "runtime_dtm_or_tablebase",
+                    "m3_m4_update",
+                ],
+            }
+        penalized_counts[provider_family] = penalized_counts.get(provider_family, 0) + 1
+    summary["penalized_count"] = sum(penalized_counts.values())
+    summary["penalized_provider_counts"] = dict(sorted(penalized_counts.items()))
+    if not penalized_counts:
+        summary["blocked_reason"] = "no_predicted_unsafe_proposals"
+    return summary
+
+
 def _apply_krk_strategy_arbiter_sandbox_support(
     suggestions: list[dict],
     *,
