@@ -1,0 +1,80 @@
+{
+  "schema_version": "krk_ownership_selection_labeling_review.v0",
+  "causal_status": "non_causal_review",
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_selector_implemented": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_terminals_added": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "gameplay_topology_mutation": false,
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "source_artifacts": [
+    "reports/krk_selected_provider_diversity_ownership_labels_v0.json",
+    "reports/krk_selected_provider_diversity_ownership_labels_v1.json",
+    "reports/krk_ownership_selection_label_dataset_v2.json",
+    "reports/krk_ownership_selection_feature_probe_v2.json",
+    "reports/krk_split_selector_objective_readiness_v3.json"
+  ],
+  "labeling_semantics": {
+    "labeling_is_policy_authoring": false,
+    "description": "Ownership labels are offline observations of the current graph: which provider normal routing selected and whether the resulting h40 playout converted. They are not hand-authored target moves, provider boosts, topology edits, or runtime rules.",
+    "human_authored_parts": [
+      "measurement protocol",
+      "sampling bounds",
+      "safety constraints",
+      "artifact schema"
+    ],
+    "machine_observed_parts": [
+      "selected provider",
+      "selected move",
+      "h40 conversion result",
+      "failure trace when selected playout fails"
+    ]
+  },
+  "summary": {
+    "ownership_dataset_rows": 34,
+    "selected_owner_converted": 25,
+    "selected_owner_failed": 9,
+    "stage7_rows": 0,
+    "selector_training_rows": 0,
+    "first_diversity_label_slice": {
+      "jobs": 20,
+      "selected_owner_converted": 16,
+      "selected_owner_failed": 4,
+      "selected_providers": {
+        "krk.stage0_basin": 20
+      }
+    },
+    "second_diversity_label_slice": {
+      "jobs": 18,
+      "selected_owner_converted": 15,
+      "selected_owner_failed": 3,
+      "deduplicated_new_rows": 0,
+      "interpretation": "sampling_overlap"
+    },
+    "best_ownership_probe": {
+      "objective": "stage_provider_family@0.75",
+      "negative_suppression": 0.5555555555555556,
+      "positive_recall": 0.56,
+      "accuracy": 0.5588235294117647
+    }
+  },
+  "decision": {
+    "status": "ownership_labels_improved_but_selector_runtime_blocked",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "recommended_next_step": "review_sampling_source_diversity_and_ownership_feature_semantics_before_more_labels"
+  },
+  "blocked_next_steps": [
+    "runtime_selector",
+    "runtime_arbiter",
+    "candidate_generator_runtime",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ]
+}

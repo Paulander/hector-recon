@@ -33,6 +33,14 @@ readiness_module = _load_module(
     "review_krk_split_selector_objective_readiness_v1",
     "review_krk_split_selector_objective_readiness_v1.py",
 )
+ownership_v1_module = _load_module(
+    "build_krk_ownership_selection_label_dataset_v1",
+    "build_krk_ownership_selection_label_dataset_v1.py",
+)
+selected_diversity_labels_module = _load_module(
+    "run_krk_selected_provider_diversity_ownership_labels_v0",
+    "run_krk_selected_provider_diversity_ownership_labels_v0.py",
+)
 
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
@@ -232,3 +240,94 @@ def test_ownership_probe_and_readiness_remain_non_causal(tmp_path, monkeypatch):
     assert readiness["causal_status"] == "non_causal_readiness_review"
     assert readiness["summary"]["ownership_selection_available"] is True
     assert readiness["decision"]["selector_training_allowed"] is False
+
+
+def test_selected_provider_diversity_label_validation_blocks_runtime_flags():
+    payload = {
+        "causal_status": "non_causal_label_run",
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_arbiter_implemented": False,
+        "runtime_selector_implemented": False,
+        "runtime_candidate_generator_implemented": False,
+        "runtime_terminals_added": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+        "summary": {"stage7_training_rows": 0},
+        "labels": [
+            {
+                "causal_status": "non_causal_ownership_outcome_label",
+                "source_stage": "stage5",
+            }
+        ],
+    }
+
+    selected_diversity_labels_module.validate_payload(payload)
+    payload["runtime_selector_implemented"] = True
+    try:
+        selected_diversity_labels_module.validate_payload(payload)
+    except ValueError as exc:
+        assert "runtime_selector_implemented" in str(exc)
+    else:
+        raise AssertionError("runtime selector flag should be rejected")
+
+
+def test_ownership_v1_merges_diversity_negatives_without_training_rows(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(ownership_v1_module, "ROOT", root)
+    _write_json(
+        root,
+        ownership_v1_module.OWNERSHIP_V0,
+        {
+            "causal_status": "non_causal_ownership_label_dataset",
+            "rows": [
+                {
+                    "causal_status": "non_causal_ownership_label",
+                    "state_id": "s1",
+                    "provider_id": "krk.stage0_basin",
+                    "source_stage": "stage5",
+                    "target_label": "selected_owner_converted",
+                    "owner_positive": True,
+                    "label_source": "normal_selected_playout",
+                }
+            ],
+        },
+    )
+    _write_json(
+        root,
+        ownership_v1_module.DIVERSITY_LABELS,
+        {
+            "causal_status": "non_causal_label_run",
+            "labels": [
+                {
+                    "causal_status": "non_causal_ownership_outcome_label",
+                    "state_id": "s2",
+                    "frame_id": "f2",
+                    "source_stage": "stage6",
+                    "active_landmark_label": "drive_to_edge",
+                    "selected_provider": "krk.stage0_basin",
+                    "selected_move": "a1a8",
+                    "initial_provider_count": 1,
+                    "initial_same_move_providers": [
+                        {
+                            "provider_id": "krk.stage0_basin",
+                            "score": 12.0,
+                        }
+                    ],
+                    "selected_playout_success": {"result": "max_plies", "plies": 40},
+                }
+            ],
+        },
+    )
+
+    dataset = ownership_v1_module.build_dataset()
+
+    assert dataset["summary"]["merged_row_count"] == 2
+    assert dataset["summary"]["target_label_counts"] == {
+        "selected_owner_converted": 1,
+        "selected_owner_failed": 1,
+    }
+    assert dataset["summary"]["selector_training_row_count"] == 0
+    assert dataset["decision"]["selector_training_allowed"] is False
