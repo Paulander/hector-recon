@@ -429,3 +429,26 @@ def test_krk_strategy_sequence_inventory_blocks_runtime_on_sequence_gap() -> Non
     assert payload["decision"]["runtime_work_allowed"] is False
     assert payload["gap_summary"]["sequence_policy_has_clean_success_gap"] is True
     assert payload["sequence_policy_inventory"]["ready_for_runtime_review"] is False
+
+
+def test_stage7_curriculum_boundary_decision_reclassifies_box_shrink() -> None:
+    subprocess.run(
+        [sys.executable, "scripts/summarize_stage7_curriculum_boundary_decision.py"],
+        cwd=ROOT,
+        check=True,
+    )
+    payload = json.loads(
+        (ROOT / "reports/structural_candidates/stage7_curriculum_boundary_decision_v0.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["decision"]["status"] == "box_shrink_reclassified_as_local_evidence_handoff_trigger"
+    assert payload["decision"]["stage7_standalone_repair_target"] is False
+    assert payload["decision"]["box_shrink_promotable_independent_stage"] is False
+    assert payload["new_role_for_stage7"]["stage7_residuals_role"] == "heldout_challenge_set"
+    assert "more Stage 7 local move-shape tuning" in payload["explicitly_rejected_next_steps"]

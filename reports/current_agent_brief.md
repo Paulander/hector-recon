@@ -6,7 +6,7 @@ This file is the current source-of-truth brief for future coding agents. It summ
 
 Build ReCoN-lite as an inspectable, self-growing chess architecture where visible SCRIPT/TERMINAL structure, bounded plasticity, and offline structural promotion cooperate without hidden runtime controllers.
 
-The near-term KRK goal is to preserve the validated handoff/composition stack while diagnosing why Stage 7 `box_shrink` remains locally useful but composition-quarantined.
+The near-term KRK goal is to preserve the validated handoff/composition stack while moving beyond Stage 7 local repair into broader KRK strategy ownership and sequence-policy evidence.
 
 ## Current Validated Stack
 
@@ -25,13 +25,20 @@ Stage 7 `box_shrink` status:
 local_valid_composition_quarantined
 ```
 
+Architecture decision:
+
+```text
+box_shrink_reclassified_as_local_evidence_handoff_trigger
+```
+
 Current interpretation:
 
 - Local/one-ply behavior can be improved.
 - Conversion remains unresolved.
 - Stage 7 must not be promoted.
 - Stage 8 must not be trained from unresolved Stage 7.
-- The current task is diagnostic, not a runtime patch.
+- Stage 7 is no longer a standalone repair target. `box_shrink` is retained as local evidence / handoff trigger / phase-boundary signal and Stage 7 residuals are held-out challenge cases for broader KRK strategy/sequence work.
+- The current task is architecture/evidence work, not a Stage 7 runtime patch.
 - The learnable post-box Plan Capsule can own residual states, but closed-loop h40 replay still fails; expanded offline DTM-margin supervision improved DTM-positive top-1 only modestly and left the diagnosis as a trajectory-ranking/model-expression gap.
 - The latest arbitration probe established shared terminal-space provider comparison infrastructure but did not justify a causal arbitration change.
 - The first unified arbitration sample was intentionally small and underpowered; its sampled residuals were high `box_area_relevance`, so low box relevance / near-edge phase boundary is not yet established as the explanation.
@@ -70,6 +77,7 @@ Current interpretation:
 - `krk_strategy_sequence_architecture_review_v0` reframes the next work around two separate evidence tracks: strategy ownership and multi-step sequence policy. It keeps Stage 7 held out and recommends a bounded `krk_strategy_sequence_evidence_plan_v0` before any further runtime selector work.
 - `krk_strategy_sequence_evidence_plan_v0` defines the next bounded non-causal evidence path: replay-free inventory first, then reviewed manifests only if gaps remain. Tracks are `strategy_ownership`, `sequence_policy`, and `curriculum_boundary`; Stage 7 remains held-out/evaluation-only.
 - `krk_strategy_sequence_inventory_v0` completes the replay-free inventory. Strategy-ownership has some signal, but the state-holdout probe remains not ready and sequence-policy still has a clean success-control gap. Decision: `replay_free_inventory_complete_sequence_gap_blocks_runtime`; runtime work remains blocked.
+- `stage7_curriculum_boundary_decision_v0` records the architecture decision to stop treating Stage 7 as a standalone problem to crack. `box_shrink` is now local evidence / handoff trigger / phase-boundary signal; Stage 7 rows may be used as held-out challenge evidence, not as training rows or promotion criteria.
 
 ## Hard Invariants
 

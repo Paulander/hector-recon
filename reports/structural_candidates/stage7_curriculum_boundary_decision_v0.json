@@ -1,0 +1,75 @@
+{
+  "architecture_implication": {
+    "next_level_problem": "learn_when_each_KRK_strategy_or_sequence_should_own",
+    "next_tracks": [
+      "strategy_ownership",
+      "sequence_policy",
+      "curriculum_boundary"
+    ],
+    "protected_base": [
+      "stage1",
+      "stage4_with_h40_caveat",
+      "stage5",
+      "stage6"
+    ],
+    "stage7_evaluation_rows_allowed": true,
+    "stage7_training_rows_allowed": false
+  },
+  "causal_status": "non_causal_architecture_decision",
+  "decision": {
+    "box_shrink_promotable_independent_stage": false,
+    "recommended_next_step": "use_stage7_as_heldout_challenge_for_broader_krk_strategy_sequence_work",
+    "runtime_work_allowed": false,
+    "stage7_standalone_repair_target": false,
+    "stage7_status": "local_valid_composition_quarantined",
+    "status": "box_shrink_reclassified_as_local_evidence_handoff_trigger"
+  },
+  "explicitly_rejected_next_steps": [
+    "more Stage 7 local move-shape tuning",
+    "more Stage 7 support adapters or score bonuses",
+    "more Plan Capsule micro-tuning as a Stage 7 repair",
+    "promoting Stage 7",
+    "training Stage 8 from unresolved Stage 7",
+    "runtime DTM/tablebase selector",
+    "unreviewed additional Stage 7 labels"
+  ],
+  "gameplay_topology_mutation": false,
+  "motivation": [
+    "Stage 7 box_shrink can be locally useful, but repeated local, arbitration, support, candidate-move, Plan Capsule, and training-objective work did not produce reliable conversion.",
+    "Selected-path evidence split the residuals into strategy-ownership gaps and sequence/continuation gaps, which means the failure is not one local move-shape defect.",
+    "Clean-control collection recovered enough hard negatives but too few unique clean successes, and a bounded current-default h40 run produced no novel de-duplicated success controls.",
+    "Continuing to crack Stage 7 as a standalone problem risks overfitting the lab to a noisy curriculum boundary.",
+    "The better abstraction is to treat box_shrink as local evidence that can help trigger owner exit, handoff, or broader KRK strategy/sequence selection."
+  ],
+  "new_role_for_stage7": {
+    "allowed_uses": [
+      "diagnostic evidence for strategy-ownership failures",
+      "diagnostic evidence for sequence-policy failures",
+      "held-out challenge cases for broader KRK strategy/sequence learners",
+      "non-causal feature/monitor evaluation"
+    ],
+    "blocked_uses": [
+      "standalone promotion target",
+      "Stage 8 training gate",
+      "justification for local box_shrink runtime patches",
+      "runtime selector tuning target without protected-stack evidence"
+    ],
+    "box_shrink_role": "local_evidence_handoff_trigger_phase_boundary_signal",
+    "stage7_residuals_role": "heldout_challenge_set"
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "stage7_curriculum_boundary_decision.v0",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_post_decision_closure.json",
+    "reports/structural_candidates/stage7_training_objective_decision_gate.json",
+    "reports/structural_candidates/stage7_selected_path_architecture_review_v0.json",
+    "reports/structural_candidates/stage7_clean_control_architecture_review_v0.json",
+    "reports/krk_strategy_sequence_architecture_review_v0.json",
+    "reports/krk_strategy_sequence_inventory_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}
