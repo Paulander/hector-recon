@@ -62,6 +62,7 @@ Current interpretation:
 - `stage7_selected_path_architecture_review_v0` closes the selected-path runtime follow-up with `runtime_no_go_architecture_review_required`. The next allowed slice is a non-causal clean-control collection plan; runtime arbiter/selector work remains blocked.
 - `stage7_clean_control_collection_plan_v0` defines the next evidence path: classify Stage 7 artifacts by clean/default-off versus repair-sandbox source, then recover clean h40 post-box controls before any runtime review. Next allowed slice: `implement_replay_free_clean_artifact_manifest`.
 - `stage7_clean_artifact_manifest_v0` classifies existing Stage 7 artifacts for clean-control recovery. It found clean current-profile/default-off candidates in addition to repair-sandbox-sourced artifacts; next step is replay-free clean sequence-control recovery from the manifest candidates before any new label job.
+- `stage7_clean_sequence_control_recovery_v0` recovers `10` replay-free clean controls from manifest-approved artifacts: `2` mate controls and `8` h40 max-plies hard negatives. The hard-negative requirement is met, but clean success controls remain insufficient (`2/5`). Decision: `clean_sequence_controls_insufficient`; next step is either a bounded clean h40 label job or architecture review, not runtime work.
 
 ## Hard Invariants
 

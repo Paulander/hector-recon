@@ -209,3 +209,38 @@ def test_stage7_clean_artifact_manifest_finds_replay_free_clean_candidates() -> 
     assert baseline["candidate_for_clean_control_recovery"] is True
     assert enabled["candidate_for_clean_control_recovery"] is False
     assert enabled["classification"] == "repair_sandbox_sourced"
+
+
+def test_stage7_clean_sequence_control_recovery_uses_manifest_clean_candidates_only() -> None:
+    subprocess.run(
+        [sys.executable, "scripts/build_stage7_clean_artifact_manifest.py"],
+        cwd=ROOT,
+        check=True,
+    )
+    subprocess.run(
+        [sys.executable, "scripts/recover_stage7_clean_sequence_controls.py"],
+        cwd=ROOT,
+        check=True,
+    )
+    payload = json.loads(
+        (ROOT / "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["summary"]["usable_for_runtime_authorization"] is False
+    assert payload["summary"]["control_count"] > 0
+    assert payload["summary"]["role_counts"]["clean_sequence_hard_negative"] >= 5
+    assert payload["acceptance"]["clean_sequence_success_controls_met"] is False
+    assert payload["decision"]["status"] == "clean_sequence_controls_insufficient"
+
+    for control in payload["controls"]:
+        assert control["source_classification"] != "repair_sandbox_sourced"
+        assert control["source_enabled_flags"] == []
+        assert control["source_runtime_activity_fields"] == []
+        if control["result"] != "mate":
+            assert control["max_plies"] == 40

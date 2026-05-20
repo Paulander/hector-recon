@@ -14,6 +14,11 @@ PLAN = Path("reports/structural_candidates/stage7_clean_control_collection_plan_
 OUT_JSON = Path("reports/structural_candidates/stage7_clean_artifact_manifest_v0.json")
 OUT_MD = Path("reports/structural_candidates/stage7_clean_artifact_manifest_v0.md")
 
+GENERATED_ARTIFACT_NAMES = {
+    OUT_JSON.name,
+    "stage7_clean_sequence_control_recovery_v0.json",
+}
+
 
 REPAIR_NAME_MARKERS = (
     "adapter",
@@ -195,6 +200,8 @@ def build_manifest() -> dict[str, Any]:
         if path in seen_paths:
             continue
         seen_paths.add(path)
+        if path.name in GENERATED_ARTIFACT_NAMES:
+            continue
         if "stage8" in path.name.lower():
             continue
         payload = _load_json(path)
