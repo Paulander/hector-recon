@@ -40,6 +40,20 @@ assert COVERAGE_SPEC.loader is not None
 coverage_module = importlib.util.module_from_spec(COVERAGE_SPEC)
 COVERAGE_SPEC.loader.exec_module(coverage_module)
 
+EXPANSION_PLAN_SCRIPT = (
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "summarize_krk_protected_proposal_coverage_expansion_plan.py"
+)
+EXPANSION_PLAN_SPEC = importlib.util.spec_from_file_location(
+    "summarize_krk_protected_proposal_coverage_expansion_plan",
+    EXPANSION_PLAN_SCRIPT,
+)
+assert EXPANSION_PLAN_SPEC is not None
+assert EXPANSION_PLAN_SPEC.loader is not None
+expansion_plan_module = importlib.util.module_from_spec(EXPANSION_PLAN_SPEC)
+EXPANSION_PLAN_SPEC.loader.exec_module(expansion_plan_module)
+
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
     path = root / relative
@@ -211,3 +225,40 @@ def test_ranked_proposal_frame_coverage_review_detects_missing_provider_rows(tmp
     assert review["summary"]["missing_provider_mate_label_count"] == 1
     assert review["decision"]["status"] == "proposal_provider_coverage_gap_blocks_selector_training"
     assert review["decision"]["runtime_work_allowed"] is False
+
+
+def test_protected_proposal_coverage_expansion_plan_keeps_rows_non_training(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(expansion_plan_module, "ROOT", root)
+    _write_json(
+        root,
+        expansion_plan_module.COVERAGE_REVIEW,
+        {
+            "causal_status": "non_causal_coverage_review",
+            "records": [
+                {
+                    "provider_present_in_frame": False,
+                    "source_stage": "stage6",
+                    "provider_id": "krk.drive_to_edge",
+                },
+                {
+                    "provider_present_in_frame": True,
+                    "source_stage": "stage6",
+                    "provider_id": "krk.stage0_basin",
+                },
+            ],
+        },
+    )
+
+    plan = expansion_plan_module.build_plan()
+
+    assert plan["schema_version"] == "krk_protected_proposal_coverage_expansion_plan.v0"
+    assert plan["causal_status"] == "non_causal_design_plan"
+    assert plan["runtime_behavior_changed"] is False
+    assert plan["runtime_selector_implemented"] is False
+    assert plan["stage7_promotion_allowed"] is False
+    assert plan["stage8_training_allowed"] is False
+    assert plan["expansion_design"]["rows_to_create"] == 1
+    assert plan["acceptance_for_next_slice"]["stage7_rows_allowed"] == 0
+    assert plan["acceptance_for_next_slice"]["training_allowed_initially"] is False
+    assert plan["decision"]["recommended_next_step"] == "build_non_causal_protected_provider_coverage_frames_v0"
