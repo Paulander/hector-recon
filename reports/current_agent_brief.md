@@ -701,6 +701,14 @@ KRK strategy arbiter runtime review packet v1:
 
 The runtime review packet packages the protected-stage status, selector-readiness v3, default-off sandbox design review, and strategy-owner contrast probe into a single external-review decision point. Decision: `runtime_review_packet_ready`. It asks whether to approve a future default-off strategy-arbiter sandbox implementation, request one bounded non-causal evidence slice, or reject the sandbox path for now. Implementation remains blocked until review.
 
+KRK strategy arbiter runtime sandbox smoke v1:
+
+- `scripts/run_krk_strategy_arbiter_runtime_sandbox_smoke_v1.py`
+- `reports/krk_strategy_arbiter_runtime_sandbox_smoke_v1.json`
+- `reports/krk_strategy_arbiter_runtime_sandbox_smoke_v1.md`
+
+The first approved runtime-test slice adds a default-off KRK strategy-arbiter support sandbox in `scripts/test_krk_landmark_progress.py`. It only applies an explicit bounded support amount to already-materialized eligible provider-family proposals when `--enable-krk-strategy-arbiter-sandbox` and a positive `--krk-strategy-arbiter-support` are provided. It records `krk_strategy_arbiter_sandbox_support.v0` metadata with `direct_request=false` and blocks Stage 7 `box_shrink` challenge contexts by default. Smoke v1 passed flag-present default-off equivalence and observed trace-visible enabled support on a tiny protected `fence_established` sample. Decision: `runtime_sandbox_smoke_passed`; next safe runtime-test step is a tiny protected-control matrix, not Stage 7 repair or promotion.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
@@ -900,6 +908,8 @@ reports/krk_strategy_arbiter_default_off_design_review_v1.json
 reports/krk_strategy_arbiter_default_off_design_review_v1.md
 reports/krk_strategy_arbiter_runtime_review_packet_v1.json
 reports/krk_strategy_arbiter_runtime_review_packet_v1.md
+reports/krk_strategy_arbiter_runtime_sandbox_smoke_v1.json
+reports/krk_strategy_arbiter_runtime_sandbox_smoke_v1.md
 ```
 
 No runtime behavior should change while Stage 7 is paused.

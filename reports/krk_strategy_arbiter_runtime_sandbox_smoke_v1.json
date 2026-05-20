@@ -1,0 +1,153 @@
+{
+  "causal_status": "runtime_test_sandbox_smoke",
+  "decision": {
+    "default_off_equivalence_passed": true,
+    "enabled_support_trace_visible": true,
+    "recommended_next_step": "run_tiny_protected_control_matrix",
+    "status": "runtime_sandbox_smoke_passed"
+  },
+  "enabled_sandbox": {
+    "direct_request": false,
+    "selected_supported": false,
+    "support_amount": 0.05,
+    "support_was_applied": true
+  },
+  "equivalence": {
+    "flag_present_default_off_decision_matches_baseline": true,
+    "flag_present_default_off_outcome_matches_baseline": true
+  },
+  "eval_results": {
+    "baseline": {
+      "avg_oracle_reward": 0.07400000000000001,
+      "avg_reward": 0.07400000000000001,
+      "conversion_status_counts": {
+        "failed": 1
+      },
+      "handoff_packet_count": 3,
+      "krk_strategy_arbiter_sandbox_selected_supported_count": 0,
+      "krk_strategy_arbiter_sandbox_supported_count": 0,
+      "krk_strategy_arbiter_sandbox_supported_provider_by_outcome": {},
+      "one_ply_status_counts": {
+        "passed": 1
+      },
+      "playouts": {
+        "max_plies": 1
+      },
+      "shadow_candidate_count": 4
+    },
+    "enabled_support_0_05": {
+      "avg_oracle_reward": 0.07400000000000001,
+      "avg_reward": 0.07400000000000001,
+      "conversion_status_counts": {
+        "failed": 1
+      },
+      "handoff_packet_count": 3,
+      "krk_strategy_arbiter_sandbox_selected_supported_count": 1,
+      "krk_strategy_arbiter_sandbox_supported_count": 5,
+      "krk_strategy_arbiter_sandbox_supported_provider_by_outcome": {
+        "drive_to_edge:max_plies": 1,
+        "edge_trap:max_plies": 3,
+        "fence_established:max_plies": 1
+      },
+      "one_ply_status_counts": {
+        "passed": 1
+      },
+      "playouts": {
+        "max_plies": 1
+      },
+      "shadow_candidate_count": 3
+    },
+    "flag_present_default_off": {
+      "avg_oracle_reward": 0.07400000000000001,
+      "avg_reward": 0.07400000000000001,
+      "conversion_status_counts": {
+        "failed": 1
+      },
+      "handoff_packet_count": 3,
+      "krk_strategy_arbiter_sandbox_selected_supported_count": 0,
+      "krk_strategy_arbiter_sandbox_supported_count": 0,
+      "krk_strategy_arbiter_sandbox_supported_provider_by_outcome": {},
+      "one_ply_status_counts": {
+        "passed": 1
+      },
+      "playouts": {
+        "max_plies": 1
+      },
+      "shadow_candidate_count": 4
+    }
+  },
+  "gameplay_topology_mutation": false,
+  "one_ply_decisions": {
+    "baseline": {
+      "confidence": 64.7254499139376,
+      "move": "a7h7",
+      "sandbox_summary": {
+        "allow_stage7_challenge": false,
+        "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+        "blocked_reason": "disabled",
+        "causal_status": "inactive",
+        "direct_request": false,
+        "enabled": false,
+        "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+        "support_amount": 0.0,
+        "supported_count": 0,
+        "supported_provider_counts": {}
+      },
+      "selected_provider": "krk.stage0_basin",
+      "selected_support_payload": {}
+    },
+    "enabled_support_0_05": {
+      "confidence": 64.7254499139376,
+      "move": "a7h7",
+      "sandbox_summary": {
+        "allow_stage7_challenge": false,
+        "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+        "blocked_reason": null,
+        "causal_status": "sandbox_opt_in",
+        "direct_request": false,
+        "enabled": true,
+        "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+        "support_amount": 0.05,
+        "supported_count": 5,
+        "supported_provider_counts": {
+          "drive_to_edge": 1,
+          "edge_trap": 3,
+          "fence_established": 1
+        }
+      },
+      "selected_provider": "krk.stage0_basin",
+      "selected_support_payload": {}
+    },
+    "flag_present_default_off": {
+      "confidence": 64.7254499139376,
+      "move": "a7h7",
+      "sandbox_summary": {
+        "allow_stage7_challenge": false,
+        "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+        "blocked_reason": "non_positive_support",
+        "causal_status": "sandbox_opt_in",
+        "direct_request": false,
+        "enabled": true,
+        "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+        "support_amount": 0.0,
+        "supported_count": 0,
+        "supported_provider_counts": {}
+      },
+      "selected_provider": "krk.stage0_basin",
+      "selected_support_payload": {}
+    }
+  },
+  "profile": "handoff_composition_v1",
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "sample": {
+    "label": "fence_established",
+    "playout_max_plies": 4,
+    "samples": 1,
+    "seed": 7
+  },
+  "schema_version": "krk_strategy_arbiter_runtime_sandbox_smoke.v1",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json"
+}
