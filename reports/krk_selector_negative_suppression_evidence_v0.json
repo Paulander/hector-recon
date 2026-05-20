@@ -1,0 +1,253 @@
+{
+  "capacity_negative_controls": [
+    {
+      "existing_frame_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "forced_first_move": "h7c7",
+      "forced_plies": 40,
+      "provider_family": "drive_to_edge",
+      "provider_id": "krk.drive_to_edge",
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511"
+    },
+    {
+      "existing_frame_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "forced_first_move": "h7c7",
+      "forced_plies": 40,
+      "provider_family": "fence_established",
+      "provider_id": "krk.fence_established",
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511"
+    },
+    {
+      "existing_frame_providers": [
+        "krk.stage0_basin"
+      ],
+      "forced_first_move": "c8c7",
+      "forced_plies": 40,
+      "provider_family": "edge_trap",
+      "provider_id": "krk.edge_trap_close",
+      "source_stage": "stage4",
+      "state_id": "state.b11124d658cf"
+    },
+    {
+      "existing_frame_providers": [
+        "krk.stage0_basin"
+      ],
+      "forced_first_move": "c8c7",
+      "forced_plies": 40,
+      "provider_family": "edge_trap",
+      "provider_id": "krk.edge_trap_wrong_tempo",
+      "source_stage": "stage4",
+      "state_id": "state.b11124d658cf"
+    },
+    {
+      "existing_frame_providers": [
+        "krk.stage0_basin"
+      ],
+      "forced_first_move": "c8c7",
+      "forced_plies": 40,
+      "provider_family": "edge_trap",
+      "provider_id": "krk.edge_trap_enemy_between",
+      "source_stage": "stage4",
+      "state_id": "state.b11124d658cf"
+    }
+  ],
+  "causal_status": "non_causal_evidence_audit",
+  "decision": {
+    "candidate_generator_runtime_allowed": false,
+    "recommended_next_step": "design_non_causal_negative_suppression_feature_and_label_balance_fix",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "selector_negative_suppression_failure_confirmed"
+  },
+  "feature_overlap": {
+    "all_training_normalized_score_values": [
+      1.0
+    ],
+    "negative_training_feature_key_counts": {
+      "stage6|edge_trap|rank_1|score_high": 3
+    },
+    "negative_training_feature_keys": [
+      {
+        "feature_key": [
+          "stage6",
+          "edge_trap",
+          "rank_1",
+          "score_high"
+        ],
+        "global_raw_score_rank": 1,
+        "normalized_score": 1.0,
+        "provider_id": "krk.edge_trap_close",
+        "provider_local_rank": 1,
+        "state_id": "state.699f0003a511"
+      },
+      {
+        "feature_key": [
+          "stage6",
+          "edge_trap",
+          "rank_1",
+          "score_high"
+        ],
+        "global_raw_score_rank": 3,
+        "normalized_score": 1.0,
+        "provider_id": "krk.edge_trap_enemy_between",
+        "provider_local_rank": 1,
+        "state_id": "state.699f0003a511"
+      },
+      {
+        "feature_key": [
+          "stage6",
+          "edge_trap",
+          "rank_1",
+          "score_high"
+        ],
+        "global_raw_score_rank": 2,
+        "normalized_score": 1.0,
+        "provider_id": "krk.edge_trap_wrong_tempo",
+        "provider_local_rank": 1,
+        "state_id": "state.699f0003a511"
+      }
+    ],
+    "positive_training_feature_key_counts": {
+      "stage5|edge_trap|rank_1|score_high": 4,
+      "stage5|stage0_basin|rank_1|score_high": 2,
+      "stage6|stage0_basin|rank_1|score_high": 3
+    }
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "data_gap": "Protected negative-capacity controls exist but are not yet proposal-compatible or selector-training rows.",
+    "directed_fix_class": "non_causal_negative_balance_and_candidate_scoring_feature_fix_before_runtime",
+    "feature_gap": "Current selector features mostly collapse to stage/family/rank/normalized-score buckets; normalized scores are all high, so current features cannot express why same-family candidates differ in capacity.",
+    "primary": "Negative suppression failure is real but the training negatives are underbalanced and concentrated."
+  },
+  "label_balance": {
+    "capacity_negative_count": 5,
+    "capacity_negative_provider_family_counts": {
+      "drive_to_edge": 1,
+      "edge_trap": 3,
+      "fence_established": 1
+    },
+    "capacity_negative_stage_counts": {
+      "stage4": 3,
+      "stage6": 2
+    },
+    "capacity_negative_state_count": 2,
+    "capacity_positive_count": 11,
+    "stage7_heldout_negative_count": 8,
+    "training_negative_count": 3,
+    "training_negative_provider_family_counts": {
+      "edge_trap": 3
+    },
+    "training_negative_stage_counts": {
+      "stage6": 3
+    },
+    "training_negative_state_count": 1,
+    "training_positive_count": 9,
+    "training_rows": 12
+  },
+  "leave_state_out_best_objective_replay": {
+    "false_positive_count": 3,
+    "false_positive_rows": [
+      {
+        "feature_key": [
+          "stage6",
+          "edge_trap",
+          "rank_1",
+          "score_high"
+        ],
+        "forced_plies": 40,
+        "forced_result": "max_plies",
+        "global_raw_score_rank": 1,
+        "label_positive": false,
+        "normalized_score": 1.0,
+        "predicted_positive": true,
+        "provider_family": "edge_trap",
+        "provider_id": "krk.edge_trap_close",
+        "provider_local_rank": 1,
+        "provider_maturity": "validated_low_plasticity",
+        "score": 1.0,
+        "source_stage": "stage6",
+        "state_id": "state.699f0003a511"
+      },
+      {
+        "feature_key": [
+          "stage6",
+          "edge_trap",
+          "rank_1",
+          "score_high"
+        ],
+        "forced_plies": 40,
+        "forced_result": "max_plies",
+        "global_raw_score_rank": 3,
+        "label_positive": false,
+        "normalized_score": 1.0,
+        "predicted_positive": true,
+        "provider_family": "edge_trap",
+        "provider_id": "krk.edge_trap_enemy_between",
+        "provider_local_rank": 1,
+        "provider_maturity": "validated_low_plasticity",
+        "score": 1.0,
+        "source_stage": "stage6",
+        "state_id": "state.699f0003a511"
+      },
+      {
+        "feature_key": [
+          "stage6",
+          "edge_trap",
+          "rank_1",
+          "score_high"
+        ],
+        "forced_plies": 40,
+        "forced_result": "max_plies",
+        "global_raw_score_rank": 2,
+        "label_positive": false,
+        "normalized_score": 1.0,
+        "predicted_positive": true,
+        "provider_family": "edge_trap",
+        "provider_id": "krk.edge_trap_wrong_tempo",
+        "provider_local_rank": 1,
+        "provider_maturity": "validated_low_plasticity",
+        "score": 1.0,
+        "source_stage": "stage6",
+        "state_id": "state.699f0003a511"
+      }
+    ],
+    "feature_keys": [
+      "source_stage",
+      "provider_family",
+      "provider_local_rank_bucket",
+      "normalized_score_bucket"
+    ],
+    "negative_suppression": 0.0,
+    "objective": "stage_family_rank_score",
+    "positive_prediction_count": 9,
+    "prediction_count": 12,
+    "true_negative_count": 0
+  },
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_selector_negative_suppression_evidence.v0",
+  "source_artifacts": [
+    "reports/krk_state_local_contrast_labels_v2.json",
+    "reports/krk_state_local_contrast_selector_probe_v2.json",
+    "reports/krk_protected_provider_coverage_frames_v0.json",
+    "reports/krk_two_stage_candidate_selection_benchmark_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}
