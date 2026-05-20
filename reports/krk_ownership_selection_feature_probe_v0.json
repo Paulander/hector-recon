@@ -1,0 +1,4523 @@
+{
+  "best_result": {
+    "accuracy": 0.8571428571428571,
+    "false_negative": 0,
+    "false_positive": 2,
+    "features": [
+      "raw_score_bucket"
+    ],
+    "negative_suppression": 0.6,
+    "objective": "raw_score_bucket@0.5",
+    "positive_precision": 0.8181818181818182,
+    "positive_recall": 1.0,
+    "row_count": 14,
+    "threshold": 0.5,
+    "true_negative": 3,
+    "true_positive": 9
+  },
+  "causal_status": "non_causal_offline_probe",
+  "decision": {
+    "recommended_next_step": "review_split_objective_readiness_with_recovered_ownership_labels",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "ownership_selection_probe_promising_underpowered"
+  },
+  "gameplay_topology_mutation": false,
+  "results": {
+    "edge_terms_provider_family@0.5": {
+      "accuracy": 0.7857142857142857,
+      "false_negative": 0,
+      "false_positive": 3,
+      "features": [
+        "provider_family",
+        "term:enemy_king_near_edge",
+        "term:fence_exists",
+        "term:wrong_tempo_detected"
+      ],
+      "negative_suppression": 0.4,
+      "positive_precision": 0.75,
+      "positive_recall": 1.0,
+      "predictions": [
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7142857142857143,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7142857142857143,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "True"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "True"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "True",
+            "True",
+            "True"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8571428571428571,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7142857142857143,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7142857142857143,
+          "state_id": "state.69711173114a",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "True",
+            "True",
+            "True"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "True"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6153846153846154,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8571428571428571,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7142857142857143,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7142857142857143,
+          "state_id": "state.f17117682948",
+          "threshold": 0.5
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.5,
+      "true_negative": 2,
+      "true_positive": 9
+    },
+    "edge_terms_provider_family@0.6": {
+      "accuracy": 0.6428571428571429,
+      "false_negative": 2,
+      "false_positive": 3,
+      "features": [
+        "provider_family",
+        "term:enemy_king_near_edge",
+        "term:fence_exists",
+        "term:wrong_tempo_detected"
+      ],
+      "negative_suppression": 0.4,
+      "positive_precision": 0.7,
+      "positive_recall": 0.7777777777777778,
+      "predictions": [
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7142857142857143,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7142857142857143,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "True"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "True"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "True",
+            "True",
+            "True"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8571428571428571,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7142857142857143,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7142857142857143,
+          "state_id": "state.69711173114a",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "True",
+            "True",
+            "True"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "True"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6153846153846154,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8571428571428571,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7142857142857143,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7142857142857143,
+          "state_id": "state.f17117682948",
+          "threshold": 0.6
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.6,
+      "true_negative": 2,
+      "true_positive": 7
+    },
+    "edge_terms_provider_family@0.75": {
+      "accuracy": 0.14285714285714285,
+      "false_negative": 9,
+      "false_positive": 3,
+      "features": [
+        "provider_family",
+        "term:enemy_king_near_edge",
+        "term:fence_exists",
+        "term:wrong_tempo_detected"
+      ],
+      "negative_suppression": 0.4,
+      "positive_precision": 0.0,
+      "positive_recall": 0.0,
+      "predictions": [
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7142857142857143,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7142857142857143,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "True"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "True"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "True",
+            "True",
+            "True"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8571428571428571,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7142857142857143,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7142857142857143,
+          "state_id": "state.69711173114a",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "True",
+            "True",
+            "True"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "True"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6153846153846154,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8571428571428571,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7142857142857143,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "True",
+            "True",
+            "False"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7142857142857143,
+          "state_id": "state.f17117682948",
+          "threshold": 0.75
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.75,
+      "true_negative": 2,
+      "true_positive": 0
+    },
+    "landmark_provider_family@0.5": {
+      "accuracy": 0.5714285714285714,
+      "false_negative": 1,
+      "false_positive": 5,
+      "features": [
+        "active_landmark_label",
+        "provider_family"
+      ],
+      "negative_suppression": 0.0,
+      "positive_precision": 0.6153846153846154,
+      "positive_recall": 0.8888888888888888,
+      "predictions": [
+        {
+          "feature_key": [
+            "wrong_tempo_control",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "wrong_tempo_control",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "wrong_tempo_control",
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.75,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "fence_established",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "fence_established",
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 1.0,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "fence_established",
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "drive_to_edge",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "drive_to_edge",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.69711173114a",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "drive_to_edge",
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6923076923076923,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "fence_established",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "fence_established",
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "wrong_tempo_control",
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.75,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "drive_to_edge",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "wrong_tempo_control",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.f17117682948",
+          "threshold": 0.5
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.5,
+      "true_negative": 0,
+      "true_positive": 8
+    },
+    "landmark_provider_family@0.6": {
+      "accuracy": 0.21428571428571427,
+      "false_negative": 6,
+      "false_positive": 5,
+      "features": [
+        "active_landmark_label",
+        "provider_family"
+      ],
+      "negative_suppression": 0.0,
+      "positive_precision": 0.375,
+      "positive_recall": 0.3333333333333333,
+      "predictions": [
+        {
+          "feature_key": [
+            "wrong_tempo_control",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "wrong_tempo_control",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "wrong_tempo_control",
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.75,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "fence_established",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "fence_established",
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 1.0,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "fence_established",
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "drive_to_edge",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "drive_to_edge",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.69711173114a",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "drive_to_edge",
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6923076923076923,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "fence_established",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "fence_established",
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "wrong_tempo_control",
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.75,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "drive_to_edge",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "wrong_tempo_control",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.f17117682948",
+          "threshold": 0.6
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.6,
+      "true_negative": 0,
+      "true_positive": 3
+    },
+    "landmark_provider_family@0.75": {
+      "accuracy": 0.2857142857142857,
+      "false_negative": 6,
+      "false_positive": 4,
+      "features": [
+        "active_landmark_label",
+        "provider_family"
+      ],
+      "negative_suppression": 0.2,
+      "positive_precision": 0.42857142857142855,
+      "positive_recall": 0.3333333333333333,
+      "predictions": [
+        {
+          "feature_key": [
+            "wrong_tempo_control",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "wrong_tempo_control",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "wrong_tempo_control",
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.75,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "fence_established",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "fence_established",
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 1.0,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "fence_established",
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "drive_to_edge",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "drive_to_edge",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.69711173114a",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "drive_to_edge",
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6923076923076923,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "fence_established",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "fence_established",
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "wrong_tempo_control",
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.75,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "drive_to_edge",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "wrong_tempo_control",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.f17117682948",
+          "threshold": 0.75
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.75,
+      "true_negative": 1,
+      "true_positive": 3
+    },
+    "provider_family@0.5": {
+      "accuracy": 0.5714285714285714,
+      "false_negative": 1,
+      "false_positive": 5,
+      "features": [
+        "provider_family"
+      ],
+      "negative_suppression": 0.0,
+      "positive_precision": 0.6153846153846154,
+      "positive_recall": 0.8888888888888888,
+      "predictions": [
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.69711173114a",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.f17117682948",
+          "threshold": 0.5
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.5,
+      "true_negative": 0,
+      "true_positive": 8
+    },
+    "provider_family@0.6": {
+      "accuracy": 0.7142857142857143,
+      "false_negative": 1,
+      "false_positive": 3,
+      "features": [
+        "provider_family"
+      ],
+      "negative_suppression": 0.4,
+      "positive_precision": 0.7272727272727273,
+      "positive_recall": 0.8888888888888888,
+      "predictions": [
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.69711173114a",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.f17117682948",
+          "threshold": 0.6
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.6,
+      "true_negative": 2,
+      "true_positive": 8
+    },
+    "provider_family@0.75": {
+      "accuracy": 0.14285714285714285,
+      "false_negative": 9,
+      "false_positive": 3,
+      "features": [
+        "provider_family"
+      ],
+      "negative_suppression": 0.4,
+      "positive_precision": 0.0,
+      "positive_recall": 0.0,
+      "predictions": [
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.69711173114a",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.f17117682948",
+          "threshold": 0.75
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.75,
+      "true_negative": 2,
+      "true_positive": 0
+    },
+    "provider_family_raw_score@0.5": {
+      "accuracy": 0.7857142857142857,
+      "false_negative": 0,
+      "false_positive": 3,
+      "features": [
+        "provider_family",
+        "raw_score_bucket"
+      ],
+      "negative_suppression": 0.4,
+      "positive_precision": 0.75,
+      "positive_recall": 1.0,
+      "predictions": [
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8888888888888888,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "nonnegative"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "nonnegative"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.6923076923076923,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.69711173114a",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "nonnegative"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "mate_like"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6153846153846154,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8888888888888888,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.f17117682948",
+          "threshold": 0.5
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.5,
+      "true_negative": 2,
+      "true_positive": 9
+    },
+    "provider_family_raw_score@0.6": {
+      "accuracy": 0.7857142857142857,
+      "false_negative": 0,
+      "false_positive": 3,
+      "features": [
+        "provider_family",
+        "raw_score_bucket"
+      ],
+      "negative_suppression": 0.4,
+      "positive_precision": 0.75,
+      "positive_recall": 1.0,
+      "predictions": [
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8888888888888888,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "nonnegative"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "nonnegative"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.6923076923076923,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.69711173114a",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "nonnegative"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "mate_like"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6153846153846154,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8888888888888888,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.f17117682948",
+          "threshold": 0.6
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.6,
+      "true_negative": 2,
+      "true_positive": 9
+    },
+    "provider_family_raw_score@0.75": {
+      "accuracy": 0.7857142857142857,
+      "false_negative": 1,
+      "false_positive": 2,
+      "features": [
+        "provider_family",
+        "raw_score_bucket"
+      ],
+      "negative_suppression": 0.6,
+      "positive_precision": 0.8,
+      "positive_recall": 0.8888888888888888,
+      "predictions": [
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8888888888888888,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "nonnegative"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "nonnegative"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.6923076923076923,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.69711173114a",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "nonnegative"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "mate_like"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6153846153846154,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8888888888888888,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.f17117682948",
+          "threshold": 0.75
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.75,
+      "true_negative": 3,
+      "true_positive": 8
+    },
+    "provider_family_summary_count@0.5": {
+      "accuracy": 0.5714285714285714,
+      "false_negative": 1,
+      "false_positive": 5,
+      "features": [
+        "provider_family",
+        "summary_count_bucket"
+      ],
+      "negative_suppression": 0.0,
+      "positive_precision": 0.6153846153846154,
+      "positive_recall": 0.8888888888888888,
+      "predictions": [
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.69711173114a",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.f17117682948",
+          "threshold": 0.5
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.5,
+      "true_negative": 0,
+      "true_positive": 8
+    },
+    "provider_family_summary_count@0.6": {
+      "accuracy": 0.7142857142857143,
+      "false_negative": 1,
+      "false_positive": 3,
+      "features": [
+        "provider_family",
+        "summary_count_bucket"
+      ],
+      "negative_suppression": 0.4,
+      "positive_precision": 0.7272727272727273,
+      "positive_recall": 0.8888888888888888,
+      "predictions": [
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.69711173114a",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.f17117682948",
+          "threshold": 0.6
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.6,
+      "true_negative": 2,
+      "true_positive": 8
+    },
+    "provider_family_summary_count@0.75": {
+      "accuracy": 0.14285714285714285,
+      "false_negative": 9,
+      "false_positive": 3,
+      "features": [
+        "provider_family",
+        "summary_count_bucket"
+      ],
+      "negative_suppression": 0.4,
+      "positive_precision": 0.0,
+      "positive_recall": 0.0,
+      "predictions": [
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.69711173114a",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.f17117682948",
+          "threshold": 0.75
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.75,
+      "true_negative": 2,
+      "true_positive": 0
+    },
+    "provider_family_unique_count@0.5": {
+      "accuracy": 0.5714285714285714,
+      "false_negative": 1,
+      "false_positive": 5,
+      "features": [
+        "provider_family",
+        "unique_provider_bucket"
+      ],
+      "negative_suppression": 0.0,
+      "positive_precision": 0.6153846153846154,
+      "positive_recall": 0.8888888888888888,
+      "predictions": [
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.69711173114a",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.f17117682948",
+          "threshold": 0.5
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.5,
+      "true_negative": 0,
+      "true_positive": 8
+    },
+    "provider_family_unique_count@0.6": {
+      "accuracy": 0.7142857142857143,
+      "false_negative": 1,
+      "false_positive": 3,
+      "features": [
+        "provider_family",
+        "unique_provider_bucket"
+      ],
+      "negative_suppression": 0.4,
+      "positive_precision": 0.7272727272727273,
+      "positive_recall": 0.8888888888888888,
+      "predictions": [
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.69711173114a",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.f17117682948",
+          "threshold": 0.6
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.6,
+      "true_negative": 2,
+      "true_positive": 8
+    },
+    "provider_family_unique_count@0.75": {
+      "accuracy": 0.14285714285714285,
+      "false_negative": 9,
+      "false_positive": 3,
+      "features": [
+        "provider_family",
+        "unique_provider_bucket"
+      ],
+      "negative_suppression": 0.4,
+      "positive_precision": 0.0,
+      "positive_recall": 0.0,
+      "predictions": [
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.69711173114a",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "edge_trap",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage0_basin",
+            "many"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7,
+          "state_id": "state.f17117682948",
+          "threshold": 0.75
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.75,
+      "true_negative": 2,
+      "true_positive": 0
+    },
+    "raw_score_bucket@0.5": {
+      "accuracy": 0.8571428571428571,
+      "false_negative": 0,
+      "false_positive": 2,
+      "features": [
+        "raw_score_bucket"
+      ],
+      "negative_suppression": 0.6,
+      "positive_precision": 0.8181818181818182,
+      "positive_recall": 1.0,
+      "predictions": [
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8888888888888888,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "nonnegative"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "nonnegative"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.0,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.69711173114a",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "nonnegative"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "mate_like"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6153846153846154,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8888888888888888,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.f17117682948",
+          "threshold": 0.5
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.5,
+      "true_negative": 3,
+      "true_positive": 9
+    },
+    "raw_score_bucket@0.6": {
+      "accuracy": 0.8571428571428571,
+      "false_negative": 0,
+      "false_positive": 2,
+      "features": [
+        "raw_score_bucket"
+      ],
+      "negative_suppression": 0.6,
+      "positive_precision": 0.8181818181818182,
+      "positive_recall": 1.0,
+      "predictions": [
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8888888888888888,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "nonnegative"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "nonnegative"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.0,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.69711173114a",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "nonnegative"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "mate_like"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6153846153846154,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8888888888888888,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.f17117682948",
+          "threshold": 0.6
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.6,
+      "true_negative": 3,
+      "true_positive": 9
+    },
+    "raw_score_bucket@0.75": {
+      "accuracy": 0.7857142857142857,
+      "false_negative": 1,
+      "false_positive": 2,
+      "features": [
+        "raw_score_bucket"
+      ],
+      "negative_suppression": 0.6,
+      "positive_precision": 0.8,
+      "positive_recall": 0.8888888888888888,
+      "predictions": [
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8888888888888888,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "nonnegative"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "nonnegative"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.0,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.69711173114a",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "nonnegative"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "mate_like"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6153846153846154,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.8888888888888888,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "high"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7777777777777778,
+          "state_id": "state.f17117682948",
+          "threshold": 0.75
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.75,
+      "true_negative": 3,
+      "true_positive": 8
+    },
+    "stage_provider_family@0.5": {
+      "accuracy": 0.5714285714285714,
+      "false_negative": 1,
+      "false_positive": 5,
+      "features": [
+        "source_stage",
+        "provider_family"
+      ],
+      "negative_suppression": 0.0,
+      "positive_precision": 0.6153846153846154,
+      "positive_recall": 0.8888888888888888,
+      "predictions": [
+        {
+          "feature_key": [
+            "stage4",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage4",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage4",
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.75,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 1.0,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage6",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage6",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.69711173114a",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage6",
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6923076923076923,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage4",
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.75,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage6",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.5
+        },
+        {
+          "feature_key": [
+            "stage4",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.f17117682948",
+          "threshold": 0.5
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.5,
+      "true_negative": 0,
+      "true_positive": 8
+    },
+    "stage_provider_family@0.6": {
+      "accuracy": 0.21428571428571427,
+      "false_negative": 6,
+      "false_positive": 5,
+      "features": [
+        "source_stage",
+        "provider_family"
+      ],
+      "negative_suppression": 0.0,
+      "positive_precision": 0.375,
+      "positive_recall": 0.3333333333333333,
+      "predictions": [
+        {
+          "feature_key": [
+            "stage4",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage4",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage4",
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.75,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 1.0,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage6",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage6",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.69711173114a",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage6",
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6923076923076923,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage4",
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.75,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage6",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.6
+        },
+        {
+          "feature_key": [
+            "stage4",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.f17117682948",
+          "threshold": 0.6
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.6,
+      "true_negative": 0,
+      "true_positive": 3
+    },
+    "stage_provider_family@0.75": {
+      "accuracy": 0.2857142857142857,
+      "false_negative": 6,
+      "false_positive": 4,
+      "features": [
+        "source_stage",
+        "provider_family"
+      ],
+      "negative_suppression": 0.2,
+      "positive_precision": 0.42857142857142855,
+      "positive_recall": 0.3333333333333333,
+      "predictions": [
+        {
+          "feature_key": [
+            "stage4",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.02cfd843a2cf",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage4",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.1e4f48a672e8",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage4",
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.75,
+          "state_id": "state.256a3da30f0f",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.2c1d6da27ea1",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 1.0,
+          "state_id": "state.326222aefdf1",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.3dca34326fca",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage6",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.52085d244e9d",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage6",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.69711173114a",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage6",
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6923076923076923,
+          "state_id": "state.699f0003a511",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.7bd8961882ad",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.87b1160e68b9",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage4",
+            "stage0_basin"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.75,
+          "state_id": "state.b11124d658cf",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage6",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.d1f052d2cab2",
+          "threshold": 0.75
+        },
+        {
+          "feature_key": [
+            "stage4",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.5,
+          "state_id": "state.f17117682948",
+          "threshold": 0.75
+        }
+      ],
+      "row_count": 14,
+      "threshold": 0.75,
+      "true_negative": 1,
+      "true_positive": 3
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_ownership_selection_feature_probe.v0",
+  "source_artifacts": [
+    "reports/krk_ownership_selection_label_dataset_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "negative_owner_count": 5,
+    "positive_owner_count": 9,
+    "provider_family_counts": {
+      "edge_trap": 3,
+      "stage0_basin": 11
+    },
+    "row_count": 14,
+    "source_stage_counts": {
+      "stage4": 5,
+      "stage5": 5,
+      "stage6": 4
+    },
+    "stage7_row_count": 0,
+    "state_count": 14,
+    "underpowered": true
+  }
+}

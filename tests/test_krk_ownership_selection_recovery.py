@@ -1,0 +1,234 @@
+from __future__ import annotations
+
+import importlib.util
+import json
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def _load_module(name: str, script: str):
+    spec = importlib.util.spec_from_file_location(name, ROOT / "scripts" / script)
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+ownership_module = _load_module(
+    "build_krk_ownership_selection_label_dataset_v0",
+    "build_krk_ownership_selection_label_dataset_v0.py",
+)
+split_v1_module = _load_module(
+    "build_krk_split_selector_objective_dataset_v1",
+    "build_krk_split_selector_objective_dataset_v1.py",
+)
+probe_module = _load_module(
+    "probe_krk_ownership_selection_features_v0",
+    "probe_krk_ownership_selection_features_v0.py",
+)
+readiness_module = _load_module(
+    "review_krk_split_selector_objective_readiness_v1",
+    "review_krk_split_selector_objective_readiness_v1.py",
+)
+
+
+def _write_json(root: Path, relative: Path, payload: dict) -> None:
+    path = root / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+
+def test_ownership_selection_recovery_uses_only_normal_selected_provider(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(ownership_module, "ROOT", root)
+    _write_json(
+        root,
+        ownership_module.SELECTOR_FEATURES,
+        {
+            "causal_status": "non_causal_feature_dataset",
+            "rows": [
+                {
+                    "target_kind": "selected_playout_success",
+                    "usable_for_training": True,
+                    "source_stage": "stage5",
+                    "state_id": "s1",
+                    "frame_id": "f1",
+                    "active_landmark_label": "fence_established",
+                    "provider_id": "krk.stage0_basin",
+                    "move_uci": "a1a2",
+                    "label": "positive",
+                    "selected_provider_before_observation": "krk.stage0_basin",
+                    "selected_provider_matches_target": True,
+                    "target_provider_best_rank": 1,
+                    "target_provider_best_raw_score": 3.0,
+                    "target_provider_summary_count": 1,
+                    "unique_provider_count": 2,
+                    "all_suggestion_count": 4,
+                    "source_terms": ["fence_exists"],
+                    "source_term_count": 1,
+                },
+                {
+                    "target_kind": "selected_playout_success",
+                    "usable_for_training": True,
+                    "source_stage": "stage5",
+                    "state_id": "s1",
+                    "frame_id": "f1",
+                    "provider_id": "krk.edge_trap_close",
+                    "label": "positive",
+                    "selected_provider_before_observation": "krk.stage0_basin",
+                    "selected_provider_matches_target": False,
+                },
+                {
+                    "target_kind": "selected_playout_success",
+                    "usable_for_training": True,
+                    "source_stage": "stage7",
+                    "state_id": "s7",
+                    "frame_id": "f7",
+                    "provider_id": "krk.stage0_basin",
+                    "label": "negative",
+                    "selected_provider_before_observation": "krk.stage0_basin",
+                    "selected_provider_matches_target": True,
+                },
+            ],
+        },
+    )
+    _write_json(root, ownership_module.SPLIT_READINESS, {"causal_status": "non_causal_readiness_review"})
+
+    dataset = ownership_module.build_dataset()
+
+    assert dataset["causal_status"] == "non_causal_ownership_label_dataset"
+    assert dataset["summary"]["deduplicated_row_count"] == 1
+    assert dataset["summary"]["target_label_counts"] == {"selected_owner_converted": 1}
+    assert dataset["summary"]["stage7_row_count"] == 0
+    assert dataset["decision"]["selector_training_allowed"] is False
+
+
+def test_split_v1_replaces_missing_ownership_channel(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(split_v1_module, "ROOT", root)
+    _write_json(
+        root,
+        split_v1_module.SPLIT_V0,
+        {
+            "causal_status": "non_causal_split_objective_dataset",
+            "rows": [
+                {
+                    "causal_status": "non_causal_objective_row",
+                    "objective_channel": "capacity_risk",
+                    "target_label": "risk_path_failed_h40",
+                    "usable_for_offline_probe": True,
+                    "usable_for_selector_training": False,
+                },
+                {
+                    "causal_status": "non_causal_objective_row",
+                    "objective_channel": "ownership_selection",
+                    "target_label": "missing_runtime_ownership_label",
+                    "usable_for_offline_probe": False,
+                    "usable_for_selector_training": False,
+                },
+            ],
+        },
+    )
+    _write_json(
+        root,
+        split_v1_module.OWNERSHIP,
+        {
+            "causal_status": "non_causal_ownership_label_dataset",
+            "rows": [
+                {
+                    "causal_status": "non_causal_ownership_label",
+                    "objective_channel": "ownership_selection",
+                    "target_label": "selected_owner_failed",
+                    "source_stage": "stage5",
+                    "usable_for_offline_probe": True,
+                    "usable_for_selector_training": False,
+                }
+            ],
+        },
+    )
+
+    dataset = split_v1_module.build_dataset()
+
+    assert dataset["summary"]["ownership_selection_available"] is True
+    assert dataset["summary"]["ownership_selection_row_count"] == 1
+    assert dataset["summary"]["selector_training_row_count"] == 0
+    assert dataset["decision"]["selector_training_allowed"] is False
+
+
+def test_ownership_probe_and_readiness_remain_non_causal(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(probe_module, "ROOT", root)
+    monkeypatch.setattr(readiness_module, "ROOT", root)
+    ownership_rows = [
+        {
+            "causal_status": "non_causal_ownership_label",
+            "target_label": "selected_owner_converted",
+            "owner_positive": True,
+            "state_id": "s1",
+            "source_stage": "stage5",
+            "provider_id": "krk.stage0_basin",
+            "provider_family": "stage0_basin",
+            "target_provider_best_raw_score": 3.0,
+            "target_provider_summary_count": 1,
+            "unique_provider_count": 2,
+            "source_terms": ["fence_exists"],
+        },
+        {
+            "causal_status": "non_causal_ownership_label",
+            "target_label": "selected_owner_failed",
+            "owner_positive": False,
+            "state_id": "s2",
+            "source_stage": "stage5",
+            "provider_id": "krk.edge_trap_close",
+            "provider_family": "edge_trap",
+            "target_provider_best_raw_score": -1.0,
+            "target_provider_summary_count": 1,
+            "unique_provider_count": 2,
+            "source_terms": [],
+        },
+    ]
+    _write_json(
+        root,
+        probe_module.OWNERSHIP,
+        {
+            "causal_status": "non_causal_ownership_label_dataset",
+            "rows": ownership_rows,
+        },
+    )
+    probe = probe_module.build_probe()
+    _write_json(
+        root,
+        readiness_module.SPLIT,
+        {
+            "causal_status": "non_causal_split_objective_dataset",
+            "summary": {"ownership_selection_available": True, "ownership_selection_row_count": 2},
+            "rows": [
+                {
+                    "objective_channel": "ownership_selection",
+                    "target_label": "selected_owner_converted",
+                    "source_stage": "stage5",
+                    "usable_for_selector_training": False,
+                }
+            ],
+        },
+    )
+    _write_json(root, readiness_module.OWNERSHIP_PROBE, probe)
+    _write_json(
+        root,
+        readiness_module.CAPACITY_FEATURE_REVIEW,
+        {
+            "causal_status": "non_causal_feature_review",
+            "best_result": {"negative_suppression": 0.7, "positive_recall": 0.9},
+        },
+    )
+    readiness = readiness_module.build_review()
+
+    assert probe["causal_status"] == "non_causal_offline_probe"
+    assert probe["runtime_selector_implemented"] is False
+    assert probe["decision"]["selector_training_allowed"] is False
+    assert readiness["causal_status"] == "non_causal_readiness_review"
+    assert readiness["summary"]["ownership_selection_available"] is True
+    assert readiness["decision"]["selector_training_allowed"] is False
