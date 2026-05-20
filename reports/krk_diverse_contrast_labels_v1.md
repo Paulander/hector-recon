@@ -4,15 +4,16 @@ This bounded label run forces each configured provider for the first White move,
 
 ## Summary
 
-- `label_count`: `12`
-- `training_label_count`: `4`
-- `stage7_eval_only_label_count`: `8`
-- `result_counts`: `{'mate': 4, 'max_plies': 8}`
-- `result_counts_by_stage`: `{'stage5:mate': 2, 'stage6:mate': 2, 'stage7:max_plies': 8}`
-- `result_counts_by_provider_family`: `{'edge_trap:mate': 1, 'stage0_basin:mate': 3, 'drive_to_edge:max_plies': 2, 'edge_trap:max_plies': 2, 'fence_established:max_plies': 2, 'stage0_basin:max_plies': 2}`
 - `forced_successor_available_counts`: `{'True': 12}`
-- `wall_time_seconds`: `247.048`
+- `label_count`: `12`
+- `result_counts`: `{'mate': 4, 'max_plies': 8}`
+- `result_counts_by_provider_family`: `{'drive_to_edge:max_plies': 2, 'edge_trap:mate': 1, 'edge_trap:max_plies': 2, 'fence_established:max_plies': 2, 'stage0_basin:mate': 3, 'stage0_basin:max_plies': 2}`
+- `result_counts_by_stage`: `{'stage5:mate': 2, 'stage6:mate': 2, 'stage7:max_plies': 8}`
+- `stage7_eval_only_label_count`: `8`
 - `trace_failures_only`: `True`
+- `training_label_count`: `4`
+- `wall_time_seconds`: `247.048`
+- `full_failure_traces_elided`: `True`
 
 ## Labels
 

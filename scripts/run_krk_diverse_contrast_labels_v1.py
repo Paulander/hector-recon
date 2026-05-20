@@ -35,6 +35,49 @@ def _load_json(path: Path) -> dict[str, Any]:
     return payload
 
 
+def _compact_stagnation_summary(summary: Any) -> dict[str, Any] | None:
+    if not isinstance(summary, dict):
+        return None
+    keys = (
+        "abstract_state_signature",
+        "repeated_state_count",
+        "repeated_abstract_state_count",
+        "max_state_repetition",
+        "rook_oscillation_loop",
+        "rook_oscillation_detected",
+        "rook_reversal_count",
+        "no_progress_plies",
+        "no_box_progress_recently",
+        "no_edge_progress_recently",
+        "no_mate_progress_recently",
+        "post_stagnation_break_continuation_needed",
+        "safe_loop_breaking_move_available",
+        "safe_followup_available",
+    )
+    return {key: summary.get(key) for key in keys if key in summary}
+
+
+def _compact_label(label: dict[str, Any]) -> dict[str, Any]:
+    compact = dict(label)
+    trace = compact.pop("trace", None)
+    if isinstance(trace, list):
+        compact["trace_ply_count"] = len(trace)
+        compact["trace_first_fen"] = trace[0].get("fen") if trace and isinstance(trace[0], dict) else None
+        compact["trace_last_fen"] = trace[-1].get("fen") if trace and isinstance(trace[-1], dict) else None
+        compact["full_trace_elided"] = True
+    compact_summary = _compact_stagnation_summary(compact.pop("stagnation_summary", None))
+    if compact_summary is not None:
+        compact["stagnation_summary_compact"] = compact_summary
+    return compact
+
+
+def compact_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    compact = dict(payload)
+    compact["labels"] = [_compact_label(label) for label in payload.get("labels") or []]
+    compact.setdefault("summary", {})["full_failure_traces_elided"] = True
+    return compact
+
+
 def run_labels() -> dict[str, Any]:
     manifest = _load_json(MANIFEST)
     if manifest.get("causal_status") != "non_causal_execution_manifest":
@@ -57,7 +100,7 @@ def run_labels() -> dict[str, Any]:
             str(job.get("active_landmark_label") or ""),
             job.get("active_landmark_label"),
         )
-        label = forced_labels._run_job(ROOT, execution_job, cache)
+        label = _compact_label(forced_labels._run_job(ROOT, execution_job, cache))
         label["source_active_landmark_label"] = job.get("active_landmark_label")
         label["execution_landmark_label"] = execution_job.get("active_landmark_label")
         label["stratum_id"] = job.get("stratum_id")
