@@ -69,6 +69,7 @@ Current interpretation:
 - `stage7_clean_control_architecture_review_v0` pauses the Stage 7 clean-control collection branch. It recommends returning to broader KRK strategy/sequence architecture review with Stage 7 as a held-out challenge, rather than running more unreviewed Stage 7 labels or runtime selector tests.
 - `krk_strategy_sequence_architecture_review_v0` reframes the next work around two separate evidence tracks: strategy ownership and multi-step sequence policy. It keeps Stage 7 held out and recommends a bounded `krk_strategy_sequence_evidence_plan_v0` before any further runtime selector work.
 - `krk_strategy_sequence_evidence_plan_v0` defines the next bounded non-causal evidence path: replay-free inventory first, then reviewed manifests only if gaps remain. Tracks are `strategy_ownership`, `sequence_policy`, and `curriculum_boundary`; Stage 7 remains held-out/evaluation-only.
+- `krk_strategy_sequence_inventory_v0` completes the replay-free inventory. Strategy-ownership has some signal, but the state-holdout probe remains not ready and sequence-policy still has a clean success-control gap. Decision: `replay_free_inventory_complete_sequence_gap_blocks_runtime`; runtime work remains blocked.
 
 ## Hard Invariants
 

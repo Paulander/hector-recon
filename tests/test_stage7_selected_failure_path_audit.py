@@ -407,3 +407,25 @@ def test_krk_strategy_sequence_evidence_plan_is_non_causal_and_split() -> None:
     assert tracks["strategy_ownership"]["stage7_usage"] == "held_out_challenge_only"
     assert tracks["sequence_policy"]["stage7_usage"] == "evaluation_only_no_training_rows"
     assert "runtime selector implementation" in payload["blocked_actions"]
+
+
+def test_krk_strategy_sequence_inventory_blocks_runtime_on_sequence_gap() -> None:
+    for script in (
+        "scripts/summarize_krk_strategy_sequence_architecture_review.py",
+        "scripts/summarize_krk_strategy_sequence_evidence_plan.py",
+        "scripts/summarize_krk_strategy_sequence_inventory.py",
+    ):
+        subprocess.run([sys.executable, script], cwd=ROOT, check=True)
+    payload = json.loads(
+        (ROOT / "reports/krk_strategy_sequence_inventory_v0.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["decision"]["runtime_work_allowed"] is False
+    assert payload["gap_summary"]["sequence_policy_has_clean_success_gap"] is True
+    assert payload["sequence_policy_inventory"]["ready_for_runtime_review"] is False

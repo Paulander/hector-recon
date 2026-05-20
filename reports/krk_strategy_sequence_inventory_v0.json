@@ -1,0 +1,72 @@
+{
+  "causal_status": "non_causal_replay_free_inventory",
+  "curriculum_boundary_inventory": {
+    "stage7_clean_control_collection_paused": true,
+    "stage7_clean_review_recommendation": "return_to_broader_krk_strategy_or_sequence_architecture_review",
+    "stage7_is_held_out": true
+  },
+  "decision": {
+    "recommended_next_step": "review_diverse_sequence_policy_controls_or_curriculum_boundary",
+    "runtime_work_allowed": false,
+    "status": "replay_free_inventory_complete_sequence_gap_blocks_runtime"
+  },
+  "gameplay_topology_mutation": false,
+  "gap_summary": {
+    "runtime_work_allowed": false,
+    "sequence_policy_has_clean_success_gap": true,
+    "strategy_ownership_has_some_signal": true,
+    "strategy_ownership_state_holdout_ready": false
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_strategy_sequence_inventory.v0",
+  "sequence_policy_inventory": {
+    "clean_control_count": 10,
+    "hard_negatives_met": true,
+    "ready_for_runtime_review": false,
+    "role_counts": {
+      "clean_sequence_hard_negative": 8,
+      "clean_sequence_success_control": 2
+    },
+    "source_classification_counts": {
+      "clean_current_profile_candidate": 5,
+      "clean_default_off_candidate": 5
+    },
+    "stage7_clean_review_status": "stage7_clean_control_collection_paused_architecture_review_required",
+    "success_controls_met": false
+  },
+  "source_artifacts": [
+    "reports/krk_strategy_sequence_evidence_plan_v0.json",
+    "reports/krk_ranked_strategy_proposal_frames_v1.json",
+    "reports/krk_state_local_contrast_labels_v2.json",
+    "reports/krk_state_local_contrast_selector_probe_v2.json",
+    "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json",
+    "reports/structural_candidates/stage7_clean_control_architecture_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "strategy_ownership_inventory": {
+    "provider_family_counts": {
+      "drive_to_edge": 2,
+      "edge_trap": 9,
+      "fence_established": 2,
+      "stage0_basin": 7
+    },
+    "ranked_frame_count": 87,
+    "ranked_frame_stage7_challenge_rows": 45,
+    "ranked_frame_training_rows": 42,
+    "ready_for_runtime_review": false,
+    "stage7_contrast_label_counts": {
+      "negative": 8
+    },
+    "state_holdout_probe_status": "state_local_contrast_signal_not_ready",
+    "state_local_contrast_rows": 20,
+    "state_local_training_rows": 12,
+    "training_label_counts": {
+      "negative": 3,
+      "positive": 9
+    }
+  }
+}
