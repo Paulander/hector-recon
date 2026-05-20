@@ -92,6 +92,7 @@ Current interpretation:
 - `krk_candidate_generator_coverage_audit_v0` confirms the candidate-generation recall gap: current proposal frames have `0.0` recall for `11` protected positive-capacity provider labels. Selector training remains blocked; next allowed slice is a non-causal validated-provider candidate-set audit.
 - `krk_validated_provider_candidate_set_audit_v0` shows a validated-provider candidate-set expansion would recover the missing positive-capacity providers, but also includes `5` negative-capacity providers. Candidate generation and strategy selection must remain separate evidence tracks. Next allowed slice: a two-stage candidate-generation/selection design review, not runtime work.
 - `krk_two_stage_candidate_selection_review_v0` records that split explicitly. Stage 1 should optimize candidate recall over validated providers; Stage 2 should select/suppress using separated label semantics. No runtime generator, selector training, Stage 7 promotion, or Stage 8 training is authorized. Next allowed slice: plan a non-causal two-stage benchmark.
+- `krk_two_stage_candidate_selection_benchmark_plan_v0` defines that benchmark: candidate generation measured by protected positive-capacity recall and negative-capacity inclusion; strategy selection measured separately with selected-playout, runtime-proposal, and forced-capacity channels kept distinct. Next allowed slice: build the non-causal benchmark artifact; runtime work remains blocked.
 
 ## Hard Invariants
 

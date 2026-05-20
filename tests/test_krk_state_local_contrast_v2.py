@@ -116,6 +116,18 @@ assert TWO_STAGE_REVIEW_SPEC.loader is not None
 two_stage_review_module = importlib.util.module_from_spec(TWO_STAGE_REVIEW_SPEC)
 TWO_STAGE_REVIEW_SPEC.loader.exec_module(two_stage_review_module)
 
+TWO_STAGE_BENCHMARK_PLAN_SCRIPT = (
+    Path(__file__).resolve().parents[1] / "scripts" / "plan_krk_two_stage_candidate_selection_benchmark_v0.py"
+)
+TWO_STAGE_BENCHMARK_PLAN_SPEC = importlib.util.spec_from_file_location(
+    "plan_krk_two_stage_candidate_selection_benchmark_v0",
+    TWO_STAGE_BENCHMARK_PLAN_SCRIPT,
+)
+assert TWO_STAGE_BENCHMARK_PLAN_SPEC is not None
+assert TWO_STAGE_BENCHMARK_PLAN_SPEC.loader is not None
+two_stage_benchmark_plan_module = importlib.util.module_from_spec(TWO_STAGE_BENCHMARK_PLAN_SPEC)
+TWO_STAGE_BENCHMARK_PLAN_SPEC.loader.exec_module(two_stage_benchmark_plan_module)
+
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
     path = root / relative
@@ -552,3 +564,27 @@ def test_two_stage_candidate_selection_review_blocks_runtime_and_training(tmp_pa
     assert review["decision"]["candidate_generator_runtime_allowed"] is False
     assert review["decision"]["selector_training_allowed"] is False
     assert review["decision"]["status"] == "two_stage_non_causal_benchmark_design_needed"
+
+
+def test_two_stage_candidate_selection_benchmark_plan_is_non_causal(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(two_stage_benchmark_plan_module, "ROOT", root)
+    _write_json(
+        root,
+        two_stage_benchmark_plan_module.TWO_STAGE_REVIEW,
+        {"causal_status": "non_causal_architecture_review"},
+    )
+
+    plan = two_stage_benchmark_plan_module.build_plan()
+
+    assert plan["schema_version"] == "krk_two_stage_candidate_selection_benchmark_plan.v0"
+    assert plan["causal_status"] == "non_causal_benchmark_plan"
+    assert plan["runtime_behavior_changed"] is False
+    assert plan["runtime_candidate_generator_implemented"] is False
+    assert plan["runtime_selector_implemented"] is False
+    assert plan["stage7_promotion_allowed"] is False
+    assert plan["stage8_training_allowed"] is False
+    assert plan["acceptance"]["stage7_training_rows"] == 0
+    assert plan["acceptance"]["reports_candidate_generation_and_selection_separately"] is True
+    assert plan["decision"]["candidate_generator_runtime_allowed"] is False
+    assert plan["decision"]["selector_training_allowed"] is False
