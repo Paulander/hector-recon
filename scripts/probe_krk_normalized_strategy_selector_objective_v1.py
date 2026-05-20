@@ -44,6 +44,66 @@ def _row_key(row: Row, keys: tuple[str, ...]) -> tuple[str, ...]:
     return tuple(str(row.get(key)) for key in keys)
 
 
+def _provider_local_rank(row: Row) -> int | None:
+    value = row.get("provider_local_rank", row.get("target_provider_best_rank"))
+    return int(value) if isinstance(value, (int, float)) else None
+
+
+def _raw_score(row: Row) -> float | None:
+    value = row.get("normalized_score", row.get("target_provider_best_raw_score"))
+    return float(value) if isinstance(value, (int, float)) else None
+
+
+def _rank_bucket(rank: int | None) -> str:
+    if rank is None:
+        return "missing"
+    if rank <= 1:
+        return "rank_1"
+    if rank <= 3:
+        return "rank_2_3"
+    return "rank_4_plus"
+
+
+def _score_bucket(score: float | None) -> str:
+    if score is None:
+        return "missing"
+    if score >= 0.75:
+        return "score_high"
+    if score >= 0.25:
+        return "score_mid"
+    return "score_low"
+
+
+def _augment_rows(rows: list[Row]) -> list[Row]:
+    raw_by_provider: dict[str, list[float]] = defaultdict(list)
+    for row in rows:
+        provider = str(row.get("provider_id"))
+        score = _raw_score(row)
+        if score is not None:
+            raw_by_provider[provider].append(score)
+
+    ranges = {}
+    for provider, values in raw_by_provider.items():
+        ranges[provider] = (min(values), max(values))
+
+    augmented = []
+    for row in rows:
+        copy = dict(row)
+        rank = _provider_local_rank(row)
+        raw = _raw_score(row)
+        provider = str(row.get("provider_id"))
+        normalized = None
+        if raw is not None and provider in ranges:
+            low, high = ranges[provider]
+            normalized = 0.5 if high == low else (raw - low) / (high - low)
+        copy["provider_local_rank"] = rank
+        copy["normalized_score"] = normalized
+        copy["provider_local_rank_bucket"] = _rank_bucket(rank)
+        copy["normalized_score_bucket"] = _score_bucket(normalized)
+        augmented.append(copy)
+    return augmented
+
+
 def _positive_rate(rows: list[Row], keys: tuple[str, ...] | None = None) -> dict[tuple[str, ...], float]:
     counts: dict[tuple[str, ...], Counter[str]] = defaultdict(Counter)
     for row in rows:
@@ -162,8 +222,8 @@ def build_probe() -> dict[str, Any]:
     if objective.get("decision", {}).get("status") != "normalized_selector_objective_design_ready_for_offline_probe":
         raise ValueError("normalized objective design must be ready before probing")
 
-    balanced_rows = list(balanced.get("rows") or [])
-    provenance_rows = list(provenance.get("rows") or [])
+    balanced_rows = _augment_rows(list(balanced.get("rows") or []))
+    provenance_rows = _augment_rows(list(provenance.get("rows") or []))
     provenance_labeled = [
         row
         for row in provenance_rows
@@ -177,6 +237,19 @@ def build_probe() -> dict[str, Any]:
         "family_maturity": ("provider_family", "provider_maturity"),
         "family_maturity_target_kind": ("provider_family", "provider_maturity", "target_kind"),
         "source_stage_family": ("source_stage", "provider_family"),
+        "provider_rank_bucket": ("provider_local_rank_bucket",),
+        "family_rank_bucket": ("provider_family", "provider_local_rank_bucket"),
+        "family_rank_score_bucket": (
+            "provider_family",
+            "provider_local_rank_bucket",
+            "normalized_score_bucket",
+        ),
+        "family_maturity_rank_target_kind": (
+            "provider_family",
+            "provider_maturity",
+            "provider_local_rank_bucket",
+            "target_kind",
+        ),
     }
     balanced_results = {
         name: _evaluate_loo(balanced_rows, keys)
@@ -195,17 +268,26 @@ def build_probe() -> dict[str, Any]:
         provenance_results.items(),
         key=lambda item: item[1]["accuracy"] if item[1]["accuracy"] is not None else -1,
     )
-    missing_fields = _missing_required_fields(balanced_rows + provenance_labeled)
-    normalized_fields_available = all(count == 0 for count in missing_fields.values())
+    missing_fields = {
+        "balanced": _missing_required_fields(balanced_rows),
+        "provenance_labeled": _missing_required_fields(provenance_labeled),
+    }
+    normalized_fields_available = all(
+        count == 0 for count in missing_fields["provenance_labeled"].values()
+    )
     underpowered = len(balanced_rows) < 30 or len(provenance_labeled) < 80
 
     status = (
-        "normalized_objective_probe_blocked_missing_rank_fields"
-        if not normalized_fields_available
-        else "normalized_objective_probe_ready_for_next_review"
+        "normalized_objective_probe_fields_available_but_underpowered"
+        if normalized_fields_available
+        else "normalized_objective_probe_blocked_missing_rank_fields"
     )
     if underpowered:
-        status = "normalized_objective_probe_underpowered_missing_rank_fields"
+        status = (
+            "normalized_objective_probe_underpowered_fields_available"
+            if normalized_fields_available
+            else "normalized_objective_probe_underpowered_missing_rank_fields"
+        )
 
     probe = {
         "schema_version": "krk_normalized_strategy_selector_objective_probe.v1",
@@ -243,13 +325,21 @@ def build_probe() -> dict[str, Any]:
             "probe_can_test_full_normalized_objective": normalized_fields_available,
             "stage7_training_leakage": False,
             "finding": (
-                "Existing labels can replay provenance baselines but cannot test the full "
+                "Existing provenance labels can test normalized rank/score proxies via "
+                "target_provider_best_rank and target_provider_best_raw_score, but the dataset "
+                "is still too small and Stage7 remains held out."
+                if normalized_fields_available
+                else "Existing labels can replay provenance baselines but cannot test the full "
                 "normalized objective because provider_local_rank and normalized_score are absent."
             ),
         },
         "decision": {
             "status": status,
-            "recommended_next_step": "export_strategy_proposal_frames_with_provider_local_rank",
+            "recommended_next_step": (
+                "review_normalized_probe_before_runtime_tests"
+                if normalized_fields_available
+                else "export_strategy_proposal_frames_with_provider_local_rank"
+            ),
             "runtime_test_allowed_next": False,
             "stage7_promotion_allowed": False,
             "stage8_training_allowed": False,
