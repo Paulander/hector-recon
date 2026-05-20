@@ -1,0 +1,72 @@
+{
+  "blocked_paths": [
+    "runtime_selector",
+    "runtime_candidate_generator",
+    "direct Stage 7 repair",
+    "Stage 7 promotion",
+    "Stage 8 training",
+    "runtime DTM/tablebase",
+    "gameplay topology mutation"
+  ],
+  "causal_status": "non_causal_architecture_review",
+  "current_evidence": {
+    "candidate_generation_recall_gap_confirmed": true,
+    "direct_selector_training_allowed": false,
+    "negative_capacity_also_included": 5,
+    "positive_capacity_recovered_by_validated_provider_set": 11,
+    "runtime_work_allowed": false
+  },
+  "decision": {
+    "candidate_generator_runtime_allowed": false,
+    "recommended_next_step": "plan_two_stage_candidate_selection_benchmark_v0",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "two_stage_non_causal_benchmark_design_needed"
+  },
+  "gameplay_topology_mutation": false,
+  "minimum_next_benchmark_requirements": [
+    "candidate-generator recall for protected positive-capacity providers",
+    "selector suppression of protected negative-capacity providers",
+    "separate selected-playout, forced-capacity, and runtime-proposal label channels",
+    "leave-state-out evaluation over protected Stage 4/5/6 rows",
+    "Stage 7 held-out challenge evaluation only",
+    "no runtime behavior changes"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_two_stage_candidate_selection_review.v0",
+  "source_artifacts": [
+    "reports/krk_validated_provider_candidate_set_audit_v0.json",
+    "reports/krk_protected_provider_capacity_frame_training_semantics_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "two_stage_architecture": {
+    "stage_1_candidate_generation": {
+      "evidence_target": "high recall for protected positive-capacity providers",
+      "must_not": [
+        "select moves",
+        "boost providers",
+        "suppress providers",
+        "mutate topology",
+        "use runtime DTM/tablebase"
+      ],
+      "purpose": "Represent plausible validated providers/strategies so the selector can evaluate them."
+    },
+    "stage_2_strategy_selection": {
+      "evidence_target": "suppress negative-capacity and selected-failure candidates while preserving positive-capacity/selected-success candidates",
+      "must_not": [
+        "train on forced-provider capacity as direct runtime-positive labels",
+        "mix Stage 7 held-out residuals into protected training",
+        "ignore guardrail preservation"
+      ],
+      "purpose": "Choose among represented providers using separated label semantics."
+    }
+  }
+}

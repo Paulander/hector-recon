@@ -104,6 +104,18 @@ assert VALIDATED_CANDIDATE_SET_SPEC.loader is not None
 validated_candidate_set_module = importlib.util.module_from_spec(VALIDATED_CANDIDATE_SET_SPEC)
 VALIDATED_CANDIDATE_SET_SPEC.loader.exec_module(validated_candidate_set_module)
 
+TWO_STAGE_REVIEW_SCRIPT = (
+    Path(__file__).resolve().parents[1] / "scripts" / "summarize_krk_two_stage_candidate_selection_review_v0.py"
+)
+TWO_STAGE_REVIEW_SPEC = importlib.util.spec_from_file_location(
+    "summarize_krk_two_stage_candidate_selection_review_v0",
+    TWO_STAGE_REVIEW_SCRIPT,
+)
+assert TWO_STAGE_REVIEW_SPEC is not None
+assert TWO_STAGE_REVIEW_SPEC.loader is not None
+two_stage_review_module = importlib.util.module_from_spec(TWO_STAGE_REVIEW_SPEC)
+TWO_STAGE_REVIEW_SPEC.loader.exec_module(two_stage_review_module)
+
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
     path = root / relative
@@ -505,3 +517,38 @@ def test_validated_provider_candidate_set_audit_keeps_runtime_blocked(tmp_path, 
     assert audit["summary"]["added_negative_capacity_count"] == 1
     assert audit["decision"]["candidate_generator_runtime_allowed"] is False
     assert audit["decision"]["selector_training_allowed"] is False
+
+
+def test_two_stage_candidate_selection_review_blocks_runtime_and_training(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(two_stage_review_module, "ROOT", root)
+    _write_json(
+        root,
+        two_stage_review_module.CANDIDATE_SET_AUDIT,
+        {
+            "causal_status": "non_causal_candidate_set_audit",
+            "summary": {
+                "added_positive_capacity_count": 2,
+                "added_negative_capacity_count": 1,
+            },
+        },
+    )
+    _write_json(
+        root,
+        two_stage_review_module.CAPACITY_SEMANTICS,
+        {"causal_status": "non_causal_semantics_review"},
+    )
+
+    review = two_stage_review_module.build_review()
+
+    assert review["schema_version"] == "krk_two_stage_candidate_selection_review.v0"
+    assert review["causal_status"] == "non_causal_architecture_review"
+    assert review["runtime_candidate_generator_implemented"] is False
+    assert review["runtime_selector_implemented"] is False
+    assert review["stage7_promotion_allowed"] is False
+    assert review["stage8_training_allowed"] is False
+    assert review["current_evidence"]["positive_capacity_recovered_by_validated_provider_set"] == 2
+    assert review["current_evidence"]["negative_capacity_also_included"] == 1
+    assert review["decision"]["candidate_generator_runtime_allowed"] is False
+    assert review["decision"]["selector_training_allowed"] is False
+    assert review["decision"]["status"] == "two_stage_non_causal_benchmark_design_needed"
