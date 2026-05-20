@@ -1,0 +1,53 @@
+{
+  "accepted_result": {
+    "best_negative_suppression": 0.17647058823529413,
+    "best_objective": "provider_family",
+    "best_safe_preservation": 0.6176470588235294,
+    "row_count": 51,
+    "runtime_ready": false,
+    "unsafe_owner_count": 17
+  },
+  "blocked_next_steps": [
+    "runtime_selector",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation",
+    "m3_m4_arbitration_update"
+  ],
+  "causal_status": "non_causal_architecture_review",
+  "diagnosis": [
+    "Raw provider family/provenance is not enough to distinguish unsafe owners once selected-playout labels are included.",
+    "The abstention gate now has enough examples by count, but it lacks state-local context features that explain why a normally useful provider is unsafe in a specific position.",
+    "The next evidence object should join abstention labels to ControlPlaneEvidenceFrame terminal-space context, not collect more Stage7 repair traces."
+  ],
+  "gameplay_topology_mutation": false,
+  "recommended_next_step": {
+    "artifacts": [
+      "reports/krk_abstention_context_feature_dataset_v0.json",
+      "reports/krk_abstention_context_feature_dataset_v0.md",
+      "reports/krk_abstention_context_feature_probe_v0.json",
+      "reports/krk_abstention_context_feature_probe_v0.md"
+    ],
+    "implementation_allowed": "non_causal_replay_free_only",
+    "status": "join_abstention_labels_with_control_plane_context"
+  },
+  "required_feature_groups": [
+    "terminal_space_context: edge distance, box relevance, fence/cut state, rook safety, king support, mobility",
+    "proposal_context: provider rank, normalized score, raw score gap, selected-vs-forced semantics",
+    "monitor_context: local_provider_competition_failed, repair_needed_monitor, post_plan_stagnation where available",
+    "label_semantics: selected_playout_success versus forced_provider_conversion separated at evaluation time"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_abstention_feature_gap_review.v0",
+  "source_artifacts": [
+    "reports/krk_abstention_training_dataset_v1.json",
+    "reports/krk_abstention_training_probe_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

@@ -46,6 +46,7 @@ Current interpretation:
 - The runtime-test architecture review v3 keeps runtime selector work blocked and reframes the next selector objective as abstention-first: learn to reject unsafe ownership before ranking owners. `reports/krk_abstention_first_selector_objective_v0.md/json` defines minimum evidence requirements (`>=40` protected training rows, `>=12` protected negatives, Stage7 training rows `0`) before any runtime review.
 - Replay-free abstention reconstruction (`krk_abstention_training_dataset_v0` / `krk_abstention_training_probe_v0`) recovered `28` protected rows but only `5` unsafe-owner examples. Leave-state-out negative suppression remains `0.0`; runtime selector work remains blocked until more protected negative controls or a better non-causal objective is available.
 - Abstention v1 added selected-playout labels replay-free and reached the raw evidence threshold (`51` protected rows, `17` unsafe-owner examples), but the best leave-state-out negative suppression is only `0.176` with safe preservation `0.618`. This confirms that count alone is not enough; the abstention objective needs better state/context features or cleaner label semantics before any runtime review.
+- `krk_abstention_feature_gap_review_v0` concludes the next safe step is replay-free only: join abstention labels with ControlPlaneEvidenceFrame terminal-space/proposal/monitor context. Runtime selector work remains blocked.
 
 ## Hard Invariants
 
