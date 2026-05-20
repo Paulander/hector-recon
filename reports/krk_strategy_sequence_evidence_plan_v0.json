@@ -1,0 +1,129 @@
+{
+  "blocked_actions": [
+    "runtime selector implementation",
+    "Stage 7 repair or promotion",
+    "Stage 8 training",
+    "unreviewed label execution",
+    "runtime DTM/tablebase use",
+    "gameplay-time topology mutation"
+  ],
+  "causal_status": "non_causal_plan",
+  "collection_phases": [
+    {
+      "description": "Join existing ranked proposal frames, forced-provider labels, and sequence controls before any new run.",
+      "executes_labels": false,
+      "phase_id": "replay_free_inventory"
+    },
+    {
+      "description": "If gaps remain, write a concrete h40 label manifest with topology/provider bindings before executing.",
+      "executes_labels": false,
+      "max_new_labels": 36,
+      "max_new_states": 12,
+      "phase_id": "bounded_manifest_only"
+    },
+    {
+      "description": "Execute only after manifest review; trace failures only and keep Stage 7 out of training rows.",
+      "executes_labels": "requires_future_review",
+      "phase_id": "reviewed_label_execution"
+    },
+    {
+      "description": "Probe ownership and sequence signals with state/family holdout; report source bias explicitly.",
+      "executes_labels": false,
+      "phase_id": "state_heldout_probe"
+    }
+  ],
+  "decision": {
+    "recommended_next_step": "run_replay_free_strategy_sequence_inventory",
+    "runtime_work_allowed": false,
+    "status": "strategy_sequence_evidence_plan_defined"
+  },
+  "gameplay_topology_mutation": false,
+  "purpose": "Collect enough non-causal evidence to evaluate strategy ownership and multi-step sequence policy without resuming Stage 7 local repair.",
+  "readiness_requirements_before_runtime": [
+    "protected Stage 4/5/6 coverage",
+    "no Stage 7 training leakage",
+    "provider-family diversity across positives and negatives",
+    "state-heldout performance above simple provenance/rank baselines",
+    "negative suppression measured",
+    "sequence-policy controls not sourced only from Stage 7 repair artifacts",
+    "source-bias audit passes",
+    "default-off runtime design review passes separately"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_strategy_sequence_evidence_plan.v0",
+  "source_artifacts": [
+    "reports/krk_strategy_sequence_architecture_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "tracks": [
+    {
+      "required_fields": [
+        "StrategyProposalFrame-compatible provider rows",
+        "provider_local_rank",
+        "normalized_score",
+        "provider_version",
+        "provider_maturity",
+        "forced_provider_h40_result",
+        "same-move compatibility where available"
+      ],
+      "stage7_usage": "held_out_challenge_only",
+      "stage_scope": [
+        "stage4_wrong_tempo",
+        "stage5_fence",
+        "stage6_drive_to_edge"
+      ],
+      "target_rows": {
+        "max_forced_provider_labels": 36,
+        "min_negative_provider_families": 2,
+        "min_positive_provider_families": 3,
+        "protected_states": 12
+      },
+      "track_id": "strategy_ownership"
+    },
+    {
+      "required_fields": [
+        "closed_loop_h40_result",
+        "selected_provider",
+        "first_move",
+        "handoff_success",
+        "plan_progress_or_stagnation",
+        "family_id",
+        "source_bias_flag"
+      ],
+      "stage7_usage": "evaluation_only_no_training_rows",
+      "stage_scope": [
+        "protected_stage5_6_success_controls",
+        "stage7_heldout_residuals"
+      ],
+      "target_rows": {
+        "clean_success_controls": 8,
+        "hard_negative_controls": 8,
+        "heldout_stage7_challenge_rows": 4
+      },
+      "track_id": "sequence_policy"
+    },
+    {
+      "required_fields": [
+        "box_area_relevance",
+        "black_king_edge_distance",
+        "edge_net_or_king_support_context",
+        "validated_handoff_target_available",
+        "owner_exit_pressure"
+      ],
+      "stage7_usage": "held_out_boundary_probe",
+      "stage_scope": [
+        "stage7_heldout",
+        "near_edge_protected_controls"
+      ],
+      "target_rows": {
+        "box_shrink_exit_examples": 4,
+        "phase_boundary_examples": 8
+      },
+      "track_id": "curriculum_boundary"
+    }
+  ]
+}

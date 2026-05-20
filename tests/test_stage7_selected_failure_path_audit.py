@@ -377,3 +377,33 @@ def test_krk_strategy_sequence_architecture_review_keeps_stage7_held_out() -> No
     assert "another Stage 7 local repair" in payload["forbidden_shortcuts"]
     objectives = {item["objective_id"] for item in payload["next_architecture_objectives"]}
     assert {"strategy_ownership_evidence", "sequence_policy_evidence", "curriculum_boundary_evidence"} <= objectives
+
+
+def test_krk_strategy_sequence_evidence_plan_is_non_causal_and_split() -> None:
+    subprocess.run(
+        [sys.executable, "scripts/summarize_krk_strategy_sequence_architecture_review.py"],
+        cwd=ROOT,
+        check=True,
+    )
+    subprocess.run(
+        [sys.executable, "scripts/summarize_krk_strategy_sequence_evidence_plan.py"],
+        cwd=ROOT,
+        check=True,
+    )
+    payload = json.loads(
+        (ROOT / "reports/krk_strategy_sequence_evidence_plan_v0.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["decision"]["runtime_work_allowed"] is False
+    assert payload["decision"]["recommended_next_step"] == "run_replay_free_strategy_sequence_inventory"
+    tracks = {track["track_id"]: track for track in payload["tracks"]}
+    assert set(tracks) == {"strategy_ownership", "sequence_policy", "curriculum_boundary"}
+    assert tracks["strategy_ownership"]["stage7_usage"] == "held_out_challenge_only"
+    assert tracks["sequence_policy"]["stage7_usage"] == "evaluation_only_no_training_rows"
+    assert "runtime selector implementation" in payload["blocked_actions"]
