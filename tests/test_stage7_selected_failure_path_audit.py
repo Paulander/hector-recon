@@ -131,3 +131,27 @@ def test_stage7_sequence_control_recovery_marks_controls_offline_only() -> None:
     assert dataset["summary"]["sequence_target_minimally_trainable"] is True
     assert dataset["summary"]["sequence_control_caveat"] == "sandbox_sourced_controls_offline_only"
     assert dataset["decision"]["status"] == "split_target_dataset_ready_for_offline_probe_with_sandbox_sourced_sequence_controls"
+
+
+def test_stage7_selected_path_probe_blocks_runtime_when_source_biased() -> None:
+    for script in (
+        "scripts/summarize_stage7_selected_failure_path_audit.py",
+        "scripts/summarize_stage7_selected_path_target_spec.py",
+        "scripts/build_stage7_selected_path_target_dataset.py",
+        "scripts/recover_stage7_post_box_sequence_controls.py",
+        "scripts/probe_stage7_selected_path_targets.py",
+    ):
+        subprocess.run([sys.executable, script], cwd=ROOT, check=True)
+
+    payload = json.loads(
+        (ROOT / "reports/structural_candidates/stage7_selected_path_target_probe_v0.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["summary"]["source_bias_detected"] is True
+    assert payload["decision"]["status"] == "split_targets_separable_but_source_biased_no_runtime"
