@@ -128,6 +128,18 @@ assert TWO_STAGE_BENCHMARK_PLAN_SPEC.loader is not None
 two_stage_benchmark_plan_module = importlib.util.module_from_spec(TWO_STAGE_BENCHMARK_PLAN_SPEC)
 TWO_STAGE_BENCHMARK_PLAN_SPEC.loader.exec_module(two_stage_benchmark_plan_module)
 
+TWO_STAGE_BENCHMARK_SCRIPT = (
+    Path(__file__).resolve().parents[1] / "scripts" / "build_krk_two_stage_candidate_selection_benchmark_v0.py"
+)
+TWO_STAGE_BENCHMARK_SPEC = importlib.util.spec_from_file_location(
+    "build_krk_two_stage_candidate_selection_benchmark_v0",
+    TWO_STAGE_BENCHMARK_SCRIPT,
+)
+assert TWO_STAGE_BENCHMARK_SPEC is not None
+assert TWO_STAGE_BENCHMARK_SPEC.loader is not None
+two_stage_benchmark_module = importlib.util.module_from_spec(TWO_STAGE_BENCHMARK_SPEC)
+TWO_STAGE_BENCHMARK_SPEC.loader.exec_module(two_stage_benchmark_module)
+
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
     path = root / relative
@@ -588,3 +600,60 @@ def test_two_stage_candidate_selection_benchmark_plan_is_non_causal(tmp_path, mo
     assert plan["acceptance"]["reports_candidate_generation_and_selection_separately"] is True
     assert plan["decision"]["candidate_generator_runtime_allowed"] is False
     assert plan["decision"]["selector_training_allowed"] is False
+
+
+def test_two_stage_candidate_selection_benchmark_blocks_runtime_when_selector_not_ready(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(two_stage_benchmark_module, "ROOT", root)
+    _write_json(
+        root,
+        two_stage_benchmark_module.PLAN,
+        {"causal_status": "non_causal_benchmark_plan"},
+    )
+    _write_json(
+        root,
+        two_stage_benchmark_module.CAPACITY_FRAMES,
+        {
+            "causal_status": "non_causal_capacity_frame_dataset",
+            "rows": [
+                {"capacity_label": "positive_capacity", "has_runtime_proposal_frame": False},
+                {"capacity_label": "negative_capacity", "has_runtime_proposal_frame": False},
+            ],
+        },
+    )
+    _write_json(
+        root,
+        two_stage_benchmark_module.SELECTOR_PROBE,
+        {
+            "causal_status": "non_causal_offline_probe",
+            "summary": {
+                "training_row_count": 2,
+                "training_state_count": 1,
+                "training_label_counts": {"positive": 1, "negative": 1},
+                "stage7_eval_row_count": 0,
+                "stage7_training_leakage": False,
+            },
+            "best_training_result": {
+                "objective": "family_rank",
+                "accuracy": 0.5,
+                "positive_precision": 0.5,
+                "positive_recall": 1.0,
+                "negative_suppression": 0.0,
+            },
+            "decision": {"status": "state_local_contrast_signal_not_ready"},
+        },
+    )
+
+    benchmark = two_stage_benchmark_module.build_benchmark()
+
+    assert benchmark["schema_version"] == "krk_two_stage_candidate_selection_benchmark.v0"
+    assert benchmark["causal_status"] == "non_causal_benchmark"
+    assert benchmark["runtime_candidate_generator_implemented"] is False
+    assert benchmark["runtime_selector_implemented"] is False
+    assert benchmark["stage7_promotion_allowed"] is False
+    assert benchmark["stage8_training_allowed"] is False
+    assert benchmark["candidate_generation_track"]["current_runtime_proposal_frames"]["positive_capacity_recall_rate"] == 0.0
+    assert benchmark["candidate_generation_track"]["validated_provider_candidate_set_expansion"]["positive_capacity_recall_rate"] == 1.0
+    assert benchmark["strategy_selection_track"]["selector_ready"] is False
+    assert benchmark["decision"]["status"] == "candidate_generation_recall_improves_selection_not_ready"
+    assert benchmark["decision"]["selector_training_allowed"] is False

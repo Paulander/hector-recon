@@ -1,0 +1,67 @@
+{
+  "candidate_generation_track": {
+    "current_runtime_proposal_frames": {
+      "negative_capacity_inclusion_count": 0,
+      "negative_capacity_inclusion_rate": 0.0,
+      "negative_capacity_total": 5,
+      "positive_capacity_recall_count": 0,
+      "positive_capacity_recall_rate": 0.0,
+      "positive_capacity_total": 11
+    },
+    "validated_provider_candidate_set_expansion": {
+      "negative_capacity_inclusion_count": 5,
+      "negative_capacity_inclusion_rate": 1.0,
+      "negative_capacity_total": 5,
+      "positive_capacity_recall_count": 11,
+      "positive_capacity_recall_rate": 1.0,
+      "positive_capacity_total": 11
+    }
+  },
+  "causal_status": "non_causal_benchmark",
+  "decision": {
+    "candidate_generator_runtime_allowed": false,
+    "recommended_next_step": "improve_selector_label_balance_or_candidate_scoring_non_causal",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "candidate_generation_recall_improves_selection_not_ready"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "candidate_generation": "Validated-provider expansion fixes recall for known protected positive-capacity providers.",
+    "combined": "Runtime work remains blocked until candidate generation and selection both pass non-causal benchmarks.",
+    "selection": "Existing selector evidence is not ready because negative suppression remains poor/underpowered."
+  },
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_two_stage_candidate_selection_benchmark.v0",
+  "source_artifacts": [
+    "reports/krk_two_stage_candidate_selection_benchmark_plan_v0.json",
+    "reports/krk_protected_provider_coverage_frames_v0.json",
+    "reports/krk_state_local_contrast_selector_probe_v2.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "strategy_selection_track": {
+    "best_accuracy": 0.75,
+    "best_negative_suppression": 0.0,
+    "best_objective": "stage_family_rank_score",
+    "best_positive_precision": 0.75,
+    "best_positive_recall": 1.0,
+    "selector_ready": false,
+    "source_probe_status": "state_local_contrast_signal_not_ready",
+    "stage7_eval_row_count": 8,
+    "stage7_training_leakage": false,
+    "training_label_counts": {
+      "negative": 3,
+      "positive": 9
+    },
+    "training_row_count": 12,
+    "training_state_count": 8
+  }
+}
