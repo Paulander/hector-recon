@@ -1657,6 +1657,9 @@ def _compact_selected_suggestion(item: dict | None) -> dict:
         "visible_stage7_post_box_frozen_model_candidate": dict(
             meta.get("visible_stage7_post_box_frozen_model_candidate", {}) or {}
         ),
+        "krk_two_stage_abstention_selector": dict(
+            meta.get("krk_two_stage_abstention_selector", {}) or {}
+        ),
     }
 
 
@@ -1780,6 +1783,9 @@ def _suggestion_role_trace(meta: dict) -> dict:
         ),
         "krk_strategy_arbiter_sandbox_support": dict(
             meta.get("krk_strategy_arbiter_sandbox_support", {}) or {}
+        ),
+        "krk_two_stage_abstention_selector": dict(
+            meta.get("krk_two_stage_abstention_selector", {}) or {}
         ),
     }
 
@@ -2709,6 +2715,11 @@ def choose_move_details(
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
     krk_strategy_arbiter_allow_stage7_challenge: bool = False,
+    krk_two_stage_abstention_selector_enabled: bool = False,
+    krk_two_stage_abstention_penalty: float = 0.0,
+    krk_two_stage_abstention_unsafe_threshold: float = 0.45,
+    krk_two_stage_abstention_preserve_threshold: float = 0.5,
+    krk_two_stage_abstention_allow_stage7_challenge: bool = False,
     stage7_king_tempo_already_used: bool = False,
     stage7_drive_repair_already_used: bool = False,
     stage7_drive_repair_post_reply_context: bool = False,
@@ -2784,6 +2795,19 @@ def choose_move_details(
             krk_strategy_arbiter_allow_stage7_challenge=(
                 krk_strategy_arbiter_allow_stage7_challenge
             ),
+            krk_two_stage_abstention_selector_enabled=(
+                krk_two_stage_abstention_selector_enabled
+            ),
+            krk_two_stage_abstention_penalty=krk_two_stage_abstention_penalty,
+            krk_two_stage_abstention_unsafe_threshold=(
+                krk_two_stage_abstention_unsafe_threshold
+            ),
+            krk_two_stage_abstention_preserve_threshold=(
+                krk_two_stage_abstention_preserve_threshold
+            ),
+            krk_two_stage_abstention_allow_stage7_challenge=(
+                krk_two_stage_abstention_allow_stage7_challenge
+            ),
             stage7_king_tempo_already_used=stage7_king_tempo_already_used,
             stage7_drive_repair_already_used=stage7_drive_repair_already_used,
             stage7_drive_repair_post_reply_context=stage7_drive_repair_post_reply_context,
@@ -2848,6 +2872,11 @@ def _choose_move_details_impl(
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
     krk_strategy_arbiter_allow_stage7_challenge: bool = False,
+    krk_two_stage_abstention_selector_enabled: bool = False,
+    krk_two_stage_abstention_penalty: float = 0.0,
+    krk_two_stage_abstention_unsafe_threshold: float = 0.45,
+    krk_two_stage_abstention_preserve_threshold: float = 0.5,
+    krk_two_stage_abstention_allow_stage7_challenge: bool = False,
     stage7_king_tempo_already_used: bool = False,
     stage7_drive_repair_already_used: bool = False,
     stage7_drive_repair_post_reply_context: bool = False,
@@ -3000,6 +3029,21 @@ def _choose_move_details_impl(
     env["blackboard"]["krk_strategy_arbiter_allow_stage7_challenge"] = bool(
         krk_strategy_arbiter_allow_stage7_challenge
     )
+    env["blackboard"]["krk_two_stage_abstention_selector_enabled"] = bool(
+        krk_two_stage_abstention_selector_enabled
+    )
+    env["blackboard"]["krk_two_stage_abstention_penalty"] = float(
+        krk_two_stage_abstention_penalty
+    )
+    env["blackboard"]["krk_two_stage_abstention_unsafe_threshold"] = float(
+        krk_two_stage_abstention_unsafe_threshold
+    )
+    env["blackboard"]["krk_two_stage_abstention_preserve_threshold"] = float(
+        krk_two_stage_abstention_preserve_threshold
+    )
+    env["blackboard"]["krk_two_stage_abstention_allow_stage7_challenge"] = bool(
+        krk_two_stage_abstention_allow_stage7_challenge
+    )
 
     _materialize_explicit_support_roles(graph, env)
     _materialize_stage7_sandbox_providers(graph, env)
@@ -3093,6 +3137,17 @@ def _choose_move_details_impl(
         visible_terms=env.get("blackboard", {}).get("krk_visible_terms", {}) or {},
         board=board,
         allow_stage7_challenge=bool(krk_strategy_arbiter_allow_stage7_challenge),
+    )
+    two_stage_abstention_summary = _apply_krk_two_stage_abstention_selector(
+        suggestions,
+        enabled=bool(krk_two_stage_abstention_selector_enabled),
+        unsafe_threshold=float(krk_two_stage_abstention_unsafe_threshold),
+        preserve_threshold=float(krk_two_stage_abstention_preserve_threshold),
+        penalty=float(krk_two_stage_abstention_penalty),
+        active_landmark_label=active_landmark_label,
+        visible_terms=env.get("blackboard", {}).get("krk_visible_terms", {}) or {},
+        board=board,
+        allow_stage7_challenge=bool(krk_two_stage_abstention_allow_stage7_challenge),
     )
     suggestions.sort(key=lambda item: item.get("score", float("-inf")), reverse=True)
     selected_suggestion = suggestions[0] if suggestions else None
@@ -3330,6 +3385,20 @@ def _choose_move_details_impl(
             krk_strategy_arbiter_allow_stage7_challenge
         ),
         "krk_strategy_arbiter_sandbox_summary": strategy_arbiter_sandbox_summary,
+        "krk_two_stage_abstention_selector_enabled": bool(
+            krk_two_stage_abstention_selector_enabled
+        ),
+        "krk_two_stage_abstention_penalty": float(krk_two_stage_abstention_penalty),
+        "krk_two_stage_abstention_unsafe_threshold": float(
+            krk_two_stage_abstention_unsafe_threshold
+        ),
+        "krk_two_stage_abstention_preserve_threshold": float(
+            krk_two_stage_abstention_preserve_threshold
+        ),
+        "krk_two_stage_abstention_allow_stage7_challenge": bool(
+            krk_two_stage_abstention_allow_stage7_challenge
+        ),
+        "krk_two_stage_abstention_selector_summary": two_stage_abstention_summary,
         "role_owned_score_normalization_enabled": bool(role_owned_score_normalization_enabled),
         "selected_by_role_owned_score_normalization": bool(
             selected_by_role_owned_score_normalization
@@ -3559,6 +3628,11 @@ def play_to_mate(
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
     krk_strategy_arbiter_allow_stage7_challenge: bool = False,
+    krk_two_stage_abstention_selector_enabled: bool = False,
+    krk_two_stage_abstention_penalty: float = 0.0,
+    krk_two_stage_abstention_unsafe_threshold: float = 0.45,
+    krk_two_stage_abstention_preserve_threshold: float = 0.5,
+    krk_two_stage_abstention_allow_stage7_challenge: bool = False,
     perf_profile: dict | None = None,
     enable_diagnostic_caches: bool = False,
     initial_white_moves: int = 0,
@@ -3718,6 +3792,19 @@ def play_to_mate(
                 krk_strategy_arbiter_support=krk_strategy_arbiter_support,
                 krk_strategy_arbiter_allow_stage7_challenge=(
                     krk_strategy_arbiter_allow_stage7_challenge
+                ),
+                krk_two_stage_abstention_selector_enabled=(
+                    krk_two_stage_abstention_selector_enabled
+                ),
+                krk_two_stage_abstention_penalty=krk_two_stage_abstention_penalty,
+                krk_two_stage_abstention_unsafe_threshold=(
+                    krk_two_stage_abstention_unsafe_threshold
+                ),
+                krk_two_stage_abstention_preserve_threshold=(
+                    krk_two_stage_abstention_preserve_threshold
+                ),
+                krk_two_stage_abstention_allow_stage7_challenge=(
+                    krk_two_stage_abstention_allow_stage7_challenge
                 ),
                 perf_profile=perf_profile,
                 enable_diagnostic_caches=enable_diagnostic_caches,
@@ -4772,6 +4859,11 @@ def evaluate_landmark_progress(
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
     krk_strategy_arbiter_allow_stage7_challenge: bool = False,
+    krk_two_stage_abstention_selector_enabled: bool = False,
+    krk_two_stage_abstention_penalty: float = 0.0,
+    krk_two_stage_abstention_unsafe_threshold: float = 0.45,
+    krk_two_stage_abstention_preserve_threshold: float = 0.5,
+    krk_two_stage_abstention_allow_stage7_challenge: bool = False,
     counterfactual_successors: tuple[str, ...] = (),
     max_counterfactual_sweeps: int = 0,
     counterfactual_sweeps_output: Optional[Path] = None,
@@ -4903,6 +4995,10 @@ def evaluate_landmark_progress(
         "krk_strategy_arbiter_sandbox_supported_provider_by_outcome": {},
         "krk_strategy_arbiter_sandbox_selected_supported_count": 0,
         "krk_strategy_arbiter_sandbox_selected_by_outcome": {},
+        "krk_two_stage_abstention_penalized_count": 0,
+        "krk_two_stage_abstention_penalized_provider_by_outcome": {},
+        "krk_two_stage_abstention_selected_penalized_count": 0,
+        "krk_two_stage_abstention_selected_by_outcome": {},
         "one_ply_status": "not_checked",
         "conversion_status": "not_checked",
     }
@@ -4979,6 +5075,19 @@ def evaluate_landmark_progress(
             krk_strategy_arbiter_allow_stage7_challenge=(
                 krk_strategy_arbiter_allow_stage7_challenge
             ),
+            krk_two_stage_abstention_selector_enabled=(
+                krk_two_stage_abstention_selector_enabled
+            ),
+            krk_two_stage_abstention_penalty=krk_two_stage_abstention_penalty,
+            krk_two_stage_abstention_unsafe_threshold=(
+                krk_two_stage_abstention_unsafe_threshold
+            ),
+            krk_two_stage_abstention_preserve_threshold=(
+                krk_two_stage_abstention_preserve_threshold
+            ),
+            krk_two_stage_abstention_allow_stage7_challenge=(
+                krk_two_stage_abstention_allow_stage7_challenge
+            ),
             perf_profile=perf_profile,
             enable_diagnostic_caches=enable_diagnostic_caches,
         )
@@ -4992,6 +5101,15 @@ def evaluate_landmark_progress(
             stats["krk_strategy_arbiter_sandbox_supported_count"] = (
                 int(stats.get("krk_strategy_arbiter_sandbox_supported_count", 0) or 0)
                 + sandbox_supported_count
+            )
+        abstention_summary = dict(
+            move_details.get("krk_two_stage_abstention_selector_summary", {}) or {}
+        )
+        abstention_penalized_count = int(abstention_summary.get("penalized_count", 0) or 0)
+        if abstention_penalized_count:
+            stats["krk_two_stage_abstention_penalized_count"] = (
+                int(stats.get("krk_two_stage_abstention_penalized_count", 0) or 0)
+                + abstention_penalized_count
             )
         stats["candidate_move_frame_count"] = (
             int(stats.get("candidate_move_frame_count", 0) or 0)
@@ -5196,6 +5314,19 @@ def evaluate_landmark_progress(
                 krk_strategy_arbiter_support=krk_strategy_arbiter_support,
                 krk_strategy_arbiter_allow_stage7_challenge=(
                     krk_strategy_arbiter_allow_stage7_challenge
+                ),
+                krk_two_stage_abstention_selector_enabled=(
+                    krk_two_stage_abstention_selector_enabled
+                ),
+                krk_two_stage_abstention_penalty=krk_two_stage_abstention_penalty,
+                krk_two_stage_abstention_unsafe_threshold=(
+                    krk_two_stage_abstention_unsafe_threshold
+                ),
+                krk_two_stage_abstention_preserve_threshold=(
+                    krk_two_stage_abstention_preserve_threshold
+                ),
+                krk_two_stage_abstention_allow_stage7_challenge=(
+                    krk_two_stage_abstention_allow_stage7_challenge
                 ),
                 perf_profile=perf_profile,
                 enable_diagnostic_caches=enable_diagnostic_caches,
@@ -6638,6 +6769,16 @@ def main() -> None:
                         help="Runtime test: bounded visible support amount for eligible strategy-arbiter provider families")
     parser.add_argument("--allow-krk-strategy-arbiter-stage7-challenge", action="store_true",
                         help="Runtime test: allow strategy-arbiter sandbox support on held-out Stage 7 box_shrink contexts")
+    parser.add_argument("--enable-krk-two-stage-abstention-selector", action="store_true",
+                        help="Runtime test: enable default-off two-stage KRK abstention selector penalty sandbox")
+    parser.add_argument("--krk-two-stage-abstention-penalty", type=float, default=0.0,
+                        help="Runtime test: explicit score penalty for proposals classified unsafe by the two-stage abstention selector")
+    parser.add_argument("--krk-two-stage-abstention-unsafe-threshold", type=float, default=0.45,
+                        help="Runtime test: unsafe-score threshold for two-stage abstention selector")
+    parser.add_argument("--krk-two-stage-abstention-preserve-threshold", type=float, default=0.5,
+                        help="Runtime test: preserve-score threshold below which unsafe proposals may be penalized")
+    parser.add_argument("--allow-krk-two-stage-abstention-stage7-challenge", action="store_true",
+                        help="Runtime test: allow two-stage abstention selector on held-out Stage 7 box_shrink contexts")
     parser.add_argument("--composition-profile",
                         choices=[COMPOSITION_PROFILE_NONE, COMPOSITION_PROFILE_HANDOFF_V1],
                         default=COMPOSITION_PROFILE_NONE,
@@ -6747,6 +6888,19 @@ def main() -> None:
         krk_strategy_arbiter_support=args.krk_strategy_arbiter_support,
         krk_strategy_arbiter_allow_stage7_challenge=(
             args.allow_krk_strategy_arbiter_stage7_challenge
+        ),
+        krk_two_stage_abstention_selector_enabled=(
+            args.enable_krk_two_stage_abstention_selector
+        ),
+        krk_two_stage_abstention_penalty=args.krk_two_stage_abstention_penalty,
+        krk_two_stage_abstention_unsafe_threshold=(
+            args.krk_two_stage_abstention_unsafe_threshold
+        ),
+        krk_two_stage_abstention_preserve_threshold=(
+            args.krk_two_stage_abstention_preserve_threshold
+        ),
+        krk_two_stage_abstention_allow_stage7_challenge=(
+            args.allow_krk_two_stage_abstention_stage7_challenge
         ),
         early_stop_stable_suggestions=args.early_stop_stable_suggestions,
         lock_stage_filter_through_playout=args.lock_stage_filter_through_playout,
