@@ -1,0 +1,52 @@
+{
+  "schema_version": "krk_two_stage_abstention_default_off_equivalence.v0",
+  "status": "default_off_equivalent",
+  "causal_status": "sandbox_opt_in_disabled",
+  "runtime_defaults_changed": false,
+  "topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+  "profile": "handoff_composition_v1",
+  "label": "fence_established",
+  "samples": 3,
+  "seed": 7,
+  "horizon_plies": 40,
+  "baseline_artifact": "reports/krk_two_stage_abstention_default_off_baseline_stage5_3_h40.json",
+  "disabled_artifact": "reports/krk_two_stage_abstention_default_off_disabled_stage5_3_h40.json",
+  "compared_fields": [
+    "total",
+    "no_move",
+    "improved",
+    "flat",
+    "worsened",
+    "optimal",
+    "avg_reward",
+    "avg_oracle_reward",
+    "playouts",
+    "one_ply_status_counts",
+    "conversion_status_counts",
+    "semantic_alignment_status_counts",
+    "conversion_by_semantic_alignment_status",
+    "one_ply_status",
+    "conversion_status",
+    "handoff_packet_count",
+    "shadow_candidate_count",
+    "sample_indices",
+    "deterministic_sample_seeds",
+    "krk_two_stage_abstention_penalized_count",
+    "krk_two_stage_abstention_selected_penalized_count",
+    "krk_two_stage_abstention_penalized_provider_by_outcome",
+    "krk_two_stage_abstention_selected_by_outcome"
+  ],
+  "diffs": {},
+  "acceptance": {
+    "same_core_metrics": true,
+    "disabled_selector_penalized_count_zero": true,
+    "disabled_selector_selected_penalized_count_zero": true,
+    "conversion_status": "passed",
+    "playouts": {
+      "mate": 3
+    },
+    "shadow_candidate_count": 0
+  },
+  "stop_condition_fired": false,
+  "next_step": "enabled_tiny_smoke"
+}
