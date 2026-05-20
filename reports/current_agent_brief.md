@@ -805,6 +805,17 @@ KRK ranked StrategyProposalFrame probe v1:
 
 The offline probe evaluates ranked proposal context at frame level, not proposal-positive level. It has only `15` non-Stage7 training frames and `7` Stage7 challenge frames, so it remains underpowered. `top_family_raw_bucket` reaches `0.8` LOO accuracy, but negative suppression is only `0.5`; frame-level outcome labels are too coarse to identify the winning proposal inside a state. Decision: `ranked_frames_available_label_semantics_too_coarse`; next step is to derive state-local contrast labels before any runtime selector.
 
+KRK state-local contrast labels/probe v1:
+
+- `scripts/build_krk_state_local_contrast_labels_v1.py`
+- `scripts/probe_krk_state_local_contrast_selector_v1.py`
+- `reports/krk_state_local_contrast_labels_v1.json`
+- `reports/krk_state_local_contrast_labels_v1.md`
+- `reports/krk_state_local_contrast_selector_probe_v1.json`
+- `reports/krk_state_local_contrast_selector_probe_v1.md`
+
+The replay-free join matched ranked proposal frames to forced-provider labels by state/provider, producing `28` protected contrast rows across `8` states with `13` positive and `15` negative labels and no Stage 7 leakage. The leave-state-out probe is not selector-ready: best accuracy is only `0.464`, and negative suppression is `0.0`, meaning the current simple features do not distinguish failing forced providers under state holdout. Decision: `state_local_contrast_signal_not_ready`; runtime selector tests remain blocked.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.

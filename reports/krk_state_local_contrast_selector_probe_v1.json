@@ -1,0 +1,138 @@
+{
+  "benchmark_underpowered": true,
+  "best_result": {
+    "accuracy": 0.4642857142857143,
+    "false_negative": 0,
+    "false_positive": 15,
+    "negative_suppression": 0.0,
+    "objective": "stage_family_rank_score",
+    "positive_precision": 0.4642857142857143,
+    "positive_recall": 1.0,
+    "row_count": 28,
+    "true_negative": 0,
+    "true_positive": 13
+  },
+  "causal_status": "non_causal_offline_probe",
+  "decision": {
+    "recommended_next_step": "review_state_local_contrast_before_runtime_tests",
+    "runtime_test_allowed_next": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "state_local_contrast_signal_not_ready"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "finding": "State-local forced-provider contrast labels are a better selector target than frame-level outcomes, but coverage is still small and provider families are limited.",
+    "stage7_training_leakage": false
+  },
+  "results": {
+    "family_global_rank": {
+      "accuracy": 0.2857142857142857,
+      "false_negative": 5,
+      "false_positive": 15,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.34782608695652173,
+      "positive_recall": 0.6153846153846154,
+      "row_count": 28,
+      "true_negative": 0,
+      "true_positive": 8
+    },
+    "family_maturity": {
+      "accuracy": 0.2857142857142857,
+      "false_negative": 5,
+      "false_positive": 15,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.34782608695652173,
+      "positive_recall": 0.6153846153846154,
+      "row_count": 28,
+      "true_negative": 0,
+      "true_positive": 8
+    },
+    "family_norm_score": {
+      "accuracy": 0.2857142857142857,
+      "false_negative": 5,
+      "false_positive": 15,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.34782608695652173,
+      "positive_recall": 0.6153846153846154,
+      "row_count": 28,
+      "true_negative": 0,
+      "true_positive": 8
+    },
+    "family_rank": {
+      "accuracy": 0.2857142857142857,
+      "false_negative": 5,
+      "false_positive": 15,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.34782608695652173,
+      "positive_recall": 0.6153846153846154,
+      "row_count": 28,
+      "true_negative": 0,
+      "true_positive": 8
+    },
+    "family_rank_norm_score": {
+      "accuracy": 0.2857142857142857,
+      "false_negative": 5,
+      "false_positive": 15,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.34782608695652173,
+      "positive_recall": 0.6153846153846154,
+      "row_count": 28,
+      "true_negative": 0,
+      "true_positive": 8
+    },
+    "provider_family": {
+      "accuracy": 0.2857142857142857,
+      "false_negative": 5,
+      "false_positive": 15,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.34782608695652173,
+      "positive_recall": 0.6153846153846154,
+      "row_count": 28,
+      "true_negative": 0,
+      "true_positive": 8
+    },
+    "provider_maturity": {
+      "accuracy": 0.2857142857142857,
+      "false_negative": 5,
+      "false_positive": 15,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.34782608695652173,
+      "positive_recall": 0.6153846153846154,
+      "row_count": 28,
+      "true_negative": 0,
+      "true_positive": 8
+    },
+    "stage_family_rank_score": {
+      "accuracy": 0.4642857142857143,
+      "false_negative": 0,
+      "false_positive": 15,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.4642857142857143,
+      "positive_recall": 1.0,
+      "row_count": 28,
+      "true_negative": 0,
+      "true_positive": 13
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_state_local_contrast_selector_probe.v1",
+  "source_artifact": "reports/krk_state_local_contrast_labels_v1.json",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "label_counts": {
+      "negative": 15,
+      "positive": 13
+    },
+    "provider_family_counts": {
+      "edge_trap": 20,
+      "stage0_basin": 8
+    },
+    "row_count": 28,
+    "stage7_training_leakage": false,
+    "state_count": 8
+  }
+}
