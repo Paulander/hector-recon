@@ -42,6 +42,7 @@ Current interpretation:
 - The visible-term refinement audit found candidate positive terms, but several high-value terms are globally ambiguous and require companion/phase scope; current status is `visible_term_refinement_candidates_non_causal`, with no runtime patch justified.
 - The scoped interaction benchmark was inconclusive: scoped models did not beat the visible-term baseline and increased hard-negative ranking relative to current/visible baselines. Current status is `scoped_interaction_benchmark_inconclusive`; pause Stage 7 runtime work or request architecture review.
 - Stage 7 runtime repair is now paused pending an architecture-level decision. Stage 7 residuals should be treated as challenge cases for general KRK strategy arbitration / plan selection, not as the sole optimization target.
+- The latest bounded runtime-test evidence (`krk_state_local_contrast_readiness_review_v2`) blocks runtime selector work: diverse forced-provider labels added Stage 7 held-out max_plies evidence, but protected training labels remain too sparse/positive-heavy and leave-state-out negative suppression is still `0.0`. Next step is architecture review before more runtime tests, not a causal selector.
 
 ## Hard Invariants
 
