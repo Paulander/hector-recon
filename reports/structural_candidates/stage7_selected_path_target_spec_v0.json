@@ -1,0 +1,124 @@
+{
+  "causal_status": "non_causal_design_spec",
+  "decision_gate": {
+    "blocked_actions": [
+      "runtime arbiter implementation",
+      "abstention threshold tuning",
+      "Stage 7 promotion",
+      "Stage 8 training",
+      "causal internal terminals"
+    ],
+    "next_allowed_action": "build_replay_free_selected_path_target_dataset_or_request_architecture_review",
+    "status": "non_causal_targets_defined_no_runtime_work",
+    "why": "The selected failure path is mixed; a single selector, penalty, or provider boost would conflate ownership errors with continuation-capacity/sequence errors."
+  },
+  "gameplay_topology_mutation": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "stage7_selected_path_target_spec.v0",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_selected_failure_path_audit_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "status": "split_targets_required",
+  "target_specs": [
+    {
+      "forbidden_now": [
+        "boost target provider",
+        "penalize stage0_basin",
+        "make local_provider_competition_failed causal",
+        "promote Stage 7"
+      ],
+      "future_consumer_if_validated": "strategy arbiter or owner-exit monitor dataset",
+      "minimum_future_evidence": [
+        "more than two ownership-gap states",
+        "protected Stage 5/6 controls with safe stage0/edge/fence ownership",
+        "paired no-change default-off check before any sandbox",
+        "false-positive review where alternate provider should not own"
+      ],
+      "negative_or_control_definition": "validated protected states where selected provider converts or forced alternatives do not improve outcome",
+      "positive_label_definition": "existing provider converts under forced ownership while selected provider max-plies",
+      "required_features": [
+        "current_owner",
+        "selected_owner_failed_h40",
+        "alternative_provider_known_conversion_h40",
+        "local_provider_competition_failed",
+        "provider_score_scale_gap",
+        "provider_family",
+        "active_landmark_label",
+        "repair_or_phase_monitor_signature"
+      ],
+      "state_count": 2,
+      "states": [
+        {
+          "recommended_label": "selected_owner_failed_alternative_provider_converts",
+          "selected_move": "a1a4",
+          "selected_provider": "krk.stage0_basin",
+          "state_id": "state.ac0b7ed500ea",
+          "target_evidence": "forced_provider_mates_h40",
+          "target_provider": "krk.fence_established"
+        },
+        {
+          "recommended_label": "selected_owner_failed_alternative_provider_converts",
+          "selected_move": "a4e4",
+          "selected_provider": "krk.stage0_basin",
+          "state_id": "state.ff6652c8832c",
+          "target_evidence": "forced_provider_mates_h40",
+          "target_provider": "krk.drive_to_edge"
+        }
+      ],
+      "target_id": "stage7.selected_path.strategy_ownership_gap.v0",
+      "target_type": "strategy_ownership_training_target"
+    },
+    {
+      "forbidden_now": [
+        "train Stage 8",
+        "use DTM/tablebase at runtime",
+        "add full-KRK continuation overlay",
+        "tune current plan capsule micro-repair"
+      ],
+      "future_consumer_if_validated": "ranked sequence-policy benchmark or plan-capsule model-expression redesign",
+      "minimum_future_evidence": [
+        "offline successful trajectories for the unresolved states or nearby controls",
+        "hard-negative contrast moves from current failed selected paths",
+        "teacher-forced and closed-loop split metrics",
+        "successful post-box controls outside Stage 7 residuals"
+      ],
+      "negative_or_control_definition": "provider-best and legal-first h40 labels that remain max_plies or draw",
+      "positive_label_definition": "multi-step trajectory or continuation policy converts from state without runtime oracle",
+      "required_features": [
+        "post_plan_stagnation",
+        "plan_selection_needed",
+        "repair_needed_monitor",
+        "handoff_success_after_plan",
+        "multi_step_progress_required",
+        "trajectory_progress_terms",
+        "closed_loop_drift_class"
+      ],
+      "state_count": 2,
+      "states": [
+        {
+          "recommended_label": "current_provider_set_insufficient_or_sequence_policy_gap",
+          "selected_move": "a3e3",
+          "selected_provider": "krk.stage0_basin",
+          "state_id": "state.0afbf11aa123",
+          "target_evidence": "forced_providers_and_legal_first_h40_no_mate",
+          "target_provider": null
+        },
+        {
+          "recommended_label": "current_provider_set_insufficient_or_sequence_policy_gap",
+          "selected_move": "a3a5",
+          "selected_provider": "krk.stage0_basin",
+          "state_id": "state.38aed2f35911",
+          "target_evidence": "forced_providers_and_legal_first_h40_no_mate",
+          "target_provider": null
+        }
+      ],
+      "target_id": "stage7.selected_path.sequence_continuation_gap.v0",
+      "target_type": "sequence_policy_or_continuation_capacity_target"
+    }
+  ]
+}
