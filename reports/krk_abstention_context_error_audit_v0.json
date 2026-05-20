@@ -1,0 +1,390 @@
+{
+  "causal_status": "non_causal_error_audit",
+  "decision": {
+    "recommended_next_step": "non_causal_safe_preservation_label_semantics_review",
+    "runtime_test_allowed_next": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "context_signal_overrejects_safe_owners_runtime_blocked"
+  },
+  "diagnosis": [
+    "Context features substantially improve unsafe-owner recall, but they over-reject safe owners.",
+    "The strongest feature uses white-king support bucket plus provider family; this is useful evidence but not a safe runtime abstention rule.",
+    "Safe-preservation misses the runtime-review threshold, so any runtime selector remains blocked.",
+    "False positives should be analyzed before collecting more labels: the current objective suppresses too many known-safe owners."
+  ],
+  "error_patterns": {
+    "false_negative_by_label_source_kind": {
+      "forced_provider_conversion": 2,
+      "selected_playout_success": 1
+    },
+    "false_negative_by_monitor_signature": {
+      "OwnerExitMonitor+PhaseBoundaryMonitor": 3
+    },
+    "false_negative_by_provider_family": {
+      "edge_trap": 2,
+      "stage0_basin": 1
+    },
+    "false_negative_by_stage": {
+      "stage4": 2,
+      "stage5": 1
+    },
+    "false_negative_by_support_bucket": {
+      "close": 3
+    },
+    "false_positive_by_label_source_kind": {
+      "forced_provider_conversion": 8,
+      "selected_playout_success": 4
+    },
+    "false_positive_by_monitor_signature": {
+      "OwnerExitMonitor+PhaseBoundaryMonitor": 7,
+      "OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor": 5
+    },
+    "false_positive_by_provider_family": {
+      "edge_trap": 11,
+      "stage0_basin": 1
+    },
+    "false_positive_by_stage": {
+      "stage4": 1,
+      "stage5": 11
+    },
+    "false_positive_by_support_bucket": {
+      "close": 6,
+      "far": 5,
+      "medium": 1
+    }
+  },
+  "examples": {
+    "false_negatives": [
+      {
+        "label": "unsafe_owner",
+        "label_source_kind": "forced_provider_conversion",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor",
+        "move_uci": "b7b6",
+        "provider_id": "krk.edge_trap_wrong_tempo",
+        "source_stage": "stage4",
+        "state_id": "state.1e4f48a672e8",
+        "support_bucket": "close",
+        "unsafe_score": 0.0
+      },
+      {
+        "label": "unsafe_owner",
+        "label_source_kind": "forced_provider_conversion",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor",
+        "move_uci": "b7b6",
+        "provider_id": "krk.edge_trap_close",
+        "source_stage": "stage4",
+        "state_id": "state.1e4f48a672e8",
+        "support_bucket": "close",
+        "unsafe_score": 0.0
+      },
+      {
+        "label": "unsafe_owner",
+        "label_source_kind": "selected_playout_success",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor",
+        "move_uci": "c6b6",
+        "provider_id": "krk.stage0_basin",
+        "source_stage": "stage5",
+        "state_id": "state.3dca34326fca",
+        "support_bucket": "close",
+        "unsafe_score": 0.0
+      }
+    ],
+    "false_positives": [
+      {
+        "label": "safe_owner",
+        "label_source_kind": "forced_provider_conversion",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor",
+        "move_uci": "h7c7",
+        "provider_id": "krk.edge_trap_close",
+        "source_stage": "stage5",
+        "state_id": "state.02feb8593cc6",
+        "support_bucket": "far",
+        "unsafe_score": 0.75
+      },
+      {
+        "label": "safe_owner",
+        "label_source_kind": "forced_provider_conversion",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor",
+        "move_uci": "h7c7",
+        "provider_id": "krk.edge_trap_close",
+        "source_stage": "stage5",
+        "state_id": "state.02feb8593cc6",
+        "support_bucket": "far",
+        "unsafe_score": 0.75
+      },
+      {
+        "label": "safe_owner",
+        "label_source_kind": "forced_provider_conversion",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor",
+        "move_uci": "f2f3",
+        "provider_id": "krk.edge_trap_close",
+        "source_stage": "stage5",
+        "state_id": "state.7bd8961882ad",
+        "support_bucket": "far",
+        "unsafe_score": 0.8571428571428571
+      },
+      {
+        "label": "safe_owner",
+        "label_source_kind": "forced_provider_conversion",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor",
+        "move_uci": "f2f3",
+        "provider_id": "krk.edge_trap_enemy_between",
+        "source_stage": "stage5",
+        "state_id": "state.7bd8961882ad",
+        "support_bucket": "far",
+        "unsafe_score": 0.8571428571428571
+      },
+      {
+        "label": "safe_owner",
+        "label_source_kind": "forced_provider_conversion",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor",
+        "move_uci": "f2f3",
+        "provider_id": "krk.edge_trap_wrong_tempo",
+        "source_stage": "stage5",
+        "state_id": "state.7bd8961882ad",
+        "support_bucket": "far",
+        "unsafe_score": 0.8571428571428571
+      },
+      {
+        "label": "safe_owner",
+        "label_source_kind": "forced_provider_conversion",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor",
+        "move_uci": "e7e8",
+        "provider_id": "krk.edge_trap_close",
+        "source_stage": "stage5",
+        "state_id": "state.87b1160e68b9",
+        "support_bucket": "close",
+        "unsafe_score": 0.6666666666666666
+      },
+      {
+        "label": "safe_owner",
+        "label_source_kind": "forced_provider_conversion",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor",
+        "move_uci": "e7e8",
+        "provider_id": "krk.edge_trap_enemy_between",
+        "source_stage": "stage5",
+        "state_id": "state.87b1160e68b9",
+        "support_bucket": "close",
+        "unsafe_score": 0.6666666666666666
+      },
+      {
+        "label": "safe_owner",
+        "label_source_kind": "forced_provider_conversion",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor",
+        "move_uci": "e7e8",
+        "provider_id": "krk.edge_trap_wrong_tempo",
+        "source_stage": "stage5",
+        "state_id": "state.87b1160e68b9",
+        "support_bucket": "close",
+        "unsafe_score": 0.6666666666666666
+      }
+    ],
+    "true_negatives": [
+      {
+        "label": "safe_owner",
+        "label_source_kind": "selected_playout_success",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor",
+        "move_uci": "f6f7",
+        "provider_id": "krk.stage0_basin",
+        "source_stage": "stage4",
+        "state_id": "state.02cfd843a2cf",
+        "support_bucket": "close",
+        "unsafe_score": 0.1
+      },
+      {
+        "label": "safe_owner",
+        "label_source_kind": "forced_provider_conversion",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor",
+        "move_uci": "b7b1",
+        "provider_id": "krk.fence_established",
+        "source_stage": "stage4",
+        "state_id": "state.1e4f48a672e8",
+        "support_bucket": "close",
+        "unsafe_score": 0.0
+      },
+      {
+        "label": "safe_owner",
+        "label_source_kind": "selected_playout_success",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor",
+        "move_uci": "b7b1",
+        "provider_id": "krk.stage0_basin",
+        "source_stage": "stage4",
+        "state_id": "state.1e4f48a672e8",
+        "support_bucket": "close",
+        "unsafe_score": 0.1
+      },
+      {
+        "label": "safe_owner",
+        "label_source_kind": "forced_provider_conversion",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor",
+        "move_uci": "a7a8",
+        "provider_id": "krk.stage0_basin",
+        "source_stage": "stage5",
+        "state_id": "state.2c1d6da27ea1",
+        "support_bucket": "far",
+        "unsafe_score": 0.0
+      },
+      {
+        "label": "safe_owner",
+        "label_source_kind": "forced_provider_conversion",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor",
+        "move_uci": "a7a8",
+        "provider_id": "krk.stage0_basin",
+        "source_stage": "stage5",
+        "state_id": "state.2c1d6da27ea1",
+        "support_bucket": "far",
+        "unsafe_score": 0.0
+      },
+      {
+        "label": "safe_owner",
+        "label_source_kind": "selected_playout_success",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor",
+        "move_uci": "a7a8",
+        "provider_id": "krk.stage0_basin",
+        "source_stage": "stage5",
+        "state_id": "state.2c1d6da27ea1",
+        "support_bucket": "far",
+        "unsafe_score": 0.0
+      },
+      {
+        "label": "safe_owner",
+        "label_source_kind": "forced_provider_conversion",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor",
+        "move_uci": "a8f8",
+        "provider_id": "krk.stage0_basin",
+        "source_stage": "stage6",
+        "state_id": "state.52085d244e9d",
+        "support_bucket": "close",
+        "unsafe_score": 0.125
+      },
+      {
+        "label": "safe_owner",
+        "label_source_kind": "forced_provider_conversion",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor",
+        "move_uci": "f6f7",
+        "provider_id": "krk.drive_to_edge",
+        "source_stage": "stage6",
+        "state_id": "state.52085d244e9d",
+        "support_bucket": "close",
+        "unsafe_score": 0.0
+      }
+    ],
+    "true_positives": [
+      {
+        "label": "unsafe_owner",
+        "label_source_kind": "selected_playout_success",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor",
+        "move_uci": "h7c7",
+        "provider_id": "krk.edge_trap_close",
+        "source_stage": "stage5",
+        "state_id": "state.02feb8593cc6",
+        "support_bucket": "far",
+        "unsafe_score": 0.75
+      },
+      {
+        "label": "unsafe_owner",
+        "label_source_kind": "selected_playout_success",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor",
+        "move_uci": "h7c7",
+        "provider_id": "krk.edge_trap_enemy_between",
+        "source_stage": "stage5",
+        "state_id": "state.02feb8593cc6",
+        "support_bucket": "far",
+        "unsafe_score": 0.75
+      },
+      {
+        "label": "unsafe_owner",
+        "label_source_kind": "selected_playout_success",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor",
+        "move_uci": "h7c7",
+        "provider_id": "krk.edge_trap_wrong_tempo",
+        "source_stage": "stage5",
+        "state_id": "state.02feb8593cc6",
+        "support_bucket": "far",
+        "unsafe_score": 0.75
+      },
+      {
+        "label": "unsafe_owner",
+        "label_source_kind": "selected_playout_success",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor",
+        "move_uci": "d6c7",
+        "provider_id": "krk.stage0_basin",
+        "source_stage": "stage4",
+        "state_id": "state.256a3da30f0f",
+        "support_bucket": "medium",
+        "unsafe_score": 0.5
+      },
+      {
+        "label": "unsafe_owner",
+        "label_source_kind": "selected_playout_success",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor",
+        "move_uci": "h7c7",
+        "provider_id": "krk.edge_trap_close",
+        "source_stage": "stage5",
+        "state_id": "state.326222aefdf1",
+        "support_bucket": "far",
+        "unsafe_score": 0.6428571428571429
+      },
+      {
+        "label": "unsafe_owner",
+        "label_source_kind": "selected_playout_success",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor",
+        "move_uci": "h7c7",
+        "provider_id": "krk.edge_trap_enemy_between",
+        "source_stage": "stage5",
+        "state_id": "state.326222aefdf1",
+        "support_bucket": "far",
+        "unsafe_score": 0.6428571428571429
+      },
+      {
+        "label": "unsafe_owner",
+        "label_source_kind": "selected_playout_success",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor",
+        "move_uci": "h7c7",
+        "provider_id": "krk.edge_trap_wrong_tempo",
+        "source_stage": "stage5",
+        "state_id": "state.326222aefdf1",
+        "support_bucket": "far",
+        "unsafe_score": 0.6428571428571429
+      },
+      {
+        "label": "unsafe_owner",
+        "label_source_kind": "forced_provider_conversion",
+        "monitor_signature": "OwnerExitMonitor+PhaseBoundaryMonitor+RepairNeededMonitor",
+        "move_uci": "h7c7",
+        "provider_id": "krk.edge_trap_close",
+        "source_stage": "stage6",
+        "state_id": "state.699f0003a511",
+        "support_bucket": "far",
+        "unsafe_score": 0.5454545454545454
+      }
+    ]
+  },
+  "gameplay_topology_mutation": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_abstention_context_error_audit.v0",
+  "source_artifacts": [
+    "reports/krk_abstention_context_feature_dataset_v0.json",
+    "reports/krk_abstention_context_feature_probe_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "best_features": [
+      "terminal_space_context.white_king_support_bucket",
+      "provider_family"
+    ],
+    "best_objective": "king_support_provider_family",
+    "false_negative_count": 3,
+    "false_positive_count": 12,
+    "negative_suppression": 0.8235294117647058,
+    "row_count": 51,
+    "safe_preservation": 0.6470588235294118,
+    "true_negative_count": 22,
+    "true_positive_count": 14
+  }
+}

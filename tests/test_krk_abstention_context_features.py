@@ -25,6 +25,10 @@ _probe = _load_script(
     "probe_krk_abstention_context_feature_dataset_v0",
     "probe_krk_abstention_context_feature_dataset_v0.py",
 )
+_error_audit = _load_script(
+    "summarize_krk_abstention_context_error_audit_v0",
+    "summarize_krk_abstention_context_error_audit_v0.py",
+)
 
 
 def _write_fixture(root: Path) -> None:
@@ -166,3 +170,23 @@ def test_abstention_context_feature_probe_blocks_runtime(tmp_path):
     assert probe["decision"]["runtime_test_allowed_next"] is False
     assert "king_support_provider_family" in probe["results"]
     assert probe["decision"]["stage7_promotion_allowed"] is False
+
+
+def test_abstention_context_error_audit_blocks_runtime(tmp_path):
+    _write_fixture(tmp_path)
+    dataset = _dataset.build_dataset(tmp_path)
+    (tmp_path / "reports" / "krk_abstention_context_feature_dataset_v0.json").write_text(
+        json.dumps(dataset)
+    )
+    probe = _probe.build_probe(tmp_path)
+    (tmp_path / "reports" / "krk_abstention_context_feature_probe_v0.json").write_text(
+        json.dumps(probe)
+    )
+
+    audit = _error_audit.build_audit(tmp_path)
+
+    assert audit["schema_version"] == "krk_abstention_context_error_audit.v0"
+    assert audit["runtime_selector_implemented"] is False
+    assert audit["decision"]["runtime_test_allowed_next"] is False
+    assert audit["summary"]["row_count"] == 2
+    assert audit["summary"]["false_positive_count"] + audit["summary"]["false_negative_count"] >= 0
