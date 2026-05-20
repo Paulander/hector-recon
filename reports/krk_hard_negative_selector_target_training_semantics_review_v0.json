@@ -1,0 +1,57 @@
+{
+  "approved_non_causal_uses": [
+    "offline_hard_negative_selector_benchmark",
+    "feature_ablation_for_negative_suppression",
+    "candidate_generator_precision_review"
+  ],
+  "blocked_uses": [
+    "runtime_selector_training",
+    "runtime_provider_suppression",
+    "runtime_provider_boost",
+    "topology_mutation",
+    "Stage7 promotion",
+    "Stage8 training"
+  ],
+  "causal_status": "non_causal_semantics_review",
+  "decision": {
+    "offline_benchmark_allowed": true,
+    "recommended_next_step": "run_hard_negative_selector_feature_ablation_v0",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "hard_negative_targets_approved_for_offline_benchmark_only"
+  },
+  "gameplay_topology_mutation": false,
+  "requirements_for_future_training": [
+    "explicit objective separates capacity, runtime proposal, and selected-playout channels",
+    "leave-state-out negative suppression improves above baseline",
+    "hard-negative false positives are inspected",
+    "Stage 7 remains held out",
+    "guardrail suite passes before any causal sandbox"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_hard_negative_selector_target_training_semantics_review.v0",
+  "source_artifacts": [
+    "reports/krk_hard_negative_selector_target_dataset_v0.json",
+    "reports/krk_selector_directed_fix_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "current_training_row_count": 0,
+    "hard_negative_capacity_count": 5,
+    "positive_capacity_context_count": 11,
+    "stage7_row_count": 0,
+    "target_row_count": 16
+  },
+  "training_semantics": {
+    "hard_negative_capacity": "May be used as an offline benchmark negative for candidate scoring. It means forced first-move ownership failed h40, not that the provider is globally bad or should be suppressed at runtime.",
+    "positive_capacity_context": "May be used as offline positive-capacity context. It is still not selected-playout success and should not be mixed with runtime proposal labels without channel separation."
+  }
+}

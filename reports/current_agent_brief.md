@@ -99,6 +99,7 @@ Current interpretation:
 - `krk_geometry_augmented_selector_feature_probe_v0` confirms simple geometry features are insufficient on current evidence: all tested feature sets still have `0.0` negative suppression over protected capacity labels. Next work should collect or design more protected hard-negative evidence and explicit negative label semantics before runtime.
 - `krk_selector_directed_fix_review_v0` consolidates the evidence and rejects runtime selector/generator work, forced-capacity-as-direct-positive training, simple-geometry-only fixes, and returning to Stage 7 patching. Recommended fix class: design a non-causal hard-negative selector target dataset with separated label semantics and geometry/post-move features.
 - `krk_hard_negative_selector_target_dataset_v0` materializes that dataset: `16` protected non-causal target candidates, including `5` `hard_negative_capacity` rows and `11` `positive_capacity_context` rows, with `0` Stage 7 rows and `0` training rows. Next allowed slice: review hard-negative target training semantics.
+- `krk_hard_negative_selector_target_training_semantics_review_v0` approves those rows for offline benchmarking only. Runtime work and selector training remain blocked. Next allowed slice: `run_hard_negative_selector_feature_ablation_v0`.
 
 ## Hard Invariants
 
