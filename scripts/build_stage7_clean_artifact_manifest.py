@@ -21,6 +21,7 @@ REPAIR_NAME_MARKERS = (
     "king_tempo",
     "drive_repair",
     "candidate_move_layer",
+    "plan_capsule",
     "plan_capsule_enabled",
     "plan_capsule_owned",
     "post_king_tempo",
@@ -46,6 +47,12 @@ def _bool_enabled_flags(payload: dict[str, Any]) -> list[str]:
         if not isinstance(value, bool) or value is not True:
             continue
         lower = key.lower()
+        if lower in {"diagnostic_caches_enabled"}:
+            continue
+        # Handoff composition v1 uses successor/stagnation/post-break mechanics as
+        # protected baseline behavior; they are not by themselves Stage 7 repairs.
+        if lower.startswith(("successor_", "stagnation_", "post_break_")):
+            continue
         if lower.endswith("_enabled") or lower.startswith("enable_") or "sandbox" in lower:
             flags.append(key)
     return sorted(flags)
@@ -63,7 +70,37 @@ def _positive_support_fields(payload: dict[str, Any]) -> list[str]:
             or "selected_by" in lower
         ):
             continue
-        if not any(marker in lower for marker in ("support", "bonus", "score", "penalty")):
+        if lower.startswith(("successor_", "stagnation_", "post_break_")):
+            continue
+        if not any(marker in lower for marker in ("support", "bonus", "penalty")):
+            continue
+        if isinstance(value, (int, float)) and value > 0:
+            fields.append(key)
+    return sorted(fields)
+
+
+def _runtime_test_activity_fields(payload: dict[str, Any]) -> list[str]:
+    fields = []
+    runtime_markers = (
+        "krk_two_stage_abstention",
+        "krk_strategy_arbiter_sandbox",
+        "candidate_move_role",
+        "plan_capsule",
+        "stage7_post_box_frozen_model_candidate",
+    )
+    activity_markers = (
+        "supported_suggestion_count",
+        "selected_supported_count",
+        "penalized_count",
+        "selected_penalized_count",
+    )
+    for key, value in payload.items():
+        lower = key.lower()
+        if not any(marker in lower for marker in runtime_markers):
+            continue
+        if not any(marker in lower for marker in activity_markers):
+            continue
+        if isinstance(value, bool):
             continue
         if isinstance(value, (int, float)) and value > 0:
             fields.append(key)
@@ -93,15 +130,28 @@ def _classify(path: Path, payload: dict[str, Any]) -> dict[str, Any]:
     name = path.name.lower()
     enabled_flags = _bool_enabled_flags(payload)
     positive_support = _positive_support_fields(payload)
+    runtime_activity = _runtime_test_activity_fields(payload)
     marker_hits = [marker for marker in REPAIR_NAME_MARKERS if marker in name]
+    explicit_runtime_enabled_name = "abstention_stage7_enabled" in name
     has_default_off_marker = "default_off" in name or "baseline" in name
     label = _label(payload)
     has_box_context = label == "box_shrink" or _has_box_handoff_packets(payload) or "stage7" in name
     has_outcomes = _has_outcome_payload(payload)
 
+    has_stage7_repair_flags = any(flag.lower().startswith("stage7_") for flag in enabled_flags)
+    has_current_profile_baseline_marker = has_default_off_marker and not has_stage7_repair_flags
+
     if not has_outcomes:
         classification = "metadata_or_design_only"
-    elif enabled_flags or positive_support or (marker_hits and not has_default_off_marker):
+    elif has_current_profile_baseline_marker and has_box_context and not marker_hits:
+        classification = "clean_current_profile_candidate"
+    elif (
+        enabled_flags
+        or positive_support
+        or runtime_activity
+        or explicit_runtime_enabled_name
+        or (marker_hits and not has_default_off_marker)
+    ):
         classification = "repair_sandbox_sourced"
     elif has_default_off_marker and has_box_context:
         classification = "clean_default_off_candidate"
@@ -120,11 +170,14 @@ def _classify(path: Path, payload: dict[str, Any]) -> dict[str, Any]:
         "total": payload.get("total"),
         "enabled_flags": enabled_flags,
         "positive_support_or_bonus_fields": positive_support,
+        "runtime_test_activity_fields": runtime_activity,
         "filename_repair_markers": marker_hits,
+        "explicit_runtime_enabled_name": explicit_runtime_enabled_name,
         "default_off_or_baseline_marker": has_default_off_marker,
         "candidate_for_clean_control_recovery": classification in {
             "clean_default_off_candidate",
             "clean_baseline_candidate",
+            "clean_current_profile_candidate",
         },
     }
 
@@ -133,7 +186,15 @@ def build_manifest() -> dict[str, Any]:
     # Ensure the plan exists and is parseable before producing a manifest.
     _load_json(ROOT / PLAN)
     rows = []
-    for path in sorted((ROOT / "reports/structural_candidates").glob("stage7*.json")):
+    candidate_paths = [
+        *sorted((ROOT / "reports").glob("*stage7*.json")),
+        *sorted((ROOT / "reports/structural_candidates").glob("stage7*.json")),
+    ]
+    seen_paths: set[Path] = set()
+    for path in candidate_paths:
+        if path in seen_paths:
+            continue
+        seen_paths.add(path)
         if "stage8" in path.name.lower():
             continue
         payload = _load_json(path)

@@ -182,7 +182,7 @@ def test_stage7_selected_path_architecture_review_blocks_runtime() -> None:
     assert payload["decision"]["next_allowed_slice"] == "non_causal_clean_control_collection_plan"
 
 
-def test_stage7_clean_artifact_manifest_finds_no_replay_free_clean_controls() -> None:
+def test_stage7_clean_artifact_manifest_finds_replay_free_clean_candidates() -> None:
     subprocess.run(
         [sys.executable, "scripts/build_stage7_clean_artifact_manifest.py"],
         cwd=ROOT,
@@ -198,6 +198,14 @@ def test_stage7_clean_artifact_manifest_finds_no_replay_free_clean_controls() ->
     assert payload["runtime_selector_implemented"] is False
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
-    assert payload["summary"]["clean_candidate_count"] == 0
-    assert payload["decision"]["status"] == "no_clean_replay_free_artifacts_found"
+    assert payload["summary"]["clean_candidate_count"] > 0
+    assert payload["decision"]["status"] == "clean_artifact_manifest_ready"
+    assert payload["decision"]["recommended_next_step"] == "recover_clean_sequence_controls_from_manifest_candidates"
     assert payload["decision"]["runtime_work_allowed"] is False
+
+    rows_by_artifact = {row["artifact"]: row for row in payload["rows"]}
+    baseline = rows_by_artifact["reports/krk_two_stage_abstention_stage7_baseline_3_seed11_h40.json"]
+    enabled = rows_by_artifact["reports/krk_two_stage_abstention_stage7_enabled_3_seed11_h40.json"]
+    assert baseline["candidate_for_clean_control_recovery"] is True
+    assert enabled["candidate_for_clean_control_recovery"] is False
+    assert enabled["classification"] == "repair_sandbox_sourced"
