@@ -1,0 +1,635 @@
+{
+  "binding_summary": {
+    "all_bindings_valid": true,
+    "job_count": 12,
+    "missing_provider_skill_ids": [],
+    "stage7_jobs": 0,
+    "topology_exists": true,
+    "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json"
+  },
+  "blocked_actions": [
+    "run labels without manifest review",
+    "runtime selector changes",
+    "selector training",
+    "Stage 7 repair or promotion",
+    "Stage 8 training",
+    "runtime DTM/tablebase use",
+    "gameplay topology mutation"
+  ],
+  "causal_status": "non_causal_execution_manifest",
+  "decision": {
+    "labels_allowed_now": false,
+    "recommended_next_step": "review_balanced_hard_negative_execution_manifest",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "status": "balanced_hard_negative_execution_manifest_bound"
+  },
+  "gameplay_topology_mutation": false,
+  "jobs": [
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_label_plan",
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "force_provider_first_white_move_then_release",
+        "max_ticks": 200,
+        "plasticity_scope": "protected_frozen",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "foundation_frozen_v1",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "existing_runtime_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "fen": "6k1/4R3/6K1/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.87b1160e68b9",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.d4d27a10d1c4",
+      "known_frame_outcomes": [
+        "mate"
+      ],
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "labels_generated": false,
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "purpose": "collect_balanced_protected_hard_negative_or_positive_capacity_label",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_balanced_hard_negative_execution_job.v0",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.87b1160e68b9"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_label_plan",
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "force_provider_first_white_move_then_release",
+        "max_ticks": 200,
+        "plasticity_scope": "protected_frozen",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "foundation_frozen_v1",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "1k6/7R/2K5/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.3dca34326fca",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.fd95ab614799",
+      "known_frame_outcomes": [
+        "max_plies"
+      ],
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "labels_generated": false,
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "purpose": "collect_balanced_protected_hard_negative_or_positive_capacity_label",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_balanced_hard_negative_execution_job.v0",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.3dca34326fca"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_label_plan",
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "force_provider_first_white_move_then_release",
+        "max_ticks": 200,
+        "plasticity_scope": "protected_frozen",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "foundation_frozen_v1",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "7k/8/5K2/4R3/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.02cfd843a2cf",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.8c7944e4b11b",
+      "known_frame_outcomes": [
+        "mate"
+      ],
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "labels_generated": false,
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "purpose": "collect_balanced_protected_hard_negative_or_positive_capacity_label",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_balanced_hard_negative_execution_job.v0",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.02cfd843a2cf"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_label_plan",
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "force_provider_first_white_move_then_release",
+        "max_ticks": 200,
+        "plasticity_scope": "protected_frozen",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "foundation_frozen_v1",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "8/1RK5/8/k7/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.1e4f48a672e8",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.0129b9fbfc65",
+      "known_frame_outcomes": [
+        "mate"
+      ],
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "labels_generated": false,
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "purpose": "collect_balanced_protected_hard_negative_or_positive_capacity_label",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_balanced_hard_negative_execution_job.v0",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.1e4f48a672e8"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_label_plan",
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "force_provider_first_white_move_then_release",
+        "max_ticks": 200,
+        "plasticity_scope": "protected_frozen",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "foundation_frozen_v1",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "8/k7/3K4/8/8/1R6/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.256a3da30f0f",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.e3b51918de2d",
+      "known_frame_outcomes": [
+        "max_plies"
+      ],
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "labels_generated": false,
+      "provider_family": "stage0_basin",
+      "provider_id": "krk.stage0_basin",
+      "purpose": "collect_balanced_protected_hard_negative_or_positive_capacity_label",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_balanced_hard_negative_execution_job.v0",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.256a3da30f0f"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_label_plan",
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "force_provider_first_white_move_then_release",
+        "max_ticks": 200,
+        "plasticity_scope": "protected_frozen",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage6_overlay_v1",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "existing_runtime_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.02feb8593cc6",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.3ce9a363baff",
+      "known_frame_outcomes": [
+        "max_plies"
+      ],
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "labels_generated": false,
+      "provider_family": "drive_to_edge",
+      "provider_id": "krk.drive_to_edge",
+      "purpose": "collect_balanced_protected_hard_negative_or_positive_capacity_label",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_balanced_hard_negative_execution_job.v0",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.02feb8593cc6"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_label_plan",
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "force_provider_first_white_move_then_release",
+        "max_ticks": 200,
+        "plasticity_scope": "protected_frozen",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage6_overlay_v1",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "5k2/R7/8/8/8/8/4K3/8 w - - 2 2",
+      "frame_id": "cp.krk.state.2c1d6da27ea1",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.02a926e18ae1",
+      "known_frame_outcomes": [
+        "mate"
+      ],
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "labels_generated": false,
+      "provider_family": "drive_to_edge",
+      "provider_id": "krk.drive_to_edge",
+      "purpose": "collect_balanced_protected_hard_negative_or_positive_capacity_label",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_balanced_hard_negative_execution_job.v0",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.2c1d6da27ea1"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_label_plan",
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "force_provider_first_white_move_then_release",
+        "max_ticks": 200,
+        "plasticity_scope": "protected_frozen",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "5k2/R7/8/8/8/8/4K3/8 w - - 2 2",
+      "frame_id": "cp.krk.state.2c1d6da27ea1",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.a8a2493398d4",
+      "known_frame_outcomes": [
+        "mate"
+      ],
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "labels_generated": false,
+      "provider_family": "fence_established",
+      "provider_id": "krk.fence_established",
+      "purpose": "collect_balanced_protected_hard_negative_or_positive_capacity_label",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_balanced_hard_negative_execution_job.v0",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.2c1d6da27ea1"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_label_plan",
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "force_provider_first_white_move_then_release",
+        "max_ticks": 200,
+        "plasticity_scope": "protected_frozen",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage6_overlay_v1",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "R7/7k/5K2/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.52085d244e9d",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.a89843f4f707",
+      "known_frame_outcomes": [
+        "mate"
+      ],
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "labels_generated": false,
+      "provider_family": "drive_to_edge",
+      "provider_id": "krk.drive_to_edge",
+      "purpose": "collect_balanced_protected_hard_negative_or_positive_capacity_label",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_balanced_hard_negative_execution_job.v0",
+      "source_stage": "stage6",
+      "stage7_training_row": false,
+      "state_id": "state.52085d244e9d"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_label_plan",
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "force_provider_first_white_move_then_release",
+        "max_ticks": 200,
+        "plasticity_scope": "protected_frozen",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "R7/7k/5K2/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.52085d244e9d",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.1f6a0b02f7b7",
+      "known_frame_outcomes": [
+        "mate"
+      ],
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "labels_generated": false,
+      "provider_family": "fence_established",
+      "provider_id": "krk.fence_established",
+      "purpose": "collect_balanced_protected_hard_negative_or_positive_capacity_label",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_balanced_hard_negative_execution_job.v0",
+      "source_stage": "stage6",
+      "stage7_training_row": false,
+      "state_id": "state.52085d244e9d"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_label_plan",
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "force_provider_first_white_move_then_release",
+        "max_ticks": 200,
+        "plasticity_scope": "protected_frozen",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage6_overlay_v1",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "2k5/8/1K6/8/8/8/8/R7 w - - 2 2",
+      "frame_id": "cp.krk.state.69711173114a",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.91560b3a0090",
+      "known_frame_outcomes": [
+        "mate"
+      ],
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "labels_generated": false,
+      "provider_family": "drive_to_edge",
+      "provider_id": "krk.drive_to_edge",
+      "purpose": "collect_balanced_protected_hard_negative_or_positive_capacity_label",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_balanced_hard_negative_execution_job.v0",
+      "source_stage": "stage6",
+      "stage7_training_row": false,
+      "state_id": "state.69711173114a"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_label_plan",
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "force_provider_first_white_move_then_release",
+        "max_ticks": 200,
+        "plasticity_scope": "protected_frozen",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage6_overlay_v1",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "existing_runtime_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "fen": "5k2/7R/K7/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.326222aefdf1",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.c9f3bdbd81b4",
+      "known_frame_outcomes": [
+        "max_plies"
+      ],
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "labels_generated": false,
+      "provider_family": "drive_to_edge",
+      "provider_id": "krk.drive_to_edge",
+      "purpose": "collect_balanced_protected_hard_negative_or_positive_capacity_label",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_balanced_hard_negative_execution_job.v0",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.326222aefdf1"
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_balanced_hard_negative_execution_manifest.v0",
+  "source_artifacts": [
+    "reports/krk_balanced_hard_negative_label_plan_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}
