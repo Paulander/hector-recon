@@ -741,6 +741,14 @@ KRK strategy arbiter Stage 7 challenge probe v1:
 
 The first explicit Stage 7 challenge runtime-test used three h20 `box_shrink` samples with `allow_stage7_challenge=true` and support `0.05`. It produced trace-visible support (`15` supported proposals) but selected-supported count stayed `0`, conversion stayed `0/3` mate, and shadow candidates did not change. Decision: `stage7_challenge_probe_no_regression`. This does not justify Stage 7 promotion or tuning; it shows the current bounded support is too weak or not aligned enough to affect Stage 7 ownership.
 
+KRK strategy arbiter support sensitivity v1:
+
+- `scripts/run_krk_strategy_arbiter_support_sensitivity_v1.py`
+- `reports/krk_strategy_arbiter_support_sensitivity_v1.json`
+- `reports/krk_strategy_arbiter_support_sensitivity_v1.md`
+
+The one-ply support sensitivity runtime-test measured support values `0.0`, `0.05`, `1.0`, `5.0`, `20.0`, and `50.0` on protected labels plus the explicit Stage 7 challenge label. Low support up to `5.0` did not change Stage 7 ownership. At high support, protected `drive_to_edge` ownership changed before there was safe Stage 7 evidence. Decision: `support_sensitivity_measured`; recommended next step is `do_not_raise_support_without_arbitration_objective_review`. This blocks simply increasing the additive support bonus as the next repair.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.

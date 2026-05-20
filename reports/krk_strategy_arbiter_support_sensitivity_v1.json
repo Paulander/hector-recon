@@ -1,0 +1,923 @@
+{
+  "causal_status": "runtime_test_one_ply_sensitivity",
+  "decision": {
+    "protected_control_status": "high_support_changes_protected_one_ply_ownership",
+    "recommended_next_step": "do_not_raise_support_without_arbitration_objective_review",
+    "stage7_runtime_test_status": "no_low_support_ownership_effect",
+    "status": "support_sensitivity_measured"
+  },
+  "gameplay_topology_mutation": false,
+  "profile": "handoff_composition_v1",
+  "rows": [
+    {
+      "baseline_provider": "krk.stage0_basin",
+      "decisions": [
+        {
+          "confidence": 61.531386011672204,
+          "move": "d2d8",
+          "sandbox_summary": {
+            "allow_stage7_challenge": false,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": "disabled",
+            "causal_status": "inactive",
+            "direct_request": false,
+            "enabled": false,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 0.0,
+            "supported_count": 0,
+            "supported_provider_counts": {}
+          },
+          "selected_provider": "krk.stage0_basin",
+          "selected_support_payload": {},
+          "selected_supported": false,
+          "support": 0.0
+        },
+        {
+          "confidence": 61.531386011672204,
+          "move": "d2d8",
+          "sandbox_summary": {
+            "allow_stage7_challenge": false,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 0.05,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.stage0_basin",
+          "selected_support_payload": {},
+          "selected_supported": false,
+          "support": 0.05
+        },
+        {
+          "confidence": 61.531386011672204,
+          "move": "d2d8",
+          "sandbox_summary": {
+            "allow_stage7_challenge": false,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 1.0,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.stage0_basin",
+          "selected_support_payload": {},
+          "selected_supported": false,
+          "support": 1.0
+        },
+        {
+          "confidence": 61.531386011672204,
+          "move": "d2d8",
+          "sandbox_summary": {
+            "allow_stage7_challenge": false,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 5.0,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.stage0_basin",
+          "selected_support_payload": {},
+          "selected_supported": false,
+          "support": 5.0
+        },
+        {
+          "confidence": 61.531386011672204,
+          "move": "d2d8",
+          "sandbox_summary": {
+            "allow_stage7_challenge": false,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 20.0,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.stage0_basin",
+          "selected_support_payload": {},
+          "selected_supported": false,
+          "support": 20.0
+        },
+        {
+          "confidence": 61.531386011672204,
+          "move": "d2d8",
+          "sandbox_summary": {
+            "allow_stage7_challenge": false,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 50.0,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.stage0_basin",
+          "selected_support_payload": {},
+          "selected_supported": false,
+          "support": 50.0
+        }
+      ],
+      "first_provider_change": null,
+      "label": "edge_trap_wrong_tempo"
+    },
+    {
+      "baseline_provider": "krk.stage0_basin",
+      "decisions": [
+        {
+          "confidence": 60.91247522218246,
+          "move": "b7h7",
+          "sandbox_summary": {
+            "allow_stage7_challenge": false,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": "disabled",
+            "causal_status": "inactive",
+            "direct_request": false,
+            "enabled": false,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 0.0,
+            "supported_count": 0,
+            "supported_provider_counts": {}
+          },
+          "selected_provider": "krk.stage0_basin",
+          "selected_support_payload": {},
+          "selected_supported": false,
+          "support": 0.0
+        },
+        {
+          "confidence": 60.91247522218246,
+          "move": "b7h7",
+          "sandbox_summary": {
+            "allow_stage7_challenge": false,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 0.05,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.stage0_basin",
+          "selected_support_payload": {},
+          "selected_supported": false,
+          "support": 0.05
+        },
+        {
+          "confidence": 60.91247522218246,
+          "move": "b7h7",
+          "sandbox_summary": {
+            "allow_stage7_challenge": false,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 1.0,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.stage0_basin",
+          "selected_support_payload": {},
+          "selected_supported": false,
+          "support": 1.0
+        },
+        {
+          "confidence": 60.91247522218246,
+          "move": "b7h7",
+          "sandbox_summary": {
+            "allow_stage7_challenge": false,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 5.0,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.stage0_basin",
+          "selected_support_payload": {},
+          "selected_supported": false,
+          "support": 5.0
+        },
+        {
+          "confidence": 60.91247522218246,
+          "move": "b7h7",
+          "sandbox_summary": {
+            "allow_stage7_challenge": false,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 20.0,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.stage0_basin",
+          "selected_support_payload": {},
+          "selected_supported": false,
+          "support": 20.0
+        },
+        {
+          "confidence": 60.91247522218246,
+          "move": "b7h7",
+          "sandbox_summary": {
+            "allow_stage7_challenge": false,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 50.0,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.stage0_basin",
+          "selected_support_payload": {},
+          "selected_supported": false,
+          "support": 50.0
+        }
+      ],
+      "first_provider_change": null,
+      "label": "fence_established"
+    },
+    {
+      "baseline_provider": "krk.stage0_basin",
+      "decisions": [
+        {
+          "confidence": 40.74213501104899,
+          "move": "a1a6",
+          "sandbox_summary": {
+            "allow_stage7_challenge": false,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": "disabled",
+            "causal_status": "inactive",
+            "direct_request": false,
+            "enabled": false,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 0.0,
+            "supported_count": 0,
+            "supported_provider_counts": {}
+          },
+          "selected_provider": "krk.stage0_basin",
+          "selected_support_payload": {},
+          "selected_supported": false,
+          "support": 0.0
+        },
+        {
+          "confidence": 40.74213501104899,
+          "move": "a1a6",
+          "sandbox_summary": {
+            "allow_stage7_challenge": false,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 0.05,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.stage0_basin",
+          "selected_support_payload": {},
+          "selected_supported": false,
+          "support": 0.05
+        },
+        {
+          "confidence": 40.74213501104899,
+          "move": "a1a6",
+          "sandbox_summary": {
+            "allow_stage7_challenge": false,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 1.0,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.stage0_basin",
+          "selected_support_payload": {},
+          "selected_supported": false,
+          "support": 1.0
+        },
+        {
+          "confidence": 40.74213501104899,
+          "move": "a1a6",
+          "sandbox_summary": {
+            "allow_stage7_challenge": false,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 5.0,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.stage0_basin",
+          "selected_support_payload": {},
+          "selected_supported": false,
+          "support": 5.0
+        },
+        {
+          "confidence": 40.74213501104899,
+          "move": "a1a6",
+          "sandbox_summary": {
+            "allow_stage7_challenge": false,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 20.0,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.stage0_basin",
+          "selected_support_payload": {},
+          "selected_supported": false,
+          "support": 20.0
+        },
+        {
+          "confidence": 50.09019804933518,
+          "move": "a1a6",
+          "sandbox_summary": {
+            "allow_stage7_challenge": false,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 50.0,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.edge_trap_close",
+          "selected_support_payload": {
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "forbidden_actions": [
+              "direct_move_selection",
+              "direct_provider_request",
+              "topology_mutation",
+              "runtime_dtm_or_tablebase"
+            ],
+            "mode": "provider_family_maturity_prior",
+            "provider_family": "edge_trap",
+            "provider_id": "krk.edge_trap_close",
+            "provider_local_rank": 1,
+            "raw_score_before": 0.09019804933518172,
+            "schema_version": "krk_strategy_arbiter_sandbox_support.v0",
+            "score_after_support": 50.09019804933518,
+            "source_terms": [
+              "active_landmark_label.drive_to_edge",
+              "box_area_large",
+              "box_shrink_available",
+              "corner_net_pressure_available",
+              "cut_stable",
+              "edge_rook_transfer_recovery_available",
+              "edge_trap_close_geometry",
+              "edge_trap_shape_available",
+              "enemy_king_near_edge",
+              "enemy_king_restricted",
+              "fence_already_satisfied",
+              "fence_exists",
+              "fence_stable",
+              "king_approach_after_fence_available",
+              "king_support_improvement_move_exists",
+              "post_fence_conversion_needed",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "rook_transfer_after_fence_available",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
+            ],
+            "support_amount": 50.0
+          },
+          "selected_supported": true,
+          "support": 50.0
+        }
+      ],
+      "first_provider_change": {
+        "confidence": 50.09019804933518,
+        "move": "a1a6",
+        "sandbox_summary": {
+          "allow_stage7_challenge": false,
+          "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+          "blocked_reason": null,
+          "causal_status": "sandbox_opt_in",
+          "direct_request": false,
+          "enabled": true,
+          "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+          "support_amount": 50.0,
+          "supported_count": 5,
+          "supported_provider_counts": {
+            "drive_to_edge": 1,
+            "edge_trap": 3,
+            "fence_established": 1
+          }
+        },
+        "selected_provider": "krk.edge_trap_close",
+        "selected_support_payload": {
+          "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+          "causal_status": "sandbox_opt_in",
+          "direct_request": false,
+          "enabled": true,
+          "forbidden_actions": [
+            "direct_move_selection",
+            "direct_provider_request",
+            "topology_mutation",
+            "runtime_dtm_or_tablebase"
+          ],
+          "mode": "provider_family_maturity_prior",
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_close",
+          "provider_local_rank": 1,
+          "raw_score_before": 0.09019804933518172,
+          "schema_version": "krk_strategy_arbiter_sandbox_support.v0",
+          "score_after_support": 50.09019804933518,
+          "source_terms": [
+            "active_landmark_label.drive_to_edge",
+            "box_area_large",
+            "box_shrink_available",
+            "corner_net_pressure_available",
+            "cut_stable",
+            "edge_rook_transfer_recovery_available",
+            "edge_trap_close_geometry",
+            "edge_trap_shape_available",
+            "enemy_king_near_edge",
+            "enemy_king_restricted",
+            "fence_already_satisfied",
+            "fence_exists",
+            "fence_stable",
+            "king_approach_after_fence_available",
+            "king_support_improvement_move_exists",
+            "post_fence_conversion_needed",
+            "repair_or_reestablish_cut_available",
+            "rook_has_safe_lateral_transfer",
+            "rook_safe",
+            "rook_transfer_after_fence_available",
+            "safe_check_available",
+            "safe_rook_edge_transfer_available",
+            "safe_rook_long_transfer_available",
+            "white_king_support_available"
+          ],
+          "support_amount": 50.0
+        },
+        "selected_supported": true,
+        "support": 50.0
+      },
+      "label": "drive_to_edge"
+    },
+    {
+      "baseline_provider": "krk.fence_established",
+      "decisions": [
+        {
+          "confidence": 0.029047916114827002,
+          "move": "a4a8",
+          "sandbox_summary": {
+            "allow_stage7_challenge": true,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": "disabled",
+            "causal_status": "inactive",
+            "direct_request": false,
+            "enabled": false,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 0.0,
+            "supported_count": 0,
+            "supported_provider_counts": {}
+          },
+          "selected_provider": "krk.fence_established",
+          "selected_support_payload": {},
+          "selected_supported": false,
+          "support": 0.0
+        },
+        {
+          "confidence": 0.079047916114827,
+          "move": "a4a8",
+          "sandbox_summary": {
+            "allow_stage7_challenge": true,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 0.05,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.fence_established",
+          "selected_support_payload": {
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "forbidden_actions": [
+              "direct_move_selection",
+              "direct_provider_request",
+              "topology_mutation",
+              "runtime_dtm_or_tablebase"
+            ],
+            "mode": "provider_family_maturity_prior",
+            "provider_family": "fence_established",
+            "provider_id": "krk.fence_established",
+            "provider_local_rank": 1,
+            "raw_score_before": 0.029047916114827002,
+            "schema_version": "krk_strategy_arbiter_sandbox_support.v0",
+            "score_after_support": 0.079047916114827,
+            "source_terms": [
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_near_edge",
+              "enemy_king_not_at_edge",
+              "enemy_king_restricted",
+              "fence_or_cut_not_preserved",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
+            ],
+            "support_amount": 0.05
+          },
+          "selected_supported": true,
+          "support": 0.05
+        },
+        {
+          "confidence": 1.029047916114827,
+          "move": "a4a8",
+          "sandbox_summary": {
+            "allow_stage7_challenge": true,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 1.0,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.fence_established",
+          "selected_support_payload": {
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "forbidden_actions": [
+              "direct_move_selection",
+              "direct_provider_request",
+              "topology_mutation",
+              "runtime_dtm_or_tablebase"
+            ],
+            "mode": "provider_family_maturity_prior",
+            "provider_family": "fence_established",
+            "provider_id": "krk.fence_established",
+            "provider_local_rank": 1,
+            "raw_score_before": 0.029047916114827002,
+            "schema_version": "krk_strategy_arbiter_sandbox_support.v0",
+            "score_after_support": 1.029047916114827,
+            "source_terms": [
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_near_edge",
+              "enemy_king_not_at_edge",
+              "enemy_king_restricted",
+              "fence_or_cut_not_preserved",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
+            ],
+            "support_amount": 1.0
+          },
+          "selected_supported": true,
+          "support": 1.0
+        },
+        {
+          "confidence": 5.029047916114827,
+          "move": "a4a8",
+          "sandbox_summary": {
+            "allow_stage7_challenge": true,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 5.0,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.fence_established",
+          "selected_support_payload": {
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "forbidden_actions": [
+              "direct_move_selection",
+              "direct_provider_request",
+              "topology_mutation",
+              "runtime_dtm_or_tablebase"
+            ],
+            "mode": "provider_family_maturity_prior",
+            "provider_family": "fence_established",
+            "provider_id": "krk.fence_established",
+            "provider_local_rank": 1,
+            "raw_score_before": 0.029047916114827002,
+            "schema_version": "krk_strategy_arbiter_sandbox_support.v0",
+            "score_after_support": 5.029047916114827,
+            "source_terms": [
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_near_edge",
+              "enemy_king_not_at_edge",
+              "enemy_king_restricted",
+              "fence_or_cut_not_preserved",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
+            ],
+            "support_amount": 5.0
+          },
+          "selected_supported": true,
+          "support": 5.0
+        },
+        {
+          "confidence": 20.029047916114827,
+          "move": "a4a8",
+          "sandbox_summary": {
+            "allow_stage7_challenge": true,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 20.0,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.fence_established",
+          "selected_support_payload": {
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "forbidden_actions": [
+              "direct_move_selection",
+              "direct_provider_request",
+              "topology_mutation",
+              "runtime_dtm_or_tablebase"
+            ],
+            "mode": "provider_family_maturity_prior",
+            "provider_family": "fence_established",
+            "provider_id": "krk.fence_established",
+            "provider_local_rank": 1,
+            "raw_score_before": 0.029047916114827002,
+            "schema_version": "krk_strategy_arbiter_sandbox_support.v0",
+            "score_after_support": 20.029047916114827,
+            "source_terms": [
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_near_edge",
+              "enemy_king_not_at_edge",
+              "enemy_king_restricted",
+              "fence_or_cut_not_preserved",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
+            ],
+            "support_amount": 20.0
+          },
+          "selected_supported": true,
+          "support": 20.0
+        },
+        {
+          "confidence": 50.02904791611483,
+          "move": "a4a8",
+          "sandbox_summary": {
+            "allow_stage7_challenge": true,
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "blocked_reason": null,
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "schema_version": "krk_strategy_arbiter_sandbox_summary.v0",
+            "support_amount": 50.0,
+            "supported_count": 5,
+            "supported_provider_counts": {
+              "drive_to_edge": 1,
+              "edge_trap": 3,
+              "fence_established": 1
+            }
+          },
+          "selected_provider": "krk.fence_established",
+          "selected_support_payload": {
+            "arbiter_id": "sandbox.krk.strategy_arbiter_v1",
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "forbidden_actions": [
+              "direct_move_selection",
+              "direct_provider_request",
+              "topology_mutation",
+              "runtime_dtm_or_tablebase"
+            ],
+            "mode": "provider_family_maturity_prior",
+            "provider_family": "fence_established",
+            "provider_id": "krk.fence_established",
+            "provider_local_rank": 1,
+            "raw_score_before": 0.029047916114827002,
+            "schema_version": "krk_strategy_arbiter_sandbox_support.v0",
+            "score_after_support": 50.02904791611483,
+            "source_terms": [
+              "active_landmark_label.box_shrink",
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_near_edge",
+              "enemy_king_not_at_edge",
+              "enemy_king_restricted",
+              "fence_or_cut_not_preserved",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
+            ],
+            "support_amount": 50.0
+          },
+          "selected_supported": true,
+          "support": 50.0
+        }
+      ],
+      "first_provider_change": null,
+      "label": "box_shrink"
+    }
+  ],
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_strategy_arbiter_support_sensitivity.v1",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "low_support_cap": 5.0,
+    "protected_labels_with_low_support_change": [],
+    "protected_labels_with_provider_change": [
+      "drive_to_edge"
+    ],
+    "stage7_changes_under_low_support_cap": false,
+    "stage7_first_provider_change_support": null,
+    "support_scale_risk": "high_support_changes_protected_ownership_before_safe_stage7_evidence"
+  },
+  "support_values": [
+    0.0,
+    0.05,
+    1.0,
+    5.0,
+    20.0,
+    50.0
+  ],
+  "topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json"
+}
