@@ -229,6 +229,17 @@ assert _protected_max_only_review_spec.loader is not None
 _protected_max_only_review = importlib.util.module_from_spec(_protected_max_only_review_spec)
 _protected_max_only_review_spec.loader.exec_module(_protected_max_only_review)
 
+_protected_missing_provider_plan_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_protected_missing_provider_capacity_audit_plan",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "summarize_krk_protected_missing_provider_capacity_audit_plan.py",
+)
+assert _protected_missing_provider_plan_spec is not None
+assert _protected_missing_provider_plan_spec.loader is not None
+_protected_missing_provider_plan = importlib.util.module_from_spec(_protected_missing_provider_plan_spec)
+_protected_missing_provider_plan_spec.loader.exec_module(_protected_missing_provider_plan)
+
 _strategy_arbiter_risk_review_spec = importlib.util.spec_from_file_location(
     "review_krk_strategy_arbiter_evidence_risks",
     Path(__file__).resolve().parents[1] / "scripts" / "review_krk_strategy_arbiter_evidence_risks.py",
@@ -2591,6 +2602,51 @@ def test_krk_protected_max_only_review_identifies_capacity_gap(tmp_path, monkeyp
     assert review["summary"]["frames_with_labeled_mate_provider"] == 1
     assert review["summary"]["frames_with_only_labeled_max_plies_providers"] == 1
     assert review["decision"]["status"] == "protected_max_only_frames_block_runtime_selector"
+
+
+def test_krk_protected_missing_provider_capacity_plan_is_bounded(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    reports.mkdir(parents=True, exist_ok=True)
+    (reports / "krk_protected_max_only_frame_review_v0.json").write_text(
+        json.dumps(
+            {
+                "max_only_frames": [
+                    {
+                        "frame_id": "cp.max",
+                        "state_id": "state.max",
+                        "source_stage": "stage6",
+                        "active_landmark_label": "drive_to_edge",
+                        "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                        "max_only_provider_counts": {"krk.stage0_basin": 1},
+                    },
+                    {
+                        "frame_id": "cp.max",
+                        "state_id": "state.max",
+                        "source_stage": "stage6",
+                        "active_landmark_label": "drive_to_edge",
+                        "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                        "max_only_provider_counts": {"krk.stage0_basin": 1},
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_protected_missing_provider_plan, "ROOT", root)
+
+    plan = _protected_missing_provider_plan.build_plan()
+
+    assert plan["schema_version"] == "krk_protected_missing_provider_capacity_audit_plan.v0"
+    assert plan["causal_status"] == "non_causal_label_plan"
+    assert plan["runtime_behavior_changed"] is False
+    assert plan["runtime_selector_implemented"] is False
+    assert plan["stage7_promotion_allowed"] is False
+    assert plan["stage8_training_allowed"] is False
+    assert plan["label_budget"]["stage7_jobs"] == 0
+    assert plan["summary"]["job_count"] == 3
+    assert plan["decision"]["status"] == "protected_missing_provider_capacity_audit_plan_ready"
+    assert len({job["job_id"] for job in plan["jobs"]}) == len(plan["jobs"])
 
 
 def test_krk_strategy_arbiter_risk_review_separates_label_semantics(tmp_path):
