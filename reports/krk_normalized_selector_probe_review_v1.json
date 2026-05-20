@@ -1,0 +1,52 @@
+{
+  "blocked_next_steps": [
+    "runtime_selector",
+    "higher_additive_support_playout",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_review",
+  "decision": {
+    "recommended_next_step": "build_ranked_strategy_proposal_frame_dataset_v1",
+    "runtime_test_allowed_next": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "normalized_selector_signal_promising_more_ranked_frames_required"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "positive_signal": "family_rank_score_bucket improved over the family/maturity provenance baseline on existing provenance rows",
+    "readiness_blocker": "dataset is still small, balanced rows lack rank/score fields, and Stage7 is held out",
+    "runtime_conclusion": "not_runtime_ready"
+  },
+  "minimum_next_evidence": [
+    "export ranked StrategyProposalFrame rows for balanced/protected controls",
+    "keep selected/forced/same-move label channels separate",
+    "include provider_local_rank and normalized_score in every new labeled row",
+    "keep Stage7 residual rows held out as challenge/evaluation only",
+    "rerun normalized objective probe before any runtime test"
+  ],
+  "probe_summary": {
+    "benchmark_underpowered": true,
+    "best_provenance_accuracy": 0.8888888888888888,
+    "best_provenance_objective": "family_rank_score_bucket",
+    "family_maturity_baseline_accuracy": 0.7962962962962963,
+    "normalized_fields_available": true,
+    "normalized_over_baseline_delta": 0.09259259259259256,
+    "stage7_training_leakage": false,
+    "status": "normalized_objective_probe_underpowered_fields_available"
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_normalized_selector_probe_review.v1",
+  "source_artifacts": [
+    "reports/krk_normalized_strategy_selector_objective_v1.json",
+    "reports/krk_normalized_strategy_selector_objective_probe_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

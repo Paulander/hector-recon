@@ -781,6 +781,14 @@ KRK normalized strategy selector objective probe v1:
 
 The offline probe replays existing balanced/provenance labels without new playouts. Provenance-style baselines remain useful (`0.889` balanced LOO accuracy for `family_maturity_target_kind`). The provenance dataset already exposes equivalent rank/score fields (`target_provider_best_rank`, `target_provider_best_raw_score`), allowing a normalized proxy probe: `family_rank_score_bucket` reaches `0.889` provenance LOO accuracy with no Stage 7 training leakage. Balanced rows still lack rank/score fields, and the dataset remains underpowered, so this is not runtime-ready. Decision: `normalized_objective_probe_underpowered_fields_available`; next step is review before any runtime test.
 
+KRK normalized selector probe review v1:
+
+- `scripts/summarize_krk_normalized_selector_probe_review_v1.py`
+- `reports/krk_normalized_selector_probe_review_v1.json`
+- `reports/krk_normalized_selector_probe_review_v1.md`
+
+The review finds a real but insufficient normalized-selector signal: `family_rank_score_bucket` improves over the family/maturity provenance baseline by about `0.093` accuracy on existing provenance rows. It is still not runtime-ready because the dataset is small, balanced rows lack rank/score fields, and Stage 7 remains held out. Decision: `normalized_selector_signal_promising_more_ranked_frames_required`; next step is to build ranked StrategyProposalFrame rows for balanced/protected controls before any further runtime test.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
