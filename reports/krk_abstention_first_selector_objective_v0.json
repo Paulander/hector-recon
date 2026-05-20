@@ -1,0 +1,119 @@
+{
+  "blocked_next_steps": [
+    "runtime_selector",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation",
+    "m3_m4_arbitration_update"
+  ],
+  "causal_status": "non_causal_design",
+  "data_requirements_before_runtime_review": {
+    "heldout_stage7_rows_minimum": 8,
+    "minimum_negative_training_rows": 12,
+    "minimum_training_rows": 40,
+    "minimum_training_states": 12,
+    "required_splits": [
+      "leave_state_out",
+      "leave_stage_out_if_data_allows"
+    ],
+    "required_stages": [
+      "stage4",
+      "stage5",
+      "stage6"
+    ],
+    "stage7_training_rows": 0
+  },
+  "decision": {
+    "recommended_next_step": "collect_or_reconstruct_protected_negative_controls_for_abstention_gate",
+    "runtime_test_allowed_next": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "abstention_first_selector_objective_defined"
+  },
+  "evaluation_protocol": [
+    "Train/evaluate the abstention gate on protected Stage4/5/6 only.",
+    "Measure negative_suppression before positive owner ranking.",
+    "If abstention fails, no runtime selector review is allowed.",
+    "If abstention passes, evaluate owner ranking on pass-filtered proposals.",
+    "Evaluate Stage7 residuals only as held-out challenge rows."
+  ],
+  "feature_policy": {
+    "allowed_non_causal_features": [
+      "provider_family",
+      "provider_maturity",
+      "provider_source_stage",
+      "provider_local_rank",
+      "normalized_score_bucket",
+      "active_landmark_label",
+      "terminal_space_context",
+      "internal_monitor_labels_as_metadata"
+    ],
+    "blocked_features": [
+      "runtime DTM/tablebase",
+      "state hash exceptions",
+      "exact-move exceptions",
+      "Stage7 training labels",
+      "hidden Python routing"
+    ]
+  },
+  "gameplay_topology_mutation": false,
+  "objective_components": [
+    {
+      "component_id": "ownership_abstention_gate",
+      "minimum_before_runtime_review": 0.7,
+      "negative_labels": [
+        "forced_provider_conversion=max_plies",
+        "selected_playout_success=max_plies",
+        "stagnation_or_loop_after_ownership=true",
+        "guardrail_safe_ownership=false"
+      ],
+      "positive_labels": [
+        "forced_provider_conversion=mate",
+        "selected_playout_success=mate",
+        "guardrail_safe_ownership=true"
+      ],
+      "required_metric": "negative_suppression",
+      "target": "reject unsafe or unsupported provider ownership"
+    },
+    {
+      "component_id": "owner_ranking_after_pass",
+      "minimum_before_runtime_review": 0.75,
+      "negative_labels": [
+        "long max_plies",
+        "no handoff",
+        "post-plan stagnation"
+      ],
+      "positive_labels": [
+        "shorter mate",
+        "successful handoff",
+        "lower stagnation"
+      ],
+      "required_metric": "positive_precision",
+      "target": "rank only proposals that pass the abstention gate"
+    },
+    {
+      "component_id": "challenge_set_generalization",
+      "minimum_before_runtime_review": 0.7,
+      "negative_labels": [
+        "stage7_forced_provider_max_plies"
+      ],
+      "positive_labels": [],
+      "required_metric": "heldout_negative_suppression",
+      "target": "do not train on Stage7 residuals; use them as held-out rejection/challenge examples"
+    }
+  ],
+  "problem_statement": "Current selector probes can recover many converting providers but fail to reject negative ownership examples. The next selector objective should first decide whether any proposed owner is safe enough to select; only then should it rank owners.",
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_abstention_first_selector_objective.v0",
+  "source_artifacts": [
+    "reports/krk_runtime_test_architecture_review_v3.json",
+    "reports/krk_state_local_contrast_readiness_review_v2.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

@@ -43,6 +43,7 @@ Current interpretation:
 - The scoped interaction benchmark was inconclusive: scoped models did not beat the visible-term baseline and increased hard-negative ranking relative to current/visible baselines. Current status is `scoped_interaction_benchmark_inconclusive`; pause Stage 7 runtime work or request architecture review.
 - Stage 7 runtime repair is now paused pending an architecture-level decision. Stage 7 residuals should be treated as challenge cases for general KRK strategy arbitration / plan selection, not as the sole optimization target.
 - The latest bounded runtime-test evidence (`krk_state_local_contrast_readiness_review_v2`) blocks runtime selector work: diverse forced-provider labels added Stage 7 held-out max_plies evidence, but protected training labels remain too sparse/positive-heavy and leave-state-out negative suppression is still `0.0`. Next step is architecture review before more runtime tests, not a causal selector.
+- The runtime-test architecture review v3 keeps runtime selector work blocked and reframes the next selector objective as abstention-first: learn to reject unsafe ownership before ranking owners. `reports/krk_abstention_first_selector_objective_v0.md/json` defines minimum evidence requirements (`>=40` protected training rows, `>=12` protected negatives, Stage7 training rows `0`) before any runtime review.
 
 ## Hard Invariants
 
