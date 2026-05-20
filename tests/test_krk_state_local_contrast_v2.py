@@ -80,6 +80,18 @@ assert CAPACITY_SEMANTICS_SPEC.loader is not None
 capacity_semantics_module = importlib.util.module_from_spec(CAPACITY_SEMANTICS_SPEC)
 CAPACITY_SEMANTICS_SPEC.loader.exec_module(capacity_semantics_module)
 
+CANDIDATE_COVERAGE_SCRIPT = (
+    Path(__file__).resolve().parents[1] / "scripts" / "audit_krk_candidate_generator_coverage_v0.py"
+)
+CANDIDATE_COVERAGE_SPEC = importlib.util.spec_from_file_location(
+    "audit_krk_candidate_generator_coverage_v0",
+    CANDIDATE_COVERAGE_SCRIPT,
+)
+assert CANDIDATE_COVERAGE_SPEC is not None
+assert CANDIDATE_COVERAGE_SPEC.loader is not None
+candidate_coverage_module = importlib.util.module_from_spec(CANDIDATE_COVERAGE_SPEC)
+CANDIDATE_COVERAGE_SPEC.loader.exec_module(candidate_coverage_module)
+
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
     path = root / relative
@@ -392,3 +404,44 @@ def test_capacity_frame_training_semantics_review_blocks_selector_training(tmp_p
     assert "direct_selector_training_positive" in review["blocked_uses"]
     assert review["decision"]["selector_training_allowed"] is False
     assert review["decision"]["status"] == "capacity_frames_diagnostic_not_selector_training_ready"
+
+
+def test_candidate_generator_coverage_audit_confirms_zero_positive_recall(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(candidate_coverage_module, "ROOT", root)
+    _write_json(
+        root,
+        candidate_coverage_module.CAPACITY_FRAMES,
+        {
+            "causal_status": "non_causal_capacity_frame_dataset",
+            "rows": [
+                {
+                    "source_stage": "stage6",
+                    "state_id": "state.a",
+                    "provider_id": "krk.drive_to_edge",
+                    "provider_family": "drive_to_edge",
+                    "capacity_label": "positive_capacity",
+                    "has_runtime_proposal_frame": False,
+                    "existing_frame_providers": ["krk.stage0_basin"],
+                }
+            ],
+        },
+    )
+    _write_json(
+        root,
+        candidate_coverage_module.SEMANTICS_REVIEW,
+        {"causal_status": "non_causal_semantics_review"},
+    )
+
+    audit = candidate_coverage_module.build_audit()
+
+    assert audit["schema_version"] == "krk_candidate_generator_coverage_audit.v0"
+    assert audit["causal_status"] == "non_causal_candidate_generator_audit"
+    assert audit["runtime_behavior_changed"] is False
+    assert audit["runtime_candidate_generator_implemented"] is False
+    assert audit["stage7_promotion_allowed"] is False
+    assert audit["stage8_training_allowed"] is False
+    assert audit["summary"]["positive_capacity_count"] == 1
+    assert audit["summary"]["runtime_proposal_positive_recall_rate"] == 0.0
+    assert audit["decision"]["status"] == "candidate_generator_recall_gap_confirmed"
+    assert audit["decision"]["selector_training_allowed"] is False

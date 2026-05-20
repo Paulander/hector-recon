@@ -89,6 +89,7 @@ Current interpretation:
 - `krk_protected_proposal_coverage_expansion_plan_v0` defines that expansion as non-causal evidence rows only: create `16` protected provider candidate frames from forced labels plus existing state context, with `usable_for_training = false` initially and no runtime selector/topology effect. Next allowed slice: build `krk_protected_provider_coverage_frames_v0` and review whether those rows should remain capacity-only or become a separate training/evaluation channel.
 - `krk_protected_provider_coverage_frames_v0` materializes those `16` rows as non-causal capacity evidence (`11` positive_capacity / `5` negative_capacity), with `0` Stage 7 rows, `0` training rows, and `0` runtime proposal rows. Next allowed slice: review capacity-frame training semantics before any selector use.
 - `krk_protected_provider_capacity_frame_training_semantics_review_v0` blocks direct selector training from those rows. Forced-provider capacity is useful proposal/candidate-generation evidence, but it is not a runtime-proposal or ownership label. Next allowed slice: design a non-causal candidate-generator coverage audit.
+- `krk_candidate_generator_coverage_audit_v0` confirms the candidate-generation recall gap: current proposal frames have `0.0` recall for `11` protected positive-capacity provider labels. Selector training remains blocked; next allowed slice is a non-causal validated-provider candidate-set audit.
 
 ## Hard Invariants
 
