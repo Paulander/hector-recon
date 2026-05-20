@@ -26,6 +26,20 @@ assert REVIEW_SPEC.loader is not None
 review_module = importlib.util.module_from_spec(REVIEW_SPEC)
 REVIEW_SPEC.loader.exec_module(review_module)
 
+COVERAGE_SCRIPT = (
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "summarize_krk_ranked_proposal_frame_coverage_for_protected_missing_provider.py"
+)
+COVERAGE_SPEC = importlib.util.spec_from_file_location(
+    "summarize_krk_ranked_proposal_frame_coverage_for_protected_missing_provider",
+    COVERAGE_SCRIPT,
+)
+assert COVERAGE_SPEC is not None
+assert COVERAGE_SPEC.loader is not None
+coverage_module = importlib.util.module_from_spec(COVERAGE_SPEC)
+COVERAGE_SPEC.loader.exec_module(coverage_module)
+
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
     path = root / relative
@@ -144,4 +158,56 @@ def test_protected_missing_provider_label_merge_review_blocks_unmatched_runtime_
     assert review["summary"]["matched_protected_label_count"] == 0
     assert review["summary"]["unmatched_protected_label_count"] == 1
     assert review["decision"]["status"] == "protected_missing_provider_labels_unmatched_by_current_proposal_frames"
+    assert review["decision"]["runtime_work_allowed"] is False
+
+
+def test_ranked_proposal_frame_coverage_review_detects_missing_provider_rows(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(coverage_module, "ROOT", root)
+    _write_json(
+        root,
+        coverage_module.RANKED_FRAMES,
+        {
+            "causal_status": "non_causal_ranked_frame_dataset",
+            "rows": [
+                {
+                    "frame_id": "cp.a",
+                    "state_id": "state.a",
+                    "provider_id": "krk.stage0_basin",
+                }
+            ],
+        },
+    )
+    _write_json(
+        root,
+        coverage_module.LABELS,
+        {
+            "causal_status": "non_causal_label_run",
+            "labels": [
+                {
+                    "causal_status": "non_causal_outcome_label",
+                    "job_id": "job.krk.protected_missing_provider.a",
+                    "frame_id": "cp.a",
+                    "state_id": "state.a",
+                    "source_stage": "stage6",
+                    "provider_id": "krk.drive_to_edge",
+                    "result": "mate",
+                    "plies": 9,
+                }
+            ],
+        },
+    )
+
+    review = coverage_module.build_review()
+
+    assert review["schema_version"] == "krk_ranked_proposal_frame_protected_provider_coverage_review.v0"
+    assert review["causal_status"] == "non_causal_coverage_review"
+    assert review["runtime_behavior_changed"] is False
+    assert review["runtime_selector_implemented"] is False
+    assert review["stage7_promotion_allowed"] is False
+    assert review["stage8_training_allowed"] is False
+    assert review["summary"]["frames_present_count"] == 1
+    assert review["summary"]["provider_present_in_frame_count"] == 0
+    assert review["summary"]["missing_provider_mate_label_count"] == 1
+    assert review["decision"]["status"] == "proposal_provider_coverage_gap_blocks_selector_training"
     assert review["decision"]["runtime_work_allowed"] is False

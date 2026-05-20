@@ -1,0 +1,419 @@
+{
+  "causal_status": "non_causal_coverage_review",
+  "decision": {
+    "recommended_next_step": "design_non_causal_proposal_coverage_expansion_for_protected_states",
+    "runtime_work_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "proposal_provider_coverage_gap_blocks_selector_training"
+  },
+  "gameplay_topology_mutation": false,
+  "records": [
+    {
+      "causal_status": "non_causal",
+      "frame_id": "cp.krk.state.02feb8593cc6",
+      "frame_present": true,
+      "frame_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "job_id": "job.krk.protected_missing_provider.75babbcc6000",
+      "label_plies": 27,
+      "label_result": "mate",
+      "provider_id": "krk.stage0_basin",
+      "provider_present_in_frame": false,
+      "provider_present_in_state": false,
+      "schema_version": "krk_protected_provider_proposal_coverage_record.v0",
+      "source_stage": "stage5",
+      "state_id": "state.02feb8593cc6",
+      "state_present": true,
+      "state_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "frame_id": "cp.krk.state.02feb8593cc6",
+      "frame_present": true,
+      "frame_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "job_id": "job.krk.protected_missing_provider.5f9c11521077",
+      "label_plies": 15,
+      "label_result": "mate",
+      "provider_id": "krk.fence_established",
+      "provider_present_in_frame": false,
+      "provider_present_in_state": false,
+      "schema_version": "krk_protected_provider_proposal_coverage_record.v0",
+      "source_stage": "stage5",
+      "state_id": "state.02feb8593cc6",
+      "state_present": true,
+      "state_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "frame_id": "cp.krk.state.326222aefdf1",
+      "frame_present": true,
+      "frame_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "job_id": "job.krk.protected_missing_provider.38d0a11daf0c",
+      "label_plies": 27,
+      "label_result": "mate",
+      "provider_id": "krk.stage0_basin",
+      "provider_present_in_frame": false,
+      "provider_present_in_state": false,
+      "schema_version": "krk_protected_provider_proposal_coverage_record.v0",
+      "source_stage": "stage5",
+      "state_id": "state.326222aefdf1",
+      "state_present": true,
+      "state_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "frame_id": "cp.krk.state.326222aefdf1",
+      "frame_present": true,
+      "frame_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "job_id": "job.krk.protected_missing_provider.9df1f2680cbc",
+      "label_plies": 37,
+      "label_result": "mate",
+      "provider_id": "krk.fence_established",
+      "provider_present_in_frame": false,
+      "provider_present_in_state": false,
+      "schema_version": "krk_protected_provider_proposal_coverage_record.v0",
+      "source_stage": "stage5",
+      "state_id": "state.326222aefdf1",
+      "state_present": true,
+      "state_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "frame_id": "cp.krk.state.3dca34326fca",
+      "frame_present": true,
+      "frame_providers": [
+        "krk.stage0_basin"
+      ],
+      "job_id": "job.krk.protected_missing_provider.8d58e5a5f72c",
+      "label_plies": 31,
+      "label_result": "mate",
+      "provider_id": "krk.edge_trap_close",
+      "provider_present_in_frame": false,
+      "provider_present_in_state": false,
+      "schema_version": "krk_protected_provider_proposal_coverage_record.v0",
+      "source_stage": "stage5",
+      "state_id": "state.3dca34326fca",
+      "state_present": true,
+      "state_providers": [
+        "krk.stage0_basin"
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "frame_id": "cp.krk.state.3dca34326fca",
+      "frame_present": true,
+      "frame_providers": [
+        "krk.stage0_basin"
+      ],
+      "job_id": "job.krk.protected_missing_provider.a306768e24a0",
+      "label_plies": 31,
+      "label_result": "mate",
+      "provider_id": "krk.edge_trap_wrong_tempo",
+      "provider_present_in_frame": false,
+      "provider_present_in_state": false,
+      "schema_version": "krk_protected_provider_proposal_coverage_record.v0",
+      "source_stage": "stage5",
+      "state_id": "state.3dca34326fca",
+      "state_present": true,
+      "state_providers": [
+        "krk.stage0_basin"
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "frame_id": "cp.krk.state.3dca34326fca",
+      "frame_present": true,
+      "frame_providers": [
+        "krk.stage0_basin"
+      ],
+      "job_id": "job.krk.protected_missing_provider.9a4cc895c68d",
+      "label_plies": 31,
+      "label_result": "mate",
+      "provider_id": "krk.edge_trap_enemy_between",
+      "provider_present_in_frame": false,
+      "provider_present_in_state": false,
+      "schema_version": "krk_protected_provider_proposal_coverage_record.v0",
+      "source_stage": "stage5",
+      "state_id": "state.3dca34326fca",
+      "state_present": true,
+      "state_providers": [
+        "krk.stage0_basin"
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "frame_id": "cp.krk.state.699f0003a511",
+      "frame_present": true,
+      "frame_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "job_id": "job.krk.protected_missing_provider.4dca16fc81b3",
+      "label_plies": 27,
+      "label_result": "mate",
+      "provider_id": "krk.stage0_basin",
+      "provider_present_in_frame": false,
+      "provider_present_in_state": false,
+      "schema_version": "krk_protected_provider_proposal_coverage_record.v0",
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511",
+      "state_present": true,
+      "state_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "frame_id": "cp.krk.state.699f0003a511",
+      "frame_present": true,
+      "frame_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "job_id": "job.krk.protected_missing_provider.abcf6fafb467",
+      "label_plies": 40,
+      "label_result": "max_plies",
+      "provider_id": "krk.drive_to_edge",
+      "provider_present_in_frame": false,
+      "provider_present_in_state": false,
+      "schema_version": "krk_protected_provider_proposal_coverage_record.v0",
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511",
+      "state_present": true,
+      "state_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "frame_id": "cp.krk.state.699f0003a511",
+      "frame_present": true,
+      "frame_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "job_id": "job.krk.protected_missing_provider.54fd6c4dd136",
+      "label_plies": 40,
+      "label_result": "max_plies",
+      "provider_id": "krk.fence_established",
+      "provider_present_in_frame": false,
+      "provider_present_in_state": false,
+      "schema_version": "krk_protected_provider_proposal_coverage_record.v0",
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511",
+      "state_present": true,
+      "state_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "frame_id": "cp.krk.state.256a3da30f0f",
+      "frame_present": true,
+      "frame_providers": [
+        "krk.stage0_basin"
+      ],
+      "job_id": "job.krk.protected_missing_provider.01f7ab28aca7",
+      "label_plies": 9,
+      "label_result": "mate",
+      "provider_id": "krk.edge_trap_close",
+      "provider_present_in_frame": false,
+      "provider_present_in_state": false,
+      "schema_version": "krk_protected_provider_proposal_coverage_record.v0",
+      "source_stage": "stage4",
+      "state_id": "state.256a3da30f0f",
+      "state_present": true,
+      "state_providers": [
+        "krk.stage0_basin"
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "frame_id": "cp.krk.state.256a3da30f0f",
+      "frame_present": true,
+      "frame_providers": [
+        "krk.stage0_basin"
+      ],
+      "job_id": "job.krk.protected_missing_provider.ac1e25bed37b",
+      "label_plies": 9,
+      "label_result": "mate",
+      "provider_id": "krk.edge_trap_wrong_tempo",
+      "provider_present_in_frame": false,
+      "provider_present_in_state": false,
+      "schema_version": "krk_protected_provider_proposal_coverage_record.v0",
+      "source_stage": "stage4",
+      "state_id": "state.256a3da30f0f",
+      "state_present": true,
+      "state_providers": [
+        "krk.stage0_basin"
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "frame_id": "cp.krk.state.256a3da30f0f",
+      "frame_present": true,
+      "frame_providers": [
+        "krk.stage0_basin"
+      ],
+      "job_id": "job.krk.protected_missing_provider.8bd0028955fa",
+      "label_plies": 9,
+      "label_result": "mate",
+      "provider_id": "krk.edge_trap_enemy_between",
+      "provider_present_in_frame": false,
+      "provider_present_in_state": false,
+      "schema_version": "krk_protected_provider_proposal_coverage_record.v0",
+      "source_stage": "stage4",
+      "state_id": "state.256a3da30f0f",
+      "state_present": true,
+      "state_providers": [
+        "krk.stage0_basin"
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "frame_id": "cp.krk.state.b11124d658cf",
+      "frame_present": true,
+      "frame_providers": [
+        "krk.stage0_basin"
+      ],
+      "job_id": "job.krk.protected_missing_provider.6262bf8a2534",
+      "label_plies": 40,
+      "label_result": "max_plies",
+      "provider_id": "krk.edge_trap_close",
+      "provider_present_in_frame": false,
+      "provider_present_in_state": false,
+      "schema_version": "krk_protected_provider_proposal_coverage_record.v0",
+      "source_stage": "stage4",
+      "state_id": "state.b11124d658cf",
+      "state_present": true,
+      "state_providers": [
+        "krk.stage0_basin"
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "frame_id": "cp.krk.state.b11124d658cf",
+      "frame_present": true,
+      "frame_providers": [
+        "krk.stage0_basin"
+      ],
+      "job_id": "job.krk.protected_missing_provider.104cb87db2f9",
+      "label_plies": 40,
+      "label_result": "max_plies",
+      "provider_id": "krk.edge_trap_wrong_tempo",
+      "provider_present_in_frame": false,
+      "provider_present_in_state": false,
+      "schema_version": "krk_protected_provider_proposal_coverage_record.v0",
+      "source_stage": "stage4",
+      "state_id": "state.b11124d658cf",
+      "state_present": true,
+      "state_providers": [
+        "krk.stage0_basin"
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "frame_id": "cp.krk.state.b11124d658cf",
+      "frame_present": true,
+      "frame_providers": [
+        "krk.stage0_basin"
+      ],
+      "job_id": "job.krk.protected_missing_provider.8343f8b595ba",
+      "label_plies": 40,
+      "label_result": "max_plies",
+      "provider_id": "krk.edge_trap_enemy_between",
+      "provider_present_in_frame": false,
+      "provider_present_in_state": false,
+      "schema_version": "krk_protected_provider_proposal_coverage_record.v0",
+      "source_stage": "stage4",
+      "state_id": "state.b11124d658cf",
+      "state_present": true,
+      "state_providers": [
+        "krk.stage0_basin"
+      ]
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_ranked_proposal_frame_protected_provider_coverage_review.v0",
+  "source_artifacts": [
+    "reports/krk_ranked_strategy_proposal_frames_v1.json",
+    "reports/krk_protected_missing_provider_capacity_labels_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "frames_present_count": 16,
+    "label_count": 16,
+    "missing_provider_counts": {
+      "krk.drive_to_edge": 1,
+      "krk.edge_trap_close": 3,
+      "krk.edge_trap_enemy_between": 3,
+      "krk.edge_trap_wrong_tempo": 3,
+      "krk.fence_established": 3,
+      "krk.stage0_basin": 3
+    },
+    "missing_provider_mate_label_count": 11,
+    "missing_result_counts": {
+      "mate": 11,
+      "max_plies": 5
+    },
+    "missing_stage_counts": {
+      "stage4": 6,
+      "stage5": 7,
+      "stage6": 3
+    },
+    "provider_missing_from_frame_count": 16,
+    "provider_present_in_frame_count": 0,
+    "result_counts": {
+      "mate": 11,
+      "max_plies": 5
+    },
+    "stage7_label_count": 0,
+    "states_present_count": 16
+  }
+}
