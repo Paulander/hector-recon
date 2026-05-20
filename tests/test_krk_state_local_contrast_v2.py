@@ -92,6 +92,18 @@ assert CANDIDATE_COVERAGE_SPEC.loader is not None
 candidate_coverage_module = importlib.util.module_from_spec(CANDIDATE_COVERAGE_SPEC)
 CANDIDATE_COVERAGE_SPEC.loader.exec_module(candidate_coverage_module)
 
+VALIDATED_CANDIDATE_SET_SCRIPT = (
+    Path(__file__).resolve().parents[1] / "scripts" / "audit_krk_validated_provider_candidate_set_v0.py"
+)
+VALIDATED_CANDIDATE_SET_SPEC = importlib.util.spec_from_file_location(
+    "audit_krk_validated_provider_candidate_set_v0",
+    VALIDATED_CANDIDATE_SET_SCRIPT,
+)
+assert VALIDATED_CANDIDATE_SET_SPEC is not None
+assert VALIDATED_CANDIDATE_SET_SPEC.loader is not None
+validated_candidate_set_module = importlib.util.module_from_spec(VALIDATED_CANDIDATE_SET_SPEC)
+VALIDATED_CANDIDATE_SET_SPEC.loader.exec_module(validated_candidate_set_module)
+
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
     path = root / relative
@@ -444,4 +456,52 @@ def test_candidate_generator_coverage_audit_confirms_zero_positive_recall(tmp_pa
     assert audit["summary"]["positive_capacity_count"] == 1
     assert audit["summary"]["runtime_proposal_positive_recall_rate"] == 0.0
     assert audit["decision"]["status"] == "candidate_generator_recall_gap_confirmed"
+    assert audit["decision"]["selector_training_allowed"] is False
+
+
+def test_validated_provider_candidate_set_audit_keeps_runtime_blocked(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(validated_candidate_set_module, "ROOT", root)
+    _write_json(
+        root,
+        validated_candidate_set_module.CANDIDATE_COVERAGE,
+        {"causal_status": "non_causal_candidate_generator_audit"},
+    )
+    _write_json(
+        root,
+        validated_candidate_set_module.CAPACITY_FRAMES,
+        {
+            "causal_status": "non_causal_capacity_frame_dataset",
+            "rows": [
+                {
+                    "source_stage": "stage6",
+                    "state_id": "state.a",
+                    "provider_id": "krk.drive_to_edge",
+                    "provider_family": "drive_to_edge",
+                    "capacity_label": "positive_capacity",
+                    "existing_frame_providers": ["krk.stage0_basin"],
+                },
+                {
+                    "source_stage": "stage6",
+                    "state_id": "state.a",
+                    "provider_id": "krk.fence_established",
+                    "provider_family": "fence_established",
+                    "capacity_label": "negative_capacity",
+                    "existing_frame_providers": ["krk.stage0_basin"],
+                },
+            ],
+        },
+    )
+
+    audit = validated_candidate_set_module.build_audit()
+
+    assert audit["schema_version"] == "krk_validated_provider_candidate_set_audit.v0"
+    assert audit["causal_status"] == "non_causal_candidate_set_audit"
+    assert audit["runtime_candidate_generator_implemented"] is False
+    assert audit["runtime_selector_implemented"] is False
+    assert audit["stage7_promotion_allowed"] is False
+    assert audit["stage8_training_allowed"] is False
+    assert audit["summary"]["added_positive_capacity_count"] == 1
+    assert audit["summary"]["added_negative_capacity_count"] == 1
+    assert audit["decision"]["candidate_generator_runtime_allowed"] is False
     assert audit["decision"]["selector_training_allowed"] is False
