@@ -797,6 +797,14 @@ KRK ranked StrategyProposalFrame dataset v1:
 
 The replay-free dataset exports existing `StrategyProposalFrame` records from control-plane frames with `provider_local_rank` and `normalized_score`. It contains `87` proposal rows across `22` frames, with `42` non-Stage7 usable context rows and `45` Stage7 challenge rows held out. No row is missing rank or normalized score. Labels are frame-level context only; the export explicitly does not treat every proposal in a mate frame as a positive owner. Decision: `ranked_strategy_proposal_frames_exported`; next step is an offline ranked-frame probe, not a runtime test.
 
+KRK ranked StrategyProposalFrame probe v1:
+
+- `scripts/probe_krk_ranked_strategy_proposal_frames_v1.py`
+- `reports/krk_ranked_strategy_proposal_frame_probe_v1.json`
+- `reports/krk_ranked_strategy_proposal_frame_probe_v1.md`
+
+The offline probe evaluates ranked proposal context at frame level, not proposal-positive level. It has only `15` non-Stage7 training frames and `7` Stage7 challenge frames, so it remains underpowered. `top_family_raw_bucket` reaches `0.8` LOO accuracy, but negative suppression is only `0.5`; frame-level outcome labels are too coarse to identify the winning proposal inside a state. Decision: `ranked_frames_available_label_semantics_too_coarse`; next step is to derive state-local contrast labels before any runtime selector.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
