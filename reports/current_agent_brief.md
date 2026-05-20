@@ -67,6 +67,7 @@ Current interpretation:
 - `stage7_clean_h40_label_run_review_v0` reviews that bounded label job. The run produced `3` mate / `7` max_plies with no Stage 7/runtime repair flags, but added `0` novel de-duplicated clean controls to the recovery set. Decision: `bounded_label_run_no_novel_clean_success_controls`; next step is review sampling diversity or the architecture boundary before more label jobs.
 - `stage7_clean_control_sampling_review_v0` concludes clean success-control collection is currently blocked by sampling overlap: `2/5` clean success controls remain available despite the bounded h40 run producing mates. Decision: `clean_success_collection_blocked_by_sampling_overlap`; recommended next step is architecture review before more Stage 7 clean labels.
 - `stage7_clean_control_architecture_review_v0` pauses the Stage 7 clean-control collection branch. It recommends returning to broader KRK strategy/sequence architecture review with Stage 7 as a held-out challenge, rather than running more unreviewed Stage 7 labels or runtime selector tests.
+- `krk_strategy_sequence_architecture_review_v0` reframes the next work around two separate evidence tracks: strategy ownership and multi-step sequence policy. It keeps Stage 7 held out and recommends a bounded `krk_strategy_sequence_evidence_plan_v0` before any further runtime selector work.
 
 ## Hard Invariants
 

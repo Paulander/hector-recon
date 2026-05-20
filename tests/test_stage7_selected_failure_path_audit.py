@@ -354,3 +354,26 @@ def test_stage7_clean_control_architecture_review_pauses_stage7_collection() -> 
     assert "unreviewed additional Stage 7 h40 labels" in payload["blocked_next_steps"]
     preferred = [path for path in payload["recommended_paths"] if path["preferred"] is True]
     assert preferred[0]["path_id"] == "broader_krk_strategy_sequence_architecture_review"
+
+
+def test_krk_strategy_sequence_architecture_review_keeps_stage7_held_out() -> None:
+    subprocess.run(
+        [sys.executable, "scripts/summarize_krk_strategy_sequence_architecture_review.py"],
+        cwd=ROOT,
+        check=True,
+    )
+    payload = json.loads(
+        (ROOT / "reports/krk_strategy_sequence_architecture_review_v0.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["decision"]["runtime_work_allowed"] is False
+    assert payload["decision"]["recommended_next_step"] == "define_krk_strategy_sequence_evidence_plan_v0"
+    assert "another Stage 7 local repair" in payload["forbidden_shortcuts"]
+    objectives = {item["objective_id"] for item in payload["next_architecture_objectives"]}
+    assert {"strategy_ownership_evidence", "sequence_policy_evidence", "curriculum_boundary_evidence"} <= objectives
