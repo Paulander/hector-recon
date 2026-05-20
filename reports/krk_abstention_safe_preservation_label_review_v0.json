@@ -1,0 +1,92 @@
+{
+  "blocked_runtime_interpretation": [
+    "Do not turn king-support bucket into a causal abstention terminal.",
+    "Do not suppress edge-trap ownership from this evidence.",
+    "Do not use monitor signatures as direct runtime rejections."
+  ],
+  "causal_status": "non_causal_architecture_review",
+  "decision": {
+    "recommended_next_step": "design_or_probe_two_stage_abstention_objective_non_causal",
+    "runtime_test_allowed_next": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "safe_preservation_requires_two_stage_label_semantics"
+  },
+  "gameplay_topology_mutation": false,
+  "label_semantics_findings": [
+    {
+      "finding": "forced_provider_conversion and selected_playout_success labels should not be treated as identical abstention targets",
+      "implication": "An abstention gate needs to preserve validated provider conversions even when context looks risky.",
+      "reason": "False positives include known-safe forced-provider conversions, especially Stage 5 edge-trap owners."
+    },
+    {
+      "finding": "king-support context is useful for unsafe-owner recall but too aggressive as a one-stage rejection rule",
+      "implication": "Use it as a risk feature inside a two-stage objective, not as a runtime decision rule.",
+      "reason": "It reaches high negative suppression but misses safe-preservation threshold."
+    },
+    {
+      "finding": "repair/phase monitor signatures are ambiguous",
+      "implication": "Future labels need companion semantics: repair needed, repair possible, and repair-preserves-conversion should be separated.",
+      "reason": "They occur in both failed and successful protected contexts."
+    }
+  ],
+  "proposed_non_causal_objective": {
+    "causal_status": "non_causal_design_only",
+    "name": "two_stage_abstention_preservation_objective_v0",
+    "required_separations": [
+      "forced_provider_conversion vs selected_playout_success",
+      "provider_can_convert_if_forced vs normal_selected_provider_failed",
+      "repair_needed_monitor vs repair_preserves_conversion",
+      "white_king_support_bucket risk vs validated edge_trap safe ownership"
+    ],
+    "stage_1": {
+      "failure_to_avoid": "false_positive_safe_owner_rejected",
+      "goal": "preserve validated safe owners",
+      "minimum_safe_preservation_before_runtime_review": 0.75,
+      "positive_examples": "forced_provider_conversion safe_owner rows and selected_playout_success positive rows"
+    },
+    "stage_2": {
+      "goal": "suppress unsafe owners after preservation filter",
+      "minimum_negative_suppression_before_runtime_review": 0.7,
+      "positive_examples_for_rejection": "unsafe_owner rows separated by label_source_kind"
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_abstention_safe_preservation_label_review.v0",
+  "source_artifacts": [
+    "reports/krk_abstention_context_feature_dataset_v0.json",
+    "reports/krk_abstention_context_feature_probe_v0.json",
+    "reports/krk_abstention_context_error_audit_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "best_context_objective": "king_support_provider_family",
+    "best_negative_suppression": 0.8235294117647058,
+    "best_safe_preservation": 0.6470588235294118,
+    "false_positive_by_label_source_kind": {
+      "forced_provider_conversion": 8,
+      "selected_playout_success": 4
+    },
+    "false_positive_by_provider_family": {
+      "edge_trap": 11,
+      "stage0_basin": 1
+    },
+    "false_positive_count": 12,
+    "false_positive_forced_provider_conversion_examples": 8,
+    "label_source_distribution": {
+      "forced_provider_conversion": {
+        "safe_owner": 23,
+        "unsafe_owner": 5
+      },
+      "selected_playout_success": {
+        "safe_owner": 11,
+        "unsafe_owner": 12
+      }
+    },
+    "row_count": 51
+  }
+}

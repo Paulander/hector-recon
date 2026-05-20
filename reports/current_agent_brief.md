@@ -49,6 +49,7 @@ Current interpretation:
 - `krk_abstention_feature_gap_review_v0` concludes the next safe step is replay-free only: join abstention labels with ControlPlaneEvidenceFrame terminal-space/proposal/monitor context. Runtime selector work remains blocked.
 - `krk_abstention_context_feature_dataset_v0` / `krk_abstention_context_feature_probe_v0` joined all `51` abstention rows to replay-free control-plane context. Context features help negative suppression (`0.824` best via king-support bucket + provider family vs `0.176` baseline) but safe preservation is only `0.647`, below the `0.7` runtime-review threshold. Runtime selector work remains blocked; the next work, if any, must refine context labels/features non-causally or go back to architecture review.
 - `krk_abstention_context_error_audit_v0` shows why runtime remains blocked: the best context objective has `12` false positives and over-rejects mostly known-safe Stage 5 `edge_trap` owners. The next safe step is a non-causal safe-preservation / label-semantics review, not a selector implementation.
+- `krk_abstention_safe_preservation_label_review_v0` reframes the blocker as label semantics: forced-provider conversion and selected-playout success/failure should not be collapsed into one abstention target. It proposes a two-stage non-causal objective that first preserves validated safe owners, then suppresses unsafe owners. Runtime selector work remains blocked.
 
 ## Hard Invariants
 
