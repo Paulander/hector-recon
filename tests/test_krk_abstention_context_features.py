@@ -33,6 +33,10 @@ _label_review = _load_script(
     "summarize_krk_abstention_safe_preservation_label_review_v0",
     "summarize_krk_abstention_safe_preservation_label_review_v0.py",
 )
+_two_stage_probe = _load_script(
+    "probe_krk_two_stage_abstention_objective_v0",
+    "probe_krk_two_stage_abstention_objective_v0.py",
+)
 
 
 def _write_fixture(root: Path) -> None:
@@ -213,3 +217,26 @@ def test_abstention_safe_preservation_review_is_design_only(tmp_path):
     assert review["decision"]["runtime_test_allowed_next"] is False
     assert review["proposed_non_causal_objective"]["causal_status"] == "non_causal_design_only"
     assert "forced_provider_conversion vs selected_playout_success" in review["proposed_non_causal_objective"]["required_separations"]
+
+
+def test_two_stage_abstention_probe_requires_runtime_review(tmp_path):
+    _write_fixture(tmp_path)
+    dataset = _dataset.build_dataset(tmp_path)
+    reports = tmp_path / "reports"
+    (reports / "krk_abstention_context_feature_dataset_v0.json").write_text(json.dumps(dataset))
+    probe = _probe.build_probe(tmp_path)
+    (reports / "krk_abstention_context_feature_probe_v0.json").write_text(json.dumps(probe))
+    audit = _error_audit.build_audit(tmp_path)
+    (reports / "krk_abstention_context_error_audit_v0.json").write_text(json.dumps(audit))
+    review = _label_review.build_review(tmp_path)
+    (reports / "krk_abstention_safe_preservation_label_review_v0.json").write_text(json.dumps(review))
+
+    two_stage = _two_stage_probe.build_probe(tmp_path)
+
+    assert two_stage["schema_version"] == "krk_two_stage_abstention_objective_probe.v0"
+    assert two_stage["runtime_selector_implemented"] is False
+    assert two_stage["decision"]["runtime_test_allowed_next"] is False
+    assert two_stage["decision"]["recommended_next_step"] in {
+        "architecture_review_before_default_off_runtime_selector",
+        "refine_two_stage_abstention_labels_non_causal",
+    }
