@@ -765,6 +765,14 @@ KRK arbitration objective review v1:
 
 The objective review rejects broad additive support as the next runtime objective. Provider provenance/maturity remains a promising non-causal feature family, while selected-playout labels alone remain insufficient because the raw arbiter is stage0-dominant. Decision: `additive_support_objective_rejected_design_normalized_selector_objective`. The next allowed class is design-only: a normalized contrastive strategy-selector objective using StrategyProposalFrame-compatible proposals, provider-local rank/normalized score, separated label semantics, protected Stage 4/5/6 controls, and Stage 7 held out as challenge cases.
 
+KRK normalized strategy selector objective v1:
+
+- `scripts/summarize_krk_normalized_strategy_selector_objective_v1.py`
+- `reports/krk_normalized_strategy_selector_objective_v1.json`
+- `reports/krk_normalized_strategy_selector_objective_v1.md`
+
+The normalized selector objective design defines a non-causal offline objective contract. It separates selected-playout, forced-provider, same-move compatibility, and Stage 7 held-out challenge labels; requires StrategyProposalFrame-compatible proposal rows, provider provenance/maturity, provider-local rank, and normalized score; and explicitly blocks runtime support, Stage 7 repair, promotion, Stage 8, runtime DTM/tablebase, and topology mutation. Decision: `normalized_selector_objective_design_ready_for_offline_probe`; the next permitted step is an offline normalized selector objective probe, not a runtime test.
+
 ## Performance Rules
 
 - Keep Stage 7 diagnostic probes small unless a previous result justifies scaling.
