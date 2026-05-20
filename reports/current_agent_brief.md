@@ -97,6 +97,7 @@ Current interpretation:
 - `krk_selector_negative_suppression_evidence_v0` confirms the selector-side bottleneck: only `3` protected training negatives exist, all from one Stage 6 state and one provider family; all training normalized scores are `1.0`; the best offline rule produces `3` false positives / `0` true negatives. Directed next fix class: non-causal negative-balance and candidate-scoring feature work before any runtime selector.
 - `krk_capacity_geometry_feature_audit_v0` adds simple visible geometry for protected capacity labels. It is diagnostic but not sufficient: all rows have black king edge distance `0`, positives and negatives share provider families, and simple king/rook distance deltas do not cleanly separate labels. Next allowed slice: run a non-causal geometry-augmented selector feature benchmark.
 - `krk_geometry_augmented_selector_feature_probe_v0` confirms simple geometry features are insufficient on current evidence: all tested feature sets still have `0.0` negative suppression over protected capacity labels. Next work should collect or design more protected hard-negative evidence and explicit negative label semantics before runtime.
+- `krk_selector_directed_fix_review_v0` consolidates the evidence and rejects runtime selector/generator work, forced-capacity-as-direct-positive training, simple-geometry-only fixes, and returning to Stage 7 patching. Recommended fix class: design a non-causal hard-negative selector target dataset with separated label semantics and geometry/post-move features.
 
 ## Hard Invariants
 
