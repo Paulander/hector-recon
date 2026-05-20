@@ -1,0 +1,78 @@
+{
+  "baseline": {
+    "conversion_status_counts": {
+      "failed": 3
+    },
+    "improved": 3,
+    "krk_strategy_arbiter_sandbox_selected_by_outcome": {},
+    "krk_strategy_arbiter_sandbox_selected_supported_count": 0,
+    "krk_strategy_arbiter_sandbox_supported_count": 0,
+    "krk_strategy_arbiter_sandbox_supported_provider_by_outcome": {},
+    "no_move": 0,
+    "one_ply_status_counts": {
+      "failed": 1,
+      "passed": 2
+    },
+    "optimal": 2,
+    "playouts": {
+      "max_plies": 3
+    },
+    "shadow_candidate_count": 7,
+    "total": 3,
+    "worsened": 0
+  },
+  "causal_status": "runtime_test_stage7_challenge_probe",
+  "decision": {
+    "recommended_next_step": "review_stage7_challenge_effect_before_scaling_or_tuning",
+    "status": "stage7_challenge_probe_no_regression"
+  },
+  "enabled_support_0_05": {
+    "conversion_status_counts": {
+      "failed": 3
+    },
+    "improved": 3,
+    "krk_strategy_arbiter_sandbox_selected_by_outcome": {},
+    "krk_strategy_arbiter_sandbox_selected_supported_count": 0,
+    "krk_strategy_arbiter_sandbox_supported_count": 15,
+    "krk_strategy_arbiter_sandbox_supported_provider_by_outcome": {
+      "drive_to_edge:max_plies": 3,
+      "edge_trap:max_plies": 9,
+      "fence_established:max_plies": 3
+    },
+    "no_move": 0,
+    "one_ply_status_counts": {
+      "failed": 1,
+      "passed": 2
+    },
+    "optimal": 2,
+    "playouts": {
+      "max_plies": 3
+    },
+    "shadow_candidate_count": 7,
+    "total": 3,
+    "worsened": 0
+  },
+  "gameplay_topology_mutation": false,
+  "profile": "handoff_composition_v1",
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "sample": {
+    "allow_stage7_challenge": true,
+    "label": "box_shrink",
+    "playout_max_plies": 20,
+    "samples": 3,
+    "seed": 11,
+    "support_amount": 0.05
+  },
+  "schema_version": "krk_strategy_arbiter_stage7_challenge_probe.v1",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "conversion_delta": 0,
+    "no_no_move_or_draw_spike": true,
+    "selected_supported_count": 0,
+    "shadow_candidate_delta": 0,
+    "support_total": 15
+  },
+  "topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json"
+}
