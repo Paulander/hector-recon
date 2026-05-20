@@ -21,6 +21,7 @@ GENERATED_ARTIFACT_NAMES = {
     "stage7_clean_h40_label_run_review_v0.json",
     "stage7_clean_control_sampling_review_v0.json",
     "stage7_clean_control_architecture_review_v0.json",
+    "stage7_curriculum_boundary_decision_v0.json",
 }
 
 
