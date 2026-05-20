@@ -1,0 +1,121 @@
+{
+  "causal_status": "non_causal_readiness_review",
+  "channel_summary": {
+    "capacity_recall": {
+      "offline_probe_row_count": 31,
+      "row_count": 31,
+      "selector_training_row_count": 0,
+      "source_stage_counts": {
+        "stage4": 11,
+        "stage5": 11,
+        "stage6": 9
+      },
+      "state_count": 12,
+      "target_label_counts": {
+        "include_validated_provider_candidate": 31
+      }
+    },
+    "capacity_risk": {
+      "offline_probe_row_count": 40,
+      "row_count": 40,
+      "selector_training_row_count": 0,
+      "source_stage_counts": {
+        "stage4": 16,
+        "stage5": 13,
+        "stage6": 11
+      },
+      "state_count": 14,
+      "target_label_counts": {
+        "risk_path_converted_h40": 31,
+        "risk_path_failed_h40": 9
+      }
+    },
+    "ownership_selection": {
+      "offline_probe_row_count": 0,
+      "row_count": 1,
+      "selector_training_row_count": 0,
+      "source_stage_counts": {},
+      "state_count": 0,
+      "target_label_counts": {
+        "missing_runtime_ownership_label": 1
+      }
+    },
+    "safe_preservation": {
+      "offline_probe_row_count": 31,
+      "row_count": 31,
+      "selector_training_row_count": 0,
+      "source_stage_counts": {
+        "stage4": 11,
+        "stage5": 11,
+        "stage6": 9
+      },
+      "state_count": 12,
+      "target_label_counts": {
+        "preserve_validated_conversion_capacity": 31
+      }
+    }
+  },
+  "decision": {
+    "recommended_next_step": "collect_or_recover_ownership_selection_labels_before_selector_training",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "split_objectives_fixed_semantics_runtime_still_blocked"
+  },
+  "gameplay_topology_mutation": false,
+  "minimum_before_selector_training": [
+    "ownership_selection labels from normal-routing or paired-selection evidence",
+    "safe-preservation gate that protects validated converting providers",
+    "capacity-risk feature reviewed as auxiliary risk, not direct target",
+    "default-off sandbox review after offline objectives are separated"
+  ],
+  "readiness": {
+    "capacity_recall": {
+      "blocked_for": "runtime ownership selection",
+      "ready_for": "candidate_recall_benchmark_only",
+      "reason": "positive capacity rows identify providers worth including, not selecting.",
+      "status": "offline_evidence_available"
+    },
+    "capacity_risk": {
+      "blocked_for": "runtime suppression or selector training",
+      "ready_for": "capacity-risk feature review",
+      "reason": "best feature `piece_motion@0.5` reaches negative suppression `0.7777777777777778` but labels are forced-path risk, not ownership.",
+      "status": "offline_feature_signal_promising"
+    },
+    "ownership_selection": {
+      "blocked_for": "selector training and runtime behavior",
+      "ready_for": "nothing beyond requirements definition",
+      "reason": "forced-provider labels do not identify normal-routing owner choice.",
+      "status": "missing_label_channel"
+    },
+    "safe_preservation": {
+      "blocked_for": "positive runtime ownership selection",
+      "ready_for": "preservation constraint design",
+      "reason": "safe rows define what future suppressors must not break.",
+      "status": "offline_evidence_available"
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_split_selector_objective_readiness.v0",
+  "source_artifacts": [
+    "reports/krk_split_selector_objective_dataset_v0.json",
+    "reports/krk_stronger_selector_feature_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "capacity_risk_best_negative_suppression": 0.7777777777777778,
+    "capacity_risk_best_objective": "piece_motion@0.5",
+    "capacity_risk_best_positive_recall": 0.9032258064516129,
+    "objective_channel_count": 4,
+    "ownership_selection_available": false,
+    "selector_training_row_count": 0,
+    "stage7_row_count": 0
+  }
+}
