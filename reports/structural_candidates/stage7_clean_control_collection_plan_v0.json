@@ -1,0 +1,93 @@
+{
+  "schema_version": "stage7_clean_control_collection_plan.v0",
+  "causal_status": "non_causal_collection_plan",
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_selector_implemented": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "gameplay_topology_mutation": false,
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_selected_path_architecture_review_v0.json",
+    "reports/structural_candidates/stage7_selected_path_target_probe_v0.json"
+  ],
+  "status": "plan_only",
+  "goal": "Collect clean non-sandbox Stage 7/post-box sequence controls and additional ownership-gap examples before any runtime selector, arbiter, or plan-capsule repair.",
+  "clean_control_definition": {
+    "positive_sequence_control": [
+      "active_landmark_label == box_shrink",
+      "playout_result == mate within h40",
+      "artifact produced without Stage 7 repair sandbox flags",
+      "no runtime DTM/tablebase lookup",
+      "trace includes initial selected move and enough handoff/plan evidence to classify post-box continuation",
+      "not sourced only from candidate repair, support adapter, role-owned arbitration, or plan-capsule micro-tuning runs"
+    ],
+    "hard_negative_sequence_control": [
+      "same or nearby post-box family",
+      "playout_result == max_plies or draw within h40",
+      "no runtime repair sandbox flags",
+      "selected provider/move and failure class visible"
+    ],
+    "ownership_gap_positive": [
+      "selected provider max-plies",
+      "alternative existing provider forced at h40 mates",
+      "current owner and target provider visible",
+      "protected lower-stage providers unchanged"
+    ],
+    "protected_safe_owner_control": [
+      "Stage 4/5/6 protected state",
+      "selected owner converts at h40",
+      "monitor/phase terms may be present but should not imply forced owner exit",
+      "validated provider metadata remains frozen/protected"
+    ]
+  },
+  "collection_phases": [
+    {
+      "phase": 1,
+      "name": "replay_free_artifact_classification",
+      "work": "Classify existing Stage 7 artifacts as clean-baseline/default-off versus repair-sandbox-sourced.",
+      "output": "stage7_clean_artifact_manifest_v0",
+      "new_playouts_allowed": false
+    },
+    {
+      "phase": 2,
+      "name": "replay_free_clean_control_recovery",
+      "work": "Recover only clean h40 post-box mate/max_plies controls from baseline/default-off artifacts with selected move/provider evidence.",
+      "output": "stage7_clean_sequence_controls_v0",
+      "new_playouts_allowed": false
+    },
+    {
+      "phase": 3,
+      "name": "bounded_missing_cell_labels",
+      "work": "If clean controls remain insufficient, run a tiny h40 label job with current defaults and no repair flags, tracing failures only.",
+      "output": "stage7_clean_sequence_labels_v0",
+      "new_playouts_allowed": true,
+      "limits": {
+        "max_samples": 10,
+        "horizon": 40,
+        "trace_mode": "failures_only",
+        "diagnostic_caches": true,
+        "stop_if_projected_hours": true
+      }
+    }
+  ],
+  "minimum_acceptance_before_runtime_review": {
+    "clean_sequence_success_controls": 5,
+    "paired_sequence_hard_negatives": 5,
+    "ownership_gap_positives": 5,
+    "protected_safe_owner_controls": 12,
+    "held_out_family_split_required": true,
+    "source_bias_audit_required": true
+  },
+  "blocked_actions": [
+    "runtime arbiter implementation",
+    "abstention selector tuning",
+    "Stage 7 support adapter",
+    "Plan Capsule runtime repair",
+    "Stage 7 promotion",
+    "Stage 8 training",
+    "causal internal terminals"
+  ],
+  "next_allowed_slice": "implement_replay_free_clean_artifact_manifest"
+}

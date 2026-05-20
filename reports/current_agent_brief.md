@@ -60,6 +60,7 @@ Current interpretation:
 - `stage7_post_box_sequence_control_recovery_v0` recovered 14 replay-free successful post-box sequence controls from prior Stage 7 sandbox artifacts. `stage7_selected_path_target_dataset_v1` is now minimally ready for a non-causal split-target probe, with a strict caveat: the sequence controls are sandbox-sourced offline labels and do not authorize runtime behavior.
 - `stage7_selected_path_target_probe_v0` found the split targets are separable offline, but the sequence target is source-biased because all recovered success controls are from prior sandbox artifacts. Decision: `split_targets_separable_but_source_biased_no_runtime`. Next step should be architecture review or clean sequence-control collection before any runtime work.
 - `stage7_selected_path_architecture_review_v0` closes the selected-path runtime follow-up with `runtime_no_go_architecture_review_required`. The next allowed slice is a non-causal clean-control collection plan; runtime arbiter/selector work remains blocked.
+- `stage7_clean_control_collection_plan_v0` defines the next evidence path: classify Stage 7 artifacts by clean/default-off versus repair-sandbox source, then recover clean h40 post-box controls before any runtime review. Next allowed slice: `implement_replay_free_clean_artifact_manifest`.
 
 ## Hard Invariants
 
