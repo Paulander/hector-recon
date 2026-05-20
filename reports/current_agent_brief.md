@@ -65,6 +65,7 @@ Current interpretation:
 - `stage7_clean_sequence_control_recovery_v0` recovers `10` replay-free clean controls from manifest-approved artifacts: `2` mate controls and `8` h40 max-plies hard negatives. The hard-negative requirement is met, but clean success controls remain insufficient (`2/5`). Decision: `clean_sequence_controls_insufficient`; next step is either a bounded clean h40 label job or architecture review, not runtime work.
 - `stage7_clean_h40_label_manifest_v0` defines one bounded current-defaults label job (`10` samples, seed `17`, h40, no Stage 7 repair flags) to fill the remaining clean success-control gap. Decision: `bounded_clean_h40_label_manifest_ready`; it is a non-causal data-labeling job only.
 - `stage7_clean_h40_label_run_review_v0` reviews that bounded label job. The run produced `3` mate / `7` max_plies with no Stage 7/runtime repair flags, but added `0` novel de-duplicated clean controls to the recovery set. Decision: `bounded_label_run_no_novel_clean_success_controls`; next step is review sampling diversity or the architecture boundary before more label jobs.
+- `stage7_clean_control_sampling_review_v0` concludes clean success-control collection is currently blocked by sampling overlap: `2/5` clean success controls remain available despite the bounded h40 run producing mates. Decision: `clean_success_collection_blocked_by_sampling_overlap`; recommended next step is architecture review before more Stage 7 clean labels.
 
 ## Hard Invariants
 

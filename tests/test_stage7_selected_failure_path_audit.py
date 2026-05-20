@@ -300,3 +300,30 @@ def test_stage7_clean_h40_label_run_review_blocks_runtime_work() -> None:
         "bounded_label_run_closed_clean_success_gap",
         "bounded_label_run_clean_gap_still_open",
     }
+
+
+def test_stage7_clean_control_sampling_review_blocks_unreviewed_more_labels() -> None:
+    for script in (
+        "scripts/build_stage7_clean_artifact_manifest.py",
+        "scripts/recover_stage7_clean_sequence_controls.py",
+        "scripts/summarize_stage7_clean_h40_label_manifest.py",
+        "scripts/summarize_stage7_clean_h40_label_run_review.py",
+        "scripts/summarize_stage7_clean_control_sampling_review.py",
+    ):
+        subprocess.run([sys.executable, script], cwd=ROOT, check=True)
+    payload = json.loads(
+        (ROOT / "reports/structural_candidates/stage7_clean_control_sampling_review_v0.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["decision"]["runtime_work_allowed"] is False
+    assert "unreviewed additional Stage 7 label runs" in payload["blocked_next_steps"]
+    assert payload["decision"]["recommended_next_step"] in {
+        "architecture_review_before_more_stage7_clean_labels",
+        "build_clean_selected_path_dataset_and_source_bias_audit",
+    }
