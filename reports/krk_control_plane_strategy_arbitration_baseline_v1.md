@@ -4,62 +4,62 @@ This is a non-causal offline selector baseline over existing filtered ControlPla
 
 ## Frame Summary
 
-- `strategy_benchmark_frame_count`: `28`
-- `stage_counts`: `{'stage7': 4, 'stage5': 8, 'stage6': 10, 'stage4': 6}`
-- `proposal_label_counts`: `{'max_plies': 50, 'mate': 16}`
-- `frames_with_provider_mate`: `14`
-- `frames_with_only_provider_max_plies`: `14`
+- `strategy_benchmark_frame_count`: `24`
+- `stage_counts`: `{'stage5': 8, 'stage6': 10, 'stage4': 6}`
+- `proposal_label_counts`: `{'mate': 14, 'max_plies': 28}`
+- `frames_with_provider_mate`: `12`
+- `frames_with_only_provider_max_plies`: `12`
 
 ## Selector Results
 
 ### raw_global_score
 
 - Selected count: `24`
-- Selected labels: `{'no_selection': 4, 'mate': 12, 'max_plies': 12}`
-- Positive-available frames: `14`
+- Selected labels: `{'mate': 12, 'max_plies': 12}`
+- Positive-available frames: `12`
 - Positive hit count: `12`
-- Positive hit rate: `0.8571428571428571`
+- Positive hit rate: `1.0`
 - Selected mate rate: `0.5`
 
 ### normalized_score
 
-- Selected count: `28`
-- Selected labels: `{'max_plies': 15, 'mate': 13}`
-- Positive-available frames: `14`
-- Positive hit count: `13`
-- Positive hit rate: `0.9285714285714286`
-- Selected mate rate: `0.4642857142857143`
+- Selected count: `24`
+- Selected labels: `{'mate': 12, 'max_plies': 12}`
+- Positive-available frames: `12`
+- Positive hit count: `12`
+- Positive hit rate: `1.0`
+- Selected mate rate: `0.5`
 
 ### provider_local_rank
 
-- Selected count: `28`
-- Selected labels: `{'max_plies': 15, 'mate': 13}`
-- Positive-available frames: `14`
-- Positive hit count: `13`
-- Positive hit rate: `0.9285714285714286`
-- Selected mate rate: `0.4642857142857143`
+- Selected count: `24`
+- Selected labels: `{'mate': 12, 'max_plies': 12}`
+- Positive-available frames: `12`
+- Positive hit count: `12`
+- Positive hit rate: `1.0`
+- Selected mate rate: `0.5`
 
 ### visible_context_heuristic
 
-- Selected count: `1`
-- Selected labels: `{'max_plies': 1, 'no_selection': 27}`
-- Positive-available frames: `14`
+- Selected count: `0`
+- Selected labels: `{'no_selection': 24}`
+- Positive-available frames: `12`
 - Positive hit count: `0`
 - Positive hit rate: `0.0`
-- Selected mate rate: `0.0`
+- Selected mate rate: `None`
 
 ### stage_prior_heuristic
 
-- Selected count: `28`
-- Selected labels: `{'max_plies': 15, 'mate': 13}`
-- Positive-available frames: `14`
-- Positive hit count: `13`
-- Positive hit rate: `0.9285714285714286`
-- Selected mate rate: `0.4642857142857143`
+- Selected count: `24`
+- Selected labels: `{'mate': 12, 'max_plies': 12}`
+- Positive-available frames: `12`
+- Positive hit count: `12`
+- Positive hit rate: `1.0`
+- Selected mate rate: `0.5`
 
 ## Context Summary
 
-- Box relevance by edge bucket: `{'near_edge|medium': 1, 'central|high': 3, 'at_edge|low': 24}`
+- Box relevance by edge bucket: `{'at_edge|low': 24}`
 
 ## Decision
 

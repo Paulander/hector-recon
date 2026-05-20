@@ -16,15 +16,15 @@
   },
   "gameplay_topology_mutation": false,
   "label_coverage": {
-    "frames_with_known_provider_mate": 14,
-    "frames_with_normalized_scores": 28,
+    "frames_with_known_provider_mate": 12,
+    "frames_with_normalized_scores": 24,
     "frames_with_raw_scores": 24,
     "label_status": "provider_labels_sufficient_for_small_probe",
-    "provider_labeled_frame_count": 28,
-    "strategy_benchmark_frame_count": 28
+    "provider_labeled_frame_count": 24,
+    "strategy_benchmark_frame_count": 24
   },
   "oracle_ceilings": {
-    "known_provider_mate_available_count": 14,
+    "known_provider_mate_available_count": 12,
     "known_provider_mate_available_rate": 0.5
   },
   "runtime_arbiter_added": false,
@@ -94,34 +94,10 @@
       "selector": "raw_global_score"
     },
     {
-      "known_selected_count": 28,
-      "known_selected_mate_rate": 0.4642857142857143,
-      "selected_count": 28,
+      "known_selected_count": 24,
+      "known_selected_mate_rate": 0.5,
+      "selected_count": 24,
       "selected_examples": [
-        {
-          "frame_id": "cp.krk.state.0afbf11aa123",
-          "known_provider_result": "max_plies",
-          "move_uci": "e3a3",
-          "provider_id": "krk.drive_to_edge"
-        },
-        {
-          "frame_id": "cp.krk.state.38aed2f35911",
-          "known_provider_result": "max_plies",
-          "move_uci": "a5a8",
-          "provider_id": "krk.drive_to_edge"
-        },
-        {
-          "frame_id": "cp.krk.state.ac0b7ed500ea",
-          "known_provider_result": "max_plies",
-          "move_uci": "a4a8",
-          "provider_id": "krk.drive_to_edge"
-        },
-        {
-          "frame_id": "cp.krk.state.ff6652c8832c",
-          "known_provider_result": "mate",
-          "move_uci": "e4h4",
-          "provider_id": "krk.drive_to_edge"
-        },
         {
           "frame_id": "cp.krk.state.7bd8961882ad",
           "known_provider_result": "mate",
@@ -145,42 +121,42 @@
           "known_provider_result": "mate",
           "move_uci": "a7a8",
           "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.02feb8593cc6",
+          "known_provider_result": "max_plies",
+          "move_uci": "h7c7",
+          "provider_id": "krk.edge_trap_close"
+        },
+        {
+          "frame_id": "cp.krk.state.326222aefdf1",
+          "known_provider_result": "max_plies",
+          "move_uci": "h7c7",
+          "provider_id": "krk.edge_trap_close"
+        },
+        {
+          "frame_id": "cp.krk.state.3dca34326fca",
+          "known_provider_result": "max_plies",
+          "move_uci": "c6b6",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.02feb8593cc6",
+          "known_provider_result": "max_plies",
+          "move_uci": "h7c7",
+          "provider_id": "krk.edge_trap_close"
         }
       ],
-      "selected_mate_count": 13,
-      "selected_max_plies_count": 15,
+      "selected_mate_count": 12,
+      "selected_max_plies_count": 12,
       "selected_unknown_count": 0,
       "selector": "normalized_score"
     },
     {
-      "known_selected_count": 28,
-      "known_selected_mate_rate": 0.4642857142857143,
-      "selected_count": 28,
+      "known_selected_count": 24,
+      "known_selected_mate_rate": 0.5,
+      "selected_count": 24,
       "selected_examples": [
-        {
-          "frame_id": "cp.krk.state.0afbf11aa123",
-          "known_provider_result": "max_plies",
-          "move_uci": "e3a3",
-          "provider_id": "krk.drive_to_edge"
-        },
-        {
-          "frame_id": "cp.krk.state.38aed2f35911",
-          "known_provider_result": "max_plies",
-          "move_uci": "a5a8",
-          "provider_id": "krk.drive_to_edge"
-        },
-        {
-          "frame_id": "cp.krk.state.ac0b7ed500ea",
-          "known_provider_result": "max_plies",
-          "move_uci": "a4a8",
-          "provider_id": "krk.drive_to_edge"
-        },
-        {
-          "frame_id": "cp.krk.state.ff6652c8832c",
-          "known_provider_result": "mate",
-          "move_uci": "e4h4",
-          "provider_id": "krk.drive_to_edge"
-        },
         {
           "frame_id": "cp.krk.state.7bd8961882ad",
           "known_provider_result": "mate",
@@ -204,10 +180,34 @@
           "known_provider_result": "mate",
           "move_uci": "a7a8",
           "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.02feb8593cc6",
+          "known_provider_result": "max_plies",
+          "move_uci": "h7c7",
+          "provider_id": "krk.edge_trap_close"
+        },
+        {
+          "frame_id": "cp.krk.state.326222aefdf1",
+          "known_provider_result": "max_plies",
+          "move_uci": "h7c7",
+          "provider_id": "krk.edge_trap_close"
+        },
+        {
+          "frame_id": "cp.krk.state.3dca34326fca",
+          "known_provider_result": "max_plies",
+          "move_uci": "c6b6",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.02feb8593cc6",
+          "known_provider_result": "max_plies",
+          "move_uci": "h7c7",
+          "provider_id": "krk.edge_trap_close"
         }
       ],
-      "selected_mate_count": 13,
-      "selected_max_plies_count": 15,
+      "selected_mate_count": 12,
+      "selected_max_plies_count": 12,
       "selected_unknown_count": 0,
       "selector": "provider_local_rank"
     }

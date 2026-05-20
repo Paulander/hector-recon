@@ -4,11 +4,11 @@ This is a non-causal offline probe over filtered control-plane frames. It does n
 
 ## Label Coverage
 
-- `strategy_benchmark_frame_count`: `28`
-- `provider_labeled_frame_count`: `28`
-- `frames_with_known_provider_mate`: `14`
+- `strategy_benchmark_frame_count`: `24`
+- `provider_labeled_frame_count`: `24`
+- `frames_with_known_provider_mate`: `12`
 - `frames_with_raw_scores`: `24`
-- `frames_with_normalized_scores`: `28`
+- `frames_with_normalized_scores`: `24`
 - `label_status`: `provider_labels_sufficient_for_small_probe`
 
 ## Selector Results
@@ -22,17 +22,17 @@ This is a non-causal offline probe over filtered control-plane frames. It does n
 
 ### normalized_score
 
-- Selected count: `28`
-- Known selected count: `28`
-- Mate / max_plies / unknown: `13` / `15` / `0`
-- Known selected mate rate: `0.4642857142857143`
+- Selected count: `24`
+- Known selected count: `24`
+- Mate / max_plies / unknown: `12` / `12` / `0`
+- Known selected mate rate: `0.5`
 
 ### provider_local_rank
 
-- Selected count: `28`
-- Known selected count: `28`
-- Mate / max_plies / unknown: `13` / `15` / `0`
-- Known selected mate rate: `0.4642857142857143`
+- Selected count: `24`
+- Known selected count: `24`
+- Mate / max_plies / unknown: `12` / `12` / `0`
+- Known selected mate rate: `0.5`
 
 ## Decision
 

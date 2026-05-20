@@ -205,6 +205,19 @@ _control_plane_strategy_baseline = importlib.util.module_from_spec(
 )
 _control_plane_strategy_baseline_spec.loader.exec_module(_control_plane_strategy_baseline)
 
+_control_plane_stage7_boundary_refresh_spec = importlib.util.spec_from_file_location(
+    "summarize_krk_control_plane_stage7_boundary_refresh",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "summarize_krk_control_plane_stage7_boundary_refresh.py",
+)
+assert _control_plane_stage7_boundary_refresh_spec is not None
+assert _control_plane_stage7_boundary_refresh_spec.loader is not None
+_control_plane_stage7_boundary_refresh = importlib.util.module_from_spec(
+    _control_plane_stage7_boundary_refresh_spec
+)
+_control_plane_stage7_boundary_refresh_spec.loader.exec_module(_control_plane_stage7_boundary_refresh)
+
 _strategy_arbiter_risk_review_spec = importlib.util.spec_from_file_location(
     "review_krk_strategy_arbiter_evidence_risks",
     Path(__file__).resolve().parents[1] / "scripts" / "review_krk_strategy_arbiter_evidence_risks.py",
@@ -2197,8 +2210,8 @@ def test_krk_control_plane_filter_marks_strategy_ready_and_dedupes(tmp_path):
                     "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
                     "source_stage": "stage7",
                     "active_landmark_label": "box_shrink",
-                    "outcome_labels": {"result_label": {}},
-                    "strategy_proposal_frames": [],
+                    "outcome_labels": {"result_label": {"current_graph_h40": "max_plies"}},
+                    "strategy_proposal_frames": [{"move_uci": "a1a2"}],
                     "internal_monitor_records": [],
                     "plan_capsule_window_records": [],
                     "sequence_training_examples": [{"offline_only": True}],
@@ -2221,7 +2234,8 @@ def test_krk_control_plane_filter_marks_strategy_ready_and_dedupes(tmp_path):
     assert result["stage7_promotion_allowed"] is False
     assert result["stage8_training_allowed"] is False
     assert result["summary"]["strategy_ready_frame_count"] == 1
-    assert result["summary"]["context_only_frame_count"] == 1
+    assert result["summary"]["stage7_boundary_heldout_frame_count"] == 1
+    assert result["summary"]["context_only_frame_count"] == 0
     assert result["summary"]["dropped_duplicate_monitor_count"] == 1
     assert result["summary"]["dropped_duplicate_plan_window_count"] == 1
     assert result["summary"]["new_playouts_added"] == 0
@@ -2233,6 +2247,9 @@ def test_krk_control_plane_filter_marks_strategy_ready_and_dedupes(tmp_path):
     assert first["filter_metadata"]["causal_status"] == "non_causal"
     assert len(first["internal_monitor_records"]) == 1
     assert len(first["plan_capsule_window_records"]) == 1
+    second = result["frames"][1]
+    assert "stage7_boundary_heldout_challenge" in second["filter_metadata"]["benchmark_roles"]
+    assert "strategy_arbitration_benchmark" not in second["filter_metadata"]["benchmark_roles"]
 
 
 def test_krk_control_plane_strategy_probe_stays_non_causal_and_reports_label_gap(tmp_path):
@@ -2436,6 +2453,77 @@ def test_krk_control_plane_strategy_baseline_is_non_causal_and_reads_labels(tmp_
     )
     assert normalized["selected_label_counts"]["mate"] == 1
     assert baseline["decision"]["causal_next_step_allowed"] is False
+
+
+def test_krk_control_plane_stage7_boundary_refresh_keeps_stage7_heldout(tmp_path, monkeypatch):
+    root = tmp_path
+    reports = root / "reports"
+    structural = reports / "structural_candidates"
+    structural.mkdir(parents=True, exist_ok=True)
+    reports.mkdir(parents=True, exist_ok=True)
+    (structural / "stage7_curriculum_boundary_decision_v0.json").write_text(
+        json.dumps(
+            {
+                "decision": {
+                    "status": "box_shrink_reclassified_as_local_evidence_handoff_trigger"
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reports / "krk_control_plane_filtered_frames_v0.json").write_text(
+        json.dumps(
+            {
+                "summary": {
+                    "strategy_ready_frame_count": 1,
+                    "strategy_ready_by_stage": {"stage5": 1},
+                    "stage7_boundary_heldout_frame_count": 1,
+                    "benchmark_role_counts": {
+                        "strategy_arbitration_benchmark": 1,
+                        "stage7_boundary_heldout_challenge": 1,
+                    },
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reports / "krk_control_plane_strategy_arbitration_probe_v0.json").write_text(
+        json.dumps(
+            {
+                "label_coverage": {
+                    "strategy_benchmark_frame_count": 1,
+                    "label_status": "provider_labels_underpowered",
+                },
+                "decision": {"selected_status": "provider_labels_underpowered"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reports / "krk_control_plane_strategy_arbitration_baseline_v1.json").write_text(
+        json.dumps(
+            {
+                "frame_summary": {
+                    "strategy_benchmark_frame_count": 1,
+                    "stage_counts": {"stage5": 1},
+                },
+                "decision": {"selected_status": "inconclusive_need_more_stratified_data"},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(_control_plane_stage7_boundary_refresh, "ROOT", root)
+    review = _control_plane_stage7_boundary_refresh.build_review()
+
+    assert review["schema_version"] == "krk_control_plane_stage7_boundary_refresh.v0"
+    assert review["causal_status"] == "non_causal_artifact_review"
+    assert review["runtime_behavior_changed"] is False
+    assert review["runtime_selector_implemented"] is False
+    assert review["stage7_promotion_allowed"] is False
+    assert review["stage8_training_allowed"] is False
+    assert review["decision"]["status"] == "control_plane_respects_stage7_boundary"
+    assert review["filtered_frame_summary"]["strategy_ready_by_stage"] == {"stage5": 1}
+    assert review["filtered_frame_summary"]["stage7_boundary_heldout_frame_count"] == 1
 
 
 def test_krk_strategy_arbiter_risk_review_separates_label_semantics(tmp_path):

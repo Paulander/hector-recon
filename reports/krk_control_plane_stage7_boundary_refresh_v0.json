@@ -1,0 +1,53 @@
+{
+  "baseline_summary": {
+    "decision_status": "strategy_arbitration_promising",
+    "stage_counts": {
+      "stage4": 6,
+      "stage5": 8,
+      "stage6": 10
+    },
+    "strategy_benchmark_frame_count": 24
+  },
+  "boundary_decision_status": "box_shrink_reclassified_as_local_evidence_handoff_trigger",
+  "causal_status": "non_causal_artifact_review",
+  "decision": {
+    "recommended_next_step": "continue_broader_krk_strategy_sequence_work_with_stage7_heldout",
+    "runtime_work_allowed": false,
+    "status": "control_plane_respects_stage7_boundary"
+  },
+  "filtered_frame_summary": {
+    "benchmark_role_counts": {
+      "internal_monitor_quality_analysis": 33,
+      "plan_window_context_only_stage7": 4,
+      "sequence_policy_context_only_stage7": 3,
+      "stage7_boundary_heldout_challenge": 7,
+      "strategy_arbitration_benchmark": 24
+    },
+    "stage7_boundary_heldout_frame_count": 7,
+    "strategy_ready_by_stage": {
+      "stage4": 6,
+      "stage5": 8,
+      "stage6": 10
+    },
+    "strategy_ready_frame_count": 24
+  },
+  "gameplay_topology_mutation": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_control_plane_stage7_boundary_refresh.v0",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_curriculum_boundary_decision_v0.json",
+    "reports/krk_control_plane_filtered_frames_v0.json",
+    "reports/krk_control_plane_strategy_arbitration_probe_v0.json",
+    "reports/krk_control_plane_strategy_arbitration_baseline_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "strategy_probe_summary": {
+    "decision_status": "provider_labels_sufficient_for_small_probe",
+    "label_status": "provider_labels_sufficient_for_small_probe",
+    "strategy_benchmark_frame_count": 24
+  }
+}

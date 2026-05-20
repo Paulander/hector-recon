@@ -61,8 +61,13 @@ def _window_key(record: dict[str, Any]) -> tuple[Any, ...]:
 def _benchmark_roles(frame: dict[str, Any]) -> list[str]:
     roles = []
     outcome = _outcome(frame)
-    if frame.get("strategy_proposal_frames") and outcome in {"mate", "max_plies"}:
+    stage = str(frame.get("source_stage") or "")
+    active_label = str(frame.get("active_landmark_label") or "")
+    stage7_boundary_challenge = stage == "stage7" or active_label == "box_shrink"
+    if frame.get("strategy_proposal_frames") and outcome in {"mate", "max_plies"} and not stage7_boundary_challenge:
         roles.append("strategy_arbitration_benchmark")
+    if frame.get("strategy_proposal_frames") and stage7_boundary_challenge:
+        roles.append("stage7_boundary_heldout_challenge")
     if frame.get("internal_monitor_records"):
         roles.append("internal_monitor_quality_analysis")
     if frame.get("sequence_training_examples"):
@@ -132,6 +137,10 @@ def build_filtered_export(repo_root: Path) -> dict[str, Any]:
     for frame in frames:
         by_role.update(frame["filter_metadata"]["benchmark_roles"])
     by_stage_strategy_ready = Counter(frame["source_stage"] for frame in strategy_ready)
+    stage7_heldout_count = sum(
+        "stage7_boundary_heldout_challenge" in frame["filter_metadata"]["benchmark_roles"]
+        for frame in frames
+    )
     dropped_monitor_count = sum(frame["filter_metadata"]["dropped_duplicate_monitor_count"] for frame in frames)
     dropped_window_count = sum(frame["filter_metadata"]["dropped_duplicate_plan_window_count"] for frame in frames)
 
@@ -157,6 +166,7 @@ def build_filtered_export(repo_root: Path) -> dict[str, Any]:
             "benchmark_role_counts": dict(by_role),
             "strategy_ready_frame_count": len(strategy_ready),
             "strategy_ready_by_stage": dict(by_stage_strategy_ready),
+            "stage7_boundary_heldout_frame_count": stage7_heldout_count,
             "context_only_frame_count": sum(frame["filter_metadata"]["context_only"] for frame in frames),
             "dropped_duplicate_monitor_count": dropped_monitor_count,
             "dropped_duplicate_plan_window_count": dropped_window_count,
@@ -218,6 +228,7 @@ def render_markdown(result: dict[str, Any]) -> str:
         f"- Benchmark role counts: `{summary['benchmark_role_counts']}`",
         f"- Strategy-ready frames: `{summary['strategy_ready_frame_count']}`",
         f"- Strategy-ready by stage: `{summary['strategy_ready_by_stage']}`",
+        f"- Stage 7 boundary held-out frames: `{summary['stage7_boundary_heldout_frame_count']}`",
         f"- Context-only frames: `{summary['context_only_frame_count']}`",
         f"- Dropped duplicate monitors: `{summary['dropped_duplicate_monitor_count']}`",
         f"- Dropped duplicate plan windows: `{summary['dropped_duplicate_plan_window_count']}`",

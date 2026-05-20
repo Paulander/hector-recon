@@ -78,6 +78,8 @@ Current interpretation:
 - `krk_strategy_sequence_evidence_plan_v0` defines the next bounded non-causal evidence path: replay-free inventory first, then reviewed manifests only if gaps remain. Tracks are `strategy_ownership`, `sequence_policy`, and `curriculum_boundary`; Stage 7 remains held-out/evaluation-only.
 - `krk_strategy_sequence_inventory_v0` completes the replay-free inventory. Strategy-ownership has some signal, but the state-holdout probe remains not ready and sequence-policy still has a clean success-control gap. Decision: `replay_free_inventory_complete_sequence_gap_blocks_runtime`; runtime work remains blocked.
 - `stage7_curriculum_boundary_decision_v0` records the architecture decision to stop treating Stage 7 as a standalone problem to crack. `box_shrink` is now local evidence / handoff trigger / phase-boundary signal; Stage 7 rows may be used as held-out challenge evidence, not as training rows or promotion criteria.
+- `krk_control_plane_stage7_boundary_refresh_v0` refreshes the broader control-plane strategy artifacts to honor that decision: Stage 7 contributes `7` held-out boundary frames and `0` strategy-ready training frames; protected Stage 4/5/6 provide `24` strategy-arbitration benchmark frames.
+- After the refresh, `krk_control_plane_strategy_arbitration_baseline_v1` is computed only over protected Stage 4/5/6 strategy benchmark frames (`24` total). It still reports `strategy_arbitration_promising`, but remains non-causal and too small for runtime promotion.
 
 ## Hard Invariants
 

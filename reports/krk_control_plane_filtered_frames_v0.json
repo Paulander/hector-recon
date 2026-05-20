@@ -332,6 +332,7 @@
       "fen": "R7/8/8/8/8/2k5/8/3K4 w - - 4 3",
       "filter_metadata": {
         "benchmark_roles": [
+          "stage7_boundary_heldout_challenge",
           "internal_monitor_quality_analysis",
           "sequence_policy_context_only_stage7"
         ],
@@ -620,6 +621,7 @@
       "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
       "filter_metadata": {
         "benchmark_roles": [
+          "stage7_boundary_heldout_challenge",
           "internal_monitor_quality_analysis",
           "sequence_policy_context_only_stage7",
           "plan_window_context_only_stage7"
@@ -995,6 +997,7 @@
       "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
       "filter_metadata": {
         "benchmark_roles": [
+          "stage7_boundary_heldout_challenge",
           "internal_monitor_quality_analysis",
           "sequence_policy_context_only_stage7",
           "plan_window_context_only_stage7"
@@ -1365,7 +1368,7 @@
       "fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
       "filter_metadata": {
         "benchmark_roles": [
-          "strategy_arbitration_benchmark",
+          "stage7_boundary_heldout_challenge",
           "internal_monitor_quality_analysis"
         ],
         "causal_status": "non_causal",
@@ -1651,7 +1654,7 @@
       "fen": "8/8/8/R7/4k3/8/8/3K4 w - - 2 2",
       "filter_metadata": {
         "benchmark_roles": [
-          "strategy_arbitration_benchmark",
+          "stage7_boundary_heldout_challenge",
           "internal_monitor_quality_analysis"
         ],
         "causal_status": "non_causal",
@@ -1892,7 +1895,7 @@
       "fen": "8/8/8/4k3/R7/8/3K4/8 w - - 2 2",
       "filter_metadata": {
         "benchmark_roles": [
-          "strategy_arbitration_benchmark",
+          "stage7_boundary_heldout_challenge",
           "internal_monitor_quality_analysis"
         ],
         "causal_status": "non_causal",
@@ -2133,7 +2136,7 @@
       "fen": "8/8/8/8/4R3/2k5/4K3/8 w - - 2 2",
       "filter_metadata": {
         "benchmark_roles": [
-          "strategy_arbitration_benchmark",
+          "stage7_boundary_heldout_challenge",
           "internal_monitor_quality_analysis"
         ],
         "causal_status": "non_causal",
@@ -10903,7 +10906,8 @@
       "internal_monitor_quality_analysis": 33,
       "plan_window_context_only_stage7": 4,
       "sequence_policy_context_only_stage7": 3,
-      "strategy_arbitration_benchmark": 28
+      "stage7_boundary_heldout_challenge": 7,
+      "strategy_arbitration_benchmark": 24
     },
     "context_only_frame_count": 5,
     "dropped_duplicate_monitor_count": 0,
@@ -10918,13 +10922,13 @@
     ],
     "frame_count": 33,
     "new_playouts_added": 0,
+    "stage7_boundary_heldout_frame_count": 7,
     "strategy_ready_by_stage": {
       "stage4": 6,
       "stage5": 8,
-      "stage6": 10,
-      "stage7": 4
+      "stage6": 10
     },
-    "strategy_ready_frame_count": 28,
+    "strategy_ready_frame_count": 24,
     "unique_state_count": 24
   }
 }

@@ -10,22 +10,16 @@
   "causal_status": "non_causal_probe",
   "context_summary": {
     "box_relevance_by_edge_bucket": {
-      "at_edge|low": 24,
-      "central|high": 3,
-      "near_edge|medium": 1
+      "at_edge|low": 24
     },
     "box_relevance_by_outcome_edge_bucket": {
       "mate|at_edge|low": 12,
-      "max_plies|at_edge|low": 12,
-      "max_plies|central|high": 3,
-      "max_plies|near_edge|medium": 1
+      "max_plies|at_edge|low": 12
     },
     "box_relevance_by_stage_edge_bucket": {
       "stage4|at_edge|low": 6,
       "stage5|at_edge|low": 8,
-      "stage6|at_edge|low": 10,
-      "stage7|central|high": 3,
-      "stage7|near_edge|medium": 1
+      "stage6|at_edge|low": 10
     }
   },
   "decision": {
@@ -35,11 +29,11 @@
     "selected_status": "strategy_arbitration_promising"
   },
   "frame_summary": {
-    "frames_with_only_provider_max_plies": 14,
-    "frames_with_provider_mate": 14,
+    "frames_with_only_provider_max_plies": 12,
+    "frames_with_provider_mate": 12,
     "proposal_label_counts": {
-      "mate": 16,
-      "max_plies": 50
+      "mate": 14,
+      "max_plies": 28
     },
     "proposal_label_counts_by_stage": {
       "stage4:mate": 3,
@@ -47,17 +41,14 @@
       "stage5:mate": 6,
       "stage5:max_plies": 10,
       "stage6:mate": 5,
-      "stage6:max_plies": 15,
-      "stage7:mate": 2,
-      "stage7:max_plies": 22
+      "stage6:max_plies": 15
     },
     "stage_counts": {
       "stage4": 6,
       "stage5": 8,
-      "stage6": 10,
-      "stage7": 4
+      "stage6": 10
     },
-    "strategy_benchmark_frame_count": 28
+    "strategy_benchmark_frame_count": 24
   },
   "gameplay_topology_mutation": false,
   "runtime_arbiter_added": false,
@@ -69,14 +60,13 @@
   "selector_results": [
     {
       "hit_when_positive_available_count": 12,
-      "hit_when_positive_available_rate": 0.8571428571428571,
+      "hit_when_positive_available_rate": 1.0,
       "miss_examples": [],
-      "positive_available_frame_count": 14,
+      "positive_available_frame_count": 12,
       "selected_count": 24,
       "selected_label_counts": {
         "mate": 12,
-        "max_plies": 12,
-        "no_selection": 4
+        "max_plies": 12
       },
       "selected_label_counts_by_stage": {
         "stage4:mate": 3,
@@ -90,60 +80,14 @@
       "selector": "raw_global_score"
     },
     {
-      "hit_when_positive_available_count": 13,
-      "hit_when_positive_available_rate": 0.9285714285714286,
-      "miss_examples": [
-        {
-          "context": {
-            "active_terminal_terms": [
-              "black_king_escape_available",
-              "box_area_large",
-              "box_shrink_drive_repair_available",
-              "drive_to_edge_affordance_after_box_shrink",
-              "enemy_king_edge_distance_bin",
-              "enemy_king_not_at_edge",
-              "fence_or_cut_not_preserved",
-              "king_support_improvement_move_exists",
-              "repair_or_reestablish_cut_available",
-              "rook_has_safe_lateral_transfer",
-              "rook_safe",
-              "safe_check_available",
-              "safe_rook_edge_transfer_available",
-              "safe_rook_long_transfer_available",
-              "white_king_can_improve_support"
-            ],
-            "black_king_edge_bucket": "central",
-            "black_king_edge_distance": 3,
-            "box_area": 28,
-            "box_area_relevance": "high",
-            "context_available": true,
-            "corner_net_pressure_proxy": false,
-            "cut_stable": false,
-            "edge_net_pressure_proxy": false,
-            "enemy_king_mobility": 5,
-            "fence_exists": false,
-            "fence_stable": false,
-            "mate_in_one_available": false,
-            "rook_safe": true,
-            "stalemate_or_draw_risk": false,
-            "white_king_can_improve_support": false,
-            "white_king_support_available": false
-          },
-          "frame_id": "cp.krk.state.ac0b7ed500ea",
-          "positive_providers": [
-            "krk.fence_established"
-          ],
-          "selected_move": "a4a8",
-          "selected_provider": "krk.drive_to_edge",
-          "selected_result": "max_plies",
-          "source_stage": "stage7"
-        }
-      ],
-      "positive_available_frame_count": 14,
-      "selected_count": 28,
+      "hit_when_positive_available_count": 12,
+      "hit_when_positive_available_rate": 1.0,
+      "miss_examples": [],
+      "positive_available_frame_count": 12,
+      "selected_count": 24,
       "selected_label_counts": {
-        "mate": 13,
-        "max_plies": 15
+        "mate": 12,
+        "max_plies": 12
       },
       "selected_label_counts_by_stage": {
         "stage4:mate": 3,
@@ -151,68 +95,20 @@
         "stage5:mate": 4,
         "stage5:max_plies": 4,
         "stage6:mate": 5,
-        "stage6:max_plies": 5,
-        "stage7:mate": 1,
-        "stage7:max_plies": 3
+        "stage6:max_plies": 5
       },
-      "selected_mate_rate": 0.4642857142857143,
+      "selected_mate_rate": 0.5,
       "selector": "normalized_score"
     },
     {
-      "hit_when_positive_available_count": 13,
-      "hit_when_positive_available_rate": 0.9285714285714286,
-      "miss_examples": [
-        {
-          "context": {
-            "active_terminal_terms": [
-              "black_king_escape_available",
-              "box_area_large",
-              "box_shrink_drive_repair_available",
-              "drive_to_edge_affordance_after_box_shrink",
-              "enemy_king_edge_distance_bin",
-              "enemy_king_not_at_edge",
-              "fence_or_cut_not_preserved",
-              "king_support_improvement_move_exists",
-              "repair_or_reestablish_cut_available",
-              "rook_has_safe_lateral_transfer",
-              "rook_safe",
-              "safe_check_available",
-              "safe_rook_edge_transfer_available",
-              "safe_rook_long_transfer_available",
-              "white_king_can_improve_support"
-            ],
-            "black_king_edge_bucket": "central",
-            "black_king_edge_distance": 3,
-            "box_area": 28,
-            "box_area_relevance": "high",
-            "context_available": true,
-            "corner_net_pressure_proxy": false,
-            "cut_stable": false,
-            "edge_net_pressure_proxy": false,
-            "enemy_king_mobility": 5,
-            "fence_exists": false,
-            "fence_stable": false,
-            "mate_in_one_available": false,
-            "rook_safe": true,
-            "stalemate_or_draw_risk": false,
-            "white_king_can_improve_support": false,
-            "white_king_support_available": false
-          },
-          "frame_id": "cp.krk.state.ac0b7ed500ea",
-          "positive_providers": [
-            "krk.fence_established"
-          ],
-          "selected_move": "a4a8",
-          "selected_provider": "krk.drive_to_edge",
-          "selected_result": "max_plies",
-          "source_stage": "stage7"
-        }
-      ],
-      "positive_available_frame_count": 14,
-      "selected_count": 28,
+      "hit_when_positive_available_count": 12,
+      "hit_when_positive_available_rate": 1.0,
+      "miss_examples": [],
+      "positive_available_frame_count": 12,
+      "selected_count": 24,
       "selected_label_counts": {
-        "mate": 13,
-        "max_plies": 15
+        "mate": 12,
+        "max_plies": 12
       },
       "selected_label_counts_by_stage": {
         "stage4:mate": 3,
@@ -220,84 +116,33 @@
         "stage5:mate": 4,
         "stage5:max_plies": 4,
         "stage6:mate": 5,
-        "stage6:max_plies": 5,
-        "stage7:mate": 1,
-        "stage7:max_plies": 3
+        "stage6:max_plies": 5
       },
-      "selected_mate_rate": 0.4642857142857143,
+      "selected_mate_rate": 0.5,
       "selector": "provider_local_rank"
     },
     {
       "hit_when_positive_available_count": 0,
       "hit_when_positive_available_rate": 0.0,
       "miss_examples": [],
-      "positive_available_frame_count": 14,
-      "selected_count": 1,
+      "positive_available_frame_count": 12,
+      "selected_count": 0,
       "selected_label_counts": {
-        "max_plies": 1,
-        "no_selection": 27
+        "no_selection": 24
       },
-      "selected_label_counts_by_stage": {
-        "stage7:max_plies": 1
-      },
-      "selected_mate_rate": 0.0,
+      "selected_label_counts_by_stage": {},
+      "selected_mate_rate": null,
       "selector": "visible_context_heuristic"
     },
     {
-      "hit_when_positive_available_count": 13,
-      "hit_when_positive_available_rate": 0.9285714285714286,
-      "miss_examples": [
-        {
-          "context": {
-            "active_terminal_terms": [
-              "black_king_escape_available",
-              "box_area_large",
-              "box_shrink_drive_repair_available",
-              "drive_to_edge_affordance_after_box_shrink",
-              "enemy_king_edge_distance_bin",
-              "enemy_king_not_at_edge",
-              "fence_or_cut_not_preserved",
-              "king_support_improvement_move_exists",
-              "repair_or_reestablish_cut_available",
-              "rook_has_safe_lateral_transfer",
-              "rook_safe",
-              "safe_check_available",
-              "safe_rook_edge_transfer_available",
-              "safe_rook_long_transfer_available",
-              "white_king_can_improve_support"
-            ],
-            "black_king_edge_bucket": "central",
-            "black_king_edge_distance": 3,
-            "box_area": 28,
-            "box_area_relevance": "high",
-            "context_available": true,
-            "corner_net_pressure_proxy": false,
-            "cut_stable": false,
-            "edge_net_pressure_proxy": false,
-            "enemy_king_mobility": 5,
-            "fence_exists": false,
-            "fence_stable": false,
-            "mate_in_one_available": false,
-            "rook_safe": true,
-            "stalemate_or_draw_risk": false,
-            "white_king_can_improve_support": false,
-            "white_king_support_available": false
-          },
-          "frame_id": "cp.krk.state.ac0b7ed500ea",
-          "positive_providers": [
-            "krk.fence_established"
-          ],
-          "selected_move": "a4a8",
-          "selected_provider": "krk.drive_to_edge",
-          "selected_result": "max_plies",
-          "source_stage": "stage7"
-        }
-      ],
-      "positive_available_frame_count": 14,
-      "selected_count": 28,
+      "hit_when_positive_available_count": 12,
+      "hit_when_positive_available_rate": 1.0,
+      "miss_examples": [],
+      "positive_available_frame_count": 12,
+      "selected_count": 24,
       "selected_label_counts": {
-        "mate": 13,
-        "max_plies": 15
+        "mate": 12,
+        "max_plies": 12
       },
       "selected_label_counts_by_stage": {
         "stage4:mate": 3,
@@ -305,11 +150,9 @@
         "stage5:mate": 4,
         "stage5:max_plies": 4,
         "stage6:mate": 5,
-        "stage6:max_plies": 5,
-        "stage7:mate": 1,
-        "stage7:max_plies": 3
+        "stage6:max_plies": 5
       },
-      "selected_mate_rate": 0.4642857142857143,
+      "selected_mate_rate": 0.5,
       "selector": "stage_prior_heuristic"
     }
   ],
