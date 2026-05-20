@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -59,9 +60,10 @@ def _recover_controls(limit: int = 16) -> list[dict[str, Any]]:
             if key in seen:
                 continue
             seen.add(key)
+            state_digest = hashlib.sha1("|".join(str(item) for item in key).encode("utf-8")).hexdigest()[:12]
             controls.append({
                 "schema_version": "stage7_post_box_sequence_control.v0",
-                "state_id": f"recovered.{abs(hash(key)) & 0xffffffffffff:x}",
+                "state_id": f"recovered.{state_digest}",
                 "fen": fen,
                 "move_uci": move,
                 "plies": plies,

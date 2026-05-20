@@ -155,3 +155,28 @@ def test_stage7_selected_path_probe_blocks_runtime_when_source_biased() -> None:
     assert payload["stage8_training_allowed"] is False
     assert payload["summary"]["source_bias_detected"] is True
     assert payload["decision"]["status"] == "split_targets_separable_but_source_biased_no_runtime"
+
+
+def test_stage7_selected_path_architecture_review_blocks_runtime() -> None:
+    for script in (
+        "scripts/summarize_stage7_selected_failure_path_audit.py",
+        "scripts/summarize_stage7_selected_path_target_spec.py",
+        "scripts/build_stage7_selected_path_target_dataset.py",
+        "scripts/recover_stage7_post_box_sequence_controls.py",
+        "scripts/probe_stage7_selected_path_targets.py",
+        "scripts/summarize_stage7_selected_path_architecture_review.py",
+    ):
+        subprocess.run([sys.executable, script], cwd=ROOT, check=True)
+
+    payload = json.loads(
+        (ROOT / "reports/structural_candidates/stage7_selected_path_architecture_review_v0.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["decision"]["status"] == "runtime_no_go_architecture_review_required"
+    assert payload["decision"]["next_allowed_slice"] == "non_causal_clean_control_collection_plan"
