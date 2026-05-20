@@ -37,6 +37,10 @@ _two_stage_probe = _load_script(
     "probe_krk_two_stage_abstention_objective_v0",
     "probe_krk_two_stage_abstention_objective_v0.py",
 )
+_runtime_review_packet = _load_script(
+    "summarize_krk_two_stage_abstention_runtime_review_packet_v0",
+    "summarize_krk_two_stage_abstention_runtime_review_packet_v0.py",
+)
 
 
 def _write_fixture(root: Path) -> None:
@@ -240,3 +244,26 @@ def test_two_stage_abstention_probe_requires_runtime_review(tmp_path):
         "architecture_review_before_default_off_runtime_selector",
         "refine_two_stage_abstention_labels_non_causal",
     }
+
+
+def test_two_stage_runtime_review_packet_does_not_authorize_implementation(tmp_path):
+    _write_fixture(tmp_path)
+    reports = tmp_path / "reports"
+    dataset = _dataset.build_dataset(tmp_path)
+    (reports / "krk_abstention_context_feature_dataset_v0.json").write_text(json.dumps(dataset))
+    probe = _probe.build_probe(tmp_path)
+    (reports / "krk_abstention_context_feature_probe_v0.json").write_text(json.dumps(probe))
+    audit = _error_audit.build_audit(tmp_path)
+    (reports / "krk_abstention_context_error_audit_v0.json").write_text(json.dumps(audit))
+    review = _label_review.build_review(tmp_path)
+    (reports / "krk_abstention_safe_preservation_label_review_v0.json").write_text(json.dumps(review))
+    two_stage = _two_stage_probe.build_probe(tmp_path)
+    (reports / "krk_two_stage_abstention_objective_probe_v0.json").write_text(json.dumps(two_stage))
+
+    packet = _runtime_review_packet.build_packet(tmp_path)
+
+    assert packet["schema_version"] == "krk_two_stage_abstention_runtime_review_packet.v0"
+    assert packet["runtime_selector_implemented"] is False
+    assert packet["decision"]["implementation_allowed_by_this_packet"] is False
+    assert packet["decision"]["runtime_test_allowed_next"] is False
+    assert "default_off_flag_required" in packet["future_sandbox_requirements_if_approved"]

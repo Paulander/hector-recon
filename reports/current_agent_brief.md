@@ -51,6 +51,7 @@ Current interpretation:
 - `krk_abstention_context_error_audit_v0` shows why runtime remains blocked: the best context objective has `12` false positives and over-rejects mostly known-safe Stage 5 `edge_trap` owners. The next safe step is a non-causal safe-preservation / label-semantics review, not a selector implementation.
 - `krk_abstention_safe_preservation_label_review_v0` reframes the blocker as label semantics: forced-provider conversion and selected-playout success/failure should not be collapsed into one abstention target. It proposes a two-stage non-causal objective that first preserves validated safe owners, then suppresses unsafe owners. Runtime selector work remains blocked.
 - `krk_two_stage_abstention_objective_probe_v0` found `12` threshold-passing offline objectives. The best preservation-gated result reaches negative suppression `0.706` and safe preservation `0.853`, which is the first abstention result to clear both non-causal review thresholds. This still does not authorize runtime behavior; it requires architecture review before any default-off selector sandbox.
+- `krk_two_stage_abstention_runtime_review_packet_v0` packages that evidence for explicit review. It records the default-off sandbox requirements and keeps implementation blocked by this packet (`implementation_allowed_by_this_packet = false`). The next step requires an explicit decision before implementing a runtime selector.
 
 ## Hard Invariants
 
