@@ -54,6 +54,18 @@ assert EXPANSION_PLAN_SPEC.loader is not None
 expansion_plan_module = importlib.util.module_from_spec(EXPANSION_PLAN_SPEC)
 EXPANSION_PLAN_SPEC.loader.exec_module(expansion_plan_module)
 
+COVERAGE_FRAMES_SCRIPT = (
+    Path(__file__).resolve().parents[1] / "scripts" / "build_krk_protected_provider_coverage_frames_v0.py"
+)
+COVERAGE_FRAMES_SPEC = importlib.util.spec_from_file_location(
+    "build_krk_protected_provider_coverage_frames_v0",
+    COVERAGE_FRAMES_SCRIPT,
+)
+assert COVERAGE_FRAMES_SPEC is not None
+assert COVERAGE_FRAMES_SPEC.loader is not None
+coverage_frames_module = importlib.util.module_from_spec(COVERAGE_FRAMES_SPEC)
+COVERAGE_FRAMES_SPEC.loader.exec_module(coverage_frames_module)
+
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
     path = root / relative
@@ -262,3 +274,65 @@ def test_protected_proposal_coverage_expansion_plan_keeps_rows_non_training(tmp_
     assert plan["acceptance_for_next_slice"]["stage7_rows_allowed"] == 0
     assert plan["acceptance_for_next_slice"]["training_allowed_initially"] is False
     assert plan["decision"]["recommended_next_step"] == "build_non_causal_protected_provider_coverage_frames_v0"
+
+
+def test_protected_provider_coverage_frames_are_capacity_evidence_not_training(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(coverage_frames_module, "ROOT", root)
+    _write_json(root, coverage_frames_module.PLAN, {"causal_status": "non_causal_design_plan"})
+    _write_json(
+        root,
+        coverage_frames_module.RANKED_FRAMES,
+        {
+            "causal_status": "non_causal_ranked_frame_dataset",
+            "rows": [
+                {
+                    "frame_id": "cp.a",
+                    "state_id": "state.a",
+                    "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                    "active_landmark_label": "drive_to_edge",
+                    "provider_id": "krk.stage0_basin",
+                }
+            ],
+        },
+    )
+    _write_json(
+        root,
+        coverage_frames_module.LABELS,
+        {
+            "causal_status": "non_causal_label_run",
+            "labels": [
+                {
+                    "causal_status": "non_causal_outcome_label",
+                    "job_id": "job.krk.protected_missing_provider.a",
+                    "frame_id": "cp.a",
+                    "state_id": "state.a",
+                    "source_stage": "stage6",
+                    "source_active_landmark_label": "drive_to_edge",
+                    "provider_id": "krk.drive_to_edge",
+                    "provider_version": "stage6_overlay_v1",
+                    "result": "mate",
+                    "plies": 9,
+                    "forced_first_move": "a1a2",
+                    "forced_successor_available": True,
+                }
+            ],
+        },
+    )
+
+    payload = coverage_frames_module.build_frames()
+
+    assert payload["schema_version"] == "krk_protected_provider_coverage_frames.v0"
+    assert payload["causal_status"] == "non_causal_capacity_frame_dataset"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["summary"]["row_count"] == 1
+    assert payload["summary"]["training_row_count"] == 0
+    assert payload["summary"]["runtime_proposal_row_count"] == 0
+    row = payload["rows"][0]
+    assert row["capacity_label"] == "positive_capacity"
+    assert row["proposal_source"] == "offline_forced_provider_label_not_runtime_proposal"
+    assert row["usable_for_training"] is False
+    assert row["has_runtime_proposal_frame"] is False
