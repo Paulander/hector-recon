@@ -1,0 +1,298 @@
+{
+  "audited_objective": "owner_family_pair@0.25",
+  "candidate_safe_preservation_features": [
+    "owner_a_positive",
+    "owner_a_evidence_channel=normal_selected_playout",
+    "owner_b_evidence_channel=forced_capacity",
+    "owner_b_positive",
+    "comparison_semantics:selected_mate_plus_forced_mate_preserve_selected",
+    "do_not_switch_from_selected_mate_to_forced_capacity_without_selected_failure"
+  ],
+  "causal_status": "non_causal_error_audit",
+  "decision": {
+    "recommended_next_step": "probe_safe_preservation_gated_pair_models",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "status": "safe_preservation_false_positives_are_outcome_semantics_errors"
+  },
+  "false_negatives": [
+    {
+      "active_landmark_label": "drive_to_edge",
+      "comparison_label": "prefer_capacity_alternative",
+      "evidence_channel": "strong_same_state_conflict",
+      "feature_key": [
+        "edge_trap",
+        "stage0_basin"
+      ],
+      "owner_a": "krk.edge_trap_close",
+      "owner_a_family": "edge_trap",
+      "owner_a_label_source": "targeted_non_stage0_current_profile_h40",
+      "owner_a_move": "h7c7",
+      "owner_a_outcome": "selected_owner_failed",
+      "owner_a_positive": false,
+      "owner_b": "krk.stage0_basin",
+      "owner_b_family": "stage0_basin",
+      "owner_b_forced_result": "mate",
+      "owner_b_move": "a5b6",
+      "owner_b_outcome": "positive_capacity",
+      "owner_b_positive": true,
+      "owner_b_source_artifact": "reports/krk_protected_provider_coverage_frames_v0.json",
+      "predicted_prefer_capacity": false,
+      "score": 0.0,
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511",
+      "target_prefer_capacity": true,
+      "terminal_context": {
+        "black_king_edge_bucket": "edge",
+        "box_area_relevance": "low",
+        "rook_safe_proxy": true,
+        "white_king_support_bucket": "far"
+      },
+      "threshold": 0.25
+    }
+  ],
+  "false_positives": [
+    {
+      "active_landmark_label": "fence_established",
+      "comparison_label": "equivalent_positive_or_preserve_selected",
+      "evidence_channel": "safe_preservation",
+      "feature_key": [
+        "edge_trap",
+        "stage0_basin"
+      ],
+      "owner_a": "krk.edge_trap_close",
+      "owner_a_family": "edge_trap",
+      "owner_a_label_source": "targeted_non_stage0_current_profile_h40",
+      "owner_a_move": "h7c7",
+      "owner_a_outcome": "selected_owner_converted",
+      "owner_a_positive": true,
+      "owner_b": "krk.stage0_basin",
+      "owner_b_family": "stage0_basin",
+      "owner_b_forced_result": "mate",
+      "owner_b_move": "a6b7",
+      "owner_b_outcome": "positive_capacity",
+      "owner_b_positive": true,
+      "owner_b_source_artifact": "reports/krk_protected_provider_coverage_frames_v0.json",
+      "predicted_prefer_capacity": true,
+      "score": 0.5,
+      "source_stage": "stage5",
+      "state_id": "state.326222aefdf1",
+      "target_prefer_capacity": false,
+      "terminal_context": {
+        "black_king_edge_bucket": "edge",
+        "box_area_relevance": "low",
+        "rook_safe_proxy": true,
+        "white_king_support_bucket": "far"
+      },
+      "threshold": 0.25
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "comparison_label": "equivalent_positive_or_preserve_selected",
+      "evidence_channel": "safe_preservation",
+      "feature_key": [
+        "stage0_basin",
+        "edge_trap"
+      ],
+      "owner_a": "krk.stage0_basin",
+      "owner_a_family": "stage0_basin",
+      "owner_a_label_source": "normal_selected_playout",
+      "owner_a_move": "a8f8",
+      "owner_a_outcome": "selected_owner_converted",
+      "owner_a_positive": true,
+      "owner_b": "krk.edge_trap_close",
+      "owner_b_family": "edge_trap",
+      "owner_b_forced_result": null,
+      "owner_b_move": "a8f8",
+      "owner_b_outcome": "positive_capacity",
+      "owner_b_positive": true,
+      "owner_b_source_artifact": "reports/krk_hard_negative_selector_target_dataset_v2.json",
+      "predicted_prefer_capacity": true,
+      "score": 0.6666666666666666,
+      "source_stage": "stage6",
+      "state_id": "state.52085d244e9d",
+      "target_prefer_capacity": false,
+      "terminal_context": {
+        "black_king_edge_bucket": "edge",
+        "box_area_relevance": "low",
+        "rook_safe_proxy": true,
+        "white_king_support_bucket": "close"
+      },
+      "threshold": 0.25
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "comparison_label": "equivalent_positive_or_preserve_selected",
+      "evidence_channel": "safe_preservation",
+      "feature_key": [
+        "stage0_basin",
+        "edge_trap"
+      ],
+      "owner_a": "krk.stage0_basin",
+      "owner_a_family": "stage0_basin",
+      "owner_a_label_source": "normal_selected_playout",
+      "owner_a_move": "a1d1",
+      "owner_a_outcome": "selected_owner_converted",
+      "owner_a_positive": true,
+      "owner_b": "krk.edge_trap_close",
+      "owner_b_family": "edge_trap",
+      "owner_b_forced_result": null,
+      "owner_b_move": "a1d1",
+      "owner_b_outcome": "positive_capacity",
+      "owner_b_positive": true,
+      "owner_b_source_artifact": "reports/krk_hard_negative_selector_target_dataset_v2.json",
+      "predicted_prefer_capacity": true,
+      "score": 0.6666666666666666,
+      "source_stage": "stage6",
+      "state_id": "state.69711173114a",
+      "target_prefer_capacity": false,
+      "terminal_context": {
+        "black_king_edge_bucket": "edge",
+        "box_area_relevance": "low",
+        "rook_safe_proxy": true,
+        "white_king_support_bucket": "close"
+      },
+      "threshold": 0.25
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "comparison_label": "equivalent_positive_or_preserve_selected",
+      "evidence_channel": "safe_preservation",
+      "feature_key": [
+        "edge_trap",
+        "stage0_basin"
+      ],
+      "owner_a": "krk.edge_trap_close",
+      "owner_a_family": "edge_trap",
+      "owner_a_label_source": "targeted_non_stage0_current_profile_h40",
+      "owner_a_move": "e7e8",
+      "owner_a_outcome": "selected_owner_converted",
+      "owner_a_positive": true,
+      "owner_b": "krk.stage0_basin",
+      "owner_b_family": "stage0_basin",
+      "owner_b_forced_result": null,
+      "owner_b_move": "e7e8",
+      "owner_b_outcome": "positive_capacity",
+      "owner_b_positive": true,
+      "owner_b_source_artifact": "reports/krk_hard_negative_selector_target_dataset_v2.json",
+      "predicted_prefer_capacity": true,
+      "score": 0.5,
+      "source_stage": "stage5",
+      "state_id": "state.87b1160e68b9",
+      "target_prefer_capacity": false,
+      "terminal_context": {
+        "black_king_edge_bucket": "edge",
+        "box_area_relevance": "low",
+        "rook_safe_proxy": true,
+        "white_king_support_bucket": "close"
+      },
+      "threshold": 0.25
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "comparison_label": "equivalent_positive_or_preserve_selected",
+      "evidence_channel": "safe_preservation",
+      "feature_key": [
+        "stage0_basin",
+        "edge_trap"
+      ],
+      "owner_a": "krk.stage0_basin",
+      "owner_a_family": "stage0_basin",
+      "owner_a_label_source": "normal_selected_playout",
+      "owner_a_move": "a1g1",
+      "owner_a_outcome": "selected_owner_converted",
+      "owner_a_positive": true,
+      "owner_b": "krk.edge_trap_close",
+      "owner_b_family": "edge_trap",
+      "owner_b_forced_result": null,
+      "owner_b_move": "a1g1",
+      "owner_b_outcome": "positive_capacity",
+      "owner_b_positive": true,
+      "owner_b_source_artifact": "reports/krk_hard_negative_selector_target_dataset_v2.json",
+      "predicted_prefer_capacity": true,
+      "score": 0.75,
+      "source_stage": "stage6",
+      "state_id": "state.d1f052d2cab2",
+      "target_prefer_capacity": false,
+      "terminal_context": {
+        "black_king_edge_bucket": "edge",
+        "box_area_relevance": "low",
+        "rook_safe_proxy": true,
+        "white_king_support_bucket": "close"
+      },
+      "threshold": 0.25
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "comparison_label": "equivalent_positive_or_preserve_selected",
+      "evidence_channel": "safe_preservation",
+      "feature_key": [
+        "stage0_basin",
+        "edge_trap"
+      ],
+      "owner_a": "krk.stage0_basin",
+      "owner_a_family": "stage0_basin",
+      "owner_a_label_source": "normal_selected_playout",
+      "owner_a_move": "a1g1",
+      "owner_a_outcome": "selected_owner_converted",
+      "owner_a_positive": true,
+      "owner_b": "krk.edge_trap_enemy_between",
+      "owner_b_family": "edge_trap",
+      "owner_b_forced_result": null,
+      "owner_b_move": "a1g1",
+      "owner_b_outcome": "positive_capacity",
+      "owner_b_positive": true,
+      "owner_b_source_artifact": "reports/krk_hard_negative_selector_target_dataset_v2.json",
+      "predicted_prefer_capacity": true,
+      "score": 0.75,
+      "source_stage": "stage6",
+      "state_id": "state.d1f052d2cab2",
+      "target_prefer_capacity": false,
+      "terminal_context": {
+        "black_king_edge_bucket": "edge",
+        "box_area_relevance": "low",
+        "rook_safe_proxy": true,
+        "white_king_support_bucket": "close"
+      },
+      "threshold": 0.25
+    }
+  ],
+  "gameplay_topology_mutation": false,
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_state_local_paired_ownership_error_audit.v0",
+  "selector_training_allowed": false,
+  "source_artifacts": [
+    "reports/krk_state_local_paired_ownership_inventory_v1.json",
+    "reports/krk_state_local_paired_ownership_probe_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "false_negative_by_family_pair": {
+      "edge_trap->stage0_basin": 1
+    },
+    "false_negative_count": 1,
+    "false_positive_by_evidence_channel": {
+      "safe_preservation": 6
+    },
+    "false_positive_by_family_pair": {
+      "edge_trap->stage0_basin": 2,
+      "stage0_basin->edge_trap": 4
+    },
+    "false_positive_by_stage": {
+      "stage5": 2,
+      "stage6": 4
+    },
+    "false_positive_count": 6,
+    "false_positive_feature_key_counts": {
+      "['edge_trap', 'stage0_basin']": 2,
+      "['stage0_basin', 'edge_trap']": 4
+    },
+    "stage7_row_count": 0
+  }
+}
