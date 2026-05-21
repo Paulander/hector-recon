@@ -1,0 +1,53 @@
+{
+  "causal_status": "non_causal_review",
+  "decision": {
+    "recommended_next_step": "architecture_review_before_any_selector_runtime_or_collect_more_targeted_negatives",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "context_features_review_ready_but_not_runtime_ready"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": [
+    "FEN-derived context is useful for positive-owner preservation: the balanced context result raises positive recall to 0.88.",
+    "The same context does not yet suppress enough unsafe selected owners: negative suppression remains 0.2 on the balanced result.",
+    "The ownership evidence is still provider-family narrow: most rows are stage0_basin, so this should not be trained into a runtime selector.",
+    "The next improvement should target source/provider diversity and normal-routing ownership labels, not another Stage 7 repair.",
+    "Targeted false-positive risk-cell labels added true negatives but did not clear the balanced runtime-review threshold."
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_ownership_context_feature_review.v3",
+  "source_artifacts": [
+    "reports/krk_ownership_selection_context_dataset_v3.json",
+    "reports/krk_ownership_selection_context_feature_probe_v3.json",
+    "reports/krk_ownership_selection_context_feature_probe_v2.json",
+    "reports/krk_targeted_ownership_negative_labels_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "balanced_improves_recall": true,
+    "balanced_loses_suppression": true,
+    "base_best_negative_suppression": 0.625,
+    "base_best_objective": "stage_provider_family@0.75",
+    "base_best_positive_recall": 0.6296296296296297,
+    "context_best_balanced_negative_suppression": 0.2,
+    "context_best_balanced_objective": "raw_score_bucket@0.75",
+    "context_best_balanced_positive_recall": 0.8064516129032258,
+    "context_best_negative_suppression": 0.6,
+    "context_best_objective": "stage_provider_family@0.75",
+    "context_best_positive_recall": 0.5806451612903226,
+    "context_row_count": 41,
+    "exact_move_context_count": 41,
+    "fen_join_count": 41,
+    "runtime_threshold_passed": false,
+    "targeted_negative_failure_count": 2,
+    "targeted_negative_label_count": 6
+  }
+}

@@ -73,6 +73,18 @@ ownership_v4_module = _load_module(
     "build_krk_ownership_selection_label_dataset_v4",
     "build_krk_ownership_selection_label_dataset_v4.py",
 )
+targeted_negative_manifest_module = _load_module(
+    "generate_krk_targeted_ownership_negative_manifest_v0",
+    "generate_krk_targeted_ownership_negative_manifest_v0.py",
+)
+targeted_negative_labels_module = _load_module(
+    "run_krk_targeted_ownership_negative_labels_v0",
+    "run_krk_targeted_ownership_negative_labels_v0.py",
+)
+ownership_v5_module = _load_module(
+    "build_krk_ownership_selection_label_dataset_v5",
+    "build_krk_ownership_selection_label_dataset_v5.py",
+)
 
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
@@ -697,5 +709,108 @@ def test_ownership_v4_targeted_labels_supersede_stale_nonstage0_labels(tmp_path,
     assert dataset["summary"]["targeted_label_change_count"] == 1
     assert dataset["rows"][0]["target_label"] == "selected_owner_converted"
     assert dataset["rows"][0]["prior_target_label"] == "selected_owner_failed"
+    assert dataset["rows"][0]["usable_for_selector_training"] is False
+    assert dataset["decision"]["selector_training_allowed"] is False
+
+
+def test_targeted_negative_manifest_and_labels_remain_non_causal():
+    manifest = {
+        "causal_status": "non_causal_execution_manifest",
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_arbiter_implemented": False,
+        "runtime_selector_implemented": False,
+        "runtime_candidate_generator_implemented": False,
+        "runtime_terminals_added": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "labels_generated_in_this_slice": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+        "jobs": [
+            {
+                "causal_status": "non_causal_label_job",
+                "source_stage": "stage5",
+            }
+        ],
+    }
+    targeted_negative_manifest_module.validate_manifest(manifest)
+    manifest["runtime_selector_implemented"] = True
+    try:
+        targeted_negative_manifest_module.validate_manifest(manifest)
+    except ValueError as exc:
+        assert "runtime_selector_implemented" in str(exc)
+    else:
+        raise AssertionError("runtime selector flag should be rejected")
+
+    labels = {
+        "causal_status": "non_causal_label_run",
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_arbiter_implemented": False,
+        "runtime_selector_implemented": False,
+        "runtime_candidate_generator_implemented": False,
+        "runtime_terminals_added": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+        "selector_training_allowed": False,
+        "labels": [
+            {
+                "causal_status": "non_causal_outcome_label",
+                "source_stage": "stage5",
+            }
+        ],
+    }
+    targeted_negative_labels_module.validate_payload(labels)
+    labels["stage8_training_allowed"] = True
+    try:
+        targeted_negative_labels_module.validate_payload(labels)
+    except ValueError as exc:
+        assert "stage8_training_allowed" in str(exc)
+    else:
+        raise AssertionError("stage8 training flag should be rejected")
+
+
+def test_ownership_v5_merges_targeted_negative_labels_without_training_rows(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(ownership_v5_module, "ROOT", root)
+    _write_json(
+        root,
+        ownership_v5_module.OWNERSHIP_V4,
+        {
+            "causal_status": "non_causal_ownership_label_dataset",
+            "rows": [],
+        },
+    )
+    _write_json(
+        root,
+        ownership_v5_module.TARGETED_NEGATIVE_LABELS,
+        {
+            "causal_status": "non_causal_label_run",
+            "labels": [
+                {
+                    "causal_status": "non_causal_outcome_label",
+                    "state_id": "state.neg",
+                    "frame_id": "cp.krk.state.neg",
+                    "source_stage": "stage4",
+                    "active_landmark_label": "edge_trap_wrong_tempo",
+                    "selected_provider": "krk.stage0_basin",
+                    "selected_move": "a1a8",
+                    "initial_provider_count": 1,
+                    "target_cell_id": "stage4_stage0_wrong_tempo_like",
+                    "target_cell_reason": "test",
+                    "label_semantics": "current_profile_selected_owner_outcome_in_false_positive_risk_cell",
+                    "selected_playout_success": {"result": "max_plies"},
+                }
+            ],
+        },
+    )
+
+    dataset = ownership_v5_module.build_dataset()
+
+    assert dataset["summary"]["targeted_added_row_count"] == 1
+    assert dataset["summary"]["target_label_counts"] == {"selected_owner_failed": 1}
     assert dataset["rows"][0]["usable_for_selector_training"] is False
     assert dataset["decision"]["selector_training_allowed"] is False
