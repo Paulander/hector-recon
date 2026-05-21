@@ -97,6 +97,14 @@ paired_review_module = _load_module(
     "review_krk_state_local_paired_ownership_objective_v0",
     "review_krk_state_local_paired_ownership_objective_v0.py",
 )
+paired_probe_v1_module = _load_module(
+    "probe_krk_state_local_paired_ownership_objective_v1",
+    "probe_krk_state_local_paired_ownership_objective_v1.py",
+)
+paired_packet_module = _load_module(
+    "summarize_krk_state_local_paired_selector_runtime_review_packet_v0",
+    "summarize_krk_state_local_paired_selector_runtime_review_packet_v0.py",
+)
 
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
@@ -924,3 +932,53 @@ def test_paired_probe_and_review_validation_blocks_causal_flags():
         assert "stage7_promotion_allowed" in str(exc)
     else:
         raise AssertionError("Stage 7 promotion flag should be rejected")
+
+
+def test_safe_preservation_gate_preserves_selected_mate_and_prefers_failed_selected():
+    selected_mate_forced_mate = {
+        "owner_a_positive": True,
+        "owner_b_positive": True,
+        "evidence_channel": "safe_preservation",
+    }
+    selected_failed_forced_mate = {
+        "owner_a_positive": False,
+        "owner_b_positive": True,
+        "evidence_channel": "strong_same_state_conflict",
+    }
+    selected_mate_forced_failed = {
+        "owner_a_positive": True,
+        "owner_b_positive": False,
+        "evidence_channel": "strong_same_state_conflict",
+    }
+
+    assert paired_probe_v1_module.safe_preservation_gate_predict(selected_mate_forced_mate) is False
+    assert paired_probe_v1_module.conflict_only_predict(selected_mate_forced_mate) is False
+    assert paired_probe_v1_module.safe_preservation_gate_predict(selected_failed_forced_mate) is True
+    assert paired_probe_v1_module.conflict_only_predict(selected_failed_forced_mate) is True
+    assert paired_probe_v1_module.safe_preservation_gate_predict(selected_mate_forced_failed) is False
+    assert paired_probe_v1_module.conflict_only_predict(selected_mate_forced_failed) is False
+
+
+def test_runtime_review_packet_does_not_authorize_implementation():
+    packet = {
+        "causal_status": "non_causal_runtime_review_packet",
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_selector_implemented": False,
+        "runtime_candidate_generator_implemented": False,
+        "runtime_terminals_added": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+        "selector_training_allowed": False,
+        "implementation_allowed_by_this_packet": False,
+    }
+    paired_packet_module.validate_packet(packet)
+    packet["implementation_allowed_by_this_packet"] = True
+    try:
+        paired_packet_module.validate_packet(packet)
+    except ValueError as exc:
+        assert "implementation_allowed_by_this_packet" in str(exc)
+    else:
+        raise AssertionError("runtime review packet must not authorize implementation")
