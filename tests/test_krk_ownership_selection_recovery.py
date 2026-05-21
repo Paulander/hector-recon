@@ -105,6 +105,10 @@ paired_packet_module = _load_module(
     "summarize_krk_state_local_paired_selector_runtime_review_packet_v0",
     "summarize_krk_state_local_paired_selector_runtime_review_packet_v0.py",
 )
+runtime_proxy_module = _load_module(
+    "design_krk_state_local_paired_runtime_proxies_v0",
+    "design_krk_state_local_paired_runtime_proxies_v0.py",
+)
 
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
@@ -982,3 +986,137 @@ def test_runtime_review_packet_does_not_authorize_implementation():
         assert "implementation_allowed_by_this_packet" in str(exc)
     else:
         raise AssertionError("runtime review packet must not authorize implementation")
+
+
+def test_runtime_proxy_design_dataset_and_probe_remain_non_causal(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(runtime_proxy_module, "ROOT", root)
+    reports = root / "reports"
+    reports.mkdir()
+    _write_json(
+        root,
+        runtime_proxy_module.RUNTIME_PACKET,
+        {
+            "causal_status": "non_causal_runtime_review_packet",
+            "runtime_behavior_changed": False,
+            "runtime_defaults_changed": False,
+            "runtime_selector_implemented": False,
+            "runtime_candidate_generator_implemented": False,
+            "runtime_terminals_added": False,
+            "runtime_dtm_or_tablebase_lookup": False,
+            "gameplay_topology_mutation": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": False,
+            "selector_training_allowed": False,
+            "implementation_allowed_by_this_packet": False,
+        },
+    )
+    _write_json(root, runtime_proxy_module.PROBE_V1, {"causal_status": "non_causal_offline_probe"})
+    _write_json(root, runtime_proxy_module.ERROR_AUDIT, {"causal_status": "non_causal_error_audit"})
+    _write_json(
+        root,
+        runtime_proxy_module.INVENTORY,
+        {
+            "causal_status": "non_causal_pair_inventory",
+            "rows": [
+                {
+                    "causal_status": "non_causal_pair_label",
+                    "source_stage": "stage5",
+                    "state_id": "state.safe",
+                    "frame_id": "cp.safe",
+                    "active_landmark_label": "fence_established",
+                    "owner_a": "krk.fence_established",
+                    "owner_a_family": "fence_established",
+                    "owner_a_evidence_channel": "normal_selected_playout",
+                    "owner_a_positive": True,
+                    "owner_a_outcome": "selected_owner_converted",
+                    "owner_b": "krk.edge_trap_close",
+                    "owner_b_family": "edge_trap",
+                    "owner_b_evidence_channel": "forced_capacity",
+                    "owner_b_role": "forced_capacity_alternative",
+                    "owner_b_positive": True,
+                    "owner_b_outcome": "positive_capacity",
+                    "comparison_label": "equivalent_positive_or_preserve_selected",
+                    "safe_preservation_pair": True,
+                    "context_terms": ["selected_piece:rook", "box_area_delta:same"],
+                    "terminal_space_context": {
+                        "black_king_edge_bucket": "edge",
+                        "box_area_relevance": "low",
+                        "white_king_support_bucket": "close",
+                        "rook_safe_proxy": True,
+                    },
+                },
+                {
+                    "causal_status": "non_causal_pair_label",
+                    "source_stage": "stage5",
+                    "state_id": "state.risk",
+                    "frame_id": "cp.risk",
+                    "active_landmark_label": "fence_established",
+                    "owner_a": "krk.stage0_basin",
+                    "owner_a_family": "stage0_basin",
+                    "owner_a_evidence_channel": "normal_selected_playout",
+                    "owner_a_positive": False,
+                    "owner_a_outcome": "selected_owner_failed",
+                    "owner_b": "krk.edge_trap_close",
+                    "owner_b_family": "edge_trap",
+                    "owner_b_evidence_channel": "forced_capacity",
+                    "owner_b_role": "forced_capacity_alternative",
+                    "owner_b_positive": True,
+                    "owner_b_outcome": "positive_capacity",
+                    "comparison_label": "prefer_capacity_alternative",
+                    "safe_preservation_pair": False,
+                    "context_terms": ["selected_piece:king", "box_area_delta:same"],
+                    "terminal_space_context": {
+                        "black_king_edge_bucket": "edge",
+                        "box_area_relevance": "low",
+                        "white_king_support_bucket": "medium",
+                        "rook_safe_proxy": True,
+                    },
+                },
+                {
+                    "causal_status": "non_causal_pair_label",
+                    "source_stage": "stage7",
+                    "state_id": "state.stage7",
+                    "owner_a": "krk.box_shrink",
+                    "owner_b": "krk.edge_trap_close",
+                    "comparison_label": "prefer_capacity_alternative",
+                },
+            ],
+        },
+    )
+
+    design, dataset, probe, review = runtime_proxy_module.build_all()
+
+    assert design["causal_status"] == "non_causal_proxy_design"
+    assert dataset["summary"]["stage7_row_count"] == 0
+    assert dataset["summary"]["selector_training_row_count"] == 0
+    assert probe["causal_status"] == "non_causal_proxy_probe"
+    assert review["causal_status"] == "non_causal_architecture_review"
+    assert review["implementation_allowed_by_this_review"] is False
+    assert review["runtime_selector_implemented"] is False
+    assert all(row["usable_for_selector_training"] is False for row in dataset["rows"])
+
+
+def test_runtime_proxy_forbidden_outcome_features_are_not_runtime_eligible():
+    row = {
+        "runtime_visible_candidate_features": {
+            "selected_owner_family": "stage0_basin",
+            "alternative_owner_family": "edge_trap",
+            "source_stage": "stage5",
+        },
+        "offline_outcome_forbidden_features": {
+            "owner_a_positive": False,
+            "owner_b_positive": True,
+        },
+    }
+
+    offline_model = runtime_proxy_module._rule_model(
+        [row],
+        model_id="offline_semantic_selected_failed_alt_positive",
+        target_name="selected_owner_failure_risk_target",
+        runtime_feature_eligible=False,
+        notes="test",
+    )
+
+    assert offline_model["runtime_feature_eligible"] is False
+    assert offline_model["predictions"][0]["predicted_positive"] is True
