@@ -1,0 +1,75 @@
+{
+  "blocked_next_steps": [
+    "runtime_selector",
+    "selector_training",
+    "runtime_arbiter",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_architecture_review",
+  "decision": {
+    "recommended_next_step": "design_non_causal_state_local_paired_ownership_objective",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "status": "ownership_objective_requires_state_local_pairing_review"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": [
+    "Labeling here means offline observation of what the current graph selected and whether that selected path converted; it is not hand-authoring a policy.",
+    "Targeted source-diversity work recovered non-stage0 selected-owner evidence and proved current profile can preserve those owners.",
+    "Targeted false-positive risk-cell labels added true ownership negatives, but the probe still cannot preserve safe owners and suppress unsafe owners simultaneously.",
+    "The remaining blocker is objective structure: global row classification over sparse labels is too crude for ownership selection.",
+    "The next principled objective should be state-local or paired: compare candidate owners within the same state/control context, preserve validated safe owners, and suppress only owners with direct same-context failure evidence."
+  ],
+  "recommended_next_design": {
+    "forbidden_shortcuts": [
+      "global provider penalty",
+      "forced-capacity labels as direct ownership labels",
+      "Stage7 training rows",
+      "runtime selector before paired-objective review"
+    ],
+    "goal": "separate safe-owner preservation from unsafe-owner suppression using same-state comparisons",
+    "required_inputs": [
+      "normal_selected_owner_outcome",
+      "same_state_alternative_provider_capacity_when_available",
+      "provider_family_and_terminal_context",
+      "source_stage_and_active_landmark_scope",
+      "explicit abstain/no_selector_when_no_safe_pair evidence"
+    ],
+    "status": "state_local_paired_ownership_objective_design"
+  },
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_ownership_objective_architecture_review.v0",
+  "selector_training_allowed": false,
+  "source_artifacts": [
+    "reports/krk_ownership_selection_label_dataset_v5.json",
+    "reports/krk_ownership_selection_context_feature_probe_v3.json",
+    "reports/krk_ownership_context_feature_review_v3.json",
+    "reports/krk_ownership_source_diversity_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "best_balanced_negative_suppression": 0.2,
+    "best_balanced_objective": "raw_score_bucket@0.75",
+    "best_balanced_positive_recall": 0.8064516129032258,
+    "best_negative_suppression": 0.6,
+    "best_objective": "stage_provider_family@0.75",
+    "best_positive_recall": 0.5806451612903226,
+    "converted_rows": 31,
+    "failed_rows": 10,
+    "non_stage0_rows": 4,
+    "ownership_rows": 41,
+    "runtime_threshold_passed": false,
+    "source_diversity_status": "source_diversity_gap_blocks_runtime",
+    "stage7_rows": 0
+  }
+}
