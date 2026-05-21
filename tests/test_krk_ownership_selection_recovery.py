@@ -57,6 +57,22 @@ ownership_v3_module = _load_module(
     "build_krk_ownership_selection_label_dataset_v3",
     "build_krk_ownership_selection_label_dataset_v3.py",
 )
+targeted_manifest_module = _load_module(
+    "generate_krk_targeted_non_stage0_ownership_manifest_v0",
+    "generate_krk_targeted_non_stage0_ownership_manifest_v0.py",
+)
+targeted_labels_module = _load_module(
+    "run_krk_targeted_non_stage0_ownership_labels_v0",
+    "run_krk_targeted_non_stage0_ownership_labels_v0.py",
+)
+targeted_review_module = _load_module(
+    "review_krk_targeted_non_stage0_ownership_v0",
+    "review_krk_targeted_non_stage0_ownership_v0.py",
+)
+ownership_v4_module = _load_module(
+    "build_krk_ownership_selection_label_dataset_v4",
+    "build_krk_ownership_selection_label_dataset_v4.py",
+)
 
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
@@ -495,3 +511,191 @@ def test_ownership_v3_recovers_selected_provider_group_label(tmp_path, monkeypat
     assert dataset["rows"][0]["target_label"] == "selected_owner_failed"
     assert dataset["rows"][0]["usable_for_selector_training"] is False
     assert dataset["decision"]["runtime_work_allowed"] is False
+
+
+def test_targeted_non_stage0_manifest_excludes_stage7_and_stage0(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(targeted_manifest_module, "ROOT", root)
+    monkeypatch.setattr(
+        targeted_manifest_module,
+        "STAGE_CONFIGS",
+        {
+            "stage5": {
+                "label": "fence_established",
+                "stage_role": "stage5_fence_handoff",
+            },
+            "stage6": {
+                "label": "drive_to_edge",
+                "stage_role": "stage6_drive_to_edge",
+            },
+        },
+    )
+    monkeypatch.setattr(
+        targeted_manifest_module,
+        "_binding_for_stage",
+        lambda stage: {
+            "topology_path": "topology.json",
+            "source_checkpoint": "checkpoint.pkl",
+            "composition_profile": "handoff_composition_v1",
+            "topology_version": "stage6_overlay_composed_v1",
+        },
+    )
+    (root / "topology.json").write_text("{}", encoding="utf-8")
+    (root / "checkpoint.pkl").write_text("checkpoint", encoding="utf-8")
+    _write_json(
+        root,
+        targeted_manifest_module.SOURCE,
+        {
+            "causal_status": "non_causal_labeled_observation_controls",
+            "records": [
+                {
+                    "state_id": "state.edge",
+                    "frame_id": "cp.krk.state.edge",
+                    "source_stage": "stage5",
+                    "active_landmark_label": "fence_established",
+                    "fen": "6k1/4R3/6K1/8/8/8/8/8 w - - 2 2",
+                    "observation": {"selected_provider": "krk.edge_trap_close"},
+                },
+                {
+                    "state_id": "state.stage0",
+                    "source_stage": "stage5",
+                    "fen": "6k1/4R3/6K1/8/8/8/8/8 w - - 2 2",
+                    "observation": {"selected_provider": "krk.stage0_basin"},
+                },
+                {
+                    "state_id": "state.stage7",
+                    "source_stage": "stage7",
+                    "fen": "6k1/4R3/6K1/8/8/8/8/8 w - - 2 2",
+                    "observation": {"selected_provider": "krk.edge_trap_close"},
+                },
+            ],
+        },
+    )
+
+    manifest = targeted_manifest_module.build_manifest(root)
+
+    assert manifest["causal_status"] == "non_causal_execution_manifest"
+    assert manifest["binding_summary"]["job_count"] == 1
+    assert manifest["binding_summary"]["stage7_job_count"] == 0
+    assert manifest["jobs"][0]["historical_selected_provider"] == "krk.edge_trap_close"
+    assert manifest["decision"]["selector_training_allowed"] is False
+    assert manifest["runtime_behavior_changed"] is False
+
+
+def test_targeted_non_stage0_label_and_review_validation_blocks_runtime_flags(tmp_path, monkeypatch):
+    label_payload = {
+        "causal_status": "non_causal_label_run",
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_arbiter_implemented": False,
+        "runtime_terminals_added": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+        "selector_training_allowed": False,
+        "labels": [
+            {
+                "causal_status": "non_causal_outcome_label",
+                "source_stage": "stage5",
+                "selected_playout_success": {"result": "mate"},
+            }
+        ],
+    }
+    targeted_labels_module.validate_payload(label_payload)
+    label_payload["selector_training_allowed"] = True
+    try:
+        targeted_labels_module.validate_payload(label_payload)
+    except ValueError as exc:
+        assert "selector_training_allowed" in str(exc)
+    else:
+        raise AssertionError("selector training flag should be rejected")
+
+    review_payload = {
+        "causal_status": "non_causal_review",
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_arbiter_implemented": False,
+        "runtime_terminals_added": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+        "selector_training_allowed": False,
+    }
+    targeted_review_module.validate_review(review_payload)
+    review_payload["runtime_arbiter_implemented"] = True
+    try:
+        targeted_review_module.validate_review(review_payload)
+    except ValueError as exc:
+        assert "runtime_arbiter_implemented" in str(exc)
+    else:
+        raise AssertionError("runtime arbiter flag should be rejected")
+
+
+def test_ownership_v4_targeted_labels_supersede_stale_nonstage0_labels(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(ownership_v4_module, "ROOT", root)
+    _write_json(
+        root,
+        ownership_v4_module.OWNERSHIP_V3,
+        {
+            "causal_status": "non_causal_ownership_label_dataset",
+            "rows": [
+                {
+                    "causal_status": "non_causal_ownership_label",
+                    "state_id": "state.edge",
+                    "frame_id": "cp.krk.state.edge",
+                    "source_stage": "stage5",
+                    "active_landmark_label": "fence_established",
+                    "provider_id": "krk.edge_trap_close",
+                    "provider_family": "edge_trap",
+                    "move_uci": "h7c7",
+                    "target_label": "selected_owner_failed",
+                    "owner_positive": False,
+                    "label_source": "normal_selected_playout",
+                    "usable_for_selector_training": False,
+                }
+            ],
+        },
+    )
+    _write_json(
+        root,
+        ownership_v4_module.TARGETED_LABELS,
+        {
+            "causal_status": "non_causal_label_run",
+            "labels": [
+                {
+                    "causal_status": "non_causal_outcome_label",
+                    "state_id": "state.edge",
+                    "frame_id": "cp.krk.state.edge",
+                    "source_stage": "stage5",
+                    "active_landmark_label": "fence_established",
+                    "current_profile_selected_provider": "krk.edge_trap_close",
+                    "current_profile_selected_move": "h7c7",
+                    "historical_selected_provider": "krk.edge_trap_close",
+                    "historical_selection_preserved": True,
+                    "initial_provider_count": 1,
+                    "initial_same_move_providers": [
+                        {"provider_id": "krk.edge_trap_close", "score": 3.0}
+                    ],
+                    "selected_playout_success": {"result": "mate", "plies": 3},
+                    "forced_provider_conversion_for_selected_provider": {"result": "mate"},
+                }
+            ],
+        },
+    )
+    _write_json(
+        root,
+        ownership_v4_module.TARGETED_REVIEW,
+        {"causal_status": "non_causal_review"},
+    )
+
+    dataset = ownership_v4_module.build_dataset()
+
+    assert dataset["summary"]["merged_row_count"] == 1
+    assert dataset["summary"]["targeted_label_change_count"] == 1
+    assert dataset["rows"][0]["target_label"] == "selected_owner_converted"
+    assert dataset["rows"][0]["prior_target_label"] == "selected_owner_failed"
+    assert dataset["rows"][0]["usable_for_selector_training"] is False
+    assert dataset["decision"]["selector_training_allowed"] is False

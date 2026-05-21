@@ -1,0 +1,331 @@
+{
+  "binding_summary": {
+    "all_bindings_valid": true,
+    "historical_selected_provider_counts": {
+      "krk.edge_trap_close": 3,
+      "krk.fence_established": 1
+    },
+    "job_count": 4,
+    "job_count_by_stage": {
+      "stage5": 3,
+      "stage6": 1
+    },
+    "max_jobs_respected": true,
+    "missing_path_count": 0,
+    "missing_paths": [],
+    "stage7_job_count": 0
+  },
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "selector_sandbox",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_execution_manifest",
+  "decision": {
+    "execute_labels_now": true,
+    "recommended_next_step": "run_bounded_current_profile_labels_for_historical_non_stage0_owners",
+    "runtime_arbiter_allowed": false,
+    "selector_training_allowed": false,
+    "status": "targeted_non_stage0_manifest_ready"
+  },
+  "gameplay_topology_mutation": false,
+  "jobs": [
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_label_job",
+      "diagnostic_caches_required": true,
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_modes": [
+          "selected_playout_h40",
+          "force_selected_provider_first_white_move_then_release_h40",
+          "same_move_provider_compatibility_when_available",
+          "shadow_candidate_delta"
+        ],
+        "max_ticks": 200,
+        "primary_provider_skill_id": "krk.fence_established",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "selected_provider_resolved_at_execution": true,
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+        "suggestion_limit": 10,
+        "topology_component": "stage5_frozen_base_provider_pack_with_skill_ids",
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "exhaustive_legal_first_sweeps": false,
+      "fen": "5k2/7R/K7/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.326222aefdf1",
+      "historical_known_label_count": 3,
+      "historical_negative_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "historical_selected_move": "h7c7",
+      "historical_selected_provider": "krk.edge_trap_close",
+      "horizon": 40,
+      "job_id": "job.krk.targeted_non_stage0_ownership.c5a4e272fb5b",
+      "labels_generated": false,
+      "parallel_workers_allowed": true,
+      "purpose": "Check whether historically non-stage0 protected-control owners are preserved by the current handoff profile before selector training.",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_targeted_non_stage0_ownership_job.v0",
+      "source_artifact": "reports/krk_strategy_arbiter_labeled_observation_controls_v0.json",
+      "source_kind": "historical_non_stage0_selected_owner",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "stage_role": "stage5_fence_handoff",
+      "state_id": "state.326222aefdf1",
+      "target_label_semantics": [
+        "current_profile_selected_owner_h40",
+        "historical_owner_preservation",
+        "current_profile_owner_collapse_check",
+        "forced_current_selected_provider_h40"
+      ]
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_label_job",
+      "diagnostic_caches_required": true,
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_modes": [
+          "selected_playout_h40",
+          "force_selected_provider_first_white_move_then_release_h40",
+          "same_move_provider_compatibility_when_available",
+          "shadow_candidate_delta"
+        ],
+        "max_ticks": 200,
+        "primary_provider_skill_id": "krk.fence_established",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "selected_provider_resolved_at_execution": true,
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+        "suggestion_limit": 10,
+        "topology_component": "stage5_frozen_base_provider_pack_with_skill_ids",
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "exhaustive_legal_first_sweeps": false,
+      "fen": "6k1/4R3/6K1/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.87b1160e68b9",
+      "historical_known_label_count": 3,
+      "historical_negative_providers": [],
+      "historical_selected_move": "e7e8",
+      "historical_selected_provider": "krk.edge_trap_close",
+      "horizon": 40,
+      "job_id": "job.krk.targeted_non_stage0_ownership.1fdb687c61b3",
+      "labels_generated": false,
+      "parallel_workers_allowed": true,
+      "purpose": "Check whether historically non-stage0 protected-control owners are preserved by the current handoff profile before selector training.",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_targeted_non_stage0_ownership_job.v0",
+      "source_artifact": "reports/krk_strategy_arbiter_labeled_observation_controls_v0.json",
+      "source_kind": "historical_non_stage0_selected_owner",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "stage_role": "stage5_fence_handoff",
+      "state_id": "state.87b1160e68b9",
+      "target_label_semantics": [
+        "current_profile_selected_owner_h40",
+        "historical_owner_preservation",
+        "current_profile_owner_collapse_check",
+        "forced_current_selected_provider_h40"
+      ]
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_label_job",
+      "diagnostic_caches_required": true,
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_modes": [
+          "selected_playout_h40",
+          "force_selected_provider_first_white_move_then_release_h40",
+          "same_move_provider_compatibility_when_available",
+          "shadow_candidate_delta"
+        ],
+        "max_ticks": 200,
+        "primary_provider_skill_id": "krk.fence_established",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "selected_provider_resolved_at_execution": true,
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+        "suggestion_limit": 10,
+        "topology_component": "stage5_frozen_base_provider_pack_with_skill_ids",
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "exhaustive_legal_first_sweeps": false,
+      "fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.02feb8593cc6",
+      "historical_known_label_count": 3,
+      "historical_negative_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "historical_selected_move": "h7c7",
+      "historical_selected_provider": "krk.fence_established",
+      "horizon": 40,
+      "job_id": "job.krk.targeted_non_stage0_ownership.f81e16dbc167",
+      "labels_generated": false,
+      "parallel_workers_allowed": true,
+      "purpose": "Check whether historically non-stage0 protected-control owners are preserved by the current handoff profile before selector training.",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_targeted_non_stage0_ownership_job.v0",
+      "source_artifact": "reports/krk_strategy_arbiter_labeled_observation_controls_v0.json",
+      "source_kind": "historical_non_stage0_selected_owner",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "stage_role": "stage5_fence_handoff",
+      "state_id": "state.02feb8593cc6",
+      "target_label_semantics": [
+        "current_profile_selected_owner_h40",
+        "historical_owner_preservation",
+        "current_profile_owner_collapse_check",
+        "forced_current_selected_provider_h40"
+      ]
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_label_job",
+      "diagnostic_caches_required": true,
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_modes": [
+          "selected_playout_h40",
+          "force_selected_provider_first_white_move_then_release_h40",
+          "same_move_provider_compatibility_when_available",
+          "shadow_candidate_delta"
+        ],
+        "max_ticks": 200,
+        "primary_provider_skill_id": "krk.drive_to_edge",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage6_overlay_v1",
+        "selected_provider_resolved_at_execution": true,
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support/baseline/best_by_stage/drive_to_edge.pkl",
+        "suggestion_limit": 10,
+        "topology_component": "stage6_overlay_composed",
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "exhaustive_legal_first_sweeps": false,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.699f0003a511",
+      "historical_known_label_count": 3,
+      "historical_negative_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "historical_selected_move": "h7c7",
+      "historical_selected_provider": "krk.edge_trap_close",
+      "horizon": 40,
+      "job_id": "job.krk.targeted_non_stage0_ownership.338ff65f24c4",
+      "labels_generated": false,
+      "parallel_workers_allowed": true,
+      "purpose": "Check whether historically non-stage0 protected-control owners are preserved by the current handoff profile before selector training.",
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_targeted_non_stage0_ownership_job.v0",
+      "source_artifact": "reports/krk_strategy_arbiter_labeled_observation_controls_v0.json",
+      "source_kind": "historical_non_stage0_selected_owner",
+      "source_stage": "stage6",
+      "stage7_training_row": false,
+      "stage_role": "stage6_drive_to_edge",
+      "state_id": "state.699f0003a511",
+      "target_label_semantics": [
+        "current_profile_selected_owner_h40",
+        "historical_owner_preservation",
+        "current_profile_owner_collapse_check",
+        "forced_current_selected_provider_h40"
+      ]
+    }
+  ],
+  "labels_generated_in_this_slice": false,
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_targeted_non_stage0_ownership_manifest.v0",
+  "selection_policy": {
+    "horizon": 40,
+    "max_jobs": 4,
+    "prefer_historical_non_stage0_selected_owners": true,
+    "selected_provider_excluded": [
+      "",
+      "None",
+      "krk.stage0_basin",
+      "none",
+      "null"
+    ],
+    "stage7_training_rows": 0
+  },
+  "source_artifacts": [
+    "reports/krk_strategy_arbiter_labeled_observation_controls_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

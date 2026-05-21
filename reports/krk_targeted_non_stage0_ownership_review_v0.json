@@ -1,0 +1,54 @@
+{
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "selector_sandbox",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_review",
+  "decision": {
+    "recommended_next_step": "merge_preserved_non_stage0_labels_into_v4_then_reprobe_selector_features",
+    "runtime_arbiter_allowed": false,
+    "selector_training_allowed": false,
+    "status": "non_stage0_current_profile_evidence_recovered"
+  },
+  "evidence": {
+    "failed_state_ids": [
+      "state.699f0003a511"
+    ],
+    "preserved_state_ids": [
+      "state.326222aefdf1",
+      "state.87b1160e68b9",
+      "state.02feb8593cc6",
+      "state.699f0003a511"
+    ],
+    "shifted_state_ids": [],
+    "stage0_collapse_state_ids": []
+  },
+  "gameplay_topology_mutation": false,
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_targeted_non_stage0_ownership_review.v0",
+  "selector_training_allowed": false,
+  "source_artifacts": [
+    "reports/krk_targeted_non_stage0_ownership_labels_v0.json",
+    "reports/krk_ownership_source_diversity_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "labeling_semantics": "offline_observation_of_current_graph_choices_not_hand_authored_policy",
+    "preserved_historical_non_stage0_count": 4,
+    "previous_ownership_source_status": "source_diversity_gap_blocks_runtime",
+    "selected_owner_failed_count": 1,
+    "shifted_to_other_owner_count": 0,
+    "stage0_collapse_count": 0,
+    "targeted_label_count": 4
+  }
+}
