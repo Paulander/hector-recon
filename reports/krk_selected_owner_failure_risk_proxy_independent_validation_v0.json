@@ -1,0 +1,45 @@
+{
+  "causal_status": "non_causal_proxy_validation",
+  "decision": {
+    "recommended_next_step": "review_visible_failure_risk_proxy_or_collect_more_independent_pairs",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "status": "independent_proxy_validation_failed_or_underpowered"
+  },
+  "gameplay_topology_mutation": false,
+  "implementation_allowed_by_this_validation": false,
+  "metrics": {
+    "false_negative": 1,
+    "false_positive": 4,
+    "precision": 0.0,
+    "recall": 0.0,
+    "safe_preservation_recall": 0.42857142857142855,
+    "term_name": "selected_owner_failure_risk_proxy_v0",
+    "true_negative": 3,
+    "true_positive": 0
+  },
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_selected_owner_failure_risk_proxy_independent_validation.v0",
+  "selector_training_allowed": false,
+  "source_artifacts": [
+    "reports/krk_selected_owner_failure_risk_proxy_independent_labels_v0.json",
+    "reports/krk_selected_owner_failure_risk_proxy_independent_manifest_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "label_count": 8,
+    "manifest_proxy_firing_preserved_count": 8,
+    "manifest_selected_provider_preserved_count": 8,
+    "proxy_precision": 0.0,
+    "proxy_recall": 0.0,
+    "safe_preservation_recall": 0.42857142857142855,
+    "stage7_row_count": 0,
+    "threshold_met": false
+  }
+}

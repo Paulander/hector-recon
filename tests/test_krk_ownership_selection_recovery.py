@@ -113,6 +113,10 @@ failure_risk_terms_module = _load_module(
     "extract_krk_selected_owner_failure_risk_terms_v0",
     "extract_krk_selected_owner_failure_risk_terms_v0.py",
 )
+failure_risk_validation_module = _load_module(
+    "validate_krk_selected_owner_failure_risk_proxy_v0",
+    "validate_krk_selected_owner_failure_risk_proxy_v0.py",
+)
 
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
@@ -1229,3 +1233,71 @@ def test_failure_risk_terms_validation_rejects_runtime_behavior():
         assert "runtime_terminals_added" in str(exc)
     else:
         raise AssertionError("runtime terminal flag should be rejected")
+
+
+def test_independent_failure_risk_validation_builds_packet_only_on_pass():
+    labels = {
+        "summary": {"stage7_training_rows": 0, "manifest_selected_provider_preserved_count": 2, "manifest_proxy_firing_preserved_count": 2},
+        "labels": [
+            {
+                "proxy_fires": True,
+                "selected_owner_failure_risk_target": True,
+            },
+            {
+                "proxy_fires": False,
+                "selected_owner_failure_risk_target": False,
+            },
+        ],
+    }
+
+    validation = failure_risk_validation_module.build_validation(labels)
+    packet = failure_risk_validation_module.build_packet(validation)
+
+    assert validation["decision"]["status"] == "independent_proxy_validation_passed"
+    assert packet is not None
+    assert packet["implementation_allowed_by_this_packet"] is False
+    assert packet["runtime_selector_implemented"] is False
+
+    failed_labels = {
+        "summary": {"stage7_training_rows": 0, "manifest_selected_provider_preserved_count": 2, "manifest_proxy_firing_preserved_count": 2},
+        "labels": [
+            {
+                "proxy_fires": True,
+                "selected_owner_failure_risk_target": False,
+            },
+            {
+                "proxy_fires": False,
+                "selected_owner_failure_risk_target": True,
+            },
+        ],
+    }
+    failed_validation = failure_risk_validation_module.build_validation(failed_labels)
+
+    assert failed_validation["decision"]["status"] == "independent_proxy_validation_failed_or_underpowered"
+    assert failure_risk_validation_module.build_packet(failed_validation) is None
+
+
+def test_independent_failure_risk_validation_rejects_causal_flags():
+    payload = {
+        "causal_status": "non_causal_proxy_validation",
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_selector_implemented": False,
+        "runtime_candidate_generator_implemented": False,
+        "runtime_terminals_added": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+        "selector_training_allowed": False,
+        "implementation_allowed_by_this_validation": False,
+        "summary": {"stage7_row_count": 0},
+    }
+    failure_risk_validation_module._validate_non_causal(payload)
+    payload["runtime_selector_implemented"] = True
+    try:
+        failure_risk_validation_module._validate_non_causal(payload)
+    except ValueError as exc:
+        assert "runtime_selector_implemented" in str(exc)
+    else:
+        raise AssertionError("runtime selector flag should be rejected")
