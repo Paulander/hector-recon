@@ -1,0 +1,103 @@
+{
+  "blocked_paths": [
+    "runtime_selector",
+    "selector_training",
+    "global_provider_penalty",
+    "forced_capacity_as_direct_ownership_label",
+    "Stage7_training_rows",
+    "Stage8_training",
+    "runtime_DTM_or_tablebase"
+  ],
+  "causal_status": "non_causal_design_plan",
+  "decision": {
+    "recommended_next_step": "build_replay_free_state_local_pair_inventory",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "status": "state_local_paired_ownership_objective_plan_ready"
+  },
+  "future_pipeline": [
+    "build replay-free pair inventory from existing selected/forced/proposal artifacts",
+    "classify pairs by evidence strength",
+    "benchmark state-local pair scoring non-causally",
+    "review whether same-state evidence improves negative suppression without sacrificing safe preservation",
+    "only after explicit review, consider a default-off runtime sandbox design"
+  ],
+  "gameplay_topology_mutation": false,
+  "label_rules": [
+    {
+      "meaning": "within comparable state/local context, converting selected owners outrank failing selected owners",
+      "requires_same_state": false,
+      "risk": "cross-state fallback only; weaker than same-state evidence",
+      "rule": "selected_owner_converted_vs_selected_owner_failed"
+    },
+    {
+      "meaning": "same-state alternative capacity can mark an ownership gap, but not direct runtime ownership until selection evidence exists",
+      "requires_same_state": true,
+      "risk": "forced capacity may overstate normal-routing suitability",
+      "rule": "forced_alternative_converts_when_selected_owner_fails"
+    },
+    {
+      "meaning": "validated safe selected owners should be preserved unless same-context failure evidence overrides",
+      "requires_same_state": false,
+      "risk": "over-preservation can miss rare failures",
+      "rule": "safe_preservation_before_suppression"
+    },
+    {
+      "meaning": "do not train a preference pair when only proposal/capacity evidence exists and no selected/handoff outcome is known",
+      "requires_same_state": false,
+      "risk": "slower learning but avoids handcrafted policy leakage",
+      "rule": "abstain_when_only_capacity_or_proposal_evidence"
+    }
+  ],
+  "minimum_benchmark_requirements": {
+    "family_holdout_required_if_possible": true,
+    "leave_state_out_required": true,
+    "protected_pair_count": 30,
+    "safe_preservation_pair_count": 12,
+    "same_state_conflict_pair_count": 8,
+    "selected_failure_with_alternative_success_count": 4,
+    "stage7_training_rows": 0
+  },
+  "motivation": [
+    "Global row classification over provider labels cannot preserve safe owners and suppress unsafe owners simultaneously.",
+    "Ownership is state-relative: a provider is good or bad in a concrete state/control context, not globally.",
+    "Forced-capacity, selected-playout, safe-preservation, and ownership-selection evidence must stay separated."
+  ],
+  "objective": {
+    "goal": "learn non-causally whether one candidate owner should be preferred, rejected, or abstained relative to other owners in the same state",
+    "not_a_runtime_policy": true,
+    "objective_id": "krk.selector.state_local_paired_ownership.v0",
+    "status": "design_only",
+    "unit": "state_local_owner_pair"
+  },
+  "row_schema": {
+    "active_landmark_label": "active visible landmark/profile label",
+    "causal_status": "non_causal_pair_label",
+    "comparison_label": "prefer_a / prefer_b / equivalent / abstain / insufficient_evidence",
+    "evidence_channel": "normal_selected / forced_capacity / same_move / proposal_only / mixed",
+    "fen": "board position when available",
+    "owner_a": "candidate provider/strategy id",
+    "owner_a_features": "provider-local and move/post-move features",
+    "owner_a_outcome": "selected/forced/capacity/handoff outcome evidence",
+    "owner_b": "candidate provider/strategy id or abstain",
+    "owner_b_features": "provider-local and move/post-move features",
+    "owner_b_outcome": "selected/forced/capacity/handoff outcome evidence",
+    "schema_version": "state_local_owner_pair.v0",
+    "source_stage": "protected source stage only for initial benchmark",
+    "state_id": "stable state key",
+    "terminal_context": "shared state features"
+  },
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_state_local_paired_ownership_objective_plan.v0",
+  "selector_training_allowed": false,
+  "source_artifacts": [
+    "reports/krk_ownership_objective_architecture_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}
