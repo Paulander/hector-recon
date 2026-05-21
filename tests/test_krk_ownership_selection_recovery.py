@@ -109,6 +109,10 @@ runtime_proxy_module = _load_module(
     "design_krk_state_local_paired_runtime_proxies_v0",
     "design_krk_state_local_paired_runtime_proxies_v0.py",
 )
+failure_risk_terms_module = _load_module(
+    "extract_krk_selected_owner_failure_risk_terms_v0",
+    "extract_krk_selected_owner_failure_risk_terms_v0.py",
+)
 
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
@@ -1120,3 +1124,108 @@ def test_runtime_proxy_forbidden_outcome_features_are_not_runtime_eligible():
 
     assert offline_model["runtime_feature_eligible"] is False
     assert offline_model["predictions"][0]["predicted_positive"] is True
+
+
+def test_selected_owner_failure_risk_terms_identify_visible_proxy_without_causal_flags(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(failure_risk_terms_module, "ROOT", root)
+    reports = root / "reports"
+    reports.mkdir()
+    _write_json(
+        root,
+        failure_risk_terms_module.CONTEXT_DATASET,
+        {
+            "causal_status": "non_causal_context_feature_dataset",
+            "rows": [
+                {
+                    "source_stage": "stage5",
+                    "state_id": "state.risk",
+                    "provider_id": "krk.stage0_basin",
+                    "source_terms": ["edge_trap_shape_available"],
+                },
+                {
+                    "source_stage": "stage5",
+                    "state_id": "state.safe",
+                    "provider_id": "krk.fence_established",
+                    "source_terms": [],
+                },
+            ],
+        },
+    )
+    _write_json(
+        root,
+        failure_risk_terms_module.PROXY_DATASET,
+        {
+            "causal_status": "non_causal_proxy_validation_dataset",
+            "rows": [
+                {
+                    "source_stage": "stage5",
+                    "state_id": "state.risk",
+                    "owner_a": "krk.stage0_basin",
+                    "owner_b": "krk.edge_trap_close",
+                    "comparison_label": "prefer_capacity_alternative",
+                    "selected_owner_failure_risk_target": True,
+                    "safe_preservation_confidence_target": False,
+                    "runtime_visible_candidate_features": {
+                        "family_pair": "stage0_basin->edge_trap",
+                        "selected_piece": "king",
+                        "box_area_delta": "same",
+                        "rook_distance_delta": "worsens",
+                        "active_landmark_label": "fence_established",
+                    },
+                },
+                {
+                    "source_stage": "stage5",
+                    "state_id": "state.safe",
+                    "owner_a": "krk.fence_established",
+                    "owner_b": "krk.edge_trap_close",
+                    "comparison_label": "equivalent_positive_or_preserve_selected",
+                    "selected_owner_failure_risk_target": False,
+                    "safe_preservation_confidence_target": True,
+                    "runtime_visible_candidate_features": {
+                        "family_pair": "fence_established->edge_trap",
+                        "selected_piece": "rook",
+                        "box_area_delta": "same",
+                        "rook_distance_delta": "improves",
+                        "active_landmark_label": "fence_established",
+                    },
+                },
+            ],
+        },
+    )
+
+    terms, probe, review = failure_risk_terms_module.build_all()
+
+    assert terms["summary"]["stage7_row_count"] == 0
+    assert terms["summary"]["selector_training_row_count"] == 0
+    assert probe["candidate_proxy"]["true_positive"] == 1
+    assert probe["candidate_proxy"]["false_positive"] == 0
+    assert probe["decision"]["runtime_work_allowed"] is False
+    assert review["implementation_allowed_by_this_review"] is False
+    assert review["runtime_selector_implemented"] is False
+
+
+def test_failure_risk_terms_validation_rejects_runtime_behavior():
+    payload = {
+        "causal_status": "non_causal_architecture_review",
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_selector_implemented": False,
+        "runtime_candidate_generator_implemented": False,
+        "runtime_terminals_added": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+        "selector_training_allowed": False,
+        "implementation_allowed_by_this_review": False,
+        "summary": {"stage7_row_count": 0, "selector_training_row_count": 0},
+    }
+    failure_risk_terms_module._validate_non_causal(payload)
+    payload["runtime_terminals_added"] = True
+    try:
+        failure_risk_terms_module._validate_non_causal(payload)
+    except ValueError as exc:
+        assert "runtime_terminals_added" in str(exc)
+    else:
+        raise AssertionError("runtime terminal flag should be rejected")
