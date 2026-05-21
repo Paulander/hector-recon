@@ -85,6 +85,18 @@ ownership_v5_module = _load_module(
     "build_krk_ownership_selection_label_dataset_v5",
     "build_krk_ownership_selection_label_dataset_v5.py",
 )
+paired_inventory_v1_module = _load_module(
+    "build_krk_state_local_paired_ownership_inventory_v1",
+    "build_krk_state_local_paired_ownership_inventory_v1.py",
+)
+paired_probe_module = _load_module(
+    "probe_krk_state_local_paired_ownership_objective_v0",
+    "probe_krk_state_local_paired_ownership_objective_v0.py",
+)
+paired_review_module = _load_module(
+    "review_krk_state_local_paired_ownership_objective_v0",
+    "review_krk_state_local_paired_ownership_objective_v0.py",
+)
 
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
@@ -814,3 +826,101 @@ def test_ownership_v5_merges_targeted_negative_labels_without_training_rows(tmp_
     assert dataset["summary"]["target_label_counts"] == {"selected_owner_failed": 1}
     assert dataset["rows"][0]["usable_for_selector_training"] is False
     assert dataset["decision"]["selector_training_allowed"] is False
+
+
+def test_paired_ownership_label_ordering():
+    selected_failed = {"target_label": "selected_owner_failed", "owner_positive": False}
+    selected_mate = {"target_label": "selected_owner_converted", "owner_positive": True}
+    capacity_mate = {"capacity_label": "positive_capacity"}
+    capacity_failed = {"capacity_label": "negative_capacity"}
+
+    assert paired_inventory_v1_module._comparison_label(selected_failed, capacity_mate) == (
+        "prefer_capacity_alternative",
+        "strong_same_state_conflict",
+    )
+    assert paired_inventory_v1_module._comparison_label(selected_mate, capacity_failed) == (
+        "prefer_selected_owner",
+        "strong_same_state_conflict",
+    )
+    assert paired_inventory_v1_module._comparison_label(selected_mate, capacity_mate) == (
+        "equivalent_positive_or_preserve_selected",
+        "safe_preservation",
+    )
+
+
+def test_paired_inventory_validation_blocks_runtime_flags():
+    payload = {
+        "causal_status": "non_causal_pair_inventory",
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_selector_implemented": False,
+        "runtime_candidate_generator_implemented": False,
+        "runtime_terminals_added": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+        "selector_training_allowed": False,
+        "summary": {"stage7_row_count": 0},
+        "rows": [
+            {
+                "causal_status": "non_causal_pair_label",
+                "usable_for_selector_training": False,
+            }
+        ],
+    }
+    paired_inventory_v1_module.validate_inventory(payload)
+    payload["runtime_selector_implemented"] = True
+    try:
+        paired_inventory_v1_module.validate_inventory(payload)
+    except ValueError as exc:
+        assert "runtime_selector_implemented" in str(exc)
+    else:
+        raise AssertionError("runtime selector flag should be rejected")
+
+
+def test_paired_probe_and_review_validation_blocks_causal_flags():
+    probe = {
+        "causal_status": "non_causal_offline_probe",
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_selector_implemented": False,
+        "runtime_candidate_generator_implemented": False,
+        "runtime_terminals_added": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+        "selector_training_allowed": False,
+        "summary": {"stage7_row_count": 0},
+    }
+    paired_probe_module.validate_probe(probe)
+    probe["selector_training_allowed"] = True
+    try:
+        paired_probe_module.validate_probe(probe)
+    except ValueError as exc:
+        assert "selector_training_allowed" in str(exc)
+    else:
+        raise AssertionError("selector training flag should be rejected")
+
+    review = {
+        "causal_status": "non_causal_architecture_review",
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_selector_implemented": False,
+        "runtime_candidate_generator_implemented": False,
+        "runtime_terminals_added": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+        "selector_training_allowed": False,
+    }
+    paired_review_module.validate_review(review)
+    review["stage7_promotion_allowed"] = True
+    try:
+        paired_review_module.validate_review(review)
+    except ValueError as exc:
+        assert "stage7_promotion_allowed" in str(exc)
+    else:
+        raise AssertionError("Stage 7 promotion flag should be rejected")
