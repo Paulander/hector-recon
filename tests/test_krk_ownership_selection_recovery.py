@@ -117,6 +117,10 @@ failure_risk_validation_module = _load_module(
     "validate_krk_selected_owner_failure_risk_proxy_v0",
     "validate_krk_selected_owner_failure_risk_proxy_v0.py",
 )
+failure_risk_blocker_module = _load_module(
+    "summarize_krk_selected_owner_failure_risk_proxy_blocker_review_v0",
+    "summarize_krk_selected_owner_failure_risk_proxy_blocker_review_v0.py",
+)
 
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
@@ -1301,3 +1305,95 @@ def test_independent_failure_risk_validation_rejects_causal_flags():
         assert "runtime_selector_implemented" in str(exc)
     else:
         raise AssertionError("runtime selector flag should be rejected")
+
+
+def test_failure_risk_blocker_review_closes_failed_proxy_path():
+    discovery_review = {
+        "summary": {
+            "proxy_precision": 1.0,
+            "proxy_recall": 1.0,
+            "safe_preservation_recall": 1.0,
+        }
+    }
+    independent_validation = {
+        "metrics": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "safe_preservation_recall": 0.5,
+            "false_positive": 1,
+            "false_negative": 1,
+        },
+        "summary": {
+            "label_count": 2,
+            "stage7_row_count": 0,
+            "threshold_met": False,
+        },
+    }
+    independent_labels = {
+        "labels": [
+            {
+                "frame_id": "state.false_positive",
+                "proxy_fires": True,
+                "selected_owner_failure_risk_target": False,
+                "selected_move": "a1a2",
+                "forced_alternative_provider": "krk.edge_trap_close",
+                "runtime_visible_candidate_features": {
+                    "source_stage": "stage5",
+                    "selected_owner_family": "stage0_basin",
+                },
+                "selected_playout_success": {"result": "mate"},
+                "forced_alternative_result": {"result": "mate"},
+            },
+            {
+                "frame_id": "state.false_negative",
+                "proxy_fires": False,
+                "selected_owner_failure_risk_target": True,
+                "selected_move": "b1b2",
+                "forced_alternative_provider": "krk.edge_trap_close",
+                "runtime_visible_candidate_features": {
+                    "source_stage": "stage4",
+                    "selected_owner_family": "stage0_basin",
+                },
+                "selected_playout_success": {"result": "max_plies"},
+                "forced_alternative_result": {"result": "mate"},
+            },
+        ]
+    }
+
+    review = failure_risk_blocker_module.build_review(
+        discovery_review=discovery_review,
+        independent_validation=independent_validation,
+        independent_labels=independent_labels,
+    )
+
+    assert review["decision"]["status"] == "failed_proxy_closed_next_evidence_v1_required"
+    assert review["implementation_allowed_by_this_review"] is False
+    assert review["runtime_selector_implemented"] is False
+    assert review["summary"]["stage7_row_count"] == 0
+    assert len(review["false_positive_examples"]) == 1
+    assert len(review["false_negative_examples"]) == 1
+
+
+def test_failure_risk_blocker_review_rejects_causal_flags():
+    payload = {
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_selector_implemented": False,
+        "runtime_candidate_generator_implemented": False,
+        "runtime_terminals_added": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+        "selector_training_allowed": False,
+        "implementation_allowed_by_this_review": False,
+        "summary": {"stage7_row_count": 0},
+    }
+    failure_risk_blocker_module._validate_non_causal(payload)
+    payload["selector_training_allowed"] = True
+    try:
+        failure_risk_blocker_module._validate_non_causal(payload)
+    except ValueError as exc:
+        assert "selector_training_allowed" in str(exc)
+    else:
+        raise AssertionError("selector training flag should be rejected")
