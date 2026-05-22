@@ -1,0 +1,54 @@
+{
+  "schema_version": "krk_progress_window_reconsideration_runtime_test_review.v0",
+  "review_date": "2026-05-22",
+  "sandbox_id": "sandbox.krk.progress_window_reconsideration_v0",
+  "source_review_packet": "reports/krk_state_local_paired_selector_runtime_proxy_review_packet_v1.json",
+  "source_smoke": "reports/krk_progress_window_reconsideration_runtime_smoke_v0.json",
+  "causal_status": "default_off_runtime_test_scaffold",
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "gameplay_topology_mutation": false,
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "default_off_equivalence_passed": true,
+  "activation_observed": true,
+  "target_improvement_observed": false,
+  "safe_regression_observed": false,
+  "smoke_summary": {
+    "protected_label_count": 3,
+    "targeted_row_count": 2,
+    "enabled_supported_total": 518,
+    "enabled_selected_supported_total": 14,
+    "targeted_monitor_confirmed_events": 14,
+    "targeted_candidate_intersection_events": 20,
+    "target_failure_row_count": 1,
+    "improved_target_failure_count": 0,
+    "safe_regression_count": 0
+  },
+  "decision": {
+    "status": "runtime_test_scaffold_wired_but_policy_insufficient",
+    "guardrails_allowed_now": false,
+    "promotion_allowed_now": false,
+    "recommended_next_step": "quarantine_or_refine_reconsideration_policy_before_guardrails"
+  },
+  "diagnosis": [
+    "The runtime flags are wired and default-off equivalence passed.",
+    "The enabled sandbox activates on the intended progress-window failure row.",
+    "The activated support does not improve the targeted failure outcome; the row remains max_plies at h40.",
+    "The current support rule is too broad inside the progress-window scope: it supports visible loop-breaking moves, including selected moves that still participate in non-converting trajectories.",
+    "The sandbox therefore is not ready for guardrails, scaling, promotion, or default enablement."
+  ],
+  "blocked_next_steps": [
+    "do_not_run_guardrails_as_if_validated",
+    "do_not_enable_by_default",
+    "do_not_promote_stage7",
+    "do_not_train_stage8",
+    "do_not_expand_to_general_predecision_selector",
+    "do_not_add_runtime_dtm_or_tablebase"
+  ],
+  "allowed_future_work_requires_review": [
+    "narrower alternative-selection policy inside the progress-window scope",
+    "visible candidate/proposal coverage for true reconsideration alternatives",
+    "sequence-policy or strategy-arbitration review using Stage7 as held-out challenge"
+  ]
+}

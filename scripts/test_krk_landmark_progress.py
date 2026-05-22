@@ -880,6 +880,63 @@ def _apply_krk_two_stage_abstention_selector(
     return summary
 
 
+def _krk_progress_window_reconsideration_summary_for_suggestions(
+    suggestions: list[dict],
+    *,
+    selected_suggestion: dict | None,
+    enabled: bool,
+    support: float,
+    active_landmark_label: str | None,
+    allow_stage7_challenge: bool,
+) -> dict:
+    """Summarize opt-in progress-window reconsideration support metadata."""
+    summary = {
+        "schema_version": "krk_progress_window_reconsideration_summary.v0",
+        "sandbox_id": "sandbox.krk.progress_window_reconsideration_v0",
+        "source_artifact": "reports/krk_state_local_paired_selector_runtime_proxy_review_packet_v1.json",
+        "enabled": bool(enabled),
+        "causal_status": "sandbox_opt_in" if enabled else "inactive",
+        "direct_request": False,
+        "support": float(support),
+        "supported_count": 0,
+        "supported_provider_counts": {},
+        "selected_supported": False,
+        "selected_provider": None,
+        "blocked_reason": None,
+        "allow_stage7_challenge": bool(allow_stage7_challenge),
+        "scope": "post_selection_progress_window_reconsideration",
+    }
+    if not enabled:
+        summary["blocked_reason"] = "disabled"
+        return summary
+    if float(support) <= 0.0:
+        summary["blocked_reason"] = "non_positive_support"
+        return summary
+    if str(active_landmark_label or "") == "box_shrink" and not allow_stage7_challenge:
+        summary["blocked_reason"] = "stage7_challenge_held_out"
+        return summary
+
+    counts: dict[str, int] = {}
+    for item in suggestions:
+        meta = item.get("meta") if isinstance(item.get("meta"), dict) else {}
+        payload = meta.get("krk_progress_window_reconsideration")
+        if not isinstance(payload, dict) or not payload.get("enabled"):
+            continue
+        provider_id = _skill_id_for_suggestion(item)
+        family = _krk_strategy_provider_family(provider_id)
+        counts[family] = counts.get(family, 0) + 1
+    summary["supported_count"] = sum(counts.values())
+    summary["supported_provider_counts"] = dict(sorted(counts.items()))
+    if selected_suggestion is not None:
+        selected_meta = selected_suggestion.get("meta")
+        if isinstance(selected_meta, dict) and selected_meta.get("krk_progress_window_reconsideration"):
+            summary["selected_supported"] = True
+            summary["selected_provider"] = _skill_id_for_suggestion(selected_suggestion)
+    if not counts:
+        summary["blocked_reason"] = "no_supported_progress_window_suggestions"
+    return summary
+
+
 def _apply_krk_strategy_arbiter_sandbox_support(
     suggestions: list[dict],
     *,
@@ -1660,6 +1717,9 @@ def _compact_selected_suggestion(item: dict | None) -> dict:
         "krk_two_stage_abstention_selector": dict(
             meta.get("krk_two_stage_abstention_selector", {}) or {}
         ),
+        "krk_progress_window_reconsideration": dict(
+            meta.get("krk_progress_window_reconsideration", {}) or {}
+        ),
     }
 
 
@@ -1787,6 +1847,9 @@ def _suggestion_role_trace(meta: dict) -> dict:
         "krk_two_stage_abstention_selector": dict(
             meta.get("krk_two_stage_abstention_selector", {}) or {}
         ),
+        "krk_progress_window_reconsideration": dict(
+            meta.get("krk_progress_window_reconsideration", {}) or {}
+        ),
     }
 
 
@@ -1851,6 +1914,10 @@ def _successor_skill_summary(
             "krk_strategy_arbiter_sandbox_supported_provider_counts": {},
             "krk_strategy_arbiter_sandbox_selected_supported": False,
             "krk_strategy_arbiter_sandbox_selected_payload": {},
+            "krk_progress_window_reconsideration_supported_count": 0,
+            "krk_progress_window_reconsideration_supported_provider_counts": {},
+            "krk_progress_window_reconsideration_selected_supported": False,
+            "krk_progress_window_reconsideration_selected_payload": {},
             "visible_stage7_king_tempo_bonus": 0.0,
             "visible_stage7_king_tempo_license": {},
         }
@@ -2068,6 +2135,26 @@ def _successor_skill_summary(
         ),
         "krk_strategy_arbiter_sandbox_selected_payload": dict(
             selected_contract.get("krk_strategy_arbiter_sandbox_support", {}) or {}
+        ),
+        "krk_progress_window_reconsideration_supported_count": int(
+            (move_details.get("krk_progress_window_reconsideration_summary", {}) or {}).get(
+                "supported_count",
+                0,
+            )
+            or 0
+        ),
+        "krk_progress_window_reconsideration_supported_provider_counts": dict(
+            (move_details.get("krk_progress_window_reconsideration_summary", {}) or {}).get(
+                "supported_provider_counts",
+                {},
+            )
+            or {}
+        ),
+        "krk_progress_window_reconsideration_selected_supported": bool(
+            selected_contract.get("krk_progress_window_reconsideration", {})
+        ),
+        "krk_progress_window_reconsideration_selected_payload": dict(
+            selected_contract.get("krk_progress_window_reconsideration", {}) or {}
         ),
         **selected_contract,
     }
@@ -2720,6 +2807,9 @@ def choose_move_details(
     krk_two_stage_abstention_unsafe_threshold: float = 0.45,
     krk_two_stage_abstention_preserve_threshold: float = 0.5,
     krk_two_stage_abstention_allow_stage7_challenge: bool = False,
+    krk_progress_window_reconsideration_enabled: bool = False,
+    krk_progress_window_reconsideration_support: float = 0.0,
+    krk_progress_window_reconsideration_allow_stage7_challenge: bool = False,
     stage7_king_tempo_already_used: bool = False,
     stage7_drive_repair_already_used: bool = False,
     stage7_drive_repair_post_reply_context: bool = False,
@@ -2808,6 +2898,15 @@ def choose_move_details(
             krk_two_stage_abstention_allow_stage7_challenge=(
                 krk_two_stage_abstention_allow_stage7_challenge
             ),
+            krk_progress_window_reconsideration_enabled=(
+                krk_progress_window_reconsideration_enabled
+            ),
+            krk_progress_window_reconsideration_support=(
+                krk_progress_window_reconsideration_support
+            ),
+            krk_progress_window_reconsideration_allow_stage7_challenge=(
+                krk_progress_window_reconsideration_allow_stage7_challenge
+            ),
             stage7_king_tempo_already_used=stage7_king_tempo_already_used,
             stage7_drive_repair_already_used=stage7_drive_repair_already_used,
             stage7_drive_repair_post_reply_context=stage7_drive_repair_post_reply_context,
@@ -2877,6 +2976,9 @@ def _choose_move_details_impl(
     krk_two_stage_abstention_unsafe_threshold: float = 0.45,
     krk_two_stage_abstention_preserve_threshold: float = 0.5,
     krk_two_stage_abstention_allow_stage7_challenge: bool = False,
+    krk_progress_window_reconsideration_enabled: bool = False,
+    krk_progress_window_reconsideration_support: float = 0.0,
+    krk_progress_window_reconsideration_allow_stage7_challenge: bool = False,
     stage7_king_tempo_already_used: bool = False,
     stage7_drive_repair_already_used: bool = False,
     stage7_drive_repair_post_reply_context: bool = False,
@@ -3044,6 +3146,15 @@ def _choose_move_details_impl(
     env["blackboard"]["krk_two_stage_abstention_allow_stage7_challenge"] = bool(
         krk_two_stage_abstention_allow_stage7_challenge
     )
+    env["blackboard"]["krk_progress_window_reconsideration_enabled"] = bool(
+        krk_progress_window_reconsideration_enabled
+    )
+    env["blackboard"]["krk_progress_window_reconsideration_support"] = float(
+        krk_progress_window_reconsideration_support
+    )
+    env["blackboard"]["krk_progress_window_reconsideration_allow_stage7_challenge"] = bool(
+        krk_progress_window_reconsideration_allow_stage7_challenge
+    )
 
     _materialize_explicit_support_roles(graph, env)
     _materialize_stage7_sandbox_providers(graph, env)
@@ -3151,6 +3262,18 @@ def _choose_move_details_impl(
     )
     suggestions.sort(key=lambda item: item.get("score", float("-inf")), reverse=True)
     selected_suggestion = suggestions[0] if suggestions else None
+    progress_window_reconsideration_summary = (
+        _krk_progress_window_reconsideration_summary_for_suggestions(
+            suggestions,
+            selected_suggestion=selected_suggestion,
+            enabled=bool(krk_progress_window_reconsideration_enabled),
+            support=float(krk_progress_window_reconsideration_support),
+            active_landmark_label=active_landmark_label,
+            allow_stage7_challenge=bool(
+                krk_progress_window_reconsideration_allow_stage7_challenge
+            ),
+        )
+    )
     raw_selected_suggestion = selected_suggestion
     selected_by_role_owned_score_normalization = False
     selected_by_stage7_plan_capsule_owned_arbitration = False
@@ -3399,6 +3522,18 @@ def _choose_move_details_impl(
             krk_two_stage_abstention_allow_stage7_challenge
         ),
         "krk_two_stage_abstention_selector_summary": two_stage_abstention_summary,
+        "krk_progress_window_reconsideration_enabled": bool(
+            krk_progress_window_reconsideration_enabled
+        ),
+        "krk_progress_window_reconsideration_support": float(
+            krk_progress_window_reconsideration_support
+        ),
+        "krk_progress_window_reconsideration_allow_stage7_challenge": bool(
+            krk_progress_window_reconsideration_allow_stage7_challenge
+        ),
+        "krk_progress_window_reconsideration_summary": (
+            progress_window_reconsideration_summary
+        ),
         "role_owned_score_normalization_enabled": bool(role_owned_score_normalization_enabled),
         "selected_by_role_owned_score_normalization": bool(
             selected_by_role_owned_score_normalization
@@ -3633,6 +3768,9 @@ def play_to_mate(
     krk_two_stage_abstention_unsafe_threshold: float = 0.45,
     krk_two_stage_abstention_preserve_threshold: float = 0.5,
     krk_two_stage_abstention_allow_stage7_challenge: bool = False,
+    krk_progress_window_reconsideration_enabled: bool = False,
+    krk_progress_window_reconsideration_support: float = 0.0,
+    krk_progress_window_reconsideration_allow_stage7_challenge: bool = False,
     perf_profile: dict | None = None,
     enable_diagnostic_caches: bool = False,
     initial_white_moves: int = 0,
@@ -3805,6 +3943,15 @@ def play_to_mate(
                 ),
                 krk_two_stage_abstention_allow_stage7_challenge=(
                     krk_two_stage_abstention_allow_stage7_challenge
+                ),
+                krk_progress_window_reconsideration_enabled=(
+                    krk_progress_window_reconsideration_enabled
+                ),
+                krk_progress_window_reconsideration_support=(
+                    krk_progress_window_reconsideration_support
+                ),
+                krk_progress_window_reconsideration_allow_stage7_challenge=(
+                    krk_progress_window_reconsideration_allow_stage7_challenge
                 ),
                 perf_profile=perf_profile,
                 enable_diagnostic_caches=enable_diagnostic_caches,
@@ -4864,6 +5011,9 @@ def evaluate_landmark_progress(
     krk_two_stage_abstention_unsafe_threshold: float = 0.45,
     krk_two_stage_abstention_preserve_threshold: float = 0.5,
     krk_two_stage_abstention_allow_stage7_challenge: bool = False,
+    krk_progress_window_reconsideration_enabled: bool = False,
+    krk_progress_window_reconsideration_support: float = 0.0,
+    krk_progress_window_reconsideration_allow_stage7_challenge: bool = False,
     counterfactual_successors: tuple[str, ...] = (),
     max_counterfactual_sweeps: int = 0,
     counterfactual_sweeps_output: Optional[Path] = None,
@@ -4999,6 +5149,10 @@ def evaluate_landmark_progress(
         "krk_two_stage_abstention_penalized_provider_by_outcome": {},
         "krk_two_stage_abstention_selected_penalized_count": 0,
         "krk_two_stage_abstention_selected_by_outcome": {},
+        "krk_progress_window_reconsideration_supported_count": 0,
+        "krk_progress_window_reconsideration_supported_provider_by_outcome": {},
+        "krk_progress_window_reconsideration_selected_supported_count": 0,
+        "krk_progress_window_reconsideration_selected_by_outcome": {},
         "one_ply_status": "not_checked",
         "conversion_status": "not_checked",
     }
@@ -5087,6 +5241,15 @@ def evaluate_landmark_progress(
             ),
             krk_two_stage_abstention_allow_stage7_challenge=(
                 krk_two_stage_abstention_allow_stage7_challenge
+            ),
+            krk_progress_window_reconsideration_enabled=(
+                krk_progress_window_reconsideration_enabled
+            ),
+            krk_progress_window_reconsideration_support=(
+                krk_progress_window_reconsideration_support
+            ),
+            krk_progress_window_reconsideration_allow_stage7_challenge=(
+                krk_progress_window_reconsideration_allow_stage7_challenge
             ),
             perf_profile=perf_profile,
             enable_diagnostic_caches=enable_diagnostic_caches,
@@ -5328,6 +5491,15 @@ def evaluate_landmark_progress(
                 krk_two_stage_abstention_allow_stage7_challenge=(
                     krk_two_stage_abstention_allow_stage7_challenge
                 ),
+                krk_progress_window_reconsideration_enabled=(
+                    krk_progress_window_reconsideration_enabled
+                ),
+                krk_progress_window_reconsideration_support=(
+                    krk_progress_window_reconsideration_support
+                ),
+                krk_progress_window_reconsideration_allow_stage7_challenge=(
+                    krk_progress_window_reconsideration_allow_stage7_challenge
+                ),
                 perf_profile=perf_profile,
                 enable_diagnostic_caches=enable_diagnostic_caches,
             )
@@ -5449,6 +5621,55 @@ def evaluate_landmark_progress(
                 selected_key = f"{successor_summary.get('selected_skill', 'unknown')}:{key}"
                 stats["krk_strategy_arbiter_sandbox_selected_by_outcome"][selected_key] = (
                     stats["krk_strategy_arbiter_sandbox_selected_by_outcome"].get(
+                        selected_key,
+                        0,
+                    )
+                    + 1
+                )
+            progress_reconsider_supported_count = int(
+                successor_summary.get(
+                    "krk_progress_window_reconsideration_supported_count",
+                    0,
+                )
+                or 0
+            )
+            if progress_reconsider_supported_count:
+                stats["krk_progress_window_reconsideration_supported_count"] = (
+                    int(stats.get("krk_progress_window_reconsideration_supported_count", 0) or 0)
+                    + progress_reconsider_supported_count
+                )
+                for provider, count in (
+                    successor_summary.get(
+                        "krk_progress_window_reconsideration_supported_provider_counts",
+                        {},
+                    )
+                    or {}
+                ).items():
+                    provider_key = f"{provider}:{key}"
+                    stats["krk_progress_window_reconsideration_supported_provider_by_outcome"][
+                        provider_key
+                    ] = (
+                        stats[
+                            "krk_progress_window_reconsideration_supported_provider_by_outcome"
+                        ].get(provider_key, 0)
+                        + int(count or 0)
+                    )
+            if successor_summary.get("krk_progress_window_reconsideration_selected_supported"):
+                stats["krk_progress_window_reconsideration_selected_supported_count"] = (
+                    int(
+                        stats.get(
+                            "krk_progress_window_reconsideration_selected_supported_count",
+                            0,
+                        )
+                        or 0
+                    )
+                    + 1
+                )
+                selected_key = f"{successor_summary.get('selected_skill', 'unknown')}:{key}"
+                stats["krk_progress_window_reconsideration_selected_by_outcome"][
+                    selected_key
+                ] = (
+                    stats["krk_progress_window_reconsideration_selected_by_outcome"].get(
                         selected_key,
                         0,
                     )
@@ -6779,6 +7000,12 @@ def main() -> None:
                         help="Runtime test: preserve-score threshold below which unsafe proposals may be penalized")
     parser.add_argument("--allow-krk-two-stage-abstention-stage7-challenge", action="store_true",
                         help="Runtime test: allow two-stage abstention selector on held-out Stage 7 box_shrink contexts")
+    parser.add_argument("--enable-krk-progress-window-reconsideration", action="store_true",
+                        help="Runtime test: enable default-off selected-owner progress-window reconsideration sandbox")
+    parser.add_argument("--krk-progress-window-reconsideration-support", type=float, default=0.0,
+                        help="Runtime test: bounded visible support for suggestions licensed by progress-window reconsideration")
+    parser.add_argument("--allow-krk-progress-window-reconsideration-stage7-challenge", action="store_true",
+                        help="Runtime test: allow progress-window reconsideration on held-out Stage 7 box_shrink contexts")
     parser.add_argument("--composition-profile",
                         choices=[COMPOSITION_PROFILE_NONE, COMPOSITION_PROFILE_HANDOFF_V1],
                         default=COMPOSITION_PROFILE_NONE,
@@ -6901,6 +7128,15 @@ def main() -> None:
         ),
         krk_two_stage_abstention_allow_stage7_challenge=(
             args.allow_krk_two_stage_abstention_stage7_challenge
+        ),
+        krk_progress_window_reconsideration_enabled=(
+            args.enable_krk_progress_window_reconsideration
+        ),
+        krk_progress_window_reconsideration_support=(
+            args.krk_progress_window_reconsideration_support
+        ),
+        krk_progress_window_reconsideration_allow_stage7_challenge=(
+            args.allow_krk_progress_window_reconsideration_stage7_challenge
         ),
         early_stop_stable_suggestions=args.early_stop_stable_suggestions,
         lock_stage_filter_through_playout=args.lock_stage_filter_through_playout,

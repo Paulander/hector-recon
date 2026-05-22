@@ -29,7 +29,7 @@ The goal is to build a general KRK strategy arbitration / plan-selection layer t
 - plan capsule / post-box continuation
 - future edge-net / king-support continuation
 
-This is not a new runtime policy yet. It is an architecture and diagnostic plan.
+This is not a broad runtime policy. A later update, `reports/krk_runtime_sandbox_policy_update_v0.md`, allows only reviewed, default-off, reversible runtime sandboxes when a runtime-review packet exists. The first allowed runtime-test scope is progress-window selected-owner reconsideration, not a general strategy arbiter. That first runtime-test scaffold was wired and activated, but did not improve the targeted failure row, so broader strategy-arbitration / sequence-policy design remains the next architecture direction rather than scaling the sandbox.
 
 ## Motivation
 
@@ -63,6 +63,8 @@ The plan must preserve:
 - No Stage 8 training from unresolved Stage 7.
 - No broad Stage 7 support bonus / provider penalty / `stage0` suppression.
 - No direct unsafe role-SCRIPT -> provider SUB edge.
+- No unreviewed runtime change and no default-policy change.
+- Reviewed default-off sandboxes may be tested only within their approved packet scope.
 
 The following remain non-causal evidence unless explicitly promoted into visible topology:
 

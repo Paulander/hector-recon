@@ -17,6 +17,7 @@ from scripts.test_krk_landmark_progress import (
     _composition_profile_metadata,
     _finalize_perf_profile,
     _krk_strategy_arbiter_observation_for_suggestions,
+    _krk_progress_window_reconsideration_summary_for_suggestions,
     _apply_krk_two_stage_abstention_selector,
     _merge_count_dict,
     _mate_in_one_available,
@@ -318,6 +319,74 @@ def test_two_stage_abstention_selector_blocks_stage7_challenge_by_default():
     assert summary["blocked_reason"] == "stage7_challenge_held_out"
     assert summary["penalized_count"] == 0
     assert suggestions[0]["score"] == 3.0
+
+
+def test_progress_window_reconsideration_summary_is_default_off_and_traceable():
+    suggestions = [
+        {
+            "move": chess.Move.from_uci("h4f4"),
+            "score": 3.5,
+            "actuator": "actuator_1",
+            "meta": {
+                "curriculum_label": "stage0_basin",
+                "krk_progress_window_reconsideration": {
+                    "schema_version": "krk_progress_window_reconsideration.v0",
+                    "enabled": True,
+                    "direct_request": False,
+                },
+            },
+        }
+    ]
+
+    off = _krk_progress_window_reconsideration_summary_for_suggestions(
+        suggestions,
+        selected_suggestion=suggestions[0],
+        enabled=False,
+        support=1.5,
+        active_landmark_label="fence_established",
+        allow_stage7_challenge=False,
+    )
+    enabled = _krk_progress_window_reconsideration_summary_for_suggestions(
+        suggestions,
+        selected_suggestion=suggestions[0],
+        enabled=True,
+        support=1.5,
+        active_landmark_label="fence_established",
+        allow_stage7_challenge=False,
+    )
+
+    assert off["blocked_reason"] == "disabled"
+    assert off["supported_count"] == 0
+    assert enabled["causal_status"] == "sandbox_opt_in"
+    assert enabled["direct_request"] is False
+    assert enabled["supported_count"] == 1
+    assert enabled["selected_supported"] is True
+    assert enabled["supported_provider_counts"] == {"stage0_basin": 1}
+
+
+def test_choose_move_details_forwards_progress_window_reconsideration_flags(monkeypatch):
+    import scripts.test_krk_landmark_progress as landmark
+
+    captured = {}
+
+    def fake_impl(*args, **kwargs):
+        captured.update(kwargs)
+        return {"move": None}
+
+    monkeypatch.setattr(landmark, "_choose_move_details_impl", fake_impl)
+
+    landmark.choose_move_details(
+        None,
+        None,
+        chess.Board(),
+        krk_progress_window_reconsideration_enabled=True,
+        krk_progress_window_reconsideration_support=0.5,
+        krk_progress_window_reconsideration_allow_stage7_challenge=True,
+    )
+
+    assert captured["krk_progress_window_reconsideration_enabled"] is True
+    assert captured["krk_progress_window_reconsideration_support"] == 0.5
+    assert captured["krk_progress_window_reconsideration_allow_stage7_challenge"] is True
 
 
 def test_compact_trace_preserves_strategy_arbiter_observation_metadata():

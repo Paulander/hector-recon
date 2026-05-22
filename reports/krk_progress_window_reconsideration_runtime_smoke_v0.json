@@ -1,0 +1,786 @@
+{
+  "causal_status": "runtime_test_default_off_sandbox_smoke",
+  "decision": {
+    "recommended_next_step": "quarantine_or_refine_reconsideration_policy_before_guardrails",
+    "status": "runtime_smoke_activation_observed_no_target_improvement"
+  },
+  "gameplay_topology_mutation": false,
+  "profile": "handoff_composition_v1",
+  "protected_control_rows": [
+    {
+      "baseline": {
+        "conversion_status_counts": {
+          "failed": 1
+        },
+        "krk_progress_window_reconsideration_selected_by_outcome": {},
+        "krk_progress_window_reconsideration_selected_supported_count": 0,
+        "krk_progress_window_reconsideration_supported_count": 0,
+        "krk_progress_window_reconsideration_supported_provider_by_outcome": {},
+        "no_move": 0,
+        "one_ply_status_counts": {
+          "failed": 1
+        },
+        "playouts": {
+          "max_plies": 1
+        },
+        "shadow_candidate_count": 0,
+        "total": 1
+      },
+      "default_off_equivalence": true,
+      "enabled_support_0_5": {
+        "conversion_status_counts": {
+          "failed": 1
+        },
+        "krk_progress_window_reconsideration_selected_by_outcome": {},
+        "krk_progress_window_reconsideration_selected_supported_count": 0,
+        "krk_progress_window_reconsideration_supported_count": 0,
+        "krk_progress_window_reconsideration_supported_provider_by_outcome": {},
+        "no_move": 0,
+        "one_ply_status_counts": {
+          "failed": 1
+        },
+        "playouts": {
+          "max_plies": 1
+        },
+        "shadow_candidate_count": 0,
+        "total": 1
+      },
+      "flag_present_default_off": {
+        "conversion_status_counts": {
+          "failed": 1
+        },
+        "krk_progress_window_reconsideration_selected_by_outcome": {},
+        "krk_progress_window_reconsideration_selected_supported_count": 0,
+        "krk_progress_window_reconsideration_supported_count": 0,
+        "krk_progress_window_reconsideration_supported_provider_by_outcome": {},
+        "no_move": 0,
+        "one_ply_status_counts": {
+          "failed": 1
+        },
+        "playouts": {
+          "max_plies": 1
+        },
+        "shadow_candidate_count": 0,
+        "total": 1
+      },
+      "label": "edge_trap_wrong_tempo"
+    },
+    {
+      "baseline": {
+        "conversion_status_counts": {
+          "passed": 1
+        },
+        "krk_progress_window_reconsideration_selected_by_outcome": {},
+        "krk_progress_window_reconsideration_selected_supported_count": 0,
+        "krk_progress_window_reconsideration_supported_count": 0,
+        "krk_progress_window_reconsideration_supported_provider_by_outcome": {},
+        "no_move": 0,
+        "one_ply_status_counts": {
+          "passed": 1
+        },
+        "playouts": {
+          "mate": 1
+        },
+        "shadow_candidate_count": 0,
+        "total": 1
+      },
+      "default_off_equivalence": true,
+      "enabled_support_0_5": {
+        "conversion_status_counts": {
+          "passed": 1
+        },
+        "krk_progress_window_reconsideration_selected_by_outcome": {},
+        "krk_progress_window_reconsideration_selected_supported_count": 0,
+        "krk_progress_window_reconsideration_supported_count": 0,
+        "krk_progress_window_reconsideration_supported_provider_by_outcome": {},
+        "no_move": 0,
+        "one_ply_status_counts": {
+          "passed": 1
+        },
+        "playouts": {
+          "mate": 1
+        },
+        "shadow_candidate_count": 0,
+        "total": 1
+      },
+      "flag_present_default_off": {
+        "conversion_status_counts": {
+          "passed": 1
+        },
+        "krk_progress_window_reconsideration_selected_by_outcome": {},
+        "krk_progress_window_reconsideration_selected_supported_count": 0,
+        "krk_progress_window_reconsideration_supported_count": 0,
+        "krk_progress_window_reconsideration_supported_provider_by_outcome": {},
+        "no_move": 0,
+        "one_ply_status_counts": {
+          "passed": 1
+        },
+        "playouts": {
+          "mate": 1
+        },
+        "shadow_candidate_count": 0,
+        "total": 1
+      },
+      "label": "fence_established"
+    },
+    {
+      "baseline": {
+        "conversion_status_counts": {
+          "passed": 1
+        },
+        "krk_progress_window_reconsideration_selected_by_outcome": {},
+        "krk_progress_window_reconsideration_selected_supported_count": 0,
+        "krk_progress_window_reconsideration_supported_count": 0,
+        "krk_progress_window_reconsideration_supported_provider_by_outcome": {},
+        "no_move": 0,
+        "one_ply_status_counts": {
+          "passed": 1
+        },
+        "playouts": {
+          "mate": 1
+        },
+        "shadow_candidate_count": 0,
+        "total": 1
+      },
+      "default_off_equivalence": true,
+      "enabled_support_0_5": {
+        "conversion_status_counts": {
+          "passed": 1
+        },
+        "krk_progress_window_reconsideration_selected_by_outcome": {},
+        "krk_progress_window_reconsideration_selected_supported_count": 0,
+        "krk_progress_window_reconsideration_supported_count": 0,
+        "krk_progress_window_reconsideration_supported_provider_by_outcome": {},
+        "no_move": 0,
+        "one_ply_status_counts": {
+          "passed": 1
+        },
+        "playouts": {
+          "mate": 1
+        },
+        "shadow_candidate_count": 0,
+        "total": 1
+      },
+      "flag_present_default_off": {
+        "conversion_status_counts": {
+          "passed": 1
+        },
+        "krk_progress_window_reconsideration_selected_by_outcome": {},
+        "krk_progress_window_reconsideration_selected_supported_count": 0,
+        "krk_progress_window_reconsideration_supported_count": 0,
+        "krk_progress_window_reconsideration_supported_provider_by_outcome": {},
+        "no_move": 0,
+        "one_ply_status_counts": {
+          "passed": 1
+        },
+        "playouts": {
+          "mate": 1
+        },
+        "shadow_candidate_count": 0,
+        "total": 1
+      },
+      "label": "drive_to_edge"
+    }
+  ],
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_progress_window_reconsideration_runtime_smoke.v0",
+  "source_review_packet": "reports/krk_state_local_paired_selector_runtime_proxy_review_packet_v1.json",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "default_off_equivalence_passed": true,
+    "enabled_selected_supported_total": 14,
+    "enabled_supported_total": 518,
+    "improved_target_failure_count": 0,
+    "protected_label_count": 3,
+    "safe_regression_count": 0,
+    "target_failure_row_count": 1,
+    "targeted_candidate_intersection_events": 20,
+    "targeted_monitor_confirmed_events": 14,
+    "targeted_row_count": 2
+  },
+  "targeted_progress_window_rows": [
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "baseline": {
+        "activation_diagnosis": {
+          "blocked_reason_counts": {
+            "disabled": 20
+          },
+          "candidate_intersection_events": 16,
+          "monitor_confirmed_events": 14,
+          "no_supported_examples": [
+            {
+              "blocked_reason": "disabled",
+              "intersection": [
+                "b1b8"
+              ],
+              "legal_loop_breaking_moves": [
+                "b1a1",
+                "b1b2",
+                "b1b3",
+                "b1b7",
+                "b1b8",
+                "b1c1",
+                "b1d1",
+                "b1e1"
+              ],
+              "move": "b1b8",
+              "no_progress_plies": 7,
+              "ply": 10,
+              "suggestion_moves": [
+                "b1b8"
+              ]
+            },
+            {
+              "blocked_reason": "disabled",
+              "intersection": [
+                "c7b7",
+                "c7d7",
+                "c7d8"
+              ],
+              "legal_loop_breaking_moves": [
+                "b1a1",
+                "b1b2",
+                "b1b3",
+                "b1b7",
+                "b1c1",
+                "b1d1",
+                "b1e1",
+                "b1f1"
+              ],
+              "move": "c7d8",
+              "no_progress_plies": 7,
+              "ply": 14,
+              "suggestion_moves": [
+                "c7b7",
+                "c7d7",
+                "c7d8"
+              ]
+            },
+            {
+              "blocked_reason": "disabled",
+              "intersection": [
+                "d8c7"
+              ],
+              "legal_loop_breaking_moves": [
+                "b1a1",
+                "b1b2",
+                "b1b3",
+                "b1b4",
+                "b1c1",
+                "b1d1",
+                "b1e1",
+                "b1f1"
+              ],
+              "move": "d8c7",
+              "no_progress_plies": 9,
+              "ply": 16,
+              "suggestion_moves": [
+                "d8c7"
+              ]
+            }
+          ],
+          "suggested_loop_breaking_events": 16
+        },
+        "final_fen": "3K4/8/k7/8/8/8/8/1R6 w - - 40 21",
+        "plies": 40,
+        "result": "max_plies",
+        "selected_payloads": [],
+        "selected_supported_count": 0,
+        "stagnation_summary": {
+          "no_box_progress_recently": true,
+          "no_edge_progress_recently": true,
+          "no_mate_progress_recently": true,
+          "no_progress_plies": 9,
+          "rook_oscillation_loop": true,
+          "safe_loop_breaking_move_available": true,
+          "stagnation_loop": true
+        },
+        "supported_count": 0
+      },
+      "default_off_equivalence": true,
+      "enabled_support_0_5": {
+        "activation_diagnosis": {
+          "blocked_reason_counts": {
+            "no_supported_progress_window_suggestions": 6,
+            "none": 14
+          },
+          "candidate_intersection_events": 16,
+          "monitor_confirmed_events": 14,
+          "no_supported_examples": [],
+          "suggested_loop_breaking_events": 16
+        },
+        "final_fen": "3K4/8/k7/8/8/8/8/1R6 w - - 40 21",
+        "plies": 40,
+        "result": "max_plies",
+        "selected_payloads": [
+          {
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "forbidden_actions": [
+              "initial_predecision_global_selector",
+              "direct_move_selection",
+              "direct_provider_request",
+              "topology_mutation",
+              "runtime_dtm_or_tablebase",
+              "m3_m4_update"
+            ],
+            "loop_breaking_terms": [
+              "box_area_not_increased_after_move",
+              "candidate_is_rook_move",
+              "candidate_is_rook_transfer",
+              "enemy_edge_distance_not_increased_after_move",
+              "escapes_rook_oscillation_pair",
+              "no_draw_after_move",
+              "not_immediate_rook_reverse",
+              "rook_safe_after_move"
+            ],
+            "move": "b1b8",
+            "move_shape_terms": [
+              "candidate_is_rook_move",
+              "candidate_is_rook_transfer",
+              "rook_destination_far_from_enemy",
+              "rook_destination_not_adjacent_enemy",
+              "rook_safe_after_candidate",
+              "rook_to_edge_rank",
+              "rook_transfer_vertical"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "cut_preserved_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "fence_exists_after_move",
+              "fence_stable_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_and_rook_same_rank_side_after_move",
+              "white_king_distance_to_rook_decreases"
+            ],
+            "progress_window_context": {
+              "abstract_state_signature": "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+              "legal_loop_breaking_moves": [
+                "c7d8",
+                "c7c8",
+                "c7b8",
+                "c7d7",
+                "c7b7",
+                "c7d6",
+                "c7c6",
+                "b1b8",
+                "b1b7",
+                "b1b3",
+                "b1b2",
+                "b1h1",
+                "b1g1",
+                "b1f1",
+                "b1e1",
+                "b1d1",
+                "b1c1",
+                "b1a1"
+              ],
+              "no_progress_plies": 7,
+              "repeated_abstract_state_count": 4,
+              "rook_reversal_count": 3
+            },
+            "provider_skill_id": "krk.edge_trap_close",
+            "raw_score_before": 0.547304124353081,
+            "sandbox_id": "sandbox.krk.progress_window_reconsideration_v0",
+            "schema_version": "krk_progress_window_reconsideration.v0",
+            "scope": "post_selection_progress_window_reconsideration",
+            "score_after_support": 1.047304124353081,
+            "source_artifact": "reports/krk_state_local_paired_selector_runtime_proxy_review_packet_v1.json",
+            "source_terminal": "terminal.krk.selected_owner_failure_risk_progress_window_monitor",
+            "source_terms": [
+              "box_area_not_increased_after_move",
+              "candidate_is_rook_transfer",
+              "enemy_edge_distance_not_increased_after_move",
+              "escapes_rook_oscillation_pair",
+              "no_box_progress_recently",
+              "no_draw_after_move",
+              "no_edge_progress_recently",
+              "no_mate_progress_recently",
+              "repeated_abstract_state",
+              "rook_oscillation_loop",
+              "rook_safe_after_move",
+              "safe_loop_breaking_move_available"
+            ],
+            "support_amount": 0.5
+          },
+          {
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "forbidden_actions": [
+              "initial_predecision_global_selector",
+              "direct_move_selection",
+              "direct_provider_request",
+              "topology_mutation",
+              "runtime_dtm_or_tablebase",
+              "m3_m4_update"
+            ],
+            "loop_breaking_terms": [
+              "box_area_not_increased_after_move",
+              "candidate_is_king_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "escapes_rook_oscillation_pair",
+              "no_draw_after_move",
+              "not_immediate_rook_reverse",
+              "rook_safe_after_move"
+            ],
+            "move": "c7d8",
+            "move_shape_terms": [
+              "candidate_is_king_move"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "cut_preserved_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "fence_exists_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_and_rook_split_rank_side_after_move"
+            ],
+            "progress_window_context": {
+              "abstract_state_signature": "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+              "legal_loop_breaking_moves": [
+                "c7d8",
+                "c7c8",
+                "c7b8",
+                "c7d7",
+                "c7b7",
+                "c7d6",
+                "c7c6",
+                "b1b7",
+                "b1b3",
+                "b1b2",
+                "b1h1",
+                "b1g1",
+                "b1f1",
+                "b1e1",
+                "b1d1",
+                "b1c1",
+                "b1a1"
+              ],
+              "no_progress_plies": 7,
+              "repeated_abstract_state_count": 6,
+              "rook_reversal_count": 4
+            },
+            "provider_skill_id": "krk.fence_established",
+            "raw_score_before": 0.7887841038917501,
+            "sandbox_id": "sandbox.krk.progress_window_reconsideration_v0",
+            "schema_version": "krk_progress_window_reconsideration.v0",
+            "scope": "post_selection_progress_window_reconsideration",
+            "score_after_support": 1.28878410389175,
+            "source_artifact": "reports/krk_state_local_paired_selector_runtime_proxy_review_packet_v1.json",
+            "source_terminal": "terminal.krk.selected_owner_failure_risk_progress_window_monitor",
+            "source_terms": [
+              "box_area_not_increased_after_move",
+              "candidate_is_king_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "escapes_rook_oscillation_pair",
+              "no_box_progress_recently",
+              "no_draw_after_move",
+              "no_edge_progress_recently",
+              "no_mate_progress_recently",
+              "repeated_abstract_state",
+              "rook_oscillation_loop",
+              "rook_safe_after_move",
+              "safe_loop_breaking_move_available"
+            ],
+            "support_amount": 0.5
+          },
+          {
+            "causal_status": "sandbox_opt_in",
+            "direct_request": false,
+            "enabled": true,
+            "forbidden_actions": [
+              "initial_predecision_global_selector",
+              "direct_move_selection",
+              "direct_provider_request",
+              "topology_mutation",
+              "runtime_dtm_or_tablebase",
+              "m3_m4_update"
+            ],
+            "loop_breaking_terms": [
+              "box_area_not_increased_after_move",
+              "candidate_is_king_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "escapes_rook_oscillation_pair",
+              "no_draw_after_move",
+              "not_immediate_rook_reverse",
+              "rook_safe_after_move"
+            ],
+            "move": "d8c7",
+            "move_shape_terms": [
+              "candidate_is_king_move",
+              "king_moves_toward_enemy",
+              "king_moves_toward_rook_support"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "cut_preserved_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "fence_exists_after_move",
+              "fence_stable_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_and_rook_split_rank_side_after_move",
+              "white_king_distance_to_enemy_decreases",
+              "white_king_distance_to_rook_decreases"
+            ],
+            "progress_window_context": {
+              "abstract_state_signature": "wk=d8|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+              "legal_loop_breaking_moves": [
+                "d8e8",
+                "d8c8",
+                "d8e7",
+                "d8d7",
+                "d8c7",
+                "b1b4",
+                "b1b3",
+                "b1b2",
+                "b1h1",
+                "b1g1",
+                "b1f1",
+                "b1e1",
+                "b1d1",
+                "b1c1",
+                "b1a1"
+              ],
+              "no_progress_plies": 9,
+              "repeated_abstract_state_count": 6,
+              "rook_reversal_count": 4
+            },
+            "provider_skill_id": "krk.stage0_basin",
+            "raw_score_before": 8.862121709486843,
+            "sandbox_id": "sandbox.krk.progress_window_reconsideration_v0",
+            "schema_version": "krk_progress_window_reconsideration.v0",
+            "scope": "post_selection_progress_window_reconsideration",
+            "score_after_support": 9.362121709486843,
+            "source_artifact": "reports/krk_state_local_paired_selector_runtime_proxy_review_packet_v1.json",
+            "source_terminal": "terminal.krk.selected_owner_failure_risk_progress_window_monitor",
+            "source_terms": [
+              "box_area_not_increased_after_move",
+              "candidate_is_king_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "escapes_rook_oscillation_pair",
+              "no_box_progress_recently",
+              "no_draw_after_move",
+              "no_edge_progress_recently",
+              "no_mate_progress_recently",
+              "repeated_abstract_state",
+              "rook_oscillation_loop",
+              "rook_safe_after_move",
+              "safe_loop_breaking_move_available"
+            ],
+            "support_amount": 0.5
+          }
+        ],
+        "selected_supported_count": 14,
+        "stagnation_summary": {
+          "no_box_progress_recently": true,
+          "no_edge_progress_recently": true,
+          "no_mate_progress_recently": true,
+          "no_progress_plies": 9,
+          "rook_oscillation_loop": true,
+          "safe_loop_breaking_move_available": true,
+          "stagnation_loop": true
+        },
+        "supported_count": 518
+      },
+      "flag_present_default_off": {
+        "activation_diagnosis": {
+          "blocked_reason_counts": {
+            "non_positive_support": 20
+          },
+          "candidate_intersection_events": 16,
+          "monitor_confirmed_events": 14,
+          "no_supported_examples": [
+            {
+              "blocked_reason": "non_positive_support",
+              "intersection": [
+                "b1b8"
+              ],
+              "legal_loop_breaking_moves": [
+                "b1a1",
+                "b1b2",
+                "b1b3",
+                "b1b7",
+                "b1b8",
+                "b1c1",
+                "b1d1",
+                "b1e1"
+              ],
+              "move": "b1b8",
+              "no_progress_plies": 7,
+              "ply": 10,
+              "suggestion_moves": [
+                "b1b8"
+              ]
+            },
+            {
+              "blocked_reason": "non_positive_support",
+              "intersection": [
+                "c7b7",
+                "c7d7",
+                "c7d8"
+              ],
+              "legal_loop_breaking_moves": [
+                "b1a1",
+                "b1b2",
+                "b1b3",
+                "b1b7",
+                "b1c1",
+                "b1d1",
+                "b1e1",
+                "b1f1"
+              ],
+              "move": "c7d8",
+              "no_progress_plies": 7,
+              "ply": 14,
+              "suggestion_moves": [
+                "c7b7",
+                "c7d7",
+                "c7d8"
+              ]
+            },
+            {
+              "blocked_reason": "non_positive_support",
+              "intersection": [
+                "d8c7"
+              ],
+              "legal_loop_breaking_moves": [
+                "b1a1",
+                "b1b2",
+                "b1b3",
+                "b1b4",
+                "b1c1",
+                "b1d1",
+                "b1e1",
+                "b1f1"
+              ],
+              "move": "d8c7",
+              "no_progress_plies": 9,
+              "ply": 16,
+              "suggestion_moves": [
+                "d8c7"
+              ]
+            }
+          ],
+          "suggested_loop_breaking_events": 16
+        },
+        "final_fen": "3K4/8/k7/8/8/8/8/1R6 w - - 40 21",
+        "plies": 40,
+        "result": "max_plies",
+        "selected_payloads": [],
+        "selected_supported_count": 0,
+        "stagnation_summary": {
+          "no_box_progress_recently": true,
+          "no_edge_progress_recently": true,
+          "no_mate_progress_recently": true,
+          "no_progress_plies": 9,
+          "rook_oscillation_loop": true,
+          "safe_loop_breaking_move_available": true,
+          "stagnation_loop": true
+        },
+        "supported_count": 0
+      },
+      "frame_id": "cp.krk.state.ea634c29ece7",
+      "target_failure_risk": true
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "baseline": {
+        "activation_diagnosis": {
+          "blocked_reason_counts": {
+            "disabled": 4
+          },
+          "candidate_intersection_events": 4,
+          "monitor_confirmed_events": 0,
+          "no_supported_examples": [],
+          "suggested_loop_breaking_events": 4
+        },
+        "final_fen": "8/8/8/8/8/6K1/8/R5k1 b - - 7 4",
+        "plies": 7,
+        "result": "mate",
+        "selected_payloads": [],
+        "selected_supported_count": 0,
+        "stagnation_summary": {
+          "no_box_progress_recently": true,
+          "no_edge_progress_recently": true,
+          "no_mate_progress_recently": false,
+          "no_progress_plies": 1,
+          "rook_oscillation_loop": false,
+          "safe_loop_breaking_move_available": false,
+          "stagnation_loop": false
+        },
+        "supported_count": 0
+      },
+      "default_off_equivalence": true,
+      "enabled_support_0_5": {
+        "activation_diagnosis": {
+          "blocked_reason_counts": {
+            "no_supported_progress_window_suggestions": 4
+          },
+          "candidate_intersection_events": 4,
+          "monitor_confirmed_events": 0,
+          "no_supported_examples": [],
+          "suggested_loop_breaking_events": 4
+        },
+        "final_fen": "8/8/8/8/8/6K1/8/R5k1 b - - 7 4",
+        "plies": 7,
+        "result": "mate",
+        "selected_payloads": [],
+        "selected_supported_count": 0,
+        "stagnation_summary": {
+          "no_box_progress_recently": true,
+          "no_edge_progress_recently": true,
+          "no_mate_progress_recently": false,
+          "no_progress_plies": 1,
+          "rook_oscillation_loop": false,
+          "safe_loop_breaking_move_available": false,
+          "stagnation_loop": false
+        },
+        "supported_count": 0
+      },
+      "flag_present_default_off": {
+        "activation_diagnosis": {
+          "blocked_reason_counts": {
+            "non_positive_support": 4
+          },
+          "candidate_intersection_events": 4,
+          "monitor_confirmed_events": 0,
+          "no_supported_examples": [],
+          "suggested_loop_breaking_events": 4
+        },
+        "final_fen": "8/8/8/8/8/6K1/8/R5k1 b - - 7 4",
+        "plies": 7,
+        "result": "mate",
+        "selected_payloads": [],
+        "selected_supported_count": 0,
+        "stagnation_summary": {
+          "no_box_progress_recently": true,
+          "no_edge_progress_recently": true,
+          "no_mate_progress_recently": false,
+          "no_progress_plies": 1,
+          "rook_oscillation_loop": false,
+          "safe_loop_breaking_move_available": false,
+          "stagnation_loop": false
+        },
+        "supported_count": 0
+      },
+      "frame_id": "cp.krk.state.c732b2d6dc56",
+      "target_failure_risk": false
+    }
+  ],
+  "topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json"
+}

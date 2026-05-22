@@ -1959,6 +1959,14 @@ def create_actuator_terminal(node_id=None):
                     blackboard=blackboard,
                     move_meta=move_meta[move],
                 )
+                score = _apply_krk_progress_window_reconsideration_bias(
+                    score,
+                    board=board,
+                    move=move,
+                    skill_id=skill_id,
+                    blackboard=blackboard,
+                    move_meta=move_meta[move],
+                )
 
                 scores[move] = score
         finally:
@@ -3049,6 +3057,130 @@ def _apply_visible_post_break_continuation_bias(
     move_meta["visible_post_break_continuation_bonus"] = float(weight)
     move_meta["visible_post_break_continuation_license"] = license_payload
     move_meta["score_after_post_break_continuation_bonus"] = adjusted
+    return adjusted
+
+
+def _apply_krk_progress_window_reconsideration_bias(
+    score: float,
+    *,
+    board: chess.Board,
+    move: chess.Move,
+    skill_id: str | None,
+    blackboard: Dict[str, Any],
+    move_meta: Dict[str, Any],
+) -> float:
+    """Default-off selected-owner progress-window reconsideration sandbox.
+
+    This is not a pre-decision global selector. It only adds bounded support to
+    already-produced provider suggestions after visible progress-window terms
+    say the current owner has failed to make progress and the candidate move is
+    already present in the audited safe loop-breaking set.
+    """
+    if not blackboard.get("krk_progress_window_reconsideration_enabled", False):
+        return score
+    support = float(
+        blackboard.get("krk_progress_window_reconsideration_support", 0.0) or 0.0
+    )
+    if support <= 0.0:
+        return score
+    active_label = str(blackboard.get("active_landmark_label", "") or "")
+    if active_label == "box_shrink" and not blackboard.get(
+        "krk_progress_window_reconsideration_allow_stage7_challenge", False
+    ):
+        return score
+
+    terms = blackboard.get("krk_dynamic_context_terms", {}) or {}
+    required_monitor_terms = {
+        "rook_oscillation_loop",
+        "no_box_progress_recently",
+        "no_edge_progress_recently",
+        "no_mate_progress_recently",
+        "safe_loop_breaking_move_available",
+    }
+    if not all(bool(terms.get(term, False)) for term in required_monitor_terms):
+        return score
+    if not (
+        bool(terms.get("repeated_abstract_state", False))
+        or int((blackboard.get("krk_stagnation_context", {}) or {}).get("no_progress_plies", 0) or 0) >= 4
+    ):
+        return score
+
+    context = blackboard.get("krk_stagnation_context", {}) or {}
+    loop_moves = set(context.get("legal_loop_breaking_moves", []) or [])
+    if move.uci() not in loop_moves:
+        return score
+
+    audit = krk_move_shape_audit(board, move, blackboard, include_worst_reply=False)
+    move_terms = set(audit.get("move_shape_terms", []) or [])
+    post_terms = set(audit.get("post_move_terms", []) or [])
+    loop_audit = None
+    for item in context.get("legal_loop_breaking_move_audits", []) or []:
+        if isinstance(item, dict) and item.get("move") == move.uci():
+            loop_audit = item
+            break
+    loop_terms = set((loop_audit or {}).get("source_terms", []) or [])
+
+    safety_terms = {"rook_safe_after_move", "no_draw_after_move"}
+    progress_terms = {
+        "box_area_not_increased_after_move",
+        "box_area_decreases_after_move",
+        "enemy_edge_distance_not_increased_after_move",
+        "checking_line_created",
+    }
+    if not safety_terms <= (post_terms | loop_terms):
+        return score
+    if not progress_terms & (post_terms | loop_terms):
+        return score
+
+    source_terms = sorted(
+        required_monitor_terms
+        | {"repeated_abstract_state"}
+        | safety_terms
+        | (progress_terms & (post_terms | loop_terms))
+        | ({"candidate_is_rook_transfer", "candidate_is_king_move"} & move_terms)
+        | ({"escapes_rook_oscillation_pair"} & loop_terms)
+    )
+    adjusted = float(score) + support
+    payload = {
+        "schema_version": "krk_progress_window_reconsideration.v0",
+        "enabled": True,
+        "sandbox_id": "sandbox.krk.progress_window_reconsideration_v0",
+        "source_artifact": "reports/krk_state_local_paired_selector_runtime_proxy_review_packet_v1.json",
+        "source_terminal": "terminal.krk.selected_owner_failure_risk_progress_window_monitor",
+        "provider_skill_id": _canonical_krk_skill_id(skill_id),
+        "move": move.uci(),
+        "support_amount": float(support),
+        "raw_score_before": float(score),
+        "score_after_support": adjusted,
+        "source_terms": source_terms,
+        "move_shape_terms": sorted(move_terms),
+        "post_move_terms": sorted(post_terms),
+        "loop_breaking_terms": sorted(loop_terms),
+        "progress_window_context": {
+            key: context.get(key)
+            for key in (
+                "abstract_state_signature",
+                "repeated_abstract_state_count",
+                "rook_reversal_count",
+                "no_progress_plies",
+                "legal_loop_breaking_moves",
+            )
+        },
+        "direct_request": False,
+        "causal_status": "sandbox_opt_in",
+        "scope": "post_selection_progress_window_reconsideration",
+        "forbidden_actions": [
+            "initial_predecision_global_selector",
+            "direct_move_selection",
+            "direct_provider_request",
+            "topology_mutation",
+            "runtime_dtm_or_tablebase",
+            "m3_m4_update",
+        ],
+    }
+    move_meta["krk_progress_window_reconsideration"] = payload
+    move_meta["krk_progress_window_reconsideration_support"] = float(support)
+    move_meta["score_after_progress_window_reconsideration"] = adjusted
     return adjusted
 
 

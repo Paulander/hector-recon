@@ -125,6 +125,7 @@ Current interpretation:
 - `krk_selected_owner_failure_risk_proxy_independent_validation_v0` runs that independent protected-pair validation (`8` jobs, Stage 4/5/6 only, `0` Stage 7 rows). The proxy fails out-of-sample: precision `0.0`, recall `0.0`, safe-preservation recall `0.429`. The only true failure-risk case was missed, and four proxy-positive cases were safe selected-owner conversions. No runtime-review packet is produced. Current conclusion: one-ply selected move-shape proxies are insufficient for selected-owner failure risk; the next step should be visible competing-proposal/progress-window evidence design or an architecture review, not runtime selector implementation.
 - `krk_selected_owner_failure_risk_proxy_blocker_review_v0` formally closes the failed v0 proxy path: the discovery-fit one-ply move-shape proxy is rejected as overfit, runtime-review remains blocked, and the next allowed evidence slice is non-causal v1 evidence from visible competing-provider proposals and selected-owner progress-window failure signals.
 - `krk_selected_owner_failure_risk_evidence_v1` / `krk_selected_owner_failure_risk_proxy_probe_v1` split those evidence tracks. Live competing-provider proposal evidence remains sparse (`5/48` rows), while selected-owner progress-window traces exist for a small subset (`6/48`). The conservative v1 proxy passes independent protected validation (`precision=1.0`, `recall=1.0`, `safe_preservation_recall=1.0`, `8` labels, `0` Stage 7 rows) but all-row performance remains weak (`precision=0.333`, `recall=0.25`) because it is progress-window scoped. `krk_state_local_paired_selector_runtime_proxy_review_packet_v1` is therefore review-ready only for a default-off progress-window monitor/reconsideration sandbox; it does not authorize implementation or an initial pre-decision selector.
+- After explicit runtime-test approval, `sandbox.krk.progress_window_reconsideration_v0` was implemented as a default-off, opt-in, traceable runtime-test scaffold. `krk_progress_window_reconsideration_runtime_smoke_v0` passed default-off equivalence and activated on the intended progress-window failure row, but did not improve the h40 target outcome (`max_plies/40` remained `max_plies/40`). `krk_progress_window_reconsideration_runtime_test_review_v0` records `runtime_test_scaffold_wired_but_policy_insufficient`; do not advance this sandbox to guardrails, scaling, promotion, or default enablement without a new review.
 
 ## Hard Invariants
 
@@ -136,7 +137,8 @@ Current interpretation:
 - Preserve M1-M4 plasticity/consolidation semantics.
 - Validated providers stay protected/frozen unless a sandbox explicitly says otherwise.
 - Later-stage skills should be overlays, not monolithic replacements.
-- Runtime defaults must not change during diagnostics.
+- Runtime defaults must not change during diagnostics or runtime-test sandboxes.
+- Reviewed, default-off, reversible runtime sandboxes are allowed only when a runtime-review packet is present and the implementation remains scoped to that packet. Broad selectors, default-policy changes, unreviewed provider penalties/supports, Stage 7 promotion, and Stage 8 training remain blocked.
 
 ## Rejected Paths
 
@@ -165,7 +167,22 @@ The next diagnostic should distinguish these hypotheses rather than optimize onl
 
 Stage 7-specific runtime implementation is paused. The current objective is to preserve the Stage 7 evidence as an architecture review and decide the next direction outside the local-repair loop.
 
-The next architecture decision should choose among:
+The immediate architecture decision has been updated by:
+
+```text
+reports/krk_runtime_sandbox_policy_update_v0.md
+reports/krk_runtime_sandbox_policy_update_v0.json
+```
+
+Current immediate runtime-test result:
+
+```text
+runtime_test_scaffold_wired_but_policy_insufficient
+```
+
+The reviewed progress-window sandbox was allowed because `krk_state_local_paired_selector_runtime_proxy_review_packet_v1` was runtime-review-ready for progress-window scope only. The implementation remained default-off, but the smoke did not improve the targeted failure row. Do not run guardrails or scale this sandbox as if validated; the next step is architecture review or a narrower visible alternative-selection design.
+
+After this runtime-test slice, the next architecture decision should choose among:
 
 - a general KRK strategy-arbitration / plan-selection experiment,
 - a stronger sequence-policy / Plan Capsule learner,

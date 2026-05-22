@@ -12,6 +12,7 @@ from recon_lite_chess.krk_baseline_nodes import (
     _apply_explicit_support_move_shape_bias,
     _apply_successor_affordance_bias,
     _apply_visible_post_break_continuation_bias,
+    _apply_krk_progress_window_reconsideration_bias,
     _apply_visible_stage0_drift_penalty,
     _apply_visible_rook_transfer_move_bias,
     _apply_visible_stagnation_breaker_bias,
@@ -1098,6 +1099,117 @@ def test_stagnation_breaker_king_support_bonus_is_narrow_and_visible():
         "krk.stagnation_breaker_king_support"
     )
     assert "visible_stagnation_breaker_king_support_bonus" not in rook_meta
+
+
+def test_progress_window_reconsideration_is_default_off_and_visible():
+    board = chess.Board("5k2/8/8/K7/7R/8/8/8 w - - 18 10")
+    move = chess.Move.from_uci("h4f4")
+    blackboard = {
+        "krk_progress_window_reconsideration_enabled": True,
+        "krk_progress_window_reconsideration_support": 1.5,
+        "active_landmark_label": "fence_established",
+        "krk_dynamic_context_terms": {
+            "rook_oscillation_loop": True,
+            "repeated_abstract_state": True,
+            "no_box_progress_recently": True,
+            "no_edge_progress_recently": True,
+            "no_mate_progress_recently": True,
+            "safe_loop_breaking_move_available": True,
+        },
+        "krk_stagnation_context": {
+            "abstract_state_signature": "loop",
+            "repeated_abstract_state_count": 2,
+            "rook_reversal_count": 2,
+            "no_progress_plies": 6,
+            "legal_loop_breaking_moves": ["h4f4"],
+            "legal_loop_breaking_move_audits": [
+                {
+                    "move": "h4f4",
+                    "source_terms": [
+                        "escapes_rook_oscillation_pair",
+                        "rook_safe_after_move",
+                        "no_draw_after_move",
+                        "box_area_not_increased_after_move",
+                        "enemy_edge_distance_not_increased_after_move",
+                    ],
+                }
+            ],
+        },
+    }
+    meta = {}
+    off_meta = {}
+
+    score = _apply_krk_progress_window_reconsideration_bias(
+        2.0,
+        board=board,
+        move=move,
+        skill_id="krk.stage0_basin",
+        blackboard=blackboard,
+        move_meta=meta,
+    )
+    off_score = _apply_krk_progress_window_reconsideration_bias(
+        2.0,
+        board=board,
+        move=move,
+        skill_id="krk.stage0_basin",
+        blackboard={**blackboard, "krk_progress_window_reconsideration_enabled": False},
+        move_meta=off_meta,
+    )
+
+    assert score == 3.5
+    assert off_score == 2.0
+    payload = meta["krk_progress_window_reconsideration"]
+    assert payload["schema_version"] == "krk_progress_window_reconsideration.v0"
+    assert payload["direct_request"] is False
+    assert payload["causal_status"] == "sandbox_opt_in"
+    assert payload["source_terminal"] == (
+        "terminal.krk.selected_owner_failure_risk_progress_window_monitor"
+    )
+    assert "runtime_dtm_or_tablebase" in payload["forbidden_actions"]
+    assert "krk_progress_window_reconsideration" not in off_meta
+
+
+def test_progress_window_reconsideration_blocks_stage7_by_default():
+    board = chess.Board("5k2/8/8/K7/7R/8/8/8 w - - 18 10")
+    meta = {}
+
+    score = _apply_krk_progress_window_reconsideration_bias(
+        2.0,
+        board=board,
+        move=chess.Move.from_uci("h4f4"),
+        skill_id="krk.stage0_basin",
+        blackboard={
+            "krk_progress_window_reconsideration_enabled": True,
+            "krk_progress_window_reconsideration_support": 1.5,
+            "active_landmark_label": "box_shrink",
+            "krk_dynamic_context_terms": {
+                "rook_oscillation_loop": True,
+                "repeated_abstract_state": True,
+                "no_box_progress_recently": True,
+                "no_edge_progress_recently": True,
+                "no_mate_progress_recently": True,
+                "safe_loop_breaking_move_available": True,
+            },
+            "krk_stagnation_context": {
+                "no_progress_plies": 6,
+                "legal_loop_breaking_moves": ["h4f4"],
+                "legal_loop_breaking_move_audits": [
+                    {
+                        "move": "h4f4",
+                        "source_terms": [
+                            "rook_safe_after_move",
+                            "no_draw_after_move",
+                            "box_area_not_increased_after_move",
+                        ],
+                    }
+                ],
+            },
+        },
+        move_meta=meta,
+    )
+
+    assert score == 2.0
+    assert "krk_progress_window_reconsideration" not in meta
 
 
 def test_move_shape_audit_emits_current_candidate_post_and_worst_reply_terms():
