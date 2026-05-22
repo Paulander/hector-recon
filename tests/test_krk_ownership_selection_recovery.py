@@ -121,6 +121,14 @@ failure_risk_blocker_module = _load_module(
     "summarize_krk_selected_owner_failure_risk_proxy_blocker_review_v0",
     "summarize_krk_selected_owner_failure_risk_proxy_blocker_review_v0.py",
 )
+failure_risk_evidence_v1_module = _load_module(
+    "build_krk_selected_owner_failure_risk_evidence_v1",
+    "build_krk_selected_owner_failure_risk_evidence_v1.py",
+)
+failure_risk_probe_v1_module = _load_module(
+    "probe_krk_selected_owner_failure_risk_proxy_v1",
+    "probe_krk_selected_owner_failure_risk_proxy_v1.py",
+)
 
 
 def _write_json(root: Path, relative: Path, payload: dict) -> None:
@@ -1397,3 +1405,196 @@ def test_failure_risk_blocker_review_rejects_causal_flags():
         assert "selector_training_allowed" in str(exc)
     else:
         raise AssertionError("selector training flag should be rejected")
+
+
+def test_failure_risk_evidence_v1_joins_visible_proposal_context(tmp_path, monkeypatch):
+    root = tmp_path
+    monkeypatch.setattr(failure_risk_evidence_v1_module, "ROOT", root)
+    _write_json(
+        root,
+        failure_risk_evidence_v1_module.PROXY_DATASET,
+        {
+            "causal_status": "non_causal_proxy_validation_dataset",
+            "rows": [
+                {
+                    "state_id": "state.s1",
+                    "frame_id": "cp.krk.state.s1",
+                    "source_stage": "stage5",
+                    "active_landmark_label": "fence_established",
+                    "owner_a": "krk.stage0_basin",
+                    "owner_b": "krk.edge_trap_close",
+                    "comparison_label": "prefer_capacity_alternative",
+                    "selected_owner_failure_risk_target": True,
+                    "safe_preservation_confidence_target": False,
+                    "stage7_training_row": False,
+                    "runtime_visible_candidate_features": {
+                        "selected_owner_family": "stage0_basin",
+                        "alternative_owner_family": "edge_trap",
+                    },
+                    "offline_outcome_forbidden_features": {
+                        "owner_a_outcome": "selected_owner_failed",
+                        "owner_b_outcome": "positive_capacity",
+                    },
+                },
+                {
+                    "state_id": "state.s7",
+                    "source_stage": "stage7",
+                    "stage7_training_row": True,
+                },
+            ],
+        },
+    )
+    _write_json(
+        root,
+        failure_risk_evidence_v1_module.INVENTORY,
+        {
+            "causal_status": "non_causal_pair_inventory",
+            "rows": [
+                {
+                    "state_id": "state.s1",
+                    "owner_a": "krk.stage0_basin",
+                    "owner_b": "krk.edge_trap_close",
+                    "evidence_channel": "strong_same_state_conflict",
+                    "stage7_training_row": False,
+                }
+            ],
+        },
+    )
+    _write_json(
+        root,
+        failure_risk_evidence_v1_module.INDEPENDENT_LABELS,
+        {
+            "labels": [
+                {
+                    "frame_id": "cp.krk.state.ind",
+                    "active_landmark_label": "edge_trap_wrong_tempo",
+                    "forced_alternative_provider": "krk.edge_trap_close",
+                    "selected_owner_failure_risk_target": False,
+                    "safe_preservation_confidence_target": True,
+                    "runtime_visible_candidate_features": {
+                        "source_stage": "stage4",
+                        "selected_owner_family": "stage0_basin",
+                    },
+                    "selected_playout_success": {"result": "mate"},
+                    "forced_alternative_result": {"result": "mate"},
+                }
+            ]
+        },
+    )
+    _write_json(
+        root,
+        failure_risk_evidence_v1_module.CONTEXT_DATASET,
+        {"causal_status": "non_causal_context_feature_dataset", "rows": []},
+    )
+    _write_json(
+        root,
+        failure_risk_evidence_v1_module.RANKED_FRAMES,
+        {
+            "causal_status": "non_causal_ranked_frame_dataset",
+            "rows": [
+                {
+                    "state_id": "state.s1",
+                    "provider_id": "krk.stage0_basin",
+                    "move_uci": "a1a2",
+                    "raw_score": 1.0,
+                    "provider_local_rank": 1,
+                },
+                {
+                    "state_id": "state.s1",
+                    "provider_id": "krk.edge_trap_close",
+                    "move_uci": "b1b2",
+                    "raw_score": 2.0,
+                    "provider_local_rank": 1,
+                    "role_licenses": ["edge_trap_close"],
+                },
+            ],
+        },
+    )
+
+    evidence = failure_risk_evidence_v1_module.build_evidence()
+
+    assert evidence["causal_status"] == "non_causal_failure_risk_evidence"
+    assert evidence["runtime_selector_implemented"] is False
+    assert evidence["summary"]["stage7_row_count"] == 0
+    assert evidence["summary"]["alternative_live_proposal_count"] == 1
+    row = next(row for row in evidence["rows"] if row["state_id"] == "state.s1")
+    assert row["competing_proposal_evidence"]["same_state_provider_conflict_visible"] is True
+    assert row["usable_for_selector_training"] is False
+
+
+def test_failure_risk_proxy_v1_packet_is_review_only_on_independent_pass():
+    evidence = {
+        "causal_status": "non_causal_failure_risk_evidence",
+        "rows": [
+            {
+                "evidence_split": "independent_validation_label",
+                "state_id": "state.risk",
+                "stage7_training_row": False,
+                "selected_owner_failure_risk_target": True,
+                "runtime_visible_candidate_features": {"selected_provider_validated_family": True},
+                "competing_proposal_evidence": {},
+                "progress_window_evidence": {
+                    "selected_owner_trace_available": True,
+                    "selected_owner_no_edge_progress": True,
+                    "selected_owner_no_mate_progress": True,
+                    "selected_owner_repeated_abstract_state": True,
+                },
+            },
+            {
+                "evidence_split": "independent_validation_label",
+                "state_id": "state.safe",
+                "stage7_training_row": False,
+                "selected_owner_failure_risk_target": False,
+                "runtime_visible_candidate_features": {"selected_provider_validated_family": True},
+                "competing_proposal_evidence": {},
+                "progress_window_evidence": {"selected_owner_trace_available": False},
+            },
+        ],
+    }
+
+    probe = failure_risk_probe_v1_module.build_probe(evidence)
+    validation = failure_risk_probe_v1_module.build_validation(probe, evidence)
+    packet = failure_risk_probe_v1_module.build_packet(validation)
+
+    assert validation["decision"]["status"] == "independent_proxy_validation_passed"
+    assert packet is not None
+    assert packet["implementation_allowed_by_this_packet"] is False
+    assert packet["runtime_selector_implemented"] is False
+    assert packet["decision"]["runtime_implementation_allowed"] is False
+
+
+def test_failure_risk_proxy_v1_no_packet_on_failed_thresholds():
+    evidence = {
+        "causal_status": "non_causal_failure_risk_evidence",
+        "rows": [
+            {
+                "evidence_split": "independent_validation_label",
+                "state_id": "state.fp",
+                "stage7_training_row": False,
+                "selected_owner_failure_risk_target": False,
+                "runtime_visible_candidate_features": {"selected_provider_validated_family": True},
+                "competing_proposal_evidence": {},
+                "progress_window_evidence": {
+                    "selected_owner_trace_available": True,
+                    "selected_owner_no_edge_progress": True,
+                    "selected_owner_no_mate_progress": True,
+                    "selected_owner_repeated_abstract_state": True,
+                },
+            },
+            {
+                "evidence_split": "independent_validation_label",
+                "state_id": "state.fn",
+                "stage7_training_row": False,
+                "selected_owner_failure_risk_target": True,
+                "runtime_visible_candidate_features": {"selected_provider_validated_family": True},
+                "competing_proposal_evidence": {},
+                "progress_window_evidence": {"selected_owner_trace_available": False},
+            },
+        ],
+    }
+
+    probe = failure_risk_probe_v1_module.build_probe(evidence)
+    validation = failure_risk_probe_v1_module.build_validation(probe, evidence)
+
+    assert validation["decision"]["status"] == "independent_proxy_validation_failed_or_underpowered"
+    assert failure_risk_probe_v1_module.build_packet(validation) is None
