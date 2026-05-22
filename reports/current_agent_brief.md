@@ -8,6 +8,15 @@ Build ReCoN-lite / Hector as an inspectable, self-growing chess architecture whe
 
 KRK is the controlled proving ground. The deeper goal is a scalable ReCoN architecture that can later compose KRK, KQK, KPK, tactics, full-game chess, and eventually non-chess domains.
 
+Long-term roadmap:
+
+```text
+reports/recon_long_term_architecture_roadmap.md
+reports/recon_long_term_architecture_roadmap.json
+```
+
+That roadmap is the current architecture reset after the quarantined progress-window runtime test.
+
 ## Current Validated Stack
 
 - `handoff_composition_v1` is the stable experimental KRK handoff profile.
