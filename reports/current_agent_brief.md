@@ -266,6 +266,8 @@ Important artifacts include:
 * `reports/strategy_arbitration/krk_candidate_proposal_coverage_v0.md/json`
 * `reports/strategy_arbitration/krk_candidate_generation_strategy_review_v0.md/json`
 * `reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_v1.md/json`
+* `reports/strategy_arbitration/krk_strategy_sequence_candidate_frames_v1.md/json`
+* `reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_quality_v1.md/json`
 
 Current conclusion:
 
@@ -284,6 +286,21 @@ strategy_sequence_control_plane_v1_needed
 The current protected replay-free proposal frames have `0.0` positive-capacity recall for the checked validated-provider alternatives: 11 protected positive-capacity alternatives are missing from visible proposal coverage, across Stage 4/5/6 and with 0 Stage 7 readiness rows. The validated-provider candidate pack would recover positive capacity, but it also includes negative capacity cases, so it is candidate-generation evidence only and must not become a direct selector label.
 
 `StrategySequenceCandidateFrame v1` is now defined as a non-causal evidence-frame schema to separate validated-provider candidates, CandidateMoveFrame hypotheses, PlanCapsule sequence candidates, and broader KRK strategy candidates. The next safe slice is replay-free population of those frames, not runtime selection.
+
+Replay-free StrategySequenceCandidateFrame v1 population is complete:
+
+```text
+strategy_sequence_frames_populated_non_causal
+frame_quality_probe_supports_next_sequence_candidate_benchmark
+```
+
+The population has 256 non-causal frames across validated-provider candidates, candidate-move hypotheses, and broader strategy-monitor candidates. Stage 7 contributes held-out challenge frames only: `stage7_readiness_training_row_count = 0`. The quality probe keeps capacity labels separate from selector labels and reports no runtime behavior/default/topology changes.
+
+Next safe non-causal slice:
+
+```text
+benchmark_candidate_frame_sources_before_runtime
+```
 
 ### Progress-Window Reconsideration Runtime Test
 
@@ -382,6 +399,10 @@ reports/strategy_arbitration/krk_candidate_generation_strategy_review_v0.md
 reports/strategy_arbitration/krk_candidate_generation_strategy_review_v0.json
 reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_v1.md
 reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_v1.json
+reports/strategy_arbitration/krk_strategy_sequence_candidate_frames_v1.md
+reports/strategy_arbitration/krk_strategy_sequence_candidate_frames_v1.json
+reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_quality_v1.md
+reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_quality_v1.json
 ```
 
 These artifacts answer:
@@ -396,13 +417,13 @@ These artifacts answer:
 * What is the first non-causal candidate-generation benchmark?
 * What, if anything, would justify a future default-off candidate-generation sandbox?
 
-Next safe non-causal slice:
+Next safe non-causal slice after frame population:
 
 ```text
-populate_strategy_sequence_candidate_frames_replay_free_v1
+benchmark_candidate_frame_sources_before_runtime
 ```
 
-This should materialize StrategySequenceCandidateFrame rows from existing artifacts, keep Stage 7 as held-out challenge evidence, preserve capacity-vs-ownership label semantics, and avoid runtime behavior changes.
+This should compare candidate-frame source channels before any runtime work, preserve capacity-vs-ownership label semantics, and keep Stage 7 held out from readiness/training rows.
 
 ## Runtime Approval Rule
 

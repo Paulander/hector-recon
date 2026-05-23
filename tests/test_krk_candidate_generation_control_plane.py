@@ -16,6 +16,17 @@ assert _spec.loader is not None
 _module = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_module)
 
+_populate_spec = importlib.util.spec_from_file_location(
+    "populate_krk_strategy_sequence_candidate_frames_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "populate_krk_strategy_sequence_candidate_frames_v1.py",
+)
+assert _populate_spec is not None
+assert _populate_spec.loader is not None
+_populate = importlib.util.module_from_spec(_populate_spec)
+_populate_spec.loader.exec_module(_populate)
+
 
 def test_candidate_proposal_coverage_preserves_capacity_label_semantics():
     capacity_rows = [
@@ -93,3 +104,73 @@ def test_strategy_sequence_candidate_frame_schema_is_non_causal():
     assert payload["stage8_training_allowed"] is False
     assert "direct_provider_request" in payload["forbidden_causal_uses"]
     assert "capacity_evidence" in payload["required_fields"]
+
+
+def test_strategy_sequence_capacity_frames_are_generation_not_selection_labels():
+    frames = _populate.capacity_candidate_frames(
+        [
+            {
+                "state_id": "state.a",
+                "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                "source_stage": "stage5",
+                "provider_id": "krk.fence_established",
+                "provider_family": "fence_established",
+                "capacity_label": "positive_capacity",
+                "forced_result": "mate",
+                "forced_first_move": "a1a2",
+                "stage7_challenge_row": False,
+            }
+        ]
+    )
+
+    assert frames[0]["frame_type"] == "validated_provider_candidate"
+    assert frames[0]["label_semantics"] == "capacity_evidence_not_ownership_label"
+    assert frames[0]["usable_for_selector_training"] is False
+    assert frames[0]["usable_for_candidate_generation_training"] is True
+    assert frames[0]["causal_status"] == "non_causal"
+
+
+def test_strategy_sequence_quality_blocks_stage7_training_rows():
+    frames_payload = {
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_selector_implemented": False,
+        "runtime_candidate_generator_implemented": False,
+        "runtime_terminals_added": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+        "summary": {
+            "readiness_training_stage7_row_count": 1,
+        },
+        "frames": [
+            {
+                "label_semantics": "capacity_evidence_not_ownership_label",
+                "usable_for_selector_training": False,
+                "stage7_challenge_row": True,
+                "frame_type": "candidate_move_hypothesis",
+                "sequence_evidence": {},
+            }
+        ],
+    }
+
+    quality = _populate.build_quality_payload(frames_payload)
+
+    assert quality["quality_checks"]["stage7_excluded_from_training_readiness"] is False
+    assert quality["decision"]["status"] == "frame_quality_blocked"
+
+
+def test_progress_window_continuation_index_accepts_list_shape():
+    indexed = _populate._continuation_index(
+        [
+            {
+                "move": "a1a2",
+                "continuation": {
+                    "result": "max_plies",
+                },
+            }
+        ]
+    )
+
+    assert indexed == {"a1a2": {"result": "max_plies"}}

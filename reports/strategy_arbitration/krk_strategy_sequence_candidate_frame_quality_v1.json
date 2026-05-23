@@ -1,0 +1,46 @@
+{
+  "causal_status": "non_causal_frame_quality_probe",
+  "decision": {
+    "recommended_next_step": "benchmark_candidate_frame_sources_before_runtime",
+    "runtime_sandbox_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "frame_quality_probe_supports_next_sequence_candidate_benchmark"
+  },
+  "gameplay_topology_mutation": false,
+  "quality_checks": {
+    "capacity_not_selector_label": true,
+    "runtime_flags_false": true,
+    "sequence_candidates_all_heldout": true,
+    "stage7_excluded_from_training_readiness": true
+  },
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_strategy_sequence_candidate_frame_quality.v1",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_sequence_candidate_frames_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "label_semantics_counts": {
+      "capacity_evidence_not_ownership_label": 16,
+      "internal_monitor_context_not_runtime_route": 13,
+      "sandbox_supported_move_hypothesis_not_selector_label": 140,
+      "visible_provider_proposal_context_not_capacity_or_ownership_label": 87
+    },
+    "protected_frame_count": 58,
+    "protected_positive_capacity_candidate_count": 11,
+    "protected_visible_provider_proposal_count": 42,
+    "sequence_candidate_count": 140,
+    "sequence_candidate_mate_count": 0,
+    "stage7_challenge_frame_count": 198,
+    "stage7_readiness_training_row_count": 0,
+    "total_frames": 256
+  }
+}
