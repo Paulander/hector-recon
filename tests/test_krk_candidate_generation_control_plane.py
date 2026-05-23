@@ -565,6 +565,19 @@ _stage5_6_refresh_quality = importlib.util.module_from_spec(
 )
 _stage5_6_refresh_quality_spec.loader.exec_module(_stage5_6_refresh_quality)
 
+_stage5_6_refresh_trace_fold_spec = importlib.util.spec_from_file_location(
+    "fold_krk_stage5_6_refresh_frames_into_strategy_sequence_trace_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "fold_krk_stage5_6_refresh_frames_into_strategy_sequence_trace_v0.py",
+)
+assert _stage5_6_refresh_trace_fold_spec is not None
+assert _stage5_6_refresh_trace_fold_spec.loader is not None
+_stage5_6_refresh_trace_fold = importlib.util.module_from_spec(
+    _stage5_6_refresh_trace_fold_spec
+)
+_stage5_6_refresh_trace_fold_spec.loader.exec_module(_stage5_6_refresh_trace_fold)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -2760,3 +2773,50 @@ def test_stage5_6_refresh_quality_retains_trace_only_use():
     assert payload["decision"]["guardrails_allowed"] is False
     assert "capacity_evidence_not_runtime_ownership_label" in payload["selector_blockers"]
     assert payload["summary"]["trace_usable_for_candidate_generation_context"] is True
+
+
+def test_stage5_6_refresh_trace_fold_is_non_causal_context_only():
+    refresh_payload = {
+        "cases": [
+            {
+                "case_id": "stage5",
+                "state_id": "state.a",
+                "source_stage": "stage5",
+                "active_landmark_label": "fence_established",
+                "fen": "fen-a",
+                "selected_move_provider_score_equivalent": True,
+                "enabled_refresh_sample_frames": [
+                    {
+                        "candidate_source": "stage_conditioned_candidate_generation_refresh",
+                        "provider_id": "krk.stage0_basin",
+                        "move_id": "a1a2",
+                        "capacity_evidence_kind": "positive_capacity",
+                        "capacity_evidence_source": "offline",
+                        "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+                        "source_terms": ["stage5_6_candidate_generation_refresh_scope"],
+                        "provider_provenance": "stage5_6_candidate_generation_refresh_review_packet_v3",
+                        "protected_status": "protected_control",
+                        "selected_provider_before_observation": "krk.fence_established",
+                        "selected_move_before_observation": "h7c7",
+                    }
+                ],
+            }
+        ]
+    }
+    quality_payload = {"decision": {"selector_allowed": False}}
+
+    payload = _stage5_6_refresh_trace_fold.build_payload(
+        base_payload={"summary": {}},
+        refresh_payload=refresh_payload,
+        quality_payload=quality_payload,
+    )
+
+    assert payload["decision"]["status"] == (
+        "stage5_6_refresh_trace_features_folded_non_causal"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["summary"]["trace_frame_count"] == 1
+    assert payload["summary"]["stage7_trace_frame_count"] == 0
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert payload["trace_only_frames"][0]["usable_for_selector_training"] is False
+    assert payload["trace_only_frames"][0]["causal_status"] == "non_causal_trace_feature"

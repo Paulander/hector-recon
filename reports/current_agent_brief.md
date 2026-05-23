@@ -524,6 +524,7 @@ Coverage and broadened protected sampling are complete:
 stage5_6_refresh_coverage_ready_for_broadened_analysis
 stage5_6_candidate_generation_refresh_broadened_default_off_equivalent
 stage5_6_candidate_generation_refresh_quality_trace_only_retained
+stage5_6_refresh_trace_features_folded_non_causal
 ```
 
 Artifacts:
@@ -531,15 +532,18 @@ Artifacts:
 * `reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_coverage_v0.md/json`
 * `reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_broadened_v0.md/json`
 * `reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_quality_review_v0.md/json`
+* `reports/strategy_arbitration/krk_strategy_sequence_stage5_6_refresh_trace_features_v0.md/json`
 
 The coverage analysis confirms the smoke emitted 13 full refresh frames with 0 selected move/provider deltas, 0 invariant failures, and 0 Stage 7 cases. The broadened sample covered 4 protected Stage 5/6 cases, emitted 38 refresh frames, and again produced 0 selected move/provider deltas, 0 baseline refresh-frame leaks, 0 invariant failures, and 0 Stage 7 cases.
 
 The quality review retains this source as trace/candidate-generation context only. Selector and guardrails remain blocked because capacity evidence is not runtime ownership evidence, the protected sample is small, and Stage 4/7/8 are explicitly excluded.
 
+The trace-fold artifact converts the 38 Stage 5/6 refresh observation frames into StrategySequenceCandidateFrame-compatible trace features: 37 Stage 5 rows, 1 Stage 6 row, 0 Stage 7 rows, 0 selector-training rows, and 0 candidate-generation-training rows. These rows are runtime-observation context only.
+
 Next safe step:
 
 ```text
-fold_stage5_6_refresh_frames_into_strategy_sequence_dataset
+strategy_sequence_dataset_v3_design_or_integration_review
 ```
 
 Do not implement selector behavior, run guardrails, tune scores, route providers, promote Stage 7, or train Stage 8 from this source.
