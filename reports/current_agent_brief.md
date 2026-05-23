@@ -276,6 +276,7 @@ Important artifacts include:
 * `reports/strategy_arbitration/krk_candidate_generation_observation_broadened_sample_v1.md/json`
 * `reports/strategy_arbitration/krk_candidate_generation_observation_gap_review_v1.md/json`
 * `reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v1.md/json`
+* `reports/strategy_arbitration/krk_candidate_move_capacity_label_manifest_v1.md/json`
 
 Current conclusion:
 
@@ -359,6 +360,14 @@ candidate_move_capacity_annotation_partial_selector_blocked
 ```
 
 Existing protected forced-capacity evidence can annotate 10 of 292 protected observed CandidateMoveFrame hypotheses. This confirms a viable annotation path, but coverage is too sparse for selector review. Capacity labels remain offline evidence only and are not ownership labels. The next safe step, if continued, is a bounded protected-only candidate-move capacity label manifest, not runtime selection.
+
+Bounded candidate-move capacity label manifest is complete:
+
+```text
+bounded_candidate_move_capacity_manifest_ready
+```
+
+The manifest proposes 12 protected-only offline jobs balanced across Stage 4/5/6, with 0 Stage 7 jobs and no labels run by the manifest artifact itself. Each job is explicitly `forced_first_move_capacity_not_runtime_ownership_label`; it must not become selector training or runtime input without a later review.
 
 ### Progress-Window Reconsideration Runtime Test
 
@@ -477,6 +486,8 @@ reports/strategy_arbitration/krk_candidate_generation_observation_gap_review_v1.
 reports/strategy_arbitration/krk_candidate_generation_observation_gap_review_v1.json
 reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v1.md
 reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v1.json
+reports/strategy_arbitration/krk_candidate_move_capacity_label_manifest_v1.md
+reports/strategy_arbitration/krk_candidate_move_capacity_label_manifest_v1.json
 ```
 
 These artifacts answer:
@@ -494,10 +505,10 @@ These artifacts answer:
 Next safe step after observation-only candidate-generation coverage analysis:
 
 ```text
-bounded_protected_candidate_move_capacity_label_manifest
+run_bounded_offline_candidate_move_capacity_labels_or_review_manifest
 ```
 
-Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The next slice should propose a bounded protected-only candidate-move capacity label manifest if more annotation coverage is needed.
+Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. If labels are run, they must remain protected-only, bounded, offline, and capacity-only.
 
 ## Runtime Approval Rule
 

@@ -104,6 +104,17 @@ assert _candidate_move_annotation_spec.loader is not None
 _candidate_move_annotation = importlib.util.module_from_spec(_candidate_move_annotation_spec)
 _candidate_move_annotation_spec.loader.exec_module(_candidate_move_annotation)
 
+_candidate_move_manifest_spec = importlib.util.spec_from_file_location(
+    "build_krk_candidate_move_capacity_label_manifest_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "build_krk_candidate_move_capacity_label_manifest_v1.py",
+)
+assert _candidate_move_manifest_spec is not None
+assert _candidate_move_manifest_spec.loader is not None
+_candidate_move_manifest = importlib.util.module_from_spec(_candidate_move_manifest_spec)
+_candidate_move_manifest_spec.loader.exec_module(_candidate_move_manifest)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -621,4 +632,68 @@ def test_candidate_move_capacity_annotation_remains_offline_capacity_evidence():
     assert payload["summary"]["annotation_counts"]["positive_capacity"] == 1
     assert payload["summary"]["annotation_counts"]["unannotated"] == 1
     assert payload["interpretation"]["capacity_labels_are_not_ownership_labels"] is True
+    assert payload["decision"]["selector_allowed"] is False
+
+
+def test_candidate_move_capacity_manifest_is_bounded_and_protected_only():
+    observation_payload = {
+        "cases": [
+            {
+                "case_id": "stage5_state",
+                "state_id": "state.a",
+                "source_stage": "stage5",
+                "active_landmark_label": "fence_established",
+                "held_out": False,
+                "enabled_decision": {
+                    "observation": {
+                        "selected_move_before_observation": "a1a2",
+                        "selected_provider_before_observation": "krk.fence_established",
+                        "frames": [
+                            {
+                                "candidate_source": "candidate_move_frame",
+                                "state_fen": "fen-a",
+                                "move_uci": "a1a3",
+                                "move_shape_terms": ["candidate_is_rook_move"],
+                                "post_move_terms": ["box_area_not_increased_after_move"],
+                                "safety_terms": [],
+                                "source_terms": [],
+                            }
+                        ],
+                    }
+                },
+            },
+            {
+                "case_id": "stage7_state",
+                "state_id": "state.b",
+                "source_stage": "stage7",
+                "active_landmark_label": "box_shrink",
+                "held_out": True,
+                "enabled_decision": {
+                    "observation": {
+                        "frames": [
+                            {
+                                "candidate_source": "candidate_move_frame",
+                                "state_fen": "fen-b",
+                                "move_uci": "b1b2",
+                            }
+                        ],
+                    }
+                },
+            },
+        ]
+    }
+    capacity_payload = {"rows": []}
+
+    payload = _candidate_move_manifest.build_payload(
+        observation_payload=observation_payload,
+        capacity_payload=capacity_payload,
+        cap=4,
+    )
+
+    assert payload["summary"]["job_count"] == 1
+    assert payload["summary"]["stage7_job_count"] == 0
+    assert payload["jobs"][0]["label_semantics"] == (
+        "forced_first_move_capacity_not_runtime_ownership_label"
+    )
+    assert payload["decision"]["labels_run_by_this_artifact"] is False
     assert payload["decision"]["selector_allowed"] is False
