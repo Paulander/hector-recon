@@ -723,7 +723,20 @@ The bounded v3 labels added 8 protected capacity labels: 7 mate and 1 max_plies,
 Next safe step:
 
 ```text
-review_stage_conditioned_candidate_generation_scope
+stage_conditioned_candidate_generation_scope_review_ready
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_candidate_generation_stage_conditioned_scope_review_v3.md`
+* `reports/strategy_arbitration/krk_candidate_generation_stage_conditioned_scope_review_v3.json`
+
+The scope review says global cross-stage candidate-generation refresh is not supported, but stage-conditioned non-causal benchmarking is justified. Current protected evidence suggests Stage 5 has positive-capacity candidate-generation scopes for `edge_trap`, `fence_established`, and `stage0_basin`; Stage 6 has positive `stage0_basin` scope and risk/underpowered edge/fence/drive scopes; Stage 4 is mixed and needs companion visible context terms. This remains candidate generation only: no selector, no provider suppression, no score delta, and no runtime refresh.
+
+Next safe step:
+
+```text
+benchmark_stage_conditioned_candidate_generation_non_causal
 ```
 
 ## Runtime Approval Rule

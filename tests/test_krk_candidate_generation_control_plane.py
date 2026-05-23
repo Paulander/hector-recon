@@ -478,6 +478,19 @@ _cross_stage_label_outcome_review = importlib.util.module_from_spec(
 )
 _cross_stage_label_outcome_review_spec.loader.exec_module(_cross_stage_label_outcome_review)
 
+_stage_conditioned_scope_review_spec = importlib.util.spec_from_file_location(
+    "review_krk_candidate_generation_stage_conditioned_scope_v3",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_candidate_generation_stage_conditioned_scope_v3.py",
+)
+assert _stage_conditioned_scope_review_spec is not None
+assert _stage_conditioned_scope_review_spec.loader is not None
+_stage_conditioned_scope_review = importlib.util.module_from_spec(
+    _stage_conditioned_scope_review_spec
+)
+_stage_conditioned_scope_review_spec.loader.exec_module(_stage_conditioned_scope_review)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -2341,3 +2354,46 @@ def test_candidate_generation_cross_stage_label_outcome_blocks_runtime_when_gene
     assert payload["decision"]["runtime_candidate_generator_refresh_allowed"] is False
     assert payload["interpretation"]["more_blind_capacity_labels_recommended"] is False
     assert payload["interpretation"]["capacity_labels_are_not_ownership_labels"] is True
+
+
+def test_candidate_generation_stage_conditioned_scope_review_blocks_runtime():
+    payload = _stage_conditioned_scope_review.build_payload(
+        outcome_review={
+            "decision": {
+                "status": "cross_stage_capacity_labels_improve_in_sample_but_generalization_blocked"
+            }
+        },
+        post_probe={
+            "stage_family_rates": {
+                "stage5|edge_trap": {
+                    "support": 3,
+                    "positive": 3,
+                    "negative": 0,
+                    "positive_rate": 1.0,
+                },
+                "stage6|edge_trap": {
+                    "support": 3,
+                    "positive": 0,
+                    "negative": 3,
+                    "positive_rate": 0.0,
+                },
+                "stage4|stage0_basin": {
+                    "support": 3,
+                    "positive": 2,
+                    "negative": 1,
+                    "positive_rate": 2 / 3,
+                },
+            }
+        },
+    )
+
+    assert payload["decision"]["status"] == (
+        "stage_conditioned_candidate_generation_scope_review_ready"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["runtime_candidate_generator_refresh_allowed"] is False
+    assert payload["interpretation"]["stage_conditioned_scope_supported_for_benchmark"] is True
+    assert payload["stage_scopes"]["stage5"]["positive_scope_families"] == ["edge_trap"]
+    assert payload["stage_scopes"]["stage6"]["risk_scope_families"] == ["edge_trap"]
+    assert payload["stage_scopes"]["stage4"]["mixed_scope_families"] == ["stage0_basin"]
+    assert "provider_suppression" in payload["forbidden_uses"]
