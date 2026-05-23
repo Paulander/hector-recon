@@ -263,6 +263,9 @@ Important artifacts include:
 * split selector objective datasets/reviews
 * ownership selection label datasets/reviews
 * state-local paired ownership inventory/probes/reviews
+* `reports/strategy_arbitration/krk_candidate_proposal_coverage_v0.md/json`
+* `reports/strategy_arbitration/krk_candidate_generation_strategy_review_v0.md/json`
+* `reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_v1.md/json`
 
 Current conclusion:
 
@@ -271,6 +274,16 @@ candidate generation and strategy selection must remain separate evidence tracks
 ```
 
 Forced-provider capacity labels are useful for candidate-generation coverage, not direct runtime selection.
+
+Current candidate-generation review result:
+
+```text
+strategy_sequence_control_plane_v1_needed
+```
+
+The current protected replay-free proposal frames have `0.0` positive-capacity recall for the checked validated-provider alternatives: 11 protected positive-capacity alternatives are missing from visible proposal coverage, across Stage 4/5/6 and with 0 Stage 7 readiness rows. The validated-provider candidate pack would recover positive capacity, but it also includes negative capacity cases, so it is candidate-generation evidence only and must not become a direct selector label.
+
+`StrategySequenceCandidateFrame v1` is now defined as a non-causal evidence-frame schema to separate validated-provider candidates, CandidateMoveFrame hypotheses, PlanCapsule sequence candidates, and broader KRK strategy candidates. The next safe slice is replay-free population of those frames, not runtime selection.
 
 ### Progress-Window Reconsideration Runtime Test
 
@@ -360,14 +373,18 @@ The next architecture work should focus on:
 * how selector training should remain separate from capacity labels,
 * how Stage 7 residuals should remain held-out challenge cases.
 
-A suitable next artifact could be:
+A suitable next artifact has been produced:
 
 ```text
-reports/krk_candidate_generation_strategy_review_v0.md
-reports/krk_candidate_generation_strategy_review_v0.json
+reports/strategy_arbitration/krk_candidate_proposal_coverage_v0.md
+reports/strategy_arbitration/krk_candidate_proposal_coverage_v0.json
+reports/strategy_arbitration/krk_candidate_generation_strategy_review_v0.md
+reports/strategy_arbitration/krk_candidate_generation_strategy_review_v0.json
+reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_v1.md
+reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_v1.json
 ```
 
-It should answer:
+These artifacts answer:
 
 * What alternatives should a ReCoN reconsideration/strategy arbiter be able to see?
 * Which current proposal sources are missing those alternatives?
@@ -378,6 +395,14 @@ It should answer:
 * How should candidate generation remain visible and non-hidden?
 * What is the first non-causal candidate-generation benchmark?
 * What, if anything, would justify a future default-off candidate-generation sandbox?
+
+Next safe non-causal slice:
+
+```text
+populate_strategy_sequence_candidate_frames_replay_free_v1
+```
+
+This should materialize StrategySequenceCandidateFrame rows from existing artifacts, keep Stage 7 as held-out challenge evidence, preserve capacity-vs-ownership label semantics, and avoid runtime behavior changes.
 
 ## Runtime Approval Rule
 

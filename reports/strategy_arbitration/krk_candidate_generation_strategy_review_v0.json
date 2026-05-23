@@ -1,0 +1,125 @@
+{
+  "benchmark_findings": {
+    "progress_window_supported_candidate_mate_count": 0,
+    "progress_window_unsupported_visible_candidate_mate_count": 0,
+    "protected_positive_capacity_missing_count": 11,
+    "protected_positive_capacity_recall_current": 0.0,
+    "sequence_policy_ready_for_runtime_review": false,
+    "sequence_policy_success_controls_met": false,
+    "strategy_ownership_ready_for_runtime_review": false,
+    "validated_provider_pack_negative_capacity_inclusion_rate": 0.3125,
+    "validated_provider_pack_positive_recall_if_included": 1.0
+  },
+  "candidate_channels": [
+    {
+      "causal_status": "non_causal",
+      "channel": "validated_provider_pack",
+      "reason": "Would recover protected positive-capacity providers, but also includes negative-capacity providers.",
+      "role": "candidate_generation",
+      "status": "recall_promising_but_selection_risk"
+    },
+    {
+      "causal_status": "non_causal_design_needed",
+      "channel": "candidate_move_frame",
+      "reason": "Provider proposals can omit legal alternatives; candidate moves must remain visible hypotheses, not hidden selectors.",
+      "role": "legal_move_hypothesis_generation",
+      "status": "needed_for_provider_omission_cases"
+    },
+    {
+      "causal_status": "non_causal_design_needed",
+      "channel": "plan_capsule_sequence_candidate",
+      "reason": "One-ply safe/progress moves may not convert without sequence policy.",
+      "role": "multi_step_candidate_generation",
+      "status": "needed_for_progress_window_and_stage7_sequence_gaps"
+    },
+    {
+      "causal_status": "non_causal_design_needed",
+      "channel": "broader_krk_strategy_proposal",
+      "reason": "Stage 7 is local evidence / handoff trigger, not a stable owner.",
+      "role": "phase_boundary_strategy_generation",
+      "status": "needed_for_stage7_boundary_cases"
+    }
+  ],
+  "causal_status": "non_causal_strategy_sequence_review",
+  "decision": {
+    "future_runtime_sandbox_requires": [
+      "candidate-generation candidate set exists",
+      "selection semantics separate capacity from ownership",
+      "sequence-policy candidates have clean success and hard-negative controls",
+      "default-off review packet",
+      "target smoke improvement before guardrails"
+    ],
+    "recommended_next_step": "define_non_causal_strategy_sequence_candidate_frame_v1",
+    "runtime_sandbox_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "strategy_sequence_control_plane_v1_needed"
+  },
+  "gameplay_topology_mutation": false,
+  "question_answers": {
+    "capacity_evidence_only": [
+      "forced-provider h40 mate labels",
+      "forced-provider h40 max_plies labels",
+      "validated-provider candidate-set counterfactual rows"
+    ],
+    "what_alternatives_should_be_visible": [
+      "validated provider candidates with protected positive-capacity evidence",
+      "candidate moves from CandidateMoveFrame when provider proposals omit legal progress moves",
+      "plan/capsule sequence candidates when one-ply provider moves do not convert",
+      "broader KRK strategy proposals when local stage labels are boundary signals"
+    ],
+    "what_remains_non_causal": [
+      "coverage rows",
+      "capacity labels",
+      "candidate-generation benchmark",
+      "strategy/sequence review",
+      "InternalTerminalSpec and PlanCapsuleSpec evidence"
+    ],
+    "which_alternatives_are_missing_from_current_frames": {
+      "missing_provider_family_counts": {
+        "edge_trap": 6,
+        "fence_established": 2,
+        "stage0_basin": 3
+      },
+      "missing_source_stage_counts": {
+        "stage4": 3,
+        "stage5": 7,
+        "stage6": 1
+      },
+      "protected_positive_capacity_missing_count": 11
+    },
+    "which_can_be_generated_by_existing_validated_providers": [
+      "krk.edge_trap_close",
+      "krk.edge_trap_enemy_between",
+      "krk.edge_trap_wrong_tempo",
+      "krk.fence_established",
+      "krk.stage0_basin"
+    ],
+    "which_require_candidate_move_frame_enumeration": [
+      "states where provider proposals omit legal progress moves",
+      "states where support terms are broad but no provider candidate converts"
+    ],
+    "which_require_new_broader_krk_strategy_proposals": [
+      "phase-boundary states where local stage ownership is not stable",
+      "positions needing edge-net / king-support continuation beyond current providers"
+    ],
+    "which_require_plan_capsule_sequence_candidates": [
+      "progress-window activation states whose selected/supported one-ply candidates all max out",
+      "Stage 7 held-out residuals with sequence-policy or post-box continuation gaps"
+    ]
+  },
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_candidate_generation_strategy_review.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_candidate_proposal_coverage_v0.json",
+    "reports/krk_strategy_sequence_inventory_v0.json",
+    "reports/krk_progress_window_reconsideration_post_activation_audit_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}
