@@ -850,6 +850,21 @@ _candidate_source_gap_manifest = importlib.util.module_from_spec(
 )
 _candidate_source_gap_manifest_spec.loader.exec_module(_candidate_source_gap_manifest)
 
+_candidate_source_expansion_options_spec = importlib.util.spec_from_file_location(
+    "review_krk_candidate_source_expansion_options_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_candidate_source_expansion_options_v0.py",
+)
+assert _candidate_source_expansion_options_spec is not None
+assert _candidate_source_expansion_options_spec.loader is not None
+_candidate_source_expansion_options = importlib.util.module_from_spec(
+    _candidate_source_expansion_options_spec
+)
+_candidate_source_expansion_options_spec.loader.exec_module(
+    _candidate_source_expansion_options
+)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -4083,3 +4098,28 @@ def test_candidate_source_gap_manifest_keeps_capacity_gaps_non_causal():
     assert payload["summary"]["policy_cell_missing_count"] == 1
     assert payload["gap_records"][0]["runtime_allowed"] is False
     assert payload["interpretation"]["not_selector_training_data"] is True
+
+
+def test_candidate_source_expansion_options_require_review_packet():
+    payload = _candidate_source_expansion_options.build_payload(
+        {
+            "summary": {
+                "exact_missing_positive_capacity_count": 21,
+                "policy_cell_covered_exact_missing_count": 15,
+                "policy_cell_missing_count": 6,
+                "gap_count_by_stage": {"stage4": 6, "stage5": 12, "stage6": 3},
+                "gap_count_by_family": {"edge_trap": 12, "stage0_basin": 9},
+            }
+        }
+    )
+
+    assert payload["decision"]["status"] == (
+        "candidate_source_expansion_options_review_complete_runtime_packet_required"
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["preferred_next_review"] == (
+        "exact_trace_enrichment_within_existing_policy_cells"
+    )
+    assert payload["options"][0]["selector_allowed"] is False
+    assert "new_review_packet" in payload["required_before_runtime"]

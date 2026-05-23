@@ -972,6 +972,19 @@ Artifacts:
 
 The manifest reports positive-capacity rows `26`, refresh trace rows `25`, exact-covered positive-capacity rows `5`, exact-missing positive-capacity rows `21`, policy-cell-covered/exact-missing rows `15`, and policy-cell-missing rows `6`. Gaps are concentrated in Stage 5 (`12`), Stage 4 (`6`), and Stage 6 (`3`), across `edge_trap` (`12`) and `stage0_basin` (`9`). These remain capacity/source gaps only, not selector labels. The recommended next safe slice is `review_candidate_source_expansion_options_non_causal`.
 
+Latest candidate source-expansion options review:
+
+```text
+candidate_source_expansion_options_review_complete_runtime_packet_required
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_candidate_source_expansion_options_v0.md`
+* `reports/strategy_arbitration/krk_candidate_source_expansion_options_v0.json`
+
+The preferred next review is exact trace enrichment within the existing Stage 5/6 policy cells, because most exact gaps are already policy-cell covered. Any implementation would require a new explicit runtime-review packet, default-off scope, candidate-count bound, default-off equivalence, zero score/selection deltas, no Stage 7 training rows, and no selector/routing.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

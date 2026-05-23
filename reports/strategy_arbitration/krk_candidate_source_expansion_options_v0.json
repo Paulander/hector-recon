@@ -1,0 +1,87 @@
+{
+  "causal_status": "non_causal_expansion_options_review",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "draft_exact_trace_enrichment_runtime_review_packet",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "status": "candidate_source_expansion_options_review_complete_runtime_packet_required"
+  },
+  "gameplay_topology_mutation": false,
+  "options": [
+    {
+      "option_id": "exact_trace_enrichment_within_existing_policy_cells",
+      "purpose": "Improve exact move/provider trace coverage where the reviewed policy cell is already visible but the exact capacity candidate is absent.",
+      "risk": "candidate_volume_growth_without_selection_value",
+      "runtime_implementation_requires_review_packet": true,
+      "scope": "stage5_stage6_current_refresh_policy_cells",
+      "selector_allowed": false,
+      "supported_by_gap_count": 15
+    },
+    {
+      "option_id": "protected_stage4_scope_review",
+      "purpose": "Decide whether Stage 4 should be eligible for observation-only candidate generation.",
+      "risk": "stage4_wrong_tempo_debt_scope_needs_separate_guardrails",
+      "runtime_implementation_requires_review_packet": true,
+      "scope": "stage4_review_only",
+      "selector_allowed": false,
+      "supported_by_gap_count": 6
+    },
+    {
+      "option_id": "plan_sequence_candidate_trace_review",
+      "purpose": "Define separate observation frames for sequence/PlanCapsule candidates when provider-pack frames are insufficient.",
+      "risk": "sequence_candidates_are_not_one_ply_provider_capacity_labels",
+      "runtime_implementation_requires_review_packet": true,
+      "scope": "plan_capsule_sequence_candidates",
+      "selector_allowed": false,
+      "supported_by_gap_count": 0
+    },
+    {
+      "option_id": "selector_training",
+      "purpose": "Out of scope because capacity/source gaps are not ownership labels.",
+      "risk": "would_mix_candidate_generation_capacity_with_runtime_ownership",
+      "runtime_implementation_requires_review_packet": true,
+      "scope": "not_allowed",
+      "selector_allowed": false,
+      "supported_by_gap_count": 0
+    }
+  ],
+  "preferred_next_review": "exact_trace_enrichment_within_existing_policy_cells",
+  "required_before_runtime": [
+    "new_review_packet",
+    "default_off_scope",
+    "candidate_count_bound",
+    "default_off_equivalence",
+    "no_score_delta",
+    "no_selected_move_or_provider_delta",
+    "no_stage7_training_rows",
+    "no_selector_or_routing"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_source_expansion_options.v1",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_candidate_source_gap_manifest_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "exact_missing_positive_capacity_count": 21,
+    "gap_count_by_family": {
+      "edge_trap": 12,
+      "stage0_basin": 9
+    },
+    "gap_count_by_stage": {
+      "stage4": 6,
+      "stage5": 12,
+      "stage6": 3
+    },
+    "policy_cell_covered_exact_missing_count": 15,
+    "policy_cell_missing_count": 6
+  }
+}
