@@ -352,6 +352,19 @@ assert _dataset_v2_quality_spec.loader is not None
 _dataset_v2_quality = importlib.util.module_from_spec(_dataset_v2_quality_spec)
 _dataset_v2_quality_spec.loader.exec_module(_dataset_v2_quality)
 
+_candidate_generation_refresh_spec = importlib.util.spec_from_file_location(
+    "probe_krk_candidate_generation_refresh_v2",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "probe_krk_candidate_generation_refresh_v2.py",
+)
+assert _candidate_generation_refresh_spec is not None
+assert _candidate_generation_refresh_spec.loader is not None
+_candidate_generation_refresh = importlib.util.module_from_spec(
+    _candidate_generation_refresh_spec
+)
+_candidate_generation_refresh_spec.loader.exec_module(_candidate_generation_refresh)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -1750,3 +1763,42 @@ def test_strategy_sequence_dataset_v2_quality_keeps_selector_blocked():
     assert payload["interpretation"]["candidate_generation_dataset_usable"] is True
     assert payload["interpretation"]["selector_dataset_usable"] is False
     assert "no_explicit_ownership_selector_rows" in payload["selector_blockers"]
+
+
+def test_candidate_generation_refresh_probe_uses_capacity_not_ownership_labels():
+    dataset = {
+        "rows": [
+            {
+                "evidence_channel": "validated_provider_capacity",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "fence_established",
+                "capacity_label": "positive_capacity",
+                "stage7_challenge_row": False,
+            },
+            {
+                "evidence_channel": "validated_provider_capacity",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "drive_to_edge",
+                "capacity_label": "negative_capacity",
+                "stage7_challenge_row": False,
+            },
+            {
+                "evidence_channel": "validated_provider_capacity",
+                "source_stage": "stage7",
+                "candidate_strategy_family": "box_shrink",
+                "capacity_label": "positive_capacity",
+                "stage7_challenge_row": True,
+            },
+        ]
+    }
+
+    payload = _candidate_generation_refresh.build_payload(
+        dataset=dataset,
+        quality={"decision": {"status": "fixture"}},
+    )
+
+    assert payload["summary"]["capacity_row_count"] == 2
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["interpretation"]["capacity_labels_are_not_ownership_labels"] is True
+    assert payload["interpretation"]["stage7_training_allowed"] is False
+    assert payload["policy_metrics"]["oracle_positive_capacity_ceiling"]["positive_recall"] == 1.0
