@@ -71,6 +71,28 @@ assert _observation_analysis_spec.loader is not None
 _observation_analysis = importlib.util.module_from_spec(_observation_analysis_spec)
 _observation_analysis_spec.loader.exec_module(_observation_analysis)
 
+_observation_broadened_spec = importlib.util.spec_from_file_location(
+    "run_krk_candidate_generation_observation_broadened_sample_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "run_krk_candidate_generation_observation_broadened_sample_v1.py",
+)
+assert _observation_broadened_spec is not None
+assert _observation_broadened_spec.loader is not None
+_observation_broadened = importlib.util.module_from_spec(_observation_broadened_spec)
+_observation_broadened_spec.loader.exec_module(_observation_broadened)
+
+_observation_gap_review_spec = importlib.util.spec_from_file_location(
+    "analyze_krk_candidate_generation_observation_gap_review_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "analyze_krk_candidate_generation_observation_gap_review_v1.py",
+)
+assert _observation_gap_review_spec is not None
+assert _observation_gap_review_spec.loader is not None
+_observation_gap_review = importlib.util.module_from_spec(_observation_gap_review_spec)
+_observation_gap_review_spec.loader.exec_module(_observation_gap_review)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -417,3 +439,118 @@ def test_candidate_generation_observation_coverage_analysis_blocks_selector():
     assert analysis["interpretation"]["candidate_generation_visible"] is True
     assert analysis["decision"]["selector_allowed"] is False
     assert analysis["decision"]["guardrails_allowed"] is False
+
+
+def test_candidate_generation_broadened_sample_cases_keep_stage7_held_out():
+    cases = _observation_broadened.load_broadened_cases(stage7_cap=2)
+
+    assert cases
+    assert any(case["source_stage"] in {"stage4", "stage5", "stage6"} for case in cases)
+    assert sum(1 for case in cases if case["source_stage"] == "stage7") == 2
+    assert all(case["held_out"] for case in cases if case["source_stage"] == "stage7")
+
+
+def test_candidate_generation_broadened_aggregate_blocks_selector():
+    rows = [
+        {
+            "case_id": "stage5_state",
+            "source_stage": "stage5",
+            "held_out": False,
+            "source_artifact": "fixture",
+            "flag_off_decision": {"observation_present": False},
+            "enabled_decision": {
+                "observation": {
+                    "frames": [
+                        {
+                            "candidate_source": "validated_provider_pack",
+                            "capacity_evidence_kind": "positive_capacity",
+                            "protected_status": "protected_control",
+                            "direct_request": False,
+                            "score_delta": 0.0,
+                            "causal_status": "observation_only",
+                        }
+                    ]
+                }
+            },
+            "selected_move_provider_score_equivalent": True,
+        },
+        {
+            "case_id": "stage7_state",
+            "source_stage": "stage7",
+            "held_out": True,
+            "source_artifact": "fixture",
+            "flag_off_decision": {"observation_present": False},
+            "enabled_decision": {
+                "observation": {
+                    "frames": [
+                        {
+                            "candidate_source": "candidate_move_frame",
+                            "capacity_evidence_kind": "held_out_challenge",
+                            "protected_status": "held_out_stage7_challenge",
+                            "direct_request": False,
+                            "score_delta": 0.0,
+                            "causal_status": "observation_only",
+                        }
+                    ]
+                }
+            },
+            "selected_move_provider_score_equivalent": True,
+        },
+    ]
+
+    summary = _observation_broadened._aggregate(rows)
+
+    assert summary["stage7_heldout_case_count"] == 1
+    assert summary["stage7_readiness_training_row_count"] == 0
+    assert summary["selected_move_or_provider_delta_count"] == 0
+    assert summary["default_off_observation_case_count"] == 0
+    assert summary["invariant_failure_count"] == 0
+
+
+def test_candidate_generation_observation_gap_review_blocks_selector_on_unknown_capacity():
+    payload = {
+        "cases": [
+            {
+                "case_id": "stage5_state",
+                "source_stage": "stage5",
+                "held_out": False,
+                "enabled_decision": {
+                    "observation": {
+                        "frames": [
+                            {
+                                "candidate_source": "candidate_move_frame",
+                                "capacity_evidence_kind": "unknown_capacity",
+                                "protected_status": "protected_or_unknown",
+                                "direct_request": False,
+                                "score_delta": 0.0,
+                                "causal_status": "observation_only",
+                            },
+                            {
+                                "candidate_source": "candidate_move_frame",
+                                "capacity_evidence_kind": "unknown_capacity",
+                                "protected_status": "protected_or_unknown",
+                                "direct_request": False,
+                                "score_delta": 0.0,
+                                "causal_status": "observation_only",
+                            },
+                            {
+                                "candidate_source": "validated_provider_pack",
+                                "capacity_evidence_kind": "negative_capacity",
+                                "protected_status": "protected_control",
+                                "direct_request": False,
+                                "score_delta": 0.0,
+                                "causal_status": "observation_only",
+                            },
+                        ]
+                    }
+                },
+            }
+        ]
+    }
+
+    review = _observation_gap_review.review(payload)
+
+    assert review["decision"]["selector_allowed"] is False
+    assert review["decision"]["guardrails_allowed"] is False
+    assert "candidate_capacity_mostly_unknown" in review["selector_blockers"]
+    assert "generated_set_contains_negative_capacity_candidates" in review["selector_blockers"]

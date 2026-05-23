@@ -273,6 +273,8 @@ Important artifacts include:
 * `reports/strategy_arbitration/krk_candidate_generation_sandbox_review_v0.md/json`
 * `reports/strategy_arbitration/krk_candidate_generation_observation_sandbox_v0.md/json`
 * `reports/strategy_arbitration/krk_candidate_generation_observation_coverage_analysis_v0.md/json`
+* `reports/strategy_arbitration/krk_candidate_generation_observation_broadened_sample_v1.md/json`
+* `reports/strategy_arbitration/krk_candidate_generation_observation_gap_review_v1.md/json`
 
 Current conclusion:
 
@@ -339,6 +341,15 @@ observation_frames_usable_for_non_causal_coverage_analysis
 ```
 
 The emitted frames include both `validated_provider_pack` and `candidate_move_frame` sources, expose positive/negative/unknown/held-out capacity classes, and have zero invariant failures. Selector work and guardrails remain blocked; the next safe step is to broaden the observation sample before any selector review.
+
+Broadened observation-only sampling is complete:
+
+```text
+broadened_observation_sample_supports_coverage_analysis
+observation_gap_review_blocks_selector_recommends_capacity_annotation
+```
+
+The broadened sample covers 19 Stage 4/5/6 protected plus Stage 7 held-out cases and emits 569 observation-only frames with zero invariant failures, zero default-off observation leakage, and zero selected move/provider deltas. The gap review keeps selector work blocked because most emitted frames still have unknown capacity evidence, negative-capacity provider-pack candidates are present, and runtime observation does not yet expose PlanCapsule sequence candidates or broader strategy candidates. The next safe step is non-causal candidate-frame capacity/quality annotation review, not selector implementation or guardrails.
 
 ### Progress-Window Reconsideration Runtime Test
 
@@ -451,6 +462,10 @@ reports/strategy_arbitration/krk_candidate_generation_observation_sandbox_v0.md
 reports/strategy_arbitration/krk_candidate_generation_observation_sandbox_v0.json
 reports/strategy_arbitration/krk_candidate_generation_observation_coverage_analysis_v0.md
 reports/strategy_arbitration/krk_candidate_generation_observation_coverage_analysis_v0.json
+reports/strategy_arbitration/krk_candidate_generation_observation_broadened_sample_v1.md
+reports/strategy_arbitration/krk_candidate_generation_observation_broadened_sample_v1.json
+reports/strategy_arbitration/krk_candidate_generation_observation_gap_review_v1.md
+reports/strategy_arbitration/krk_candidate_generation_observation_gap_review_v1.json
 ```
 
 These artifacts answer:
@@ -468,10 +483,10 @@ These artifacts answer:
 Next safe step after observation-only candidate-generation coverage analysis:
 
 ```text
-broaden_observation_sample_before_selector_review
+non_causal_candidate_move_capacity_annotation_review
 ```
 
-Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The next slice should collect a broader observation-only sample and analyze candidate coverage before any selector review.
+Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The next slice should review non-causal capacity/quality annotation for visible candidate frames before any selector review.
 
 ## Runtime Approval Rule
 
