@@ -807,6 +807,21 @@ _candidate_generation_v4_context_benchmark_spec.loader.exec_module(
     _candidate_generation_v4_context_benchmark
 )
 
+_candidate_generation_v4_runtime_boundary_spec = importlib.util.spec_from_file_location(
+    "review_krk_candidate_generation_v4_next_runtime_boundary",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_candidate_generation_v4_next_runtime_boundary.py",
+)
+assert _candidate_generation_v4_runtime_boundary_spec is not None
+assert _candidate_generation_v4_runtime_boundary_spec.loader is not None
+_candidate_generation_v4_runtime_boundary = importlib.util.module_from_spec(
+    _candidate_generation_v4_runtime_boundary_spec
+)
+_candidate_generation_v4_runtime_boundary_spec.loader.exec_module(
+    _candidate_generation_v4_runtime_boundary
+)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -3914,3 +3929,33 @@ def test_candidate_generation_v4_context_benchmark_keeps_selector_blocked():
     assert payload["summary"]["policy_cell_negative_capacity_exposure_from_refresh_trace"] == 0.0
     assert payload["interpretation"]["capacity_labels_are_not_ownership_labels"] is True
     assert payload["interpretation"]["trace_rows_are_not_training_labels"] is True
+
+
+def test_candidate_generation_v4_runtime_boundary_blocks_new_runtime_behavior():
+    payload = _candidate_generation_v4_runtime_boundary.build_payload(
+        {
+            "decision": {"selector_allowed": False},
+            "summary": {
+                "capacity_row_count": 36,
+                "positive_capacity_count": 26,
+                "negative_capacity_count": 10,
+                "runtime_trace_row_count": 31,
+                "refresh_trace_row_count": 25,
+                "exact_positive_capacity_recall_from_refresh_trace": 0.19,
+                "policy_cell_positive_capacity_recall_from_refresh_trace": 0.77,
+                "exact_negative_capacity_exposure_from_refresh_trace": 0.0,
+                "policy_cell_negative_capacity_exposure_from_refresh_trace": 0.0,
+                "selector_training_row_count": 0,
+                "stage7_readiness_training_row_count": 0,
+            },
+        }
+    )
+
+    assert payload["decision"]["status"] == (
+        "candidate_generation_v4_next_runtime_boundary_context_ready_selector_blocked"
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["approved_now"]["implement_new_runtime_sandbox"] is False
+    assert payload["approved_now"]["selector_allowed"] is False
+    assert payload["boundary_assessment"]["exact_move_provider_coverage_is_partial"] is True
+    assert "selector_training" in payload["still_forbidden"]

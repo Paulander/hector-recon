@@ -933,6 +933,19 @@ architecture_review_candidate_generation_context_to_next_runtime_boundary
 
 This does not authorize a selector, scoring, routing, guardrails, Stage 7 promotion, Stage 8 training, or runtime behavior changes.
 
+Latest v4 runtime-boundary review:
+
+```text
+candidate_generation_v4_next_runtime_boundary_context_ready_selector_blocked
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_candidate_generation_v4_next_runtime_boundary_review_v0.md`
+* `reports/strategy_arbitration/krk_candidate_generation_v4_next_runtime_boundary_review_v0.json`
+
+The existing default-off observation sandbox remains valid for candidate-generation context, but the review does not authorize a new runtime sandbox, selector, scoring/routing changes, guardrails, Stage 4 runtime scope, Stage 7 promotion, or Stage 8 training. Exact move/provider coverage remains partial, so the next safe step is a non-causal scope-gap review before any new runtime boundary.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:
