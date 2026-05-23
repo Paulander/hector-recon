@@ -330,6 +330,17 @@ assert _dataset_design_v2_spec.loader is not None
 _dataset_design_v2 = importlib.util.module_from_spec(_dataset_design_v2_spec)
 _dataset_design_v2_spec.loader.exec_module(_dataset_design_v2)
 
+_dataset_v2_spec = importlib.util.spec_from_file_location(
+    "build_krk_strategy_sequence_dataset_v2",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "build_krk_strategy_sequence_dataset_v2.py",
+)
+assert _dataset_v2_spec is not None
+assert _dataset_v2_spec.loader is not None
+_dataset_v2 = importlib.util.module_from_spec(_dataset_v2_spec)
+_dataset_v2_spec.loader.exec_module(_dataset_v2)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -1635,3 +1646,43 @@ def test_strategy_sequence_dataset_design_v2_separates_trace_and_labels():
     assert channels["validated_provider_capacity"]["forbidden_use"] == (
         "selector_training_label"
     )
+
+
+def test_strategy_sequence_dataset_v2_blocks_selector_and_preserves_generator_rows():
+    base_frame = {
+        "frame_id": "frame.capacity",
+        "state_id": "state.a",
+        "source_stage": "stage5",
+        "frame_type": "validated_provider_candidate",
+        "candidate_strategy_family": "fence_established",
+        "label_semantics": "capacity_evidence_not_ownership_label",
+        "stage7_challenge_row": False,
+        "usable_for_selector_training": True,
+        "capacity_evidence": {"capacity_label": "positive_capacity"},
+    }
+    trace_frame = {
+        "frame_id": "frame.trace",
+        "state_id": "state.b",
+        "source_stage": "stage5",
+        "frame_type": "broader_krk_strategy_candidate",
+        "candidate_strategy_family": "terminal.krk.repair_needed_monitor",
+        "label_semantics": "runtime_observation_context_not_selector_label",
+        "stage7_challenge_row": False,
+        "usable_for_selector_training": False,
+    }
+
+    payload = _dataset_v2.build_payload(
+        base_payload={"frames": [base_frame]},
+        trace_payload={"trace_only_frames": [trace_frame]},
+        design_payload={"schema_version": "krk_strategy_sequence_dataset_design.v2"},
+    )
+
+    assert payload["decision"]["status"] == (
+        "strategy_sequence_dataset_v2_refreshed_non_causal_selector_blocked"
+    )
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert payload["summary"]["candidate_generation_training_row_count"] == 1
+    assert payload["summary"]["runtime_trace_feature_row_count"] == 1
+    assert payload["rows"][0]["legacy_usable_for_selector_training"] is True
+    assert payload["rows"][0]["usable_for_selector_training_v2"] is False
+    assert payload["rows"][0]["usable_for_candidate_generation_training_v2"] is True
