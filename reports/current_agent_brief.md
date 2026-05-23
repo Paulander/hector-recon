@@ -959,6 +959,19 @@ Artifacts:
 
 The review identifies these blockers before any new runtime boundary: partial exact move/provider coverage, absent ownership-selector labels, Stage 4 runtime scope still unreviewed, missing plan/sequence candidate trace coverage, and Stage 7 held-out-only status. The recommended next safe slice is `candidate_source_gap_manifest_non_causal`.
 
+Latest candidate source-gap manifest:
+
+```text
+candidate_source_gap_manifest_ready_non_causal
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_candidate_source_gap_manifest_v0.md`
+* `reports/strategy_arbitration/krk_candidate_source_gap_manifest_v0.json`
+
+The manifest reports positive-capacity rows `26`, refresh trace rows `25`, exact-covered positive-capacity rows `5`, exact-missing positive-capacity rows `21`, policy-cell-covered/exact-missing rows `15`, and policy-cell-missing rows `6`. Gaps are concentrated in Stage 5 (`12`), Stage 4 (`6`), and Stage 6 (`3`), across `edge_trap` (`12`) and `stage0_basin` (`9`). These remain capacity/source gaps only, not selector labels. The recommended next safe slice is `review_candidate_source_expansion_options_non_causal`.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

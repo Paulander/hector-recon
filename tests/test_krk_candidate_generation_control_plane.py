@@ -837,6 +837,19 @@ _candidate_generation_scope_gap_review_spec.loader.exec_module(
     _candidate_generation_scope_gap_review
 )
 
+_candidate_source_gap_manifest_spec = importlib.util.spec_from_file_location(
+    "build_krk_candidate_source_gap_manifest_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "build_krk_candidate_source_gap_manifest_v0.py",
+)
+assert _candidate_source_gap_manifest_spec is not None
+assert _candidate_source_gap_manifest_spec.loader is not None
+_candidate_source_gap_manifest = importlib.util.module_from_spec(
+    _candidate_source_gap_manifest_spec
+)
+_candidate_source_gap_manifest_spec.loader.exec_module(_candidate_source_gap_manifest)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -4017,3 +4030,56 @@ def test_candidate_generation_scope_gap_review_blocks_new_runtime_boundary():
     assert "exact_move_provider_coverage_partial" in payload["scope_gaps"]
     assert "ownership_selector_labels_absent" in payload["scope_gaps"]
     assert payload["gap_interpretation"]["selection_blocked_by_label_semantics"] is True
+
+
+def test_candidate_source_gap_manifest_keeps_capacity_gaps_non_causal():
+    dataset = {
+        "rows": [
+            {
+                "evidence_channel": "validated_provider_capacity",
+                "state_id": "state.a",
+                "fen": "fen-a",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "stage0_basin",
+                "candidate_provider_id": "krk.stage0_basin",
+                "candidate_move_uci": "a1a2",
+                "capacity_label": "positive_capacity",
+                "stage7_challenge_row": False,
+            },
+            {
+                "evidence_channel": "validated_provider_capacity",
+                "state_id": "state.b",
+                "fen": "fen-b",
+                "source_stage": "stage4",
+                "candidate_strategy_family": "edge_trap",
+                "candidate_provider_id": "krk.edge_trap_close",
+                "candidate_move_uci": "b1b2",
+                "capacity_label": "positive_capacity",
+                "stage7_challenge_row": False,
+            },
+            {
+                "evidence_channel": "runtime_observation_trace_feature",
+                "fen": "fen-a",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "stage0_basin",
+                "candidate_provider_id": "krk.stage0_basin",
+                "candidate_move_uci": "a1a2",
+                "policy_cell": "stage5|stage0_basin",
+                "trace_feature_source": "candidate_generation_refresh_sandbox",
+                "stage7_challenge_row": False,
+            },
+        ]
+    }
+
+    payload = _candidate_source_gap_manifest.build_payload(
+        dataset=dataset,
+        scope_review={"decision": {"status": "scope_review_fixture"}},
+    )
+
+    assert payload["decision"]["status"] == "candidate_source_gap_manifest_ready_non_causal"
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["summary"]["exact_covered_positive_capacity_count"] == 1
+    assert payload["summary"]["exact_missing_positive_capacity_count"] == 1
+    assert payload["summary"]["policy_cell_missing_count"] == 1
+    assert payload["gap_records"][0]["runtime_allowed"] is False
+    assert payload["interpretation"]["not_selector_training_data"] is True
