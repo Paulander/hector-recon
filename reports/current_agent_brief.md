@@ -438,19 +438,23 @@ The default-off repair-monitor observation source was then explicitly approved a
 ```text
 repair_monitor_observation_source_wired_default_off_equivalent
 repair_monitor_observation_source_coverage_ready_for_guarded_analysis
+repair_monitor_observation_source_broadened_default_off_equivalent
 ```
 
 Artifacts:
 
 * `reports/strategy_arbitration/krk_repair_monitor_observation_source_smoke_v1.md/json`
 * `reports/strategy_arbitration/krk_repair_monitor_observation_source_coverage_v1.md/json`
+* `reports/strategy_arbitration/krk_repair_monitor_observation_source_broadened_v1.md/json`
 
 The source emits `broader_strategy_candidate` frames for `terminal.krk.repair_needed_monitor` in protected Stage 4/5/6 contexts only. The smoke covered 3 protected cases, emitted 3 repair-monitor frames, and produced 0 selected move/provider deltas, 0 baseline frame leaks, 0 invariant failures, and 0 Stage 7 cases. This is observation-only: `direct_request=false`, `score_delta=0.0`, no selector, no routing, no guardrails, no Stage 7 training/readiness rows, no Stage 8.
+
+The broadened protected sample covered 6 protected cases, emitted 6 repair-monitor frames, and again produced 0 selected move/provider deltas, 0 baseline frame leaks, 0 invariant failures, and 0 Stage 7 cases. Selected providers in that sample were `krk.stage0_basin`, `krk.edge_trap_close`, and `krk.fence_established`.
 
 Next safe step:
 
 ```text
-broaden_repair_monitor_observation_sample_non_causal
+repair_monitor_observation_source_non_causal_quality_review
 ```
 
 Do not implement selector behavior, run guardrails, tune scores, route providers, promote Stage 7, or train Stage 8 from this source.
@@ -619,10 +623,10 @@ These artifacts answer:
 Next safe step after observation-only candidate-generation coverage analysis:
 
 ```text
-broaden_repair_monitor_observation_sample_non_causal
+repair_monitor_observation_source_non_causal_quality_review
 ```
 
-Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The narrow repair-monitor observation source has been wired as an explicitly approved, default-off observation-only source; the next work is non-causal coverage analysis, not selection.
+Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The narrow repair-monitor observation source has been wired as an explicitly approved, default-off observation-only source and passed broadened protected equivalence; the next work is non-causal quality review, not selection.
 
 ## Runtime Approval Rule
 

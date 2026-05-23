@@ -271,6 +271,19 @@ assert _repair_monitor_coverage_spec.loader is not None
 _repair_monitor_coverage = importlib.util.module_from_spec(_repair_monitor_coverage_spec)
 _repair_monitor_coverage_spec.loader.exec_module(_repair_monitor_coverage)
 
+_repair_monitor_broadened_spec = importlib.util.spec_from_file_location(
+    "run_krk_repair_monitor_observation_source_broadened_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "run_krk_repair_monitor_observation_source_broadened_v1.py",
+)
+assert _repair_monitor_broadened_spec is not None
+assert _repair_monitor_broadened_spec.loader is not None
+_repair_monitor_broadened = importlib.util.module_from_spec(
+    _repair_monitor_broadened_spec
+)
+_repair_monitor_broadened_spec.loader.exec_module(_repair_monitor_broadened)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -1358,3 +1371,58 @@ def test_repair_monitor_observation_smoke_loads_protected_cases_only():
     assert cases
     assert all(case["source_stage"] in {"stage4", "stage5", "stage6"} for case in cases)
     assert all(case["held_out"] is False for case in cases)
+
+
+def test_repair_monitor_observation_broadened_summary_blocks_selector():
+    rows = [
+        {
+            "case_id": f"case_{idx}",
+            "source_stage": "stage5",
+            "selected_provider": "krk.stage0_basin",
+            "baseline_decision": {"observation": {"frames": []}},
+            "enabled_decision": {
+                "observation": {
+                    "frames": [
+                        {
+                            "candidate_source": "broader_strategy_candidate",
+                            "strategy_family": "terminal.krk.repair_needed_monitor",
+                            "risk_terms": ["repair_or_reestablish_cut_available"],
+                            "direct_request": False,
+                            "score_delta": 0.0,
+                            "causal_status": "observation_only",
+                            "protected_status": "protected_control",
+                        }
+                    ]
+                }
+            },
+            "selected_move_provider_score_equivalent": True,
+            "baseline_repair_monitor_frame_count": 0,
+            "enabled_repair_monitor_frame_count": 1,
+            "enabled_repair_monitor_sample_frames": [
+                {
+                    "candidate_source": "broader_strategy_candidate",
+                    "strategy_family": "terminal.krk.repair_needed_monitor",
+                    "risk_terms": ["repair_or_reestablish_cut_available"],
+                    "direct_request": False,
+                    "score_delta": 0.0,
+                    "causal_status": "observation_only",
+                    "protected_status": "protected_control",
+                }
+            ],
+        }
+        for idx in range(4)
+    ]
+
+    summary = _repair_monitor_broadened._summary(rows)
+    decision = _repair_monitor_broadened._decision(summary)
+
+    assert summary["case_count"] == 4
+    assert summary["repair_monitor_frame_count"] == 4
+    assert summary["stage7_case_count"] == 0
+    assert summary["selected_move_provider_delta_count"] == 0
+    assert summary["invariant_failure_count"] == 0
+    assert decision["status"] == (
+        "repair_monitor_observation_source_broadened_default_off_equivalent"
+    )
+    assert decision["selector_allowed"] is False
+    assert decision["guardrails_allowed"] is False
