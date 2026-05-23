@@ -66,7 +66,7 @@ def build_payload(source: dict[str, Any] | None = None) -> dict[str, Any]:
             frame.get("candidate_source") != "stage_conditioned_candidate_generation_refresh"
             or frame.get("direct_request") is not False
             or float(frame.get("score_delta", 1.0) or 0.0) != 0.0
-            or frame.get("causal_status") != "observation_only"
+            or frame.get("causal_status") != "candidate_generation_only"
             or frame.get("protected_status") != "protected_control"
         ):
             invariant_failures.append(frame)

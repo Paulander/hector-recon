@@ -25,7 +25,7 @@ from scripts.test_krk_landmark_progress import choose_move_details  # noqa: E402
 
 
 SOURCE_ROWS = Path(
-    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v2_cross_stage_capacity_merged.json"
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v3.json"
 )
 OUT_JSON = Path(
     "reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_smoke_v0.json"
@@ -157,7 +157,7 @@ def build_payload() -> dict[str, Any]:
             if (
                 frame.get("direct_request") is not False
                 or float(frame.get("score_delta", 1.0) or 0.0) != 0.0
-                or frame.get("causal_status") != "observation_only"
+                or frame.get("causal_status") != "candidate_generation_only"
                 or frame.get("protected_status") != "protected_control"
             ):
                 invariant_failures.append(frame)

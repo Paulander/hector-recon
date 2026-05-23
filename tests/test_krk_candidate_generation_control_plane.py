@@ -526,6 +526,21 @@ assert _stage5_6_refresh_smoke_spec.loader is not None
 _stage5_6_refresh_smoke = importlib.util.module_from_spec(_stage5_6_refresh_smoke_spec)
 _stage5_6_refresh_smoke_spec.loader.exec_module(_stage5_6_refresh_smoke)
 
+_candidate_generation_refresh_sandbox_spec = importlib.util.spec_from_file_location(
+    "run_krk_candidate_generation_refresh_sandbox_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "run_krk_candidate_generation_refresh_sandbox_v0.py",
+)
+assert _candidate_generation_refresh_sandbox_spec is not None
+assert _candidate_generation_refresh_sandbox_spec.loader is not None
+_candidate_generation_refresh_sandbox = importlib.util.module_from_spec(
+    _candidate_generation_refresh_sandbox_spec
+)
+_candidate_generation_refresh_sandbox_spec.loader.exec_module(
+    _candidate_generation_refresh_sandbox
+)
+
 _stage5_6_refresh_coverage_spec = importlib.util.spec_from_file_location(
     "analyze_krk_stage5_6_candidate_generation_refresh_coverage_v0",
     Path(__file__).resolve().parents[1]
@@ -2771,7 +2786,11 @@ def test_stage5_6_refresh_observation_source_is_default_off_and_scoped():
     assert refresh_frames
     assert refresh_frames[0]["direct_request"] is False
     assert refresh_frames[0]["score_delta"] == 0.0
-    assert refresh_frames[0]["causal_status"] == "observation_only"
+    assert refresh_frames[0]["causal_status"] == "candidate_generation_only"
+    assert refresh_frames[0]["policy"] == "trace_stage_family_context"
+    assert refresh_frames[0]["stage"] == "stage5"
+    assert refresh_frames[0]["provider_family"] == "fence_established"
+    assert refresh_frames[0]["policy_cell"] == "stage5|fence_established"
     assert refresh_frames[0]["protected_status"] == "protected_control"
     assert "selecting_a_provider" in refresh_frames[0]["forbidden_actions"]
     assert not any(
@@ -2817,6 +2836,40 @@ def test_stage5_6_refresh_smoke_decision_blocks_selector():
     assert payload["decision"]["promotion_allowed"] is False
 
 
+def test_candidate_generation_refresh_sandbox_summary_enforces_frame_invariants():
+    rows = [
+        {
+            "source_stage": "stage5",
+            "baseline_refresh_frame_count": 0,
+            "selected_move_delta": False,
+            "selected_provider_delta": False,
+            "selected_score_delta": False,
+            "enabled_refresh_frames": [
+                {
+                    "candidate_source": "stage_conditioned_candidate_generation_refresh",
+                    "policy": "trace_stage_family_context",
+                    "stage": "stage5",
+                    "provider_family": "stage0_basin",
+                    "direct_request": False,
+                    "score_delta": 0.0,
+                    "causal_status": "candidate_generation_only",
+                    "protected_status": "protected_control",
+                    "candidate_generation_truncated": False,
+                }
+            ],
+        }
+    ]
+
+    summary = _candidate_generation_refresh_sandbox._summarize_rows(rows)
+
+    assert summary["generated_frame_count"] == 1
+    assert summary["generated_frame_count_by_stage"] == {"stage5": 1}
+    assert summary["generated_frame_count_by_provider_family"] == {"stage0_basin": 1}
+    assert summary["direct_request_false_count"] == 1
+    assert summary["score_delta_zero_count"] == 1
+    assert summary["invalid_frame_count"] == 0
+
+
 def test_stage5_6_refresh_coverage_keeps_selector_blocked():
     source = {
         "decision": {
@@ -2839,7 +2892,7 @@ def test_stage5_6_refresh_coverage_keeps_selector_blocked():
                         "provider_provenance": "stage5_6_candidate_generation_refresh_review_packet_v3",
                         "direct_request": False,
                         "score_delta": 0.0,
-                        "causal_status": "observation_only",
+                        "causal_status": "candidate_generation_only",
                         "protected_status": "protected_control",
                     }
                 ],

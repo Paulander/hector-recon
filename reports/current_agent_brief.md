@@ -870,6 +870,23 @@ Next step requires explicit human approval:
 explicit_approval_required_for_default_off_candidate_generation_refresh_sandbox
 ```
 
+Approval was granted for the scoped default-off candidate-generation refresh sandbox only.
+
+Current candidate-generation refresh sandbox status:
+
+```text
+candidate_generation_refresh_sandbox_ready_for_non_causal_coverage_analysis
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_candidate_generation_refresh_sandbox_v0.md`
+* `reports/strategy_arbitration/krk_candidate_generation_refresh_sandbox_v0.json`
+
+The sandbox is opt-in via `--enable-krk-candidate-generation-refresh` or the legacy alias `--enable-krk-stage5-6-candidate-generation-refresh-observation`. It emits `candidate_generation_only` frames for the approved `trace_stage_family_context` cells only: Stage 5 `edge_trap`, `fence_established`, `stage0_basin`; Stage 6 `stage0_basin`. It passed the small protected smoke: default-off equivalence `true`, enabled smoke `passed`, selected move/provider/score deltas `0`, generated frames `25`, protected frames `25`, Stage 7 held-out frames `0`, direct-request violations `0`, score-delta violations `0`, invalid frames `0`.
+
+This does not authorize selection, scoring, routing, provider suppression, guardrails, promotion, Stage 7 training/promotion, Stage 8 training, or Stage 4 runtime scope. The next safe step is non-causal coverage analysis over emitted candidate-generation frames.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

@@ -66,7 +66,7 @@ def build_payload(stage_cap: int = 4) -> dict[str, Any]:
             if (
                 frame.get("direct_request") is not False
                 or float(frame.get("score_delta", 1.0) or 0.0) != 0.0
-                or frame.get("causal_status") != "observation_only"
+                or frame.get("causal_status") != "candidate_generation_only"
                 or frame.get("protected_status") != "protected_control"
             ):
                 invariant_failures.append(frame)
