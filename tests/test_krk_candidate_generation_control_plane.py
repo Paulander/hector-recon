@@ -38,6 +38,17 @@ assert _benchmark_spec.loader is not None
 _benchmark = importlib.util.module_from_spec(_benchmark_spec)
 _benchmark_spec.loader.exec_module(_benchmark)
 
+_sandbox_review_spec = importlib.util.spec_from_file_location(
+    "write_krk_candidate_generation_sandbox_review_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_candidate_generation_sandbox_review_v0.py",
+)
+assert _sandbox_review_spec is not None
+assert _sandbox_review_spec.loader is not None
+_sandbox_review = importlib.util.module_from_spec(_sandbox_review_spec)
+_sandbox_review_spec.loader.exec_module(_sandbox_review)
+
 
 def test_candidate_proposal_coverage_preserves_capacity_label_semantics():
     capacity_rows = [
@@ -247,3 +258,20 @@ def test_control_plane_decision_blocks_runtime_when_stage7_training_leaks():
     assert decision["decision"]["status"] == "blocked_stage7_leakage"
     assert decision["decision"]["runtime_sandbox_allowed_by_this_packet"] is False
     assert decision["evidence"]["stage7_training_row_count"] == 1
+
+
+def test_candidate_generation_sandbox_review_is_observation_only():
+    payload = _sandbox_review.build_review_payload()
+
+    assert payload["decision"]["status"] == (
+        "candidate_generation_observation_sandbox_review_ready"
+    )
+    assert payload["decision"]["implementation_authorized_by_this_packet"] is False
+    assert payload["decision"]["runtime_sandbox_allowed_by_this_packet"] is False
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["score_changes_allowed"] is False
+    assert payload["decision"]["routing_changes_allowed"] is False
+    assert payload["runtime_candidate_generator_implemented"] is False
+    assert payload["runtime_behavior_changed"] is False
+    assert "selecting_a_provider" in payload["explicitly_forbidden"]
+    assert "score_delta_zero" in payload["required_candidate_frame_fields"]

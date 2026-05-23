@@ -1,0 +1,165 @@
+{
+  "acceptance_criteria_before_implementation": {
+    "beyond_observation_only": [
+      "separate review required",
+      "selector semantics reviewed separately",
+      "target smoke improvement required before guardrails"
+    ],
+    "observation_only_sandbox": [
+      "explicit approval after this review",
+      "default-off equivalence",
+      "generated candidate count bounded",
+      "no selected-move/provider delta",
+      "score_delta = 0.0",
+      "no topology mutation",
+      "trace includes source terms",
+      "Stage 7 rows remain held-out",
+      "focused tests pass",
+      "tiny smoke before any guardrail validation"
+    ]
+  },
+  "allowed_candidate_channels": [
+    {
+      "allowed_output": "visible candidate/proposal frames for protected validated providers",
+      "channel": "validated_provider_pack_proposals",
+      "label_semantics": "capacity_evidence_not_ownership_label",
+      "runtime_effect_allowed": "observation_only",
+      "source_evidence": "forced-provider capacity and visible provider proposal artifacts"
+    },
+    {
+      "allowed_output": "visible legal-move hypotheses with move-shape/post-move/safety terms",
+      "channel": "CandidateMoveFrame_legal_move_hypotheses",
+      "label_semantics": "move_hypothesis_not_selector_decision",
+      "runtime_effect_allowed": "observation_only",
+      "source_evidence": "CandidateMoveFrame and progress-window candidate evidence"
+    },
+    {
+      "allowed_output": "visible bounded sequence-candidate frames and plan context",
+      "channel": "PlanCapsule_sequence_candidates",
+      "label_semantics": "sequence_candidate_not_runtime_commitment",
+      "runtime_effect_allowed": "observation_only",
+      "source_evidence": "PlanCapsuleSpec and sequence-window diagnostics"
+    },
+    {
+      "allowed_output": "visible strategy-family/context candidates from monitors and phase-boundary evidence",
+      "channel": "broader_KRK_strategy_proposal_candidates",
+      "label_semantics": "strategy_candidate_not_provider_route",
+      "runtime_effect_allowed": "observation_only",
+      "source_evidence": "InternalTerminalSpec/StrategyMonitor evidence"
+    }
+  ],
+  "causal_status": "review_packet_only_non_runtime",
+  "decision": {
+    "implementation_authorized_by_this_packet": false,
+    "recommended_first_sandbox": "default_off_observation_only_candidate_generation",
+    "routing_changes_allowed": false,
+    "runtime_sandbox_allowed_by_this_packet": false,
+    "score_changes_allowed": false,
+    "selector_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "candidate_generation_observation_sandbox_review_ready"
+  },
+  "explicitly_forbidden": [
+    "selecting_a_provider",
+    "selecting_a_move",
+    "changing_scores",
+    "suppressing_providers",
+    "routing_directly_to_a_provider",
+    "direct_request_true",
+    "promoting_Stage7",
+    "training_Stage8",
+    "runtime_DTM_or_tablebase",
+    "gameplay_time_topology_mutation",
+    "hidden_Python_routing",
+    "treating_capacity_labels_as_selector_labels",
+    "guardrail_validation_before_target_smoke"
+  ],
+  "gameplay_topology_mutation": false,
+  "generation_vs_selection": {
+    "candidate_generation": "Expands the visible consideration set by emitting traceable candidate/proposal frames with source terms and non-causal evidence.",
+    "review_boundary": "The proposed sandbox may emit candidates but must preserve the existing selected move/provider and score ordering.",
+    "selection": "Chooses, scores, suppresses, or routes among candidates. Selection remains blocked and requires a separate review."
+  },
+  "recommended_first_runtime_sandbox": {
+    "authorization_status": "review_ready_requires_explicit_approval",
+    "guardrails": "not_yet; default-off equivalence and tiny smoke first",
+    "implementation_status": "not_implemented",
+    "name": "default_off_observation_only_candidate_generation",
+    "routing": "none",
+    "scoring": "none",
+    "selector": "none"
+  },
+  "remaining_risks": [
+    "validated provider pack includes negative-capacity candidates",
+    "capacity labels are not ownership labels",
+    "Stage 7 sequence candidates are held-out challenge evidence only",
+    "selection policy remains blocked",
+    "candidate explosion and performance risk",
+    "accidental hidden selector risk",
+    "observation-only data may still be too narrow for later selector design"
+  ],
+  "required_candidate_frame_fields": [
+    "generated_candidate_source",
+    "provider_id_or_move_id",
+    "source_terms",
+    "capacity_evidence_type",
+    "protected_or_stage7_or_heldout_flag",
+    "direct_request_false",
+    "score_delta_zero",
+    "causal_status_sandbox_observation_only_or_candidate_generation_only"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "sandbox_modes": [
+    {
+      "behavior": "generate candidate frames after normal selection",
+      "mode": "A",
+      "name": "observation_only_candidate_generation",
+      "routing_effect": "none",
+      "scoring_effect": 0.0,
+      "selection_effect": "none",
+      "status": "recommended_first_runtime_sandbox_if_explicitly_approved_later"
+    },
+    {
+      "behavior": "make additional candidates visible to later non-causal evaluation",
+      "mode": "B",
+      "name": "proposal_set_expansion_only",
+      "routing_effect": "none",
+      "scoring_effect": 0.0,
+      "selection_effect": "none",
+      "status": "review_later"
+    },
+    {
+      "behavior": "candidate generator hands off to selector",
+      "blocked_by": "requires separate selector review",
+      "mode": "C",
+      "name": "candidate_generation_plus_selector_handoff",
+      "status": "not_allowed"
+    }
+  ],
+  "schema_version": "krk_candidate_generation_sandbox_review.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_candidate_proposal_coverage_v0.json",
+    "reports/strategy_arbitration/krk_candidate_generation_strategy_review_v0.json",
+    "reports/strategy_arbitration/krk_strategy_sequence_candidate_frames_v1.json",
+    "reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_quality_v1.json",
+    "reports/strategy_arbitration/krk_candidate_frame_source_benchmark_v1.json",
+    "reports/strategy_arbitration/krk_strategy_sequence_control_plane_decision_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "supporting_evidence": {
+    "candidate_proposal_coverage_status": "candidate_generation_gap_confirmed",
+    "frame_quality_status": "frame_quality_probe_supports_next_sequence_candidate_benchmark",
+    "progress_window_supported_move_h40_mate_count": 0,
+    "protected_negative_capacity_ratio": 0.3125,
+    "protected_positive_capacity_candidates": 11,
+    "source_benchmark_status": "candidate_generation_sources_promising_selector_blocked",
+    "stage7_training_row_count": 0
+  }
+}

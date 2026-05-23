@@ -270,6 +270,7 @@ Important artifacts include:
 * `reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_quality_v1.md/json`
 * `reports/strategy_arbitration/krk_candidate_frame_source_benchmark_v1.md/json`
 * `reports/strategy_arbitration/krk_strategy_sequence_control_plane_decision_v1.md/json`
+* `reports/strategy_arbitration/krk_candidate_generation_sandbox_review_v0.md/json`
 
 Current conclusion:
 
@@ -313,7 +314,13 @@ candidate_generation_control_plane_ready_for_architecture_review
 
 Evidence: there are 11 protected positive-capacity candidates available for candidate generation, but protected forced-capacity sources also carry a `0.3125` negative-capacity ratio, so source expansion alone is not a selector. Progress-window supported move candidates still have 0 h40 mate outcomes in the held-out Stage 7 runtime-test target. Stage 7 readiness/training rows remain 0.
 
-The next step is not runtime implementation. It is architecture review for whether a default-off candidate-generation sandbox scope should be proposed, with selector policy still blocked.
+Candidate-generation sandbox scope review is complete:
+
+```text
+candidate_generation_observation_sandbox_review_ready
+```
+
+The review packet recommends only a default-off observation-only candidate-generation sandbox as the first possible runtime experiment, and it explicitly does not authorize implementation by itself. It forbids selection, score changes, suppression, direct provider routing, Stage 7 promotion, Stage 8 training, runtime DTM/tablebase, gameplay topology mutation, and hidden routing.
 
 ### Progress-Window Reconsideration Runtime Test
 
@@ -420,6 +427,8 @@ reports/strategy_arbitration/krk_candidate_frame_source_benchmark_v1.md
 reports/strategy_arbitration/krk_candidate_frame_source_benchmark_v1.json
 reports/strategy_arbitration/krk_strategy_sequence_control_plane_decision_v1.md
 reports/strategy_arbitration/krk_strategy_sequence_control_plane_decision_v1.json
+reports/strategy_arbitration/krk_candidate_generation_sandbox_review_v0.md
+reports/strategy_arbitration/krk_candidate_generation_sandbox_review_v0.json
 ```
 
 These artifacts answer:
@@ -434,13 +443,13 @@ These artifacts answer:
 * What is the first non-causal candidate-generation benchmark?
 * What, if anything, would justify a future default-off candidate-generation sandbox?
 
-Next safe non-causal slice after candidate-frame source benchmarking:
+Next safe step after candidate-generation sandbox review:
 
 ```text
-architecture_review_for_default_off_candidate_generation_sandbox_scope
+explicit_approval_required_before_default_off_observation_sandbox_implementation
 ```
 
-This should decide whether to propose a narrow, default-off candidate-generation sandbox review packet. It must not implement the sandbox, train a selector, promote Stage 7, or train Stage 8.
+Do not implement the sandbox unless explicitly approved. If approved, the first runtime slice must be observation-only, default-off, no score/routing effect, bounded candidate count, default-off equivalence first, and tiny smoke before any guardrails.
 
 ## Runtime Approval Rule
 
