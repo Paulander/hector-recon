@@ -865,6 +865,19 @@ _candidate_source_expansion_options_spec.loader.exec_module(
     _candidate_source_expansion_options
 )
 
+_exact_trace_enrichment_packet_spec = importlib.util.spec_from_file_location(
+    "write_krk_exact_trace_enrichment_runtime_review_packet_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_exact_trace_enrichment_runtime_review_packet_v0.py",
+)
+assert _exact_trace_enrichment_packet_spec is not None
+assert _exact_trace_enrichment_packet_spec.loader is not None
+_exact_trace_enrichment_packet = importlib.util.module_from_spec(
+    _exact_trace_enrichment_packet_spec
+)
+_exact_trace_enrichment_packet_spec.loader.exec_module(_exact_trace_enrichment_packet)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -4123,3 +4136,49 @@ def test_candidate_source_expansion_options_require_review_packet():
     )
     assert payload["options"][0]["selector_allowed"] is False
     assert "new_review_packet" in payload["required_before_runtime"]
+
+
+def test_exact_trace_enrichment_runtime_review_packet_requires_explicit_approval():
+    options = {
+        "decision": {
+            "status": "candidate_source_expansion_options_review_complete_runtime_packet_required"
+        },
+        "preferred_next_review": "exact_trace_enrichment_within_existing_policy_cells",
+        "summary": {},
+    }
+    manifest = {
+        "summary": {
+            "exact_missing_positive_capacity_count": 2,
+            "policy_cell_covered_exact_missing_count": 1,
+            "policy_cell_missing_count": 1,
+            "gap_count_by_stage": {"stage4": 1, "stage5": 1},
+            "gap_count_by_family": {"edge_trap": 2},
+        },
+        "gap_records": [
+            {
+                "gap_type": "policy_cell_covered_exact_missing",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "edge_trap",
+            },
+            {
+                "gap_type": "policy_cell_missing",
+                "source_stage": "stage4",
+                "candidate_strategy_family": "edge_trap",
+            },
+        ],
+    }
+
+    payload = _exact_trace_enrichment_packet.build_payload(
+        options=options,
+        manifest=manifest,
+    )
+
+    assert payload["decision"]["status"] == "exact_trace_enrichment_runtime_review_ready"
+    assert payload["decision"]["runtime_review_ready"] is True
+    assert payload["decision"]["implementation_authorized_by_this_packet"] is False
+    assert payload["decision"]["runtime_candidate_generation_allowed_by_this_packet"] is False
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["approved_scope_if_later_authorized"]["candidate_generation_cells"] == {
+        "stage5": ["edge_trap"]
+    }
+    assert "stage4_runtime_scope_without_separate_review" in payload["explicitly_forbidden"]

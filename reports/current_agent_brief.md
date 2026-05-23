@@ -985,6 +985,19 @@ Artifacts:
 
 The preferred next review is exact trace enrichment within the existing Stage 5/6 policy cells, because most exact gaps are already policy-cell covered. Any implementation would require a new explicit runtime-review packet, default-off scope, candidate-count bound, default-off equivalence, zero score/selection deltas, no Stage 7 training rows, and no selector/routing.
 
+Latest exact trace enrichment review packet:
+
+```text
+exact_trace_enrichment_runtime_review_ready
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_exact_trace_enrichment_runtime_review_packet_v0.md`
+* `reports/strategy_arbitration/krk_exact_trace_enrichment_runtime_review_packet_v0.json`
+
+This packet is review-ready but does not authorize implementation. If explicitly approved later, the only allowed scope would be default-off exact candidate-generation observation frames for policy-cell-covered gaps in Stage 5/6: Stage 5 `edge_trap` and `stage0_basin`, Stage 6 `stage0_basin`. It still forbids selector training, move/provider selection, score changes, provider suppression, direct routing, runtime DTM/tablebase, state-hash/exact-move runtime exceptions, gameplay-time topology mutation, Stage 4 runtime scope without separate review, Stage 7 training/promotion, Stage 8 training, and guardrails before default-off equivalence plus enabled smoke.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:
