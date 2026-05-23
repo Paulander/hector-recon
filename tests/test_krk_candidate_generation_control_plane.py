@@ -491,6 +491,19 @@ _stage_conditioned_scope_review = importlib.util.module_from_spec(
 )
 _stage_conditioned_scope_review_spec.loader.exec_module(_stage_conditioned_scope_review)
 
+_stage_conditioned_benchmark_spec = importlib.util.spec_from_file_location(
+    "benchmark_krk_stage_conditioned_candidate_generation_v3",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "benchmark_krk_stage_conditioned_candidate_generation_v3.py",
+)
+assert _stage_conditioned_benchmark_spec is not None
+assert _stage_conditioned_benchmark_spec.loader is not None
+_stage_conditioned_benchmark = importlib.util.module_from_spec(
+    _stage_conditioned_benchmark_spec
+)
+_stage_conditioned_benchmark_spec.loader.exec_module(_stage_conditioned_benchmark)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -2397,3 +2410,56 @@ def test_candidate_generation_stage_conditioned_scope_review_blocks_runtime():
     assert payload["stage_scopes"]["stage6"]["risk_scope_families"] == ["edge_trap"]
     assert payload["stage_scopes"]["stage4"]["mixed_scope_families"] == ["stage0_basin"]
     assert "provider_suppression" in payload["forbidden_uses"]
+
+
+def test_stage_conditioned_candidate_generation_benchmark_separates_stage5_6_from_stage4():
+    payload = _stage_conditioned_benchmark.build_payload(
+        dataset={
+            "rows": [
+                {
+                    "evidence_channel": "validated_provider_capacity",
+                    "source_stage": "stage5",
+                    "candidate_strategy_family": "edge_trap",
+                    "capacity_label": "positive_capacity",
+                    "stage7_challenge_row": False,
+                },
+                {
+                    "evidence_channel": "validated_provider_capacity",
+                    "source_stage": "stage6",
+                    "candidate_strategy_family": "stage0_basin",
+                    "capacity_label": "positive_capacity",
+                    "stage7_challenge_row": False,
+                },
+                {
+                    "evidence_channel": "validated_provider_capacity",
+                    "source_stage": "stage6",
+                    "candidate_strategy_family": "edge_trap",
+                    "capacity_label": "negative_capacity",
+                    "stage7_challenge_row": False,
+                },
+                {
+                    "evidence_channel": "validated_provider_capacity",
+                    "source_stage": "stage4",
+                    "candidate_strategy_family": "stage0_basin",
+                    "capacity_label": "positive_capacity",
+                    "stage7_challenge_row": False,
+                },
+            ]
+        },
+        scope_review={
+            "stage_scopes": {
+                "stage5": {"positive_scope_families": ["edge_trap"]},
+                "stage6": {"positive_scope_families": ["stage0_basin"]},
+                "stage4": {"positive_scope_families": []},
+            }
+        },
+    )
+
+    assert payload["decision"]["status"] == (
+        "stage_conditioned_candidate_generation_stage5_6_promising_stage4_blocked"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["runtime_candidate_generator_refresh_allowed"] is False
+    assert payload["interpretation"]["stage5_6_scope_promising"] is True
+    assert payload["interpretation"]["stage4_scope_blocked_without_companion_terms"] is True
+    assert payload["summary"]["stage7_readiness_training_row_count"] == 0

@@ -736,7 +736,20 @@ The scope review says global cross-stage candidate-generation refresh is not sup
 Next safe step:
 
 ```text
-benchmark_stage_conditioned_candidate_generation_non_causal
+stage_conditioned_candidate_generation_stage5_6_promising_stage4_blocked
+```
+
+Artifact:
+
+* `reports/strategy_arbitration/krk_stage_conditioned_candidate_generation_benchmark_v3.md`
+* `reports/strategy_arbitration/krk_stage_conditioned_candidate_generation_benchmark_v3.json`
+
+The non-causal benchmark says stage-conditioned candidate generation is promising for protected Stage 5/6 but still blocked for Stage 4 companion-context reasons. Stage 5/6 positive-scope metrics are perfect on the current protected capacity rows (`1.0` positive recall, `1.0` precision, `1.0` negative suppression), while Stage 4 positive recall is `0.0` because Stage 4 cells are mixed and intentionally require companion terms. This is still candidate-generation evidence only and does not authorize runtime refresh, selection, provider suppression, score changes, guardrails, Stage 7 promotion, or Stage 8 training.
+
+Next safe step:
+
+```text
+stage5_6_candidate_generation_refresh_review_packet_or_stage4_companion_audit
 ```
 
 ## Runtime Approval Rule

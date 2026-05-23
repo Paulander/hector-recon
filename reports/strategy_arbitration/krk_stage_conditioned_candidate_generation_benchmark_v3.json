@@ -1,0 +1,331 @@
+{
+  "causal_status": "non_causal_benchmark",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "stage5_6_candidate_generation_refresh_review_packet_or_stage4_companion_audit",
+    "runtime_candidate_generator_refresh_allowed": false,
+    "selector_allowed": false,
+    "status": "stage_conditioned_candidate_generation_stage5_6_promising_stage4_blocked"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "capacity_labels_are_not_ownership_labels": true,
+    "runtime_refresh_supported_now": false,
+    "selector_supported": false,
+    "stage4_scope_blocked_without_companion_terms": true,
+    "stage5_6_scope_promising": true,
+    "stage_conditioned_candidate_generation_supported": true
+  },
+  "policy_metrics": {
+    "emit_all_capacity_candidates": {
+      "balanced_recall_risk": 0.5,
+      "false_negative": 0,
+      "false_positive": 10,
+      "negative_count": 10,
+      "negative_suppression": 0.0,
+      "positive_count": 26,
+      "positive_precision": 0.7222222222222222,
+      "positive_recall": 1.0,
+      "predicted_count": 36,
+      "row_count": 36,
+      "true_negative": 0,
+      "true_positive": 26
+    },
+    "global_family_positive_rate_at_least_half": {
+      "balanced_recall_risk": 0.55,
+      "false_negative": 0,
+      "false_positive": 9,
+      "negative_count": 10,
+      "negative_suppression": 0.1,
+      "positive_count": 26,
+      "positive_precision": 0.7428571428571429,
+      "positive_recall": 1.0,
+      "predicted_count": 35,
+      "row_count": 36,
+      "true_negative": 1,
+      "true_positive": 26
+    },
+    "stage5_6_positive_scope_only": {
+      "balanced_recall_risk": 0.8846153846153846,
+      "false_negative": 6,
+      "false_positive": 0,
+      "negative_count": 10,
+      "negative_suppression": 1.0,
+      "positive_count": 26,
+      "positive_precision": 1.0,
+      "positive_recall": 0.7692307692307693,
+      "predicted_count": 20,
+      "row_count": 36,
+      "true_negative": 10,
+      "true_positive": 20
+    },
+    "stage_conditioned_positive_scope": {
+      "balanced_recall_risk": 0.8846153846153846,
+      "false_negative": 6,
+      "false_positive": 0,
+      "negative_count": 10,
+      "negative_suppression": 1.0,
+      "positive_count": 26,
+      "positive_precision": 1.0,
+      "positive_recall": 0.7692307692307693,
+      "predicted_count": 20,
+      "row_count": 36,
+      "true_negative": 10,
+      "true_positive": 20
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_stage_conditioned_candidate_generation_benchmark.v3",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v2_cross_stage_capacity_merged.json",
+    "reports/strategy_arbitration/krk_candidate_generation_stage_conditioned_scope_review_v3.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "stage_metrics": {
+    "emit_all_capacity_candidates": {
+      "stage4": {
+        "balanced_recall_risk": 0.5,
+        "false_negative": 0,
+        "false_positive": 5,
+        "negative_count": 5,
+        "negative_suppression": 0.0,
+        "positive_count": 6,
+        "positive_precision": 0.5454545454545454,
+        "positive_recall": 1.0,
+        "predicted_count": 11,
+        "row_count": 11,
+        "true_negative": 0,
+        "true_positive": 6
+      },
+      "stage5": {
+        "balanced_recall_risk": 1.0,
+        "false_negative": 0,
+        "false_positive": 0,
+        "negative_count": 0,
+        "negative_suppression": 1.0,
+        "positive_count": 16,
+        "positive_precision": 1.0,
+        "positive_recall": 1.0,
+        "predicted_count": 16,
+        "row_count": 16,
+        "true_negative": 0,
+        "true_positive": 16
+      },
+      "stage6": {
+        "balanced_recall_risk": 0.5,
+        "false_negative": 0,
+        "false_positive": 5,
+        "negative_count": 5,
+        "negative_suppression": 0.0,
+        "positive_count": 4,
+        "positive_precision": 0.4444444444444444,
+        "positive_recall": 1.0,
+        "predicted_count": 9,
+        "row_count": 9,
+        "true_negative": 0,
+        "true_positive": 4
+      }
+    },
+    "global_family_positive_rate_at_least_half": {
+      "stage4": {
+        "balanced_recall_risk": 0.5,
+        "false_negative": 0,
+        "false_positive": 5,
+        "negative_count": 5,
+        "negative_suppression": 0.0,
+        "positive_count": 6,
+        "positive_precision": 0.5454545454545454,
+        "positive_recall": 1.0,
+        "predicted_count": 11,
+        "row_count": 11,
+        "true_negative": 0,
+        "true_positive": 6
+      },
+      "stage5": {
+        "balanced_recall_risk": 1.0,
+        "false_negative": 0,
+        "false_positive": 0,
+        "negative_count": 0,
+        "negative_suppression": 1.0,
+        "positive_count": 16,
+        "positive_precision": 1.0,
+        "positive_recall": 1.0,
+        "predicted_count": 16,
+        "row_count": 16,
+        "true_negative": 0,
+        "true_positive": 16
+      },
+      "stage6": {
+        "balanced_recall_risk": 0.6,
+        "false_negative": 0,
+        "false_positive": 4,
+        "negative_count": 5,
+        "negative_suppression": 0.2,
+        "positive_count": 4,
+        "positive_precision": 0.5,
+        "positive_recall": 1.0,
+        "predicted_count": 8,
+        "row_count": 9,
+        "true_negative": 1,
+        "true_positive": 4
+      }
+    },
+    "stage5_6_positive_scope_only": {
+      "stage4": {
+        "balanced_recall_risk": 0.5,
+        "false_negative": 6,
+        "false_positive": 0,
+        "negative_count": 5,
+        "negative_suppression": 1.0,
+        "positive_count": 6,
+        "positive_precision": 0.0,
+        "positive_recall": 0.0,
+        "predicted_count": 0,
+        "row_count": 11,
+        "true_negative": 5,
+        "true_positive": 0
+      },
+      "stage5": {
+        "balanced_recall_risk": 1.0,
+        "false_negative": 0,
+        "false_positive": 0,
+        "negative_count": 0,
+        "negative_suppression": 1.0,
+        "positive_count": 16,
+        "positive_precision": 1.0,
+        "positive_recall": 1.0,
+        "predicted_count": 16,
+        "row_count": 16,
+        "true_negative": 0,
+        "true_positive": 16
+      },
+      "stage6": {
+        "balanced_recall_risk": 1.0,
+        "false_negative": 0,
+        "false_positive": 0,
+        "negative_count": 5,
+        "negative_suppression": 1.0,
+        "positive_count": 4,
+        "positive_precision": 1.0,
+        "positive_recall": 1.0,
+        "predicted_count": 4,
+        "row_count": 9,
+        "true_negative": 5,
+        "true_positive": 4
+      }
+    },
+    "stage_conditioned_positive_scope": {
+      "stage4": {
+        "balanced_recall_risk": 0.5,
+        "false_negative": 6,
+        "false_positive": 0,
+        "negative_count": 5,
+        "negative_suppression": 1.0,
+        "positive_count": 6,
+        "positive_precision": 0.0,
+        "positive_recall": 0.0,
+        "predicted_count": 0,
+        "row_count": 11,
+        "true_negative": 5,
+        "true_positive": 0
+      },
+      "stage5": {
+        "balanced_recall_risk": 1.0,
+        "false_negative": 0,
+        "false_positive": 0,
+        "negative_count": 0,
+        "negative_suppression": 1.0,
+        "positive_count": 16,
+        "positive_precision": 1.0,
+        "positive_recall": 1.0,
+        "predicted_count": 16,
+        "row_count": 16,
+        "true_negative": 0,
+        "true_positive": 16
+      },
+      "stage6": {
+        "balanced_recall_risk": 1.0,
+        "false_negative": 0,
+        "false_positive": 0,
+        "negative_count": 5,
+        "negative_suppression": 1.0,
+        "positive_count": 4,
+        "positive_precision": 1.0,
+        "positive_recall": 1.0,
+        "predicted_count": 4,
+        "row_count": 9,
+        "true_negative": 5,
+        "true_positive": 4
+      }
+    }
+  },
+  "summary": {
+    "best_policy": "stage_conditioned_positive_scope",
+    "best_policy_metrics": {
+      "balanced_recall_risk": 0.8846153846153846,
+      "false_negative": 6,
+      "false_positive": 0,
+      "negative_count": 10,
+      "negative_suppression": 1.0,
+      "positive_count": 26,
+      "positive_precision": 1.0,
+      "positive_recall": 0.7692307692307693,
+      "predicted_count": 20,
+      "row_count": 36,
+      "true_negative": 10,
+      "true_positive": 20
+    },
+    "capacity_label_counts": {
+      "negative_capacity": 10,
+      "positive_capacity": 26
+    },
+    "capacity_row_count": 36,
+    "positive_scope_cells": [
+      "stage5|edge_trap",
+      "stage5|fence_established",
+      "stage5|stage0_basin",
+      "stage6|stage0_basin"
+    ],
+    "source_stage_counts": {
+      "stage4": 11,
+      "stage5": 16,
+      "stage6": 9
+    },
+    "stage4_positive_scope_metrics": {
+      "balanced_recall_risk": 0.5,
+      "false_negative": 6,
+      "false_positive": 0,
+      "negative_count": 5,
+      "negative_suppression": 1.0,
+      "positive_count": 6,
+      "positive_precision": 0.0,
+      "positive_recall": 0.0,
+      "predicted_count": 0,
+      "row_count": 11,
+      "true_negative": 5,
+      "true_positive": 0
+    },
+    "stage5_6_positive_scope_metrics": {
+      "balanced_recall_risk": 1.0,
+      "false_negative": 0,
+      "false_positive": 0,
+      "negative_count": 5,
+      "negative_suppression": 1.0,
+      "positive_count": 20,
+      "positive_precision": 1.0,
+      "positive_recall": 1.0,
+      "predicted_count": 20,
+      "row_count": 25,
+      "true_negative": 5,
+      "true_positive": 20
+    },
+    "stage7_readiness_training_row_count": 0
+  }
+}
