@@ -749,7 +749,20 @@ The non-causal benchmark says stage-conditioned candidate generation is promisin
 Next safe step:
 
 ```text
-stage5_6_candidate_generation_refresh_review_packet_or_stage4_companion_audit
+stage5_6_candidate_generation_refresh_review_ready
+```
+
+Artifact:
+
+* `reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_review_packet_v3.md`
+* `reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_review_packet_v3.json`
+
+The review packet marks a narrow Stage 5/6 candidate-generation refresh as runtime-review-ready, but implementation is not authorized by the packet itself. The only reviewed future runtime scope would be default-off candidate-frame emission for protected Stage 5/6 positive-scope cells, with `direct_request=false`, `score_delta=0.0`, no selection, no suppression, no direct provider route, no Stage 4 scope, no Stage 7 training/promotion, and no Stage 8 training.
+
+Next step requires an explicit human architecture decision:
+
+```text
+explicit_approval_required_for_default_off_stage5_6_candidate_generation_refresh_sandbox
 ```
 
 ## Runtime Approval Rule

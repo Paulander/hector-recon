@@ -504,6 +504,17 @@ _stage_conditioned_benchmark = importlib.util.module_from_spec(
 )
 _stage_conditioned_benchmark_spec.loader.exec_module(_stage_conditioned_benchmark)
 
+_stage5_6_refresh_packet_spec = importlib.util.spec_from_file_location(
+    "write_krk_stage5_6_candidate_generation_refresh_review_packet_v3",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_stage5_6_candidate_generation_refresh_review_packet_v3.py",
+)
+assert _stage5_6_refresh_packet_spec is not None
+assert _stage5_6_refresh_packet_spec.loader is not None
+_stage5_6_refresh_packet = importlib.util.module_from_spec(_stage5_6_refresh_packet_spec)
+_stage5_6_refresh_packet_spec.loader.exec_module(_stage5_6_refresh_packet)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -2463,3 +2474,39 @@ def test_stage_conditioned_candidate_generation_benchmark_separates_stage5_6_fro
     assert payload["interpretation"]["stage5_6_scope_promising"] is True
     assert payload["interpretation"]["stage4_scope_blocked_without_companion_terms"] is True
     assert payload["summary"]["stage7_readiness_training_row_count"] == 0
+
+
+def test_stage5_6_candidate_generation_refresh_packet_requires_explicit_approval():
+    payload = _stage5_6_refresh_packet.build_payload(
+        benchmark={
+            "decision": {
+                "status": "stage_conditioned_candidate_generation_stage5_6_promising_stage4_blocked"
+            },
+            "summary": {
+                "stage5_6_positive_scope_metrics": {
+                    "positive_recall": 1.0,
+                    "negative_suppression": 1.0,
+                },
+                "stage4_positive_scope_metrics": {
+                    "positive_recall": 0.0,
+                    "negative_suppression": 1.0,
+                },
+                "positive_scope_cells": ["stage5|edge_trap", "stage6|stage0_basin"],
+                "stage7_readiness_training_row_count": 0,
+            },
+        }
+    )
+
+    assert payload["decision"]["status"] == (
+        "stage5_6_candidate_generation_refresh_review_ready"
+    )
+    assert payload["decision"]["runtime_review_ready"] is True
+    assert payload["decision"]["implementation_authorized_by_this_packet"] is False
+    assert payload["decision"]["runtime_candidate_generator_refresh_allowed_by_this_packet"] is False
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["approved_scope_if_later_authorized"]["excluded_stages"] == [
+        "stage4",
+        "stage7",
+        "stage8",
+    ]
+    assert "selecting_a_provider" in payload["explicitly_forbidden"]
