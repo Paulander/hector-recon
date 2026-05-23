@@ -1127,6 +1127,25 @@ Artifacts:
 
 The packet is review-ready for a future bounded observation-only trace collection run, but it does not authorize execution by itself. If explicitly approved later, the scope is capped at `8` Stage 5/6 rows, includes the `2` high-priority selected-owner failure rows, excludes Stage 4/7/8, requires default-off equivalence, and forbids selector training, routing, score changes, runtime DTM/tablebase, and gameplay-time topology mutation.
 
+Latest approved joined trace/ownership collection run:
+
+```text
+joined_trace_ownership_collection_complete_seed_improved
+selector_objective_seed_manifest_v1_ready_non_causal
+selector_objective_seed_ready_for_non_causal_feature_probe
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_joined_trace_ownership_collection_v0.md`
+* `reports/strategy_arbitration/krk_joined_trace_ownership_collection_v0.json`
+* `reports/strategy_arbitration/krk_selector_objective_seed_manifest_v1.md`
+* `reports/strategy_arbitration/krk_selector_objective_seed_manifest_v1.json`
+* `reports/strategy_arbitration/krk_selector_objective_seed_probe_v1.md`
+* `reports/strategy_arbitration/krk_selector_objective_seed_probe_v1.json`
+
+The explicitly approved bounded observation-only run collected `8/8` Stage 5/6 rows and emitted `80` candidate-generation-only frames with direct_request false, score_delta zero, selected move/provider delta zero, routing delta zero, Stage 7 training rows zero, and topology mutation false. The selector-objective seed now has `12` rows: `4` switch-contrast seeds and `8` safe-preservation seeds. The v1 seed probe confirms switch-vs-preserve semantics and is ready for a future non-causal selector-feature probe, but it still has `0` runtime-feature-eligible predictions and does not authorize selector training or runtime selector behavior.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

@@ -1047,6 +1047,49 @@ _joined_trace_ownership_collection_packet_spec.loader.exec_module(
     _joined_trace_ownership_collection_packet
 )
 
+_joined_trace_ownership_collection_run_spec = importlib.util.spec_from_file_location(
+    "run_krk_joined_trace_ownership_collection_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "run_krk_joined_trace_ownership_collection_v0.py",
+)
+assert _joined_trace_ownership_collection_run_spec is not None
+assert _joined_trace_ownership_collection_run_spec.loader is not None
+_joined_trace_ownership_collection_run = importlib.util.module_from_spec(
+    _joined_trace_ownership_collection_run_spec
+)
+_joined_trace_ownership_collection_run_spec.loader.exec_module(
+    _joined_trace_ownership_collection_run
+)
+
+_selector_objective_seed_manifest_v1_spec = importlib.util.spec_from_file_location(
+    "build_krk_selector_objective_seed_manifest_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "build_krk_selector_objective_seed_manifest_v1.py",
+)
+assert _selector_objective_seed_manifest_v1_spec is not None
+assert _selector_objective_seed_manifest_v1_spec.loader is not None
+_selector_objective_seed_manifest_v1 = importlib.util.module_from_spec(
+    _selector_objective_seed_manifest_v1_spec
+)
+_selector_objective_seed_manifest_v1_spec.loader.exec_module(
+    _selector_objective_seed_manifest_v1
+)
+
+_selector_objective_seed_probe_v1_spec = importlib.util.spec_from_file_location(
+    "probe_krk_selector_objective_seed_manifest_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "probe_krk_selector_objective_seed_manifest_v1.py",
+)
+assert _selector_objective_seed_probe_v1_spec is not None
+assert _selector_objective_seed_probe_v1_spec.loader is not None
+_selector_objective_seed_probe_v1 = importlib.util.module_from_spec(
+    _selector_objective_seed_probe_v1_spec
+)
+_selector_objective_seed_probe_v1_spec.loader.exec_module(_selector_objective_seed_probe_v1)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -5018,3 +5061,191 @@ def test_joined_trace_ownership_collection_review_packet_does_not_authorize_run(
     assert payload["approved_if_later_explicitly_authorized"]["max_rows"] == 8
     assert payload["approved_if_later_explicitly_authorized"]["selected_review_row_count"] == 2
     assert "stage4_runtime_scope" in payload["explicitly_forbidden"]
+
+
+def test_joined_trace_ownership_collection_preserves_observation_only_invariants(monkeypatch):
+    packet = {
+        "approved_if_later_explicitly_authorized": {
+            "max_rows": 2,
+            "protected_stages": ["stage5", "stage6"],
+            "excluded_stages": ["stage4", "stage7", "stage8"],
+        },
+        "review_rows": [
+            {
+                "state_id": "state.fail",
+                "source_stage": "stage5",
+                "selected_provider": "krk.stage0_basin",
+                "selected_owner_label": "selected_owner_failed",
+                "priority": "high_selected_failure",
+            },
+            {
+                "state_id": "state.safe",
+                "source_stage": "stage6",
+                "selected_provider": "krk.stage0_basin",
+                "selected_owner_label": "selected_owner_converted",
+                "priority": "medium_safe_preservation_control",
+            },
+            {
+                "state_id": "state.stage4",
+                "source_stage": "stage4",
+                "selected_provider": "krk.stage0_basin",
+                "selected_owner_label": "selected_owner_failed",
+                "priority": "excluded_requires_separate_review",
+            },
+        ],
+    }
+    context = {
+        "rows": [
+            {
+                "state_id": "state.fail",
+                "frame_id": "cp.fail",
+                "fen": "fen-fail",
+                "source_stage": "stage5",
+                "active_landmark_label": "fence_established",
+            },
+            {
+                "state_id": "state.safe",
+                "frame_id": "cp.safe",
+                "fen": "fen-safe",
+                "source_stage": "stage6",
+                "active_landmark_label": "drive_to_edge",
+            },
+        ]
+    }
+
+    def fake_run(case, *, enabled):
+        frame = {
+            "candidate_source": "stage_conditioned_candidate_generation_refresh",
+            "policy": "trace_stage_family_context",
+            "direct_request": False,
+            "score_delta": 0.0,
+            "causal_status": "candidate_generation_only",
+            "protected_status": "protected_control",
+            "stage": case["source_stage"],
+            "provider_family": "stage0_basin",
+            "provider_id": "krk.stage0_basin",
+            "capacity_evidence_kind": "positive_capacity",
+        }
+        return {
+            "move": "a1a2",
+            "selected_provider": "krk.stage0_basin",
+            "confidence": 1.0,
+            "observation": {"frames": [frame] if enabled else []},
+        }
+
+    monkeypatch.setattr(_joined_trace_ownership_collection_run, "_run_decision", fake_run)
+
+    payload = _joined_trace_ownership_collection_run.build_payload(
+        packet=packet,
+        context=context,
+    )
+
+    assert payload["decision"]["status"] == "joined_trace_ownership_collection_complete_seed_improved"
+    assert payload["summary"]["attempted_row_count"] == 2
+    assert payload["summary"]["joined_row_count"] == 2
+    assert payload["summary"]["switch_contrast_count"] == 1
+    assert payload["summary"]["safe_preservation_count"] == 1
+    assert payload["summary"]["selected_move_provider_delta_count"] == 0
+    assert payload["summary"]["score_delta_count"] == 0
+    assert payload["summary"]["routing_delta_count"] == 0
+    assert payload["summary"]["stage7_training_row_count"] == 0
+    assert payload["runtime_selector_implemented"] is False
+
+
+def test_selector_objective_seed_manifest_v1_adds_collection_rows_without_training():
+    seed_v0 = {
+        "seed_rows": [
+            {
+                "state_id": "state.old",
+                "source_stage": "stage5",
+                "selected_provider": "krk.fence_established",
+                "selected_provider_family": "fence_established",
+                "selected_owner_label": "selected_owner_converted",
+                "trace_provider_candidate_count": 1,
+                "positive_trace_provider_candidate_count": 1,
+                "trace_sources": ["candidate_generation_refresh_sandbox"],
+                "recovery_class": "safe_preservation_with_visible_positive_alternative",
+                "objective_channel": "safe_preservation_contrast_seed",
+            }
+        ]
+    }
+    collection = {
+        "decision": {"collection_valid": True},
+        "summary": {"joined_row_count": 8},
+        "rows": [
+            {
+                "state_id": f"state.fail.{idx}",
+                "source_stage": "stage5",
+                "selected_provider_label": "krk.stage0_basin",
+                "selected_owner_label": "selected_owner_failed",
+                "enabled_refresh_frame_count": 1,
+                "positive_refresh_frame_count": 1,
+                "recovery_class": "selected_failure_with_visible_positive_alternative",
+                "joined_trace_ownership_row": True,
+            }
+            for idx in range(4)
+        ]
+        + [
+            {
+                "state_id": f"state.safe.{idx}",
+                "source_stage": "stage6",
+                "selected_provider_label": "krk.stage0_basin",
+                "selected_owner_label": "selected_owner_converted",
+                "enabled_refresh_frame_count": 1,
+                "positive_refresh_frame_count": 1,
+                "recovery_class": "safe_preservation_with_visible_positive_alternative",
+                "joined_trace_ownership_row": True,
+            }
+            for idx in range(4)
+        ],
+    }
+
+    payload = _selector_objective_seed_manifest_v1.build_payload(
+        seed_v0=seed_v0,
+        collection=collection,
+    )
+
+    assert payload["decision"]["status"] == "selector_objective_seed_manifest_v1_ready_non_causal"
+    assert payload["summary"]["candidate_switch_contrast_seed_count"] == 4
+    assert payload["summary"]["safe_preservation_contrast_seed_count"] == 5
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert payload["summary"]["stage7_training_row_count"] == 0
+    assert payload["decision"]["selector_allowed"] is False
+
+
+def test_selector_objective_seed_probe_v1_allows_only_non_causal_feature_probe():
+    manifest = {
+        "summary": {"selector_training_row_count": 0, "stage7_training_row_count": 0},
+        "seed_rows": [
+            {
+                "state_id": f"state.fail.{idx}",
+                "source_stage": "stage5",
+                "selected_provider": "krk.stage0_basin",
+                "selected_owner_label": "selected_owner_failed",
+                "positive_trace_provider_candidate_count": 1,
+                "objective_channel": "candidate_switch_contrast_seed",
+            }
+            for idx in range(4)
+        ]
+        + [
+            {
+                "state_id": f"state.safe.{idx}",
+                "source_stage": "stage6",
+                "selected_provider": "krk.stage0_basin",
+                "selected_owner_label": "selected_owner_converted",
+                "positive_trace_provider_candidate_count": 1,
+                "objective_channel": "safe_preservation_contrast_seed",
+            }
+            for idx in range(8)
+        ],
+    }
+
+    payload = _selector_objective_seed_probe_v1.build_payload(manifest=manifest)
+
+    assert payload["decision"]["status"] == "selector_objective_seed_ready_for_non_causal_feature_probe"
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["summary"]["seed_row_count"] == 12
+    assert payload["summary"]["benchmark_underpowered"] is False
+    assert payload["summary"]["runtime_feature_eligible_prediction_count"] == 0
+    assert payload["interpretation"]["runtime_selector_supported"] is False
