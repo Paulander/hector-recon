@@ -909,11 +909,29 @@ Artifacts:
 
 Coverage analysis over the emitted sandbox frames reports exact positive-capacity recall `1.0` on the sampled approved cells, exact negative-capacity exposure `0.0`, Stage 4 frames `0`, Stage 7 frames `0`, and selector/guardrail authorization still `false`. Dataset v4 folds the refresh frames as runtime-observation context only: row count `307`, refresh trace rows `25`, candidate-generation training rows `26`, selector training rows `0`, Stage 7 readiness/training rows `0`.
 
+Latest v4 context closeout:
+
+```text
+strategy_sequence_dataset_v4_context_integrated_selector_still_blocked
+candidate_generation_v4_context_useful_selector_still_blocked
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_v4_context_review.md`
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_v4_context_review.json`
+* `reports/strategy_arbitration/krk_candidate_generation_v4_context_benchmark.md`
+* `reports/strategy_arbitration/krk_candidate_generation_v4_context_benchmark.json`
+
+Dataset v4 context is useful for candidate-generation analysis but still not selector training. The v4 context benchmark reports protected capacity rows `36`, positive capacity rows `26`, negative capacity rows `10`, runtime trace rows `31`, refresh trace rows `25`, exact positive-capacity recall from refresh traces `0.1923`, policy-cell positive-capacity recall `0.7692`, exact/policy-cell negative-capacity exposure `0.0`, selector training rows `0`, and Stage 7 readiness/training rows `0`.
+
 Next safe step:
 
 ```text
-candidate_generation_refresh_v4_context_review_or_bounded_non_causal_probe
+architecture_review_candidate_generation_context_to_next_runtime_boundary
 ```
+
+This does not authorize a selector, scoring, routing, guardrails, Stage 7 promotion, Stage 8 training, or runtime behavior changes.
 
 ## Runtime Approval Rule
 
