@@ -878,6 +878,19 @@ _exact_trace_enrichment_packet = importlib.util.module_from_spec(
 )
 _exact_trace_enrichment_packet_spec.loader.exec_module(_exact_trace_enrichment_packet)
 
+_exact_trace_enrichment_sandbox_spec = importlib.util.spec_from_file_location(
+    "run_krk_exact_trace_enrichment_sandbox_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "run_krk_exact_trace_enrichment_sandbox_v0.py",
+)
+assert _exact_trace_enrichment_sandbox_spec is not None
+assert _exact_trace_enrichment_sandbox_spec.loader is not None
+_exact_trace_enrichment_sandbox = importlib.util.module_from_spec(
+    _exact_trace_enrichment_sandbox_spec
+)
+_exact_trace_enrichment_sandbox_spec.loader.exec_module(_exact_trace_enrichment_sandbox)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -4182,3 +4195,32 @@ def test_exact_trace_enrichment_runtime_review_packet_requires_explicit_approval
         "stage5": ["edge_trap"]
     }
     assert "stage4_runtime_scope_without_separate_review" in payload["explicitly_forbidden"]
+
+
+def test_exact_trace_enrichment_sandbox_summary_enforces_frame_invariants():
+    rows = [
+        {
+            "source_stage": "stage5",
+            "enabled_exact_frames": [
+                {
+                    "candidate_source": "exact_trace_enrichment",
+                    "policy": "trace_stage_family_context",
+                    "direct_request": False,
+                    "score_delta": 0.0,
+                    "causal_status": "candidate_generation_only",
+                    "protected_status": "protected_control",
+                    "stage": "stage5",
+                    "provider_family": "edge_trap",
+                    "candidate_generation_truncated": False,
+                }
+            ],
+        }
+    ]
+
+    summary = _exact_trace_enrichment_sandbox._summarize_rows(rows)
+
+    assert summary["generated_frame_count"] == 1
+    assert summary["direct_request_false_count"] == 1
+    assert summary["score_delta_zero_count"] == 1
+    assert summary["invalid_frame_count"] == 0
+    assert summary["stage7_held_out_frame_count"] == 0

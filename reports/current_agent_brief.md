@@ -998,6 +998,19 @@ Artifacts:
 
 This packet is review-ready but does not authorize implementation. If explicitly approved later, the only allowed scope would be default-off exact candidate-generation observation frames for policy-cell-covered gaps in Stage 5/6: Stage 5 `edge_trap` and `stage0_basin`, Stage 6 `stage0_basin`. It still forbids selector training, move/provider selection, score changes, provider suppression, direct routing, runtime DTM/tablebase, state-hash/exact-move runtime exceptions, gameplay-time topology mutation, Stage 4 runtime scope without separate review, Stage 7 training/promotion, Stage 8 training, and guardrails before default-off equivalence plus enabled smoke.
 
+Latest exact trace enrichment sandbox:
+
+```text
+exact_trace_enrichment_sandbox_ready_for_non_causal_coverage_analysis
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_exact_trace_enrichment_sandbox_v0.md`
+* `reports/strategy_arbitration/krk_exact_trace_enrichment_sandbox_v0.json`
+
+The sandbox is opt-in via `--enable-krk-exact-trace-enrichment` and emits `candidate_generation_only` frames from the reviewed exact trace enrichment source only. It passed the small protected smoke: default-off equivalence `true`, enabled smoke `passed`, selected move/provider/score deltas `0`, generated frames `3`, protected frames `3`, Stage 7 held-out frames `0`, direct-request violations `0`, score-delta violations `0`, invalid frames `0`. This does not authorize selector work, scoring/routing changes, guardrails, Stage 7 promotion, or Stage 8 training. The next safe step is non-causal coverage analysis over exact trace enrichment frames.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

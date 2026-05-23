@@ -708,8 +708,16 @@ _KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_PATH = Path(
     "reports/strategy_arbitration/krk_strategy_sequence_dataset_v3.json"
 )
 _KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_CACHE: dict[str, list[dict]] | None = None
+_KRK_EXACT_TRACE_ENRICHMENT_GAP_PATH = Path(
+    "reports/strategy_arbitration/krk_candidate_source_gap_manifest_v0.json"
+)
+_KRK_EXACT_TRACE_ENRICHMENT_CACHE: dict[str, list[dict]] | None = None
 _KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_SCOPE = {
     "stage5": {"edge_trap", "fence_established", "stage0_basin"},
+    "stage6": {"stage0_basin"},
+}
+_KRK_EXACT_TRACE_ENRICHMENT_SCOPE = {
+    "stage5": {"edge_trap", "stage0_basin"},
     "stage6": {"stage0_basin"},
 }
 _KRK_STAGE_BY_LANDMARK_LABEL = {
@@ -774,6 +782,36 @@ def _krk_stage5_6_candidate_generation_refresh_index() -> dict[str, list[dict]]:
     return index
 
 
+def _krk_exact_trace_enrichment_index() -> dict[str, list[dict]]:
+    global _KRK_EXACT_TRACE_ENRICHMENT_CACHE
+    if _KRK_EXACT_TRACE_ENRICHMENT_CACHE is not None:
+        return _KRK_EXACT_TRACE_ENRICHMENT_CACHE
+    path = Path(__file__).resolve().parents[1] / _KRK_EXACT_TRACE_ENRICHMENT_GAP_PATH
+    index: dict[str, list[dict]] = {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        _KRK_EXACT_TRACE_ENRICHMENT_CACHE = index
+        return index
+    for row in payload.get("gap_records") or []:
+        if not isinstance(row, dict):
+            continue
+        if row.get("gap_type") != "policy_cell_covered_exact_missing":
+            continue
+        if row.get("stage7_challenge_row"):
+            continue
+        stage = str(row.get("source_stage") or "")
+        family = str(row.get("candidate_strategy_family") or "")
+        if family not in _KRK_EXACT_TRACE_ENRICHMENT_SCOPE.get(stage, set()):
+            continue
+        fen = str(row.get("fen") or "")
+        if not fen:
+            continue
+        index.setdefault(fen, []).append(row)
+    _KRK_EXACT_TRACE_ENRICHMENT_CACHE = index
+    return index
+
+
 def _krk_observation_capacity_kind(row: dict | None, *, held_out: bool = False) -> str:
     if held_out:
         return "held_out_challenge"
@@ -801,6 +839,19 @@ def _krk_stage5_6_refresh_scope_allows(
     return family in _KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_SCOPE.get(stage, set())
 
 
+def _krk_exact_trace_enrichment_scope_allows(
+    *,
+    active_landmark_label: str | None,
+    source_stage: str | None = None,
+    provider_family: str | None = None,
+) -> bool:
+    stage = str(source_stage or _krk_stage_for_active_landmark(active_landmark_label))
+    if stage not in {"stage5", "stage6"}:
+        return False
+    family = str(provider_family or "")
+    return family in _KRK_EXACT_TRACE_ENRICHMENT_SCOPE.get(stage, set())
+
+
 def _krk_candidate_generation_observation_for_suggestions(
     suggestions: list[dict],
     *,
@@ -812,6 +863,7 @@ def _krk_candidate_generation_observation_for_suggestions(
     limit: int = 10,
     repair_monitor_observation_source_enabled: bool = False,
     stage5_6_candidate_generation_refresh_enabled: bool = False,
+    exact_trace_enrichment_enabled: bool = False,
 ) -> dict:
     """Emit observation-only candidate-generation frames after normal selection.
 
@@ -1017,6 +1069,67 @@ def _krk_candidate_generation_observation_for_suggestions(
                 "truncation_reason": (
                     "candidate_generation_frame_bound"
                     if refresh_truncated
+                    else ""
+                ),
+                "forbidden_actions": [
+                    "selecting_a_provider",
+                    "selecting_a_move",
+                    "changing_scores",
+                    "suppressing_providers",
+                    "routing_directly_to_a_provider",
+                    "runtime_dtm_or_tablebase",
+                    "gameplay_topology_mutation",
+                    "m3_m4_update",
+                ],
+            })
+    if exact_trace_enrichment_enabled and not stage7_held_out:
+        enrichment_rows = _krk_exact_trace_enrichment_index().get(str(fen or ""), [])
+        enrichment_candidate_count_before_truncation = len(enrichment_rows)
+        enrichment_truncated = enrichment_candidate_count_before_truncation > max(0, limit)
+        for row in enrichment_rows[:max(0, limit)]:
+            source_stage = str(row.get("source_stage") or "")
+            provider_family = str(row.get("candidate_strategy_family") or "")
+            if not _krk_exact_trace_enrichment_scope_allows(
+                active_landmark_label=active_landmark_label,
+                source_stage=source_stage,
+                provider_family=provider_family,
+            ):
+                continue
+            frames.append({
+                "schema_version": "krk_candidate_generation_observation_frame.v0",
+                "sandbox_id": "sandbox.krk.exact_trace_enrichment_v0",
+                "causal_status": "candidate_generation_only",
+                "direct_request": False,
+                "score_delta": 0.0,
+                "policy": "trace_stage_family_context",
+                "state_fen": fen,
+                "stage": source_stage,
+                "active_landmark_label": str(active_landmark_label or row.get("active_landmark_label") or ""),
+                "selected_provider_before_observation": selected_skill,
+                "selected_move_before_observation": selected_move,
+                "candidate_source": "exact_trace_enrichment",
+                "provider_id": row.get("candidate_provider_id"),
+                "provider_family": provider_family,
+                "move_id": row.get("candidate_move_uci"),
+                "source_terms": [
+                    "exact_trace_enrichment_scope",
+                    "runtime_review_packet.krk_exact_trace_enrichment_runtime_review_packet_v0",
+                    "candidate_source_gap_manifest_v0",
+                    f"source_stage.{source_stage}",
+                    f"candidate_strategy_family.{provider_family}",
+                ],
+                "policy_cell": f"{source_stage}|{provider_family}",
+                "provider_provenance": "krk_exact_trace_enrichment_runtime_review_packet_v0",
+                "capacity_evidence_kind": "positive_capacity",
+                "capacity_evidence_source": str(_KRK_EXACT_TRACE_ENRICHMENT_GAP_PATH),
+                "label_semantics": "offline_capacity_gap_not_runtime_ownership",
+                "exact_enrichment_reason": str(row.get("gap_type") or "policy_cell_covered_exact_missing"),
+                "protected_status": "protected_control",
+                "candidate_generation_truncated": enrichment_truncated,
+                "candidate_count_before_truncation": enrichment_candidate_count_before_truncation,
+                "truncation_reason": (
+                    "candidate_generation_frame_bound"
+                    if enrichment_truncated
                     else ""
                 ),
                 "forbidden_actions": [
@@ -3319,6 +3432,7 @@ def choose_move_details(
     krk_candidate_generation_observability_enabled: bool = False,
     krk_repair_monitor_observation_source_enabled: bool = False,
     krk_stage5_6_candidate_generation_refresh_enabled: bool = False,
+    krk_exact_trace_enrichment_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -3407,6 +3521,7 @@ def choose_move_details(
             krk_stage5_6_candidate_generation_refresh_enabled=(
                 krk_stage5_6_candidate_generation_refresh_enabled
             ),
+            krk_exact_trace_enrichment_enabled=krk_exact_trace_enrichment_enabled,
             krk_strategy_arbiter_observability_enabled=(
                 krk_strategy_arbiter_observability_enabled
             ),
@@ -3500,6 +3615,7 @@ def _choose_move_details_impl(
     krk_candidate_generation_observability_enabled: bool = False,
     krk_repair_monitor_observation_source_enabled: bool = False,
     krk_stage5_6_candidate_generation_refresh_enabled: bool = False,
+    krk_exact_trace_enrichment_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -3663,6 +3779,9 @@ def _choose_move_details_impl(
     )
     env["blackboard"]["krk_stage5_6_candidate_generation_refresh_enabled"] = bool(
         krk_stage5_6_candidate_generation_refresh_enabled
+    )
+    env["blackboard"]["krk_exact_trace_enrichment_enabled"] = bool(
+        krk_exact_trace_enrichment_enabled
     )
     env["blackboard"]["krk_strategy_arbiter_sandbox_enabled"] = bool(
         krk_strategy_arbiter_sandbox_enabled
@@ -3961,6 +4080,7 @@ def _choose_move_details_impl(
                 stage5_6_candidate_generation_refresh_enabled=(
                     krk_stage5_6_candidate_generation_refresh_enabled
                 ),
+                exact_trace_enrichment_enabled=krk_exact_trace_enrichment_enabled,
             )
         )
     clean_suggestions = []
@@ -4078,6 +4198,9 @@ def _choose_move_details_impl(
                 ),
                 "krk_stage5_6_candidate_generation_refresh_enabled": bool(
                     krk_stage5_6_candidate_generation_refresh_enabled
+                ),
+                "krk_exact_trace_enrichment_enabled": bool(
+                    krk_exact_trace_enrichment_enabled
                 ),
                 "krk_candidate_generation_observation": candidate_generation_observation,
             }
@@ -4344,6 +4467,7 @@ def play_to_mate(
     krk_candidate_generation_observability_enabled: bool = False,
     krk_repair_monitor_observation_source_enabled: bool = False,
     krk_stage5_6_candidate_generation_refresh_enabled: bool = False,
+    krk_exact_trace_enrichment_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -4517,6 +4641,7 @@ def play_to_mate(
                 krk_stage5_6_candidate_generation_refresh_enabled=(
                     krk_stage5_6_candidate_generation_refresh_enabled
                 ),
+                krk_exact_trace_enrichment_enabled=krk_exact_trace_enrichment_enabled,
                 krk_strategy_arbiter_observability_enabled=(
                     krk_strategy_arbiter_observability_enabled
                 ),
@@ -5599,6 +5724,7 @@ def evaluate_landmark_progress(
     krk_candidate_generation_observability_enabled: bool = False,
     krk_repair_monitor_observation_source_enabled: bool = False,
     krk_stage5_6_candidate_generation_refresh_enabled: bool = False,
+    krk_exact_trace_enrichment_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -5830,6 +5956,7 @@ def evaluate_landmark_progress(
             krk_stage5_6_candidate_generation_refresh_enabled=(
                 krk_stage5_6_candidate_generation_refresh_enabled
             ),
+            krk_exact_trace_enrichment_enabled=krk_exact_trace_enrichment_enabled,
             krk_strategy_arbiter_observability_enabled=(
                 krk_strategy_arbiter_observability_enabled
             ),
@@ -6105,6 +6232,7 @@ def evaluate_landmark_progress(
                 krk_stage5_6_candidate_generation_refresh_enabled=(
                     krk_stage5_6_candidate_generation_refresh_enabled
                 ),
+                krk_exact_trace_enrichment_enabled=krk_exact_trace_enrichment_enabled,
                 krk_strategy_arbiter_observability_enabled=(
                     krk_strategy_arbiter_observability_enabled
                 ),
@@ -7625,6 +7753,8 @@ def main() -> None:
                         help="Runtime test: add default-off observation-only Stage 5/6 candidate-generation refresh frames; no score/routing effect")
     parser.add_argument("--enable-krk-candidate-generation-refresh", action="store_true",
                         help="Runtime test: alias for the approved default-off Stage 5/6 candidate-generation refresh frame source; no score/routing effect")
+    parser.add_argument("--enable-krk-exact-trace-enrichment", action="store_true",
+                        help="Runtime test: add default-off exact candidate-generation observation frames for reviewed Stage 5/6 source gaps; no score/routing effect")
     parser.add_argument("--enable-krk-strategy-arbiter-observability", action="store_true",
                         help="Enable default-off trace-only KRK strategy-arbiter observation metadata; does not alter scores or move selection")
     parser.add_argument("--enable-krk-strategy-arbiter-sandbox", action="store_true",
@@ -7755,6 +7885,7 @@ def main() -> None:
         candidate_move_role_support=args.candidate_move_role_support,
         krk_candidate_generation_observability_enabled=(
             args.enable_krk_candidate_generation_observability
+            or args.enable_krk_exact_trace_enrichment
         ),
         krk_repair_monitor_observation_source_enabled=(
             args.enable_krk_repair_monitor_observation_source
@@ -7763,6 +7894,7 @@ def main() -> None:
             args.enable_krk_stage5_6_candidate_generation_refresh_observation
             or args.enable_krk_candidate_generation_refresh
         ),
+        krk_exact_trace_enrichment_enabled=args.enable_krk_exact_trace_enrichment,
         krk_strategy_arbiter_observability_enabled=args.enable_krk_strategy_arbiter_observability,
         krk_strategy_arbiter_sandbox_enabled=args.enable_krk_strategy_arbiter_sandbox,
         krk_strategy_arbiter_support=args.krk_strategy_arbiter_support,
