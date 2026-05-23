@@ -1,0 +1,60 @@
+{
+  "blockers": [
+    "candidate_capacity_mostly_unknown",
+    "generated_set_contains_negative_capacity_candidates",
+    "plan_capsule_sequence_candidates_not_observed",
+    "broader_strategy_candidates_not_observed",
+    "candidate_move_annotation_coverage_too_sparse",
+    "blind_label_expansion_risk"
+  ],
+  "causal_status": "non_causal_architecture_review",
+  "decision": {
+    "guardrails_allowed": false,
+    "recommended_next_step": "design_candidate_proposal_quality_prioritization_review",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "status": "candidate_generation_label_coverage_underpowered_selector_blocked"
+  },
+  "evidence": {
+    "bounded_label_count": 12,
+    "bounded_label_negative_capacity_count": 1,
+    "bounded_label_positive_capacity_count": 11,
+    "broadened_frame_count": 569,
+    "candidate_move_frame_count": 363,
+    "manifest_job_count": 12,
+    "missing_expected_sources": [
+      "broader_strategy_candidate",
+      "plan_capsule_sequence_candidate"
+    ],
+    "protected_annotated_candidate_move_count": 22,
+    "protected_annotation_recall": 0.07534246575342465,
+    "protected_candidate_move_count": 292,
+    "stage7_label_count": 0,
+    "stage7_training_label_count": 0
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "bounded_labels_found_negative_capacity": true,
+    "bounded_labels_found_positive_capacity": true,
+    "candidate_generation_observation_is_safe": true,
+    "candidate_move_annotation_is_too_sparse_for_selector_review": true,
+    "candidate_move_capacity_annotation_path_exists": true,
+    "capacity_labels_are_not_ownership_labels": true,
+    "more_blind_label_farming_not_recommended": true
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_generation_label_blocker_review.v1",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_candidate_generation_observation_gap_review_v1.json",
+    "reports/strategy_arbitration/krk_candidate_move_capacity_label_manifest_v1.json",
+    "reports/strategy_arbitration/krk_candidate_move_capacity_labels_v1.json",
+    "reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v2.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

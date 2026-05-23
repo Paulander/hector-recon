@@ -1,0 +1,310 @@
+{
+  "causal_status": "non_causal_replay_free_capacity_annotation",
+  "decision": {
+    "guardrails_allowed": false,
+    "recommended_next_step": "candidate_generation_label_blocker_review",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "status": "candidate_move_capacity_annotation_improved_but_selector_blocked"
+  },
+  "examples": [
+    {
+      "annotation_kind": "positive_capacity",
+      "case_id": "stage4_state.02cfd843a2cf",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_results": [
+        "mate"
+      ],
+      "matched_sources": [
+        "reports/strategy_arbitration/krk_candidate_move_capacity_labels_v1.json"
+      ],
+      "move_uci": "e5e7",
+      "source_stage": "stage4"
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "case_id": "stage4_state.02cfd843a2cf",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_results": [
+        "mate"
+      ],
+      "matched_sources": [
+        "reports/strategy_arbitration/krk_candidate_move_capacity_labels_v1.json"
+      ],
+      "move_uci": "e5e8",
+      "source_stage": "stage4"
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "case_id": "stage4_state.02cfd843a2cf",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_results": [
+        "mate"
+      ],
+      "matched_sources": [
+        "reports/strategy_arbitration/krk_candidate_move_capacity_labels_v1.json"
+      ],
+      "move_uci": "e5g5",
+      "source_stage": "stage4"
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "case_id": "stage4_state.02cfd843a2cf",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_results": [
+        "mate"
+      ],
+      "matched_sources": [
+        "reports/strategy_arbitration/krk_candidate_move_capacity_labels_v1.json"
+      ],
+      "move_uci": "e5h5",
+      "source_stage": "stage4"
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "case_id": "stage4_state.256a3da30f0f",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_results": [
+        "mate"
+      ],
+      "matched_sources": [
+        "reports/krk_protected_provider_coverage_frames_v0.json"
+      ],
+      "move_uci": "d6d5",
+      "source_stage": "stage4"
+    },
+    {
+      "annotation_kind": "negative_capacity",
+      "case_id": "stage4_state.b11124d658cf",
+      "matched_capacity_labels": [
+        "negative_capacity"
+      ],
+      "matched_results": [
+        "max_plies"
+      ],
+      "matched_sources": [
+        "reports/krk_protected_provider_coverage_frames_v0.json"
+      ],
+      "move_uci": "c8c7",
+      "source_stage": "stage4"
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "case_id": "stage5_state.02feb8593cc6",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_results": [
+        "mate"
+      ],
+      "matched_sources": [
+        "reports/krk_protected_provider_coverage_frames_v0.json"
+      ],
+      "move_uci": "b6c7",
+      "source_stage": "stage5"
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "case_id": "stage5_state.02feb8593cc6",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_results": [
+        "mate"
+      ],
+      "matched_sources": [
+        "reports/strategy_arbitration/krk_candidate_move_capacity_labels_v1.json"
+      ],
+      "move_uci": "h7a7",
+      "source_stage": "stage5"
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "case_id": "stage5_state.02feb8593cc6",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_results": [
+        "mate"
+      ],
+      "matched_sources": [
+        "reports/strategy_arbitration/krk_candidate_move_capacity_labels_v1.json"
+      ],
+      "move_uci": "h7b7",
+      "source_stage": "stage5"
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "case_id": "stage5_state.02feb8593cc6",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_results": [
+        "mate"
+      ],
+      "matched_sources": [
+        "reports/krk_protected_provider_coverage_frames_v0.json"
+      ],
+      "move_uci": "h7c7",
+      "source_stage": "stage5"
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "case_id": "stage5_state.326222aefdf1",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_results": [
+        "mate"
+      ],
+      "matched_sources": [
+        "reports/krk_protected_provider_coverage_frames_v0.json"
+      ],
+      "move_uci": "a6b7",
+      "source_stage": "stage5"
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "case_id": "stage5_state.326222aefdf1",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_results": [
+        "mate"
+      ],
+      "matched_sources": [
+        "reports/krk_protected_provider_coverage_frames_v0.json"
+      ],
+      "move_uci": "h7c7",
+      "source_stage": "stage5"
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "case_id": "stage5_state.3dca34326fca",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_results": [
+        "mate"
+      ],
+      "matched_sources": [
+        "reports/krk_protected_provider_coverage_frames_v0.json"
+      ],
+      "move_uci": "h7b7",
+      "source_stage": "stage5"
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "case_id": "stage5_state.3dca34326fca",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_results": [
+        "mate"
+      ],
+      "matched_sources": [
+        "reports/krk_protected_provider_coverage_frames_v0.json"
+      ],
+      "move_uci": "h7d7",
+      "source_stage": "stage5"
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "case_id": "stage5_state.3dca34326fca",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_results": [
+        "mate"
+      ],
+      "matched_sources": [
+        "reports/strategy_arbitration/krk_candidate_move_capacity_labels_v1.json"
+      ],
+      "move_uci": "h7h8",
+      "source_stage": "stage5"
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "case_id": "stage5_state.87b1160e68b9",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_results": [
+        "mate"
+      ],
+      "matched_sources": [
+        "reports/strategy_arbitration/krk_candidate_move_capacity_labels_v1.json"
+      ],
+      "move_uci": "e7g7",
+      "source_stage": "stage5"
+    }
+  ],
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "annotation_coverage_improved": true,
+    "annotation_coverage_sufficient_for_selector_review": false,
+    "capacity_labels_are_not_ownership_labels": true,
+    "stage7_excluded_from_readiness": true
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_move_capacity_annotation.v2",
+  "source_artifacts": {
+    "existing_capacity": "reports/krk_protected_provider_coverage_frames_v0.json",
+    "new_candidate_move_labels": "reports/strategy_arbitration/krk_candidate_move_capacity_labels_v1.json",
+    "observation_frames": "reports/strategy_arbitration/krk_candidate_generation_observation_broadened_sample_v1.json"
+  },
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "annotated_candidate_move_count": 22,
+    "annotation_counts": {
+      "negative_capacity": 3,
+      "positive_capacity": 19,
+      "unannotated": 341
+    },
+    "annotation_counts_by_stage": {
+      "stage4": {
+        "negative_capacity": 1,
+        "positive_capacity": 5,
+        "unannotated": 83
+      },
+      "stage5": {
+        "positive_capacity": 10,
+        "unannotated": 114
+      },
+      "stage6": {
+        "negative_capacity": 2,
+        "positive_capacity": 4,
+        "unannotated": 73
+      },
+      "stage7": {
+        "unannotated": 71
+      }
+    },
+    "candidate_move_frame_count": 363,
+    "heldout_stage7_candidate_move_count": 71,
+    "matched_annotation_source_counts": {
+      "reports/krk_protected_provider_coverage_frames_v0.json": 16,
+      "reports/strategy_arbitration/krk_candidate_move_capacity_labels_v1.json": 12
+    },
+    "protected_annotated_candidate_move_count": 22,
+    "protected_annotation_recall": 0.07534246575342465,
+    "protected_candidate_move_count": 292,
+    "stage7_readiness_training_row_count": 0
+  }
+}

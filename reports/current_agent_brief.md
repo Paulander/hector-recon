@@ -277,6 +277,9 @@ Important artifacts include:
 * `reports/strategy_arbitration/krk_candidate_generation_observation_gap_review_v1.md/json`
 * `reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v1.md/json`
 * `reports/strategy_arbitration/krk_candidate_move_capacity_label_manifest_v1.md/json`
+* `reports/strategy_arbitration/krk_candidate_move_capacity_labels_v1.md/json`
+* `reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v2.md/json`
+* `reports/strategy_arbitration/krk_candidate_generation_label_blocker_review_v1.md/json`
 
 Current conclusion:
 
@@ -368,6 +371,16 @@ bounded_candidate_move_capacity_manifest_ready
 ```
 
 The manifest proposes 12 protected-only offline jobs balanced across Stage 4/5/6, with 0 Stage 7 jobs and no labels run by the manifest artifact itself. Each job is explicitly `forced_first_move_capacity_not_runtime_ownership_label`; it must not become selector training or runtime input without a later review.
+
+Bounded candidate-move capacity labels were run offline:
+
+```text
+bounded_candidate_move_capacity_labels_completed
+candidate_move_capacity_annotation_improved_but_selector_blocked
+candidate_generation_label_coverage_underpowered_selector_blocked
+```
+
+The 12 protected labels produced 11 mate and 1 max_plies outcomes with 0 Stage 7 labels. Merging them improved protected CandidateMoveFrame annotation from 10 to 22 rows, but protected annotation recall remains only 0.075. The blocker review recommends candidate proposal quality/prioritization review before any further labels or selector review; more blind label farming is not recommended.
 
 ### Progress-Window Reconsideration Runtime Test
 
@@ -488,6 +501,12 @@ reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v1.md
 reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v1.json
 reports/strategy_arbitration/krk_candidate_move_capacity_label_manifest_v1.md
 reports/strategy_arbitration/krk_candidate_move_capacity_label_manifest_v1.json
+reports/strategy_arbitration/krk_candidate_move_capacity_labels_v1.md
+reports/strategy_arbitration/krk_candidate_move_capacity_labels_v1.json
+reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v2.md
+reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v2.json
+reports/strategy_arbitration/krk_candidate_generation_label_blocker_review_v1.md
+reports/strategy_arbitration/krk_candidate_generation_label_blocker_review_v1.json
 ```
 
 These artifacts answer:
@@ -505,10 +524,10 @@ These artifacts answer:
 Next safe step after observation-only candidate-generation coverage analysis:
 
 ```text
-run_bounded_offline_candidate_move_capacity_labels_or_review_manifest
+design_candidate_proposal_quality_prioritization_review
 ```
 
-Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. If labels are run, they must remain protected-only, bounded, offline, and capacity-only.
+Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The next slice should decide how candidate generation should prioritize or filter visible proposals before more labels or any selector review.
 
 ## Runtime Approval Rule
 

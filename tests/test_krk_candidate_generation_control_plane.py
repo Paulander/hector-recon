@@ -115,6 +115,39 @@ assert _candidate_move_manifest_spec.loader is not None
 _candidate_move_manifest = importlib.util.module_from_spec(_candidate_move_manifest_spec)
 _candidate_move_manifest_spec.loader.exec_module(_candidate_move_manifest)
 
+_candidate_move_label_spec = importlib.util.spec_from_file_location(
+    "run_krk_candidate_move_capacity_labels_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "run_krk_candidate_move_capacity_labels_v1.py",
+)
+assert _candidate_move_label_spec is not None
+assert _candidate_move_label_spec.loader is not None
+_candidate_move_label = importlib.util.module_from_spec(_candidate_move_label_spec)
+_candidate_move_label_spec.loader.exec_module(_candidate_move_label)
+
+_candidate_move_merge_spec = importlib.util.spec_from_file_location(
+    "merge_krk_candidate_move_capacity_annotations_v2",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "merge_krk_candidate_move_capacity_annotations_v2.py",
+)
+assert _candidate_move_merge_spec is not None
+assert _candidate_move_merge_spec.loader is not None
+_candidate_move_merge = importlib.util.module_from_spec(_candidate_move_merge_spec)
+_candidate_move_merge_spec.loader.exec_module(_candidate_move_merge)
+
+_candidate_label_blocker_spec = importlib.util.spec_from_file_location(
+    "review_krk_candidate_generation_label_blockers_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_candidate_generation_label_blockers_v1.py",
+)
+assert _candidate_label_blocker_spec is not None
+assert _candidate_label_blocker_spec.loader is not None
+_candidate_label_blocker = importlib.util.module_from_spec(_candidate_label_blocker_spec)
+_candidate_label_blocker_spec.loader.exec_module(_candidate_label_blocker)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -697,3 +730,132 @@ def test_candidate_move_capacity_manifest_is_bounded_and_protected_only():
     )
     assert payload["decision"]["labels_run_by_this_artifact"] is False
     assert payload["decision"]["selector_allowed"] is False
+
+
+def test_candidate_move_capacity_label_payload_validation_blocks_stage7():
+    payload = {
+        "schema_version": "krk_candidate_move_capacity_labels.v1",
+        "causal_status": "non_causal_label_run",
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_selector_implemented": False,
+        "runtime_score_changes": False,
+        "runtime_direct_routing": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+        "summary": {
+            "stage7_label_count": 0,
+            "stage7_training_label_count": 0,
+        },
+        "labels": [
+            {
+                "causal_status": "non_causal_outcome_label",
+                "label_semantics": "forced_first_move_capacity_not_runtime_ownership_label",
+            }
+        ],
+    }
+
+    _candidate_move_label.validate_payload(payload)
+
+
+def test_candidate_move_capacity_merge_improves_annotation_but_keeps_selector_blocked():
+    observation_payload = {
+        "cases": [
+            {
+                "case_id": "stage5_state",
+                "source_stage": "stage5",
+                "held_out": False,
+                "enabled_decision": {
+                    "observation": {
+                        "frames": [
+                            {
+                                "candidate_source": "candidate_move_frame",
+                                "state_fen": "fen-a",
+                                "move_uci": "a1a2",
+                            },
+                            {
+                                "candidate_source": "candidate_move_frame",
+                                "state_fen": "fen-a",
+                                "move_uci": "a1a3",
+                            },
+                        ]
+                    }
+                },
+            }
+        ]
+    }
+    capacity_payload = {
+        "rows": [
+            {
+                "fen": "fen-a",
+                "forced_first_move": "a1a2",
+                "capacity_label": "positive_capacity",
+                "forced_result": "mate",
+                "provider_id": "krk.fence_established",
+            }
+        ]
+    }
+    label_payload = {
+        "labels": [
+            {
+                "fen": "fen-a",
+                "forced_first_move": "a1a3",
+                "capacity_label": "negative_capacity",
+                "result": "max_plies",
+                "source_stage": "stage5",
+                "label_semantics": "forced_first_move_capacity_not_runtime_ownership_label",
+            }
+        ]
+    }
+
+    payload = _candidate_move_merge.build_payload(
+        observation_payload=observation_payload,
+        capacity_payload=capacity_payload,
+        label_payload=label_payload,
+    )
+
+    assert payload["summary"]["annotated_candidate_move_count"] == 2
+    assert payload["summary"]["annotation_counts"]["positive_capacity"] == 1
+    assert payload["summary"]["annotation_counts"]["negative_capacity"] == 1
+    assert payload["interpretation"]["capacity_labels_are_not_ownership_labels"] is True
+    assert payload["decision"]["selector_allowed"] is False
+
+
+def test_candidate_generation_label_blocker_review_rejects_blind_label_farming():
+    gap_review = {
+        "summary": {
+            "frame_count": 100,
+            "missing_expected_sources": ["plan_capsule_sequence_candidate"],
+        },
+        "selector_blockers": ["candidate_capacity_mostly_unknown"],
+    }
+    annotation_v2 = {
+        "summary": {
+            "candidate_move_frame_count": 80,
+            "protected_candidate_move_count": 70,
+            "protected_annotated_candidate_move_count": 5,
+            "protected_annotation_recall": 5 / 70,
+        }
+    }
+    labels_v1 = {
+        "summary": {
+            "label_count": 12,
+            "capacity_label_counts": {"positive_capacity": 11, "negative_capacity": 1},
+            "stage7_label_count": 0,
+            "stage7_training_label_count": 0,
+        }
+    }
+    manifest_v1 = {"summary": {"job_count": 12}}
+
+    payload = _candidate_label_blocker.build_payload(
+        gap_review=gap_review,
+        annotation_v2=annotation_v2,
+        labels_v1=labels_v1,
+        manifest_v1=manifest_v1,
+    )
+
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["interpretation"]["more_blind_label_farming_not_recommended"] is True
+    assert "candidate_move_annotation_coverage_too_sparse" in payload["blockers"]
