@@ -378,6 +378,19 @@ _capacity_evidence_manifest = importlib.util.module_from_spec(
 )
 _capacity_evidence_manifest_spec.loader.exec_module(_capacity_evidence_manifest)
 
+_capacity_evidence_labels_spec = importlib.util.spec_from_file_location(
+    "run_krk_candidate_generation_capacity_evidence_labels_v2",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "run_krk_candidate_generation_capacity_evidence_labels_v2.py",
+)
+assert _capacity_evidence_labels_spec is not None
+assert _capacity_evidence_labels_spec.loader is not None
+_capacity_evidence_labels = importlib.util.module_from_spec(
+    _capacity_evidence_labels_spec
+)
+_capacity_evidence_labels_spec.loader.exec_module(_capacity_evidence_labels)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -1859,3 +1872,30 @@ def test_candidate_generation_capacity_manifest_is_protected_and_non_causal():
         "forced_provider_capacity_not_runtime_ownership"
     )
     assert payload["jobs"][0]["selector_training_allowed"] is False
+
+
+def test_candidate_generation_capacity_labels_validate_non_causal_capacity_semantics():
+    payload = {
+        "causal_status": "non_causal_label_run",
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_selector_implemented": False,
+        "runtime_score_changes": False,
+        "runtime_direct_routing": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+        "summary": {
+            "stage7_label_count": 0,
+            "stage7_training_label_count": 0,
+        },
+        "labels": [
+            {
+                "causal_status": "non_causal_outcome_label",
+                "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+            }
+        ],
+    }
+
+    _capacity_evidence_labels.validate_payload(payload)

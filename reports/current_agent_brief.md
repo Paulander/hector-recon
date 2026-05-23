@@ -447,6 +447,7 @@ strategy_sequence_dataset_v2_refreshed_non_causal_selector_blocked
 strategy_sequence_dataset_v2_quality_candidate_generation_ready_selector_blocked
 candidate_generation_refresh_underpowered_selector_blocked
 candidate_generation_capacity_evidence_manifest_ready
+candidate_generation_capacity_evidence_labels_completed
 ```
 
 Artifacts:
@@ -462,6 +463,7 @@ Artifacts:
 * `reports/strategy_arbitration/krk_strategy_sequence_dataset_v2_quality_probe.md/json`
 * `reports/strategy_arbitration/krk_candidate_generation_refresh_probe_v2.md/json`
 * `reports/strategy_arbitration/krk_candidate_generation_capacity_evidence_manifest_v2.md/json`
+* `reports/strategy_arbitration/krk_candidate_generation_capacity_evidence_labels_v2.md/json`
 
 The source emits `broader_strategy_candidate` frames for `terminal.krk.repair_needed_monitor` in protected Stage 4/5/6 contexts only. The smoke covered 3 protected cases, emitted 3 repair-monitor frames, and produced 0 selected move/provider deltas, 0 baseline frame leaks, 0 invariant failures, and 0 Stage 7 cases. This is observation-only: `direct_request=false`, `score_delta=0.0`, no selector, no routing, no guardrails, no Stage 7 training/readiness rows, no Stage 8.
 
@@ -483,10 +485,12 @@ The candidate-generation refresh probe remains underpowered. The protected capac
 
 A bounded capacity-evidence manifest is ready. It proposes 12 protected-only forced-provider capacity jobs from visible provider proposals, balanced across Stage 4/5/6 with 0 Stage 7 jobs. The manifest does not run labels and does not authorize selector use; labels would remain forced-provider capacity evidence, not ownership labels.
 
+The bounded offline labels completed: 12 protected labels, 8 mate and 4 max_plies, with 0 Stage 7 labels and 0 Stage 7 training labels. Results by family were edge_trap 3 mate / 3 max_plies and stage0_basin 5 mate / 1 max_plies. These are capacity labels only, not selector labels.
+
 Next safe step:
 
 ```text
-review_or_run_bounded_offline_capacity_labels
+merge_capacity_evidence_labels_v2_and_rerun_refresh_probe
 ```
 
 Do not implement selector behavior, run guardrails, tune scores, route providers, promote Stage 7, or train Stage 8 from this source.
@@ -655,10 +659,10 @@ These artifacts answer:
 Next safe step after observation-only candidate-generation coverage analysis:
 
 ```text
-review_or_run_bounded_offline_capacity_labels
+merge_capacity_evidence_labels_v2_and_rerun_refresh_probe
 ```
 
-Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The narrow repair-monitor observation source has been wired as an explicitly approved, default-off observation-only source and passed broadened protected equivalence; the quality review, trace-fold, integration review, dataset design v2, dataset v2 refresh, quality probe, candidate-generation refresh probe, and capacity-evidence manifest keep the path non-causal. Current evidence is underpowered for a candidate-generation refresh, so the next work is reviewing or running the bounded protected offline capacity labels, not runtime selection.
+Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The narrow repair-monitor observation source has been wired as an explicitly approved, default-off observation-only source and passed broadened protected equivalence; the quality review, trace-fold, integration review, dataset design v2, dataset v2 refresh, quality probe, candidate-generation refresh probe, capacity-evidence manifest, and bounded labels keep the path non-causal. Current work should merge the new capacity labels and rerun the candidate-generation refresh probe, not runtime selection.
 
 ## Runtime Approval Rule
 
