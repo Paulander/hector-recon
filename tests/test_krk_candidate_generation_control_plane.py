@@ -365,6 +365,19 @@ _candidate_generation_refresh = importlib.util.module_from_spec(
 )
 _candidate_generation_refresh_spec.loader.exec_module(_candidate_generation_refresh)
 
+_capacity_evidence_manifest_spec = importlib.util.spec_from_file_location(
+    "build_krk_candidate_generation_capacity_evidence_manifest_v2",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "build_krk_candidate_generation_capacity_evidence_manifest_v2.py",
+)
+assert _capacity_evidence_manifest_spec is not None
+assert _capacity_evidence_manifest_spec.loader is not None
+_capacity_evidence_manifest = importlib.util.module_from_spec(
+    _capacity_evidence_manifest_spec
+)
+_capacity_evidence_manifest_spec.loader.exec_module(_capacity_evidence_manifest)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -1802,3 +1815,47 @@ def test_candidate_generation_refresh_probe_uses_capacity_not_ownership_labels()
     assert payload["interpretation"]["capacity_labels_are_not_ownership_labels"] is True
     assert payload["interpretation"]["stage7_training_allowed"] is False
     assert payload["policy_metrics"]["oracle_positive_capacity_ceiling"]["positive_recall"] == 1.0
+
+
+def test_candidate_generation_capacity_manifest_is_protected_and_non_causal():
+    dataset = {
+        "rows": [
+            {
+                "evidence_channel": "visible_provider_proposal",
+                "state_id": "state.a",
+                "fen": "fen-a",
+                "source_stage": "stage5",
+                "active_landmark_label": "fence_established",
+                "candidate_provider_id": "krk.fence_established",
+                "candidate_strategy_family": "fence_established",
+                "candidate_move_uci": "a1a2",
+                "stage7_challenge_row": False,
+            },
+            {
+                "evidence_channel": "visible_provider_proposal",
+                "state_id": "state.b",
+                "source_stage": "stage7",
+                "candidate_provider_id": "krk.box_shrink",
+                "candidate_strategy_family": "box_shrink",
+                "stage7_challenge_row": True,
+            },
+        ]
+    }
+
+    payload = _capacity_evidence_manifest.build_payload(
+        dataset=dataset,
+        refresh_probe={"decision": {"status": "underpowered"}},
+        cap=4,
+    )
+
+    assert payload["decision"]["status"] == (
+        "candidate_generation_capacity_evidence_manifest_ready"
+    )
+    assert payload["decision"]["labels_run_by_this_artifact"] is False
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["summary"]["job_count"] == 1
+    assert payload["summary"]["stage7_job_count"] == 0
+    assert payload["jobs"][0]["label_semantics"] == (
+        "forced_provider_capacity_not_runtime_ownership"
+    )
+    assert payload["jobs"][0]["selector_training_allowed"] is False
