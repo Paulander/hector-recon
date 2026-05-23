@@ -550,6 +550,7 @@ strategy_sequence_dataset_v3_context_integrated_selector_still_blocked
 candidate_generation_v3_context_useful_selector_still_blocked
 candidate_generation_v3_runtime_boundary_context_ready_selector_blocked
 candidate_generation_v3_training_refresh_design_ready_non_causal
+candidate_generation_training_refresh_v3_design_ready
 ```
 
 Artifacts:
@@ -561,6 +562,7 @@ Artifacts:
 * `reports/strategy_arbitration/krk_candidate_generation_v3_context_benchmark.md/json`
 * `reports/strategy_arbitration/krk_candidate_generation_v3_runtime_boundary_review.md/json`
 * `reports/strategy_arbitration/krk_candidate_generation_v3_training_refresh_review.md/json`
+* `reports/strategy_arbitration/krk_candidate_generation_training_refresh_design_v3.md/json`
 
 Dataset v3 has 320 rows: 36 validated-provider capacity rows, 87 visible provider proposal rows, 140 CandidateMoveFrame rows, 13 internal monitor rows, and 44 runtime-observation trace-feature rows. Runtime trace features now include 6 repair-monitor rows and 38 Stage 5/6 refresh rows. Candidate-generation training rows remain 26 protected positive-capacity rows. Selector-training rows remain 0. Stage 7 readiness/training rows remain 0.
 
@@ -570,10 +572,12 @@ The runtime-boundary review keeps the current observation sources allowed but bl
 
 The training-refresh review authorizes design only for an offline candidate-generation training refresh. It does not authorize runtime generator changes, selector training, scoring/routing changes, guardrails, Stage 7 training/promotion, or Stage 8 training.
 
+The v3 training-refresh design defines an offline benchmark target for candidate-generation recall with negative-capacity suppression. It uses protected Stage 4/5/6 capacity rows and runtime trace context as features only. It explicitly excludes runtime ownership selection, provider routing, score changes, guardrails, Stage 7 promotion, and Stage 8 training.
+
 Next safe step:
 
 ```text
-design_offline_candidate_generation_training_refresh_v3
+implement_offline_candidate_generation_training_refresh_v3_benchmark
 ```
 
 Do not implement selector behavior, run guardrails, tune scores, route providers, promote Stage 7, or train Stage 8 from this source.

@@ -669,6 +669,21 @@ _candidate_generation_v3_training_refresh_spec.loader.exec_module(
     _candidate_generation_v3_training_refresh
 )
 
+_candidate_generation_training_refresh_design_v3_spec = importlib.util.spec_from_file_location(
+    "write_krk_candidate_generation_training_refresh_design_v3",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_candidate_generation_training_refresh_design_v3.py",
+)
+assert _candidate_generation_training_refresh_design_v3_spec is not None
+assert _candidate_generation_training_refresh_design_v3_spec.loader is not None
+_candidate_generation_training_refresh_design_v3 = importlib.util.module_from_spec(
+    _candidate_generation_training_refresh_design_v3_spec
+)
+_candidate_generation_training_refresh_design_v3_spec.loader.exec_module(
+    _candidate_generation_training_refresh_design_v3
+)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -3181,3 +3196,30 @@ def test_candidate_generation_v3_training_refresh_review_allows_design_only():
     assert "capacity labels are not runtime ownership labels" in payload[
         "blockers_before_runtime"
     ]
+
+
+def test_candidate_generation_training_refresh_design_v3_blocks_runtime_use():
+    payload = _candidate_generation_training_refresh_design_v3.build_payload(
+        review={
+            "decision": {
+                "status": "candidate_generation_v3_training_refresh_design_ready_non_causal"
+            }
+        },
+        dataset={
+            "summary": {
+                "row_count": 320,
+                "candidate_generation_training_row_count": 26,
+                "selector_training_row_count": 0,
+                "runtime_trace_feature_row_count": 44,
+                "stage7_readiness_training_row_count": 0,
+            }
+        },
+    )
+
+    assert payload["decision"]["status"] == (
+        "candidate_generation_training_refresh_v3_design_ready"
+    )
+    assert payload["decision"]["implementation_allowed_by_this_artifact"] is False
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["training_target"]["not_objective"] == "runtime_ownership_or_move_selection"
+    assert "runtime_selector" in payload["forbidden_uses"]
