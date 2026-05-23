@@ -1146,6 +1146,22 @@ Artifacts:
 
 The explicitly approved bounded observation-only run collected `8/8` Stage 5/6 rows and emitted `80` candidate-generation-only frames with direct_request false, score_delta zero, selected move/provider delta zero, routing delta zero, Stage 7 training rows zero, and topology mutation false. The selector-objective seed now has `12` rows: `4` switch-contrast seeds and `8` safe-preservation seeds. The v1 seed probe confirms switch-vs-preserve semantics and is ready for a future non-causal selector-feature probe, but it still has `0` runtime-feature-eligible predictions and does not authorize selector training or runtime selector behavior.
 
+Latest selector-objective feature probe:
+
+```text
+selector_objective_feature_probe_no_runtime_ready_features
+selector_feature_probe_blocks_runtime_needs_diverse_evidence
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_selector_objective_feature_probe_v0.md`
+* `reports/strategy_arbitration/krk_selector_objective_feature_probe_v0.json`
+* `reports/strategy_arbitration/krk_selector_objective_feature_probe_review_v0.md`
+* `reports/strategy_arbitration/krk_selector_objective_feature_probe_review_v0.json`
+
+The feature probe tests simple visible keys over the `12` seed rows. No runtime-feature model passes thresholds. The best switch-recall model reaches switch recall `0.75` but preserve recall `0.0`; the best preservation/precision model reaches preserve recall `1.0` and switch precision `1.0` but switch recall only `0.5`. The offline outcome oracle remains `1.0`, confirming semantics but not runtime eligibility. Runtime selector work remains blocked; the next safe step is more diverse joined trace/ownership evidence, especially more selected-failure rows and non-stage0 selected-owner rows.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

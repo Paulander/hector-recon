@@ -1090,6 +1090,32 @@ _selector_objective_seed_probe_v1 = importlib.util.module_from_spec(
 )
 _selector_objective_seed_probe_v1_spec.loader.exec_module(_selector_objective_seed_probe_v1)
 
+_selector_objective_feature_probe_spec = importlib.util.spec_from_file_location(
+    "probe_krk_selector_objective_features_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "probe_krk_selector_objective_features_v0.py",
+)
+assert _selector_objective_feature_probe_spec is not None
+assert _selector_objective_feature_probe_spec.loader is not None
+_selector_objective_feature_probe = importlib.util.module_from_spec(
+    _selector_objective_feature_probe_spec
+)
+_selector_objective_feature_probe_spec.loader.exec_module(_selector_objective_feature_probe)
+
+_selector_objective_feature_review_spec = importlib.util.spec_from_file_location(
+    "review_krk_selector_objective_feature_probe_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_selector_objective_feature_probe_v0.py",
+)
+assert _selector_objective_feature_review_spec is not None
+assert _selector_objective_feature_review_spec.loader is not None
+_selector_objective_feature_review = importlib.util.module_from_spec(
+    _selector_objective_feature_review_spec
+)
+_selector_objective_feature_review_spec.loader.exec_module(_selector_objective_feature_review)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -5249,3 +5275,94 @@ def test_selector_objective_seed_probe_v1_allows_only_non_causal_feature_probe()
     assert payload["summary"]["benchmark_underpowered"] is False
     assert payload["summary"]["runtime_feature_eligible_prediction_count"] == 0
     assert payload["interpretation"]["runtime_selector_supported"] is False
+
+
+def test_selector_objective_feature_probe_keeps_oracle_separate_from_runtime_features():
+    rows = []
+    for idx in range(4):
+        rows.append(
+            {
+                "state_id": f"state.fail.{idx}",
+                "source_stage": "stage5",
+                "selected_provider": "krk.stage0_basin",
+                "selected_provider_family": "stage0_basin",
+                "selected_owner_label": "selected_owner_failed",
+                "positive_trace_provider_candidate_count": 10,
+                "trace_sources": ["stage5_6_candidate_generation_refresh_collection"],
+                "objective_channel": "candidate_switch_contrast_seed",
+                "stage7_training_row": False,
+            }
+        )
+    for idx in range(8):
+        rows.append(
+            {
+                "state_id": f"state.safe.{idx}",
+                "source_stage": "stage6",
+                "selected_provider": "krk.stage0_basin",
+                "selected_provider_family": "stage0_basin",
+                "selected_owner_label": "selected_owner_converted",
+                "positive_trace_provider_candidate_count": 10,
+                "trace_sources": ["stage5_6_candidate_generation_refresh_collection"],
+                "objective_channel": "safe_preservation_contrast_seed",
+                "stage7_training_row": False,
+            }
+        )
+    manifest = {
+        "summary": {"selector_training_row_count": 0, "stage7_training_row_count": 0},
+        "seed_rows": rows,
+    }
+    seed_probe = {"decision": {"status": "selector_objective_seed_ready_for_non_causal_feature_probe"}}
+
+    payload = _selector_objective_feature_probe.build_payload(
+        manifest=manifest,
+        seed_probe=seed_probe,
+    )
+
+    assert payload["summary"]["offline_oracle_accuracy"] == 1.0
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["results"]["offline_selected_owner_outcome_oracle"]["runtime_feature_eligible"] is False
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert payload["summary"]["stage7_training_row_count"] == 0
+
+
+def test_selector_objective_feature_probe_review_blocks_runtime_without_passing_model():
+    probe = {
+        "summary": {
+            "seed_row_count": 12,
+            "target_channel_counts": {
+                "candidate_switch_contrast_seed": 4,
+                "safe_preservation_contrast_seed": 8,
+            },
+            "runtime_threshold_passing_model_count": 0,
+            "offline_oracle_accuracy": 1.0,
+            "selector_training_row_count": 0,
+            "stage7_training_row_count": 0,
+        },
+        "results": {
+            "switchy": {
+                "model_id": "switchy",
+                "runtime_feature_eligible": True,
+                "switch_recall": 0.75,
+                "preserve_recall": 0.0,
+                "switch_precision": 0.27,
+            },
+            "safe": {
+                "model_id": "safe",
+                "runtime_feature_eligible": True,
+                "switch_recall": 0.5,
+                "preserve_recall": 1.0,
+                "switch_precision": 1.0,
+            },
+        },
+    }
+
+    payload = _selector_objective_feature_review.build_payload(probe=probe)
+
+    assert payload["decision"]["status"] == (
+        "selector_feature_probe_blocks_runtime_needs_diverse_evidence"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert "offline_outcome_oracle_is_not_runtime_feature_eligible" in payload["blockers"]
+    assert "more_non_stage0_selected_owner_rows" in payload["recommended_evidence"]
