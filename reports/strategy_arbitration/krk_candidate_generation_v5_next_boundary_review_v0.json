@@ -1,0 +1,75 @@
+{
+  "approved_now": {
+    "continue_non_causal_context_analysis": true,
+    "guardrails_allowed": false,
+    "implement_new_runtime_sandbox": false,
+    "keep_existing_default_off_observation_sandboxes_available": true,
+    "provider_routing_allowed": false,
+    "score_changes_allowed": false,
+    "selector_allowed": false,
+    "stage4_runtime_scope_allowed": false
+  },
+  "boundary_assessment": {
+    "candidate_generation_context_is_useful": true,
+    "exact_move_provider_coverage_is_still_partial": true,
+    "exact_trace_enrichment_helped": true,
+    "negative_capacity_exposure_is_clean": true,
+    "policy_cell_context_is_useful": true,
+    "selector_training_still_absent": true,
+    "stage7_remains_held_out": true
+  },
+  "causal_status": "non_causal_boundary_review",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "non_causal_ownership_label_recovery_or_selector_objective_review",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "status": "candidate_generation_v5_next_boundary_context_improved_selector_blocked"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "candidate_generation_context_is_ready_for_analysis": true,
+    "not_a_selector_packet": true,
+    "reason": "V5 improves exact candidate-generation trace coverage while keeping negative exposure clean, but exact coverage is still partial and no ownership selector labels exist. The next boundary is label/objective recovery, not another runtime candidate-generation sandbox."
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_generation_v5_next_boundary_review.v1",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_candidate_generation_v5_context_benchmark.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "still_forbidden": [
+    "selector_training",
+    "score_changes",
+    "provider_routing",
+    "guardrail_campaign_from_context_only",
+    "stage4_runtime_scope_without_separate_review",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation",
+    "capacity_labels_as_ownership_labels"
+  ],
+  "summary": {
+    "candidate_generation_trace_row_count": 28,
+    "capacity_row_count": 36,
+    "exact_negative_capacity_exposure_from_candidate_generation_trace": 0.0,
+    "exact_positive_capacity_recall_delta_vs_v4": 0.11538461538461539,
+    "exact_positive_capacity_recall_from_candidate_generation_trace": 0.3076923076923077,
+    "exact_trace_enrichment_trace_row_count": 3,
+    "negative_capacity_count": 10,
+    "policy_cell_negative_capacity_exposure_from_candidate_generation_trace": 0.0,
+    "policy_cell_positive_capacity_recall_from_candidate_generation_trace": 0.7692307692307693,
+    "positive_capacity_count": 26,
+    "runtime_trace_row_count": 34,
+    "selector_training_row_count": 0,
+    "stage7_readiness_training_row_count": 0
+  }
+}

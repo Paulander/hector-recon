@@ -1059,6 +1059,19 @@ Artifacts:
 
 Dataset v5 improves exact positive-capacity trace coverage from refresh-only `5/26` to combined refresh-plus-exact `8/26`, while keeping exact/stage-family/policy-cell negative exposure at `0/10`. This supports candidate-generation context usefulness only. Selector training remains blocked because the dataset still has `0` ownership selector rows and `0` Stage 7 readiness/training rows.
 
+Latest v5 boundary review:
+
+```text
+candidate_generation_v5_next_boundary_context_improved_selector_blocked
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_candidate_generation_v5_next_boundary_review_v0.md`
+* `reports/strategy_arbitration/krk_candidate_generation_v5_next_boundary_review_v0.json`
+
+The existing default-off observation sandboxes remain useful as trace/context sources. The review does not authorize another runtime sandbox, selector, score changes, routing, guardrails, or promotion. The next safe class is non-causal ownership-label recovery or selector-objective review.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

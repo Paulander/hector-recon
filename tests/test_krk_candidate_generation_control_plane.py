@@ -965,6 +965,19 @@ _candidate_generation_v5_benchmark_spec.loader.exec_module(
     _candidate_generation_v5_benchmark
 )
 
+_candidate_generation_v5_boundary_spec = importlib.util.spec_from_file_location(
+    "review_krk_candidate_generation_v5_next_boundary",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_candidate_generation_v5_next_boundary.py",
+)
+assert _candidate_generation_v5_boundary_spec is not None
+assert _candidate_generation_v5_boundary_spec.loader is not None
+_candidate_generation_v5_boundary = importlib.util.module_from_spec(
+    _candidate_generation_v5_boundary_spec
+)
+_candidate_generation_v5_boundary_spec.loader.exec_module(_candidate_generation_v5_boundary)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -4654,3 +4667,35 @@ def test_candidate_generation_v5_context_benchmark_counts_exact_enrichment():
     )
     assert payload["interpretation"]["capacity_labels_are_not_ownership_labels"] is True
     assert payload["interpretation"]["exact_trace_enrichment_improved_exact_coverage"] is True
+
+
+def test_candidate_generation_v5_next_boundary_keeps_runtime_blocked():
+    benchmark = {
+        "summary": {
+            "capacity_row_count": 36,
+            "positive_capacity_count": 26,
+            "negative_capacity_count": 10,
+            "runtime_trace_row_count": 34,
+            "candidate_generation_trace_row_count": 28,
+            "exact_trace_enrichment_trace_row_count": 3,
+            "exact_positive_capacity_recall_from_candidate_generation_trace": 8 / 26,
+            "exact_positive_capacity_recall_delta_vs_v4": 3 / 26,
+            "policy_cell_positive_capacity_recall_from_candidate_generation_trace": 20 / 26,
+            "exact_negative_capacity_exposure_from_candidate_generation_trace": 0.0,
+            "policy_cell_negative_capacity_exposure_from_candidate_generation_trace": 0.0,
+            "selector_training_row_count": 0,
+            "stage7_readiness_training_row_count": 0,
+        },
+        "decision": {"selector_allowed": False},
+    }
+
+    payload = _candidate_generation_v5_boundary.build_payload(benchmark=benchmark)
+
+    assert payload["decision"]["status"] == (
+        "candidate_generation_v5_next_boundary_context_improved_selector_blocked"
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["approved_now"]["implement_new_runtime_sandbox"] is False
+    assert payload["boundary_assessment"]["exact_trace_enrichment_helped"] is True
+    assert payload["boundary_assessment"]["exact_move_provider_coverage_is_still_partial"] is True
+    assert "capacity_labels_as_ownership_labels" in payload["still_forbidden"]
