@@ -1101,6 +1101,19 @@ Artifacts:
 
 The seed probe confirms the intended switch-vs-preserve semantics on the `4` seed rows, but it is explicitly underpowered and uses offline selected-owner outcome labels. It does not create runtime-feature-eligible predictions. The next safe step is collecting more joined trace/ownership evidence non-causally, not selector training.
 
+Latest joined trace/ownership collection manifest:
+
+```text
+joined_trace_ownership_collection_manifest_ready_for_review
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_joined_trace_ownership_collection_manifest_v0.md`
+* `reports/strategy_arbitration/krk_joined_trace_ownership_collection_manifest_v0.json`
+
+The manifest identifies `18` Stage 5/6 protected ownership-labeled states in already approved observation-sandbox policy cells that lack provider trace context, including `2` high-priority selected-owner failure rows. It also identifies `19` Stage 4 rows that remain excluded until separate review. The manifest itself does not authorize any runtime collection; it only prepares a bounded review scope.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

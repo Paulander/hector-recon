@@ -1017,6 +1017,21 @@ _selector_objective_seed_probe = importlib.util.module_from_spec(
 )
 _selector_objective_seed_probe_spec.loader.exec_module(_selector_objective_seed_probe)
 
+_joined_trace_ownership_collection_manifest_spec = importlib.util.spec_from_file_location(
+    "build_krk_joined_trace_ownership_collection_manifest_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "build_krk_joined_trace_ownership_collection_manifest_v0.py",
+)
+assert _joined_trace_ownership_collection_manifest_spec is not None
+assert _joined_trace_ownership_collection_manifest_spec.loader is not None
+_joined_trace_ownership_collection_manifest = importlib.util.module_from_spec(
+    _joined_trace_ownership_collection_manifest_spec
+)
+_joined_trace_ownership_collection_manifest_spec.loader.exec_module(
+    _joined_trace_ownership_collection_manifest
+)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -4889,3 +4904,57 @@ def test_selector_objective_seed_probe_confirms_semantics_but_blocks_runtime():
     assert payload["summary"]["benchmark_underpowered"] is True
     assert payload["summary"]["runtime_feature_eligible_prediction_count"] == 0
     assert payload["interpretation"]["selector_training_supported"] is False
+
+
+def test_joined_trace_ownership_collection_manifest_requires_review_before_runtime():
+    ownership = {
+        "rows": [
+            {
+                "state_id": "state.fail",
+                "source_stage": "stage5",
+                "provider_id": "krk.stage0_basin",
+                "provider_family": "stage0_basin",
+                "target_label": "selected_owner_failed",
+            },
+            {
+                "state_id": "state.safe",
+                "source_stage": "stage6",
+                "provider_id": "krk.stage0_basin",
+                "provider_family": "stage0_basin",
+                "target_label": "selected_owner_converted",
+            },
+            {
+                "state_id": "state.stage4",
+                "source_stage": "stage4",
+                "provider_id": "krk.stage0_basin",
+                "provider_family": "stage0_basin",
+                "target_label": "selected_owner_failed",
+            },
+        ]
+    }
+    dataset = {
+        "rows": [
+            {
+                "evidence_channel": "runtime_observation_trace_feature",
+                "state_id": "state.already",
+                "candidate_provider_id": "krk.stage0_basin",
+                "stage7_challenge_row": False,
+            }
+        ]
+    }
+    seed_probe = {"decision": {"selector_allowed": False}}
+
+    payload = _joined_trace_ownership_collection_manifest.build_payload(
+        ownership=ownership,
+        dataset=dataset,
+        seed_probe=seed_probe,
+    )
+
+    assert payload["decision"]["status"] == (
+        "joined_trace_ownership_collection_manifest_ready_for_review"
+    )
+    assert payload["decision"]["runtime_collection_allowed_by_manifest"] is False
+    assert payload["summary"]["approved_observation_scope_candidate_count"] == 2
+    assert payload["summary"]["excluded_requires_separate_review_count"] == 1
+    assert payload["summary"]["runtime_collection_allowed_row_count"] == 0
+    assert payload["summary"]["stage7_training_row_count"] == 0
