@@ -699,10 +699,31 @@ Artifacts:
 
 The review identifies the main blocker as `stage_family_capacity_is_not_uniform_across_protected_stages`: Stage 5 cells are currently positive-only, Stage 6 edge-trap is negative-only, Stage 4 cells are mixed, and leave-stage-out negative suppression remains weak. The v3 manifest proposes 8 protected-only h40 jobs across Stage 4/5/6 with 0 Stage 7 jobs; it does not run labels or authorize selector/runtime use.
 
+Bounded cross-stage labels were then run and merged:
+
+```text
+cross_stage_capacity_labels_completed
+strategy_sequence_dataset_v2_cross_stage_capacity_merged_non_causal
+cross_stage_capacity_labels_improve_in_sample_but_generalization_blocked
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_candidate_generation_cross_stage_capacity_labels_v3.md`
+* `reports/strategy_arbitration/krk_candidate_generation_cross_stage_capacity_labels_v3.json`
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_v2_cross_stage_capacity_merged.md`
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_v2_cross_stage_capacity_merged.json`
+* `reports/strategy_arbitration/krk_candidate_generation_refresh_probe_v2_cross_stage_labels.md`
+* `reports/strategy_arbitration/krk_candidate_generation_refresh_probe_v2_cross_stage_labels.json`
+* `reports/strategy_arbitration/krk_candidate_generation_cross_stage_label_outcome_review_v3.md`
+* `reports/strategy_arbitration/krk_candidate_generation_cross_stage_label_outcome_review_v3.json`
+
+The bounded v3 labels added 8 protected capacity labels: 7 mate and 1 max_plies, with 0 Stage 7 labels. They improved the in-sample best conservative candidate-generation policy from `0.737` to `0.769` positive recall while preserving `1.0` negative suppression. They did not improve leave-stage-out generalization (`0.577` positive recall / `0.1` negative suppression). The outcome review blocks selector/runtime refresh and says more blind capacity labels are not recommended.
+
 Next safe step:
 
 ```text
-review_or_run_bounded_cross_stage_capacity_labels
+review_stage_conditioned_candidate_generation_scope
 ```
 
 ## Runtime Approval Rule

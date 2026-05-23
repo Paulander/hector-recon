@@ -1,0 +1,89 @@
+{
+  "after": {
+    "best_balanced_recall_risk": 0.8846153846153846,
+    "best_negative_suppression": 1.0,
+    "best_policy": "stage_family_pure_positive_with_support_2",
+    "best_positive_precision": 1.0,
+    "best_positive_recall": 0.7692307692307693,
+    "capacity_label_counts": {
+      "negative_capacity": 10,
+      "positive_capacity": 26
+    },
+    "capacity_row_count": 36,
+    "leave_stage_balanced_recall_risk": 0.3384615384615384,
+    "leave_stage_negative_suppression": 0.1,
+    "leave_stage_positive_recall": 0.5769230769230769
+  },
+  "before": {
+    "best_balanced_recall_risk": 0.868421052631579,
+    "best_negative_suppression": 1.0,
+    "best_policy": "stage_family_pure_positive_with_support_2",
+    "best_positive_precision": 1.0,
+    "best_positive_recall": 0.7368421052631579,
+    "capacity_label_counts": {
+      "negative_capacity": 9,
+      "positive_capacity": 19
+    },
+    "capacity_row_count": 28,
+    "leave_stage_balanced_recall_risk": 0.3450292397660819,
+    "leave_stage_negative_suppression": 0.1111111111111111,
+    "leave_stage_positive_recall": 0.5789473684210527
+  },
+  "causal_status": "non_causal_review",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "review_stage_conditioned_candidate_generation_scope",
+    "runtime_candidate_generator_refresh_allowed": false,
+    "selector_allowed": false,
+    "status": "cross_stage_capacity_labels_improve_in_sample_but_generalization_blocked"
+  },
+  "deltas": {
+    "best_balanced_recall_risk": 0.0161943319838056,
+    "best_negative_suppression": 0.0,
+    "best_positive_recall": 0.03238866396761142,
+    "capacity_row_count": 8,
+    "leave_stage_balanced_recall_risk": -0.006567701304543483,
+    "leave_stage_negative_suppression": -0.0111111111111111,
+    "leave_stage_positive_recall": -0.002024291497975783
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "capacity_labels_are_not_ownership_labels": true,
+    "cross_stage_generalization_improved": false,
+    "in_sample_candidate_generation_signal_improved": true,
+    "main_blocker": "stage_family_scope_and_candidate_source_coverage",
+    "more_blind_capacity_labels_recommended": false,
+    "selector_supported": false
+  },
+  "label_run": {
+    "label_count": 8,
+    "result_counts": {
+      "mate": 7,
+      "max_plies": 1
+    },
+    "result_counts_by_stage_family_cell": {
+      "stage4|stage0_basin:mate": 1,
+      "stage4|stage0_basin:max_plies": 1,
+      "stage5|edge_trap:mate": 3,
+      "stage5|stage0_basin:mate": 1,
+      "stage6|stage0_basin:mate": 2
+    },
+    "stage7_label_count": 0,
+    "stage7_training_label_count": 0
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_generation_cross_stage_label_outcome_review.v3",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_candidate_generation_refresh_probe_v2_after_labels.json",
+    "reports/strategy_arbitration/krk_candidate_generation_cross_stage_capacity_labels_v3.json",
+    "reports/strategy_arbitration/krk_candidate_generation_refresh_probe_v2_cross_stage_labels.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

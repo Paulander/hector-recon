@@ -439,6 +439,45 @@ _cross_stage_capacity_manifest = importlib.util.module_from_spec(
 )
 _cross_stage_capacity_manifest_spec.loader.exec_module(_cross_stage_capacity_manifest)
 
+_cross_stage_capacity_labels_spec = importlib.util.spec_from_file_location(
+    "run_krk_candidate_generation_cross_stage_capacity_labels_v3",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "run_krk_candidate_generation_cross_stage_capacity_labels_v3.py",
+)
+assert _cross_stage_capacity_labels_spec is not None
+assert _cross_stage_capacity_labels_spec.loader is not None
+_cross_stage_capacity_labels = importlib.util.module_from_spec(
+    _cross_stage_capacity_labels_spec
+)
+_cross_stage_capacity_labels_spec.loader.exec_module(_cross_stage_capacity_labels)
+
+_cross_stage_capacity_merge_spec = importlib.util.spec_from_file_location(
+    "merge_krk_candidate_generation_cross_stage_capacity_v3",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "merge_krk_candidate_generation_cross_stage_capacity_v3.py",
+)
+assert _cross_stage_capacity_merge_spec is not None
+assert _cross_stage_capacity_merge_spec.loader is not None
+_cross_stage_capacity_merge = importlib.util.module_from_spec(
+    _cross_stage_capacity_merge_spec
+)
+_cross_stage_capacity_merge_spec.loader.exec_module(_cross_stage_capacity_merge)
+
+_cross_stage_label_outcome_review_spec = importlib.util.spec_from_file_location(
+    "review_krk_candidate_generation_cross_stage_label_outcome_v3",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_candidate_generation_cross_stage_label_outcome_v3.py",
+)
+assert _cross_stage_label_outcome_review_spec is not None
+assert _cross_stage_label_outcome_review_spec.loader is not None
+_cross_stage_label_outcome_review = importlib.util.module_from_spec(
+    _cross_stage_label_outcome_review_spec
+)
+_cross_stage_label_outcome_review_spec.loader.exec_module(_cross_stage_label_outcome_review)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -2170,3 +2209,135 @@ def test_candidate_generation_cross_stage_manifest_targets_protected_cells_only(
     assert payload["jobs"][0]["label_semantics"] == (
         "forced_provider_capacity_not_runtime_ownership"
     )
+
+
+def test_candidate_generation_cross_stage_labels_validate_non_causal_semantics():
+    payload = {
+        "causal_status": "non_causal_label_run",
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_selector_implemented": False,
+        "runtime_score_changes": False,
+        "runtime_direct_routing": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+        "summary": {
+            "stage7_label_count": 0,
+            "stage7_training_label_count": 0,
+        },
+        "labels": [
+            {
+                "causal_status": "non_causal_outcome_label",
+                "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+            }
+        ],
+    }
+
+    _cross_stage_capacity_labels.validate_payload(payload)
+
+
+def test_candidate_generation_cross_stage_merge_keeps_selector_blocked():
+    payload = _cross_stage_capacity_merge.build_dataset_payload(
+        base_dataset={"rows": []},
+        labels={
+            "causal_status": "non_causal_label_run",
+            "summary": {"stage7_label_count": 0},
+            "labels": [
+                {
+                    "job_id": "job.cross.a",
+                    "causal_status": "non_causal_outcome_label",
+                    "state_id": "state.a",
+                    "source_stage": "stage5",
+                    "provider_id": "krk.stage0_basin",
+                    "provider_family": "stage0_basin",
+                    "stage_family_cell": "stage5|stage0_basin",
+                    "target_cell_maturity": "positive_only_cell",
+                    "result": "mate",
+                    "forced_first_move": "a1a2",
+                    "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+                },
+                {
+                    "job_id": "job.cross.b",
+                    "causal_status": "non_causal_outcome_label",
+                    "state_id": "state.b",
+                    "source_stage": "stage6",
+                    "provider_id": "krk.edge_trap_close",
+                    "provider_family": "edge_trap",
+                    "stage_family_cell": "stage6|edge_trap",
+                    "target_cell_maturity": "negative_only_cell",
+                    "result": "max_plies",
+                    "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+                },
+            ],
+        },
+    )
+
+    assert payload["decision"]["status"] == (
+        "strategy_sequence_dataset_v2_cross_stage_capacity_merged_non_causal"
+    )
+    assert payload["summary"]["merged_cross_stage_label_capacity_counts"] == {
+        "negative_capacity": 1,
+        "positive_capacity": 1,
+    }
+    assert payload["summary"]["candidate_generation_training_row_count"] == 1
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert all(row["usable_for_selector_training_v2"] is False for row in payload["rows"])
+
+
+def test_candidate_generation_cross_stage_label_outcome_blocks_runtime_when_generalization_weak():
+    payload = _cross_stage_label_outcome_review.build_payload(
+        pre_probe={
+            "summary": {
+                "capacity_row_count": 10,
+                "capacity_label_counts": {"positive_capacity": 6, "negative_capacity": 4},
+                "best_non_oracle_policy": "fixture",
+                "best_non_oracle_metrics": {
+                    "positive_recall": 0.7,
+                    "positive_precision": 1.0,
+                    "negative_suppression": 1.0,
+                    "balanced_recall_risk": 0.85,
+                },
+                "leave_stage_out_aggregate": {
+                    "positive_recall": 0.6,
+                    "negative_suppression": 0.2,
+                    "balanced_recall_risk": 0.4,
+                },
+            }
+        },
+        labels={
+            "summary": {
+                "label_count": 2,
+                "result_counts": {"mate": 2},
+                "stage7_label_count": 0,
+                "stage7_training_label_count": 0,
+            }
+        },
+        post_probe={
+            "summary": {
+                "capacity_row_count": 12,
+                "capacity_label_counts": {"positive_capacity": 8, "negative_capacity": 4},
+                "best_non_oracle_policy": "fixture",
+                "best_non_oracle_metrics": {
+                    "positive_recall": 0.8,
+                    "positive_precision": 1.0,
+                    "negative_suppression": 1.0,
+                    "balanced_recall_risk": 0.9,
+                },
+                "leave_stage_out_aggregate": {
+                    "positive_recall": 0.58,
+                    "negative_suppression": 0.2,
+                    "balanced_recall_risk": 0.39,
+                },
+            }
+        },
+    )
+
+    assert payload["decision"]["status"] == (
+        "cross_stage_capacity_labels_improve_in_sample_but_generalization_blocked"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["runtime_candidate_generator_refresh_allowed"] is False
+    assert payload["interpretation"]["more_blind_capacity_labels_recommended"] is False
+    assert payload["interpretation"]["capacity_labels_are_not_ownership_labels"] is True
