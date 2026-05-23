@@ -1,0 +1,45 @@
+{
+  "causal_status": "non_causal_design",
+  "decision": {
+    "guardrails_allowed": false,
+    "implementation_allowed_by_this_artifact": false,
+    "recommended_next_step": "implement_strategy_sequence_dataset_v3_non_causal",
+    "selector_allowed": false,
+    "status": "strategy_sequence_dataset_design_v3_ready"
+  },
+  "design_goal": "Integrate the approved Stage 5/6 candidate-generation refresh observation frames into the strategy-sequence dataset as trace-only context, while preserving the split between candidate-generation capacity evidence and runtime ownership/selector labels.",
+  "gameplay_topology_mutation": false,
+  "inherits_from": "krk_strategy_sequence_dataset_design.v2",
+  "integration_rules": [
+    "append trace-only rows without rewriting existing capacity labels",
+    "set usable_for_selector_training_v3=false for all rows",
+    "carry candidate-generation training rows only from protected positive capacity evidence",
+    "preserve Stage 7 as held-out challenge evidence",
+    "report runtime trace rows by source artifact",
+    "block selector review unless explicit ownership labels exist"
+  ],
+  "new_trace_feature_sources": [
+    {
+      "allowed_use": "candidate_generation_context_and_proposal_coverage_analysis",
+      "candidate_generation_training_row_count": 0,
+      "forbidden_use": "selector_training_or_guardrail_trigger",
+      "selector_training_row_count": 0,
+      "source": "stage5_6_candidate_generation_refresh",
+      "source_artifact": "reports/strategy_arbitration/krk_strategy_sequence_stage5_6_refresh_trace_features_v0.json",
+      "stage7_trace_frame_count": 0,
+      "trace_frame_count": 38
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_strategy_sequence_dataset_design.v3",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_sequence_stage5_6_refresh_trace_features_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

@@ -1,0 +1,56 @@
+{
+  "causal_status": "non_causal_context_review",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "candidate_generation_v3_context_benchmark_or_architecture_review",
+    "selector_allowed": false,
+    "status": "strategy_sequence_dataset_v3_context_integrated_selector_still_blocked"
+  },
+  "gameplay_topology_mutation": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_strategy_sequence_dataset_v3_context_review.v1",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v3.json",
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v3_quality_probe.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "still_blocked": [
+    "selector_training",
+    "guardrail_campaign",
+    "score_changes",
+    "provider_routing",
+    "stage7_promotion",
+    "stage8_training"
+  ],
+  "summary": {
+    "candidate_generation_training_row_count": 26,
+    "quality_row_count": 320,
+    "quality_selector_blockers": [
+      "no_explicit_ownership_selector_rows",
+      "runtime_trace_features_are_context_not_selector_labels",
+      "capacity_rows_are_candidate_generation_not_ownership_labels"
+    ],
+    "quality_status": "strategy_sequence_dataset_v3_quality_candidate_generation_context_ready_selector_blocked",
+    "row_count": 320,
+    "runtime_trace_feature_row_count": 44,
+    "runtime_trace_feature_row_count_by_source": {
+      "repair_monitor_observation": 6,
+      "stage5_6_candidate_generation_refresh": 38
+    },
+    "selector_training_row_count": 0,
+    "stage7_readiness_training_row_count": 0
+  },
+  "validated_progress": [
+    "stage5_6_refresh_runtime_observation_source_default_off_equivalent",
+    "stage5_6_refresh_trace_features_integrated_non_causal",
+    "repair_monitor_trace_features_preserved",
+    "capacity_labels_preserved_for_candidate_generation_only"
+  ]
+}

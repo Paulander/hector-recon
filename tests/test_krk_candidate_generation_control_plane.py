@@ -578,6 +578,52 @@ _stage5_6_refresh_trace_fold = importlib.util.module_from_spec(
 )
 _stage5_6_refresh_trace_fold_spec.loader.exec_module(_stage5_6_refresh_trace_fold)
 
+_dataset_design_v3_spec = importlib.util.spec_from_file_location(
+    "write_krk_strategy_sequence_dataset_design_v3",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_strategy_sequence_dataset_design_v3.py",
+)
+assert _dataset_design_v3_spec is not None
+assert _dataset_design_v3_spec.loader is not None
+_dataset_design_v3 = importlib.util.module_from_spec(_dataset_design_v3_spec)
+_dataset_design_v3_spec.loader.exec_module(_dataset_design_v3)
+
+_dataset_v3_spec = importlib.util.spec_from_file_location(
+    "build_krk_strategy_sequence_dataset_v3",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "build_krk_strategy_sequence_dataset_v3.py",
+)
+assert _dataset_v3_spec is not None
+assert _dataset_v3_spec.loader is not None
+_dataset_v3 = importlib.util.module_from_spec(_dataset_v3_spec)
+_dataset_v3_spec.loader.exec_module(_dataset_v3)
+
+_dataset_v3_quality_spec = importlib.util.spec_from_file_location(
+    "probe_krk_strategy_sequence_dataset_v3_quality",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "probe_krk_strategy_sequence_dataset_v3_quality.py",
+)
+assert _dataset_v3_quality_spec is not None
+assert _dataset_v3_quality_spec.loader is not None
+_dataset_v3_quality = importlib.util.module_from_spec(_dataset_v3_quality_spec)
+_dataset_v3_quality_spec.loader.exec_module(_dataset_v3_quality)
+
+_dataset_v3_context_review_spec = importlib.util.spec_from_file_location(
+    "review_krk_strategy_sequence_dataset_v3_context",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_strategy_sequence_dataset_v3_context.py",
+)
+assert _dataset_v3_context_review_spec is not None
+assert _dataset_v3_context_review_spec.loader is not None
+_dataset_v3_context_review = importlib.util.module_from_spec(
+    _dataset_v3_context_review_spec
+)
+_dataset_v3_context_review_spec.loader.exec_module(_dataset_v3_context_review)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -2820,3 +2866,163 @@ def test_stage5_6_refresh_trace_fold_is_non_causal_context_only():
     assert payload["summary"]["selector_training_row_count"] == 0
     assert payload["trace_only_frames"][0]["usable_for_selector_training"] is False
     assert payload["trace_only_frames"][0]["causal_status"] == "non_causal_trace_feature"
+
+
+def test_strategy_sequence_dataset_design_v3_integrates_stage5_6_trace_only():
+    payload = _dataset_design_v3.build_payload(
+        {
+            "summary": {
+                "trace_frame_count": 38,
+                "stage7_trace_frame_count": 0,
+                "selector_training_row_count": 0,
+                "candidate_generation_training_row_count": 0,
+            }
+        }
+    )
+
+    assert payload["decision"]["status"] == "strategy_sequence_dataset_design_v3_ready"
+    assert payload["decision"]["selector_allowed"] is False
+    source = payload["new_trace_feature_sources"][0]
+    assert source["source"] == "stage5_6_candidate_generation_refresh"
+    assert source["forbidden_use"] == "selector_training_or_guardrail_trigger"
+
+
+def test_strategy_sequence_dataset_v3_appends_trace_context_without_selector_rows():
+    base_row = {
+        "schema_version": "krk_strategy_sequence_dataset_row.v2",
+        "row_id": "capacity",
+        "source_stage": "stage5",
+        "evidence_channel": "validated_provider_capacity",
+        "candidate_strategy_family": "stage0_basin",
+        "capacity_label": "positive_capacity",
+        "stage7_challenge_row": False,
+        "usable_for_selector_training_v2": False,
+        "usable_for_candidate_generation_training_v2": True,
+    }
+    trace_frame = {
+        "frame_id": "trace",
+        "state_id": "state.a",
+        "source_stage": "stage5",
+        "frame_type": "stage_conditioned_candidate_generation_refresh",
+        "candidate_provider_id": "krk.stage0_basin",
+        "candidate_move_uci": "a1a2",
+        "candidate_strategy_family": "stage0_basin",
+        "label_semantics": "runtime_observation_context_not_selector_label",
+        "usable_for_selector_training": False,
+        "usable_for_candidate_generation_training": False,
+        "capacity_evidence": {"capacity_label": "positive_capacity_scope"},
+        "ownership_evidence": {
+            "label_semantics": "runtime_observation_context_not_ownership_label"
+        },
+        "sequence_evidence": {"candidate_source": "stage_conditioned_candidate_generation_refresh"},
+    }
+
+    payload = _dataset_v3.build_payload(
+        base_dataset={"rows": [base_row]},
+        stage5_6_trace={
+            "decision": {"selector_allowed": False},
+            "trace_only_frames": [trace_frame],
+        },
+        design={"schema_version": "krk_strategy_sequence_dataset_design.v3"},
+    )
+
+    assert payload["decision"]["status"] == (
+        "strategy_sequence_dataset_v3_refreshed_non_causal_selector_blocked"
+    )
+    assert payload["summary"]["row_count"] == 2
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert payload["summary"]["candidate_generation_training_row_count"] == 1
+    assert payload["summary"]["added_stage5_6_refresh_trace_row_count"] == 1
+    assert payload["rows"][1]["usable_for_selector_training_v3"] is False
+    assert payload["rows"][1]["trace_feature_source"] == (
+        "stage5_6_candidate_generation_refresh"
+    )
+
+
+def test_strategy_sequence_dataset_v3_quality_blocks_selector():
+    payload = _dataset_v3_quality.build_payload(
+        {
+            "runtime_behavior_changed": False,
+            "runtime_defaults_changed": False,
+            "runtime_selector_implemented": False,
+            "runtime_score_changes": False,
+            "runtime_direct_routing": False,
+            "runtime_dtm_or_tablebase_lookup": False,
+            "gameplay_topology_mutation": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": False,
+            "summary": {
+                "row_count_by_channel": {
+                    "validated_provider_capacity": 1,
+                    "visible_provider_proposal": 1,
+                    "candidate_move_frame": 1,
+                    "runtime_observation_trace_feature": 2,
+                },
+                "runtime_trace_feature_row_count_by_source": {
+                    "repair_monitor_observation": 1,
+                    "stage5_6_candidate_generation_refresh": 1,
+                },
+                "stage7_readiness_training_row_count": 0,
+            },
+            "rows": [
+                {
+                    "evidence_channel": "validated_provider_capacity",
+                    "usable_for_candidate_generation_training_v3": True,
+                    "usable_for_selector_training_v3": False,
+                },
+                {
+                    "evidence_channel": "runtime_observation_trace_feature",
+                    "trace_feature_source": "repair_monitor_observation",
+                    "usable_for_candidate_generation_training_v3": False,
+                    "usable_for_selector_training_v3": False,
+                },
+                {
+                    "evidence_channel": "runtime_observation_trace_feature",
+                    "trace_feature_source": "stage5_6_candidate_generation_refresh",
+                    "usable_for_candidate_generation_training_v3": False,
+                    "usable_for_selector_training_v3": False,
+                },
+            ],
+        }
+    )
+
+    assert payload["decision"]["status"] == (
+        "strategy_sequence_dataset_v3_quality_candidate_generation_context_ready_selector_blocked"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["interpretation"]["candidate_generation_context_usable"] is True
+    assert payload["interpretation"]["selector_dataset_usable"] is False
+
+
+def test_strategy_sequence_dataset_v3_context_review_closes_selector_blocked_slice():
+    payload = _dataset_v3_context_review.build_payload(
+        dataset={
+            "decision": {"selector_allowed": False},
+            "summary": {
+                "row_count": 320,
+                "candidate_generation_training_row_count": 26,
+                "selector_training_row_count": 0,
+                "stage7_readiness_training_row_count": 0,
+                "runtime_trace_feature_row_count": 44,
+                "runtime_trace_feature_row_count_by_source": {
+                    "repair_monitor_observation": 6,
+                    "stage5_6_candidate_generation_refresh": 38,
+                },
+            },
+        },
+        quality={
+            "decision": {
+                "selector_allowed": False,
+                "status": "strategy_sequence_dataset_v3_quality_candidate_generation_context_ready_selector_blocked",
+            },
+            "summary": {"row_count": 320},
+            "selector_blockers": ["no_explicit_ownership_selector_rows"],
+        },
+    )
+
+    assert payload["decision"]["status"] == (
+        "strategy_sequence_dataset_v3_context_integrated_selector_still_blocked"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["guardrails_allowed"] is False
+    assert "selector_training" in payload["still_blocked"]

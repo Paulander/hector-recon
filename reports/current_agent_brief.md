@@ -540,10 +540,28 @@ The quality review retains this source as trace/candidate-generation context onl
 
 The trace-fold artifact converts the 38 Stage 5/6 refresh observation frames into StrategySequenceCandidateFrame-compatible trace features: 37 Stage 5 rows, 1 Stage 6 row, 0 Stage 7 rows, 0 selector-training rows, and 0 candidate-generation-training rows. These rows are runtime-observation context only.
 
+Strategy-sequence dataset v3 integration is complete:
+
+```text
+strategy_sequence_dataset_design_v3_ready
+strategy_sequence_dataset_v3_refreshed_non_causal_selector_blocked
+strategy_sequence_dataset_v3_quality_candidate_generation_context_ready_selector_blocked
+strategy_sequence_dataset_v3_context_integrated_selector_still_blocked
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_design_v3.md/json`
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_v3.md/json`
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_v3_quality_probe.md/json`
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_v3_context_review.md/json`
+
+Dataset v3 has 320 rows: 36 validated-provider capacity rows, 87 visible provider proposal rows, 140 CandidateMoveFrame rows, 13 internal monitor rows, and 44 runtime-observation trace-feature rows. Runtime trace features now include 6 repair-monitor rows and 38 Stage 5/6 refresh rows. Candidate-generation training rows remain 26 protected positive-capacity rows. Selector-training rows remain 0. Stage 7 readiness/training rows remain 0.
+
 Next safe step:
 
 ```text
-strategy_sequence_dataset_v3_design_or_integration_review
+candidate_generation_v3_context_benchmark_or_architecture_review
 ```
 
 Do not implement selector behavior, run guardrails, tune scores, route providers, promote Stage 7, or train Stage 8 from this source.
