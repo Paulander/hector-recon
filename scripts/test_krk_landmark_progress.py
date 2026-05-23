@@ -700,6 +700,253 @@ def _krk_strategy_arbiter_observation_for_suggestions(
     }
 
 
+_KRK_CANDIDATE_GENERATION_CAPACITY_FRAMES_PATH = (
+    Path("reports/krk_protected_provider_coverage_frames_v0.json")
+)
+_KRK_CANDIDATE_GENERATION_CAPACITY_CACHE: dict[str, list[dict]] | None = None
+
+
+def _krk_candidate_generation_capacity_index() -> dict[str, list[dict]]:
+    global _KRK_CANDIDATE_GENERATION_CAPACITY_CACHE
+    if _KRK_CANDIDATE_GENERATION_CAPACITY_CACHE is not None:
+        return _KRK_CANDIDATE_GENERATION_CAPACITY_CACHE
+    path = Path(__file__).resolve().parents[1] / _KRK_CANDIDATE_GENERATION_CAPACITY_FRAMES_PATH
+    index: dict[str, list[dict]] = {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        _KRK_CANDIDATE_GENERATION_CAPACITY_CACHE = index
+        return index
+    for row in payload.get("rows") or []:
+        if not isinstance(row, dict):
+            continue
+        fen = str(row.get("fen") or "")
+        if not fen:
+            continue
+        index.setdefault(fen, []).append(row)
+    _KRK_CANDIDATE_GENERATION_CAPACITY_CACHE = index
+    return index
+
+
+def _krk_observation_capacity_kind(row: dict | None, *, held_out: bool = False) -> str:
+    if held_out:
+        return "held_out_challenge"
+    label = str((row or {}).get("capacity_label") or "")
+    if label in {"positive_capacity", "negative_capacity"}:
+        return label
+    return "unknown_capacity"
+
+
+def _krk_candidate_generation_observation_for_suggestions(
+    suggestions: list[dict],
+    *,
+    selected_suggestion: dict | None = None,
+    active_landmark_label: str | None = None,
+    visible_terms: dict | None = None,
+    board: chess.Board | None = None,
+    blackboard: dict | None = None,
+    limit: int = 10,
+) -> dict:
+    """Emit observation-only candidate-generation frames after normal selection.
+
+    This sandbox records extra visible candidate/proposal frames. It never
+    changes scores, asks for a provider, selects a move, or mutates topology.
+    """
+    selected_skill = (
+        _skill_id_for_suggestion(selected_suggestion)
+        if isinstance(selected_suggestion, dict)
+        else None
+    )
+    selected_move = (
+        _suggestion_move_uci(selected_suggestion)
+        if isinstance(selected_suggestion, dict)
+        else None
+    )
+    trace_terms = dict(_trace_only_krk_context_terms(board))
+    trace_terms.update(visible_terms or {})
+    if active_landmark_label:
+        trace_terms[f"active_landmark_label.{active_landmark_label}"] = True
+    active_source_terms = sorted(
+        str(term)
+        for term, value in trace_terms.items()
+        if bool(value)
+    )[:32]
+    fen = board.fen() if board is not None else None
+    stage7_held_out = str(active_landmark_label or "") == "box_shrink"
+    frames: list[dict] = []
+    provider_rank_counts: dict[str, int] = {}
+    for idx, item in enumerate(suggestions[:max(0, limit)]):
+        provider_id = _skill_id_for_suggestion(item)
+        provider_rank_counts[provider_id] = provider_rank_counts.get(provider_id, 0) + 1
+        meta = item.get("meta") if isinstance(item.get("meta"), dict) else {}
+        frames.append({
+            "schema_version": "krk_candidate_generation_observation_frame.v0",
+            "sandbox_id": "sandbox.krk.candidate_generation_observation_v0",
+            "causal_status": "observation_only",
+            "direct_request": False,
+            "score_delta": 0.0,
+            "state_fen": fen,
+            "active_landmark_label": str(active_landmark_label or ""),
+            "selected_provider_before_observation": selected_skill,
+            "selected_move_before_observation": selected_move,
+            "candidate_source": "validated_provider_pack",
+            "provider_id": provider_id,
+            "move_id": _suggestion_move_uci(item),
+            "source_terms": active_source_terms,
+            "provider_provenance": str(meta.get("provider_maturity") or meta.get("provider_version") or ""),
+            "provider_local_rank": provider_rank_counts[provider_id],
+            "raw_score_observed": float(item.get("score", 0.0) or 0.0),
+            "capacity_evidence_kind": (
+                "held_out_challenge" if stage7_held_out else "unknown_capacity"
+            ),
+            "protected_status": "held_out_stage7_challenge" if stage7_held_out else "protected_or_unknown",
+            "forbidden_actions": [
+                "selecting_a_provider",
+                "selecting_a_move",
+                "changing_scores",
+                "suppressing_providers",
+                "routing_directly_to_a_provider",
+                "runtime_dtm_or_tablebase",
+                "gameplay_topology_mutation",
+                "m3_m4_update",
+            ],
+        })
+    capacity_rows = _krk_candidate_generation_capacity_index().get(str(fen or ""), [])
+    for idx, row in enumerate(capacity_rows[:max(0, limit)]):
+        held_out = bool(row.get("stage7_challenge_row", False))
+        frames.append({
+            "schema_version": "krk_candidate_generation_observation_frame.v0",
+            "sandbox_id": "sandbox.krk.candidate_generation_observation_v0",
+            "causal_status": "observation_only",
+            "direct_request": False,
+            "score_delta": 0.0,
+            "state_fen": fen,
+            "active_landmark_label": str(active_landmark_label or row.get("active_landmark_label") or ""),
+            "selected_provider_before_observation": selected_skill,
+            "selected_move_before_observation": selected_move,
+            "candidate_source": "validated_provider_pack",
+            "provider_id": row.get("provider_id"),
+            "move_id": row.get("forced_first_move"),
+            "source_terms": ["offline_validated_provider_capacity_evidence"],
+            "provider_provenance": str(row.get("provider_version") or ""),
+            "capacity_evidence_kind": _krk_observation_capacity_kind(row, held_out=held_out),
+            "capacity_evidence_source": str(_KRK_CANDIDATE_GENERATION_CAPACITY_FRAMES_PATH),
+            "protected_status": "held_out_stage7_challenge" if held_out else "protected_control",
+            "forbidden_actions": [
+                "selecting_a_provider",
+                "selecting_a_move",
+                "changing_scores",
+                "suppressing_providers",
+                "routing_directly_to_a_provider",
+                "runtime_dtm_or_tablebase",
+                "gameplay_topology_mutation",
+                "m3_m4_update",
+            ],
+        })
+    for frame in (blackboard or {}).get("krk_candidate_move_frames", []) or []:
+        if not isinstance(frame, dict):
+            continue
+        frames.append({
+            "schema_version": "krk_candidate_generation_observation_frame.v0",
+            "sandbox_id": "sandbox.krk.candidate_generation_observation_v0",
+            "causal_status": "observation_only",
+            "direct_request": False,
+            "score_delta": 0.0,
+            "state_fen": fen,
+            "active_landmark_label": str(active_landmark_label or ""),
+            "selected_provider_before_observation": selected_skill,
+            "selected_move_before_observation": selected_move,
+            "candidate_source": "candidate_move_frame",
+            "provider_id": None,
+            "move_id": frame.get("move_uci"),
+            "source_terms": list(frame.get("source_terms") or []),
+            "move_shape_terms": list(frame.get("move_shape_terms") or []),
+            "post_move_terms": list(frame.get("post_move_terms") or []),
+            "safety_terms": list(frame.get("safety_terms") or []),
+            "capacity_evidence_kind": "held_out_challenge" if stage7_held_out else "unknown_capacity",
+            "protected_status": "held_out_stage7_challenge" if stage7_held_out else "protected_or_unknown",
+            "forbidden_actions": [
+                "selecting_a_provider",
+                "selecting_a_move",
+                "changing_scores",
+                "suppressing_providers",
+                "routing_directly_to_a_provider",
+                "runtime_dtm_or_tablebase",
+                "gameplay_topology_mutation",
+                "m3_m4_update",
+            ],
+        })
+    plan_state = dict((blackboard or {}).get("stage7_plan_capsule_state", {}) or {})
+    if plan_state:
+        frames.append({
+            "schema_version": "krk_candidate_generation_observation_frame.v0",
+            "sandbox_id": "sandbox.krk.candidate_generation_observation_v0",
+            "causal_status": "observation_only",
+            "direct_request": False,
+            "score_delta": 0.0,
+            "state_fen": fen,
+            "active_landmark_label": str(active_landmark_label or ""),
+            "selected_provider_before_observation": selected_skill,
+            "selected_move_before_observation": selected_move,
+            "candidate_source": "plan_capsule_sequence_candidate",
+            "provider_id": None,
+            "move_id": None,
+            "plan_id": plan_state.get("plan_id"),
+            "source_terms": list(plan_state.get("entry_terms_confirmed", []) or []),
+            "capacity_evidence_kind": "held_out_challenge" if stage7_held_out else "unknown_capacity",
+            "protected_status": "held_out_stage7_challenge" if stage7_held_out else "protected_or_unknown",
+            "plan_status": plan_state.get("plan_status"),
+            "ttl_remaining": plan_state.get("ttl_remaining"),
+            "forbidden_actions": [
+                "selecting_a_provider",
+                "selecting_a_move",
+                "changing_scores",
+                "suppressing_providers",
+                "routing_directly_to_a_provider",
+                "runtime_dtm_or_tablebase",
+                "gameplay_topology_mutation",
+                "m3_m4_update",
+            ],
+        })
+    source_counts: dict[str, int] = {}
+    capacity_counts: dict[str, int] = {}
+    protected_counts: dict[str, int] = {}
+    for frame in frames:
+        source = str(frame.get("candidate_source") or "unknown")
+        source_counts[source] = source_counts.get(source, 0) + 1
+        capacity = str(frame.get("capacity_evidence_kind") or "unknown_capacity")
+        capacity_counts[capacity] = capacity_counts.get(capacity, 0) + 1
+        protected = str(frame.get("protected_status") or "unknown")
+        protected_counts[protected] = protected_counts.get(protected, 0) + 1
+    return {
+        "schema_version": "krk_candidate_generation_observation.v0",
+        "sandbox_id": "sandbox.krk.candidate_generation_observation_v0",
+        "enabled": True,
+        "causal_status": "observation_only",
+        "direct_request": False,
+        "score_delta": 0.0,
+        "state_fen": fen,
+        "active_landmark_label": str(active_landmark_label or ""),
+        "selected_provider_before_observation": selected_skill,
+        "selected_move_before_observation": selected_move,
+        "candidate_count": len(frames),
+        "candidate_count_by_source": dict(sorted(source_counts.items())),
+        "capacity_evidence_counts": dict(sorted(capacity_counts.items())),
+        "protected_status_counts": dict(sorted(protected_counts.items())),
+        "frames": frames,
+        "forbidden_actions": [
+            "selecting_a_provider",
+            "selecting_a_move",
+            "changing_scores",
+            "suppressing_providers",
+            "routing_directly_to_a_provider",
+            "runtime_dtm_or_tablebase",
+            "gameplay_topology_mutation",
+            "m3_m4_update",
+        ],
+    }
+
+
 def _krk_strategy_provider_family(skill_id: str) -> str:
     if "stage0_basin" in skill_id:
         return "stage0_basin"
@@ -2798,6 +3045,7 @@ def choose_move_details(
     active_landmark_label: str | None = None,
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
+    krk_candidate_generation_observability_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -2877,6 +3125,9 @@ def choose_move_details(
             active_landmark_label=active_landmark_label,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
             forced_successor_skill=forced_successor_skill,
+            krk_candidate_generation_observability_enabled=(
+                krk_candidate_generation_observability_enabled
+            ),
             krk_strategy_arbiter_observability_enabled=(
                 krk_strategy_arbiter_observability_enabled
             ),
@@ -2967,6 +3218,7 @@ def _choose_move_details_impl(
     active_landmark_label: str | None = None,
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
+    krk_candidate_generation_observability_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -3121,6 +3373,9 @@ def _choose_move_details_impl(
         env["blackboard"]["forced_successor_skill"] = forced_successor_skill
     env["blackboard"]["krk_strategy_arbiter_observability_enabled"] = bool(
         krk_strategy_arbiter_observability_enabled
+    )
+    env["blackboard"]["krk_candidate_generation_observability_enabled"] = bool(
+        krk_candidate_generation_observability_enabled
     )
     env["blackboard"]["krk_strategy_arbiter_sandbox_enabled"] = bool(
         krk_strategy_arbiter_sandbox_enabled
@@ -3395,6 +3650,26 @@ def _choose_move_details_impl(
             board=board,
             limit=suggestion_limit,
         )
+    candidate_generation_observation = {}
+    if krk_candidate_generation_observability_enabled:
+        if "krk_candidate_move_frames" not in env.get("blackboard", {}):
+            _enumerate_candidate_move_frames(
+                board,
+                blackboard=env["blackboard"],
+                include_worst_reply=False,
+                causal_status="non_causal",
+            )
+        candidate_generation_observation = (
+            _krk_candidate_generation_observation_for_suggestions(
+                suggestion_source,
+                selected_suggestion=selected_suggestion,
+                active_landmark_label=active_landmark_label,
+                visible_terms=env.get("blackboard", {}).get("krk_visible_terms", {}) or {},
+                board=board,
+                blackboard=env.get("blackboard", {}),
+                limit=suggestion_limit,
+            )
+        )
     clean_suggestions = []
     clean_source = list(suggestion_source)
     if (
@@ -3500,6 +3775,14 @@ def _choose_move_details_impl(
                 "krk_strategy_arbiter_observation": strategy_arbiter_observation,
             }
             if strategy_arbiter_observation
+            else {}
+        ),
+        **(
+            {
+                "krk_candidate_generation_observability_enabled": True,
+                "krk_candidate_generation_observation": candidate_generation_observation,
+            }
+            if candidate_generation_observation
             else {}
         ),
         "krk_strategy_arbiter_sandbox_enabled": bool(krk_strategy_arbiter_sandbox_enabled),
@@ -3759,6 +4042,7 @@ def play_to_mate(
     early_stop_stable_suggestions: int = 0,
     lock_stage_filter_through_playout: bool = False,
     forced_successor_skill: Optional[str] = None,
+    krk_candidate_generation_observability_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -3923,6 +4207,9 @@ def play_to_mate(
                 stage7_post_box_post_reply_context=white_moves > 0,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
                 forced_successor_skill=active_forced_successor,
+                krk_candidate_generation_observability_enabled=(
+                    krk_candidate_generation_observability_enabled
+                ),
                 krk_strategy_arbiter_observability_enabled=(
                     krk_strategy_arbiter_observability_enabled
                 ),
@@ -5002,6 +5289,7 @@ def evaluate_landmark_progress(
     stage7_post_box_frozen_model: dict | None = None,
     early_stop_stable_suggestions: int = 0,
     lock_stage_filter_through_playout: bool = False,
+    krk_candidate_generation_observability_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -5140,6 +5428,9 @@ def evaluate_landmark_progress(
         "plan_capsule_owned_arbitration_provider_by_outcome": {},
         "role_owned_score_normalization_selected_count": 0,
         "role_owned_score_normalization_provider_by_outcome": {},
+        "krk_candidate_generation_observation_count": 0,
+        "krk_candidate_generation_observation_frame_count": 0,
+        "krk_candidate_generation_observation_by_source": {},
         "krk_strategy_arbiter_observation_count": 0,
         "krk_strategy_arbiter_sandbox_supported_count": 0,
         "krk_strategy_arbiter_sandbox_supported_provider_by_outcome": {},
@@ -5221,6 +5512,9 @@ def evaluate_landmark_progress(
             candidate_move_role_support=candidate_move_role_support,
             active_landmark_label=label,
             early_stop_stable_suggestions=early_stop_stable_suggestions,
+            krk_candidate_generation_observability_enabled=(
+                krk_candidate_generation_observability_enabled
+            ),
             krk_strategy_arbiter_observability_enabled=(
                 krk_strategy_arbiter_observability_enabled
             ),
@@ -5258,6 +5552,23 @@ def evaluate_landmark_progress(
             stats["krk_strategy_arbiter_observation_count"] = (
                 int(stats.get("krk_strategy_arbiter_observation_count", 0) or 0) + 1
             )
+        candidate_generation_observation = dict(
+            move_details.get("krk_candidate_generation_observation", {}) or {}
+        )
+        if candidate_generation_observation:
+            stats["krk_candidate_generation_observation_count"] = (
+                int(stats.get("krk_candidate_generation_observation_count", 0) or 0) + 1
+            )
+            frame_count = int(candidate_generation_observation.get("candidate_count", 0) or 0)
+            stats["krk_candidate_generation_observation_frame_count"] = (
+                int(stats.get("krk_candidate_generation_observation_frame_count", 0) or 0)
+                + frame_count
+            )
+            for source, count in (
+                candidate_generation_observation.get("candidate_count_by_source", {}) or {}
+            ).items():
+                by_source = stats["krk_candidate_generation_observation_by_source"]
+                by_source[str(source)] = int(by_source.get(str(source), 0) or 0) + int(count)
         sandbox_summary = dict(move_details.get("krk_strategy_arbiter_sandbox_summary", {}) or {})
         sandbox_supported_count = int(sandbox_summary.get("supported_count", 0) or 0)
         if sandbox_supported_count:
@@ -5470,6 +5781,9 @@ def evaluate_landmark_progress(
                 candidate_move_role_support=candidate_move_role_support,
                 early_stop_stable_suggestions=early_stop_stable_suggestions,
                 lock_stage_filter_through_playout=lock_stage_filter_through_playout,
+                krk_candidate_generation_observability_enabled=(
+                    krk_candidate_generation_observability_enabled
+                ),
                 krk_strategy_arbiter_observability_enabled=(
                     krk_strategy_arbiter_observability_enabled
                 ),
@@ -6982,6 +7296,8 @@ def main() -> None:
                         help="Enable sandbox 0926 king-support fence-stabilizer MoveShapeRoleSpec matching")
     parser.add_argument("--candidate-move-role-support", type=float, default=0.0,
                         help="Visible support amount for sandbox role-scoped candidate-move suggestions")
+    parser.add_argument("--enable-krk-candidate-generation-observability", action="store_true",
+                        help="Runtime test: emit default-off observation-only KRK candidate-generation frames with no score/routing effect")
     parser.add_argument("--enable-krk-strategy-arbiter-observability", action="store_true",
                         help="Enable default-off trace-only KRK strategy-arbiter observation metadata; does not alter scores or move selection")
     parser.add_argument("--enable-krk-strategy-arbiter-sandbox", action="store_true",
@@ -7110,6 +7426,9 @@ def main() -> None:
         candidate_move_layer_enabled=args.enable_candidate_move_layer,
         stage7_king_support_fence_stabilizer_enabled=args.enable_stage7_king_support_fence_stabilizer,
         candidate_move_role_support=args.candidate_move_role_support,
+        krk_candidate_generation_observability_enabled=(
+            args.enable_krk_candidate_generation_observability
+        ),
         krk_strategy_arbiter_observability_enabled=args.enable_krk_strategy_arbiter_observability,
         krk_strategy_arbiter_sandbox_enabled=args.enable_krk_strategy_arbiter_sandbox,
         krk_strategy_arbiter_support=args.krk_strategy_arbiter_support,

@@ -49,6 +49,28 @@ assert _sandbox_review_spec.loader is not None
 _sandbox_review = importlib.util.module_from_spec(_sandbox_review_spec)
 _sandbox_review_spec.loader.exec_module(_sandbox_review)
 
+_observation_smoke_spec = importlib.util.spec_from_file_location(
+    "run_krk_candidate_generation_observation_sandbox_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "run_krk_candidate_generation_observation_sandbox_v0.py",
+)
+assert _observation_smoke_spec is not None
+assert _observation_smoke_spec.loader is not None
+_observation_smoke = importlib.util.module_from_spec(_observation_smoke_spec)
+_observation_smoke_spec.loader.exec_module(_observation_smoke)
+
+_landmark_spec = importlib.util.spec_from_file_location(
+    "test_krk_landmark_progress",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "test_krk_landmark_progress.py",
+)
+assert _landmark_spec is not None
+assert _landmark_spec.loader is not None
+_landmark = importlib.util.module_from_spec(_landmark_spec)
+_landmark_spec.loader.exec_module(_landmark)
+
 
 def test_candidate_proposal_coverage_preserves_capacity_label_semantics():
     capacity_rows = [
@@ -275,3 +297,76 @@ def test_candidate_generation_sandbox_review_is_observation_only():
     assert payload["runtime_behavior_changed"] is False
     assert "selecting_a_provider" in payload["explicitly_forbidden"]
     assert "score_delta_zero" in payload["required_candidate_frame_fields"]
+
+
+def test_candidate_generation_observation_frames_are_non_causal():
+    suggestion = {
+        "move": "a1a2",
+        "score": 7.5,
+        "meta": {"curriculum_label": "fence_established", "provider_version": "frozen"},
+    }
+
+    observation = _landmark._krk_candidate_generation_observation_for_suggestions(
+        [suggestion],
+        selected_suggestion=suggestion,
+        active_landmark_label="fence_established",
+        visible_terms={"fence_exists": True},
+        board=None,
+        blackboard={},
+        limit=1,
+    )
+
+    assert observation["causal_status"] == "observation_only"
+    assert observation["direct_request"] is False
+    assert observation["score_delta"] == 0.0
+    assert suggestion["score"] == 7.5
+    assert observation["candidate_count"] == 1
+    frame = observation["frames"][0]
+    assert frame["candidate_source"] == "validated_provider_pack"
+    assert frame["direct_request"] is False
+    assert frame["score_delta"] == 0.0
+    assert "selecting_a_provider" in frame["forbidden_actions"]
+
+
+def test_candidate_generation_observation_smoke_decision_schema():
+    payload = {
+        "summary": {
+            "generated_candidate_count": 1,
+            "generated_candidate_count_by_source": {"validated_provider_pack": 1},
+            "protected_candidate_count": 1,
+            "stage7_heldout_candidate_count": 0,
+            "capacity_evidence_counts": {"positive_capacity": 1},
+            "selected_move_or_provider_changed": False,
+            "playout_result_or_plies_changed": False,
+        },
+        "decision": {
+            "status": "observation_sandbox_ready_for_non_causal_coverage_analysis",
+            "default_off_equivalence_passed": True,
+            "observation_frames_emitted": True,
+            "frame_invariants_passed": True,
+            "selector_allowed": False,
+        },
+        "cases": [],
+    }
+
+    assert _observation_smoke._same_decision(
+        {"move": "a1a2", "selected_provider": "krk.fence", "confidence": 1.0},
+        {"move": "a1a2", "selected_provider": "krk.fence", "confidence": 1.0},
+    )
+    assert payload["decision"]["selector_allowed"] is False
+
+
+def test_candidate_generation_observation_runtime_flag_is_observation_only():
+    case = _observation_smoke._load_cases()[0]
+
+    flag_off = _observation_smoke._run_decision(case, enabled=False)
+    enabled = _observation_smoke._run_decision(case, enabled=True)
+
+    assert flag_off["observation_present"] is False
+    assert enabled["observation_present"] is True
+    assert _observation_smoke._same_decision(flag_off, enabled)
+    observation = enabled["observation"]
+    assert observation["direct_request"] is False
+    assert observation["score_delta"] == 0.0
+    assert observation["candidate_count"] > 0
+    assert observation["sample_frames"][0]["causal_status"] == "observation_only"

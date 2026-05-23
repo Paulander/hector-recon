@@ -271,6 +271,7 @@ Important artifacts include:
 * `reports/strategy_arbitration/krk_candidate_frame_source_benchmark_v1.md/json`
 * `reports/strategy_arbitration/krk_strategy_sequence_control_plane_decision_v1.md/json`
 * `reports/strategy_arbitration/krk_candidate_generation_sandbox_review_v0.md/json`
+* `reports/strategy_arbitration/krk_candidate_generation_observation_sandbox_v0.md/json`
 
 Current conclusion:
 
@@ -321,6 +322,14 @@ candidate_generation_observation_sandbox_review_ready
 ```
 
 The review packet recommends only a default-off observation-only candidate-generation sandbox as the first possible runtime experiment, and it explicitly does not authorize implementation by itself. It forbids selection, score changes, suppression, direct provider routing, Stage 7 promotion, Stage 8 training, runtime DTM/tablebase, gameplay topology mutation, and hidden routing.
+
+The default-off observation-only candidate-generation sandbox has now been explicitly approved, wired, and smoke-tested:
+
+```text
+observation_sandbox_ready_for_non_causal_coverage_analysis
+```
+
+The sandbox emits candidate/proposal frames only when `--enable-krk-candidate-generation-observability` is set. It records `direct_request = false`, `score_delta = 0.0`, `causal_status = observation_only`, candidate source, capacity evidence kind, and protected/held-out status. The smoke generated 93 candidate frames across protected Stage 5/6 and held-out Stage 7 cases with no selected move/provider delta and no h8 playout result/ply delta. It is not a selector and does not authorize guardrails or promotion.
 
 ### Progress-Window Reconsideration Runtime Test
 
@@ -429,6 +438,8 @@ reports/strategy_arbitration/krk_strategy_sequence_control_plane_decision_v1.md
 reports/strategy_arbitration/krk_strategy_sequence_control_plane_decision_v1.json
 reports/strategy_arbitration/krk_candidate_generation_sandbox_review_v0.md
 reports/strategy_arbitration/krk_candidate_generation_sandbox_review_v0.json
+reports/strategy_arbitration/krk_candidate_generation_observation_sandbox_v0.md
+reports/strategy_arbitration/krk_candidate_generation_observation_sandbox_v0.json
 ```
 
 These artifacts answer:
@@ -443,13 +454,13 @@ These artifacts answer:
 * What is the first non-causal candidate-generation benchmark?
 * What, if anything, would justify a future default-off candidate-generation sandbox?
 
-Next safe step after candidate-generation sandbox review:
+Next safe step after observation-only candidate-generation sandbox smoke:
 
 ```text
-explicit_approval_required_before_default_off_observation_sandbox_implementation
+non_causal_candidate_coverage_analysis_using_emitted_frames
 ```
 
-Do not implement the sandbox unless explicitly approved. If approved, the first runtime slice must be observation-only, default-off, no score/routing effect, bounded candidate count, default-off equivalence first, and tiny smoke before any guardrails.
+Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The next slice should analyze the emitted observation frames for candidate coverage and usefulness.
 
 ## Runtime Approval Rule
 
