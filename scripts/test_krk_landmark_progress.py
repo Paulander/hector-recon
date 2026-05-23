@@ -704,6 +704,20 @@ _KRK_CANDIDATE_GENERATION_CAPACITY_FRAMES_PATH = (
     Path("reports/krk_protected_provider_coverage_frames_v0.json")
 )
 _KRK_CANDIDATE_GENERATION_CAPACITY_CACHE: dict[str, list[dict]] | None = None
+_KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_PATH = Path(
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v2_cross_stage_capacity_merged.json"
+)
+_KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_CACHE: dict[str, list[dict]] | None = None
+_KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_SCOPE = {
+    "stage5": {"edge_trap", "fence_established", "stage0_basin"},
+    "stage6": {"stage0_basin"},
+}
+_KRK_STAGE_BY_LANDMARK_LABEL = {
+    "wrong_tempo_control": "stage4",
+    "fence_established": "stage5",
+    "drive_to_edge": "stage6",
+    "box_shrink": "stage7",
+}
 
 
 def _krk_candidate_generation_capacity_index() -> dict[str, list[dict]]:
@@ -728,6 +742,38 @@ def _krk_candidate_generation_capacity_index() -> dict[str, list[dict]]:
     return index
 
 
+def _krk_stage5_6_candidate_generation_refresh_index() -> dict[str, list[dict]]:
+    global _KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_CACHE
+    if _KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_CACHE is not None:
+        return _KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_CACHE
+    path = Path(__file__).resolve().parents[1] / _KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_PATH
+    index: dict[str, list[dict]] = {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        _KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_CACHE = index
+        return index
+    for row in payload.get("rows") or []:
+        if not isinstance(row, dict):
+            continue
+        if row.get("stage7_challenge_row"):
+            continue
+        if row.get("evidence_channel") != "validated_provider_capacity":
+            continue
+        if row.get("capacity_label") != "positive_capacity":
+            continue
+        stage = str(row.get("source_stage") or "")
+        family = str(row.get("candidate_strategy_family") or "")
+        if family not in _KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_SCOPE.get(stage, set()):
+            continue
+        fen = str(row.get("fen") or "")
+        if not fen:
+            continue
+        index.setdefault(fen, []).append(row)
+    _KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_CACHE = index
+    return index
+
+
 def _krk_observation_capacity_kind(row: dict | None, *, held_out: bool = False) -> str:
     if held_out:
         return "held_out_challenge"
@@ -735,6 +781,24 @@ def _krk_observation_capacity_kind(row: dict | None, *, held_out: bool = False) 
     if label in {"positive_capacity", "negative_capacity"}:
         return label
     return "unknown_capacity"
+
+
+def _krk_stage_for_active_landmark(active_landmark_label: str | None) -> str:
+    return _KRK_STAGE_BY_LANDMARK_LABEL.get(str(active_landmark_label or ""), "unknown")
+
+
+def _krk_stage5_6_refresh_scope_allows(
+    *,
+    active_landmark_label: str | None,
+    provider_id: str | None = None,
+    source_stage: str | None = None,
+    provider_family: str | None = None,
+) -> bool:
+    stage = str(source_stage or _krk_stage_for_active_landmark(active_landmark_label))
+    if stage not in {"stage5", "stage6"}:
+        return False
+    family = str(provider_family or _krk_strategy_provider_family(str(provider_id or "")))
+    return family in _KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_SCOPE.get(stage, set())
 
 
 def _krk_candidate_generation_observation_for_suggestions(
@@ -747,6 +811,7 @@ def _krk_candidate_generation_observation_for_suggestions(
     blackboard: dict | None = None,
     limit: int = 10,
     repair_monitor_observation_source_enabled: bool = False,
+    stage5_6_candidate_generation_refresh_enabled: bool = False,
 ) -> dict:
     """Emit observation-only candidate-generation frames after normal selection.
 
@@ -844,6 +909,90 @@ def _krk_candidate_generation_observation_for_suggestions(
                 "m3_m4_update",
             ],
         })
+    if stage5_6_candidate_generation_refresh_enabled and not stage7_held_out:
+        refresh_rows = _krk_stage5_6_candidate_generation_refresh_index().get(str(fen or ""), [])
+        for row in refresh_rows[:max(0, limit)]:
+            if not _krk_stage5_6_refresh_scope_allows(
+                active_landmark_label=active_landmark_label,
+                source_stage=str(row.get("source_stage") or ""),
+                provider_family=str(row.get("candidate_strategy_family") or ""),
+            ):
+                continue
+            frames.append({
+                "schema_version": "krk_candidate_generation_observation_frame.v0",
+                "sandbox_id": "sandbox.krk.stage5_6_candidate_generation_refresh_v0",
+                "causal_status": "observation_only",
+                "direct_request": False,
+                "score_delta": 0.0,
+                "state_fen": fen,
+                "active_landmark_label": str(active_landmark_label or row.get("active_landmark_label") or ""),
+                "selected_provider_before_observation": selected_skill,
+                "selected_move_before_observation": selected_move,
+                "candidate_source": "stage_conditioned_candidate_generation_refresh",
+                "provider_id": row.get("candidate_provider_id"),
+                "move_id": row.get("candidate_move_uci"),
+                "source_terms": [
+                    "stage5_6_candidate_generation_refresh_scope",
+                    f"source_stage.{row.get('source_stage')}",
+                    f"candidate_strategy_family.{row.get('candidate_strategy_family')}",
+                ],
+                "provider_provenance": "stage5_6_candidate_generation_refresh_review_packet_v3",
+                "capacity_evidence_kind": "positive_capacity",
+                "capacity_evidence_source": str(_KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_PATH),
+                "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+                "protected_status": "protected_control",
+                "forbidden_actions": [
+                    "selecting_a_provider",
+                    "selecting_a_move",
+                    "changing_scores",
+                    "suppressing_providers",
+                    "routing_directly_to_a_provider",
+                    "runtime_dtm_or_tablebase",
+                    "gameplay_topology_mutation",
+                    "m3_m4_update",
+                ],
+            })
+        for item in suggestions[:max(0, limit)]:
+            provider_id = _skill_id_for_suggestion(item)
+            if not _krk_stage5_6_refresh_scope_allows(
+                active_landmark_label=active_landmark_label,
+                provider_id=provider_id,
+            ):
+                continue
+            frames.append({
+                "schema_version": "krk_candidate_generation_observation_frame.v0",
+                "sandbox_id": "sandbox.krk.stage5_6_candidate_generation_refresh_v0",
+                "causal_status": "observation_only",
+                "direct_request": False,
+                "score_delta": 0.0,
+                "state_fen": fen,
+                "active_landmark_label": str(active_landmark_label or ""),
+                "selected_provider_before_observation": selected_skill,
+                "selected_move_before_observation": selected_move,
+                "candidate_source": "stage_conditioned_candidate_generation_refresh",
+                "provider_id": provider_id,
+                "move_id": _suggestion_move_uci(item),
+                "source_terms": [
+                    "stage5_6_candidate_generation_refresh_scope",
+                    f"active_landmark_label.{active_landmark_label}",
+                    f"candidate_strategy_family.{_krk_strategy_provider_family(provider_id)}",
+                ],
+                "provider_provenance": "visible_provider_proposal_scope",
+                "capacity_evidence_kind": "positive_capacity_scope",
+                "capacity_evidence_source": str(_KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_PATH),
+                "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+                "protected_status": "protected_control",
+                "forbidden_actions": [
+                    "selecting_a_provider",
+                    "selecting_a_move",
+                    "changing_scores",
+                    "suppressing_providers",
+                    "routing_directly_to_a_provider",
+                    "runtime_dtm_or_tablebase",
+                    "gameplay_topology_mutation",
+                    "m3_m4_update",
+                ],
+            })
     for frame in (blackboard or {}).get("krk_candidate_move_frames", []) or []:
         if not isinstance(frame, dict):
             continue
@@ -3119,6 +3268,7 @@ def choose_move_details(
     forced_successor_skill: Optional[str] = None,
     krk_candidate_generation_observability_enabled: bool = False,
     krk_repair_monitor_observation_source_enabled: bool = False,
+    krk_stage5_6_candidate_generation_refresh_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -3203,6 +3353,9 @@ def choose_move_details(
             ),
             krk_repair_monitor_observation_source_enabled=(
                 krk_repair_monitor_observation_source_enabled
+            ),
+            krk_stage5_6_candidate_generation_refresh_enabled=(
+                krk_stage5_6_candidate_generation_refresh_enabled
             ),
             krk_strategy_arbiter_observability_enabled=(
                 krk_strategy_arbiter_observability_enabled
@@ -3296,6 +3449,7 @@ def _choose_move_details_impl(
     forced_successor_skill: Optional[str] = None,
     krk_candidate_generation_observability_enabled: bool = False,
     krk_repair_monitor_observation_source_enabled: bool = False,
+    krk_stage5_6_candidate_generation_refresh_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -3456,6 +3610,9 @@ def _choose_move_details_impl(
     )
     env["blackboard"]["krk_repair_monitor_observation_source_enabled"] = bool(
         krk_repair_monitor_observation_source_enabled
+    )
+    env["blackboard"]["krk_stage5_6_candidate_generation_refresh_enabled"] = bool(
+        krk_stage5_6_candidate_generation_refresh_enabled
     )
     env["blackboard"]["krk_strategy_arbiter_sandbox_enabled"] = bool(
         krk_strategy_arbiter_sandbox_enabled
@@ -3751,6 +3908,9 @@ def _choose_move_details_impl(
                 repair_monitor_observation_source_enabled=(
                     krk_repair_monitor_observation_source_enabled
                 ),
+                stage5_6_candidate_generation_refresh_enabled=(
+                    krk_stage5_6_candidate_generation_refresh_enabled
+                ),
             )
         )
     clean_suggestions = []
@@ -3865,6 +4025,9 @@ def _choose_move_details_impl(
                 "krk_candidate_generation_observability_enabled": True,
                 "krk_repair_monitor_observation_source_enabled": bool(
                     krk_repair_monitor_observation_source_enabled
+                ),
+                "krk_stage5_6_candidate_generation_refresh_enabled": bool(
+                    krk_stage5_6_candidate_generation_refresh_enabled
                 ),
                 "krk_candidate_generation_observation": candidate_generation_observation,
             }
@@ -4130,6 +4293,7 @@ def play_to_mate(
     forced_successor_skill: Optional[str] = None,
     krk_candidate_generation_observability_enabled: bool = False,
     krk_repair_monitor_observation_source_enabled: bool = False,
+    krk_stage5_6_candidate_generation_refresh_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -4299,6 +4463,9 @@ def play_to_mate(
                 ),
                 krk_repair_monitor_observation_source_enabled=(
                     krk_repair_monitor_observation_source_enabled
+                ),
+                krk_stage5_6_candidate_generation_refresh_enabled=(
+                    krk_stage5_6_candidate_generation_refresh_enabled
                 ),
                 krk_strategy_arbiter_observability_enabled=(
                     krk_strategy_arbiter_observability_enabled
@@ -5381,6 +5548,7 @@ def evaluate_landmark_progress(
     lock_stage_filter_through_playout: bool = False,
     krk_candidate_generation_observability_enabled: bool = False,
     krk_repair_monitor_observation_source_enabled: bool = False,
+    krk_stage5_6_candidate_generation_refresh_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -5608,6 +5776,9 @@ def evaluate_landmark_progress(
             ),
             krk_repair_monitor_observation_source_enabled=(
                 krk_repair_monitor_observation_source_enabled
+            ),
+            krk_stage5_6_candidate_generation_refresh_enabled=(
+                krk_stage5_6_candidate_generation_refresh_enabled
             ),
             krk_strategy_arbiter_observability_enabled=(
                 krk_strategy_arbiter_observability_enabled
@@ -5880,6 +6051,9 @@ def evaluate_landmark_progress(
                 ),
                 krk_repair_monitor_observation_source_enabled=(
                     krk_repair_monitor_observation_source_enabled
+                ),
+                krk_stage5_6_candidate_generation_refresh_enabled=(
+                    krk_stage5_6_candidate_generation_refresh_enabled
                 ),
                 krk_strategy_arbiter_observability_enabled=(
                     krk_strategy_arbiter_observability_enabled
@@ -7397,6 +7571,8 @@ def main() -> None:
                         help="Runtime test: emit default-off observation-only KRK candidate-generation frames with no score/routing effect")
     parser.add_argument("--enable-krk-repair-monitor-observation-source", action="store_true",
                         help="Runtime test: add default-off observation-only protected repair-monitor broader-strategy candidate frames; no score/routing effect")
+    parser.add_argument("--enable-krk-stage5-6-candidate-generation-refresh-observation", action="store_true",
+                        help="Runtime test: add default-off observation-only Stage 5/6 candidate-generation refresh frames; no score/routing effect")
     parser.add_argument("--enable-krk-strategy-arbiter-observability", action="store_true",
                         help="Enable default-off trace-only KRK strategy-arbiter observation metadata; does not alter scores or move selection")
     parser.add_argument("--enable-krk-strategy-arbiter-sandbox", action="store_true",
@@ -7530,6 +7706,9 @@ def main() -> None:
         ),
         krk_repair_monitor_observation_source_enabled=(
             args.enable_krk_repair_monitor_observation_source
+        ),
+        krk_stage5_6_candidate_generation_refresh_enabled=(
+            args.enable_krk_stage5_6_candidate_generation_refresh_observation
         ),
         krk_strategy_arbiter_observability_enabled=args.enable_krk_strategy_arbiter_observability,
         krk_strategy_arbiter_sandbox_enabled=args.enable_krk_strategy_arbiter_sandbox,

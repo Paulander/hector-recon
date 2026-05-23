@@ -493,10 +493,53 @@ The bounded offline labels completed: 12 protected labels, 8 mate and 4 max_plie
 
 After merging the labels, dataset v2 has 274 rows and 28 protected capacity rows: 19 positive and 9 negative. The candidate-generation refresh probe now supports a non-causal refresh design: best conservative policy `stage_family_pure_positive_with_support_2` gets recall 0.737 and negative suppression 1.0. Leave-stage-out remains weak at recall 0.579 / negative suppression 0.111, so this is not robust enough for selector work or runtime selection.
 
+Candidate-generation training-refresh design and review are complete:
+
+```text
+stage5_6_candidate_generation_refresh_review_ready
+stage5_6_candidate_generation_refresh_wired_default_off_equivalent
+```
+
+The Stage 5/6 candidate-generation refresh is now wired only as an explicitly approved default-off observation source:
+
+* flag: `--enable-krk-stage5-6-candidate-generation-refresh-observation`
+* scope: protected Stage 5/6 only
+* candidate families: Stage 5 `edge_trap`, `fence_established`, `stage0_basin`; Stage 6 `stage0_basin`
+* excluded: Stage 4, Stage 7, Stage 8
+* behavior: emits `stage_conditioned_candidate_generation_refresh` frames only
+* invariants: `direct_request=false`, `score_delta=0.0`, `causal_status=observation_only`
+
+Smoke artifact:
+
+```text
+reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_smoke_v0.md
+reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_smoke_v0.json
+```
+
+The smoke covered 2 protected cases, emitted 13 refresh frames, produced 0 selected move/provider deltas, 0 baseline refresh-frame leaks, 0 invariant failures, and 0 Stage 7 cases. This does not authorize selector behavior, guardrails, score tuning, provider routing, Stage 7 promotion, or Stage 8 training.
+
+Coverage and broadened protected sampling are complete:
+
+```text
+stage5_6_refresh_coverage_ready_for_broadened_analysis
+stage5_6_candidate_generation_refresh_broadened_default_off_equivalent
+stage5_6_candidate_generation_refresh_quality_trace_only_retained
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_coverage_v0.md/json`
+* `reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_broadened_v0.md/json`
+* `reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_quality_review_v0.md/json`
+
+The coverage analysis confirms the smoke emitted 13 full refresh frames with 0 selected move/provider deltas, 0 invariant failures, and 0 Stage 7 cases. The broadened sample covered 4 protected Stage 5/6 cases, emitted 38 refresh frames, and again produced 0 selected move/provider deltas, 0 baseline refresh-frame leaks, 0 invariant failures, and 0 Stage 7 cases.
+
+The quality review retains this source as trace/candidate-generation context only. Selector and guardrails remain blocked because capacity evidence is not runtime ownership evidence, the protected sample is small, and Stage 4/7/8 are explicitly excluded.
+
 Next safe step:
 
 ```text
-design_candidate_generation_training_refresh_non_causal
+fold_stage5_6_refresh_frames_into_strategy_sequence_dataset
 ```
 
 Do not implement selector behavior, run guardrails, tune scores, route providers, promote Stage 7, or train Stage 8 from this source.

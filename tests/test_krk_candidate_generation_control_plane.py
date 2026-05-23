@@ -515,6 +515,56 @@ assert _stage5_6_refresh_packet_spec.loader is not None
 _stage5_6_refresh_packet = importlib.util.module_from_spec(_stage5_6_refresh_packet_spec)
 _stage5_6_refresh_packet_spec.loader.exec_module(_stage5_6_refresh_packet)
 
+_stage5_6_refresh_smoke_spec = importlib.util.spec_from_file_location(
+    "run_krk_stage5_6_candidate_generation_refresh_smoke_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "run_krk_stage5_6_candidate_generation_refresh_smoke_v0.py",
+)
+assert _stage5_6_refresh_smoke_spec is not None
+assert _stage5_6_refresh_smoke_spec.loader is not None
+_stage5_6_refresh_smoke = importlib.util.module_from_spec(_stage5_6_refresh_smoke_spec)
+_stage5_6_refresh_smoke_spec.loader.exec_module(_stage5_6_refresh_smoke)
+
+_stage5_6_refresh_coverage_spec = importlib.util.spec_from_file_location(
+    "analyze_krk_stage5_6_candidate_generation_refresh_coverage_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "analyze_krk_stage5_6_candidate_generation_refresh_coverage_v0.py",
+)
+assert _stage5_6_refresh_coverage_spec is not None
+assert _stage5_6_refresh_coverage_spec.loader is not None
+_stage5_6_refresh_coverage = importlib.util.module_from_spec(
+    _stage5_6_refresh_coverage_spec
+)
+_stage5_6_refresh_coverage_spec.loader.exec_module(_stage5_6_refresh_coverage)
+
+_stage5_6_refresh_broadened_spec = importlib.util.spec_from_file_location(
+    "run_krk_stage5_6_candidate_generation_refresh_broadened_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "run_krk_stage5_6_candidate_generation_refresh_broadened_v0.py",
+)
+assert _stage5_6_refresh_broadened_spec is not None
+assert _stage5_6_refresh_broadened_spec.loader is not None
+_stage5_6_refresh_broadened = importlib.util.module_from_spec(
+    _stage5_6_refresh_broadened_spec
+)
+_stage5_6_refresh_broadened_spec.loader.exec_module(_stage5_6_refresh_broadened)
+
+_stage5_6_refresh_quality_spec = importlib.util.spec_from_file_location(
+    "analyze_krk_stage5_6_candidate_generation_refresh_quality_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "analyze_krk_stage5_6_candidate_generation_refresh_quality_v0.py",
+)
+assert _stage5_6_refresh_quality_spec is not None
+assert _stage5_6_refresh_quality_spec.loader is not None
+_stage5_6_refresh_quality = importlib.util.module_from_spec(
+    _stage5_6_refresh_quality_spec
+)
+_stage5_6_refresh_quality_spec.loader.exec_module(_stage5_6_refresh_quality)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -2510,3 +2560,203 @@ def test_stage5_6_candidate_generation_refresh_packet_requires_explicit_approval
         "stage8",
     ]
     assert "selecting_a_provider" in payload["explicitly_forbidden"]
+
+
+def test_stage5_6_refresh_observation_source_is_default_off_and_scoped():
+    suggestion = {
+        "move": "a1a2",
+        "score": 7.5,
+        "meta": {"curriculum_label": "fence_established", "provider_version": "frozen"},
+    }
+
+    disabled = _landmark._krk_candidate_generation_observation_for_suggestions(
+        [suggestion],
+        selected_suggestion=suggestion,
+        active_landmark_label="fence_established",
+        visible_terms={"fence_exists": True},
+        board=None,
+        blackboard={},
+        limit=1,
+        stage5_6_candidate_generation_refresh_enabled=False,
+    )
+    enabled = _landmark._krk_candidate_generation_observation_for_suggestions(
+        [suggestion],
+        selected_suggestion=suggestion,
+        active_landmark_label="fence_established",
+        visible_terms={"fence_exists": True},
+        board=None,
+        blackboard={},
+        limit=1,
+        stage5_6_candidate_generation_refresh_enabled=True,
+    )
+    stage4 = _landmark._krk_candidate_generation_observation_for_suggestions(
+        [suggestion],
+        selected_suggestion=suggestion,
+        active_landmark_label="wrong_tempo_control",
+        visible_terms={"fence_exists": True},
+        board=None,
+        blackboard={},
+        limit=1,
+        stage5_6_candidate_generation_refresh_enabled=True,
+    )
+    stage7 = _landmark._krk_candidate_generation_observation_for_suggestions(
+        [suggestion],
+        selected_suggestion=suggestion,
+        active_landmark_label="box_shrink",
+        visible_terms={"fence_exists": True},
+        board=None,
+        blackboard={},
+        limit=1,
+        stage5_6_candidate_generation_refresh_enabled=True,
+    )
+
+    assert not any(
+        frame.get("candidate_source") == "stage_conditioned_candidate_generation_refresh"
+        for frame in disabled["frames"]
+    )
+    refresh_frames = [
+        frame
+        for frame in enabled["frames"]
+        if frame.get("candidate_source") == "stage_conditioned_candidate_generation_refresh"
+    ]
+    assert refresh_frames
+    assert refresh_frames[0]["direct_request"] is False
+    assert refresh_frames[0]["score_delta"] == 0.0
+    assert refresh_frames[0]["causal_status"] == "observation_only"
+    assert refresh_frames[0]["protected_status"] == "protected_control"
+    assert "selecting_a_provider" in refresh_frames[0]["forbidden_actions"]
+    assert not any(
+        frame.get("candidate_source") == "stage_conditioned_candidate_generation_refresh"
+        for frame in stage4["frames"]
+    )
+    assert not any(
+        frame.get("candidate_source") == "stage_conditioned_candidate_generation_refresh"
+        for frame in stage7["frames"]
+    )
+
+
+def test_stage5_6_refresh_smoke_loads_protected_cases_only():
+    cases = _stage5_6_refresh_smoke.load_cases()
+
+    assert cases
+    assert {case["source_stage"] for case in cases} <= {"stage5", "stage6"}
+    assert any(case["source_stage"] == "stage5" for case in cases)
+    assert any(case["source_stage"] == "stage6" for case in cases)
+    assert all(not case["held_out"] for case in cases)
+
+
+def test_stage5_6_refresh_smoke_decision_blocks_selector():
+    payload = {
+        "summary": {
+            "case_count": 2,
+            "refresh_frame_count": 3,
+            "selected_move_provider_delta_count": 0,
+            "baseline_refresh_frame_count": 0,
+            "invariant_failure_count": 0,
+            "stage7_case_count": 0,
+        },
+        "decision": {
+            "status": "stage5_6_candidate_generation_refresh_wired_default_off_equivalent",
+            "selector_allowed": False,
+            "guardrails_allowed": False,
+            "promotion_allowed": False,
+        },
+    }
+
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["guardrails_allowed"] is False
+    assert payload["decision"]["promotion_allowed"] is False
+
+
+def test_stage5_6_refresh_coverage_keeps_selector_blocked():
+    source = {
+        "decision": {
+            "status": "stage5_6_candidate_generation_refresh_wired_default_off_equivalent"
+        },
+        "summary": {
+            "stage7_case_count": 0,
+            "selected_move_provider_delta_count": 0,
+            "baseline_refresh_frame_count": 0,
+        },
+        "cases": [
+            {
+                "case_id": "stage5",
+                "source_stage": "stage5",
+                "enabled_refresh_sample_frames": [
+                    {
+                        "candidate_source": "stage_conditioned_candidate_generation_refresh",
+                        "provider_id": "krk.stage0_basin",
+                        "capacity_evidence_kind": "positive_capacity",
+                        "provider_provenance": "stage5_6_candidate_generation_refresh_review_packet_v3",
+                        "direct_request": False,
+                        "score_delta": 0.0,
+                        "causal_status": "observation_only",
+                        "protected_status": "protected_control",
+                    }
+                ],
+            }
+        ],
+    }
+
+    payload = _stage5_6_refresh_coverage.build_payload(source)
+
+    assert payload["decision"]["status"] == (
+        "stage5_6_refresh_coverage_ready_for_broadened_analysis"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["guardrails_allowed"] is False
+    assert payload["summary"]["stage7_case_count"] == 0
+    assert payload["summary"]["invariant_failure_count"] == 0
+
+
+def test_stage5_6_refresh_broadened_summary_blocks_selector():
+    payload = {
+        "summary": {
+            "case_count": 2,
+            "case_count_by_stage": {"stage5": 1, "stage6": 1},
+            "refresh_frame_count": 3,
+            "selected_move_provider_delta_count": 0,
+            "baseline_refresh_frame_count": 0,
+            "invariant_failure_count": 0,
+            "stage7_case_count": 0,
+        },
+        "decision": {
+            "status": "stage5_6_candidate_generation_refresh_broadened_default_off_equivalent",
+            "selector_allowed": False,
+            "guardrails_allowed": False,
+            "promotion_allowed": False,
+        },
+    }
+
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["guardrails_allowed"] is False
+    assert payload["decision"]["promotion_allowed"] is False
+    assert payload["summary"]["stage7_case_count"] == 0
+
+
+def test_stage5_6_refresh_quality_retains_trace_only_use():
+    source = {
+        "decision": {
+            "status": "stage5_6_candidate_generation_refresh_broadened_default_off_equivalent"
+        },
+        "summary": {
+            "case_count": 4,
+            "refresh_frame_count": 38,
+            "stage7_case_count": 0,
+            "invariant_failure_count": 0,
+            "selected_move_provider_delta_count": 0,
+            "baseline_refresh_frame_count": 0,
+            "refresh_provider_counts": {"krk.stage0_basin": 13},
+            "capacity_evidence_counts": {"positive_capacity": 16},
+        },
+    }
+
+    payload = _stage5_6_refresh_quality.build_payload(source)
+
+    assert payload["decision"]["status"] == (
+        "stage5_6_candidate_generation_refresh_quality_trace_only_retained"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["guardrails_allowed"] is False
+    assert "capacity_evidence_not_runtime_ownership_label" in payload["selector_blockers"]
+    assert payload["summary"]["trace_usable_for_candidate_generation_context"] is True

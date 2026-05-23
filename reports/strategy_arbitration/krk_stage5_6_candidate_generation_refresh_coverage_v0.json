@@ -1,0 +1,48 @@
+{
+  "causal_status": "non_causal_runtime_observation_analysis",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "broaden_stage5_6_candidate_generation_refresh_sample_non_causal",
+    "selector_allowed": false,
+    "status": "stage5_6_refresh_coverage_ready_for_broadened_analysis"
+  },
+  "gameplay_topology_mutation": false,
+  "invariant_failures": [],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_stage5_6_candidate_generation_refresh_coverage.v0",
+  "source_artifact": "reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_smoke_v0.json",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "baseline_refresh_frame_count": 0,
+    "capacity_evidence_counts": {
+      "positive_capacity": 3,
+      "positive_capacity_scope": 10
+    },
+    "frame_count_by_stage": {
+      "stage5": 12,
+      "stage6": 1
+    },
+    "invariant_failure_count": 0,
+    "provider_counts": {
+      "krk.edge_trap_close": 2,
+      "krk.edge_trap_enemy_between": 5,
+      "krk.edge_trap_wrong_tempo": 2,
+      "krk.fence_established": 2,
+      "krk.stage0_basin": 2
+    },
+    "provider_provenance_counts": {
+      "stage5_6_candidate_generation_refresh_review_packet_v3": 3,
+      "visible_provider_proposal_scope": 10
+    },
+    "refresh_frame_count": 13,
+    "selected_move_provider_delta_count": 0,
+    "stage7_case_count": 0
+  }
+}
