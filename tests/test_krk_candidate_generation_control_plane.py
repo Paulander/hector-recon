@@ -214,6 +214,41 @@ assert _source_review_spec.loader is not None
 _source_review = importlib.util.module_from_spec(_source_review_spec)
 _source_review_spec.loader.exec_module(_source_review)
 
+_protected_monitor_expansion_spec = importlib.util.spec_from_file_location(
+    "build_krk_protected_strategy_monitor_frame_expansion_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "build_krk_protected_strategy_monitor_frame_expansion_v1.py",
+)
+assert _protected_monitor_expansion_spec is not None
+assert _protected_monitor_expansion_spec.loader is not None
+_protected_monitor_expansion = importlib.util.module_from_spec(
+    _protected_monitor_expansion_spec
+)
+_protected_monitor_expansion_spec.loader.exec_module(_protected_monitor_expansion)
+
+_protected_monitor_quality_spec = importlib.util.spec_from_file_location(
+    "probe_krk_protected_strategy_monitor_frame_quality_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "probe_krk_protected_strategy_monitor_frame_quality_v1.py",
+)
+assert _protected_monitor_quality_spec is not None
+assert _protected_monitor_quality_spec.loader is not None
+_protected_monitor_quality = importlib.util.module_from_spec(_protected_monitor_quality_spec)
+_protected_monitor_quality_spec.loader.exec_module(_protected_monitor_quality)
+
+_protected_monitor_packet_spec = importlib.util.spec_from_file_location(
+    "write_krk_protected_strategy_monitor_observation_source_review_packet_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_protected_strategy_monitor_observation_source_review_packet_v1.py",
+)
+assert _protected_monitor_packet_spec is not None
+assert _protected_monitor_packet_spec.loader is not None
+_protected_monitor_packet = importlib.util.module_from_spec(_protected_monitor_packet_spec)
+_protected_monitor_packet_spec.loader.exec_module(_protected_monitor_packet)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -1131,3 +1166,74 @@ def test_plan_capsule_and_broader_strategy_source_reviews_block_runtime_expansio
     assert combined["decision"]["recommended_next_step"] == (
         "build_protected_cross_stage_strategy_monitor_frame_expansion_non_causal"
     )
+
+
+def test_protected_strategy_monitor_frame_expansion_excludes_stage7():
+    payload = _protected_monitor_expansion.build_payload(
+        monitor_payload={
+            "records": [
+                {
+                    "active_landmark_label": "fence_established",
+                    "monitor_type": "RepairNeededMonitor",
+                    "state_id": "state.a",
+                    "fen": "fen-a",
+                    "associated_outcome": "max_plies",
+                    "source_terms": ["repair_needed"],
+                },
+                {
+                    "active_landmark_label": "box_shrink",
+                    "monitor_type": "PlanSelectionNeededMonitor",
+                    "state_id": "state.b",
+                    "fen": "fen-b",
+                    "associated_outcome": "max_plies",
+                    "source_terms": ["plan_needed"],
+                },
+            ]
+        },
+        source_review={"decision": {"status": "source_reviews_complete_runtime_expansion_not_authorized"}},
+    )
+
+    assert payload["summary"]["frame_count"] == 1
+    assert payload["summary"]["stage7_challenge_row_count"] == 0
+    assert payload["frames"][0]["source_stage"] == "stage5"
+    assert payload["frames"][0]["usable_for_selector_training"] is False
+    assert payload["decision"]["selector_allowed"] is False
+
+
+def test_protected_strategy_monitor_quality_packet_requires_explicit_approval():
+    quality = _protected_monitor_quality.build_payload(
+        frames_payload={
+            "frames": [
+                {
+                    "candidate_strategy_family": "terminal.krk.repair_needed_monitor",
+                    "associated_outcome": "max_plies",
+                    "stage7_challenge_row": False,
+                }
+                for _ in range(4)
+            ]
+            + [
+                {
+                    "candidate_strategy_family": "terminal.krk.repair_needed_monitor",
+                    "associated_outcome": "mate",
+                    "stage7_challenge_row": False,
+                }
+            ]
+        }
+    )
+    packet = _protected_monitor_packet.build_payload(
+        expansion={
+            "summary": {
+                "frame_count": 5,
+                "frame_count_by_stage": {"stage5": 5},
+                "stage7_challenge_row_count": 0,
+            }
+        },
+        quality=quality,
+    )
+
+    assert quality["decision"]["status"] == "protected_strategy_monitor_frames_have_monitor_signal"
+    assert packet["decision"]["status"] == (
+        "protected_repair_monitor_observation_source_review_ready"
+    )
+    assert packet["decision"]["implementation_allowed_by_this_packet"] is False
+    assert packet["decision"]["selector_allowed"] is False

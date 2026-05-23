@@ -288,6 +288,9 @@ Important artifacts include:
 * `reports/strategy_arbitration/krk_plan_capsule_sequence_candidate_observation_review_v1.md/json`
 * `reports/strategy_arbitration/krk_broader_strategy_candidate_observation_review_v1.md/json`
 * `reports/strategy_arbitration/krk_broader_strategy_sequence_candidate_source_review_v1.md/json`
+* `reports/strategy_arbitration/krk_protected_strategy_monitor_frame_expansion_v1.md/json`
+* `reports/strategy_arbitration/krk_protected_strategy_monitor_frame_quality_v1.md/json`
+* `reports/strategy_arbitration/krk_protected_strategy_monitor_observation_source_review_packet_v1.md/json`
 
 Current conclusion:
 
@@ -421,6 +424,14 @@ source_reviews_complete_runtime_expansion_not_authorized
 ```
 
 Both source contracts are schema-ready, but current evidence is Stage7-only or Stage7-dominated. PlanCapsule source evidence comes from the quarantined Stage 7 post-box capsule path; broader-strategy source evidence exists as 13 monitor-derived frames, all Stage 7 challenge rows. Runtime source expansion remains blocked. The next safe non-causal step is protected cross-stage strategy-monitor frame expansion.
+
+Protected cross-stage strategy-monitor frame expansion is complete:
+
+```text
+protected_repair_monitor_observation_source_review_ready
+```
+
+Replay-free expansion produced 85 protected Stage 4/5/6 broader-strategy monitor frames with 0 Stage 7 rows. The quality probe found `terminal.krk.repair_needed_monitor` has failure precision 0.769 across 13 protected frames, while owner-exit and phase-boundary monitor families are ambiguous. A review packet exists for a future default-off observation-only repair-monitor source, but it explicitly does not authorize implementation. Runtime source expansion now requires explicit approval.
 
 ### Progress-Window Reconsideration Runtime Test
 
@@ -563,6 +574,12 @@ reports/strategy_arbitration/krk_broader_strategy_candidate_observation_review_v
 reports/strategy_arbitration/krk_broader_strategy_candidate_observation_review_v1.json
 reports/strategy_arbitration/krk_broader_strategy_sequence_candidate_source_review_v1.md
 reports/strategy_arbitration/krk_broader_strategy_sequence_candidate_source_review_v1.json
+reports/strategy_arbitration/krk_protected_strategy_monitor_frame_expansion_v1.md
+reports/strategy_arbitration/krk_protected_strategy_monitor_frame_expansion_v1.json
+reports/strategy_arbitration/krk_protected_strategy_monitor_frame_quality_v1.md
+reports/strategy_arbitration/krk_protected_strategy_monitor_frame_quality_v1.json
+reports/strategy_arbitration/krk_protected_strategy_monitor_observation_source_review_packet_v1.md
+reports/strategy_arbitration/krk_protected_strategy_monitor_observation_source_review_packet_v1.json
 ```
 
 These artifacts answer:
@@ -580,10 +597,10 @@ These artifacts answer:
 Next safe step after observation-only candidate-generation coverage analysis:
 
 ```text
-build_protected_cross_stage_strategy_monitor_frame_expansion_non_causal
+explicit_approval_required_for_default_off_repair_monitor_observation_source
 ```
 
-Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. Do not expand runtime observation sources without protected cross-stage evidence and a separate review packet.
+Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. A narrow repair-monitor observation source review packet is ready, but runtime implementation requires explicit approval.
 
 ## Runtime Approval Rule
 
