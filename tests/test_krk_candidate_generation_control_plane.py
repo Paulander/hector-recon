@@ -159,6 +159,39 @@ assert _candidate_quality_review_spec.loader is not None
 _candidate_quality_review = importlib.util.module_from_spec(_candidate_quality_review_spec)
 _candidate_quality_review_spec.loader.exec_module(_candidate_quality_review)
 
+_candidate_quality_dataset_spec = importlib.util.spec_from_file_location(
+    "build_krk_candidate_proposal_quality_dataset_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "build_krk_candidate_proposal_quality_dataset_v1.py",
+)
+assert _candidate_quality_dataset_spec is not None
+assert _candidate_quality_dataset_spec.loader is not None
+_candidate_quality_dataset = importlib.util.module_from_spec(_candidate_quality_dataset_spec)
+_candidate_quality_dataset_spec.loader.exec_module(_candidate_quality_dataset)
+
+_candidate_quality_probe_spec = importlib.util.spec_from_file_location(
+    "probe_krk_candidate_proposal_quality_axes_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "probe_krk_candidate_proposal_quality_axes_v1.py",
+)
+assert _candidate_quality_probe_spec is not None
+assert _candidate_quality_probe_spec.loader is not None
+_candidate_quality_probe = importlib.util.module_from_spec(_candidate_quality_probe_spec)
+_candidate_quality_probe_spec.loader.exec_module(_candidate_quality_probe)
+
+_candidate_quality_decision_spec = importlib.util.spec_from_file_location(
+    "write_krk_candidate_proposal_quality_decision_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_candidate_proposal_quality_decision_v1.py",
+)
+assert _candidate_quality_decision_spec is not None
+assert _candidate_quality_decision_spec.loader is not None
+_candidate_quality_decision = importlib.util.module_from_spec(_candidate_quality_decision_spec)
+_candidate_quality_decision_spec.loader.exec_module(_candidate_quality_decision)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -903,4 +936,91 @@ def test_candidate_proposal_quality_review_stays_non_causal():
     assert "runtime_selector" in payload["forbidden_next_steps"]
     assert payload["decision"]["recommended_next_step"] == (
         "build_non_causal_candidate_proposal_quality_dataset"
+    )
+
+
+def test_candidate_proposal_quality_dataset_keeps_capacity_not_selector_labels():
+    observation_payload = {
+        "cases": [
+            {
+                "case_id": "stage5_state",
+                "state_id": "state.a",
+                "source_stage": "stage5",
+                "active_landmark_label": "fence_established",
+                "held_out": False,
+                "enabled_decision": {
+                    "observation": {
+                        "selected_move_before_observation": "a1a2",
+                        "selected_provider_before_observation": "krk.stage0_basin",
+                        "frames": [
+                            {
+                                "candidate_source": "candidate_move_frame",
+                                "state_fen": "fen-a",
+                                "move_uci": "a1a3",
+                                "move_shape_terms": ["candidate_is_rook_move"],
+                                "post_move_terms": ["box_area_not_increased_after_move"],
+                                "safety_terms": [],
+                                "source_terms": ["rook_safe"],
+                                "direct_request": False,
+                                "score_delta": 0.0,
+                            }
+                        ],
+                    }
+                },
+            }
+        ]
+    }
+    capacity_payload = {"rows": []}
+    label_payload = {
+        "labels": [
+            {
+                "fen": "fen-a",
+                "forced_first_move": "a1a3",
+                "capacity_label": "positive_capacity",
+                "source_stage": "stage5",
+            }
+        ]
+    }
+
+    payload = _candidate_quality_dataset.build_payload(
+        observation_payload=observation_payload,
+        annotation_payload={"summary": {}},
+        capacity_payload=capacity_payload,
+        label_payload=label_payload,
+    )
+
+    assert payload["summary"]["quality_probe_row_count"] == 1
+    assert payload["rows"][0]["capacity_evidence_kind"] == "positive_capacity"
+    assert payload["rows"][0]["usable_for_selector_training"] is False
+    assert payload["decision"]["selector_allowed"] is False
+
+
+def test_candidate_proposal_quality_decision_blocks_selector_when_probe_weak():
+    dataset = {
+        "summary": {
+            "row_count": 10,
+            "quality_probe_row_count": 5,
+            "stage7_challenge_row_count": 1,
+            "stage7_readiness_training_row_count": 0,
+        }
+    }
+    probe = {
+        "summary": {
+            "best_probe": "fixture",
+            "best_probe_metrics": {
+                "positive_precision": 0.8,
+                "positive_recall": 0.6,
+                "negative_suppression": 0.6,
+                "balanced_score": 0.6,
+            },
+        }
+    }
+
+    payload = _candidate_quality_decision.build_payload(dataset=dataset, probe=probe)
+
+    assert payload["decision"]["status"] == "candidate_proposal_quality_not_selector_ready"
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["more_blind_label_farming_allowed"] is False
+    assert payload["decision"]["recommended_next_step"] == (
+        "design_broader_strategy_sequence_candidate_sources"
     )
