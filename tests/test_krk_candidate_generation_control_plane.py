@@ -391,6 +391,17 @@ _capacity_evidence_labels = importlib.util.module_from_spec(
 )
 _capacity_evidence_labels_spec.loader.exec_module(_capacity_evidence_labels)
 
+_capacity_evidence_merge_spec = importlib.util.spec_from_file_location(
+    "merge_krk_candidate_generation_capacity_evidence_v2",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "merge_krk_candidate_generation_capacity_evidence_v2.py",
+)
+assert _capacity_evidence_merge_spec is not None
+assert _capacity_evidence_merge_spec.loader is not None
+_capacity_evidence_merge = importlib.util.module_from_spec(_capacity_evidence_merge_spec)
+_capacity_evidence_merge_spec.loader.exec_module(_capacity_evidence_merge)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -1899,3 +1910,47 @@ def test_candidate_generation_capacity_labels_validate_non_causal_capacity_seman
     }
 
     _capacity_evidence_labels.validate_payload(payload)
+
+
+def test_candidate_generation_capacity_merge_preserves_selector_block():
+    payload = _capacity_evidence_merge.build_dataset_payload(
+        dataset={"rows": []},
+        labels={
+            "causal_status": "non_causal_label_run",
+            "summary": {"stage7_label_count": 0},
+            "labels": [
+                {
+                    "job_id": "job.a",
+                    "causal_status": "non_causal_outcome_label",
+                    "state_id": "state.a",
+                    "source_stage": "stage5",
+                    "provider_id": "krk.stage0_basin",
+                    "provider_family": "stage0_basin",
+                    "result": "mate",
+                    "forced_first_move": "a1a2",
+                    "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+                },
+                {
+                    "job_id": "job.b",
+                    "causal_status": "non_causal_outcome_label",
+                    "state_id": "state.b",
+                    "source_stage": "stage6",
+                    "provider_id": "krk.drive_to_edge",
+                    "provider_family": "drive_to_edge",
+                    "result": "max_plies",
+                    "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+                },
+            ],
+        },
+    )
+
+    assert payload["decision"]["status"] == (
+        "strategy_sequence_dataset_v2_capacity_merged_non_causal"
+    )
+    assert payload["summary"]["merged_label_capacity_counts"] == {
+        "negative_capacity": 1,
+        "positive_capacity": 1,
+    }
+    assert payload["summary"]["candidate_generation_training_row_count"] == 1
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert all(row["usable_for_selector_training_v2"] is False for row in payload["rows"])
