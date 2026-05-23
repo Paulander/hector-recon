@@ -268,6 +268,8 @@ Important artifacts include:
 * `reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_v1.md/json`
 * `reports/strategy_arbitration/krk_strategy_sequence_candidate_frames_v1.md/json`
 * `reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_quality_v1.md/json`
+* `reports/strategy_arbitration/krk_candidate_frame_source_benchmark_v1.md/json`
+* `reports/strategy_arbitration/krk_strategy_sequence_control_plane_decision_v1.md/json`
 
 Current conclusion:
 
@@ -301,6 +303,17 @@ Next safe non-causal slice:
 ```text
 benchmark_candidate_frame_sources_before_runtime
 ```
+
+Candidate-frame source benchmarking is complete:
+
+```text
+candidate_generation_sources_promising_selector_blocked
+candidate_generation_control_plane_ready_for_architecture_review
+```
+
+Evidence: there are 11 protected positive-capacity candidates available for candidate generation, but protected forced-capacity sources also carry a `0.3125` negative-capacity ratio, so source expansion alone is not a selector. Progress-window supported move candidates still have 0 h40 mate outcomes in the held-out Stage 7 runtime-test target. Stage 7 readiness/training rows remain 0.
+
+The next step is not runtime implementation. It is architecture review for whether a default-off candidate-generation sandbox scope should be proposed, with selector policy still blocked.
 
 ### Progress-Window Reconsideration Runtime Test
 
@@ -403,6 +416,10 @@ reports/strategy_arbitration/krk_strategy_sequence_candidate_frames_v1.md
 reports/strategy_arbitration/krk_strategy_sequence_candidate_frames_v1.json
 reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_quality_v1.md
 reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_quality_v1.json
+reports/strategy_arbitration/krk_candidate_frame_source_benchmark_v1.md
+reports/strategy_arbitration/krk_candidate_frame_source_benchmark_v1.json
+reports/strategy_arbitration/krk_strategy_sequence_control_plane_decision_v1.md
+reports/strategy_arbitration/krk_strategy_sequence_control_plane_decision_v1.json
 ```
 
 These artifacts answer:
@@ -417,13 +434,13 @@ These artifacts answer:
 * What is the first non-causal candidate-generation benchmark?
 * What, if anything, would justify a future default-off candidate-generation sandbox?
 
-Next safe non-causal slice after frame population:
+Next safe non-causal slice after candidate-frame source benchmarking:
 
 ```text
-benchmark_candidate_frame_sources_before_runtime
+architecture_review_for_default_off_candidate_generation_sandbox_scope
 ```
 
-This should compare candidate-frame source channels before any runtime work, preserve capacity-vs-ownership label semantics, and keep Stage 7 held out from readiness/training rows.
+This should decide whether to propose a narrow, default-off candidate-generation sandbox review packet. It must not implement the sandbox, train a selector, promote Stage 7, or train Stage 8.
 
 ## Runtime Approval Rule
 

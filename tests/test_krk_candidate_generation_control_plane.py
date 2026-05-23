@@ -27,6 +27,17 @@ assert _populate_spec.loader is not None
 _populate = importlib.util.module_from_spec(_populate_spec)
 _populate_spec.loader.exec_module(_populate)
 
+_benchmark_spec = importlib.util.spec_from_file_location(
+    "benchmark_krk_candidate_frame_sources_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "benchmark_krk_candidate_frame_sources_v1.py",
+)
+assert _benchmark_spec is not None
+assert _benchmark_spec.loader is not None
+_benchmark = importlib.util.module_from_spec(_benchmark_spec)
+_benchmark_spec.loader.exec_module(_benchmark)
+
 
 def test_candidate_proposal_coverage_preserves_capacity_label_semantics():
     capacity_rows = [
@@ -174,3 +185,65 @@ def test_progress_window_continuation_index_accepts_list_shape():
     )
 
     assert indexed == {"a1a2": {"result": "max_plies"}}
+
+
+def test_candidate_frame_source_benchmark_keeps_capacity_and_selection_separate():
+    frames = [
+        {
+            "label_semantics": "capacity_evidence_not_ownership_label",
+            "stage7_challenge_row": False,
+            "state_id": "state.a",
+            "candidate_strategy_family": "fence_established",
+            "capacity_evidence": {"capacity_label": "positive_capacity"},
+            "usable_for_candidate_generation_training": True,
+            "usable_for_selector_training": False,
+        },
+        {
+            "label_semantics": "capacity_evidence_not_ownership_label",
+            "stage7_challenge_row": False,
+            "state_id": "state.a",
+            "candidate_strategy_family": "stage0_basin",
+            "capacity_evidence": {"capacity_label": "negative_capacity"},
+            "usable_for_candidate_generation_training": False,
+            "usable_for_selector_training": False,
+        },
+    ]
+
+    summary = _benchmark.benchmark_frames(frames)
+    readiness = _benchmark.source_readiness(summary)
+
+    assert summary["protected_forced_capacity"]["positive_capacity_ratio"] == 0.5
+    assert summary["protected_forced_capacity"]["negative_capacity_ratio"] == 0.5
+    assert readiness["protected_forced_capacity"]["selection_signal"] == (
+        "blocked_capacity_not_ownership_label"
+    )
+    assert readiness["protected_forced_capacity"]["usable_next"] == (
+        "candidate_generation_benchmark_only"
+    )
+
+
+def test_control_plane_decision_blocks_runtime_when_stage7_training_leaks():
+    benchmark = {
+        "channel_summaries": {
+            "protected_forced_capacity": {
+                "candidate_generation_training_row_count": 1,
+                "negative_capacity_ratio": 0.0,
+                "stage7_training_row_count": 1,
+            }
+        },
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_selector_implemented": False,
+        "runtime_candidate_generator_implemented": False,
+        "runtime_terminals_added": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+    }
+
+    decision = _benchmark.build_decision_payload(benchmark)
+
+    assert decision["decision"]["status"] == "blocked_stage7_leakage"
+    assert decision["decision"]["runtime_sandbox_allowed_by_this_packet"] is False
+    assert decision["evidence"]["stage7_training_row_count"] == 1
