@@ -846,6 +846,30 @@ Next step requires an explicit human architecture decision:
 explicit_approval_required_for_default_off_stage5_6_candidate_generation_refresh_sandbox
 ```
 
+Latest candidate-generation control-plane update:
+
+```text
+candidate_generation_training_refresh_v3_benchmark_passed_runtime_review_needed
+candidate_generation_training_refresh_runtime_review_ready
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_candidate_generation_training_refresh_benchmark_v3.md`
+* `reports/strategy_arbitration/krk_candidate_generation_training_refresh_benchmark_v3.json`
+* `reports/strategy_arbitration/krk_candidate_generation_training_refresh_runtime_review_packet_v3.md`
+* `reports/strategy_arbitration/krk_candidate_generation_training_refresh_runtime_review_packet_v3.json`
+
+The v3 offline benchmark found that `trace_stage_family_context` meets the preset candidate-generation review thresholds on protected capacity rows: positive-capacity recall `0.769`, positive precision `1.0`, negative-capacity suppression `1.0`, leave-stage-out positive-capacity recall `0.769`, selector-training rows `0`, and Stage 7 training rows `0`. This is still candidate generation only. Capacity labels remain capacity labels, not selector/ownership labels.
+
+The v3 runtime-review packet is review-ready but does not authorize implementation by itself. The only reviewed future scope is a default-off candidate-generation refresh that emits extra candidate frames for protected Stage 5/6 trace-stage-family cells with `direct_request=false`, `score_delta=0.0`, no selection, no routing, no suppression, no Stage 4 scope without separate review, no Stage 7 training/promotion, and no Stage 8 training.
+
+Next step requires explicit human approval:
+
+```text
+explicit_approval_required_for_default_off_candidate_generation_refresh_sandbox
+```
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

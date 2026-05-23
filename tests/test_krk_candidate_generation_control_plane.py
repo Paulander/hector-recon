@@ -684,6 +684,36 @@ _candidate_generation_training_refresh_design_v3_spec.loader.exec_module(
     _candidate_generation_training_refresh_design_v3
 )
 
+_candidate_generation_training_refresh_benchmark_v3_spec = importlib.util.spec_from_file_location(
+    "benchmark_krk_candidate_generation_training_refresh_v3",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "benchmark_krk_candidate_generation_training_refresh_v3.py",
+)
+assert _candidate_generation_training_refresh_benchmark_v3_spec is not None
+assert _candidate_generation_training_refresh_benchmark_v3_spec.loader is not None
+_candidate_generation_training_refresh_benchmark_v3 = importlib.util.module_from_spec(
+    _candidate_generation_training_refresh_benchmark_v3_spec
+)
+_candidate_generation_training_refresh_benchmark_v3_spec.loader.exec_module(
+    _candidate_generation_training_refresh_benchmark_v3
+)
+
+_candidate_generation_training_refresh_packet_v3_spec = importlib.util.spec_from_file_location(
+    "write_krk_candidate_generation_training_refresh_runtime_review_packet_v3",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_candidate_generation_training_refresh_runtime_review_packet_v3.py",
+)
+assert _candidate_generation_training_refresh_packet_v3_spec is not None
+assert _candidate_generation_training_refresh_packet_v3_spec.loader is not None
+_candidate_generation_training_refresh_packet_v3 = importlib.util.module_from_spec(
+    _candidate_generation_training_refresh_packet_v3_spec
+)
+_candidate_generation_training_refresh_packet_v3_spec.loader.exec_module(
+    _candidate_generation_training_refresh_packet_v3
+)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -3223,3 +3253,198 @@ def test_candidate_generation_training_refresh_design_v3_blocks_runtime_use():
     assert payload["decision"]["selector_allowed"] is False
     assert payload["training_target"]["not_objective"] == "runtime_ownership_or_move_selection"
     assert "runtime_selector" in payload["forbidden_uses"]
+
+
+def test_candidate_generation_training_refresh_benchmark_v3_passes_without_selector():
+    dataset = {
+        "rows": [
+            {
+                "evidence_channel": "validated_provider_capacity",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "stage0_basin",
+                "capacity_label": "positive_capacity",
+                "stage7_challenge_row": False,
+                "usable_for_selector_training_v3": False,
+            },
+            {
+                "evidence_channel": "validated_provider_capacity",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "edge_trap",
+                "capacity_label": "negative_capacity",
+                "stage7_challenge_row": False,
+                "usable_for_selector_training_v3": False,
+            },
+            {
+                "evidence_channel": "runtime_observation_trace_feature",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "stage0_basin",
+                "stage7_challenge_row": False,
+            },
+            {
+                "evidence_channel": "validated_provider_capacity",
+                "source_stage": "stage7",
+                "candidate_strategy_family": "box_shrink",
+                "capacity_label": "positive_capacity",
+                "stage7_challenge_row": True,
+                "usable_for_candidate_generation_training_v3": False,
+                "usable_for_selector_training_v3": False,
+            },
+        ]
+    }
+    design = {
+        "readiness_thresholds_for_future_runtime_review": {
+            "positive_capacity_recall": 0.75,
+            "negative_capacity_suppression": 0.8,
+            "leave_stage_out_positive_capacity_recall": 0.65,
+            "selector_training_rows": 0,
+            "stage7_training_rows": 0,
+        }
+    }
+
+    payload = _candidate_generation_training_refresh_benchmark_v3.build_payload(
+        dataset=dataset,
+        design=design,
+    )
+
+    assert payload["decision"]["status"] == (
+        "candidate_generation_training_refresh_v3_benchmark_passed_runtime_review_needed"
+    )
+    assert payload["decision"]["runtime_implementation_allowed_by_this_artifact"] is False
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["summary"]["stage7_training_row_count"] == 0
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert payload["summary"]["best_policy"] == "trace_stage_family_context"
+    assert payload["summary"]["best_policy_metrics"]["positive_capacity_recall"] == 1.0
+    assert payload["summary"]["best_policy_metrics"]["negative_capacity_suppression"] == 1.0
+    assert payload["label_semantics"]["capacity_labels_are_not_selector_or_ownership_labels"] is True
+
+
+def test_candidate_generation_training_refresh_benchmark_v3_blocks_noisy_context():
+    dataset = {
+        "rows": [
+            {
+                "evidence_channel": "validated_provider_capacity",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "stage0_basin",
+                "capacity_label": "positive_capacity",
+                "stage7_challenge_row": False,
+            },
+            {
+                "evidence_channel": "validated_provider_capacity",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "stage0_basin",
+                "capacity_label": "negative_capacity",
+                "stage7_challenge_row": False,
+            },
+            {
+                "evidence_channel": "runtime_observation_trace_feature",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "stage0_basin",
+                "stage7_challenge_row": False,
+            },
+        ]
+    }
+    design = {
+        "readiness_thresholds_for_future_runtime_review": {
+            "positive_capacity_recall": 0.75,
+            "negative_capacity_suppression": 0.8,
+            "leave_stage_out_positive_capacity_recall": 0.65,
+            "selector_training_rows": 0,
+            "stage7_training_rows": 0,
+        }
+    }
+
+    payload = _candidate_generation_training_refresh_benchmark_v3.build_payload(
+        dataset=dataset,
+        design=design,
+    )
+
+    assert payload["decision"]["status"] == (
+        "candidate_generation_training_refresh_v3_benchmark_runtime_blocked"
+    )
+    assert payload["decision"]["runtime_implementation_allowed_by_this_artifact"] is False
+    assert payload["summary"]["best_policy_metrics"]["negative_capacity_suppression"] < 0.8
+
+
+def test_candidate_generation_training_refresh_runtime_review_packet_requires_approval():
+    benchmark = {
+        "decision": {
+            "status": "candidate_generation_training_refresh_v3_benchmark_passed_runtime_review_needed"
+        },
+        "summary": {
+            "thresholds_met": True,
+            "best_policy": "trace_stage_family_context",
+            "selector_training_row_count": 0,
+            "stage7_training_row_count": 0,
+            "best_policy_metrics": {
+                "positive_capacity_recall": 0.77,
+                "negative_capacity_suppression": 1.0,
+            },
+            "best_policy_leave_stage_out_metrics": {
+                "positive_capacity_recall": 0.77,
+                "negative_capacity_suppression": 1.0,
+            },
+        },
+        "thresholds": {
+            "positive_capacity_recall": 0.75,
+            "negative_capacity_suppression": 0.8,
+            "leave_stage_out_positive_capacity_recall": 0.65,
+        },
+        "rate_tables": {
+            "stage_family": {
+                "stage5|stage0_basin": {
+                    "support": 2,
+                    "positive": 2,
+                    "negative": 0,
+                    "positive_rate": 1.0,
+                },
+                "stage4|edge_trap": {
+                    "support": 2,
+                    "positive": 2,
+                    "negative": 0,
+                    "positive_rate": 1.0,
+                },
+                "stage6|drive_to_edge": {
+                    "support": 1,
+                    "positive": 0,
+                    "negative": 1,
+                    "positive_rate": 0.0,
+                },
+            }
+        },
+        "policy_metrics": {"trace_stage_family_context": {"false_positive": 0}},
+    }
+
+    payload = _candidate_generation_training_refresh_packet_v3.build_payload(benchmark)
+
+    assert payload["decision"]["status"] == (
+        "candidate_generation_training_refresh_runtime_review_ready"
+    )
+    assert payload["decision"]["implementation_authorized_by_this_packet"] is False
+    assert payload["decision"]["runtime_candidate_generation_allowed_by_this_packet"] is False
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["approved_scope_if_later_authorized"]["candidate_generation_cells"] == {
+        "stage5": ["stage0_basin"]
+    }
+    assert "stage4_runtime_scope_without_separate_review" in payload["explicitly_forbidden"]
+
+
+def test_candidate_generation_training_refresh_runtime_review_packet_blocks_failed_benchmark():
+    benchmark = {
+        "decision": {"status": "candidate_generation_training_refresh_v3_benchmark_runtime_blocked"},
+        "summary": {
+            "thresholds_met": False,
+            "best_policy": "trace_stage_family_context",
+            "selector_training_row_count": 0,
+            "stage7_training_row_count": 0,
+        },
+        "policy_metrics": {"trace_stage_family_context": {"false_positive": 1}},
+    }
+
+    payload = _candidate_generation_training_refresh_packet_v3.build_payload(benchmark)
+
+    assert payload["decision"]["status"] == (
+        "candidate_generation_training_refresh_runtime_review_blocked"
+    )
+    assert payload["decision"]["runtime_review_ready"] is False
+    assert payload["decision"]["implementation_authorized_by_this_packet"] is False
