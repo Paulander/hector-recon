@@ -275,6 +275,7 @@ Important artifacts include:
 * `reports/strategy_arbitration/krk_candidate_generation_observation_coverage_analysis_v0.md/json`
 * `reports/strategy_arbitration/krk_candidate_generation_observation_broadened_sample_v1.md/json`
 * `reports/strategy_arbitration/krk_candidate_generation_observation_gap_review_v1.md/json`
+* `reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v1.md/json`
 
 Current conclusion:
 
@@ -350,6 +351,14 @@ observation_gap_review_blocks_selector_recommends_capacity_annotation
 ```
 
 The broadened sample covers 19 Stage 4/5/6 protected plus Stage 7 held-out cases and emits 569 observation-only frames with zero invariant failures, zero default-off observation leakage, and zero selected move/provider deltas. The gap review keeps selector work blocked because most emitted frames still have unknown capacity evidence, negative-capacity provider-pack candidates are present, and runtime observation does not yet expose PlanCapsule sequence candidates or broader strategy candidates. The next safe step is non-causal candidate-frame capacity/quality annotation review, not selector implementation or guardrails.
+
+Replay-free CandidateMoveFrame capacity annotation is complete:
+
+```text
+candidate_move_capacity_annotation_partial_selector_blocked
+```
+
+Existing protected forced-capacity evidence can annotate 10 of 292 protected observed CandidateMoveFrame hypotheses. This confirms a viable annotation path, but coverage is too sparse for selector review. Capacity labels remain offline evidence only and are not ownership labels. The next safe step, if continued, is a bounded protected-only candidate-move capacity label manifest, not runtime selection.
 
 ### Progress-Window Reconsideration Runtime Test
 
@@ -466,6 +475,8 @@ reports/strategy_arbitration/krk_candidate_generation_observation_broadened_samp
 reports/strategy_arbitration/krk_candidate_generation_observation_broadened_sample_v1.json
 reports/strategy_arbitration/krk_candidate_generation_observation_gap_review_v1.md
 reports/strategy_arbitration/krk_candidate_generation_observation_gap_review_v1.json
+reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v1.md
+reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v1.json
 ```
 
 These artifacts answer:
@@ -483,10 +494,10 @@ These artifacts answer:
 Next safe step after observation-only candidate-generation coverage analysis:
 
 ```text
-non_causal_candidate_move_capacity_annotation_review
+bounded_protected_candidate_move_capacity_label_manifest
 ```
 
-Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The next slice should review non-causal capacity/quality annotation for visible candidate frames before any selector review.
+Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The next slice should propose a bounded protected-only candidate-move capacity label manifest if more annotation coverage is needed.
 
 ## Runtime Approval Rule
 

@@ -1,0 +1,286 @@
+{
+  "causal_status": "non_causal_replay_free_capacity_annotation",
+  "decision": {
+    "guardrails_allowed": false,
+    "recommended_next_step": "bounded_candidate_move_capacity_label_manifest",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "status": "candidate_move_capacity_annotation_partial_selector_blocked"
+  },
+  "examples": [
+    {
+      "annotation_kind": "positive_capacity",
+      "annotation_source": "reports/krk_protected_provider_coverage_frames_v0.json",
+      "case_id": "stage4_state.256a3da30f0f",
+      "label_semantics": "offline_forced_capacity_not_runtime_ownership_label",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_capacity_row_count": 3,
+      "matched_forced_results": [
+        "mate"
+      ],
+      "matched_provider_ids": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "move_uci": "d6d5",
+      "source_stage": "stage4",
+      "state_fen": "8/k7/3K4/8/8/1R6/8/8 w - - 2 2",
+      "usable_for_selector_training": false
+    },
+    {
+      "annotation_kind": "negative_capacity",
+      "annotation_source": "reports/krk_protected_provider_coverage_frames_v0.json",
+      "case_id": "stage4_state.b11124d658cf",
+      "label_semantics": "offline_forced_capacity_not_runtime_ownership_label",
+      "matched_capacity_labels": [
+        "negative_capacity"
+      ],
+      "matched_capacity_row_count": 3,
+      "matched_forced_results": [
+        "max_plies"
+      ],
+      "matched_provider_ids": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "move_uci": "c8c7",
+      "source_stage": "stage4",
+      "state_fen": "2K5/1R6/8/k7/8/8/8/8 w - - 2 2",
+      "usable_for_selector_training": false
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "annotation_source": "reports/krk_protected_provider_coverage_frames_v0.json",
+      "case_id": "stage5_state.02feb8593cc6",
+      "label_semantics": "offline_forced_capacity_not_runtime_ownership_label",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_capacity_row_count": 1,
+      "matched_forced_results": [
+        "mate"
+      ],
+      "matched_provider_ids": [
+        "krk.stage0_basin"
+      ],
+      "move_uci": "b6c7",
+      "source_stage": "stage5",
+      "state_fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+      "usable_for_selector_training": false
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "annotation_source": "reports/krk_protected_provider_coverage_frames_v0.json",
+      "case_id": "stage5_state.02feb8593cc6",
+      "label_semantics": "offline_forced_capacity_not_runtime_ownership_label",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_capacity_row_count": 1,
+      "matched_forced_results": [
+        "mate"
+      ],
+      "matched_provider_ids": [
+        "krk.fence_established"
+      ],
+      "move_uci": "h7c7",
+      "source_stage": "stage5",
+      "state_fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+      "usable_for_selector_training": false
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "annotation_source": "reports/krk_protected_provider_coverage_frames_v0.json",
+      "case_id": "stage5_state.326222aefdf1",
+      "label_semantics": "offline_forced_capacity_not_runtime_ownership_label",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_capacity_row_count": 1,
+      "matched_forced_results": [
+        "mate"
+      ],
+      "matched_provider_ids": [
+        "krk.stage0_basin"
+      ],
+      "move_uci": "a6b7",
+      "source_stage": "stage5",
+      "state_fen": "5k2/7R/K7/8/8/8/8/8 w - - 2 2",
+      "usable_for_selector_training": false
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "annotation_source": "reports/krk_protected_provider_coverage_frames_v0.json",
+      "case_id": "stage5_state.326222aefdf1",
+      "label_semantics": "offline_forced_capacity_not_runtime_ownership_label",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_capacity_row_count": 1,
+      "matched_forced_results": [
+        "mate"
+      ],
+      "matched_provider_ids": [
+        "krk.fence_established"
+      ],
+      "move_uci": "h7c7",
+      "source_stage": "stage5",
+      "state_fen": "5k2/7R/K7/8/8/8/8/8 w - - 2 2",
+      "usable_for_selector_training": false
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "annotation_source": "reports/krk_protected_provider_coverage_frames_v0.json",
+      "case_id": "stage5_state.3dca34326fca",
+      "label_semantics": "offline_forced_capacity_not_runtime_ownership_label",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_capacity_row_count": 1,
+      "matched_forced_results": [
+        "mate"
+      ],
+      "matched_provider_ids": [
+        "krk.edge_trap_enemy_between"
+      ],
+      "move_uci": "h7b7",
+      "source_stage": "stage5",
+      "state_fen": "1k6/7R/2K5/8/8/8/8/8 w - - 2 2",
+      "usable_for_selector_training": false
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "annotation_source": "reports/krk_protected_provider_coverage_frames_v0.json",
+      "case_id": "stage5_state.3dca34326fca",
+      "label_semantics": "offline_forced_capacity_not_runtime_ownership_label",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_capacity_row_count": 2,
+      "matched_forced_results": [
+        "mate"
+      ],
+      "matched_provider_ids": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "move_uci": "h7d7",
+      "source_stage": "stage5",
+      "state_fen": "1k6/7R/2K5/8/8/8/8/8 w - - 2 2",
+      "usable_for_selector_training": false
+    },
+    {
+      "annotation_kind": "positive_capacity",
+      "annotation_source": "reports/krk_protected_provider_coverage_frames_v0.json",
+      "case_id": "stage6_state.699f0003a511",
+      "label_semantics": "offline_forced_capacity_not_runtime_ownership_label",
+      "matched_capacity_labels": [
+        "positive_capacity"
+      ],
+      "matched_capacity_row_count": 1,
+      "matched_forced_results": [
+        "mate"
+      ],
+      "matched_provider_ids": [
+        "krk.stage0_basin"
+      ],
+      "move_uci": "a5b6",
+      "source_stage": "stage6",
+      "state_fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "usable_for_selector_training": false
+    },
+    {
+      "annotation_kind": "negative_capacity",
+      "annotation_source": "reports/krk_protected_provider_coverage_frames_v0.json",
+      "case_id": "stage6_state.699f0003a511",
+      "label_semantics": "offline_forced_capacity_not_runtime_ownership_label",
+      "matched_capacity_labels": [
+        "negative_capacity"
+      ],
+      "matched_capacity_row_count": 2,
+      "matched_forced_results": [
+        "max_plies"
+      ],
+      "matched_provider_ids": [
+        "krk.drive_to_edge",
+        "krk.fence_established"
+      ],
+      "move_uci": "h7c7",
+      "source_stage": "stage6",
+      "state_fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "usable_for_selector_training": false
+    }
+  ],
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "annotation_coverage_sufficient_for_selector_review": false,
+    "capacity_labels_are_not_ownership_labels": true,
+    "capacity_labels_remain_offline_only": true,
+    "replay_free_annotation_possible": true,
+    "stage7_excluded_from_readiness": true
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_move_capacity_annotation.v1",
+  "source_artifacts": {
+    "capacity_labels": "reports/krk_protected_provider_coverage_frames_v0.json",
+    "observation_frames": "reports/strategy_arbitration/krk_candidate_generation_observation_broadened_sample_v1.json"
+  },
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "annotated_candidate_move_count": 10,
+    "annotation_counts": {
+      "negative_capacity": 2,
+      "positive_capacity": 8,
+      "unannotated": 353
+    },
+    "annotation_counts_by_stage": {
+      "stage4": {
+        "negative_capacity": 1,
+        "positive_capacity": 1,
+        "unannotated": 87
+      },
+      "stage5": {
+        "positive_capacity": 6,
+        "unannotated": 118
+      },
+      "stage6": {
+        "negative_capacity": 1,
+        "positive_capacity": 1,
+        "unannotated": 77
+      },
+      "stage7": {
+        "unannotated": 71
+      }
+    },
+    "candidate_move_count_by_stage": {
+      "stage4": 89,
+      "stage5": 124,
+      "stage6": 79,
+      "stage7": 71
+    },
+    "candidate_move_frame_count": 363,
+    "heldout_stage7_candidate_move_count": 71,
+    "matched_provider_ids": {
+      "krk.drive_to_edge": 1,
+      "krk.edge_trap_close": 3,
+      "krk.edge_trap_enemy_between": 3,
+      "krk.edge_trap_wrong_tempo": 3,
+      "krk.fence_established": 3,
+      "krk.stage0_basin": 3
+    },
+    "protected_annotated_candidate_move_count": 10,
+    "protected_annotation_recall": 0.03424657534246575,
+    "protected_candidate_move_count": 292,
+    "stage7_readiness_training_row_count": 0
+  }
+}

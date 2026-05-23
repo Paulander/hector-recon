@@ -93,6 +93,17 @@ assert _observation_gap_review_spec.loader is not None
 _observation_gap_review = importlib.util.module_from_spec(_observation_gap_review_spec)
 _observation_gap_review_spec.loader.exec_module(_observation_gap_review)
 
+_candidate_move_annotation_spec = importlib.util.spec_from_file_location(
+    "annotate_krk_candidate_move_capacity_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "annotate_krk_candidate_move_capacity_v1.py",
+)
+assert _candidate_move_annotation_spec is not None
+assert _candidate_move_annotation_spec.loader is not None
+_candidate_move_annotation = importlib.util.module_from_spec(_candidate_move_annotation_spec)
+_candidate_move_annotation_spec.loader.exec_module(_candidate_move_annotation)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -554,3 +565,60 @@ def test_candidate_generation_observation_gap_review_blocks_selector_on_unknown_
     assert review["decision"]["guardrails_allowed"] is False
     assert "candidate_capacity_mostly_unknown" in review["selector_blockers"]
     assert "generated_set_contains_negative_capacity_candidates" in review["selector_blockers"]
+
+
+def test_candidate_move_capacity_annotation_remains_offline_capacity_evidence():
+    observation_payload = {
+        "cases": [
+            {
+                "case_id": "stage5_state",
+                "source_stage": "stage5",
+                "held_out": False,
+                "enabled_decision": {
+                    "observation": {
+                        "frames": [
+                            {
+                                "candidate_source": "candidate_move_frame",
+                                "state_fen": "fen-a",
+                                "move_uci": "a1a2",
+                                "direct_request": False,
+                                "score_delta": 0.0,
+                                "causal_status": "observation_only",
+                            },
+                            {
+                                "candidate_source": "candidate_move_frame",
+                                "state_fen": "fen-a",
+                                "move_uci": "a1a3",
+                                "direct_request": False,
+                                "score_delta": 0.0,
+                                "causal_status": "observation_only",
+                            },
+                        ]
+                    }
+                },
+            }
+        ]
+    }
+    capacity_payload = {
+        "rows": [
+            {
+                "fen": "fen-a",
+                "forced_first_move": "a1a2",
+                "capacity_label": "positive_capacity",
+                "provider_id": "krk.fence_established",
+                "forced_result": "mate",
+                "stage7_challenge_row": False,
+            }
+        ]
+    }
+
+    payload = _candidate_move_annotation.build_payload(
+        observation_payload=observation_payload,
+        capacity_payload=capacity_payload,
+    )
+
+    assert payload["summary"]["annotated_candidate_move_count"] == 1
+    assert payload["summary"]["annotation_counts"]["positive_capacity"] == 1
+    assert payload["summary"]["annotation_counts"]["unannotated"] == 1
+    assert payload["interpretation"]["capacity_labels_are_not_ownership_labels"] is True
+    assert payload["decision"]["selector_allowed"] is False
