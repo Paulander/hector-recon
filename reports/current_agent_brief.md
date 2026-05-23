@@ -440,6 +440,7 @@ repair_monitor_observation_source_wired_default_off_equivalent
 repair_monitor_observation_source_coverage_ready_for_guarded_analysis
 repair_monitor_observation_source_broadened_default_off_equivalent
 repair_monitor_observation_source_quality_trace_only_retained
+repair_monitor_trace_features_folded_non_causal
 ```
 
 Artifacts:
@@ -448,6 +449,7 @@ Artifacts:
 * `reports/strategy_arbitration/krk_repair_monitor_observation_source_coverage_v1.md/json`
 * `reports/strategy_arbitration/krk_repair_monitor_observation_source_broadened_v1.md/json`
 * `reports/strategy_arbitration/krk_repair_monitor_observation_source_quality_review_v1.md/json`
+* `reports/strategy_arbitration/krk_strategy_sequence_repair_monitor_trace_features_v1.md/json`
 
 The source emits `broader_strategy_candidate` frames for `terminal.krk.repair_needed_monitor` in protected Stage 4/5/6 contexts only. The smoke covered 3 protected cases, emitted 3 repair-monitor frames, and produced 0 selected move/provider deltas, 0 baseline frame leaks, 0 invariant failures, and 0 Stage 7 cases. This is observation-only: `direct_request=false`, `score_delta=0.0`, no selector, no routing, no guardrails, no Stage 7 training/readiness rows, no Stage 8.
 
@@ -455,10 +457,12 @@ The broadened protected sample covered 6 protected cases, emitted 6 repair-monit
 
 The quality review retains this source only as trace context for future strategy-sequence datasets. It is not selector- or guardrail-ready because the protected sample is small, the observed risk-term set is not diverse, and explicit cut/fence break or instability examples are missing.
 
+The trace-fold artifact converts the 6 repair-monitor observation frames into StrategySequenceCandidateFrame-compatible trace features. It adds 0 selector-training rows, 0 candidate-generation training rows, and 0 Stage 7 rows. These rows are context evidence only, not capacity labels or ownership labels.
+
 Next safe step:
 
 ```text
-fold_repair_monitor_frames_into_strategy_sequence_dataset_trace_only
+strategy_sequence_trace_feature_integration_review
 ```
 
 Do not implement selector behavior, run guardrails, tune scores, route providers, promote Stage 7, or train Stage 8 from this source.
@@ -627,10 +631,10 @@ These artifacts answer:
 Next safe step after observation-only candidate-generation coverage analysis:
 
 ```text
-fold_repair_monitor_frames_into_strategy_sequence_dataset_trace_only
+strategy_sequence_trace_feature_integration_review
 ```
 
-Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The narrow repair-monitor observation source has been wired as an explicitly approved, default-off observation-only source and passed broadened protected equivalence; the quality review keeps it trace-only. The next work is folding those frames into the strategy-sequence dataset, not selection.
+Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The narrow repair-monitor observation source has been wired as an explicitly approved, default-off observation-only source and passed broadened protected equivalence; the quality review and trace-fold keep it trace-only. The next work is an integration review of strategy-sequence trace features, not selection.
 
 ## Runtime Approval Rule
 

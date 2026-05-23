@@ -295,6 +295,19 @@ assert _repair_monitor_quality_spec.loader is not None
 _repair_monitor_quality = importlib.util.module_from_spec(_repair_monitor_quality_spec)
 _repair_monitor_quality_spec.loader.exec_module(_repair_monitor_quality)
 
+_repair_monitor_trace_fold_spec = importlib.util.spec_from_file_location(
+    "fold_krk_repair_monitor_frames_into_strategy_sequence_trace_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "fold_krk_repair_monitor_frames_into_strategy_sequence_trace_v1.py",
+)
+assert _repair_monitor_trace_fold_spec is not None
+assert _repair_monitor_trace_fold_spec.loader is not None
+_repair_monitor_trace_fold = importlib.util.module_from_spec(
+    _repair_monitor_trace_fold_spec
+)
+_repair_monitor_trace_fold_spec.loader.exec_module(_repair_monitor_trace_fold)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -1480,3 +1493,57 @@ def test_repair_monitor_observation_quality_keeps_trace_only_use():
     assert payload["decision"]["guardrails_allowed"] is False
     assert payload["interpretation"]["quality_signal_mature"] is False
     assert "selector_input_without_separate_review" in payload["interpretation"]["forbidden_use"]
+
+
+def test_repair_monitor_trace_fold_keeps_rows_non_causal_and_non_training():
+    payload = _repair_monitor_trace_fold.build_payload(
+        base_payload={"summary": {"frame_count": 1}},
+        repair_payload={
+            "cases": [
+                {
+                    "case_id": "case_a",
+                    "state_id": "state.a",
+                    "fen": "fen-a",
+                    "source_stage": "stage5",
+                    "active_landmark_label": "fence_established",
+                    "selected_move_provider_score_equivalent": True,
+                    "enabled_repair_monitor_sample_frames": [
+                        {
+                            "candidate_source": "broader_strategy_candidate",
+                            "strategy_family": "terminal.krk.repair_needed_monitor",
+                            "selected_provider_before_observation": "krk.stage0_basin",
+                            "selected_move_before_observation": "a1a2",
+                            "risk_terms": ["repair_or_reestablish_cut_available"],
+                            "handoff_or_exit_terms": ["repair_or_reestablish_cut_available"],
+                            "licensed_provider_families": ["krk.fence_established"],
+                            "source_monitor_records": ["terminal.krk.repair_needed_monitor"],
+                            "source_terms": ["repair_or_reestablish_cut_available"],
+                            "capacity_evidence_kind": "unknown_capacity",
+                        }
+                    ],
+                },
+                {
+                    "case_id": "heldout",
+                    "state_id": "state.stage7",
+                    "source_stage": "stage7",
+                    "enabled_repair_monitor_sample_frames": [
+                        {
+                            "candidate_source": "broader_strategy_candidate",
+                            "strategy_family": "terminal.krk.repair_needed_monitor",
+                        }
+                    ],
+                },
+            ]
+        },
+        quality_payload={"decision": {"selector_allowed": False}},
+    )
+
+    assert payload["decision"]["status"] == "repair_monitor_trace_features_folded_non_causal"
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["summary"]["trace_frame_count"] == 1
+    assert payload["summary"]["stage7_trace_frame_count"] == 0
+    frame = payload["trace_only_frames"][0]
+    assert frame["label_semantics"] == "runtime_observation_context_not_selector_label"
+    assert frame["usable_for_selector_training"] is False
+    assert frame["usable_for_candidate_generation_training"] is False
+    assert frame["causal_status"] == "non_causal_trace_feature"
