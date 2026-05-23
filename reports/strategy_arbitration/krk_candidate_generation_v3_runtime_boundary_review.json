@@ -1,0 +1,54 @@
+{
+  "approved_runtime_boundary": {
+    "current_observation_sources_remain_allowed": true,
+    "guardrails_allowed": false,
+    "new_runtime_behavior_allowed": false,
+    "provider_routing_allowed": false,
+    "score_changes_allowed": false,
+    "selector_allowed": false
+  },
+  "causal_status": "non_causal_runtime_boundary_review",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "candidate_generation_v3_context_to_training_refresh_review",
+    "selector_allowed": false,
+    "status": "candidate_generation_v3_runtime_boundary_context_ready_selector_blocked"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "candidate_generation_context_is_useful": true,
+    "exact_state_provider_move_recall_is_partial": true,
+    "reason": "V3 trace context supports candidate-generation coverage analysis, but it is not ownership evidence. The next runtime step cannot be a selector; it would require explicit ownership labels or a separate review packet.",
+    "runtime_selection_still_blocked": true,
+    "stage_family_context_is_promising": true
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_generation_v3_runtime_boundary_review.v1",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_candidate_generation_v3_context_benchmark.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "still_forbidden": [
+    "selector_training",
+    "score_changes",
+    "provider_routing",
+    "guardrail_campaign_from_context_only",
+    "stage7_promotion",
+    "stage8_training"
+  ],
+  "summary": {
+    "exact_positive_capacity_recall_from_trace": 0.3076923076923077,
+    "runtime_trace_row_count": 44,
+    "selector_training_row_count": 0,
+    "stage7_readiness_training_row_count": 0,
+    "stage_family_negative_capacity_exposure_from_trace": 0.0,
+    "stage_family_positive_capacity_recall_from_trace": 0.7692307692307693
+  }
+}

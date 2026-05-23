@@ -624,6 +624,36 @@ _dataset_v3_context_review = importlib.util.module_from_spec(
 )
 _dataset_v3_context_review_spec.loader.exec_module(_dataset_v3_context_review)
 
+_candidate_generation_v3_context_benchmark_spec = importlib.util.spec_from_file_location(
+    "benchmark_krk_candidate_generation_v3_context",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "benchmark_krk_candidate_generation_v3_context.py",
+)
+assert _candidate_generation_v3_context_benchmark_spec is not None
+assert _candidate_generation_v3_context_benchmark_spec.loader is not None
+_candidate_generation_v3_context_benchmark = importlib.util.module_from_spec(
+    _candidate_generation_v3_context_benchmark_spec
+)
+_candidate_generation_v3_context_benchmark_spec.loader.exec_module(
+    _candidate_generation_v3_context_benchmark
+)
+
+_candidate_generation_v3_runtime_boundary_spec = importlib.util.spec_from_file_location(
+    "review_krk_candidate_generation_v3_runtime_boundary",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_candidate_generation_v3_runtime_boundary.py",
+)
+assert _candidate_generation_v3_runtime_boundary_spec is not None
+assert _candidate_generation_v3_runtime_boundary_spec.loader is not None
+_candidate_generation_v3_runtime_boundary = importlib.util.module_from_spec(
+    _candidate_generation_v3_runtime_boundary_spec
+)
+_candidate_generation_v3_runtime_boundary_spec.loader.exec_module(
+    _candidate_generation_v3_runtime_boundary
+)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -3026,3 +3056,80 @@ def test_strategy_sequence_dataset_v3_context_review_closes_selector_blocked_sli
     assert payload["decision"]["selector_allowed"] is False
     assert payload["decision"]["guardrails_allowed"] is False
     assert "selector_training" in payload["still_blocked"]
+
+
+def test_candidate_generation_v3_context_benchmark_keeps_selection_blocked():
+    dataset = {
+        "summary": {
+            "selector_training_row_count": 0,
+            "stage7_readiness_training_row_count": 0,
+        },
+        "rows": [
+            {
+                "evidence_channel": "validated_provider_capacity",
+                "fen": "fen-a",
+                "candidate_provider_id": "krk.stage0_basin",
+                "candidate_move_uci": "a1a2",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "stage0_basin",
+                "capacity_label": "positive_capacity",
+                "stage7_challenge_row": False,
+            },
+            {
+                "evidence_channel": "validated_provider_capacity",
+                "fen": "fen-b",
+                "candidate_provider_id": "krk.edge_trap_close",
+                "candidate_move_uci": "b1b2",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "edge_trap",
+                "capacity_label": "negative_capacity",
+                "stage7_challenge_row": False,
+            },
+            {
+                "evidence_channel": "runtime_observation_trace_feature",
+                "fen": "fen-a",
+                "candidate_provider_id": "krk.stage0_basin",
+                "candidate_move_uci": "a1a2",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "stage0_basin",
+                "trace_feature_source": "stage5_6_candidate_generation_refresh",
+                "stage7_challenge_row": False,
+            },
+        ],
+    }
+
+    payload = _candidate_generation_v3_context_benchmark.build_payload(
+        dataset=dataset,
+        quality={"decision": {"selector_allowed": False}},
+    )
+
+    assert payload["decision"]["status"] == (
+        "candidate_generation_v3_context_useful_selector_still_blocked"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["summary"]["exact_positive_capacity_recall_from_trace"] == 1.0
+    assert payload["interpretation"]["trace_rows_are_not_training_labels"] is True
+
+
+def test_candidate_generation_v3_runtime_boundary_blocks_selector():
+    payload = _candidate_generation_v3_runtime_boundary.build_payload(
+        {
+            "decision": {"selector_allowed": False},
+            "summary": {
+                "exact_positive_capacity_recall_from_trace": 0.31,
+                "stage_family_positive_capacity_recall_from_trace": 0.77,
+                "stage_family_negative_capacity_exposure_from_trace": 0.0,
+                "runtime_trace_row_count": 44,
+                "selector_training_row_count": 0,
+                "stage7_readiness_training_row_count": 0,
+            },
+        }
+    )
+
+    assert payload["decision"]["status"] == (
+        "candidate_generation_v3_runtime_boundary_context_ready_selector_blocked"
+    )
+    assert payload["approved_runtime_boundary"]["current_observation_sources_remain_allowed"] is True
+    assert payload["approved_runtime_boundary"]["new_runtime_behavior_allowed"] is False
+    assert payload["approved_runtime_boundary"]["selector_allowed"] is False
+    assert "selector_training" in payload["still_forbidden"]
