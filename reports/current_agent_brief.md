@@ -1114,6 +1114,19 @@ Artifacts:
 
 The manifest identifies `18` Stage 5/6 protected ownership-labeled states in already approved observation-sandbox policy cells that lack provider trace context, including `2` high-priority selected-owner failure rows. It also identifies `19` Stage 4 rows that remain excluded until separate review. The manifest itself does not authorize any runtime collection; it only prepares a bounded review scope.
 
+Latest joined trace/ownership collection review packet:
+
+```text
+joined_trace_ownership_observation_collection_review_ready
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_joined_trace_ownership_collection_review_packet_v0.md`
+* `reports/strategy_arbitration/krk_joined_trace_ownership_collection_review_packet_v0.json`
+
+The packet is review-ready for a future bounded observation-only trace collection run, but it does not authorize execution by itself. If explicitly approved later, the scope is capped at `8` Stage 5/6 rows, includes the `2` high-priority selected-owner failure rows, excludes Stage 4/7/8, requires default-off equivalence, and forbids selector training, routing, score changes, runtime DTM/tablebase, and gameplay-time topology mutation.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

@@ -1032,6 +1032,21 @@ _joined_trace_ownership_collection_manifest_spec.loader.exec_module(
     _joined_trace_ownership_collection_manifest
 )
 
+_joined_trace_ownership_collection_packet_spec = importlib.util.spec_from_file_location(
+    "write_krk_joined_trace_ownership_collection_review_packet_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_joined_trace_ownership_collection_review_packet_v0.py",
+)
+assert _joined_trace_ownership_collection_packet_spec is not None
+assert _joined_trace_ownership_collection_packet_spec.loader is not None
+_joined_trace_ownership_collection_packet = importlib.util.module_from_spec(
+    _joined_trace_ownership_collection_packet_spec
+)
+_joined_trace_ownership_collection_packet_spec.loader.exec_module(
+    _joined_trace_ownership_collection_packet
+)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -4958,3 +4973,48 @@ def test_joined_trace_ownership_collection_manifest_requires_review_before_runti
     assert payload["summary"]["excluded_requires_separate_review_count"] == 1
     assert payload["summary"]["runtime_collection_allowed_row_count"] == 0
     assert payload["summary"]["stage7_training_row_count"] == 0
+
+
+def test_joined_trace_ownership_collection_review_packet_does_not_authorize_run():
+    manifest = {
+        "decision": {
+            "status": "joined_trace_ownership_collection_manifest_ready_for_review"
+        },
+        "manifest_rows": [
+            {
+                "state_id": "state.fail",
+                "source_stage": "stage5",
+                "selected_provider": "krk.stage0_basin",
+                "selected_owner_label": "selected_owner_failed",
+                "approved_observation_scope": True,
+                "priority": "high_selected_failure",
+            },
+            {
+                "state_id": "state.safe",
+                "source_stage": "stage6",
+                "selected_provider": "krk.stage0_basin",
+                "selected_owner_label": "selected_owner_converted",
+                "approved_observation_scope": True,
+                "priority": "medium_safe_preservation_control",
+            },
+            {
+                "state_id": "state.stage4",
+                "source_stage": "stage4",
+                "selected_provider": "krk.stage0_basin",
+                "selected_owner_label": "selected_owner_failed",
+                "approved_observation_scope": False,
+                "priority": "excluded_requires_separate_review",
+            },
+        ],
+    }
+
+    payload = _joined_trace_ownership_collection_packet.build_payload(manifest=manifest)
+
+    assert payload["decision"]["status"] == (
+        "joined_trace_ownership_observation_collection_review_ready"
+    )
+    assert payload["decision"]["implementation_authorized_by_this_packet"] is False
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["approved_if_later_explicitly_authorized"]["max_rows"] == 8
+    assert payload["approved_if_later_explicitly_authorized"]["selected_review_row_count"] == 2
+    assert "stage4_runtime_scope" in payload["explicitly_forbidden"]
