@@ -308,6 +308,17 @@ _repair_monitor_trace_fold = importlib.util.module_from_spec(
 )
 _repair_monitor_trace_fold_spec.loader.exec_module(_repair_monitor_trace_fold)
 
+_trace_feature_review_spec = importlib.util.spec_from_file_location(
+    "review_krk_strategy_sequence_trace_feature_integration_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_strategy_sequence_trace_feature_integration_v1.py",
+)
+assert _trace_feature_review_spec is not None
+assert _trace_feature_review_spec.loader is not None
+_trace_feature_review = importlib.util.module_from_spec(_trace_feature_review_spec)
+_trace_feature_review_spec.loader.exec_module(_trace_feature_review)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -1547,3 +1558,45 @@ def test_repair_monitor_trace_fold_keeps_rows_non_causal_and_non_training():
     assert frame["usable_for_selector_training"] is False
     assert frame["usable_for_candidate_generation_training"] is False
     assert frame["causal_status"] == "non_causal_trace_feature"
+
+
+def test_strategy_sequence_trace_feature_review_keeps_selector_blocked():
+    payload = _trace_feature_review.build_payload(
+        base_payload={
+            "summary": {
+                "frame_count": 10,
+                "stage7_challenge_row_count": 2,
+                "readiness_training_stage7_row_count": 0,
+            }
+        },
+        trace_payload={
+            "runtime_behavior_changed": False,
+            "runtime_defaults_changed": False,
+            "runtime_selector_implemented": False,
+            "runtime_score_changes": False,
+            "runtime_direct_routing": False,
+            "runtime_dtm_or_tablebase_lookup": False,
+            "gameplay_topology_mutation": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": False,
+            "summary": {
+                "trace_frame_count": 6,
+                "stage_counts": {"stage5": 6},
+                "stage7_trace_frame_count": 0,
+                "selector_training_row_count": 0,
+                "candidate_generation_training_row_count": 0,
+            },
+            "decision": {"selector_allowed": False},
+        },
+        quality_payload={
+            "summary": {"risk_term_set_count": 1},
+            "interpretation": {"quality_signal_mature": False},
+        },
+    )
+
+    assert payload["decision"]["status"] == (
+        "strategy_sequence_trace_features_integrated_selector_still_blocked"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["guardrails_allowed"] is False
+    assert "trace_features_are_not_selector_labels" in payload["selector_blockers"]
