@@ -746,6 +746,7 @@ def _krk_candidate_generation_observation_for_suggestions(
     board: chess.Board | None = None,
     blackboard: dict | None = None,
     limit: int = 10,
+    repair_monitor_observation_source_enabled: bool = False,
 ) -> dict:
     """Emit observation-only candidate-generation frames after normal selection.
 
@@ -865,6 +866,77 @@ def _krk_candidate_generation_observation_for_suggestions(
             "safety_terms": list(frame.get("safety_terms") or []),
             "capacity_evidence_kind": "held_out_challenge" if stage7_held_out else "unknown_capacity",
             "protected_status": "held_out_stage7_challenge" if stage7_held_out else "protected_or_unknown",
+            "forbidden_actions": [
+                "selecting_a_provider",
+                "selecting_a_move",
+                "changing_scores",
+                "suppressing_providers",
+                "routing_directly_to_a_provider",
+                "runtime_dtm_or_tablebase",
+                "gameplay_topology_mutation",
+                "m3_m4_update",
+            ],
+        })
+    protected_repair_labels = {
+        "wrong_tempo_control",
+        "fence_established",
+        "drive_to_edge",
+    }
+    repair_pressure_terms = [
+        term
+        for term in (
+            "repair_or_reestablish_cut_available",
+            "fence_or_cut_not_preserved",
+            "post_fence_conversion_needed",
+            "cut_unstable",
+            "fence_unstable",
+            "rook_safe",
+        )
+        if bool(trace_terms.get(term))
+    ]
+    if (
+        repair_monitor_observation_source_enabled
+        and str(active_landmark_label or "") in protected_repair_labels
+        and repair_pressure_terms
+    ):
+        frames.append({
+            "schema_version": "krk_candidate_generation_observation_frame.v0",
+            "sandbox_id": "sandbox.krk.candidate_generation_observation_v0",
+            "causal_status": "observation_only",
+            "direct_request": False,
+            "score_delta": 0.0,
+            "state_fen": fen,
+            "active_landmark_label": str(active_landmark_label or ""),
+            "selected_provider_before_observation": selected_skill,
+            "selected_move_before_observation": selected_move,
+            "candidate_source": "broader_strategy_candidate",
+            "strategy_id": "terminal.krk.repair_needed_monitor",
+            "strategy_family": "terminal.krk.repair_needed_monitor",
+            "provider_id": None,
+            "move_id": None,
+            "source_monitor_records": ["terminal.krk.repair_needed_monitor"],
+            "licensed_provider_families": [
+                "krk.fence_established",
+                "krk.drive_to_edge",
+                "krk.stage0_basin",
+            ],
+            "candidate_scope_terms": [
+                f"active_landmark_label.{active_landmark_label}",
+                "protected_stage4_5_6_scope",
+            ],
+            "risk_terms": repair_pressure_terms,
+            "handoff_or_exit_terms": [
+                term
+                for term in (
+                    "repair_or_reestablish_cut_available",
+                    "post_fence_conversion_needed",
+                    "fence_or_cut_not_preserved",
+                )
+                if term in repair_pressure_terms
+            ],
+            "source_terms": sorted(set(active_source_terms) | set(repair_pressure_terms))[:32],
+            "capacity_evidence_kind": "unknown_capacity",
+            "protected_status": "protected_control",
             "forbidden_actions": [
                 "selecting_a_provider",
                 "selecting_a_move",
@@ -3046,6 +3118,7 @@ def choose_move_details(
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
     krk_candidate_generation_observability_enabled: bool = False,
+    krk_repair_monitor_observation_source_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -3127,6 +3200,9 @@ def choose_move_details(
             forced_successor_skill=forced_successor_skill,
             krk_candidate_generation_observability_enabled=(
                 krk_candidate_generation_observability_enabled
+            ),
+            krk_repair_monitor_observation_source_enabled=(
+                krk_repair_monitor_observation_source_enabled
             ),
             krk_strategy_arbiter_observability_enabled=(
                 krk_strategy_arbiter_observability_enabled
@@ -3219,6 +3295,7 @@ def _choose_move_details_impl(
     early_stop_stable_suggestions: int = 0,
     forced_successor_skill: Optional[str] = None,
     krk_candidate_generation_observability_enabled: bool = False,
+    krk_repair_monitor_observation_source_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -3376,6 +3453,9 @@ def _choose_move_details_impl(
     )
     env["blackboard"]["krk_candidate_generation_observability_enabled"] = bool(
         krk_candidate_generation_observability_enabled
+    )
+    env["blackboard"]["krk_repair_monitor_observation_source_enabled"] = bool(
+        krk_repair_monitor_observation_source_enabled
     )
     env["blackboard"]["krk_strategy_arbiter_sandbox_enabled"] = bool(
         krk_strategy_arbiter_sandbox_enabled
@@ -3668,6 +3748,9 @@ def _choose_move_details_impl(
                 board=board,
                 blackboard=env.get("blackboard", {}),
                 limit=suggestion_limit,
+                repair_monitor_observation_source_enabled=(
+                    krk_repair_monitor_observation_source_enabled
+                ),
             )
         )
     clean_suggestions = []
@@ -3780,6 +3863,9 @@ def _choose_move_details_impl(
         **(
             {
                 "krk_candidate_generation_observability_enabled": True,
+                "krk_repair_monitor_observation_source_enabled": bool(
+                    krk_repair_monitor_observation_source_enabled
+                ),
                 "krk_candidate_generation_observation": candidate_generation_observation,
             }
             if candidate_generation_observation
@@ -4043,6 +4129,7 @@ def play_to_mate(
     lock_stage_filter_through_playout: bool = False,
     forced_successor_skill: Optional[str] = None,
     krk_candidate_generation_observability_enabled: bool = False,
+    krk_repair_monitor_observation_source_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -4209,6 +4296,9 @@ def play_to_mate(
                 forced_successor_skill=active_forced_successor,
                 krk_candidate_generation_observability_enabled=(
                     krk_candidate_generation_observability_enabled
+                ),
+                krk_repair_monitor_observation_source_enabled=(
+                    krk_repair_monitor_observation_source_enabled
                 ),
                 krk_strategy_arbiter_observability_enabled=(
                     krk_strategy_arbiter_observability_enabled
@@ -5290,6 +5380,7 @@ def evaluate_landmark_progress(
     early_stop_stable_suggestions: int = 0,
     lock_stage_filter_through_playout: bool = False,
     krk_candidate_generation_observability_enabled: bool = False,
+    krk_repair_monitor_observation_source_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -5514,6 +5605,9 @@ def evaluate_landmark_progress(
             early_stop_stable_suggestions=early_stop_stable_suggestions,
             krk_candidate_generation_observability_enabled=(
                 krk_candidate_generation_observability_enabled
+            ),
+            krk_repair_monitor_observation_source_enabled=(
+                krk_repair_monitor_observation_source_enabled
             ),
             krk_strategy_arbiter_observability_enabled=(
                 krk_strategy_arbiter_observability_enabled
@@ -5783,6 +5877,9 @@ def evaluate_landmark_progress(
                 lock_stage_filter_through_playout=lock_stage_filter_through_playout,
                 krk_candidate_generation_observability_enabled=(
                     krk_candidate_generation_observability_enabled
+                ),
+                krk_repair_monitor_observation_source_enabled=(
+                    krk_repair_monitor_observation_source_enabled
                 ),
                 krk_strategy_arbiter_observability_enabled=(
                     krk_strategy_arbiter_observability_enabled
@@ -7298,6 +7395,8 @@ def main() -> None:
                         help="Visible support amount for sandbox role-scoped candidate-move suggestions")
     parser.add_argument("--enable-krk-candidate-generation-observability", action="store_true",
                         help="Runtime test: emit default-off observation-only KRK candidate-generation frames with no score/routing effect")
+    parser.add_argument("--enable-krk-repair-monitor-observation-source", action="store_true",
+                        help="Runtime test: add default-off observation-only protected repair-monitor broader-strategy candidate frames; no score/routing effect")
     parser.add_argument("--enable-krk-strategy-arbiter-observability", action="store_true",
                         help="Enable default-off trace-only KRK strategy-arbiter observation metadata; does not alter scores or move selection")
     parser.add_argument("--enable-krk-strategy-arbiter-sandbox", action="store_true",
@@ -7428,6 +7527,9 @@ def main() -> None:
         candidate_move_role_support=args.candidate_move_role_support,
         krk_candidate_generation_observability_enabled=(
             args.enable_krk_candidate_generation_observability
+        ),
+        krk_repair_monitor_observation_source_enabled=(
+            args.enable_krk_repair_monitor_observation_source
         ),
         krk_strategy_arbiter_observability_enabled=args.enable_krk_strategy_arbiter_observability,
         krk_strategy_arbiter_sandbox_enabled=args.enable_krk_strategy_arbiter_sandbox,

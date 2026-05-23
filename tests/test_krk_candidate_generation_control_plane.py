@@ -249,6 +249,28 @@ assert _protected_monitor_packet_spec.loader is not None
 _protected_monitor_packet = importlib.util.module_from_spec(_protected_monitor_packet_spec)
 _protected_monitor_packet_spec.loader.exec_module(_protected_monitor_packet)
 
+_repair_monitor_smoke_spec = importlib.util.spec_from_file_location(
+    "run_krk_repair_monitor_observation_source_smoke_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "run_krk_repair_monitor_observation_source_smoke_v1.py",
+)
+assert _repair_monitor_smoke_spec is not None
+assert _repair_monitor_smoke_spec.loader is not None
+_repair_monitor_smoke = importlib.util.module_from_spec(_repair_monitor_smoke_spec)
+_repair_monitor_smoke_spec.loader.exec_module(_repair_monitor_smoke)
+
+_repair_monitor_coverage_spec = importlib.util.spec_from_file_location(
+    "analyze_krk_repair_monitor_observation_source_coverage_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "analyze_krk_repair_monitor_observation_source_coverage_v1.py",
+)
+assert _repair_monitor_coverage_spec is not None
+assert _repair_monitor_coverage_spec.loader is not None
+_repair_monitor_coverage = importlib.util.module_from_spec(_repair_monitor_coverage_spec)
+_repair_monitor_coverage_spec.loader.exec_module(_repair_monitor_coverage)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -1237,3 +1259,102 @@ def test_protected_strategy_monitor_quality_packet_requires_explicit_approval():
     )
     assert packet["decision"]["implementation_allowed_by_this_packet"] is False
     assert packet["decision"]["selector_allowed"] is False
+
+
+def test_repair_monitor_observation_source_emits_only_for_protected_scope():
+    suggestion = {
+        "move": "a1a2",
+        "score": 1.0,
+        "meta": {"curriculum_label": "fence_established"},
+    }
+
+    observation = _landmark._krk_candidate_generation_observation_for_suggestions(
+        [suggestion],
+        selected_suggestion=suggestion,
+        active_landmark_label="fence_established",
+        visible_terms={
+            "repair_or_reestablish_cut_available": True,
+            "rook_safe": True,
+        },
+        board=None,
+        blackboard={},
+        limit=0,
+        repair_monitor_observation_source_enabled=True,
+    )
+    repair_frames = [
+        frame
+        for frame in observation["frames"]
+        if frame.get("strategy_family") == "terminal.krk.repair_needed_monitor"
+    ]
+
+    assert len(repair_frames) == 1
+    frame = repair_frames[0]
+    assert frame["candidate_source"] == "broader_strategy_candidate"
+    assert frame["direct_request"] is False
+    assert frame["score_delta"] == 0.0
+    assert frame["causal_status"] == "observation_only"
+    assert frame["protected_status"] == "protected_control"
+    assert "selecting_a_provider" in frame["forbidden_actions"]
+    assert "repair_or_reestablish_cut_available" in frame["risk_terms"]
+
+    held_out_observation = _landmark._krk_candidate_generation_observation_for_suggestions(
+        [suggestion],
+        selected_suggestion=suggestion,
+        active_landmark_label="box_shrink",
+        visible_terms={
+            "repair_or_reestablish_cut_available": True,
+            "rook_safe": True,
+        },
+        board=None,
+        blackboard={},
+        limit=0,
+        repair_monitor_observation_source_enabled=True,
+    )
+
+    assert not [
+        frame
+        for frame in held_out_observation["frames"]
+        if frame.get("strategy_family") == "terminal.krk.repair_needed_monitor"
+    ]
+
+
+def test_repair_monitor_observation_source_coverage_blocks_selector_and_guardrails():
+    payload = _repair_monitor_coverage.build_payload(
+        {
+            "summary": {
+                "stage7_case_count": 0,
+                "selected_move_provider_delta_count": 0,
+            },
+            "cases": [
+                {
+                    "source_stage": "stage5",
+                    "enabled_repair_monitor_sample_frames": [
+                        {
+                            "candidate_source": "broader_strategy_candidate",
+                            "strategy_family": "terminal.krk.repair_needed_monitor",
+                            "risk_terms": ["repair_or_reestablish_cut_available"],
+                            "direct_request": False,
+                            "score_delta": 0.0,
+                            "causal_status": "observation_only",
+                        }
+                    ],
+                }
+            ],
+        }
+    )
+
+    assert payload["decision"]["status"] == (
+        "repair_monitor_observation_source_coverage_ready_for_guarded_analysis"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["guardrails_allowed"] is False
+    assert payload["summary"]["stage7_case_count"] == 0
+    assert payload["summary"]["invariant_failure_count"] == 0
+
+
+def test_repair_monitor_observation_smoke_loads_protected_cases_only():
+    cases = _repair_monitor_smoke._load_cases()
+
+    assert cases
+    assert all(case["source_stage"] in {"stage4", "stage5", "stage6"} for case in cases)
+    assert all(case["held_out"] is False for case in cases)

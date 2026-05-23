@@ -433,6 +433,28 @@ protected_repair_monitor_observation_source_review_ready
 
 Replay-free expansion produced 85 protected Stage 4/5/6 broader-strategy monitor frames with 0 Stage 7 rows. The quality probe found `terminal.krk.repair_needed_monitor` has failure precision 0.769 across 13 protected frames, while owner-exit and phase-boundary monitor families are ambiguous. A review packet exists for a future default-off observation-only repair-monitor source, but it explicitly does not authorize implementation. Runtime source expansion now requires explicit approval.
 
+The default-off repair-monitor observation source was then explicitly approved and wired:
+
+```text
+repair_monitor_observation_source_wired_default_off_equivalent
+repair_monitor_observation_source_coverage_ready_for_guarded_analysis
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_repair_monitor_observation_source_smoke_v1.md/json`
+* `reports/strategy_arbitration/krk_repair_monitor_observation_source_coverage_v1.md/json`
+
+The source emits `broader_strategy_candidate` frames for `terminal.krk.repair_needed_monitor` in protected Stage 4/5/6 contexts only. The smoke covered 3 protected cases, emitted 3 repair-monitor frames, and produced 0 selected move/provider deltas, 0 baseline frame leaks, 0 invariant failures, and 0 Stage 7 cases. This is observation-only: `direct_request=false`, `score_delta=0.0`, no selector, no routing, no guardrails, no Stage 7 training/readiness rows, no Stage 8.
+
+Next safe step:
+
+```text
+broaden_repair_monitor_observation_sample_non_causal
+```
+
+Do not implement selector behavior, run guardrails, tune scores, route providers, promote Stage 7, or train Stage 8 from this source.
+
 ### Progress-Window Reconsideration Runtime Test
 
 Artifacts:
@@ -597,10 +619,10 @@ These artifacts answer:
 Next safe step after observation-only candidate-generation coverage analysis:
 
 ```text
-explicit_approval_required_for_default_off_repair_monitor_observation_source
+broaden_repair_monitor_observation_sample_non_causal
 ```
 
-Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. A narrow repair-monitor observation source review packet is ready, but runtime implementation requires explicit approval.
+Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The narrow repair-monitor observation source has been wired as an explicitly approved, default-off observation-only source; the next work is non-causal coverage analysis, not selection.
 
 ## Runtime Approval Rule
 
