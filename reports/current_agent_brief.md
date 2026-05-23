@@ -549,6 +549,7 @@ strategy_sequence_dataset_v3_quality_candidate_generation_context_ready_selector
 strategy_sequence_dataset_v3_context_integrated_selector_still_blocked
 candidate_generation_v3_context_useful_selector_still_blocked
 candidate_generation_v3_runtime_boundary_context_ready_selector_blocked
+candidate_generation_v3_training_refresh_design_ready_non_causal
 ```
 
 Artifacts:
@@ -559,6 +560,7 @@ Artifacts:
 * `reports/strategy_arbitration/krk_strategy_sequence_dataset_v3_context_review.md/json`
 * `reports/strategy_arbitration/krk_candidate_generation_v3_context_benchmark.md/json`
 * `reports/strategy_arbitration/krk_candidate_generation_v3_runtime_boundary_review.md/json`
+* `reports/strategy_arbitration/krk_candidate_generation_v3_training_refresh_review.md/json`
 
 Dataset v3 has 320 rows: 36 validated-provider capacity rows, 87 visible provider proposal rows, 140 CandidateMoveFrame rows, 13 internal monitor rows, and 44 runtime-observation trace-feature rows. Runtime trace features now include 6 repair-monitor rows and 38 Stage 5/6 refresh rows. Candidate-generation training rows remain 26 protected positive-capacity rows. Selector-training rows remain 0. Stage 7 readiness/training rows remain 0.
 
@@ -566,10 +568,12 @@ The v3 context benchmark shows the runtime trace context covers 8/26 protected p
 
 The runtime-boundary review keeps the current observation sources allowed but blocks new runtime behavior: no selector, no score changes, no routing, no guardrails, no Stage 7 promotion, and no Stage 8 training from this context alone.
 
+The training-refresh review authorizes design only for an offline candidate-generation training refresh. It does not authorize runtime generator changes, selector training, scoring/routing changes, guardrails, Stage 7 training/promotion, or Stage 8 training.
+
 Next safe step:
 
 ```text
-candidate_generation_v3_context_to_training_refresh_review
+design_offline_candidate_generation_training_refresh_v3
 ```
 
 Do not implement selector behavior, run guardrails, tune scores, route providers, promote Stage 7, or train Stage 8 from this source.

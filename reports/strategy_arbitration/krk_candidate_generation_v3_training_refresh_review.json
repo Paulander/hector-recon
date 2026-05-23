@@ -1,0 +1,55 @@
+{
+  "allowed_next_design_scope": {
+    "offline_candidate_generation_training_refresh_design": true,
+    "runtime_candidate_generator_change": false,
+    "score_or_routing_change": false,
+    "selector_training": false,
+    "stage7_training_or_promotion": false
+  },
+  "blockers_before_runtime": [
+    "no explicit ownership selector labels",
+    "exact positive-capacity trace recall is partial",
+    "capacity labels are not runtime ownership labels",
+    "runtime observation context cannot select or score"
+  ],
+  "causal_status": "non_causal_training_refresh_review",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "design_offline_candidate_generation_training_refresh_v3",
+    "selector_allowed": false,
+    "status": "candidate_generation_v3_training_refresh_design_ready_non_causal"
+  },
+  "design_requirements": [
+    "train/evaluate candidate-generation recall only, not ownership selection",
+    "use protected Stage 4/5/6 rows only for readiness",
+    "keep Stage 7 as held-out challenge evidence",
+    "separate exact state/provider/move coverage from stage/family context",
+    "report negative-capacity exposure by stage/family",
+    "emit review packet before any runtime change"
+  ],
+  "gameplay_topology_mutation": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_generation_v3_training_refresh_review.v1",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_candidate_generation_v3_runtime_boundary_review.json",
+    "reports/strategy_arbitration/krk_candidate_generation_v3_context_benchmark.json",
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v3.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "candidate_generation_training_row_count": 26,
+    "exact_positive_capacity_recall_from_trace": 0.3076923076923077,
+    "runtime_trace_feature_row_count": 44,
+    "selector_training_row_count": 0,
+    "stage7_readiness_training_row_count": 0,
+    "stage_family_negative_capacity_exposure_from_trace": 0.0,
+    "stage_family_positive_capacity_recall_from_trace": 0.7692307692307693
+  }
+}

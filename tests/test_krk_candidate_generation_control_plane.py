@@ -654,6 +654,21 @@ _candidate_generation_v3_runtime_boundary_spec.loader.exec_module(
     _candidate_generation_v3_runtime_boundary
 )
 
+_candidate_generation_v3_training_refresh_spec = importlib.util.spec_from_file_location(
+    "review_krk_candidate_generation_v3_training_refresh",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_candidate_generation_v3_training_refresh.py",
+)
+assert _candidate_generation_v3_training_refresh_spec is not None
+assert _candidate_generation_v3_training_refresh_spec.loader is not None
+_candidate_generation_v3_training_refresh = importlib.util.module_from_spec(
+    _candidate_generation_v3_training_refresh_spec
+)
+_candidate_generation_v3_training_refresh_spec.loader.exec_module(
+    _candidate_generation_v3_training_refresh
+)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -3133,3 +3148,36 @@ def test_candidate_generation_v3_runtime_boundary_blocks_selector():
     assert payload["approved_runtime_boundary"]["new_runtime_behavior_allowed"] is False
     assert payload["approved_runtime_boundary"]["selector_allowed"] is False
     assert "selector_training" in payload["still_forbidden"]
+
+
+def test_candidate_generation_v3_training_refresh_review_allows_design_only():
+    payload = _candidate_generation_v3_training_refresh.build_payload(
+        boundary={"decision": {"selector_allowed": False}},
+        benchmark={
+            "summary": {
+                "exact_positive_capacity_recall_from_trace": 0.31,
+                "stage_family_positive_capacity_recall_from_trace": 0.77,
+                "stage_family_negative_capacity_exposure_from_trace": 0.0,
+            }
+        },
+        dataset={
+            "summary": {
+                "candidate_generation_training_row_count": 26,
+                "selector_training_row_count": 0,
+                "stage7_readiness_training_row_count": 0,
+                "runtime_trace_feature_row_count": 44,
+            }
+        },
+    )
+
+    assert payload["decision"]["status"] == (
+        "candidate_generation_v3_training_refresh_design_ready_non_causal"
+    )
+    assert payload["allowed_next_design_scope"][
+        "offline_candidate_generation_training_refresh_design"
+    ] is True
+    assert payload["allowed_next_design_scope"]["runtime_candidate_generator_change"] is False
+    assert payload["decision"]["selector_allowed"] is False
+    assert "capacity labels are not runtime ownership labels" in payload[
+        "blockers_before_runtime"
+    ]
