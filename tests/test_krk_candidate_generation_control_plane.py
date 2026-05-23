@@ -413,6 +413,32 @@ assert _training_refresh_design_spec.loader is not None
 _training_refresh_design = importlib.util.module_from_spec(_training_refresh_design_spec)
 _training_refresh_design_spec.loader.exec_module(_training_refresh_design)
 
+_cross_stage_capacity_review_spec = importlib.util.spec_from_file_location(
+    "review_krk_candidate_generation_cross_stage_capacity_v2",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_candidate_generation_cross_stage_capacity_v2.py",
+)
+assert _cross_stage_capacity_review_spec is not None
+assert _cross_stage_capacity_review_spec.loader is not None
+_cross_stage_capacity_review = importlib.util.module_from_spec(
+    _cross_stage_capacity_review_spec
+)
+_cross_stage_capacity_review_spec.loader.exec_module(_cross_stage_capacity_review)
+
+_cross_stage_capacity_manifest_spec = importlib.util.spec_from_file_location(
+    "build_krk_candidate_generation_cross_stage_capacity_manifest_v3",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "build_krk_candidate_generation_cross_stage_capacity_manifest_v3.py",
+)
+assert _cross_stage_capacity_manifest_spec is not None
+assert _cross_stage_capacity_manifest_spec.loader is not None
+_cross_stage_capacity_manifest = importlib.util.module_from_spec(
+    _cross_stage_capacity_manifest_spec
+)
+_cross_stage_capacity_manifest_spec.loader.exec_module(_cross_stage_capacity_manifest)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -2011,3 +2037,136 @@ def test_candidate_generation_training_refresh_design_blocks_runtime_selector():
     assert payload["training_refresh_scope"]["selector_rows_allowed"] is False
     assert payload["training_refresh_scope"]["stage7_rows_use"] == "held_out_challenge_only"
     assert "using_capacity_labels_as_ownership_labels" in payload["forbidden_next_steps"]
+
+
+def test_candidate_generation_cross_stage_review_recommends_stratified_manifest():
+    payload = _cross_stage_capacity_review.build_payload(
+        merged_dataset={
+            "rows": [
+                {
+                    "evidence_channel": "validated_provider_capacity",
+                    "source_stage": "stage5",
+                    "candidate_strategy_family": "stage0_basin",
+                    "capacity_label": "positive_capacity",
+                    "stage7_challenge_row": False,
+                    "state_id": "state.a",
+                },
+                {
+                    "evidence_channel": "validated_provider_capacity",
+                    "source_stage": "stage5",
+                    "candidate_strategy_family": "stage0_basin",
+                    "capacity_label": "positive_capacity",
+                    "stage7_challenge_row": False,
+                    "state_id": "state.b",
+                },
+                {
+                    "evidence_channel": "validated_provider_capacity",
+                    "source_stage": "stage6",
+                    "candidate_strategy_family": "stage0_basin",
+                    "capacity_label": "negative_capacity",
+                    "stage7_challenge_row": False,
+                    "state_id": "state.c",
+                },
+                {
+                    "evidence_channel": "validated_provider_capacity",
+                    "source_stage": "stage7",
+                    "candidate_strategy_family": "box_shrink",
+                    "capacity_label": "positive_capacity",
+                    "stage7_challenge_row": True,
+                    "state_id": "state.stage7",
+                },
+            ]
+        },
+        refresh_probe={
+            "summary": {
+                "leave_stage_out_aggregate": {
+                    "positive_recall": 0.4,
+                    "negative_suppression": 0.0,
+                }
+            }
+        },
+        training_design={
+            "readiness_assessment": {
+                "candidate_refresh_supported": True,
+                "cross_stage_generalization_supported": False,
+            }
+        },
+    )
+
+    assert payload["decision"]["status"] == (
+        "cross_stage_capacity_review_recommends_stratified_capacity_manifest"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["runtime_candidate_generator_refresh_allowed"] is False
+    assert payload["summary"]["stage7_readiness_training_row_count"] == 0
+    assert payload["stage_family_cells"]["stage5|stage0_basin"]["maturity"] == (
+        "positive_only_cell"
+    )
+    assert payload["stage_family_cells"]["stage6|stage0_basin"]["maturity"] == (
+        "underpowered_cell"
+    )
+    assert payload["recommended_manifest_scope"]["stage7_jobs_allowed"] is False
+
+
+def test_candidate_generation_cross_stage_manifest_targets_protected_cells_only():
+    payload = _cross_stage_capacity_manifest.build_payload(
+        dataset={
+            "rows": [
+                {
+                    "evidence_channel": "validated_provider_capacity",
+                    "state_id": "state.a",
+                    "candidate_provider_id": "krk.stage0_basin",
+                    "source_stage": "stage5",
+                    "candidate_strategy_family": "stage0_basin",
+                },
+                {
+                    "evidence_channel": "visible_provider_proposal",
+                    "state_id": "state.a",
+                    "candidate_provider_id": "krk.stage0_basin",
+                    "candidate_strategy_family": "stage0_basin",
+                    "candidate_move_uci": "a1a2",
+                    "source_stage": "stage5",
+                    "stage7_challenge_row": False,
+                },
+                {
+                    "evidence_channel": "visible_provider_proposal",
+                    "state_id": "state.b",
+                    "candidate_provider_id": "krk.stage0_basin",
+                    "candidate_strategy_family": "stage0_basin",
+                    "candidate_move_uci": "a1a3",
+                    "source_stage": "stage5",
+                    "stage7_challenge_row": False,
+                },
+                {
+                    "evidence_channel": "visible_provider_proposal",
+                    "state_id": "state.stage7",
+                    "candidate_provider_id": "krk.box_shrink",
+                    "candidate_strategy_family": "box_shrink",
+                    "candidate_move_uci": "b1b2",
+                    "source_stage": "stage7",
+                    "stage7_challenge_row": True,
+                },
+            ]
+        },
+        review={
+            "findings": {
+                "positive_only_cells": ["stage5|stage0_basin"],
+                "negative_only_cells": [],
+                "mixed_capacity_cells": [],
+                "underpowered_cells": [],
+            }
+        },
+        cap=4,
+    )
+
+    assert payload["decision"]["status"] == (
+        "cross_stage_capacity_manifest_ready_partial_target_coverage"
+    )
+    assert payload["decision"]["labels_run_by_this_artifact"] is False
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["summary"]["job_count"] == 1
+    assert payload["summary"]["stage7_job_count"] == 0
+    assert payload["jobs"][0]["state_id"] == "state.b"
+    assert payload["jobs"][0]["label_semantics"] == (
+        "forced_provider_capacity_not_runtime_ownership"
+    )

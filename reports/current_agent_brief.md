@@ -683,6 +683,28 @@ candidate_generation_training_refresh_benchmark_or_cross_stage_capacity_review
 
 The narrow repair-monitor observation source has been wired as an explicitly approved, default-off observation-only source and passed broadened protected equivalence; the quality review, trace-fold, integration review, dataset design v2, dataset v2 refresh, quality probe, candidate-generation refresh probe, capacity-evidence manifest, bounded labels, merged refresh probe, and training-refresh design keep the path non-causal. Current work should improve cross-stage candidate-generation evidence or benchmark the refresh offline, not runtime selection.
 
+Cross-stage capacity review:
+
+```text
+cross_stage_capacity_review_recommends_stratified_capacity_manifest
+cross_stage_capacity_manifest_ready_partial_target_coverage
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_candidate_generation_cross_stage_capacity_review_v2.md`
+* `reports/strategy_arbitration/krk_candidate_generation_cross_stage_capacity_review_v2.json`
+* `reports/strategy_arbitration/krk_candidate_generation_cross_stage_capacity_manifest_v3.md`
+* `reports/strategy_arbitration/krk_candidate_generation_cross_stage_capacity_manifest_v3.json`
+
+The review identifies the main blocker as `stage_family_capacity_is_not_uniform_across_protected_stages`: Stage 5 cells are currently positive-only, Stage 6 edge-trap is negative-only, Stage 4 cells are mixed, and leave-stage-out negative suppression remains weak. The v3 manifest proposes 8 protected-only h40 jobs across Stage 4/5/6 with 0 Stage 7 jobs; it does not run labels or authorize selector/runtime use.
+
+Next safe step:
+
+```text
+review_or_run_bounded_cross_stage_capacity_labels
+```
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

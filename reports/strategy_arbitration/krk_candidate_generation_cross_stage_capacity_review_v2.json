@@ -1,0 +1,231 @@
+{
+  "causal_status": "non_causal_review",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "build_targeted_cross_stage_capacity_manifest_non_causal",
+    "runtime_candidate_generator_refresh_allowed": false,
+    "selector_allowed": false,
+    "status": "cross_stage_capacity_review_recommends_stratified_capacity_manifest"
+  },
+  "findings": {
+    "cross_stage_generalization_blocker": "stage_family_capacity_is_not_uniform_across_protected_stages",
+    "leave_stage_out_negative_suppression": 0.1111111111111111,
+    "leave_stage_out_positive_recall": 0.5789473684210527,
+    "mixed_capacity_cells": [
+      "stage4|edge_trap",
+      "stage4|stage0_basin"
+    ],
+    "negative_only_cells": [
+      "stage6|edge_trap"
+    ],
+    "positive_only_cells": [
+      "stage5|edge_trap",
+      "stage5|fence_established",
+      "stage5|stage0_basin",
+      "stage6|stage0_basin"
+    ],
+    "stage_specific_interaction_likely": true,
+    "underpowered_cells": [
+      "stage6|drive_to_edge",
+      "stage6|fence_established"
+    ]
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "candidate_generation_refresh_cross_stage_ready": false,
+    "candidate_generation_refresh_supported_in_sample": true,
+    "capacity_labels_are_not_ownership_labels": true,
+    "main_blocker": "stage_family_capacity_is_not_uniform_across_protected_stages",
+    "selector_supported": false
+  },
+  "recommended_manifest_scope": {
+    "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+    "max_jobs_first_slice": 12,
+    "needed": true,
+    "scope": "protected_stage4_stage5_stage6_only",
+    "selection_rule": "prefer cells with single-class support, underpowered support, or large leave-stage-out error contribution",
+    "stage7_jobs_allowed": false
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_generation_cross_stage_capacity_review.v2",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v2_capacity_merged.json",
+    "reports/strategy_arbitration/krk_candidate_generation_refresh_probe_v2_after_labels.json",
+    "reports/strategy_arbitration/krk_candidate_generation_training_refresh_design_v2.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "stage_family_cells": {
+    "stage4|edge_trap": {
+      "candidate_strategy_family": "edge_trap",
+      "example_state_ids": [
+        "state.256a3da30f0f",
+        "state.b11124d658cf"
+      ],
+      "maturity": "mixed_capacity_cell",
+      "negative_capacity": 3,
+      "positive_capacity": 3,
+      "positive_rate": 0.5,
+      "source_stage": "stage4",
+      "support": 6
+    },
+    "stage4|stage0_basin": {
+      "candidate_strategy_family": "stage0_basin",
+      "example_state_ids": [
+        "state.02cfd843a2cf",
+        "state.1e4f48a672e8",
+        "state.256a3da30f0f"
+      ],
+      "maturity": "mixed_capacity_cell",
+      "negative_capacity": 1,
+      "positive_capacity": 2,
+      "positive_rate": 0.6666666666666666,
+      "source_stage": "stage4",
+      "support": 3
+    },
+    "stage5|edge_trap": {
+      "candidate_strategy_family": "edge_trap",
+      "example_state_ids": [
+        "state.02feb8593cc6",
+        "state.3dca34326fca"
+      ],
+      "maturity": "positive_only_cell",
+      "negative_capacity": 0,
+      "positive_capacity": 6,
+      "positive_rate": 1.0,
+      "source_stage": "stage5",
+      "support": 6
+    },
+    "stage5|fence_established": {
+      "candidate_strategy_family": "fence_established",
+      "example_state_ids": [
+        "state.02feb8593cc6",
+        "state.326222aefdf1"
+      ],
+      "maturity": "positive_only_cell",
+      "negative_capacity": 0,
+      "positive_capacity": 2,
+      "positive_rate": 1.0,
+      "source_stage": "stage5",
+      "support": 2
+    },
+    "stage5|stage0_basin": {
+      "candidate_strategy_family": "stage0_basin",
+      "example_state_ids": [
+        "state.02feb8593cc6",
+        "state.2c1d6da27ea1",
+        "state.326222aefdf1",
+        "state.3dca34326fca"
+      ],
+      "maturity": "positive_only_cell",
+      "negative_capacity": 0,
+      "positive_capacity": 4,
+      "positive_rate": 1.0,
+      "source_stage": "stage5",
+      "support": 4
+    },
+    "stage6|drive_to_edge": {
+      "candidate_strategy_family": "drive_to_edge",
+      "example_state_ids": [
+        "state.699f0003a511"
+      ],
+      "maturity": "underpowered_cell",
+      "negative_capacity": 1,
+      "positive_capacity": 0,
+      "positive_rate": 0.0,
+      "source_stage": "stage6",
+      "support": 1
+    },
+    "stage6|edge_trap": {
+      "candidate_strategy_family": "edge_trap",
+      "example_state_ids": [
+        "state.699f0003a511"
+      ],
+      "maturity": "negative_only_cell",
+      "negative_capacity": 3,
+      "positive_capacity": 0,
+      "positive_rate": 0.0,
+      "source_stage": "stage6",
+      "support": 3
+    },
+    "stage6|fence_established": {
+      "candidate_strategy_family": "fence_established",
+      "example_state_ids": [
+        "state.699f0003a511"
+      ],
+      "maturity": "underpowered_cell",
+      "negative_capacity": 1,
+      "positive_capacity": 0,
+      "positive_rate": 0.0,
+      "source_stage": "stage6",
+      "support": 1
+    },
+    "stage6|stage0_basin": {
+      "candidate_strategy_family": "stage0_basin",
+      "example_state_ids": [
+        "state.52085d244e9d",
+        "state.699f0003a511"
+      ],
+      "maturity": "positive_only_cell",
+      "negative_capacity": 0,
+      "positive_capacity": 2,
+      "positive_rate": 1.0,
+      "source_stage": "stage6",
+      "support": 2
+    }
+  },
+  "stage_summary": {
+    "stage4": {
+      "families": {
+        "edge_trap": 6,
+        "stage0_basin": 3
+      },
+      "negative_capacity": 4,
+      "positive_capacity": 5,
+      "row_count": 9
+    },
+    "stage5": {
+      "families": {
+        "edge_trap": 6,
+        "fence_established": 2,
+        "stage0_basin": 4
+      },
+      "negative_capacity": 0,
+      "positive_capacity": 12,
+      "row_count": 12
+    },
+    "stage6": {
+      "families": {
+        "drive_to_edge": 1,
+        "edge_trap": 3,
+        "fence_established": 1,
+        "stage0_basin": 2
+      },
+      "negative_capacity": 5,
+      "positive_capacity": 2,
+      "row_count": 7
+    }
+  },
+  "summary": {
+    "capacity_row_count": 28,
+    "family_counts": {
+      "drive_to_edge": 1,
+      "edge_trap": 15,
+      "fence_established": 3,
+      "stage0_basin": 9
+    },
+    "stage7_readiness_training_row_count": 0,
+    "stage_counts": {
+      "stage4": 9,
+      "stage5": 12,
+      "stage6": 7
+    },
+    "stage_family_cell_count": 9
+  }
+}
