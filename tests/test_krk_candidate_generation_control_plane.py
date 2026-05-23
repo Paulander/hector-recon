@@ -148,6 +148,17 @@ assert _candidate_label_blocker_spec.loader is not None
 _candidate_label_blocker = importlib.util.module_from_spec(_candidate_label_blocker_spec)
 _candidate_label_blocker_spec.loader.exec_module(_candidate_label_blocker)
 
+_candidate_quality_review_spec = importlib.util.spec_from_file_location(
+    "write_krk_candidate_proposal_quality_prioritization_review_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_candidate_proposal_quality_prioritization_review_v1.py",
+)
+assert _candidate_quality_review_spec is not None
+assert _candidate_quality_review_spec.loader is not None
+_candidate_quality_review = importlib.util.module_from_spec(_candidate_quality_review_spec)
+_candidate_quality_review_spec.loader.exec_module(_candidate_quality_review)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -859,3 +870,37 @@ def test_candidate_generation_label_blocker_review_rejects_blind_label_farming()
     assert payload["decision"]["selector_allowed"] is False
     assert payload["interpretation"]["more_blind_label_farming_not_recommended"] is True
     assert "candidate_move_annotation_coverage_too_sparse" in payload["blockers"]
+
+
+def test_candidate_proposal_quality_review_stays_non_causal():
+    payload = _candidate_quality_review.build_payload(
+        gap_review={
+            "summary": {
+                "frame_count": 10,
+                "missing_expected_sources": ["plan_capsule_sequence_candidate"],
+            }
+        },
+        annotation_v2={
+            "summary": {
+                "candidate_move_frame_count": 8,
+                "protected_candidate_move_count": 8,
+                "protected_annotated_candidate_move_count": 2,
+                "protected_annotation_recall": 0.25,
+            }
+        },
+        blocker_review={
+            "evidence": {
+                "bounded_label_count": 4,
+                "bounded_label_positive_capacity_count": 3,
+                "bounded_label_negative_capacity_count": 1,
+            }
+        },
+    )
+
+    assert payload["decision"]["status"] == "proposal_quality_prioritization_review_ready"
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["runtime_behavior_changed"] is False
+    assert "runtime_selector" in payload["forbidden_next_steps"]
+    assert payload["decision"]["recommended_next_step"] == (
+        "build_non_causal_candidate_proposal_quality_dataset"
+    )

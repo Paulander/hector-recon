@@ -280,6 +280,7 @@ Important artifacts include:
 * `reports/strategy_arbitration/krk_candidate_move_capacity_labels_v1.md/json`
 * `reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v2.md/json`
 * `reports/strategy_arbitration/krk_candidate_generation_label_blocker_review_v1.md/json`
+* `reports/strategy_arbitration/krk_candidate_proposal_quality_prioritization_review_v1.md/json`
 
 Current conclusion:
 
@@ -381,6 +382,14 @@ candidate_generation_label_coverage_underpowered_selector_blocked
 ```
 
 The 12 protected labels produced 11 mate and 1 max_plies outcomes with 0 Stage 7 labels. Merging them improved protected CandidateMoveFrame annotation from 10 to 22 rows, but protected annotation recall remains only 0.075. The blocker review recommends candidate proposal quality/prioritization review before any further labels or selector review; more blind label farming is not recommended.
+
+Candidate proposal quality/prioritization review is complete:
+
+```text
+proposal_quality_prioritization_review_ready
+```
+
+The review reframes the next control-plane step away from more unprioritized labels. The candidate generator is visible but too broad and underannotated; the next useful non-causal artifact is a candidate proposal quality dataset/probe that separates source channel, visible term density, safety floor, known capacity contrast, selected-move relation, and protection scope before any selector review.
 
 ### Progress-Window Reconsideration Runtime Test
 
@@ -507,6 +516,8 @@ reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v2.md
 reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v2.json
 reports/strategy_arbitration/krk_candidate_generation_label_blocker_review_v1.md
 reports/strategy_arbitration/krk_candidate_generation_label_blocker_review_v1.json
+reports/strategy_arbitration/krk_candidate_proposal_quality_prioritization_review_v1.md
+reports/strategy_arbitration/krk_candidate_proposal_quality_prioritization_review_v1.json
 ```
 
 These artifacts answer:
@@ -524,10 +535,10 @@ These artifacts answer:
 Next safe step after observation-only candidate-generation coverage analysis:
 
 ```text
-design_candidate_proposal_quality_prioritization_review
+build_non_causal_candidate_proposal_quality_dataset
 ```
 
-Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The next slice should decide how candidate generation should prioritize or filter visible proposals before more labels or any selector review.
+Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The next slice should build a non-causal proposal-quality dataset/probe before more labels or any selector review.
 
 ## Runtime Approval Rule
 
