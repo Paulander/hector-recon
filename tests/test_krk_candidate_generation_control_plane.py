@@ -284,6 +284,17 @@ _repair_monitor_broadened = importlib.util.module_from_spec(
 )
 _repair_monitor_broadened_spec.loader.exec_module(_repair_monitor_broadened)
 
+_repair_monitor_quality_spec = importlib.util.spec_from_file_location(
+    "analyze_krk_repair_monitor_observation_source_quality_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "analyze_krk_repair_monitor_observation_source_quality_v1.py",
+)
+assert _repair_monitor_quality_spec is not None
+assert _repair_monitor_quality_spec.loader is not None
+_repair_monitor_quality = importlib.util.module_from_spec(_repair_monitor_quality_spec)
+_repair_monitor_quality_spec.loader.exec_module(_repair_monitor_quality)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -1426,3 +1437,46 @@ def test_repair_monitor_observation_broadened_summary_blocks_selector():
     )
     assert decision["selector_allowed"] is False
     assert decision["guardrails_allowed"] is False
+
+
+def test_repair_monitor_observation_quality_keeps_trace_only_use():
+    payload = _repair_monitor_quality.build_payload(
+        {
+            "summary": {
+                "selected_move_provider_delta_count": 0,
+                "baseline_repair_monitor_frame_count": 0,
+                "invariant_failure_count": 0,
+                "stage7_case_count": 0,
+            },
+            "cases": [
+                {
+                    "case_id": "case_a",
+                    "source_stage": "stage5",
+                    "selected_provider": "krk.stage0_basin",
+                    "enabled_repair_monitor_sample_frames": [
+                        {
+                            "candidate_source": "broader_strategy_candidate",
+                            "strategy_family": "terminal.krk.repair_needed_monitor",
+                            "risk_terms": [
+                                "repair_or_reestablish_cut_available",
+                                "post_fence_conversion_needed",
+                            ],
+                            "licensed_provider_families": ["krk.fence_established"],
+                            "direct_request": False,
+                            "score_delta": 0.0,
+                            "causal_status": "observation_only",
+                            "protected_status": "protected_control",
+                        }
+                    ],
+                }
+            ],
+        }
+    )
+
+    assert payload["decision"]["status"] == (
+        "repair_monitor_observation_source_quality_trace_only_retained"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["guardrails_allowed"] is False
+    assert payload["interpretation"]["quality_signal_mature"] is False
+    assert "selector_input_without_separate_review" in payload["interpretation"]["forbidden_use"]

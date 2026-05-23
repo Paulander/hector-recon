@@ -1,0 +1,65 @@
+{
+  "causal_status": "non_causal_observation_source_quality_review",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "fold_repair_monitor_frames_into_strategy_sequence_dataset_trace_only",
+    "selector_allowed": false,
+    "status": "repair_monitor_observation_source_quality_trace_only_retained"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "forbidden_use": [
+      "selector_input_without_separate_review",
+      "score_delta",
+      "provider_route",
+      "guardrail_campaign",
+      "stage7_training_or_promotion",
+      "stage8_training"
+    ],
+    "observation_source_useful": true,
+    "quality_signal_mature": false,
+    "reason": "The source is stable as trace-only candidate context, but the current sample is small and risk terms are not diverse enough to support selector or guardrail review.",
+    "safe_use": "trace_only_strategy_sequence_dataset_feature"
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_repair_monitor_observation_source_quality_review.v1",
+  "selector_blockers": [
+    "repair_monitor_terms_not_diverse_enough",
+    "protected_sample_too_small_for_quality_threshold",
+    "missing_cut_or_fence_break_examples",
+    "missing_explicit_instability_examples"
+  ],
+  "source_artifact": "reports/strategy_arbitration/krk_repair_monitor_observation_source_broadened_v1.json",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "invariant_failure_count": 0,
+    "licensed_provider_sets": {
+      "krk.drive_to_edge|krk.fence_established|krk.stage0_basin": 6
+    },
+    "repair_monitor_frame_count": 6,
+    "risk_term_set_count": 1,
+    "risk_term_sets": {
+      "post_fence_conversion_needed|repair_or_reestablish_cut_available|rook_safe": 6
+    },
+    "selected_move_provider_delta_count": 0,
+    "selected_provider_counts": {
+      "krk.edge_trap_close": 2,
+      "krk.fence_established": 1,
+      "krk.stage0_basin": 3
+    },
+    "source_stable": true,
+    "stage7_case_count": 0,
+    "stage_counts": {
+      "stage4": 1,
+      "stage5": 4,
+      "stage6": 1
+    }
+  }
+}
