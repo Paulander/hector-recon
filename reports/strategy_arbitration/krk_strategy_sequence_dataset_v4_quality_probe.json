@@ -1,0 +1,63 @@
+{
+  "causal_status": "non_causal_dataset_quality_probe",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "candidate_generation_refresh_v4_context_review_or_bounded_non_causal_probe",
+    "selector_allowed": false,
+    "status": "strategy_sequence_dataset_v4_quality_candidate_generation_context_ready_selector_blocked"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "candidate_generation_context_usable": true,
+    "reason": "V4 integrates approved candidate-generation refresh sandbox traces as observation context and preserves positive capacity rows for candidate-generation recall, but still has no explicit ownership selector labels.",
+    "selector_dataset_usable": false
+  },
+  "quality_checks": {
+    "candidate_generation_refresh_trace_source_present": true,
+    "candidate_generation_rows_preserved": true,
+    "multiple_evidence_channels_present": true,
+    "refresh_trace_rows_are_context_only": true,
+    "repair_monitor_trace_source_preserved": true,
+    "runtime_flags_false": true,
+    "selector_rows_absent_without_ownership_labels": true,
+    "stage7_excluded_from_readiness": true
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_strategy_sequence_dataset_v4_quality_probe.v1",
+  "selector_blockers": [
+    "no_explicit_ownership_selector_rows",
+    "runtime_trace_features_are_context_not_selector_labels",
+    "capacity_rows_are_candidate_generation_not_ownership_labels"
+  ],
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v4.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "candidate_generation_refresh_trace_row_count": 25,
+    "candidate_generation_training_row_count": 26,
+    "evidence_channel_count": 5,
+    "row_count": 307,
+    "row_count_by_channel": {
+      "candidate_move_frame": 140,
+      "internal_monitor_candidate": 13,
+      "runtime_observation_trace_feature": 31,
+      "validated_provider_capacity": 36,
+      "visible_provider_proposal": 87
+    },
+    "runtime_trace_feature_row_count": 31,
+    "runtime_trace_feature_row_count_by_source": {
+      "candidate_generation_refresh_sandbox": 25,
+      "repair_monitor_observation": 6
+    },
+    "selector_training_row_count": 0,
+    "stage7_readiness_training_row_count": 0
+  }
+}

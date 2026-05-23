@@ -887,6 +887,34 @@ The sandbox is opt-in via `--enable-krk-candidate-generation-refresh` or the leg
 
 This does not authorize selection, scoring, routing, provider suppression, guardrails, promotion, Stage 7 training/promotion, Stage 8 training, or Stage 4 runtime scope. The next safe step is non-causal coverage analysis over emitted candidate-generation frames.
 
+Latest non-causal coverage/dataset refresh:
+
+```text
+candidate_generation_refresh_coverage_ready_for_trace_dataset_refresh
+candidate_generation_refresh_trace_features_folded_non_causal
+strategy_sequence_dataset_v4_refreshed_non_causal_selector_blocked
+strategy_sequence_dataset_v4_quality_candidate_generation_context_ready_selector_blocked
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_candidate_generation_refresh_coverage_analysis_v0.md`
+* `reports/strategy_arbitration/krk_candidate_generation_refresh_coverage_analysis_v0.json`
+* `reports/strategy_arbitration/krk_strategy_sequence_candidate_generation_refresh_trace_features_v1.md`
+* `reports/strategy_arbitration/krk_strategy_sequence_candidate_generation_refresh_trace_features_v1.json`
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_v4.md`
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_v4.json`
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_v4_quality_probe.md`
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_v4_quality_probe.json`
+
+Coverage analysis over the emitted sandbox frames reports exact positive-capacity recall `1.0` on the sampled approved cells, exact negative-capacity exposure `0.0`, Stage 4 frames `0`, Stage 7 frames `0`, and selector/guardrail authorization still `false`. Dataset v4 folds the refresh frames as runtime-observation context only: row count `307`, refresh trace rows `25`, candidate-generation training rows `26`, selector training rows `0`, Stage 7 readiness/training rows `0`.
+
+Next safe step:
+
+```text
+candidate_generation_refresh_v4_context_review_or_bounded_non_causal_probe
+```
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:
