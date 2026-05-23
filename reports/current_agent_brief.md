@@ -1024,6 +1024,25 @@ Artifacts:
 
 Replay-free coverage over the emitted exact trace enrichment frames reports target gap rows in sample `3`, exact gap hits `3`, exact gap recall `1.0`, invalid frames `0`, selected move/provider/score deltas `0`, Stage 4 frames `0`, and Stage 7 frames `0`. This remains candidate-generation context only; it does not add negative/selector evidence. The next safe step is folding exact trace enrichment frames into a non-causal strategy-sequence trace dataset.
 
+Latest exact trace fold and dataset v5:
+
+```text
+exact_trace_enrichment_trace_features_folded_non_causal
+strategy_sequence_dataset_v5_refreshed_non_causal_selector_blocked
+strategy_sequence_dataset_v5_quality_candidate_generation_context_ready_selector_blocked
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_strategy_sequence_exact_trace_enrichment_trace_features_v1.md`
+* `reports/strategy_arbitration/krk_strategy_sequence_exact_trace_enrichment_trace_features_v1.json`
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_v5.md`
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_v5.json`
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_v5_quality_probe.md`
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_v5_quality_probe.json`
+
+Dataset v5 appends the exact trace enrichment frames as trace-only context: row count `310`, exact trace enrichment rows `3`, runtime trace rows `34`, candidate-generation training rows `26`, selector training rows `0`, and Stage 7 readiness/training rows `0`. The quality probe keeps selector/guardrail authorization blocked because runtime trace features remain context, not ownership labels.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

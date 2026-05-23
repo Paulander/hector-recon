@@ -1,0 +1,242 @@
+{
+  "base_dataset_summary": {
+    "candidate_generation_training_row_count": 11,
+    "candidate_strategy_family_counts": {
+      "box_shrink": 3,
+      "drive_to_edge": 8,
+      "edge_trap": 130,
+      "fence_established": 17,
+      "stage0_basin": 85,
+      "terminal.krk.box_shrink_owner_exit_pressure": 2,
+      "terminal.krk.local_provider_competition_failed": 2,
+      "terminal.krk.post_plan_stagnation": 4,
+      "terminal.krk.repair_needed_monitor": 5
+    },
+    "capacity_evidence_row_count": 16,
+    "frame_count": 256,
+    "frame_type_counts": {
+      "broader_krk_strategy_candidate": 13,
+      "candidate_move_hypothesis": 140,
+      "validated_provider_candidate": 103
+    },
+    "internal_monitor_row_count": 153,
+    "ownership_evidence_row_count": 87,
+    "readiness_training_stage7_row_count": 0,
+    "selector_training_row_count": 42,
+    "sequence_evidence_row_count": 153,
+    "source_stage_counts": {
+      "stage4": 12,
+      "stage5": 23,
+      "stage6": 23,
+      "stage7": 198
+    },
+    "stage7_challenge_row_count": 198,
+    "state_count": 25
+  },
+  "causal_status": "non_causal_trace_feature_augmentation",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "build_strategy_sequence_dataset_v5_non_causal",
+    "selector_allowed": false,
+    "status": "exact_trace_enrichment_trace_features_folded_non_causal"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "capacity_labels_are_not_selector_labels": true,
+    "folded_into_strategy_sequence_context": true,
+    "ownership_labels_are_not_selector_labels": true,
+    "safe_use": "trace_only_feature_for_future_strategy_sequence_dataset",
+    "selector_or_guardrail_authorized": false
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_strategy_sequence_exact_trace_enrichment_trace_features.v1",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_sequence_candidate_frames_v1.json",
+    "reports/strategy_arbitration/krk_exact_trace_enrichment_sandbox_v0.json",
+    "reports/strategy_arbitration/krk_exact_trace_enrichment_coverage_analysis_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "candidate_generation_training_row_count": 0,
+    "capacity_label_counts": {
+      "positive_capacity": 3
+    },
+    "policy_cell_counts": {
+      "stage5|edge_trap": 3
+    },
+    "selector_training_row_count": 0,
+    "stage7_trace_frame_count": 0,
+    "stage_counts": {
+      "stage5": 3
+    },
+    "strategy_family_counts": {
+      "edge_trap": 3
+    },
+    "trace_frame_count": 3
+  },
+  "trace_only_frames": [
+    {
+      "active_landmark_label": "fence_established",
+      "candidate_id": "candidate.exact_trace_enrichment.krk.edge_trap_close.h7d7",
+      "candidate_move_uci": "h7d7",
+      "candidate_plan_id": null,
+      "candidate_provider_id": "krk.edge_trap_close",
+      "candidate_strategy_family": "edge_trap",
+      "capacity_evidence": {
+        "capacity_evidence_source": "reports/strategy_arbitration/krk_candidate_source_gap_manifest_v0.json",
+        "capacity_label": "positive_capacity",
+        "label_semantics": "offline_capacity_gap_not_runtime_ownership"
+      },
+      "causal_status": "non_causal_trace_feature",
+      "fen": "1k6/7R/2K5/8/8/8/8/8 w - - 2 2",
+      "frame_id": "ssf.runtime_observation.exact_trace_enrichment.state.3dca34326fca.0",
+      "frame_type": "exact_trace_enrichment_sandbox",
+      "internal_monitor_terms": [],
+      "label_semantics": "runtime_observation_context_not_selector_label",
+      "move_shape_terms": [],
+      "ownership_evidence": {
+        "label_semantics": "runtime_observation_context_not_ownership_label",
+        "selected_move_before_observation": "c6b6",
+        "selected_move_provider_score_equivalent": true,
+        "selected_provider_before_observation": "krk.stage0_basin"
+      },
+      "post_move_terms": [],
+      "safety_terms": [],
+      "schema_version": "krk_strategy_sequence_candidate_frame.v1",
+      "sequence_evidence": {
+        "candidate_count_before_truncation": 3,
+        "candidate_generation_truncated": false,
+        "candidate_source": "exact_trace_enrichment",
+        "exact_enrichment_reason": "policy_cell_covered_exact_missing",
+        "policy": "trace_stage_family_context",
+        "policy_cell": "stage5|edge_trap",
+        "protected_status": "protected_control",
+        "provider_provenance": "krk_exact_trace_enrichment_runtime_review_packet_v0",
+        "source_artifact": "reports/strategy_arbitration/krk_exact_trace_enrichment_sandbox_v0.json"
+      },
+      "source_stage": "stage5",
+      "source_terms": [
+        "exact_trace_enrichment_scope",
+        "runtime_review_packet.krk_exact_trace_enrichment_runtime_review_packet_v0",
+        "candidate_source_gap_manifest_v0",
+        "source_stage.stage5",
+        "candidate_strategy_family.edge_trap"
+      ],
+      "stage7_challenge_row": false,
+      "state_id": "state.3dca34326fca",
+      "usable_for_candidate_generation_training": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "candidate_id": "candidate.exact_trace_enrichment.krk.edge_trap_wrong_tempo.h7d7",
+      "candidate_move_uci": "h7d7",
+      "candidate_plan_id": null,
+      "candidate_provider_id": "krk.edge_trap_wrong_tempo",
+      "candidate_strategy_family": "edge_trap",
+      "capacity_evidence": {
+        "capacity_evidence_source": "reports/strategy_arbitration/krk_candidate_source_gap_manifest_v0.json",
+        "capacity_label": "positive_capacity",
+        "label_semantics": "offline_capacity_gap_not_runtime_ownership"
+      },
+      "causal_status": "non_causal_trace_feature",
+      "fen": "1k6/7R/2K5/8/8/8/8/8 w - - 2 2",
+      "frame_id": "ssf.runtime_observation.exact_trace_enrichment.state.3dca34326fca.1",
+      "frame_type": "exact_trace_enrichment_sandbox",
+      "internal_monitor_terms": [],
+      "label_semantics": "runtime_observation_context_not_selector_label",
+      "move_shape_terms": [],
+      "ownership_evidence": {
+        "label_semantics": "runtime_observation_context_not_ownership_label",
+        "selected_move_before_observation": "c6b6",
+        "selected_move_provider_score_equivalent": true,
+        "selected_provider_before_observation": "krk.stage0_basin"
+      },
+      "post_move_terms": [],
+      "safety_terms": [],
+      "schema_version": "krk_strategy_sequence_candidate_frame.v1",
+      "sequence_evidence": {
+        "candidate_count_before_truncation": 3,
+        "candidate_generation_truncated": false,
+        "candidate_source": "exact_trace_enrichment",
+        "exact_enrichment_reason": "policy_cell_covered_exact_missing",
+        "policy": "trace_stage_family_context",
+        "policy_cell": "stage5|edge_trap",
+        "protected_status": "protected_control",
+        "provider_provenance": "krk_exact_trace_enrichment_runtime_review_packet_v0",
+        "source_artifact": "reports/strategy_arbitration/krk_exact_trace_enrichment_sandbox_v0.json"
+      },
+      "source_stage": "stage5",
+      "source_terms": [
+        "exact_trace_enrichment_scope",
+        "runtime_review_packet.krk_exact_trace_enrichment_runtime_review_packet_v0",
+        "candidate_source_gap_manifest_v0",
+        "source_stage.stage5",
+        "candidate_strategy_family.edge_trap"
+      ],
+      "stage7_challenge_row": false,
+      "state_id": "state.3dca34326fca",
+      "usable_for_candidate_generation_training": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "candidate_id": "candidate.exact_trace_enrichment.krk.edge_trap_enemy_between.h7b7",
+      "candidate_move_uci": "h7b7",
+      "candidate_plan_id": null,
+      "candidate_provider_id": "krk.edge_trap_enemy_between",
+      "candidate_strategy_family": "edge_trap",
+      "capacity_evidence": {
+        "capacity_evidence_source": "reports/strategy_arbitration/krk_candidate_source_gap_manifest_v0.json",
+        "capacity_label": "positive_capacity",
+        "label_semantics": "offline_capacity_gap_not_runtime_ownership"
+      },
+      "causal_status": "non_causal_trace_feature",
+      "fen": "1k6/7R/2K5/8/8/8/8/8 w - - 2 2",
+      "frame_id": "ssf.runtime_observation.exact_trace_enrichment.state.3dca34326fca.2",
+      "frame_type": "exact_trace_enrichment_sandbox",
+      "internal_monitor_terms": [],
+      "label_semantics": "runtime_observation_context_not_selector_label",
+      "move_shape_terms": [],
+      "ownership_evidence": {
+        "label_semantics": "runtime_observation_context_not_ownership_label",
+        "selected_move_before_observation": "c6b6",
+        "selected_move_provider_score_equivalent": true,
+        "selected_provider_before_observation": "krk.stage0_basin"
+      },
+      "post_move_terms": [],
+      "safety_terms": [],
+      "schema_version": "krk_strategy_sequence_candidate_frame.v1",
+      "sequence_evidence": {
+        "candidate_count_before_truncation": 3,
+        "candidate_generation_truncated": false,
+        "candidate_source": "exact_trace_enrichment",
+        "exact_enrichment_reason": "policy_cell_covered_exact_missing",
+        "policy": "trace_stage_family_context",
+        "policy_cell": "stage5|edge_trap",
+        "protected_status": "protected_control",
+        "provider_provenance": "krk_exact_trace_enrichment_runtime_review_packet_v0",
+        "source_artifact": "reports/strategy_arbitration/krk_exact_trace_enrichment_sandbox_v0.json"
+      },
+      "source_stage": "stage5",
+      "source_terms": [
+        "exact_trace_enrichment_scope",
+        "runtime_review_packet.krk_exact_trace_enrichment_runtime_review_packet_v0",
+        "candidate_source_gap_manifest_v0",
+        "source_stage.stage5",
+        "candidate_strategy_family.edge_trap"
+      ],
+      "stage7_challenge_row": false,
+      "state_id": "state.3dca34326fca",
+      "usable_for_candidate_generation_training": false,
+      "usable_for_selector_training": false
+    }
+  ]
+}

@@ -904,6 +904,41 @@ _exact_trace_enrichment_coverage = importlib.util.module_from_spec(
 )
 _exact_trace_enrichment_coverage_spec.loader.exec_module(_exact_trace_enrichment_coverage)
 
+_exact_trace_enrichment_trace_fold_spec = importlib.util.spec_from_file_location(
+    "fold_krk_exact_trace_enrichment_frames_into_strategy_sequence_trace_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "fold_krk_exact_trace_enrichment_frames_into_strategy_sequence_trace_v1.py",
+)
+assert _exact_trace_enrichment_trace_fold_spec is not None
+assert _exact_trace_enrichment_trace_fold_spec.loader is not None
+_exact_trace_enrichment_trace_fold = importlib.util.module_from_spec(
+    _exact_trace_enrichment_trace_fold_spec
+)
+_exact_trace_enrichment_trace_fold_spec.loader.exec_module(_exact_trace_enrichment_trace_fold)
+
+_dataset_v5_spec = importlib.util.spec_from_file_location(
+    "build_krk_strategy_sequence_dataset_v5",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "build_krk_strategy_sequence_dataset_v5.py",
+)
+assert _dataset_v5_spec is not None
+assert _dataset_v5_spec.loader is not None
+_dataset_v5 = importlib.util.module_from_spec(_dataset_v5_spec)
+_dataset_v5_spec.loader.exec_module(_dataset_v5)
+
+_dataset_v5_quality_spec = importlib.util.spec_from_file_location(
+    "probe_krk_strategy_sequence_dataset_v5_quality",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "probe_krk_strategy_sequence_dataset_v5_quality.py",
+)
+assert _dataset_v5_quality_spec is not None
+assert _dataset_v5_quality_spec.loader is not None
+_dataset_v5_quality = importlib.util.module_from_spec(_dataset_v5_quality_spec)
+_dataset_v5_quality_spec.loader.exec_module(_dataset_v5_quality)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -4294,3 +4329,154 @@ def test_exact_trace_enrichment_coverage_keeps_selector_blocked():
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["summary"]["exact_gap_recall"] == 1.0
     assert payload["interpretation"]["capacity_gap_labels_are_not_ownership_labels"] is True
+
+
+def test_exact_trace_enrichment_trace_fold_is_context_only():
+    sandbox = {
+        "cases": [
+            {
+                "state_id": "state.a",
+                "fen": "fen-a",
+                "source_stage": "stage5",
+                "active_landmark_label": "fence_established",
+                "selected_move_provider_score_equivalent": True,
+                "enabled_exact_frames": [
+                    {
+                        "candidate_source": "exact_trace_enrichment",
+                        "provider_id": "krk.edge_trap_close",
+                        "provider_family": "edge_trap",
+                        "move_id": "a1a2",
+                        "source_terms": ["exact_trace_enrichment_scope"],
+                        "capacity_evidence_kind": "positive_capacity",
+                        "capacity_evidence_source": "source.json",
+                        "label_semantics": "offline_capacity_gap_not_runtime_ownership",
+                        "selected_provider_before_observation": "krk.fence_established",
+                        "selected_move_before_observation": "h7c7",
+                        "policy": "trace_stage_family_context",
+                        "policy_cell": "stage5|edge_trap",
+                        "provider_provenance": "packet",
+                        "protected_status": "protected_control",
+                        "exact_enrichment_reason": "policy_cell_covered_exact_missing",
+                    }
+                ],
+            }
+        ]
+    }
+    coverage = {
+        "decision": {
+            "selector_allowed": False,
+            "status": "exact_trace_enrichment_coverage_ready_for_trace_dataset_refresh",
+        }
+    }
+
+    payload = _exact_trace_enrichment_trace_fold.build_payload(
+        base_payload={"summary": {}},
+        sandbox_payload=sandbox,
+        coverage_payload=coverage,
+    )
+
+    assert payload["decision"]["status"] == (
+        "exact_trace_enrichment_trace_features_folded_non_causal"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["summary"]["trace_frame_count"] == 1
+    assert payload["trace_only_frames"][0]["usable_for_selector_training"] is False
+    assert payload["trace_only_frames"][0]["causal_status"] == "non_causal_trace_feature"
+
+
+def test_strategy_sequence_dataset_v5_adds_exact_trace_without_selector_rows():
+    base = {
+        "rows": [
+            {
+                "schema_version": "krk_strategy_sequence_dataset_row.v4",
+                "evidence_channel": "validated_provider_capacity",
+                "source_stage": "stage5",
+                "stage7_challenge_row": False,
+                "usable_for_candidate_generation_training_v4": True,
+                "usable_for_selector_training_v4": False,
+                "causal_status": "non_causal_dataset_row",
+            },
+            {
+                "schema_version": "krk_strategy_sequence_dataset_row.v4",
+                "evidence_channel": "runtime_observation_trace_feature",
+                "trace_feature_source": "candidate_generation_refresh_sandbox",
+                "source_stage": "stage5",
+                "stage7_challenge_row": False,
+                "usable_for_candidate_generation_training_v4": False,
+                "usable_for_selector_training_v4": False,
+                "causal_status": "non_causal_dataset_row",
+            },
+            {
+                "schema_version": "krk_strategy_sequence_dataset_row.v4",
+                "evidence_channel": "runtime_observation_trace_feature",
+                "trace_feature_source": "repair_monitor_observation",
+                "source_stage": "stage5",
+                "stage7_challenge_row": False,
+                "usable_for_candidate_generation_training_v4": False,
+                "usable_for_selector_training_v4": False,
+                "causal_status": "non_causal_dataset_row",
+            },
+            {
+                "schema_version": "krk_strategy_sequence_dataset_row.v4",
+                "evidence_channel": "visible_provider_proposal",
+                "source_stage": "stage5",
+                "stage7_challenge_row": False,
+                "usable_for_candidate_generation_training_v4": False,
+                "usable_for_selector_training_v4": False,
+                "causal_status": "non_causal_dataset_row",
+            },
+            {
+                "schema_version": "krk_strategy_sequence_dataset_row.v4",
+                "evidence_channel": "candidate_move_frame",
+                "source_stage": "stage5",
+                "stage7_challenge_row": False,
+                "usable_for_candidate_generation_training_v4": False,
+                "usable_for_selector_training_v4": False,
+                "causal_status": "non_causal_dataset_row",
+            },
+        ]
+    }
+    trace = {
+        "decision": {"selector_allowed": False},
+        "trace_only_frames": [
+            {
+                "frame_id": "frame.exact",
+                "state_id": "state.a",
+                "fen": "fen-a",
+                "source_stage": "stage5",
+                "active_landmark_label": "fence_established",
+                "frame_type": "exact_trace_enrichment_sandbox",
+                "candidate_strategy_family": "edge_trap",
+                "candidate_provider_id": "krk.edge_trap_close",
+                "candidate_move_uci": "a1a2",
+                "label_semantics": "runtime_observation_context_not_selector_label",
+                "stage7_challenge_row": False,
+                "usable_for_selector_training": False,
+                "usable_for_candidate_generation_training": False,
+                "capacity_evidence": {"capacity_label": "positive_capacity"},
+                "ownership_evidence": {
+                    "label_semantics": "runtime_observation_context_not_ownership_label"
+                },
+                "sequence_evidence": {
+                    "policy": "trace_stage_family_context",
+                    "policy_cell": "stage5|edge_trap",
+                    "exact_enrichment_reason": "policy_cell_covered_exact_missing",
+                },
+                "causal_status": "non_causal_trace_feature",
+            }
+        ],
+    }
+
+    dataset = _dataset_v5.build_payload(base_dataset=base, exact_trace=trace, design={})
+    probe = _dataset_v5_quality.build_payload(dataset)
+
+    assert dataset["decision"]["status"] == (
+        "strategy_sequence_dataset_v5_refreshed_non_causal_selector_blocked"
+    )
+    assert dataset["summary"]["added_exact_trace_enrichment_row_count"] == 1
+    assert dataset["summary"]["selector_training_row_count"] == 0
+    assert probe["decision"]["status"] == (
+        "strategy_sequence_dataset_v5_quality_candidate_generation_context_ready_selector_blocked"
+    )
+    assert probe["summary"]["exact_trace_enrichment_trace_row_count"] == 1
+    assert probe["interpretation"]["selector_dataset_usable"] is False
