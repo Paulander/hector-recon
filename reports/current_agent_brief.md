@@ -285,6 +285,9 @@ Important artifacts include:
 * `reports/strategy_arbitration/krk_candidate_proposal_quality_probe_v1.md/json`
 * `reports/strategy_arbitration/krk_candidate_proposal_quality_decision_v1.md/json`
 * `reports/strategy_arbitration/krk_broader_strategy_sequence_candidate_source_design_v1.md/json`
+* `reports/strategy_arbitration/krk_plan_capsule_sequence_candidate_observation_review_v1.md/json`
+* `reports/strategy_arbitration/krk_broader_strategy_candidate_observation_review_v1.md/json`
+* `reports/strategy_arbitration/krk_broader_strategy_sequence_candidate_source_review_v1.md/json`
 
 Current conclusion:
 
@@ -410,6 +413,14 @@ broader_strategy_sequence_candidate_source_design_ready
 ```
 
 This design defines observation-only contracts for `plan_capsule_sequence_candidate` and `broader_strategy_candidate` sources. It does not authorize implementation. Any runtime source expansion requires a separate review because the current observation sandbox only proved provider-pack and CandidateMoveFrame visibility.
+
+PlanCapsule and broader-strategy observation source reviews are complete:
+
+```text
+source_reviews_complete_runtime_expansion_not_authorized
+```
+
+Both source contracts are schema-ready, but current evidence is Stage7-only or Stage7-dominated. PlanCapsule source evidence comes from the quarantined Stage 7 post-box capsule path; broader-strategy source evidence exists as 13 monitor-derived frames, all Stage 7 challenge rows. Runtime source expansion remains blocked. The next safe non-causal step is protected cross-stage strategy-monitor frame expansion.
 
 ### Progress-Window Reconsideration Runtime Test
 
@@ -546,6 +557,12 @@ reports/strategy_arbitration/krk_candidate_proposal_quality_decision_v1.md
 reports/strategy_arbitration/krk_candidate_proposal_quality_decision_v1.json
 reports/strategy_arbitration/krk_broader_strategy_sequence_candidate_source_design_v1.md
 reports/strategy_arbitration/krk_broader_strategy_sequence_candidate_source_design_v1.json
+reports/strategy_arbitration/krk_plan_capsule_sequence_candidate_observation_review_v1.md
+reports/strategy_arbitration/krk_plan_capsule_sequence_candidate_observation_review_v1.json
+reports/strategy_arbitration/krk_broader_strategy_candidate_observation_review_v1.md
+reports/strategy_arbitration/krk_broader_strategy_candidate_observation_review_v1.json
+reports/strategy_arbitration/krk_broader_strategy_sequence_candidate_source_review_v1.md
+reports/strategy_arbitration/krk_broader_strategy_sequence_candidate_source_review_v1.json
 ```
 
 These artifacts answer:
@@ -563,10 +580,10 @@ These artifacts answer:
 Next safe step after observation-only candidate-generation coverage analysis:
 
 ```text
-review_plan_capsule_and_broader_strategy_observation_sources
+build_protected_cross_stage_strategy_monitor_frame_expansion_non_causal
 ```
 
-Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. Do not expand runtime observation sources without a separate review packet.
+Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. Do not expand runtime observation sources without protected cross-stage evidence and a separate review packet.
 
 ## Runtime Approval Rule
 

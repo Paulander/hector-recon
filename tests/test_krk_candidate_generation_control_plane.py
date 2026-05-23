@@ -203,6 +203,17 @@ assert _broader_source_design_spec.loader is not None
 _broader_source_design = importlib.util.module_from_spec(_broader_source_design_spec)
 _broader_source_design_spec.loader.exec_module(_broader_source_design)
 
+_source_review_spec = importlib.util.spec_from_file_location(
+    "review_krk_plan_capsule_and_broader_strategy_sources_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_plan_capsule_and_broader_strategy_sources_v1.py",
+)
+assert _source_review_spec is not None
+assert _source_review_spec.loader is not None
+_source_review = importlib.util.module_from_spec(_source_review_spec)
+_source_review_spec.loader.exec_module(_source_review)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -1054,3 +1065,69 @@ def test_broader_strategy_sequence_candidate_source_design_requires_separate_rev
     assert payload["decision"]["selector_allowed"] is False
     assert payload["runtime_candidate_generator_changes_implemented"] is False
     assert "runtime_source_expansion_without_review" in payload["forbidden_next_steps"]
+
+
+def test_plan_capsule_and_broader_strategy_source_reviews_block_runtime_expansion():
+    plan = _source_review.plan_capsule_review(
+        source_design={
+            "candidate_source_contracts": [
+                {
+                    "candidate_source": "plan_capsule_sequence_candidate",
+                    "required_fields": ["plan_capsule_id"],
+                }
+            ]
+        },
+        plan_spec={
+            "plan_capsule": {
+                "capsule_id": "krk.plan",
+                "causal_status": "non_causal",
+                "promotion_status": "sandboxed",
+                "ttl_white_moves": 3,
+                "entry_terms": ["entry"],
+                "progress_terms": ["progress"],
+                "exit_terms": ["exit"],
+                "abort_terms": ["abort"],
+                "handoff_exports": {"krk.stage0_basin": 0.1},
+            }
+        },
+        plan_failure={"summary_counters": {"plan_capsule_selected_supported_count": 1}},
+        plan_audit={"diagnosis": {"missing_plan_commitment": "likely"}},
+    )
+    strategy = _source_review.broader_strategy_review(
+        source_design={
+            "candidate_source_contracts": [
+                {
+                    "candidate_source": "broader_strategy_candidate",
+                    "required_fields": ["strategy_id"],
+                }
+            ]
+        },
+        sequence_frames={
+            "frames": [
+                {
+                    "frame_type": "broader_krk_strategy_candidate",
+                    "source_stage": "stage7",
+                    "stage7_challenge_row": True,
+                    "candidate_strategy_family": "terminal.krk.post_plan_stagnation",
+                }
+            ]
+        },
+        monitor_records={"summary": {"monitor_record_count": 1}},
+        internal_terminals={
+            "summary": {
+                "strongest_internal_terminal_candidates": [
+                    "terminal.krk.post_plan_stagnation"
+                ],
+                "causal_ready_terminals": [],
+            }
+        },
+    )
+    combined = _source_review.combined_review(plan, strategy)
+
+    assert plan["decision"]["implementation_allowed_by_this_artifact"] is False
+    assert strategy["decision"]["implementation_allowed_by_this_artifact"] is False
+    assert strategy["readiness"]["stage7_only_evidence"] is True
+    assert combined["decision"]["runtime_changes_allowed"] is False
+    assert combined["decision"]["recommended_next_step"] == (
+        "build_protected_cross_stage_strategy_monitor_frame_expansion_non_causal"
+    )

@@ -1,0 +1,34 @@
+{
+  "broader_strategy_source_status": "broader_strategy_observation_source_schema_ready_but_stage7_only",
+  "causal_status": "non_causal_source_review_decision",
+  "decision": {
+    "guardrails_allowed": false,
+    "implementation_allowed_by_this_artifact": false,
+    "recommended_next_step": "build_protected_cross_stage_strategy_monitor_frame_expansion_non_causal",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "status": "source_reviews_complete_runtime_expansion_not_authorized"
+  },
+  "gameplay_topology_mutation": false,
+  "plan_capsule_source_status": "plan_capsule_sequence_observation_source_schema_ready_but_stage7_only",
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_changes_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_broader_strategy_sequence_candidate_source_review.v1",
+  "shared_blockers": [
+    "evidence_is_stage7_only_or_stage7_dominated",
+    "source_contracts_are_defined_but_runtime_expansion_needs_separate_review",
+    "candidate_generation_remains_separate_from_selection",
+    "capacity_or_monitor_evidence_is_not_ownership_label"
+  ],
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_plan_capsule_sequence_candidate_observation_review_v1.json",
+    "reports/strategy_arbitration/krk_broader_strategy_candidate_observation_review_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}
