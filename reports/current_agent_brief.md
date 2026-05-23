@@ -442,6 +442,7 @@ repair_monitor_observation_source_broadened_default_off_equivalent
 repair_monitor_observation_source_quality_trace_only_retained
 repair_monitor_trace_features_folded_non_causal
 strategy_sequence_trace_features_integrated_selector_still_blocked
+strategy_sequence_dataset_design_v2_ready
 ```
 
 Artifacts:
@@ -452,6 +453,7 @@ Artifacts:
 * `reports/strategy_arbitration/krk_repair_monitor_observation_source_quality_review_v1.md/json`
 * `reports/strategy_arbitration/krk_strategy_sequence_repair_monitor_trace_features_v1.md/json`
 * `reports/strategy_arbitration/krk_strategy_sequence_trace_feature_integration_review_v1.md/json`
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_design_v2.md/json`
 
 The source emits `broader_strategy_candidate` frames for `terminal.krk.repair_needed_monitor` in protected Stage 4/5/6 contexts only. The smoke covered 3 protected cases, emitted 3 repair-monitor frames, and produced 0 selected move/provider deltas, 0 baseline frame leaks, 0 invariant failures, and 0 Stage 7 cases. This is observation-only: `direct_request=false`, `score_delta=0.0`, no selector, no routing, no guardrails, no Stage 7 training/readiness rows, no Stage 8.
 
@@ -463,10 +465,12 @@ The trace-fold artifact converts the 6 repair-monitor observation frames into St
 
 The integration review confirms the trace-feature channel is safe but selector-blocked. Blockers are: trace features are not selector labels, sample size is small, repair-monitor risk terms are not diverse, and the quality signal is not mature.
 
+Dataset design v2 now separates evidence channels explicitly: validated-provider capacity, visible provider proposals, CandidateMoveFrame hypotheses, PlanCapsule sequence candidates, internal monitor candidates, and runtime-observation trace features. The design blocks using trace features or forced-capacity rows as selector labels.
+
 Next safe step:
 
 ```text
-refresh_strategy_sequence_dataset_design_with_trace_feature_channel
+implement_strategy_sequence_dataset_refresh_v2_non_causal
 ```
 
 Do not implement selector behavior, run guardrails, tune scores, route providers, promote Stage 7, or train Stage 8 from this source.
@@ -635,10 +639,10 @@ These artifacts answer:
 Next safe step after observation-only candidate-generation coverage analysis:
 
 ```text
-refresh_strategy_sequence_dataset_design_with_trace_feature_channel
+implement_strategy_sequence_dataset_refresh_v2_non_causal
 ```
 
-Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The narrow repair-monitor observation source has been wired as an explicitly approved, default-off observation-only source and passed broadened protected equivalence; the quality review, trace-fold, and integration review keep it trace-only. The next work is refreshing the strategy-sequence dataset design with an explicit trace-feature channel, not selection.
+Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The narrow repair-monitor observation source has been wired as an explicitly approved, default-off observation-only source and passed broadened protected equivalence; the quality review, trace-fold, integration review, and dataset design v2 keep it trace-only. The next work is a non-causal dataset refresh using explicit evidence channels, not selection.
 
 ## Runtime Approval Rule
 

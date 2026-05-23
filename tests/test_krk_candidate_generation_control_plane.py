@@ -319,6 +319,17 @@ assert _trace_feature_review_spec.loader is not None
 _trace_feature_review = importlib.util.module_from_spec(_trace_feature_review_spec)
 _trace_feature_review_spec.loader.exec_module(_trace_feature_review)
 
+_dataset_design_v2_spec = importlib.util.spec_from_file_location(
+    "write_krk_strategy_sequence_dataset_design_v2",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_strategy_sequence_dataset_design_v2.py",
+)
+assert _dataset_design_v2_spec is not None
+assert _dataset_design_v2_spec.loader is not None
+_dataset_design_v2 = importlib.util.module_from_spec(_dataset_design_v2_spec)
+_dataset_design_v2_spec.loader.exec_module(_dataset_design_v2)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -1600,3 +1611,27 @@ def test_strategy_sequence_trace_feature_review_keeps_selector_blocked():
     assert payload["decision"]["selector_allowed"] is False
     assert payload["decision"]["guardrails_allowed"] is False
     assert "trace_features_are_not_selector_labels" in payload["selector_blockers"]
+
+
+def test_strategy_sequence_dataset_design_v2_separates_trace_and_labels():
+    payload = _dataset_design_v2.build_payload(
+        {
+            "decision": {
+                "status": "strategy_sequence_trace_features_integrated_selector_still_blocked"
+            },
+            "summary": {"trace_frame_count": 6},
+            "selector_blockers": ["trace_features_are_not_selector_labels"],
+        }
+    )
+
+    channels = {item["channel"]: item for item in payload["evidence_channels"]}
+
+    assert payload["decision"]["status"] == "strategy_sequence_dataset_design_v2_ready"
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["partition_rules"]["stage7_training_rows_allowed"] is False
+    assert channels["runtime_observation_trace_feature"]["forbidden_use"] == (
+        "selector_training_or_guardrail_trigger"
+    )
+    assert channels["validated_provider_capacity"]["forbidden_use"] == (
+        "selector_training_label"
+    )
