@@ -444,6 +444,7 @@ repair_monitor_trace_features_folded_non_causal
 strategy_sequence_trace_features_integrated_selector_still_blocked
 strategy_sequence_dataset_design_v2_ready
 strategy_sequence_dataset_v2_refreshed_non_causal_selector_blocked
+strategy_sequence_dataset_v2_quality_candidate_generation_ready_selector_blocked
 ```
 
 Artifacts:
@@ -456,6 +457,7 @@ Artifacts:
 * `reports/strategy_arbitration/krk_strategy_sequence_trace_feature_integration_review_v1.md/json`
 * `reports/strategy_arbitration/krk_strategy_sequence_dataset_design_v2.md/json`
 * `reports/strategy_arbitration/krk_strategy_sequence_dataset_v2.md/json`
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_v2_quality_probe.md/json`
 
 The source emits `broader_strategy_candidate` frames for `terminal.krk.repair_needed_monitor` in protected Stage 4/5/6 contexts only. The smoke covered 3 protected cases, emitted 3 repair-monitor frames, and produced 0 selected move/provider deltas, 0 baseline frame leaks, 0 invariant failures, and 0 Stage 7 cases. This is observation-only: `direct_request=false`, `score_delta=0.0`, no selector, no routing, no guardrails, no Stage 7 training/readiness rows, no Stage 8.
 
@@ -471,10 +473,12 @@ Dataset design v2 now separates evidence channels explicitly: validated-provider
 
 Dataset v2 has 262 rows: 16 validated-provider capacity rows, 87 visible provider proposal rows, 140 CandidateMoveFrame rows, 13 internal monitor rows, and 6 runtime-observation trace-feature rows. It preserves 11 candidate-generation training rows from protected positive capacity evidence and sets selector-training rows to 0 until explicit ownership labels exist. Stage 7 remains held out with 0 readiness-training rows.
 
+The v2 quality probe says the dataset is usable for candidate-generation recall/context work, not selector work. Selector blockers are: no explicit ownership selector rows, small runtime trace-feature channel, and Stage 7 present only as held-out challenge evidence.
+
 Next safe step:
 
 ```text
-probe_strategy_sequence_dataset_v2_quality_non_causal
+review_candidate_generation_training_refresh_or_collect_ownership_labels
 ```
 
 Do not implement selector behavior, run guardrails, tune scores, route providers, promote Stage 7, or train Stage 8 from this source.
@@ -643,10 +647,10 @@ These artifacts answer:
 Next safe step after observation-only candidate-generation coverage analysis:
 
 ```text
-probe_strategy_sequence_dataset_v2_quality_non_causal
+review_candidate_generation_training_refresh_or_collect_ownership_labels
 ```
 
-Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The narrow repair-monitor observation source has been wired as an explicitly approved, default-off observation-only source and passed broadened protected equivalence; the quality review, trace-fold, integration review, dataset design v2, and dataset v2 refresh keep it trace-only and non-causal. The next work is a non-causal dataset quality probe, not selection.
+Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The narrow repair-monitor observation source has been wired as an explicitly approved, default-off observation-only source and passed broadened protected equivalence; the quality review, trace-fold, integration review, dataset design v2, dataset v2 refresh, and quality probe keep it trace-only and non-causal. The next work is choosing between candidate-generation training refresh and collecting explicit ownership labels; neither implies runtime selection.
 
 ## Runtime Approval Rule
 

@@ -341,6 +341,17 @@ assert _dataset_v2_spec.loader is not None
 _dataset_v2 = importlib.util.module_from_spec(_dataset_v2_spec)
 _dataset_v2_spec.loader.exec_module(_dataset_v2)
 
+_dataset_v2_quality_spec = importlib.util.spec_from_file_location(
+    "probe_krk_strategy_sequence_dataset_v2_quality",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "probe_krk_strategy_sequence_dataset_v2_quality.py",
+)
+assert _dataset_v2_quality_spec is not None
+assert _dataset_v2_quality_spec.loader is not None
+_dataset_v2_quality = importlib.util.module_from_spec(_dataset_v2_quality_spec)
+_dataset_v2_quality_spec.loader.exec_module(_dataset_v2_quality)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -1686,3 +1697,56 @@ def test_strategy_sequence_dataset_v2_blocks_selector_and_preserves_generator_ro
     assert payload["rows"][0]["legacy_usable_for_selector_training"] is True
     assert payload["rows"][0]["usable_for_selector_training_v2"] is False
     assert payload["rows"][0]["usable_for_candidate_generation_training_v2"] is True
+
+
+def test_strategy_sequence_dataset_v2_quality_keeps_selector_blocked():
+    payload = _dataset_v2_quality.build_payload(
+        {
+            "runtime_behavior_changed": False,
+            "runtime_defaults_changed": False,
+            "runtime_selector_implemented": False,
+            "runtime_score_changes": False,
+            "runtime_direct_routing": False,
+            "runtime_dtm_or_tablebase_lookup": False,
+            "gameplay_topology_mutation": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": False,
+            "summary": {
+                "row_count_by_channel": {
+                    "validated_provider_capacity": 1,
+                    "visible_provider_proposal": 1,
+                    "candidate_move_frame": 1,
+                    "runtime_observation_trace_feature": 1,
+                },
+                "stage7_readiness_training_row_count": 0,
+            },
+            "rows": [
+                {
+                    "evidence_channel": "validated_provider_capacity",
+                    "stage7_challenge_row": False,
+                    "usable_for_candidate_generation_training_v2": True,
+                    "usable_for_selector_training_v2": False,
+                },
+                {
+                    "evidence_channel": "runtime_observation_trace_feature",
+                    "stage7_challenge_row": False,
+                    "usable_for_candidate_generation_training_v2": False,
+                    "usable_for_selector_training_v2": False,
+                },
+                {
+                    "evidence_channel": "candidate_move_frame",
+                    "stage7_challenge_row": True,
+                    "usable_for_candidate_generation_training_v2": False,
+                    "usable_for_selector_training_v2": False,
+                },
+            ],
+        }
+    )
+
+    assert payload["decision"]["status"] == (
+        "strategy_sequence_dataset_v2_quality_candidate_generation_ready_selector_blocked"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["interpretation"]["candidate_generation_dataset_usable"] is True
+    assert payload["interpretation"]["selector_dataset_usable"] is False
+    assert "no_explicit_ownership_selector_rows" in payload["selector_blockers"]

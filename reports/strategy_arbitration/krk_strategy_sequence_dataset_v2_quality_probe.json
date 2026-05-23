@@ -1,0 +1,57 @@
+{
+  "causal_status": "non_causal_dataset_quality_probe",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "review_candidate_generation_training_refresh_or_collect_ownership_labels",
+    "selector_allowed": false,
+    "status": "strategy_sequence_dataset_v2_quality_candidate_generation_ready_selector_blocked"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "candidate_generation_dataset_usable": true,
+    "reason": "V2 separates evidence channels and has protected positive-capacity rows for candidate-generation recall, but it intentionally has no selector rows because ownership labels are not recovered.",
+    "selector_dataset_usable": false
+  },
+  "quality_checks": {
+    "candidate_generation_rows_present": true,
+    "multiple_evidence_channels_present": true,
+    "runtime_flags_false": true,
+    "selector_rows_absent_without_ownership_labels": true,
+    "stage7_excluded_from_readiness": true,
+    "trace_feature_channel_present": true
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_strategy_sequence_dataset_v2_quality_probe.v1",
+  "selector_blockers": [
+    "no_explicit_ownership_selector_rows",
+    "runtime_trace_feature_channel_small",
+    "stage7_present_only_as_heldout_challenge"
+  ],
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v2.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "candidate_generation_training_row_count": 11,
+    "evidence_channel_count": 5,
+    "protected_row_count": 64,
+    "row_count": 262,
+    "row_count_by_channel": {
+      "candidate_move_frame": 140,
+      "internal_monitor_candidate": 13,
+      "runtime_observation_trace_feature": 6,
+      "validated_provider_capacity": 16,
+      "visible_provider_proposal": 87
+    },
+    "runtime_trace_feature_row_count": 6,
+    "selector_training_row_count": 0,
+    "stage7_challenge_row_count": 198
+  }
+}
