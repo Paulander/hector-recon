@@ -946,6 +946,19 @@ Artifacts:
 
 The existing default-off observation sandbox remains valid for candidate-generation context, but the review does not authorize a new runtime sandbox, selector, scoring/routing changes, guardrails, Stage 4 runtime scope, Stage 7 promotion, or Stage 8 training. Exact move/provider coverage remains partial, so the next safe step is a non-causal scope-gap review before any new runtime boundary.
 
+Latest scope-gap review:
+
+```text
+candidate_generation_scope_gap_review_blocks_new_runtime_boundary
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_candidate_generation_scope_gap_review_v0.md`
+* `reports/strategy_arbitration/krk_candidate_generation_scope_gap_review_v0.json`
+
+The review identifies these blockers before any new runtime boundary: partial exact move/provider coverage, absent ownership-selector labels, Stage 4 runtime scope still unreviewed, missing plan/sequence candidate trace coverage, and Stage 7 held-out-only status. The recommended next safe slice is `candidate_source_gap_manifest_non_causal`.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:
