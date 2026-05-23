@@ -978,6 +978,32 @@ _candidate_generation_v5_boundary = importlib.util.module_from_spec(
 )
 _candidate_generation_v5_boundary_spec.loader.exec_module(_candidate_generation_v5_boundary)
 
+_ownership_label_recovery_spec = importlib.util.spec_from_file_location(
+    "review_krk_ownership_label_recovery_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_ownership_label_recovery_v0.py",
+)
+assert _ownership_label_recovery_spec is not None
+assert _ownership_label_recovery_spec.loader is not None
+_ownership_label_recovery = importlib.util.module_from_spec(
+    _ownership_label_recovery_spec
+)
+_ownership_label_recovery_spec.loader.exec_module(_ownership_label_recovery)
+
+_selector_objective_seed_manifest_spec = importlib.util.spec_from_file_location(
+    "build_krk_selector_objective_seed_manifest_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "build_krk_selector_objective_seed_manifest_v0.py",
+)
+assert _selector_objective_seed_manifest_spec is not None
+assert _selector_objective_seed_manifest_spec.loader is not None
+_selector_objective_seed_manifest = importlib.util.module_from_spec(
+    _selector_objective_seed_manifest_spec
+)
+_selector_objective_seed_manifest_spec.loader.exec_module(_selector_objective_seed_manifest)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -4699,3 +4725,119 @@ def test_candidate_generation_v5_next_boundary_keeps_runtime_blocked():
     assert payload["boundary_assessment"]["exact_trace_enrichment_helped"] is True
     assert payload["boundary_assessment"]["exact_move_provider_coverage_is_still_partial"] is True
     assert "capacity_labels_as_ownership_labels" in payload["still_forbidden"]
+
+
+def test_ownership_label_recovery_review_builds_seed_classes_without_selector():
+    dataset = {
+        "rows": [
+            {
+                "evidence_channel": "runtime_observation_trace_feature",
+                "trace_feature_source": "candidate_generation_refresh_sandbox",
+                "state_id": "state.fail",
+                "source_stage": "stage5",
+                "candidate_provider_id": "krk.edge_trap_close",
+                "capacity_label": "positive_capacity",
+                "stage7_challenge_row": False,
+            },
+            {
+                "evidence_channel": "runtime_observation_trace_feature",
+                "trace_feature_source": "exact_trace_enrichment_sandbox",
+                "state_id": "state.safe",
+                "source_stage": "stage5",
+                "candidate_provider_id": "krk.fence_established",
+                "capacity_label": "positive_capacity",
+                "stage7_challenge_row": False,
+            },
+        ]
+    }
+    ownership = {
+        "summary": {"selector_training_row_count": 0, "stage7_row_count": 0},
+        "rows": [
+            {
+                "state_id": "state.fail",
+                "source_stage": "stage5",
+                "provider_id": "krk.stage0_basin",
+                "provider_family": "stage0_basin",
+                "target_label": "selected_owner_failed",
+            },
+            {
+                "state_id": "state.safe",
+                "source_stage": "stage5",
+                "provider_id": "krk.fence_established",
+                "provider_family": "fence_established",
+                "target_label": "selected_owner_converted",
+            },
+            {
+                "state_id": "state.stage7",
+                "source_stage": "stage7",
+                "provider_id": "krk.box_shrink",
+                "provider_family": "box_shrink",
+                "target_label": "selected_owner_failed",
+            },
+        ],
+    }
+    paired_review = {"summary": {"threshold_passing_model_count": 2, "runtime_feature_passing_model_count": 0}}
+    progress_audit = {"classification": {"primary": "candidate_set_missing_good_alternative"}}
+    boundary = {
+        "decision": {
+            "status": "candidate_generation_v5_next_boundary_context_improved_selector_blocked"
+        }
+    }
+
+    payload = _ownership_label_recovery.build_payload(
+        dataset=dataset,
+        ownership=ownership,
+        paired_review=paired_review,
+        progress_audit=progress_audit,
+        boundary=boundary,
+    )
+
+    assert payload["decision"]["status"] == (
+        "ownership_label_recovery_seed_manifest_ready_selector_blocked"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["summary"]["stage7_row_count"] == 0
+    assert payload["summary"]["selected_failure_with_visible_positive_alternative_count"] == 1
+    assert payload["summary"]["safe_preservation_with_visible_positive_alternative_count"] == 1
+    assert "selector_training" in payload["forbidden_uses"]
+
+
+def test_selector_objective_seed_manifest_remains_non_causal():
+    review = {
+        "summary": {"stage7_row_count": 0},
+        "decision": {"selector_allowed": False},
+        "joined_records": [
+            {
+                "state_id": "state.fail",
+                "source_stage": "stage5",
+                "selected_provider": "krk.stage0_basin",
+                "selected_provider_family": "stage0_basin",
+                "target_label": "selected_owner_failed",
+                "trace_provider_candidate_count": 1,
+                "positive_trace_provider_candidate_count": 1,
+                "trace_sources": ["exact_trace_enrichment_sandbox"],
+                "recovery_class": "selected_failure_with_visible_positive_alternative",
+            },
+            {
+                "state_id": "state.safe",
+                "source_stage": "stage5",
+                "selected_provider": "krk.fence_established",
+                "selected_provider_family": "fence_established",
+                "target_label": "selected_owner_converted",
+                "trace_provider_candidate_count": 1,
+                "positive_trace_provider_candidate_count": 1,
+                "trace_sources": ["candidate_generation_refresh_sandbox"],
+                "recovery_class": "safe_preservation_with_visible_positive_alternative",
+            },
+        ],
+    }
+
+    payload = _selector_objective_seed_manifest.build_payload(review=review)
+
+    assert payload["decision"]["status"] == "selector_objective_seed_manifest_ready_non_causal"
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["summary"]["candidate_switch_contrast_seed_count"] == 1
+    assert payload["summary"]["safe_preservation_contrast_seed_count"] == 1
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert payload["summary"]["stage7_training_row_count"] == 0

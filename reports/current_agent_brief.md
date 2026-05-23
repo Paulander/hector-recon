@@ -1072,6 +1072,22 @@ Artifacts:
 
 The existing default-off observation sandboxes remain useful as trace/context sources. The review does not authorize another runtime sandbox, selector, score changes, routing, guardrails, or promotion. The next safe class is non-causal ownership-label recovery or selector-objective review.
 
+Latest ownership-label recovery slice:
+
+```text
+ownership_label_recovery_seed_manifest_ready_selector_blocked
+selector_objective_seed_manifest_ready_non_causal
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_ownership_label_recovery_review_v0.md`
+* `reports/strategy_arbitration/krk_ownership_label_recovery_review_v0.json`
+* `reports/strategy_arbitration/krk_selector_objective_seed_manifest_v0.md`
+* `reports/strategy_arbitration/krk_selector_objective_seed_manifest_v0.json`
+
+The recovery review joins dataset v5 runtime trace context with existing protected ownership labels. It finds `4` joined protected seed states: `2` selected-owner failures with visible positive-capacity alternatives and `2` safe-preservation cases with visible positive-capacity alternatives. This is useful for non-causal selector-objective design, but it remains underpowered and explicitly has `0` selector-training rows and `0` Stage 7 rows. No runtime selector, scoring, routing, guardrails, or promotion is authorized.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:
