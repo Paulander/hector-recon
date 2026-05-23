@@ -1,0 +1,108 @@
+{
+  "candidate_source_contracts": [
+    {
+      "candidate_source": "plan_capsule_sequence_candidate",
+      "forbidden_uses": [
+        "force_plan_entry",
+        "alter_ttl",
+        "select_provider",
+        "change_scores",
+        "route_to_plan"
+      ],
+      "implementation_status": "design_only_requires_separate_review",
+      "purpose": "Expose bounded sequence/continuation candidates that are already present as plan/capsule evidence.",
+      "required_fields": [
+        "plan_capsule_id",
+        "entry_terms_confirmed",
+        "progress_terms_available",
+        "exit_terms_available",
+        "abort_terms_available",
+        "ttl_white_moves",
+        "handoff_targets",
+        "source_terms",
+        "capacity_evidence_kind",
+        "direct_request=false",
+        "score_delta=0.0",
+        "causal_status=observation_only"
+      ]
+    },
+    {
+      "candidate_source": "broader_strategy_candidate",
+      "forbidden_uses": [
+        "select_strategy",
+        "suppress_current_provider",
+        "boost_provider",
+        "direct_role_to_provider_edge",
+        "mutate_topology"
+      ],
+      "implementation_status": "design_only_requires_separate_review",
+      "purpose": "Expose strategy-level alternatives such as edge-net, king-support continuation, fence repair, mate-basin finish, or owner-exit candidates as visible hypotheses.",
+      "required_fields": [
+        "strategy_id",
+        "strategy_family",
+        "source_monitor_records",
+        "licensed_provider_families",
+        "candidate_scope_terms",
+        "risk_terms",
+        "handoff_or_exit_terms",
+        "capacity_evidence_kind",
+        "direct_request=false",
+        "score_delta=0.0",
+        "causal_status=observation_only"
+      ]
+    }
+  ],
+  "causal_status": "non_causal_design_review",
+  "decision": {
+    "guardrails_allowed": false,
+    "implementation_allowed_by_this_artifact": false,
+    "recommended_next_step": "review_plan_capsule_and_broader_strategy_observation_sources",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "status": "broader_strategy_sequence_candidate_source_design_ready"
+  },
+  "forbidden_next_steps": [
+    "runtime_selector",
+    "score_changes",
+    "provider_routing",
+    "guardrail_campaign",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "hidden_python_controller",
+    "runtime_source_expansion_without_review"
+  ],
+  "gameplay_topology_mutation": false,
+  "motivation": {
+    "gap_review_status": "observation_gap_review_blocks_selector_recommends_capacity_annotation",
+    "quality_decision_status": "candidate_proposal_quality_not_selector_ready",
+    "reason": "provider-pack and legal-move frames are visible but not quality-sufficient; PlanCapsule and broader strategy sources are absent from observation frames"
+  },
+  "recommended_next_artifacts": [
+    "reports/strategy_arbitration/krk_broader_strategy_sequence_candidate_source_review_v1.json",
+    "reports/strategy_arbitration/krk_plan_capsule_sequence_candidate_observation_review_v1.json",
+    "reports/strategy_arbitration/krk_broader_strategy_candidate_observation_review_v1.json"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_changes_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_broader_strategy_sequence_candidate_source_design.v1",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_candidate_proposal_quality_decision_v1.json",
+    "reports/strategy_arbitration/krk_candidate_generation_observation_gap_review_v1.json"
+  ],
+  "source_quality_requirements": [
+    "candidate count must be bounded per state/source",
+    "Stage 7 rows remain held-out challenge only",
+    "capacity evidence remains separate from ownership labels",
+    "source terms must be visible and explainable",
+    "default-off equivalence must pass before any runtime source expansion",
+    "source expansion alone must not trigger guardrails or selector review"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

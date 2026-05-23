@@ -284,6 +284,7 @@ Important artifacts include:
 * `reports/strategy_arbitration/krk_candidate_proposal_quality_dataset_v1.md/json`
 * `reports/strategy_arbitration/krk_candidate_proposal_quality_probe_v1.md/json`
 * `reports/strategy_arbitration/krk_candidate_proposal_quality_decision_v1.md/json`
+* `reports/strategy_arbitration/krk_broader_strategy_sequence_candidate_source_design_v1.md/json`
 
 Current conclusion:
 
@@ -401,6 +402,14 @@ candidate_proposal_quality_not_selector_ready
 ```
 
 The dataset has 569 observation rows and 38 known protected capacity rows. The best simple quality axis (`candidate_move_frame_source`) reaches positive recall 0.633 and negative suppression 0.625, below selector-review thresholds. This closes the current candidate-quality slice: selector work remains blocked, more blind labels are blocked, and the next architecture direction is broader strategy/sequence candidate sources rather than tuning a selector.
+
+Broader strategy/sequence candidate source design is complete:
+
+```text
+broader_strategy_sequence_candidate_source_design_ready
+```
+
+This design defines observation-only contracts for `plan_capsule_sequence_candidate` and `broader_strategy_candidate` sources. It does not authorize implementation. Any runtime source expansion requires a separate review because the current observation sandbox only proved provider-pack and CandidateMoveFrame visibility.
 
 ### Progress-Window Reconsideration Runtime Test
 
@@ -535,6 +544,8 @@ reports/strategy_arbitration/krk_candidate_proposal_quality_probe_v1.md
 reports/strategy_arbitration/krk_candidate_proposal_quality_probe_v1.json
 reports/strategy_arbitration/krk_candidate_proposal_quality_decision_v1.md
 reports/strategy_arbitration/krk_candidate_proposal_quality_decision_v1.json
+reports/strategy_arbitration/krk_broader_strategy_sequence_candidate_source_design_v1.md
+reports/strategy_arbitration/krk_broader_strategy_sequence_candidate_source_design_v1.json
 ```
 
 These artifacts answer:
@@ -552,10 +563,10 @@ These artifacts answer:
 Next safe step after observation-only candidate-generation coverage analysis:
 
 ```text
-design_broader_strategy_sequence_candidate_sources
+review_plan_capsule_and_broader_strategy_observation_sources
 ```
 
-Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The next slice should decide how to expose PlanCapsule sequence candidates and broader KRK strategy candidates as observation-only sources, because current provider/candidate-move frames are visible but not quality-sufficient.
+Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. Do not expand runtime observation sources without a separate review packet.
 
 ## Runtime Approval Rule
 

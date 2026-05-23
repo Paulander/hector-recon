@@ -192,6 +192,17 @@ assert _candidate_quality_decision_spec.loader is not None
 _candidate_quality_decision = importlib.util.module_from_spec(_candidate_quality_decision_spec)
 _candidate_quality_decision_spec.loader.exec_module(_candidate_quality_decision)
 
+_broader_source_design_spec = importlib.util.spec_from_file_location(
+    "write_krk_broader_strategy_sequence_candidate_source_design_v1",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_broader_strategy_sequence_candidate_source_design_v1.py",
+)
+assert _broader_source_design_spec is not None
+assert _broader_source_design_spec.loader is not None
+_broader_source_design = importlib.util.module_from_spec(_broader_source_design_spec)
+_broader_source_design_spec.loader.exec_module(_broader_source_design)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -1024,3 +1035,22 @@ def test_candidate_proposal_quality_decision_blocks_selector_when_probe_weak():
     assert payload["decision"]["recommended_next_step"] == (
         "design_broader_strategy_sequence_candidate_sources"
     )
+
+
+def test_broader_strategy_sequence_candidate_source_design_requires_separate_review():
+    payload = _broader_source_design.build_payload(
+        quality_decision={"decision": {"status": "candidate_proposal_quality_not_selector_ready"}},
+        gap_review={
+            "decision": {
+                "status": "observation_gap_review_blocks_selector_recommends_capacity_annotation"
+            }
+        },
+    )
+
+    assert payload["decision"]["status"] == (
+        "broader_strategy_sequence_candidate_source_design_ready"
+    )
+    assert payload["decision"]["implementation_allowed_by_this_artifact"] is False
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["runtime_candidate_generator_changes_implemented"] is False
+    assert "runtime_source_expansion_without_review" in payload["forbidden_next_steps"]
