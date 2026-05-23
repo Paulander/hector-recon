@@ -1162,6 +1162,22 @@ Artifacts:
 
 The feature probe tests simple visible keys over the `12` seed rows. No runtime-feature model passes thresholds. The best switch-recall model reaches switch recall `0.75` but preserve recall `0.0`; the best preservation/precision model reaches preserve recall `1.0` and switch precision `1.0` but switch recall only `0.5`. The offline outcome oracle remains `1.0`, confirming semantics but not runtime eligibility. Runtime selector work remains blocked; the next safe step is more diverse joined trace/ownership evidence, especially more selected-failure rows and non-stage0 selected-owner rows.
 
+Latest selector-objective diversity gap review:
+
+```text
+selector_objective_diversity_gap_requires_stage4_scope_review
+stage4_joined_trace_ownership_scope_review_ready
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_selector_objective_diversity_gap_review_v0.md`
+* `reports/strategy_arbitration/krk_selector_objective_diversity_gap_review_v0.json`
+* `reports/strategy_arbitration/krk_stage4_joined_trace_ownership_scope_review_packet_v0.md`
+* `reports/strategy_arbitration/krk_stage4_joined_trace_ownership_scope_review_packet_v0.json`
+
+The Stage 5/6 approved scope is nearly exhausted for switch evidence: remaining Stage 5/6 rows have `0` selected-owner failures and only `1` non-stage0 selected-owner row. The remaining selected-owner failures are all Stage 4. A Stage 4 observation-only scope review packet is ready, but it does not authorize implementation or execution. It explicitly requires a new Stage 4 observation source, default-off equivalence, zero selected move/provider/score/routing deltas, and separate approval before any run.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

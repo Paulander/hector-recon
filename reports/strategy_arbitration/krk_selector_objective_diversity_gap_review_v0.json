@@ -1,0 +1,121 @@
+{
+  "causal_status": "non_causal_diversity_gap_review",
+  "decision": {
+    "recommended_next_step": "write_stage4_observation_scope_review_packet",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "status": "selector_objective_diversity_gap_requires_stage4_scope_review"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "new_non_stage0_label_source_needed": true,
+    "runtime_selector_supported": false,
+    "stage4_scope_needed_for_more_switch_contrast": true,
+    "stage5_6_approved_scope_nearly_exhausted_for_switch_evidence": true
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_selector_objective_diversity_gap_review.v0",
+  "source_artifacts": [
+    "reports/krk_ownership_selection_label_dataset_v5.json",
+    "reports/strategy_arbitration/krk_selector_objective_seed_manifest_v1.json",
+    "reports/strategy_arbitration/krk_selector_objective_feature_probe_review_v0.json"
+  ],
+  "stage4_failure_candidates": [
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "frame_id": "cp.krk.state.256a3da30f0f",
+      "provider_family": "stage0_basin",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.256a3da30f0f",
+      "target_label": "selected_owner_failed"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "frame_id": "cp.krk.state.44938ccb8ab7",
+      "provider_family": "stage0_basin",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.44938ccb8ab7",
+      "target_label": "selected_owner_failed"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "frame_id": "cp.krk.state.80080a9a826d",
+      "provider_family": "stage0_basin",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.80080a9a826d",
+      "target_label": "selected_owner_failed"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "frame_id": "cp.krk.state.b09c954a787e",
+      "provider_family": "stage0_basin",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.b09c954a787e",
+      "target_label": "selected_owner_failed"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "frame_id": "cp.krk.state.b11124d658cf",
+      "provider_family": "stage0_basin",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.b11124d658cf",
+      "target_label": "selected_owner_failed"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "frame_id": "cp.krk.state.ea634c29ece7",
+      "provider_family": "stage0_basin",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.ea634c29ece7",
+      "target_label": "selected_owner_failed"
+    }
+  ],
+  "stage5_6_non_stage0_candidates": [
+    {
+      "active_landmark_label": "fence_established",
+      "frame_id": "cp.krk.state.87b1160e68b9",
+      "provider_family": "edge_trap",
+      "selected_provider": "krk.edge_trap_close",
+      "source_stage": "stage5",
+      "state_id": "state.87b1160e68b9",
+      "target_label": "selected_owner_converted"
+    }
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "feature_probe_status": "selector_feature_probe_blocks_runtime_needs_diverse_evidence",
+    "remaining_by_label": {
+      "selected_owner_converted": 23,
+      "selected_owner_failed": 6
+    },
+    "remaining_by_provider_family": {
+      "edge_trap": 1,
+      "stage0_basin": 28
+    },
+    "remaining_by_stage": {
+      "stage4": 19,
+      "stage5": 6,
+      "stage6": 4
+    },
+    "remaining_non_stage0_count": 1,
+    "remaining_ownership_row_count": 29,
+    "remaining_selected_failure_count": 6,
+    "remaining_stage4_selected_failure_count": 6,
+    "remaining_stage5_6_non_stage0_count": 1,
+    "remaining_stage5_6_selected_failure_count": 0,
+    "seed_row_count": 12
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "acceptance_criteria_if_later_run": [
+    "default_off_equivalence",
+    "observation_frames_only",
+    "selected_move_provider_delta_count_zero",
+    "score_delta_count_zero",
+    "stage7_training_row_count_zero",
+    "runtime_dtm_or_tablebase_lookup_false",
+    "gameplay_topology_mutation_false",
+    "joined_trace_ownership_rows_increase"
+  ],
+  "approved_if_later_explicitly_authorized": {
+    "default_off_required": true,
+    "excluded_stages": [
+      "stage5",
+      "stage6",
+      "stage7",
+      "stage8"
+    ],
+    "max_rows": 6,
+    "protected_stages": [
+      "stage4"
+    ],
+    "requires_new_stage4_observation_source": true,
+    "routing_allowed": false,
+    "scope": "stage4_observation_only_trace_collection_for_selector_objective_evidence",
+    "score_delta_allowed": false,
+    "selected_move_provider_delta_allowed": false,
+    "selected_review_row_count": 6,
+    "selector_training_allowed": false
+  },
+  "causal_status": "runtime_review_packet",
+  "decision": {
+    "implementation_authorized_by_this_packet": false,
+    "recommended_next_step": "explicit_approval_required_before_stage4_observation_source_design_or_run",
+    "runtime_changes_allowed_without_explicit_approval": false,
+    "runtime_review_ready": true,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "status": "stage4_joined_trace_ownership_scope_review_ready"
+  },
+  "explicitly_forbidden": [
+    "selector_training",
+    "provider_routing",
+    "score_changes",
+    "capacity_labels_as_ownership_labels",
+    "stage7_training_or_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "gameplay_topology_mutation": false,
+  "implementation_authorized_by_this_packet": false,
+  "review_rows": [
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "frame_id": "cp.krk.state.256a3da30f0f",
+      "provider_family": "stage0_basin",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.256a3da30f0f",
+      "target_label": "selected_owner_failed"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "frame_id": "cp.krk.state.44938ccb8ab7",
+      "provider_family": "stage0_basin",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.44938ccb8ab7",
+      "target_label": "selected_owner_failed"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "frame_id": "cp.krk.state.80080a9a826d",
+      "provider_family": "stage0_basin",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.80080a9a826d",
+      "target_label": "selected_owner_failed"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "frame_id": "cp.krk.state.b09c954a787e",
+      "provider_family": "stage0_basin",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.b09c954a787e",
+      "target_label": "selected_owner_failed"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "frame_id": "cp.krk.state.b11124d658cf",
+      "provider_family": "stage0_basin",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.b11124d658cf",
+      "target_label": "selected_owner_failed"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "frame_id": "cp.krk.state.ea634c29ece7",
+      "provider_family": "stage0_basin",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.ea634c29ece7",
+      "target_label": "selected_owner_failed"
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_stage4_joined_trace_ownership_scope_review_packet.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_selector_objective_diversity_gap_review_v0.json"
+  ],
+  "stage4_risks": [
+    "Stage 4 candidate-generation cells were previously mixed",
+    "Stage 4 observation source must not become a provider selector",
+    "Any Stage 4 source must remain observation-only and default-off"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "why_stage4_is_needed": [
+    "Stage 5/6 approved scope has no remaining selected-failure rows outside the seed",
+    "Stage 4 contains the remaining selected-owner failure contrasts",
+    "The current selector feature probe overfires because switch evidence is too narrow"
+  ]
+}

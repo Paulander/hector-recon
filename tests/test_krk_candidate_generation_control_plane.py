@@ -1116,6 +1116,32 @@ _selector_objective_feature_review = importlib.util.module_from_spec(
 )
 _selector_objective_feature_review_spec.loader.exec_module(_selector_objective_feature_review)
 
+_selector_objective_diversity_gap_spec = importlib.util.spec_from_file_location(
+    "review_krk_selector_objective_diversity_gap_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_selector_objective_diversity_gap_v0.py",
+)
+assert _selector_objective_diversity_gap_spec is not None
+assert _selector_objective_diversity_gap_spec.loader is not None
+_selector_objective_diversity_gap = importlib.util.module_from_spec(
+    _selector_objective_diversity_gap_spec
+)
+_selector_objective_diversity_gap_spec.loader.exec_module(_selector_objective_diversity_gap)
+
+_stage4_joined_trace_scope_packet_spec = importlib.util.spec_from_file_location(
+    "write_krk_stage4_joined_trace_ownership_scope_review_packet_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_stage4_joined_trace_ownership_scope_review_packet_v0.py",
+)
+assert _stage4_joined_trace_scope_packet_spec is not None
+assert _stage4_joined_trace_scope_packet_spec.loader is not None
+_stage4_joined_trace_scope_packet = importlib.util.module_from_spec(
+    _stage4_joined_trace_scope_packet_spec
+)
+_stage4_joined_trace_scope_packet_spec.loader.exec_module(_stage4_joined_trace_scope_packet)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -5366,3 +5392,69 @@ def test_selector_objective_feature_probe_review_blocks_runtime_without_passing_
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert "offline_outcome_oracle_is_not_runtime_feature_eligible" in payload["blockers"]
     assert "more_non_stage0_selected_owner_rows" in payload["recommended_evidence"]
+
+
+def test_selector_objective_diversity_gap_points_to_stage4_scope_review():
+    ownership = {
+        "rows": [
+            {
+                "state_id": "state.stage4.fail",
+                "frame_id": "cp.stage4.fail",
+                "source_stage": "stage4",
+                "active_landmark_label": "edge_trap_wrong_tempo",
+                "provider_id": "krk.stage0_basin",
+                "provider_family": "stage0_basin",
+                "target_label": "selected_owner_failed",
+            },
+            {
+                "state_id": "state.stage5.safe",
+                "frame_id": "cp.stage5.safe",
+                "source_stage": "stage5",
+                "active_landmark_label": "fence_established",
+                "provider_id": "krk.edge_trap_close",
+                "provider_family": "edge_trap",
+                "target_label": "selected_owner_converted",
+            },
+        ]
+    }
+    seed = {"seed_rows": [{"state_id": "state.seed"}]}
+    feature_review = {"decision": {"status": "selector_feature_probe_blocks_runtime_needs_diverse_evidence"}}
+
+    payload = _selector_objective_diversity_gap.build_payload(
+        ownership=ownership,
+        seed=seed,
+        feature_review=feature_review,
+    )
+
+    assert payload["decision"]["status"] == (
+        "selector_objective_diversity_gap_requires_stage4_scope_review"
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["summary"]["remaining_stage4_selected_failure_count"] == 1
+    assert payload["interpretation"]["stage4_scope_needed_for_more_switch_contrast"] is True
+
+
+def test_stage4_joined_trace_scope_packet_requires_explicit_approval():
+    diversity = {
+        "decision": {
+            "status": "selector_objective_diversity_gap_requires_stage4_scope_review"
+        },
+        "stage4_failure_candidates": [
+            {
+                "state_id": "state.stage4.fail",
+                "source_stage": "stage4",
+                "active_landmark_label": "edge_trap_wrong_tempo",
+                "selected_provider": "krk.stage0_basin",
+                "provider_family": "stage0_basin",
+                "target_label": "selected_owner_failed",
+            }
+        ],
+    }
+
+    payload = _stage4_joined_trace_scope_packet.build_payload(diversity=diversity)
+
+    assert payload["decision"]["status"] == "stage4_joined_trace_ownership_scope_review_ready"
+    assert payload["decision"]["implementation_authorized_by_this_packet"] is False
+    assert payload["approved_if_later_explicitly_authorized"]["protected_stages"] == ["stage4"]
+    assert payload["approved_if_later_explicitly_authorized"]["requires_new_stage4_observation_source"] is True
+    assert "selector_training" in payload["explicitly_forbidden"]
