@@ -1004,6 +1004,19 @@ _selector_objective_seed_manifest = importlib.util.module_from_spec(
 )
 _selector_objective_seed_manifest_spec.loader.exec_module(_selector_objective_seed_manifest)
 
+_selector_objective_seed_probe_spec = importlib.util.spec_from_file_location(
+    "probe_krk_selector_objective_seed_manifest_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "probe_krk_selector_objective_seed_manifest_v0.py",
+)
+assert _selector_objective_seed_probe_spec is not None
+assert _selector_objective_seed_probe_spec.loader is not None
+_selector_objective_seed_probe = importlib.util.module_from_spec(
+    _selector_objective_seed_probe_spec
+)
+_selector_objective_seed_probe_spec.loader.exec_module(_selector_objective_seed_probe)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -4841,3 +4854,38 @@ def test_selector_objective_seed_manifest_remains_non_causal():
     assert payload["summary"]["safe_preservation_contrast_seed_count"] == 1
     assert payload["summary"]["selector_training_row_count"] == 0
     assert payload["summary"]["stage7_training_row_count"] == 0
+
+
+def test_selector_objective_seed_probe_confirms_semantics_but_blocks_runtime():
+    manifest = {
+        "summary": {"selector_training_row_count": 0, "stage7_training_row_count": 0},
+        "seed_rows": [
+            {
+                "state_id": "state.fail",
+                "source_stage": "stage5",
+                "selected_provider": "krk.stage0_basin",
+                "selected_owner_label": "selected_owner_failed",
+                "positive_trace_provider_candidate_count": 1,
+                "objective_channel": "candidate_switch_contrast_seed",
+            },
+            {
+                "state_id": "state.safe",
+                "source_stage": "stage5",
+                "selected_provider": "krk.fence_established",
+                "selected_owner_label": "selected_owner_converted",
+                "positive_trace_provider_candidate_count": 1,
+                "objective_channel": "safe_preservation_contrast_seed",
+            },
+        ],
+    }
+
+    payload = _selector_objective_seed_probe.build_payload(manifest=manifest)
+
+    assert payload["decision"]["status"] == (
+        "selector_objective_seed_probe_underpowered_semantics_confirmed"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["summary"]["apparent_semantic_rule_accuracy"] == 1.0
+    assert payload["summary"]["benchmark_underpowered"] is True
+    assert payload["summary"]["runtime_feature_eligible_prediction_count"] == 0
+    assert payload["interpretation"]["selector_training_supported"] is False

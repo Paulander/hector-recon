@@ -1088,6 +1088,19 @@ Artifacts:
 
 The recovery review joins dataset v5 runtime trace context with existing protected ownership labels. It finds `4` joined protected seed states: `2` selected-owner failures with visible positive-capacity alternatives and `2` safe-preservation cases with visible positive-capacity alternatives. This is useful for non-causal selector-objective design, but it remains underpowered and explicitly has `0` selector-training rows and `0` Stage 7 rows. No runtime selector, scoring, routing, guardrails, or promotion is authorized.
 
+Latest selector-objective seed probe:
+
+```text
+selector_objective_seed_probe_underpowered_semantics_confirmed
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_selector_objective_seed_probe_v0.md`
+* `reports/strategy_arbitration/krk_selector_objective_seed_probe_v0.json`
+
+The seed probe confirms the intended switch-vs-preserve semantics on the `4` seed rows, but it is explicitly underpowered and uses offline selected-owner outcome labels. It does not create runtime-feature-eligible predictions. The next safe step is collecting more joined trace/ownership evidence non-causally, not selector training.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:
