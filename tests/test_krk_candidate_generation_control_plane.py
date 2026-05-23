@@ -891,6 +891,19 @@ _exact_trace_enrichment_sandbox = importlib.util.module_from_spec(
 )
 _exact_trace_enrichment_sandbox_spec.loader.exec_module(_exact_trace_enrichment_sandbox)
 
+_exact_trace_enrichment_coverage_spec = importlib.util.spec_from_file_location(
+    "analyze_krk_exact_trace_enrichment_coverage_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "analyze_krk_exact_trace_enrichment_coverage_v0.py",
+)
+assert _exact_trace_enrichment_coverage_spec is not None
+assert _exact_trace_enrichment_coverage_spec.loader is not None
+_exact_trace_enrichment_coverage = importlib.util.module_from_spec(
+    _exact_trace_enrichment_coverage_spec
+)
+_exact_trace_enrichment_coverage_spec.loader.exec_module(_exact_trace_enrichment_coverage)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -4224,3 +4237,60 @@ def test_exact_trace_enrichment_sandbox_summary_enforces_frame_invariants():
     assert summary["score_delta_zero_count"] == 1
     assert summary["invalid_frame_count"] == 0
     assert summary["stage7_held_out_frame_count"] == 0
+
+
+def test_exact_trace_enrichment_coverage_keeps_selector_blocked():
+    sandbox = {
+        "decision": {
+            "status": "exact_trace_enrichment_sandbox_ready_for_non_causal_coverage_analysis"
+        },
+        "summary": {
+            "selected_move_delta_count": 0,
+            "selected_provider_delta_count": 0,
+            "score_delta_count": 0,
+        },
+        "cases": [
+            {
+                "case_id": "case.a",
+                "fen": "fen-a",
+                "enabled_exact_frames": [
+                    {
+                        "candidate_source": "exact_trace_enrichment",
+                        "state_fen": "fen-a",
+                        "provider_id": "krk.edge_trap_close",
+                        "move_id": "a1a2",
+                        "stage": "stage5",
+                        "provider_family": "edge_trap",
+                        "policy": "trace_stage_family_context",
+                        "direct_request": False,
+                        "score_delta": 0.0,
+                        "causal_status": "candidate_generation_only",
+                        "protected_status": "protected_control",
+                    }
+                ],
+            }
+        ],
+    }
+    gaps = {
+        "gap_records": [
+            {
+                "gap_type": "policy_cell_covered_exact_missing",
+                "fen": "fen-a",
+                "candidate_provider_id": "krk.edge_trap_close",
+                "candidate_move_uci": "a1a2",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "edge_trap",
+                "stage7_challenge_row": False,
+            }
+        ]
+    }
+
+    payload = _exact_trace_enrichment_coverage.analyze(sandbox=sandbox, gaps=gaps)
+
+    assert payload["decision"]["status"] == (
+        "exact_trace_enrichment_coverage_ready_for_trace_dataset_refresh"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["summary"]["exact_gap_recall"] == 1.0
+    assert payload["interpretation"]["capacity_gap_labels_are_not_ownership_labels"] is True

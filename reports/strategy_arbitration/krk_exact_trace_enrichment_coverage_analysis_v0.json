@@ -1,0 +1,61 @@
+{
+  "causal_status": "non_causal_candidate_generation_frame_coverage_analysis",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "fold_exact_trace_enrichment_frames_into_non_causal_strategy_sequence_trace_dataset",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "status": "exact_trace_enrichment_coverage_ready_for_trace_dataset_refresh"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "approved_cells_only": true,
+    "capacity_gap_labels_are_not_ownership_labels": true,
+    "exact_gap_coverage_visible": true,
+    "guardrails_supported": false,
+    "negative_or_selector_evidence_added": false,
+    "selector_supported": false
+  },
+  "invalid_frames": [],
+  "missed_target_gap_rows": [],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_exact_trace_enrichment_coverage_analysis.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_exact_trace_enrichment_sandbox_v0.json",
+    "reports/strategy_arbitration/krk_candidate_source_gap_manifest_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "case_count": 1,
+    "emitted_exact_frame_count": 3,
+    "emitted_frame_count_by_policy_cell": {
+      "stage5|edge_trap": 3
+    },
+    "emitted_frame_count_by_provider_family": {
+      "edge_trap": 3
+    },
+    "emitted_frame_count_by_stage": {
+      "stage5": 3
+    },
+    "exact_gap_hits": 3,
+    "exact_gap_recall": 1.0,
+    "invalid_frame_count": 0,
+    "policy_cell_gap_hits": 3,
+    "policy_cell_gap_recall": 1.0,
+    "score_delta_count": 0,
+    "selected_move_delta_count": 0,
+    "selected_provider_delta_count": 0,
+    "stage4_frame_count": 0,
+    "stage7_frame_count": 0,
+    "target_gap_rows_in_sample": 3,
+    "truncated_frame_count": 0,
+    "truncation_count": 0
+  }
+}

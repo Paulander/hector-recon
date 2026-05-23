@@ -1011,6 +1011,19 @@ Artifacts:
 
 The sandbox is opt-in via `--enable-krk-exact-trace-enrichment` and emits `candidate_generation_only` frames from the reviewed exact trace enrichment source only. It passed the small protected smoke: default-off equivalence `true`, enabled smoke `passed`, selected move/provider/score deltas `0`, generated frames `3`, protected frames `3`, Stage 7 held-out frames `0`, direct-request violations `0`, score-delta violations `0`, invalid frames `0`. This does not authorize selector work, scoring/routing changes, guardrails, Stage 7 promotion, or Stage 8 training. The next safe step is non-causal coverage analysis over exact trace enrichment frames.
 
+Latest exact trace enrichment coverage:
+
+```text
+exact_trace_enrichment_coverage_ready_for_trace_dataset_refresh
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_exact_trace_enrichment_coverage_analysis_v0.md`
+* `reports/strategy_arbitration/krk_exact_trace_enrichment_coverage_analysis_v0.json`
+
+Replay-free coverage over the emitted exact trace enrichment frames reports target gap rows in sample `3`, exact gap hits `3`, exact gap recall `1.0`, invalid frames `0`, selected move/provider/score deltas `0`, Stage 4 frames `0`, and Stage 7 frames `0`. This remains candidate-generation context only; it does not add negative/selector evidence. The next safe step is folding exact trace enrichment frames into a non-causal strategy-sequence trace dataset.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:
