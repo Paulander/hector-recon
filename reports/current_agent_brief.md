@@ -272,6 +272,7 @@ Important artifacts include:
 * `reports/strategy_arbitration/krk_strategy_sequence_control_plane_decision_v1.md/json`
 * `reports/strategy_arbitration/krk_candidate_generation_sandbox_review_v0.md/json`
 * `reports/strategy_arbitration/krk_candidate_generation_observation_sandbox_v0.md/json`
+* `reports/strategy_arbitration/krk_candidate_generation_observation_coverage_analysis_v0.md/json`
 
 Current conclusion:
 
@@ -330,6 +331,14 @@ observation_sandbox_ready_for_non_causal_coverage_analysis
 ```
 
 The sandbox emits candidate/proposal frames only when `--enable-krk-candidate-generation-observability` is set. It records `direct_request = false`, `score_delta = 0.0`, `causal_status = observation_only`, candidate source, capacity evidence kind, and protected/held-out status. The smoke generated 93 candidate frames across protected Stage 5/6 and held-out Stage 7 cases with no selected move/provider delta and no h8 playout result/ply delta. It is not a selector and does not authorize guardrails or promotion.
+
+Observation-frame coverage analysis confirms:
+
+```text
+observation_frames_usable_for_non_causal_coverage_analysis
+```
+
+The emitted frames include both `validated_provider_pack` and `candidate_move_frame` sources, expose positive/negative/unknown/held-out capacity classes, and have zero invariant failures. Selector work and guardrails remain blocked; the next safe step is to broaden the observation sample before any selector review.
 
 ### Progress-Window Reconsideration Runtime Test
 
@@ -440,6 +449,8 @@ reports/strategy_arbitration/krk_candidate_generation_sandbox_review_v0.md
 reports/strategy_arbitration/krk_candidate_generation_sandbox_review_v0.json
 reports/strategy_arbitration/krk_candidate_generation_observation_sandbox_v0.md
 reports/strategy_arbitration/krk_candidate_generation_observation_sandbox_v0.json
+reports/strategy_arbitration/krk_candidate_generation_observation_coverage_analysis_v0.md
+reports/strategy_arbitration/krk_candidate_generation_observation_coverage_analysis_v0.json
 ```
 
 These artifacts answer:
@@ -454,13 +465,13 @@ These artifacts answer:
 * What is the first non-causal candidate-generation benchmark?
 * What, if anything, would justify a future default-off candidate-generation sandbox?
 
-Next safe step after observation-only candidate-generation sandbox smoke:
+Next safe step after observation-only candidate-generation coverage analysis:
 
 ```text
-non_causal_candidate_coverage_analysis_using_emitted_frames
+broaden_observation_sample_before_selector_review
 ```
 
-Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The next slice should analyze the emitted observation frames for candidate coverage and usefulness.
+Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The next slice should collect a broader observation-only sample and analyze candidate coverage before any selector review.
 
 ## Runtime Approval Rule
 

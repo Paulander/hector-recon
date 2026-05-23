@@ -1,0 +1,68 @@
+{
+  "causal_status": "non_causal_observation_frame_analysis",
+  "decision": {
+    "guardrails_allowed": false,
+    "recommended_next_step": "broaden_observation_sample_before_selector_review",
+    "runtime_candidate_generator_changes_allowed": false,
+    "selector_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "observation_frames_usable_for_non_causal_coverage_analysis"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "candidate_generation_visible": true,
+    "candidate_move_hypotheses_visible": true,
+    "guardrails_still_blocked": true,
+    "positive_and_negative_capacity_visible": true,
+    "protected_and_heldout_status_visible": true,
+    "selector_still_blocked": true
+  },
+  "invariant_failures": [],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_generation_observation_coverage_analysis.v0",
+  "source_artifact": "reports/strategy_arbitration/krk_candidate_generation_observation_sandbox_v0.json",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "candidate_count_by_case_and_source": {
+      "heldout_stage7": {
+        "candidate_move_frame": 17,
+        "validated_provider_pack": 10
+      },
+      "protected_stage5": {
+        "candidate_move_frame": 22,
+        "validated_provider_pack": 12
+      },
+      "protected_stage6": {
+        "candidate_move_frame": 19,
+        "validated_provider_pack": 13
+      }
+    },
+    "candidate_count_by_source": {
+      "candidate_move_frame": 58,
+      "validated_provider_pack": 35
+    },
+    "capacity_evidence_counts": {
+      "held_out_challenge": 27,
+      "negative_capacity": 2,
+      "positive_capacity": 3,
+      "unknown_capacity": 61
+    },
+    "generated_candidate_count": 93,
+    "invariant_failure_count": 0,
+    "playout_result_or_plies_changed": false,
+    "protected_status_counts": {
+      "held_out_stage7_challenge": 27,
+      "protected_control": 5,
+      "protected_or_unknown": 61
+    },
+    "sampled_frame_count": 93,
+    "selected_move_or_provider_changed": false
+  }
+}

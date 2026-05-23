@@ -94,6 +94,7 @@ def _compact_observation(observation: dict[str, Any]) -> dict[str, Any]:
         "candidate_count_by_source": dict(observation.get("candidate_count_by_source") or {}),
         "capacity_evidence_counts": dict(observation.get("capacity_evidence_counts") or {}),
         "protected_status_counts": dict(observation.get("protected_status_counts") or {}),
+        "frames": list(observation.get("frames") or []),
         "selected_provider_before_observation": observation.get(
             "selected_provider_before_observation"
         ),

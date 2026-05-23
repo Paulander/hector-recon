@@ -60,6 +60,17 @@ assert _observation_smoke_spec.loader is not None
 _observation_smoke = importlib.util.module_from_spec(_observation_smoke_spec)
 _observation_smoke_spec.loader.exec_module(_observation_smoke)
 
+_observation_analysis_spec = importlib.util.spec_from_file_location(
+    "analyze_krk_candidate_generation_observation_frames_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "analyze_krk_candidate_generation_observation_frames_v0.py",
+)
+assert _observation_analysis_spec is not None
+assert _observation_analysis_spec.loader is not None
+_observation_analysis = importlib.util.module_from_spec(_observation_analysis_spec)
+_observation_analysis_spec.loader.exec_module(_observation_analysis)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -370,3 +381,39 @@ def test_candidate_generation_observation_runtime_flag_is_observation_only():
     assert observation["score_delta"] == 0.0
     assert observation["candidate_count"] > 0
     assert observation["sample_frames"][0]["causal_status"] == "observation_only"
+
+
+def test_candidate_generation_observation_coverage_analysis_blocks_selector():
+    payload = {
+        "summary": {
+            "generated_candidate_count": 1,
+            "selected_move_or_provider_changed": False,
+            "playout_result_or_plies_changed": False,
+        },
+        "cases": [
+            {
+                "case_id": "protected",
+                "enabled_decision": {
+                    "observation": {
+                        "frames": [
+                            {
+                                "candidate_source": "validated_provider_pack",
+                                "capacity_evidence_kind": "positive_capacity",
+                                "protected_status": "protected_control",
+                                "direct_request": False,
+                                "score_delta": 0.0,
+                                "causal_status": "observation_only",
+                            }
+                        ]
+                    }
+                },
+            }
+        ],
+    }
+
+    analysis = _observation_analysis.analyze(payload)
+
+    assert analysis["summary"]["invariant_failure_count"] == 0
+    assert analysis["interpretation"]["candidate_generation_visible"] is True
+    assert analysis["decision"]["selector_allowed"] is False
+    assert analysis["decision"]["guardrails_allowed"] is False
