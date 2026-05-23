@@ -402,6 +402,17 @@ assert _capacity_evidence_merge_spec.loader is not None
 _capacity_evidence_merge = importlib.util.module_from_spec(_capacity_evidence_merge_spec)
 _capacity_evidence_merge_spec.loader.exec_module(_capacity_evidence_merge)
 
+_training_refresh_design_spec = importlib.util.spec_from_file_location(
+    "write_krk_candidate_generation_training_refresh_design_v2",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_candidate_generation_training_refresh_design_v2.py",
+)
+assert _training_refresh_design_spec is not None
+assert _training_refresh_design_spec.loader is not None
+_training_refresh_design = importlib.util.module_from_spec(_training_refresh_design_spec)
+_training_refresh_design_spec.loader.exec_module(_training_refresh_design)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -1954,3 +1965,49 @@ def test_candidate_generation_capacity_merge_preserves_selector_block():
     assert payload["summary"]["candidate_generation_training_row_count"] == 1
     assert payload["summary"]["selector_training_row_count"] == 0
     assert all(row["usable_for_selector_training_v2"] is False for row in payload["rows"])
+
+
+def test_candidate_generation_training_refresh_design_blocks_runtime_selector():
+    payload = _training_refresh_design.build_payload(
+        merged_dataset={
+            "summary": {
+                "candidate_generation_training_row_count": 14,
+                "selector_training_row_count": 0,
+                "stage7_readiness_training_row_count": 0,
+            },
+            "decision": {"status": "strategy_sequence_dataset_v2_capacity_merged_non_causal"},
+        },
+        refresh_probe={
+            "summary": {
+                "capacity_row_count": 20,
+                "capacity_label_counts": {
+                    "positive_capacity": 14,
+                    "negative_capacity": 6,
+                },
+                "best_non_oracle_policy": "stage_family_pure_positive_with_support_2",
+                "best_non_oracle_metrics": {
+                    "positive_recall": 0.75,
+                    "positive_precision": 1.0,
+                    "negative_suppression": 1.0,
+                    "false_negative": 2,
+                    "false_positive": 0,
+                },
+                "leave_stage_out_aggregate": {
+                    "positive_recall": 0.5,
+                    "negative_suppression": 0.25,
+                },
+            },
+            "decision": {"status": "candidate_generation_refresh_supported_selector_blocked"},
+        },
+    )
+
+    assert payload["decision"]["status"] == (
+        "candidate_generation_training_refresh_design_ready"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["runtime_candidate_generator_refresh_allowed"] is False
+    assert payload["readiness_assessment"]["candidate_refresh_supported"] is True
+    assert payload["readiness_assessment"]["cross_stage_generalization_supported"] is False
+    assert payload["training_refresh_scope"]["selector_rows_allowed"] is False
+    assert payload["training_refresh_scope"]["stage7_rows_use"] == "held_out_challenge_only"
+    assert "using_capacity_labels_as_ownership_labels" in payload["forbidden_next_steps"]

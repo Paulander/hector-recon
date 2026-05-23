@@ -662,13 +662,26 @@ These artifacts answer:
 * What is the first non-causal candidate-generation benchmark?
 * What, if anything, would justify a future default-off candidate-generation sandbox?
 
-Next safe step after observation-only candidate-generation coverage analysis:
+Current candidate-generation training refresh design:
 
 ```text
-design_candidate_generation_training_refresh_non_causal
+candidate_generation_training_refresh_design_ready
 ```
 
-Do not implement a selector, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training. The narrow repair-monitor observation source has been wired as an explicitly approved, default-off observation-only source and passed broadened protected equivalence; the quality review, trace-fold, integration review, dataset design v2, dataset v2 refresh, quality probe, candidate-generation refresh probe, capacity-evidence manifest, bounded labels, and merged refresh probe keep the path non-causal. Current work should design the candidate-generation training refresh, not runtime selection.
+Artifacts:
+
+* `reports/strategy_arbitration/krk_candidate_generation_training_refresh_design_v2.md`
+* `reports/strategy_arbitration/krk_candidate_generation_training_refresh_design_v2.json`
+
+The design says the merged protected capacity evidence supports candidate-generation refresh design only. The best conservative analysis seed is `stage_family_pure_positive_with_support_2` with protected positive recall `0.737`, positive precision `1.0`, and negative suppression `1.0`, but leave-stage-out generalization remains weak (`0.579` positive recall / `0.111` negative suppression). Therefore no selector, runtime candidate-generator refresh, score change, provider route, guardrail campaign, Stage 7 promotion, or Stage 8 training is authorized.
+
+Next safe step:
+
+```text
+candidate_generation_training_refresh_benchmark_or_cross_stage_capacity_review
+```
+
+The narrow repair-monitor observation source has been wired as an explicitly approved, default-off observation-only source and passed broadened protected equivalence; the quality review, trace-fold, integration review, dataset design v2, dataset v2 refresh, quality probe, candidate-generation refresh probe, capacity-evidence manifest, bounded labels, merged refresh probe, and training-refresh design keep the path non-causal. Current work should improve cross-stage candidate-generation evidence or benchmark the refresh offline, not runtime selection.
 
 ## Runtime Approval Rule
 
