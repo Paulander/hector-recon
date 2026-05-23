@@ -1043,6 +1043,22 @@ Artifacts:
 
 Dataset v5 appends the exact trace enrichment frames as trace-only context: row count `310`, exact trace enrichment rows `3`, runtime trace rows `34`, candidate-generation training rows `26`, selector training rows `0`, and Stage 7 readiness/training rows `0`. The quality probe keeps selector/guardrail authorization blocked because runtime trace features remain context, not ownership labels.
 
+Latest v5 context benchmark:
+
+```text
+strategy_sequence_dataset_v5_context_integrated_selector_still_blocked
+candidate_generation_v5_context_useful_selector_still_blocked
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_v5_context_review.md`
+* `reports/strategy_arbitration/krk_strategy_sequence_dataset_v5_context_review.json`
+* `reports/strategy_arbitration/krk_candidate_generation_v5_context_benchmark.md`
+* `reports/strategy_arbitration/krk_candidate_generation_v5_context_benchmark.json`
+
+Dataset v5 improves exact positive-capacity trace coverage from refresh-only `5/26` to combined refresh-plus-exact `8/26`, while keeping exact/stage-family/policy-cell negative exposure at `0/10`. This supports candidate-generation context usefulness only. Selector training remains blocked because the dataset still has `0` ownership selector rows and `0` Stage 7 readiness/training rows.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

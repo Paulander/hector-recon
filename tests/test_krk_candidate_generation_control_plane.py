@@ -939,6 +939,32 @@ assert _dataset_v5_quality_spec.loader is not None
 _dataset_v5_quality = importlib.util.module_from_spec(_dataset_v5_quality_spec)
 _dataset_v5_quality_spec.loader.exec_module(_dataset_v5_quality)
 
+_dataset_v5_context_spec = importlib.util.spec_from_file_location(
+    "review_krk_strategy_sequence_dataset_v5_context",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_strategy_sequence_dataset_v5_context.py",
+)
+assert _dataset_v5_context_spec is not None
+assert _dataset_v5_context_spec.loader is not None
+_dataset_v5_context = importlib.util.module_from_spec(_dataset_v5_context_spec)
+_dataset_v5_context_spec.loader.exec_module(_dataset_v5_context)
+
+_candidate_generation_v5_benchmark_spec = importlib.util.spec_from_file_location(
+    "benchmark_krk_candidate_generation_v5_context",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "benchmark_krk_candidate_generation_v5_context.py",
+)
+assert _candidate_generation_v5_benchmark_spec is not None
+assert _candidate_generation_v5_benchmark_spec.loader is not None
+_candidate_generation_v5_benchmark = importlib.util.module_from_spec(
+    _candidate_generation_v5_benchmark_spec
+)
+_candidate_generation_v5_benchmark_spec.loader.exec_module(
+    _candidate_generation_v5_benchmark
+)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -4480,3 +4506,151 @@ def test_strategy_sequence_dataset_v5_adds_exact_trace_without_selector_rows():
     )
     assert probe["summary"]["exact_trace_enrichment_trace_row_count"] == 1
     assert probe["interpretation"]["selector_dataset_usable"] is False
+
+
+def test_strategy_sequence_dataset_v5_context_review_keeps_selector_blocked():
+    dataset = {
+        "summary": {
+            "row_count": 12,
+            "candidate_generation_training_row_count": 2,
+            "selector_training_row_count": 0,
+            "stage7_readiness_training_row_count": 0,
+            "runtime_trace_feature_row_count": 3,
+            "runtime_trace_feature_row_count_by_source": {
+                "candidate_generation_refresh_sandbox": 1,
+                "exact_trace_enrichment_sandbox": 1,
+                "repair_monitor_observation": 1,
+            },
+        },
+        "decision": {"selector_allowed": False},
+    }
+    quality = {
+        "summary": {
+            "row_count": 12,
+            "candidate_generation_refresh_trace_row_count": 1,
+            "exact_trace_enrichment_trace_row_count": 1,
+        },
+        "decision": {
+            "selector_allowed": False,
+            "status": "strategy_sequence_dataset_v5_quality_candidate_generation_context_ready_selector_blocked",
+        },
+        "selector_blockers": ["capacity_rows_are_candidate_generation_not_ownership_labels"],
+    }
+
+    payload = _dataset_v5_context.build_payload(dataset=dataset, quality=quality)
+
+    assert payload["decision"]["status"] == (
+        "strategy_sequence_dataset_v5_context_integrated_selector_still_blocked"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["guardrails_allowed"] is False
+    assert payload["summary"]["exact_trace_enrichment_trace_row_count"] == 1
+    assert "exact_trace_enrichment_source_integrated" in payload["validated_progress"]
+
+
+def test_candidate_generation_v5_context_benchmark_counts_exact_enrichment():
+    dataset = {
+        "summary": {
+            "selector_training_row_count": 0,
+            "stage7_readiness_training_row_count": 0,
+        },
+        "rows": [
+            {
+                "evidence_channel": "validated_provider_capacity",
+                "fen": "fen-a",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "stage0_basin",
+                "candidate_provider_id": "krk.stage0_basin",
+                "candidate_move_uci": "a1a2",
+                "capacity_label": "positive_capacity",
+                "stage7_challenge_row": False,
+            },
+            {
+                "evidence_channel": "validated_provider_capacity",
+                "fen": "fen-b",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "edge_trap",
+                "candidate_provider_id": "krk.edge_trap_close",
+                "candidate_move_uci": "b1b2",
+                "capacity_label": "positive_capacity",
+                "stage7_challenge_row": False,
+            },
+            {
+                "evidence_channel": "validated_provider_capacity",
+                "fen": "fen-c",
+                "source_stage": "stage6",
+                "candidate_strategy_family": "stage0_basin",
+                "candidate_provider_id": "krk.stage0_basin",
+                "candidate_move_uci": "c1c2",
+                "capacity_label": "negative_capacity",
+                "stage7_challenge_row": False,
+            },
+            {
+                "evidence_channel": "runtime_observation_trace_feature",
+                "trace_feature_source": "candidate_generation_refresh_sandbox",
+                "fen": "fen-a",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "stage0_basin",
+                "candidate_provider_id": "krk.stage0_basin",
+                "candidate_move_uci": "a1a2",
+                "policy_cell": "stage5|stage0_basin",
+                "stage7_challenge_row": False,
+            },
+            {
+                "evidence_channel": "runtime_observation_trace_feature",
+                "trace_feature_source": "exact_trace_enrichment_sandbox",
+                "fen": "fen-b",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "edge_trap",
+                "candidate_provider_id": "krk.edge_trap_close",
+                "candidate_move_uci": "b1b2",
+                "policy_cell": "stage5|edge_trap",
+                "stage7_challenge_row": False,
+            },
+            {
+                "evidence_channel": "runtime_observation_trace_feature",
+                "trace_feature_source": "repair_monitor_observation",
+                "fen": "fen-z",
+                "source_stage": "stage5",
+                "candidate_strategy_family": "repair",
+                "stage7_challenge_row": False,
+            },
+        ],
+    }
+    quality = {"decision": {"selector_allowed": False}}
+    context = {"decision": {"selector_allowed": False}}
+    v4_benchmark = {
+        "summary": {"exact_positive_capacity_recall_from_refresh_trace": 0.5}
+    }
+
+    payload = _candidate_generation_v5_benchmark.build_payload(
+        dataset=dataset,
+        quality=quality,
+        context=context,
+        v4_benchmark=v4_benchmark,
+    )
+
+    assert payload["decision"]["status"] == (
+        "candidate_generation_v5_context_useful_selector_still_blocked"
+    )
+    assert payload["decision"]["selector_allowed"] is False
+    assert (
+        payload["summary"][
+            "exact_positive_capacity_recall_from_candidate_generation_trace"
+        ]
+        == 1.0
+    )
+    assert (
+        payload["summary"][
+            "exact_positive_capacity_recall_from_exact_trace_enrichment"
+        ]
+        == 0.5
+    )
+    assert (
+        payload["summary"][
+            "exact_negative_capacity_exposure_from_candidate_generation_trace"
+        ]
+        == 0.0
+    )
+    assert payload["interpretation"]["capacity_labels_are_not_ownership_labels"] is True
+    assert payload["interpretation"]["exact_trace_enrichment_improved_exact_coverage"] is True

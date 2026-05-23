@@ -1,0 +1,67 @@
+{
+  "causal_status": "non_causal_context_benchmark",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "candidate_generation_v5_boundary_review_or_ownership_label_recovery",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "status": "candidate_generation_v5_context_useful_selector_still_blocked"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "capacity_labels_are_not_ownership_labels": true,
+    "context_useful_for_candidate_generation_analysis": true,
+    "exact_trace_enrichment_improved_exact_coverage": true,
+    "guardrails_supported": false,
+    "risk": "V5 exact trace enrichment improves exact candidate visibility for reviewed policy-cell-covered gaps, but these rows remain trace context and do not provide ownership selector labels.",
+    "selector_supported": false,
+    "trace_rows_are_not_training_labels": true
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_generation_v5_context_benchmark.v1",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v5.json",
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v5_quality_probe.json",
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v5_context_review.json",
+    "reports/strategy_arbitration/krk_candidate_generation_v4_context_benchmark.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "candidate_generation_trace_row_count": 28,
+    "capacity_row_count": 36,
+    "exact_negative_capacity_exposure_from_candidate_generation_trace": 0.0,
+    "exact_positive_capacity_covered_count": 8,
+    "exact_positive_capacity_recall_delta_vs_v4": 0.11538461538461539,
+    "exact_positive_capacity_recall_from_candidate_generation_trace": 0.3076923076923077,
+    "exact_positive_capacity_recall_from_exact_trace_enrichment": 0.11538461538461539,
+    "exact_positive_capacity_recall_from_refresh_trace": 0.19230769230769232,
+    "exact_trace_enrichment_positive_capacity_covered_count": 3,
+    "exact_trace_enrichment_trace_row_count": 3,
+    "negative_capacity_count": 10,
+    "policy_cell_negative_capacity_exposed_count": 0,
+    "policy_cell_negative_capacity_exposure_from_candidate_generation_trace": 0.0,
+    "policy_cell_positive_capacity_covered_count": 20,
+    "policy_cell_positive_capacity_recall_from_candidate_generation_trace": 0.7692307692307693,
+    "positive_capacity_count": 26,
+    "refresh_trace_row_count": 25,
+    "runtime_trace_row_count": 34,
+    "runtime_trace_row_count_by_source": {
+      "candidate_generation_refresh_sandbox": 25,
+      "exact_trace_enrichment_sandbox": 3,
+      "repair_monitor_observation": 6
+    },
+    "selector_training_row_count": 0,
+    "stage7_readiness_training_row_count": 0,
+    "stage_family_negative_capacity_exposure_from_candidate_generation_trace": 0.0,
+    "stage_family_positive_capacity_recall_from_candidate_generation_trace": 0.7692307692307693,
+    "state_provider_positive_capacity_recall_from_candidate_generation_trace": 0.3076923076923077,
+    "v4_exact_positive_capacity_recall_from_refresh_trace": 0.19230769230769232
+  }
+}
