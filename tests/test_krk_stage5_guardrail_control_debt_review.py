@@ -50,6 +50,39 @@ assert _replacement_review_spec.loader is not None
 _replacement_review = importlib.util.module_from_spec(_replacement_review_spec)
 _replacement_review_spec.loader.exec_module(_replacement_review)
 
+_stage4_review_spec = importlib.util.spec_from_file_location(
+    "review_krk_retry1_stage4_caveat_control_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_retry1_stage4_caveat_control_v0.py",
+)
+assert _stage4_review_spec is not None
+assert _stage4_review_spec.loader is not None
+_stage4_review = importlib.util.module_from_spec(_stage4_review_spec)
+_stage4_review_spec.loader.exec_module(_stage4_review)
+
+_preservation_checks_spec = importlib.util.spec_from_file_location(
+    "write_krk_retry1_preservation_checks_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_retry1_preservation_checks_v0.py",
+)
+assert _preservation_checks_spec is not None
+assert _preservation_checks_spec.loader is not None
+_preservation_checks = importlib.util.module_from_spec(_preservation_checks_spec)
+_preservation_checks_spec.loader.exec_module(_preservation_checks)
+
+_snapshot_manifest_spec = importlib.util.spec_from_file_location(
+    "write_krk_retry1_protected_stack_snapshot_manifest_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_retry1_protected_stack_snapshot_manifest_v0.py",
+)
+assert _snapshot_manifest_spec is not None
+assert _snapshot_manifest_spec.loader is not None
+_snapshot_manifest = importlib.util.module_from_spec(_snapshot_manifest_spec)
+_snapshot_manifest_spec.loader.exec_module(_snapshot_manifest)
+
 
 def _write_json(path: Path, payload: dict) -> Path:
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
@@ -239,4 +272,73 @@ def test_retry1_replacement_readiness_review_allows_only_remaining_checks():
     assert "m1_m4_preservation_suite" in required_checks
     assert "kpk_kqk_bridge_preservation" in required_checks
     assert payload["invariants"]["runtime_defaults_changed"] is False
+    assert payload["invariants"]["stage8_training"] is False
+
+
+def test_retry1_stage4_caveat_control_review_artifact_blocks_replacement():
+    payload = json.loads(
+        Path("reports/krk_clean_retrain_retry1_stage4_caveat_control_review_v0.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["schema_version"] == "krk_clean_retrain_retry1_stage4_caveat_control_review.v0"
+    assert payload["status"] == "stage4_caveat_reproduces_in_base_control_no_overlay_regression"
+    assert payload["decision"]["stage4_overlay_regressed_vs_base_control"] is False
+    assert payload["decision"]["stage4_caveat_reproduces_in_base_control"] is True
+    assert payload["decision"]["clean_stack_replacement_allowed"] is False
+    assert payload["delta_overlay_vs_base_control"]["mate_delta"] == 0
+    assert payload["delta_overlay_vs_base_control"]["max_plies_delta"] == 0
+    assert payload["delta_overlay_vs_base_control"]["shadow_candidate_delta"] == 0
+    assert payload["stage4_overlay"]["mate"] == 268
+    assert payload["stage4_base_control"]["mate"] == 268
+    assert payload["invariants"]["runtime_defaults_changed"] is False
+    assert payload["invariants"]["stage7_promotion"] is False
+    assert payload["invariants"]["stage8_training"] is False
+
+
+def test_retry1_preservation_checks_artifact_passes_but_does_not_replace():
+    payload = json.loads(
+        Path("reports/krk_clean_retrain_retry1_preservation_checks_v0.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["schema_version"] == "krk_clean_retrain_retry1_preservation_checks.v0"
+    assert payload["status"] == "retry1_m1_m4_and_bridge_preservation_checks_passed"
+    assert payload["decision"]["stage4_caveat_control_review_passed"] is True
+    assert payload["decision"]["m1_m4_preservation_passed"] is True
+    assert payload["decision"]["kpk_kqk_bridge_preservation_passed"] is True
+    assert payload["decision"]["clean_stack_replacement_allowed"] is False
+    assert payload["test_run"]["result"] == "passed"
+    assert payload["test_run"]["passed_count"] == 78
+    assert "protected_stack_snapshot_manifest" in payload["remaining_required_checks"]
+    assert payload["invariants"]["runtime_defaults_changed"] is False
+    assert payload["invariants"]["gameplay_topology_mutation"] is False
+
+
+def test_retry1_snapshot_manifest_records_paths_without_replacement():
+    payload = json.loads(
+        Path(
+            "reports/krk_clean_retrain_retry1_protected_stack_snapshot_manifest_v0.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert (
+        payload["schema_version"]
+        == "krk_clean_retrain_retry1_protected_stack_snapshot_manifest.v0"
+    )
+    assert payload["status"] == "retry1_protected_stack_snapshot_manifest_ready_no_replacement"
+    assert payload["decision"]["manifest_records_current_protected_stack"] is True
+    assert payload["decision"]["manifest_records_retry1_candidate_stack"] is True
+    assert payload["decision"]["all_referenced_paths_exist"] is True
+    assert payload["decision"]["clean_stack_replacement_allowed_by_manifest"] is False
+    assert payload["path_existence"]["missing_paths"] == []
+    assert "stage5_fence" in payload["current_protected_stack"]
+    assert "stage6_drive_overlay" in payload["current_protected_stack"]
+    assert "stage5_fence" in payload["retry1_candidate_stack"]
+    assert "stage6_drive_overlay" in payload["retry1_candidate_stack"]
+    assert payload["invariants"]["files_copied_or_replaced"] is False
+    assert payload["invariants"]["runtime_defaults_changed"] is False
+    assert payload["invariants"]["stage7_promotion"] is False
     assert payload["invariants"]["stage8_training"] is False

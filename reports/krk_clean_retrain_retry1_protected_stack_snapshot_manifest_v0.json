@@ -1,0 +1,99 @@
+{
+  "created_at": "2026-05-24T23:20:03+02:00",
+  "current_protected_stack": {
+    "stage5_fence": {
+      "provider": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+      "run_manifest": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/run_manifest.json",
+      "topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/topology/krk_entry_topology.json"
+    },
+    "stage6_drive_overlay": {
+      "promotion_eval": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/promotion_eval_stage6_overlay.json",
+      "stage4_caveat_control": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/stage4_wrong_tempo_stage5_base_control_300_seed7_h40.json",
+      "stage5_guardrail": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/stage5_fence_overlay_300_seed7_h40.json",
+      "stage6_validation": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/stage6_drive_overlay_300_seed7_h40.json",
+      "topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json"
+    }
+  },
+  "decision": {
+    "all_referenced_paths_exist": true,
+    "clean_stack_replacement_allowed_by_manifest": false,
+    "manifest_records_current_protected_stack": true,
+    "manifest_records_retry1_candidate_stack": true,
+    "recommended_next_step": "write_clean_stack_replacement_review_packet_before_any_file_change"
+  },
+  "invariants": {
+    "files_copied_or_replaced": false,
+    "gameplay_topology_mutation": false,
+    "runtime_defaults_changed": false,
+    "runtime_direct_routing": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "runtime_score_changes": false,
+    "runtime_selector_implemented": false,
+    "stage7_promotion": false,
+    "stage8_training": false
+  },
+  "path_existence": {
+    "current_protected_stack": {
+      "stage5_fence": {
+        "provider": true,
+        "run_manifest": true,
+        "topology": true
+      },
+      "stage6_drive_overlay": {
+        "promotion_eval": true,
+        "stage4_caveat_control": true,
+        "stage5_guardrail": true,
+        "stage6_validation": true,
+        "topology": true
+      }
+    },
+    "missing_paths": [],
+    "retry1_candidate_stack": {
+      "stage5_fence": {
+        "provider": true,
+        "run_manifest": true,
+        "topology": true
+      },
+      "stage6_drive_overlay": {
+        "promotion_eval": true,
+        "provider": true,
+        "stage4_caveat_control": true,
+        "stage5_guardrail": true,
+        "stage6_validation": true,
+        "topology": true
+      }
+    }
+  },
+  "retry1_candidate_stack": {
+    "stage5_fence": {
+      "provider": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage5_fence_handoff/baseline/best_by_stage/fence_established.pkl",
+      "run_manifest": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage5_fence_handoff/baseline/curriculum_history.json",
+      "topology": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage5_fence_handoff/topology/krk_entry_topology.json"
+    },
+    "stage6_drive_overlay": {
+      "promotion_eval": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/promotion_eval_stage6_overlay_profile_bonus.json",
+      "provider": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_drive_overlay_candidate/baseline/best_by_stage/drive_to_edge.pkl",
+      "stage4_caveat_control": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage4_wrong_tempo_stage5_base_control_300_seed7_h40_profile_bonus.json",
+      "stage5_guardrail": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+      "stage6_validation": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage6_drive_overlay_300_seed7_h40_profile_bonus.json",
+      "topology": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/topology/krk_entry_topology.json"
+    }
+  },
+  "rollback_requirements": [
+    "Record exact current protected topology/provider paths before any replacement.",
+    "Do not delete or overwrite current protected snapshots.",
+    "Any replacement packet must name the rollback source paths and candidate target paths explicitly.",
+    "A rollback must restore the previous protected topology/provider pointers without retraining.",
+    "Stage 7 remains held-out/quarantined and cannot be included in the replacement stack."
+  ],
+  "schema_version": "krk_clean_retrain_retry1_protected_stack_snapshot_manifest.v0",
+  "source_artifacts": [
+    "reports/krk_clean_retrain_retry1_stage4_caveat_control_review_v0.json",
+    "reports/krk_clean_retrain_retry1_preservation_checks_v0.json"
+  ],
+  "status": "retry1_protected_stack_snapshot_manifest_ready_no_replacement",
+  "upstream_status": {
+    "preservation_checks": "retry1_m1_m4_and_bridge_preservation_checks_passed",
+    "stage4_caveat_control_review": "stage4_caveat_reproduces_in_base_control_no_overlay_regression"
+  }
+}

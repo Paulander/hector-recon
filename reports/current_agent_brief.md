@@ -1195,6 +1195,9 @@ stage5_one_ply_guardrail_control_debt_confirmed
 stage5_guardrail_semantics_split_defined
 stage5_local_reward_contract_debt_is_guardrail_semantics_debt
 retry1_ready_for_remaining_preservation_checks_not_replacement
+stage4_caveat_reproduces_in_base_control_no_overlay_regression
+retry1_m1_m4_and_bridge_preservation_checks_passed
+retry1_protected_stack_snapshot_manifest_ready_no_replacement
 ```
 
 Artifacts:
@@ -1227,6 +1230,12 @@ Artifacts:
 * `reports/krk_stage5_local_reward_contract_debt_audit_v0.json`
 * `reports/krk_clean_retrain_retry1_replacement_readiness_review_v0.md`
 * `reports/krk_clean_retrain_retry1_replacement_readiness_review_v0.json`
+* `reports/krk_clean_retrain_retry1_stage4_caveat_control_review_v0.md`
+* `reports/krk_clean_retrain_retry1_stage4_caveat_control_review_v0.json`
+* `reports/krk_clean_retrain_retry1_preservation_checks_v0.md`
+* `reports/krk_clean_retrain_retry1_preservation_checks_v0.json`
+* `reports/krk_clean_retrain_retry1_protected_stack_snapshot_manifest_v0.md`
+* `reports/krk_clean_retrain_retry1_protected_stack_snapshot_manifest_v0.json`
 
 The approved candidate-generation refresh sandbox was rerun and remains valid:
 
@@ -1253,7 +1262,13 @@ The Stage 5 control-debt review confirms that the one-ply debt is not a Stage 6 
 
 The Stage 5 guardrail semantics split is now formalized. `stage5.conversion_preservation_guardrail` protects conversion behavior by comparing the candidate overlay against the paired Stage 5 base control. `stage5.local_reward_contract_guardrail` tracks local reward/visible-fence-contract debt and blocks clean-stack replacement when that debt reproduces in the base control. The offline promotion evaluator now reports `promotion_status_semantics` and `guardrail_semantics`; the corrected retry1 result is `overlay_only_due_to_guardrail_control_debt`, not `promoted` and not Stage 6 quarantine.
 
-The Stage 5 local reward/contract debt audit classifies the debt as guardrail semantics debt. The six repeated Stage 5 patterns all preserve h40 conversion; 156/300 samples show visible fence contract plus conversion without local dense reward confirmation, and the same pattern signature appears in the paired base control. Retry1 is therefore ready only for remaining preservation checks, not protected-stack replacement. Required next checks are Stage 4 overlay-caveat/control review, M1-M4 preservation, KPK→KQK bridge preservation, and a protected-stack snapshot/rollback manifest before any replacement packet.
+The Stage 5 local reward/contract debt audit classifies the debt as guardrail semantics debt. The six repeated Stage 5 patterns all preserve h40 conversion; 156/300 samples show visible fence contract plus conversion without local dense reward confirmation, and the same pattern signature appears in the paired base control.
+
+The Stage 4 overlay-caveat/control review is complete. Retry1 Stage 6 overlay and the paired Stage 5 base control are identical on the Stage 4 wrong-tempo h40 check under the corrected historical validation bonus: both get 238/300 one-ply improved, 62/300 worsened, 268/300 h40 mates, 32/300 max_plies, and 0 shadow candidates. This means the Stage 4 caveat is real but not a retry1 Stage 6 overlay regression.
+
+The retry1 M1-M4 and KPK→KQK bridge preservation checks are complete. Focused preservation tests passed (`78 passed`) with only pre-existing `PytestReturnNotNoneWarning` warnings in `tests/test_subgraph_delegation.py`.
+
+The protected-stack snapshot/rollback manifest is complete and records current protected Stage 5/6 stack paths plus retry1 candidate stack paths. All referenced paths exist. The manifest is reference-only: it does not copy, replace, delete, promote, train, route, score, mutate topology, or change runtime defaults. Clean protected-stack replacement is still not allowed by these artifacts; the next possible step is a clean-stack replacement review packet before any file change.
 
 ## Runtime Approval Rule
 
