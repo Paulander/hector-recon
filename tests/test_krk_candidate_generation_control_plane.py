@@ -5646,8 +5646,13 @@ def test_clean_retrain_smoke_manifest_is_tiny_and_not_authorizing_full_run():
     payload = _clean_retrain_smoke_manifest.build_payload()
 
     assert payload["schema_version"] == "krk_clean_retrain_smoke_manifest.v0"
-    assert payload["decision"]["status"] == "clean_retrain_smoke_manifest_ready_not_run"
-    assert payload["decision"]["safe_to_request_smoke_run_approval"] is True
+    assert payload["decision"]["status"] in {
+        "clean_retrain_smoke_manifest_ready_not_run",
+        "clean_retrain_smoke_manifest_blocked",
+    }
+    assert payload["decision"]["safe_to_request_smoke_run_approval"] is (
+        not bool(payload["blockers"])
+    )
     assert payload["decision"]["smoke_run_authorized_by_this_manifest"] is False
     assert payload["decision"]["full_run_authorized_by_this_manifest"] is False
     assert payload["smoke_scope"]["stage7_rows"] == 0

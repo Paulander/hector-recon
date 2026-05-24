@@ -1,0 +1,37 @@
+{
+  "schema_version": "krk_clean_retrain_smoke_result.v0",
+  "causal_status": "bounded_smoke_run_result",
+  "source_artifacts": [
+    "reports/krk_clean_retrain_smoke_manifest_v0.json"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_selector_implemented": false,
+  "runtime_score_changes": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "gameplay_topology_mutation": false,
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "selector_training_allowed": false,
+  "summary": {
+    "smoke_root": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_smoke/stage2a_edge_trap_close_smoke",
+    "train_command_exit_code": 0,
+    "compile_command_exit_code": 0,
+    "parse_command_exit_code": 0,
+    "learner_written": true,
+    "topology_written": true,
+    "topology_node_count": 81,
+    "topology_edge_count": 160,
+    "stage1_skipped": true,
+    "stage1_skip_reason": "Stage 0 did not produce mature sensors or mate_in_1 goal prototypes under the intentionally tiny smoke settings.",
+    "command_plumbing_validated": true,
+    "curriculum_semantics_validated": false
+  },
+  "decision": {
+    "status": "clean_retrain_smoke_plumbing_passed_semantic_smoke_too_tiny",
+    "full_run_authorized_by_this_artifact": false,
+    "runtime_selector_allowed": false,
+    "recommended_next_step": "run_full_clean_retrain_or_create_larger_semantic_smoke"
+  }
+}
