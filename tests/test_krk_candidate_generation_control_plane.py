@@ -1142,6 +1142,19 @@ _stage4_joined_trace_scope_packet = importlib.util.module_from_spec(
 )
 _stage4_joined_trace_scope_packet_spec.loader.exec_module(_stage4_joined_trace_scope_packet)
 
+_clean_curriculum_checkpoint_plan_spec = importlib.util.spec_from_file_location(
+    "write_krk_clean_curriculum_checkpoint_plan_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_clean_curriculum_checkpoint_plan_v0.py",
+)
+assert _clean_curriculum_checkpoint_plan_spec is not None
+assert _clean_curriculum_checkpoint_plan_spec.loader is not None
+_clean_curriculum_checkpoint_plan = importlib.util.module_from_spec(
+    _clean_curriculum_checkpoint_plan_spec
+)
+_clean_curriculum_checkpoint_plan_spec.loader.exec_module(_clean_curriculum_checkpoint_plan)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -5458,3 +5471,37 @@ def test_stage4_joined_trace_scope_packet_requires_explicit_approval():
     assert payload["approved_if_later_explicitly_authorized"]["protected_stages"] == ["stage4"]
     assert payload["approved_if_later_explicitly_authorized"]["requires_new_stage4_observation_source"] is True
     assert "selector_training" in payload["explicitly_forbidden"]
+
+
+def test_clean_curriculum_checkpoint_plan_blocks_full_run_without_manifest_review():
+    payload = _clean_curriculum_checkpoint_plan.build_payload()
+
+    assert payload["schema_version"] == "krk_clean_curriculum_checkpoint_plan.v0"
+    assert payload["decision"]["status"] == (
+        "clean_curriculum_checkpoint_plan_ready_full_run_requires_review"
+    )
+    assert payload["decision"]["stage7_remains_quarantined"] is True
+    assert payload["decision"]["stage8_remains_blocked"] is True
+    assert payload["decision"]["runtime_selector_allowed"] is False
+    assert payload["readiness_review"]["can_run_full_clean_curriculum_now"] is False
+    assert payload["candidate_generation_observation_policy"]["include_in_normal_clean_training"] is False
+    assert payload["candidate_generation_observation_policy"]["selector_allowed"] is False
+    assert {step["step_id"] for step in payload["command_sequence"]} == {
+        "stage1_foundation_clean",
+        "stage4_wrong_tempo_profile",
+        "stage5_fence_handoff",
+        "stage6_drive_overlay",
+        "stage6_overlay_composition",
+    }
+
+
+def test_clean_curriculum_checkpoint_plan_preserves_stage_boundaries():
+    payload = _clean_curriculum_checkpoint_plan.build_payload()
+    checkpoints = {item["stage"]: item for item in payload["stage_checkpoints"]}
+
+    assert checkpoints["stage7"]["promotion_policy"] == "do_not_promote"
+    assert payload["stage8_training_allowed"] is False
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert "training Stage 8" in payload["readiness_review"]["invalid_run_conditions"]
+    assert "promoting Stage 7" in payload["readiness_review"]["invalid_run_conditions"]

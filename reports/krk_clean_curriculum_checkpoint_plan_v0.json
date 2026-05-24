@@ -1,0 +1,536 @@
+{
+  "candidate_generation_observation_policy": {
+    "allowed_effect": "trace_or_candidate_generation_frames_only",
+    "flags": [
+      "--enable-krk-candidate-generation-refresh",
+      "--enable-krk-exact-trace-enrichment"
+    ],
+    "include_in_diagnostic_validation": true,
+    "include_in_normal_clean_training": false,
+    "selector_allowed": false
+  },
+  "causal_status": "plan_and_readiness_audit_only",
+  "command_sequence": [
+    {
+      "commands": [
+        [
+          "/home/banquo/recon-lite/.venv/bin/python3",
+          "scripts/train_baseline_krk_chain.py",
+          "--stage0-cycles",
+          "20",
+          "--stage1-cycles",
+          "10",
+          "--samples-per-cycle",
+          "100",
+          "--output-dir",
+          "snapshots/krk_triplet_pipeline/stage1_clean/baseline",
+          "--save-learner",
+          "snapshots/krk_triplet_pipeline/stage1_clean/baseline/final_learner.pkl",
+          "--device",
+          "cpu",
+          "--seed",
+          "7",
+          "--snapshot-every",
+          "1",
+          "--stage1-position-mode",
+          "mate_in_2",
+          "--stage0-balance-corners"
+        ],
+        [
+          "/home/banquo/recon-lite/.venv/bin/python3",
+          "scripts/baseline_to_recon.py",
+          "--learner",
+          "snapshots/krk_triplet_pipeline/stage1_clean/baseline/final_learner.pkl",
+          "--output",
+          "snapshots/krk_triplet_pipeline/stage1_clean/topology/krk_entry_topology.json"
+        ],
+        [
+          "/home/banquo/recon-lite/.venv/bin/python3",
+          "scripts/test_krk_entry.py",
+          "--topology",
+          "snapshots/krk_triplet_pipeline/stage1_clean/topology/krk_entry_topology.json",
+          "--samples",
+          "50"
+        ],
+        [
+          "/home/banquo/recon-lite/.venv/bin/python3",
+          "scripts/test_stage1_backchain.py",
+          "--topology",
+          "snapshots/krk_triplet_pipeline/stage1_clean/topology/krk_entry_topology.json",
+          "--learner",
+          "snapshots/krk_triplet_pipeline/stage1_clean/baseline/final_learner.pkl",
+          "--samples",
+          "50",
+          "--seed",
+          "7",
+          "--stage-filter",
+          "1",
+          "--position-mode",
+          "mate_in_2"
+        ]
+      ],
+      "expected_outputs": [
+        "snapshots/krk_triplet_pipeline/stage1_clean/baseline/final_learner.pkl",
+        "snapshots/krk_triplet_pipeline/stage1_clean/topology/krk_entry_topology.json"
+      ],
+      "purpose": "Train/rebuild Stage 0/1 foundation from zero.",
+      "source_manifest": "snapshots/krk_triplet_pipeline/stage1_clean/run_manifest.json",
+      "step_id": "stage1_foundation_clean"
+    },
+    {
+      "commands": [
+        [
+          "/home/banquo/recon-lite/.venv/bin/python3",
+          "scripts/train_baseline_krk_chain.py",
+          "--stage0-cycles",
+          "0",
+          "--stage1-cycles",
+          "0",
+          "--samples-per-cycle",
+          "150",
+          "--output-dir",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage2c_clean/baseline",
+          "--save-learner",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage2c_clean/baseline/final_learner.pkl",
+          "--device",
+          "cpu",
+          "--seed",
+          "7",
+          "--snapshot-every",
+          "1",
+          "--min-mature-for-goals",
+          "6",
+          "--feature-set",
+          "krk_rich_v1",
+          "--max-curriculum-stage",
+          "4",
+          "--start-curriculum-stage",
+          "4",
+          "--landmark-cycles",
+          "10",
+          "--stage1-position-mode",
+          "mate_in_2",
+          "--load-learner",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage2b_only/baseline/best_by_stage/edge_trap_enemy_between.pkl",
+          "--adaptive-curriculum",
+          "--eval-every",
+          "5",
+          "--patience",
+          "3",
+          "--min-cycles-per-stage",
+          "10",
+          "--max-cycles-per-stage",
+          "80",
+          "--adaptive-eval-samples",
+          "100",
+          "--adaptive-playout-max-plies",
+          "0",
+          "--stage0-balance-corners"
+        ],
+        [
+          "/home/banquo/recon-lite/.venv/bin/python3",
+          "scripts/baseline_to_recon.py",
+          "--learner",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage2c_clean/baseline/final_learner.pkl",
+          "--output",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage2c_clean/topology/krk_entry_topology.json"
+        ],
+        [
+          "/home/banquo/recon-lite/.venv/bin/python3",
+          "scripts/test_krk_entry.py",
+          "--topology",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage2c_clean/topology/krk_entry_topology.json",
+          "--samples",
+          "100"
+        ],
+        [
+          "/home/banquo/recon-lite/.venv/bin/python3",
+          "scripts/test_stage1_backchain.py",
+          "--topology",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage2c_clean/topology/krk_entry_topology.json",
+          "--learner",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage2c_clean/baseline/final_learner.pkl",
+          "--samples",
+          "100",
+          "--seed",
+          "7",
+          "--stage-filter",
+          "1",
+          "--position-mode",
+          "mate_in_2"
+        ]
+      ],
+      "expected_outputs": [
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage2c_clean/baseline/final_learner.pkl",
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage2c_clean/topology/krk_entry_topology.json",
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage2c_clean/baseline/best_by_stage/edge_trap_wrong_tempo.pkl"
+      ],
+      "purpose": "Train/rebuild wrong-tempo / edge-trap profile from the prior clean provider.",
+      "source_manifest": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2c_clean/run_manifest.json",
+      "step_id": "stage4_wrong_tempo_profile"
+    },
+    {
+      "commands": [
+        [
+          "/home/banquo/recon-lite/.venv/bin/python3",
+          "scripts/train_baseline_krk_chain.py",
+          "--stage0-cycles",
+          "0",
+          "--stage1-cycles",
+          "0",
+          "--samples-per-cycle",
+          "150",
+          "--output-dir",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline",
+          "--save-learner",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/final_learner.pkl",
+          "--device",
+          "cpu",
+          "--seed",
+          "7",
+          "--snapshot-every",
+          "1",
+          "--min-mature-for-goals",
+          "6",
+          "--feature-set",
+          "krk_rich_v1",
+          "--max-curriculum-stage",
+          "5",
+          "--start-curriculum-stage",
+          "5",
+          "--landmark-cycles",
+          "10",
+          "--stage1-position-mode",
+          "mate_in_2",
+          "--load-learner",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage2c_clean/baseline/best_by_stage/edge_trap_wrong_tempo.pkl",
+          "--adaptive-curriculum",
+          "--eval-every",
+          "5",
+          "--patience",
+          "3",
+          "--min-cycles-per-stage",
+          "10",
+          "--max-cycles-per-stage",
+          "80",
+          "--adaptive-eval-samples",
+          "100",
+          "--adaptive-playout-max-plies",
+          "0",
+          "--stage0-balance-corners"
+        ],
+        [
+          "/home/banquo/recon-lite/.venv/bin/python3",
+          "scripts/baseline_to_recon.py",
+          "--learner",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/final_learner.pkl",
+          "--output",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/topology/krk_entry_topology.json"
+        ],
+        [
+          "/home/banquo/recon-lite/.venv/bin/python3",
+          "scripts/test_krk_entry.py",
+          "--topology",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/topology/krk_entry_topology.json",
+          "--samples",
+          "100"
+        ],
+        [
+          "/home/banquo/recon-lite/.venv/bin/python3",
+          "scripts/test_stage1_backchain.py",
+          "--topology",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/topology/krk_entry_topology.json",
+          "--learner",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/final_learner.pkl",
+          "--samples",
+          "100",
+          "--seed",
+          "7",
+          "--stage-filter",
+          "1",
+          "--position-mode",
+          "mate_in_2"
+        ]
+      ],
+      "expected_outputs": [
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/final_learner.pkl",
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/topology/krk_entry_topology.json",
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl"
+      ],
+      "purpose": "Train/rebuild protected fence/handoff component.",
+      "source_manifest": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/run_manifest.json",
+      "step_id": "stage5_fence_handoff"
+    },
+    {
+      "commands": [
+        [
+          "/home/banquo/recon-lite/.venv/bin/python3",
+          "scripts/train_baseline_krk_chain.py",
+          "--stage0-cycles",
+          "0",
+          "--stage1-cycles",
+          "0",
+          "--samples-per-cycle",
+          "150",
+          "--output-dir",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support/baseline",
+          "--save-learner",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support/baseline/final_learner.pkl",
+          "--device",
+          "auto",
+          "--seed",
+          "7",
+          "--snapshot-every",
+          "1",
+          "--min-mature-for-goals",
+          "6",
+          "--feature-set",
+          "krk_rich_v1",
+          "--max-curriculum-stage",
+          "6",
+          "--start-curriculum-stage",
+          "6",
+          "--landmark-cycles",
+          "10",
+          "--stage1-position-mode",
+          "mate_in_2",
+          "--load-learner",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+          "--adaptive-curriculum",
+          "--eval-every",
+          "5",
+          "--patience",
+          "3",
+          "--min-cycles-per-stage",
+          "10",
+          "--max-cycles-per-stage",
+          "80",
+          "--adaptive-eval-samples",
+          "200",
+          "--adaptive-playout-max-plies",
+          "40",
+          "--adaptive-composition-profile",
+          "handoff_composition_v1",
+          "--adaptive-use-profile-validation-defaults",
+          "--adaptive-stagnation-breaker-king-support-bonus",
+          "2.0",
+          "--stage0-balance-corners"
+        ],
+        [
+          "/home/banquo/recon-lite/.venv/bin/python3",
+          "scripts/baseline_to_recon.py",
+          "--learner",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support/baseline/final_learner.pkl",
+          "--output",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support/topology/krk_entry_topology.json"
+        ],
+        [
+          "/home/banquo/recon-lite/.venv/bin/python3",
+          "scripts/test_krk_entry.py",
+          "--topology",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support/topology/krk_entry_topology.json",
+          "--samples",
+          "100"
+        ],
+        [
+          "/home/banquo/recon-lite/.venv/bin/python3",
+          "scripts/test_stage1_backchain.py",
+          "--topology",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support/topology/krk_entry_topology.json",
+          "--learner",
+          "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support/baseline/final_learner.pkl",
+          "--samples",
+          "100",
+          "--seed",
+          "7",
+          "--stage-filter",
+          "1",
+          "--position-mode",
+          "mate_in_2"
+        ]
+      ],
+      "expected_outputs": [
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support/baseline/final_learner.pkl",
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support/topology/krk_entry_topology.json",
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support/baseline/best_by_stage/drive_to_edge.pkl"
+      ],
+      "purpose": "Train/rebuild Stage 6 drive overlay against handoff_composition_v1.",
+      "source_manifest": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support/run_manifest.json",
+      "step_id": "stage6_drive_overlay"
+    },
+    {
+      "commands": [
+        [
+          "UV_CACHE_DIR=/tmp/uv-cache",
+          "uv",
+          "run",
+          "pytest",
+          "tests/test_architecture_preservation.py",
+          "tests/test_routing_contracts.py"
+        ]
+      ],
+      "expected_outputs": [
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json"
+      ],
+      "purpose": "Compose Stage 6 overlay with protected Stage 5 base and validate preservation.",
+      "readiness_note": "Existing composed overlay artifact has no run_manifest; preserve current artifact paths until a dedicated compose script is formalized.",
+      "source_artifacts": [
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/promotion_eval_stage6_overlay.json",
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/stage6_drive_overlay_300_seed7_h40.json",
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/stage5_fence_overlay_300_seed7_h40.json",
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/stage4_wrong_tempo_overlay_300_seed7_h40.json"
+      ],
+      "step_id": "stage6_overlay_composition"
+    }
+  ],
+  "current_validated_stack": {
+    "control_plane_status": {
+      "candidate_generation_refresh_coverage": "candidate_generation_refresh_coverage_ready_for_trace_dataset_refresh",
+      "candidate_generation_refresh_sandbox": "candidate_generation_refresh_sandbox_ready_for_non_causal_coverage_analysis",
+      "dataset_v5_status": "strategy_sequence_dataset_v5_refreshed_non_causal_selector_blocked",
+      "exact_trace_enrichment_status": "exact_trace_enrichment_sandbox_ready_for_non_causal_coverage_analysis"
+    },
+    "profile": "handoff_composition_v1",
+    "protected_or_base_components": [
+      "stage1_backchain",
+      "stage5_fence_handoff",
+      "stage6_drive_to_edge_overlay",
+      "kpk_to_kqk_bridge_preservation"
+    ],
+    "stage4_status": "mostly_clean_with_separate_h40_overlay_control_caveat",
+    "stage7_status": "local_valid_composition_quarantined_held_out_challenge",
+    "stage8_status": "blocked_until_stage7_or_broader_control_plane_review"
+  },
+  "decision": {
+    "recommended_next_step": "write_explicit_clean_retrain_execution_manifest_before_any_long_run",
+    "runtime_selector_allowed": false,
+    "stage7_remains_quarantined": true,
+    "stage8_remains_blocked": true,
+    "status": "clean_curriculum_checkpoint_plan_ready_full_run_requires_review"
+  },
+  "gameplay_topology_mutation": false,
+  "promotion_quarantine_criteria": {
+    "promote_stage1_5_6_only_if": [
+      "clean retrain artifacts exist",
+      "protected guardrails match or improve current stack",
+      "M1-M4 preservation tests pass",
+      "KPK->KQK bridge preservation tests pass",
+      "no default runtime behavior changes"
+    ],
+    "quarantine_if": [
+      "Stage 5 or Stage 6 guardrail regression",
+      "M1-M4 semantic regression",
+      "KPK->KQK bridge regression",
+      "Stage 7 treated as training/promotion row",
+      "runtime observation frames affect selection/scoring/routing"
+    ]
+  },
+  "provider_pack_and_overlay_rules": {
+    "frozen_provider_pack_sources": [
+      "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+      "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support/baseline/best_by_stage/drive_to_edge.pkl"
+    ],
+    "handoff_profile": "handoff_composition_v1",
+    "overlay_rule": "later stages compose as overlays over frozen validated providers, never monolithic replacement",
+    "stage7_usage": "held_out_challenge_rows_only_no_training_or_promotion"
+  },
+  "readiness_review": {
+    "can_run_full_clean_curriculum_now": false,
+    "can_run_tiny_smoke_now": true,
+    "estimated_runtime_class": "full_retrain_likely_long; smoke_tests_short",
+    "invalid_run_conditions": [
+      "overwriting protected snapshots without a new output directory",
+      "training Stage 8",
+      "promoting Stage 7",
+      "using runtime DTM/tablebase",
+      "enabling observation sandboxes as causal selectors"
+    ],
+    "missing_or_stale_items": [
+      "full_clean_retrain_not_launched_in_this_slice_requires_explicit_manifest_review"
+    ],
+    "reason": "commands and artifacts are identified, but a full run may be long and should start from an explicit execution manifest with output paths to avoid overwriting protected snapshots",
+    "tiny_smoke_recommendation": "use existing stage smoke scripts and focused tests; do not launch full retrain from this artifact"
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_clean_curriculum_checkpoint_plan.v0",
+  "source_artifacts": [
+    "reports/current_agent_brief.md",
+    "reports/recon_long_term_architecture_roadmap.md",
+    "reports/strategy_arbitration/krk_candidate_generation_refresh_sandbox_v0.json",
+    "reports/strategy_arbitration/krk_candidate_generation_refresh_coverage_analysis_v0.json",
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v5.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "stage_checkpoints": [
+    {
+      "expected_artifact": "snapshots/krk_triplet_pipeline/stage1_clean",
+      "promotion_policy": "protected_if_clean_retrain_matches_current_stage1_guardrails",
+      "role": "local/backchain foundation",
+      "stage": "stage1"
+    },
+    {
+      "expected_artifact": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2c_clean",
+      "promotion_policy": "protected_with_existing_h40_overlay_control_caveat",
+      "role": "wrong-tempo / edge-trap profile",
+      "stage": "stage4"
+    },
+    {
+      "expected_artifact": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean",
+      "promotion_policy": "protected_base_provider_pack",
+      "role": "fence/handoff protected base",
+      "stage": "stage5"
+    },
+    {
+      "expected_artifact": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support",
+      "promotion_policy": "overlay_preserved_if_stage5_and_stage4_guardrails_hold",
+      "role": "drive_to_edge overlay",
+      "stage": "stage6"
+    },
+    {
+      "expected_artifact": "reports/structural_candidates/stage7_pause_and_architecture_review.md",
+      "promotion_policy": "do_not_promote",
+      "role": "held-out challenge / local evidence / handoff trigger",
+      "stage": "stage7"
+    }
+  ],
+  "validation_commands": [
+    [
+      "UV_CACHE_DIR=/tmp/uv-cache",
+      "uv",
+      "run",
+      "pytest",
+      "tests/test_krk_strategy_arbitration_dataset.py",
+      "tests/test_krk_ownership_selection_recovery.py"
+    ],
+    [
+      "UV_CACHE_DIR=/tmp/uv-cache",
+      "uv",
+      "run",
+      "pytest",
+      "tests/test_architecture_preservation.py",
+      "tests/test_routing_contracts.py",
+      "tests/test_endgame_components.py"
+    ],
+    [
+      "UV_CACHE_DIR=/tmp/uv-cache",
+      "uv",
+      "run",
+      "python",
+      "scripts/run_krk_candidate_generation_refresh_sandbox_v0.py"
+    ],
+    [
+      "UV_CACHE_DIR=/tmp/uv-cache",
+      "uv",
+      "run",
+      "python",
+      "scripts/analyze_krk_candidate_generation_refresh_coverage_v0.py"
+    ]
+  ]
+}

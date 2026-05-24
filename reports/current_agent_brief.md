@@ -1178,6 +1178,28 @@ Artifacts:
 
 The Stage 5/6 approved scope is nearly exhausted for switch evidence: remaining Stage 5/6 rows have `0` selected-owner failures and only `1` non-stage0 selected-owner row. The remaining selected-owner failures are all Stage 4. A Stage 4 observation-only scope review packet is ready, but it does not authorize implementation or execution. It explicitly requires a new Stage 4 observation source, default-off equivalence, zero selected move/provider/score/routing deltas, and separate approval before any run.
 
+Latest clean curriculum checkpoint package:
+
+```text
+clean_curriculum_checkpoint_plan_ready_full_run_requires_review
+```
+
+Artifacts:
+
+* `reports/krk_clean_curriculum_checkpoint_plan_v0.md`
+* `reports/krk_clean_curriculum_checkpoint_plan_v0.json`
+
+The approved candidate-generation refresh sandbox was rerun and remains valid:
+
+```text
+candidate_generation_refresh_sandbox_ready_for_non_causal_coverage_analysis
+candidate_generation_refresh_coverage_ready_for_trace_dataset_refresh
+candidate_generation_refresh_trace_features_folded_non_causal
+strategy_sequence_dataset_v4_refreshed_non_causal_selector_blocked
+```
+
+The clean curriculum checkpoint plan identifies the current Stage 1/4/5/6 rebuild command sequence from existing run manifests, records Stage 7 as held-out/quarantined, keeps Stage 8 blocked, and keeps candidate-generation observation out of normal clean training. It does not launch a full retrain. A full clean run should be started only from a separate execution manifest with fresh output paths so protected snapshots are not overwritten.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:
