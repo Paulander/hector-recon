@@ -34,8 +34,14 @@ This manifest formalizes the missing replayable Stage 6 overlay composition step
 
 - compile_overlay_topology:
   - `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/baseline_to_recon.py --base-topology snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage5_fence_handoff/topology/krk_entry_topology.json --overlay-learner snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage6_drive_overlay_candidate/baseline/final_learner.pkl --overlay-label drive_to_edge --base-provider-version stage5_validated_v1 --overlay-provider-version stage6_overlay_v1 --base-source-checkpoint snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage5_fence_handoff/baseline/best_by_stage/fence_established.pkl --overlay-source-checkpoint snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage6_drive_overlay_candidate/baseline/best_by_stage/drive_to_edge.pkl --validated-profile handoff_composition_v1 --output snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage6_overlay_composed/topology/krk_entry_topology.json`
+- stage6_candidate_eval:
+  - `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/test_krk_landmark_progress.py --topology snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage6_overlay_composed/topology/krk_entry_topology.json --label drive_to_edge --samples 300 --seed 7 --source-stage-names Opposition_Approach,Tempo_Wait,King_Close_1 --playout-max-plies 40 --composition-profile handoff_composition_v1 --use-profile-validation-defaults --stagnation-breaker-king-support-bonus 2.0 --early-stop-stable-suggestions 2 --json-output snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage6_overlay_composed/stage6_drive_overlay_300_seed7_h40.json --no-json-stdout`
+- stage5_guardrail_eval:
+  - `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/test_krk_landmark_progress.py --topology snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage6_overlay_composed/topology/krk_entry_topology.json --label fence_established --samples 300 --seed 7 --source-stage-names Fence_Established,Anchored_Cut,Edge_Cut_Hold --playout-max-plies 40 --composition-profile handoff_composition_v1 --use-profile-validation-defaults --stagnation-breaker-king-support-bonus 2.0 --early-stop-stable-suggestions 2 --json-output snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40.json --no-json-stdout`
+- stage5_base_control_eval:
+  - `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/test_krk_landmark_progress.py --topology snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage5_fence_handoff/topology/krk_entry_topology.json --label fence_established --samples 300 --seed 7 --source-stage-names Fence_Established,Anchored_Cut,Edge_Cut_Hold --playout-max-plies 40 --composition-profile handoff_composition_v1 --use-profile-validation-defaults --stagnation-breaker-king-support-bonus 2.0 --early-stop-stable-suggestions 2 --json-output snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage6_overlay_composed/stage5_fence_stage5_base_control_300_seed7_h40.json --no-json-stdout`
 - promotion_eval:
-  - `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/evaluate_provider_promotion.py --stage-artifact snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage6_overlay_composed/stage6_drive_overlay_300_seed7_h40.json --guardrail-artifact snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40.json --min-mate-rate 0.65 --max-max-plies-rate 0.25 --max-shadow-candidates 0 --json-output snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage6_overlay_composed/promotion_eval_stage6_overlay.json`
+  - `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/evaluate_provider_promotion.py --stage-artifact snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage6_overlay_composed/stage6_drive_overlay_300_seed7_h40.json --guardrail-artifact snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40.json --guardrail-control-artifact snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage6_overlay_composed/stage5_fence_stage5_base_control_300_seed7_h40.json --min-mate-rate 0.65 --max-max-plies-rate 0.25 --max-shadow-candidates 0 --json-output snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage6_overlay_composed/promotion_eval_stage6_overlay.json`
 - validation:
   - `UV_CACHE_DIR=/tmp/uv-cache uv run pytest tests/test_architecture_preservation.py tests/test_routing_contracts.py tests/test_endgame_components.py`
 
@@ -51,6 +57,8 @@ This manifest formalizes the missing replayable Stage 6 overlay composition step
 - `composed topology exists`
 - `Stage 6 candidate evaluation meets promotion thresholds`
 - `Stage 5 guardrail evaluation preserves protected behavior`
+- `Stage 5 guardrail is compared against fresh Stage 5 base-control debt`
+- `Stage 6/5 h40 evaluations use explicit handoff profile king-support validation bonus`
 - `Stage 4 overlay probe no worse than Stage 5 base-control caveat`
 - `promotion_eval promotion_status is promoted`
 - `M1-M4 and bridge/routing preservation tests pass`
@@ -62,6 +70,7 @@ This manifest formalizes the missing replayable Stage 6 overlay composition step
 - `base or overlay checkpoint missing`
 - `Stage 5 guardrail regresses`
 - `Stage 4 caveat worsens relative to base control`
+- `handoff profile king-support validation bonus is omitted from h40 evaluation`
 - `promotion eval fails`
 - `runtime selector/scoring/routing behavior appears`
 - `runtime DTM/tablebase use appears`

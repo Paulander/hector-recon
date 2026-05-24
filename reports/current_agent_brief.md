@@ -1190,6 +1190,7 @@ clean_retrain_smoke_plumbing_passed_semantic_smoke_too_tiny
 clean_retrain_full_run_incomplete_stage2a_no_promotable_checkpoint
 clean_retrain_retry1_completed_through_stage6_overlay_compose_basic_checks_passed
 clean_retrain_retry1_stage6_overlay_quarantined_guardrails_partial
+stage6_gap_explained_by_validation_profile_mismatch
 ```
 
 Artifacts:
@@ -1212,6 +1213,8 @@ Artifacts:
 * `reports/krk_clean_retrain_retry1_result_v1.json`
 * `reports/krk_clean_retrain_retry1_guardrail_result_v1.md`
 * `reports/krk_clean_retrain_retry1_guardrail_result_v1.json`
+* `reports/krk_clean_retrain_retry1_stage6_gap_inspection_v1.md`
+* `reports/krk_clean_retrain_retry1_stage6_gap_inspection_v1.json`
 
 The approved candidate-generation refresh sandbox was rerun and remains valid:
 
@@ -1231,6 +1234,8 @@ The approved full clean retrain attempt was started in the fresh ignored root `s
 Retry1 was then run in the separate ignored root `snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1`. It completed Stage 2A, Stage 2B, Stage 4, Stage 5, Stage 6, and fresh Stage 6 overlay composition. The composed overlay topology has 390 nodes and 1088 edges and passed the basic KRK entry and Stage 1 backchain checks on 100 samples each. Stage 6 passed h40 conversion at cycle 9. This is still not a promotion: dedicated Stage 5/6 handoff guardrail artifacts, M1-M4 preservation, KPK→KQK preservation, and promotion/quarantine review remain required before replacing protected checkpoints.
 
 Dedicated retry1 Stage 5/6 guardrail artifacts were then generated. The fresh Stage 6 candidate is quarantined: 217/300 h40 mates, 83/300 max_plies, and 166 shadow candidates, failing promotion thresholds. The Stage 5 overlay guardrail preserves conversion at 300/300 mates and 0 shadow candidates, and does not regress relative to its fresh Stage 5 base control, but the fresh base/control path itself shows local reward and conversion debt. The retry1 checkpoint must not replace the existing protected stack.
+
+Follow-up inspection showed that this quarantine was driven by a validation-profile mismatch: the historical passing Stage 6 artifacts and the Stage 6 adaptive training command used `--stagnation-breaker-king-support-bonus 2.0`, while the initial retry1 guardrail rerun used `--use-profile-validation-defaults` without that explicit bonus. Rerunning retry1 with the explicit historical validation bonus restores Stage 6 to 300/300 h40 mates and 0 shadow candidates. The corrected promotion eval reports `overlay_only` with no Stage 6 failures and only Stage 5 one-ply guardrail control debt. Retry1 is still not promoted, but the next question is Stage 5 guardrail-definition/control-debt review, not Stage 6 learner quality.
 
 ## Runtime Approval Rule
 

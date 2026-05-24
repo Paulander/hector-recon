@@ -5615,6 +5615,10 @@ def test_stage6_overlay_compose_manifest_is_review_only_and_fresh_scoped():
 def test_stage6_overlay_compose_manifest_preserves_overlay_compile_contract():
     payload = _stage6_overlay_compose_manifest.build_payload()
     compile_cmd = " ".join(payload["commands"]["compile_overlay_topology"])
+    stage6_eval_cmd = " ".join(payload["commands"]["stage6_candidate_eval"])
+    stage5_eval_cmd = " ".join(payload["commands"]["stage5_guardrail_eval"])
+    stage5_control_cmd = " ".join(payload["commands"]["stage5_base_control_eval"])
+    promotion_cmd = " ".join(payload["commands"]["promotion_eval"])
 
     assert "--base-topology" in compile_cmd
     assert "--overlay-learner" in compile_cmd
@@ -5622,8 +5626,16 @@ def test_stage6_overlay_compose_manifest_preserves_overlay_compile_contract():
     assert "--base-provider-version stage5_validated_v1" in compile_cmd
     assert "--overlay-provider-version stage6_overlay_v1" in compile_cmd
     assert "--validated-profile handoff_composition_v1" in compile_cmd
+    assert "--stagnation-breaker-king-support-bonus 2.0" in stage6_eval_cmd
+    assert "--stagnation-breaker-king-support-bonus 2.0" in stage5_eval_cmd
+    assert "--stagnation-breaker-king-support-bonus 2.0" in stage5_control_cmd
+    assert "--guardrail-control-artifact" in promotion_cmd
     assert "Stage 5 guardrail regresses" in payload["stop_conditions"]
     assert "Stage 4 caveat worsens relative to base control" in payload["stop_conditions"]
+    assert (
+        "handoff profile king-support validation bonus is omitted from h40 evaluation"
+        in payload["stop_conditions"]
+    )
 
 
 def test_clean_retrain_preflight_ready_without_running_training():
