@@ -1,0 +1,496 @@
+{
+  "schema_version": "krk_stage5_guardrail_control_debt_review.v0",
+  "created_at": "2026-05-24T18:40:50+02:00",
+  "status": "stage5_one_ply_guardrail_control_debt_confirmed",
+  "decision": {
+    "status": "stage5_one_ply_guardrail_control_debt_confirmed",
+    "stage5_overlay_regressed_vs_base_control": false,
+    "stage5_conversion_preserved": true,
+    "stage5_one_ply_debt_reproduces_in_base_control": true,
+    "stage6_overlay_promotion_eval_status": "overlay_only",
+    "should_quarantine_stage6_overlay_for_stage5_one_ply_debt": false,
+    "should_replace_protected_stack_now": false,
+    "recommended_next_step": "split_stage5_guardrail_into_conversion_preservation_and_local_reward_contract_debt_before_clean_stack_replacement"
+  },
+  "source_artifacts": {
+    "overlay": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+    "base_control": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_stage5_base_control_300_seed7_h40_profile_bonus.json",
+    "promotion_eval": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/promotion_eval_stage6_overlay_profile_bonus.json",
+    "stage6_gap_inspection": "reports/krk_clean_retrain_retry1_stage6_gap_inspection_v1.json"
+  },
+  "stage5_overlay": {
+    "path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+    "label": "fence_established",
+    "total": 300,
+    "improved": 144,
+    "worsened": 156,
+    "optimal": 144,
+    "improved_rate": 0.48,
+    "worsened_rate": 0.52,
+    "mate_rate": 1.0,
+    "max_plies_rate": 0.0,
+    "playouts": {
+      "mate": 300
+    },
+    "one_ply_status": "failed",
+    "conversion_status": "passed",
+    "shadow_candidate_count": 0,
+    "handoff_packet_counts_by_phase": {
+      "post_own_move": {
+        "failed": 156,
+        "confirmed": 144
+      },
+      "post_opponent_reply": {
+        "failed": 156,
+        "confirmed": 144
+      },
+      "playout_summary": {
+        "confirmed": 300
+      }
+    },
+    "stagnation_breaker_king_support_bonus": 2.0,
+    "early_stop_stable_suggestions": 2,
+    "source_stage_names": [
+      "Fence_Established",
+      "Anchored_Cut",
+      "Edge_Cut_Hold"
+    ]
+  },
+  "stage5_base_control": {
+    "path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_stage5_base_control_300_seed7_h40_profile_bonus.json",
+    "label": "fence_established",
+    "total": 300,
+    "improved": 144,
+    "worsened": 156,
+    "optimal": 144,
+    "improved_rate": 0.48,
+    "worsened_rate": 0.52,
+    "mate_rate": 1.0,
+    "max_plies_rate": 0.0,
+    "playouts": {
+      "mate": 300
+    },
+    "one_ply_status": "failed",
+    "conversion_status": "passed",
+    "shadow_candidate_count": 0,
+    "handoff_packet_counts_by_phase": {
+      "post_own_move": {
+        "failed": 156,
+        "confirmed": 144
+      },
+      "post_opponent_reply": {
+        "failed": 156,
+        "confirmed": 144
+      },
+      "playout_summary": {
+        "confirmed": 300
+      }
+    },
+    "stagnation_breaker_king_support_bonus": 2.0,
+    "early_stop_stable_suggestions": 2,
+    "source_stage_names": [
+      "Fence_Established",
+      "Anchored_Cut",
+      "Edge_Cut_Hold"
+    ]
+  },
+  "delta_overlay_vs_base_control": {
+    "improved_delta": 0,
+    "worsened_delta": 0,
+    "optimal_delta": 0,
+    "mate_rate_delta": 0.0,
+    "max_plies_rate_delta": 0.0,
+    "shadow_candidate_delta": 0
+  },
+  "post_own_pattern_summary": {
+    "unique_post_own_state_move_rows": 6,
+    "status_counts": {
+      "failed": 156,
+      "confirmed": 144
+    },
+    "status_contract_counts": {
+      "failed|True|True|False": 156,
+      "confirmed|True|True|True": 144
+    },
+    "top_unique_rows": [
+      {
+        "count": 59,
+        "status": "confirmed",
+        "fen": "4k3/1R6/1K6/8/8/8/8/8 w - - 0 1",
+        "move": "b7h7",
+        "chosen_reward": 0.07400000000000001,
+        "oracle_reward": 0.07400000000000001,
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "cut_axis_after_own_move": "edge",
+        "rook_safe_after_own_move": true,
+        "box_area_after_own_move": 7
+      },
+      {
+        "count": 54,
+        "status": "failed",
+        "fen": "4k3/8/8/8/R7/8/4K3/8 w - - 0 1",
+        "move": "a4a8",
+        "chosen_reward": -0.865,
+        "oracle_reward": 0.14900000000000002,
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "cut_axis_after_own_move": "rank",
+        "rook_safe_after_own_move": true,
+        "box_area_after_own_move": 7
+      },
+      {
+        "count": 54,
+        "status": "failed",
+        "fen": "7k/4RK2/8/8/8/8/8/8 w - - 0 1",
+        "move": "e7e1",
+        "chosen_reward": -0.016,
+        "oracle_reward": 0.07400000000000001,
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": true,
+        "cut_axis_after_own_move": "edge",
+        "rook_safe_after_own_move": true,
+        "box_area_after_own_move": 21
+      },
+      {
+        "count": 48,
+        "status": "failed",
+        "fen": "7k/8/8/8/R7/8/5K2/8 w - - 0 1",
+        "move": "f2g3",
+        "chosen_reward": -0.75,
+        "oracle_reward": 0.14900000000000002,
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "cut_axis_after_own_move": "edge",
+        "rook_safe_after_own_move": true,
+        "box_area_after_own_move": 28
+      },
+      {
+        "count": 44,
+        "status": "confirmed",
+        "fen": "4k3/R7/K7/8/8/8/8/8 w - - 0 1",
+        "move": "a7h7",
+        "chosen_reward": 0.07400000000000001,
+        "oracle_reward": 0.07400000000000001,
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "cut_axis_after_own_move": "edge",
+        "rook_safe_after_own_move": true,
+        "box_area_after_own_move": 7
+      },
+      {
+        "count": 41,
+        "status": "confirmed",
+        "fen": "k7/2R5/2K5/8/8/8/8/8 w - - 0 1",
+        "move": "c7h7",
+        "chosen_reward": 0.07400000000000001,
+        "oracle_reward": 0.07400000000000001,
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": true,
+        "cut_axis_after_own_move": "edge",
+        "rook_safe_after_own_move": true,
+        "box_area_after_own_move": 7
+      }
+    ],
+    "examples": [
+      {
+        "status": "failed",
+        "fen": "7k/8/8/8/R7/8/5K2/8 w - - 0 1",
+        "move": "f2g3",
+        "chosen_reward": -0.75,
+        "oracle_reward": 0.14900000000000002,
+        "reward_confirmed": false,
+        "visible_fence_contract_confirmed": true,
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "cut_axis_after_own_move": "edge",
+        "rook_safe_after_own_move": true,
+        "box_area_after_own_move": 28,
+        "achieved": [
+          "visible_fence_contract_confirmed"
+        ],
+        "failed": [
+          "reward_confirmed.fence_established"
+        ]
+      },
+      {
+        "status": "failed",
+        "fen": "4k3/8/8/8/R7/8/4K3/8 w - - 0 1",
+        "move": "a4a8",
+        "chosen_reward": -0.865,
+        "oracle_reward": 0.14900000000000002,
+        "reward_confirmed": false,
+        "visible_fence_contract_confirmed": true,
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "cut_axis_after_own_move": "rank",
+        "rook_safe_after_own_move": true,
+        "box_area_after_own_move": 7,
+        "achieved": [
+          "visible_fence_contract_confirmed"
+        ],
+        "failed": [
+          "reward_confirmed.fence_established"
+        ]
+      },
+      {
+        "status": "confirmed",
+        "fen": "4k3/1R6/1K6/8/8/8/8/8 w - - 0 1",
+        "move": "b7h7",
+        "chosen_reward": 0.07400000000000001,
+        "oracle_reward": 0.07400000000000001,
+        "reward_confirmed": true,
+        "visible_fence_contract_confirmed": true,
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "cut_axis_after_own_move": "edge",
+        "rook_safe_after_own_move": true,
+        "box_area_after_own_move": 7,
+        "achieved": [
+          "reward_confirmed.fence_established",
+          "visible_fence_contract_confirmed"
+        ],
+        "failed": []
+      },
+      {
+        "status": "confirmed",
+        "fen": "k7/2R5/2K5/8/8/8/8/8 w - - 0 1",
+        "move": "c7h7",
+        "chosen_reward": 0.07400000000000001,
+        "oracle_reward": 0.07400000000000001,
+        "reward_confirmed": true,
+        "visible_fence_contract_confirmed": true,
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": true,
+        "cut_axis_after_own_move": "edge",
+        "rook_safe_after_own_move": true,
+        "box_area_after_own_move": 7,
+        "achieved": [
+          "reward_confirmed.fence_established",
+          "visible_fence_contract_confirmed"
+        ],
+        "failed": []
+      },
+      {
+        "status": "failed",
+        "fen": "7k/4RK2/8/8/8/8/8/8 w - - 0 1",
+        "move": "e7e1",
+        "chosen_reward": -0.016,
+        "oracle_reward": 0.07400000000000001,
+        "reward_confirmed": false,
+        "visible_fence_contract_confirmed": true,
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": true,
+        "cut_axis_after_own_move": "edge",
+        "rook_safe_after_own_move": true,
+        "box_area_after_own_move": 21,
+        "achieved": [
+          "visible_fence_contract_confirmed"
+        ],
+        "failed": [
+          "reward_confirmed.fence_established"
+        ]
+      },
+      {
+        "status": "confirmed",
+        "fen": "4k3/1R6/1K6/8/8/8/8/8 w - - 0 1",
+        "move": "b7h7",
+        "chosen_reward": 0.07400000000000001,
+        "oracle_reward": 0.07400000000000001,
+        "reward_confirmed": true,
+        "visible_fence_contract_confirmed": true,
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "cut_axis_after_own_move": "edge",
+        "rook_safe_after_own_move": true,
+        "box_area_after_own_move": 7,
+        "achieved": [
+          "reward_confirmed.fence_established",
+          "visible_fence_contract_confirmed"
+        ],
+        "failed": []
+      },
+      {
+        "status": "failed",
+        "fen": "7k/4RK2/8/8/8/8/8/8 w - - 0 1",
+        "move": "e7e1",
+        "chosen_reward": -0.016,
+        "oracle_reward": 0.07400000000000001,
+        "reward_confirmed": false,
+        "visible_fence_contract_confirmed": true,
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": true,
+        "cut_axis_after_own_move": "edge",
+        "rook_safe_after_own_move": true,
+        "box_area_after_own_move": 21,
+        "achieved": [
+          "visible_fence_contract_confirmed"
+        ],
+        "failed": [
+          "reward_confirmed.fence_established"
+        ]
+      },
+      {
+        "status": "confirmed",
+        "fen": "k7/2R5/2K5/8/8/8/8/8 w - - 0 1",
+        "move": "c7h7",
+        "chosen_reward": 0.07400000000000001,
+        "oracle_reward": 0.07400000000000001,
+        "reward_confirmed": true,
+        "visible_fence_contract_confirmed": true,
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": true,
+        "cut_axis_after_own_move": "edge",
+        "rook_safe_after_own_move": true,
+        "box_area_after_own_move": 7,
+        "achieved": [
+          "reward_confirmed.fence_established",
+          "visible_fence_contract_confirmed"
+        ],
+        "failed": []
+      },
+      {
+        "status": "confirmed",
+        "fen": "4k3/R7/K7/8/8/8/8/8 w - - 0 1",
+        "move": "a7h7",
+        "chosen_reward": 0.07400000000000001,
+        "oracle_reward": 0.07400000000000001,
+        "reward_confirmed": true,
+        "visible_fence_contract_confirmed": true,
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "cut_axis_after_own_move": "edge",
+        "rook_safe_after_own_move": true,
+        "box_area_after_own_move": 7,
+        "achieved": [
+          "reward_confirmed.fence_established",
+          "visible_fence_contract_confirmed"
+        ],
+        "failed": []
+      },
+      {
+        "status": "confirmed",
+        "fen": "4k3/R7/K7/8/8/8/8/8 w - - 0 1",
+        "move": "a7h7",
+        "chosen_reward": 0.07400000000000001,
+        "oracle_reward": 0.07400000000000001,
+        "reward_confirmed": true,
+        "visible_fence_contract_confirmed": true,
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "cut_axis_after_own_move": "edge",
+        "rook_safe_after_own_move": true,
+        "box_area_after_own_move": 7,
+        "achieved": [
+          "reward_confirmed.fence_established",
+          "visible_fence_contract_confirmed"
+        ],
+        "failed": []
+      },
+      {
+        "status": "confirmed",
+        "fen": "4k3/1R6/1K6/8/8/8/8/8 w - - 0 1",
+        "move": "b7h7",
+        "chosen_reward": 0.07400000000000001,
+        "oracle_reward": 0.07400000000000001,
+        "reward_confirmed": true,
+        "visible_fence_contract_confirmed": true,
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "cut_axis_after_own_move": "edge",
+        "rook_safe_after_own_move": true,
+        "box_area_after_own_move": 7,
+        "achieved": [
+          "reward_confirmed.fence_established",
+          "visible_fence_contract_confirmed"
+        ],
+        "failed": []
+      },
+      {
+        "status": "confirmed",
+        "fen": "4k3/R7/K7/8/8/8/8/8 w - - 0 1",
+        "move": "a7h7",
+        "chosen_reward": 0.07400000000000001,
+        "oracle_reward": 0.07400000000000001,
+        "reward_confirmed": true,
+        "visible_fence_contract_confirmed": true,
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "cut_axis_after_own_move": "edge",
+        "rook_safe_after_own_move": true,
+        "box_area_after_own_move": 7,
+        "achieved": [
+          "reward_confirmed.fence_established",
+          "visible_fence_contract_confirmed"
+        ],
+        "failed": []
+      }
+    ]
+  },
+  "promotion_eval_summary": {
+    "promotion_status": "overlay_only",
+    "failures": [],
+    "guardrail_control_debt": [
+      {
+        "kind": "guardrail_control_debt",
+        "path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_stage5_base_control_300_seed7_h40_profile_bonus.json",
+        "label": "fence_established",
+        "total": 300,
+        "improved_rate": 0.48,
+        "worsened_rate": 0.52,
+        "mate_rate": 1.0,
+        "max_plies_rate": 0.0,
+        "shadow_candidates": 0,
+        "passed": false,
+        "failure_reasons": [
+          "improved_rate=0.480 < 0.700",
+          "worsened_rate=0.520 > 0.200"
+        ]
+      }
+    ],
+    "guardrail_deltas_vs_control": [
+      {
+        "mate_rate_delta": 0.0,
+        "max_plies_rate_delta": 0.0,
+        "improved_rate_delta": 0.0,
+        "worsened_rate_delta": 0.0,
+        "shadow_candidates_delta": 0,
+        "index": 0,
+        "candidate_path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+        "control_path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_stage5_base_control_300_seed7_h40_profile_bonus.json",
+        "regressed_vs_control": false
+      }
+    ]
+  },
+  "interpretation": [
+    "Stage 5 conversion preservation passes under the corrected historical validation profile: overlay and base-control both mate 300/300 with 0 shadow candidates.",
+    "Stage 5 one-ply local reward debt is identical in the Stage 6 overlay guardrail and the fresh Stage 5 base control: 144 improved, 156 worsened.",
+    "The one-ply failures still expose useful contract debt, but they are not evidence of Stage 6 overlay interference because the paired base control has the same debt.",
+    "Promotion evaluation should keep this as overlay_only/control-debt, not promoted replacement, until the Stage 5 guardrail definition is split or explicitly accepted."
+  ],
+  "guardrail_definition_recommendation": {
+    "split_required": true,
+    "conversion_preservation_guardrail": {
+      "purpose": "protect existing Stage 5 conversion behavior against later overlays",
+      "comparison": "candidate_overlay_vs_paired_stage5_base_control",
+      "current_retry1_result": "passed_no_regression"
+    },
+    "local_reward_contract_guardrail": {
+      "purpose": "track whether Stage 5 fence local reward semantics match visible fence contracts",
+      "current_retry1_result": "failed_but_reproduces_in_base_control",
+      "promotion_effect": "blocks_clean_replacement_or_full_promotion_until_reviewed"
+    },
+    "clean_stack_replacement_policy": "blocked_pending_stage5_contract_debt_decision"
+  },
+  "invariants": {
+    "runtime_defaults_changed": false,
+    "runtime_selector_implemented": false,
+    "runtime_score_changes": false,
+    "runtime_direct_routing": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "gameplay_topology_mutation": false,
+    "stage7_promotion": false,
+    "stage8_training": false
+  },
+  "related_stage6_gap_status": "stage6_gap_explained_by_validation_profile_mismatch"
+}

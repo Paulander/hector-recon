@@ -1191,6 +1191,7 @@ clean_retrain_full_run_incomplete_stage2a_no_promotable_checkpoint
 clean_retrain_retry1_completed_through_stage6_overlay_compose_basic_checks_passed
 clean_retrain_retry1_stage6_overlay_quarantined_guardrails_partial
 stage6_gap_explained_by_validation_profile_mismatch
+stage5_one_ply_guardrail_control_debt_confirmed
 ```
 
 Artifacts:
@@ -1215,6 +1216,8 @@ Artifacts:
 * `reports/krk_clean_retrain_retry1_guardrail_result_v1.json`
 * `reports/krk_clean_retrain_retry1_stage6_gap_inspection_v1.md`
 * `reports/krk_clean_retrain_retry1_stage6_gap_inspection_v1.json`
+* `reports/krk_stage5_guardrail_control_debt_review_v0.md`
+* `reports/krk_stage5_guardrail_control_debt_review_v0.json`
 
 The approved candidate-generation refresh sandbox was rerun and remains valid:
 
@@ -1236,6 +1239,8 @@ Retry1 was then run in the separate ignored root `snapshots/krk_triplet_pipeline
 Dedicated retry1 Stage 5/6 guardrail artifacts were then generated. The fresh Stage 6 candidate is quarantined: 217/300 h40 mates, 83/300 max_plies, and 166 shadow candidates, failing promotion thresholds. The Stage 5 overlay guardrail preserves conversion at 300/300 mates and 0 shadow candidates, and does not regress relative to its fresh Stage 5 base control, but the fresh base/control path itself shows local reward and conversion debt. The retry1 checkpoint must not replace the existing protected stack.
 
 Follow-up inspection showed that this quarantine was driven by a validation-profile mismatch: the historical passing Stage 6 artifacts and the Stage 6 adaptive training command used `--stagnation-breaker-king-support-bonus 2.0`, while the initial retry1 guardrail rerun used `--use-profile-validation-defaults` without that explicit bonus. Rerunning retry1 with the explicit historical validation bonus restores Stage 6 to 300/300 h40 mates and 0 shadow candidates. The corrected promotion eval reports `overlay_only` with no Stage 6 failures and only Stage 5 one-ply guardrail control debt. Retry1 is still not promoted, but the next question is Stage 5 guardrail-definition/control-debt review, not Stage 6 learner quality.
+
+The Stage 5 control-debt review confirms that the one-ply debt is not a Stage 6 overlay regression: the Stage 5 overlay guardrail and paired fresh Stage 5 base control both convert 300/300 with 0 shadow candidates, and both show identical one-ply debt of 144 improved / 156 worsened. Stage 6 overlay validation should remain `overlay_only` with control debt, not quarantine for Stage 5 one-ply debt. Clean protected-stack replacement remains blocked until Stage 5 guardrails are split into conversion-preservation versus local reward/visible-contract debt, or that base-control debt is explicitly accepted by review.
 
 ## Runtime Approval Rule
 
