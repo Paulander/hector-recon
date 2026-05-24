@@ -1,0 +1,94 @@
+{
+  "schema_version": "krk_clean_retrain_run_result.v0",
+  "created_at": "2026-05-24T10:34:51+02:00",
+  "source_artifacts": [
+    "reports/krk_clean_curriculum_checkpoint_plan_v0.json",
+    "reports/krk_clean_retrain_execution_manifest_v0.json",
+    "reports/krk_clean_retrain_preflight_v0.json",
+    "reports/krk_clean_retrain_smoke_result_v0.json"
+  ],
+  "checkpoint_root": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0",
+  "status": "clean_retrain_full_run_incomplete_stage2a_no_promotable_checkpoint",
+  "decision": {
+    "full_clean_retrain_complete": false,
+    "stage2a_complete": false,
+    "stage2b_started": false,
+    "stage4_started": false,
+    "stage5_started": false,
+    "stage6_started": false,
+    "stage6_overlay_composed": false,
+    "stage7_remains_quarantined": true,
+    "stage8_remains_blocked": true,
+    "runtime_behavior_changed": false,
+    "recommended_next_step": "inspect_stage2a_training_stop_then_retry_stage2a_in_a_fresh_retry_root_or_fix_training_stop_condition"
+  },
+  "attempted_step": {
+    "step_id": "stage2a_edge_trap_close",
+    "stage_label": "stage2_edge_trap_close",
+    "command_source": "reports/krk_clean_retrain_execution_manifest_v0.json",
+    "output_dir": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage2a_edge_trap_close/baseline",
+    "observed_process_status": "no_train_baseline_krk_chain_process_alive_after_stage2_eval",
+    "stdout_status": "pty_session_returned_no_buffered_stdout",
+    "stop_condition": "expected_output_missing"
+  },
+  "observed_outputs": {
+    "topology_snapshot_file_count": 40,
+    "stage0_mate_in_1_snapshots": 20,
+    "stage1_backchain_snapshots": 10,
+    "stage2_edge_trap_close_snapshots": 10,
+    "adaptive_eval_files": [
+      "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage2a_edge_trap_close/baseline/adaptive_eval/mate_in_1/cycle_0019/learner.pkl",
+      "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage2a_edge_trap_close/baseline/adaptive_eval/mate_in_1/cycle_0019/topology.json",
+      "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage2a_edge_trap_close/baseline/adaptive_eval/stage0_basin/cycle_0009/learner.pkl",
+      "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage2a_edge_trap_close/baseline/adaptive_eval/stage0_basin/cycle_0009/topology.json",
+      "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage2a_edge_trap_close/baseline/adaptive_eval/edge_trap_close/cycle_0009/learner.pkl",
+      "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage2a_edge_trap_close/baseline/adaptive_eval/edge_trap_close/cycle_0009/topology.json"
+    ],
+    "best_by_stage_files": [
+      "mate_in_1.pkl",
+      "stage0_basin.pkl"
+    ],
+    "missing_required_outputs": [
+      "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage2a_edge_trap_close/baseline/final_learner.pkl",
+      "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage2a_edge_trap_close/baseline/best_by_stage/edge_trap_close.pkl",
+      "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage2a_edge_trap_close/topology/krk_entry_topology.json"
+    ]
+  },
+  "partial_eval_summary": {
+    "mate_in_1": {
+      "cycle": 19,
+      "passed": true,
+      "total": 100,
+      "mate_found": 100
+    },
+    "stage0_basin": {
+      "cycle": 9,
+      "passed": true,
+      "total": 100,
+      "improved": 100,
+      "optimal": 100
+    },
+    "edge_trap_close": {
+      "cycle": 9,
+      "adaptive_eval_artifacts_written": true,
+      "curriculum_history_event_written": false,
+      "stage_best_checkpoint_written": false
+    }
+  },
+  "invariants": {
+    "runtime_defaults_changed": false,
+    "runtime_selector_implemented": false,
+    "runtime_score_changes": false,
+    "runtime_direct_routing": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "gameplay_topology_mutation": false,
+    "stage7_promotion": false,
+    "stage8_training": false
+  },
+  "notes": [
+    "The clean retrain smoke already validated command plumbing, learner serialization, compiler execution, and topology parsing.",
+    "The full Stage 2A attempt reached Stage 2 edge-trap-close adaptive evaluation but did not produce the required final or stage-best checkpoint.",
+    "Because the required Stage 2A checkpoint is missing, downstream Stage 2B/4/5/6 clean retrain steps were not started.",
+    "Existing protected snapshots were not overwritten; the attempted output root is a fresh ignored snapshot root."
+  ]
+}

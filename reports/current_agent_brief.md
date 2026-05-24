@@ -1187,6 +1187,7 @@ stage6_overlay_compose_manifest_ready_not_run
 clean_retrain_preflight_ready_for_run_review
 clean_retrain_smoke_manifest_ready_not_run
 clean_retrain_smoke_plumbing_passed_semantic_smoke_too_tiny
+clean_retrain_full_run_incomplete_stage2a_no_promotable_checkpoint
 ```
 
 Artifacts:
@@ -1203,6 +1204,8 @@ Artifacts:
 * `reports/krk_clean_retrain_smoke_manifest_v0.json`
 * `reports/krk_clean_retrain_smoke_result_v0.md`
 * `reports/krk_clean_retrain_smoke_result_v0.json`
+* `reports/krk_clean_retrain_run_result_v0.md`
+* `reports/krk_clean_retrain_run_result_v0.json`
 
 The approved candidate-generation refresh sandbox was rerun and remains valid:
 
@@ -1216,6 +1219,8 @@ strategy_sequence_dataset_v4_refreshed_non_causal_selector_blocked
 The clean curriculum checkpoint plan identifies the current Stage 1/4/5/6 rebuild command sequence from existing run manifests, records Stage 7 as held-out/quarantined, keeps Stage 8 blocked, and keeps candidate-generation observation out of normal clean training. The execution manifest redirects the clean rebuild path to `snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0` and explicitly does not start training. The Stage 6 overlay compose manifest now defines the fresh frozen-base + overlay composition command, fresh output paths, promotion-eval command, guardrail criteria, and stop conditions. The preflight reports zero output collisions, zero protected-overwrite risks, zero command-scope violations, and no blockers for run review. A tiny command-plumbing smoke manifest is also ready, scoped only to 1 Stage 0 cycle and 1 Stage 1 cycle with 8 samples per cycle under `snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_smoke`. None of these artifacts start training or authorize a full run by themselves.
 
 The tiny smoke was run. It validates command plumbing: training exited 0, compilation exited 0, topology JSON parsed, and a fresh ignored smoke topology was written with 81 nodes and 160 edges. It does not validate curriculum semantics because Stage 1 skipped under the intentionally tiny settings.
+
+The approved full clean retrain attempt was started in the fresh ignored root `snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0`. Stage 2A reached the edge-trap-close adaptive-eval point, but no `final_learner.pkl` and no `best_by_stage/edge_trap_close.pkl` were produced. Downstream Stage 2B/4/5/6 steps were not started. Next work should inspect the Stage 2A training stop condition or retry Stage 2A in a fresh retry root; do not treat this as a completed clean checkpoint.
 
 ## Runtime Approval Rule
 
