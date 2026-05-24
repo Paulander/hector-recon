@@ -17,6 +17,17 @@ assert _spec.loader is not None
 _review = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_review)
 
+_split_spec = importlib.util.spec_from_file_location(
+    "write_krk_stage5_guardrail_semantics_split_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_stage5_guardrail_semantics_split_v0.py",
+)
+assert _split_spec is not None
+assert _split_spec.loader is not None
+_split = importlib.util.module_from_spec(_split_spec)
+_split_spec.loader.exec_module(_split)
+
 
 def _write_json(path: Path, payload: dict) -> Path:
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
@@ -136,3 +147,25 @@ def test_generated_stage5_control_debt_review_artifact_preserves_decision():
     assert payload["guardrail_definition_recommendation"]["split_required"] is True
     assert payload["stage5_overlay"]["mate_rate"] == 1.0
     assert payload["stage5_base_control"]["mate_rate"] == 1.0
+
+
+def test_stage5_guardrail_semantics_split_artifact_blocks_clean_replacement():
+    payload = json.loads(
+        Path("reports/krk_stage5_guardrail_semantics_split_v0.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["schema_version"] == "krk_stage5_guardrail_semantics_split.v0"
+    assert payload["status"] == "stage5_guardrail_semantics_split_defined"
+    assert payload["decision"]["clean_stack_replacement_allowed"] is False
+    assert payload["decision"]["stage6_overlay_use_allowed_as_overlay_only"] is True
+    tracks = {track["track_id"]: track for track in payload["guardrail_tracks"]}
+    assert "stage5.conversion_preservation_guardrail" in tracks
+    assert "stage5.local_reward_contract_guardrail" in tracks
+    assert (
+        payload["clean_retrain_promotion_policy"][
+            "stage5_local_reward_debt_reproduces_in_base_control"
+        ]
+        == "overlay_only_control_debt"
+    )

@@ -5630,10 +5630,22 @@ def test_stage6_overlay_compose_manifest_preserves_overlay_compile_contract():
     assert "--stagnation-breaker-king-support-bonus 2.0" in stage5_eval_cmd
     assert "--stagnation-breaker-king-support-bonus 2.0" in stage5_control_cmd
     assert "--guardrail-control-artifact" in promotion_cmd
+    assert (
+        "Stage 5 guardrail semantics split conversion preservation from local reward contract debt"
+        in payload["acceptance_criteria"]
+    )
+    assert (
+        "promotion_eval promotion_status is promoted, or overlay_only with no failures and only paired guardrail control debt"
+        in payload["acceptance_criteria"]
+    )
     assert "Stage 5 guardrail regresses" in payload["stop_conditions"]
     assert "Stage 4 caveat worsens relative to base control" in payload["stop_conditions"]
     assert (
         "handoff profile king-support validation bonus is omitted from h40 evaluation"
+        in payload["stop_conditions"]
+    )
+    assert (
+        "promotion eval has a Stage 6 target failure or paired guardrail regression"
         in payload["stop_conditions"]
     )
 

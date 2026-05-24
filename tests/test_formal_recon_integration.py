@@ -632,8 +632,18 @@ def test_provider_promotion_eval_keeps_overlay_only_when_control_guardrail_has_d
     )
 
     assert result["promotion_status"] == "overlay_only"
+    assert result["promotion_status_semantics"] == "overlay_only_due_to_guardrail_control_debt"
     assert result["failures"] == []
     assert result["guardrail_control_debt"][0]["path"] == str(control_path)
+    assert result["guardrail_semantics"]["split_enabled"] is True
+    assert result["guardrail_semantics"]["clean_replacement_blocked_by_control_debt"] is True
+    assert result["guardrail_semantics"]["conversion_preservation"][0]["passed"] is True
+    assert (
+        result["guardrail_semantics"]["local_reward_contract_debt"][0][
+            "blocks_clean_replacement"
+        ]
+        is True
+    )
 
 
 def test_provider_promotion_eval_keeps_stage_as_overlay_when_guardrail_fails(tmp_path):
@@ -712,10 +722,13 @@ def test_provider_promotion_eval_can_use_guardrail_controls(tmp_path):
     )
 
     assert result["promotion_status"] == "promoted"
+    assert result["promotion_status_semantics"] == "promoted_no_guardrail_regression_or_control_debt"
     assert result["target_improved_vs_baseline"] is True
     assert result["target_delta_vs_baseline"]["mate_rate_delta"] == 0.8
     assert result["guardrails"][0]["passed"] is True
     assert result["guardrail_deltas_vs_control"][0]["regressed_vs_control"] is False
+    assert result["guardrail_semantics"]["conversion_preservation"][0]["passed"] is True
+    assert result["guardrail_semantics"]["local_reward_contract_debt"] == []
 
 
 def test_provider_promotion_eval_blocks_guardrail_delta_regression(tmp_path):

@@ -179,6 +179,12 @@ def evaluate_promotion(
         for item in guardrail_controls
         if not item.get("passed", False)
     ]
+    guardrail_semantics = _guardrail_semantics(
+        guardrails=guardrails,
+        guardrail_controls=guardrail_controls,
+        guardrail_deltas=guardrail_deltas,
+        guardrail_control_debt=guardrail_control_debt,
+    )
 
     failures = []
     if not stage["passed"]:
@@ -195,9 +201,16 @@ def evaluate_promotion(
         status = "overlay_only"
     else:
         status = "quarantine"
+    promotion_status_semantics = _promotion_status_semantics(
+        status=status,
+        stage_passed=bool(stage["passed"]),
+        failures=failures,
+        guardrail_control_debt=guardrail_control_debt,
+    )
     return {
         "schema_version": "provider_promotion_eval.v1",
         "promotion_status": status,
+        "promotion_status_semantics": promotion_status_semantics,
         "stage": stage,
         "stage_baseline": stage_baseline,
         "target_delta_vs_baseline": target_delta,
@@ -206,6 +219,7 @@ def evaluate_promotion(
         "guardrail_controls": guardrail_controls,
         "guardrail_deltas_vs_control": guardrail_deltas,
         "guardrail_control_debt": guardrail_control_debt,
+        "guardrail_semantics": guardrail_semantics,
         "failures": failures,
     }
 
@@ -218,6 +232,104 @@ def _artifact_delta(candidate: dict[str, Any], baseline: dict[str, Any]) -> dict
         "worsened_rate_delta": candidate["worsened_rate"] - baseline["worsened_rate"],
         "shadow_candidates_delta": candidate["shadow_candidates"] - baseline["shadow_candidates"],
     }
+
+
+def _failure_track(reasons: list[str]) -> str:
+    if not reasons:
+        return "none"
+    local_terms = ("improved_rate", "worsened_rate")
+    conversion_terms = ("mate_rate", "max_plies_rate", "shadow_candidates")
+    has_local = any(any(term in reason for term in local_terms) for reason in reasons)
+    has_conversion = any(any(term in reason for term in conversion_terms) for reason in reasons)
+    if has_local and not has_conversion:
+        return "local_reward_contract"
+    if has_conversion and not has_local:
+        return "conversion_or_shadow"
+    return "mixed"
+
+
+def _guardrail_semantics(
+    *,
+    guardrails: list[dict[str, Any]],
+    guardrail_controls: list[dict[str, Any]],
+    guardrail_deltas: list[dict[str, Any]],
+    guardrail_control_debt: list[dict[str, Any]],
+) -> dict[str, Any]:
+    conversion_preservation = []
+    local_reward_contract_debt = []
+    controls_by_path = {item["path"]: item for item in guardrail_controls}
+    debt_paths = {item["path"] for item in guardrail_control_debt}
+
+    for index, guardrail in enumerate(guardrails):
+        delta = guardrail_deltas[index] if index < len(guardrail_deltas) else None
+        control = (
+            controls_by_path.get(delta["control_path"])
+            if delta is not None and delta.get("control_path")
+            else None
+        )
+        conversion_passed = bool(
+            guardrail.get("mate_rate", 0.0) >= 1.0
+            and guardrail.get("max_plies_rate", 1.0) <= 0.0
+            and guardrail.get("shadow_candidates", 1) == 0
+        )
+        conversion_preservation.append(
+            {
+                "index": index,
+                "guardrail_path": guardrail.get("path"),
+                "control_path": control.get("path") if control else None,
+                "track": "conversion_preservation_guardrail",
+                "passed": bool(delta is None or not delta.get("regressed_vs_control", False)),
+                "candidate_conversion_passed": conversion_passed,
+                "regressed_vs_control": bool(delta.get("regressed_vs_control", False))
+                if delta is not None
+                else None,
+                "delta": delta,
+            }
+        )
+        if control and control.get("path") in debt_paths:
+            local_reward_contract_debt.append(
+                {
+                    "index": index,
+                    "guardrail_path": guardrail.get("path"),
+                    "control_path": control.get("path"),
+                    "track": "local_reward_contract_guardrail",
+                    "status": "control_debt",
+                    "candidate_failure_track": _failure_track(
+                        list(guardrail.get("failure_reasons") or [])
+                    ),
+                    "control_failure_track": _failure_track(
+                        list(control.get("failure_reasons") or [])
+                    ),
+                    "candidate_failure_reasons": list(guardrail.get("failure_reasons") or []),
+                    "control_failure_reasons": list(control.get("failure_reasons") or []),
+                    "blocks_clean_replacement": True,
+                    "blocks_overlay_use": False,
+                }
+            )
+
+    return {
+        "schema_version": "guardrail_semantics_split.v1",
+        "split_enabled": bool(guardrail_controls),
+        "conversion_preservation": conversion_preservation,
+        "local_reward_contract_debt": local_reward_contract_debt,
+        "clean_replacement_blocked_by_control_debt": bool(local_reward_contract_debt),
+    }
+
+
+def _promotion_status_semantics(
+    *,
+    status: str,
+    stage_passed: bool,
+    failures: list[dict[str, Any]],
+    guardrail_control_debt: list[dict[str, Any]],
+) -> str:
+    if status == "promoted":
+        return "promoted_no_guardrail_regression_or_control_debt"
+    if status == "overlay_only" and stage_passed and not failures and guardrail_control_debt:
+        return "overlay_only_due_to_guardrail_control_debt"
+    if status == "overlay_only" and stage_passed:
+        return "overlay_only_due_to_guardrail_failure_without_control"
+    return "quarantined_due_to_stage_or_guardrail_failure"
 
 
 def main() -> int:
