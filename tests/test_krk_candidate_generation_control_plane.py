@@ -1155,6 +1155,19 @@ _clean_curriculum_checkpoint_plan = importlib.util.module_from_spec(
 )
 _clean_curriculum_checkpoint_plan_spec.loader.exec_module(_clean_curriculum_checkpoint_plan)
 
+_clean_retrain_execution_manifest_spec = importlib.util.spec_from_file_location(
+    "write_krk_clean_retrain_execution_manifest_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_clean_retrain_execution_manifest_v0.py",
+)
+assert _clean_retrain_execution_manifest_spec is not None
+assert _clean_retrain_execution_manifest_spec.loader is not None
+_clean_retrain_execution_manifest = importlib.util.module_from_spec(
+    _clean_retrain_execution_manifest_spec
+)
+_clean_retrain_execution_manifest_spec.loader.exec_module(_clean_retrain_execution_manifest)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -5505,3 +5518,38 @@ def test_clean_curriculum_checkpoint_plan_preserves_stage_boundaries():
     assert payload["runtime_selector_implemented"] is False
     assert "training Stage 8" in payload["readiness_review"]["invalid_run_conditions"]
     assert "promoting Stage 7" in payload["readiness_review"]["invalid_run_conditions"]
+
+
+def test_clean_retrain_execution_manifest_uses_fresh_outputs_and_blocks_run():
+    payload = _clean_retrain_execution_manifest.build_payload()
+
+    assert payload["schema_version"] == "krk_clean_retrain_execution_manifest.v0"
+    assert payload["decision"]["status"] == "clean_retrain_execution_manifest_ready_not_run"
+    assert payload["decision"]["full_run_authorized_by_this_manifest"] is False
+    assert payload["preflight"]["fresh_output_root_required"] is True
+    assert payload["preflight"]["must_not_overwrite_protected_snapshots"] is True
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["selector_training_allowed"] is False
+    assert all(
+        "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0" in output
+        for step in payload["steps"]
+        for output in step.get("expected_outputs", [])
+    )
+
+
+def test_clean_retrain_execution_manifest_chains_prior_stage_learners():
+    payload = _clean_retrain_execution_manifest.build_payload()
+    steps = {step["step_id"]: step for step in payload["steps"]}
+
+    assert steps["stage2b_enemy_between"]["prerequisites"] == ["stage2a_edge_trap_close"]
+    assert steps["stage4_wrong_tempo"]["prerequisites"] == ["stage2b_enemy_between"]
+    assert steps["stage5_fence_handoff"]["prerequisites"] == ["stage4_wrong_tempo"]
+    assert steps["stage6_drive_overlay_candidate"]["prerequisites"] == ["stage5_fence_handoff"]
+    assert steps["stage6_overlay_composition_review"]["execution_status"] == (
+        "requires_dedicated_compose_script_or_manual_review"
+    )
+    stage6_cmd = " ".join(steps["stage6_drive_overlay_candidate"]["commands"][0])
+    assert "--adaptive-composition-profile handoff_composition_v1" in stage6_cmd
+    assert "stage5_fence_handoff/baseline/best_by_stage/fence_established.pkl" in stage6_cmd

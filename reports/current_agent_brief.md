@@ -1182,12 +1182,15 @@ Latest clean curriculum checkpoint package:
 
 ```text
 clean_curriculum_checkpoint_plan_ready_full_run_requires_review
+clean_retrain_execution_manifest_ready_not_run
 ```
 
 Artifacts:
 
 * `reports/krk_clean_curriculum_checkpoint_plan_v0.md`
 * `reports/krk_clean_curriculum_checkpoint_plan_v0.json`
+* `reports/krk_clean_retrain_execution_manifest_v0.md`
+* `reports/krk_clean_retrain_execution_manifest_v0.json`
 
 The approved candidate-generation refresh sandbox was rerun and remains valid:
 
@@ -1198,7 +1201,7 @@ candidate_generation_refresh_trace_features_folded_non_causal
 strategy_sequence_dataset_v4_refreshed_non_causal_selector_blocked
 ```
 
-The clean curriculum checkpoint plan identifies the current Stage 1/4/5/6 rebuild command sequence from existing run manifests, records Stage 7 as held-out/quarantined, keeps Stage 8 blocked, and keeps candidate-generation observation out of normal clean training. It does not launch a full retrain. A full clean run should be started only from a separate execution manifest with fresh output paths so protected snapshots are not overwritten.
+The clean curriculum checkpoint plan identifies the current Stage 1/4/5/6 rebuild command sequence from existing run manifests, records Stage 7 as held-out/quarantined, keeps Stage 8 blocked, and keeps candidate-generation observation out of normal clean training. The execution manifest redirects the clean rebuild path to `snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0` and explicitly does not start training. It also records that the Stage 6 overlay composition step still needs a dedicated compose-manifest package before a full clean run can be considered fully replayable.
 
 ## Runtime Approval Rule
 
