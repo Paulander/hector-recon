@@ -1184,6 +1184,7 @@ Latest clean curriculum checkpoint package:
 clean_curriculum_checkpoint_plan_ready_full_run_requires_review
 clean_retrain_execution_manifest_ready_not_run
 stage6_overlay_compose_manifest_ready_not_run
+clean_retrain_preflight_ready_for_run_review
 ```
 
 Artifacts:
@@ -1194,6 +1195,8 @@ Artifacts:
 * `reports/krk_clean_retrain_execution_manifest_v0.json`
 * `reports/krk_stage6_overlay_compose_manifest_v0.md`
 * `reports/krk_stage6_overlay_compose_manifest_v0.json`
+* `reports/krk_clean_retrain_preflight_v0.md`
+* `reports/krk_clean_retrain_preflight_v0.json`
 
 The approved candidate-generation refresh sandbox was rerun and remains valid:
 
@@ -1204,7 +1207,7 @@ candidate_generation_refresh_trace_features_folded_non_causal
 strategy_sequence_dataset_v4_refreshed_non_causal_selector_blocked
 ```
 
-The clean curriculum checkpoint plan identifies the current Stage 1/4/5/6 rebuild command sequence from existing run manifests, records Stage 7 as held-out/quarantined, keeps Stage 8 blocked, and keeps candidate-generation observation out of normal clean training. The execution manifest redirects the clean rebuild path to `snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0` and explicitly does not start training. The Stage 6 overlay compose manifest now defines the fresh frozen-base + overlay composition command, fresh output paths, promotion-eval command, guardrail criteria, and stop conditions. It also does not run composition; it exists so a future clean run can be reviewed before execution.
+The clean curriculum checkpoint plan identifies the current Stage 1/4/5/6 rebuild command sequence from existing run manifests, records Stage 7 as held-out/quarantined, keeps Stage 8 blocked, and keeps candidate-generation observation out of normal clean training. The execution manifest redirects the clean rebuild path to `snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0` and explicitly does not start training. The Stage 6 overlay compose manifest now defines the fresh frozen-base + overlay composition command, fresh output paths, promotion-eval command, guardrail criteria, and stop conditions. The preflight reports zero output collisions, zero protected-overwrite risks, zero command-scope violations, and no blockers for run review. None of these artifacts start training or authorize a full run by themselves.
 
 ## Runtime Approval Rule
 

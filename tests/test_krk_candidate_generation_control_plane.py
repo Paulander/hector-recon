@@ -1181,6 +1181,17 @@ _stage6_overlay_compose_manifest = importlib.util.module_from_spec(
 )
 _stage6_overlay_compose_manifest_spec.loader.exec_module(_stage6_overlay_compose_manifest)
 
+_clean_retrain_preflight_spec = importlib.util.spec_from_file_location(
+    "verify_krk_clean_retrain_preflight_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "verify_krk_clean_retrain_preflight_v0.py",
+)
+assert _clean_retrain_preflight_spec is not None
+assert _clean_retrain_preflight_spec.loader is not None
+_clean_retrain_preflight = importlib.util.module_from_spec(_clean_retrain_preflight_spec)
+_clean_retrain_preflight_spec.loader.exec_module(_clean_retrain_preflight)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -5600,3 +5611,19 @@ def test_stage6_overlay_compose_manifest_preserves_overlay_compile_contract():
     assert "--validated-profile handoff_composition_v1" in compile_cmd
     assert "Stage 5 guardrail regresses" in payload["stop_conditions"]
     assert "Stage 4 caveat worsens relative to base control" in payload["stop_conditions"]
+
+
+def test_clean_retrain_preflight_ready_without_running_training():
+    payload = _clean_retrain_preflight.build_payload()
+
+    assert payload["schema_version"] == "krk_clean_retrain_preflight.v0"
+    assert payload["decision"]["status"] == "clean_retrain_preflight_ready_for_run_review"
+    assert payload["decision"]["safe_to_request_run_review"] is True
+    assert payload["decision"]["training_started"] is False
+    assert payload["decision"]["full_run_authorized_by_this_artifact"] is False
+    assert payload["summary"]["blocker_count"] == 0
+    assert payload["summary"]["protected_overwrite_count"] == 0
+    assert payload["summary"]["command_violation_count"] == 0
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False

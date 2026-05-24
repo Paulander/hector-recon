@@ -1,0 +1,48 @@
+{
+  "blockers": [],
+  "causal_status": "preflight_only_no_training",
+  "command_violations": [],
+  "compose_output_collisions": [],
+  "decision": {
+    "full_run_authorized_by_this_artifact": false,
+    "recommended_next_step": "request_explicit_run_approval_or_create_smoke_run_manifest",
+    "runtime_selector_allowed": false,
+    "safe_to_request_run_review": true,
+    "status": "clean_retrain_preflight_ready_for_run_review",
+    "training_started": false
+  },
+  "gameplay_topology_mutation": false,
+  "output_collisions": [],
+  "protected_overwrites": [],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_clean_retrain_preflight.v0",
+  "source_artifacts": [
+    "reports/krk_clean_retrain_execution_manifest_v0.json",
+    "reports/krk_stage6_overlay_compose_manifest_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "blocker_count": 0,
+    "checkpoint_root": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0",
+    "command_violation_count": 0,
+    "compose_output_collision_count": 0,
+    "compose_output_count": 7,
+    "execution_output_collision_count": 0,
+    "execution_output_count": 16,
+    "protected_overwrite_count": 0,
+    "stage_chain": [
+      "stage2a_edge_trap_close",
+      "stage2b_enemy_between",
+      "stage4_wrong_tempo",
+      "stage5_fence_handoff",
+      "stage6_drive_overlay_candidate",
+      "stage6_overlay_composition_review"
+    ]
+  }
+}
