@@ -1193,6 +1193,8 @@ clean_retrain_retry1_stage6_overlay_quarantined_guardrails_partial
 stage6_gap_explained_by_validation_profile_mismatch
 stage5_one_ply_guardrail_control_debt_confirmed
 stage5_guardrail_semantics_split_defined
+stage5_local_reward_contract_debt_is_guardrail_semantics_debt
+retry1_ready_for_remaining_preservation_checks_not_replacement
 ```
 
 Artifacts:
@@ -1221,6 +1223,10 @@ Artifacts:
 * `reports/krk_stage5_guardrail_control_debt_review_v0.json`
 * `reports/krk_stage5_guardrail_semantics_split_v0.md`
 * `reports/krk_stage5_guardrail_semantics_split_v0.json`
+* `reports/krk_stage5_local_reward_contract_debt_audit_v0.md`
+* `reports/krk_stage5_local_reward_contract_debt_audit_v0.json`
+* `reports/krk_clean_retrain_retry1_replacement_readiness_review_v0.md`
+* `reports/krk_clean_retrain_retry1_replacement_readiness_review_v0.json`
 
 The approved candidate-generation refresh sandbox was rerun and remains valid:
 
@@ -1246,6 +1252,8 @@ Follow-up inspection showed that this quarantine was driven by a validation-prof
 The Stage 5 control-debt review confirms that the one-ply debt is not a Stage 6 overlay regression: the Stage 5 overlay guardrail and paired fresh Stage 5 base control both convert 300/300 with 0 shadow candidates, and both show identical one-ply debt of 144 improved / 156 worsened. Stage 6 overlay validation should remain `overlay_only` with control debt, not quarantine for Stage 5 one-ply debt. Clean protected-stack replacement remains blocked until Stage 5 guardrails are split into conversion-preservation versus local reward/visible-contract debt, or that base-control debt is explicitly accepted by review.
 
 The Stage 5 guardrail semantics split is now formalized. `stage5.conversion_preservation_guardrail` protects conversion behavior by comparing the candidate overlay against the paired Stage 5 base control. `stage5.local_reward_contract_guardrail` tracks local reward/visible-fence-contract debt and blocks clean-stack replacement when that debt reproduces in the base control. The offline promotion evaluator now reports `promotion_status_semantics` and `guardrail_semantics`; the corrected retry1 result is `overlay_only_due_to_guardrail_control_debt`, not `promoted` and not Stage 6 quarantine.
+
+The Stage 5 local reward/contract debt audit classifies the debt as guardrail semantics debt. The six repeated Stage 5 patterns all preserve h40 conversion; 156/300 samples show visible fence contract plus conversion without local dense reward confirmation, and the same pattern signature appears in the paired base control. Retry1 is therefore ready only for remaining preservation checks, not protected-stack replacement. Required next checks are Stage 4 overlay-caveat/control review, M1-M4 preservation, KPK→KQK bridge preservation, and a protected-stack snapshot/rollback manifest before any replacement packet.
 
 ## Runtime Approval Rule
 

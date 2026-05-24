@@ -28,6 +28,28 @@ assert _split_spec.loader is not None
 _split = importlib.util.module_from_spec(_split_spec)
 _split_spec.loader.exec_module(_split)
 
+_debt_audit_spec = importlib.util.spec_from_file_location(
+    "audit_krk_stage5_local_reward_contract_debt_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "audit_krk_stage5_local_reward_contract_debt_v0.py",
+)
+assert _debt_audit_spec is not None
+assert _debt_audit_spec.loader is not None
+_debt_audit = importlib.util.module_from_spec(_debt_audit_spec)
+_debt_audit_spec.loader.exec_module(_debt_audit)
+
+_replacement_review_spec = importlib.util.spec_from_file_location(
+    "write_krk_clean_retrain_retry1_replacement_readiness_review_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_clean_retrain_retry1_replacement_readiness_review_v0.py",
+)
+assert _replacement_review_spec is not None
+assert _replacement_review_spec.loader is not None
+_replacement_review = importlib.util.module_from_spec(_replacement_review_spec)
+_replacement_review_spec.loader.exec_module(_replacement_review)
+
 
 def _write_json(path: Path, payload: dict) -> Path:
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
@@ -169,3 +191,52 @@ def test_stage5_guardrail_semantics_split_artifact_blocks_clean_replacement():
         ]
         == "overlay_only_control_debt"
     )
+
+
+def test_stage5_local_reward_contract_debt_audit_classifies_semantics_debt():
+    payload = json.loads(
+        Path("reports/krk_stage5_local_reward_contract_debt_audit_v0.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["schema_version"] == "krk_stage5_local_reward_contract_debt_audit.v0"
+    assert payload["status"] == "stage5_local_reward_contract_debt_is_guardrail_semantics_debt"
+    assert payload["decision"]["overlay_matches_base_control_patterns"] is True
+    assert payload["decision"]["local_reward_debt_is_stage6_regression"] is False
+    assert payload["decision"]["clean_stack_replacement_allowed"] is False
+    assert (
+        payload["pattern_summary"]["semantic_alignment_counts"][
+            "visible_contract_and_conversion_without_local_reward"
+        ]
+        == 156
+    )
+    assert payload["invariants"]["runtime_defaults_changed"] is False
+    assert payload["invariants"]["stage7_promotion"] is False
+
+
+def test_retry1_replacement_readiness_review_allows_only_remaining_checks():
+    payload = json.loads(
+        Path("reports/krk_clean_retrain_retry1_replacement_readiness_review_v0.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["schema_version"] == "krk_clean_retrain_retry1_replacement_readiness_review.v0"
+    assert payload["status"] == "retry1_ready_for_remaining_preservation_checks_not_replacement"
+    assert payload["decision"]["stage6_target_passed_corrected_profile"] is True
+    assert payload["decision"]["stage5_conversion_preservation_passed"] is True
+    assert (
+        payload["decision"][
+            "stage5_local_reward_debt_accepted_as_known_base_control_debt_for_overlay_review"
+        ]
+        is True
+    )
+    assert payload["decision"]["clean_stack_replacement_allowed"] is False
+    assert payload["replacement_policy"]["allowed_now"] is False
+    required_checks = {item["check_id"] for item in payload["remaining_required_checks"]}
+    assert "stage4_overlay_caveat_control_review" in required_checks
+    assert "m1_m4_preservation_suite" in required_checks
+    assert "kpk_kqk_bridge_preservation" in required_checks
+    assert payload["invariants"]["runtime_defaults_changed"] is False
+    assert payload["invariants"]["stage8_training"] is False

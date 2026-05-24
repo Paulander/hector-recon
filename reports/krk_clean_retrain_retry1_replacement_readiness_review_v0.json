@@ -1,0 +1,155 @@
+{
+  "created_at": "2026-05-24T19:08:42+02:00",
+  "decision": {
+    "clean_stack_replacement_allowed": false,
+    "recommended_next_step": "run_remaining_preservation_checks_and_stage4_caveat_review_before_any_clean_stack_replacement_packet",
+    "runtime_behavior_changed": false,
+    "stage5_conversion_preservation_passed": true,
+    "stage5_local_reward_debt_accepted_as_known_base_control_debt_for_overlay_review": true,
+    "stage6_target_passed_corrected_profile": true
+  },
+  "invariants": {
+    "gameplay_topology_mutation": false,
+    "runtime_defaults_changed": false,
+    "runtime_direct_routing": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "runtime_score_changes": false,
+    "runtime_selector_implemented": false,
+    "stage7_promotion": false,
+    "stage8_training": false
+  },
+  "promotion_eval_summary": {
+    "failures": [],
+    "guardrail_semantics": {
+      "clean_replacement_blocked_by_control_debt": true,
+      "conversion_preservation": [
+        {
+          "candidate_conversion_passed": true,
+          "control_path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_stage5_base_control_300_seed7_h40_profile_bonus.json",
+          "delta": {
+            "candidate_path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+            "control_path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_stage5_base_control_300_seed7_h40_profile_bonus.json",
+            "improved_rate_delta": 0.0,
+            "index": 0,
+            "mate_rate_delta": 0.0,
+            "max_plies_rate_delta": 0.0,
+            "regressed_vs_control": false,
+            "shadow_candidates_delta": 0,
+            "worsened_rate_delta": 0.0
+          },
+          "guardrail_path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+          "index": 0,
+          "passed": true,
+          "regressed_vs_control": false,
+          "track": "conversion_preservation_guardrail"
+        }
+      ],
+      "local_reward_contract_debt": [
+        {
+          "blocks_clean_replacement": true,
+          "blocks_overlay_use": false,
+          "candidate_failure_reasons": [
+            "improved_rate=0.480 < 0.700",
+            "worsened_rate=0.520 > 0.200"
+          ],
+          "candidate_failure_track": "local_reward_contract",
+          "control_failure_reasons": [
+            "improved_rate=0.480 < 0.700",
+            "worsened_rate=0.520 > 0.200"
+          ],
+          "control_failure_track": "local_reward_contract",
+          "control_path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_stage5_base_control_300_seed7_h40_profile_bonus.json",
+          "guardrail_path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+          "index": 0,
+          "status": "control_debt",
+          "track": "local_reward_contract_guardrail"
+        }
+      ],
+      "schema_version": "guardrail_semantics_split.v1",
+      "split_enabled": true
+    },
+    "promotion_status": "overlay_only",
+    "promotion_status_semantics": "overlay_only_due_to_guardrail_control_debt",
+    "stage_passed": true
+  },
+  "related_stage6_gap_status": "stage6_gap_explained_by_validation_profile_mismatch",
+  "remaining_required_checks": [
+    {
+      "check_id": "stage4_overlay_caveat_control_review",
+      "reason": "Stage 4 has a known h40 overlay-control caveat and was not rerun after the corrected Stage 6 validation-profile inspection.",
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "check_id": "m1_m4_preservation_suite",
+      "reason": "Clean-stack replacement must preserve plasticity/consolidation semantics beyond KRK artifact-level checks.",
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "check_id": "kpk_kqk_bridge_preservation",
+      "reason": "Endgame domain handoff and bridge eligibility must remain intact before replacing protected KRK checkpoints.",
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "check_id": "protected_stack_snapshot_manifest",
+      "reason": "Replacement requires an explicit snapshot/rollback manifest naming old and candidate checkpoints.",
+      "required": true,
+      "status": "pending"
+    }
+  ],
+  "replacement_policy": {
+    "allowed_now": false,
+    "stage5_local_reward_debt_effect": "accepted_only_as_known_base_control_debt_for_overlay_review",
+    "stage6_overlay_effect": "can_continue_as_overlay_only_candidate_for_remaining_preservation_checks",
+    "stage7_effect": "unchanged_quarantined_held_out",
+    "stage8_effect": "unchanged_blocked"
+  },
+  "schema_version": "krk_clean_retrain_retry1_replacement_readiness_review.v0",
+  "semantics_split_summary": {
+    "clean_retrain_promotion_policy": {
+      "no_debt_no_regression_target_passed": "promoted_after_remaining_guardrails",
+      "stage5_conversion_regression_vs_control": "quarantine",
+      "stage5_local_reward_debt_only_in_candidate": "quarantine_or_review",
+      "stage5_local_reward_debt_reproduces_in_base_control": "overlay_only_control_debt",
+      "stage6_target_failure": "quarantine"
+    },
+    "status": "stage5_guardrail_semantics_split_defined"
+  },
+  "source_artifacts": {
+    "corrected_promotion_eval": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/promotion_eval_stage6_overlay_profile_bonus.json",
+    "stage5_debt_audit": "reports/krk_stage5_local_reward_contract_debt_audit_v0.json",
+    "stage5_semantics_split": "reports/krk_stage5_guardrail_semantics_split_v0.json",
+    "stage6_gap_inspection": "reports/krk_clean_retrain_retry1_stage6_gap_inspection_v1.json"
+  },
+  "stage5_debt_summary": {
+    "pattern_summary": {
+      "post_own_status_counts": {
+        "confirmed": 144,
+        "failed": 156
+      },
+      "post_reply_status_counts": {
+        "confirmed": 144,
+        "failed": 156
+      },
+      "root_cause_label_counts": {
+        "box_area_expands_after_reply_but_converts": 54,
+        "fence_break_after_reply_still_converts": 54,
+        "local_reward_too_strict_for_conversion": 156,
+        "no_debt_pattern": 144,
+        "one_ply_worst_reply_reward_prefers_alternative": 156,
+        "stable_fence_still_negative_dense_reward": 54
+      },
+      "semantic_alignment_counts": {
+        "reward_visible_contract_conversion_aligned": 144,
+        "visible_contract_and_conversion_without_local_reward": 156
+      },
+      "unique_base_control_patterns": 6,
+      "unique_overlay_patterns": 6
+    },
+    "recommended_next_step": "accept_stage5_local_reward_debt_as_known_base_control_debt_for_overlay_only_review_and_run_remaining_preservation_checks_before_any_clean_stack_replacement",
+    "status": "stage5_local_reward_contract_debt_is_guardrail_semantics_debt"
+  },
+  "status": "retry1_ready_for_remaining_preservation_checks_not_replacement"
+}
