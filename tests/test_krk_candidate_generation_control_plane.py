@@ -1192,6 +1192,19 @@ assert _clean_retrain_preflight_spec.loader is not None
 _clean_retrain_preflight = importlib.util.module_from_spec(_clean_retrain_preflight_spec)
 _clean_retrain_preflight_spec.loader.exec_module(_clean_retrain_preflight)
 
+_clean_retrain_smoke_manifest_spec = importlib.util.spec_from_file_location(
+    "write_krk_clean_retrain_smoke_manifest_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_clean_retrain_smoke_manifest_v0.py",
+)
+assert _clean_retrain_smoke_manifest_spec is not None
+assert _clean_retrain_smoke_manifest_spec.loader is not None
+_clean_retrain_smoke_manifest = importlib.util.module_from_spec(
+    _clean_retrain_smoke_manifest_spec
+)
+_clean_retrain_smoke_manifest_spec.loader.exec_module(_clean_retrain_smoke_manifest)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -5627,3 +5640,22 @@ def test_clean_retrain_preflight_ready_without_running_training():
     assert payload["runtime_behavior_changed"] is False
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
+
+
+def test_clean_retrain_smoke_manifest_is_tiny_and_not_authorizing_full_run():
+    payload = _clean_retrain_smoke_manifest.build_payload()
+
+    assert payload["schema_version"] == "krk_clean_retrain_smoke_manifest.v0"
+    assert payload["decision"]["status"] == "clean_retrain_smoke_manifest_ready_not_run"
+    assert payload["decision"]["safe_to_request_smoke_run_approval"] is True
+    assert payload["decision"]["smoke_run_authorized_by_this_manifest"] is False
+    assert payload["decision"]["full_run_authorized_by_this_manifest"] is False
+    assert payload["smoke_scope"]["stage7_rows"] == 0
+    assert payload["smoke_scope"]["stage8_training"] is False
+    assert payload["smoke_scope"]["samples_per_cycle"] == 8
+    assert payload["smoke_scope"]["stage0_cycles"] == 1
+    assert payload["smoke_scope"]["stage1_cycles"] == 1
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["selector_training_allowed"] is False
