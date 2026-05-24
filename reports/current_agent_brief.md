@@ -1188,6 +1188,7 @@ clean_retrain_preflight_ready_for_run_review
 clean_retrain_smoke_manifest_ready_not_run
 clean_retrain_smoke_plumbing_passed_semantic_smoke_too_tiny
 clean_retrain_full_run_incomplete_stage2a_no_promotable_checkpoint
+clean_retrain_retry1_completed_through_stage6_overlay_compose_basic_checks_passed
 ```
 
 Artifacts:
@@ -1206,6 +1207,8 @@ Artifacts:
 * `reports/krk_clean_retrain_smoke_result_v0.json`
 * `reports/krk_clean_retrain_run_result_v0.md`
 * `reports/krk_clean_retrain_run_result_v0.json`
+* `reports/krk_clean_retrain_retry1_result_v1.md`
+* `reports/krk_clean_retrain_retry1_result_v1.json`
 
 The approved candidate-generation refresh sandbox was rerun and remains valid:
 
@@ -1221,6 +1224,8 @@ The clean curriculum checkpoint plan identifies the current Stage 1/4/5/6 rebuil
 The tiny smoke was run. It validates command plumbing: training exited 0, compilation exited 0, topology JSON parsed, and a fresh ignored smoke topology was written with 81 nodes and 160 edges. It does not validate curriculum semantics because Stage 1 skipped under the intentionally tiny settings.
 
 The approved full clean retrain attempt was started in the fresh ignored root `snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0`. Stage 2A reached the edge-trap-close adaptive-eval point, but no `final_learner.pkl` and no `best_by_stage/edge_trap_close.pkl` were produced. Downstream Stage 2B/4/5/6 steps were not started. Next work should inspect the Stage 2A training stop condition or retry Stage 2A in a fresh retry root; do not treat this as a completed clean checkpoint.
+
+Retry1 was then run in the separate ignored root `snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1`. It completed Stage 2A, Stage 2B, Stage 4, Stage 5, Stage 6, and fresh Stage 6 overlay composition. The composed overlay topology has 390 nodes and 1088 edges and passed the basic KRK entry and Stage 1 backchain checks on 100 samples each. Stage 6 passed h40 conversion at cycle 9. This is still not a promotion: dedicated Stage 5/6 handoff guardrail artifacts, M1-M4 preservation, KPK→KQK preservation, and promotion/quarantine review remain required before replacing protected checkpoints.
 
 ## Runtime Approval Rule
 

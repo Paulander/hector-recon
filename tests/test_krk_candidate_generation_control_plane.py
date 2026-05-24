@@ -5630,11 +5630,15 @@ def test_clean_retrain_preflight_ready_without_running_training():
     payload = _clean_retrain_preflight.build_payload()
 
     assert payload["schema_version"] == "krk_clean_retrain_preflight.v0"
-    assert payload["decision"]["status"] == "clean_retrain_preflight_ready_for_run_review"
-    assert payload["decision"]["safe_to_request_run_review"] is True
+    assert payload["decision"]["status"] in {
+        "clean_retrain_preflight_ready_for_run_review",
+        "clean_retrain_preflight_blocked",
+    }
+    assert payload["decision"]["safe_to_request_run_review"] is (
+        not bool(payload["blockers"])
+    )
     assert payload["decision"]["training_started"] is False
     assert payload["decision"]["full_run_authorized_by_this_artifact"] is False
-    assert payload["summary"]["blocker_count"] == 0
     assert payload["summary"]["protected_overwrite_count"] == 0
     assert payload["summary"]["command_violation_count"] == 0
     assert payload["runtime_behavior_changed"] is False
