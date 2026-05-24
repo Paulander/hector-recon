@@ -1198,6 +1198,7 @@ retry1_ready_for_remaining_preservation_checks_not_replacement
 stage4_caveat_reproduces_in_base_control_no_overlay_regression
 retry1_m1_m4_and_bridge_preservation_checks_passed
 retry1_protected_stack_snapshot_manifest_ready_no_replacement
+retry1_clean_stack_replacement_review_ready_explicit_approval_required
 ```
 
 Artifacts:
@@ -1236,6 +1237,8 @@ Artifacts:
 * `reports/krk_clean_retrain_retry1_preservation_checks_v0.json`
 * `reports/krk_clean_retrain_retry1_protected_stack_snapshot_manifest_v0.md`
 * `reports/krk_clean_retrain_retry1_protected_stack_snapshot_manifest_v0.json`
+* `reports/krk_clean_retrain_retry1_clean_stack_replacement_review_packet_v0.md`
+* `reports/krk_clean_retrain_retry1_clean_stack_replacement_review_packet_v0.json`
 
 The approved candidate-generation refresh sandbox was rerun and remains valid:
 
@@ -1269,6 +1272,8 @@ The Stage 4 overlay-caveat/control review is complete. Retry1 Stage 6 overlay an
 The retry1 M1-M4 and KPK→KQK bridge preservation checks are complete. Focused preservation tests passed (`78 passed`) with only pre-existing `PytestReturnNotNoneWarning` warnings in `tests/test_subgraph_delegation.py`.
 
 The protected-stack snapshot/rollback manifest is complete and records current protected Stage 5/6 stack paths plus retry1 candidate stack paths. All referenced paths exist. The manifest is reference-only: it does not copy, replace, delete, promote, train, route, score, mutate topology, or change runtime defaults. Clean protected-stack replacement is still not allowed by these artifacts; the next possible step is a clean-stack replacement review packet before any file change.
+
+The clean-stack replacement review packet is now ready for human review. It records all prerequisites as passed and marks retry1 replacement review-ready, but explicitly states `implementation_allowed_by_this_packet = false`. No file changes, protected-stack replacement, Stage 7 promotion, Stage 8 training, runtime default changes, runtime selector behavior, runtime DTM/tablebase use, or gameplay topology mutation are authorized. A later explicit approval is required before any protected-stack pointer/path change.
 
 ## Runtime Approval Rule
 

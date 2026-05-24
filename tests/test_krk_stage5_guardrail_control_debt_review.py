@@ -83,6 +83,17 @@ assert _snapshot_manifest_spec.loader is not None
 _snapshot_manifest = importlib.util.module_from_spec(_snapshot_manifest_spec)
 _snapshot_manifest_spec.loader.exec_module(_snapshot_manifest)
 
+_replacement_packet_spec = importlib.util.spec_from_file_location(
+    "write_krk_retry1_clean_stack_replacement_review_packet_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_retry1_clean_stack_replacement_review_packet_v0.py",
+)
+assert _replacement_packet_spec is not None
+assert _replacement_packet_spec.loader is not None
+_replacement_packet = importlib.util.module_from_spec(_replacement_packet_spec)
+_replacement_packet_spec.loader.exec_module(_replacement_packet)
+
 
 def _write_json(path: Path, payload: dict) -> Path:
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
@@ -342,3 +353,37 @@ def test_retry1_snapshot_manifest_records_paths_without_replacement():
     assert payload["invariants"]["runtime_defaults_changed"] is False
     assert payload["invariants"]["stage7_promotion"] is False
     assert payload["invariants"]["stage8_training"] is False
+
+
+def test_retry1_clean_stack_replacement_packet_requires_explicit_approval():
+    payload = json.loads(
+        Path(
+            "reports/krk_clean_retrain_retry1_clean_stack_replacement_review_packet_v0.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert (
+        payload["schema_version"]
+        == "krk_clean_retrain_retry1_clean_stack_replacement_review_packet.v0"
+    )
+    assert (
+        payload["status"]
+        == "retry1_clean_stack_replacement_review_ready_explicit_approval_required"
+    )
+    assert payload["decision"]["replacement_review_ready"] is True
+    assert payload["decision"]["implementation_allowed_by_this_packet"] is False
+    assert payload["decision"]["clean_stack_replacement_performed"] is False
+    assert (
+        payload["decision"]["explicit_human_approval_required_before_any_file_change"]
+        is True
+    )
+    assert all(payload["prerequisites"].values())
+    assert payload["invariants"]["files_copied_or_replaced"] is False
+    assert payload["invariants"]["runtime_defaults_changed"] is False
+    assert payload["invariants"]["gameplay_topology_mutation"] is False
+    assert payload["invariants"]["stage7_promotion"] is False
+    assert payload["invariants"]["stage8_training"] is False
+    forbidden = set(payload["required_approval_scope_if_approved_later"]["forbidden"])
+    assert "promote Stage 7" in forbidden
+    assert "train Stage 8" in forbidden
+    assert "delete or overwrite rollback sources" in forbidden
