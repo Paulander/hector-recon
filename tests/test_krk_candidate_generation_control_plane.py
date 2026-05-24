@@ -1168,6 +1168,19 @@ _clean_retrain_execution_manifest = importlib.util.module_from_spec(
 )
 _clean_retrain_execution_manifest_spec.loader.exec_module(_clean_retrain_execution_manifest)
 
+_stage6_overlay_compose_manifest_spec = importlib.util.spec_from_file_location(
+    "write_krk_stage6_overlay_compose_manifest_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_stage6_overlay_compose_manifest_v0.py",
+)
+assert _stage6_overlay_compose_manifest_spec is not None
+assert _stage6_overlay_compose_manifest_spec.loader is not None
+_stage6_overlay_compose_manifest = importlib.util.module_from_spec(
+    _stage6_overlay_compose_manifest_spec
+)
+_stage6_overlay_compose_manifest_spec.loader.exec_module(_stage6_overlay_compose_manifest)
+
 _landmark_spec = importlib.util.spec_from_file_location(
     "test_krk_landmark_progress",
     Path(__file__).resolve().parents[1]
@@ -5553,3 +5566,37 @@ def test_clean_retrain_execution_manifest_chains_prior_stage_learners():
     stage6_cmd = " ".join(steps["stage6_drive_overlay_candidate"]["commands"][0])
     assert "--adaptive-composition-profile handoff_composition_v1" in stage6_cmd
     assert "stage5_fence_handoff/baseline/best_by_stage/fence_established.pkl" in stage6_cmd
+
+
+def test_stage6_overlay_compose_manifest_is_review_only_and_fresh_scoped():
+    payload = _stage6_overlay_compose_manifest.build_payload()
+
+    assert payload["schema_version"] == "krk_stage6_overlay_compose_manifest.v0"
+    assert payload["decision"]["status"] == "stage6_overlay_compose_manifest_ready_not_run"
+    assert payload["decision"]["compose_run_authorized_by_this_manifest"] is False
+    assert payload["decision"]["full_run_authorized_by_this_manifest"] is False
+    assert payload["decision"]["stage7_remains_quarantined"] is True
+    assert payload["decision"]["stage8_remains_blocked"] is True
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["gameplay_topology_mutation"] is False
+    assert payload["composition_profile"] == "handoff_composition_v1"
+    assert payload["base_provider_version"] == "stage5_validated_v1"
+    assert payload["overlay_provider_version"] == "stage6_overlay_v1"
+    assert all(
+        "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0" in value
+        for value in payload["fresh_outputs"].values()
+    )
+
+
+def test_stage6_overlay_compose_manifest_preserves_overlay_compile_contract():
+    payload = _stage6_overlay_compose_manifest.build_payload()
+    compile_cmd = " ".join(payload["commands"]["compile_overlay_topology"])
+
+    assert "--base-topology" in compile_cmd
+    assert "--overlay-learner" in compile_cmd
+    assert "--overlay-label drive_to_edge" in compile_cmd
+    assert "--base-provider-version stage5_validated_v1" in compile_cmd
+    assert "--overlay-provider-version stage6_overlay_v1" in compile_cmd
+    assert "--validated-profile handoff_composition_v1" in compile_cmd
+    assert "Stage 5 guardrail regresses" in payload["stop_conditions"]
+    assert "Stage 4 caveat worsens relative to base control" in payload["stop_conditions"]
