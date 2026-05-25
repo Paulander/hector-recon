@@ -1,0 +1,191 @@
+{
+  "causal_status": "non_causal_sequence_policy_input_probe",
+  "decision": {
+    "label_run_allowed": false,
+    "recommended_next_step": "fill_stage7_clean_success_controls_before_full_sequence_policy_benchmark",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "sequence_policy_input_probe_partial_stage7_success_controls_missing"
+  },
+  "gameplay_topology_mutation": false,
+  "protected_plan_window_probe": {
+    "failure_evidence_sparse": true,
+    "failure_row_count": 2,
+    "row_count": 21,
+    "runtime_ready": false,
+    "source_stage_counts": {
+      "stage4": 11,
+      "stage5": 6,
+      "stage6": 4
+    },
+    "target_label_counts": {
+      "conversion_failure": 2,
+      "conversion_positive": 19
+    },
+    "top_terms": [
+      {
+        "conversion_failure": 2,
+        "conversion_positive": 19,
+        "failure_precision": 0.09523809523809523,
+        "success_precision": 0.9047619047619048,
+        "support": 21,
+        "term": "entry_terms_confirmed:enemy_king_boxed_after_own_move"
+      },
+      {
+        "conversion_failure": 2,
+        "conversion_positive": 19,
+        "failure_precision": 0.09523809523809523,
+        "success_precision": 0.9047619047619048,
+        "support": 21,
+        "term": "entry_terms_confirmed:rook_safe_after_own_move"
+      },
+      {
+        "conversion_failure": 2,
+        "conversion_positive": 19,
+        "failure_precision": 0.09523809523809523,
+        "success_precision": 0.9047619047619048,
+        "support": 21,
+        "term": "entry_terms_confirmed:visible_fence_contract_confirmed"
+      },
+      {
+        "conversion_failure": 2,
+        "conversion_positive": 19,
+        "failure_precision": 0.09523809523809523,
+        "success_precision": 0.9047619047619048,
+        "support": 21,
+        "term": "progress_terms_after_first_reply:handoff_gap_absent"
+      },
+      {
+        "conversion_failure": 2,
+        "conversion_positive": 18,
+        "failure_precision": 0.1,
+        "success_precision": 0.9,
+        "support": 20,
+        "term": "progress_terms_after_first_reply:enemy_king_boxed_after_reply"
+      },
+      {
+        "conversion_failure": 2,
+        "conversion_positive": 18,
+        "failure_precision": 0.1,
+        "success_precision": 0.9,
+        "support": 20,
+        "term": "progress_terms_after_first_reply:fence_survived_reply"
+      },
+      {
+        "conversion_failure": 0,
+        "conversion_positive": 15,
+        "failure_precision": 0.0,
+        "success_precision": 1.0,
+        "support": 15,
+        "term": "entry_terms_confirmed:reward_confirmed"
+      },
+      {
+        "conversion_failure": 0,
+        "conversion_positive": 15,
+        "failure_precision": 0.0,
+        "success_precision": 1.0,
+        "support": 15,
+        "term": "progress_terms_after_first_reply:successor_affordance"
+      },
+      {
+        "conversion_failure": 0,
+        "conversion_positive": 15,
+        "failure_precision": 0.0,
+        "success_precision": 1.0,
+        "support": 15,
+        "term": "semantic_alignment_status:reward_visible_fence_aligned_survived"
+      },
+      {
+        "conversion_failure": 2,
+        "conversion_positive": 12,
+        "failure_precision": 0.14285714285714285,
+        "success_precision": 0.8571428571428571,
+        "support": 14,
+        "term": "handoff_targets:krk.stage0_basin"
+      },
+      {
+        "conversion_failure": 0,
+        "conversion_positive": 13,
+        "failure_precision": 0.0,
+        "success_precision": 1.0,
+        "support": 13,
+        "term": "handoff_targets:krk.edge_trap_close"
+      },
+      {
+        "conversion_failure": 0,
+        "conversion_positive": 13,
+        "failure_precision": 0.0,
+        "success_precision": 1.0,
+        "support": 13,
+        "term": "handoff_targets:krk.edge_trap_enemy_between"
+      }
+    ]
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_sequence_policy_input_probe.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json"
+  ],
+  "stage4_first_move_contrast_probe": {
+    "accuracy": 0.5833333333333334,
+    "false_negative": 17,
+    "false_positive": 3,
+    "heuristic": "rook_mid_rank8_cut_candidate",
+    "negative_suppression": 0.8636363636363636,
+    "precision": 0.75,
+    "recall": 0.34615384615384615,
+    "row_count": 48,
+    "runtime_ready": false,
+    "state_count": 4,
+    "top1_conversion_positive_by_state": 0.75,
+    "top3_conversion_positive_by_state": 1.0,
+    "true_negative": 19,
+    "true_positive": 9
+  },
+  "stage7_heldout_probe": {
+    "failure_controls": 8,
+    "failure_controls_met": true,
+    "failure_controls_required": 5,
+    "row_count": 10,
+    "runtime_ready": false,
+    "selected_provider_counts": {
+      "None": 1,
+      "krk.edge_trap_close": 2,
+      "krk.stage0_basin": 7
+    },
+    "semantic_alignment_counts": {
+      "neither_reward_nor_visible_contract": 2,
+      "reward_contract_mismatch": 3,
+      "reward_visible_fence_aligned_reply_not_checked": 1,
+      "reward_visible_fence_aligned_survived": 4
+    },
+    "success_controls": 2,
+    "success_controls_met": false,
+    "success_controls_required": 5,
+    "target_label_counts": {
+      "conversion_failure": 8,
+      "conversion_positive": 2
+    },
+    "underpowered": true
+  },
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "benchmark_input_ready": false,
+    "protected_plan_window_failure_sparse": true,
+    "row_count": 79,
+    "runtime_authorization_row_count": 0,
+    "selector_training_row_count": 0,
+    "stage4_binary_heuristic_sufficient": false,
+    "stage4_topk_signal": true,
+    "stage7_underpowered": true
+  }
+}
