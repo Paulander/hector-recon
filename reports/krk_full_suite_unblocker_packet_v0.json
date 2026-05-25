@@ -4,6 +4,9 @@
     "protected_stack_ready": true,
     "sequence_policy_benchmark_ready": false,
     "sequence_policy_inputs_ready": false,
+    "stage7_invalid_existing_output_count": 0,
+    "stage7_output_validation_status": "stage7_diverse_clean_sampling_outputs_validation_pending",
+    "stage7_overwrite_existing_outputs": false,
     "stage7_success_controls": 2,
     "stage7_success_controls_required": 5,
     "stage8_training_ready": false
@@ -29,8 +32,11 @@
     "purpose": "Fill held-out Stage 7 clean success controls so the sequence-policy benchmark can run.",
     "scope": {
       "horizon": "h40",
+      "invalid_existing_outputs_block_without_overwrite": true,
       "max_jobs": 8,
+      "resume_safe": true,
       "runtime_behavior_changed": false,
+      "skip_existing_outputs_by_default": true,
       "stage": "stage7_held_out_evidence_only",
       "stage7_promotion_allowed": false,
       "stage7_training_rows": 0,

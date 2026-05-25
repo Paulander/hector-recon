@@ -34,6 +34,7 @@ def build_payload() -> dict[str, Any]:
         stage7_gate["runner_status"] == "stage7_diverse_clean_sampling_runner_dry_run_ready"
         and stage7_gate["executed_job_count"] == 0
         and stage7_gate["success_controls_ready"] is False
+        and not (stage7_gate.get("invalid_existing_output_count") or 0)
     )
 
     return {
@@ -54,6 +55,13 @@ def build_payload() -> dict[str, Any]:
             "sequence_policy_inputs_ready": sequence["inputs_ready"],
             "sequence_policy_benchmark_ready": sequence["benchmark_ready"],
             "stage8_training_ready": False,
+            "stage7_output_validation_status": stage7_gate.get("output_validation_status"),
+            "stage7_invalid_existing_output_count": stage7_gate.get(
+                "invalid_existing_output_count"
+            ),
+            "stage7_overwrite_existing_outputs": stage7_gate.get(
+                "overwrite_existing_outputs"
+            ),
         },
         "why_agent_stops_here": [
             "The next highest-value action creates new Stage 7 h40 labels or implements a reviewed runtime sandbox.",
@@ -73,6 +81,9 @@ def build_payload() -> dict[str, Any]:
                 "max_jobs": 8,
                 "horizon": "h40",
                 "stage": "stage7_held_out_evidence_only",
+                "resume_safe": True,
+                "skip_existing_outputs_by_default": True,
+                "invalid_existing_outputs_block_without_overwrite": True,
                 "runtime_behavior_changed": False,
                 "stage7_training_rows": 0,
                 "stage7_promotion_allowed": False,
@@ -134,6 +145,9 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- sequence_policy_inputs_ready: `{state['sequence_policy_inputs_ready']}`",
         f"- sequence_policy_benchmark_ready: `{state['sequence_policy_benchmark_ready']}`",
         f"- stage8_training_ready: `{state['stage8_training_ready']}`",
+        f"- stage7_output_validation_status: `{state['stage7_output_validation_status']}`",
+        f"- stage7_invalid_existing_output_count: `{state['stage7_invalid_existing_output_count']}`",
+        f"- stage7_overwrite_existing_outputs: `{state['stage7_overwrite_existing_outputs']}`",
         "",
         "## Why Work Stops At This Gate",
         "",

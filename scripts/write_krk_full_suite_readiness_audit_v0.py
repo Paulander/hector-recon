@@ -183,6 +183,12 @@ def build_payload() -> dict[str, Any]:
             "success_controls_required": stage7_success_required,
             "success_controls_ready": stage7_success_ready,
             "sampling_runner_status": runner.get("decision", {}).get("status"),
+            "sampling_runner_output_validation_status": runner.get("summary", {}).get(
+                "output_validation_status"
+            ),
+            "sampling_runner_invalid_existing_output_count": runner.get("summary", {}).get(
+                "invalid_existing_output_count"
+            ),
             "sampling_outputs_status": integration.get("decision", {}).get("status"),
         },
         "stage8": {
@@ -254,6 +260,18 @@ def build_payload() -> dict[str, Any]:
             "runner_dry_run": runner.get("summary", {}).get("dry_run"),
             "runner_job_count": runner.get("summary", {}).get("job_count"),
             "executed_job_count": runner.get("summary", {}).get("executed_job_count"),
+            "skipped_existing_output_count": runner.get("summary", {}).get(
+                "skipped_existing_output_count"
+            ),
+            "overwrite_existing_outputs": runner.get("summary", {}).get(
+                "overwrite_existing_outputs"
+            ),
+            "output_validation_status": runner.get("summary", {}).get(
+                "output_validation_status"
+            ),
+            "invalid_existing_output_count": runner.get("summary", {}).get(
+                "invalid_existing_output_count"
+            ),
             "integration_status": integration.get("decision", {}).get("status"),
             "outputs_present_count": stage7_summary.get("outputs_present_count"),
             "combined_success_controls": stage7_success_controls,
@@ -278,9 +296,10 @@ def build_payload() -> dict[str, Any]:
         "approval_gates": {
             "stage7_diverse_clean_label_execution": {
                 "ready_for_explicit_approval": runner.get("decision", {}).get("status")
-                == "stage7_diverse_clean_sampling_runner_dry_run_ready",
+                == "stage7_diverse_clean_sampling_runner_dry_run_ready"
+                and not (runner.get("summary", {}).get("invalid_existing_output_count") or 0),
                 "current_artifact_allows_execution": False,
-                "why": "The runner is dry-run ready, but execution requires explicit approval because it creates new Stage 7 h40 labels.",
+                "why": "The runner is dry-run ready, validates/skips existing outputs safely, but execution requires explicit approval because it creates new Stage 7 h40 labels.",
             },
             "stage4_first_move_contrast_sandbox": {
                 "ready_for_explicit_approval": stage4_ready_for_explicit_approval,
@@ -351,6 +370,10 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- runner_dry_run: `{stage7['runner_dry_run']}`",
             f"- runner_job_count: `{stage7['runner_job_count']}`",
             f"- executed_job_count: `{stage7['executed_job_count']}`",
+            f"- skipped_existing_output_count: `{stage7['skipped_existing_output_count']}`",
+            f"- overwrite_existing_outputs: `{stage7['overwrite_existing_outputs']}`",
+            f"- output_validation_status: `{stage7['output_validation_status']}`",
+            f"- invalid_existing_output_count: `{stage7['invalid_existing_output_count']}`",
             f"- integration_status: `{stage7['integration_status']}`",
             f"- outputs_present_count: `{stage7['outputs_present_count']}`",
             f"- combined_success_controls: `{stage7['combined_success_controls']}`",

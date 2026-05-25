@@ -9,7 +9,7 @@
     "stage7_diverse_clean_label_execution": {
       "current_artifact_allows_execution": false,
       "ready_for_explicit_approval": true,
-      "why": "The runner is dry-run ready, but execution requires explicit approval because it creates new Stage 7 h40 labels."
+      "why": "The runner is dry-run ready, validates/skips existing outputs safely, but execution requires explicit approval because it creates new Stage 7 h40 labels."
     },
     "stage8_training": {
       "ready_for_explicit_approval": false,
@@ -91,11 +91,15 @@
     "executed_job_count": 0,
     "failure_controls_required": 5,
     "integration_status": "stage7_diverse_clean_sampling_outputs_pending",
+    "invalid_existing_output_count": 0,
     "label_run_allowed_by_artifact": false,
+    "output_validation_status": "stage7_diverse_clean_sampling_outputs_validation_pending",
     "outputs_present_count": 0,
+    "overwrite_existing_outputs": false,
     "runner_dry_run": true,
     "runner_job_count": 8,
     "runner_status": "stage7_diverse_clean_sampling_runner_dry_run_ready",
+    "skipped_existing_output_count": 0,
     "success_controls_ready": false,
     "success_controls_required": 5
   },
@@ -122,6 +126,8 @@
     "stage7": {
       "ready_for_promotion": false,
       "sampling_outputs_status": "stage7_diverse_clean_sampling_outputs_pending",
+      "sampling_runner_invalid_existing_output_count": 0,
+      "sampling_runner_output_validation_status": "stage7_diverse_clean_sampling_outputs_validation_pending",
       "sampling_runner_status": "stage7_diverse_clean_sampling_runner_dry_run_ready",
       "status": "held_out_challenge_quarantined",
       "success_controls": 2,

@@ -36,6 +36,10 @@
 - runner_dry_run: `True`
 - runner_job_count: `8`
 - executed_job_count: `0`
+- skipped_existing_output_count: `0`
+- overwrite_existing_outputs: `False`
+- output_validation_status: `stage7_diverse_clean_sampling_outputs_validation_pending`
+- invalid_existing_output_count: `0`
 - integration_status: `stage7_diverse_clean_sampling_outputs_pending`
 - outputs_present_count: `0`
 - combined_success_controls: `2`
@@ -58,7 +62,7 @@
 
 ## Approval Gates
 
-- `stage7_diverse_clean_label_execution`: The runner is dry-run ready, but execution requires explicit approval because it creates new Stage 7 h40 labels.
+- `stage7_diverse_clean_label_execution`: The runner is dry-run ready, validates/skips existing outputs safely, but execution requires explicit approval because it creates new Stage 7 h40 labels.
 - `stage4_first_move_contrast_sandbox`: Stage 4 has a reviewed default-off first-move contrast sandbox scope, but implementation still requires explicit sandbox approval.
 - `stage8_training`: Stage 7 is still quarantined and sequence-policy benchmark is blocked.
 

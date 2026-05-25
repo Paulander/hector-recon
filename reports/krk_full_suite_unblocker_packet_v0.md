@@ -16,6 +16,9 @@
 - sequence_policy_inputs_ready: `False`
 - sequence_policy_benchmark_ready: `False`
 - stage8_training_ready: `False`
+- stage7_output_validation_status: `stage7_diverse_clean_sampling_outputs_validation_pending`
+- stage7_invalid_existing_output_count: `0`
+- stage7_overwrite_existing_outputs: `False`
 
 ## Why Work Stops At This Gate
 
