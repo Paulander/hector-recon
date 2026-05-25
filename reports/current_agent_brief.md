@@ -249,6 +249,21 @@ sequence_policy_benchmark_review_blocked_pending_ready_inputs
 
 Meaning: the review gate is wired and will classify sequence-policy benchmark results once Stage 7 held-out success controls are filled. Current evidence still shows Stage 4 top-k signal, sparse protected plan-window failure evidence, and missing Stage 7 success controls.
 
+Current Stage 8 training-readiness review:
+
+```text
+reports/krk_stage8_training_readiness_review_v0.md
+reports/krk_stage8_training_readiness_review_v0.json
+```
+
+Current Stage 8 review decision:
+
+```text
+stage8_training_blocked_pending_stage7_sequence_gate
+```
+
+Meaning: Stage 8 training remains blocked. The retry1 protected stack is ready, but Stage 7 held-out success controls and the sequence-policy benchmark review are not ready. This review does not authorize Stage 8 training by itself even if it later reaches review-ready status.
+
 Immediate status:
 
 ```text

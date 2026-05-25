@@ -84,6 +84,7 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         "sequence_policy_benchmark_review",
         "full_suite_readiness_audit",
         "full_suite_unblocker_packet",
+        "stage8_training_readiness_review",
     }
     assert "krk_suite_passive_advancement_blocked_pending_stage7_label_outputs" in rendered
     assert (
@@ -95,6 +96,10 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         == "stage7_diverse_clean_sampling_outputs_validation_pending"
     )
     assert payload["summary"]["stage7_output_valid_count"] == 0
+    assert (
+        payload["summary"]["stage8_training_readiness_status"]
+        == "stage8_training_blocked_pending_stage7_sequence_gate"
+    )
     for step in payload["step_results"]:
         assert step["label_run_allowed"] is False
         assert step["runtime_changes_allowed"] is False

@@ -60,6 +60,11 @@ PASSIVE_STEPS = [
         "script": "scripts/write_krk_full_suite_unblocker_packet_v0.py",
         "output_json": "reports/krk_full_suite_unblocker_packet_v0.json",
     },
+    {
+        "step_id": "stage8_training_readiness_review",
+        "script": "scripts/review_krk_stage8_training_readiness_v0.py",
+        "output_json": "reports/krk_stage8_training_readiness_review_v0.json",
+    },
 ]
 
 
@@ -126,6 +131,7 @@ def build_payload() -> dict[str, Any]:
     benchmark_review = _load_json(
         "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
     )
+    stage8_review = _load_json("reports/krk_stage8_training_readiness_review_v0.json")
 
     all_boundaries_preserved = all(
         not result["runtime_changes_allowed"]
@@ -180,6 +186,9 @@ def build_payload() -> dict[str, Any]:
             ),
             "readiness_status": readiness.get("decision", {}).get("status"),
             "unblocker_status": unblocker.get("decision", {}).get("status"),
+            "stage8_training_readiness_status": stage8_review.get("decision", {}).get(
+                "status"
+            ),
         },
         "decision": {
             "status": status,

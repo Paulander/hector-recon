@@ -23,7 +23,8 @@
     "scripts/refresh_krk_sequence_policy_pipeline_v0.py",
     "scripts/review_krk_sequence_policy_benchmark_v0.py",
     "scripts/write_krk_full_suite_readiness_audit_v0.py",
-    "scripts/write_krk_full_suite_unblocker_packet_v0.py"
+    "scripts/write_krk_full_suite_unblocker_packet_v0.py",
+    "scripts/review_krk_stage8_training_readiness_v0.py"
   ],
   "stage7_promotion_allowed": false,
   "stage8_training_allowed": false,
@@ -82,6 +83,17 @@
       "stage7_promotion_allowed": false,
       "stage8_training_allowed": false,
       "step_id": "full_suite_unblocker_packet"
+    },
+    {
+      "decision_status": "stage8_training_blocked_pending_stage7_sequence_gate",
+      "label_run_allowed": false,
+      "output_json": "reports/krk_stage8_training_readiness_review_v0.json",
+      "runtime_changes_allowed": false,
+      "script": "scripts/review_krk_stage8_training_readiness_v0.py",
+      "selector_training_allowed": false,
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false,
+      "step_id": "stage8_training_readiness_review"
     }
   ],
   "summary": {
@@ -95,6 +107,7 @@
     "stage7_success_controls": 2,
     "stage7_success_controls_ready": false,
     "stage7_success_controls_required": 5,
+    "stage8_training_readiness_status": "stage8_training_blocked_pending_stage7_sequence_gate",
     "unblocker_status": "krk_suite_primary_unblocker_ready_pending_explicit_label_approval"
   }
 }

@@ -1,0 +1,49 @@
+{
+  "blockers": [
+    "stage7_clean_success_controls_missing",
+    "sequence_policy_benchmark_review_not_ready"
+  ],
+  "causal_status": "non_causal_stage8_training_readiness_review",
+  "decision": {
+    "implementation_allowed_by_this_review": false,
+    "label_run_allowed": false,
+    "recommended_next_step": "fill_stage7_success_controls_and_rerun_passive_gate_advancement",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "stage8_training_blocked_pending_stage7_sequence_gate"
+  },
+  "gameplay_topology_mutation": false,
+  "requirements": {
+    "kpk_kqk_bridge_preservation_passed": true,
+    "m1_m4_preservation_passed": true,
+    "protected_stage5_6_stack_ready": true,
+    "sequence_policy_benchmark_review_ready": false,
+    "sequence_policy_benchmark_review_status": "sequence_policy_benchmark_review_blocked_pending_ready_inputs",
+    "sequence_policy_benchmark_supportive": false,
+    "stage4_ready_for_current_suite": false,
+    "stage7_clean_success_controls_ready": false,
+    "stage7_promoted": false,
+    "stage7_success_controls": 2,
+    "stage7_success_controls_required": 5
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_stage8_training_readiness_review.v0",
+  "source_artifacts": [
+    "reports/krk_full_suite_readiness_audit_v0.json",
+    "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "warnings": [
+    "stage4_h40_caveat_remains",
+    "stage7_not_promoted_and_must_remain_held_out_without_explicit_gate"
+  ]
+}
