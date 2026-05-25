@@ -234,6 +234,14 @@ stage7_diverse_clean_sampling_outputs_validation_pending
 
 Meaning: no Stage 7 diverse-clean label outputs are present yet. Once explicitly approved label outputs exist, this passive gate validates parseability, h40 consistency, and held-out/non-training status before those outputs are consumed by the sequence-policy pipeline.
 
+Current Stage 7 diverse-clean runner status:
+
+```text
+stage7_diverse_clean_sampling_runner_dry_run_ready
+```
+
+Meaning: the approval-gated runner is dry-run ready and resume-safe. If a later explicitly approved label run is interrupted after writing some reviewed outputs, existing output files are skipped by default rather than overwritten. Overwriting requires the separate `--overwrite-existing-outputs` flag. This runner still does not authorize labels by itself and does not authorize runtime behavior, selector training, Stage 7 promotion, or Stage 8 training.
+
 Current Stage 4 caveat unblocker packet:
 
 ```text
