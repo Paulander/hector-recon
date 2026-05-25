@@ -1327,6 +1327,8 @@ The Stage 4 first-move feature review found single-state visible contrast terms:
 
 Stage 4 stratified contrast validation is complete. The identity, file-mirrored, rank-mirrored, and 180-degree transformed variants all reproduce the first-move ranking gap: the transformed selected drift move fails under h40, while multiple legal transformed alternatives convert. This supports a geometric Stage 4 first-move contrast problem rather than a missing-capacity problem. It is still non-causal and not a selector-training set; the next appropriate artifact is a review packet for a narrow Stage 4 first-move contrast sandbox or a broader sequence-policy design, with no exact-state patch.
 
+The Stage 4 first-move contrast runtime review packet is ready, but it does not authorize implementation. If explicitly approved later, the only reviewed scope is a default-off Stage 4 CandidateMoveFrame first-move contrast sandbox using visible move-shape terms, with no exact-state/runtime exception, no selector training, no broad stage0 penalty, no provider suppression, no Stage 7 promotion, and no Stage 8 training. The packet is `stage4_first_move_contrast_runtime_review_ready_pending_explicit_approval`.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

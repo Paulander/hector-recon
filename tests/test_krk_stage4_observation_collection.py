@@ -66,6 +66,10 @@ _stage4_stratified_contrast = _load_module(
     "run_krk_stage4_stratified_contrast_validation_v0",
     "scripts/run_krk_stage4_stratified_contrast_validation_v0.py",
 )
+_stage4_first_move_contrast_packet = _load_module(
+    "write_krk_stage4_first_move_contrast_review_packet_v0",
+    "scripts/write_krk_stage4_first_move_contrast_review_packet_v0.py",
+)
 
 
 def _read_report(path: str) -> dict:
@@ -717,3 +721,40 @@ def test_stage4_stratified_contrast_transform_helpers_are_involutions():
         transformed = _stage4_stratified_contrast.transform_move_uci(move, transform)
         restored = _stage4_stratified_contrast.transform_move_uci(transformed, transform)
         assert restored == move
+
+
+def test_stage4_first_move_contrast_review_packet_requires_explicit_approval():
+    payload = _read_report("reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json")
+
+    assert payload["schema_version"] == "krk_stage4_first_move_contrast_runtime_review_packet.v0"
+    assert payload["causal_status"] == "review_packet_only"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_score_changes"] is False
+    assert payload["runtime_direct_routing"] is False
+    assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["gameplay_topology_mutation"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert (
+        payload["decision"]["status"]
+        == "stage4_first_move_contrast_runtime_review_ready_pending_explicit_approval"
+    )
+    assert payload["decision"]["runtime_review_ready"] is True
+    assert payload["decision"]["implementation_authorized_by_this_packet"] is False
+    assert payload["decision"]["requires_explicit_approval_before_implementation"] is True
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["implementation_boundaries"]["implementation_allowed_by_this_packet"] is False
+    assert "exact_state_or_exact_move_runtime_exception" in payload["explicitly_forbidden"]
+
+
+def test_stage4_first_move_contrast_packet_fixture_blocks_when_evidence_missing():
+    payload = _stage4_first_move_contrast_packet.build_payload(
+        sequence_candidates={"classification": {"primary": "other"}},
+        feature_review={"decision": {"status": "other"}, "interpretation": {}},
+        stratified_validation={"summary": {"gap_variant_count": 0}, "decision": {"status": "other"}},
+    )
+
+    assert payload["decision"]["runtime_review_ready"] is False
+    assert payload["decision"]["implementation_authorized_by_this_packet"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
