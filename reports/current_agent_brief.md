@@ -194,6 +194,15 @@ krk_suite_readiness_blocked_pending_stage7_clean_success_controls
 
 Meaning: the retry1 protected Stage 5/6 stack is adopted and validated, M1-M4 and KPK→KQK preservation checks pass, and runtime/default/topology boundaries remain clean. The remaining KRK-suite blocker is that Stage 7 is still held out with insufficient clean success controls, so the sequence-policy benchmark remains blocked and Stage 8 remains blocked.
 
+Current unblocker packet:
+
+```text
+reports/krk_full_suite_unblocker_packet_v0.md
+reports/krk_full_suite_unblocker_packet_v0.json
+```
+
+This packet identifies the primary unblocker as explicit approval for the bounded Stage 7 diverse-clean h40 label execution. It does not authorize execution by itself.
+
 Immediate status:
 
 ```text
