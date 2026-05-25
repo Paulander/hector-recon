@@ -89,19 +89,20 @@ def test_curriculum_next_milestone_decision_is_review_only():
 
     assert payload["schema_version"] == "krk_curriculum_next_milestone_decision.v0"
     assert payload["status"] == "krk_curriculum_next_milestone_review_ready"
-    assert "clean_stack_adoption_rejected_or_deferred" in payload["decision_states"]
+    assert "clean_stack_adopted_and_validated" in payload["decision_states"]
     assert "stage4_caveat_reduction_path_identified" in payload["decision_states"]
     assert "stage7_unlock_path_identified" in payload["decision_states"]
     assert "stage8_remains_blocked_with_review" in payload["decision_states"]
     assert (
         payload["current_adopted_protected_stack_status"]
-        == "current_protected_stack_unchanged_retry1_review_ready_only"
+        == "retry1_protected_stage5_6_stack_adopted_manifest_only"
     )
+    assert payload["invariants"]["active_stack_reference_updated"] is True
     assert payload["invariants"]["protected_stack_replacement_performed"] is False
     assert payload["invariants"]["runtime_behavior_changed"] is False
     assert payload["invariants"]["stage7_promotion"] is False
     assert payload["invariants"]["stage8_training"] is False
-    assert "protected-stack replacement without explicit approval" in payload["what_remains_forbidden"]
+    assert "destructive snapshot replacement without rollback review" in payload["what_remains_forbidden"]
 
 
 def test_retry1_active_stack_manifest_is_rollback_aware_and_non_destructive():

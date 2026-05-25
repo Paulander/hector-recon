@@ -37,6 +37,8 @@ STAGE7_TARGET_PROBE = Path("reports/structural_candidates/stage7_selected_path_t
 STAGE7_SEQUENCE_CONTROLS = Path(
     "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json"
 )
+ACTIVE_STACK = Path("reports/krk_active_protected_stack_v0.json")
+POST_REPLACEMENT_VALIDATION = Path("reports/krk_clean_stack_post_replacement_validation_v0.json")
 
 OUT_REPLACEMENT_JSON = Path("reports/krk_clean_stack_replacement_deferred_review_v0.json")
 OUT_REPLACEMENT_MD = Path("reports/krk_clean_stack_replacement_deferred_review_v0.md")
@@ -57,6 +59,13 @@ def _load(path: Path) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError(f"Expected JSON object: {path}")
     return payload
+
+
+def _load_optional(path: Path) -> dict[str, Any]:
+    full_path = ROOT / path
+    if not full_path.exists():
+        return {}
+    return _load(path)
 
 
 def _common_invariants() -> dict[str, bool]:
@@ -300,27 +309,50 @@ def build_curriculum_decision(
     stage7_unlock: dict[str, Any],
     stage7_blocker: dict[str, Any],
 ) -> dict[str, Any]:
-    return {
-        "schema_version": "krk_curriculum_next_milestone_decision.v0",
-        "created_at": now,
-        "status": "krk_curriculum_next_milestone_review_ready",
-        "decision_states": [
-            replacement["decision_state"],
-            "stage4_caveat_reduction_path_identified",
-            "stage7_unlock_path_identified",
-            "stage8_remains_blocked_with_review",
-        ],
-        "current_adopted_protected_stack_status": "current_protected_stack_unchanged_retry1_review_ready_only",
-        "stage4_status": stage4_gate["status"],
-        "stage7_status": stage7_unlock["status"],
-        "stage8_status": stage7_blocker["status"],
-        "recommended_path_forward": [
+    active = _load_optional(ACTIVE_STACK)
+    post_validation = _load_optional(POST_REPLACEMENT_VALIDATION)
+    adopted = (
+        active.get("status") == "retry1_protected_stage5_6_stack_adopted_manifest_only"
+        and post_validation.get("status") == "clean_stack_adopted_and_validated"
+        and post_validation.get("decision", {}).get("clean_stack_adopted_and_validated") is True
+    )
+    stack_state = (
+        "clean_stack_adopted_and_validated"
+        if adopted
+        else replacement["decision_state"]
+    )
+    stack_status = (
+        "retry1_protected_stage5_6_stack_adopted_manifest_only"
+        if adopted
+        else "current_protected_stack_unchanged_retry1_review_ready_only"
+    )
+    recommended_path = (
+        [
+            "Use the active retry1 Stage 5/6 protected-stack manifest as the current protected reference.",
+            "Keep rollback paths preserved; do not copy, delete, or overwrite snapshot files.",
+            "For Stage 4, the next useful evidence is the already-reviewed observation-only trace collection scope, capped and non-causal.",
+            "For Stage 7, stop micro-repairs and build broader sequence-policy/strategy-arbitration evidence with Stage 7 held out.",
+        ]
+        if adopted
+        else [
             "Choose whether to explicitly approve rollback-aware retry1 protected Stage 5/6 adoption.",
             "If approval is not granted, keep current protected stack and continue non-causal Stage 4/7 evidence work.",
             "For Stage 4, the next useful evidence is the already-reviewed observation-only trace collection scope, capped and non-causal.",
             "For Stage 7, stop micro-repairs and build broader sequence-policy/strategy-arbitration evidence with Stage 7 held out.",
-        ],
-        "what_remains_forbidden": [
+        ]
+    )
+    forbidden = (
+        [
+            "destructive snapshot replacement without rollback review",
+            "Stage 7 promotion",
+            "Stage 8 training",
+            "runtime selector implementation",
+            "runtime DTM/tablebase",
+            "gameplay topology mutation",
+            "capacity labels as ownership labels",
+        ]
+        if adopted
+        else [
             "protected-stack replacement without explicit approval",
             "Stage 7 promotion",
             "Stage 8 training",
@@ -328,8 +360,35 @@ def build_curriculum_decision(
             "runtime DTM/tablebase",
             "gameplay topology mutation",
             "capacity labels as ownership labels",
+        ]
+    )
+    invariants = _common_invariants()
+    invariants["active_stack_reference_updated"] = adopted
+    return {
+        "schema_version": "krk_curriculum_next_milestone_decision.v0",
+        "created_at": now,
+        "status": "krk_curriculum_next_milestone_review_ready",
+        "source_artifacts": [
+            str(REPLACEMENT_PACKET),
+            str(ACTIVE_STACK),
+            str(POST_REPLACEMENT_VALIDATION),
+            str(OUT_STAGE4_GATE_JSON),
+            str(OUT_STAGE7_UNLOCK_JSON),
+            str(OUT_STAGE7_BLOCKER_JSON),
         ],
-        "invariants": _common_invariants(),
+        "decision_states": [
+            stack_state,
+            "stage4_caveat_reduction_path_identified",
+            "stage7_unlock_path_identified",
+            "stage8_remains_blocked_with_review",
+        ],
+        "current_adopted_protected_stack_status": stack_status,
+        "stage4_status": stage4_gate["status"],
+        "stage7_status": stage7_unlock["status"],
+        "stage8_status": stage7_blocker["status"],
+        "recommended_path_forward": recommended_path,
+        "what_remains_forbidden": forbidden,
+        "invariants": invariants,
     }
 
 
