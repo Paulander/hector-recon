@@ -237,6 +237,27 @@ def test_current_control_plane_gate_requires_explicit_choice():
         payload["current_state"]["stage7_label_runner"]
         == "stage7_diverse_clean_sampling_runner_dry_run_ready"
     )
+    assert (
+        payload["current_state"]["stage7_label_runner_output_validation_status"]
+        == "stage7_diverse_clean_sampling_outputs_validation_pending"
+    )
+    assert payload["current_state"]["stage7_label_runner_invalid_existing_output_count"] == 0
+    assert payload["current_state"]["stage7_label_runner_processed_job_count"] == 0
+    assert payload["current_state"]["stage7_label_runner_executed_job_count"] == 0
+    assert payload["current_state"]["stage7_label_runner_skipped_existing_output_count"] == 0
+    assert (
+        payload["current_state"]["stage7_post_label_outcome"]
+        == "post_label_outcome_pending_explicit_label_outputs"
+    )
+    label_option = [
+        option
+        for option in payload["approval_options"]
+        if option["option_id"] == "approve_stage7_diverse_clean_label_run"
+    ][0]
+    assert label_option["safety_scope"]["resume_safe"] is True
+    assert label_option["safety_scope"]["skip_existing_outputs_by_default"] is True
+    assert label_option["safety_scope"]["invalid_existing_outputs_block_without_overwrite"] is True
+    assert label_option["safety_scope"]["stage7_training_rows"] == 0
 
 
 def test_current_control_plane_gate_fixture_preserves_no_implicit_approval():

@@ -14,6 +14,7 @@ STAGE7_MANIFEST = ROOT / "reports/structural_candidates/stage7_diverse_clean_sam
 STAGE7_EXECUTION_READINESS = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_execution_readiness_v0.json"
 STAGE7_INTEGRATION = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json"
 STAGE7_RUNNER = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json"
+STAGE7_POST_LABEL_OUTCOME = ROOT / "reports/krk_stage7_post_label_outcome_review_v0.json"
 SEQUENCE_PROBE = ROOT / "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.json"
 SEQUENCE_POLICY_DESIGN = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json"
 PROTECTED_PLAN_WINDOWS = ROOT / "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json"
@@ -54,6 +55,7 @@ def build_payload(
     stage7_execution_readiness: dict[str, Any] | None = None,
     stage7_integration: dict[str, Any] | None = None,
     stage7_runner: dict[str, Any] | None = None,
+    stage7_post_label_outcome: dict[str, Any] | None = None,
     sequence_probe: dict[str, Any] | None = None,
     sequence_policy_design: dict[str, Any] | None = None,
     protected_plan_windows: dict[str, Any] | None = None,
@@ -64,6 +66,7 @@ def build_payload(
     stage7_execution_readiness = stage7_execution_readiness or _load_optional(STAGE7_EXECUTION_READINESS)
     stage7_integration = stage7_integration or _load_optional(STAGE7_INTEGRATION)
     stage7_runner = stage7_runner or _load_optional(STAGE7_RUNNER)
+    stage7_post_label_outcome = stage7_post_label_outcome or _load_optional(STAGE7_POST_LABEL_OUTCOME)
     sequence_probe = sequence_probe or _load(SEQUENCE_PROBE)
     sequence_policy_design = sequence_policy_design or _load(SEQUENCE_POLICY_DESIGN)
     protected_plan_windows = protected_plan_windows or _load_optional(PROTECTED_PLAN_WINDOWS)
@@ -81,6 +84,7 @@ def build_payload(
             "reports/structural_candidates/stage7_diverse_clean_sampling_execution_readiness_v0.json",
             "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json",
             "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json",
+            "reports/krk_stage7_post_label_outcome_review_v0.json",
             "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.json",
             "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json",
             "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json",
@@ -99,6 +103,26 @@ def build_payload(
                 "not_checked",
             ),
             "stage7_label_runner": stage7_runner.get("decision", {}).get(
+                "status",
+                "not_checked",
+            ),
+            "stage7_label_runner_output_validation_status": stage7_runner.get("summary", {}).get(
+                "output_validation_status",
+                "not_checked",
+            ),
+            "stage7_label_runner_invalid_existing_output_count": stage7_runner.get(
+                "summary", {}
+            ).get("invalid_existing_output_count"),
+            "stage7_label_runner_processed_job_count": stage7_runner.get("summary", {}).get(
+                "processed_job_count"
+            ),
+            "stage7_label_runner_executed_job_count": stage7_runner.get("summary", {}).get(
+                "executed_job_count"
+            ),
+            "stage7_label_runner_skipped_existing_output_count": stage7_runner.get(
+                "summary", {}
+            ).get("skipped_existing_output_count"),
+            "stage7_post_label_outcome": stage7_post_label_outcome.get("decision", {}).get(
                 "status",
                 "not_checked",
             ),
@@ -138,6 +162,12 @@ def build_payload(
                     stage7_manifest.get("decision", {}).get("status"),
                 ),
                 "what_it_allows": "run 8 bounded h40 clean Stage 7 label jobs, 64 samples total",
+                "safety_scope": {
+                    "resume_safe": True,
+                    "skip_existing_outputs_by_default": True,
+                    "invalid_existing_outputs_block_without_overwrite": True,
+                    "stage7_training_rows": 0,
+                },
                 "what_it_does_not_allow": [
                     "runtime behavior",
                     "selector training",
@@ -204,6 +234,13 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- status: `{option['status']}`",
             f"- allows: {option['what_it_allows']}",
             f"- recommended_if: {option['recommended_if']}",
+        ])
+        if option.get("safety_scope"):
+            lines.append("- safety_scope:")
+            lines.extend(
+                f"  - {key}: `{value}`" for key, value in option["safety_scope"].items()
+            )
+        lines.extend([
             "- does_not_allow:",
         ])
         lines.extend(f"  - {item}" for item in option["what_it_does_not_allow"])

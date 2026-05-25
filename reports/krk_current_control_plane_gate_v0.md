@@ -10,6 +10,12 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - stage7_label_execution_readiness: `stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval`
 - stage7_label_output_integration: `stage7_diverse_clean_sampling_outputs_pending`
 - stage7_label_runner: `stage7_diverse_clean_sampling_runner_dry_run_ready`
+- stage7_label_runner_output_validation_status: `stage7_diverse_clean_sampling_outputs_validation_pending`
+- stage7_label_runner_invalid_existing_output_count: `0`
+- stage7_label_runner_processed_job_count: `0`
+- stage7_label_runner_executed_job_count: `0`
+- stage7_label_runner_skipped_existing_output_count: `0`
+- stage7_post_label_outcome: `post_label_outcome_pending_explicit_label_outputs`
 - protected_plan_window_evidence: `available_non_causal`
 - sequence_policy: `sequence_policy_benchmark_blocked_pending_clean_stage7_controls`
 - sequence_policy_inputs: `sequence_policy_benchmark_inputs_blocked_pending_stage7_success_controls`
@@ -39,6 +45,11 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - status: `stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval`
 - allows: run 8 bounded h40 clean Stage 7 label jobs, 64 samples total
 - recommended_if: you want to fill the Stage 7 clean success-control gap before broader sequence-policy benchmarking
+- safety_scope:
+  - resume_safe: `True`
+  - skip_existing_outputs_by_default: `True`
+  - invalid_existing_outputs_block_without_overwrite: `True`
+  - stage7_training_rows: `0`
 - does_not_allow:
   - runtime behavior
   - selector training
