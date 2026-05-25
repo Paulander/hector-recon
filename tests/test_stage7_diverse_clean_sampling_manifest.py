@@ -26,6 +26,10 @@ _readiness = _load_module(
     "validate_stage7_diverse_clean_sampling_execution_readiness_v0",
     "scripts/validate_stage7_diverse_clean_sampling_execution_readiness_v0.py",
 )
+_integration = _load_module(
+    "integrate_stage7_diverse_clean_sampling_results_v0",
+    "scripts/integrate_stage7_diverse_clean_sampling_results_v0.py",
+)
 
 
 def _read_report(path: str) -> dict:
@@ -184,4 +188,145 @@ def test_stage7_diverse_clean_sampling_readiness_fixture_detects_forbidden_flag(
     assert payload["summary"]["all_jobs_pass_readiness"] is False
     assert payload["job_checks"][0]["forbidden_flag_hits"] == ["--enable-stage7-plan-capsule"]
     assert payload["decision"]["status"] == "stage7_diverse_clean_sampling_execution_readiness_failed"
+    assert payload["decision"]["label_run_allowed"] is False
+
+
+def test_stage7_diverse_clean_sampling_integration_waits_for_outputs():
+    payload = _read_report(
+        "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json"
+    )
+
+    assert payload["schema_version"] == "stage7_diverse_clean_sampling_integration.v0"
+    assert payload["causal_status"] == "non_causal_post_label_integration"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_score_changes"] is False
+    assert payload["runtime_direct_routing"] is False
+    assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["gameplay_topology_mutation"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["summary"]["job_count"] == 8
+    assert payload["summary"]["outputs_present_count"] == 0
+    assert payload["summary"]["combined_success_controls"] == 2
+    assert payload["summary"]["success_controls_met"] is False
+    assert payload["summary"]["stage7_training_row_count"] == 0
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert payload["summary"]["runtime_authorization_row_count"] == 0
+    assert payload["decision"]["status"] == "stage7_diverse_clean_sampling_outputs_pending"
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["label_run_allowed"] is False
+    assert payload["decision"]["selector_training_allowed"] is False
+
+
+def test_stage7_diverse_clean_sampling_integration_fixture_closes_success_gap(tmp_path, monkeypatch):
+    output = tmp_path / "out.json"
+    output.write_text(
+        json.dumps(
+            {
+                "handoff_packets": [
+                    {
+                        "phase": "post_opponent_reply",
+                        "evidence_terms": {
+                            "label": "box_shrink",
+                            "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                            "move": "a1a2",
+                            "successor_selected_skill": "krk.edge_trap_close",
+                            "successor_skills": {
+                                "krk.edge_trap_close": {"best_move": "a2a8"}
+                            },
+                        },
+                    },
+                    {
+                        "phase": "playout_summary",
+                        "evidence_terms": {
+                            "label": "box_shrink",
+                            "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                            "move": "a1a2",
+                            "playout_result": "mate",
+                            "plies": 20,
+                            "max_plies": 40,
+                        },
+                    },
+                    {
+                        "phase": "post_opponent_reply",
+                        "evidence_terms": {
+                            "label": "box_shrink",
+                            "fen": "8/8/8/8/8/8/8/7K w - - 0 1",
+                            "move": "h1h2",
+                            "successor_selected_skill": "krk.stage0_basin",
+                            "successor_skills": {
+                                "krk.stage0_basin": {"best_move": "h2h8"}
+                            },
+                        },
+                    },
+                    {
+                        "phase": "playout_summary",
+                        "evidence_terms": {
+                            "label": "box_shrink",
+                            "fen": "8/8/8/8/8/8/8/7K w - - 0 1",
+                            "move": "h1h2",
+                            "playout_result": "mate",
+                            "plies": 21,
+                            "max_plies": 40,
+                        },
+                    },
+                    {
+                        "phase": "post_opponent_reply",
+                        "evidence_terms": {
+                            "label": "box_shrink",
+                            "fen": "8/8/8/8/8/8/K7/8 w - - 0 1",
+                            "move": "a2a3",
+                            "successor_selected_skill": "krk.stage0_basin",
+                            "successor_skills": {
+                                "krk.stage0_basin": {"best_move": "a3a8"}
+                            },
+                        },
+                    },
+                    {
+                        "phase": "playout_summary",
+                        "evidence_terms": {
+                            "label": "box_shrink",
+                            "fen": "8/8/8/8/8/8/K7/8 w - - 0 1",
+                            "move": "a2a3",
+                            "playout_result": "mate",
+                            "plies": 22,
+                            "max_plies": 40,
+                        },
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_integration, "ROOT", tmp_path)
+    manifest = {
+        "jobs": [
+            {
+                "job_id": "fixture.job",
+                "json_output": "out.json",
+                "source_stage_names": ["Box_Small"],
+            }
+        ]
+    }
+    base_controls = {
+        "acceptance": {
+            "clean_sequence_success_controls_required": 5,
+            "clean_sequence_hard_negatives_required": 5,
+        },
+        "controls": [
+            {"control_role": "clean_sequence_success_control"},
+            {"control_role": "clean_sequence_success_control"},
+            *[{"control_role": "clean_sequence_hard_negative"} for _ in range(8)],
+        ],
+    }
+
+    payload = _integration.build_payload(manifest=manifest, base_controls=base_controls)
+
+    assert (
+        payload["decision"]["status"]
+        == "stage7_diverse_clean_sampling_integration_success_controls_met"
+    )
+    assert payload["summary"]["combined_success_controls"] == 5
+    assert payload["summary"]["success_controls_met"] is True
     assert payload["decision"]["label_run_allowed"] is False

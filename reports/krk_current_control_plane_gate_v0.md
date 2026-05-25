@@ -8,6 +8,7 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - stage4: `first_move_contrast_runtime_review_ready_pending_explicit_approval`
 - stage7: `heldout_clean_success_controls_insufficient_sampling_manifest_ready`
 - stage7_label_execution_readiness: `stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval`
+- stage7_label_output_integration: `stage7_diverse_clean_sampling_outputs_pending`
 - protected_plan_window_evidence: `available_non_causal`
 - sequence_policy: `sequence_policy_benchmark_blocked_pending_clean_stage7_controls`
 - sequence_policy_inputs: `sequence_policy_benchmark_inputs_blocked_pending_stage7_success_controls`
