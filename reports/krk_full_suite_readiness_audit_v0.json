@@ -1,0 +1,133 @@
+{
+  "approval_gates": {
+    "stage4_first_move_contrast_sandbox": {
+      "current_artifact_allows_implementation": false,
+      "ready_for_explicit_approval": true,
+      "why": "Stage 4 has a separate runtime-review-ready gate, but implementation still requires explicit sandbox approval."
+    },
+    "stage7_diverse_clean_label_execution": {
+      "current_artifact_allows_execution": false,
+      "ready_for_explicit_approval": true,
+      "why": "The runner is dry-run ready, but execution requires explicit approval because it creates new Stage 7 h40 labels."
+    },
+    "stage8_training": {
+      "ready_for_explicit_approval": false,
+      "why": "Stage 7 is still quarantined and sequence-policy benchmark is blocked."
+    }
+  },
+  "blockers": [
+    "stage7_clean_success_controls_missing",
+    "sequence_policy_benchmark_not_ready"
+  ],
+  "causal_status": "non_causal_readiness_audit",
+  "current_control_plane_gate": {
+    "label_run_allowed": false,
+    "runtime_changes_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "krk_control_plane_waiting_on_explicit_gate_choice"
+  },
+  "decision": {
+    "label_run_allowed": false,
+    "recommended_next_step": "explicitly_approve_stage7_diverse_clean_sampling_or_choose_stage4_sandbox_gate",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "krk_suite_readiness_blocked_pending_stage7_clean_success_controls"
+  },
+  "protected_stack": {
+    "clean_stack_adopted": true,
+    "clean_stack_adopted_and_validated": true,
+    "filesystem_snapshots_replaced": false,
+    "kpk_kqk_bridge_preservation_passed": true,
+    "m1_m4_preservation_passed": true,
+    "ready": true,
+    "stage5_conversion_preservation_passed": true,
+    "stage6_drive_validation_passed": true,
+    "status": "retry1_protected_stage5_6_stack_adopted_manifest_only"
+  },
+  "runtime_and_training_boundaries": {
+    "checked_flag_count": 65,
+    "gameplay_topology_mutation": false,
+    "runtime_behavior_changed": false,
+    "runtime_defaults_changed": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "runtime_selector_implemented": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "violation_count": 0,
+    "violations": []
+  },
+  "schema_version": "krk_full_suite_readiness_audit.v0",
+  "sequence_policy": {
+    "benchmark_ready": false,
+    "benchmark_status": "sequence_policy_benchmark_blocked_pending_stage7_success_controls",
+    "input_row_count": 79,
+    "inputs_ready": false,
+    "pipeline_status": "sequence_policy_pipeline_refreshed_still_blocked_by_stage7_success_controls",
+    "runtime_authorization_row_count": 0,
+    "selector_training_row_count": 0,
+    "stage7_heldout_row_count": 10
+  },
+  "source_artifacts": {
+    "active_protected_stack": "reports/krk_active_protected_stack_v0.json",
+    "clean_stack_validation": "reports/krk_clean_stack_post_replacement_validation_v0.json",
+    "control_plane_gate": "reports/krk_current_control_plane_gate_v0.json",
+    "current_brief": "reports/current_agent_brief.md",
+    "preservation_checks": "reports/krk_clean_retrain_retry1_preservation_checks_v0.json",
+    "sequence_benchmark": "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
+    "sequence_pipeline_refresh": "reports/strategy_arbitration/krk_sequence_policy_pipeline_refresh_v0.json",
+    "stage7_sampling_integration": "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json",
+    "stage7_sampling_runner": "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json"
+  },
+  "stage7_sampling_gate": {
+    "combined_failure_controls": 8,
+    "combined_success_controls": 2,
+    "executed_job_count": 0,
+    "failure_controls_required": 5,
+    "integration_status": "stage7_diverse_clean_sampling_outputs_pending",
+    "label_run_allowed_by_artifact": false,
+    "outputs_present_count": 0,
+    "runner_dry_run": true,
+    "runner_job_count": 8,
+    "runner_status": "stage7_diverse_clean_sampling_runner_dry_run_ready",
+    "success_controls_ready": false,
+    "success_controls_required": 5
+  },
+  "stage_status": {
+    "stage1": {
+      "ready_for_current_suite": true,
+      "status": "protected_component_from_current_brief"
+    },
+    "stage4": {
+      "blocker": "stage4 h40 caveat remains separate guardrail/control debt",
+      "ready_for_current_suite": false,
+      "status": "mostly_clean_with_h40_caveat"
+    },
+    "stage5": {
+      "ready_for_current_suite": true,
+      "status": "protected_retry1_stack_validated"
+    },
+    "stage6": {
+      "ready_for_current_suite": true,
+      "status": "protected_retry1_overlay_validated"
+    },
+    "stage7": {
+      "ready_for_promotion": false,
+      "sampling_outputs_status": "stage7_diverse_clean_sampling_outputs_pending",
+      "sampling_runner_status": "stage7_diverse_clean_sampling_runner_dry_run_ready",
+      "status": "held_out_challenge_quarantined",
+      "success_controls": 2,
+      "success_controls_ready": false,
+      "success_controls_required": 5
+    },
+    "stage8": {
+      "blocker": "Stage 7 remains quarantined and sequence-policy benchmark is not ready",
+      "ready_for_training": false,
+      "status": "blocked"
+    }
+  }
+}
