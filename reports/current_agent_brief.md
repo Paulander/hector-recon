@@ -1203,6 +1203,9 @@ clean_stack_adoption_deferred_explicit_approval_required
 retry1_protected_stage5_6_stack_adopted_manifest_only
 clean_stack_adopted_and_validated
 stage4_candidate_generation_gap_with_known_residual_guardrail
+stage4_joined_trace_ownership_collection_complete
+selector_objective_seed_manifest_v2_ready_non_causal
+selector_objective_seed_probe_v2_ready_for_non_causal_benchmark
 stage7_unlock_path_identified_broader_sequence_control_not_micro_repair
 stage8_remains_blocked_with_review
 krk_curriculum_next_milestone_review_ready
@@ -1256,6 +1259,12 @@ Artifacts:
 * `reports/krk_stage4_caveat_diagnostic_matrix_v0.json`
 * `reports/krk_stage4_caveat_decision_gate_v0.md`
 * `reports/krk_stage4_caveat_decision_gate_v0.json`
+* `reports/strategy_arbitration/krk_stage4_joined_trace_ownership_collection_v0.md`
+* `reports/strategy_arbitration/krk_stage4_joined_trace_ownership_collection_v0.json`
+* `reports/strategy_arbitration/krk_selector_objective_seed_manifest_v2.md`
+* `reports/strategy_arbitration/krk_selector_objective_seed_manifest_v2.json`
+* `reports/strategy_arbitration/krk_selector_objective_seed_probe_v2.md`
+* `reports/strategy_arbitration/krk_selector_objective_seed_probe_v2.json`
 * `reports/structural_candidates/stage7_heldout_unlock_review_v0.md`
 * `reports/structural_candidates/stage7_heldout_unlock_review_v0.json`
 * `reports/structural_candidates/stage7_to_stage8_blocker_review_v0.md`
@@ -1301,6 +1310,8 @@ The clean-stack replacement review packet is now ready for human review. It reco
 The next-milestone decision package is complete. The user then approved rollback-aware retry1 protected-stack adoption. Adoption was implemented as a tracked active-stack manifest, not destructive snapshot replacement: `reports/krk_active_protected_stack_v0.json` now points protected Stage 5/6 references at retry1 candidate paths while preserving rollback paths to the previous protected stack. `reports/krk_clean_stack_post_replacement_validation_v0.json` validates the adopted manifest: Stage 5 conversion preservation is 300/300 h40 mates with 0 shadow candidates, Stage 6 is 300/300 h40 mates with 0 shadow candidates under the explicit historical king-support bonus, Stage 4 caveat/control remains no-regression at 268/300 mate and 32 max_plies on both overlay and base control, and M1-M4 plus KPK->KQK preservation checks remain passed. No snapshot files were copied, deleted, or overwritten; runtime defaults did not change.
 
 The protected stage status report now uses the active retry1 manifest when present. Stage 4 is classified as `stage4_candidate_generation_gap_with_known_residual_guardrail`: the h40 caveat reproduces in base control and should remain a guardrail while the next useful evidence is the already-reviewed Stage 4 observation-only trace/ownership scope. Stage 7 is classified as `stage7_unlock_path_identified_broader_sequence_control_not_micro_repair`: the path forward is broader sequence-policy / strategy-arbitration evidence with Stage 7 held out, not local repair. Stage 8 remains blocked with review.
+
+The Stage 4 observation-only trace/ownership collection is complete. It collected 6/6 approved Stage 4 selected-failure rows, emitted 170 observation-only frames, and preserved default-off equivalence with zero selected move/provider/score/routing deltas. It produced one Stage 4 switch contrast with visible positive capacity and five Stage 4 failure-context rows without visible positive capacity. The v2 selector-objective seed now has 18 rows across Stage 4/5/6 with 5 switch, 8 preserve, and 5 abstain/context targets. The v2 probe confirms switch/preserve/abstain semantics and is ready for a non-causal selector-objective benchmark. It still does not authorize selector training, runtime selection, Stage 7 promotion, or Stage 8 training.
 
 ## Runtime Approval Rule
 
