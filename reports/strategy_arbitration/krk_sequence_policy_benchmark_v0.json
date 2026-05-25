@@ -1,0 +1,152 @@
+{
+  "causal_status": "non_causal_sequence_policy_benchmark",
+  "decision": {
+    "benchmark_executed_as_ready": false,
+    "label_run_allowed": false,
+    "recommended_next_step": "fill_stage7_clean_success_controls_before_treating_benchmark_as_ready",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "sequence_policy_benchmark_blocked_pending_stage7_success_controls"
+  },
+  "gameplay_topology_mutation": false,
+  "objectives": [
+    {
+      "metrics": {
+        "accuracy": 0.5833333333333334,
+        "false_negative": 17,
+        "false_positive": 3,
+        "negative_suppression": 0.8636363636363636,
+        "precision": 0.75,
+        "recall": 0.34615384615384615,
+        "top1_conversion_positive_by_state": 0.75,
+        "top3_conversion_positive_by_state": 1.0,
+        "true_negative": 19,
+        "true_positive": 9
+      },
+      "model": "visible_rook_mid_rank8_cut_candidate_topk",
+      "objective_id": "stage4_state_local_first_move_contrast",
+      "row_count": 48,
+      "runtime_ready": false,
+      "state_count": 4
+    },
+    {
+      "failure_evidence_sparse": true,
+      "objective_id": "protected_plan_window_entry_progress_exit_abort",
+      "row_count": 21,
+      "runtime_ready": false,
+      "target_label_counts": {
+        "conversion_failure": 2,
+        "conversion_positive": 19
+      },
+      "top_terms": [
+        {
+          "failure_precision": 0.09523809523809523,
+          "success_precision": 0.9047619047619048,
+          "support": 21,
+          "term": "entry_terms_confirmed:enemy_king_boxed_after_own_move"
+        },
+        {
+          "failure_precision": 0.09523809523809523,
+          "success_precision": 0.9047619047619048,
+          "support": 21,
+          "term": "entry_terms_confirmed:rook_safe_after_own_move"
+        },
+        {
+          "failure_precision": 0.09523809523809523,
+          "success_precision": 0.9047619047619048,
+          "support": 21,
+          "term": "entry_terms_confirmed:visible_fence_contract_confirmed"
+        },
+        {
+          "failure_precision": 0.09523809523809523,
+          "success_precision": 0.9047619047619048,
+          "support": 21,
+          "term": "progress_terms_after_first_reply:handoff_gap_absent"
+        },
+        {
+          "failure_precision": 0.1,
+          "success_precision": 0.9,
+          "support": 20,
+          "term": "progress_terms_after_first_reply:enemy_king_boxed_after_reply"
+        },
+        {
+          "failure_precision": 0.1,
+          "success_precision": 0.9,
+          "support": 20,
+          "term": "progress_terms_after_first_reply:fence_survived_reply"
+        },
+        {
+          "failure_precision": 0.0,
+          "success_precision": 1.0,
+          "support": 15,
+          "term": "entry_terms_confirmed:reward_confirmed"
+        },
+        {
+          "failure_precision": 0.0,
+          "success_precision": 1.0,
+          "support": 15,
+          "term": "progress_terms_after_first_reply:successor_affordance"
+        },
+        {
+          "failure_precision": 0.16666666666666666,
+          "success_precision": 0.8333333333333334,
+          "support": 12,
+          "term": "abort_terms:provider_selected_without_role_license"
+        },
+        {
+          "failure_precision": 0.2,
+          "success_precision": 0.8,
+          "support": 10,
+          "term": "selected_successor:krk.stage0_basin"
+        }
+      ]
+    },
+    {
+      "failure_controls_met": true,
+      "objective_id": "stage7_heldout_sequence_success_vs_hard_negative",
+      "row_count": 10,
+      "runtime_ready": false,
+      "selected_provider_counts": {
+        "None": 1,
+        "krk.edge_trap_close": 2,
+        "krk.stage0_basin": 7
+      },
+      "semantic_alignment_counts": {
+        "neither_reward_nor_visible_contract": 2,
+        "reward_contract_mismatch": 3,
+        "reward_visible_fence_aligned_reply_not_checked": 1,
+        "reward_visible_fence_aligned_survived": 4
+      },
+      "success_controls_met": false,
+      "target_label_counts": {
+        "conversion_failure": 8,
+        "conversion_positive": 2
+      }
+    }
+  ],
+  "preflight": {
+    "benchmark_input_ready": false,
+    "blockers": [
+      "stage7_clean_success_controls_missing"
+    ],
+    "row_count": 79,
+    "runtime_authorization_row_count": 0,
+    "selector_training_row_count": 0,
+    "stage7_heldout_row_count": 10
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_sequence_policy_benchmark.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}
