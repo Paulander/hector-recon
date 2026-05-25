@@ -15,6 +15,9 @@ This is a non-causal benchmark design/readiness artifact. It does not train a mo
 - post_box_sandbox_sourced_success_controls: `14`
 - post_box_controls_runtime_authorization_eligible: `False`
 - plan_capsule_stage7_only_evidence: `True`
+- protected_plan_window_frame_count: `21`
+- protected_plan_window_evidence_met: `True`
+- cross_stage_sequence_evidence_met: `True`
 - plan_capsule_policy_succeeded: `False`
 - benchmark_ready: `False`
 
@@ -34,7 +37,7 @@ This is a non-causal benchmark design/readiness artifact. It does not train a mo
 
 ### plan_capsule_entry_progress_exit_abort
 
-- uses: PlanCapsule marker/source terms
+- uses: PlanCapsule marker/source terms plus protected plan-window frames where available
 - target: predict when a bounded plan should enter, continue, hand off, or abort
 - runtime_ready: `False`
 
@@ -48,7 +51,7 @@ This is a non-causal benchmark design/readiness artifact. It does not train a mo
 
 - at least 5 clean Stage 7 success controls and 5 clean Stage 7 hard negatives
 - explicit held-out split by source family and state id
-- PlanCapsule sequence fields represented outside Stage 7 or marked Stage7-only
+- PlanCapsule sequence fields represented outside Stage 7 or protected plan-window evidence marked as non-causal
 - no row marked as selector-training or runtime-authorization evidence
 
 ## Metrics
@@ -62,7 +65,7 @@ This is a non-causal benchmark design/readiness artifact. It does not train a mo
 
 ## Decision
 
-- recommended_next_step: `approve_stage7_diverse_clean_label_run_or_defer_to_cross_stage_plan_capsule_evidence`
+- recommended_next_step: `approve_stage7_diverse_clean_label_run_or_defer_to_non_causal_design`
 - runtime_changes_allowed: `false`
 - selector_training_allowed: `false`
 - Stage 7 promotion and Stage 8 training remain blocked.

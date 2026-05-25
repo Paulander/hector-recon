@@ -233,8 +233,11 @@ def test_current_control_plane_gate_fixture_preserves_no_implicit_approval():
 
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False
-    assert payload["recommendation"]["preferred_next_if_no_user_approval"] == "stop_at_gate_and_report"
+    assert (
+        payload["recommendation"]["preferred_next_if_no_user_approval"]
+        == "stop_at_gate_or_design_non_causal_sequence_policy_only"
+    )
     assert (
         payload["recommendation"]["preferred_next_if_user_defers_both"]
-        == "review_cross_stage_plan_capsule_sequence_evidence_requirements"
+        == "non_causal_sequence_policy_design_without_new_labels"
     )

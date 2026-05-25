@@ -1,0 +1,141 @@
+{
+  "acceptance_before_sequence_policy_benchmark": {
+    "dtm_runtime_lookup": false,
+    "plan_capsule_spec_causal": false,
+    "protected_stage4_5_6_frame_count_min": 20,
+    "runtime_authorization_rows": 0,
+    "selector_training_rows": 0,
+    "stage7_heldout_failure_min": 5,
+    "stage7_heldout_success_min": 5,
+    "stage7_training_rows": 0,
+    "topology_mutation": false
+  },
+  "causal_status": "non_causal_requirements_review",
+  "current_readiness": {
+    "control_plane_gate_status": "krk_control_plane_waiting_on_explicit_gate_choice",
+    "plan_capsule_policy_succeeded": false,
+    "plan_capsule_stage7_only_evidence": true,
+    "protected_cross_stage_plan_capsule_evidence": false,
+    "sequence_policy_benchmark_ready": false,
+    "stage7_clean_failure_controls_met": true,
+    "stage7_clean_success_controls_met": false
+  },
+  "decision": {
+    "label_run_allowed": false,
+    "recommended_next_step": "attempt_replay_free_protected_window_extraction_before_new_runs",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "cross_stage_plan_capsule_evidence_requirements_defined_blocked"
+  },
+  "gameplay_topology_mutation": false,
+  "non_causal_collection_options": [
+    {
+      "description": "recover plan-window terms from existing protected Stage 4/5/6 traces if available",
+      "option_id": "replay_free_protected_window_extraction",
+      "requires_approval": false,
+      "risk": "may lack explicit entry/progress/exit/abort fields"
+    },
+    {
+      "description": "collect trace-only protected Stage 4/5/6 plan-window metadata with no score/routing effect",
+      "option_id": "bounded_protected_trace_collection",
+      "requires_approval": true,
+      "risk": "new collection run; must prove default-off equivalence"
+    },
+    {
+      "description": "run the existing Stage 7 diverse clean sampling manifest to fill held-out success controls",
+      "option_id": "approved_stage7_diverse_clean_label_run",
+      "requires_approval": true,
+      "risk": "Stage7-only labels; still not promotion or Stage8 authorization"
+    }
+  ],
+  "required_evidence_frames": [
+    {
+      "frame_id": "stage4.first_move_or_wrong_tempo_plan_window",
+      "minimum_examples": {
+        "failure": 4,
+        "success": 4
+      },
+      "purpose": "test whether short plan windows can distinguish wrong-tempo first-move contrast from drift",
+      "required_fields": [
+        "plan_candidate_id",
+        "entry_terms_confirmed",
+        "first_move_candidate_terms",
+        "progress_terms_after_first_reply",
+        "abort_terms",
+        "handoff_target_if_any",
+        "h40_outcome_label",
+        "causal_status=non_causal"
+      ],
+      "source_stage": "stage4"
+    },
+    {
+      "frame_id": "stage5.fence_handoff_plan_window",
+      "minimum_examples": {
+        "failure": 2,
+        "success": 4
+      },
+      "purpose": "verify that plan-window evidence preserves validated fence/handoff behavior",
+      "required_fields": [
+        "fence_contract_terms",
+        "handoff_packet_trace",
+        "plan_entry_or_abstain",
+        "safe_preservation_label",
+        "h40_outcome_label",
+        "causal_status=non_causal"
+      ],
+      "source_stage": "stage5"
+    },
+    {
+      "frame_id": "stage6.drive_to_edge_plan_window",
+      "minimum_examples": {
+        "failure": 2,
+        "success": 4
+      },
+      "purpose": "verify that plan-window evidence does not override protected drive-to-edge overlay behavior",
+      "required_fields": [
+        "drive_progress_terms",
+        "owner_preservation_terms",
+        "candidate_handoff_terms",
+        "h40_outcome_label",
+        "causal_status=non_causal"
+      ],
+      "source_stage": "stage6"
+    },
+    {
+      "frame_id": "stage7.heldout_post_box_plan_window",
+      "minimum_examples": {
+        "failure": 5,
+        "success": 5
+      },
+      "purpose": "held-out challenge only; evaluate whether cross-stage plan evidence explains post-box failures",
+      "required_fields": [
+        "post_box_entry_terms",
+        "progress_terms",
+        "exit_or_handoff_terms",
+        "stagnation_terms",
+        "h40_outcome_label",
+        "heldout_challenge=true",
+        "causal_status=non_causal"
+      ],
+      "source_stage": "stage7"
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_changes_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_cross_stage_plan_capsule_evidence_requirements.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_plan_capsule_sequence_candidate_observation_review_v1.json",
+    "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json",
+    "reports/krk_current_control_plane_gate_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

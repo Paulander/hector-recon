@@ -15,6 +15,7 @@ PLAN_CAPSULE_REVIEW = ROOT / "reports/strategy_arbitration/krk_plan_capsule_sequ
 STAGE7_POST_BOX_CONTROLS = ROOT / "reports/structural_candidates/stage7_post_box_sequence_control_recovery_v0.json"
 STAGE7_CLEAN_CONTROLS = ROOT / "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json"
 STAGE7_SAMPLING_MANIFEST = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json"
+PROTECTED_PLAN_WINDOWS = ROOT / "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json"
 OUTPUT_JSON = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json"
 OUTPUT_MD = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.md"
 
@@ -38,6 +39,12 @@ def _load(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _load_optional(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    return _load(path)
+
+
 def build_payload(
     *,
     contrast_probe: dict[str, Any] | None = None,
@@ -46,6 +53,7 @@ def build_payload(
     post_box_controls: dict[str, Any] | None = None,
     clean_controls: dict[str, Any] | None = None,
     sampling_manifest: dict[str, Any] | None = None,
+    protected_plan_windows: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     contrast_probe = contrast_probe or _load(CONTRAST_PROBE)
     contrast_dataset = contrast_dataset or _load(CONTRAST_DATASET)
@@ -53,6 +61,7 @@ def build_payload(
     post_box_controls = post_box_controls or _load(STAGE7_POST_BOX_CONTROLS)
     clean_controls = clean_controls or _load(STAGE7_CLEAN_CONTROLS)
     sampling_manifest = sampling_manifest or _load(STAGE7_SAMPLING_MANIFEST)
+    protected_plan_windows = protected_plan_windows or _load_optional(PROTECTED_PLAN_WINDOWS)
 
     clean_success = int(
         clean_controls.get("summary", {})
@@ -71,14 +80,21 @@ def build_payload(
     plan_capsule_stage7_only = bool(
         plan_capsule_review.get("readiness", {}).get("stage7_only_evidence")
     )
+    protected_plan_window_count = int(
+        protected_plan_windows.get("summary", {}).get("frame_count", 0) or 0
+    )
+    protected_plan_window_met = bool(
+        protected_plan_windows.get("summary", {}).get("protected_cross_stage_evidence_met", False)
+    )
     clean_success_met = clean_success >= 5
     clean_fail_met = clean_fail >= 5
-    benchmark_ready = clean_success_met and clean_fail_met and not plan_capsule_stage7_only
+    cross_stage_sequence_evidence_met = (not plan_capsule_stage7_only) or protected_plan_window_met
+    benchmark_ready = clean_success_met and clean_fail_met and cross_stage_sequence_evidence_met
     status = (
         "sequence_policy_benchmark_blocked_pending_clean_stage7_controls"
         if not clean_success_met
-        else "sequence_policy_benchmark_blocked_pending_cross_stage_plan_capsule_evidence"
-        if plan_capsule_stage7_only
+        else "sequence_policy_benchmark_blocked_pending_cross_stage_sequence_evidence"
+        if not cross_stage_sequence_evidence_met
         else "sequence_policy_benchmark_design_ready_non_causal"
     )
 
@@ -93,6 +109,7 @@ def build_payload(
             "reports/structural_candidates/stage7_post_box_sequence_control_recovery_v0.json",
             "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json",
             "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
+            "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json",
         ],
         "readiness": {
             "stage4_first_move_contrast_sandbox_review_ready": stage4_review_ready,
@@ -104,6 +121,9 @@ def build_payload(
             "post_box_sandbox_sourced_success_controls": post_box_count,
             "post_box_controls_runtime_authorization_eligible": False,
             "plan_capsule_stage7_only_evidence": plan_capsule_stage7_only,
+            "protected_plan_window_frame_count": protected_plan_window_count,
+            "protected_plan_window_evidence_met": protected_plan_window_met,
+            "cross_stage_sequence_evidence_met": cross_stage_sequence_evidence_met,
             "plan_capsule_policy_succeeded": bool(
                 plan_capsule_review.get("readiness", {}).get("policy_succeeded")
             ),
@@ -127,7 +147,7 @@ def build_payload(
                 },
                 {
                     "objective_id": "plan_capsule_entry_progress_exit_abort",
-                    "uses": "PlanCapsule marker/source terms",
+                    "uses": "PlanCapsule marker/source terms plus protected plan-window frames where available",
                     "target": "predict when a bounded plan should enter, continue, hand off, or abort",
                     "runtime_ready": False,
                 },
@@ -141,7 +161,7 @@ def build_payload(
             "minimum_data_before_benchmark": [
                 "at least 5 clean Stage 7 success controls and 5 clean Stage 7 hard negatives",
                 "explicit held-out split by source family and state id",
-                "PlanCapsule sequence fields represented outside Stage 7 or marked Stage7-only",
+                "PlanCapsule sequence fields represented outside Stage 7 or protected plan-window evidence marked as non-causal",
                 "no row marked as selector-training or runtime-authorization evidence",
             ],
             "metrics": [
@@ -170,14 +190,20 @@ def build_payload(
                 if not benchmark_ready
                 else "ready_non_causal",
             },
+            {
+                "item": "protected_plan_window_frames",
+                "status": "available_non_causal"
+                if protected_plan_window_met
+                else "missing_or_underpowered",
+            },
         ],
         "decision": {
             "status": status,
             "recommended_next_step": (
-                "approve_stage7_diverse_clean_label_run_or_defer_to_cross_stage_plan_capsule_evidence"
+                "approve_stage7_diverse_clean_label_run_or_defer_to_non_causal_design"
                 if not clean_success_met
-                else "collect_cross_stage_plan_capsule_sequence_evidence"
-                if plan_capsule_stage7_only
+                else "collect_cross_stage_sequence_evidence"
+                if not cross_stage_sequence_evidence_met
                 else "implement_non_causal_sequence_policy_benchmark"
             ),
             "runtime_changes_allowed": False,

@@ -17,7 +17,7 @@
         "objective_id": "plan_capsule_entry_progress_exit_abort",
         "runtime_ready": false,
         "target": "predict when a bounded plan should enter, continue, hand off, or abort",
-        "uses": "PlanCapsule marker/source terms"
+        "uses": "PlanCapsule marker/source terms plus protected plan-window frames where available"
       },
       {
         "objective_id": "cross_stage_owner_preservation_vs_switch",
@@ -37,7 +37,7 @@
     "minimum_data_before_benchmark": [
       "at least 5 clean Stage 7 success controls and 5 clean Stage 7 hard negatives",
       "explicit held-out split by source family and state id",
-      "PlanCapsule sequence fields represented outside Stage 7 or marked Stage7-only",
+      "PlanCapsule sequence fields represented outside Stage 7 or protected plan-window evidence marked as non-causal",
       "no row marked as selector-training or runtime-authorization evidence"
     ],
     "name": "krk_sequence_policy_benchmark_v0",
@@ -55,11 +55,15 @@
     {
       "item": "sequence_policy_benchmark",
       "status": "blocked_until_clean_success_controls_or_cross_stage_evidence"
+    },
+    {
+      "item": "protected_plan_window_frames",
+      "status": "available_non_causal"
     }
   ],
   "causal_status": "non_causal_sequence_policy_design",
   "decision": {
-    "recommended_next_step": "approve_stage7_diverse_clean_label_run_or_defer_to_cross_stage_plan_capsule_evidence",
+    "recommended_next_step": "approve_stage7_diverse_clean_label_run_or_defer_to_non_causal_design",
     "runtime_changes_allowed": false,
     "selector_allowed": false,
     "selector_training_allowed": false,
@@ -70,10 +74,13 @@
   "gameplay_topology_mutation": false,
   "readiness": {
     "benchmark_ready": false,
+    "cross_stage_sequence_evidence_met": true,
     "plan_capsule_policy_succeeded": false,
     "plan_capsule_stage7_only_evidence": true,
     "post_box_controls_runtime_authorization_eligible": false,
     "post_box_sandbox_sourced_success_controls": 14,
+    "protected_plan_window_evidence_met": true,
+    "protected_plan_window_frame_count": 21,
     "stage4_first_move_contrast_sandbox_review_ready": true,
     "stage7_clean_failure_controls": 8,
     "stage7_clean_failure_controls_met": true,
@@ -94,7 +101,8 @@
     "reports/strategy_arbitration/krk_plan_capsule_sequence_candidate_observation_review_v1.json",
     "reports/structural_candidates/stage7_post_box_sequence_control_recovery_v0.json",
     "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json",
-    "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json"
+    "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
+    "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json"
   ],
   "stage7_promotion_allowed": false,
   "stage8_training_allowed": false

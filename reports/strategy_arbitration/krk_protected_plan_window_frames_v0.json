@@ -1,0 +1,878 @@
+{
+  "causal_status": "non_causal_replay_free_protected_window_extraction",
+  "decision": {
+    "label_run_allowed": false,
+    "recommended_next_step": "refresh_sequence_policy_readiness_with_protected_plan_window_frames",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "protected_cross_stage_plan_window_evidence_extracted"
+  },
+  "frames": [
+    {
+      "abort_terms": [],
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "reward_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "1R6/2K5/k7/8/8/8/8/8 w - - 0 1",
+      "frame_id": "planwin.23c0bb760d87",
+      "h40_outcome_label": "conversion_positive",
+      "handoff_targets": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "move_uci": "b8b1",
+      "outcome_bucket": "success",
+      "plies": 23,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "successor_affordance",
+        "handoff_gap_absent"
+      ],
+      "result": "mate",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.edge_trap_close",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage4_wrong_tempo_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "wrong_tempo_plan_window",
+      "source_stage": "stage4",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [],
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "8/8/8/8/8/4K3/3R4/5k2 w - - 0 1",
+      "frame_id": "planwin.d90d6f3d623a",
+      "h40_outcome_label": "conversion_positive",
+      "handoff_targets": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "move_uci": "d2d8",
+      "outcome_bucket": "success",
+      "plies": 31,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "handoff_gap_absent"
+      ],
+      "result": "mate",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.edge_trap_close",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "visible_contract_without_reward",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage4_wrong_tempo_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "wrong_tempo_plan_window",
+      "source_stage": "stage4",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [
+        "provider_selected_without_role_license"
+      ],
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "reward_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "6k1/4R3/5K2/8/8/8/8/8 w - - 0 1",
+      "frame_id": "planwin.779a16acb3e5",
+      "h40_outcome_label": "conversion_positive",
+      "handoff_targets": [
+        "krk.stage0_basin"
+      ],
+      "move_uci": "e7a7",
+      "outcome_bucket": "success",
+      "plies": 5,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "successor_affordance",
+        "handoff_gap_absent"
+      ],
+      "result": "mate",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.stage0_basin",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage4_wrong_tempo_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "wrong_tempo_plan_window",
+      "source_stage": "stage4",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [
+        "provider_selected_without_role_license"
+      ],
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "reward_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "8/8/k7/2K5/8/1R6/8/8 w - - 0 1",
+      "frame_id": "planwin.37c3699e0948",
+      "h40_outcome_label": "conversion_positive",
+      "handoff_targets": [
+        "krk.stage0_basin"
+      ],
+      "move_uci": "b3b1",
+      "outcome_bucket": "success",
+      "plies": 7,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "successor_affordance",
+        "handoff_gap_absent"
+      ],
+      "result": "mate",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.stage0_basin",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage4_wrong_tempo_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "wrong_tempo_plan_window",
+      "source_stage": "stage4",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [
+        "provider_selected_without_role_license"
+      ],
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "reward_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "8/8/8/8/8/8/R2K4/5k2 w - - 0 1",
+      "frame_id": "planwin.803a1dddf75d",
+      "h40_outcome_label": "conversion_positive",
+      "handoff_targets": [
+        "krk.stage0_basin"
+      ],
+      "move_uci": "d2e3",
+      "outcome_bucket": "success",
+      "plies": 7,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "successor_affordance",
+        "handoff_gap_absent"
+      ],
+      "result": "mate",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.stage0_basin",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage4_wrong_tempo_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "wrong_tempo_plan_window",
+      "source_stage": "stage4",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [
+        "provider_selected_without_role_license"
+      ],
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "reward_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "k7/2K1R3/8/8/8/8/8/8 w - - 0 1",
+      "frame_id": "planwin.34bc712214dd",
+      "h40_outcome_label": "conversion_positive",
+      "handoff_targets": [
+        "krk.drive_to_edge",
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.stage0_basin"
+      ],
+      "move_uci": "e7e3",
+      "outcome_bucket": "success",
+      "plies": 3,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "successor_affordance",
+        "handoff_gap_absent"
+      ],
+      "result": "mate",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.drive_to_edge",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage4_wrong_tempo_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "wrong_tempo_plan_window",
+      "source_stage": "stage4",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [
+        "provider_selected_without_role_license"
+      ],
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "reward_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "8/7k/5K2/8/8/8/8/6R1 w - - 0 1",
+      "frame_id": "planwin.3625755345be",
+      "h40_outcome_label": "conversion_positive",
+      "handoff_targets": [
+        "krk.stage0_basin"
+      ],
+      "move_uci": "g1g7",
+      "outcome_bucket": "success",
+      "plies": 13,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "successor_affordance",
+        "handoff_gap_absent"
+      ],
+      "result": "mate",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.stage0_basin",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage4_wrong_tempo_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "wrong_tempo_plan_window",
+      "source_stage": "stage4",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [
+        "provider_selected_without_role_license",
+        "max_plies"
+      ],
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "1R6/1K6/8/k7/8/8/8/8 w - - 0 1",
+      "frame_id": "planwin.7302462fcb01",
+      "h40_outcome_label": "conversion_failure",
+      "handoff_targets": [
+        "krk.stage0_basin"
+      ],
+      "move_uci": "b8h8",
+      "outcome_bucket": "failure",
+      "plies": 40,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "handoff_gap_absent"
+      ],
+      "result": "max_plies",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.stage0_basin",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "visible_contract_without_reward",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage4_wrong_tempo_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "wrong_tempo_plan_window",
+      "source_stage": "stage4",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [],
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "reward_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "1K6/1R6/k7/8/8/8/8/8 w - - 0 1",
+      "frame_id": "planwin.7a342c612ef0",
+      "h40_outcome_label": "conversion_positive",
+      "handoff_targets": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "move_uci": "b7b1",
+      "outcome_bucket": "success",
+      "plies": 15,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "successor_affordance",
+        "handoff_gap_absent"
+      ],
+      "result": "mate",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.edge_trap_close",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage4_wrong_tempo_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "wrong_tempo_plan_window",
+      "source_stage": "stage4",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [
+        "provider_selected_without_role_license"
+      ],
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "reward_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "7k/5KR1/8/8/8/8/8/8 w - - 0 1",
+      "frame_id": "planwin.313fd8684bbc",
+      "h40_outcome_label": "conversion_positive",
+      "handoff_targets": [
+        "krk.drive_to_edge",
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.mate_in_1",
+        "krk.stage0_basin"
+      ],
+      "move_uci": "g7g4",
+      "outcome_bucket": "success",
+      "plies": 3,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "successor_affordance",
+        "handoff_gap_absent"
+      ],
+      "result": "mate",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.drive_to_edge",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage4_wrong_tempo_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "wrong_tempo_plan_window",
+      "source_stage": "stage4",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [
+        "provider_selected_without_role_license",
+        "max_plies"
+      ],
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "1R6/1K6/8/k7/8/8/8/8 w - - 0 1",
+      "frame_id": "planwin.7302462fcb01",
+      "h40_outcome_label": "conversion_failure",
+      "handoff_targets": [
+        "krk.stage0_basin"
+      ],
+      "move_uci": "b8h8",
+      "outcome_bucket": "failure",
+      "plies": 40,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "handoff_gap_absent"
+      ],
+      "result": "max_plies",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.stage0_basin",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "visible_contract_without_reward",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage4_wrong_tempo_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "wrong_tempo_plan_window",
+      "source_stage": "stage4",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [
+        "provider_selected_without_role_license"
+      ],
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "7k/8/8/8/R7/8/5K2/8 w - - 0 1",
+      "frame_id": "planwin.a8dd289c75b7",
+      "h40_outcome_label": "conversion_positive",
+      "handoff_targets": [
+        "krk.stage0_basin"
+      ],
+      "move_uci": "f2g3",
+      "outcome_bucket": "success",
+      "plies": 27,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "handoff_gap_absent"
+      ],
+      "result": "mate",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.stage0_basin",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "visible_contract_without_reward",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "fence_handoff_plan_window",
+      "source_stage": "stage5",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [
+        "fence_broken_by_reply",
+        "provider_selected_without_role_license"
+      ],
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "4k3/8/8/8/R7/8/4K3/8 w - - 0 1",
+      "frame_id": "planwin.6ffab60fb0d0",
+      "h40_outcome_label": "conversion_positive",
+      "handoff_targets": [
+        "krk.stage0_basin"
+      ],
+      "move_uci": "a4a8",
+      "outcome_bucket": "success",
+      "plies": 33,
+      "progress_terms_after_first_reply": [
+        "handoff_gap_absent"
+      ],
+      "result": "mate",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.stage0_basin",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "visible_contract_without_reward",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "fence_handoff_plan_window",
+      "source_stage": "stage5",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [],
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "reward_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "4k3/1R6/1K6/8/8/8/8/8 w - - 0 1",
+      "frame_id": "planwin.146819b5f648",
+      "h40_outcome_label": "conversion_positive",
+      "handoff_targets": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "move_uci": "b7h7",
+      "outcome_bucket": "success",
+      "plies": 17,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "successor_affordance",
+        "handoff_gap_absent"
+      ],
+      "result": "mate",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.edge_trap_close",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "fence_handoff_plan_window",
+      "source_stage": "stage5",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [],
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "reward_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "k7/2R5/2K5/8/8/8/8/8 w - - 0 1",
+      "frame_id": "planwin.b71ecad060b7",
+      "h40_outcome_label": "conversion_positive",
+      "handoff_targets": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "move_uci": "c7h7",
+      "outcome_bucket": "success",
+      "plies": 21,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "successor_affordance",
+        "handoff_gap_absent"
+      ],
+      "result": "mate",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.edge_trap_close",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "fence_handoff_plan_window",
+      "source_stage": "stage5",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [
+        "provider_selected_without_role_license"
+      ],
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "7k/4RK2/8/8/8/8/8/8 w - - 0 1",
+      "frame_id": "planwin.227342c93b11",
+      "h40_outcome_label": "conversion_positive",
+      "handoff_targets": [
+        "krk.drive_to_edge",
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.stage0_basin"
+      ],
+      "move_uci": "e7e1",
+      "outcome_bucket": "success",
+      "plies": 3,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "handoff_gap_absent"
+      ],
+      "result": "mate",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.edge_trap_enemy_between",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "visible_contract_without_reward",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "fence_handoff_plan_window",
+      "source_stage": "stage5",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [],
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "reward_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "4k3/R7/K7/8/8/8/8/8 w - - 0 1",
+      "frame_id": "planwin.4c05d20ddf59",
+      "h40_outcome_label": "conversion_positive",
+      "handoff_targets": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "move_uci": "a7h7",
+      "outcome_bucket": "success",
+      "plies": 33,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "successor_affordance",
+        "handoff_gap_absent"
+      ],
+      "result": "mate",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.edge_trap_close",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "fence_handoff_plan_window",
+      "source_stage": "stage5",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [],
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "reward_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "4k3/8/3K4/8/8/8/8/R7 w - - 0 1",
+      "frame_id": "planwin.4f9789a608c4",
+      "h40_outcome_label": "conversion_positive",
+      "handoff_targets": [
+        "krk.drive_to_edge",
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.stage0_basin"
+      ],
+      "move_uci": "a1f1",
+      "outcome_bucket": "success",
+      "plies": 3,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "successor_affordance",
+        "handoff_gap_absent"
+      ],
+      "result": "mate",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.stage0_basin",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage6_drive_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "drive_to_edge_plan_window",
+      "source_stage": "stage6",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [
+        "provider_selected_without_role_license"
+      ],
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "reward_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "7k/8/5K2/8/8/8/8/R7 w - - 0 1",
+      "frame_id": "planwin.e09fb2b8a021",
+      "h40_outcome_label": "conversion_positive",
+      "handoff_targets": [
+        "krk.drive_to_edge",
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.stage0_basin"
+      ],
+      "move_uci": "f6f7",
+      "outcome_bucket": "success",
+      "plies": 3,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "successor_affordance",
+        "handoff_gap_absent"
+      ],
+      "result": "mate",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.edge_trap_close",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage6_drive_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "drive_to_edge_plan_window",
+      "source_stage": "stage6",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [],
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "reward_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "1k6/8/2K5/8/8/8/8/R7 w - - 0 1",
+      "frame_id": "planwin.5fa48b6e0286",
+      "h40_outcome_label": "conversion_positive",
+      "handoff_targets": [
+        "krk.drive_to_edge",
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.mate_in_1",
+        "krk.stage0_basin"
+      ],
+      "move_uci": "a1a6",
+      "outcome_bucket": "success",
+      "plies": 3,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "successor_affordance",
+        "handoff_gap_absent"
+      ],
+      "result": "mate",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.stage0_basin",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage6_drive_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "drive_to_edge_plan_window",
+      "source_stage": "stage6",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    },
+    {
+      "abort_terms": [],
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_replay_free_protected_plan_window",
+      "entry_terms_confirmed": [
+        "visible_fence_contract_confirmed",
+        "reward_confirmed",
+        "rook_safe_after_own_move",
+        "enemy_king_boxed_after_own_move"
+      ],
+      "fen": "4k3/R7/8/K7/8/8/8/8 w - - 0 1",
+      "frame_id": "planwin.e075918bdd9d",
+      "h40_outcome_label": "conversion_positive",
+      "handoff_targets": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "move_uci": "a7h7",
+      "outcome_bucket": "success",
+      "plies": 33,
+      "progress_terms_after_first_reply": [
+        "fence_survived_reply",
+        "enemy_king_boxed_after_reply",
+        "successor_affordance",
+        "handoff_gap_absent"
+      ],
+      "result": "mate",
+      "schema_version": "krk_protected_plan_window_frame.v0",
+      "selected_successor": "krk.edge_trap_close",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+      "source_artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage6_drive_overlay_300_seed7_h40_profile_bonus.json",
+      "source_family": "drive_to_edge_plan_window",
+      "source_stage": "stage6",
+      "stage7_heldout_challenge": false,
+      "usable_for_runtime_authorization": false,
+      "usable_for_selector_training": false
+    }
+  ],
+  "gameplay_topology_mutation": false,
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_changes_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_protected_plan_window_frames.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_cross_stage_plan_capsule_evidence_requirements_v0.json",
+    "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage4_wrong_tempo_overlay_300_seed7_h40_profile_bonus.json",
+    "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+    "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage6_drive_overlay_300_seed7_h40_profile_bonus.json"
+  ],
+  "source_group_counts": {
+    "stage4": 10,
+    "stage5": 6,
+    "stage6": 4
+  },
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "frame_count": 21,
+    "outcome_bucket_counts": {
+      "failure": 2,
+      "success": 19
+    },
+    "protected_cross_stage_evidence_met": true,
+    "protected_stage4_5_6_frame_count_min": 20,
+    "runtime_authorization_row_count": 0,
+    "selector_training_row_count": 0,
+    "source_stage_counts": {
+      "stage4": 11,
+      "stage5": 6,
+      "stage6": 4
+    },
+    "stage7_training_row_count": 0
+  }
+}

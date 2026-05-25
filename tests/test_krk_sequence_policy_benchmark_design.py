@@ -54,6 +54,9 @@ def test_sequence_policy_benchmark_design_blocks_training_and_runtime():
     assert payload["readiness"]["stage7_clean_failure_controls"] == 8
     assert payload["readiness"]["stage7_clean_success_controls_met"] is False
     assert payload["readiness"]["post_box_controls_runtime_authorization_eligible"] is False
+    assert payload["readiness"]["protected_plan_window_frame_count"] >= 20
+    assert payload["readiness"]["protected_plan_window_evidence_met"] is True
+    assert payload["readiness"]["cross_stage_sequence_evidence_met"] is True
     assert payload["readiness"]["benchmark_ready"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["selector_training_allowed"] is False
@@ -83,6 +86,12 @@ def test_sequence_policy_benchmark_design_fixture_requires_clean_success_control
             }
         },
         sampling_manifest={"decision": {"status": "review_ready"}},
+        protected_plan_windows={
+            "summary": {
+                "frame_count": 21,
+                "protected_cross_stage_evidence_met": True,
+            }
+        },
     )
 
     assert (
@@ -115,6 +124,12 @@ def test_sequence_policy_benchmark_design_fixture_can_become_ready_non_causally(
             }
         },
         sampling_manifest={"decision": {"status": "review_ready"}},
+        protected_plan_windows={
+            "summary": {
+                "frame_count": 21,
+                "protected_cross_stage_evidence_met": True,
+            }
+        },
     )
 
     assert payload["decision"]["status"] == "sequence_policy_benchmark_design_ready_non_causal"
