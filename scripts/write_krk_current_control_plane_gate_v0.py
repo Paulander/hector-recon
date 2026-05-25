@@ -14,6 +14,7 @@ STAGE7_MANIFEST = ROOT / "reports/structural_candidates/stage7_diverse_clean_sam
 SEQUENCE_PROBE = ROOT / "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.json"
 SEQUENCE_POLICY_DESIGN = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json"
 PROTECTED_PLAN_WINDOWS = ROOT / "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json"
+SEQUENCE_POLICY_INPUTS = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json"
 OUTPUT_JSON = ROOT / "reports/krk_current_control_plane_gate_v0.json"
 OUTPUT_MD = ROOT / "reports/krk_current_control_plane_gate_v0.md"
 
@@ -50,12 +51,14 @@ def build_payload(
     sequence_probe: dict[str, Any] | None = None,
     sequence_policy_design: dict[str, Any] | None = None,
     protected_plan_windows: dict[str, Any] | None = None,
+    sequence_policy_inputs: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     stage4_packet = stage4_packet or _load(STAGE4_PACKET)
     stage7_manifest = stage7_manifest or _load(STAGE7_MANIFEST)
     sequence_probe = sequence_probe or _load(SEQUENCE_PROBE)
     sequence_policy_design = sequence_policy_design or _load(SEQUENCE_POLICY_DESIGN)
     protected_plan_windows = protected_plan_windows or _load_optional(PROTECTED_PLAN_WINDOWS)
+    sequence_policy_inputs = sequence_policy_inputs or _load_optional(SEQUENCE_POLICY_INPUTS)
     protected_plan_window_met = bool(
         protected_plan_windows.get("summary", {}).get("protected_cross_stage_evidence_met", False)
     )
@@ -69,6 +72,7 @@ def build_payload(
             "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.json",
             "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json",
             "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json",
+            "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json",
         ],
         "current_state": {
             "protected_stack": "retry1_stage5_6_active_manifest_validated",
@@ -78,6 +82,10 @@ def build_payload(
             if protected_plan_window_met
             else "missing_or_underpowered",
             "sequence_policy": sequence_policy_design.get("decision", {}).get("status"),
+            "sequence_policy_inputs": sequence_policy_inputs.get("decision", {}).get(
+                "status",
+                "not_assembled",
+            ),
             "stage8": "blocked",
             "runtime_selector": "blocked",
         },
