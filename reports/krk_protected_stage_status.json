@@ -1,4 +1,6 @@
 {
+  "active_stack_artifact": "reports/krk_active_protected_stack_v0.json",
+  "active_stack_status": "retry1_protected_stage5_6_stack_adopted_manifest_only",
   "blocked_next_steps": [
     "stage7_promotion",
     "stage8_training",
@@ -9,6 +11,7 @@
   ],
   "causal_status": "non_causal_status_audit",
   "gameplay_topology_mutation": false,
+  "protected_stack_reference_mode": "retry1_manifest_active",
   "runtime_behavior_changed": false,
   "runtime_defaults_changed": false,
   "runtime_dtm_or_tablebase_lookup": false,
@@ -17,11 +20,11 @@
     "snapshots/krk_triplet_pipeline/stage1_clean/run_manifest.json",
     "snapshots/krk_triplet_pipeline/handoff_observability_check/slice47_profile_stage4_wrong_tempo_500_seed7_h40.json",
     "snapshots/krk_triplet_pipeline/handoff_observability_check/slice47_profile_stage5_1000_seed7_h40.json",
-    "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/stage6_drive_overlay_300_seed7_h40.json",
-    "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/stage5_fence_overlay_300_seed7_h40.json",
-    "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/stage4_wrong_tempo_overlay_300_seed7_h40.json",
-    "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/stage4_wrong_tempo_stage5_base_control_300_seed7_h40.json",
-    "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/promotion_eval_stage6_overlay.json",
+    "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage6_drive_overlay_300_seed7_h40_profile_bonus.json",
+    "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+    "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage4_wrong_tempo_overlay_300_seed7_h40_profile_bonus.json",
+    "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage4_wrong_tempo_stage5_base_control_300_seed7_h40_profile_bonus.json",
+    "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/promotion_eval_stage6_overlay_profile_bonus.json",
     "reports/krk_handoff_counterfactual_notes.md"
   ],
   "stage7_promotion_allowed": false,
@@ -62,48 +65,50 @@
       "status": "protected_solved_local_regression"
     },
     {
-      "caveat": "The 500-sample handoff_composition_v1 profile is clean, but the later 300-sample overlay/control guardrail has 247 mate / 53 max_plies on both overlay and frozen Stage 5 base. This is not Stage 6 overlay interference; it remains a horizon/guardrail-definition diagnostic.",
+      "caveat": "The 500-sample handoff_composition_v1 profile is clean, but the later 300-sample overlay/control guardrail has 268 mate / 32 max_plies on both overlay and frozen Stage 5 base. This is not Stage 6 overlay interference; it remains a candidate-generation/horizon guardrail diagnostic.",
       "evidence": {
         "base_control_300_seed7_h40": {
           "composition_profile": "handoff_composition_v1",
           "conversion_status_counts": {
-            "failed": 53,
-            "passed": 247
+            "failed": 32,
+            "passed": 268
           },
-          "improved": 300,
+          "improved": 238,
           "no_move": 0,
           "one_ply_status_counts": {
-            "passed": 300
+            "failed": 62,
+            "passed": 238
           },
-          "optimal": 300,
+          "optimal": 238,
           "playouts": {
-            "mate": 247,
-            "max_plies": 53
+            "mate": 268,
+            "max_plies": 32
           },
-          "shadow_candidate_count": 106,
+          "shadow_candidate_count": 0,
           "total": 300,
-          "worsened": 0
+          "worsened": 62
         },
         "overlay_caveat_reproduces_on_base_control": true,
         "overlay_probe_300_seed7_h40": {
           "composition_profile": "handoff_composition_v1",
           "conversion_status_counts": {
-            "failed": 53,
-            "passed": 247
+            "failed": 32,
+            "passed": 268
           },
-          "improved": 300,
+          "improved": 238,
           "no_move": 0,
           "one_ply_status_counts": {
-            "passed": 300
+            "failed": 62,
+            "passed": 238
           },
-          "optimal": 300,
+          "optimal": 238,
           "playouts": {
-            "mate": 247,
-            "max_plies": 53
+            "mate": 268,
+            "max_plies": 32
           },
-          "shadow_candidate_count": 106,
+          "shadow_candidate_count": 0,
           "total": 300,
-          "worsened": 0
+          "worsened": 62
         },
         "profile_500_seed7_h40": {
           "composition_profile": "handoff_composition_v1",
@@ -155,18 +160,19 @@
           "conversion_status_counts": {
             "passed": 300
           },
-          "improved": 300,
+          "improved": 144,
           "no_move": 0,
           "one_ply_status_counts": {
-            "passed": 300
+            "failed": 156,
+            "passed": 144
           },
-          "optimal": 300,
+          "optimal": 144,
           "playouts": {
             "mate": 300
           },
           "shadow_candidate_count": 0,
           "total": 300,
-          "worsened": 0
+          "worsened": 156
         }
       },
       "scope": "protected Stage 5 fence/handoff provider pack",
@@ -175,24 +181,76 @@
       "status": "protected_solved_conversion_profile"
     },
     {
-      "caveat": "Stage 6 is solved as an overlay, not as a monolithic replacement topology. Use frozen-provider plus overlay composition for later stages.",
+      "caveat": "Stage 6 is solved as an overlay, not as a monolithic replacement topology. Use frozen-provider plus overlay composition for later stages. If active retry1 is selected, Stage 5 conversion is preserved while local reward/contract debt remains explicitly recorded as guardrail-control debt.",
       "evidence": {
         "promotion_eval": {
+          "guardrail_semantics": {
+            "clean_replacement_blocked_by_control_debt": true,
+            "conversion_preservation": [
+              {
+                "candidate_conversion_passed": true,
+                "control_path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_stage5_base_control_300_seed7_h40_profile_bonus.json",
+                "delta": {
+                  "candidate_path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+                  "control_path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_stage5_base_control_300_seed7_h40_profile_bonus.json",
+                  "improved_rate_delta": 0.0,
+                  "index": 0,
+                  "mate_rate_delta": 0.0,
+                  "max_plies_rate_delta": 0.0,
+                  "regressed_vs_control": false,
+                  "shadow_candidates_delta": 0,
+                  "worsened_rate_delta": 0.0
+                },
+                "guardrail_path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+                "index": 0,
+                "passed": true,
+                "regressed_vs_control": false,
+                "track": "conversion_preservation_guardrail"
+              }
+            ],
+            "local_reward_contract_debt": [
+              {
+                "blocks_clean_replacement": true,
+                "blocks_overlay_use": false,
+                "candidate_failure_reasons": [
+                  "improved_rate=0.480 < 0.700",
+                  "worsened_rate=0.520 > 0.200"
+                ],
+                "candidate_failure_track": "local_reward_contract",
+                "control_failure_reasons": [
+                  "improved_rate=0.480 < 0.700",
+                  "worsened_rate=0.520 > 0.200"
+                ],
+                "control_failure_track": "local_reward_contract",
+                "control_path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_stage5_base_control_300_seed7_h40_profile_bonus.json",
+                "guardrail_path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+                "index": 0,
+                "status": "control_debt",
+                "track": "local_reward_contract_guardrail"
+              }
+            ],
+            "schema_version": "guardrail_semantics_split.v1",
+            "split_enabled": true
+          },
           "guardrails": [
             {
-              "failure_reasons": [],
-              "improved_rate": 1.0,
+              "failure_reasons": [
+                "improved_rate=0.480 < 0.700",
+                "worsened_rate=0.520 > 0.200"
+              ],
+              "improved_rate": 0.48,
               "label": "fence_established",
               "mate_rate": 1.0,
               "max_plies_rate": 0.0,
-              "passed": true,
-              "path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/stage5_fence_overlay_300_seed7_h40.json",
+              "passed": false,
+              "path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
               "shadow_candidates": 0,
               "total": 300,
-              "worsened_rate": 0.0
+              "worsened_rate": 0.52
             }
           ],
-          "promotion_status": "promoted",
+          "promotion_status": "overlay_only",
+          "promotion_status_semantics": "overlay_only_due_to_guardrail_control_debt",
           "stage": {
             "failure_reasons": [],
             "improved_rate": 1.0,
@@ -200,7 +258,7 @@
             "mate_rate": 1.0,
             "max_plies_rate": 0.0,
             "passed": true,
-            "path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/stage6_drive_overlay_300_seed7_h40.json",
+            "path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage6_drive_overlay_300_seed7_h40_profile_bonus.json",
             "shadow_candidates": 0,
             "total": 300,
             "worsened_rate": 0.0
@@ -211,18 +269,19 @@
           "conversion_status_counts": {
             "passed": 300
           },
-          "improved": 300,
+          "improved": 144,
           "no_move": 0,
           "one_ply_status_counts": {
-            "passed": 300
+            "failed": 156,
+            "passed": 144
           },
-          "optimal": 300,
+          "optimal": 144,
           "playouts": {
             "mate": 300
           },
           "shadow_candidate_count": 0,
           "total": 300,
-          "worsened": 0
+          "worsened": 156
         },
         "stage6_candidate_300_seed7_h40": {
           "composition_profile": "handoff_composition_v1",
@@ -247,7 +306,7 @@
       "scope": "additive Stage 6 overlay on frozen Stage 5 provider pack",
       "solved_under_current_architecture": true,
       "stage": "stage6_drive_overlay",
-      "status": "promoted_overlay_solved_against_stage5_guardrail"
+      "status": "active_retry1_overlay_solved_with_guardrail_control_debt"
     }
   ],
   "summary": {
@@ -261,7 +320,7 @@
     "solved_with_caveat": [
       "stage4_wrong_tempo"
     ],
-    "stage6_overlay_status": "promoted",
+    "stage6_overlay_status": "active_retry1_overlay_solved_with_guardrail_control_debt",
     "yes_protected_or_promoted": [
       "stage1_backchain",
       "stage4_wrong_tempo",

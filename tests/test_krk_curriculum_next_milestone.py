@@ -17,6 +17,15 @@ assert _spec.loader is not None
 _reviews = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_reviews)
 
+_adoption_spec = importlib.util.spec_from_file_location(
+    "adopt_krk_retry1_protected_stack_v0",
+    ROOT / "scripts" / "adopt_krk_retry1_protected_stack_v0.py",
+)
+assert _adoption_spec is not None
+assert _adoption_spec.loader is not None
+_adoption = importlib.util.module_from_spec(_adoption_spec)
+_adoption_spec.loader.exec_module(_adoption)
+
 
 def _load(path: str) -> dict:
     payload = json.loads((ROOT / path).read_text(encoding="utf-8"))
@@ -93,3 +102,48 @@ def test_curriculum_next_milestone_decision_is_review_only():
     assert payload["invariants"]["stage7_promotion"] is False
     assert payload["invariants"]["stage8_training"] is False
     assert "protected-stack replacement without explicit approval" in payload["what_remains_forbidden"]
+
+
+def test_retry1_active_stack_manifest_is_rollback_aware_and_non_destructive():
+    payload = _load("reports/krk_active_protected_stack_v0.json")
+
+    assert payload["schema_version"] == "krk_active_protected_stack.v0"
+    assert payload["status"] == "retry1_protected_stage5_6_stack_adopted_manifest_only"
+    assert payload["decision"]["clean_stack_adopted"] is True
+    assert payload["decision"]["adoption_mechanism"] == "tracked_active_stack_manifest"
+    assert payload["decision"]["filesystem_snapshots_replaced"] is False
+    assert "stage5_fence" in payload["active_protected_stack"]
+    assert "stage6_drive_overlay" in payload["active_protected_stack"]
+    assert "stage5_fence" in payload["rollback_protected_stack"]
+    assert "stage6_drive_overlay" in payload["rollback_protected_stack"]
+    assert payload["adoption_scope"]["stage7"] == "unchanged_quarantined_held_out"
+    assert payload["adoption_scope"]["stage8"] == "unchanged_blocked"
+    assert payload["invariants"]["active_stack_reference_updated"] is True
+    assert payload["invariants"]["files_copied_or_replaced"] is False
+    assert payload["invariants"]["rollback_paths_preserved"] is True
+    assert payload["invariants"]["runtime_defaults_changed"] is False
+    assert payload["invariants"]["stage7_promotion"] is False
+    assert payload["invariants"]["stage8_training"] is False
+
+
+def test_retry1_post_replacement_validation_passes_without_runtime_changes():
+    payload = _load("reports/krk_clean_stack_post_replacement_validation_v0.json")
+
+    assert payload["schema_version"] == "krk_clean_stack_post_replacement_validation.v0"
+    assert payload["status"] == "clean_stack_adopted_and_validated"
+    assert payload["decision"]["clean_stack_adopted_and_validated"] is True
+    assert payload["decision"]["stage7_status"] == "unchanged_quarantined_held_out"
+    assert payload["decision"]["stage8_status"] == "unchanged_blocked"
+    validation = payload["validation"]
+    assert validation["stage5_conversion_preservation_guardrail"]["passed"] is True
+    assert validation["stage5_conversion_preservation_guardrail"]["playouts"] == {"mate": 300}
+    assert validation["stage6_drive_h40_historical_bonus"]["passed"] is True
+    assert validation["stage6_drive_h40_historical_bonus"]["playouts"] == {"mate": 300}
+    assert validation["stage4_caveat_control_no_regression"]["passed"] is True
+    assert validation["m1_m4_preservation"]["passed"] is True
+    assert validation["kpk_kqk_bridge_preservation"]["passed"] is True
+    assert payload["invariants"]["runtime_behavior_changed"] is False
+    assert payload["invariants"]["runtime_defaults_changed"] is False
+    assert payload["invariants"]["files_copied_or_replaced"] is False
+    assert payload["invariants"]["stage7_promotion"] is False
+    assert payload["invariants"]["stage8_training"] is False

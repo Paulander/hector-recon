@@ -2,6 +2,12 @@
 
 This is a replay-free, non-causal status audit of the protected KRK stages. It does not change runtime behavior, defaults, topology, training, or promotion state.
 
+## Active Stack
+
+- Reference mode: `retry1_manifest_active`
+- Active stack status: `retry1_protected_stage5_6_stack_adopted_manifest_only`
+- Active stack artifact: `reports/krk_active_protected_stack_v0.json`
+
 ## Short Answer
 
 - Stage 1 is solved/protected as a backchain/local regression subskill.
@@ -29,11 +35,11 @@ So the current architecture has validated/protected Stages 1, 4, 5, and 6, but S
 - Status: `protected_profile_solved_with_overlay_guardrail_caveat`
 - Solved under current architecture: `True`
 - Scope: wrong-tempo local/conversion profile; current overlay-control h40 caveat remains separate
-- Caveat: The 500-sample handoff_composition_v1 profile is clean, but the later 300-sample overlay/control guardrail has 247 mate / 53 max_plies on both overlay and frozen Stage 5 base. This is not Stage 6 overlay interference; it remains a horizon/guardrail-definition diagnostic.
+- Caveat: The 500-sample handoff_composition_v1 profile is clean, but the later 300-sample overlay/control guardrail has 268 mate / 32 max_plies on both overlay and frozen Stage 5 base. This is not Stage 6 overlay interference; it remains a candidate-generation/horizon guardrail diagnostic.
 
 - `profile_500_seed7_h40`: total `500`, mate: 500, shadow `0`
-- `overlay_probe_300_seed7_h40`: total `300`, mate: 247, max_plies: 53, shadow `106`
-- `base_control_300_seed7_h40`: total `300`, mate: 247, max_plies: 53, shadow `106`
+- `overlay_probe_300_seed7_h40`: total `300`, mate: 268, max_plies: 32, shadow `0`
+- `base_control_300_seed7_h40`: total `300`, mate: 268, max_plies: 32, shadow `0`
 - `overlay_caveat_reproduces_on_base_control`: `True`
 
 ### stage5_fence
@@ -48,14 +54,14 @@ So the current architecture has validated/protected Stages 1, 4, 5, and 6, but S
 
 ### stage6_drive_overlay
 
-- Status: `promoted_overlay_solved_against_stage5_guardrail`
+- Status: `active_retry1_overlay_solved_with_guardrail_control_debt`
 - Solved under current architecture: `True`
 - Scope: additive Stage 6 overlay on frozen Stage 5 provider pack
-- Caveat: Stage 6 is solved as an overlay, not as a monolithic replacement topology. Use frozen-provider plus overlay composition for later stages.
+- Caveat: Stage 6 is solved as an overlay, not as a monolithic replacement topology. Use frozen-provider plus overlay composition for later stages. If active retry1 is selected, Stage 5 conversion is preserved while local reward/contract debt remains explicitly recorded as guardrail-control debt.
 
 - `stage6_candidate_300_seed7_h40`: total `300`, mate: 300, shadow `0`
 - `stage5_guardrail_300_seed7_h40`: total `300`, mate: 300, shadow `0`
-- `promotion_eval`: promotion_status `promoted`
+- `promotion_eval`: promotion_status `overlay_only`, semantics `overlay_only_due_to_guardrail_control_debt`
 
 ## Current Boundary
 

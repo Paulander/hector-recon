@@ -1,0 +1,78 @@
+{
+  "active_protected_stack": {
+    "stage5_fence": {
+      "provider": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage5_fence_handoff/baseline/best_by_stage/fence_established.pkl",
+      "run_manifest": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage5_fence_handoff/baseline/curriculum_history.json",
+      "topology": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage5_fence_handoff/topology/krk_entry_topology.json"
+    },
+    "stage6_drive_overlay": {
+      "promotion_eval": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/promotion_eval_stage6_overlay_profile_bonus.json",
+      "provider": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_drive_overlay_candidate/baseline/best_by_stage/drive_to_edge.pkl",
+      "stage4_caveat_control": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage4_wrong_tempo_stage5_base_control_300_seed7_h40_profile_bonus.json",
+      "stage5_guardrail": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+      "stage6_validation": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage6_drive_overlay_300_seed7_h40_profile_bonus.json",
+      "topology": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/topology/krk_entry_topology.json"
+    }
+  },
+  "adoption_scope": {
+    "stage4": "unchanged_known_caveat_guardrail",
+    "stage5": "retry1_fence_handoff",
+    "stage6": "retry1_drive_overlay_composed",
+    "stage7": "unchanged_quarantined_held_out",
+    "stage8": "unchanged_blocked"
+  },
+  "approval_record": {
+    "approval_date": "2026-05-25T11:27:52+02:00",
+    "approval_kind": "user_explicit_rollback_aware_adoption",
+    "approval_text_summary": "User approved continuing with rollback-aware retry1 adoption path."
+  },
+  "created_at": "2026-05-25T11:27:52+02:00",
+  "decision": {
+    "adoption_mechanism": "tracked_active_stack_manifest",
+    "clean_stack_adopted": true,
+    "filesystem_snapshots_replaced": false,
+    "post_adoption_validation_required": true,
+    "recommended_next_step": "run_or_record_post_adoption_validation"
+  },
+  "invariants": {
+    "active_stack_reference_updated": true,
+    "files_copied_or_replaced": false,
+    "gameplay_topology_mutation": false,
+    "rollback_paths_preserved": true,
+    "runtime_behavior_changed": false,
+    "runtime_defaults_changed": false,
+    "runtime_direct_routing": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "runtime_score_changes": false,
+    "runtime_selector_implemented": false,
+    "stage7_promotion": false,
+    "stage8_training": false
+  },
+  "rollback_protected_stack": {
+    "stage5_fence": {
+      "provider": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+      "run_manifest": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/run_manifest.json",
+      "topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/topology/krk_entry_topology.json"
+    },
+    "stage6_drive_overlay": {
+      "promotion_eval": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/promotion_eval_stage6_overlay.json",
+      "stage4_caveat_control": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/stage4_wrong_tempo_stage5_base_control_300_seed7_h40.json",
+      "stage5_guardrail": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/stage5_fence_overlay_300_seed7_h40.json",
+      "stage6_validation": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/stage6_drive_overlay_300_seed7_h40.json",
+      "topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json"
+    }
+  },
+  "rollback_requirements": [
+    "Record exact current protected topology/provider paths before any replacement.",
+    "Do not delete or overwrite current protected snapshots.",
+    "Any replacement packet must name the rollback source paths and candidate target paths explicitly.",
+    "A rollback must restore the previous protected topology/provider pointers without retraining.",
+    "Stage 7 remains held-out/quarantined and cannot be included in the replacement stack."
+  ],
+  "schema_version": "krk_active_protected_stack.v0",
+  "source_artifacts": [
+    "reports/krk_clean_retrain_retry1_clean_stack_replacement_review_packet_v0.json",
+    "reports/krk_clean_retrain_retry1_protected_stack_snapshot_manifest_v0.json"
+  ],
+  "status": "retry1_protected_stage5_6_stack_adopted_manifest_only"
+}

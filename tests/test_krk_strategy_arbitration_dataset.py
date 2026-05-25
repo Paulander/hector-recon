@@ -1692,6 +1692,132 @@ def test_krk_protected_stage_status_preserves_stage4_caveat(tmp_path):
     ] == {"mate": 247, "max_plies": 53}
 
 
+def test_krk_protected_stage_status_uses_active_retry1_manifest(tmp_path):
+    root = tmp_path
+
+    def write_json(relative_path, payload):
+        path = root / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload), encoding="utf-8")
+
+    validation_profile = {
+        "schema_version": "composition_profile.v1",
+        "profile_id": "handoff_composition_v1",
+    }
+    write_json(
+        _protected_stage_status.STAGE1_MANIFEST,
+        {
+            "formal_validation": {
+                "mode": "strict_pairs",
+                "validated": True,
+                "nodes": 257,
+                "edges": 796,
+            }
+        },
+    )
+    write_json(
+        _protected_stage_status.STAGE4_PROFILE,
+        {
+            "total": 500,
+            "playouts": {"mate": 500},
+            "shadow_candidates": [],
+            "composition_profile": validation_profile,
+        },
+    )
+    write_json(
+        _protected_stage_status.STAGE5_PROFILE,
+        {
+            "total": 1000,
+            "playouts": {"mate": 1000},
+            "shadow_candidates": [],
+            "composition_profile": validation_profile,
+        },
+    )
+    retry_root = Path("snapshots/retry1")
+    stage6_validation = retry_root / "stage6.json"
+    stage5_guardrail = retry_root / "stage5_guardrail.json"
+    stage4_overlay = retry_root / "stage4_overlay.json"
+    stage4_base = retry_root / "stage4_base.json"
+    promotion_eval = retry_root / "promotion.json"
+    stage6_payload = {
+        "total": 300,
+        "improved": 300,
+        "optimal": 217,
+        "worsened": 0,
+        "playouts": {"mate": 300},
+        "shadow_candidates": [],
+        "composition_profile": validation_profile,
+    }
+    stage5_payload = {
+        "total": 300,
+        "improved": 144,
+        "optimal": 144,
+        "worsened": 156,
+        "playouts": {"mate": 300},
+        "shadow_candidates": [],
+        "composition_profile": validation_profile,
+    }
+    stage4_payload = {
+        "total": 300,
+        "improved": 238,
+        "optimal": 238,
+        "worsened": 62,
+        "playouts": {"mate": 268, "max_plies": 32},
+        "shadow_candidates": [],
+        "composition_profile": validation_profile,
+    }
+    write_json(stage6_validation, stage6_payload)
+    write_json(stage5_guardrail, stage5_payload)
+    write_json(stage4_overlay, stage4_payload)
+    write_json(stage4_base, stage4_payload)
+    write_json(
+        promotion_eval,
+        {
+            "promotion_status": "overlay_only",
+            "promotion_status_semantics": "overlay_only_due_to_guardrail_control_debt",
+            "stage": {"passed": True, "mate_rate": 1.0},
+            "guardrail_semantics": {
+                "conversion_preservation": [{"passed": True}],
+                "local_reward_contract_debt": [{"status": "control_debt"}],
+            },
+            "guardrails": [],
+        },
+    )
+    write_json(
+        _protected_stage_status.RETRY1_STAGE4_REVIEW,
+        {"source_artifacts": {"stage4_overlay": str(stage4_overlay)}},
+    )
+    write_json(
+        _protected_stage_status.ACTIVE_STACK,
+        {
+            "status": "retry1_protected_stage5_6_stack_adopted_manifest_only",
+            "active_protected_stack": {
+                "stage6_drive_overlay": {
+                    "stage6_validation": str(stage6_validation),
+                    "stage5_guardrail": str(stage5_guardrail),
+                    "stage4_caveat_control": str(stage4_base),
+                    "promotion_eval": str(promotion_eval),
+                }
+            },
+        },
+    )
+
+    status = _protected_stage_status.build_status(root)
+
+    assert status["protected_stack_reference_mode"] == "retry1_manifest_active"
+    assert status["active_stack_status"] == "retry1_protected_stage5_6_stack_adopted_manifest_only"
+    stages = {item["stage"]: item for item in status["stage_statuses"]}
+    assert stages["stage6_drive_overlay"]["status"] == (
+        "active_retry1_overlay_solved_with_guardrail_control_debt"
+    )
+    assert stages["stage6_drive_overlay"]["evidence"]["promotion_eval"][
+        "promotion_status_semantics"
+    ] == "overlay_only_due_to_guardrail_control_debt"
+    assert stages["stage4_wrong_tempo"]["evidence"]["overlay_probe_300_seed7_h40"][
+        "playouts"
+    ] == {"mate": 268, "max_plies": 32}
+
+
 def test_krk_self_expansion_architecture_gate_selects_non_causal_contract(tmp_path):
     root = tmp_path
 

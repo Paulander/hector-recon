@@ -43,6 +43,8 @@ STAGE6_PROMOTION = Path(
     "promotion_eval_stage6_overlay.json"
 )
 HANDOFF_NOTES = Path("reports/krk_handoff_counterfactual_notes.md")
+ACTIVE_STACK = Path("reports/krk_active_protected_stack_v0.json")
+RETRY1_STAGE4_REVIEW = Path("reports/krk_clean_retrain_retry1_stage4_caveat_control_review_v0.json")
 
 
 def _load_json(root: Path, relative_path: Path) -> dict[str, Any]:
@@ -51,6 +53,13 @@ def _load_json(root: Path, relative_path: Path) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError(f"expected JSON object: {path}")
     return payload
+
+
+def _load_optional_json(root: Path, relative_path: Path) -> dict[str, Any]:
+    path = root / relative_path
+    if not path.exists():
+        return {}
+    return _load_json(root, relative_path)
 
 
 def _load_optional_text(root: Path, relative_path: Path) -> str:
@@ -125,21 +134,68 @@ def _notes_stage1_500_present(notes: str) -> bool:
 def _stage6_promotion_summary(payload: dict[str, Any]) -> dict[str, Any]:
     return {
         "promotion_status": payload.get("promotion_status"),
+        "promotion_status_semantics": payload.get("promotion_status_semantics"),
         "stage": payload.get("stage") or {},
         "guardrails": payload.get("guardrails") or [],
+        "guardrail_semantics": payload.get("guardrail_semantics") or {},
     }
+
+
+def _active_stack_paths(repo_root: Path) -> tuple[dict[str, Path], dict[str, Any]]:
+    active = _load_optional_json(repo_root, ACTIVE_STACK)
+    if active.get("status") != "retry1_protected_stage5_6_stack_adopted_manifest_only":
+        return (
+            {
+                "stage6_candidate": STAGE6_CANDIDATE,
+                "stage5_overlay_guard": STAGE5_OVERLAY_GUARD,
+                "stage4_overlay_probe": STAGE4_OVERLAY_PROBE,
+                "stage4_base_control": STAGE4_BASE_CONTROL,
+                "stage6_promotion": STAGE6_PROMOTION,
+            },
+            {},
+        )
+
+    stack = active.get("active_protected_stack") or {}
+    stage6 = stack.get("stage6_drive_overlay") or {}
+    stage4_review = _load_optional_json(repo_root, RETRY1_STAGE4_REVIEW)
+    stage4_sources = stage4_review.get("source_artifacts") or {}
+    stage4_overlay = stage4_sources.get("stage4_overlay")
+    paths = {
+        "stage6_candidate": Path(stage6["stage6_validation"]),
+        "stage5_overlay_guard": Path(stage6["stage5_guardrail"]),
+        "stage4_overlay_probe": Path(stage4_overlay) if stage4_overlay else STAGE4_OVERLAY_PROBE,
+        "stage4_base_control": Path(stage6["stage4_caveat_control"]),
+        "stage6_promotion": Path(stage6["promotion_eval"]),
+    }
+    return paths, active
+
+
+def _stage6_promotion_valid(promotion_summary: dict[str, Any]) -> bool:
+    if promotion_summary.get("promotion_status") == "promoted":
+        return True
+    if (
+        promotion_summary.get("promotion_status") == "overlay_only"
+        and promotion_summary.get("promotion_status_semantics")
+        == "overlay_only_due_to_guardrail_control_debt"
+    ):
+        stage = promotion_summary.get("stage") or {}
+        guardrail_semantics = promotion_summary.get("guardrail_semantics") or {}
+        conversion = guardrail_semantics.get("conversion_preservation") or []
+        return bool(stage.get("passed")) and all(item.get("passed") is True for item in conversion)
+    return False
 
 
 def build_status(repo_root: Path) -> dict[str, Any]:
     notes = _load_optional_text(repo_root, HANDOFF_NOTES)
+    active_paths, active_stack = _active_stack_paths(repo_root)
     stage1_manifest = _load_json(repo_root, STAGE1_MANIFEST)
     stage4_profile = _load_json(repo_root, STAGE4_PROFILE)
     stage5_profile = _load_json(repo_root, STAGE5_PROFILE)
-    stage6_candidate = _load_json(repo_root, STAGE6_CANDIDATE)
-    stage5_overlay_guard = _load_json(repo_root, STAGE5_OVERLAY_GUARD)
-    stage4_overlay_probe = _load_json(repo_root, STAGE4_OVERLAY_PROBE)
-    stage4_base_control = _load_json(repo_root, STAGE4_BASE_CONTROL)
-    promotion = _load_json(repo_root, STAGE6_PROMOTION)
+    stage6_candidate = _load_json(repo_root, active_paths["stage6_candidate"])
+    stage5_overlay_guard = _load_json(repo_root, active_paths["stage5_overlay_guard"])
+    stage4_overlay_probe = _load_json(repo_root, active_paths["stage4_overlay_probe"])
+    stage4_base_control = _load_json(repo_root, active_paths["stage4_base_control"])
+    promotion = _load_json(repo_root, active_paths["stage6_promotion"])
 
     stage4_overlay_summary = _validation_summary(stage4_overlay_probe)
     stage4_base_summary = _validation_summary(stage4_base_control)
@@ -150,9 +206,24 @@ def build_status(repo_root: Path) -> dict[str, Any]:
         and stage4_overlay_playouts == stage4_base_playouts
     )
 
+    stage4_mate = stage4_overlay_playouts.get("mate", 0)
+    stage4_max_plies = stage4_overlay_playouts.get("max_plies", 0)
+    active_stack_enabled = bool(active_stack)
+    stage6_promotion_summary = _stage6_promotion_summary(promotion)
+    stage6_status = (
+        "active_retry1_overlay_solved_with_guardrail_control_debt"
+        if active_stack_enabled
+        else "promoted_overlay_solved_against_stage5_guardrail"
+    )
+
     status = {
         "schema_version": "krk_protected_stage_status.v1",
         "causal_status": "non_causal_status_audit",
+        "active_stack_artifact": str(ACTIVE_STACK) if active_stack_enabled else None,
+        "active_stack_status": active_stack.get("status") if active_stack_enabled else "legacy_protected_stack",
+        "protected_stack_reference_mode": (
+            "retry1_manifest_active" if active_stack_enabled else "legacy_hardcoded_paths"
+        ),
         "runtime_behavior_changed": False,
         "runtime_defaults_changed": False,
         "runtime_dtm_or_tablebase_lookup": False,
@@ -164,11 +235,11 @@ def build_status(repo_root: Path) -> dict[str, Any]:
             str(STAGE1_MANIFEST),
             str(STAGE4_PROFILE),
             str(STAGE5_PROFILE),
-            str(STAGE6_CANDIDATE),
-            str(STAGE5_OVERLAY_GUARD),
-            str(STAGE4_OVERLAY_PROBE),
-            str(STAGE4_BASE_CONTROL),
-            str(STAGE6_PROMOTION),
+            str(active_paths["stage6_candidate"]),
+            str(active_paths["stage5_overlay_guard"]),
+            str(active_paths["stage4_overlay_probe"]),
+            str(active_paths["stage4_base_control"]),
+            str(active_paths["stage6_promotion"]),
             str(HANDOFF_NOTES),
         ],
         "stage_statuses": [
@@ -199,9 +270,9 @@ def build_status(repo_root: Path) -> dict[str, Any]:
                 },
                 "caveat": (
                     "The 500-sample handoff_composition_v1 profile is clean, but the later "
-                    "300-sample overlay/control guardrail has 247 mate / 53 max_plies on both "
+                    f"300-sample overlay/control guardrail has {stage4_mate} mate / {stage4_max_plies} max_plies on both "
                     "overlay and frozen Stage 5 base. This is not Stage 6 overlay interference; "
-                    "it remains a horizon/guardrail-definition diagnostic."
+                    "it remains a candidate-generation/horizon guardrail diagnostic."
                 ),
             },
             {
@@ -217,17 +288,19 @@ def build_status(repo_root: Path) -> dict[str, Any]:
             },
             {
                 "stage": "stage6_drive_overlay",
-                "status": "promoted_overlay_solved_against_stage5_guardrail",
+                "status": stage6_status,
                 "solved_under_current_architecture": True,
                 "scope": "additive Stage 6 overlay on frozen Stage 5 provider pack",
                 "evidence": {
                     "stage6_candidate_300_seed7_h40": _validation_summary(stage6_candidate),
                     "stage5_guardrail_300_seed7_h40": _validation_summary(stage5_overlay_guard),
-                    "promotion_eval": _stage6_promotion_summary(promotion),
+                    "promotion_eval": stage6_promotion_summary,
                 },
                 "caveat": (
                     "Stage 6 is solved as an overlay, not as a monolithic replacement topology. "
-                    "Use frozen-provider plus overlay composition for later stages."
+                    "Use frozen-provider plus overlay composition for later stages. "
+                    "If active retry1 is selected, Stage 5 conversion is preserved while local "
+                    "reward/contract debt remains explicitly recorded as guardrail-control debt."
                 ),
             },
         ],
@@ -245,7 +318,7 @@ def build_status(repo_root: Path) -> dict[str, Any]:
             ],
             "solved_with_caveat": ["stage4_wrong_tempo"],
             "current_architecture_profile": "handoff_composition_v1",
-            "stage6_overlay_status": "promoted",
+            "stage6_overlay_status": stage6_status,
             "next_investigation_class": (
                 "architecture-level sequence-policy or strategy-arbitration review; "
                 "do not reopen Stage 7 micro-repairs without review"
@@ -286,8 +359,8 @@ def validate_status(status: dict[str, Any]) -> None:
     }
     if set(stages) != required:
         raise ValueError(f"unexpected protected stage set: {set(stages)}")
-    if stages["stage6_drive_overlay"]["evidence"]["promotion_eval"]["promotion_status"] != "promoted":
-        raise ValueError("Stage 6 overlay promotion artifact must remain promoted")
+    if not _stage6_promotion_valid(stages["stage6_drive_overlay"]["evidence"]["promotion_eval"]):
+        raise ValueError("Stage 6 overlay promotion artifact must remain promoted or active retry1 overlay-only with conversion preservation")
     if not stages["stage4_wrong_tempo"]["evidence"][
         "overlay_caveat_reproduces_on_base_control"
     ]:
@@ -307,6 +380,12 @@ def render_markdown(status: dict[str, Any]) -> str:
         "",
         "This is a replay-free, non-causal status audit of the protected KRK stages. "
         "It does not change runtime behavior, defaults, topology, training, or promotion state.",
+        "",
+        "## Active Stack",
+        "",
+        f"- Reference mode: `{status.get('protected_stack_reference_mode')}`",
+        f"- Active stack status: `{status.get('active_stack_status')}`",
+        f"- Active stack artifact: `{status.get('active_stack_artifact')}`",
         "",
         "## Short Answer",
         "",
@@ -342,7 +421,10 @@ def render_markdown(status: dict[str, Any]) -> str:
                 lines.append(f"- `{key}`: total `{value.get('total')}`, {_format_playouts(value)}, "
                              f"shadow `{value.get('shadow_candidate_count')}`")
             elif isinstance(value, dict) and key == "promotion_eval":
-                lines.append(f"- `{key}`: promotion_status `{value.get('promotion_status')}`")
+                lines.append(
+                    f"- `{key}`: promotion_status `{value.get('promotion_status')}`, "
+                    f"semantics `{value.get('promotion_status_semantics')}`"
+                )
             elif isinstance(value, dict) and key == "manifest":
                 formal = value.get("formal_validation") or {}
                 lines.append(
