@@ -1315,6 +1315,8 @@ The Stage 4 observation-only trace/ownership collection is complete. It collecte
 
 The non-causal selector-objective benchmark v2 is complete. A visible context heuristic over Stage 4/5/6 seed rows reaches the benchmark review thresholds on the current seed, but this is not runtime-ready: the result may be overfit to 18 rows and requires bounded independent protected validation before any runtime review. The review packet `reports/strategy_arbitration/krk_selector_objective_benchmark_review_packet_v2.md/json` authorizes no implementation, no selector training, and no runtime changes. Its next step is independent protected validation only.
 
+The bounded independent protected validation slice for that heuristic is complete and underpowered. It collected 10 protected Stage 4/6 selected-owner rows, all h40 mate/preserve outcomes, with 0 Stage 7 rows and 0 runtime changes. This validates safe-preservation behavior only; it provides no independent selected-owner failure/switch contrast, so runtime selector work remains blocked. The blocker review `reports/strategy_arbitration/krk_selector_objective_independent_validation_blocker_v0.md/json` recommends targeted Stage 4 failure discovery or keeping selector work blocked.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

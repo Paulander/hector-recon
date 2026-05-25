@@ -38,6 +38,14 @@ _benchmark_review = _load_module(
     "write_krk_selector_objective_benchmark_review_packet_v2",
     "scripts/write_krk_selector_objective_benchmark_review_packet_v2.py",
 )
+_independent_validation = _load_module(
+    "run_krk_selector_objective_independent_validation_v0",
+    "scripts/run_krk_selector_objective_independent_validation_v0.py",
+)
+_independent_blocker = _load_module(
+    "write_krk_selector_objective_independent_validation_blocker_v0",
+    "scripts/write_krk_selector_objective_independent_validation_blocker_v0.py",
+)
 
 
 def _read_report(path: str) -> dict:
@@ -369,3 +377,81 @@ def test_selector_objective_benchmark_review_fixture_never_authorizes_runtime():
     assert payload["decision"]["runtime_review_ready"] is False
     assert payload["decision"]["implementation_authorized_by_this_packet"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_selector_objective_independent_validation_artifacts_are_non_causal():
+    manifest = _read_report(
+        "reports/strategy_arbitration/krk_selector_objective_independent_validation_manifest_v0.json"
+    )
+    labels = _read_report(
+        "reports/strategy_arbitration/krk_selector_objective_independent_validation_labels_v0.json"
+    )
+    validation = _read_report(
+        "reports/strategy_arbitration/krk_selector_objective_independent_validation_v0.json"
+    )
+    blocker = _read_report(
+        "reports/strategy_arbitration/krk_selector_objective_independent_validation_blocker_v0.json"
+    )
+
+    assert manifest["schema_version"] == "krk_selector_objective_independent_validation_manifest.v0"
+    assert labels["schema_version"] == "krk_selector_objective_independent_validation_labels.v0"
+    assert validation["schema_version"] == "krk_selector_objective_independent_validation.v0"
+    assert blocker["schema_version"] == "krk_selector_objective_independent_validation_blocker.v0"
+    for payload in (manifest, labels, validation, blocker):
+        assert payload["runtime_behavior_changed"] is False
+        assert payload["runtime_defaults_changed"] is False
+        assert payload["runtime_selector_implemented"] is False
+        assert payload["runtime_score_changes"] is False
+        assert payload["runtime_direct_routing"] is False
+        assert payload["runtime_dtm_or_tablebase_lookup"] is False
+        assert payload["gameplay_topology_mutation"] is False
+        assert payload["stage7_promotion_allowed"] is False
+        assert payload["stage8_training_allowed"] is False
+    assert manifest["selection_policy"]["stage7_training_rows"] == 0
+    assert labels["summary"]["selector_training_row_count"] == 0
+    assert labels["summary"]["stage7_training_row_count"] == 0
+    assert validation["summary"]["selector_training_row_count"] == 0
+    assert validation["summary"]["stage7_training_row_count"] == 0
+    assert blocker["decision"]["selector_allowed"] is False
+    assert blocker["decision"]["runtime_changes_allowed"] is False
+
+
+def test_selector_objective_independent_blocker_fixture_detects_missing_switch():
+    validation = {
+        "summary": {
+            "target_counts": {"preserve": 8},
+            "prediction_counts": {"preserve": 8},
+            "accuracy": 1.0,
+            "switch_recall": 0.0,
+            "preserve_recall": 1.0,
+            "stage7_training_row_count": 0,
+            "selector_training_row_count": 0,
+        },
+        "decision": {"status": "selector_objective_independent_validation_underpowered"},
+    }
+    labels = {"summary": {"label_count": 8}}
+
+    payload = _independent_blocker.build_payload(validation=validation, labels=labels)
+
+    assert payload["blocker"]["blocker_class"] == "independent_switch_contrast_absent"
+    assert (
+        payload["decision"]["status"]
+        == "selector_objective_runtime_blocked_pending_independent_switch_contrasts"
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_selector_objective_independent_validation_common_flags():
+    payload = {
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_selector_implemented": False,
+        "runtime_score_changes": False,
+        "runtime_direct_routing": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+    }
+
+    _independent_validation.validate_common(payload)

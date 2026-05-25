@@ -1,0 +1,61 @@
+{
+  "blocker": {
+    "blocker_class": "independent_switch_contrast_absent",
+    "runtime_selector_blocked": true,
+    "why": "The independent bounded protected slice validated safe preservation only; it produced no selected-owner failure/switch rows, so switch recall cannot be independently validated."
+  },
+  "causal_status": "non_causal_blocker_review",
+  "decision": {
+    "recommended_next_step": "targeted_stage4_failure_discovery_or_keep_selector_blocked",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "status": "selector_objective_runtime_blocked_pending_independent_switch_contrasts"
+  },
+  "evidence_summary": {
+    "accuracy": 1.0,
+    "label_count": 10,
+    "prediction_counts": {
+      "preserve": 10
+    },
+    "preserve_recall": 1.0,
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0,
+    "switch_recall": 0.0,
+    "target_counts": {
+      "preserve": 10
+    },
+    "validation_status": "selector_objective_independent_validation_underpowered"
+  },
+  "explicitly_forbidden": [
+    "runtime_selector",
+    "selector_training",
+    "score_changes",
+    "provider_suppression",
+    "direct_provider_routing",
+    "capacity_labels_as_ownership_labels",
+    "stage7_training_or_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "gameplay_topology_mutation": false,
+  "recommended_next_evidence": [
+    "targeted protected selected-owner failure discovery from Stage 4 caveat cases",
+    "normal-routing failure rows with visible competing proposal evidence",
+    "paired switch-vs-preserve rows that exclude current benchmark seed states"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_selector_objective_independent_validation_blocker.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_selector_objective_independent_validation_v0.json",
+    "reports/strategy_arbitration/krk_selector_objective_independent_validation_labels_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}
