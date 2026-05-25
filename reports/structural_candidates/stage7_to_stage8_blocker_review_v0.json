@@ -1,0 +1,37 @@
+{
+  "blockers": [
+    "Stage 7 benchmark decision is model_expression_gap_persists_stage7_micro_work_stops.",
+    "Stage 7 has insufficient clean successful sequence controls.",
+    "Stage 7 remains a curriculum-boundary/held-out challenge, not a protected promoted stage.",
+    "Stage 8 would inherit unresolved Stage 7 continuation and ownership uncertainty."
+  ],
+  "created_at": "2026-05-25T10:59:15+02:00",
+  "invariants": {
+    "gameplay_topology_mutation": false,
+    "protected_stack_replacement_performed": false,
+    "runtime_behavior_changed": false,
+    "runtime_defaults_changed": false,
+    "runtime_direct_routing": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "runtime_score_changes": false,
+    "runtime_selector_implemented": false,
+    "stage7_promotion": false,
+    "stage8_training": false
+  },
+  "minimum_unblock_requirements": [
+    "Clean family-held-out Stage 7 sequence controls beyond current sparse set.",
+    "A broader KRK sequence-policy or strategy-arbitration benchmark that improves held-out Stage 7 challenge cases.",
+    "Guardrail-preserving review packet explicitly allowing Stage 8 training."
+  ],
+  "recommended_next_action": "do_not_train_stage8; continue_broader_krk_strategy_sequence_control_plane",
+  "schema_version": "stage7_to_stage8_blocker_review.v0",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_training_objective_decision_gate.json",
+    "reports/structural_candidates/stage7_post_decision_closure.json",
+    "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage7_status": "local_valid_composition_quarantined",
+  "stage8_training_allowed": false,
+  "status": "stage8_remains_blocked_with_review"
+}

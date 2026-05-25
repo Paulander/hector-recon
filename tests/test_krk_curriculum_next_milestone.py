@@ -1,0 +1,95 @@
+#!/usr/bin/env python3
+"""Tests for KRK next-milestone decision artifacts."""
+
+import importlib.util
+import json
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+_spec = importlib.util.spec_from_file_location(
+    "write_krk_curriculum_next_milestone_reviews_v0",
+    ROOT / "scripts" / "write_krk_curriculum_next_milestone_reviews_v0.py",
+)
+assert _spec is not None
+assert _spec.loader is not None
+_reviews = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_reviews)
+
+
+def _load(path: str) -> dict:
+    payload = json.loads((ROOT / path).read_text(encoding="utf-8"))
+    assert isinstance(payload, dict)
+    return payload
+
+
+def test_replacement_deferred_review_blocks_path_changes_without_approval():
+    payload = _load("reports/krk_clean_stack_replacement_deferred_review_v0.json")
+
+    assert payload["schema_version"] == "krk_clean_stack_replacement_deferred_review.v0"
+    assert payload["status"] == "clean_stack_adoption_deferred_explicit_approval_required"
+    assert payload["decision_state"] == "clean_stack_adoption_rejected_or_deferred"
+    assert payload["replacement_review_ready"] is True
+    assert payload["implementation_allowed_by_review_packet"] is False
+    assert payload["explicit_approval_detected"] is False
+    assert "Approve updating protected Stage 5/6 stack references" in payload["exact_approval_request"]
+    assert payload["invariants"]["protected_stack_replacement_performed"] is False
+    assert payload["invariants"]["runtime_defaults_changed"] is False
+    assert payload["invariants"]["stage7_promotion"] is False
+    assert payload["invariants"]["stage8_training"] is False
+
+
+def test_stage4_caveat_decision_gate_keeps_runtime_blocked():
+    matrix = _load("reports/krk_stage4_caveat_diagnostic_matrix_v0.json")
+    gate = _load("reports/krk_stage4_caveat_decision_gate_v0.json")
+
+    assert matrix["schema_version"] == "krk_stage4_caveat_diagnostic_matrix.v0"
+    assert gate["schema_version"] == "krk_stage4_caveat_decision_gate.v0"
+    assert gate["status"] == "stage4_candidate_generation_gap_with_known_residual_guardrail"
+    assert "stage4_candidate_generation_gap" in gate["selected_decisions"]
+    assert "stage4_known_residual_keep_as_guardrail" in gate["selected_decisions"]
+    assert "stage4_runtime_sandbox_review_ready" in gate["rejected_decisions"]
+    assert gate["runtime_or_training_authorized"] is False
+    assert matrix["stage4_observed_caveat"]["max_plies"] == 32
+    hypotheses = {item["hypothesis"]: item for item in matrix["hypotheses"]}
+    assert hypotheses["candidate_generation_gap"]["confidence"] == "high"
+    assert gate["invariants"]["runtime_behavior_changed"] is False
+    assert gate["invariants"]["protected_stack_replacement_performed"] is False
+
+
+def test_stage7_unlock_review_keeps_stage8_blocked():
+    unlock = _load("reports/structural_candidates/stage7_heldout_unlock_review_v0.json")
+    blocker = _load("reports/structural_candidates/stage7_to_stage8_blocker_review_v0.json")
+
+    assert unlock["schema_version"] == "stage7_heldout_unlock_review.v0"
+    assert unlock["status"] == "stage7_unlock_path_identified_broader_sequence_control_not_micro_repair"
+    assert unlock["stage7_status"] == "local_valid_composition_quarantined"
+    assert "stage7_sequence_policy_needed" in unlock["selected_unlock_paths"]
+    assert "stage7_curriculum_boundary_confirmed" in unlock["selected_unlock_paths"]
+    assert blocker["schema_version"] == "stage7_to_stage8_blocker_review.v0"
+    assert blocker["status"] == "stage8_remains_blocked_with_review"
+    assert blocker["stage7_promotion_allowed"] is False
+    assert blocker["stage8_training_allowed"] is False
+    assert blocker["invariants"]["stage7_promotion"] is False
+    assert blocker["invariants"]["stage8_training"] is False
+
+
+def test_curriculum_next_milestone_decision_is_review_only():
+    payload = _load("reports/krk_curriculum_next_milestone_decision_v0.json")
+
+    assert payload["schema_version"] == "krk_curriculum_next_milestone_decision.v0"
+    assert payload["status"] == "krk_curriculum_next_milestone_review_ready"
+    assert "clean_stack_adoption_rejected_or_deferred" in payload["decision_states"]
+    assert "stage4_caveat_reduction_path_identified" in payload["decision_states"]
+    assert "stage7_unlock_path_identified" in payload["decision_states"]
+    assert "stage8_remains_blocked_with_review" in payload["decision_states"]
+    assert (
+        payload["current_adopted_protected_stack_status"]
+        == "current_protected_stack_unchanged_retry1_review_ready_only"
+    )
+    assert payload["invariants"]["protected_stack_replacement_performed"] is False
+    assert payload["invariants"]["runtime_behavior_changed"] is False
+    assert payload["invariants"]["stage7_promotion"] is False
+    assert payload["invariants"]["stage8_training"] is False
+    assert "protected-stack replacement without explicit approval" in payload["what_remains_forbidden"]

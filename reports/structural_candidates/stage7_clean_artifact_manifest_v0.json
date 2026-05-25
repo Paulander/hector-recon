@@ -2662,6 +2662,22 @@
       "total": 25
     },
     {
+      "artifact": "reports/structural_candidates/stage7_heldout_unlock_review_v0.json",
+      "candidate_for_clean_control_recovery": false,
+      "classification": "metadata_or_design_only",
+      "default_off_or_baseline_marker": false,
+      "enabled_flags": [],
+      "explicit_runtime_enabled_name": false,
+      "filename_repair_markers": [],
+      "has_box_context": true,
+      "has_outcomes": false,
+      "label": null,
+      "playouts": null,
+      "positive_support_or_bonus_fields": [],
+      "runtime_test_activity_fields": [],
+      "total": null
+    },
+    {
       "artifact": "reports/structural_candidates/stage7_initial_box_repair_10_h40_noearlystop.json",
       "candidate_for_clean_control_recovery": false,
       "classification": "repair_sandbox_sourced",
@@ -6563,13 +6579,13 @@
   "stage8_training_allowed": false,
   "summary": {
     "ambiguous_count": 1,
-    "artifact_count": 338,
+    "artifact_count": 339,
     "classification_counts": {
       "ambiguous_needs_manual_review": 1,
       "clean_baseline_candidate": 3,
       "clean_current_profile_candidate": 8,
       "clean_default_off_candidate": 23,
-      "metadata_or_design_only": 185,
+      "metadata_or_design_only": 186,
       "repair_sandbox_sourced": 118
     },
     "clean_candidate_count": 34,

@@ -1,0 +1,120 @@
+{
+  "created_at": "2026-05-25T10:59:15+02:00",
+  "hypotheses": [
+    {
+      "confidence": "medium",
+      "evidence_against": [
+        "The same pattern reproduces exactly in the paired Stage 5 base control.",
+        "No retry1 Stage 6 overlay regression is observed."
+      ],
+      "evidence_for": [
+        "Stage 4 one-ply status is failed.",
+        "Stage 4 overlay has 62/300 one-ply worsened samples."
+      ],
+      "hypothesis": "local_move_shape_weakness",
+      "missing_evidence": [
+        "Per-failure candidate/provider trace context for the remaining wrong-tempo failures."
+      ],
+      "recommended_next_test": "stage4_observation_only_trace_collection_if_explicitly_approved"
+    },
+    {
+      "confidence": "medium",
+      "evidence_against": [
+        "Existing evidence does not yet isolate first-move success followed by later drift."
+      ],
+      "evidence_for": [
+        "Stage 4 h40 caveat has 32/300 max_plies outcomes.",
+        "Failures are h40 conversion failures, not only one-ply local reward misses."
+      ],
+      "hypothesis": "sequence_followup_gap",
+      "missing_evidence": [
+        "Trace windows around the 32 max_plies outcomes."
+      ],
+      "recommended_next_test": "trace_stage4_selected_failure_windows"
+    },
+    {
+      "confidence": "high",
+      "evidence_against": [
+        "Stage 4 candidate-generation cells are mixed, so candidate expansion alone is not sufficient."
+      ],
+      "evidence_for": [
+        "Stage 4 positive-scope recall is 0.0 in the stage-conditioned candidate-generation benchmark.",
+        "Remaining selected-owner failures are Stage 4: 6.",
+        "A Stage 4 observation-only scope review packet is already review-ready."
+      ],
+      "hypothesis": "candidate_generation_gap",
+      "missing_evidence": [
+        "Stage4-scoped joined trace/ownership rows with visible candidate context.",
+        "Companion context terms separating positive from negative Stage 4 cells."
+      ],
+      "recommended_next_test": "approve_stage4_observation_only_trace_collection_max_6_rows"
+    },
+    {
+      "confidence": "low",
+      "evidence_against": [
+        "No current artifact proves these failures convert under a longer horizon.",
+        "The h40 caveat reproduces in control, so it remains a valid guardrail signal."
+      ],
+      "evidence_for": [
+        "The caveat is defined at h40 and may include slow conversions beyond the practical horizon."
+      ],
+      "hypothesis": "horizon_or_label_issue",
+      "missing_evidence": [
+        "Classification-only longer-horizon labels for the 32 max_plies cases."
+      ],
+      "recommended_next_test": "defer_h80_unless_stage4_trace_collection_is_inconclusive"
+    },
+    {
+      "confidence": "medium",
+      "evidence_against": [
+        "Forced-provider capacity labels are not direct ownership labels.",
+        "Selector training remains unauthorized."
+      ],
+      "evidence_for": [
+        "Stage 4 selected-owner failure candidates exist and are concentrated in stage0_basin rows.",
+        "Prior selector-objective review says Stage 4 is needed for switch-contrast evidence."
+      ],
+      "hypothesis": "existing_provider_solved_if_arbitrated",
+      "missing_evidence": [
+        "Same-state visible alternatives for Stage 4 selected-owner failures.",
+        "Safe-preservation controls in Stage 4 context."
+      ],
+      "recommended_next_test": "stage4_joined_trace_ownership_collection_non_causal"
+    }
+  ],
+  "invariants": {
+    "gameplay_topology_mutation": false,
+    "protected_stack_replacement_performed": false,
+    "runtime_behavior_changed": false,
+    "runtime_defaults_changed": false,
+    "runtime_direct_routing": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "runtime_score_changes": false,
+    "runtime_selector_implemented": false,
+    "stage7_promotion": false,
+    "stage8_training": false
+  },
+  "schema_version": "krk_stage4_caveat_diagnostic_matrix.v0",
+  "source_artifacts": [
+    "reports/krk_clean_retrain_retry1_stage4_caveat_control_review_v0.json",
+    "reports/strategy_arbitration/krk_stage4_joined_trace_ownership_scope_review_packet_v0.json",
+    "reports/strategy_arbitration/krk_stage_conditioned_candidate_generation_benchmark_v3.json",
+    "reports/strategy_arbitration/krk_selector_objective_diversity_gap_review_v0.json"
+  ],
+  "stage4_observed_caveat": {
+    "mate": 268,
+    "max_plies": 32,
+    "overlay_vs_base_control_delta": {
+      "improved_delta": 0,
+      "mate_delta": 0,
+      "mate_rate_delta": 0.0,
+      "max_plies_delta": 0,
+      "max_plies_rate_delta": 0.0,
+      "optimal_delta": 0,
+      "shadow_candidate_delta": 0,
+      "worsened_delta": 0
+    },
+    "total": 300
+  },
+  "status": "stage4_caveat_diagnostic_matrix_ready"
+}

@@ -1,0 +1,58 @@
+{
+  "created_at": "2026-05-25T10:59:15+02:00",
+  "evidence": {
+    "clean_sequence_control_status": {
+      "recommended_next_step": "bounded_clean_h40_label_job_or_review",
+      "runtime_work_allowed": false,
+      "status": "clean_sequence_controls_insufficient"
+    },
+    "clean_sequence_success_controls_met": false,
+    "post_decision_closure": "model_expression_gap_persists_stage7_micro_work_stops",
+    "selected_path_probe": {
+      "blocked_runtime_work": [
+        "runtime arbiter",
+        "abstention selector tuning",
+        "plan capsule runtime repair",
+        "Stage 7 promotion",
+        "Stage 8 training"
+      ],
+      "recommended_next_step": "architecture_review_or_collect_clean_sequence_controls_before_runtime",
+      "status": "split_targets_separable_but_source_biased_no_runtime",
+      "why": "The split target framing is useful, but existing evidence is too small and source-biased to justify runtime behavior."
+    },
+    "training_objective_gate": "model_expression_gap_persists_stage7_micro_work_stops"
+  },
+  "interpretation": [
+    "Simple ranked/pairwise and internal-monitor-augmented objectives did not justify Stage 7 runtime repair.",
+    "Selected-path targets are separable but source-biased and too small for runtime authorization.",
+    "Clean sequence controls are insufficient for a robust Stage 7 sequence-policy benchmark.",
+    "Stage 7 remains best used as a held-out challenge for strategy/sequence control-plane work."
+  ],
+  "invariants": {
+    "gameplay_topology_mutation": false,
+    "protected_stack_replacement_performed": false,
+    "runtime_behavior_changed": false,
+    "runtime_defaults_changed": false,
+    "runtime_direct_routing": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "runtime_score_changes": false,
+    "runtime_selector_implemented": false,
+    "stage7_promotion": false,
+    "stage8_training": false
+  },
+  "recommended_next_action": "collect_clean_sequence_controls_or_design_broader_sequence_policy_benchmark_without_stage7_promotion",
+  "schema_version": "stage7_heldout_unlock_review.v0",
+  "selected_unlock_paths": [
+    "stage7_sequence_policy_needed",
+    "stage7_strategy_arbitration_needed",
+    "stage7_curriculum_boundary_confirmed"
+  ],
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_training_objective_decision_gate.json",
+    "reports/structural_candidates/stage7_post_decision_closure.json",
+    "reports/structural_candidates/stage7_selected_path_target_probe_v0.json",
+    "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json"
+  ],
+  "stage7_status": "local_valid_composition_quarantined",
+  "status": "stage7_unlock_path_identified_broader_sequence_control_not_micro_repair"
+}

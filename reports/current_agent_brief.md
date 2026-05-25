@@ -1199,6 +1199,11 @@ stage4_caveat_reproduces_in_base_control_no_overlay_regression
 retry1_m1_m4_and_bridge_preservation_checks_passed
 retry1_protected_stack_snapshot_manifest_ready_no_replacement
 retry1_clean_stack_replacement_review_ready_explicit_approval_required
+clean_stack_adoption_deferred_explicit_approval_required
+stage4_candidate_generation_gap_with_known_residual_guardrail
+stage7_unlock_path_identified_broader_sequence_control_not_micro_repair
+stage8_remains_blocked_with_review
+krk_curriculum_next_milestone_review_ready
 ```
 
 Artifacts:
@@ -1239,6 +1244,18 @@ Artifacts:
 * `reports/krk_clean_retrain_retry1_protected_stack_snapshot_manifest_v0.json`
 * `reports/krk_clean_retrain_retry1_clean_stack_replacement_review_packet_v0.md`
 * `reports/krk_clean_retrain_retry1_clean_stack_replacement_review_packet_v0.json`
+* `reports/krk_clean_stack_replacement_deferred_review_v0.md`
+* `reports/krk_clean_stack_replacement_deferred_review_v0.json`
+* `reports/krk_stage4_caveat_diagnostic_matrix_v0.md`
+* `reports/krk_stage4_caveat_diagnostic_matrix_v0.json`
+* `reports/krk_stage4_caveat_decision_gate_v0.md`
+* `reports/krk_stage4_caveat_decision_gate_v0.json`
+* `reports/structural_candidates/stage7_heldout_unlock_review_v0.md`
+* `reports/structural_candidates/stage7_heldout_unlock_review_v0.json`
+* `reports/structural_candidates/stage7_to_stage8_blocker_review_v0.md`
+* `reports/structural_candidates/stage7_to_stage8_blocker_review_v0.json`
+* `reports/krk_curriculum_next_milestone_decision_v0.md`
+* `reports/krk_curriculum_next_milestone_decision_v0.json`
 
 The approved candidate-generation refresh sandbox was rerun and remains valid:
 
@@ -1274,6 +1291,8 @@ The retry1 M1-M4 and KPK→KQK bridge preservation checks are complete. Focused 
 The protected-stack snapshot/rollback manifest is complete and records current protected Stage 5/6 stack paths plus retry1 candidate stack paths. All referenced paths exist. The manifest is reference-only: it does not copy, replace, delete, promote, train, route, score, mutate topology, or change runtime defaults. Clean protected-stack replacement is still not allowed by these artifacts; the next possible step is a clean-stack replacement review packet before any file change.
 
 The clean-stack replacement review packet is now ready for human review. It records all prerequisites as passed and marks retry1 replacement review-ready, but explicitly states `implementation_allowed_by_this_packet = false`. No file changes, protected-stack replacement, Stage 7 promotion, Stage 8 training, runtime default changes, runtime selector behavior, runtime DTM/tablebase use, or gameplay topology mutation are authorized. A later explicit approval is required before any protected-stack pointer/path change.
+
+The next-milestone decision package is complete. Because explicit replacement approval has not been granted, clean stack adoption is deferred and the current protected stack remains unchanged. Stage 4 is classified as `stage4_candidate_generation_gap_with_known_residual_guardrail`: the h40 caveat reproduces in base control and should remain a guardrail while the next useful evidence is the already-reviewed Stage 4 observation-only trace/ownership scope. Stage 7 is classified as `stage7_unlock_path_identified_broader_sequence_control_not_micro_repair`: the path forward is broader sequence-policy / strategy-arbitration evidence with Stage 7 held out, not local repair. Stage 8 remains blocked with review.
 
 ## Runtime Approval Rule
 
