@@ -20,6 +20,8 @@ This artifact integrates diverse-clean label outputs only if they already exist.
 - success_controls_met: `False`
 - failure_controls_met: `True`
 - skipped_counts: `{}`
+- validation_status: `stage7_diverse_clean_sampling_outputs_validation_pending`
+- validation_blocks_integration: `False`
 - stage7_training_row_count: `0`
 - selector_training_row_count: `0`
 - runtime_authorization_row_count: `0`

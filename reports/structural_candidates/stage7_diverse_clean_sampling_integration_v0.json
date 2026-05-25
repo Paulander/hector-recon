@@ -100,6 +100,8 @@
     "skipped_counts": {},
     "stage7_training_row_count": 0,
     "success_controls_met": false,
-    "success_controls_required": 5
+    "success_controls_required": 5,
+    "validation_blocks_integration": false,
+    "validation_status": "stage7_diverse_clean_sampling_outputs_validation_pending"
   }
 }

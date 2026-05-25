@@ -19,6 +19,7 @@
   "runtime_selector_implemented": false,
   "schema_version": "krk_sequence_policy_pipeline_refresh.v0",
   "source_scripts": [
+    "scripts/validate_stage7_diverse_clean_sampling_outputs_v0.py",
     "scripts/integrate_stage7_diverse_clean_sampling_results_v0.py",
     "scripts/assemble_krk_sequence_policy_benchmark_inputs_v0.py",
     "scripts/probe_krk_sequence_policy_inputs_v0.py",
@@ -28,6 +29,16 @@
   "stage7_promotion_allowed": false,
   "stage8_training_allowed": false,
   "step_results": [
+    {
+      "decision_status": "stage7_diverse_clean_sampling_outputs_validation_pending",
+      "label_run_allowed": false,
+      "output_json": "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json",
+      "runtime_changes_allowed": false,
+      "script": "scripts/validate_stage7_diverse_clean_sampling_outputs_v0.py",
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false,
+      "step_id": "stage7_diverse_clean_output_validation"
+    },
     {
       "decision_status": "stage7_diverse_clean_sampling_outputs_pending",
       "label_run_allowed": false,
@@ -87,6 +98,6 @@
     "stage7_outputs_present_count": 0,
     "stage7_success_controls": 2,
     "stage7_success_controls_required": 5,
-    "step_count": 5
+    "step_count": 6
   }
 }

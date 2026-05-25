@@ -6,7 +6,7 @@ This passive refresh reruns integration, input assembly, probe, benchmark, and g
 
 ## Summary
 
-- step_count: `5`
+- step_count: `6`
 - all_boundaries_preserved: `True`
 - stage7_outputs_present_count: `0`
 - stage7_success_controls: `2`
@@ -17,6 +17,7 @@ This passive refresh reruns integration, input assembly, probe, benchmark, and g
 
 ## Steps
 
+- `stage7_diverse_clean_output_validation` status=`stage7_diverse_clean_sampling_outputs_validation_pending` runtime=`False` labels=`False`
 - `stage7_diverse_clean_integration` status=`stage7_diverse_clean_sampling_outputs_pending` runtime=`False` labels=`False`
 - `sequence_policy_inputs` status=`sequence_policy_benchmark_inputs_blocked_pending_stage7_success_controls` runtime=`False` labels=`False`
 - `sequence_policy_input_probe` status=`sequence_policy_input_probe_partial_stage7_success_controls_missing` runtime=`False` labels=`False`

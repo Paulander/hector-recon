@@ -36,6 +36,11 @@ COMMON_FALSE_FLAGS = {
 
 STEPS = [
     {
+        "step_id": "stage7_diverse_clean_output_validation",
+        "script": "scripts/validate_stage7_diverse_clean_sampling_outputs_v0.py",
+        "output_json": "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json",
+    },
+    {
         "step_id": "stage7_diverse_clean_integration",
         "script": "scripts/integrate_stage7_diverse_clean_sampling_results_v0.py",
         "output_json": "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json",

@@ -336,6 +336,73 @@ def test_stage7_diverse_clean_sampling_integration_fixture_closes_success_gap(tm
     assert payload["decision"]["label_run_allowed"] is False
 
 
+def test_stage7_diverse_clean_sampling_integration_blocks_invalid_validated_outputs():
+    manifest = {
+        "jobs": [
+            {
+                "job_id": "fixture.bad",
+                "json_output": "bad.json",
+                "source_stage_names": ["Box_Small"],
+            }
+        ]
+    }
+    base_controls = {
+        "acceptance": {
+            "clean_sequence_success_controls_required": 5,
+            "clean_sequence_hard_negatives_required": 5,
+        },
+        "controls": [
+            {"control_role": "clean_sequence_success_control"},
+            {"control_role": "clean_sequence_success_control"},
+            *[{"control_role": "clean_sequence_hard_negative"} for _ in range(8)],
+        ],
+    }
+    output_validation = {
+        "summary": {
+            "output_exists_count": 1,
+            "all_outputs_present": False,
+            "stage7_training_row_count": 0,
+        },
+        "output_checks": [
+            {
+                "job_id": "fixture.bad",
+                "json_output": "bad.json",
+                "output_exists": True,
+                "valid": False,
+                "issues": {"mate_after_manifest_horizon": 1},
+            }
+        ],
+        "decision": {
+            "status": "stage7_diverse_clean_sampling_outputs_invalid_block_integration",
+            "runtime_changes_allowed": False,
+            "label_run_allowed": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": False,
+        },
+    }
+
+    payload = _integration.build_payload(
+        manifest=manifest,
+        base_controls=base_controls,
+        output_validation=output_validation,
+    )
+
+    assert (
+        payload["decision"]["status"]
+        == "stage7_diverse_clean_sampling_integration_blocked_invalid_outputs"
+    )
+    assert payload["summary"]["validation_blocks_integration"] is True
+    assert payload["summary"]["new_control_count"] == 0
+    assert payload["new_controls"] == []
+    assert payload["summary"]["stage7_training_row_count"] == 0
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert payload["summary"]["runtime_authorization_row_count"] == 0
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["label_run_allowed"] is False
+    assert payload["decision"]["stage7_promotion_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
+
+
 def test_stage7_diverse_clean_sampling_runner_defaults_to_dry_run():
     payload = _read_report(
         "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json"

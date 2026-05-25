@@ -19,6 +19,9 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json"
 BASE_CONTROLS = ROOT / "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json"
+OUTPUT_VALIDATION = (
+    ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json"
+)
 OUTPUT_JSON = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json"
 OUTPUT_MD = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.md"
 
@@ -39,6 +42,16 @@ COMMON_FALSE_FLAGS = {
 
 def _load(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _load_output_validation() -> dict[str, Any] | None:
+    path = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json"
+    if not path.exists():
+        return None
+    data = _load(path)
+    if not isinstance(data, dict):
+        raise TypeError(f"{path} must contain a JSON object")
+    return data
 
 
 def _state_id(prefix: str, *parts: Any) -> str:
@@ -151,10 +164,94 @@ def build_payload(
     *,
     manifest: dict[str, Any] | None = None,
     base_controls: dict[str, Any] | None = None,
+    output_validation: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     manifest = manifest or _load(MANIFEST)
     base_controls = base_controls or _load(BASE_CONTROLS)
+    output_validation = output_validation if output_validation is not None else _load_output_validation()
     jobs = manifest.get("jobs") or []
+    base_role_counts = Counter(
+        row.get("control_role") for row in base_controls.get("controls") or []
+    )
+    success_required = int(
+        base_controls.get("acceptance", {}).get("clean_sequence_success_controls_required", 5)
+    )
+    failure_required = int(
+        base_controls.get("acceptance", {}).get("clean_sequence_hard_negatives_required", 5)
+    )
+    validation_status = None
+    validation_blocks_integration = False
+    if output_validation is not None:
+        validation_status = (output_validation.get("decision") or {}).get("status")
+        validation_blocks_integration = (
+            validation_status
+            == "stage7_diverse_clean_sampling_outputs_invalid_block_integration"
+        )
+    if validation_blocks_integration:
+        checks = output_validation.get("output_checks")
+        output_checks = checks if isinstance(checks, list) else []
+        return {
+            "schema_version": SCHEMA_VERSION,
+            "causal_status": "non_causal_post_label_integration",
+            **COMMON_FALSE_FLAGS,
+            "source_artifacts": [
+                "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
+                "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json",
+                "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json",
+            ],
+            "summary": {
+                "job_count": len(jobs),
+                "outputs_present_count": output_validation.get("summary", {}).get(
+                    "output_exists_count", 0
+                ),
+                "all_outputs_present": output_validation.get("summary", {}).get(
+                    "all_outputs_present", False
+                ),
+                "new_control_count": 0,
+                "new_role_counts": {},
+                "base_success_controls": base_role_counts.get(
+                    "clean_sequence_success_control", 0
+                ),
+                "base_failure_controls": base_role_counts.get(
+                    "clean_sequence_hard_negative", 0
+                ),
+                "combined_success_controls": base_role_counts.get(
+                    "clean_sequence_success_control", 0
+                ),
+                "combined_failure_controls": base_role_counts.get(
+                    "clean_sequence_hard_negative", 0
+                ),
+                "success_controls_required": success_required,
+                "failure_controls_required": failure_required,
+                "success_controls_met": base_role_counts.get(
+                    "clean_sequence_success_control", 0
+                )
+                >= success_required,
+                "failure_controls_met": base_role_counts.get(
+                    "clean_sequence_hard_negative", 0
+                )
+                >= failure_required,
+                "skipped_counts": {},
+                "validation_status": validation_status,
+                "validation_blocks_integration": True,
+                "stage7_training_row_count": 0,
+                "selector_training_row_count": 0,
+                "runtime_authorization_row_count": 0,
+            },
+            "output_checks": output_checks,
+            "new_controls": [],
+            "decision": {
+                "status": "stage7_diverse_clean_sampling_integration_blocked_invalid_outputs",
+                "recommended_next_step": "inspect_invalid_stage7_diverse_clean_outputs_before_integration",
+                "runtime_changes_allowed": False,
+                "label_run_allowed": False,
+                "selector_allowed": False,
+                "selector_training_allowed": False,
+                "stage7_promotion_allowed": False,
+                "stage8_training_allowed": False,
+            },
+        }
+
     output_checks = []
     new_controls = []
     skipped = Counter()
@@ -185,21 +282,12 @@ def build_payload(
             }
         )
 
-    base_role_counts = Counter(
-        row.get("control_role") for row in base_controls.get("controls") or []
-    )
     new_role_counts = Counter(row.get("control_role") for row in new_controls)
     combined_success = int(base_role_counts.get("clean_sequence_success_control", 0)) + int(
         new_role_counts.get("clean_sequence_success_control", 0)
     )
     combined_failure = int(base_role_counts.get("clean_sequence_hard_negative", 0)) + int(
         new_role_counts.get("clean_sequence_hard_negative", 0)
-    )
-    success_required = int(
-        base_controls.get("acceptance", {}).get("clean_sequence_success_controls_required", 5)
-    )
-    failure_required = int(
-        base_controls.get("acceptance", {}).get("clean_sequence_hard_negatives_required", 5)
     )
     success_met = combined_success >= success_required
     failure_met = combined_failure >= failure_required
@@ -235,6 +323,8 @@ def build_payload(
             "success_controls_met": success_met,
             "failure_controls_met": failure_met,
             "skipped_counts": dict(skipped),
+            "validation_status": validation_status,
+            "validation_blocks_integration": False,
             "stage7_training_row_count": 0,
             "selector_training_row_count": 0,
             "runtime_authorization_row_count": 0,
