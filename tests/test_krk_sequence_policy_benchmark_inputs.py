@@ -53,6 +53,8 @@ def test_sequence_policy_benchmark_inputs_are_non_causal_and_blocked_by_stage7_s
     assert payload["summary"]["stage7_clean_success_controls"] == 2
     assert payload["summary"]["stage7_clean_success_controls_met"] is False
     assert payload["summary"]["stage7_clean_failure_controls_met"] is True
+    assert payload["summary"]["stage7_diverse_outputs_present"] is False
+    assert payload["summary"]["stage7_diverse_new_controls"] == 0
     assert payload["summary"]["selector_training_row_count"] == 0
     assert payload["summary"]["runtime_authorization_row_count"] == 0
     assert (
@@ -120,6 +122,8 @@ def test_sequence_policy_benchmark_inputs_fixture_can_be_ready_non_causally():
             "controls": [
                 {
                     "state_id": f"success.{idx}",
+                    "fen": f"8/8/8/8/{idx}/8/8/8 w - - 0 1",
+                    "move_uci": "a1a2",
                     "control_role": "clean_sequence_success_control",
                     "result": "mate",
                 }
@@ -128,17 +132,80 @@ def test_sequence_policy_benchmark_inputs_fixture_can_be_ready_non_causally():
             + [
                 {
                     "state_id": f"failure.{idx}",
+                    "fen": f"8/8/8/8/8/{idx}/8/8 w - - 0 1",
+                    "move_uci": "a1a2",
                     "control_role": "clean_sequence_hard_negative",
                     "result": "max_plies",
                 }
                 for idx in range(5)
             ]
         },
+        stage7_diverse_integration={"summary": {}, "new_controls": []},
         sequence_policy_design={
             "readiness": {"stage7_clean_success_controls_required": 5}
         },
     )
 
+    assert payload["summary"]["benchmark_input_ready"] is True
+    assert payload["decision"]["status"] == "sequence_policy_benchmark_inputs_ready_non_causal"
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["selector_training_allowed"] is False
+
+
+def test_sequence_policy_benchmark_inputs_fixture_consumes_diverse_integration():
+    payload = _inputs.build_payload(
+        contrast_dataset={"rows": []},
+        protected_plan_windows={
+            "summary": {"protected_cross_stage_evidence_met": True},
+            "frames": [],
+        },
+        stage7_clean_controls={
+            "controls": [
+                {
+                    "state_id": f"base.success.{idx}",
+                    "fen": f"8/8/8/8/8/8/8/{idx} w - - 0 1",
+                    "move_uci": "a1a2",
+                    "control_role": "clean_sequence_success_control",
+                    "result": "mate",
+                }
+                for idx in range(2)
+            ]
+            + [
+                {
+                    "state_id": f"base.failure.{idx}",
+                    "fen": f"8/8/8/8/8/8/7{idx}/8 w - - 0 1",
+                    "move_uci": "a1a2",
+                    "control_role": "clean_sequence_hard_negative",
+                    "result": "max_plies",
+                }
+                for idx in range(5)
+            ]
+        },
+        stage7_diverse_integration={
+            "summary": {"outputs_present_count": 1, "new_control_count": 3},
+            "new_controls": [
+                {
+                    "state_id": f"diverse.success.{idx}",
+                    "fen": f"8/8/8/8/8/{idx}/8/8 w - - 0 1",
+                    "move_uci": "a1a2",
+                    "control_role": "clean_sequence_success_control",
+                    "result": "mate",
+                    "source_job_id": "fixture.job",
+                    "source_stage_names": ["Box_Small"],
+                }
+                for idx in range(3)
+            ],
+        },
+        sequence_policy_design={
+            "readiness": {"stage7_clean_success_controls_required": 5}
+        },
+    )
+
+    assert payload["summary"]["stage7_clean_success_controls"] == 5
+    assert payload["summary"]["stage7_clean_success_controls_met"] is True
+    assert payload["summary"]["stage7_clean_failure_controls_met"] is True
+    assert payload["summary"]["stage7_diverse_outputs_present"] is True
+    assert payload["summary"]["stage7_diverse_new_controls"] == 3
     assert payload["summary"]["benchmark_input_ready"] is True
     assert payload["decision"]["status"] == "sequence_policy_benchmark_inputs_ready_non_causal"
     assert payload["decision"]["runtime_changes_allowed"] is False

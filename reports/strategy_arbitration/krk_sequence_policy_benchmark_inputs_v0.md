@@ -17,6 +17,8 @@ This artifact assembles currently available non-causal inputs for a future seque
 - stage7_clean_failure_controls: `8`
 - stage7_clean_failure_controls_required: `5`
 - stage7_clean_failure_controls_met: `True`
+- stage7_diverse_outputs_present: `False`
+- stage7_diverse_new_controls: `0`
 - stage7_heldout_row_count: `10`
 - selector_training_row_count: `0`
 - runtime_authorization_row_count: `0`

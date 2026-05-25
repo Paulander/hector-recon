@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTRAST_DATASET = ROOT / "reports/strategy_arbitration/krk_sequence_control_contrast_dataset_v0.json"
 PROTECTED_PLAN_WINDOWS = ROOT / "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json"
 STAGE7_CLEAN_CONTROLS = ROOT / "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json"
+STAGE7_DIVERSE_INTEGRATION = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json"
 SEQUENCE_POLICY_DESIGN = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json"
 OUTPUT_JSON = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json"
 OUTPUT_MD = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.md"
@@ -40,6 +41,12 @@ COMMON_FALSE_FLAGS = {
 
 def _load(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _load_optional(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    return _load(path)
 
 
 def _stage4_rows(contrast_dataset: dict[str, Any]) -> list[dict[str, Any]]:
@@ -102,9 +109,14 @@ def _protected_plan_window_rows(protected_plan_windows: dict[str, Any]) -> list[
     return rows
 
 
-def _stage7_clean_rows(stage7_clean_controls: dict[str, Any]) -> list[dict[str, Any]]:
+def _stage7_clean_rows(
+    stage7_clean_controls: dict[str, Any],
+    *,
+    controls_key: str = "controls",
+    source_track: str = "replay_free_recovery",
+) -> list[dict[str, Any]]:
     rows = []
-    for control in stage7_clean_controls.get("controls") or []:
+    for control in stage7_clean_controls.get(controls_key) or []:
         rows.append(
             {
                 "schema_version": "krk_sequence_policy_benchmark_input_row.v0",
@@ -130,6 +142,9 @@ def _stage7_clean_rows(stage7_clean_controls: dict[str, Any]) -> list[dict[str, 
                     "selected_skill_source": control.get("selected_skill_source"),
                     "semantic_alignment_status": control.get("semantic_alignment_status"),
                     "source_classification": control.get("source_classification"),
+                    "source_track": source_track,
+                    "source_job_id": control.get("source_job_id"),
+                    "source_stage_names": control.get("source_stage_names") or [],
                 },
                 "stage7_heldout_challenge": True,
                 "usable_for_selector_training": False,
@@ -145,17 +160,36 @@ def build_payload(
     contrast_dataset: dict[str, Any] | None = None,
     protected_plan_windows: dict[str, Any] | None = None,
     stage7_clean_controls: dict[str, Any] | None = None,
+    stage7_diverse_integration: dict[str, Any] | None = None,
     sequence_policy_design: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     contrast_dataset = contrast_dataset or _load(CONTRAST_DATASET)
     protected_plan_windows = protected_plan_windows or _load(PROTECTED_PLAN_WINDOWS)
     stage7_clean_controls = stage7_clean_controls or _load(STAGE7_CLEAN_CONTROLS)
+    stage7_diverse_integration = stage7_diverse_integration or _load_optional(STAGE7_DIVERSE_INTEGRATION)
     sequence_policy_design = sequence_policy_design or _load(SEQUENCE_POLICY_DESIGN)
+
+    stage7_rows = [
+        *_stage7_clean_rows(stage7_clean_controls),
+        *_stage7_clean_rows(
+            stage7_diverse_integration,
+            controls_key="new_controls",
+            source_track="diverse_clean_sampling_integration",
+        ),
+    ]
+    deduped_stage7_rows = []
+    seen_stage7_keys: set[tuple[Any, Any, Any]] = set()
+    for row in stage7_rows:
+        key = (row.get("fen"), row.get("move_uci"), row.get("outcome"))
+        if key in seen_stage7_keys:
+            continue
+        seen_stage7_keys.add(key)
+        deduped_stage7_rows.append(row)
 
     rows = [
         *_stage4_rows(contrast_dataset),
         *_protected_plan_window_rows(protected_plan_windows),
-        *_stage7_clean_rows(stage7_clean_controls),
+        *deduped_stage7_rows,
     ]
     input_counts = Counter(row["input_group"] for row in rows)
     stage_counts = Counter(row["source_stage"] for row in rows)
@@ -198,6 +232,7 @@ def build_payload(
             "reports/strategy_arbitration/krk_sequence_control_contrast_dataset_v0.json",
             "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json",
             "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json",
+            "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json",
             "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json",
         ],
         "summary": {
@@ -212,6 +247,12 @@ def build_payload(
             "stage7_clean_failure_controls": stage7_fail,
             "stage7_clean_failure_controls_required": stage7_failure_required,
             "stage7_clean_failure_controls_met": stage7_failure_met,
+            "stage7_diverse_outputs_present": bool(
+                stage7_diverse_integration.get("summary", {}).get("outputs_present_count", 0)
+            ),
+            "stage7_diverse_new_controls": int(
+                stage7_diverse_integration.get("summary", {}).get("new_control_count", 0) or 0
+            ),
             "stage7_heldout_row_count": sum(1 for row in rows if row["stage7_heldout_challenge"]),
             "selector_training_row_count": sum(1 for row in rows if row["usable_for_selector_training"]),
             "runtime_authorization_row_count": sum(
