@@ -1,0 +1,53 @@
+{
+  "blockers": [
+    "Stage 4 first-move contrast sandbox still requires explicit approval before implementation.",
+    "Stage 7 clean success controls remain below the minimum threshold for sequence-policy benchmarking.",
+    "No row in this dataset is an ownership-training row or runtime-authorization row."
+  ],
+  "causal_status": "non_causal_sequence_control_contrast_probe",
+  "decision": {
+    "recommended_next_step": "choose_stage4_sandbox_approval_or_design_diverse_stage7_sampling_manifest",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "sequence_control_stage4_review_ready_stage7_success_controls_insufficient"
+  },
+  "gameplay_topology_mutation": false,
+  "readiness": {
+    "broader_runtime_selector_ready": false,
+    "stage4_first_move_contrast_sandbox_review_ready": true,
+    "stage7_sequence_policy_benchmark_ready": false,
+    "stage8_training_ready": false
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_sequence_control_contrast_probe.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_sequence_control_contrast_dataset_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "protected_selector_seed_balanced": true,
+    "row_count": 76,
+    "runtime_authorization_row_count": 0,
+    "selector_preserve_seed_count": 8,
+    "selector_switch_seed_count": 5,
+    "selector_training_row_count": 0,
+    "stage4_failure_count": 22,
+    "stage4_forced_candidate_count": 48,
+    "stage4_positive_count": 26,
+    "stage4_review_ready_pending_approval": true,
+    "stage7_control_count": 10,
+    "stage7_failure_control_count": 8,
+    "stage7_failure_controls_met": true,
+    "stage7_success_control_count": 2,
+    "stage7_success_controls_met": false
+  }
+}

@@ -1329,6 +1329,8 @@ Stage 4 stratified contrast validation is complete. The identity, file-mirrored,
 
 The Stage 4 first-move contrast runtime review packet is ready, but it does not authorize implementation. If explicitly approved later, the only reviewed scope is a default-off Stage 4 CandidateMoveFrame first-move contrast sandbox using visible move-shape terms, with no exact-state/runtime exception, no selector training, no broad stage0 penalty, no provider suppression, no Stage 7 promotion, and no Stage 8 training. The packet is `stage4_first_move_contrast_runtime_review_ready_pending_explicit_approval`.
 
+The KRK sequence-control contrast dataset/probe v0 unifies the current non-causal control-plane evidence: 48 Stage 4 forced-first-move contrast rows, 18 Stage 4/5/6 ownership-seed context rows, and 10 held-out Stage 7 clean sequence-control rows. It confirms the current fork: Stage 4 has a review-ready but not implementation-authorized first-move contrast sandbox, while Stage 7 still lacks enough clean success controls for a broader sequence-policy benchmark (2 successes, 8 failures). Stage 8 remains blocked and no row is a selector-training or runtime-authorization row.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:
