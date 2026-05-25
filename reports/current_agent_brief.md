@@ -1317,6 +1317,8 @@ The non-causal selector-objective benchmark v2 is complete. A visible context he
 
 The bounded independent protected validation slice for that heuristic is complete and underpowered. It collected 10 protected Stage 4/6 selected-owner rows, all h40 mate/preserve outcomes, with 0 Stage 7 rows and 0 runtime changes. This validates safe-preservation behavior only; it provides no independent selected-owner failure/switch contrast, so runtime selector work remains blocked. The blocker review `reports/strategy_arbitration/krk_selector_objective_independent_validation_blocker_v0.md/json` recommends targeted Stage 4 failure discovery or keeping selector work blocked.
 
+Stage 4 failure discovery is complete. The retry1 Stage 4 h40 caveat has 32 max-plies failure packets, but they collapse to one unique FEN/move, `state.44938ccb8ab7` / `b8h8`, already present in selector seed v2. This explains why independent random protected validation slices do not recover new switch contrasts. More blind label farming is not recommended; the next useful work is Stage4 caveat sequence review or a targeted synthetic/stratified contrast design.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

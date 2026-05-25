@@ -1,0 +1,53 @@
+{
+  "causal_status": "non_causal_replay_free_failure_discovery",
+  "decision": {
+    "recommended_next_step": "stage4_caveat_sequence_or_synthetic_contrast_review",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "status": "stage4_failure_discovery_collapsed_to_seed_state"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "blind_label_farming_recommended": false,
+    "recommended_evidence_path": "Stage4 caveat/sequence diagnosis or targeted synthetic/stratified failure manifest, not more random selected-owner validation.",
+    "why": "The retry1 Stage 4 h40 caveat has 32 failure packets but they collapse to one unique state/move, already present in selector seed v2. Random protected validation slices are therefore unlikely to add independent switch contrast."
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_stage4_failure_discovery.v0",
+  "source_artifacts": [
+    "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage4_wrong_tempo_overlay_300_seed7_h40_profile_bonus.json",
+    "reports/strategy_arbitration/krk_selector_objective_seed_manifest_v2.json",
+    "reports/strategy_arbitration/krk_selector_objective_independent_validation_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "all_unique_failures_already_in_selector_seed": true,
+    "failure_packet_count": 32,
+    "independent_validation_target_counts": {
+      "preserve": 10
+    },
+    "independent_validation_underpowered": true,
+    "selector_training_row_count": 0,
+    "stage4_eval_conversion_failure_count": 32,
+    "stage4_eval_total": 300,
+    "stage7_training_row_count": 0,
+    "unique_failure_state_move_count": 1,
+    "unique_failure_states": 1
+  },
+  "unique_failure_rows": [
+    {
+      "failure_count": 32,
+      "fen": "1R6/1K6/8/k7/8/8/8/8 w - - 0 1",
+      "in_selector_seed_v2": true,
+      "selected_move": "b8h8",
+      "state_id": "state.44938ccb8ab7"
+    }
+  ]
+}

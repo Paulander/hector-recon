@@ -46,6 +46,10 @@ _independent_blocker = _load_module(
     "write_krk_selector_objective_independent_validation_blocker_v0",
     "scripts/write_krk_selector_objective_independent_validation_blocker_v0.py",
 )
+_stage4_failure_discovery = _load_module(
+    "summarize_krk_stage4_failure_discovery_v0",
+    "scripts/summarize_krk_stage4_failure_discovery_v0.py",
+)
 
 
 def _read_report(path: str) -> dict:
@@ -455,3 +459,61 @@ def test_selector_objective_independent_validation_common_flags():
     }
 
     _independent_validation.validate_common(payload)
+
+
+def test_stage4_failure_discovery_collapses_to_seed_state():
+    payload = _read_report("reports/krk_stage4_failure_discovery_v0.json")
+
+    assert payload["schema_version"] == "krk_stage4_failure_discovery.v0"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_score_changes"] is False
+    assert payload["runtime_direct_routing"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["summary"]["failure_packet_count"] == 32
+    assert payload["summary"]["unique_failure_state_move_count"] == 1
+    assert payload["summary"]["all_unique_failures_already_in_selector_seed"] is True
+    assert payload["interpretation"]["blind_label_farming_recommended"] is False
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_stage4_failure_discovery_fixture_identifies_seed_overlap():
+    stage4_eval = {
+        "total": 2,
+        "conversion_failure_count": 2,
+        "handoff_packets": [
+            {
+                "phase": "playout_summary",
+                "observed_outcome": "max_plies",
+                "evidence_terms": {
+                    "fen": "1R6/1K6/8/k7/8/8/8/8 w - - 0 1",
+                    "move": "b8h8",
+                    "playout_result": "max_plies",
+                },
+            },
+            {
+                "phase": "playout_summary",
+                "observed_outcome": "max_plies",
+                "evidence_terms": {
+                    "fen": "1R6/1K6/8/k7/8/8/8/8 w - - 0 1",
+                    "move": "b8h8",
+                    "playout_result": "max_plies",
+                },
+            },
+        ],
+    }
+    state_id = _stage4_failure_discovery._state_id_from_fen(
+        "1R6/1K6/8/k7/8/8/8/8 w - - 0 1"
+    )
+    payload = _stage4_failure_discovery.build_payload(
+        stage4_eval=stage4_eval,
+        seed={"seed_rows": [{"state_id": state_id}]},
+        independent_validation={"summary": {"target_counts": {"preserve": 1}}},
+    )
+
+    assert payload["summary"]["failure_packet_count"] == 2
+    assert payload["summary"]["unique_failure_state_move_count"] == 1
+    assert payload["summary"]["all_unique_failures_already_in_selector_seed"] is True
+    assert payload["decision"]["runtime_changes_allowed"] is False
