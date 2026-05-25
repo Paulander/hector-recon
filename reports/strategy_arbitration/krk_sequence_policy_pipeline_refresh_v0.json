@@ -1,0 +1,92 @@
+{
+  "causal_status": "non_causal_passive_pipeline_refresh",
+  "decision": {
+    "label_run_allowed": false,
+    "recommended_next_step": "run_explicitly_approved_stage7_diverse_clean_label_jobs",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "sequence_policy_pipeline_refreshed_still_blocked_by_stage7_success_controls"
+  },
+  "gameplay_topology_mutation": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_sequence_policy_pipeline_refresh.v0",
+  "source_scripts": [
+    "scripts/integrate_stage7_diverse_clean_sampling_results_v0.py",
+    "scripts/assemble_krk_sequence_policy_benchmark_inputs_v0.py",
+    "scripts/probe_krk_sequence_policy_inputs_v0.py",
+    "scripts/run_krk_sequence_policy_benchmark_v0.py",
+    "scripts/write_krk_current_control_plane_gate_v0.py"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "step_results": [
+    {
+      "decision_status": "stage7_diverse_clean_sampling_outputs_pending",
+      "label_run_allowed": false,
+      "output_json": "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json",
+      "runtime_changes_allowed": false,
+      "script": "scripts/integrate_stage7_diverse_clean_sampling_results_v0.py",
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false,
+      "step_id": "stage7_diverse_clean_integration"
+    },
+    {
+      "decision_status": "sequence_policy_benchmark_inputs_blocked_pending_stage7_success_controls",
+      "label_run_allowed": false,
+      "output_json": "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json",
+      "runtime_changes_allowed": false,
+      "script": "scripts/assemble_krk_sequence_policy_benchmark_inputs_v0.py",
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false,
+      "step_id": "sequence_policy_inputs"
+    },
+    {
+      "decision_status": "sequence_policy_input_probe_partial_stage7_success_controls_missing",
+      "label_run_allowed": false,
+      "output_json": "reports/strategy_arbitration/krk_sequence_policy_input_probe_v0.json",
+      "runtime_changes_allowed": false,
+      "script": "scripts/probe_krk_sequence_policy_inputs_v0.py",
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false,
+      "step_id": "sequence_policy_input_probe"
+    },
+    {
+      "decision_status": "sequence_policy_benchmark_blocked_pending_stage7_success_controls",
+      "label_run_allowed": false,
+      "output_json": "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
+      "runtime_changes_allowed": false,
+      "script": "scripts/run_krk_sequence_policy_benchmark_v0.py",
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false,
+      "step_id": "sequence_policy_benchmark"
+    },
+    {
+      "decision_status": "krk_control_plane_waiting_on_explicit_gate_choice",
+      "label_run_allowed": false,
+      "output_json": "reports/krk_current_control_plane_gate_v0.json",
+      "runtime_changes_allowed": false,
+      "script": "scripts/write_krk_current_control_plane_gate_v0.py",
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false,
+      "step_id": "current_control_plane_gate"
+    }
+  ],
+  "summary": {
+    "all_boundaries_preserved": true,
+    "current_gate_status": "krk_control_plane_waiting_on_explicit_gate_choice",
+    "sequence_policy_benchmark_status": "sequence_policy_benchmark_blocked_pending_stage7_success_controls",
+    "sequence_policy_inputs_ready": false,
+    "stage7_outputs_present_count": 0,
+    "stage7_success_controls": 2,
+    "stage7_success_controls_required": 5,
+    "step_count": 5
+  }
+}
