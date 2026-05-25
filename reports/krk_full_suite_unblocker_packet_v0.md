@@ -34,10 +34,12 @@
 - id: `stage7_diverse_clean_label_execution`
 - status: `ready_pending_explicit_approval`
 - purpose: Fill held-out Stage 7 clean success controls so the sequence-policy benchmark can run.
-- command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_stage7_diverse_clean_sampling_jobs_v0.py --execute-reviewed-label-run --refresh-after-run`
+- command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_stage7_diverse_clean_sampling_jobs_v0.py --execute-reviewed-label-run --job-timeout-seconds 900 --refresh-after-run`
 - resume_safe: `True`
 - skip_existing_outputs_by_default: `True`
 - invalid_existing_outputs_block_without_overwrite: `True`
+- per_job_timeout_seconds: `900`
+- post_success_refresh: `full_passive_krk_suite_gate_stack`
 - stage7_training_rows: `0`
 - approval_required: `True`
 - implementation_allowed_by_this_packet: `False`

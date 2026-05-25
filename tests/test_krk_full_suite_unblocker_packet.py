@@ -55,6 +55,7 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     assert primary["scope"]["execution_readiness_recomputed_live"] is True
     assert primary["scope"]["per_job_timeout_seconds"] == 900
     assert primary["scope"]["timed_out_job_count"] == 0
+    assert primary["scope"]["post_success_refresh"] == "full_passive_krk_suite_gate_stack"
     assert primary["scope"]["stage7_training_rows"] == 0
     assert primary["scope"]["stage7_promotion_allowed"] is False
     assert primary["scope"]["stage8_training_allowed"] is False
@@ -91,8 +92,10 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
     payload = _packet.build_payload()
     rendered = _packet.write_markdown(payload)
 
-    assert "--execute-reviewed-label-run --refresh-after-run" in rendered
+    assert "--execute-reviewed-label-run --job-timeout-seconds 900 --refresh-after-run" in rendered
     assert "resume_safe: `True`" in rendered
     assert "invalid_existing_outputs_block_without_overwrite: `True`" in rendered
+    assert "per_job_timeout_seconds: `900`" in rendered
+    assert "post_success_refresh: `full_passive_krk_suite_gate_stack`" in rendered
     assert "implementation_allowed_by_this_packet: `False`" in rendered
     assert payload["primary_unblocker"]["implementation_allowed_by_this_packet"] is False

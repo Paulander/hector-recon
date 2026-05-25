@@ -36,6 +36,14 @@ def build_payload() -> dict[str, Any]:
         and stage7_gate["success_controls_ready"] is False
         and not (stage7_gate.get("invalid_existing_output_count") or 0)
     )
+    job_timeout_seconds = int(stage7_gate.get("job_timeout_seconds") or 900)
+    approved_command = (
+        "UV_CACHE_DIR=/tmp/uv-cache uv run python "
+        "scripts/run_stage7_diverse_clean_sampling_jobs_v0.py "
+        "--execute-reviewed-label-run "
+        f"--job-timeout-seconds {job_timeout_seconds} "
+        "--refresh-after-run"
+    )
 
     return {
         "schema_version": "krk_full_suite_unblocker_packet.v0",
@@ -88,11 +96,7 @@ def build_payload() -> dict[str, Any]:
             "id": "stage7_diverse_clean_label_execution",
             "status": "ready_pending_explicit_approval" if primary_ready else "not_ready",
             "purpose": "Fill held-out Stage 7 clean success controls so the sequence-policy benchmark can run.",
-            "command_if_explicitly_approved": (
-                "UV_CACHE_DIR=/tmp/uv-cache uv run python "
-                "scripts/run_stage7_diverse_clean_sampling_jobs_v0.py "
-                "--execute-reviewed-label-run --refresh-after-run"
-            ),
+            "command_if_explicitly_approved": approved_command,
             "scope": {
                 "max_jobs": 8,
                 "horizon": "h40",
@@ -103,8 +107,9 @@ def build_payload() -> dict[str, Any]:
                 "execution_readiness_recomputed_live": (
                     stage7_gate.get("execution_readiness_source") == "live_recomputed"
                 ),
-                "per_job_timeout_seconds": stage7_gate.get("job_timeout_seconds"),
+                "per_job_timeout_seconds": job_timeout_seconds,
                 "timed_out_job_count": stage7_gate.get("timed_out_job_count"),
+                "post_success_refresh": "full_passive_krk_suite_gate_stack",
                 "runtime_behavior_changed": False,
                 "stage7_training_rows": 0,
                 "stage7_promotion_allowed": False,
@@ -190,6 +195,8 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- resume_safe: `{primary['scope']['resume_safe']}`",
             f"- skip_existing_outputs_by_default: `{primary['scope']['skip_existing_outputs_by_default']}`",
             f"- invalid_existing_outputs_block_without_overwrite: `{primary['scope']['invalid_existing_outputs_block_without_overwrite']}`",
+            f"- per_job_timeout_seconds: `{primary['scope']['per_job_timeout_seconds']}`",
+            f"- post_success_refresh: `{primary['scope']['post_success_refresh']}`",
             f"- stage7_training_rows: `{primary['scope']['stage7_training_rows']}`",
             f"- approval_required: `{primary['approval_required']}`",
             f"- implementation_allowed_by_this_packet: `{primary['implementation_allowed_by_this_packet']}`",
