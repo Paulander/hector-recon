@@ -234,6 +234,21 @@ stage7_diverse_clean_sampling_outputs_validation_pending
 
 Meaning: no Stage 7 diverse-clean label outputs are present yet. Once explicitly approved label outputs exist, this passive gate validates parseability, h40 consistency, and held-out/non-training status before those outputs are consumed by the sequence-policy pipeline.
 
+Current Stage 4 caveat unblocker packet:
+
+```text
+reports/krk_stage4_caveat_unblocker_packet_v0.md
+reports/krk_stage4_caveat_unblocker_packet_v0.json
+```
+
+Current Stage 4 unblocker decision:
+
+```text
+stage4_caveat_unblocker_ready_pending_explicit_runtime_approval
+```
+
+Meaning: the known Stage 4 h40 caveat has a reviewed default-off first-move contrast sandbox scope, but implementation still requires explicit runtime approval. This packet does not authorize runtime changes.
+
 Current sequence-policy benchmark review:
 
 ```text

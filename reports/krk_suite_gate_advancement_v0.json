@@ -20,6 +20,7 @@
   "schema_version": "krk_suite_gate_advancement.v0",
   "source_scripts": [
     "scripts/validate_stage7_diverse_clean_sampling_outputs_v0.py",
+    "scripts/write_krk_stage4_caveat_unblocker_packet_v0.py",
     "scripts/refresh_krk_sequence_policy_pipeline_v0.py",
     "scripts/review_krk_sequence_policy_benchmark_v0.py",
     "scripts/write_krk_full_suite_readiness_audit_v0.py",
@@ -39,6 +40,17 @@
       "stage7_promotion_allowed": false,
       "stage8_training_allowed": false,
       "step_id": "stage7_diverse_clean_output_validation"
+    },
+    {
+      "decision_status": "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval",
+      "label_run_allowed": false,
+      "output_json": "reports/krk_stage4_caveat_unblocker_packet_v0.json",
+      "runtime_changes_allowed": false,
+      "script": "scripts/write_krk_stage4_caveat_unblocker_packet_v0.py",
+      "selector_training_allowed": false,
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false,
+      "step_id": "stage4_caveat_unblocker_packet"
     },
     {
       "decision_status": "sequence_policy_pipeline_refreshed_still_blocked_by_stage7_success_controls",
@@ -102,6 +114,7 @@
     "sequence_policy_benchmark_ready": false,
     "sequence_policy_benchmark_review_status": "sequence_policy_benchmark_review_blocked_pending_ready_inputs",
     "sequence_policy_inputs_ready": false,
+    "stage4_caveat_unblocker_status": "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval",
     "stage7_output_valid_count": 0,
     "stage7_output_validation_status": "stage7_diverse_clean_sampling_outputs_validation_pending",
     "stage7_success_controls": 2,
