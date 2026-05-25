@@ -19,6 +19,9 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - sequence_policy_inputs_ready: `False`
 - sequence_policy_benchmark_ready: `False`
 - sequence_policy_benchmark_review_status: `sequence_policy_benchmark_review_blocked_pending_ready_inputs`
+- sequence_policy_underpowered_pilot_status: `sequence_policy_pilot_ready_for_full_benchmark_after_label_gate`
+- sequence_policy_underpowered_pilot_stage4_topk_signal: `True`
+- sequence_policy_underpowered_pilot_stage7_success_gap: `3`
 - readiness_status: `krk_suite_readiness_blocked_pending_stage7_clean_success_controls`
 - unblocker_status: `krk_suite_primary_unblocker_ready_pending_explicit_label_approval`
 - stage8_training_readiness_status: `stage8_training_blocked_pending_stage7_sequence_gate`
@@ -32,6 +35,7 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - `stage7_clean_success_backfill_audit` status=`stage7_clean_success_backfill_exhausted_pending_label_execution` labels=`False` runtime=`False`
 - `sequence_policy_pipeline_refresh` status=`sequence_policy_pipeline_refreshed_still_blocked_by_stage7_success_controls` labels=`False` runtime=`False`
 - `sequence_policy_benchmark_review` status=`sequence_policy_benchmark_review_blocked_pending_ready_inputs` labels=`False` runtime=`False`
+- `sequence_policy_underpowered_pilot_review` status=`sequence_policy_pilot_ready_for_full_benchmark_after_label_gate` labels=`False` runtime=`False`
 - `full_suite_readiness_audit` status=`krk_suite_readiness_blocked_pending_stage7_clean_success_controls` labels=`False` runtime=`False`
 - `full_suite_unblocker_packet` status=`krk_suite_primary_unblocker_ready_pending_explicit_label_approval` labels=`False` runtime=`False`
 - `stage8_training_readiness_review` status=`stage8_training_blocked_pending_stage7_sequence_gate` labels=`False` runtime=`False`

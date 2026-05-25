@@ -61,6 +61,11 @@ PASSIVE_STEPS = [
         "output_json": "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
     },
     {
+        "step_id": "sequence_policy_underpowered_pilot_review",
+        "script": "scripts/review_krk_sequence_policy_underpowered_pilot_v0.py",
+        "output_json": "reports/strategy_arbitration/krk_sequence_policy_underpowered_pilot_v0.json",
+    },
+    {
         "step_id": "full_suite_readiness_audit",
         "script": "scripts/write_krk_full_suite_readiness_audit_v0.py",
         "output_json": "reports/krk_full_suite_readiness_audit_v0.json",
@@ -150,6 +155,9 @@ def build_payload() -> dict[str, Any]:
     benchmark_review = _load_json(
         "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
     )
+    underpowered_pilot = _load_json(
+        "reports/strategy_arbitration/krk_sequence_policy_underpowered_pilot_v0.json"
+    )
     stage8_review = _load_json("reports/krk_stage8_training_readiness_review_v0.json")
     post_label_review = _load_json("reports/krk_stage7_post_label_outcome_review_v0.json")
 
@@ -216,6 +224,15 @@ def build_payload() -> dict[str, Any]:
             "sequence_policy_benchmark_review_status": benchmark_review.get("decision", {}).get(
                 "status"
             ),
+            "sequence_policy_underpowered_pilot_status": underpowered_pilot.get(
+                "decision", {}
+            ).get("status"),
+            "sequence_policy_underpowered_pilot_stage4_topk_signal": underpowered_pilot.get(
+                "summary", {}
+            ).get("stage4_topk_signal"),
+            "sequence_policy_underpowered_pilot_stage7_success_gap": underpowered_pilot.get(
+                "summary", {}
+            ).get("stage7_success_gap"),
             "readiness_status": readiness.get("decision", {}).get("status"),
             "unblocker_status": unblocker.get("decision", {}).get("status"),
             "stage8_training_readiness_status": stage8_review.get("decision", {}).get(

@@ -24,6 +24,7 @@
     "scripts/audit_stage7_clean_success_control_backfill_v0.py",
     "scripts/refresh_krk_sequence_policy_pipeline_v0.py",
     "scripts/review_krk_sequence_policy_benchmark_v0.py",
+    "scripts/review_krk_sequence_policy_underpowered_pilot_v0.py",
     "scripts/write_krk_full_suite_readiness_audit_v0.py",
     "scripts/write_krk_full_suite_unblocker_packet_v0.py",
     "scripts/review_krk_stage8_training_readiness_v0.py",
@@ -88,6 +89,17 @@
       "step_id": "sequence_policy_benchmark_review"
     },
     {
+      "decision_status": "sequence_policy_pilot_ready_for_full_benchmark_after_label_gate",
+      "label_run_allowed": false,
+      "output_json": "reports/strategy_arbitration/krk_sequence_policy_underpowered_pilot_v0.json",
+      "runtime_changes_allowed": false,
+      "script": "scripts/review_krk_sequence_policy_underpowered_pilot_v0.py",
+      "selector_training_allowed": false,
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false,
+      "step_id": "sequence_policy_underpowered_pilot_review"
+    },
+    {
       "decision_status": "krk_suite_readiness_blocked_pending_stage7_clean_success_controls",
       "label_run_allowed": false,
       "output_json": "reports/krk_full_suite_readiness_audit_v0.json",
@@ -138,6 +150,9 @@
     "sequence_policy_benchmark_ready": false,
     "sequence_policy_benchmark_review_status": "sequence_policy_benchmark_review_blocked_pending_ready_inputs",
     "sequence_policy_inputs_ready": false,
+    "sequence_policy_underpowered_pilot_stage4_topk_signal": true,
+    "sequence_policy_underpowered_pilot_stage7_success_gap": 3,
+    "sequence_policy_underpowered_pilot_status": "sequence_policy_pilot_ready_for_full_benchmark_after_label_gate",
     "stage4_caveat_unblocker_status": "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval",
     "stage7_clean_success_backfill_available": false,
     "stage7_clean_success_backfill_eligible_new_success": 0,

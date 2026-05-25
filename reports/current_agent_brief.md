@@ -1449,6 +1449,8 @@ The Stage 7 diverse clean sampling runner now recomputes execution readiness liv
 
 The replay-free Stage 7 clean success-control backfill audit is complete in `reports/structural_candidates/stage7_clean_success_backfill_audit_v0.md/json`. Existing clean/default-off Stage 7 artifacts contain 67 raw h40 mate rows, but they collapse to only 2 unique clean FEN/move success controls already present in the recovery artifact. There are 14 sandbox-sourced post-box success controls, but they remain non-backfillable for the clean held-out gate. The sequence-policy benchmark therefore remains blocked on clean Stage 7 success controls; replay-free backfill cannot close the gate.
 
+The underpowered KRK sequence-policy pilot review is complete in `reports/strategy_arbitration/krk_sequence_policy_underpowered_pilot_v0.md/json`. It preserves current diagnostic signal without relaxing the benchmark gate: Stage 4 has a state-local top-k signal, the one-term binary rule remains insufficient, protected plan-window failures are sparse, and Stage 7 still needs 3 additional unique clean success controls. The pilot is ready for the full non-causal benchmark after the Stage 7 clean label gate is filled, but it authorizes no labels, runtime behavior, selector training, Stage 7 promotion, or Stage 8 training.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

@@ -1,0 +1,80 @@
+{
+  "blockers": [
+    "protected_plan_window_failure_evidence_sparse",
+    "stage7_clean_success_controls_missing",
+    "stage7_replay_free_backfill_exhausted"
+  ],
+  "causal_status": "non_causal_underpowered_pilot_review",
+  "decision": {
+    "label_run_allowed": false,
+    "recommended_next_step": "explicitly_approve_stage7_diverse_clean_label_execution_before_full_sequence_policy_benchmark",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "sequence_policy_pilot_ready_for_full_benchmark_after_label_gate"
+  },
+  "gameplay_topology_mutation": false,
+  "pilot_findings": [
+    "stage4_state_local_topk_signal_present",
+    "stage4_one_term_binary_rule_insufficient"
+  ],
+  "protected_plan_window_signal": {
+    "failure_evidence_sparse": true,
+    "row_count": 21,
+    "target_label_counts": {
+      "conversion_failure": 2,
+      "conversion_positive": 19
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_sequence_policy_underpowered_pilot.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
+    "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json",
+    "reports/structural_candidates/stage7_clean_success_backfill_audit_v0.json"
+  ],
+  "stage4_signal": {
+    "interpretation": "state_local_ranking_signal_present_but_one_term_binary_rule_insufficient",
+    "negative_suppression": 0.8636363636363636,
+    "precision": 0.75,
+    "recall": 0.34615384615384615,
+    "row_count": 48,
+    "state_count": 4,
+    "top1_conversion_positive_by_state": 0.75,
+    "top3_conversion_positive_by_state": 1.0
+  },
+  "stage7_heldout_signal": {
+    "failure_controls_met": true,
+    "replay_free_backfill_exhausted": true,
+    "row_count": 10,
+    "success_controls_met": false,
+    "target_label_counts": {
+      "conversion_failure": 8,
+      "conversion_positive": 2
+    }
+  },
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "benchmark_executed_as_ready": false,
+    "input_row_count": 79,
+    "protected_plan_window_failure_evidence_sparse": true,
+    "runtime_authorization_row_count": 0,
+    "selector_training_row_count": 0,
+    "stage4_binary_rule_insufficient": true,
+    "stage4_topk_signal": true,
+    "stage7_backfillable_success_controls": 0,
+    "stage7_failure_controls": 8,
+    "stage7_replay_free_backfill_exhausted": true,
+    "stage7_success_controls": 2,
+    "stage7_success_gap": 3,
+    "stage7_training_row_count": 0
+  }
+}

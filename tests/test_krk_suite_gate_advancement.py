@@ -90,6 +90,7 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         "stage7_clean_success_backfill_audit",
         "sequence_policy_pipeline_refresh",
         "sequence_policy_benchmark_review",
+        "sequence_policy_underpowered_pilot_review",
         "full_suite_readiness_audit",
         "full_suite_unblocker_packet",
         "stage8_training_readiness_review",
@@ -100,6 +101,12 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         payload["summary"]["sequence_policy_benchmark_review_status"]
         == "sequence_policy_benchmark_review_blocked_pending_ready_inputs"
     )
+    assert (
+        payload["summary"]["sequence_policy_underpowered_pilot_status"]
+        == "sequence_policy_pilot_ready_for_full_benchmark_after_label_gate"
+    )
+    assert payload["summary"]["sequence_policy_underpowered_pilot_stage4_topk_signal"] is True
+    assert payload["summary"]["sequence_policy_underpowered_pilot_stage7_success_gap"] == 3
     assert (
         payload["summary"]["stage7_output_validation_status"]
         == "stage7_diverse_clean_sampling_outputs_validation_pending"
