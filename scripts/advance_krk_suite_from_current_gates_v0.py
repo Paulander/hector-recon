@@ -70,6 +70,11 @@ PASSIVE_STEPS = [
         "script": "scripts/review_krk_stage8_training_readiness_v0.py",
         "output_json": "reports/krk_stage8_training_readiness_review_v0.json",
     },
+    {
+        "step_id": "stage7_post_label_outcome_review",
+        "script": "scripts/review_krk_stage7_post_label_outcome_v0.py",
+        "output_json": "reports/krk_stage7_post_label_outcome_review_v0.json",
+    },
 ]
 
 

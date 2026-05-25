@@ -29,6 +29,7 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - `full_suite_readiness_audit` status=`krk_suite_readiness_blocked_pending_stage7_clean_success_controls` labels=`False` runtime=`False`
 - `full_suite_unblocker_packet` status=`krk_suite_primary_unblocker_ready_pending_explicit_label_approval` labels=`False` runtime=`False`
 - `stage8_training_readiness_review` status=`stage8_training_blocked_pending_stage7_sequence_gate` labels=`False` runtime=`False`
+- `stage7_post_label_outcome_review` status=`post_label_outcome_pending_explicit_label_outputs` labels=`False` runtime=`False`
 
 ## Decision
 

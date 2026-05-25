@@ -1,0 +1,58 @@
+{
+  "blockers": [
+    "stage7_diverse_clean_outputs_absent"
+  ],
+  "causal_status": "non_causal_post_label_outcome_review",
+  "decision": {
+    "implementation_allowed_by_this_review": false,
+    "label_run_allowed": false,
+    "recommended_next_step": "explicitly_approve_stage7_diverse_clean_label_execution",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "post_label_outcome_pending_explicit_label_outputs"
+  },
+  "findings": [],
+  "gameplay_topology_mutation": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_stage7_post_label_outcome_review.v0",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json",
+    "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json",
+    "reports/strategy_arbitration/krk_sequence_policy_pipeline_refresh_v0.json",
+    "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
+    "reports/krk_full_suite_readiness_audit_v0.json",
+    "reports/krk_stage8_training_readiness_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "benchmark_review_status": "sequence_policy_benchmark_review_blocked_pending_ready_inputs",
+    "failure_controls": 8,
+    "failure_controls_met": true,
+    "failure_controls_required": 5,
+    "integration_status": "stage7_diverse_clean_sampling_outputs_pending",
+    "invalid_output_count": 0,
+    "output_validation_status": "stage7_diverse_clean_sampling_outputs_validation_pending",
+    "outputs_present_count": 0,
+    "outputs_valid_count": 0,
+    "pipeline_status": "sequence_policy_pipeline_refreshed_still_blocked_by_stage7_success_controls",
+    "readiness_status": "krk_suite_readiness_blocked_pending_stage7_clean_success_controls",
+    "runtime_authorization_row_count": 0,
+    "selector_training_row_count": 0,
+    "sequence_policy_inputs_ready": false,
+    "stage7_runner_invalid_existing_output_count": 0,
+    "stage7_training_row_count": 0,
+    "stage8_status": "stage8_training_blocked_pending_stage7_sequence_gate",
+    "success_controls": 2,
+    "success_controls_met": false,
+    "success_controls_required": 5
+  }
+}

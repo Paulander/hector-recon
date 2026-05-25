@@ -86,6 +86,7 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         "full_suite_readiness_audit",
         "full_suite_unblocker_packet",
         "stage8_training_readiness_review",
+        "stage7_post_label_outcome_review",
     }
     assert "krk_suite_passive_advancement_blocked_pending_stage7_label_outputs" in rendered
     assert (
