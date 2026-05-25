@@ -1,0 +1,504 @@
+{
+  "boolean_feature_summary": [
+    {
+      "false_count": 11,
+      "false_failure_count": 4,
+      "false_success_count": 7,
+      "feature": "king_destination_a7",
+      "single_state_only": true,
+      "true_count": 1,
+      "true_failure_count": 1,
+      "true_success_count": 0,
+      "true_success_precision": 0.0
+    },
+    {
+      "false_count": 9,
+      "false_failure_count": 5,
+      "false_success_count": 4,
+      "feature": "king_destination_c_file",
+      "single_state_only": true,
+      "true_count": 3,
+      "true_failure_count": 0,
+      "true_success_count": 3,
+      "true_success_precision": 1.0
+    },
+    {
+      "false_count": 8,
+      "false_failure_count": 1,
+      "false_success_count": 7,
+      "feature": "rook_far_rank8_drift_candidate",
+      "single_state_only": true,
+      "true_count": 4,
+      "true_failure_count": 4,
+      "true_success_count": 0,
+      "true_success_precision": 0.0
+    },
+    {
+      "false_count": 9,
+      "false_failure_count": 5,
+      "false_success_count": 4,
+      "feature": "rook_mid_rank8_cut_candidate",
+      "single_state_only": true,
+      "true_count": 3,
+      "true_failure_count": 0,
+      "true_success_count": 3,
+      "true_success_precision": 1.0
+    },
+    {
+      "false_count": 7,
+      "false_failure_count": 4,
+      "false_success_count": 3,
+      "feature": "king_move",
+      "single_state_only": true,
+      "true_count": 5,
+      "true_failure_count": 1,
+      "true_success_count": 4,
+      "true_success_precision": 0.8
+    },
+    {
+      "false_count": 8,
+      "false_failure_count": 4,
+      "false_success_count": 4,
+      "feature": "king_destination_rank7_or_8",
+      "single_state_only": true,
+      "true_count": 4,
+      "true_failure_count": 1,
+      "true_success_count": 3,
+      "true_success_precision": 0.75
+    },
+    {
+      "false_count": 5,
+      "false_failure_count": 1,
+      "false_success_count": 4,
+      "feature": "rook_rank8_destination",
+      "single_state_only": true,
+      "true_count": 7,
+      "true_failure_count": 4,
+      "true_success_count": 3,
+      "true_success_precision": 0.42857142857142855
+    }
+  ],
+  "candidate_feature_rows": [
+    {
+      "features": {
+        "dx": 6,
+        "dy": 0,
+        "from_square": "b8",
+        "move_distance": 6,
+        "piece": "rook",
+        "rook_destination_file_distance_from_black_king_file": 7,
+        "rook_destination_file_distance_from_white_king_file": 6,
+        "rook_far_rank8_drift_candidate": true,
+        "rook_mid_rank8_cut_candidate": false,
+        "rook_rank8_destination": true,
+        "target_distance_to_black_king": 7,
+        "target_distance_to_white_king": 6,
+        "target_edge_distance": 0,
+        "to_file": 7,
+        "to_rank": 7,
+        "to_square": "h8"
+      },
+      "first_move": "b8h8",
+      "first_reply": "a5a4",
+      "first_successor_skill": "krk.stage0_basin",
+      "outcome_bucket": "fails_h40",
+      "result": "max_plies",
+      "total_plies_including_forced_first_move": 40
+    },
+    {
+      "features": {
+        "dx": 5,
+        "dy": 0,
+        "from_square": "b8",
+        "move_distance": 5,
+        "piece": "rook",
+        "rook_destination_file_distance_from_black_king_file": 6,
+        "rook_destination_file_distance_from_white_king_file": 5,
+        "rook_far_rank8_drift_candidate": true,
+        "rook_mid_rank8_cut_candidate": false,
+        "rook_rank8_destination": true,
+        "target_distance_to_black_king": 6,
+        "target_distance_to_white_king": 5,
+        "target_edge_distance": 0,
+        "to_file": 6,
+        "to_rank": 7,
+        "to_square": "g8"
+      },
+      "first_move": "b8g8",
+      "first_reply": "a5a4",
+      "first_successor_skill": "krk.stage0_basin",
+      "outcome_bucket": "fails_h40",
+      "result": "max_plies",
+      "total_plies_including_forced_first_move": 40
+    },
+    {
+      "features": {
+        "dx": 4,
+        "dy": 0,
+        "from_square": "b8",
+        "move_distance": 4,
+        "piece": "rook",
+        "rook_destination_file_distance_from_black_king_file": 5,
+        "rook_destination_file_distance_from_white_king_file": 4,
+        "rook_far_rank8_drift_candidate": true,
+        "rook_mid_rank8_cut_candidate": false,
+        "rook_rank8_destination": true,
+        "target_distance_to_black_king": 5,
+        "target_distance_to_white_king": 4,
+        "target_edge_distance": 0,
+        "to_file": 5,
+        "to_rank": 7,
+        "to_square": "f8"
+      },
+      "first_move": "b8f8",
+      "first_reply": "a5a4",
+      "first_successor_skill": "krk.stage0_basin",
+      "outcome_bucket": "fails_h40",
+      "result": "max_plies",
+      "total_plies_including_forced_first_move": 40
+    },
+    {
+      "features": {
+        "dx": 3,
+        "dy": 0,
+        "from_square": "b8",
+        "move_distance": 3,
+        "piece": "rook",
+        "rook_destination_file_distance_from_black_king_file": 4,
+        "rook_destination_file_distance_from_white_king_file": 3,
+        "rook_far_rank8_drift_candidate": false,
+        "rook_mid_rank8_cut_candidate": true,
+        "rook_rank8_destination": true,
+        "target_distance_to_black_king": 4,
+        "target_distance_to_white_king": 3,
+        "target_edge_distance": 0,
+        "to_file": 4,
+        "to_rank": 7,
+        "to_square": "e8"
+      },
+      "first_move": "b8e8",
+      "first_reply": "a5a4",
+      "first_successor_skill": "krk.stage0_basin",
+      "outcome_bucket": "converts",
+      "result": "mate",
+      "total_plies_including_forced_first_move": 25
+    },
+    {
+      "features": {
+        "dx": 2,
+        "dy": 0,
+        "from_square": "b8",
+        "move_distance": 2,
+        "piece": "rook",
+        "rook_destination_file_distance_from_black_king_file": 3,
+        "rook_destination_file_distance_from_white_king_file": 2,
+        "rook_far_rank8_drift_candidate": false,
+        "rook_mid_rank8_cut_candidate": true,
+        "rook_rank8_destination": true,
+        "target_distance_to_black_king": 3,
+        "target_distance_to_white_king": 2,
+        "target_edge_distance": 0,
+        "to_file": 3,
+        "to_rank": 7,
+        "to_square": "d8"
+      },
+      "first_move": "b8d8",
+      "first_reply": "a5a4",
+      "first_successor_skill": "krk.stage0_basin",
+      "outcome_bucket": "converts",
+      "result": "mate",
+      "total_plies_including_forced_first_move": 25
+    },
+    {
+      "features": {
+        "dx": 1,
+        "dy": 0,
+        "from_square": "b8",
+        "move_distance": 1,
+        "piece": "rook",
+        "rook_destination_file_distance_from_black_king_file": 2,
+        "rook_destination_file_distance_from_white_king_file": 1,
+        "rook_far_rank8_drift_candidate": false,
+        "rook_mid_rank8_cut_candidate": true,
+        "rook_rank8_destination": true,
+        "target_distance_to_black_king": 3,
+        "target_distance_to_white_king": 1,
+        "target_edge_distance": 0,
+        "to_file": 2,
+        "to_rank": 7,
+        "to_square": "c8"
+      },
+      "first_move": "b8c8",
+      "first_reply": "a5a4",
+      "first_successor_skill": "krk.stage0_basin",
+      "outcome_bucket": "converts",
+      "result": "mate",
+      "total_plies_including_forced_first_move": 25
+    },
+    {
+      "features": {
+        "dx": -1,
+        "dy": 0,
+        "from_square": "b8",
+        "move_distance": 1,
+        "piece": "rook",
+        "rook_destination_file_distance_from_black_king_file": 0,
+        "rook_destination_file_distance_from_white_king_file": 1,
+        "rook_far_rank8_drift_candidate": true,
+        "rook_mid_rank8_cut_candidate": false,
+        "rook_rank8_destination": true,
+        "target_distance_to_black_king": 3,
+        "target_distance_to_white_king": 1,
+        "target_edge_distance": 0,
+        "to_file": 0,
+        "to_rank": 7,
+        "to_square": "a8"
+      },
+      "first_move": "b8a8",
+      "first_reply": "a5b5",
+      "first_successor_skill": "krk.stage0_basin",
+      "outcome_bucket": "fails_h40",
+      "result": "max_plies",
+      "total_plies_including_forced_first_move": 40
+    },
+    {
+      "features": {
+        "dx": 1,
+        "dy": 1,
+        "from_square": "b7",
+        "king_destination_a7": false,
+        "king_destination_c_file": true,
+        "king_destination_rank7_or_8": true,
+        "king_move": true,
+        "move_distance": 1,
+        "piece": "king",
+        "target_distance_to_black_king": 3,
+        "target_distance_to_white_king": 1,
+        "target_edge_distance": 0,
+        "to_file": 2,
+        "to_rank": 7,
+        "to_square": "c8"
+      },
+      "first_move": "b7c8",
+      "first_reply": "a5a6",
+      "first_successor_skill": "krk.stage0_basin",
+      "outcome_bucket": "converts",
+      "result": "mate",
+      "total_plies_including_forced_first_move": 17
+    },
+    {
+      "features": {
+        "dx": -1,
+        "dy": 1,
+        "from_square": "b7",
+        "king_destination_a7": false,
+        "king_destination_c_file": false,
+        "king_destination_rank7_or_8": true,
+        "king_move": true,
+        "move_distance": 1,
+        "piece": "king",
+        "target_distance_to_black_king": 3,
+        "target_distance_to_white_king": 1,
+        "target_edge_distance": 0,
+        "to_file": 0,
+        "to_rank": 7,
+        "to_square": "a8"
+      },
+      "first_move": "b7a8",
+      "first_reply": "a5a6",
+      "first_successor_skill": "krk.stage0_basin",
+      "outcome_bucket": "converts",
+      "result": "mate",
+      "total_plies_including_forced_first_move": 21
+    },
+    {
+      "features": {
+        "dx": 1,
+        "dy": 0,
+        "from_square": "b7",
+        "king_destination_a7": false,
+        "king_destination_c_file": true,
+        "king_destination_rank7_or_8": true,
+        "king_move": true,
+        "move_distance": 1,
+        "piece": "king",
+        "target_distance_to_black_king": 2,
+        "target_distance_to_white_king": 1,
+        "target_edge_distance": 1,
+        "to_file": 2,
+        "to_rank": 6,
+        "to_square": "c7"
+      },
+      "first_move": "b7c7",
+      "first_reply": "a5a6",
+      "first_successor_skill": "krk.stage0_basin",
+      "outcome_bucket": "converts",
+      "result": "mate",
+      "total_plies_including_forced_first_move": 25
+    },
+    {
+      "features": {
+        "dx": -1,
+        "dy": 0,
+        "from_square": "b7",
+        "king_destination_a7": true,
+        "king_destination_c_file": false,
+        "king_destination_rank7_or_8": true,
+        "king_move": true,
+        "move_distance": 1,
+        "piece": "king",
+        "target_distance_to_black_king": 2,
+        "target_distance_to_white_king": 1,
+        "target_edge_distance": 0,
+        "to_file": 0,
+        "to_rank": 6,
+        "to_square": "a7"
+      },
+      "first_move": "b7a7",
+      "first_reply": "a5a4",
+      "first_successor_skill": "krk.stage0_basin",
+      "outcome_bucket": "fails_h40",
+      "result": "max_plies",
+      "total_plies_including_forced_first_move": 40
+    },
+    {
+      "features": {
+        "dx": 1,
+        "dy": -1,
+        "from_square": "b7",
+        "king_destination_a7": false,
+        "king_destination_c_file": true,
+        "king_destination_rank7_or_8": false,
+        "king_move": true,
+        "move_distance": 1,
+        "piece": "king",
+        "target_distance_to_black_king": 2,
+        "target_distance_to_white_king": 1,
+        "target_edge_distance": 2,
+        "to_file": 2,
+        "to_rank": 5,
+        "to_square": "c6"
+      },
+      "first_move": "b7c6",
+      "first_reply": "a5a4",
+      "first_successor_skill": "krk.stage0_basin",
+      "outcome_bucket": "converts",
+      "result": "mate",
+      "total_plies_including_forced_first_move": 31
+    }
+  ],
+  "categorical_feature_summary": [
+    {
+      "buckets": {
+        "king": {
+          "count": 5,
+          "failure_count": 1,
+          "success_count": 4
+        },
+        "rook": {
+          "count": 7,
+          "failure_count": 4,
+          "success_count": 3
+        }
+      },
+      "feature": "piece",
+      "single_state_only": true
+    },
+    {
+      "buckets": {
+        "a5a4": {
+          "count": 8,
+          "failure_count": 4,
+          "success_count": 4
+        },
+        "a5a6": {
+          "count": 3,
+          "failure_count": 0,
+          "success_count": 3
+        },
+        "a5b5": {
+          "count": 1,
+          "failure_count": 1,
+          "success_count": 0
+        }
+      },
+      "feature": "first_reply",
+      "single_state_only": true
+    },
+    {
+      "buckets": {
+        "krk.stage0_basin": {
+          "count": 12,
+          "failure_count": 5,
+          "success_count": 7
+        }
+      },
+      "feature": "first_successor_skill",
+      "single_state_only": true
+    }
+  ],
+  "causal_status": "non_causal_single_state_feature_review",
+  "decision": {
+    "recommended_next_step": "synthetic_or_stratified_stage4_contrast_validation",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "stage4_first_move_feature_contrast_found_single_state"
+  },
+  "explicitly_forbidden": [
+    "exact_state_runtime_patch",
+    "selector_training_from_single_state_terms",
+    "broad_stage0_penalty",
+    "runtime_score_change",
+    "stage7_promotion",
+    "stage8_training"
+  ],
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "candidate_failure_terms": [
+      "king_destination_a7",
+      "rook_far_rank8_drift_candidate"
+    ],
+    "candidate_positive_terms": [
+      "king_destination_c_file",
+      "rook_mid_rank8_cut_candidate"
+    ],
+    "primary": "single_state_visible_first_move_contrast_found",
+    "runtime_ready": false,
+    "support": [
+      "The selected failed move is separable from several converting first moves by simple visible move-shape terms.",
+      "The evidence is one repeated state only, so these terms are not runtime-ready and should not be treated as general selector labels.",
+      "The safest next step is synthetic/stratified contrast validation or a sequence-policy review, not an exact-state patch."
+    ]
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_stage4_first_move_feature_review.v0",
+  "source_artifacts": [
+    "reports/krk_stage4_sequence_candidate_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "failure_count": 5,
+    "row_count": 12,
+    "runtime_behavior_changed": false,
+    "selector_training_row_count": 0,
+    "single_state_only": true,
+    "stage7_training_row_count": 0,
+    "success_count": 7
+  },
+  "target": {
+    "fen": "1R6/1K6/8/k7/8/8/8/8 w - - 0 1",
+    "label": "edge_trap_wrong_tempo",
+    "selected_move": "b8h8",
+    "source_primary_diagnosis": "stage4_sequence_followup_gap_single_state",
+    "state_id": "state.44938ccb8ab7"
+  }
+}

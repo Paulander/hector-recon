@@ -58,6 +58,10 @@ _stage4_sequence_candidates = _load_module(
     "review_krk_stage4_sequence_candidates_v0",
     "scripts/review_krk_stage4_sequence_candidates_v0.py",
 )
+_stage4_first_move_features = _load_module(
+    "review_krk_stage4_first_move_features_v0",
+    "scripts/review_krk_stage4_first_move_features_v0.py",
+)
 
 
 def _read_report(path: str) -> dict:
@@ -614,3 +618,61 @@ def test_stage4_sequence_candidate_review_fixture_classifies_ranking_gap():
     assert classification["selected_first_move_result"] == "max_plies"
     assert classification["converting_first_moves"] == ["b8e8"]
     assert classification["recommended_next_step"] == "non_causal_stage4_first_move_feature_review"
+
+
+def test_stage4_first_move_feature_review_is_single_state_non_causal():
+    payload = _read_report("reports/krk_stage4_first_move_feature_review_v0.json")
+
+    assert payload["schema_version"] == "krk_stage4_first_move_feature_review.v0"
+    assert payload["causal_status"] == "non_causal_single_state_feature_review"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_score_changes"] is False
+    assert payload["runtime_direct_routing"] is False
+    assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["gameplay_topology_mutation"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["summary"]["row_count"] == 12
+    assert payload["summary"]["single_state_only"] is True
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert payload["summary"]["stage7_training_row_count"] == 0
+    assert payload["interpretation"]["runtime_ready"] is False
+    assert "rook_mid_rank8_cut_candidate" in payload["interpretation"]["candidate_positive_terms"]
+    assert "rook_far_rank8_drift_candidate" in payload["interpretation"]["candidate_failure_terms"]
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["selector_training_allowed"] is False
+
+
+def test_stage4_first_move_feature_review_fixture_keeps_single_state_boundary():
+    candidate_review = {
+        "target": {
+            "state_id": "state.44938ccb8ab7",
+            "fen": "1R6/1K6/8/k7/8/8/8/8 w - - 0 1",
+            "selected_move": "b8h8",
+            "label": "edge_trap_wrong_tempo",
+        },
+        "candidate_results": [
+            {
+                "first_move": "b8h8",
+                "result": "max_plies",
+                "total_plies_including_forced_first_move": 40,
+                "first_reply": {"move": "a5a4"},
+                "first_successor_skill": "krk.stage0_basin",
+            },
+            {
+                "first_move": "b8e8",
+                "result": "mate",
+                "total_plies_including_forced_first_move": 25,
+                "first_reply": {"move": "a5a4"},
+                "first_successor_skill": "krk.stage0_basin",
+            },
+        ],
+    }
+
+    payload = _stage4_first_move_features.build_payload(candidate_review=candidate_review)
+
+    assert payload["summary"]["single_state_only"] is True
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["selector_training_allowed"] is False
