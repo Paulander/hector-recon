@@ -1331,6 +1331,8 @@ The Stage 4 first-move contrast runtime review packet is ready, but it does not 
 
 The KRK sequence-control contrast dataset/probe v0 unifies the current non-causal control-plane evidence: 48 Stage 4 forced-first-move contrast rows, 18 Stage 4/5/6 ownership-seed context rows, and 10 held-out Stage 7 clean sequence-control rows. It confirms the current fork: Stage 4 has a review-ready but not implementation-authorized first-move contrast sandbox, while Stage 7 still lacks enough clean success controls for a broader sequence-policy benchmark (2 successes, 8 failures). Stage 8 remains blocked and no row is a selector-training or runtime-authorization row.
 
+The Stage 7 diverse clean sampling manifest v0 is ready for review but not execution. It proposes 8 bounded h40 jobs (64 samples total) over disjoint `Box_Small`, `Box_Medium`, and `Edge_Fence_Deep` source cells using the active retry1 Stage 6 topology, with all Stage 7 repair/sandbox flags forbidden. The purpose is to fill the clean Stage 7 success-control gap without another blind duplicate label run. It requires explicit approval before running, creates no training rows, and does not authorize Stage 7 promotion or Stage 8 training.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:
