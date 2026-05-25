@@ -1313,6 +1313,8 @@ The protected stage status report now uses the active retry1 manifest when prese
 
 The Stage 4 observation-only trace/ownership collection is complete. It collected 6/6 approved Stage 4 selected-failure rows, emitted 170 observation-only frames, and preserved default-off equivalence with zero selected move/provider/score/routing deltas. It produced one Stage 4 switch contrast with visible positive capacity and five Stage 4 failure-context rows without visible positive capacity. The v2 selector-objective seed now has 18 rows across Stage 4/5/6 with 5 switch, 8 preserve, and 5 abstain/context targets. The v2 probe confirms switch/preserve/abstain semantics and is ready for a non-causal selector-objective benchmark. It still does not authorize selector training, runtime selection, Stage 7 promotion, or Stage 8 training.
 
+The non-causal selector-objective benchmark v2 is complete. A visible context heuristic over Stage 4/5/6 seed rows reaches the benchmark review thresholds on the current seed, but this is not runtime-ready: the result may be overfit to 18 rows and requires bounded independent protected validation before any runtime review. The review packet `reports/strategy_arbitration/krk_selector_objective_benchmark_review_packet_v2.md/json` authorizes no implementation, no selector training, and no runtime changes. Its next step is independent protected validation only.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

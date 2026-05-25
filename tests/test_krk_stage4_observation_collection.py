@@ -30,6 +30,14 @@ _probe = _load_module(
     "probe_krk_selector_objective_seed_manifest_v2",
     "scripts/probe_krk_selector_objective_seed_manifest_v2.py",
 )
+_benchmark = _load_module(
+    "benchmark_krk_selector_objective_v2",
+    "scripts/benchmark_krk_selector_objective_v2.py",
+)
+_benchmark_review = _load_module(
+    "write_krk_selector_objective_benchmark_review_packet_v2",
+    "scripts/write_krk_selector_objective_benchmark_review_packet_v2.py",
+)
 
 
 def _read_report(path: str) -> dict:
@@ -213,3 +221,151 @@ def test_selector_seed_probe_v2_ready_but_non_causal():
     assert payload["interpretation"]["selector_training_supported"] is False
     assert payload["interpretation"]["runtime_selector_supported"] is False
     assert payload["decision"]["selector_allowed"] is False
+
+
+def test_selector_objective_benchmark_v2_is_non_causal_review_gate():
+    payload = _read_report("reports/strategy_arbitration/krk_selector_objective_benchmark_v2.json")
+
+    assert payload["schema_version"] == "krk_selector_objective_benchmark.v2"
+    assert payload["causal_status"] == "non_causal_selector_objective_benchmark"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_defaults_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_score_changes"] is False
+    assert payload["runtime_direct_routing"] is False
+    assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["gameplay_topology_mutation"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert payload["summary"]["stage7_training_row_count"] == 0
+    assert payload["summary"]["context_row_count"] >= payload["summary"]["seed_row_count"]
+    assert payload["interpretation"]["selector_training_supported"] is False
+    assert payload["interpretation"]["runtime_selector_supported"] is False
+    assert payload["interpretation"]["independent_validation_required_before_runtime"] is True
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["selector_training_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_selector_objective_benchmark_fixture_uses_visible_context_without_labels():
+    manifest = {
+        "summary": {"selector_training_row_count": 0, "stage7_training_row_count": 0},
+        "seed_rows": [
+            {
+                "state_id": "switch",
+                "source_stage": "stage6",
+                "selected_provider": "krk.stage0_basin",
+                "positive_trace_provider_candidate_count": 10,
+                "objective_channel": "candidate_switch_contrast_seed",
+            },
+            {
+                "state_id": "preserve",
+                "source_stage": "stage6",
+                "selected_provider": "krk.stage0_basin",
+                "positive_trace_provider_candidate_count": 10,
+                "objective_channel": "safe_preservation_contrast_seed",
+            },
+            {
+                "state_id": "abstain",
+                "source_stage": "stage4",
+                "selected_provider": "krk.stage0_basin",
+                "positive_trace_provider_candidate_count": 0,
+                "objective_channel": "failure_context_without_candidate_seed",
+            },
+        ],
+    }
+    context = {
+        "rows": [
+            {
+                "state_id": "switch",
+                "active_landmark_label": "drive_to_edge",
+                "context_terms": [
+                    "edge_bucket:edge",
+                    "box_area_relevance:low",
+                    "support_bucket:far",
+                ],
+                "selected_move_context": {"selected_piece": "rook"},
+            },
+            {
+                "state_id": "preserve",
+                "active_landmark_label": "drive_to_edge",
+                "context_terms": [
+                    "edge_bucket:edge",
+                    "box_area_relevance:low",
+                    "support_bucket:close",
+                ],
+                "selected_move_context": {"selected_piece": "rook"},
+            },
+            {
+                "state_id": "abstain",
+                "active_landmark_label": "wrong_tempo_control",
+                "context_terms": [
+                    "edge_bucket:edge",
+                    "box_area_relevance:low",
+                    "support_bucket:close",
+                ],
+                "selected_move_context": {"selected_piece": "rook"},
+            },
+        ]
+    }
+    payload = _benchmark.build_payload(
+        manifest=manifest,
+        seed_probe={"decision": {"status": "fixture"}},
+        ownership_context=context,
+    )
+
+    heuristic = payload["results"]["visible_failure_risk_heuristic_v2"]
+    assert heuristic["runtime_feature_eligible"] is True
+    assert heuristic["accuracy"] == 1.0
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_selector_objective_benchmark_review_packet_blocks_runtime():
+    payload = _read_report(
+        "reports/strategy_arbitration/krk_selector_objective_benchmark_review_packet_v2.json"
+    )
+
+    assert payload["schema_version"] == "krk_selector_objective_benchmark_review_packet.v2"
+    assert (
+        payload["decision"]["status"]
+        == "selector_objective_benchmark_review_ready_for_independent_validation"
+    )
+    assert payload["decision"]["runtime_review_ready"] is False
+    assert payload["decision"]["independent_validation_review_ready"] is True
+    assert payload["decision"]["implementation_authorized_by_this_packet"] is False
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["selector_training_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["review_observations"]["runtime_selector_supported"] is False
+    assert "runtime_selector" in payload["explicitly_forbidden"]
+    assert "stage7_training_or_promotion" in payload["explicitly_forbidden"]
+
+
+def test_selector_objective_benchmark_review_fixture_never_authorizes_runtime():
+    benchmark = {
+        "decision": {"status": "selector_objective_benchmark_v2_runtime_feature_review_ready"},
+        "summary": {
+            "best_runtime_model": "probe",
+            "runtime_threshold_passing_model_count": 1,
+        },
+        "results": {
+            "probe": {
+                "model_kind": "fixture",
+                "accuracy": 1.0,
+                "switch_precision": 1.0,
+                "switch_recall": 1.0,
+                "preserve_recall": 1.0,
+                "abstain_recall": 1.0,
+                "runtime_feature_eligible": True,
+            }
+        },
+    }
+
+    payload = _benchmark_review.build_payload(benchmark=benchmark)
+
+    assert payload["decision"]["independent_validation_review_ready"] is True
+    assert payload["decision"]["runtime_review_ready"] is False
+    assert payload["decision"]["implementation_authorized_by_this_packet"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
