@@ -19,6 +19,7 @@
   "runtime_selector_implemented": false,
   "schema_version": "krk_suite_gate_advancement.v0",
   "source_scripts": [
+    "scripts/validate_stage7_diverse_clean_sampling_outputs_v0.py",
     "scripts/refresh_krk_sequence_policy_pipeline_v0.py",
     "scripts/review_krk_sequence_policy_benchmark_v0.py",
     "scripts/write_krk_full_suite_readiness_audit_v0.py",
@@ -27,6 +28,17 @@
   "stage7_promotion_allowed": false,
   "stage8_training_allowed": false,
   "step_results": [
+    {
+      "decision_status": "stage7_diverse_clean_sampling_outputs_validation_pending",
+      "label_run_allowed": false,
+      "output_json": "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json",
+      "runtime_changes_allowed": false,
+      "script": "scripts/validate_stage7_diverse_clean_sampling_outputs_v0.py",
+      "selector_training_allowed": false,
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false,
+      "step_id": "stage7_diverse_clean_output_validation"
+    },
     {
       "decision_status": "sequence_policy_pipeline_refreshed_still_blocked_by_stage7_success_controls",
       "label_run_allowed": false,
@@ -78,6 +90,8 @@
     "sequence_policy_benchmark_ready": false,
     "sequence_policy_benchmark_review_status": "sequence_policy_benchmark_review_blocked_pending_ready_inputs",
     "sequence_policy_inputs_ready": false,
+    "stage7_output_valid_count": 0,
+    "stage7_output_validation_status": "stage7_diverse_clean_sampling_outputs_validation_pending",
     "stage7_success_controls": 2,
     "stage7_success_controls_ready": false,
     "stage7_success_controls_required": 5,

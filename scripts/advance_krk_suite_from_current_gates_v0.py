@@ -36,6 +36,11 @@ COMMON_FALSE_FLAGS = {
 
 PASSIVE_STEPS = [
     {
+        "step_id": "stage7_diverse_clean_output_validation",
+        "script": "scripts/validate_stage7_diverse_clean_sampling_outputs_v0.py",
+        "output_json": "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json",
+    },
+    {
         "step_id": "sequence_policy_pipeline_refresh",
         "script": "scripts/refresh_krk_sequence_policy_pipeline_v0.py",
         "output_json": "reports/strategy_arbitration/krk_sequence_policy_pipeline_refresh_v0.json",
@@ -113,6 +118,9 @@ def build_payload() -> dict[str, Any]:
 
     readiness = _load_json("reports/krk_full_suite_readiness_audit_v0.json")
     unblocker = _load_json("reports/krk_full_suite_unblocker_packet_v0.json")
+    output_validation = _load_json(
+        "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json"
+    )
     pipeline = _load_json("reports/strategy_arbitration/krk_sequence_policy_pipeline_refresh_v0.json")
     benchmark = _load_json("reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json")
     benchmark_review = _load_json(
@@ -150,6 +158,12 @@ def build_payload() -> dict[str, Any]:
         "step_results": step_results,
         "summary": {
             "all_boundaries_preserved": all_boundaries_preserved,
+            "stage7_output_validation_status": output_validation.get("decision", {}).get(
+                "status"
+            ),
+            "stage7_output_valid_count": output_validation.get("summary", {}).get(
+                "output_valid_count"
+            ),
             "stage7_success_controls": readiness.get("stage7_sampling_gate", {}).get(
                 "combined_success_controls"
             ),

@@ -219,6 +219,21 @@ krk_suite_passive_advancement_blocked_pending_stage7_label_outputs
 
 This harness reruns only safe passive integration/readiness artifacts. It does not execute labels, implement runtime behavior, train selectors, promote Stage 7, or train Stage 8.
 
+Current Stage 7 diverse-clean output validation gate:
+
+```text
+reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.md
+reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json
+```
+
+Current validation decision:
+
+```text
+stage7_diverse_clean_sampling_outputs_validation_pending
+```
+
+Meaning: no Stage 7 diverse-clean label outputs are present yet. Once explicitly approved label outputs exist, this passive gate validates parseability, h40 consistency, and held-out/non-training status before those outputs are consumed by the sequence-policy pipeline.
+
 Current sequence-policy benchmark review:
 
 ```text

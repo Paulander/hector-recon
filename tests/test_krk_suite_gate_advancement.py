@@ -79,6 +79,7 @@ def test_gate_advancement_writer_includes_all_passive_steps():
 
     step_ids = {step["step_id"] for step in payload["step_results"]}
     assert step_ids == {
+        "stage7_diverse_clean_output_validation",
         "sequence_policy_pipeline_refresh",
         "sequence_policy_benchmark_review",
         "full_suite_readiness_audit",
@@ -89,6 +90,11 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         payload["summary"]["sequence_policy_benchmark_review_status"]
         == "sequence_policy_benchmark_review_blocked_pending_ready_inputs"
     )
+    assert (
+        payload["summary"]["stage7_output_validation_status"]
+        == "stage7_diverse_clean_sampling_outputs_validation_pending"
+    )
+    assert payload["summary"]["stage7_output_valid_count"] == 0
     for step in payload["step_results"]:
         assert step["label_run_allowed"] is False
         assert step["runtime_changes_allowed"] is False
