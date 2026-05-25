@@ -1325,6 +1325,8 @@ Stage 4 sequence-candidate review is complete. For the isolated caveat state `st
 
 The Stage 4 first-move feature review found single-state visible contrast terms: `rook_mid_rank8_cut_candidate` and `king_destination_c_file` align with converting first moves in the isolated state, while `rook_far_rank8_drift_candidate` and `king_destination_a7` align with failures. These terms are not runtime-ready because they come from one repeated state. The next safe step is synthetic or stratified Stage 4 contrast validation if we want to generalize the finding; otherwise keep this as a known residual guardrail.
 
+Stage 4 stratified contrast validation is complete. The identity, file-mirrored, rank-mirrored, and 180-degree transformed variants all reproduce the first-move ranking gap: the transformed selected drift move fails under h40, while multiple legal transformed alternatives convert. This supports a geometric Stage 4 first-move contrast problem rather than a missing-capacity problem. It is still non-causal and not a selector-training set; the next appropriate artifact is a review packet for a narrow Stage 4 first-move contrast sandbox or a broader sequence-policy design, with no exact-state patch.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

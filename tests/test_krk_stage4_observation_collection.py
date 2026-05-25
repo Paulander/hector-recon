@@ -62,6 +62,10 @@ _stage4_first_move_features = _load_module(
     "review_krk_stage4_first_move_features_v0",
     "scripts/review_krk_stage4_first_move_features_v0.py",
 )
+_stage4_stratified_contrast = _load_module(
+    "run_krk_stage4_stratified_contrast_validation_v0",
+    "scripts/run_krk_stage4_stratified_contrast_validation_v0.py",
+)
 
 
 def _read_report(path: str) -> dict:
@@ -676,3 +680,40 @@ def test_stage4_first_move_feature_review_fixture_keeps_single_state_boundary():
     assert payload["summary"]["selector_training_row_count"] == 0
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["selector_training_allowed"] is False
+
+
+def test_stage4_stratified_contrast_validation_supports_ranking_gap_non_causally():
+    payload = _read_report("reports/krk_stage4_stratified_contrast_validation_v0.json")
+
+    assert payload["schema_version"] == "krk_stage4_stratified_contrast_validation.v0"
+    assert (
+        payload["causal_status"]
+        == "non_causal_symmetry_stratified_forced_first_move_validation"
+    )
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_score_changes"] is False
+    assert payload["runtime_direct_routing"] is False
+    assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["gameplay_topology_mutation"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["summary"]["variant_count"] == 4
+    assert payload["summary"]["candidate_row_count"] == 48
+    assert payload["summary"]["gap_variant_count"] == 4
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert payload["summary"]["stage7_training_row_count"] == 0
+    assert (
+        payload["decision"]["status"]
+        == "stage4_stratified_contrast_validation_supports_first_move_ranking_gap"
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["selector_training_allowed"] is False
+
+
+def test_stage4_stratified_contrast_transform_helpers_are_involutions():
+    move = "b8h8"
+    for _, transform in _stage4_stratified_contrast.TRANSFORMS:
+        transformed = _stage4_stratified_contrast.transform_move_uci(move, transform)
+        restored = _stage4_stratified_contrast.transform_move_uci(transformed, transform)
+        assert restored == move

@@ -142,11 +142,11 @@ def _compact_result(diag: Any, move_uci: str, result: dict[str, Any]) -> dict[st
     }
 
 
-def run_candidate(move_uci: str, *, diag: Any) -> dict[str, Any]:
-    board = chess.Board(TARGET_FEN)
+def run_candidate_for_fen(move_uci: str, *, fen: str, diag: Any) -> dict[str, Any]:
+    board = chess.Board(fen)
     move = chess.Move.from_uci(move_uci)
     if move not in board.legal_moves:
-        raise ValueError(f"{move_uci} is not legal in {TARGET_FEN}")
+        raise ValueError(f"{move_uci} is not legal in {fen}")
     board.push(move)
     graph = diag.build_graph_from_topology(TOPOLOGY)
     engine = diag.ReConEngine(graph)
@@ -158,6 +158,10 @@ def run_candidate(move_uci: str, *, diag: Any) -> dict[str, Any]:
         **PLAYOUT_KWARGS,
     )
     return _compact_result(diag, move_uci, result)
+
+
+def run_candidate(move_uci: str, *, diag: Any) -> dict[str, Any]:
+    return run_candidate_for_fen(move_uci, fen=TARGET_FEN, diag=diag)
 
 
 def classify_candidate_results(candidate_results: list[dict[str, Any]]) -> dict[str, Any]:
