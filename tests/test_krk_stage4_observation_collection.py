@@ -50,6 +50,10 @@ _stage4_failure_discovery = _load_module(
     "summarize_krk_stage4_failure_discovery_v0",
     "scripts/summarize_krk_stage4_failure_discovery_v0.py",
 )
+_stage4_sequence_review = _load_module(
+    "review_krk_stage4_caveat_sequence_v0",
+    "scripts/review_krk_stage4_caveat_sequence_v0.py",
+)
 
 
 def _read_report(path: str) -> dict:
@@ -516,4 +520,56 @@ def test_stage4_failure_discovery_fixture_identifies_seed_overlap():
     assert payload["summary"]["failure_packet_count"] == 2
     assert payload["summary"]["unique_failure_state_move_count"] == 1
     assert payload["summary"]["all_unique_failures_already_in_selector_seed"] is True
+    assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_stage4_caveat_sequence_review_is_non_causal():
+    payload = _read_report("reports/krk_stage4_caveat_sequence_review_v0.json")
+
+    assert payload["schema_version"] == "krk_stage4_caveat_sequence_review.v0"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_score_changes"] is False
+    assert payload["runtime_direct_routing"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["summary"]["single_unique_failure"] is True
+    assert payload["summary"]["base_control_reproduces_failure_count"] is True
+    assert payload["diagnosis"]["primary"] == "stage4_sequence_followup_gap_single_state"
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_stage4_caveat_sequence_review_fixture_classifies_sequence_gap():
+    stage4_eval = {
+        "handoff_packets": [
+            {
+                "phase": "playout_summary",
+                "observed_outcome": "max_plies",
+                "status": "failed",
+                "evidence_terms": {
+                    "fen": "1R6/1K6/8/k7/8/8/8/8 w - - 0 1",
+                    "move": "b8h8",
+                    "playout_result": "max_plies",
+                },
+            }
+        ]
+    }
+    discovery = {
+        "unique_failure_rows": [
+            {
+                "state_id": "state.44938ccb8ab7",
+                "fen": "1R6/1K6/8/k7/8/8/8/8 w - - 0 1",
+                "selected_move": "b8h8",
+            }
+        ]
+    }
+    payload = _stage4_sequence_review.build_payload(
+        stage4_eval=stage4_eval,
+        stage4_base=stage4_eval,
+        discovery=discovery,
+    )
+
+    assert payload["summary"]["single_unique_failure"] is True
+    assert payload["summary"]["base_control_reproduces_failure_count"] is True
     assert payload["decision"]["runtime_changes_allowed"] is False

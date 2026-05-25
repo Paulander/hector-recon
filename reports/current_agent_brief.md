@@ -1319,6 +1319,8 @@ The bounded independent protected validation slice for that heuristic is complet
 
 Stage 4 failure discovery is complete. The retry1 Stage 4 h40 caveat has 32 max-plies failure packets, but they collapse to one unique FEN/move, `state.44938ccb8ab7` / `b8h8`, already present in selector seed v2. This explains why independent random protected validation slices do not recover new switch contrasts. More blind label farming is not recommended; the next useful work is Stage4 caveat sequence review or a targeted synthetic/stratified contrast design.
 
+Stage 4 caveat sequence review is complete. The single repeated failure is a follow-up/sequence gap, not a retry1 overlay regression and not enough selector diversity: post-own move confirms the visible fence contract but not the local wrong-tempo reward, the opponent reply survives the fence, and follow-up selects `krk.stage0_basin` by actuator score without a visible role license before h40 max_plies. The safe next options are Stage4 sequence-candidate review, synthetic/stratified contrast design, or keeping Stage4 as a known residual guardrail.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:
