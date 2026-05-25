@@ -54,6 +54,10 @@ _stage4_sequence_review = _load_module(
     "review_krk_stage4_caveat_sequence_v0",
     "scripts/review_krk_stage4_caveat_sequence_v0.py",
 )
+_stage4_sequence_candidates = _load_module(
+    "review_krk_stage4_sequence_candidates_v0",
+    "scripts/review_krk_stage4_sequence_candidates_v0.py",
+)
 
 
 def _read_report(path: str) -> dict:
@@ -573,3 +577,40 @@ def test_stage4_caveat_sequence_review_fixture_classifies_sequence_gap():
     assert payload["summary"]["single_unique_failure"] is True
     assert payload["summary"]["base_control_reproduces_failure_count"] is True
     assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_stage4_sequence_candidate_review_identifies_first_move_ranking_gap():
+    payload = _read_report("reports/krk_stage4_sequence_candidate_review_v0.json")
+
+    assert payload["schema_version"] == "krk_stage4_sequence_candidate_review.v0"
+    assert payload["causal_status"] == "non_causal_forced_first_move_sequence_review"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_score_changes"] is False
+    assert payload["runtime_direct_routing"] is False
+    assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["gameplay_topology_mutation"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["summary"]["legal_first_move_count"] == 12
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert payload["summary"]["stage7_training_row_count"] == 0
+    assert payload["classification"]["primary"] == "stage4_first_move_ranking_gap"
+    assert payload["classification"]["selected_first_move_result"] == "max_plies"
+    assert payload["classification"]["converting_first_move_count"] >= 1
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_stage4_sequence_candidate_review_fixture_classifies_ranking_gap():
+    rows = [
+        {"first_move": "b8h8", "result": "max_plies", "total_plies_including_forced_first_move": 40},
+        {"first_move": "b8e8", "result": "mate", "total_plies_including_forced_first_move": 25},
+    ]
+
+    classification = _stage4_sequence_candidates.classify_candidate_results(rows)
+
+    assert classification["primary"] == "stage4_first_move_ranking_gap"
+    assert classification["selected_first_move_result"] == "max_plies"
+    assert classification["converting_first_moves"] == ["b8e8"]
+    assert classification["recommended_next_step"] == "non_causal_stage4_first_move_feature_review"

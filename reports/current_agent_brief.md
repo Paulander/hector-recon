@@ -1321,6 +1321,8 @@ Stage 4 failure discovery is complete. The retry1 Stage 4 h40 caveat has 32 max-
 
 Stage 4 caveat sequence review is complete. The single repeated failure is a follow-up/sequence gap, not a retry1 overlay regression and not enough selector diversity: post-own move confirms the visible fence contract but not the local wrong-tempo reward, the opponent reply survives the fence, and follow-up selects `krk.stage0_basin` by actuator score without a visible role license before h40 max_plies. The safe next options are Stage4 sequence-candidate review, synthetic/stratified contrast design, or keeping Stage4 as a known residual guardrail.
 
+Stage 4 sequence-candidate review is complete. For the isolated caveat state `state.44938ccb8ab7`, the forced selected first move `b8h8` still reaches max_plies, while 7 of 12 legal first moves convert under the same bounded h40 continuation. This reclassifies the immediate Stage 4 caveat as `stage4_first_move_ranking_gap` for the repeated single state, but the labels remain offline diagnostics only and are not selector-training or runtime-ownership labels. The next useful work is a non-causal first-move feature/contrast review or a broader sequence-policy design, not an exact-state runtime patch.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:
