@@ -355,8 +355,11 @@ def test_stage7_diverse_clean_sampling_runner_defaults_to_dry_run():
     assert payload["summary"]["dry_run"] is True
     assert payload["summary"]["job_count"] == 8
     assert payload["summary"]["executed_job_count"] == 0
+    assert payload["summary"]["refresh_after_run_requested"] is False
+    assert payload["summary"]["refresh_after_run_performed"] is False
     assert payload["summary"]["stage7_training_row_count"] == 0
     assert payload["summary"]["runtime_authorization_row_count"] == 0
+    assert payload["post_run_refresh"] is None
     assert payload["decision"]["status"] == "stage7_diverse_clean_sampling_runner_dry_run_ready"
     assert payload["decision"]["label_run_allowed"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False
@@ -393,3 +396,17 @@ def test_stage7_diverse_clean_sampling_runner_blocks_when_readiness_fails():
     payload = _runner.build_payload(execute=False, max_jobs=1)
     assert payload["summary"]["executed_job_count"] == 0
     assert payload["commands"][0]["would_execute"] is False
+
+
+def test_stage7_diverse_clean_sampling_runner_refresh_requires_execution():
+    payload = _runner.build_payload(
+        execute=False,
+        max_jobs=1,
+        refresh_after_run=True,
+    )
+
+    assert payload["summary"]["executed_job_count"] == 0
+    assert payload["summary"]["refresh_after_run_requested"] is True
+    assert payload["summary"]["refresh_after_run_performed"] is False
+    assert payload["post_run_refresh"] is None
+    assert payload["decision"]["label_run_allowed"] is False

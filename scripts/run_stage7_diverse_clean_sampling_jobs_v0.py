@@ -9,6 +9,7 @@ defaults, train selectors, promote Stage 7, or train Stage 8.
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import subprocess
 import time
@@ -21,6 +22,7 @@ MANIFEST = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_m
 READINESS = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_execution_readiness_v0.json"
 OUTPUT_JSON = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json"
 OUTPUT_MD = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.md"
+REFRESH_SCRIPT = ROOT / "scripts/refresh_krk_sequence_policy_pipeline_v0.py"
 
 SCHEMA_VERSION = "stage7_diverse_clean_sampling_runner.v0"
 
@@ -84,7 +86,35 @@ def _run_job(job: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def build_payload(*, execute: bool = False, max_jobs: int | None = None) -> dict[str, Any]:
+def _run_passive_refresh() -> dict[str, Any]:
+    spec = importlib.util.spec_from_file_location(REFRESH_SCRIPT.stem, REFRESH_SCRIPT)
+    if spec is None or spec.loader is None:
+        raise RuntimeError("cannot load passive refresh script")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    payload = module.run_refresh()
+    module.OUTPUT_JSON.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+    module.OUTPUT_MD.write_text(module.write_markdown(payload), encoding="utf-8")
+    return {
+        "script": "scripts/refresh_krk_sequence_policy_pipeline_v0.py",
+        "status": payload.get("decision", {}).get("status"),
+        "stage7_success_controls": payload.get("summary", {}).get("stage7_success_controls"),
+        "sequence_policy_inputs_ready": payload.get("summary", {}).get(
+            "sequence_policy_inputs_ready"
+        ),
+        "runtime_changes_allowed": payload.get("decision", {}).get("runtime_changes_allowed"),
+        "label_run_allowed": payload.get("decision", {}).get("label_run_allowed"),
+        "stage7_promotion_allowed": payload.get("decision", {}).get("stage7_promotion_allowed"),
+        "stage8_training_allowed": payload.get("decision", {}).get("stage8_training_allowed"),
+    }
+
+
+def build_payload(
+    *,
+    execute: bool = False,
+    max_jobs: int | None = None,
+    refresh_after_run: bool = False,
+) -> dict[str, Any]:
     manifest = _load(MANIFEST)
     readiness = _load(READINESS)
     blockers = _validate_ready(manifest, readiness)
@@ -105,6 +135,9 @@ def build_payload(*, execute: bool = False, max_jobs: int | None = None) -> dict
         for job in jobs:
             executed_jobs.append(_run_job(job))
     failed_jobs = [job for job in executed_jobs if job.get("returncode") != 0]
+    refresh_result = None
+    if refresh_after_run and execute and not blockers and not failed_jobs:
+        refresh_result = _run_passive_refresh()
     status = (
         "stage7_diverse_clean_sampling_runner_dry_run_ready"
         if not execute and not blockers
@@ -130,11 +163,14 @@ def build_payload(*, execute: bool = False, max_jobs: int | None = None) -> dict
             "failed_job_count": len(failed_jobs),
             "dry_run": not execute,
             "max_jobs": max_jobs,
+            "refresh_after_run_requested": refresh_after_run,
+            "refresh_after_run_performed": refresh_result is not None,
             "stage7_training_row_count": 0,
             "runtime_authorization_row_count": 0,
         },
         "commands": command_records,
         "executed_jobs": executed_jobs,
+        "post_run_refresh": refresh_result,
         "decision": {
             "status": status,
             "recommended_next_step": (
@@ -174,6 +210,16 @@ def write_markdown(payload: dict[str, Any]) -> str:
         lines.append(
             f"- `{command['job_id']}` would_execute=`{command['would_execute']}` output=`{command['json_output']}`"
         )
+    if payload.get("post_run_refresh"):
+        lines.extend(
+            [
+                "",
+                "## Post-Run Refresh",
+                "",
+                f"- status: `{payload['post_run_refresh']['status']}`",
+                f"- sequence_policy_inputs_ready: `{payload['post_run_refresh']['sequence_policy_inputs_ready']}`",
+            ]
+        )
     lines.extend(
         [
             "",
@@ -197,8 +243,17 @@ def main() -> None:
         help="Actually execute the reviewed Stage 7 diverse-clean label jobs.",
     )
     parser.add_argument("--max-jobs", type=int, default=None)
+    parser.add_argument(
+        "--refresh-after-run",
+        action="store_true",
+        help="After a successful explicit label run, refresh passive sequence-policy artifacts.",
+    )
     args = parser.parse_args()
-    payload = build_payload(execute=args.execute_reviewed_label_run, max_jobs=args.max_jobs)
+    payload = build_payload(
+        execute=args.execute_reviewed_label_run,
+        max_jobs=args.max_jobs,
+        refresh_after_run=args.refresh_after_run,
+    )
     OUTPUT_JSON.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
     OUTPUT_MD.write_text(write_markdown(payload), encoding="utf-8")
     print(

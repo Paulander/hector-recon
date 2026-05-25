@@ -11,6 +11,8 @@ This is an approval-gated label-run wrapper. By default it is dry-run only. It d
 - failed_job_count: `0`
 - dry_run: `True`
 - max_jobs: `None`
+- refresh_after_run_requested: `False`
+- refresh_after_run_performed: `False`
 - stage7_training_row_count: `0`
 - runtime_authorization_row_count: `0`
 
