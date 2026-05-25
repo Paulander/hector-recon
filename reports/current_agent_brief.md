@@ -1335,6 +1335,8 @@ The Stage 7 diverse clean sampling manifest v0 is ready for review but not execu
 
 The current KRK control-plane gate is summarized in `reports/krk_current_control_plane_gate_v0.md/json`. Immediate progress now requires one explicit choice: approve the default-off Stage 4 first-move contrast sandbox, approve the bounded Stage 7 diverse clean label run, or defer both and continue non-causal broader sequence-policy design. Without that choice, no runtime or label-run step is authorized.
 
+The non-causal KRK sequence-policy benchmark design v0 is complete. It defines candidate objectives for Stage 4 state-local first-move contrast, Stage 7 post-box sequence success vs hard negatives, PlanCapsule entry/progress/exit/abort, and cross-stage owner preservation vs switch. It remains blocked because clean Stage 7 success controls are still below threshold (2 success / 8 failure; need at least 5 success / 5 failure) and PlanCapsule evidence is still Stage7-only. The artifact does not train, sandbox, route, score, promote Stage 7, or unblock Stage 8.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

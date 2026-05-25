@@ -1,0 +1,255 @@
+#!/usr/bin/env python3
+"""Write non-causal KRK sequence-policy benchmark design/readiness v0."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Any
+
+
+ROOT = Path(__file__).resolve().parents[1]
+CONTRAST_PROBE = ROOT / "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.json"
+CONTRAST_DATASET = ROOT / "reports/strategy_arbitration/krk_sequence_control_contrast_dataset_v0.json"
+PLAN_CAPSULE_REVIEW = ROOT / "reports/strategy_arbitration/krk_plan_capsule_sequence_candidate_observation_review_v1.json"
+STAGE7_POST_BOX_CONTROLS = ROOT / "reports/structural_candidates/stage7_post_box_sequence_control_recovery_v0.json"
+STAGE7_CLEAN_CONTROLS = ROOT / "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json"
+STAGE7_SAMPLING_MANIFEST = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json"
+OUTPUT_JSON = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json"
+OUTPUT_MD = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.md"
+
+SCHEMA_VERSION = "krk_sequence_policy_benchmark_design.v0"
+
+
+COMMON_FALSE_FLAGS = {
+    "runtime_behavior_changed": False,
+    "runtime_defaults_changed": False,
+    "runtime_selector_implemented": False,
+    "runtime_score_changes": False,
+    "runtime_direct_routing": False,
+    "runtime_dtm_or_tablebase_lookup": False,
+    "gameplay_topology_mutation": False,
+    "stage7_promotion_allowed": False,
+    "stage8_training_allowed": False,
+}
+
+
+def _load(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def build_payload(
+    *,
+    contrast_probe: dict[str, Any] | None = None,
+    contrast_dataset: dict[str, Any] | None = None,
+    plan_capsule_review: dict[str, Any] | None = None,
+    post_box_controls: dict[str, Any] | None = None,
+    clean_controls: dict[str, Any] | None = None,
+    sampling_manifest: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    contrast_probe = contrast_probe or _load(CONTRAST_PROBE)
+    contrast_dataset = contrast_dataset or _load(CONTRAST_DATASET)
+    plan_capsule_review = plan_capsule_review or _load(PLAN_CAPSULE_REVIEW)
+    post_box_controls = post_box_controls or _load(STAGE7_POST_BOX_CONTROLS)
+    clean_controls = clean_controls or _load(STAGE7_CLEAN_CONTROLS)
+    sampling_manifest = sampling_manifest or _load(STAGE7_SAMPLING_MANIFEST)
+
+    clean_success = int(
+        clean_controls.get("summary", {})
+        .get("role_counts", {})
+        .get("clean_sequence_success_control", 0)
+    )
+    clean_fail = int(
+        clean_controls.get("summary", {})
+        .get("role_counts", {})
+        .get("clean_sequence_hard_negative", 0)
+    )
+    post_box_count = int(post_box_controls.get("summary", {}).get("control_count", 0) or 0)
+    stage4_review_ready = bool(
+        contrast_probe.get("readiness", {}).get("stage4_first_move_contrast_sandbox_review_ready")
+    )
+    plan_capsule_stage7_only = bool(
+        plan_capsule_review.get("readiness", {}).get("stage7_only_evidence")
+    )
+    clean_success_met = clean_success >= 5
+    clean_fail_met = clean_fail >= 5
+    benchmark_ready = clean_success_met and clean_fail_met and not plan_capsule_stage7_only
+    status = (
+        "sequence_policy_benchmark_blocked_pending_clean_stage7_controls"
+        if not clean_success_met
+        else "sequence_policy_benchmark_blocked_pending_cross_stage_plan_capsule_evidence"
+        if plan_capsule_stage7_only
+        else "sequence_policy_benchmark_design_ready_non_causal"
+    )
+
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "causal_status": "non_causal_sequence_policy_design",
+        **COMMON_FALSE_FLAGS,
+        "source_artifacts": [
+            "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.json",
+            "reports/strategy_arbitration/krk_sequence_control_contrast_dataset_v0.json",
+            "reports/strategy_arbitration/krk_plan_capsule_sequence_candidate_observation_review_v1.json",
+            "reports/structural_candidates/stage7_post_box_sequence_control_recovery_v0.json",
+            "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json",
+            "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
+        ],
+        "readiness": {
+            "stage4_first_move_contrast_sandbox_review_ready": stage4_review_ready,
+            "stage7_clean_success_controls": clean_success,
+            "stage7_clean_failure_controls": clean_fail,
+            "stage7_clean_success_controls_required": 5,
+            "stage7_clean_success_controls_met": clean_success_met,
+            "stage7_clean_failure_controls_met": clean_fail_met,
+            "post_box_sandbox_sourced_success_controls": post_box_count,
+            "post_box_controls_runtime_authorization_eligible": False,
+            "plan_capsule_stage7_only_evidence": plan_capsule_stage7_only,
+            "plan_capsule_policy_succeeded": bool(
+                plan_capsule_review.get("readiness", {}).get("policy_succeeded")
+            ),
+            "benchmark_ready": benchmark_ready,
+        },
+        "benchmark_design": {
+            "name": "krk_sequence_policy_benchmark_v0",
+            "purpose": "evaluate sequence-policy objectives without routing, scoring, promotion, or Stage 8 training",
+            "candidate_objectives": [
+                {
+                    "objective_id": "state_local_first_move_contrast",
+                    "uses": "Stage 4 forced-first-move contrast rows",
+                    "target": "rank converting visible candidate moves above h40-failing drift moves within same state family",
+                    "runtime_ready": False,
+                },
+                {
+                    "objective_id": "post_box_sequence_success_vs_hard_negative",
+                    "uses": "clean Stage 7 controls when enough success controls exist",
+                    "target": "distinguish closed-loop sequence controls from hard negatives without using Stage 7 as promotion base",
+                    "runtime_ready": False,
+                },
+                {
+                    "objective_id": "plan_capsule_entry_progress_exit_abort",
+                    "uses": "PlanCapsule marker/source terms",
+                    "target": "predict when a bounded plan should enter, continue, hand off, or abort",
+                    "runtime_ready": False,
+                },
+                {
+                    "objective_id": "cross_stage_owner_preservation_vs_switch",
+                    "uses": "protected Stage 4/5/6 ownership-seed context rows",
+                    "target": "preserve safe owners while identifying switch/abstain contexts",
+                    "runtime_ready": False,
+                },
+            ],
+            "minimum_data_before_benchmark": [
+                "at least 5 clean Stage 7 success controls and 5 clean Stage 7 hard negatives",
+                "explicit held-out split by source family and state id",
+                "PlanCapsule sequence fields represented outside Stage 7 or marked Stage7-only",
+                "no row marked as selector-training or runtime-authorization evidence",
+            ],
+            "metrics": [
+                "family-held-out top1/top3 conversion-positive ranking",
+                "hard-negative suppression",
+                "safe-owner preservation",
+                "plan entry/progress/exit/abort classification",
+                "first miss per sequence",
+                "stage7 held-out challenge result",
+            ],
+        },
+        "blocked_or_pending": [
+            {
+                "item": "stage4_first_move_contrast_sandbox",
+                "status": "review_ready_pending_explicit_approval"
+                if stage4_review_ready
+                else "not_ready",
+            },
+            {
+                "item": "stage7_diverse_clean_sampling_manifest",
+                "status": sampling_manifest.get("decision", {}).get("status"),
+            },
+            {
+                "item": "sequence_policy_benchmark",
+                "status": "blocked_until_clean_success_controls_or_cross_stage_evidence"
+                if not benchmark_ready
+                else "ready_non_causal",
+            },
+        ],
+        "decision": {
+            "status": status,
+            "recommended_next_step": (
+                "approve_stage7_diverse_clean_label_run_or_defer_to_cross_stage_plan_capsule_evidence"
+                if not clean_success_met
+                else "collect_cross_stage_plan_capsule_sequence_evidence"
+                if plan_capsule_stage7_only
+                else "implement_non_causal_sequence_policy_benchmark"
+            ),
+            "runtime_changes_allowed": False,
+            "selector_allowed": False,
+            "selector_training_allowed": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": False,
+        },
+    }
+
+
+def write_markdown(payload: dict[str, Any]) -> str:
+    readiness = payload["readiness"]
+    decision = payload["decision"]
+    lines = [
+        "# KRK Sequence-Policy Benchmark Design v0",
+        "",
+        f"Status: `{decision['status']}`",
+        "",
+        "This is a non-causal benchmark design/readiness artifact. It does not train a model, implement a sandbox, or authorize runtime behavior.",
+        "",
+        "## Readiness",
+        "",
+    ]
+    for key, value in readiness.items():
+        lines.append(f"- {key}: `{value}`")
+    lines.extend([
+        "",
+        "## Candidate Objectives",
+        "",
+    ])
+    for item in payload["benchmark_design"]["candidate_objectives"]:
+        lines.extend([
+            f"### {item['objective_id']}",
+            "",
+            f"- uses: {item['uses']}",
+            f"- target: {item['target']}",
+            f"- runtime_ready: `{item['runtime_ready']}`",
+            "",
+        ])
+    lines.extend([
+        "## Minimum Data Before Benchmark",
+        "",
+    ])
+    lines.extend(f"- {item}" for item in payload["benchmark_design"]["minimum_data_before_benchmark"])
+    lines.extend([
+        "",
+        "## Metrics",
+        "",
+    ])
+    lines.extend(f"- {item}" for item in payload["benchmark_design"]["metrics"])
+    lines.extend([
+        "",
+        "## Decision",
+        "",
+        f"- recommended_next_step: `{decision['recommended_next_step']}`",
+        "- runtime_changes_allowed: `false`",
+        "- selector_training_allowed: `false`",
+        "- Stage 7 promotion and Stage 8 training remain blocked.",
+    ])
+    return "\n".join(lines) + "\n"
+
+
+def main() -> None:
+    payload = build_payload()
+    OUTPUT_JSON.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+    OUTPUT_MD.write_text(write_markdown(payload), encoding="utf-8")
+    print(json.dumps({
+        "decision": payload["decision"]["status"],
+        "recommended_next_step": payload["decision"]["recommended_next_step"],
+    }, indent=2))
+
+
+if __name__ == "__main__":
+    main()
