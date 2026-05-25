@@ -225,6 +225,10 @@ def test_current_control_plane_gate_requires_explicit_choice():
         payload["current_state"]["sequence_policy_inputs"]
         == "sequence_policy_benchmark_inputs_blocked_pending_stage7_success_controls"
     )
+    assert (
+        payload["current_state"]["stage7_label_execution_readiness"]
+        == "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval"
+    )
 
 
 def test_current_control_plane_gate_fixture_preserves_no_implicit_approval():

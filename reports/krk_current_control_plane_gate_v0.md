@@ -7,6 +7,7 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - protected_stack: `retry1_stage5_6_active_manifest_validated`
 - stage4: `first_move_contrast_runtime_review_ready_pending_explicit_approval`
 - stage7: `heldout_clean_success_controls_insufficient_sampling_manifest_ready`
+- stage7_label_execution_readiness: `stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval`
 - protected_plan_window_evidence: `available_non_causal`
 - sequence_policy: `sequence_policy_benchmark_blocked_pending_clean_stage7_controls`
 - sequence_policy_inputs: `sequence_policy_benchmark_inputs_blocked_pending_stage7_success_controls`
@@ -33,7 +34,7 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 ### approve_stage7_diverse_clean_label_run
 
 - artifact: `reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.md`
-- status: `stage7_diverse_clean_sampling_manifest_review_ready_pending_explicit_approval`
+- status: `stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval`
 - allows: run 8 bounded h40 clean Stage 7 label jobs, 64 samples total
 - recommended_if: you want to fill the Stage 7 clean success-control gap before broader sequence-policy benchmarking
 - does_not_allow:

@@ -20,7 +20,7 @@
       "artifact": "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.md",
       "option_id": "approve_stage7_diverse_clean_label_run",
       "recommended_if": "you want to fill the Stage 7 clean success-control gap before broader sequence-policy benchmarking",
-      "status": "stage7_diverse_clean_sampling_manifest_review_ready_pending_explicit_approval",
+      "status": "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval",
       "what_it_allows": "run 8 bounded h40 clean Stage 7 label jobs, 64 samples total",
       "what_it_does_not_allow": [
         "runtime behavior",
@@ -53,6 +53,7 @@
     "sequence_policy_inputs": "sequence_policy_benchmark_inputs_blocked_pending_stage7_success_controls",
     "stage4": "first_move_contrast_runtime_review_ready_pending_explicit_approval",
     "stage7": "heldout_clean_success_controls_insufficient_sampling_manifest_ready",
+    "stage7_label_execution_readiness": "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval",
     "stage8": "blocked"
   },
   "decision": {
@@ -82,6 +83,7 @@
   "source_artifacts": [
     "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json",
     "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
+    "reports/structural_candidates/stage7_diverse_clean_sampling_execution_readiness_v0.json",
     "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.json",
     "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json",
     "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json",

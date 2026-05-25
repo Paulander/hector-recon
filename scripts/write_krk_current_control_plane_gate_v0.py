@@ -11,6 +11,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 STAGE4_PACKET = ROOT / "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json"
 STAGE7_MANIFEST = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json"
+STAGE7_EXECUTION_READINESS = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_execution_readiness_v0.json"
 SEQUENCE_PROBE = ROOT / "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.json"
 SEQUENCE_POLICY_DESIGN = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json"
 PROTECTED_PLAN_WINDOWS = ROOT / "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json"
@@ -48,6 +49,7 @@ def build_payload(
     *,
     stage4_packet: dict[str, Any] | None = None,
     stage7_manifest: dict[str, Any] | None = None,
+    stage7_execution_readiness: dict[str, Any] | None = None,
     sequence_probe: dict[str, Any] | None = None,
     sequence_policy_design: dict[str, Any] | None = None,
     protected_plan_windows: dict[str, Any] | None = None,
@@ -55,6 +57,7 @@ def build_payload(
 ) -> dict[str, Any]:
     stage4_packet = stage4_packet or _load(STAGE4_PACKET)
     stage7_manifest = stage7_manifest or _load(STAGE7_MANIFEST)
+    stage7_execution_readiness = stage7_execution_readiness or _load_optional(STAGE7_EXECUTION_READINESS)
     sequence_probe = sequence_probe or _load(SEQUENCE_PROBE)
     sequence_policy_design = sequence_policy_design or _load(SEQUENCE_POLICY_DESIGN)
     protected_plan_windows = protected_plan_windows or _load_optional(PROTECTED_PLAN_WINDOWS)
@@ -69,6 +72,7 @@ def build_payload(
         "source_artifacts": [
             "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json",
             "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
+            "reports/structural_candidates/stage7_diverse_clean_sampling_execution_readiness_v0.json",
             "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.json",
             "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json",
             "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json",
@@ -78,6 +82,10 @@ def build_payload(
             "protected_stack": "retry1_stage5_6_active_manifest_validated",
             "stage4": "first_move_contrast_runtime_review_ready_pending_explicit_approval",
             "stage7": "heldout_clean_success_controls_insufficient_sampling_manifest_ready",
+            "stage7_label_execution_readiness": stage7_execution_readiness.get("decision", {}).get(
+                "status",
+                "not_checked",
+            ),
             "protected_plan_window_evidence": "available_non_causal"
             if protected_plan_window_met
             else "missing_or_underpowered",
@@ -109,7 +117,10 @@ def build_payload(
             {
                 "option_id": "approve_stage7_diverse_clean_label_run",
                 "artifact": "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.md",
-                "status": stage7_manifest.get("decision", {}).get("status"),
+                "status": stage7_execution_readiness.get("decision", {}).get(
+                    "status",
+                    stage7_manifest.get("decision", {}).get("status"),
+                ),
                 "what_it_allows": "run 8 bounded h40 clean Stage 7 label jobs, 64 samples total",
                 "what_it_does_not_allow": [
                     "runtime behavior",

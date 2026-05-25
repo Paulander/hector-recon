@@ -22,6 +22,10 @@ _manifest = _load_module(
     "write_stage7_diverse_clean_sampling_manifest_v0",
     "scripts/write_stage7_diverse_clean_sampling_manifest_v0.py",
 )
+_readiness = _load_module(
+    "validate_stage7_diverse_clean_sampling_execution_readiness_v0",
+    "scripts/validate_stage7_diverse_clean_sampling_execution_readiness_v0.py",
+)
 
 
 def _read_report(path: str) -> dict:
@@ -116,3 +120,68 @@ def test_stage7_diverse_clean_sampling_manifest_fixture_uses_active_topology():
     assert payload["current_gap"]["clean_sequence_success_controls_have"] == 2
     assert payload["current_gap"]["clean_sequence_hard_negatives_have"] == 8
     assert payload["decision"]["implementation_authorized_by_this_manifest"] is False
+
+
+def test_stage7_diverse_clean_sampling_execution_readiness_still_requires_approval():
+    payload = _read_report(
+        "reports/structural_candidates/stage7_diverse_clean_sampling_execution_readiness_v0.json"
+    )
+
+    assert payload["schema_version"] == "stage7_diverse_clean_sampling_execution_readiness.v0"
+    assert payload["causal_status"] == "non_causal_execution_readiness_check"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_score_changes"] is False
+    assert payload["runtime_direct_routing"] is False
+    assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["gameplay_topology_mutation"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["summary"]["job_count"] == 8
+    assert payload["summary"]["jobs_passing_readiness"] == 8
+    assert payload["summary"]["all_jobs_pass_readiness"] is True
+    assert payload["summary"]["max_total_samples"] == 64
+    assert payload["summary"]["max_horizon"] == 40
+    assert payload["summary"]["manifest_blocks_execution"] is True
+    assert payload["summary"]["execution_authorized_by_this_report"] is False
+    assert payload["summary"]["stage7_training_row_count"] == 0
+    assert (
+        payload["decision"]["status"]
+        == "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval"
+    )
+    assert payload["decision"]["execution_authorized_by_this_report"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["label_run_allowed"] is False
+    assert payload["decision"]["stage7_promotion_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
+
+
+def test_stage7_diverse_clean_sampling_readiness_fixture_detects_forbidden_flag():
+    manifest = {
+        "decision": {"implementation_authorized_by_this_manifest": False},
+        "summary": {"label_run_allowed_by_this_manifest": False},
+        "jobs": [
+            {
+                "job_id": "bad",
+                "command": [
+                    "uv",
+                    "run",
+                    "python",
+                    "scripts/test_krk_landmark_progress.py",
+                    "--enable-stage7-plan-capsule",
+                ],
+                "forbidden_flags": ["--enable-stage7-plan-capsule"],
+                "topology": "reports/current_agent_brief.md",
+                "json_output": "reports/nonexistent_stage7_test_output.json",
+                "samples": 8,
+                "playout_max_plies": 40,
+            }
+        ],
+    }
+
+    payload = _readiness.build_payload(manifest=manifest)
+
+    assert payload["summary"]["all_jobs_pass_readiness"] is False
+    assert payload["job_checks"][0]["forbidden_flag_hits"] == ["--enable-stage7-plan-capsule"]
+    assert payload["decision"]["status"] == "stage7_diverse_clean_sampling_execution_readiness_failed"
+    assert payload["decision"]["label_run_allowed"] is False
