@@ -131,6 +131,12 @@ def build_payload(
             "stage7_label_runner_skipped_existing_output_count": stage7_runner.get(
                 "summary", {}
             ).get("skipped_existing_output_count"),
+            "stage7_label_runner_job_timeout_seconds": stage7_runner.get(
+                "summary", {}
+            ).get("job_timeout_seconds"),
+            "stage7_label_runner_timed_out_job_count": stage7_runner.get(
+                "summary", {}
+            ).get("timed_out_job_count"),
             "stage7_post_label_outcome": stage7_post_label_outcome.get("decision", {}).get(
                 "status",
                 "not_checked",
@@ -178,6 +184,12 @@ def build_payload(
                     "execution_readiness_recomputed_live": (
                         stage7_runner.get("summary", {}).get("execution_readiness_source")
                         == "live_recomputed"
+                    ),
+                    "per_job_timeout_seconds": stage7_runner.get("summary", {}).get(
+                        "job_timeout_seconds"
+                    ),
+                    "timed_out_job_count": stage7_runner.get("summary", {}).get(
+                        "timed_out_job_count"
                     ),
                     "stage7_training_rows": 0,
                 },

@@ -44,6 +44,8 @@
 - execution_readiness_status: `stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval`
 - execution_readiness_jobs_passing: `8`
 - invalid_existing_output_count: `0`
+- job_timeout_seconds: `900`
+- timed_out_job_count: `0`
 - integration_status: `stage7_diverse_clean_sampling_outputs_pending`
 - outputs_present_count: `0`
 - combined_success_controls: `2`

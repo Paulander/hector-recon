@@ -195,6 +195,12 @@ def build_payload() -> dict[str, Any]:
             "sampling_runner_invalid_existing_output_count": runner.get("summary", {}).get(
                 "invalid_existing_output_count"
             ),
+            "sampling_runner_job_timeout_seconds": runner.get("summary", {}).get(
+                "job_timeout_seconds"
+            ),
+            "sampling_runner_timed_out_job_count": runner.get("summary", {}).get(
+                "timed_out_job_count"
+            ),
             "sampling_outputs_status": integration.get("decision", {}).get("status"),
         },
         "stage8": {
@@ -288,6 +294,8 @@ def build_payload() -> dict[str, Any]:
             "invalid_existing_output_count": runner.get("summary", {}).get(
                 "invalid_existing_output_count"
             ),
+            "job_timeout_seconds": runner.get("summary", {}).get("job_timeout_seconds"),
+            "timed_out_job_count": runner.get("summary", {}).get("timed_out_job_count"),
             "integration_status": integration.get("decision", {}).get("status"),
             "outputs_present_count": stage7_summary.get("outputs_present_count"),
             "combined_success_controls": stage7_success_controls,
@@ -394,6 +402,8 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- execution_readiness_status: `{stage7['execution_readiness_status']}`",
             f"- execution_readiness_jobs_passing: `{stage7['execution_readiness_jobs_passing']}`",
             f"- invalid_existing_output_count: `{stage7['invalid_existing_output_count']}`",
+            f"- job_timeout_seconds: `{stage7['job_timeout_seconds']}`",
+            f"- timed_out_job_count: `{stage7['timed_out_job_count']}`",
             f"- integration_status: `{stage7['integration_status']}`",
             f"- outputs_present_count: `{stage7['outputs_present_count']}`",
             f"- combined_success_controls: `{stage7['combined_success_controls']}`",

@@ -73,6 +73,8 @@ def test_full_suite_readiness_identifies_current_gate():
     )
     assert stage7["execution_readiness_jobs_passing"] == 8
     assert stage7["invalid_existing_output_count"] == 0
+    assert stage7["job_timeout_seconds"] == 900
+    assert stage7["timed_out_job_count"] == 0
     assert stage7["overwrite_existing_outputs"] is False
     assert stage7["success_controls_ready"] is False
     assert stage7["combined_success_controls"] < stage7["success_controls_required"]
@@ -100,6 +102,7 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["stage_status"]["stage7"]["ready_for_promotion"] is False
     assert payload["stage_status"]["stage7"]["sampling_runner_invalid_existing_output_count"] == 0
+    assert payload["stage_status"]["stage7"]["sampling_runner_timed_out_job_count"] == 0
     assert (
         payload["stage_status"]["stage7"]["sampling_runner_execution_readiness_source"]
         == "live_recomputed"

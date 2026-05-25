@@ -9,12 +9,14 @@
     "stage7_execution_readiness_source": "live_recomputed",
     "stage7_execution_readiness_status": "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval",
     "stage7_invalid_existing_output_count": 0,
+    "stage7_job_timeout_seconds": 900,
     "stage7_output_validation_status": "stage7_diverse_clean_sampling_outputs_validation_pending",
     "stage7_overwrite_existing_outputs": false,
     "stage7_processed_job_count": 0,
     "stage7_skipped_existing_output_count": 0,
     "stage7_success_controls": 2,
     "stage7_success_controls_required": 5,
+    "stage7_timed_out_job_count": 0,
     "stage8_training_ready": false
   },
   "decision": {
@@ -41,13 +43,15 @@
       "horizon": "h40",
       "invalid_existing_outputs_block_without_overwrite": true,
       "max_jobs": 8,
+      "per_job_timeout_seconds": 900,
       "resume_safe": true,
       "runtime_behavior_changed": false,
       "skip_existing_outputs_by_default": true,
       "stage": "stage7_held_out_evidence_only",
       "stage7_promotion_allowed": false,
       "stage7_training_rows": 0,
-      "stage8_training_allowed": false
+      "stage8_training_allowed": false,
+      "timed_out_job_count": 0
     },
     "status": "ready_pending_explicit_approval"
   },

@@ -322,6 +322,7 @@
     "failed_job_count": 0,
     "invalid_existing_output_count": 0,
     "job_count": 8,
+    "job_timeout_seconds": 900,
     "max_jobs": null,
     "output_validation_status": "stage7_diverse_clean_sampling_outputs_validation_pending",
     "overwrite_existing_outputs": false,
@@ -330,6 +331,7 @@
     "refresh_after_run_requested": false,
     "runtime_authorization_row_count": 0,
     "skipped_existing_output_count": 0,
-    "stage7_training_row_count": 0
+    "stage7_training_row_count": 0,
+    "timed_out_job_count": 0
   }
 }

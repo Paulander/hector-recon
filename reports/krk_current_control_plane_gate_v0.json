@@ -23,9 +23,11 @@
       "safety_scope": {
         "execution_readiness_recomputed_live": true,
         "invalid_existing_outputs_block_without_overwrite": true,
+        "per_job_timeout_seconds": 900,
         "resume_safe": true,
         "skip_existing_outputs_by_default": true,
-        "stage7_training_rows": 0
+        "stage7_training_rows": 0,
+        "timed_out_job_count": 0
       },
       "status": "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval",
       "what_it_allows": "run 8 bounded h40 clean Stage 7 label jobs, 64 samples total",
@@ -68,9 +70,11 @@
     "stage7_label_runner_execution_readiness_source": "live_recomputed",
     "stage7_label_runner_execution_readiness_status": "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval",
     "stage7_label_runner_invalid_existing_output_count": 0,
+    "stage7_label_runner_job_timeout_seconds": 900,
     "stage7_label_runner_output_validation_status": "stage7_diverse_clean_sampling_outputs_validation_pending",
     "stage7_label_runner_processed_job_count": 0,
     "stage7_label_runner_skipped_existing_output_count": 0,
+    "stage7_label_runner_timed_out_job_count": 0,
     "stage7_post_label_outcome": "post_label_outcome_pending_explicit_label_outputs",
     "stage8": "blocked"
   },

@@ -13,6 +13,7 @@ This is an approval-gated label-run wrapper. By default it is dry-run only. It d
 - failed_job_count: `0`
 - dry_run: `True`
 - max_jobs: `None`
+- job_timeout_seconds: `900`
 - overwrite_existing_outputs: `False`
 - execution_readiness_source: `live_recomputed`
 - execution_readiness_status: `stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval`
@@ -20,6 +21,7 @@ This is an approval-gated label-run wrapper. By default it is dry-run only. It d
 - execution_readiness_all_jobs_pass: `True`
 - output_validation_status: `stage7_diverse_clean_sampling_outputs_validation_pending`
 - invalid_existing_output_count: `0`
+- timed_out_job_count: `0`
 - refresh_after_run_requested: `False`
 - refresh_after_run_performed: `False`
 - stage7_training_row_count: `0`

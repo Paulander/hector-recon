@@ -29,6 +29,7 @@ OUTPUT_VALIDATION_SCRIPT = ROOT / "scripts/validate_stage7_diverse_clean_samplin
 REFRESH_SCRIPT = ROOT / "scripts/refresh_krk_sequence_policy_pipeline_v0.py"
 
 SCHEMA_VERSION = "stage7_diverse_clean_sampling_runner.v0"
+DEFAULT_JOB_TIMEOUT_SECONDS = 900
 
 COMMON_FALSE_FLAGS = {
     "runtime_behavior_changed": False,
@@ -108,7 +109,12 @@ def _invalid_existing_output_count(output_validation: dict[str, Any] | None) -> 
     )
 
 
-def _run_job(job: dict[str, Any], *, overwrite_existing_outputs: bool = False) -> dict[str, Any]:
+def _run_job(
+    job: dict[str, Any],
+    *,
+    overwrite_existing_outputs: bool = False,
+    job_timeout_seconds: int = DEFAULT_JOB_TIMEOUT_SECONDS,
+) -> dict[str, Any]:
     start = time.time()
     output = ROOT / str(job.get("json_output"))
     if output.exists() and not overwrite_existing_outputs:
@@ -119,16 +125,39 @@ def _run_job(job: dict[str, Any], *, overwrite_existing_outputs: bool = False) -
             "json_output": job.get("json_output"),
             "json_output_exists": True,
             "skipped_existing_output": True,
+            "timed_out": False,
             "stdout_tail": "",
             "stderr_tail": "",
         }
-    completed = subprocess.run(  # noqa: S603 - reviewed manifest command, no shell.
-        job["command"],
-        cwd=ROOT,
-        check=False,
-        text=True,
-        capture_output=True,
-    )
+    try:
+        completed = subprocess.run(  # noqa: S603 - reviewed manifest command, no shell.
+            job["command"],
+            cwd=ROOT,
+            check=False,
+            text=True,
+            capture_output=True,
+            timeout=job_timeout_seconds,
+        )
+    except subprocess.TimeoutExpired as exc:
+        duration = time.time() - start
+        stdout = exc.stdout or ""
+        stderr = exc.stderr or ""
+        if isinstance(stdout, bytes):
+            stdout = stdout.decode(errors="replace")
+        if isinstance(stderr, bytes):
+            stderr = stderr.decode(errors="replace")
+        return {
+            "job_id": job.get("job_id"),
+            "returncode": 124,
+            "duration_seconds": round(duration, 3),
+            "json_output": job.get("json_output"),
+            "json_output_exists": output.exists(),
+            "skipped_existing_output": False,
+            "timed_out": True,
+            "timeout_seconds": job_timeout_seconds,
+            "stdout_tail": str(stdout)[-1200:],
+            "stderr_tail": str(stderr)[-1200:],
+        }
     duration = time.time() - start
     return {
         "job_id": job.get("job_id"),
@@ -137,6 +166,8 @@ def _run_job(job: dict[str, Any], *, overwrite_existing_outputs: bool = False) -
         "json_output": job.get("json_output"),
         "json_output_exists": output.exists(),
         "skipped_existing_output": False,
+        "timed_out": False,
+        "timeout_seconds": job_timeout_seconds,
         "stdout_tail": completed.stdout[-1200:],
         "stderr_tail": completed.stderr[-1200:],
     }
@@ -172,6 +203,7 @@ def build_payload(
     refresh_after_run: bool = False,
     overwrite_existing_outputs: bool = False,
     output_validation: dict[str, Any] | None = None,
+    job_timeout_seconds: int = DEFAULT_JOB_TIMEOUT_SECONDS,
 ) -> dict[str, Any]:
     manifest = _load(MANIFEST)
     live_readiness = _run_execution_readiness(manifest)
@@ -216,13 +248,18 @@ def build_payload(
     if execute and not blockers:
         for job in jobs:
             executed_jobs.append(
-                _run_job(job, overwrite_existing_outputs=overwrite_existing_outputs)
+                _run_job(
+                    job,
+                    overwrite_existing_outputs=overwrite_existing_outputs,
+                    job_timeout_seconds=job_timeout_seconds,
+                )
             )
     skipped_jobs = [job for job in executed_jobs if job.get("skipped_existing_output")]
     actually_executed_jobs = [
         job for job in executed_jobs if not job.get("skipped_existing_output")
     ]
     failed_jobs = [job for job in executed_jobs if job.get("returncode") != 0]
+    timed_out_jobs = [job for job in executed_jobs if job.get("timed_out")]
     refresh_result = None
     if refresh_after_run and execute and not blockers and not failed_jobs:
         refresh_result = _run_passive_refresh()
@@ -255,6 +292,7 @@ def build_payload(
             "failed_job_count": len(failed_jobs),
             "dry_run": not execute,
             "max_jobs": max_jobs,
+            "job_timeout_seconds": job_timeout_seconds,
             "overwrite_existing_outputs": overwrite_existing_outputs,
             "execution_readiness_source": readiness_source,
             "execution_readiness_status": readiness.get("decision", {}).get("status"),
@@ -266,6 +304,7 @@ def build_payload(
             ),
             "output_validation_status": output_validation_status,
             "invalid_existing_output_count": invalid_output_count,
+            "timed_out_job_count": len(timed_out_jobs),
             "refresh_after_run_requested": refresh_after_run,
             "refresh_after_run_performed": refresh_result is not None,
             "stage7_training_row_count": 0,
@@ -347,6 +386,12 @@ def main() -> None:
     )
     parser.add_argument("--max-jobs", type=int, default=None)
     parser.add_argument(
+        "--job-timeout-seconds",
+        type=int,
+        default=DEFAULT_JOB_TIMEOUT_SECONDS,
+        help="Maximum wall-clock seconds per reviewed label job before it is marked timed out.",
+    )
+    parser.add_argument(
         "--overwrite-existing-outputs",
         action="store_true",
         help="Rerun jobs even when their reviewed JSON output already exists.",
@@ -362,6 +407,7 @@ def main() -> None:
         max_jobs=args.max_jobs,
         refresh_after_run=args.refresh_after_run,
         overwrite_existing_outputs=args.overwrite_existing_outputs,
+        job_timeout_seconds=args.job_timeout_seconds,
     )
     OUTPUT_JSON.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
     OUTPUT_MD.write_text(write_markdown(payload), encoding="utf-8")

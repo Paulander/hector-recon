@@ -3,6 +3,7 @@
 
 import importlib.util
 import json
+import subprocess
 from pathlib import Path
 
 
@@ -423,6 +424,8 @@ def test_stage7_diverse_clean_sampling_runner_defaults_to_dry_run():
     assert payload["summary"]["job_count"] == 8
     assert payload["summary"]["processed_job_count"] == 0
     assert payload["summary"]["executed_job_count"] == 0
+    assert payload["summary"]["job_timeout_seconds"] == 900
+    assert payload["summary"]["timed_out_job_count"] == 0
     assert payload["summary"]["refresh_after_run_requested"] is False
     assert payload["summary"]["refresh_after_run_performed"] is False
     assert payload["summary"]["stage7_training_row_count"] == 0
@@ -545,6 +548,7 @@ def test_stage7_diverse_clean_sampling_runner_skips_existing_outputs_by_default(
     assert payload["summary"]["executed_job_count"] == 0
     assert payload["summary"]["skipped_existing_output_count"] == 1
     assert payload["summary"]["failed_job_count"] == 0
+    assert payload["summary"]["timed_out_job_count"] == 0
     assert payload["summary"]["overwrite_existing_outputs"] is False
     assert payload["commands"][0]["would_execute"] is False
     assert payload["commands"][0]["would_skip_existing_output"] is True
@@ -628,3 +632,73 @@ def test_stage7_diverse_clean_sampling_runner_blocks_invalid_existing_outputs_wi
     assert payload["commands"][0]["would_execute"] is False
     assert payload["decision"]["status"] == "stage7_diverse_clean_sampling_runner_blocked"
     assert payload["decision"]["label_run_allowed"] is False
+
+
+def test_stage7_diverse_clean_sampling_runner_marks_job_timeout(tmp_path, monkeypatch):
+    manifest_path = tmp_path / "manifest.json"
+    readiness_path = tmp_path / "readiness.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "decision": {
+                    "status": "stage7_diverse_clean_sampling_manifest_review_ready_pending_explicit_approval",
+                    "runtime_changes_allowed": False,
+                    "stage7_promotion_allowed": False,
+                    "stage8_training_allowed": False,
+                },
+                "summary": {"label_run_allowed_by_this_manifest": False},
+                "jobs": [
+                    {
+                        "job_id": "fixture.timeout",
+                        "command": ["uv", "run", "python", "scripts/slow.py"],
+                        "json_output": "timeout.json",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    readiness = {
+        "decision": {
+            "status": "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval"
+        },
+        "summary": {"all_jobs_pass_readiness": True, "jobs_passing_readiness": 1},
+    }
+    readiness_path.write_text(json.dumps(readiness), encoding="utf-8")
+
+    def fake_run(*args, **kwargs):
+        raise subprocess.TimeoutExpired(
+            cmd=kwargs.get("args", args[0] if args else None),
+            timeout=kwargs.get("timeout"),
+            output="partial out",
+            stderr="partial err",
+        )
+
+    monkeypatch.setattr(_runner, "ROOT", tmp_path)
+    monkeypatch.setattr(_runner, "MANIFEST", manifest_path)
+    monkeypatch.setattr(_runner, "READINESS", readiness_path)
+    monkeypatch.setattr(_runner, "_run_execution_readiness", lambda manifest: readiness)
+    monkeypatch.setattr(_runner.subprocess, "run", fake_run)
+
+    payload = _runner.build_payload(
+        execute=True,
+        max_jobs=1,
+        job_timeout_seconds=1,
+        output_validation={"decision": {"status": "stage7_outputs_pending"}},
+    )
+
+    assert payload["summary"]["processed_job_count"] == 1
+    assert payload["summary"]["executed_job_count"] == 1
+    assert payload["summary"]["failed_job_count"] == 1
+    assert payload["summary"]["timed_out_job_count"] == 1
+    assert payload["summary"]["job_timeout_seconds"] == 1
+    assert payload["executed_jobs"][0]["timed_out"] is True
+    assert payload["executed_jobs"][0]["returncode"] == 124
+    assert payload["executed_jobs"][0]["timeout_seconds"] == 1
+    assert payload["executed_jobs"][0]["stdout_tail"] == "partial out"
+    assert payload["executed_jobs"][0]["stderr_tail"] == "partial err"
+    assert (
+        payload["decision"]["status"]
+        == "stage7_diverse_clean_sampling_runner_executed_with_failures"
+    )
+    assert payload["post_run_refresh"] is None

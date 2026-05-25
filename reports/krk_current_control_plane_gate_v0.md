@@ -18,6 +18,8 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - stage7_label_runner_processed_job_count: `0`
 - stage7_label_runner_executed_job_count: `0`
 - stage7_label_runner_skipped_existing_output_count: `0`
+- stage7_label_runner_job_timeout_seconds: `900`
+- stage7_label_runner_timed_out_job_count: `0`
 - stage7_post_label_outcome: `post_label_outcome_pending_explicit_label_outputs`
 - protected_plan_window_evidence: `available_non_causal`
 - sequence_policy: `sequence_policy_benchmark_blocked_pending_clean_stage7_controls`
@@ -53,6 +55,8 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
   - skip_existing_outputs_by_default: `True`
   - invalid_existing_outputs_block_without_overwrite: `True`
   - execution_readiness_recomputed_live: `True`
+  - per_job_timeout_seconds: `900`
+  - timed_out_job_count: `0`
   - stage7_training_rows: `0`
 - does_not_allow:
   - runtime behavior

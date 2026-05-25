@@ -68,6 +68,8 @@ def build_payload() -> dict[str, Any]:
             "stage7_invalid_existing_output_count": stage7_gate.get(
                 "invalid_existing_output_count"
             ),
+            "stage7_job_timeout_seconds": stage7_gate.get("job_timeout_seconds"),
+            "stage7_timed_out_job_count": stage7_gate.get("timed_out_job_count"),
             "stage7_overwrite_existing_outputs": stage7_gate.get(
                 "overwrite_existing_outputs"
             ),
@@ -101,6 +103,8 @@ def build_payload() -> dict[str, Any]:
                 "execution_readiness_recomputed_live": (
                     stage7_gate.get("execution_readiness_source") == "live_recomputed"
                 ),
+                "per_job_timeout_seconds": stage7_gate.get("job_timeout_seconds"),
+                "timed_out_job_count": stage7_gate.get("timed_out_job_count"),
                 "runtime_behavior_changed": False,
                 "stage7_training_rows": 0,
                 "stage7_promotion_allowed": False,

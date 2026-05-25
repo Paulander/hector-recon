@@ -53,6 +53,8 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     assert primary["scope"]["skip_existing_outputs_by_default"] is True
     assert primary["scope"]["invalid_existing_outputs_block_without_overwrite"] is True
     assert primary["scope"]["execution_readiness_recomputed_live"] is True
+    assert primary["scope"]["per_job_timeout_seconds"] == 900
+    assert primary["scope"]["timed_out_job_count"] == 0
     assert primary["scope"]["stage7_training_rows"] == 0
     assert primary["scope"]["stage7_promotion_allowed"] is False
     assert primary["scope"]["stage8_training_allowed"] is False
@@ -67,6 +69,8 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     )
     assert payload["current_state"]["stage7_execution_readiness_jobs_passing"] == 8
     assert payload["current_state"]["stage7_invalid_existing_output_count"] == 0
+    assert payload["current_state"]["stage7_job_timeout_seconds"] == 900
+    assert payload["current_state"]["stage7_timed_out_job_count"] == 0
     assert payload["current_state"]["stage7_overwrite_existing_outputs"] is False
     assert payload["current_state"]["stage7_processed_job_count"] == 0
     assert payload["current_state"]["stage7_executed_job_count"] == 0
