@@ -215,8 +215,12 @@ def test_current_control_plane_gate_requires_explicit_choice():
     assert option_ids == {
         "approve_stage4_first_move_contrast_sandbox",
         "approve_stage7_diverse_clean_label_run",
-        "defer_both_and_design_broader_sequence_policy",
+        "defer_runtime_and_labels_review_cross_stage_plan_capsule_evidence",
     }
+    assert (
+        payload["current_state"]["sequence_policy"]
+        == "sequence_policy_benchmark_blocked_pending_clean_stage7_controls"
+    )
 
 
 def test_current_control_plane_gate_fixture_preserves_no_implicit_approval():
@@ -224,8 +228,13 @@ def test_current_control_plane_gate_fixture_preserves_no_implicit_approval():
         stage4_packet={"decision": {"status": "s4"}},
         stage7_manifest={"decision": {"status": "s7"}},
         sequence_probe={"decision": {"status": "seq"}},
+        sequence_policy_design={"decision": {"status": "design"}},
     )
 
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False
     assert payload["recommendation"]["preferred_next_if_no_user_approval"] == "stop_at_gate_and_report"
+    assert (
+        payload["recommendation"]["preferred_next_if_user_defers_both"]
+        == "review_cross_stage_plan_capsule_sequence_evidence_requirements"
+    )

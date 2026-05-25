@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 STAGE4_PACKET = ROOT / "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json"
 STAGE7_MANIFEST = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json"
 SEQUENCE_PROBE = ROOT / "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.json"
+SEQUENCE_POLICY_DESIGN = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json"
 OUTPUT_JSON = ROOT / "reports/krk_current_control_plane_gate_v0.json"
 OUTPUT_MD = ROOT / "reports/krk_current_control_plane_gate_v0.md"
 
@@ -40,10 +41,12 @@ def build_payload(
     stage4_packet: dict[str, Any] | None = None,
     stage7_manifest: dict[str, Any] | None = None,
     sequence_probe: dict[str, Any] | None = None,
+    sequence_policy_design: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     stage4_packet = stage4_packet or _load(STAGE4_PACKET)
     stage7_manifest = stage7_manifest or _load(STAGE7_MANIFEST)
     sequence_probe = sequence_probe or _load(SEQUENCE_PROBE)
+    sequence_policy_design = sequence_policy_design or _load(SEQUENCE_POLICY_DESIGN)
     return {
         "schema_version": SCHEMA_VERSION,
         "causal_status": "non_causal_current_gate_summary",
@@ -52,11 +55,13 @@ def build_payload(
             "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json",
             "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
             "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.json",
+            "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json",
         ],
         "current_state": {
             "protected_stack": "retry1_stage5_6_active_manifest_validated",
             "stage4": "first_move_contrast_runtime_review_ready_pending_explicit_approval",
             "stage7": "heldout_clean_success_controls_insufficient_sampling_manifest_ready",
+            "sequence_policy": sequence_policy_design.get("decision", {}).get("status"),
             "stage8": "blocked",
             "runtime_selector": "blocked",
         },
@@ -92,23 +97,30 @@ def build_payload(
                 "recommended_if": "you want to fill the Stage 7 clean success-control gap before broader sequence-policy benchmarking",
             },
             {
-                "option_id": "defer_both_and_design_broader_sequence_policy",
-                "artifact": "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.md",
-                "status": sequence_probe.get("decision", {}).get("status"),
-                "what_it_allows": "non-causal design only",
+                "option_id": "defer_runtime_and_labels_review_cross_stage_plan_capsule_evidence",
+                "artifact": "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.md",
+                "status": sequence_policy_design.get("decision", {}).get("status"),
+                "what_it_allows": "non-causal cross-stage PlanCapsule/source evidence design only",
                 "what_it_does_not_allow": [
                     "runtime selector",
+                    "label execution",
                     "Stage 7 promotion",
                     "Stage 8 training",
                 ],
-                "recommended_if": "you prefer architecture design before any more runtime or label runs",
+                "recommended_if": "you want to avoid both current gates and only design further non-causal evidence",
             },
         ],
         "recommendation": {
             "preferred_next_if_no_user_approval": "stop_at_gate_and_report",
             "preferred_next_if_user_approves_runtime": "implement_stage4_default_off_first_move_contrast_sandbox",
             "preferred_next_if_user_approves_labels": "run_stage7_diverse_clean_sampling_manifest_and_recover_controls",
-            "reason": "All remaining immediate progress crosses either a runtime sandbox approval gate or a Stage 7 label-run approval gate.",
+            "preferred_next_if_user_defers_both": "review_cross_stage_plan_capsule_sequence_evidence_requirements",
+            "reason": (
+                "The broader sequence-policy design is also blocked on clean Stage 7 "
+                "success controls or cross-stage PlanCapsule evidence; immediate "
+                "empirical progress crosses either a runtime sandbox approval gate "
+                "or a Stage 7 label-run approval gate."
+            ),
         },
         "decision": {
             "status": "krk_control_plane_waiting_on_explicit_gate_choice",
