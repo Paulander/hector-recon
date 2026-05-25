@@ -19,6 +19,9 @@
 - stage7_output_validation_status: `stage7_diverse_clean_sampling_outputs_validation_pending`
 - stage7_invalid_existing_output_count: `0`
 - stage7_overwrite_existing_outputs: `False`
+- stage7_processed_job_count: `0`
+- stage7_executed_job_count: `0`
+- stage7_skipped_existing_output_count: `0`
 
 ## Why Work Stops At This Gate
 
@@ -32,6 +35,10 @@
 - status: `ready_pending_explicit_approval`
 - purpose: Fill held-out Stage 7 clean success controls so the sequence-policy benchmark can run.
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_stage7_diverse_clean_sampling_jobs_v0.py --execute-reviewed-label-run --refresh-after-run`
+- resume_safe: `True`
+- skip_existing_outputs_by_default: `True`
+- invalid_existing_outputs_block_without_overwrite: `True`
+- stage7_training_rows: `0`
 - approval_required: `True`
 - implementation_allowed_by_this_packet: `False`
 

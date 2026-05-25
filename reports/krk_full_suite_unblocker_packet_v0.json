@@ -4,9 +4,12 @@
     "protected_stack_ready": true,
     "sequence_policy_benchmark_ready": false,
     "sequence_policy_inputs_ready": false,
+    "stage7_executed_job_count": 0,
     "stage7_invalid_existing_output_count": 0,
     "stage7_output_validation_status": "stage7_diverse_clean_sampling_outputs_validation_pending",
     "stage7_overwrite_existing_outputs": false,
+    "stage7_processed_job_count": 0,
+    "stage7_skipped_existing_output_count": 0,
     "stage7_success_controls": 2,
     "stage7_success_controls_required": 5,
     "stage8_training_ready": false

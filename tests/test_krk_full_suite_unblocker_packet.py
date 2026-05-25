@@ -61,6 +61,9 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     )
     assert payload["current_state"]["stage7_invalid_existing_output_count"] == 0
     assert payload["current_state"]["stage7_overwrite_existing_outputs"] is False
+    assert payload["current_state"]["stage7_processed_job_count"] == 0
+    assert payload["current_state"]["stage7_executed_job_count"] == 0
+    assert payload["current_state"]["stage7_skipped_existing_output_count"] == 0
 
 
 def test_unblocker_packet_keeps_stage4_as_secondary_gate():
@@ -78,5 +81,7 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
     rendered = _packet.write_markdown(payload)
 
     assert "--execute-reviewed-label-run --refresh-after-run" in rendered
+    assert "resume_safe: `True`" in rendered
+    assert "invalid_existing_outputs_block_without_overwrite: `True`" in rendered
     assert "implementation_allowed_by_this_packet: `False`" in rendered
     assert payload["primary_unblocker"]["implementation_allowed_by_this_packet"] is False

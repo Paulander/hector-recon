@@ -240,7 +240,7 @@ Current Stage 7 diverse-clean runner status:
 stage7_diverse_clean_sampling_runner_dry_run_ready
 ```
 
-Meaning: the approval-gated runner is dry-run ready and resume-safe. If a later explicitly approved label run is interrupted after writing some reviewed outputs, existing output files are skipped by default rather than overwritten. Overwriting requires the separate `--overwrite-existing-outputs` flag. This runner still does not authorize labels by itself and does not authorize runtime behavior, selector training, Stage 7 promotion, or Stage 8 training.
+Meaning: the approval-gated runner is dry-run ready and resume-safe. If a later explicitly approved label run is interrupted after writing some reviewed outputs, existing output files are skipped by default rather than overwritten. Overwriting requires the separate `--overwrite-existing-outputs` flag. The runner preflights passive output validation and blocks execution if invalid existing outputs are present without explicit overwrite/cleanup. Runner counts distinguish `processed_job_count` from actually-run `executed_job_count` and `skipped_existing_output_count`, so resumed runs remain auditable. This runner still does not authorize labels by itself and does not authorize runtime behavior, selector training, Stage 7 promotion, or Stage 8 training.
 
 Current Stage 4 caveat unblocker packet:
 

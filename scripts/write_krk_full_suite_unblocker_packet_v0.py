@@ -62,6 +62,11 @@ def build_payload() -> dict[str, Any]:
             "stage7_overwrite_existing_outputs": stage7_gate.get(
                 "overwrite_existing_outputs"
             ),
+            "stage7_processed_job_count": stage7_gate.get("processed_job_count"),
+            "stage7_executed_job_count": stage7_gate.get("executed_job_count"),
+            "stage7_skipped_existing_output_count": stage7_gate.get(
+                "skipped_existing_output_count"
+            ),
         },
         "why_agent_stops_here": [
             "The next highest-value action creates new Stage 7 h40 labels or implements a reviewed runtime sandbox.",
@@ -148,6 +153,9 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- stage7_output_validation_status: `{state['stage7_output_validation_status']}`",
         f"- stage7_invalid_existing_output_count: `{state['stage7_invalid_existing_output_count']}`",
         f"- stage7_overwrite_existing_outputs: `{state['stage7_overwrite_existing_outputs']}`",
+        f"- stage7_processed_job_count: `{state['stage7_processed_job_count']}`",
+        f"- stage7_executed_job_count: `{state['stage7_executed_job_count']}`",
+        f"- stage7_skipped_existing_output_count: `{state['stage7_skipped_existing_output_count']}`",
         "",
         "## Why Work Stops At This Gate",
         "",
@@ -163,6 +171,10 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- status: `{primary['status']}`",
             f"- purpose: {primary['purpose']}",
             f"- command_if_explicitly_approved: `{primary['command_if_explicitly_approved']}`",
+            f"- resume_safe: `{primary['scope']['resume_safe']}`",
+            f"- skip_existing_outputs_by_default: `{primary['scope']['skip_existing_outputs_by_default']}`",
+            f"- invalid_existing_outputs_block_without_overwrite: `{primary['scope']['invalid_existing_outputs_block_without_overwrite']}`",
+            f"- stage7_training_rows: `{primary['scope']['stage7_training_rows']}`",
             f"- approval_required: `{primary['approval_required']}`",
             f"- implementation_allowed_by_this_packet: `{primary['implementation_allowed_by_this_packet']}`",
             "",
