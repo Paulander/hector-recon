@@ -143,6 +143,7 @@ def build_payload() -> dict[str, Any]:
         "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
     )
     stage8_review = _load_json("reports/krk_stage8_training_readiness_review_v0.json")
+    post_label_review = _load_json("reports/krk_stage7_post_label_outcome_review_v0.json")
 
     all_boundaries_preserved = all(
         not result["runtime_changes_allowed"]
@@ -202,6 +203,12 @@ def build_payload() -> dict[str, Any]:
             "unblocker_status": unblocker.get("decision", {}).get("status"),
             "stage8_training_readiness_status": stage8_review.get("decision", {}).get(
                 "status"
+            ),
+            "stage7_post_label_outcome_status": post_label_review.get("decision", {}).get(
+                "status"
+            ),
+            "stage7_post_label_outcome_next_step": post_label_review.get("decision", {}).get(
+                "recommended_next_step"
             ),
         },
         "decision": {

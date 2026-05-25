@@ -103,6 +103,14 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         == "stage8_training_blocked_pending_stage7_sequence_gate"
     )
     assert (
+        payload["summary"]["stage7_post_label_outcome_status"]
+        == "post_label_outcome_pending_explicit_label_outputs"
+    )
+    assert (
+        payload["summary"]["stage7_post_label_outcome_next_step"]
+        == "explicitly_approve_stage7_diverse_clean_label_execution"
+    )
+    assert (
         payload["summary"]["stage4_caveat_unblocker_status"]
         == "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval"
     )

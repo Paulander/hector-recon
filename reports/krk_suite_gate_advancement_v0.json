@@ -129,6 +129,8 @@
     "stage4_caveat_unblocker_status": "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval",
     "stage7_output_valid_count": 0,
     "stage7_output_validation_status": "stage7_diverse_clean_sampling_outputs_validation_pending",
+    "stage7_post_label_outcome_next_step": "explicitly_approve_stage7_diverse_clean_label_execution",
+    "stage7_post_label_outcome_status": "post_label_outcome_pending_explicit_label_outputs",
     "stage7_success_controls": 2,
     "stage7_success_controls_ready": false,
     "stage7_success_controls_required": 5,
