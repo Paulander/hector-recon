@@ -30,6 +30,10 @@ _integration = _load_module(
     "integrate_stage7_diverse_clean_sampling_results_v0",
     "scripts/integrate_stage7_diverse_clean_sampling_results_v0.py",
 )
+_runner = _load_module(
+    "run_stage7_diverse_clean_sampling_jobs_v0",
+    "scripts/run_stage7_diverse_clean_sampling_jobs_v0.py",
+)
 
 
 def _read_report(path: str) -> dict:
@@ -330,3 +334,62 @@ def test_stage7_diverse_clean_sampling_integration_fixture_closes_success_gap(tm
     assert payload["summary"]["combined_success_controls"] == 5
     assert payload["summary"]["success_controls_met"] is True
     assert payload["decision"]["label_run_allowed"] is False
+
+
+def test_stage7_diverse_clean_sampling_runner_defaults_to_dry_run():
+    payload = _read_report(
+        "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json"
+    )
+
+    assert payload["schema_version"] == "stage7_diverse_clean_sampling_runner.v0"
+    assert payload["causal_status"] == "non_causal_label_runner_wrapper"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_score_changes"] is False
+    assert payload["runtime_direct_routing"] is False
+    assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["gameplay_topology_mutation"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["execution_requested"] is False
+    assert payload["summary"]["dry_run"] is True
+    assert payload["summary"]["job_count"] == 8
+    assert payload["summary"]["executed_job_count"] == 0
+    assert payload["summary"]["stage7_training_row_count"] == 0
+    assert payload["summary"]["runtime_authorization_row_count"] == 0
+    assert payload["decision"]["status"] == "stage7_diverse_clean_sampling_runner_dry_run_ready"
+    assert payload["decision"]["label_run_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["selector_training_allowed"] is False
+    assert payload["decision"]["stage7_promotion_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
+    for command in payload["commands"]:
+        assert command["would_execute"] is False
+
+
+def test_stage7_diverse_clean_sampling_runner_blocks_when_readiness_fails():
+    manifest = {
+        "decision": {
+            "status": "stage7_diverse_clean_sampling_manifest_review_ready_pending_explicit_approval",
+            "runtime_changes_allowed": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": False,
+        },
+        "jobs": [
+            {
+                "job_id": "fixture.job",
+                "command": ["uv", "run", "python", "scripts/test_krk_landmark_progress.py"],
+                "json_output": "reports/fixture.json",
+            }
+        ],
+    }
+    readiness = {
+        "decision": {"status": "stage7_diverse_clean_sampling_execution_readiness_failed"},
+        "summary": {"all_jobs_pass_readiness": False},
+    }
+
+    blockers = _runner._validate_ready(manifest, readiness)
+    assert "execution_readiness_not_ready" in blockers
+    payload = _runner.build_payload(execute=False, max_jobs=1)
+    assert payload["summary"]["executed_job_count"] == 0
+    assert payload["commands"][0]["would_execute"] is False

@@ -13,6 +13,7 @@ STAGE4_PACKET = ROOT / "reports/krk_stage4_first_move_contrast_runtime_review_pa
 STAGE7_MANIFEST = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json"
 STAGE7_EXECUTION_READINESS = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_execution_readiness_v0.json"
 STAGE7_INTEGRATION = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json"
+STAGE7_RUNNER = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json"
 SEQUENCE_PROBE = ROOT / "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.json"
 SEQUENCE_POLICY_DESIGN = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json"
 PROTECTED_PLAN_WINDOWS = ROOT / "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json"
@@ -52,6 +53,7 @@ def build_payload(
     stage7_manifest: dict[str, Any] | None = None,
     stage7_execution_readiness: dict[str, Any] | None = None,
     stage7_integration: dict[str, Any] | None = None,
+    stage7_runner: dict[str, Any] | None = None,
     sequence_probe: dict[str, Any] | None = None,
     sequence_policy_design: dict[str, Any] | None = None,
     protected_plan_windows: dict[str, Any] | None = None,
@@ -61,6 +63,7 @@ def build_payload(
     stage7_manifest = stage7_manifest or _load(STAGE7_MANIFEST)
     stage7_execution_readiness = stage7_execution_readiness or _load_optional(STAGE7_EXECUTION_READINESS)
     stage7_integration = stage7_integration or _load_optional(STAGE7_INTEGRATION)
+    stage7_runner = stage7_runner or _load_optional(STAGE7_RUNNER)
     sequence_probe = sequence_probe or _load(SEQUENCE_PROBE)
     sequence_policy_design = sequence_policy_design or _load(SEQUENCE_POLICY_DESIGN)
     protected_plan_windows = protected_plan_windows or _load_optional(PROTECTED_PLAN_WINDOWS)
@@ -77,6 +80,7 @@ def build_payload(
             "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
             "reports/structural_candidates/stage7_diverse_clean_sampling_execution_readiness_v0.json",
             "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json",
+            "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json",
             "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.json",
             "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json",
             "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json",
@@ -91,6 +95,10 @@ def build_payload(
                 "not_checked",
             ),
             "stage7_label_output_integration": stage7_integration.get("decision", {}).get(
+                "status",
+                "not_checked",
+            ),
+            "stage7_label_runner": stage7_runner.get("decision", {}).get(
                 "status",
                 "not_checked",
             ),
