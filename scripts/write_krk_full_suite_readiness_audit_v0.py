@@ -259,6 +259,7 @@ def build_payload() -> dict[str, Any]:
             "runner_status": runner.get("decision", {}).get("status"),
             "runner_dry_run": runner.get("summary", {}).get("dry_run"),
             "runner_job_count": runner.get("summary", {}).get("job_count"),
+            "processed_job_count": runner.get("summary", {}).get("processed_job_count"),
             "executed_job_count": runner.get("summary", {}).get("executed_job_count"),
             "skipped_existing_output_count": runner.get("summary", {}).get(
                 "skipped_existing_output_count"
@@ -369,6 +370,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- runner_status: `{stage7['runner_status']}`",
             f"- runner_dry_run: `{stage7['runner_dry_run']}`",
             f"- runner_job_count: `{stage7['runner_job_count']}`",
+            f"- processed_job_count: `{stage7['processed_job_count']}`",
             f"- executed_job_count: `{stage7['executed_job_count']}`",
             f"- skipped_existing_output_count: `{stage7['skipped_existing_output_count']}`",
             f"- overwrite_existing_outputs: `{stage7['overwrite_existing_outputs']}`",

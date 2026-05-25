@@ -198,6 +198,9 @@ def build_payload(
                 _run_job(job, overwrite_existing_outputs=overwrite_existing_outputs)
             )
     skipped_jobs = [job for job in executed_jobs if job.get("skipped_existing_output")]
+    actually_executed_jobs = [
+        job for job in executed_jobs if not job.get("skipped_existing_output")
+    ]
     failed_jobs = [job for job in executed_jobs if job.get("returncode") != 0]
     refresh_result = None
     if refresh_after_run and execute and not blockers and not failed_jobs:
@@ -224,7 +227,8 @@ def build_payload(
         "execution_blockers": blockers,
         "summary": {
             "job_count": len(jobs),
-            "executed_job_count": len(executed_jobs),
+            "processed_job_count": len(executed_jobs),
+            "executed_job_count": len(actually_executed_jobs),
             "skipped_existing_output_count": len(skipped_jobs),
             "failed_job_count": len(failed_jobs),
             "dry_run": not execute,
@@ -337,6 +341,7 @@ def main() -> None:
                 "decision": payload["decision"]["status"],
                 "execution_requested": payload["execution_requested"],
                 "executed_job_count": payload["summary"]["executed_job_count"],
+                "processed_job_count": payload["summary"]["processed_job_count"],
             },
             indent=2,
         )

@@ -320,6 +320,7 @@
     "max_jobs": null,
     "output_validation_status": "stage7_diverse_clean_sampling_outputs_validation_pending",
     "overwrite_existing_outputs": false,
+    "processed_job_count": 0,
     "refresh_after_run_performed": false,
     "refresh_after_run_requested": false,
     "runtime_authorization_row_count": 0,

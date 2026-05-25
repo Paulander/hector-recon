@@ -7,6 +7,7 @@ This is an approval-gated label-run wrapper. By default it is dry-run only. It d
 ## Summary
 
 - job_count: `8`
+- processed_job_count: `0`
 - executed_job_count: `0`
 - skipped_existing_output_count: `0`
 - failed_job_count: `0`

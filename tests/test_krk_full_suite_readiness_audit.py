@@ -61,6 +61,7 @@ def test_full_suite_readiness_identifies_current_gate():
 
     stage7 = payload["stage7_sampling_gate"]
     assert stage7["runner_status"] == "stage7_diverse_clean_sampling_runner_dry_run_ready"
+    assert stage7["processed_job_count"] == 0
     assert stage7["executed_job_count"] == 0
     assert stage7["output_validation_status"] == (
         "stage7_diverse_clean_sampling_outputs_validation_pending"

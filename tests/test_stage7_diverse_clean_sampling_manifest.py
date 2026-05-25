@@ -421,6 +421,7 @@ def test_stage7_diverse_clean_sampling_runner_defaults_to_dry_run():
     assert payload["execution_requested"] is False
     assert payload["summary"]["dry_run"] is True
     assert payload["summary"]["job_count"] == 8
+    assert payload["summary"]["processed_job_count"] == 0
     assert payload["summary"]["executed_job_count"] == 0
     assert payload["summary"]["refresh_after_run_requested"] is False
     assert payload["summary"]["refresh_after_run_performed"] is False
@@ -524,7 +525,8 @@ def test_stage7_diverse_clean_sampling_runner_skips_existing_outputs_by_default(
 
     payload = _runner.build_payload(execute=True, max_jobs=1)
 
-    assert payload["summary"]["executed_job_count"] == 1
+    assert payload["summary"]["processed_job_count"] == 1
+    assert payload["summary"]["executed_job_count"] == 0
     assert payload["summary"]["skipped_existing_output_count"] == 1
     assert payload["summary"]["failed_job_count"] == 0
     assert payload["summary"]["overwrite_existing_outputs"] is False
@@ -603,6 +605,7 @@ def test_stage7_diverse_clean_sampling_runner_blocks_invalid_existing_outputs_wi
         in payload["execution_blockers"]
     )
     assert payload["summary"]["invalid_existing_output_count"] == 1
+    assert payload["summary"]["processed_job_count"] == 0
     assert payload["summary"]["executed_job_count"] == 0
     assert payload["commands"][0]["would_execute"] is False
     assert payload["decision"]["status"] == "stage7_diverse_clean_sampling_runner_blocked"

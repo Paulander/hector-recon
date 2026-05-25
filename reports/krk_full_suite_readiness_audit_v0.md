@@ -35,6 +35,7 @@
 - runner_status: `stage7_diverse_clean_sampling_runner_dry_run_ready`
 - runner_dry_run: `True`
 - runner_job_count: `8`
+- processed_job_count: `0`
 - executed_job_count: `0`
 - skipped_existing_output_count: `0`
 - overwrite_existing_outputs: `False`
