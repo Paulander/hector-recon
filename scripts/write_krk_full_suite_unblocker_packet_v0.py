@@ -10,6 +10,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 READINESS = ROOT / "reports/krk_full_suite_readiness_audit_v0.json"
+STAGE4_UNBLOCKER = ROOT / "reports/krk_stage4_caveat_unblocker_packet_v0.json"
 OUT_JSON = ROOT / "reports/krk_full_suite_unblocker_packet_v0.json"
 OUT_MD = ROOT / "reports/krk_full_suite_unblocker_packet_v0.md"
 
@@ -23,9 +24,11 @@ def _load(path: Path) -> dict[str, Any]:
 
 def build_payload() -> dict[str, Any]:
     readiness = _load(READINESS)
+    stage4_unblocker = _load(STAGE4_UNBLOCKER)
     stage7_gate = readiness["stage7_sampling_gate"]
     sequence = readiness["sequence_policy"]
     protected = readiness["protected_stack"]
+    stage4_decision = stage4_unblocker.get("decision") or {}
 
     primary_ready = (
         stage7_gate["runner_status"] == "stage7_diverse_clean_sampling_runner_dry_run_ready"
@@ -42,6 +45,7 @@ def build_payload() -> dict[str, Any]:
                 "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json"
             ),
             "stage4_gate": "reports/krk_current_control_plane_gate_v0.json",
+            "stage4_unblocker": "reports/krk_stage4_caveat_unblocker_packet_v0.json",
         },
         "current_state": {
             "protected_stack_ready": protected["ready"],
@@ -79,14 +83,16 @@ def build_payload() -> dict[str, Any]:
         },
         "secondary_unblocker": {
             "id": "stage4_first_move_contrast_sandbox",
-            "status": "runtime_review_ready_pending_explicit_approval",
+            "status": stage4_decision.get("status"),
             "purpose": "Address the separate Stage 4 h40 caveat through a reviewed default-off sandbox path.",
             "why_secondary": (
                 "This may reduce Stage 4 debt, but it does not directly fill the Stage 7 clean "
                 "success controls currently blocking sequence-policy benchmarking."
             ),
             "approval_required": True,
-            "implementation_allowed_by_this_packet": False,
+            "implementation_allowed_by_this_packet": bool(
+                stage4_decision.get("implementation_allowed_by_this_packet")
+            ),
         },
         "low_value_safe_work_remaining": [
             "More passive summaries can be written, but they will not unblock Stage 8 or the sequence-policy benchmark.",

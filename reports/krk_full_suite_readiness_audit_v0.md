@@ -24,7 +24,7 @@
 ## Stage Status
 
 - `stage1`: `protected_component_from_current_brief`
-- `stage4`: `mostly_clean_with_h40_caveat`
+- `stage4`: `stage4_caveat_unblocker_ready_pending_explicit_runtime_approval`
 - `stage5`: `protected_retry1_stack_validated`
 - `stage6`: `protected_retry1_overlay_validated`
 - `stage7`: `held_out_challenge_quarantined`
@@ -59,10 +59,10 @@
 ## Approval Gates
 
 - `stage7_diverse_clean_label_execution`: The runner is dry-run ready, but execution requires explicit approval because it creates new Stage 7 h40 labels.
-- `stage4_first_move_contrast_sandbox`: Stage 4 has a separate runtime-review-ready gate, but implementation still requires explicit sandbox approval.
+- `stage4_first_move_contrast_sandbox`: Stage 4 has a reviewed default-off first-move contrast sandbox scope, but implementation still requires explicit sandbox approval.
 - `stage8_training`: Stage 7 is still quarantined and sequence-policy benchmark is blocked.
 
 ## Boundary Check
 
-- checked_flag_count: `65`
+- checked_flag_count: `74`
 - violation_count: `0`

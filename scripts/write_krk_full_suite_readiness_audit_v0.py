@@ -23,6 +23,7 @@ SOURCES = {
     "active_protected_stack": "reports/krk_active_protected_stack_v0.json",
     "clean_stack_validation": "reports/krk_clean_stack_post_replacement_validation_v0.json",
     "preservation_checks": "reports/krk_clean_retrain_retry1_preservation_checks_v0.json",
+    "stage4_caveat_unblocker": "reports/krk_stage4_caveat_unblocker_packet_v0.json",
     "sequence_pipeline_refresh": (
         "reports/strategy_arbitration/krk_sequence_policy_pipeline_refresh_v0.json"
     ),
@@ -113,6 +114,7 @@ def build_payload() -> dict[str, Any]:
     active = payloads["active_protected_stack"]
     clean = payloads["clean_stack_validation"]
     preservation = payloads["preservation_checks"]
+    stage4_unblocker = payloads["stage4_caveat_unblocker"]
     pipeline = payloads["sequence_pipeline_refresh"]
     benchmark = payloads["sequence_benchmark"]
     runner = payloads["stage7_sampling_runner"]
@@ -143,15 +145,28 @@ def build_payload() -> dict[str, Any]:
         benchmark.get("decision", {}).get("benchmark_executed_as_ready")
     )
 
+    stage4_decision = stage4_unblocker.get("decision") or {}
+    stage4_status = (
+        stage4_decision.get("status")
+        or "stage4_caveat_unblocker_missing"
+    )
+    stage4_ready_for_explicit_approval = (
+        stage4_status == "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval"
+    )
+
     stage_status = {
         "stage1": {
             "status": "protected_component_from_current_brief",
             "ready_for_current_suite": True,
         },
         "stage4": {
-            "status": "mostly_clean_with_h40_caveat",
+            "status": stage4_status,
             "ready_for_current_suite": False,
             "blocker": "stage4 h40 caveat remains separate guardrail/control debt",
+            "ready_for_explicit_runtime_approval": stage4_ready_for_explicit_approval,
+            "implementation_allowed_by_current_artifact": stage4_decision.get(
+                "implementation_allowed_by_this_packet"
+            ),
         },
         "stage5": {
             "status": "protected_retry1_stack_validated",
@@ -268,9 +283,12 @@ def build_payload() -> dict[str, Any]:
                 "why": "The runner is dry-run ready, but execution requires explicit approval because it creates new Stage 7 h40 labels.",
             },
             "stage4_first_move_contrast_sandbox": {
-                "ready_for_explicit_approval": True,
-                "current_artifact_allows_implementation": False,
-                "why": "Stage 4 has a separate runtime-review-ready gate, but implementation still requires explicit sandbox approval.",
+                "ready_for_explicit_approval": stage4_ready_for_explicit_approval,
+                "current_artifact_allows_implementation": bool(
+                    stage4_decision.get("implementation_allowed_by_this_packet")
+                ),
+                "status": stage4_status,
+                "why": "Stage 4 has a reviewed default-off first-move contrast sandbox scope, but implementation still requires explicit sandbox approval.",
             },
             "stage8_training": {
                 "ready_for_explicit_approval": False,

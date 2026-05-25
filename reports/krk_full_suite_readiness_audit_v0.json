@@ -3,7 +3,8 @@
     "stage4_first_move_contrast_sandbox": {
       "current_artifact_allows_implementation": false,
       "ready_for_explicit_approval": true,
-      "why": "Stage 4 has a separate runtime-review-ready gate, but implementation still requires explicit sandbox approval."
+      "status": "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval",
+      "why": "Stage 4 has a reviewed default-off first-move contrast sandbox scope, but implementation still requires explicit sandbox approval."
     },
     "stage7_diverse_clean_label_execution": {
       "current_artifact_allows_execution": false,
@@ -50,7 +51,7 @@
     "status": "retry1_protected_stage5_6_stack_adopted_manifest_only"
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 65,
+    "checked_flag_count": 74,
     "gameplay_topology_mutation": false,
     "runtime_behavior_changed": false,
     "runtime_defaults_changed": false,
@@ -80,6 +81,7 @@
     "preservation_checks": "reports/krk_clean_retrain_retry1_preservation_checks_v0.json",
     "sequence_benchmark": "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
     "sequence_pipeline_refresh": "reports/strategy_arbitration/krk_sequence_policy_pipeline_refresh_v0.json",
+    "stage4_caveat_unblocker": "reports/krk_stage4_caveat_unblocker_packet_v0.json",
     "stage7_sampling_integration": "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json",
     "stage7_sampling_runner": "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json"
   },
@@ -104,8 +106,10 @@
     },
     "stage4": {
       "blocker": "stage4 h40 caveat remains separate guardrail/control debt",
+      "implementation_allowed_by_current_artifact": false,
       "ready_for_current_suite": false,
-      "status": "mostly_clean_with_h40_caveat"
+      "ready_for_explicit_runtime_approval": true,
+      "status": "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval"
     },
     "stage5": {
       "ready_for_current_suite": true,

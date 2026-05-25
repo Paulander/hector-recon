@@ -35,7 +35,7 @@
 ## Secondary Unblocker
 
 - id: `stage4_first_move_contrast_sandbox`
-- status: `runtime_review_ready_pending_explicit_approval`
+- status: `stage4_caveat_unblocker_ready_pending_explicit_runtime_approval`
 - purpose: Address the separate Stage 4 h40 caveat through a reviewed default-off sandbox path.
 - why_secondary: This may reduce Stage 4 debt, but it does not directly fill the Stage 7 clean success controls currently blocking sequence-policy benchmarking.
 

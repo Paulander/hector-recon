@@ -65,6 +65,14 @@ def test_full_suite_readiness_identifies_current_gate():
     assert stage7["success_controls_ready"] is False
     assert stage7["combined_success_controls"] < stage7["success_controls_required"]
 
+    stage4 = payload["stage_status"]["stage4"]
+    assert (
+        stage4["status"]
+        == "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval"
+    )
+    assert stage4["ready_for_explicit_runtime_approval"] is True
+    assert stage4["implementation_allowed_by_current_artifact"] is False
+
     assert (
         payload["decision"]["status"]
         == "krk_suite_readiness_blocked_pending_stage7_clean_success_controls"
@@ -80,5 +88,9 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["stage_status"]["stage7"]["ready_for_promotion"] is False
     assert payload["stage_status"]["stage8"]["ready_for_training"] is False
+    assert (
+        payload["approval_gates"]["stage4_first_move_contrast_sandbox"]["status"]
+        == "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval"
+    )
     assert "krk_suite_readiness_blocked_pending_stage7_clean_success_controls" in rendered
     assert "label_run_allowed: `false`" in rendered

@@ -58,7 +58,7 @@ def test_unblocker_packet_keeps_stage4_as_secondary_gate():
     secondary = payload["secondary_unblocker"]
 
     assert secondary["id"] == "stage4_first_move_contrast_sandbox"
-    assert secondary["status"] == "runtime_review_ready_pending_explicit_approval"
+    assert secondary["status"] == "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval"
     assert secondary["approval_required"] is True
     assert secondary["implementation_allowed_by_this_packet"] is False
 
