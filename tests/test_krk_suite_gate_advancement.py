@@ -69,6 +69,12 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["stage7_success_controls"] == 2
     assert payload["summary"]["stage7_success_controls_required"] == 5
     assert payload["summary"]["stage7_success_controls_ready"] is False
+    assert (
+        payload["summary"]["stage7_clean_success_backfill_status"]
+        == "stage7_clean_success_backfill_exhausted_pending_label_execution"
+    )
+    assert payload["summary"]["stage7_clean_success_backfill_available"] is False
+    assert payload["summary"]["stage7_clean_success_backfill_eligible_new_success"] == 0
     assert payload["summary"]["sequence_policy_inputs_ready"] is False
     assert payload["summary"]["sequence_policy_benchmark_ready"] is False
 
@@ -81,6 +87,7 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     assert step_ids == {
         "stage7_diverse_clean_output_validation",
         "stage4_caveat_unblocker_packet",
+        "stage7_clean_success_backfill_audit",
         "sequence_policy_pipeline_refresh",
         "sequence_policy_benchmark_review",
         "full_suite_readiness_audit",

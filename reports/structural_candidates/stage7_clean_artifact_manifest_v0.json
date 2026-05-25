@@ -1196,6 +1196,22 @@
       "total": 10
     },
     {
+      "artifact": "reports/structural_candidates/stage7_clean_success_backfill_audit_v0.json",
+      "candidate_for_clean_control_recovery": false,
+      "classification": "metadata_or_design_only",
+      "default_off_or_baseline_marker": false,
+      "enabled_flags": [],
+      "explicit_runtime_enabled_name": false,
+      "filename_repair_markers": [],
+      "has_box_context": true,
+      "has_outcomes": false,
+      "label": null,
+      "playouts": null,
+      "positive_support_or_bonus_fields": [],
+      "runtime_test_activity_fields": [],
+      "total": null
+    },
+    {
       "artifact": "reports/structural_candidates/stage7_current_base_25_h40_compare.json",
       "candidate_for_clean_control_recovery": false,
       "classification": "repair_sandbox_sourced",
@@ -6675,13 +6691,13 @@
   "stage8_training_allowed": false,
   "summary": {
     "ambiguous_count": 1,
-    "artifact_count": 345,
+    "artifact_count": 346,
     "classification_counts": {
       "ambiguous_needs_manual_review": 1,
       "clean_baseline_candidate": 3,
       "clean_current_profile_candidate": 8,
       "clean_default_off_candidate": 23,
-      "metadata_or_design_only": 192,
+      "metadata_or_design_only": 193,
       "repair_sandbox_sourced": 118
     },
     "clean_candidate_count": 34,

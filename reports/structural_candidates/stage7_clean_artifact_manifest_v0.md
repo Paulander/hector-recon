@@ -6,8 +6,8 @@ Replay-free classification of existing Stage 7 artifacts for clean-control recov
 
 ## Summary
 
-- artifact_count: `345`
-- classification_counts: `{'metadata_or_design_only': 192, 'clean_current_profile_candidate': 8, 'repair_sandbox_sourced': 118, 'ambiguous_needs_manual_review': 1, 'clean_default_off_candidate': 23, 'clean_baseline_candidate': 3}`
+- artifact_count: `346`
+- classification_counts: `{'metadata_or_design_only': 193, 'clean_current_profile_candidate': 8, 'repair_sandbox_sourced': 118, 'ambiguous_needs_manual_review': 1, 'clean_default_off_candidate': 23, 'clean_baseline_candidate': 3}`
 - clean_candidate_count: `34`
 - repair_sandbox_sourced_count: `118`
 - ambiguous_count: `1`

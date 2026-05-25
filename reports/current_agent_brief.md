@@ -1447,6 +1447,8 @@ The non-causal KRK sequence-policy benchmark design v0 is complete. It defines c
 
 The Stage 7 diverse clean sampling runner now recomputes execution readiness live from the current manifest before dry-run or execution paths, instead of trusting only the persisted readiness artifact. The top-level readiness, unblocker, and control-plane gate artifacts expose `execution_readiness_source=live_recomputed`, 8/8 jobs passing readiness, zero invalid existing outputs, and zero executed jobs. This removes a stale-preflight risk, but it does not authorize the label run; the remaining blocker is still explicit approval for the bounded Stage 7 held-out label execution or a separate approved runtime sandbox.
 
+The replay-free Stage 7 clean success-control backfill audit is complete in `reports/structural_candidates/stage7_clean_success_backfill_audit_v0.md/json`. Existing clean/default-off Stage 7 artifacts contain 67 raw h40 mate rows, but they collapse to only 2 unique clean FEN/move success controls already present in the recovery artifact. There are 14 sandbox-sourced post-box success controls, but they remain non-backfillable for the clean held-out gate. The sequence-policy benchmark therefore remains blocked on clean Stage 7 success controls; replay-free backfill cannot close the gate.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

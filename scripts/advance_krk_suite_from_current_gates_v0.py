@@ -46,6 +46,11 @@ PASSIVE_STEPS = [
         "output_json": "reports/krk_stage4_caveat_unblocker_packet_v0.json",
     },
     {
+        "step_id": "stage7_clean_success_backfill_audit",
+        "script": "scripts/audit_stage7_clean_success_control_backfill_v0.py",
+        "output_json": "reports/structural_candidates/stage7_clean_success_backfill_audit_v0.json",
+    },
+    {
         "step_id": "sequence_policy_pipeline_refresh",
         "script": "scripts/refresh_krk_sequence_policy_pipeline_v0.py",
         "output_json": "reports/strategy_arbitration/krk_sequence_policy_pipeline_refresh_v0.json",
@@ -137,6 +142,9 @@ def build_payload() -> dict[str, Any]:
     output_validation = _load_json(
         "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json"
     )
+    backfill_audit = _load_json(
+        "reports/structural_candidates/stage7_clean_success_backfill_audit_v0.json"
+    )
     pipeline = _load_json("reports/strategy_arbitration/krk_sequence_policy_pipeline_refresh_v0.json")
     benchmark = _load_json("reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json")
     benchmark_review = _load_json(
@@ -182,6 +190,15 @@ def build_payload() -> dict[str, Any]:
             "stage7_output_valid_count": output_validation.get("summary", {}).get(
                 "output_valid_count"
             ),
+            "stage7_clean_success_backfill_status": backfill_audit.get("decision", {}).get(
+                "status"
+            ),
+            "stage7_clean_success_backfill_available": backfill_audit.get(
+                "summary", {}
+            ).get("can_close_success_gate_replay_free"),
+            "stage7_clean_success_backfill_eligible_new_success": backfill_audit.get(
+                "summary", {}
+            ).get("eligible_new_success_controls"),
             "stage4_caveat_unblocker_status": stage4_unblocker.get("decision", {}).get(
                 "status"
             ),
