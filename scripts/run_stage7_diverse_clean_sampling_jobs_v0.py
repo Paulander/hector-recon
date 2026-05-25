@@ -64,8 +64,20 @@ def _validate_ready(manifest: dict[str, Any], readiness: dict[str, Any]) -> list
     return blockers
 
 
-def _run_job(job: dict[str, Any]) -> dict[str, Any]:
+def _run_job(job: dict[str, Any], *, overwrite_existing_outputs: bool = False) -> dict[str, Any]:
     start = time.time()
+    output = ROOT / str(job.get("json_output"))
+    if output.exists() and not overwrite_existing_outputs:
+        return {
+            "job_id": job.get("job_id"),
+            "returncode": 0,
+            "duration_seconds": 0.0,
+            "json_output": job.get("json_output"),
+            "json_output_exists": True,
+            "skipped_existing_output": True,
+            "stdout_tail": "",
+            "stderr_tail": "",
+        }
     completed = subprocess.run(  # noqa: S603 - reviewed manifest command, no shell.
         job["command"],
         cwd=ROOT,
@@ -74,13 +86,13 @@ def _run_job(job: dict[str, Any]) -> dict[str, Any]:
         capture_output=True,
     )
     duration = time.time() - start
-    output = ROOT / str(job.get("json_output"))
     return {
         "job_id": job.get("job_id"),
         "returncode": completed.returncode,
         "duration_seconds": round(duration, 3),
         "json_output": job.get("json_output"),
         "json_output_exists": output.exists(),
+        "skipped_existing_output": False,
         "stdout_tail": completed.stdout[-1200:],
         "stderr_tail": completed.stderr[-1200:],
     }
@@ -114,6 +126,7 @@ def build_payload(
     execute: bool = False,
     max_jobs: int | None = None,
     refresh_after_run: bool = False,
+    overwrite_existing_outputs: bool = False,
 ) -> dict[str, Any]:
     manifest = _load(MANIFEST)
     readiness = _load(READINESS)
@@ -126,14 +139,30 @@ def build_payload(
             "job_id": job.get("job_id"),
             "command": job.get("command"),
             "json_output": job.get("json_output"),
-            "would_execute": bool(execute and not blockers),
+            "json_output_exists": bool(job.get("json_output"))
+            and (ROOT / str(job.get("json_output"))).exists(),
+            "would_execute": bool(execute and not blockers)
+            and (
+                overwrite_existing_outputs
+                or not (
+                    bool(job.get("json_output"))
+                    and (ROOT / str(job.get("json_output"))).exists()
+                )
+            ),
+            "would_skip_existing_output": bool(execute and not blockers)
+            and bool(job.get("json_output"))
+            and (ROOT / str(job.get("json_output"))).exists()
+            and not overwrite_existing_outputs,
         }
         for job in jobs
     ]
     executed_jobs = []
     if execute and not blockers:
         for job in jobs:
-            executed_jobs.append(_run_job(job))
+            executed_jobs.append(
+                _run_job(job, overwrite_existing_outputs=overwrite_existing_outputs)
+            )
+    skipped_jobs = [job for job in executed_jobs if job.get("skipped_existing_output")]
     failed_jobs = [job for job in executed_jobs if job.get("returncode") != 0]
     refresh_result = None
     if refresh_after_run and execute and not blockers and not failed_jobs:
@@ -160,9 +189,11 @@ def build_payload(
         "summary": {
             "job_count": len(jobs),
             "executed_job_count": len(executed_jobs),
+            "skipped_existing_output_count": len(skipped_jobs),
             "failed_job_count": len(failed_jobs),
             "dry_run": not execute,
             "max_jobs": max_jobs,
+            "overwrite_existing_outputs": overwrite_existing_outputs,
             "refresh_after_run_requested": refresh_after_run,
             "refresh_after_run_performed": refresh_result is not None,
             "stage7_training_row_count": 0,
@@ -208,7 +239,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     lines.extend(["", "## Commands", ""])
     for command in payload["commands"]:
         lines.append(
-            f"- `{command['job_id']}` would_execute=`{command['would_execute']}` output=`{command['json_output']}`"
+            f"- `{command['job_id']}` would_execute=`{command['would_execute']}` skip_existing=`{command.get('would_skip_existing_output', False)}` output=`{command['json_output']}`"
         )
     if payload.get("post_run_refresh"):
         lines.extend(
@@ -244,6 +275,11 @@ def main() -> None:
     )
     parser.add_argument("--max-jobs", type=int, default=None)
     parser.add_argument(
+        "--overwrite-existing-outputs",
+        action="store_true",
+        help="Rerun jobs even when their reviewed JSON output already exists.",
+    )
+    parser.add_argument(
         "--refresh-after-run",
         action="store_true",
         help="After a successful explicit label run, refresh passive sequence-policy artifacts.",
@@ -253,6 +289,7 @@ def main() -> None:
         execute=args.execute_reviewed_label_run,
         max_jobs=args.max_jobs,
         refresh_after_run=args.refresh_after_run,
+        overwrite_existing_outputs=args.overwrite_existing_outputs,
     )
     OUTPUT_JSON.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
     OUTPUT_MD.write_text(write_markdown(payload), encoding="utf-8")

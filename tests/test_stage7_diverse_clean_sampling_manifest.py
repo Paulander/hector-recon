@@ -477,3 +477,60 @@ def test_stage7_diverse_clean_sampling_runner_refresh_requires_execution():
     assert payload["summary"]["refresh_after_run_performed"] is False
     assert payload["post_run_refresh"] is None
     assert payload["decision"]["label_run_allowed"] is False
+
+
+def test_stage7_diverse_clean_sampling_runner_skips_existing_outputs_by_default(
+    tmp_path, monkeypatch
+):
+    existing_output = tmp_path / "existing.json"
+    existing_output.write_text(json.dumps({"handoff_packets": []}), encoding="utf-8")
+    manifest_path = tmp_path / "manifest.json"
+    readiness_path = tmp_path / "readiness.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "decision": {
+                    "status": "stage7_diverse_clean_sampling_manifest_review_ready_pending_explicit_approval",
+                    "runtime_changes_allowed": False,
+                    "stage7_promotion_allowed": False,
+                    "stage8_training_allowed": False,
+                },
+                "summary": {"label_run_allowed_by_this_manifest": False},
+                "jobs": [
+                    {
+                        "job_id": "fixture.existing",
+                        "command": ["uv", "run", "python", "scripts/should_not_run.py"],
+                        "json_output": "existing.json",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    readiness_path.write_text(
+        json.dumps(
+            {
+                "decision": {
+                    "status": "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval"
+                },
+                "summary": {"all_jobs_pass_readiness": True},
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_runner, "ROOT", tmp_path)
+    monkeypatch.setattr(_runner, "MANIFEST", manifest_path)
+    monkeypatch.setattr(_runner, "READINESS", readiness_path)
+
+    payload = _runner.build_payload(execute=True, max_jobs=1)
+
+    assert payload["summary"]["executed_job_count"] == 1
+    assert payload["summary"]["skipped_existing_output_count"] == 1
+    assert payload["summary"]["failed_job_count"] == 0
+    assert payload["summary"]["overwrite_existing_outputs"] is False
+    assert payload["commands"][0]["would_execute"] is False
+    assert payload["commands"][0]["would_skip_existing_output"] is True
+    assert payload["executed_jobs"][0]["skipped_existing_output"] is True
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["stage7_promotion_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
