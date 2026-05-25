@@ -534,3 +534,76 @@ def test_stage7_diverse_clean_sampling_runner_skips_existing_outputs_by_default(
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["stage7_promotion_allowed"] is False
     assert payload["decision"]["stage8_training_allowed"] is False
+
+
+def test_stage7_diverse_clean_sampling_runner_blocks_invalid_existing_outputs_without_overwrite(
+    tmp_path, monkeypatch
+):
+    existing_output = tmp_path / "bad.json"
+    existing_output.write_text(json.dumps({"handoff_packets": []}), encoding="utf-8")
+    manifest_path = tmp_path / "manifest.json"
+    readiness_path = tmp_path / "readiness.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "decision": {
+                    "status": "stage7_diverse_clean_sampling_manifest_review_ready_pending_explicit_approval",
+                    "runtime_changes_allowed": False,
+                    "stage7_promotion_allowed": False,
+                    "stage8_training_allowed": False,
+                },
+                "summary": {"label_run_allowed_by_this_manifest": False},
+                "jobs": [
+                    {
+                        "job_id": "fixture.bad",
+                        "command": ["uv", "run", "python", "scripts/should_not_run.py"],
+                        "json_output": "bad.json",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    readiness_path.write_text(
+        json.dumps(
+            {
+                "decision": {
+                    "status": "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval"
+                },
+                "summary": {"all_jobs_pass_readiness": True},
+            }
+        ),
+        encoding="utf-8",
+    )
+    output_validation = {
+        "output_checks": [
+            {
+                "job_id": "fixture.bad",
+                "json_output": "bad.json",
+                "output_exists": True,
+                "valid": False,
+            }
+        ],
+        "decision": {
+            "status": "stage7_diverse_clean_sampling_outputs_invalid_block_integration"
+        },
+    }
+    monkeypatch.setattr(_runner, "ROOT", tmp_path)
+    monkeypatch.setattr(_runner, "MANIFEST", manifest_path)
+    monkeypatch.setattr(_runner, "READINESS", readiness_path)
+
+    payload = _runner.build_payload(
+        execute=True,
+        max_jobs=1,
+        output_validation=output_validation,
+    )
+
+    assert (
+        "invalid_existing_outputs_require_overwrite_or_cleanup"
+        in payload["execution_blockers"]
+    )
+    assert payload["summary"]["invalid_existing_output_count"] == 1
+    assert payload["summary"]["executed_job_count"] == 0
+    assert payload["commands"][0]["would_execute"] is False
+    assert payload["decision"]["status"] == "stage7_diverse_clean_sampling_runner_blocked"
+    assert payload["decision"]["label_run_allowed"] is False

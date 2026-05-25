@@ -22,6 +22,7 @@ MANIFEST = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_m
 READINESS = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_execution_readiness_v0.json"
 OUTPUT_JSON = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json"
 OUTPUT_MD = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.md"
+OUTPUT_VALIDATION_SCRIPT = ROOT / "scripts/validate_stage7_diverse_clean_sampling_outputs_v0.py"
 REFRESH_SCRIPT = ROOT / "scripts/refresh_krk_sequence_policy_pipeline_v0.py"
 
 SCHEMA_VERSION = "stage7_diverse_clean_sampling_runner.v0"
@@ -62,6 +63,30 @@ def _validate_ready(manifest: dict[str, Any], readiness: dict[str, Any]) -> list
     if manifest.get("decision", {}).get("stage8_training_allowed"):
         blockers.append("manifest_allows_stage8_training")
     return blockers
+
+
+def _run_output_validation() -> dict[str, Any] | None:
+    if not OUTPUT_VALIDATION_SCRIPT.exists():
+        return None
+    spec = importlib.util.spec_from_file_location(
+        OUTPUT_VALIDATION_SCRIPT.stem,
+        OUTPUT_VALIDATION_SCRIPT,
+    )
+    if spec is None or spec.loader is None:
+        return None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.build_payload()
+
+
+def _invalid_existing_output_count(output_validation: dict[str, Any] | None) -> int:
+    if output_validation is None:
+        return 0
+    return sum(
+        1
+        for row in output_validation.get("output_checks") or []
+        if row.get("output_exists") and not row.get("valid")
+    )
 
 
 def _run_job(job: dict[str, Any], *, overwrite_existing_outputs: bool = False) -> dict[str, Any]:
@@ -127,10 +152,20 @@ def build_payload(
     max_jobs: int | None = None,
     refresh_after_run: bool = False,
     overwrite_existing_outputs: bool = False,
+    output_validation: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     manifest = _load(MANIFEST)
     readiness = _load(READINESS)
     blockers = _validate_ready(manifest, readiness)
+    output_validation = output_validation if output_validation is not None else _run_output_validation()
+    output_validation_status = (
+        (output_validation.get("decision") or {}).get("status")
+        if output_validation is not None
+        else None
+    )
+    invalid_output_count = _invalid_existing_output_count(output_validation)
+    if invalid_output_count and not overwrite_existing_outputs:
+        blockers.append("invalid_existing_outputs_require_overwrite_or_cleanup")
     jobs = list(manifest.get("jobs") or [])
     if max_jobs is not None:
         jobs = jobs[:max_jobs]
@@ -183,6 +218,7 @@ def build_payload(
         "source_artifacts": [
             "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
             "reports/structural_candidates/stage7_diverse_clean_sampling_execution_readiness_v0.json",
+            "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json",
         ],
         "execution_requested": execute,
         "execution_blockers": blockers,
@@ -194,6 +230,8 @@ def build_payload(
             "dry_run": not execute,
             "max_jobs": max_jobs,
             "overwrite_existing_outputs": overwrite_existing_outputs,
+            "output_validation_status": output_validation_status,
+            "invalid_existing_output_count": invalid_output_count,
             "refresh_after_run_requested": refresh_after_run,
             "refresh_after_run_performed": refresh_result is not None,
             "stage7_training_row_count": 0,

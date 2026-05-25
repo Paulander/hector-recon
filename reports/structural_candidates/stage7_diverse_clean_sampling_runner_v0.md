@@ -13,6 +13,8 @@ This is an approval-gated label-run wrapper. By default it is dry-run only. It d
 - dry_run: `True`
 - max_jobs: `None`
 - overwrite_existing_outputs: `False`
+- output_validation_status: `stage7_diverse_clean_sampling_outputs_validation_pending`
+- invalid_existing_output_count: `0`
 - refresh_after_run_requested: `False`
 - refresh_after_run_performed: `False`
 - stage7_training_row_count: `0`
