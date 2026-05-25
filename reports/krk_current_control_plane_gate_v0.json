@@ -1,0 +1,84 @@
+{
+  "approval_options": [
+    {
+      "artifact": "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.md",
+      "option_id": "approve_stage4_first_move_contrast_sandbox",
+      "recommended_if": "you want to reduce the known Stage 4 h40 caveat now",
+      "status": "stage4_first_move_contrast_runtime_review_ready_pending_explicit_approval",
+      "what_it_allows": "default-off Stage 4 CandidateMoveFrame first-move contrast sandbox only",
+      "what_it_does_not_allow": [
+        "default enablement",
+        "exact-state or exact-move runtime exception",
+        "selector training",
+        "broad stage0 penalty",
+        "provider suppression",
+        "Stage 7 promotion",
+        "Stage 8 training"
+      ]
+    },
+    {
+      "artifact": "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.md",
+      "option_id": "approve_stage7_diverse_clean_label_run",
+      "recommended_if": "you want to fill the Stage 7 clean success-control gap before broader sequence-policy benchmarking",
+      "status": "stage7_diverse_clean_sampling_manifest_review_ready_pending_explicit_approval",
+      "what_it_allows": "run 8 bounded h40 clean Stage 7 label jobs, 64 samples total",
+      "what_it_does_not_allow": [
+        "runtime behavior",
+        "selector training",
+        "Stage 7 promotion",
+        "Stage 8 training",
+        "Stage 7 repair flags"
+      ]
+    },
+    {
+      "artifact": "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.md",
+      "option_id": "defer_both_and_design_broader_sequence_policy",
+      "recommended_if": "you prefer architecture design before any more runtime or label runs",
+      "status": "sequence_control_stage4_review_ready_stage7_success_controls_insufficient",
+      "what_it_allows": "non-causal design only",
+      "what_it_does_not_allow": [
+        "runtime selector",
+        "Stage 7 promotion",
+        "Stage 8 training"
+      ]
+    }
+  ],
+  "causal_status": "non_causal_current_gate_summary",
+  "current_state": {
+    "protected_stack": "retry1_stage5_6_active_manifest_validated",
+    "runtime_selector": "blocked",
+    "stage4": "first_move_contrast_runtime_review_ready_pending_explicit_approval",
+    "stage7": "heldout_clean_success_controls_insufficient_sampling_manifest_ready",
+    "stage8": "blocked"
+  },
+  "decision": {
+    "label_run_allowed": false,
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "krk_control_plane_waiting_on_explicit_gate_choice"
+  },
+  "gameplay_topology_mutation": false,
+  "recommendation": {
+    "preferred_next_if_no_user_approval": "stop_at_gate_and_report",
+    "preferred_next_if_user_approves_labels": "run_stage7_diverse_clean_sampling_manifest_and_recover_controls",
+    "preferred_next_if_user_approves_runtime": "implement_stage4_default_off_first_move_contrast_sandbox",
+    "reason": "All remaining immediate progress crosses either a runtime sandbox approval gate or a Stage 7 label-run approval gate."
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_current_control_plane_gate.v0",
+  "source_artifacts": [
+    "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json",
+    "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
+    "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

@@ -1333,6 +1333,8 @@ The KRK sequence-control contrast dataset/probe v0 unifies the current non-causa
 
 The Stage 7 diverse clean sampling manifest v0 is ready for review but not execution. It proposes 8 bounded h40 jobs (64 samples total) over disjoint `Box_Small`, `Box_Medium`, and `Edge_Fence_Deep` source cells using the active retry1 Stage 6 topology, with all Stage 7 repair/sandbox flags forbidden. The purpose is to fill the clean Stage 7 success-control gap without another blind duplicate label run. It requires explicit approval before running, creates no training rows, and does not authorize Stage 7 promotion or Stage 8 training.
 
+The current KRK control-plane gate is summarized in `reports/krk_current_control_plane_gate_v0.md/json`. Immediate progress now requires one explicit choice: approve the default-off Stage 4 first-move contrast sandbox, approve the bounded Stage 7 diverse clean label run, or defer both and continue non-causal broader sequence-policy design. Without that choice, no runtime or label-run step is authorized.
+
 ## Runtime Approval Rule
 
 Runtime tests are allowed only when all of these are true:

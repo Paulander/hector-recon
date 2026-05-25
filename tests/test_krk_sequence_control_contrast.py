@@ -26,6 +26,10 @@ _probe = _load_module(
     "probe_krk_sequence_control_contrast_v0",
     "scripts/probe_krk_sequence_control_contrast_v0.py",
 )
+_current_gate = _load_module(
+    "write_krk_current_control_plane_gate_v0",
+    "scripts/write_krk_current_control_plane_gate_v0.py",
+)
 
 
 def _read_report(path: str) -> dict:
@@ -187,3 +191,41 @@ def test_sequence_control_contrast_probe_fixture_detects_stage7_success_gap():
     )
     assert payload["readiness"]["stage8_training_ready"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_current_control_plane_gate_requires_explicit_choice():
+    payload = _read_report("reports/krk_current_control_plane_gate_v0.json")
+
+    assert payload["schema_version"] == "krk_current_control_plane_gate.v0"
+    assert payload["causal_status"] == "non_causal_current_gate_summary"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_score_changes"] is False
+    assert payload["runtime_direct_routing"] is False
+    assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["gameplay_topology_mutation"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["decision"]["status"] == "krk_control_plane_waiting_on_explicit_gate_choice"
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["label_run_allowed"] is False
+    assert payload["decision"]["stage7_promotion_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
+    option_ids = {option["option_id"] for option in payload["approval_options"]}
+    assert option_ids == {
+        "approve_stage4_first_move_contrast_sandbox",
+        "approve_stage7_diverse_clean_label_run",
+        "defer_both_and_design_broader_sequence_policy",
+    }
+
+
+def test_current_control_plane_gate_fixture_preserves_no_implicit_approval():
+    payload = _current_gate.build_payload(
+        stage4_packet={"decision": {"status": "s4"}},
+        stage7_manifest={"decision": {"status": "s7"}},
+        sequence_probe={"decision": {"status": "seq"}},
+    )
+
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["label_run_allowed"] is False
+    assert payload["recommendation"]["preferred_next_if_no_user_approval"] == "stop_at_gate_and_report"
