@@ -27,6 +27,7 @@ EXECUTION_READINESS_SCRIPT = (
 )
 OUTPUT_VALIDATION_SCRIPT = ROOT / "scripts/validate_stage7_diverse_clean_sampling_outputs_v0.py"
 REFRESH_SCRIPT = ROOT / "scripts/refresh_krk_sequence_policy_pipeline_v0.py"
+FULL_GATE_ADVANCEMENT_SCRIPT = ROOT / "scripts/advance_krk_suite_from_current_gates_v0.py"
 
 SCHEMA_VERSION = "stage7_diverse_clean_sampling_runner.v0"
 DEFAULT_JOB_TIMEOUT_SECONDS = 900
@@ -174,20 +175,31 @@ def _run_job(
 
 
 def _run_passive_refresh() -> dict[str, Any]:
-    spec = importlib.util.spec_from_file_location(REFRESH_SCRIPT.stem, REFRESH_SCRIPT)
+    spec = importlib.util.spec_from_file_location(
+        FULL_GATE_ADVANCEMENT_SCRIPT.stem,
+        FULL_GATE_ADVANCEMENT_SCRIPT,
+    )
     if spec is None or spec.loader is None:
-        raise RuntimeError("cannot load passive refresh script")
+        raise RuntimeError("cannot load full passive gate advancement script")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    payload = module.run_refresh()
+    payload = module.build_payload()
     module.OUTPUT_JSON.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
     module.OUTPUT_MD.write_text(module.write_markdown(payload), encoding="utf-8")
     return {
-        "script": "scripts/refresh_krk_sequence_policy_pipeline_v0.py",
+        "script": "scripts/advance_krk_suite_from_current_gates_v0.py",
         "status": payload.get("decision", {}).get("status"),
-        "stage7_success_controls": payload.get("summary", {}).get("stage7_success_controls"),
+        "stage7_success_controls": payload.get("summary", {}).get(
+            "stage7_success_controls"
+        ),
         "sequence_policy_inputs_ready": payload.get("summary", {}).get(
             "sequence_policy_inputs_ready"
+        ),
+        "sequence_policy_benchmark_ready": payload.get("summary", {}).get(
+            "sequence_policy_benchmark_ready"
+        ),
+        "stage8_training_readiness_status": payload.get("summary", {}).get(
+            "stage8_training_readiness_status"
         ),
         "runtime_changes_allowed": payload.get("decision", {}).get("runtime_changes_allowed"),
         "label_run_allowed": payload.get("decision", {}).get("label_run_allowed"),
@@ -204,6 +216,7 @@ def build_payload(
     overwrite_existing_outputs: bool = False,
     output_validation: dict[str, Any] | None = None,
     job_timeout_seconds: int = DEFAULT_JOB_TIMEOUT_SECONDS,
+    run_post_success_refresh: bool = True,
 ) -> dict[str, Any]:
     manifest = _load(MANIFEST)
     live_readiness = _run_execution_readiness(manifest)
@@ -261,7 +274,7 @@ def build_payload(
     failed_jobs = [job for job in executed_jobs if job.get("returncode") != 0]
     timed_out_jobs = [job for job in executed_jobs if job.get("timed_out")]
     refresh_result = None
-    if refresh_after_run and execute and not blockers and not failed_jobs:
+    if run_post_success_refresh and refresh_after_run and execute and not blockers and not failed_jobs:
         refresh_result = _run_passive_refresh()
     status = (
         "stage7_diverse_clean_sampling_runner_dry_run_ready"
@@ -399,7 +412,7 @@ def main() -> None:
     parser.add_argument(
         "--refresh-after-run",
         action="store_true",
-        help="After a successful explicit label run, refresh passive sequence-policy artifacts.",
+        help="After a successful explicit label run, refresh the full passive KRK suite gates.",
     )
     args = parser.parse_args()
     payload = build_payload(
@@ -408,9 +421,20 @@ def main() -> None:
         refresh_after_run=args.refresh_after_run,
         overwrite_existing_outputs=args.overwrite_existing_outputs,
         job_timeout_seconds=args.job_timeout_seconds,
+        run_post_success_refresh=False,
     )
     OUTPUT_JSON.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
     OUTPUT_MD.write_text(write_markdown(payload), encoding="utf-8")
+    if (
+        args.refresh_after_run
+        and args.execute_reviewed_label_run
+        and not payload["execution_blockers"]
+        and payload["summary"]["failed_job_count"] == 0
+    ):
+        payload["post_run_refresh"] = _run_passive_refresh()
+        payload["summary"]["refresh_after_run_performed"] = True
+        OUTPUT_JSON.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+        OUTPUT_MD.write_text(write_markdown(payload), encoding="utf-8")
     print(
         json.dumps(
             {

@@ -497,6 +497,150 @@ def test_stage7_diverse_clean_sampling_runner_refresh_requires_execution():
     assert payload["decision"]["label_run_allowed"] is False
 
 
+def test_stage7_diverse_clean_sampling_runner_post_success_refresh_uses_full_gate(
+    tmp_path, monkeypatch
+):
+    manifest_path = tmp_path / "manifest.json"
+    readiness_path = tmp_path / "readiness.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "decision": {
+                    "status": "stage7_diverse_clean_sampling_manifest_review_ready_pending_explicit_approval",
+                    "runtime_changes_allowed": False,
+                    "stage7_promotion_allowed": False,
+                    "stage8_training_allowed": False,
+                },
+                "summary": {"label_run_allowed_by_this_manifest": False},
+                "jobs": [
+                    {
+                        "job_id": "fixture.success",
+                        "command": ["uv", "run", "python", "scripts/success.py"],
+                        "json_output": "success.json",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    readiness = {
+        "decision": {
+            "status": "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval"
+        },
+        "summary": {"all_jobs_pass_readiness": True, "jobs_passing_readiness": 1},
+    }
+    readiness_path.write_text(json.dumps(readiness), encoding="utf-8")
+
+    class Completed:
+        returncode = 0
+        stdout = "ok"
+        stderr = ""
+
+    refresh_payload = {
+        "script": "scripts/advance_krk_suite_from_current_gates_v0.py",
+        "status": "krk_suite_passive_advancement_ready_for_sequence_policy_review",
+        "stage7_success_controls": 5,
+        "sequence_policy_inputs_ready": True,
+        "sequence_policy_benchmark_ready": True,
+        "runtime_changes_allowed": False,
+        "label_run_allowed": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+    }
+    monkeypatch.setattr(_runner, "ROOT", tmp_path)
+    monkeypatch.setattr(_runner, "MANIFEST", manifest_path)
+    monkeypatch.setattr(_runner, "READINESS", readiness_path)
+    monkeypatch.setattr(_runner, "_run_execution_readiness", lambda manifest: readiness)
+    monkeypatch.setattr(_runner.subprocess, "run", lambda *args, **kwargs: Completed())
+    monkeypatch.setattr(_runner, "_run_passive_refresh", lambda: refresh_payload)
+
+    payload = _runner.build_payload(
+        execute=True,
+        max_jobs=1,
+        refresh_after_run=True,
+        output_validation={"decision": {"status": "stage7_outputs_pending"}},
+    )
+
+    assert payload["summary"]["processed_job_count"] == 1
+    assert payload["summary"]["executed_job_count"] == 1
+    assert payload["summary"]["failed_job_count"] == 0
+    assert payload["summary"]["refresh_after_run_performed"] is True
+    assert payload["post_run_refresh"] == refresh_payload
+    assert (
+        payload["post_run_refresh"]["script"]
+        == "scripts/advance_krk_suite_from_current_gates_v0.py"
+    )
+    assert payload["post_run_refresh"]["runtime_changes_allowed"] is False
+    assert payload["post_run_refresh"]["stage8_training_allowed"] is False
+    assert (
+        payload["decision"]["status"]
+        == "stage7_diverse_clean_sampling_runner_executed_success"
+    )
+
+
+def test_stage7_diverse_clean_sampling_runner_can_defer_post_success_refresh(
+    tmp_path, monkeypatch
+):
+    manifest_path = tmp_path / "manifest.json"
+    readiness_path = tmp_path / "readiness.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "decision": {
+                    "status": "stage7_diverse_clean_sampling_manifest_review_ready_pending_explicit_approval",
+                    "runtime_changes_allowed": False,
+                    "stage7_promotion_allowed": False,
+                    "stage8_training_allowed": False,
+                },
+                "summary": {"label_run_allowed_by_this_manifest": False},
+                "jobs": [
+                    {
+                        "job_id": "fixture.success",
+                        "command": ["uv", "run", "python", "scripts/success.py"],
+                        "json_output": "success.json",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    readiness = {
+        "decision": {
+            "status": "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval"
+        },
+        "summary": {"all_jobs_pass_readiness": True, "jobs_passing_readiness": 1},
+    }
+    readiness_path.write_text(json.dumps(readiness), encoding="utf-8")
+
+    class Completed:
+        returncode = 0
+        stdout = "ok"
+        stderr = ""
+
+    monkeypatch.setattr(_runner, "ROOT", tmp_path)
+    monkeypatch.setattr(_runner, "MANIFEST", manifest_path)
+    monkeypatch.setattr(_runner, "READINESS", readiness_path)
+    monkeypatch.setattr(_runner, "_run_execution_readiness", lambda manifest: readiness)
+    monkeypatch.setattr(_runner.subprocess, "run", lambda *args, **kwargs: Completed())
+    monkeypatch.setattr(
+        _runner,
+        "_run_passive_refresh",
+        lambda: (_ for _ in ()).throw(AssertionError("refresh should be deferred")),
+    )
+
+    payload = _runner.build_payload(
+        execute=True,
+        max_jobs=1,
+        refresh_after_run=True,
+        output_validation={"decision": {"status": "stage7_outputs_pending"}},
+        run_post_success_refresh=False,
+    )
+
+    assert payload["summary"]["refresh_after_run_requested"] is True
+    assert payload["summary"]["refresh_after_run_performed"] is False
+    assert payload["post_run_refresh"] is None
+
+
 def test_stage7_diverse_clean_sampling_runner_skips_existing_outputs_by_default(
     tmp_path, monkeypatch
 ):
