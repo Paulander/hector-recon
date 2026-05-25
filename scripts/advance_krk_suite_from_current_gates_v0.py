@@ -41,6 +41,11 @@ PASSIVE_STEPS = [
         "output_json": "reports/strategy_arbitration/krk_sequence_policy_pipeline_refresh_v0.json",
     },
     {
+        "step_id": "sequence_policy_benchmark_review",
+        "script": "scripts/review_krk_sequence_policy_benchmark_v0.py",
+        "output_json": "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
+    },
+    {
         "step_id": "full_suite_readiness_audit",
         "script": "scripts/write_krk_full_suite_readiness_audit_v0.py",
         "output_json": "reports/krk_full_suite_readiness_audit_v0.json",
@@ -110,6 +115,9 @@ def build_payload() -> dict[str, Any]:
     unblocker = _load_json("reports/krk_full_suite_unblocker_packet_v0.json")
     pipeline = _load_json("reports/strategy_arbitration/krk_sequence_policy_pipeline_refresh_v0.json")
     benchmark = _load_json("reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json")
+    benchmark_review = _load_json(
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
+    )
 
     all_boundaries_preserved = all(
         not result["runtime_changes_allowed"]
@@ -153,6 +161,9 @@ def build_payload() -> dict[str, Any]:
                 "sequence_policy_inputs_ready"
             ),
             "sequence_policy_benchmark_ready": benchmark_ready,
+            "sequence_policy_benchmark_review_status": benchmark_review.get("decision", {}).get(
+                "status"
+            ),
             "readiness_status": readiness.get("decision", {}).get("status"),
             "unblocker_status": unblocker.get("decision", {}).get("status"),
         },

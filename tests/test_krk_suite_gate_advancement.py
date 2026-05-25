@@ -80,10 +80,15 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     step_ids = {step["step_id"] for step in payload["step_results"]}
     assert step_ids == {
         "sequence_policy_pipeline_refresh",
+        "sequence_policy_benchmark_review",
         "full_suite_readiness_audit",
         "full_suite_unblocker_packet",
     }
     assert "krk_suite_passive_advancement_blocked_pending_stage7_label_outputs" in rendered
+    assert (
+        payload["summary"]["sequence_policy_benchmark_review_status"]
+        == "sequence_policy_benchmark_review_blocked_pending_ready_inputs"
+    )
     for step in payload["step_results"]:
         assert step["label_run_allowed"] is False
         assert step["runtime_changes_allowed"] is False

@@ -219,6 +219,21 @@ krk_suite_passive_advancement_blocked_pending_stage7_label_outputs
 
 This harness reruns only safe passive integration/readiness artifacts. It does not execute labels, implement runtime behavior, train selectors, promote Stage 7, or train Stage 8.
 
+Current sequence-policy benchmark review:
+
+```text
+reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.md
+reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json
+```
+
+Current review decision:
+
+```text
+sequence_policy_benchmark_review_blocked_pending_ready_inputs
+```
+
+Meaning: the review gate is wired and will classify sequence-policy benchmark results once Stage 7 held-out success controls are filled. Current evidence still shows Stage 4 top-k signal, sparse protected plan-window failure evidence, and missing Stage 7 success controls.
+
 Immediate status:
 
 ```text
