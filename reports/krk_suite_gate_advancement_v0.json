@@ -1,0 +1,73 @@
+{
+  "causal_status": "non_causal_passive_gate_advancement",
+  "decision": {
+    "label_run_allowed": false,
+    "recommended_next_step": "explicitly_approve_stage7_diverse_clean_label_execution",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "krk_suite_passive_advancement_blocked_pending_stage7_label_outputs"
+  },
+  "gameplay_topology_mutation": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_suite_gate_advancement.v0",
+  "source_scripts": [
+    "scripts/refresh_krk_sequence_policy_pipeline_v0.py",
+    "scripts/write_krk_full_suite_readiness_audit_v0.py",
+    "scripts/write_krk_full_suite_unblocker_packet_v0.py"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "step_results": [
+    {
+      "decision_status": "sequence_policy_pipeline_refreshed_still_blocked_by_stage7_success_controls",
+      "label_run_allowed": false,
+      "output_json": "reports/strategy_arbitration/krk_sequence_policy_pipeline_refresh_v0.json",
+      "runtime_changes_allowed": false,
+      "script": "scripts/refresh_krk_sequence_policy_pipeline_v0.py",
+      "selector_training_allowed": false,
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false,
+      "step_id": "sequence_policy_pipeline_refresh"
+    },
+    {
+      "decision_status": "krk_suite_readiness_blocked_pending_stage7_clean_success_controls",
+      "label_run_allowed": false,
+      "output_json": "reports/krk_full_suite_readiness_audit_v0.json",
+      "runtime_changes_allowed": false,
+      "script": "scripts/write_krk_full_suite_readiness_audit_v0.py",
+      "selector_training_allowed": false,
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false,
+      "step_id": "full_suite_readiness_audit"
+    },
+    {
+      "decision_status": "krk_suite_primary_unblocker_ready_pending_explicit_label_approval",
+      "label_run_allowed": false,
+      "output_json": "reports/krk_full_suite_unblocker_packet_v0.json",
+      "runtime_changes_allowed": false,
+      "script": "scripts/write_krk_full_suite_unblocker_packet_v0.py",
+      "selector_training_allowed": false,
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false,
+      "step_id": "full_suite_unblocker_packet"
+    }
+  ],
+  "summary": {
+    "all_boundaries_preserved": true,
+    "readiness_status": "krk_suite_readiness_blocked_pending_stage7_clean_success_controls",
+    "sequence_policy_benchmark_ready": false,
+    "sequence_policy_inputs_ready": false,
+    "stage7_success_controls": 2,
+    "stage7_success_controls_ready": false,
+    "stage7_success_controls_required": 5,
+    "unblocker_status": "krk_suite_primary_unblocker_ready_pending_explicit_label_approval"
+  }
+}

@@ -203,6 +203,22 @@ reports/krk_full_suite_unblocker_packet_v0.json
 
 This packet identifies the primary unblocker as explicit approval for the bounded Stage 7 diverse-clean h40 label execution. It does not authorize execution by itself.
 
+Current passive gate advancement harness:
+
+```text
+scripts/advance_krk_suite_from_current_gates_v0.py
+reports/krk_suite_gate_advancement_v0.md
+reports/krk_suite_gate_advancement_v0.json
+```
+
+Current passive advancement decision:
+
+```text
+krk_suite_passive_advancement_blocked_pending_stage7_label_outputs
+```
+
+This harness reruns only safe passive integration/readiness artifacts. It does not execute labels, implement runtime behavior, train selectors, promote Stage 7, or train Stage 8.
+
 Immediate status:
 
 ```text
