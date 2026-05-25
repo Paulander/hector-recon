@@ -307,6 +307,7 @@
   "source_artifacts": [
     "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
     "reports/structural_candidates/stage7_diverse_clean_sampling_execution_readiness_v0.json",
+    "scripts/validate_stage7_diverse_clean_sampling_execution_readiness_v0.py",
     "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json"
   ],
   "stage7_promotion_allowed": false,
@@ -314,6 +315,10 @@
   "summary": {
     "dry_run": true,
     "executed_job_count": 0,
+    "execution_readiness_all_jobs_pass": true,
+    "execution_readiness_jobs_passing": 8,
+    "execution_readiness_source": "live_recomputed",
+    "execution_readiness_status": "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval",
     "failed_job_count": 0,
     "invalid_existing_output_count": 0,
     "job_count": 8,

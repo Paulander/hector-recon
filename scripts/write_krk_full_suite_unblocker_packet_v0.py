@@ -56,6 +56,15 @@ def build_payload() -> dict[str, Any]:
             "sequence_policy_benchmark_ready": sequence["benchmark_ready"],
             "stage8_training_ready": False,
             "stage7_output_validation_status": stage7_gate.get("output_validation_status"),
+            "stage7_execution_readiness_source": stage7_gate.get(
+                "execution_readiness_source"
+            ),
+            "stage7_execution_readiness_status": stage7_gate.get(
+                "execution_readiness_status"
+            ),
+            "stage7_execution_readiness_jobs_passing": stage7_gate.get(
+                "execution_readiness_jobs_passing"
+            ),
             "stage7_invalid_existing_output_count": stage7_gate.get(
                 "invalid_existing_output_count"
             ),
@@ -89,6 +98,9 @@ def build_payload() -> dict[str, Any]:
                 "resume_safe": True,
                 "skip_existing_outputs_by_default": True,
                 "invalid_existing_outputs_block_without_overwrite": True,
+                "execution_readiness_recomputed_live": (
+                    stage7_gate.get("execution_readiness_source") == "live_recomputed"
+                ),
                 "runtime_behavior_changed": False,
                 "stage7_training_rows": 0,
                 "stage7_promotion_allowed": False,

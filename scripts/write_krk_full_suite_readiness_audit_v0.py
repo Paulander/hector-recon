@@ -186,6 +186,12 @@ def build_payload() -> dict[str, Any]:
             "sampling_runner_output_validation_status": runner.get("summary", {}).get(
                 "output_validation_status"
             ),
+            "sampling_runner_execution_readiness_source": runner.get("summary", {}).get(
+                "execution_readiness_source"
+            ),
+            "sampling_runner_execution_readiness_status": runner.get("summary", {}).get(
+                "execution_readiness_status"
+            ),
             "sampling_runner_invalid_existing_output_count": runner.get("summary", {}).get(
                 "invalid_existing_output_count"
             ),
@@ -269,6 +275,15 @@ def build_payload() -> dict[str, Any]:
             ),
             "output_validation_status": runner.get("summary", {}).get(
                 "output_validation_status"
+            ),
+            "execution_readiness_source": runner.get("summary", {}).get(
+                "execution_readiness_source"
+            ),
+            "execution_readiness_status": runner.get("summary", {}).get(
+                "execution_readiness_status"
+            ),
+            "execution_readiness_jobs_passing": runner.get("summary", {}).get(
+                "execution_readiness_jobs_passing"
             ),
             "invalid_existing_output_count": runner.get("summary", {}).get(
                 "invalid_existing_output_count"
@@ -375,6 +390,9 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- skipped_existing_output_count: `{stage7['skipped_existing_output_count']}`",
             f"- overwrite_existing_outputs: `{stage7['overwrite_existing_outputs']}`",
             f"- output_validation_status: `{stage7['output_validation_status']}`",
+            f"- execution_readiness_source: `{stage7['execution_readiness_source']}`",
+            f"- execution_readiness_status: `{stage7['execution_readiness_status']}`",
+            f"- execution_readiness_jobs_passing: `{stage7['execution_readiness_jobs_passing']}`",
             f"- invalid_existing_output_count: `{stage7['invalid_existing_output_count']}`",
             f"- integration_status: `{stage7['integration_status']}`",
             f"- outputs_present_count: `{stage7['outputs_present_count']}`",

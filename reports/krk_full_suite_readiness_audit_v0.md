@@ -40,6 +40,9 @@
 - skipped_existing_output_count: `0`
 - overwrite_existing_outputs: `False`
 - output_validation_status: `stage7_diverse_clean_sampling_outputs_validation_pending`
+- execution_readiness_source: `live_recomputed`
+- execution_readiness_status: `stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval`
+- execution_readiness_jobs_passing: `8`
 - invalid_existing_output_count: `0`
 - integration_status: `stage7_diverse_clean_sampling_outputs_pending`
 - outputs_present_count: `0`

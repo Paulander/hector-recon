@@ -66,6 +66,12 @@ def test_full_suite_readiness_identifies_current_gate():
     assert stage7["output_validation_status"] == (
         "stage7_diverse_clean_sampling_outputs_validation_pending"
     )
+    assert stage7["execution_readiness_source"] == "live_recomputed"
+    assert (
+        stage7["execution_readiness_status"]
+        == "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval"
+    )
+    assert stage7["execution_readiness_jobs_passing"] == 8
     assert stage7["invalid_existing_output_count"] == 0
     assert stage7["overwrite_existing_outputs"] is False
     assert stage7["success_controls_ready"] is False
@@ -94,6 +100,10 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["stage_status"]["stage7"]["ready_for_promotion"] is False
     assert payload["stage_status"]["stage7"]["sampling_runner_invalid_existing_output_count"] == 0
+    assert (
+        payload["stage_status"]["stage7"]["sampling_runner_execution_readiness_source"]
+        == "live_recomputed"
+    )
     assert payload["stage_status"]["stage8"]["ready_for_training"] is False
     assert (
         payload["approval_gates"]["stage4_first_move_contrast_sandbox"]["status"]

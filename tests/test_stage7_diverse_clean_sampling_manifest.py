@@ -427,6 +427,13 @@ def test_stage7_diverse_clean_sampling_runner_defaults_to_dry_run():
     assert payload["summary"]["refresh_after_run_performed"] is False
     assert payload["summary"]["stage7_training_row_count"] == 0
     assert payload["summary"]["runtime_authorization_row_count"] == 0
+    assert payload["summary"]["execution_readiness_source"] == "live_recomputed"
+    assert (
+        payload["summary"]["execution_readiness_status"]
+        == "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval"
+    )
+    assert payload["summary"]["execution_readiness_all_jobs_pass"] is True
+    assert payload["summary"]["execution_readiness_jobs_passing"] == 8
     assert payload["post_run_refresh"] is None
     assert payload["decision"]["status"] == "stage7_diverse_clean_sampling_runner_dry_run_ready"
     assert payload["decision"]["label_run_allowed"] is False
@@ -438,7 +445,7 @@ def test_stage7_diverse_clean_sampling_runner_defaults_to_dry_run():
         assert command["would_execute"] is False
 
 
-def test_stage7_diverse_clean_sampling_runner_blocks_when_readiness_fails():
+def test_stage7_diverse_clean_sampling_runner_blocks_when_readiness_fails(monkeypatch):
     manifest = {
         "decision": {
             "status": "stage7_diverse_clean_sampling_manifest_review_ready_pending_explicit_approval",
@@ -461,7 +468,14 @@ def test_stage7_diverse_clean_sampling_runner_blocks_when_readiness_fails():
 
     blockers = _runner._validate_ready(manifest, readiness)
     assert "execution_readiness_not_ready" in blockers
+    monkeypatch.setattr(_runner, "_run_execution_readiness", lambda manifest: readiness)
     payload = _runner.build_payload(execute=False, max_jobs=1)
+    assert payload["summary"]["execution_readiness_source"] == "live_recomputed"
+    assert (
+        payload["summary"]["execution_readiness_status"]
+        == "stage7_diverse_clean_sampling_execution_readiness_failed"
+    )
+    assert "execution_readiness_not_ready" in payload["execution_blockers"]
     assert payload["summary"]["executed_job_count"] == 0
     assert payload["commands"][0]["would_execute"] is False
 
@@ -522,6 +536,8 @@ def test_stage7_diverse_clean_sampling_runner_skips_existing_outputs_by_default(
     monkeypatch.setattr(_runner, "ROOT", tmp_path)
     monkeypatch.setattr(_runner, "MANIFEST", manifest_path)
     monkeypatch.setattr(_runner, "READINESS", readiness_path)
+    ready_payload = json.loads(readiness_path.read_text(encoding="utf-8"))
+    monkeypatch.setattr(_runner, "_run_execution_readiness", lambda manifest: ready_payload)
 
     payload = _runner.build_payload(execute=True, max_jobs=1)
 
@@ -593,6 +609,8 @@ def test_stage7_diverse_clean_sampling_runner_blocks_invalid_existing_outputs_wi
     monkeypatch.setattr(_runner, "ROOT", tmp_path)
     monkeypatch.setattr(_runner, "MANIFEST", manifest_path)
     monkeypatch.setattr(_runner, "READINESS", readiness_path)
+    ready_payload = json.loads(readiness_path.read_text(encoding="utf-8"))
+    monkeypatch.setattr(_runner, "_run_execution_readiness", lambda manifest: ready_payload)
 
     payload = _runner.build_payload(
         execute=True,

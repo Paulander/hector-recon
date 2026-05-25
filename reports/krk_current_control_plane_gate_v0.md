@@ -11,6 +11,9 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - stage7_label_output_integration: `stage7_diverse_clean_sampling_outputs_pending`
 - stage7_label_runner: `stage7_diverse_clean_sampling_runner_dry_run_ready`
 - stage7_label_runner_output_validation_status: `stage7_diverse_clean_sampling_outputs_validation_pending`
+- stage7_label_runner_execution_readiness_source: `live_recomputed`
+- stage7_label_runner_execution_readiness_status: `stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval`
+- stage7_label_runner_execution_readiness_jobs_passing: `8`
 - stage7_label_runner_invalid_existing_output_count: `0`
 - stage7_label_runner_processed_job_count: `0`
 - stage7_label_runner_executed_job_count: `0`
@@ -49,6 +52,7 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
   - resume_safe: `True`
   - skip_existing_outputs_by_default: `True`
   - invalid_existing_outputs_block_without_overwrite: `True`
+  - execution_readiness_recomputed_live: `True`
   - stage7_training_rows: `0`
 - does_not_allow:
   - runtime behavior

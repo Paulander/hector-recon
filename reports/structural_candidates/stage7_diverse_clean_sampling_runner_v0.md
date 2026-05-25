@@ -14,6 +14,10 @@ This is an approval-gated label-run wrapper. By default it is dry-run only. It d
 - dry_run: `True`
 - max_jobs: `None`
 - overwrite_existing_outputs: `False`
+- execution_readiness_source: `live_recomputed`
+- execution_readiness_status: `stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval`
+- execution_readiness_jobs_passing: `8`
+- execution_readiness_all_jobs_pass: `True`
 - output_validation_status: `stage7_diverse_clean_sampling_outputs_validation_pending`
 - invalid_existing_output_count: `0`
 - refresh_after_run_requested: `False`

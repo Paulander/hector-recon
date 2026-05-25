@@ -21,6 +21,7 @@
       "option_id": "approve_stage7_diverse_clean_label_run",
       "recommended_if": "you want to fill the Stage 7 clean success-control gap before broader sequence-policy benchmarking",
       "safety_scope": {
+        "execution_readiness_recomputed_live": true,
         "invalid_existing_outputs_block_without_overwrite": true,
         "resume_safe": true,
         "skip_existing_outputs_by_default": true,
@@ -63,6 +64,9 @@
     "stage7_label_output_integration": "stage7_diverse_clean_sampling_outputs_pending",
     "stage7_label_runner": "stage7_diverse_clean_sampling_runner_dry_run_ready",
     "stage7_label_runner_executed_job_count": 0,
+    "stage7_label_runner_execution_readiness_jobs_passing": 8,
+    "stage7_label_runner_execution_readiness_source": "live_recomputed",
+    "stage7_label_runner_execution_readiness_status": "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval",
     "stage7_label_runner_invalid_existing_output_count": 0,
     "stage7_label_runner_output_validation_status": "stage7_diverse_clean_sampling_outputs_validation_pending",
     "stage7_label_runner_processed_job_count": 0,

@@ -110,6 +110,15 @@ def build_payload(
                 "output_validation_status",
                 "not_checked",
             ),
+            "stage7_label_runner_execution_readiness_source": stage7_runner.get(
+                "summary", {}
+            ).get("execution_readiness_source"),
+            "stage7_label_runner_execution_readiness_status": stage7_runner.get(
+                "summary", {}
+            ).get("execution_readiness_status"),
+            "stage7_label_runner_execution_readiness_jobs_passing": stage7_runner.get(
+                "summary", {}
+            ).get("execution_readiness_jobs_passing"),
             "stage7_label_runner_invalid_existing_output_count": stage7_runner.get(
                 "summary", {}
             ).get("invalid_existing_output_count"),
@@ -166,6 +175,10 @@ def build_payload(
                     "resume_safe": True,
                     "skip_existing_outputs_by_default": True,
                     "invalid_existing_outputs_block_without_overwrite": True,
+                    "execution_readiness_recomputed_live": (
+                        stage7_runner.get("summary", {}).get("execution_readiness_source")
+                        == "live_recomputed"
+                    ),
                     "stage7_training_rows": 0,
                 },
                 "what_it_does_not_allow": [

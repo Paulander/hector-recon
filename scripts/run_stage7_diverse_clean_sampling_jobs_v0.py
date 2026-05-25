@@ -22,6 +22,9 @@ MANIFEST = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_m
 READINESS = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_execution_readiness_v0.json"
 OUTPUT_JSON = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json"
 OUTPUT_MD = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.md"
+EXECUTION_READINESS_SCRIPT = (
+    ROOT / "scripts/validate_stage7_diverse_clean_sampling_execution_readiness_v0.py"
+)
 OUTPUT_VALIDATION_SCRIPT = ROOT / "scripts/validate_stage7_diverse_clean_sampling_outputs_v0.py"
 REFRESH_SCRIPT = ROOT / "scripts/refresh_krk_sequence_policy_pipeline_v0.py"
 
@@ -63,6 +66,22 @@ def _validate_ready(manifest: dict[str, Any], readiness: dict[str, Any]) -> list
     if manifest.get("decision", {}).get("stage8_training_allowed"):
         blockers.append("manifest_allows_stage8_training")
     return blockers
+
+
+def _run_execution_readiness(manifest: dict[str, Any]) -> dict[str, Any] | None:
+    """Recompute readiness from the current manifest before any runner action."""
+
+    if not EXECUTION_READINESS_SCRIPT.exists():
+        return None
+    spec = importlib.util.spec_from_file_location(
+        EXECUTION_READINESS_SCRIPT.stem,
+        EXECUTION_READINESS_SCRIPT,
+    )
+    if spec is None or spec.loader is None:
+        return None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.build_payload(manifest=manifest)
 
 
 def _run_output_validation() -> dict[str, Any] | None:
@@ -155,7 +174,9 @@ def build_payload(
     output_validation: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     manifest = _load(MANIFEST)
-    readiness = _load(READINESS)
+    live_readiness = _run_execution_readiness(manifest)
+    readiness = live_readiness if live_readiness is not None else _load(READINESS)
+    readiness_source = "live_recomputed" if live_readiness is not None else "persisted_artifact"
     blockers = _validate_ready(manifest, readiness)
     output_validation = output_validation if output_validation is not None else _run_output_validation()
     output_validation_status = (
@@ -221,6 +242,7 @@ def build_payload(
         "source_artifacts": [
             "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
             "reports/structural_candidates/stage7_diverse_clean_sampling_execution_readiness_v0.json",
+            "scripts/validate_stage7_diverse_clean_sampling_execution_readiness_v0.py",
             "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json",
         ],
         "execution_requested": execute,
@@ -234,6 +256,14 @@ def build_payload(
             "dry_run": not execute,
             "max_jobs": max_jobs,
             "overwrite_existing_outputs": overwrite_existing_outputs,
+            "execution_readiness_source": readiness_source,
+            "execution_readiness_status": readiness.get("decision", {}).get("status"),
+            "execution_readiness_jobs_passing": readiness.get("summary", {}).get(
+                "jobs_passing_readiness"
+            ),
+            "execution_readiness_all_jobs_pass": readiness.get("summary", {}).get(
+                "all_jobs_pass_readiness"
+            ),
             "output_validation_status": output_validation_status,
             "invalid_existing_output_count": invalid_output_count,
             "refresh_after_run_requested": refresh_after_run,

@@ -52,6 +52,7 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     assert primary["scope"]["resume_safe"] is True
     assert primary["scope"]["skip_existing_outputs_by_default"] is True
     assert primary["scope"]["invalid_existing_outputs_block_without_overwrite"] is True
+    assert primary["scope"]["execution_readiness_recomputed_live"] is True
     assert primary["scope"]["stage7_training_rows"] == 0
     assert primary["scope"]["stage7_promotion_allowed"] is False
     assert primary["scope"]["stage8_training_allowed"] is False
@@ -59,6 +60,12 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
         payload["current_state"]["stage7_output_validation_status"]
         == "stage7_diverse_clean_sampling_outputs_validation_pending"
     )
+    assert payload["current_state"]["stage7_execution_readiness_source"] == "live_recomputed"
+    assert (
+        payload["current_state"]["stage7_execution_readiness_status"]
+        == "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval"
+    )
+    assert payload["current_state"]["stage7_execution_readiness_jobs_passing"] == 8
     assert payload["current_state"]["stage7_invalid_existing_output_count"] == 0
     assert payload["current_state"]["stage7_overwrite_existing_outputs"] is False
     assert payload["current_state"]["stage7_processed_job_count"] == 0

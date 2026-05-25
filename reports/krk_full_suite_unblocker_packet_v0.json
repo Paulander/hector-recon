@@ -5,6 +5,9 @@
     "sequence_policy_benchmark_ready": false,
     "sequence_policy_inputs_ready": false,
     "stage7_executed_job_count": 0,
+    "stage7_execution_readiness_jobs_passing": 8,
+    "stage7_execution_readiness_source": "live_recomputed",
+    "stage7_execution_readiness_status": "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval",
     "stage7_invalid_existing_output_count": 0,
     "stage7_output_validation_status": "stage7_diverse_clean_sampling_outputs_validation_pending",
     "stage7_overwrite_existing_outputs": false,
@@ -34,6 +37,7 @@
     "implementation_allowed_by_this_packet": false,
     "purpose": "Fill held-out Stage 7 clean success controls so the sequence-policy benchmark can run.",
     "scope": {
+      "execution_readiness_recomputed_live": true,
       "horizon": "h40",
       "invalid_existing_outputs_block_without_overwrite": true,
       "max_jobs": 8,
