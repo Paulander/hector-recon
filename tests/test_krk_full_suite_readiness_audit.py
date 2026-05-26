@@ -137,6 +137,31 @@ def test_full_suite_readiness_identifies_current_gate():
         "are balanced."
     )
 
+    sequence = payload["sequence_policy"]
+    assert (
+        sequence["benchmark_design_status"]
+        == "sequence_policy_benchmark_design_ready_non_causal"
+    )
+    assert (
+        sequence["passive_design_without_new_labels_status"]
+        == "non_causal_sequence_policy_design_without_new_labels_ready"
+    )
+    assert (
+        sequence["passive_design_current_evidence_limit"]
+        == "protected_plan_window_failure_evidence_sparse"
+    )
+    assert sequence["passive_design_depends_on_new_label_execution"] is False
+    assert (
+        sequence["passive_design_depends_on_protected_failure_contrast_collection"]
+        is False
+    )
+    assert (
+        sequence["cross_stage_requirements_status"]
+        == "cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark"
+    )
+    assert sequence["replay_free_protected_cross_stage_evidence"] is True
+    assert sequence["cross_stage_sequence_evidence_met"] is True
+
     protected_failure_contrast = payload["protected_failure_contrast_gate"]
     assert (
         protected_failure_contrast["plan_status"]
@@ -253,6 +278,11 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
         in rendered
     )
     assert "approval_receipt_created_by_request: `False`" in rendered
+    assert (
+        "passive_design_without_new_labels_status: "
+        "`non_causal_sequence_policy_design_without_new_labels_ready`"
+        in rendered
+    )
     assert (
         "approval_request_status: "
         "`stage4_first_move_contrast_sandbox_approval_request_ready`"

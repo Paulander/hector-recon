@@ -66,7 +66,15 @@
 
 - pipeline_status: `sequence_policy_pipeline_refreshed_ready_for_non_causal_benchmark_review`
 - benchmark_status: `sequence_policy_benchmark_ready_non_causal_results_available`
+- benchmark_design_status: `sequence_policy_benchmark_design_ready_non_causal`
 - benchmark_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered`
+- passive_design_without_new_labels_status: `non_causal_sequence_policy_design_without_new_labels_ready`
+- passive_design_current_evidence_limit: `protected_plan_window_failure_evidence_sparse`
+- passive_design_depends_on_new_label_execution: `False`
+- passive_design_depends_on_protected_failure_contrast_collection: `False`
+- cross_stage_requirements_status: `cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark`
+- replay_free_protected_cross_stage_evidence: `True`
+- cross_stage_sequence_evidence_met: `True`
 - input_row_count: `118`
 - inputs_ready: `True`
 - benchmark_ready: `True`
@@ -118,5 +126,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `173`
+- checked_flag_count: `191`
 - violation_count: `0`

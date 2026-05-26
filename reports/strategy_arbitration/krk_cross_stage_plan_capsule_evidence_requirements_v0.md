@@ -1,17 +1,23 @@
 # KRK Cross-Stage PlanCapsule Evidence Requirements v0
 
-Status: `cross_stage_plan_capsule_evidence_requirements_defined_blocked`
+Status: `cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark`
 
 This is a non-causal requirements artifact. It does not implement PlanCapsule runtime behavior, collect labels, train a selector, promote Stage 7, or train Stage 8.
 
 ## Current Readiness
 
 - plan_capsule_stage7_only_evidence: `True`
-- protected_cross_stage_plan_capsule_evidence: `False`
+- source_review_protected_cross_stage_evidence: `False`
+- replay_free_protected_cross_stage_evidence: `True`
+- cross_stage_sequence_evidence_met: `True`
 - plan_capsule_policy_succeeded: `False`
-- stage7_clean_success_controls_met: `False`
+- stage7_clean_success_controls_met: `True`
 - stage7_clean_failure_controls_met: `True`
-- sequence_policy_benchmark_ready: `False`
+- sequence_policy_benchmark_ready: `True`
+- sequence_policy_current_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered`
+- sequence_policy_passive_design_status: `non_causal_sequence_policy_design_without_new_labels_ready`
+- remaining_evidence_gap: `protected_plan_window_failure_evidence_sparse`
+- protected_failure_contrast_approval_receipt_blockers: `['approval_receipt_missing']`
 - control_plane_gate_status: `krk_control_plane_waiting_on_explicit_gate_choice`
 
 ## Required Evidence Frames
@@ -90,7 +96,7 @@ This is a non-causal requirements artifact. It does not implement PlanCapsule ru
 
 ## Decision
 
-- recommended_next_step: `attempt_replay_free_protected_window_extraction_before_new_runs`
+- recommended_next_step: `continue_non_causal_sequence_policy_design_without_new_labels_or_obtain_protected_failure_contrast_approval`
 - runtime_changes_allowed: `false`
 - label_run_allowed: `false`
 - selector_training_allowed: `false`

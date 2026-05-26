@@ -301,6 +301,24 @@ def build_payload() -> dict[str, Any]:
             "stage7_success_controls_required": stage7_gate["success_controls_required"],
             "sequence_policy_inputs_ready": sequence["inputs_ready"],
             "sequence_policy_benchmark_ready": sequence["benchmark_ready"],
+            "sequence_policy_benchmark_design_status": sequence.get(
+                "benchmark_design_status"
+            ),
+            "sequence_policy_passive_design_without_new_labels_status": (
+                sequence.get("passive_design_without_new_labels_status")
+            ),
+            "sequence_policy_passive_design_current_evidence_limit": sequence.get(
+                "passive_design_current_evidence_limit"
+            ),
+            "sequence_policy_cross_stage_requirements_status": sequence.get(
+                "cross_stage_requirements_status"
+            ),
+            "sequence_policy_replay_free_protected_cross_stage_evidence": (
+                sequence.get("replay_free_protected_cross_stage_evidence")
+            ),
+            "sequence_policy_cross_stage_sequence_evidence_met": sequence.get(
+                "cross_stage_sequence_evidence_met"
+            ),
             "sequence_policy_forbidden_training_or_runtime_input_blocked": (
                 sequence_forbidden_training_or_runtime_inputs
             ),
@@ -770,6 +788,12 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- stage7_success_controls_required: `{state['stage7_success_controls_required']}`",
         f"- sequence_policy_inputs_ready: `{state['sequence_policy_inputs_ready']}`",
         f"- sequence_policy_benchmark_ready: `{state['sequence_policy_benchmark_ready']}`",
+        f"- sequence_policy_benchmark_design_status: `{state['sequence_policy_benchmark_design_status']}`",
+        f"- sequence_policy_passive_design_without_new_labels_status: `{state['sequence_policy_passive_design_without_new_labels_status']}`",
+        f"- sequence_policy_passive_design_current_evidence_limit: `{state['sequence_policy_passive_design_current_evidence_limit']}`",
+        f"- sequence_policy_cross_stage_requirements_status: `{state['sequence_policy_cross_stage_requirements_status']}`",
+        f"- sequence_policy_replay_free_protected_cross_stage_evidence: `{state['sequence_policy_replay_free_protected_cross_stage_evidence']}`",
+        f"- sequence_policy_cross_stage_sequence_evidence_met: `{state['sequence_policy_cross_stage_sequence_evidence_met']}`",
         f"- stage8_training_ready: `{state['stage8_training_ready']}`",
         f"- stage7_output_validation_status: `{state['stage7_output_validation_status']}`",
         f"- stage7_invalid_existing_output_count: `{state['stage7_invalid_existing_output_count']}`",

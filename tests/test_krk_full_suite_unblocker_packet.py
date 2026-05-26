@@ -232,6 +232,34 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     )
     assert payload["current_state"]["protected_plan_window_failure_contrast_integration_ready"] is False
     assert (
+        payload["current_state"]["sequence_policy_benchmark_design_status"]
+        == "sequence_policy_benchmark_design_ready_non_causal"
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_passive_design_without_new_labels_status"
+        ]
+        == "non_causal_sequence_policy_design_without_new_labels_ready"
+    )
+    assert (
+        payload["current_state"]["sequence_policy_passive_design_current_evidence_limit"]
+        == "protected_plan_window_failure_evidence_sparse"
+    )
+    assert (
+        payload["current_state"]["sequence_policy_cross_stage_requirements_status"]
+        == "cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark"
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_replay_free_protected_cross_stage_evidence"
+        ]
+        is True
+    )
+    assert (
+        payload["current_state"]["sequence_policy_cross_stage_sequence_evidence_met"]
+        is True
+    )
+    assert (
         payload["current_state"][
             "sequence_policy_after_protected_failure_contrast_refresh_status"
         ]
@@ -317,6 +345,11 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
         in rendered
     )
     assert "post_success_refresh: `full_passive_krk_suite_gate_stack`" in rendered
+    assert (
+        "sequence_policy_passive_design_without_new_labels_status: "
+        "`non_causal_sequence_policy_design_without_new_labels_ready`"
+        in rendered
+    )
     assert "approval_required: `True`" in rendered
     assert "implementation_allowed_by_this_packet: `False`" in rendered
     assert payload["primary_unblocker"]["implementation_allowed_by_this_packet"] is False

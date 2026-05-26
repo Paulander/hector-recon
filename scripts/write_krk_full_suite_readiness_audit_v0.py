@@ -31,8 +31,15 @@ SOURCES = {
         "reports/strategy_arbitration/krk_sequence_policy_pipeline_refresh_v0.json"
     ),
     "sequence_benchmark": "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
+    "sequence_benchmark_design": (
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json"
+    ),
     "sequence_benchmark_review": (
         "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
+    ),
+    "cross_stage_plan_capsule_requirements": (
+        "reports/strategy_arbitration/"
+        "krk_cross_stage_plan_capsule_evidence_requirements_v0.json"
     ),
     "protected_failure_contrast_plan": (
         "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_plan_v0.json"
@@ -215,7 +222,9 @@ def build_payload() -> dict[str, Any]:
     stage4_approval_request = payloads["stage4_sandbox_approval_request"]
     pipeline = payloads["sequence_pipeline_refresh"]
     benchmark = payloads["sequence_benchmark"]
+    benchmark_design = payloads["sequence_benchmark_design"]
     benchmark_review = payloads["sequence_benchmark_review"]
+    cross_stage_requirements = payloads["cross_stage_plan_capsule_requirements"]
     failure_contrast_plan = payloads["protected_failure_contrast_plan"]
     failure_contrast_manifest = payloads["protected_failure_contrast_manifest"]
     failure_contrast_manifest_review = payloads["protected_failure_contrast_manifest_review"]
@@ -331,6 +340,9 @@ def build_payload() -> dict[str, Any]:
     )
 
     benchmark_decision = benchmark.get("decision", {})
+    benchmark_design_decision = benchmark_design.get("decision", {})
+    passive_design = benchmark_design.get("passive_design_without_new_labels") or {}
+    cross_stage_readiness = cross_stage_requirements.get("current_readiness") or {}
     benchmark_review_blockers = benchmark_review.get("blockers") or []
     sequence_ready = bool(sequence_summary.get("sequence_policy_inputs_ready")) and bool(
         benchmark_decision.get("benchmark_executed_as_ready")
@@ -548,9 +560,29 @@ def build_payload() -> dict[str, Any]:
         "sequence_policy": {
             "pipeline_status": pipeline.get("decision", {}).get("status"),
             "benchmark_status": benchmark_decision.get("status"),
+            "benchmark_design_status": benchmark_design_decision.get("status"),
             "benchmark_review_status": sequence_review_status,
             "benchmark_preflight_blockers": benchmark_preflight.get("blockers") or [],
             "benchmark_review_blockers": benchmark_review_blockers,
+            "passive_design_without_new_labels_status": passive_design.get("status"),
+            "passive_design_current_evidence_limit": passive_design.get(
+                "current_evidence_limit"
+            ),
+            "passive_design_depends_on_new_label_execution": passive_design.get(
+                "depends_on_new_label_execution"
+            ),
+            "passive_design_depends_on_protected_failure_contrast_collection": (
+                passive_design.get("depends_on_protected_failure_contrast_collection")
+            ),
+            "cross_stage_requirements_status": cross_stage_requirements.get(
+                "decision", {}
+            ).get("status"),
+            "replay_free_protected_cross_stage_evidence": cross_stage_readiness.get(
+                "replay_free_protected_cross_stage_evidence"
+            ),
+            "cross_stage_sequence_evidence_met": cross_stage_readiness.get(
+                "cross_stage_sequence_evidence_met"
+            ),
             "forbidden_training_or_runtime_input_blocked": (
                 sequence_forbidden_training_or_runtime_inputs
             ),
@@ -877,7 +909,15 @@ def write_markdown(payload: dict[str, Any]) -> str:
             "",
             f"- pipeline_status: `{sequence['pipeline_status']}`",
             f"- benchmark_status: `{sequence['benchmark_status']}`",
+            f"- benchmark_design_status: `{sequence['benchmark_design_status']}`",
             f"- benchmark_review_status: `{sequence['benchmark_review_status']}`",
+            f"- passive_design_without_new_labels_status: `{sequence['passive_design_without_new_labels_status']}`",
+            f"- passive_design_current_evidence_limit: `{sequence['passive_design_current_evidence_limit']}`",
+            f"- passive_design_depends_on_new_label_execution: `{sequence['passive_design_depends_on_new_label_execution']}`",
+            f"- passive_design_depends_on_protected_failure_contrast_collection: `{sequence['passive_design_depends_on_protected_failure_contrast_collection']}`",
+            f"- cross_stage_requirements_status: `{sequence['cross_stage_requirements_status']}`",
+            f"- replay_free_protected_cross_stage_evidence: `{sequence['replay_free_protected_cross_stage_evidence']}`",
+            f"- cross_stage_sequence_evidence_met: `{sequence['cross_stage_sequence_evidence_met']}`",
             f"- input_row_count: `{sequence['input_row_count']}`",
             f"- inputs_ready: `{sequence['inputs_ready']}`",
             f"- benchmark_ready: `{sequence['benchmark_ready']}`",

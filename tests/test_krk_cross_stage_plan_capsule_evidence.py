@@ -54,8 +54,22 @@ def test_cross_stage_plan_capsule_requirements_remain_non_causal():
     assert payload["decision"]["selector_training_allowed"] is False
     assert (
         payload["decision"]["recommended_next_step"]
-        == "attempt_replay_free_protected_window_extraction_before_new_runs"
+        == "continue_non_causal_sequence_policy_design_without_new_labels_or_obtain_protected_failure_contrast_approval"
     )
+    readiness = payload["current_readiness"]
+    assert readiness["plan_capsule_stage7_only_evidence"] is True
+    assert readiness["source_review_protected_cross_stage_evidence"] is False
+    assert readiness["replay_free_protected_cross_stage_evidence"] is True
+    assert readiness["cross_stage_sequence_evidence_met"] is True
+    assert readiness["sequence_policy_benchmark_ready"] is True
+    assert (
+        readiness["sequence_policy_passive_design_status"]
+        == "non_causal_sequence_policy_design_without_new_labels_ready"
+    )
+    assert readiness["remaining_evidence_gap"] == "protected_plan_window_failure_evidence_sparse"
+    assert readiness["protected_failure_contrast_approval_receipt_blockers"] == [
+        "approval_receipt_missing"
+    ]
 
 
 def test_cross_stage_plan_capsule_requirements_fixture_can_be_ready():
@@ -72,6 +86,8 @@ def test_cross_stage_plan_capsule_requirements_fixture_can_be_ready():
                 "stage7_clean_success_controls_met": True,
                 "stage7_clean_failure_controls_met": True,
                 "benchmark_ready": True,
+                "cross_stage_sequence_evidence_met": True,
+                "protected_plan_window_evidence_met": True,
             }
         },
         control_plane_gate={"decision": {"status": "fixture_gate"}},
@@ -80,6 +96,10 @@ def test_cross_stage_plan_capsule_requirements_fixture_can_be_ready():
     assert (
         payload["decision"]["status"]
         == "cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_non_causal_sequence_policy_benchmark_results"
     )
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["stage8_training_allowed"] is False

@@ -115,7 +115,7 @@
     "status": "retry1_protected_stage5_6_stack_adopted_manifest_only"
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 173,
+    "checked_flag_count": 191,
     "gameplay_topology_mutation": false,
     "runtime_behavior_changed": false,
     "runtime_defaults_changed": false,
@@ -128,6 +128,7 @@
   },
   "schema_version": "krk_full_suite_readiness_audit.v0",
   "sequence_policy": {
+    "benchmark_design_status": "sequence_policy_benchmark_design_ready_non_causal",
     "benchmark_preflight_blockers": [],
     "benchmark_ready": true,
     "benchmark_review_blockers": [
@@ -135,11 +136,18 @@
     ],
     "benchmark_review_status": "sequence_policy_benchmark_mixed_plan_window_underpowered",
     "benchmark_status": "sequence_policy_benchmark_ready_non_causal_results_available",
+    "cross_stage_requirements_status": "cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark",
+    "cross_stage_sequence_evidence_met": true,
     "forbidden_training_or_runtime_input_blocked": false,
     "forbidden_training_or_runtime_input_blockers": [],
     "input_row_count": 118,
     "inputs_ready": true,
+    "passive_design_current_evidence_limit": "protected_plan_window_failure_evidence_sparse",
+    "passive_design_depends_on_new_label_execution": false,
+    "passive_design_depends_on_protected_failure_contrast_collection": false,
+    "passive_design_without_new_labels_status": "non_causal_sequence_policy_design_without_new_labels_ready",
     "pipeline_status": "sequence_policy_pipeline_refreshed_ready_for_non_causal_benchmark_review",
+    "replay_free_protected_cross_stage_evidence": true,
     "runtime_authorization_row_count": 0,
     "selector_training_row_count": 0,
     "stage7_heldout_row_count": 50
@@ -148,6 +156,7 @@
     "active_protected_stack": "reports/krk_active_protected_stack_v0.json",
     "clean_stack_validation": "reports/krk_clean_stack_post_replacement_validation_v0.json",
     "control_plane_gate": "reports/krk_current_control_plane_gate_v0.json",
+    "cross_stage_plan_capsule_requirements": "reports/strategy_arbitration/krk_cross_stage_plan_capsule_evidence_requirements_v0.json",
     "current_brief": "reports/current_agent_brief.md",
     "preservation_checks": "reports/krk_clean_retrain_retry1_preservation_checks_v0.json",
     "protected_failure_contrast_approval_request": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_approval_request_v0.json",
@@ -159,6 +168,7 @@
     "protected_failure_contrast_plan": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_plan_v0.json",
     "protected_failure_contrast_runner": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_runner_v0.json",
     "sequence_benchmark": "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
+    "sequence_benchmark_design": "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json",
     "sequence_benchmark_review": "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
     "sequence_pipeline_refresh": "reports/strategy_arbitration/krk_sequence_policy_pipeline_refresh_v0.json",
     "stage4_caveat_unblocker": "reports/krk_stage4_caveat_unblocker_packet_v0.json",

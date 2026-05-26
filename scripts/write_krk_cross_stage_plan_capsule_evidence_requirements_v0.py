@@ -52,16 +52,36 @@ def build_payload(
 
     plan_readiness = plan_capsule_review.get("readiness", {})
     seq_readiness = sequence_policy_design.get("readiness", {})
+    passive_design = sequence_policy_design.get("passive_design_without_new_labels") or {}
+    control_state = control_plane_gate.get("current_state") or {}
     stage7_only = bool(plan_readiness.get("stage7_only_evidence", True))
-    protected_cross_stage = bool(plan_readiness.get("protected_cross_stage_evidence", False))
+    source_protected_cross_stage = bool(
+        plan_readiness.get("protected_cross_stage_evidence", False)
+    )
+    replay_free_protected_cross_stage = bool(
+        seq_readiness.get("protected_plan_window_evidence_met", False)
+    )
+    cross_stage_sequence_evidence_met = bool(
+        seq_readiness.get("cross_stage_sequence_evidence_met", False)
+    )
     clean_success_met = bool(seq_readiness.get("stage7_clean_success_controls_met", False))
     clean_failure_met = bool(seq_readiness.get("stage7_clean_failure_controls_met", False))
+    benchmark_ready = bool(seq_readiness.get("benchmark_ready"))
+    current_evidence_limit = passive_design.get("current_evidence_limit")
 
-    evidence_ready = protected_cross_stage and clean_success_met and clean_failure_met
+    evidence_ready = benchmark_ready and cross_stage_sequence_evidence_met
     status = (
         "cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark"
         if evidence_ready
         else "cross_stage_plan_capsule_evidence_requirements_defined_blocked"
+    )
+    recommended_next_step = (
+        "continue_non_causal_sequence_policy_design_without_new_labels_or_obtain_protected_failure_contrast_approval"
+        if passive_design.get("status")
+        == "non_causal_sequence_policy_design_without_new_labels_ready"
+        else "review_non_causal_sequence_policy_benchmark_results"
+        if evidence_ready
+        else "attempt_replay_free_protected_window_extraction_before_new_runs"
     )
 
     return {
@@ -75,11 +95,24 @@ def build_payload(
         ],
         "current_readiness": {
             "plan_capsule_stage7_only_evidence": stage7_only,
-            "protected_cross_stage_plan_capsule_evidence": protected_cross_stage,
+            "source_review_protected_cross_stage_evidence": source_protected_cross_stage,
+            "replay_free_protected_cross_stage_evidence": replay_free_protected_cross_stage,
+            "cross_stage_sequence_evidence_met": cross_stage_sequence_evidence_met,
             "plan_capsule_policy_succeeded": bool(plan_readiness.get("policy_succeeded")),
             "stage7_clean_success_controls_met": clean_success_met,
             "stage7_clean_failure_controls_met": clean_failure_met,
-            "sequence_policy_benchmark_ready": bool(seq_readiness.get("benchmark_ready")),
+            "sequence_policy_benchmark_ready": benchmark_ready,
+            "sequence_policy_current_review_status": seq_readiness.get(
+                "current_benchmark_review_status"
+            ),
+            "sequence_policy_passive_design_status": passive_design.get("status"),
+            "remaining_evidence_gap": current_evidence_limit,
+            "protected_failure_contrast_approval_receipt_blockers": (
+                control_state.get(
+                    "protected_plan_window_failure_contrast_approval_receipt_blockers"
+                )
+                or []
+            ),
             "control_plane_gate_status": control_plane_gate.get("decision", {}).get("status"),
         },
         "required_evidence_frames": [
@@ -175,7 +208,7 @@ def build_payload(
         ],
         "decision": {
             "status": status,
-            "recommended_next_step": "attempt_replay_free_protected_window_extraction_before_new_runs",
+            "recommended_next_step": recommended_next_step,
             "runtime_changes_allowed": False,
             "label_run_allowed": False,
             "selector_allowed": False,
