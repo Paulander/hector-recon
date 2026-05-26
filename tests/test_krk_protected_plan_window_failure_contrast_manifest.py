@@ -364,6 +364,8 @@ def test_failure_contrast_runner_is_dry_run_ready_without_authorizing_collection
     assert payload["summary"]["job_count"] == 6
     assert payload["summary"]["processed_job_count"] == 0
     assert payload["summary"]["executed_job_count"] == 0
+    assert payload["summary"]["refresh_after_run_requested"] is True
+    assert payload["summary"]["refresh_after_run_performed"] is False
     assert payload["summary"]["execution_readiness_jobs_passing"] == 6
     assert len(payload["summary"]["execution_readiness_manifest_fingerprint"]) == 64
     assert len(payload["summary"]["execution_readiness_fingerprint"]) == 64
@@ -461,7 +463,7 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
     assert required["approval_scope"]["max_jobs"] is None
     assert required["approval_scope"]["job_timeout_seconds"] == 900
     assert required["approval_scope"]["overwrite_existing_outputs"] is False
-    assert required["approval_scope"]["refresh_after_run"] is False
+    assert required["approval_scope"]["refresh_after_run"] is True
     assert (
         required["approval_scope"]["manifest_fingerprint"]
         == payload["summary"]["manifest_fingerprint"]

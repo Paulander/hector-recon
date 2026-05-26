@@ -54,6 +54,7 @@
         "protected_stack_rollback_paths_exist": true,
         "protected_stack_rollback_paths_preserved": true,
         "protected_stack_rollback_paths_safe": true,
+        "refresh_after_run": true,
         "resume_safe": true,
         "runtime_authorization_row_count": 0,
         "skip_existing_outputs_by_default": true,

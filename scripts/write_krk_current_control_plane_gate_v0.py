@@ -575,6 +575,9 @@ def build_payload(
                     "per_job_timeout_seconds": failure_contrast_runner_summary.get(
                         "job_timeout_seconds"
                     ),
+                    "refresh_after_run": failure_contrast_runner_summary.get(
+                        "refresh_after_run_requested"
+                    ),
                     "processed_job_count": failure_contrast_runner_summary.get(
                         "processed_job_count"
                     ),

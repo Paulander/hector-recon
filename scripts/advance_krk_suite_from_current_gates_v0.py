@@ -129,6 +129,7 @@ PASSIVE_STEPS = [
     {
         "step_id": "protected_plan_window_failure_contrast_runner",
         "script": "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py",
+        "args": ["--refresh-after-run"],
         "output_json": (
             "reports/strategy_arbitration/"
             "krk_protected_plan_window_failure_contrast_runner_v0.json"
@@ -247,7 +248,7 @@ def _load_json(relative: str) -> dict[str, Any]:
     return data
 
 
-def _run_script(script: str) -> dict[str, Any]:
+def _run_script(script: str, args: list[str] | None = None) -> dict[str, Any]:
     module = _load_module(ROOT / script)
     if not hasattr(module, "main"):
         raise RuntimeError(f"script has no main(): {script}")
@@ -255,22 +256,23 @@ def _run_script(script: str) -> dict[str, Any]:
     try:
         # Passive refresh imports scripts in-process; never let caller CLI flags
         # such as --execute-reviewed-label-run leak into imported script parsers.
-        sys.argv = [script]
+        sys.argv = [script, *(args or [])]
         module.main()
     finally:
         sys.argv = original_argv
-    return {"script": script, "ran": True}
+    return {"script": script, "args": list(args or []), "ran": True}
 
 
 def build_payload() -> dict[str, Any]:
     step_results: list[dict[str, Any]] = []
     for step in PASSIVE_STEPS:
-        _run_script(step["script"])
+        _run_script(step["script"], step.get("args") or [])
         output = _load_json(step["output_json"])
         step_results.append(
             {
                 "step_id": step["step_id"],
                 "script": step["script"],
+                "script_args": list(step.get("args") or []),
                 "output_json": step["output_json"],
                 "decision_status": (output.get("decision") or {}).get("status"),
                 "artifact_runtime_behavior_changed": bool(
@@ -591,6 +593,9 @@ def build_payload() -> dict[str, Any]:
             "protected_plan_window_failure_contrast_runner_executed_job_count": failure_contrast_runner.get(
                 "summary", {}
             ).get("executed_job_count"),
+            "protected_plan_window_failure_contrast_runner_refresh_after_run_requested": failure_contrast_runner.get(
+                "summary", {}
+            ).get("refresh_after_run_requested"),
             "protected_plan_window_failure_contrast_approval_request_status": failure_contrast_approval_request.get(
                 "decision", {}
             ).get("status"),

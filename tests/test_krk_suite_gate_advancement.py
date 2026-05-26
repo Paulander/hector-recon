@@ -163,6 +163,18 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     assert payload["summary"]["protected_plan_window_failure_contrast_runner_processed_job_count"] == 0
     assert payload["summary"]["protected_plan_window_failure_contrast_runner_executed_job_count"] == 0
     assert (
+        payload["summary"][
+            "protected_plan_window_failure_contrast_runner_refresh_after_run_requested"
+        ]
+        is True
+    )
+    runner_step = [
+        step
+        for step in payload["step_results"]
+        if step["step_id"] == "protected_plan_window_failure_contrast_runner"
+    ][0]
+    assert runner_step["script_args"] == ["--refresh-after-run"]
+    assert (
         payload["summary"]["protected_plan_window_failure_contrast_approval_request_status"]
         == "protected_plan_window_failure_contrast_approval_request_ready"
     )
@@ -322,6 +334,12 @@ def test_gate_advancement_does_not_inherit_caller_label_execution_flags():
         runner_step["decision_status"]
         == "stage7_additional_clean_sampling_runner_not_applicable_success_gate_closed"
     )
+    protected_runner_step = [
+        step
+        for step in payload["step_results"]
+        if step["step_id"] == "protected_plan_window_failure_contrast_runner"
+    ][0]
+    assert protected_runner_step["script_args"] == ["--refresh-after-run"]
 
 
 def test_gate_advancement_boundary_check_includes_artifact_level_flags(monkeypatch):
@@ -351,8 +369,8 @@ def test_gate_advancement_boundary_check_includes_artifact_level_flags(monkeypat
 def test_gate_advancement_routes_forbidden_training_rows_to_input_repair(monkeypatch):
     real_load_json = _advance._load_json
 
-    def no_op_run_script(script: str):
-        return {"script": script, "ran": False}
+    def no_op_run_script(script: str, args: list[str] | None = None):
+        return {"script": script, "args": list(args or []), "ran": False}
 
     def tainted_load_json(relative: str):
         payload = json.loads(json.dumps(real_load_json(relative)))

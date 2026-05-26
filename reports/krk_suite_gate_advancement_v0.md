@@ -44,6 +44,7 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - protected_plan_window_failure_contrast_runner_status: `protected_plan_window_failure_contrast_runner_dry_run_ready`
 - protected_plan_window_failure_contrast_runner_processed_job_count: `0`
 - protected_plan_window_failure_contrast_runner_executed_job_count: `0`
+- protected_plan_window_failure_contrast_runner_refresh_after_run_requested: `True`
 - protected_plan_window_failure_contrast_approval_request_status: `protected_plan_window_failure_contrast_approval_request_ready`
 - protected_plan_window_failure_contrast_approval_receipt_created: `False`
 - protected_plan_window_failure_contrast_approval_receipt_blockers: `['approval_receipt_missing']`

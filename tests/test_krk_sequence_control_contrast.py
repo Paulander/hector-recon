@@ -469,6 +469,7 @@ def test_current_control_plane_gate_requires_explicit_choice():
     assert len(review_option["safety_scope"]["expected_manifest_fingerprint"]) == 64
     assert len(review_option["safety_scope"]["expected_readiness_fingerprint"]) == 64
     assert review_option["safety_scope"]["per_job_timeout_seconds"] == 900
+    assert review_option["safety_scope"]["refresh_after_run"] is True
     assert review_option["safety_scope"]["processed_job_count"] == 0
     assert review_option["safety_scope"]["executed_job_count"] == 0
     assert review_option["safety_scope"]["output_valid_count"] == 0

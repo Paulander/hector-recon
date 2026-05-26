@@ -129,6 +129,7 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
   - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
   - expected_readiness_fingerprint: `351a366042e7e888018897007e29e096afdb180a9c4f4eb02853940b82228c66`
   - per_job_timeout_seconds: `900`
+  - refresh_after_run: `True`
   - processed_job_count: `0`
   - executed_job_count: `0`
   - output_valid_count: `0`

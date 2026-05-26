@@ -92,6 +92,7 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     assert primary["scope"]["invalid_existing_outputs_block_without_overwrite"] is True
     assert primary["scope"]["execution_readiness_recomputed_live"] is True
     assert primary["scope"]["per_job_timeout_seconds"] == 900
+    assert primary["scope"]["refresh_after_run"] is True
     assert primary["scope"]["approval_receipt_required"] is True
     assert primary["scope"]["approval_receipt_path"] == (
         "reports/strategy_arbitration/"

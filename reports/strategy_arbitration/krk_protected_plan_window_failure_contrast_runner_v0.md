@@ -39,7 +39,7 @@ Default mode is dry-run only. Executing collection requires explicit user approv
 - output_exists_count: `0`
 - output_valid_count: `0`
 - invalid_existing_output_count: `0`
-- refresh_after_run_requested: `False`
+- refresh_after_run_requested: `True`
 - refresh_after_run_performed: `False`
 - stage7_training_row_count: `0`
 - runtime_authorization_row_count: `0`

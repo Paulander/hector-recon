@@ -590,6 +590,11 @@ def build_payload() -> dict[str, Any]:
                     if failure_contrast_primary
                     else job_timeout_seconds
                 ),
+                "refresh_after_run": (
+                    failure_contrast_runner_summary.get("refresh_after_run_requested")
+                    if failure_contrast_primary
+                    else None
+                ),
                 "approval_receipt_required": (
                     True if failure_contrast_primary else None
                 ),
