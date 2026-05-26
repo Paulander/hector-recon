@@ -129,7 +129,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `ba23f2581ff769167dc194ab149ae8aff9d3273e312f711bf7131b5ebc68ae4f`
+- expected_readiness_fingerprint: `67c005573157606e02fadefe63068c81bce49deaf7cc904768809d296b010793`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -212,6 +212,20 @@
 - control_plane_runtime_sandbox_allowed: `False`
 - sandbox_review_status: `candidate_generation_observation_sandbox_review_ready`
 - sandbox_review_implementation_authorized: `False`
+- observation_sandbox_status: `observation_sandbox_ready_for_non_causal_coverage_analysis`
+- observation_sandbox_generated_candidate_count: `93`
+- observation_sandbox_selected_move_or_provider_changed: `False`
+- observation_coverage_status: `observation_frames_usable_for_non_causal_coverage_analysis`
+- observation_coverage_sampled_frame_count: `93`
+- observation_coverage_invariant_failure_count: `0`
+- observation_broadened_status: `broadened_observation_sample_supports_coverage_analysis`
+- observation_broadened_case_count: `19`
+- observation_broadened_emitted_frame_count: `569`
+- observation_broadened_selected_move_or_provider_delta_count: `0`
+- observation_gap_review_status: `observation_gap_review_blocks_selector_recommends_capacity_annotation`
+- observation_gap_review_unknown_capacity_ratio: `0.7768014059753954`
+- label_blocker_status: `candidate_generation_label_coverage_underpowered_selector_blocked`
+- label_blocker_more_blind_label_farming_not_recommended: `True`
 - source_design_status: `broader_strategy_sequence_candidate_source_design_ready`
 - source_design_implementation_allowed: `False`
 - plan_capsule_source_status: `plan_capsule_sequence_observation_source_schema_ready_but_stage7_only`
@@ -511,5 +525,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1347`
+- checked_flag_count: `1390`
 - violation_count: `0`

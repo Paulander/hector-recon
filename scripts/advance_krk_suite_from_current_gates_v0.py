@@ -1274,6 +1274,54 @@ def build_payload() -> dict[str, Any]:
             "strategy_sequence_candidate_source_sandbox_review_implementation_authorized": strategy_sequence_candidate_source_gate.get(
                 "sandbox_review_implementation_authorized"
             ),
+            "strategy_sequence_candidate_source_observation_sandbox_status": strategy_sequence_candidate_source_gate.get(
+                "observation_sandbox_status"
+            ),
+            "strategy_sequence_candidate_source_observation_sandbox_generated_candidate_count": strategy_sequence_candidate_source_gate.get(
+                "observation_sandbox_generated_candidate_count"
+            ),
+            "strategy_sequence_candidate_source_observation_sandbox_selected_move_or_provider_changed": strategy_sequence_candidate_source_gate.get(
+                "observation_sandbox_selected_move_or_provider_changed"
+            ),
+            "strategy_sequence_candidate_source_observation_coverage_status": strategy_sequence_candidate_source_gate.get(
+                "observation_coverage_status"
+            ),
+            "strategy_sequence_candidate_source_observation_coverage_sampled_frame_count": strategy_sequence_candidate_source_gate.get(
+                "observation_coverage_sampled_frame_count"
+            ),
+            "strategy_sequence_candidate_source_observation_coverage_invariant_failure_count": strategy_sequence_candidate_source_gate.get(
+                "observation_coverage_invariant_failure_count"
+            ),
+            "strategy_sequence_candidate_source_observation_broadened_status": strategy_sequence_candidate_source_gate.get(
+                "observation_broadened_status"
+            ),
+            "strategy_sequence_candidate_source_observation_broadened_case_count": strategy_sequence_candidate_source_gate.get(
+                "observation_broadened_case_count"
+            ),
+            "strategy_sequence_candidate_source_observation_broadened_emitted_frame_count": strategy_sequence_candidate_source_gate.get(
+                "observation_broadened_emitted_frame_count"
+            ),
+            "strategy_sequence_candidate_source_observation_broadened_selected_move_or_provider_delta_count": strategy_sequence_candidate_source_gate.get(
+                "observation_broadened_selected_move_or_provider_delta_count"
+            ),
+            "strategy_sequence_candidate_source_observation_gap_review_status": strategy_sequence_candidate_source_gate.get(
+                "observation_gap_review_status"
+            ),
+            "strategy_sequence_candidate_source_observation_gap_review_unknown_capacity_ratio": strategy_sequence_candidate_source_gate.get(
+                "observation_gap_review_unknown_capacity_ratio"
+            ),
+            "strategy_sequence_candidate_source_observation_gap_review_missing_expected_sources": strategy_sequence_candidate_source_gate.get(
+                "observation_gap_review_missing_expected_sources"
+            ),
+            "strategy_sequence_candidate_source_label_blocker_status": strategy_sequence_candidate_source_gate.get(
+                "label_blocker_status"
+            ),
+            "strategy_sequence_candidate_source_label_blocker_more_blind_label_farming_not_recommended": strategy_sequence_candidate_source_gate.get(
+                "label_blocker_more_blind_label_farming_not_recommended"
+            ),
+            "strategy_sequence_candidate_source_label_blocker_protected_annotation_recall": strategy_sequence_candidate_source_gate.get(
+                "label_blocker_protected_annotation_recall"
+            ),
             "strategy_sequence_candidate_source_design_status": strategy_sequence_candidate_source_gate.get(
                 "source_design_status"
             ),

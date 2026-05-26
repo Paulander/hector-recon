@@ -121,6 +121,18 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/strategy_arbitration/krk_candidate_generation_sandbox_review_v0.json"
     )
     assert (
+        payload["source_artifacts"]["candidate_generation_observation_sandbox"]
+        == "reports/strategy_arbitration/krk_candidate_generation_observation_sandbox_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["candidate_generation_observation_gap_review"]
+        == "reports/strategy_arbitration/krk_candidate_generation_observation_gap_review_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["candidate_generation_label_blocker_review"]
+        == "reports/strategy_arbitration/krk_candidate_generation_label_blocker_review_v1.json"
+    )
+    assert (
         payload["source_artifacts"][
             "protected_strategy_monitor_observation_source_review_packet_v1"
         ]
@@ -715,6 +727,54 @@ def test_full_suite_readiness_identifies_current_gate():
     assert (
         strategy_source["sandbox_review_recommended_first_sandbox"]
         == "default_off_observation_only_candidate_generation"
+    )
+    assert (
+        strategy_source["observation_sandbox_status"]
+        == "observation_sandbox_ready_for_non_causal_coverage_analysis"
+    )
+    assert strategy_source["observation_sandbox_generated_candidate_count"] == 93
+    assert strategy_source["observation_sandbox_selected_move_or_provider_changed"] is False
+    assert (
+        strategy_source["observation_coverage_status"]
+        == "observation_frames_usable_for_non_causal_coverage_analysis"
+    )
+    assert strategy_source["observation_coverage_sampled_frame_count"] == 93
+    assert strategy_source["observation_coverage_invariant_failure_count"] == 0
+    assert (
+        strategy_source["observation_broadened_status"]
+        == "broadened_observation_sample_supports_coverage_analysis"
+    )
+    assert strategy_source["observation_broadened_case_count"] == 19
+    assert strategy_source["observation_broadened_emitted_frame_count"] == 569
+    assert (
+        strategy_source[
+            "observation_broadened_selected_move_or_provider_delta_count"
+        ]
+        == 0
+    )
+    assert (
+        strategy_source["observation_gap_review_status"]
+        == "observation_gap_review_blocks_selector_recommends_capacity_annotation"
+    )
+    assert (
+        strategy_source["observation_gap_review_unknown_capacity_ratio"]
+        == 0.7768014059753954
+    )
+    assert strategy_source["observation_gap_review_missing_expected_sources"] == [
+        "broader_strategy_candidate",
+        "plan_capsule_sequence_candidate",
+    ]
+    assert (
+        strategy_source["label_blocker_status"]
+        == "candidate_generation_label_coverage_underpowered_selector_blocked"
+    )
+    assert (
+        strategy_source["label_blocker_more_blind_label_farming_not_recommended"]
+        is True
+    )
+    assert (
+        strategy_source["label_blocker_protected_annotation_recall"]
+        == 0.07534246575342465
     )
     assert (
         strategy_source["source_design_status"]

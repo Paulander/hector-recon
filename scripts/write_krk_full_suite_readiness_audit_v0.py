@@ -89,6 +89,21 @@ SOURCES = {
     "candidate_generation_sandbox_review": (
         "reports/strategy_arbitration/krk_candidate_generation_sandbox_review_v0.json"
     ),
+    "candidate_generation_observation_sandbox": (
+        "reports/strategy_arbitration/krk_candidate_generation_observation_sandbox_v0.json"
+    ),
+    "candidate_generation_observation_coverage": (
+        "reports/strategy_arbitration/krk_candidate_generation_observation_coverage_analysis_v0.json"
+    ),
+    "candidate_generation_observation_broadened_sample": (
+        "reports/strategy_arbitration/krk_candidate_generation_observation_broadened_sample_v1.json"
+    ),
+    "candidate_generation_observation_gap_review": (
+        "reports/strategy_arbitration/krk_candidate_generation_observation_gap_review_v1.json"
+    ),
+    "candidate_generation_label_blocker_review": (
+        "reports/strategy_arbitration/krk_candidate_generation_label_blocker_review_v1.json"
+    ),
     "broader_strategy_sequence_candidate_source_design_v1": (
         "reports/strategy_arbitration/krk_broader_strategy_sequence_candidate_source_design_v1.json"
     ),
@@ -685,6 +700,21 @@ def build_payload() -> dict[str, Any]:
     ]
     broader_strategy_sequence_candidate_source_design_v1 = payloads[
         "broader_strategy_sequence_candidate_source_design_v1"
+    ]
+    candidate_generation_observation_sandbox = payloads[
+        "candidate_generation_observation_sandbox"
+    ]
+    candidate_generation_observation_coverage = payloads[
+        "candidate_generation_observation_coverage"
+    ]
+    candidate_generation_observation_broadened_sample = payloads[
+        "candidate_generation_observation_broadened_sample"
+    ]
+    candidate_generation_observation_gap_review = payloads[
+        "candidate_generation_observation_gap_review"
+    ]
+    candidate_generation_label_blocker_review = payloads[
+        "candidate_generation_label_blocker_review"
     ]
     plan_capsule_sequence_candidate_observation_review_v1 = payloads[
         "plan_capsule_sequence_candidate_observation_review_v1"
@@ -2039,6 +2069,86 @@ def build_payload() -> dict[str, Any]:
             "sandbox_review_recommended_first_sandbox": (
                 candidate_generation_sandbox_review.get("decision", {}).get(
                     "recommended_first_sandbox"
+                )
+            ),
+            "observation_sandbox_status": (
+                candidate_generation_observation_sandbox.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "observation_sandbox_generated_candidate_count": (
+                candidate_generation_observation_sandbox.get("summary", {}).get(
+                    "generated_candidate_count"
+                )
+            ),
+            "observation_sandbox_selected_move_or_provider_changed": (
+                candidate_generation_observation_sandbox.get("summary", {}).get(
+                    "selected_move_or_provider_changed"
+                )
+            ),
+            "observation_coverage_status": (
+                candidate_generation_observation_coverage.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "observation_coverage_sampled_frame_count": (
+                candidate_generation_observation_coverage.get("summary", {}).get(
+                    "sampled_frame_count"
+                )
+            ),
+            "observation_coverage_invariant_failure_count": (
+                candidate_generation_observation_coverage.get("summary", {}).get(
+                    "invariant_failure_count"
+                )
+            ),
+            "observation_broadened_status": (
+                candidate_generation_observation_broadened_sample.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "observation_broadened_case_count": (
+                candidate_generation_observation_broadened_sample.get(
+                    "summary", {}
+                ).get("case_count")
+            ),
+            "observation_broadened_emitted_frame_count": (
+                candidate_generation_observation_broadened_sample.get(
+                    "summary", {}
+                ).get("emitted_frame_count")
+            ),
+            "observation_broadened_selected_move_or_provider_delta_count": (
+                candidate_generation_observation_broadened_sample.get(
+                    "summary", {}
+                ).get("selected_move_or_provider_delta_count")
+            ),
+            "observation_gap_review_status": (
+                candidate_generation_observation_gap_review.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "observation_gap_review_unknown_capacity_ratio": (
+                candidate_generation_observation_gap_review.get("summary", {}).get(
+                    "unknown_capacity_ratio"
+                )
+            ),
+            "observation_gap_review_missing_expected_sources": (
+                candidate_generation_observation_gap_review.get("summary", {}).get(
+                    "missing_expected_sources"
+                )
+            ),
+            "label_blocker_status": (
+                candidate_generation_label_blocker_review.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "label_blocker_more_blind_label_farming_not_recommended": (
+                candidate_generation_label_blocker_review.get(
+                    "interpretation", {}
+                ).get("more_blind_label_farming_not_recommended")
+            ),
+            "label_blocker_protected_annotation_recall": (
+                candidate_generation_label_blocker_review.get("evidence", {}).get(
+                    "protected_annotation_recall"
                 )
             ),
             "source_design_status": (
@@ -4398,6 +4508,20 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- control_plane_runtime_sandbox_allowed: `{strategy_source['control_plane_runtime_sandbox_allowed']}`",
             f"- sandbox_review_status: `{strategy_source['sandbox_review_status']}`",
             f"- sandbox_review_implementation_authorized: `{strategy_source['sandbox_review_implementation_authorized']}`",
+            f"- observation_sandbox_status: `{strategy_source['observation_sandbox_status']}`",
+            f"- observation_sandbox_generated_candidate_count: `{strategy_source['observation_sandbox_generated_candidate_count']}`",
+            f"- observation_sandbox_selected_move_or_provider_changed: `{strategy_source['observation_sandbox_selected_move_or_provider_changed']}`",
+            f"- observation_coverage_status: `{strategy_source['observation_coverage_status']}`",
+            f"- observation_coverage_sampled_frame_count: `{strategy_source['observation_coverage_sampled_frame_count']}`",
+            f"- observation_coverage_invariant_failure_count: `{strategy_source['observation_coverage_invariant_failure_count']}`",
+            f"- observation_broadened_status: `{strategy_source['observation_broadened_status']}`",
+            f"- observation_broadened_case_count: `{strategy_source['observation_broadened_case_count']}`",
+            f"- observation_broadened_emitted_frame_count: `{strategy_source['observation_broadened_emitted_frame_count']}`",
+            f"- observation_broadened_selected_move_or_provider_delta_count: `{strategy_source['observation_broadened_selected_move_or_provider_delta_count']}`",
+            f"- observation_gap_review_status: `{strategy_source['observation_gap_review_status']}`",
+            f"- observation_gap_review_unknown_capacity_ratio: `{strategy_source['observation_gap_review_unknown_capacity_ratio']}`",
+            f"- label_blocker_status: `{strategy_source['label_blocker_status']}`",
+            f"- label_blocker_more_blind_label_farming_not_recommended: `{strategy_source['label_blocker_more_blind_label_farming_not_recommended']}`",
             f"- source_design_status: `{strategy_source['source_design_status']}`",
             f"- source_design_implementation_allowed: `{strategy_source['source_design_implementation_allowed']}`",
             f"- plan_capsule_source_status: `{strategy_source['plan_capsule_source_status']}`",
