@@ -263,6 +263,54 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["selector_objective_runtime_terminals_added"] is False
     assert payload["summary"]["selector_objective_stage7_promotion_allowed"] is False
     assert payload["summary"]["selector_objective_stage8_training_allowed"] is False
+    assert payload["summary"]["abstention_selector_safety_passive_ready"] is True
+    assert (
+        payload["summary"]["abstention_selector_first_objective_status"]
+        == "abstention_first_selector_objective_defined"
+    )
+    assert (
+        payload["summary"]["abstention_safe_preservation_review_status"]
+        == "safe_preservation_requires_two_stage_label_semantics"
+    )
+    assert (
+        payload["summary"]["abstention_training_dataset_status"]
+        == "abstention_training_dataset_ready_for_probe"
+    )
+    assert payload["summary"]["abstention_training_dataset_row_count"] == 51
+    assert payload["summary"]["abstention_training_dataset_stage7_training_rows"] == 0
+    assert (
+        payload["summary"]["abstention_training_probe_status"]
+        == "abstention_signal_underpowered_no_runtime"
+    )
+    assert (
+        payload["summary"]["abstention_context_dataset_status"]
+        == "abstention_context_feature_dataset_ready_for_non_causal_probe"
+    )
+    assert (
+        payload["summary"]["abstention_context_probe_status"]
+        == "context_features_help_but_runtime_blocked"
+    )
+    assert (
+        payload["summary"]["abstention_context_probe_improved_negative_suppression"]
+        is True
+    )
+    assert (
+        payload["summary"]["abstention_context_error_audit_status"]
+        == "context_signal_overrejects_safe_owners_runtime_blocked"
+    )
+    assert payload["summary"]["abstention_context_error_false_positive_count"] == 12
+    assert (
+        payload["summary"]["abstention_feature_gap_next_step_status"]
+        == "join_abstention_labels_with_control_plane_context"
+    )
+    assert payload["summary"]["abstention_feature_gap_implementation_allowed"] == (
+        "non_causal_replay_free_only"
+    )
+    assert payload["summary"]["abstention_feature_gap_runtime_ready"] is False
+    assert payload["summary"]["abstention_runtime_selector_implemented"] is False
+    assert payload["summary"]["abstention_runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["summary"]["abstention_stage7_promotion_allowed"] is False
+    assert payload["summary"]["abstention_stage8_training_allowed"] is False
     assert payload["summary"]["clean_replacement_review_passive_ready"] is True
     assert (
         payload["summary"]["clean_replacement_review_packet_status"]

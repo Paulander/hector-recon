@@ -471,6 +471,22 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_split_selector_objective_readiness_v3.json"
     )
     assert (
+        payload["source_artifacts"]["abstention_first_selector_objective_v0"]
+        == "reports/krk_abstention_first_selector_objective_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["abstention_training_dataset_v1"]
+        == "reports/krk_abstention_training_dataset_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["abstention_context_feature_probe_v0"]
+        == "reports/krk_abstention_context_feature_probe_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["abstention_feature_gap_review_v0"]
+        == "reports/krk_abstention_feature_gap_review_v0.json"
+    )
+    assert (
         payload["source_artifacts"][
             "clean_retrain_retry1_replacement_readiness_review"
         ]
@@ -764,6 +780,61 @@ def test_full_suite_readiness_identifies_current_gate():
     assert selector_objective["runtime_terminals_added"] is False
     assert selector_objective["stage7_promotion_allowed"] is False
     assert selector_objective["stage8_training_allowed"] is False
+
+    abstention = payload["abstention_selector_safety_gate"]
+    assert abstention["passive_safety_ready"] is True
+    assert (
+        abstention["first_objective_status"]
+        == "abstention_first_selector_objective_defined"
+    )
+    assert (
+        abstention["safe_preservation_review_status"]
+        == "safe_preservation_requires_two_stage_label_semantics"
+    )
+    assert abstention["safe_preservation_false_positive_count"] == 12
+    assert (
+        abstention["training_dataset_status"]
+        == "abstention_training_dataset_ready_for_probe"
+    )
+    assert abstention["training_dataset_row_count"] == 51
+    assert abstention["training_dataset_safe_owner_count"] == 34
+    assert abstention["training_dataset_unsafe_owner_count"] == 17
+    assert abstention["training_dataset_stage7_training_rows"] == 0
+    assert abstention["training_probe_status"] == "abstention_signal_underpowered_no_runtime"
+    assert abstention["training_probe_under_minimum_requirements"] is False
+    assert (
+        abstention["context_dataset_status"]
+        == "abstention_context_feature_dataset_ready_for_non_causal_probe"
+    )
+    assert abstention["context_dataset_row_count"] == 51
+    assert abstention["context_dataset_stage7_training_rows"] == 0
+    assert abstention["context_dataset_terminal_context_proxy_count"] == 51
+    assert abstention["context_probe_status"] == "context_features_help_but_runtime_blocked"
+    assert abstention["context_probe_improved_negative_suppression"] is True
+    assert (
+        abstention["context_error_audit_status"]
+        == "context_signal_overrejects_safe_owners_runtime_blocked"
+    )
+    assert abstention["context_error_false_positive_count"] == 12
+    assert abstention["context_error_false_negative_count"] == 3
+    assert (
+        abstention["feature_gap_next_step_status"]
+        == "join_abstention_labels_with_control_plane_context"
+    )
+    assert abstention["feature_gap_implementation_allowed"] == (
+        "non_causal_replay_free_only"
+    )
+    assert abstention["feature_gap_runtime_ready"] is False
+    assert "runtime_selector" in abstention["blocked_next_steps"]
+    assert "stage7_promotion" in abstention["blocked_next_steps"]
+    assert "stage8_training" in abstention["blocked_next_steps"]
+    assert "runtime_dtm_or_tablebase" in abstention["blocked_next_steps"]
+    assert abstention["runtime_behavior_changed"] is False
+    assert abstention["runtime_defaults_changed"] is False
+    assert abstention["runtime_selector_implemented"] is False
+    assert abstention["runtime_dtm_or_tablebase_lookup"] is False
+    assert abstention["stage7_promotion_allowed"] is False
+    assert abstention["stage8_training_allowed"] is False
 
     clean_replacement = payload["clean_replacement_review_gate"]
     assert clean_replacement["passive_review_ready"] is True

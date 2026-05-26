@@ -556,6 +556,30 @@ SOURCES = {
     "split_selector_objective_readiness_v3": (
         "reports/krk_split_selector_objective_readiness_v3.json"
     ),
+    "abstention_first_selector_objective_v0": (
+        "reports/krk_abstention_first_selector_objective_v0.json"
+    ),
+    "abstention_safe_preservation_label_review_v0": (
+        "reports/krk_abstention_safe_preservation_label_review_v0.json"
+    ),
+    "abstention_training_dataset_v1": (
+        "reports/krk_abstention_training_dataset_v1.json"
+    ),
+    "abstention_training_probe_v1": (
+        "reports/krk_abstention_training_probe_v1.json"
+    ),
+    "abstention_context_feature_dataset_v0": (
+        "reports/krk_abstention_context_feature_dataset_v0.json"
+    ),
+    "abstention_context_feature_probe_v0": (
+        "reports/krk_abstention_context_feature_probe_v0.json"
+    ),
+    "abstention_context_error_audit_v0": (
+        "reports/krk_abstention_context_error_audit_v0.json"
+    ),
+    "abstention_feature_gap_review_v0": (
+        "reports/krk_abstention_feature_gap_review_v0.json"
+    ),
     "clean_retrain_retry1_replacement_readiness_review": (
         "reports/krk_clean_retrain_retry1_replacement_readiness_review_v0.json"
     ),
@@ -1304,6 +1328,22 @@ def build_payload() -> dict[str, Any]:
     split_selector_objective_readiness_v3 = payloads[
         "split_selector_objective_readiness_v3"
     ]
+    abstention_first_selector_objective_v0 = payloads[
+        "abstention_first_selector_objective_v0"
+    ]
+    abstention_safe_preservation_label_review_v0 = payloads[
+        "abstention_safe_preservation_label_review_v0"
+    ]
+    abstention_training_dataset_v1 = payloads["abstention_training_dataset_v1"]
+    abstention_training_probe_v1 = payloads["abstention_training_probe_v1"]
+    abstention_context_feature_dataset_v0 = payloads[
+        "abstention_context_feature_dataset_v0"
+    ]
+    abstention_context_feature_probe_v0 = payloads[
+        "abstention_context_feature_probe_v0"
+    ]
+    abstention_context_error_audit_v0 = payloads["abstention_context_error_audit_v0"]
+    abstention_feature_gap_review_v0 = payloads["abstention_feature_gap_review_v0"]
     clean_replacement_readiness = payloads[
         "clean_retrain_retry1_replacement_readiness_review"
     ]
@@ -1674,6 +1714,92 @@ def build_payload() -> dict[str, Any]:
         is False
         and split_selector_objective_readiness_v3.get("stage8_training_allowed")
         is False
+    )
+    abstention_objective_decision = (
+        abstention_first_selector_objective_v0.get("decision") or {}
+    )
+    abstention_safe_review_decision = (
+        abstention_safe_preservation_label_review_v0.get("decision") or {}
+    )
+    abstention_safe_review_summary = (
+        abstention_safe_preservation_label_review_v0.get("summary") or {}
+    )
+    abstention_dataset_decision = (
+        abstention_training_dataset_v1.get("decision") or {}
+    )
+    abstention_dataset_summary = abstention_training_dataset_v1.get("summary") or {}
+    abstention_probe_decision = abstention_training_probe_v1.get("decision") or {}
+    abstention_probe_summary = abstention_training_probe_v1.get("summary") or {}
+    abstention_context_dataset_decision = (
+        abstention_context_feature_dataset_v0.get("decision") or {}
+    )
+    abstention_context_dataset_summary = (
+        abstention_context_feature_dataset_v0.get("summary") or {}
+    )
+    abstention_context_probe_decision = (
+        abstention_context_feature_probe_v0.get("decision") or {}
+    )
+    abstention_context_probe_summary = (
+        abstention_context_feature_probe_v0.get("summary") or {}
+    )
+    abstention_error_audit_decision = (
+        abstention_context_error_audit_v0.get("decision") or {}
+    )
+    abstention_error_audit_summary = (
+        abstention_context_error_audit_v0.get("summary") or {}
+    )
+    abstention_feature_gap_next_step = (
+        abstention_feature_gap_review_v0.get("recommended_next_step") or {}
+    )
+    abstention_blocked_next_steps = (
+        abstention_feature_gap_review_v0.get("blocked_next_steps") or []
+    )
+    abstention_selector_safety_passive = (
+        abstention_objective_decision.get("status")
+        == "abstention_first_selector_objective_defined"
+        and abstention_objective_decision.get("runtime_test_allowed_next") is False
+        and abstention_objective_decision.get("stage7_promotion_allowed") is False
+        and abstention_objective_decision.get("stage8_training_allowed") is False
+        and abstention_safe_review_decision.get("status")
+        == "safe_preservation_requires_two_stage_label_semantics"
+        and abstention_safe_review_decision.get("runtime_test_allowed_next") is False
+        and abstention_dataset_decision.get("status")
+        == "abstention_training_dataset_ready_for_probe"
+        and abstention_dataset_decision.get("runtime_test_allowed_next") is False
+        and abstention_dataset_summary.get("row_count") == 51
+        and abstention_dataset_summary.get("stage7_training_rows") == 0
+        and abstention_probe_decision.get("status")
+        == "abstention_signal_underpowered_no_runtime"
+        and abstention_probe_decision.get("runtime_test_allowed_next") is False
+        and abstention_probe_summary.get("under_minimum_requirements") is False
+        and abstention_context_dataset_decision.get("status")
+        == "abstention_context_feature_dataset_ready_for_non_causal_probe"
+        and abstention_context_dataset_decision.get("runtime_test_allowed_next") is False
+        and abstention_context_dataset_summary.get("stage7_training_rows") == 0
+        and abstention_context_probe_decision.get("status")
+        == "context_features_help_but_runtime_blocked"
+        and abstention_context_probe_decision.get("runtime_test_allowed_next") is False
+        and abstention_context_probe_summary.get("context_improved_negative_suppression")
+        is True
+        and abstention_error_audit_decision.get("status")
+        == "context_signal_overrejects_safe_owners_runtime_blocked"
+        and abstention_error_audit_decision.get("runtime_test_allowed_next") is False
+        and abstention_feature_gap_next_step.get("status")
+        == "join_abstention_labels_with_control_plane_context"
+        and abstention_feature_gap_next_step.get("implementation_allowed")
+        == "non_causal_replay_free_only"
+        and "runtime_selector" in abstention_blocked_next_steps
+        and "stage7_promotion" in abstention_blocked_next_steps
+        and "stage8_training" in abstention_blocked_next_steps
+        and "runtime_dtm_or_tablebase" in abstention_blocked_next_steps
+        and abstention_feature_gap_review_v0.get("runtime_behavior_changed") is False
+        and abstention_feature_gap_review_v0.get("runtime_defaults_changed") is False
+        and abstention_feature_gap_review_v0.get("runtime_selector_implemented")
+        is False
+        and abstention_feature_gap_review_v0.get("runtime_dtm_or_tablebase_lookup")
+        is False
+        and abstention_feature_gap_review_v0.get("stage7_promotion_allowed") is False
+        and abstention_feature_gap_review_v0.get("stage8_training_allowed") is False
     )
     replacement_readiness_decision = clean_replacement_readiness.get("decision") or {}
     replacement_packet_decision = clean_stack_replacement_packet.get("decision") or {}
@@ -2608,6 +2734,102 @@ def build_payload() -> dict[str, Any]:
                 "stage7_promotion_allowed"
             ),
             "stage8_training_allowed": split_selector_objective_readiness_v3.get(
+                "stage8_training_allowed"
+            ),
+        },
+        "abstention_selector_safety_gate": {
+            "status": abstention_context_probe_decision.get("status"),
+            "passive_safety_ready": abstention_selector_safety_passive,
+            "first_objective_status": abstention_objective_decision.get("status"),
+            "safe_preservation_review_status": (
+                abstention_safe_review_decision.get("status")
+            ),
+            "safe_preservation_false_positive_count": (
+                abstention_safe_review_summary.get("false_positive_count")
+            ),
+            "safe_preservation_best_negative_suppression": (
+                abstention_safe_review_summary.get("best_negative_suppression")
+            ),
+            "safe_preservation_best_safe_preservation": (
+                abstention_safe_review_summary.get("best_safe_preservation")
+            ),
+            "training_dataset_status": abstention_dataset_decision.get("status"),
+            "training_dataset_row_count": abstention_dataset_summary.get("row_count"),
+            "training_dataset_safe_owner_count": (
+                (abstention_dataset_summary.get("label_counts") or {}).get("safe_owner")
+            ),
+            "training_dataset_unsafe_owner_count": (
+                (abstention_dataset_summary.get("label_counts") or {}).get(
+                    "unsafe_owner"
+                )
+            ),
+            "training_dataset_stage7_training_rows": (
+                abstention_dataset_summary.get("stage7_training_rows")
+            ),
+            "training_probe_status": abstention_probe_decision.get("status"),
+            "training_probe_under_minimum_requirements": (
+                abstention_probe_summary.get("under_minimum_requirements")
+            ),
+            "context_dataset_status": abstention_context_dataset_decision.get("status"),
+            "context_dataset_row_count": (
+                abstention_context_dataset_summary.get("row_count")
+            ),
+            "context_dataset_stage7_training_rows": (
+                abstention_context_dataset_summary.get("stage7_training_rows")
+            ),
+            "context_dataset_terminal_context_proxy_count": (
+                abstention_context_dataset_summary.get("terminal_context_proxy_count")
+            ),
+            "context_probe_status": abstention_context_probe_decision.get("status"),
+            "context_probe_improved_negative_suppression": (
+                abstention_context_probe_summary.get(
+                    "context_improved_negative_suppression"
+                )
+            ),
+            "context_probe_baseline_negative_suppression": (
+                abstention_context_probe_summary.get("baseline_negative_suppression")
+            ),
+            "context_probe_best_negative_suppression": (
+                abstention_context_probe_summary.get("best_negative_suppression")
+            ),
+            "context_probe_best_safe_preservation": (
+                abstention_context_probe_summary.get("best_safe_preservation")
+            ),
+            "context_error_audit_status": abstention_error_audit_decision.get("status"),
+            "context_error_false_positive_count": (
+                abstention_error_audit_summary.get("false_positive_count")
+            ),
+            "context_error_false_negative_count": (
+                abstention_error_audit_summary.get("false_negative_count")
+            ),
+            "feature_gap_next_step_status": abstention_feature_gap_next_step.get(
+                "status"
+            ),
+            "feature_gap_implementation_allowed": (
+                abstention_feature_gap_next_step.get("implementation_allowed")
+            ),
+            "feature_gap_runtime_ready": (
+                (abstention_feature_gap_review_v0.get("accepted_result") or {}).get(
+                    "runtime_ready"
+                )
+            ),
+            "blocked_next_steps": abstention_blocked_next_steps,
+            "runtime_behavior_changed": abstention_feature_gap_review_v0.get(
+                "runtime_behavior_changed"
+            ),
+            "runtime_defaults_changed": abstention_feature_gap_review_v0.get(
+                "runtime_defaults_changed"
+            ),
+            "runtime_selector_implemented": abstention_feature_gap_review_v0.get(
+                "runtime_selector_implemented"
+            ),
+            "runtime_dtm_or_tablebase_lookup": abstention_feature_gap_review_v0.get(
+                "runtime_dtm_or_tablebase_lookup"
+            ),
+            "stage7_promotion_allowed": abstention_feature_gap_review_v0.get(
+                "stage7_promotion_allowed"
+            ),
+            "stage8_training_allowed": abstention_feature_gap_review_v0.get(
                 "stage8_training_allowed"
             ),
         },
@@ -6240,6 +6462,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     strategy_sequence_architecture = payload["strategy_sequence_architecture_gate"]
     strategy_owner_contrast = payload["strategy_owner_contrast_gate"]
     selector_objective_normalization = payload["selector_objective_normalization_gate"]
+    abstention_selector_safety = payload["abstention_selector_safety_gate"]
     clean_replacement = payload["clean_replacement_review_gate"]
     stage7 = payload["stage7_sampling_gate"]
     sequence = payload["sequence_policy"]
@@ -6388,6 +6611,29 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- runtime_terminals_added: `{selector_objective_normalization['runtime_terminals_added']}`",
         f"- stage7_promotion_allowed: `{selector_objective_normalization['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{selector_objective_normalization['stage8_training_allowed']}`",
+        "",
+        "## Abstention Selector Safety",
+        "",
+        f"- passive_safety_ready: `{abstention_selector_safety['passive_safety_ready']}`",
+        f"- first_objective_status: `{abstention_selector_safety['first_objective_status']}`",
+        f"- safe_preservation_review_status: `{abstention_selector_safety['safe_preservation_review_status']}`",
+        f"- training_dataset_status: `{abstention_selector_safety['training_dataset_status']}`",
+        f"- training_dataset_row_count: `{abstention_selector_safety['training_dataset_row_count']}`",
+        f"- training_dataset_stage7_training_rows: `{abstention_selector_safety['training_dataset_stage7_training_rows']}`",
+        f"- training_probe_status: `{abstention_selector_safety['training_probe_status']}`",
+        f"- context_dataset_status: `{abstention_selector_safety['context_dataset_status']}`",
+        f"- context_probe_status: `{abstention_selector_safety['context_probe_status']}`",
+        f"- context_probe_improved_negative_suppression: `{abstention_selector_safety['context_probe_improved_negative_suppression']}`",
+        f"- context_error_audit_status: `{abstention_selector_safety['context_error_audit_status']}`",
+        f"- context_error_false_positive_count: `{abstention_selector_safety['context_error_false_positive_count']}`",
+        f"- feature_gap_next_step_status: `{abstention_selector_safety['feature_gap_next_step_status']}`",
+        f"- feature_gap_implementation_allowed: `{abstention_selector_safety['feature_gap_implementation_allowed']}`",
+        f"- feature_gap_runtime_ready: `{abstention_selector_safety['feature_gap_runtime_ready']}`",
+        f"- blocked_next_steps: `{abstention_selector_safety['blocked_next_steps']}`",
+        f"- runtime_selector_implemented: `{abstention_selector_safety['runtime_selector_implemented']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{abstention_selector_safety['runtime_dtm_or_tablebase_lookup']}`",
+        f"- stage7_promotion_allowed: `{abstention_selector_safety['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{abstention_selector_safety['stage8_training_allowed']}`",
         "",
         "## Clean Replacement Review",
         "",

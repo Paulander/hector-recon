@@ -587,6 +587,9 @@ def build_payload() -> dict[str, Any]:
     selector_objective_normalization_gate = (
         readiness.get("selector_objective_normalization_gate") or {}
     )
+    abstention_selector_safety_gate = (
+        readiness.get("abstention_selector_safety_gate") or {}
+    )
     clean_replacement_review_gate = readiness.get("clean_replacement_review_gate") or {}
     active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
@@ -1052,6 +1055,69 @@ def build_payload() -> dict[str, Any]:
             ),
             "selector_objective_stage8_training_allowed": (
                 selector_objective_normalization_gate.get("stage8_training_allowed")
+            ),
+            "abstention_selector_safety_passive_ready": (
+                abstention_selector_safety_gate.get("passive_safety_ready")
+            ),
+            "abstention_selector_first_objective_status": (
+                abstention_selector_safety_gate.get("first_objective_status")
+            ),
+            "abstention_safe_preservation_review_status": (
+                abstention_selector_safety_gate.get("safe_preservation_review_status")
+            ),
+            "abstention_training_dataset_status": (
+                abstention_selector_safety_gate.get("training_dataset_status")
+            ),
+            "abstention_training_dataset_row_count": (
+                abstention_selector_safety_gate.get("training_dataset_row_count")
+            ),
+            "abstention_training_dataset_stage7_training_rows": (
+                abstention_selector_safety_gate.get(
+                    "training_dataset_stage7_training_rows"
+                )
+            ),
+            "abstention_training_probe_status": (
+                abstention_selector_safety_gate.get("training_probe_status")
+            ),
+            "abstention_context_dataset_status": (
+                abstention_selector_safety_gate.get("context_dataset_status")
+            ),
+            "abstention_context_probe_status": (
+                abstention_selector_safety_gate.get("context_probe_status")
+            ),
+            "abstention_context_probe_improved_negative_suppression": (
+                abstention_selector_safety_gate.get(
+                    "context_probe_improved_negative_suppression"
+                )
+            ),
+            "abstention_context_error_audit_status": (
+                abstention_selector_safety_gate.get("context_error_audit_status")
+            ),
+            "abstention_context_error_false_positive_count": (
+                abstention_selector_safety_gate.get(
+                    "context_error_false_positive_count"
+                )
+            ),
+            "abstention_feature_gap_next_step_status": (
+                abstention_selector_safety_gate.get("feature_gap_next_step_status")
+            ),
+            "abstention_feature_gap_implementation_allowed": (
+                abstention_selector_safety_gate.get("feature_gap_implementation_allowed")
+            ),
+            "abstention_feature_gap_runtime_ready": (
+                abstention_selector_safety_gate.get("feature_gap_runtime_ready")
+            ),
+            "abstention_runtime_selector_implemented": (
+                abstention_selector_safety_gate.get("runtime_selector_implemented")
+            ),
+            "abstention_runtime_dtm_or_tablebase_lookup": (
+                abstention_selector_safety_gate.get("runtime_dtm_or_tablebase_lookup")
+            ),
+            "abstention_stage7_promotion_allowed": (
+                abstention_selector_safety_gate.get("stage7_promotion_allowed")
+            ),
+            "abstention_stage8_training_allowed": (
+                abstention_selector_safety_gate.get("stage8_training_allowed")
             ),
             "clean_replacement_review_passive_ready": clean_replacement_review_gate.get(
                 "passive_review_ready"
