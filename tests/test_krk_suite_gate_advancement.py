@@ -798,6 +798,47 @@ def test_gate_advancement_routes_forbidden_training_rows_to_input_repair(monkeyp
     assert payload["decision"]["selector_training_allowed"] is False
 
 
+def test_gate_advancement_routes_unsafe_protected_stack_to_repair(monkeypatch):
+    real_load_json = _advance._load_json
+
+    def no_op_run_script(script: str, args: list[str] | None = None):
+        return {"script": script, "args": list(args or []), "ran": False}
+
+    def tainted_load_json(relative: str):
+        payload = json.loads(json.dumps(real_load_json(relative)))
+        if relative == "reports/krk_full_suite_readiness_audit_v0.json":
+            protected_stack = payload.setdefault("protected_stack", {})
+            protected_stack["ready"] = False
+            protected_stack["rollback_paths_preserved"] = False
+            protected_stack["active_stack_path_status"] = {"all_paths_safe": False}
+            protected_stack["filesystem_snapshots_replaced"] = True
+            payload.setdefault("decision", {})["status"] = (
+                "krk_suite_readiness_blocked_pending_protected_stack_repair"
+            )
+        return payload
+
+    monkeypatch.setattr(_advance, "_run_script", no_op_run_script)
+    monkeypatch.setattr(_advance, "_load_json", tainted_load_json)
+
+    payload = _advance.build_payload()
+
+    assert (
+        payload["decision"]["status"]
+        == "krk_suite_passive_advancement_blocked_pending_protected_stack_repair"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "repair_protected_stack_validation"
+    )
+    assert payload["summary"]["protected_stack_ready"] is False
+    assert payload["summary"]["protected_stack_rollback_paths_preserved"] is False
+    assert payload["summary"]["protected_stack_active_paths_safe"] is False
+    assert payload["summary"]["protected_stack_filesystem_snapshots_replaced"] is True
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["label_run_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
+
+
 def test_gate_advancement_summary_falls_back_when_request_ready_flags_are_null(monkeypatch):
     real_load_json = _advance._load_json
 

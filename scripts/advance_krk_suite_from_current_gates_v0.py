@@ -474,7 +474,30 @@ def build_payload() -> dict[str, Any]:
         output_validation.get("summary", {}).get("output_valid_count") or 0
     ) > 0
     protected_stack = readiness.get("protected_stack") or {}
+    active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
+    rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
     readiness_boundaries = readiness.get("runtime_and_training_boundaries") or {}
+    protected_stack_repair_statuses = {
+        "sequence_policy_pilot_blocked_pending_protected_stack_repair",
+        "stage8_training_blocked_pending_protected_stack_repair",
+        "post_label_outcome_blocked_pending_protected_stack_repair",
+    }
+    protected_stack_repair_required = (
+        protected_stack.get("ready") is False
+        or protected_stack.get("rollback_paths_preserved") is False
+        or active_stack_path_status.get("all_paths_safe") is False
+        or active_stack_path_status.get("all_paths_exist") is False
+        or rollback_stack_path_status.get("all_paths_safe") is False
+        or rollback_stack_path_status.get("all_paths_exist") is False
+        or protected_stack.get("rollback_common_paths_distinct") is False
+        or protected_stack.get("filesystem_snapshots_replaced") is True
+        or underpowered_pilot.get("decision", {}).get("status")
+        in protected_stack_repair_statuses
+        or stage8_review.get("decision", {}).get("status")
+        in protected_stack_repair_statuses
+        or post_label_review.get("decision", {}).get("status")
+        in protected_stack_repair_statuses
+    )
     sequence_forbidden_blockers = sorted(
         FORBIDDEN_INPUT_BLOCKERS
         & (
@@ -511,6 +534,9 @@ def build_payload() -> dict[str, Any]:
     if sequence_forbidden_training_or_runtime_inputs:
         status = "krk_suite_passive_advancement_blocked_forbidden_training_or_runtime_rows"
         next_step = "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+    elif protected_stack_repair_required:
+        status = "krk_suite_passive_advancement_blocked_pending_protected_stack_repair"
+        next_step = "repair_protected_stack_validation"
     elif benchmark_ready:
         status = (
             "krk_suite_passive_advancement_ready_for_protected_failure_contrast_collection"
@@ -561,18 +587,18 @@ def build_payload() -> dict[str, Any]:
             "protected_stack_rollback_paths_preserved": protected_stack.get(
                 "rollback_paths_preserved"
             ),
-            "protected_stack_active_paths_safe": (
-                protected_stack.get("active_stack_path_status") or {}
-            ).get("all_paths_safe"),
-            "protected_stack_active_paths_exist": (
-                protected_stack.get("active_stack_path_status") or {}
-            ).get("all_paths_exist"),
-            "protected_stack_rollback_paths_safe": (
-                protected_stack.get("rollback_stack_path_status") or {}
-            ).get("all_paths_safe"),
-            "protected_stack_rollback_paths_exist": (
-                protected_stack.get("rollback_stack_path_status") or {}
-            ).get("all_paths_exist"),
+            "protected_stack_active_paths_safe": active_stack_path_status.get(
+                "all_paths_safe"
+            ),
+            "protected_stack_active_paths_exist": active_stack_path_status.get(
+                "all_paths_exist"
+            ),
+            "protected_stack_rollback_paths_safe": rollback_stack_path_status.get(
+                "all_paths_safe"
+            ),
+            "protected_stack_rollback_paths_exist": rollback_stack_path_status.get(
+                "all_paths_exist"
+            ),
             "protected_stack_rollback_common_paths_distinct": protected_stack.get(
                 "rollback_common_paths_distinct"
             ),
