@@ -27,7 +27,7 @@ from recon_lite_chess.scripts.kqk import create_kqk_move_selector, is_kqk_positi
 from recon_lite_chess.graph import build_unified_graph
 
 
-def test_kpk_move_selector_direct():
+def _check_kpk_move_selector_direct():
     """Test KPK move selector produces correct move when called directly."""
     print("\n=== Test 1: KPK Move Selector (Direct Call) ===")
     
@@ -58,7 +58,7 @@ def test_kpk_move_selector_direct():
     return passed == len(test_fens)
 
 
-def test_kqk_move_selector_direct():
+def _check_kqk_move_selector_direct():
     """Test KQK move selector produces valid moves when called directly."""
     print("\n=== Test 2: KQK Move Selector (Direct Call) ===")
     
@@ -102,7 +102,7 @@ def test_kqk_move_selector_direct():
     return passed == len(test_fens)
 
 
-def test_engine_single_tick():
+def _check_engine_single_tick():
     """Test that single engine tick does NOT reach move selectors."""
     print("\n=== Test 3: Engine Single Tick (Confirms Bug) ===")
     
@@ -140,7 +140,7 @@ def test_engine_single_tick():
         return False
 
 
-def test_engine_multi_tick():
+def _check_engine_multi_tick():
     """Test that multiple engine ticks DO reach move selectors."""
     print("\n=== Test 4: Engine Multi-Tick (Validates Fix) ===")
     
@@ -174,7 +174,7 @@ def test_engine_multi_tick():
     return False
 
 
-def test_kpk_to_kqk_transition():
+def _check_kpk_to_kqk_transition():
     """Test that after promotion, KQK detects and suggests moves."""
     print("\n=== Test 5: KPK→KQK Transition ===")
     
@@ -270,7 +270,7 @@ def test_kpk_to_kqk_transition():
         return False
 
 
-def test_domain_root_execution_veto():
+def _check_domain_root_execution_veto():
     """KQK approach affordance is not enough to execute KQK before promotion."""
     print("\n=== Test 6: Domain Root Execution Veto ===")
 
@@ -336,7 +336,7 @@ def test_domain_root_execution_veto():
     return True
 
 
-def test_subgraph_lock():
+def _check_subgraph_lock():
     """Test SubgraphLock mechanism produces move in single step()."""
     print("\n=== Test 7: SubgraphLock (New Feature) ===")
     
@@ -376,6 +376,34 @@ def test_subgraph_lock():
         return False
 
 
+def test_kpk_move_selector_direct():
+    assert _check_kpk_move_selector_direct()
+
+
+def test_kqk_move_selector_direct():
+    assert _check_kqk_move_selector_direct()
+
+
+def test_engine_single_tick():
+    assert _check_engine_single_tick()
+
+
+def test_engine_multi_tick():
+    assert _check_engine_multi_tick()
+
+
+def test_kpk_to_kqk_transition():
+    assert _check_kpk_to_kqk_transition()
+
+
+def test_domain_root_execution_veto():
+    assert _check_domain_root_execution_veto()
+
+
+def test_subgraph_lock():
+    assert _check_subgraph_lock()
+
+
 def main():
     """Run all verification tests."""
     print("=" * 60)
@@ -383,13 +411,13 @@ def main():
     print("=" * 60)
     
     results = {
-        "KPK Direct": test_kpk_move_selector_direct(),
-        "KQK Direct": test_kqk_move_selector_direct(),
-        "Single Tick (Bug)": test_engine_single_tick(),
-        "Multi Tick (Fix)": test_engine_multi_tick(),
-        "KPK→KQK Transition": test_kpk_to_kqk_transition(),
-        "Domain Root Veto": test_domain_root_execution_veto(),
-        "SubgraphLock": test_subgraph_lock(),
+        "KPK Direct": _check_kpk_move_selector_direct(),
+        "KQK Direct": _check_kqk_move_selector_direct(),
+        "Single Tick (Bug)": _check_engine_single_tick(),
+        "Multi Tick (Fix)": _check_engine_multi_tick(),
+        "KPK→KQK Transition": _check_kpk_to_kqk_transition(),
+        "Domain Root Veto": _check_domain_root_execution_veto(),
+        "SubgraphLock": _check_subgraph_lock(),
     }
     
     print("\n" + "=" * 60)
