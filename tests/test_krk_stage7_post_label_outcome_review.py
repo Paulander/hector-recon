@@ -61,7 +61,10 @@ def test_stage7_post_label_outcome_current_artifact_reports_sequence_policy_gap(
     assert payload["summary"]["protected_failure_contrast_command_if_explicitly_approved"] == (
         "UV_CACHE_DIR=/tmp/uv-cache uv run python "
         "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py "
-        "--execute-reviewed-collection --refresh-after-run"
+        "--execute-reviewed-collection --refresh-after-run "
+        "--approval-receipt "
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
     )
     assert (
         payload["decision"]["status"]

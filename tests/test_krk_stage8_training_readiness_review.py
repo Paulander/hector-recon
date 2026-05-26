@@ -62,7 +62,10 @@ def test_stage8_training_readiness_review_blocks_current_state():
     assert payload["requirements"]["protected_failure_contrast_command_if_explicitly_approved"] == (
         "UV_CACHE_DIR=/tmp/uv-cache uv run python "
         "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py "
-        "--execute-reviewed-collection --refresh-after-run"
+        "--execute-reviewed-collection --refresh-after-run "
+        "--approval-receipt "
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
     )
     assert "stage7_clean_success_controls_missing" not in payload["blockers"]
     assert (

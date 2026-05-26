@@ -79,8 +79,8 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - `protected_plan_window_failure_contrast_output_validation` status=`protected_plan_window_failure_contrast_outputs_validation_pending` labels=`False` runtime=`False` artifact_runtime=`False`
 - `protected_plan_window_failure_contrast_integration` status=`protected_plan_window_failure_contrast_integration_pending_outputs` labels=`False` runtime=`False` artifact_runtime=`False`
 - `sequence_policy_after_protected_failure_contrast_refresh` status=`sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs` labels=`False` runtime=`False` artifact_runtime=`False`
-- `sequence_policy_underpowered_pilot_review` status=`sequence_policy_pilot_underpowered_pending_protected_failure_contrast_collection` labels=`False` runtime=`False` artifact_runtime=`False`
 - `full_suite_readiness_audit` status=`krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection` labels=`False` runtime=`False` artifact_runtime=`False`
+- `sequence_policy_underpowered_pilot_review` status=`sequence_policy_pilot_underpowered_pending_protected_failure_contrast_collection` labels=`False` runtime=`False` artifact_runtime=`False`
 - `stage8_training_readiness_review` status=`stage8_training_blocked_pending_protected_failure_contrast_collection` labels=`False` runtime=`False` artifact_runtime=`False`
 - `stage7_post_label_outcome_review` status=`post_label_outcome_waiting_on_explicit_protected_failure_contrast_collection` labels=`False` runtime=`False` artifact_runtime=`False`
 - `stage7_label_distribution_review` status=`stage7_label_distribution_review_success_gate_closed` labels=`False` runtime=`False` artifact_runtime=`False`

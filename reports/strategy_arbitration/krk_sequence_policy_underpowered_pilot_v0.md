@@ -26,7 +26,7 @@ This is a non-causal pilot review over underpowered inputs. It preserves diagnos
 - protected_failure_contrast_runner_status: `protected_plan_window_failure_contrast_runner_dry_run_ready`
 - protected_failure_contrast_runner_processed_job_count: `0`
 - protected_failure_contrast_runner_executed_job_count: `0`
-- protected_failure_contrast_command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run`
+- protected_failure_contrast_command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - selector_training_row_count: `0`
 - runtime_authorization_row_count: `0`
 - stage7_training_row_count: `0`

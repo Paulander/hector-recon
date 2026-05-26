@@ -61,6 +61,11 @@ POST_FAILURE_CONTRAST_SEQUENCE_REFRESH = (
 OUT_JSON = ROOT / "reports/krk_full_suite_unblocker_packet_v0.json"
 OUT_MD = ROOT / "reports/krk_full_suite_unblocker_packet_v0.md"
 
+DEFAULT_FAILURE_CONTRAST_APPROVAL_RECEIPT = (
+    "reports/strategy_arbitration/"
+    "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
+)
+
 
 def _load(path: Path) -> dict[str, Any]:
     data = json.loads(path.read_text(encoding="utf-8"))
@@ -155,7 +160,9 @@ def build_payload() -> dict[str, Any]:
         "UV_CACHE_DIR=/tmp/uv-cache uv run python "
         "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py "
         "--execute-reviewed-collection "
-        "--refresh-after-run"
+        "--refresh-after-run "
+        "--approval-receipt "
+        f"{failure_contrast_runner.get('approval_receipt_path') or DEFAULT_FAILURE_CONTRAST_APPROVAL_RECEIPT}"
     )
     if sequence_forbidden_training_or_runtime_inputs:
         decision_status = "krk_suite_unblocker_blocked_forbidden_training_or_runtime_rows"
@@ -490,6 +497,45 @@ def build_payload() -> dict[str, Any]:
                     if failure_contrast_primary
                     else job_timeout_seconds
                 ),
+                "approval_receipt_required": (
+                    True if failure_contrast_primary else None
+                ),
+                "approval_receipt_path": (
+                    failure_contrast_runner.get("approval_receipt_path")
+                    or DEFAULT_FAILURE_CONTRAST_APPROVAL_RECEIPT
+                    if failure_contrast_primary
+                    else None
+                ),
+                "approval_receipt_present": (
+                    failure_contrast_runner_summary.get("approval_receipt_present")
+                    if failure_contrast_primary
+                    else None
+                ),
+                "approval_receipt_valid": (
+                    failure_contrast_runner_summary.get("approval_receipt_valid")
+                    if failure_contrast_primary
+                    else None
+                ),
+                "expected_manifest_fingerprint": (
+                    failure_contrast_runner_summary.get(
+                        "execution_readiness_manifest_fingerprint"
+                    )
+                    or failure_contrast_execution_readiness.get("summary", {}).get(
+                        "manifest_fingerprint"
+                    )
+                    if failure_contrast_primary
+                    else None
+                ),
+                "expected_readiness_fingerprint": (
+                    failure_contrast_runner_summary.get(
+                        "execution_readiness_fingerprint"
+                    )
+                    or failure_contrast_execution_readiness.get("summary", {}).get(
+                        "readiness_fingerprint"
+                    )
+                    if failure_contrast_primary
+                    else None
+                ),
                 "timed_out_job_count": (
                     failure_contrast_runner_summary.get("timed_out_job_count", 0)
                     if failure_contrast_primary
@@ -635,6 +681,12 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- skip_existing_outputs_by_default: `{primary['scope']['skip_existing_outputs_by_default']}`",
             f"- invalid_existing_outputs_block_without_overwrite: `{primary['scope']['invalid_existing_outputs_block_without_overwrite']}`",
             f"- per_job_timeout_seconds: `{primary['scope']['per_job_timeout_seconds']}`",
+            f"- approval_receipt_required: `{primary['scope']['approval_receipt_required']}`",
+            f"- approval_receipt_path: `{primary['scope']['approval_receipt_path']}`",
+            f"- approval_receipt_present: `{primary['scope']['approval_receipt_present']}`",
+            f"- approval_receipt_valid: `{primary['scope']['approval_receipt_valid']}`",
+            f"- expected_manifest_fingerprint: `{primary['scope']['expected_manifest_fingerprint']}`",
+            f"- expected_readiness_fingerprint: `{primary['scope']['expected_readiness_fingerprint']}`",
             f"- post_success_refresh: `{primary['scope']['post_success_refresh']}`",
             f"- stage7_training_rows: `{primary['scope']['stage7_training_rows']}`",
             f"- approval_required: `{primary['approval_required']}`",

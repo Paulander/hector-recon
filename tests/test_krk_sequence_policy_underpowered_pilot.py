@@ -88,7 +88,10 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
     assert payload["summary"]["protected_failure_contrast_command_if_explicitly_approved"] == (
         "UV_CACHE_DIR=/tmp/uv-cache uv run python "
         "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py "
-        "--execute-reviewed-collection --refresh-after-run"
+        "--execute-reviewed-collection --refresh-after-run "
+        "--approval-receipt "
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
     )
     assert "stage4_state_local_topk_signal_present" in payload["pilot_findings"]
     assert "stage7_clean_success_controls_missing" not in payload["blockers"]

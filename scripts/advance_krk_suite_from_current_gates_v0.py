@@ -152,14 +152,14 @@ PASSIVE_STEPS = [
         ),
     },
     {
-        "step_id": "sequence_policy_underpowered_pilot_review",
-        "script": "scripts/review_krk_sequence_policy_underpowered_pilot_v0.py",
-        "output_json": "reports/strategy_arbitration/krk_sequence_policy_underpowered_pilot_v0.json",
-    },
-    {
         "step_id": "full_suite_readiness_audit",
         "script": "scripts/write_krk_full_suite_readiness_audit_v0.py",
         "output_json": "reports/krk_full_suite_readiness_audit_v0.json",
+    },
+    {
+        "step_id": "sequence_policy_underpowered_pilot_review",
+        "script": "scripts/review_krk_sequence_policy_underpowered_pilot_v0.py",
+        "output_json": "reports/strategy_arbitration/krk_sequence_policy_underpowered_pilot_v0.json",
     },
     {
         "step_id": "stage8_training_readiness_review",

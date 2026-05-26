@@ -169,10 +169,22 @@ def test_full_suite_readiness_identifies_current_gate():
     assert protected_failure_contrast["integration_ready"] is False
     assert protected_failure_contrast["ready_for_explicit_approval"] is True
     assert protected_failure_contrast["current_artifact_allows_collection"] is False
+    assert protected_failure_contrast["approval_receipt_required"] is True
+    assert protected_failure_contrast["approval_receipt_path"] == (
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
+    )
+    assert protected_failure_contrast["approval_receipt_present"] is False
+    assert protected_failure_contrast["approval_receipt_valid"] is False
+    assert len(protected_failure_contrast["expected_manifest_fingerprint"]) == 64
+    assert len(protected_failure_contrast["expected_readiness_fingerprint"]) == 64
     assert protected_failure_contrast["command_if_explicitly_approved"] == (
         "UV_CACHE_DIR=/tmp/uv-cache uv run python "
         "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py "
-        "--execute-reviewed-collection --refresh-after-run"
+        "--execute-reviewed-collection --refresh-after-run "
+        "--approval-receipt "
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
     )
 
 

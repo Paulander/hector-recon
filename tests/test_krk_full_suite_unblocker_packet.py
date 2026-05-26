@@ -59,7 +59,10 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     assert primary["command_if_explicitly_approved"] == (
         "UV_CACHE_DIR=/tmp/uv-cache uv run python "
         "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py "
-        "--execute-reviewed-collection --refresh-after-run"
+        "--execute-reviewed-collection --refresh-after-run "
+        "--approval-receipt "
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
     )
     assert primary["scope"]["resume_safe"] is True
     assert primary["scope"]["max_jobs"] == 6
@@ -76,6 +79,15 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     assert primary["scope"]["invalid_existing_outputs_block_without_overwrite"] is True
     assert primary["scope"]["execution_readiness_recomputed_live"] is True
     assert primary["scope"]["per_job_timeout_seconds"] == 900
+    assert primary["scope"]["approval_receipt_required"] is True
+    assert primary["scope"]["approval_receipt_path"] == (
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
+    )
+    assert primary["scope"]["approval_receipt_present"] is False
+    assert primary["scope"]["approval_receipt_valid"] is False
+    assert len(primary["scope"]["expected_manifest_fingerprint"]) == 64
+    assert len(primary["scope"]["expected_readiness_fingerprint"]) == 64
     assert primary["scope"]["timed_out_job_count"] == 0
     assert primary["scope"]["post_success_refresh"] == "full_passive_krk_suite_gate_stack"
     assert primary["scope"]["stage7_training_rows"] == 0
@@ -193,7 +205,10 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
     assert (
         "command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python "
         "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py "
-        "--execute-reviewed-collection --refresh-after-run`" in rendered
+        "--execute-reviewed-collection --refresh-after-run "
+        "--approval-receipt reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_collection_approval_v0.json`"
+        in rendered
     )
     assert "max_jobs: `6`" in rendered
     assert "stage: `protected_plan_window_failure_contrast_evidence_only`" in rendered
@@ -202,6 +217,12 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
     assert "resume_safe: `True`" in rendered
     assert "invalid_existing_outputs_block_without_overwrite: `True`" in rendered
     assert "per_job_timeout_seconds: `900`" in rendered
+    assert "approval_receipt_required: `True`" in rendered
+    assert (
+        "approval_receipt_path: `reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_collection_approval_v0.json`"
+        in rendered
+    )
     assert "post_success_refresh: `full_passive_krk_suite_gate_stack`" in rendered
     assert "approval_required: `True`" in rendered
     assert "implementation_allowed_by_this_packet: `False`" in rendered

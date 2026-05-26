@@ -89,6 +89,11 @@ FORBIDDEN_INPUT_STATUSES = {
     "sequence_policy_benchmark_review_blocked_forbidden_training_or_runtime_rows",
 }
 
+DEFAULT_FAILURE_CONTRAST_APPROVAL_RECEIPT = (
+    "reports/strategy_arbitration/"
+    "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
+)
+
 
 def load_json(relative: str) -> dict[str, Any]:
     path = ROOT / relative
@@ -347,6 +352,17 @@ def build_payload() -> dict[str, Any]:
     protected_failure_contrast_integration_ready = bool(
         failure_contrast_integration.get("summary", {}).get("integration_ready")
     )
+    failure_contrast_runner_summary = failure_contrast_runner.get("summary", {})
+    failure_contrast_approval_receipt_path = (
+        failure_contrast_runner.get("approval_receipt_path")
+        or DEFAULT_FAILURE_CONTRAST_APPROVAL_RECEIPT
+    )
+    failure_contrast_command = (
+        "UV_CACHE_DIR=/tmp/uv-cache uv run python "
+        "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py "
+        "--execute-reviewed-collection --refresh-after-run "
+        f"--approval-receipt {failure_contrast_approval_receipt_path}"
+    )
     protected_failure_contrast_pending = (
         stage7_success_ready
         and sequence_ready
@@ -576,10 +592,30 @@ def build_payload() -> dict[str, Any]:
                 protected_failure_contrast_ready_for_explicit_approval
             ),
             "current_artifact_allows_collection": False,
+            "approval_receipt_required": True,
+            "approval_receipt_path": failure_contrast_approval_receipt_path,
+            "approval_receipt_present": failure_contrast_runner_summary.get(
+                "approval_receipt_present"
+            ),
+            "approval_receipt_valid": failure_contrast_runner_summary.get(
+                "approval_receipt_valid"
+            ),
+            "expected_manifest_fingerprint": (
+                failure_contrast_runner_summary.get(
+                    "execution_readiness_manifest_fingerprint"
+                )
+                or failure_contrast_execution_readiness.get("summary", {}).get(
+                    "manifest_fingerprint"
+                )
+            ),
+            "expected_readiness_fingerprint": (
+                failure_contrast_runner_summary.get("execution_readiness_fingerprint")
+                or failure_contrast_execution_readiness.get("summary", {}).get(
+                    "readiness_fingerprint"
+                )
+            ),
             "command_if_explicitly_approved": (
-                "UV_CACHE_DIR=/tmp/uv-cache uv run python "
-                "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py "
-                "--execute-reviewed-collection --refresh-after-run"
+                failure_contrast_command
                 if protected_failure_contrast_ready_for_explicit_approval
                 else None
             ),
@@ -811,6 +847,12 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- integration_ready: `{protected_failure_contrast['integration_ready']}`",
             f"- ready_for_explicit_approval: `{protected_failure_contrast['ready_for_explicit_approval']}`",
             f"- current_artifact_allows_collection: `{protected_failure_contrast['current_artifact_allows_collection']}`",
+            f"- approval_receipt_required: `{protected_failure_contrast['approval_receipt_required']}`",
+            f"- approval_receipt_path: `{protected_failure_contrast['approval_receipt_path']}`",
+            f"- approval_receipt_present: `{protected_failure_contrast['approval_receipt_present']}`",
+            f"- approval_receipt_valid: `{protected_failure_contrast['approval_receipt_valid']}`",
+            f"- expected_manifest_fingerprint: `{protected_failure_contrast['expected_manifest_fingerprint']}`",
+            f"- expected_readiness_fingerprint: `{protected_failure_contrast['expected_readiness_fingerprint']}`",
             f"- command_if_explicitly_approved: `{protected_failure_contrast['command_if_explicitly_approved']}`",
             "",
             "## Blockers",
