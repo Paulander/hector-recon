@@ -701,6 +701,7 @@
       "approval_receipt_missing"
     ],
     "protected_plan_window_failure_contrast_approval_receipt_created": false,
+    "protected_plan_window_failure_contrast_approval_request_blockers": [],
     "protected_plan_window_failure_contrast_approval_request_status": "protected_plan_window_failure_contrast_approval_request_ready",
     "protected_plan_window_failure_contrast_execution_jobs_passing": 6,
     "protected_plan_window_failure_contrast_execution_readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",

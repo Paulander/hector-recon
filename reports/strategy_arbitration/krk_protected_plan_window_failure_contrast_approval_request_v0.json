@@ -6,6 +6,7 @@
   "approval_receipt_path": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json",
   "approval_receipt_present": false,
   "approval_receipt_valid": false,
+  "blockers": [],
   "causal_status": "non_causal_approval_request_packet",
   "decision": {
     "collection_run_allowed": false,
@@ -121,6 +122,8 @@
     "readiness_fingerprint": "3d8481218b7f46804e054090e7bd83b4a8a39d341a3290a537068a0a7b586987",
     "readiness_source_artifact_count": 44,
     "readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
+    "request_blockers": [],
+    "request_ready": true,
     "runner_executed_job_count": 0,
     "runner_execution_requested": false,
     "runner_job_timeout_seconds": 900,

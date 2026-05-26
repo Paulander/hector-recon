@@ -69,6 +69,7 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - protected_plan_window_failure_contrast_runner_processed_job_count: `0`
 - protected_plan_window_failure_contrast_runner_executed_job_count: `0`
 - protected_plan_window_failure_contrast_approval_request: `protected_plan_window_failure_contrast_approval_request_ready`
+- protected_plan_window_failure_contrast_approval_request_blockers: `[]`
 - protected_plan_window_failure_contrast_approval_receipt_created: `False`
 - protected_plan_window_failure_contrast_approval_receipt_blockers: `['approval_receipt_missing']`
 - protected_plan_window_failure_contrast_post_success_refresh_required: `True`
@@ -167,6 +168,7 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
   - approval_receipt_valid: `False`
   - approval_receipt_blockers: `['approval_receipt_missing']`
   - approval_request_status: `protected_plan_window_failure_contrast_approval_request_ready`
+  - approval_request_blockers: `[]`
   - approval_receipt_created_by_request: `False`
   - post_success_refresh_required: `True`
   - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`

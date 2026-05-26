@@ -118,6 +118,52 @@ def build_payload(
         else manifest_summary.get("job_count") or len(manifest.get("jobs") or [])
     )
     approval_receipt_path = runner.get("approval_receipt_path") or DEFAULT_APPROVAL_RECEIPT
+    readiness_checked_flag_count = readiness_summary.get("readiness_checked_flag_count")
+    readiness_boundary_violation_count = readiness_summary.get(
+        "readiness_boundary_violation_count"
+    )
+    readiness_source_artifact_count = readiness_summary.get("readiness_source_artifact_count")
+    readiness_scope_clean = (
+        readiness_checked_flag_count is not None
+        and readiness_boundary_violation_count == 0
+        and readiness_source_artifact_count is not None
+        and readiness_source_artifact_count > 0
+    )
+    protected_stack_clean = (
+        protected_stack_safety["ready"] is True
+        and protected_stack_safety["rollback_paths_preserved"] is True
+        and protected_stack_safety["active_paths_safe"] is True
+        and protected_stack_safety["active_paths_exist"] is True
+        and protected_stack_safety["rollback_paths_safe"] is True
+        and protected_stack_safety["rollback_paths_exist"] is True
+        and protected_stack_safety["rollback_common_paths_distinct"] is True
+        and protected_stack_safety["filesystem_snapshots_replaced"] is False
+        and not protected_stack_safety["hard_blockers"]
+    )
+    execution_scope_ready = (
+        manifest.get("decision", {}).get("status")
+        == "protected_plan_window_failure_contrast_manifest_ready_for_review"
+        and readiness.get("decision", {}).get("status")
+        == "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+        and runner.get("decision", {}).get("status")
+        == "protected_plan_window_failure_contrast_runner_dry_run_ready"
+        and runner.get("execution_requested") is False
+        and runner_summary.get("processed_job_count") == 0
+        and runner_summary.get("executed_job_count") == 0
+    )
+    blockers: list[str] = []
+    if not execution_scope_ready:
+        blockers.append("protected_failure_contrast_execution_scope_not_ready")
+    if not readiness_scope_clean:
+        blockers.append("full_suite_readiness_audit_not_clean")
+    if not protected_stack_clean:
+        blockers.append("protected_stack_not_clean")
+    request_ready = not blockers
+    status = (
+        "protected_plan_window_failure_contrast_approval_request_ready"
+        if request_ready
+        else "protected_plan_window_failure_contrast_approval_request_blocked"
+    )
     required_receipt = {
         "schema_version": APPROVAL_SCHEMA_VERSION,
         "approval_id": APPROVAL_ID,
@@ -163,15 +209,9 @@ def build_payload(
             "protected_stack_hard_blockers": (
                 readiness_summary.get("protected_stack_hard_blockers") or []
             ),
-            "readiness_checked_flag_count": readiness_summary.get(
-                "readiness_checked_flag_count"
-            ),
-            "readiness_boundary_violation_count": readiness_summary.get(
-                "readiness_boundary_violation_count"
-            ),
-            "readiness_source_artifact_count": readiness_summary.get(
-                "readiness_source_artifact_count"
-            ),
+            "readiness_checked_flag_count": readiness_checked_flag_count,
+            "readiness_boundary_violation_count": readiness_boundary_violation_count,
+            "readiness_source_artifact_count": readiness_source_artifact_count,
         },
         "decision": {
             "status": APPROVAL_STATUS,
@@ -211,18 +251,14 @@ def build_payload(
         "protected_stack_safety": protected_stack_safety,
         "required_receipt_if_user_approves": required_receipt,
         "summary": {
+            "request_ready": request_ready,
+            "request_blockers": blockers,
             "job_count": job_count,
             "manifest_status": manifest.get("decision", {}).get("status"),
             "readiness_status": readiness.get("decision", {}).get("status"),
-            "readiness_checked_flag_count": readiness_summary.get(
-                "readiness_checked_flag_count"
-            ),
-            "readiness_boundary_violation_count": readiness_summary.get(
-                "readiness_boundary_violation_count"
-            ),
-            "readiness_source_artifact_count": readiness_summary.get(
-                "readiness_source_artifact_count"
-            ),
+            "readiness_checked_flag_count": readiness_checked_flag_count,
+            "readiness_boundary_violation_count": readiness_boundary_violation_count,
+            "readiness_source_artifact_count": readiness_source_artifact_count,
             "runner_status": runner.get("decision", {}).get("status"),
             "runner_execution_requested": runner.get("execution_requested"),
             "runner_processed_job_count": runner_summary.get("processed_job_count"),
@@ -270,10 +306,13 @@ def build_payload(
             "approval_receipt_required": True,
             "approval_receipt_missing": not bool(runner_summary.get("approval_receipt_present")),
         },
+        "blockers": blockers,
         "decision": {
-            "status": "protected_plan_window_failure_contrast_approval_request_ready",
+            "status": status,
             "recommended_next_step": (
                 "user_may_create_matching_approval_receipt_only_if_collection_is_explicitly_approved"
+                if request_ready
+                else "repair_protected_failure_contrast_approval_request_scope"
             ),
             "collection_run_allowed": False,
             "label_run_allowed": False,

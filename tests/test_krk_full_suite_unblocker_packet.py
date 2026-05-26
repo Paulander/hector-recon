@@ -131,6 +131,7 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
         primary["scope"]["approval_request_status"]
         == "protected_plan_window_failure_contrast_approval_request_ready"
     )
+    assert primary["scope"]["approval_request_blockers"] == []
     assert primary["scope"]["approval_receipt_created_by_request"] is False
     assert len(primary["scope"]["expected_manifest_fingerprint"]) == 64
     assert len(primary["scope"]["expected_readiness_fingerprint"]) == 64
@@ -227,6 +228,12 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
             "protected_plan_window_failure_contrast_approval_request_status"
         ]
         == "protected_plan_window_failure_contrast_approval_request_ready"
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_approval_request_blockers"
+        ]
+        == []
     )
     assert (
         payload["current_state"][

@@ -781,6 +781,9 @@ def build_payload() -> dict[str, Any]:
             "approval_request_status": failure_contrast_approval_request.get(
                 "decision", {}
             ).get("status"),
+            "approval_request_blockers": (
+                failure_contrast_approval_request.get("blockers") or []
+            ),
             "approval_receipt_created_by_request": (
                 failure_contrast_approval_request.get("approval_receipt_created")
             ),

@@ -6,6 +6,8 @@ This is a passive request packet only. It does not create the approval receipt, 
 
 ## Summary
 
+- request_ready: `True`
+- request_blockers: `[]`
 - job_count: `6`
 - manifest_status: `protected_plan_window_failure_contrast_manifest_ready_for_review`
 - readiness_status: `protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval`

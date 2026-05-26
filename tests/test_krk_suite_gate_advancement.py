@@ -194,6 +194,10 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         == "protected_plan_window_failure_contrast_approval_request_ready"
     )
     assert (
+        payload["summary"]["protected_plan_window_failure_contrast_approval_request_blockers"]
+        == []
+    )
+    assert (
         payload["summary"]["protected_plan_window_failure_contrast_approval_receipt_created"]
         is False
     )

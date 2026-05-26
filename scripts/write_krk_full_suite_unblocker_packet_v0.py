@@ -437,6 +437,9 @@ def build_payload() -> dict[str, Any]:
             "protected_plan_window_failure_contrast_approval_request_status": failure_contrast_approval_request.get(
                 "decision", {}
             ).get("status"),
+            "protected_plan_window_failure_contrast_approval_request_blockers": (
+                failure_contrast_approval_request.get("blockers") or []
+            ),
             "protected_plan_window_failure_contrast_approval_receipt_created": failure_contrast_approval_request.get(
                 "approval_receipt_created"
             ),
@@ -691,6 +694,11 @@ def build_payload() -> dict[str, Any]:
                     if failure_contrast_primary
                     else None
                 ),
+                "approval_request_blockers": (
+                    failure_contrast_approval_request.get("blockers") or []
+                    if failure_contrast_primary
+                    else None
+                ),
                 "approval_receipt_created_by_request": (
                     failure_contrast_approval_request.get("approval_receipt_created")
                     if failure_contrast_primary
@@ -910,6 +918,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- protected_plan_window_failure_contrast_runner_processed_job_count: `{state['protected_plan_window_failure_contrast_runner_processed_job_count']}`",
         f"- protected_plan_window_failure_contrast_runner_executed_job_count: `{state['protected_plan_window_failure_contrast_runner_executed_job_count']}`",
         f"- protected_plan_window_failure_contrast_approval_request_status: `{state['protected_plan_window_failure_contrast_approval_request_status']}`",
+        f"- protected_plan_window_failure_contrast_approval_request_blockers: `{state['protected_plan_window_failure_contrast_approval_request_blockers']}`",
         f"- protected_plan_window_failure_contrast_approval_receipt_created: `{state['protected_plan_window_failure_contrast_approval_receipt_created']}`",
         f"- protected_plan_window_failure_contrast_approval_receipt_blockers: `{state['protected_plan_window_failure_contrast_approval_receipt_blockers']}`",
         f"- protected_plan_window_failure_contrast_output_validation_status: `{state['protected_plan_window_failure_contrast_output_validation_status']}`",
@@ -971,6 +980,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- approval_receipt_blockers: `{primary['scope']['approval_receipt_blockers']}`",
             f"- approval_request_artifact: `{primary['scope']['approval_request_artifact']}`",
             f"- approval_request_status: `{primary['scope']['approval_request_status']}`",
+            f"- approval_request_blockers: `{primary['scope']['approval_request_blockers']}`",
             f"- approval_receipt_created_by_request: `{primary['scope']['approval_receipt_created_by_request']}`",
             f"- expected_manifest_fingerprint: `{primary['scope']['expected_manifest_fingerprint']}`",
             f"- expected_readiness_fingerprint: `{primary['scope']['expected_readiness_fingerprint']}`",

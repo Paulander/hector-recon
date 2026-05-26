@@ -498,6 +498,8 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
         == 0
     )
     assert payload["summary"]["approval_receipt_required"] is True
+    assert payload["summary"]["request_ready"] is True
+    assert payload["summary"]["request_blockers"] == []
     assert (
         payload["summary"]["protected_stack_status"]
         == "retry1_protected_stage5_6_stack_adopted_manifest_only"
@@ -578,6 +580,11 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
     assert required["decision"]["gameplay_topology_mutation"] is False
     assert required["decision"]["stage7_promotion_allowed"] is False
     assert required["decision"]["stage8_training_allowed"] is False
+    assert payload["blockers"] == []
+    assert (
+        payload["decision"]["status"]
+        == "protected_plan_window_failure_contrast_approval_request_ready"
+    )
     assert payload["decision"]["collection_run_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False
@@ -661,6 +668,12 @@ def test_failure_contrast_approval_request_fixture_tracks_current_scope():
         ]
         is True
     )
+    assert (
+        payload["decision"]["status"]
+        == "protected_plan_window_failure_contrast_approval_request_blocked"
+    )
+    assert payload["summary"]["request_ready"] is False
+    assert "full_suite_readiness_audit_not_clean" in payload["blockers"]
     assert payload["required_receipt_if_user_approves"]["approval_scope"] == {
         "manifest_fingerprint": "m" * 64,
         "readiness_fingerprint": "r" * 64,
@@ -692,6 +705,138 @@ def test_failure_contrast_approval_request_fixture_tracks_current_scope():
         "readiness_boundary_violation_count": None,
         "readiness_source_artifact_count": None,
     }
+    assert payload["decision"]["collection_run_allowed"] is False
+
+
+def test_failure_contrast_approval_request_blocks_readiness_violations():
+    payload = _approval_request.build_payload(
+        manifest={
+            "decision": {
+                "status": "protected_plan_window_failure_contrast_manifest_ready_for_review"
+            },
+            "summary": {"job_count": 2},
+        },
+        readiness={
+            "decision": {
+                "status": (
+                    "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+                )
+            },
+            "summary": {
+                "manifest_fingerprint": "m" * 64,
+                "readiness_fingerprint": "r" * 64,
+                "readiness_checked_flag_count": 430,
+                "readiness_boundary_violation_count": 1,
+                "readiness_source_artifact_count": 44,
+            },
+        },
+        runner={
+            "execution_requested": False,
+            "decision": {
+                "status": "protected_plan_window_failure_contrast_runner_dry_run_ready"
+            },
+            "summary": {
+                "approval_receipt_present": False,
+                "approval_receipt_valid": False,
+                "approval_receipt_blockers": ["approval_receipt_missing"],
+                "processed_job_count": 0,
+                "executed_job_count": 0,
+            },
+        },
+        full_suite_readiness={
+            "protected_stack": {
+                "ready": True,
+                "rollback_paths_preserved": True,
+                "active_stack_path_status": {
+                    "all_paths_safe": True,
+                    "all_paths_exist": True,
+                },
+                "rollback_stack_path_status": {
+                    "all_paths_safe": True,
+                    "all_paths_exist": True,
+                },
+                "rollback_common_paths_distinct": True,
+                "filesystem_snapshots_replaced": False,
+            },
+            "hard_blockers": [],
+        },
+    )
+
+    assert (
+        payload["decision"]["status"]
+        == "protected_plan_window_failure_contrast_approval_request_blocked"
+    )
+    assert payload["summary"]["request_ready"] is False
+    assert "full_suite_readiness_audit_not_clean" in payload["blockers"]
+    assert (
+        payload["required_receipt_if_user_approves"]["approval_scope"][
+            "readiness_boundary_violation_count"
+        ]
+        == 1
+    )
+    assert payload["decision"]["collection_run_allowed"] is False
+
+
+def test_failure_contrast_approval_request_blocks_unclean_protected_stack():
+    payload = _approval_request.build_payload(
+        manifest={
+            "decision": {
+                "status": "protected_plan_window_failure_contrast_manifest_ready_for_review"
+            },
+            "summary": {"job_count": 2},
+        },
+        readiness={
+            "decision": {
+                "status": (
+                    "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+                )
+            },
+            "summary": {
+                "manifest_fingerprint": "m" * 64,
+                "readiness_fingerprint": "r" * 64,
+                "readiness_checked_flag_count": 430,
+                "readiness_boundary_violation_count": 0,
+                "readiness_source_artifact_count": 44,
+            },
+        },
+        runner={
+            "execution_requested": False,
+            "decision": {
+                "status": "protected_plan_window_failure_contrast_runner_dry_run_ready"
+            },
+            "summary": {
+                "approval_receipt_present": False,
+                "approval_receipt_valid": False,
+                "approval_receipt_blockers": ["approval_receipt_missing"],
+                "processed_job_count": 0,
+                "executed_job_count": 0,
+            },
+        },
+        full_suite_readiness={
+            "protected_stack": {
+                "ready": False,
+                "rollback_paths_preserved": True,
+                "active_stack_path_status": {
+                    "all_paths_safe": True,
+                    "all_paths_exist": True,
+                },
+                "rollback_stack_path_status": {
+                    "all_paths_safe": True,
+                    "all_paths_exist": True,
+                },
+                "rollback_common_paths_distinct": True,
+                "filesystem_snapshots_replaced": False,
+            },
+            "hard_blockers": ["protected_stack_not_ready"],
+        },
+    )
+
+    assert (
+        payload["decision"]["status"]
+        == "protected_plan_window_failure_contrast_approval_request_blocked"
+    )
+    assert payload["summary"]["request_ready"] is False
+    assert "protected_stack_not_clean" in payload["blockers"]
     assert payload["decision"]["collection_run_allowed"] is False
 
 

@@ -272,6 +272,7 @@ def test_full_suite_readiness_identifies_current_gate():
         protected_failure_contrast["approval_request_status"]
         == "protected_plan_window_failure_contrast_approval_request_ready"
     )
+    assert protected_failure_contrast["approval_request_blockers"] == []
     assert protected_failure_contrast["approval_receipt_created_by_request"] is False
     assert protected_failure_contrast["post_success_refresh_required"] is True
     assert protected_failure_contrast["post_success_refresh_script"] == (

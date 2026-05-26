@@ -59,6 +59,7 @@
 - protected_plan_window_failure_contrast_runner_processed_job_count: `0`
 - protected_plan_window_failure_contrast_runner_executed_job_count: `0`
 - protected_plan_window_failure_contrast_approval_request_status: `protected_plan_window_failure_contrast_approval_request_ready`
+- protected_plan_window_failure_contrast_approval_request_blockers: `[]`
 - protected_plan_window_failure_contrast_approval_receipt_created: `False`
 - protected_plan_window_failure_contrast_approval_receipt_blockers: `['approval_receipt_missing']`
 - protected_plan_window_failure_contrast_output_validation_status: `protected_plan_window_failure_contrast_outputs_validation_pending`
@@ -118,6 +119,7 @@
 - approval_receipt_blockers: `['approval_receipt_missing']`
 - approval_request_artifact: `reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_approval_request_v0.json`
 - approval_request_status: `protected_plan_window_failure_contrast_approval_request_ready`
+- approval_request_blockers: `[]`
 - approval_receipt_created_by_request: `False`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
 - expected_readiness_fingerprint: `3d8481218b7f46804e054090e7bd83b4a8a39d341a3290a537068a0a7b586987`

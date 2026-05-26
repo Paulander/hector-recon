@@ -639,6 +639,9 @@ def build_payload(
                     "approval_request_status": failure_contrast_approval_request.get(
                         "decision", {}
                     ).get("status"),
+                    "approval_request_blockers": (
+                        failure_contrast_approval_request.get("blockers") or []
+                    ),
                     "approval_receipt_created_by_request": (
                         failure_contrast_approval_request.get(
                             "approval_receipt_created"
@@ -971,6 +974,9 @@ def build_payload(
             "protected_plan_window_failure_contrast_approval_request": failure_contrast_approval_request.get(
                 "decision", {}
             ).get("status", "not_written"),
+            "protected_plan_window_failure_contrast_approval_request_blockers": (
+                failure_contrast_approval_request.get("blockers") or []
+            ),
             "protected_plan_window_failure_contrast_approval_receipt_created": failure_contrast_approval_request.get(
                 "approval_receipt_created"
             ),

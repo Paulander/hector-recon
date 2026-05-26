@@ -5,6 +5,7 @@
       "approval_receipt_missing"
     ],
     "protected_plan_window_failure_contrast_approval_receipt_created": false,
+    "protected_plan_window_failure_contrast_approval_request_blockers": [],
     "protected_plan_window_failure_contrast_approval_request_status": "protected_plan_window_failure_contrast_approval_request_ready",
     "protected_plan_window_failure_contrast_execution_jobs_passing": 6,
     "protected_plan_window_failure_contrast_execution_readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
@@ -109,6 +110,7 @@
       "approval_receipt_required": true,
       "approval_receipt_valid": false,
       "approval_request_artifact": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_approval_request_v0.json",
+      "approval_request_blockers": [],
       "approval_request_status": "protected_plan_window_failure_contrast_approval_request_ready",
       "execution_readiness_recomputed_live": true,
       "expected_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
