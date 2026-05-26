@@ -464,6 +464,63 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["stronger_selector_feature_stage8_training_allowed"]
         is False
     )
+    assert payload["summary"]["selected_provider_diversity_passive_ready"] is True
+    assert payload["summary"]["selected_provider_diversity_evidence_plan_status"] == (
+        "selected_provider_diversity_evidence_plan_defined"
+    )
+    assert payload["summary"]["selected_provider_diversity_manifest_status"] == (
+        "fresh_seed_selected_provider_diversity_manifest_ready_for_bounded_labels"
+    )
+    assert (
+        payload["summary"][
+            "selected_provider_diversity_manifest_observations_allowed_now"
+        ]
+        is False
+    )
+    assert payload["summary"]["selected_provider_diversity_manifest_job_count"] == 18
+    assert payload["summary"]["selected_provider_diversity_manifest_stage7_jobs"] == 0
+    assert payload["summary"]["selected_provider_diversity_labels_status"] == (
+        "fresh_seed_selected_provider_diversity_ownership_labels_collected"
+    )
+    assert payload["summary"]["selected_provider_diversity_label_count"] == 18
+    assert payload["summary"]["selected_provider_diversity_stage7_training_rows"] == 0
+    assert payload["summary"]["selected_provider_diversity_architecture_status"] == (
+        "selected_provider_diversity_requirement_should_be_reframed"
+    )
+    assert (
+        payload["summary"][
+            "selected_provider_diversity_architecture_runtime_arbiter_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["selected_provider_diversity_runtime_selector_implemented"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "selected_provider_diversity_runtime_candidate_generator_implemented"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["selected_provider_diversity_runtime_arbiter_implemented"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "selected_provider_diversity_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["selected_provider_diversity_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["selected_provider_diversity_stage8_training_allowed"]
+        is False
+    )
     assert payload["summary"]["state_local_paired_ownership_passive_ready"] is True
     assert (
         payload["summary"]["state_local_paired_hard_negative_target_status"]

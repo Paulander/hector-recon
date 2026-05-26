@@ -519,6 +519,24 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_stronger_selector_feature_review_v0.json"
     )
     assert (
+        payload["source_artifacts"]["selected_provider_diversity_evidence_plan_v0"]
+        == "reports/krk_selected_provider_diversity_evidence_plan_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["selected_provider_diversity_sampling_manifest_v1"]
+        == "reports/krk_selected_provider_diversity_sampling_manifest_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["selected_provider_diversity_ownership_labels_v1"]
+        == "reports/krk_selected_provider_diversity_ownership_labels_v1.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "selected_provider_diversity_architecture_review_v0"
+        ]
+        == "reports/krk_selected_provider_diversity_architecture_review_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["hard_negative_selector_target_dataset_v2"]
         == "reports/krk_hard_negative_selector_target_dataset_v2.json"
     )
@@ -1061,6 +1079,69 @@ def test_full_suite_readiness_identifies_current_gate():
     assert stronger_feature["gameplay_topology_mutation"] is False
     assert stronger_feature["stage7_promotion_allowed"] is False
     assert stronger_feature["stage8_training_allowed"] is False
+
+    provider_diversity = payload["selected_provider_diversity_gate"]
+    assert provider_diversity["passive_diversity_review_ready"] is True
+    assert provider_diversity["evidence_plan_status"] == (
+        "selected_provider_diversity_evidence_plan_defined"
+    )
+    assert provider_diversity["evidence_plan_runtime_arbiter_allowed"] is False
+    assert provider_diversity["evidence_plan_selector_sandbox_ready"] is False
+    assert provider_diversity["manifest_status"] == (
+        "fresh_seed_selected_provider_diversity_manifest_ready_for_bounded_labels"
+    )
+    assert provider_diversity["manifest_observations_allowed_now"] is False
+    assert provider_diversity["manifest_bounded_labels_allowed_by_script"] is True
+    assert provider_diversity["manifest_runtime_arbiter_allowed"] is False
+    assert provider_diversity["manifest_all_bindings_valid"] is True
+    assert provider_diversity["manifest_job_count"] == 18
+    assert provider_diversity["manifest_job_count_by_stage"] == {
+        "stage4": 8,
+        "stage5": 6,
+        "stage6": 4,
+    }
+    assert provider_diversity["manifest_stage7_jobs"] == 0
+    assert provider_diversity["manifest_observation_only"] is True
+    assert provider_diversity["labels_status"] == (
+        "fresh_seed_selected_provider_diversity_ownership_labels_collected"
+    )
+    assert provider_diversity["label_count"] == 18
+    assert provider_diversity["ownership_label_counts"] == {
+        "selected_owner_converted": 15,
+        "selected_owner_failed": 3,
+    }
+    assert provider_diversity["selected_result_counts"] == {
+        "mate": 15,
+        "max_plies": 3,
+    }
+    assert provider_diversity["selected_result_counts_by_stage"] == {
+        "stage4:mate": 6,
+        "stage4:max_plies": 2,
+        "stage5:mate": 6,
+        "stage6:mate": 3,
+        "stage6:max_plies": 1,
+    }
+    assert provider_diversity["selected_provider_counts"] == {"krk.stage0_basin": 18}
+    assert provider_diversity["stage7_training_rows"] == 0
+    assert provider_diversity["trace_failures_only"] is True
+    assert provider_diversity["architecture_status"] == (
+        "selected_provider_diversity_requirement_should_be_reframed"
+    )
+    assert provider_diversity["architecture_recommended_next_step"] == (
+        "define_selector_readiness_v3_proposal_diversity_criteria"
+    )
+    assert provider_diversity["architecture_runtime_arbiter_allowed"] is False
+    assert provider_diversity["architecture_selector_sandbox_ready"] is False
+    assert provider_diversity["runtime_behavior_changed"] is False
+    assert provider_diversity["runtime_defaults_changed"] is False
+    assert provider_diversity["runtime_selector_implemented"] is False
+    assert provider_diversity["runtime_candidate_generator_implemented"] is False
+    assert provider_diversity["runtime_arbiter_implemented"] is False
+    assert provider_diversity["runtime_dtm_or_tablebase_lookup"] is False
+    assert provider_diversity["runtime_terminals_added"] is False
+    assert provider_diversity["gameplay_topology_mutation"] is False
+    assert provider_diversity["stage7_promotion_allowed"] is False
+    assert provider_diversity["stage8_training_allowed"] is False
 
     state_local = payload["state_local_paired_ownership_gate"]
     assert state_local["passive_semantic_gate_ready"] is True

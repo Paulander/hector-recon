@@ -78,8 +78,8 @@
         "readiness_audit": "reports/krk_full_suite_readiness_audit_v0.json",
         "readiness_audit_status": "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection",
         "readiness_boundary_violation_count": 0,
-        "readiness_checked_flag_count": 2163,
-        "readiness_source_artifact_count": 271,
+        "readiness_checked_flag_count": 2188,
+        "readiness_source_artifact_count": 275,
         "runtime_change_class": "default_off_candidate_move_frame_sandbox_only",
         "runtime_dtm_or_tablebase_lookup": false,
         "sandbox_scope_id": "default_off_stage4_candidate_move_first_move_contrast_sandbox_only",
@@ -631,7 +631,7 @@
     "execution_jobs_passing": 6,
     "execution_readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
     "expected_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
-    "expected_readiness_fingerprint": "3cce9292f5a014c961157aa3a89ac5f9a26dabf127e1698e4d4dce16b4060229",
+    "expected_readiness_fingerprint": "f2e3fbea9adeda7e1399c03baa87f280311517c8a6e94799765875b28293558b",
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "integrated_new_failure_count": 0,
@@ -866,7 +866,7 @@
     "trace_features_trace_frame_count": 6
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 2163,
+    "checked_flag_count": 2188,
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "runtime_behavior_changed": false,
@@ -944,6 +944,62 @@
     "visible_terms_row_count": 40,
     "visible_terms_stage7_row_count": 0,
     "visible_terms_status": "visible_failure_risk_terms_extracted_for_probe"
+  },
+  "selected_provider_diversity_gate": {
+    "architecture_recommended_next_step": "define_selector_readiness_v3_proposal_diversity_criteria",
+    "architecture_runtime_arbiter_allowed": false,
+    "architecture_selector_sandbox_ready": false,
+    "architecture_status": "selected_provider_diversity_requirement_should_be_reframed",
+    "evidence_plan_runtime_arbiter_allowed": false,
+    "evidence_plan_selector_sandbox_ready": false,
+    "evidence_plan_status": "selected_provider_diversity_evidence_plan_defined",
+    "gameplay_topology_mutation": false,
+    "label_count": 18,
+    "labels_status": "fresh_seed_selected_provider_diversity_ownership_labels_collected",
+    "manifest_all_bindings_valid": true,
+    "manifest_bounded_labels_allowed_by_script": true,
+    "manifest_job_count": 18,
+    "manifest_job_count_by_stage": {
+      "stage4": 8,
+      "stage5": 6,
+      "stage6": 4
+    },
+    "manifest_observation_only": true,
+    "manifest_observations_allowed_now": false,
+    "manifest_runtime_arbiter_allowed": false,
+    "manifest_stage7_jobs": 0,
+    "manifest_status": "fresh_seed_selected_provider_diversity_manifest_ready_for_bounded_labels",
+    "ownership_label_counts": {
+      "selected_owner_converted": 15,
+      "selected_owner_failed": 3
+    },
+    "passive_diversity_review_ready": true,
+    "runtime_arbiter_implemented": false,
+    "runtime_behavior_changed": false,
+    "runtime_candidate_generator_implemented": false,
+    "runtime_defaults_changed": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "runtime_selector_implemented": false,
+    "runtime_terminals_added": false,
+    "selected_provider_counts": {
+      "krk.stage0_basin": 18
+    },
+    "selected_result_counts": {
+      "mate": 15,
+      "max_plies": 3
+    },
+    "selected_result_counts_by_stage": {
+      "stage4:mate": 6,
+      "stage4:max_plies": 2,
+      "stage5:mate": 6,
+      "stage6:mate": 3,
+      "stage6:max_plies": 1
+    },
+    "stage7_promotion_allowed": false,
+    "stage7_training_rows": 0,
+    "stage8_training_allowed": false,
+    "status": "selected_provider_diversity_requirement_should_be_reframed",
+    "trace_failures_only": true
   },
   "selector_objective_gate": {
     "independent_validation_blocker_class": "independent_switch_contrast_absent",
@@ -1350,6 +1406,10 @@
     "selected_owner_failure_risk_proxy_probe_v1": "reports/krk_selected_owner_failure_risk_proxy_probe_v1.json",
     "selected_owner_failure_risk_visible_proxy_review_v0": "reports/krk_selected_owner_failure_risk_visible_proxy_review_v0.json",
     "selected_owner_failure_risk_visible_terms_v0": "reports/krk_selected_owner_failure_risk_visible_terms_v0.json",
+    "selected_provider_diversity_architecture_review_v0": "reports/krk_selected_provider_diversity_architecture_review_v0.json",
+    "selected_provider_diversity_evidence_plan_v0": "reports/krk_selected_provider_diversity_evidence_plan_v0.json",
+    "selected_provider_diversity_ownership_labels_v1": "reports/krk_selected_provider_diversity_ownership_labels_v1.json",
+    "selected_provider_diversity_sampling_manifest_v1": "reports/krk_selected_provider_diversity_sampling_manifest_v1.json",
     "selector_objective_architecture_review_v1": "reports/krk_selector_objective_architecture_review_v1.json",
     "selector_objective_benchmark_review_packet_v2": "reports/strategy_arbitration/krk_selector_objective_benchmark_review_packet_v2.json",
     "selector_objective_benchmark_v2": "reports/strategy_arbitration/krk_selector_objective_benchmark_v2.json",

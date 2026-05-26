@@ -597,6 +597,9 @@ def build_payload() -> dict[str, Any]:
     stronger_selector_feature_gate = (
         readiness.get("stronger_selector_feature_gate") or {}
     )
+    selected_provider_diversity_gate = (
+        readiness.get("selected_provider_diversity_gate") or {}
+    )
     state_local_paired_ownership_gate = (
         readiness.get("state_local_paired_ownership_gate") or {}
     )
@@ -1324,6 +1327,61 @@ def build_payload() -> dict[str, Any]:
             ),
             "stronger_selector_feature_stage8_training_allowed": (
                 stronger_selector_feature_gate.get("stage8_training_allowed")
+            ),
+            "selected_provider_diversity_passive_ready": (
+                selected_provider_diversity_gate.get("passive_diversity_review_ready")
+            ),
+            "selected_provider_diversity_evidence_plan_status": (
+                selected_provider_diversity_gate.get("evidence_plan_status")
+            ),
+            "selected_provider_diversity_manifest_status": (
+                selected_provider_diversity_gate.get("manifest_status")
+            ),
+            "selected_provider_diversity_manifest_observations_allowed_now": (
+                selected_provider_diversity_gate.get("manifest_observations_allowed_now")
+            ),
+            "selected_provider_diversity_manifest_job_count": (
+                selected_provider_diversity_gate.get("manifest_job_count")
+            ),
+            "selected_provider_diversity_manifest_stage7_jobs": (
+                selected_provider_diversity_gate.get("manifest_stage7_jobs")
+            ),
+            "selected_provider_diversity_labels_status": (
+                selected_provider_diversity_gate.get("labels_status")
+            ),
+            "selected_provider_diversity_label_count": (
+                selected_provider_diversity_gate.get("label_count")
+            ),
+            "selected_provider_diversity_stage7_training_rows": (
+                selected_provider_diversity_gate.get("stage7_training_rows")
+            ),
+            "selected_provider_diversity_architecture_status": (
+                selected_provider_diversity_gate.get("architecture_status")
+            ),
+            "selected_provider_diversity_architecture_runtime_arbiter_allowed": (
+                selected_provider_diversity_gate.get(
+                    "architecture_runtime_arbiter_allowed"
+                )
+            ),
+            "selected_provider_diversity_runtime_selector_implemented": (
+                selected_provider_diversity_gate.get("runtime_selector_implemented")
+            ),
+            "selected_provider_diversity_runtime_candidate_generator_implemented": (
+                selected_provider_diversity_gate.get(
+                    "runtime_candidate_generator_implemented"
+                )
+            ),
+            "selected_provider_diversity_runtime_arbiter_implemented": (
+                selected_provider_diversity_gate.get("runtime_arbiter_implemented")
+            ),
+            "selected_provider_diversity_runtime_dtm_or_tablebase_lookup": (
+                selected_provider_diversity_gate.get("runtime_dtm_or_tablebase_lookup")
+            ),
+            "selected_provider_diversity_stage7_promotion_allowed": (
+                selected_provider_diversity_gate.get("stage7_promotion_allowed")
+            ),
+            "selected_provider_diversity_stage8_training_allowed": (
+                selected_provider_diversity_gate.get("stage8_training_allowed")
             ),
             "state_local_paired_ownership_passive_ready": (
                 state_local_paired_ownership_gate.get("passive_semantic_gate_ready")

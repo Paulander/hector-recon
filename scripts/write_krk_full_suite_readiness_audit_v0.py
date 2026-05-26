@@ -616,6 +616,18 @@ SOURCES = {
     "stronger_selector_feature_review_v0": (
         "reports/krk_stronger_selector_feature_review_v0.json"
     ),
+    "selected_provider_diversity_evidence_plan_v0": (
+        "reports/krk_selected_provider_diversity_evidence_plan_v0.json"
+    ),
+    "selected_provider_diversity_sampling_manifest_v1": (
+        "reports/krk_selected_provider_diversity_sampling_manifest_v1.json"
+    ),
+    "selected_provider_diversity_ownership_labels_v1": (
+        "reports/krk_selected_provider_diversity_ownership_labels_v1.json"
+    ),
+    "selected_provider_diversity_architecture_review_v0": (
+        "reports/krk_selected_provider_diversity_architecture_review_v0.json"
+    ),
     "hard_negative_selector_target_dataset_v2": (
         "reports/krk_hard_negative_selector_target_dataset_v2.json"
     ),
@@ -1491,6 +1503,18 @@ def build_payload() -> dict[str, Any]:
     stronger_selector_feature_review_v0 = payloads[
         "stronger_selector_feature_review_v0"
     ]
+    selected_provider_diversity_evidence_plan_v0 = payloads[
+        "selected_provider_diversity_evidence_plan_v0"
+    ]
+    selected_provider_diversity_sampling_manifest_v1 = payloads[
+        "selected_provider_diversity_sampling_manifest_v1"
+    ]
+    selected_provider_diversity_ownership_labels_v1 = payloads[
+        "selected_provider_diversity_ownership_labels_v1"
+    ]
+    selected_provider_diversity_architecture_review_v0 = payloads[
+        "selected_provider_diversity_architecture_review_v0"
+    ]
     hard_negative_selector_target_dataset_v2 = payloads[
         "hard_negative_selector_target_dataset_v2"
     ]
@@ -2334,6 +2358,104 @@ def build_payload() -> dict[str, Any]:
         and stronger_selector_feature_review_v0.get("stage7_promotion_allowed")
         is False
         and stronger_selector_feature_review_v0.get("stage8_training_allowed")
+        is False
+    )
+    provider_diversity_plan_decision = (
+        selected_provider_diversity_evidence_plan_v0.get("decision") or {}
+    )
+    provider_diversity_manifest_decision = (
+        selected_provider_diversity_sampling_manifest_v1.get("decision") or {}
+    )
+    provider_diversity_manifest_binding = (
+        selected_provider_diversity_sampling_manifest_v1.get("binding_summary") or {}
+    )
+    provider_diversity_manifest_policy = (
+        selected_provider_diversity_sampling_manifest_v1.get("selection_policy") or {}
+    )
+    provider_diversity_labels_decision = (
+        selected_provider_diversity_ownership_labels_v1.get("decision") or {}
+    )
+    provider_diversity_labels_summary = (
+        selected_provider_diversity_ownership_labels_v1.get("summary") or {}
+    )
+    provider_diversity_architecture_decision = (
+        selected_provider_diversity_architecture_review_v0.get("decision") or {}
+    )
+    selected_provider_diversity_passive = (
+        selected_provider_diversity_evidence_plan_v0.get("causal_status")
+        == "non_causal_design_plan"
+        and provider_diversity_plan_decision.get("status")
+        == "selected_provider_diversity_evidence_plan_defined"
+        and provider_diversity_plan_decision.get("runtime_arbiter_allowed") is False
+        and provider_diversity_plan_decision.get("selector_sandbox_ready") is False
+        and selected_provider_diversity_evidence_plan_v0.get(
+            "labels_generated_in_this_slice"
+        )
+        is False
+        and selected_provider_diversity_sampling_manifest_v1.get("causal_status")
+        == "non_causal_sampling_manifest"
+        and provider_diversity_manifest_decision.get("status")
+        == "fresh_seed_selected_provider_diversity_manifest_ready_for_bounded_labels"
+        and provider_diversity_manifest_decision.get("observations_allowed_now")
+        is False
+        and provider_diversity_manifest_decision.get("runtime_arbiter_allowed")
+        is False
+        and provider_diversity_manifest_decision.get("selector_sandbox_ready")
+        is False
+        and provider_diversity_manifest_binding.get("all_bindings_valid") is True
+        and provider_diversity_manifest_binding.get("job_count") == 18
+        and provider_diversity_manifest_binding.get("missing_path_count") == 0
+        and provider_diversity_manifest_policy.get("stage7_jobs") == 0
+        and provider_diversity_manifest_policy.get("observation_only") is True
+        and selected_provider_diversity_sampling_manifest_v1.get(
+            "labels_generated_in_this_slice"
+        )
+        is False
+        and selected_provider_diversity_ownership_labels_v1.get("causal_status")
+        == "non_causal_label_run"
+        and provider_diversity_labels_decision.get("status")
+        == "fresh_seed_selected_provider_diversity_ownership_labels_collected"
+        and provider_diversity_labels_decision.get("runtime_work_allowed") is False
+        and provider_diversity_labels_decision.get("selector_training_allowed")
+        is False
+        and provider_diversity_labels_decision.get("stage7_promotion_allowed")
+        is False
+        and provider_diversity_labels_decision.get("stage8_training_allowed")
+        is False
+        and provider_diversity_labels_summary.get("label_count") == 18
+        and provider_diversity_labels_summary.get("stage7_training_rows") == 0
+        and provider_diversity_labels_summary.get("trace_failures_only") is True
+        and selected_provider_diversity_architecture_review_v0.get("causal_status")
+        == "non_causal_architecture_review"
+        and provider_diversity_architecture_decision.get("status")
+        == "selected_provider_diversity_requirement_should_be_reframed"
+        and provider_diversity_architecture_decision.get("runtime_arbiter_allowed")
+        is False
+        and provider_diversity_architecture_decision.get("selector_sandbox_ready")
+        is False
+        and all(
+            artifact.get("runtime_behavior_changed") is False
+            and artifact.get("runtime_defaults_changed") is False
+            and artifact.get("runtime_dtm_or_tablebase_lookup") is False
+            and artifact.get("runtime_terminals_added") is False
+            and artifact.get("runtime_arbiter_implemented") is False
+            and artifact.get("gameplay_topology_mutation") is False
+            and artifact.get("stage7_promotion_allowed") is False
+            and artifact.get("stage8_training_allowed") is False
+            for artifact in [
+                selected_provider_diversity_evidence_plan_v0,
+                selected_provider_diversity_sampling_manifest_v1,
+                selected_provider_diversity_ownership_labels_v1,
+                selected_provider_diversity_architecture_review_v0,
+            ]
+        )
+        and selected_provider_diversity_ownership_labels_v1.get(
+            "runtime_selector_implemented"
+        )
+        is False
+        and selected_provider_diversity_ownership_labels_v1.get(
+            "runtime_candidate_generator_implemented"
+        )
         is False
     )
     ownership_context_decision = ownership_context_feature_review_v3.get(
@@ -4079,6 +4201,129 @@ def build_payload() -> dict[str, Any]:
             ),
             "stage8_training_allowed": stronger_selector_feature_review_v0.get(
                 "stage8_training_allowed"
+            ),
+        },
+        "selected_provider_diversity_gate": {
+            "status": provider_diversity_architecture_decision.get("status"),
+            "passive_diversity_review_ready": selected_provider_diversity_passive,
+            "evidence_plan_status": provider_diversity_plan_decision.get("status"),
+            "evidence_plan_runtime_arbiter_allowed": (
+                provider_diversity_plan_decision.get("runtime_arbiter_allowed")
+            ),
+            "evidence_plan_selector_sandbox_ready": (
+                provider_diversity_plan_decision.get("selector_sandbox_ready")
+            ),
+            "manifest_status": provider_diversity_manifest_decision.get("status"),
+            "manifest_observations_allowed_now": (
+                provider_diversity_manifest_decision.get("observations_allowed_now")
+            ),
+            "manifest_bounded_labels_allowed_by_script": (
+                provider_diversity_manifest_decision.get(
+                    "bounded_labels_allowed_by_script"
+                )
+            ),
+            "manifest_runtime_arbiter_allowed": (
+                provider_diversity_manifest_decision.get("runtime_arbiter_allowed")
+            ),
+            "manifest_all_bindings_valid": (
+                provider_diversity_manifest_binding.get("all_bindings_valid")
+            ),
+            "manifest_job_count": provider_diversity_manifest_binding.get("job_count"),
+            "manifest_job_count_by_stage": (
+                provider_diversity_manifest_binding.get("job_count_by_stage") or {}
+            ),
+            "manifest_stage7_jobs": provider_diversity_manifest_policy.get(
+                "stage7_jobs"
+            ),
+            "manifest_observation_only": provider_diversity_manifest_policy.get(
+                "observation_only"
+            ),
+            "labels_status": provider_diversity_labels_decision.get("status"),
+            "label_count": provider_diversity_labels_summary.get("label_count"),
+            "ownership_label_counts": (
+                provider_diversity_labels_summary.get("ownership_label_counts") or {}
+            ),
+            "selected_result_counts": (
+                provider_diversity_labels_summary.get("selected_result_counts") or {}
+            ),
+            "selected_result_counts_by_stage": (
+                provider_diversity_labels_summary.get(
+                    "selected_result_counts_by_stage"
+                )
+                or {}
+            ),
+            "selected_provider_counts": (
+                provider_diversity_labels_summary.get("selected_provider_counts") or {}
+            ),
+            "stage7_training_rows": provider_diversity_labels_summary.get(
+                "stage7_training_rows"
+            ),
+            "trace_failures_only": provider_diversity_labels_summary.get(
+                "trace_failures_only"
+            ),
+            "architecture_status": provider_diversity_architecture_decision.get(
+                "status"
+            ),
+            "architecture_recommended_next_step": (
+                provider_diversity_architecture_decision.get("recommended_next_step")
+            ),
+            "architecture_runtime_arbiter_allowed": (
+                provider_diversity_architecture_decision.get(
+                    "runtime_arbiter_allowed"
+                )
+            ),
+            "architecture_selector_sandbox_ready": (
+                provider_diversity_architecture_decision.get("selector_sandbox_ready")
+            ),
+            "runtime_behavior_changed": (
+                selected_provider_diversity_ownership_labels_v1.get(
+                    "runtime_behavior_changed"
+                )
+            ),
+            "runtime_defaults_changed": (
+                selected_provider_diversity_ownership_labels_v1.get(
+                    "runtime_defaults_changed"
+                )
+            ),
+            "runtime_selector_implemented": (
+                selected_provider_diversity_ownership_labels_v1.get(
+                    "runtime_selector_implemented"
+                )
+            ),
+            "runtime_candidate_generator_implemented": (
+                selected_provider_diversity_ownership_labels_v1.get(
+                    "runtime_candidate_generator_implemented"
+                )
+            ),
+            "runtime_arbiter_implemented": (
+                selected_provider_diversity_ownership_labels_v1.get(
+                    "runtime_arbiter_implemented"
+                )
+            ),
+            "runtime_dtm_or_tablebase_lookup": (
+                selected_provider_diversity_ownership_labels_v1.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "runtime_terminals_added": (
+                selected_provider_diversity_ownership_labels_v1.get(
+                    "runtime_terminals_added"
+                )
+            ),
+            "gameplay_topology_mutation": (
+                selected_provider_diversity_ownership_labels_v1.get(
+                    "gameplay_topology_mutation"
+                )
+            ),
+            "stage7_promotion_allowed": (
+                selected_provider_diversity_ownership_labels_v1.get(
+                    "stage7_promotion_allowed"
+                )
+            ),
+            "stage8_training_allowed": (
+                selected_provider_diversity_ownership_labels_v1.get(
+                    "stage8_training_allowed"
+                )
             ),
         },
         "state_local_paired_ownership_gate": {
@@ -8123,6 +8368,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     targeted_ownership_recovery = payload["targeted_ownership_recovery_gate"]
     balanced_hard_negative = payload["balanced_hard_negative_gate"]
     stronger_selector_feature = payload["stronger_selector_feature_gate"]
+    selected_provider_diversity = payload["selected_provider_diversity_gate"]
     state_local_paired_ownership = payload["state_local_paired_ownership_gate"]
     selected_owner_failure_risk = payload["selected_owner_failure_risk_proxy_gate"]
     progress_window_reconsideration = payload["progress_window_reconsideration_gate"]
@@ -8374,6 +8620,32 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- runtime_terminals_added: `{stronger_selector_feature['runtime_terminals_added']}`",
         f"- stage7_promotion_allowed: `{stronger_selector_feature['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{stronger_selector_feature['stage8_training_allowed']}`",
+        "",
+        "## Selected-Provider Diversity",
+        "",
+        f"- passive_diversity_review_ready: `{selected_provider_diversity['passive_diversity_review_ready']}`",
+        f"- evidence_plan_status: `{selected_provider_diversity['evidence_plan_status']}`",
+        f"- manifest_status: `{selected_provider_diversity['manifest_status']}`",
+        f"- manifest_observations_allowed_now: `{selected_provider_diversity['manifest_observations_allowed_now']}`",
+        f"- manifest_bounded_labels_allowed_by_script: `{selected_provider_diversity['manifest_bounded_labels_allowed_by_script']}`",
+        f"- manifest_job_count: `{selected_provider_diversity['manifest_job_count']}`",
+        f"- manifest_stage7_jobs: `{selected_provider_diversity['manifest_stage7_jobs']}`",
+        f"- labels_status: `{selected_provider_diversity['labels_status']}`",
+        f"- label_count: `{selected_provider_diversity['label_count']}`",
+        f"- ownership_label_counts: `{selected_provider_diversity['ownership_label_counts']}`",
+        f"- selected_result_counts_by_stage: `{selected_provider_diversity['selected_result_counts_by_stage']}`",
+        f"- selected_provider_counts: `{selected_provider_diversity['selected_provider_counts']}`",
+        f"- stage7_training_rows: `{selected_provider_diversity['stage7_training_rows']}`",
+        f"- architecture_status: `{selected_provider_diversity['architecture_status']}`",
+        f"- architecture_recommended_next_step: `{selected_provider_diversity['architecture_recommended_next_step']}`",
+        f"- architecture_runtime_arbiter_allowed: `{selected_provider_diversity['architecture_runtime_arbiter_allowed']}`",
+        f"- runtime_selector_implemented: `{selected_provider_diversity['runtime_selector_implemented']}`",
+        f"- runtime_candidate_generator_implemented: `{selected_provider_diversity['runtime_candidate_generator_implemented']}`",
+        f"- runtime_arbiter_implemented: `{selected_provider_diversity['runtime_arbiter_implemented']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{selected_provider_diversity['runtime_dtm_or_tablebase_lookup']}`",
+        f"- runtime_terminals_added: `{selected_provider_diversity['runtime_terminals_added']}`",
+        f"- stage7_promotion_allowed: `{selected_provider_diversity['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{selected_provider_diversity['stage8_training_allowed']}`",
         "",
         "## State-Local Paired Ownership",
         "",

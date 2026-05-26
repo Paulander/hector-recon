@@ -227,6 +227,32 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Selected-Provider Diversity
+
+- passive_diversity_review_ready: `True`
+- evidence_plan_status: `selected_provider_diversity_evidence_plan_defined`
+- manifest_status: `fresh_seed_selected_provider_diversity_manifest_ready_for_bounded_labels`
+- manifest_observations_allowed_now: `False`
+- manifest_bounded_labels_allowed_by_script: `True`
+- manifest_job_count: `18`
+- manifest_stage7_jobs: `0`
+- labels_status: `fresh_seed_selected_provider_diversity_ownership_labels_collected`
+- label_count: `18`
+- ownership_label_counts: `{'selected_owner_converted': 15, 'selected_owner_failed': 3}`
+- selected_result_counts_by_stage: `{'stage4:mate': 6, 'stage4:max_plies': 2, 'stage5:mate': 6, 'stage6:mate': 3, 'stage6:max_plies': 1}`
+- selected_provider_counts: `{'krk.stage0_basin': 18}`
+- stage7_training_rows: `0`
+- architecture_status: `selected_provider_diversity_requirement_should_be_reframed`
+- architecture_recommended_next_step: `define_selector_readiness_v3_proposal_diversity_criteria`
+- architecture_runtime_arbiter_allowed: `False`
+- runtime_selector_implemented: `False`
+- runtime_candidate_generator_implemented: `False`
+- runtime_arbiter_implemented: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- runtime_terminals_added: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## State-Local Paired Ownership
 
 - passive_semantic_gate_ready: `True`
@@ -440,7 +466,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `3cce9292f5a014c961157aa3a89ac5f9a26dabf127e1698e4d4dce16b4060229`
+- expected_readiness_fingerprint: `f2e3fbea9adeda7e1399c03baa87f280311517c8a6e94799765875b28293558b`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -969,5 +995,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2163`
+- checked_flag_count: `2188`
 - violation_count: `0`
