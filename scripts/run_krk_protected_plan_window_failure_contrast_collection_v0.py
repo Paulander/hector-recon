@@ -394,8 +394,24 @@ def _approval_receipt_blockers(
         blockers.append("approval_receipt_must_not_allow_runtime_changes")
     if receipt.get("decision", {}).get("label_run_allowed") is not False:
         blockers.append("approval_receipt_must_not_allow_label_run")
+    if receipt.get("decision", {}).get("selector_allowed") is not False:
+        blockers.append("approval_receipt_must_not_allow_selector")
     if receipt.get("decision", {}).get("selector_training_allowed") is not False:
         blockers.append("approval_receipt_must_not_allow_selector_training")
+    if receipt.get("decision", {}).get("runtime_behavior_changed") is not False:
+        blockers.append("approval_receipt_must_not_allow_runtime_behavior_change")
+    if receipt.get("decision", {}).get("runtime_defaults_changed") is not False:
+        blockers.append("approval_receipt_must_not_allow_runtime_default_change")
+    if receipt.get("decision", {}).get("runtime_selector_implemented") is not False:
+        blockers.append("approval_receipt_must_not_allow_runtime_selector")
+    if receipt.get("decision", {}).get("runtime_score_changes") is not False:
+        blockers.append("approval_receipt_must_not_allow_runtime_score_changes")
+    if receipt.get("decision", {}).get("runtime_direct_routing") is not False:
+        blockers.append("approval_receipt_must_not_allow_runtime_direct_routing")
+    if receipt.get("decision", {}).get("runtime_dtm_or_tablebase_lookup") is not False:
+        blockers.append("approval_receipt_must_not_allow_runtime_dtm_or_tablebase_lookup")
+    if receipt.get("decision", {}).get("gameplay_topology_mutation") is not False:
+        blockers.append("approval_receipt_must_not_allow_gameplay_topology_mutation")
     if receipt.get("decision", {}).get("stage7_promotion_allowed") is not False:
         blockers.append("approval_receipt_must_not_allow_stage7_promotion")
     if receipt.get("decision", {}).get("stage8_training_allowed") is not False:

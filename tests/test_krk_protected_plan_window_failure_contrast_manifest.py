@@ -89,7 +89,15 @@ def _approval_receipt(job_count: int = 1) -> dict:
             "single_execution_only": True,
             "runtime_changes_allowed": False,
             "label_run_allowed": False,
+            "selector_allowed": False,
             "selector_training_allowed": False,
+            "runtime_behavior_changed": False,
+            "runtime_defaults_changed": False,
+            "runtime_selector_implemented": False,
+            "runtime_score_changes": False,
+            "runtime_direct_routing": False,
+            "runtime_dtm_or_tablebase_lookup": False,
+            "gameplay_topology_mutation": False,
             "stage7_promotion_allowed": False,
             "stage8_training_allowed": False,
         },
@@ -429,7 +437,15 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
     )
     assert required["decision"]["runtime_changes_allowed"] is False
     assert required["decision"]["label_run_allowed"] is False
+    assert required["decision"]["selector_allowed"] is False
     assert required["decision"]["selector_training_allowed"] is False
+    assert required["decision"]["runtime_behavior_changed"] is False
+    assert required["decision"]["runtime_defaults_changed"] is False
+    assert required["decision"]["runtime_selector_implemented"] is False
+    assert required["decision"]["runtime_score_changes"] is False
+    assert required["decision"]["runtime_direct_routing"] is False
+    assert required["decision"]["runtime_dtm_or_tablebase_lookup"] is False
+    assert required["decision"]["gameplay_topology_mutation"] is False
     assert required["decision"]["stage7_promotion_allowed"] is False
     assert required["decision"]["stage8_training_allowed"] is False
     assert payload["decision"]["collection_run_allowed"] is False
@@ -965,6 +981,79 @@ def test_failure_contrast_runner_blocks_stale_approval_receipt(monkeypatch):
 
     assert payload["decision"]["status"] == "protected_plan_window_failure_contrast_runner_blocked"
     assert "approval_receipt_readiness_fingerprint_mismatch" in payload["execution_blockers"]
+    assert payload["summary"]["approval_receipt_present"] is True
+    assert payload["summary"]["approval_receipt_valid"] is False
+    assert payload["summary"]["processed_job_count"] == 0
+    assert payload["decision"]["collection_run_allowed"] is False
+
+
+def test_failure_contrast_runner_blocks_runtime_expansive_approval_receipt(monkeypatch):
+    monkeypatch.setattr(
+        _runner,
+        "_run_execution_readiness",
+        lambda _manifest: {
+            "decision": {
+                "status": (
+                    "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+                )
+            },
+            "summary": _ready_execution_summary(),
+        },
+    )
+    expansive_receipt = _approval_receipt()
+    expansive_receipt["decision"] = dict(expansive_receipt["decision"])
+    expansive_receipt["decision"]["selector_allowed"] = True
+    expansive_receipt["decision"]["runtime_selector_implemented"] = True
+    expansive_receipt["decision"]["runtime_dtm_or_tablebase_lookup"] = True
+    expansive_receipt["decision"]["gameplay_topology_mutation"] = True
+    monkeypatch.setattr(_runner, "_load_optional", lambda _path: expansive_receipt)
+    monkeypatch.setattr(
+        _runner,
+        "_run_output_validation",
+        lambda: {
+            "decision": {
+                "status": "protected_plan_window_failure_contrast_outputs_validation_pending"
+            },
+            "summary": {"output_exists_count": 0, "output_valid_count": 0},
+            "output_checks": [],
+        },
+    )
+    monkeypatch.setattr(
+        _runner,
+        "_load",
+        lambda _path: {
+            "decision": {
+                "status": "protected_plan_window_failure_contrast_manifest_ready_for_review",
+                "runtime_changes_allowed": False,
+                "stage7_promotion_allowed": False,
+                "stage8_training_allowed": False,
+            },
+            "jobs": [
+                {
+                    "job_id": "safe",
+                    "expected_output_json": (
+                        "reports/strategy_arbitration/"
+                        "protected_plan_window_failure_contrasts/safe.json"
+                    ),
+                    "execution_binding": {"topology_path": "pyproject.toml"},
+                }
+            ],
+        },
+    )
+
+    payload = _runner.build_payload(execute=True, run_post_success_refresh=False)
+
+    assert payload["decision"]["status"] == "protected_plan_window_failure_contrast_runner_blocked"
+    assert "approval_receipt_must_not_allow_selector" in payload["execution_blockers"]
+    assert "approval_receipt_must_not_allow_runtime_selector" in payload[
+        "execution_blockers"
+    ]
+    assert "approval_receipt_must_not_allow_runtime_dtm_or_tablebase_lookup" in payload[
+        "execution_blockers"
+    ]
+    assert "approval_receipt_must_not_allow_gameplay_topology_mutation" in payload[
+        "execution_blockers"
+    ]
     assert payload["summary"]["approval_receipt_present"] is True
     assert payload["summary"]["approval_receipt_valid"] is False
     assert payload["summary"]["processed_job_count"] == 0
