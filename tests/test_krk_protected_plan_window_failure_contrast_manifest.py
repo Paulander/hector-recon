@@ -191,6 +191,7 @@ def test_failure_contrast_manifest_is_bounded_review_only():
     assert payload["runtime_score_changes"] is False
     assert payload["runtime_direct_routing"] is False
     assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["hidden_python_controller"] is False
     assert payload["gameplay_topology_mutation"] is False
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
@@ -218,6 +219,7 @@ def test_failure_contrast_manifest_is_bounded_review_only():
     assert payload["decision"]["selector_training_allowed"] is False
     assert payload["decision"]["stage7_promotion_allowed"] is False
     assert payload["decision"]["stage8_training_allowed"] is False
+    assert payload["hidden_python_controller"] is False
     assert {job["source_stage"] for job in payload["jobs"]} == {"stage4", "stage5", "stage6"}
     for job in payload["jobs"]:
         assert job["horizon"] == 40
@@ -266,6 +268,7 @@ def test_failure_contrast_manifest_review_passes_without_authorizing_collection(
     assert payload["decision"]["selector_training_allowed"] is False
     assert payload["decision"]["stage7_promotion_allowed"] is False
     assert payload["decision"]["stage8_training_allowed"] is False
+    assert payload["hidden_python_controller"] is False
 
 
 def test_failure_contrast_execution_readiness_is_dry_run_only():
@@ -339,6 +342,7 @@ def test_failure_contrast_output_validation_is_pending_before_collection():
     assert payload["summary"]["output_valid_count"] == 0
     assert payload["summary"]["all_outputs_valid"] is False
     assert payload["summary"]["unique_failure_candidate_count"] == 0
+    assert payload["hidden_python_controller"] is False
     assert payload["decision"]["collection_run_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False
@@ -2062,7 +2066,10 @@ def test_failure_contrast_output_validation_fixture_accepts_safe_output(tmp_path
                 "runtime_behavior_changed": False,
                 "runtime_defaults_changed": False,
                 "runtime_selector_implemented": False,
+                "runtime_score_changes": False,
+                "runtime_direct_routing": False,
                 "runtime_dtm_or_tablebase_lookup": False,
+                "hidden_python_controller": False,
                 "gameplay_topology_mutation": False,
                 "stage7_promotion_allowed": False,
                 "stage8_training_allowed": False,
@@ -2185,7 +2192,10 @@ def test_failure_contrast_output_validation_fixture_rejects_runtime_tainted_outp
                 "runtime_behavior_changed": True,
                 "runtime_defaults_changed": False,
                 "runtime_selector_implemented": False,
+                "runtime_score_changes": False,
+                "runtime_direct_routing": False,
                 "runtime_dtm_or_tablebase_lookup": False,
+                "hidden_python_controller": False,
                 "gameplay_topology_mutation": False,
                 "stage7_promotion_allowed": False,
                 "stage8_training_allowed": False,

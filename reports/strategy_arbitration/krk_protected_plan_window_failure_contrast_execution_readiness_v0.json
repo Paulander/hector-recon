@@ -13,6 +13,7 @@
     "status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
   },
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "job_checks": [
     {
       "expected_output_json": "reports/strategy_arbitration/protected_plan_window_failure_contrasts/protected_plan_failure.01.planwin.a8dd289c75b7.json",

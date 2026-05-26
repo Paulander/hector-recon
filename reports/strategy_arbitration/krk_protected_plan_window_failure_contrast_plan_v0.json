@@ -108,6 +108,7 @@
     }
   ],
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "runtime_behavior_changed": false,
   "runtime_defaults_changed": false,
   "runtime_direct_routing": false,
@@ -136,6 +137,7 @@
     },
     "forbidden_input_flag_counts": {
       "gameplay_topology_mutation": 0,
+      "hidden_python_controller": 0,
       "label_run_allowed": 0,
       "runtime_behavior_changed": 0,
       "runtime_changes_allowed": 0,

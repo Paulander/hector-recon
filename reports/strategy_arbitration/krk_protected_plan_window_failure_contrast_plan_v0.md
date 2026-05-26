@@ -25,7 +25,7 @@ This is a non-causal collection plan only. It does not execute labels, change ru
 - runtime_authorization_row_count: `0`
 - stage7_training_row_count: `0`
 - forbidden_training_or_runtime_input_row_count: `0`
-- forbidden_input_flag_counts: `{'runtime_behavior_changed': 0, 'runtime_defaults_changed': 0, 'runtime_selector_implemented': 0, 'runtime_score_changes': 0, 'runtime_direct_routing': 0, 'runtime_dtm_or_tablebase_lookup': 0, 'gameplay_topology_mutation': 0, 'runtime_changes_allowed': 0, 'label_run_allowed': 0, 'selector_allowed': 0, 'selector_training_allowed': 0, 'usable_for_selector_training': 0, 'usable_for_runtime_authorization': 0, 'stage7_heldout_challenge': 0, 'stage7_promotion_allowed': 0, 'stage8_training_allowed': 0}`
+- forbidden_input_flag_counts: `{'runtime_behavior_changed': 0, 'runtime_defaults_changed': 0, 'runtime_selector_implemented': 0, 'runtime_score_changes': 0, 'runtime_direct_routing': 0, 'runtime_dtm_or_tablebase_lookup': 0, 'hidden_python_controller': 0, 'gameplay_topology_mutation': 0, 'runtime_changes_allowed': 0, 'label_run_allowed': 0, 'selector_allowed': 0, 'selector_training_allowed': 0, 'usable_for_selector_training': 0, 'usable_for_runtime_authorization': 0, 'stage7_heldout_challenge': 0, 'stage7_promotion_allowed': 0, 'stage8_training_allowed': 0}`
 
 ## Existing Failure Examples
 
