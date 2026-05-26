@@ -198,6 +198,12 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         == []
     )
     assert (
+        payload["summary"][
+            "protected_plan_window_failure_contrast_approval_request_ready_for_collection"
+        ]
+        is True
+    )
+    assert (
         payload["summary"]["protected_plan_window_failure_contrast_approval_receipt_created"]
         is False
     )
@@ -509,6 +515,12 @@ def test_gate_advancement_writer_includes_all_passive_steps():
             "stage4_first_move_contrast_sandbox_approval_request_blockers"
         ]
         == []
+    )
+    assert (
+        payload["summary"][
+            "stage4_first_move_contrast_sandbox_approval_request_ready_for_runtime_approval"
+        ]
+        is True
     )
     assert (
         payload["summary"][

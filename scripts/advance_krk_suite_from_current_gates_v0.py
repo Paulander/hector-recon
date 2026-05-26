@@ -343,6 +343,7 @@ def build_payload() -> dict[str, Any]:
         "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
     )
     stage4_unblocker = _load_json("reports/krk_stage4_caveat_unblocker_packet_v0.json")
+    stage4_current = stage4_unblocker.get("current_stage4_status") or {}
     stage4_approval_scope = (
         stage4_unblocker.get("required_approval_scope_if_user_approves") or {}
     )
@@ -386,6 +387,7 @@ def build_payload() -> dict[str, Any]:
     failure_contrast_approval_request_summary = (
         failure_contrast_approval_request.get("summary") or {}
     )
+    protected_failure_contrast_gate = readiness.get("protected_failure_contrast_gate") or {}
     failure_contrast_output_validation = _load_json(
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_output_validation_v0.json"
@@ -567,6 +569,9 @@ def build_payload() -> dict[str, Any]:
             "stage4_first_move_contrast_sandbox_approval_request_blockers": (
                 stage4_approval_request.get("blockers") or []
             ),
+            "stage4_first_move_contrast_sandbox_approval_request_ready_for_runtime_approval": (
+                stage4_current.get("approval_request_ready_for_runtime_approval")
+            ),
             "stage4_first_move_contrast_sandbox_approval_request_created": stage4_approval_request.get(
                 "approval_request_created"
             ),
@@ -679,6 +684,9 @@ def build_payload() -> dict[str, Any]:
             ).get("status"),
             "protected_plan_window_failure_contrast_approval_request_blockers": (
                 failure_contrast_approval_request.get("blockers") or []
+            ),
+            "protected_plan_window_failure_contrast_approval_request_ready_for_collection": (
+                protected_failure_contrast_gate.get("approval_request_ready_for_collection")
             ),
             "protected_plan_window_failure_contrast_approval_receipt_created": failure_contrast_approval_request.get(
                 "approval_receipt_created"

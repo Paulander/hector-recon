@@ -10,6 +10,7 @@ This is a non-causal benchmark design/readiness artifact. It does not train a mo
 - stage4_first_move_contrast_sandbox_approval_request_status: `stage4_first_move_contrast_sandbox_approval_request_ready`
 - stage4_first_move_contrast_sandbox_approval_request_blockers: `[]`
 - stage4_first_move_contrast_sandbox_approval_request_ready: `True`
+- stage4_first_move_contrast_sandbox_approval_request_ready_for_runtime_approval: `True`
 - stage7_clean_success_controls: `11`
 - stage7_clean_failure_controls: `39`
 - stage7_clean_success_controls_required: `5`

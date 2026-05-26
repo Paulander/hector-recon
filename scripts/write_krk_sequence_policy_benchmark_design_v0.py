@@ -196,6 +196,9 @@ def build_payload(
             "stage4_first_move_contrast_sandbox_approval_request_ready": (
                 stage4_approval_request_ready
             ),
+            "stage4_first_move_contrast_sandbox_approval_request_ready_for_runtime_approval": (
+                stage4_approval_request_ready
+            ),
             "stage7_clean_success_controls": clean_success,
             "stage7_clean_failure_controls": clean_fail,
             "stage7_clean_success_controls_required": 5,
@@ -307,6 +310,9 @@ def build_payload(
                 ),
                 "approval_request_status": stage4_approval_request_status,
                 "approval_request_blockers": stage4_approval_request_blockers,
+                "approval_request_ready_for_runtime_approval": (
+                    stage4_approval_request_ready
+                ),
             },
             {
                 "item": "stage7_diverse_clean_sampling_manifest",

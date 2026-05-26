@@ -69,6 +69,12 @@ def test_sequence_policy_benchmark_design_is_ready_but_blocks_training_and_runti
         ]
         is True
     )
+    assert (
+        payload["readiness"][
+            "stage4_first_move_contrast_sandbox_approval_request_ready_for_runtime_approval"
+        ]
+        is True
+    )
     assert payload["readiness"]["stage7_clean_success_controls"] == 11
     assert payload["readiness"]["stage7_clean_failure_controls"] == 39
     assert payload["readiness"]["stage7_clean_success_controls_met"] is True
@@ -116,6 +122,7 @@ def test_sequence_policy_benchmark_design_is_ready_but_blocks_training_and_runti
         == "stage4_first_move_contrast_sandbox_approval_request_ready"
     )
     assert stage4_pending["approval_request_blockers"] == []
+    assert stage4_pending["approval_request_ready_for_runtime_approval"] is True
 
 
 def test_sequence_policy_benchmark_design_fixture_requires_clean_success_controls():
@@ -316,6 +323,12 @@ def test_sequence_policy_benchmark_design_propagates_stage4_approval_request_blo
         ]
         is False
     )
+    assert (
+        payload["readiness"][
+            "stage4_first_move_contrast_sandbox_approval_request_ready_for_runtime_approval"
+        ]
+        is False
+    )
     stage4_pending = [
         item
         for item in payload["blocked_or_pending"]
@@ -325,4 +338,5 @@ def test_sequence_policy_benchmark_design_propagates_stage4_approval_request_blo
     assert stage4_pending["approval_request_blockers"] == [
         "full_suite_readiness_audit_not_clean"
     ]
+    assert stage4_pending["approval_request_ready_for_runtime_approval"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False

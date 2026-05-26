@@ -46,6 +46,7 @@
   "blocked_or_pending": [
     {
       "approval_request_blockers": [],
+      "approval_request_ready_for_runtime_approval": true,
       "approval_request_status": "stage4_first_move_contrast_sandbox_approval_request_ready",
       "item": "stage4_first_move_contrast_sandbox",
       "status": "review_ready_pending_explicit_approval"
@@ -117,6 +118,7 @@
     "protected_plan_window_frame_count": 20,
     "stage4_first_move_contrast_sandbox_approval_request_blockers": [],
     "stage4_first_move_contrast_sandbox_approval_request_ready": true,
+    "stage4_first_move_contrast_sandbox_approval_request_ready_for_runtime_approval": true,
     "stage4_first_move_contrast_sandbox_approval_request_status": "stage4_first_move_contrast_sandbox_approval_request_ready",
     "stage4_first_move_contrast_sandbox_review_ready": true,
     "stage7_clean_failure_controls": 39,

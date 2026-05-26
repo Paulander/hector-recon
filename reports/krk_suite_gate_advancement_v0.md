@@ -24,6 +24,7 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - stage4_caveat_unblocker_status: `stage4_caveat_unblocker_ready_pending_explicit_runtime_approval`
 - stage4_first_move_contrast_sandbox_approval_request_status: `stage4_first_move_contrast_sandbox_approval_request_ready`
 - stage4_first_move_contrast_sandbox_approval_request_blockers: `[]`
+- stage4_first_move_contrast_sandbox_approval_request_ready_for_runtime_approval: `True`
 - stage4_first_move_contrast_sandbox_approval_request_created: `False`
 - stage4_first_move_contrast_sandbox_implementation_authorized_by_request: `False`
 - stage4_first_move_contrast_sandbox_scope_id: `default_off_stage4_candidate_move_first_move_contrast_sandbox_only`
@@ -63,6 +64,7 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - protected_plan_window_failure_contrast_runner_refresh_after_run_requested: `True`
 - protected_plan_window_failure_contrast_approval_request_status: `protected_plan_window_failure_contrast_approval_request_ready`
 - protected_plan_window_failure_contrast_approval_request_blockers: `[]`
+- protected_plan_window_failure_contrast_approval_request_ready_for_collection: `True`
 - protected_plan_window_failure_contrast_approval_receipt_created: `False`
 - protected_plan_window_failure_contrast_approval_receipt_blockers: `['approval_receipt_missing']`
 - protected_plan_window_failure_contrast_post_success_refresh_required: `True`
