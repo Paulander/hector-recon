@@ -171,6 +171,34 @@ def test_full_suite_readiness_identifies_current_gate():
     assert payload["current_control_plane_gate"]["selector_allowed"] is False
     assert payload["current_control_plane_gate"]["runtime_direct_routing"] is False
     assert payload["current_control_plane_gate"]["hidden_python_controller"] is False
+    assert (
+        "approve_protected_plan_window_failure_contrast_collection"
+        in payload["current_control_plane_gate"]["approval_option_ids"]
+    )
+    assert (
+        payload["current_control_plane_gate"][
+            "protected_failure_contrast_collection_option_available"
+        ]
+        is True
+    )
+    assert (
+        payload["current_control_plane_gate"][
+            "protected_failure_contrast_collection_command_available"
+        ]
+        is True
+    )
+    assert (
+        payload["current_control_plane_gate"][
+            "protected_failure_contrast_collection_option_id"
+        ]
+        == "approve_protected_plan_window_failure_contrast_collection"
+    )
+    assert (
+        payload["current_control_plane_gate"][
+            "protected_failure_contrast_collection_blocked_by_option_id"
+        ]
+        is None
+    )
 
     sequence = payload["sequence_policy"]
     assert (
@@ -452,6 +480,43 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
     )
     assert "approval_request_created: `False`" in rendered
     assert "label_run_allowed: `false`" in rendered
+
+
+def test_full_suite_readiness_reports_current_gate_blocking_option(monkeypatch):
+    real_load_json = _audit.load_json
+
+    def tainted_load_json(relative: str):
+        payload = json.loads(json.dumps(real_load_json(relative)))
+        if relative == "reports/krk_current_control_plane_gate_v0.json":
+            payload["approval_options"] = [
+                {
+                    "option_id": "repair_protected_stack_validation",
+                    "command_if_explicitly_approved": None,
+                }
+            ]
+        return payload
+
+    monkeypatch.setattr(_audit, "load_json", tainted_load_json)
+
+    payload = _audit.build_payload()
+    current_gate = payload["current_control_plane_gate"]
+
+    assert current_gate["approval_option_ids"] == ["repair_protected_stack_validation"]
+    assert (
+        current_gate["protected_failure_contrast_collection_option_available"]
+        is False
+    )
+    assert (
+        current_gate["protected_failure_contrast_collection_command_available"]
+        is False
+    )
+    assert current_gate["protected_failure_contrast_collection_option_id"] is None
+    assert (
+        current_gate["protected_failure_contrast_collection_blocked_by_option_id"]
+        == "repair_protected_stack_validation"
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
 
 
 def test_full_suite_readiness_routes_forbidden_training_rows_to_input_repair(monkeypatch):

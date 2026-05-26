@@ -59,8 +59,16 @@
   ],
   "causal_status": "non_causal_readiness_audit",
   "current_control_plane_gate": {
+    "approval_option_ids": [
+      "approve_stage4_first_move_contrast_sandbox",
+      "approve_protected_plan_window_failure_contrast_collection"
+    ],
     "hidden_python_controller": false,
     "label_run_allowed": false,
+    "protected_failure_contrast_collection_blocked_by_option_id": null,
+    "protected_failure_contrast_collection_command_available": true,
+    "protected_failure_contrast_collection_option_available": true,
+    "protected_failure_contrast_collection_option_id": "approve_protected_plan_window_failure_contrast_collection",
     "runtime_changes_allowed": false,
     "runtime_direct_routing": false,
     "selector_allowed": false,

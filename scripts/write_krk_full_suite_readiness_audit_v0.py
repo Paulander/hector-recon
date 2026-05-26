@@ -160,6 +160,23 @@ DEFAULT_FAILURE_CONTRAST_APPROVAL_RECEIPT = (
 )
 
 
+def find_approval_option(gate: dict[str, Any], option_id: str) -> dict[str, Any]:
+    for option in gate.get("approval_options") or []:
+        if option.get("option_id") == option_id:
+            return option
+    return {}
+
+
+def find_first_approval_option(
+    gate: dict[str, Any], option_ids: tuple[str, ...]
+) -> dict[str, Any]:
+    for option_id in option_ids:
+        option = find_approval_option(gate, option_id)
+        if option:
+            return option
+    return {}
+
+
 def load_json(relative: str) -> dict[str, Any]:
     path = ROOT / relative
     if not path.exists():
@@ -300,6 +317,21 @@ def build_payload() -> dict[str, Any]:
     output_validation = payloads["stage7_sampling_output_validation"]
     integration = payloads["stage7_sampling_integration"]
     gate = payloads["control_plane_gate"]
+    gate_approval_options = gate.get("approval_options") or []
+    protected_collection_gate_option = find_approval_option(
+        gate,
+        "approve_protected_plan_window_failure_contrast_collection",
+    )
+    protected_collection_blocking_gate_option = find_first_approval_option(
+        gate,
+        (
+            "repair_protected_stack_validation",
+            "repair_protected_failure_contrast_approval_request_scope",
+            "review_protected_plan_window_failure_contrast_execution_readiness",
+            "review_protected_plan_window_failure_contrast_manifest",
+            "review_protected_plan_window_failure_contrast_plan",
+        ),
+    )
 
     boundaries = boundary_status(payloads)
     stage7_summary = integration.get("summary", {})
@@ -960,6 +992,21 @@ def build_payload() -> dict[str, Any]:
         "runtime_and_training_boundaries": boundaries,
         "current_control_plane_gate": {
             "status": gate.get("decision", {}).get("status"),
+            "approval_option_ids": [
+                option.get("option_id") for option in gate_approval_options
+            ],
+            "protected_failure_contrast_collection_option_available": bool(
+                protected_collection_gate_option
+            ),
+            "protected_failure_contrast_collection_command_available": bool(
+                protected_collection_gate_option.get("command_if_explicitly_approved")
+            ),
+            "protected_failure_contrast_collection_option_id": (
+                protected_collection_gate_option.get("option_id")
+            ),
+            "protected_failure_contrast_collection_blocked_by_option_id": (
+                protected_collection_blocking_gate_option.get("option_id")
+            ),
             "label_run_allowed": gate.get("decision", {}).get("label_run_allowed"),
             "runtime_changes_allowed": gate.get("decision", {}).get("runtime_changes_allowed"),
             "selector_allowed": gate.get("decision", {}).get("selector_allowed"),
@@ -1140,6 +1187,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     stage7 = payload["stage7_sampling_gate"]
     sequence = payload["sequence_policy"]
     protected_failure_contrast = payload["protected_failure_contrast_gate"]
+    current_gate = payload["current_control_plane_gate"]
     decision = payload["decision"]
     lines = [
         "# KRK Full Suite Readiness Audit v0",
@@ -1285,6 +1333,15 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- selector_training_allowed: `{protected_failure_contrast['selector_training_allowed']}`",
             f"- stage7_promotion_allowed: `{protected_failure_contrast['stage7_promotion_allowed']}`",
             f"- stage8_training_allowed: `{protected_failure_contrast['stage8_training_allowed']}`",
+            "",
+            "## Current Control Plane Gate",
+            "",
+            f"- status: `{current_gate['status']}`",
+            f"- approval_option_ids: `{current_gate['approval_option_ids']}`",
+            f"- protected_failure_contrast_collection_option_available: `{current_gate['protected_failure_contrast_collection_option_available']}`",
+            f"- protected_failure_contrast_collection_command_available: `{current_gate['protected_failure_contrast_collection_command_available']}`",
+            f"- protected_failure_contrast_collection_option_id: `{current_gate['protected_failure_contrast_collection_option_id']}`",
+            f"- protected_failure_contrast_collection_blocked_by_option_id: `{current_gate['protected_failure_contrast_collection_blocked_by_option_id']}`",
             "",
             "## Blockers",
             "",
