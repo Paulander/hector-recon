@@ -248,6 +248,116 @@ def test_gate_advancement_reports_current_stage7_blocker():
         == 0
     )
     assert (
+        payload["summary"][
+            "protected_missing_provider_candidate_generator_coverage_status"
+        ]
+        == "candidate_generator_recall_gap_confirmed"
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_candidate_generator_positive_recall_rate"
+        ]
+        == 0.0
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_candidate_generator_missing_positive_capacity_count"
+        ]
+        == 11
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_validated_candidate_set_status"
+        ]
+        == "validated_provider_candidate_set_recall_promising_requires_selector_semantics"
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_validated_candidate_set_added_positive_capacity_count"
+        ]
+        == 11
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_validated_candidate_set_added_negative_capacity_count"
+        ]
+        == 5
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_validated_candidate_set_candidate_generator_runtime_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["protected_missing_provider_two_stage_review_status"]
+        == "two_stage_non_causal_benchmark_design_needed"
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_two_stage_review_candidate_generator_runtime_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_two_stage_benchmark_plan_status"
+        ]
+        == "two_stage_candidate_selection_benchmark_plan_ready"
+    )
+    assert (
+        payload["summary"]["protected_missing_provider_two_stage_benchmark_status"]
+        == "candidate_generation_recall_improves_selection_not_ready"
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_two_stage_benchmark_current_positive_recall_rate"
+        ]
+        == 0.0
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_two_stage_benchmark_expanded_positive_recall_rate"
+        ]
+        == 1.0
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_two_stage_benchmark_expanded_negative_inclusion_rate"
+        ]
+        == 1.0
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_two_stage_benchmark_selector_ready"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_two_stage_benchmark_best_negative_suppression"
+        ]
+        == 0.0
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_two_stage_benchmark_stage7_training_leakage"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_two_stage_benchmark_candidate_generator_runtime_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_two_stage_benchmark_selector_training_allowed"
+        ]
+        is False
+    )
+    assert (
         payload["summary"]["protected_missing_provider_runtime_work_allowed"] is False
     )
 
@@ -277,6 +387,11 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         "protected_plan_window_failure_contrast_output_validation",
         "protected_plan_window_failure_contrast_integration",
         "sequence_policy_after_protected_failure_contrast_refresh",
+        "candidate_generator_coverage_audit",
+        "validated_provider_candidate_set_audit",
+        "two_stage_candidate_selection_review",
+        "two_stage_candidate_selection_benchmark_plan",
+        "two_stage_candidate_selection_benchmark",
         "sequence_policy_underpowered_pilot_review",
         "full_suite_readiness_audit",
         "full_suite_unblocker_packet",

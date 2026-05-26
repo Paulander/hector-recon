@@ -92,6 +92,18 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         ]
         == "reports/krk_protected_provider_capacity_frame_training_semantics_review_v0.json"
     )
+    assert (
+        payload["source_artifacts"]["candidate_generator_coverage_audit"]
+        == "reports/krk_candidate_generator_coverage_audit_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["validated_provider_candidate_set_audit"]
+        == "reports/krk_validated_provider_candidate_set_audit_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["two_stage_candidate_selection_benchmark"]
+        == "reports/krk_two_stage_candidate_selection_benchmark_v0.json"
+    )
 
 
 def test_full_suite_readiness_identifies_current_gate():
@@ -419,6 +431,48 @@ def test_full_suite_readiness_identifies_current_gate():
         "direct_selector_training_positive"
         in missing_provider["training_semantics_blocked_uses"]
     )
+    assert (
+        missing_provider["candidate_generator_coverage_status"]
+        == "candidate_generator_recall_gap_confirmed"
+    )
+    assert missing_provider["candidate_generator_positive_recall_count"] == 0
+    assert missing_provider["candidate_generator_positive_recall_rate"] == 0.0
+    assert missing_provider["candidate_generator_missing_positive_capacity_count"] == 11
+    assert (
+        missing_provider["validated_candidate_set_status"]
+        == "validated_provider_candidate_set_recall_promising_requires_selector_semantics"
+    )
+    assert missing_provider["validated_candidate_set_state_count"] == 6
+    assert missing_provider["validated_candidate_set_added_candidate_count"] == 16
+    assert missing_provider["validated_candidate_set_added_positive_capacity_count"] == 11
+    assert missing_provider["validated_candidate_set_added_negative_capacity_count"] == 5
+    assert missing_provider["validated_candidate_set_candidate_generator_runtime_allowed"] is False
+    assert missing_provider["validated_candidate_set_selector_training_allowed"] is False
+    assert missing_provider["validated_candidate_set_positive_capacity_recall_if_included"] == 1.0
+    assert (
+        missing_provider["two_stage_review_status"]
+        == "two_stage_non_causal_benchmark_design_needed"
+    )
+    assert missing_provider["two_stage_review_candidate_generator_runtime_allowed"] is False
+    assert missing_provider["two_stage_review_selector_training_allowed"] is False
+    assert missing_provider["two_stage_review_positive_capacity_recovered"] == 11
+    assert missing_provider["two_stage_review_negative_capacity_also_included"] == 5
+    assert (
+        missing_provider["two_stage_benchmark_plan_status"]
+        == "two_stage_candidate_selection_benchmark_plan_ready"
+    )
+    assert (
+        missing_provider["two_stage_benchmark_status"]
+        == "candidate_generation_recall_improves_selection_not_ready"
+    )
+    assert missing_provider["two_stage_benchmark_current_positive_recall_rate"] == 0.0
+    assert missing_provider["two_stage_benchmark_expanded_positive_recall_rate"] == 1.0
+    assert missing_provider["two_stage_benchmark_expanded_negative_inclusion_rate"] == 1.0
+    assert missing_provider["two_stage_benchmark_selector_ready"] is False
+    assert missing_provider["two_stage_benchmark_best_negative_suppression"] == 0.0
+    assert missing_provider["two_stage_benchmark_stage7_training_leakage"] is False
+    assert missing_provider["two_stage_benchmark_candidate_generator_runtime_allowed"] is False
+    assert missing_provider["two_stage_benchmark_selector_training_allowed"] is False
     assert missing_provider["runtime_work_allowed"] is False
     assert missing_provider["selector_training_allowed"] is False
     assert missing_provider["stage7_promotion_allowed"] is False

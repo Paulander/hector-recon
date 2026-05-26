@@ -122,7 +122,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `13284240d3aafeb7b34279bd3c5a5eee99c8690b5898bd51de3f5292c1afa02c`
+- expected_readiness_fingerprint: `14d8cecf5201a4f378aa8a602897cdd338ff66caea550ac26377eef9cdb11886`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -168,6 +168,18 @@
 - training_semantics_runtime_work_allowed: `False`
 - training_semantics_training_row_count: `0`
 - training_semantics_runtime_proposal_row_count: `0`
+- candidate_generator_coverage_status: `candidate_generator_recall_gap_confirmed`
+- candidate_generator_positive_recall_rate: `0.0`
+- candidate_generator_missing_positive_capacity_count: `11`
+- validated_candidate_set_status: `validated_provider_candidate_set_recall_promising_requires_selector_semantics`
+- validated_candidate_set_added_positive_capacity_count: `11`
+- validated_candidate_set_added_negative_capacity_count: `5`
+- two_stage_review_status: `two_stage_non_causal_benchmark_design_needed`
+- two_stage_benchmark_plan_status: `two_stage_candidate_selection_benchmark_plan_ready`
+- two_stage_benchmark_status: `candidate_generation_recall_improves_selection_not_ready`
+- two_stage_benchmark_current_positive_recall_rate: `0.0`
+- two_stage_benchmark_expanded_positive_recall_rate: `1.0`
+- two_stage_benchmark_selector_ready: `False`
 - runtime_work_allowed: `False`
 - selector_training_allowed: `False`
 - stage7_promotion_allowed: `False`
@@ -195,5 +207,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `472`
+- checked_flag_count: `507`
 - violation_count: `0`

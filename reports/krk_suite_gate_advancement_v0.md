@@ -123,14 +123,33 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - protected_missing_provider_training_semantics_runtime_work_allowed: `False`
 - protected_missing_provider_training_semantics_training_row_count: `0`
 - protected_missing_provider_training_semantics_runtime_proposal_row_count: `0`
+- protected_missing_provider_candidate_generator_coverage_status: `candidate_generator_recall_gap_confirmed`
+- protected_missing_provider_candidate_generator_positive_recall_rate: `0.0`
+- protected_missing_provider_candidate_generator_missing_positive_capacity_count: `11`
+- protected_missing_provider_validated_candidate_set_status: `validated_provider_candidate_set_recall_promising_requires_selector_semantics`
+- protected_missing_provider_validated_candidate_set_added_positive_capacity_count: `11`
+- protected_missing_provider_validated_candidate_set_added_negative_capacity_count: `5`
+- protected_missing_provider_validated_candidate_set_candidate_generator_runtime_allowed: `False`
+- protected_missing_provider_two_stage_review_status: `two_stage_non_causal_benchmark_design_needed`
+- protected_missing_provider_two_stage_review_candidate_generator_runtime_allowed: `False`
+- protected_missing_provider_two_stage_benchmark_plan_status: `two_stage_candidate_selection_benchmark_plan_ready`
+- protected_missing_provider_two_stage_benchmark_status: `candidate_generation_recall_improves_selection_not_ready`
+- protected_missing_provider_two_stage_benchmark_current_positive_recall_rate: `0.0`
+- protected_missing_provider_two_stage_benchmark_expanded_positive_recall_rate: `1.0`
+- protected_missing_provider_two_stage_benchmark_expanded_negative_inclusion_rate: `1.0`
+- protected_missing_provider_two_stage_benchmark_selector_ready: `False`
+- protected_missing_provider_two_stage_benchmark_best_negative_suppression: `0.0`
+- protected_missing_provider_two_stage_benchmark_stage7_training_leakage: `False`
+- protected_missing_provider_two_stage_benchmark_candidate_generator_runtime_allowed: `False`
+- protected_missing_provider_two_stage_benchmark_selector_training_allowed: `False`
 - protected_missing_provider_runtime_work_allowed: `False`
 - sequence_policy_underpowered_pilot_status: `sequence_policy_pilot_underpowered_pending_protected_failure_contrast_collection`
 - sequence_policy_underpowered_pilot_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - sequence_policy_underpowered_pilot_stage4_topk_signal: `True`
 - sequence_policy_underpowered_pilot_stage7_success_gap: `0`
-- sequence_policy_underpowered_pilot_readiness_checked_flag_count: `472`
+- sequence_policy_underpowered_pilot_readiness_checked_flag_count: `507`
 - sequence_policy_underpowered_pilot_readiness_boundary_violation_count: `0`
-- sequence_policy_underpowered_pilot_readiness_source_artifact_count: `50`
+- sequence_policy_underpowered_pilot_readiness_source_artifact_count: `55`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_processed_job_count: `0`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_executed_job_count: `0`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_collection_run_allowed: `False`
@@ -150,23 +169,23 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - sequence_policy_underpowered_pilot_protected_failure_contrast_stage7_promotion_allowed: `False`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_stage8_training_allowed: `False`
 - readiness_status: `krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection`
-- readiness_checked_flag_count: `472`
+- readiness_checked_flag_count: `507`
 - readiness_boundary_violation_count: `0`
-- readiness_source_artifact_count: `50`
+- readiness_source_artifact_count: `55`
 - unblocker_status: `krk_suite_protected_failure_contrast_unblocker_ready_pending_explicit_collection_approval`
 - stage8_training_readiness_status: `stage8_training_blocked_pending_protected_failure_contrast_collection`
-- stage8_training_readiness_checked_flag_count: `472`
+- stage8_training_readiness_checked_flag_count: `507`
 - stage8_training_readiness_boundary_violation_count: `0`
-- stage8_training_readiness_source_artifact_count: `50`
+- stage8_training_readiness_source_artifact_count: `55`
 - stage8_training_readiness_protected_failure_contrast_post_success_refresh_required: `True`
 - stage8_training_readiness_protected_failure_contrast_approval_receipt_present: `False`
 - stage8_training_readiness_protected_failure_contrast_approval_receipt_valid: `False`
 - stage8_training_readiness_protected_failure_contrast_runtime_direct_routing: `False`
 - stage8_training_readiness_protected_failure_contrast_hidden_python_controller: `False`
 - stage7_post_label_outcome_status: `post_label_outcome_waiting_on_explicit_protected_failure_contrast_collection`
-- stage7_post_label_outcome_readiness_checked_flag_count: `472`
+- stage7_post_label_outcome_readiness_checked_flag_count: `507`
 - stage7_post_label_outcome_readiness_boundary_violation_count: `0`
-- stage7_post_label_outcome_readiness_source_artifact_count: `50`
+- stage7_post_label_outcome_readiness_source_artifact_count: `55`
 - stage7_post_label_outcome_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - stage7_post_label_outcome_protected_failure_contrast_runner_processed_job_count: `0`
 - stage7_post_label_outcome_protected_failure_contrast_runner_executed_job_count: `0`
@@ -207,6 +226,11 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - `protected_plan_window_failure_contrast_output_validation` status=`protected_plan_window_failure_contrast_outputs_validation_pending` labels=`False` runtime=`False` artifact_runtime=`False`
 - `protected_plan_window_failure_contrast_integration` status=`protected_plan_window_failure_contrast_integration_pending_outputs` labels=`False` runtime=`False` artifact_runtime=`False`
 - `sequence_policy_after_protected_failure_contrast_refresh` status=`sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs` labels=`False` runtime=`False` artifact_runtime=`False`
+- `candidate_generator_coverage_audit` status=`candidate_generator_recall_gap_confirmed` labels=`False` runtime=`False` artifact_runtime=`False`
+- `validated_provider_candidate_set_audit` status=`validated_provider_candidate_set_recall_promising_requires_selector_semantics` labels=`False` runtime=`False` artifact_runtime=`False`
+- `two_stage_candidate_selection_review` status=`two_stage_non_causal_benchmark_design_needed` labels=`False` runtime=`False` artifact_runtime=`False`
+- `two_stage_candidate_selection_benchmark_plan` status=`two_stage_candidate_selection_benchmark_plan_ready` labels=`False` runtime=`False` artifact_runtime=`False`
+- `two_stage_candidate_selection_benchmark` status=`candidate_generation_recall_improves_selection_not_ready` labels=`False` runtime=`False` artifact_runtime=`False`
 - `full_suite_readiness_audit` status=`krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection` labels=`False` runtime=`False` artifact_runtime=`False`
 - `sequence_policy_underpowered_pilot_review` status=`sequence_policy_pilot_underpowered_pending_protected_failure_contrast_collection` labels=`False` runtime=`False` artifact_runtime=`False`
 - `stage8_training_readiness_review` status=`stage8_training_blocked_pending_protected_failure_contrast_collection` labels=`False` runtime=`False` artifact_runtime=`False`

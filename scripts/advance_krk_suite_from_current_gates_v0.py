@@ -220,6 +220,31 @@ PASSIVE_STEPS = [
         ),
     },
     {
+        "step_id": "candidate_generator_coverage_audit",
+        "script": "scripts/audit_krk_candidate_generator_coverage_v0.py",
+        "output_json": "reports/krk_candidate_generator_coverage_audit_v0.json",
+    },
+    {
+        "step_id": "validated_provider_candidate_set_audit",
+        "script": "scripts/audit_krk_validated_provider_candidate_set_v0.py",
+        "output_json": "reports/krk_validated_provider_candidate_set_audit_v0.json",
+    },
+    {
+        "step_id": "two_stage_candidate_selection_review",
+        "script": "scripts/summarize_krk_two_stage_candidate_selection_review_v0.py",
+        "output_json": "reports/krk_two_stage_candidate_selection_review_v0.json",
+    },
+    {
+        "step_id": "two_stage_candidate_selection_benchmark_plan",
+        "script": "scripts/plan_krk_two_stage_candidate_selection_benchmark_v0.py",
+        "output_json": "reports/krk_two_stage_candidate_selection_benchmark_plan_v0.json",
+    },
+    {
+        "step_id": "two_stage_candidate_selection_benchmark",
+        "script": "scripts/build_krk_two_stage_candidate_selection_benchmark_v0.py",
+        "output_json": "reports/krk_two_stage_candidate_selection_benchmark_v0.json",
+    },
+    {
         "step_id": "full_suite_readiness_audit",
         "script": "scripts/write_krk_full_suite_readiness_audit_v0.py",
         "output_json": "reports/krk_full_suite_readiness_audit_v0.json",
@@ -1081,6 +1106,63 @@ def build_payload() -> dict[str, Any]:
             ),
             "protected_missing_provider_training_semantics_runtime_proposal_row_count": protected_missing_provider_gate.get(
                 "training_semantics_runtime_proposal_row_count"
+            ),
+            "protected_missing_provider_candidate_generator_coverage_status": protected_missing_provider_gate.get(
+                "candidate_generator_coverage_status"
+            ),
+            "protected_missing_provider_candidate_generator_positive_recall_rate": protected_missing_provider_gate.get(
+                "candidate_generator_positive_recall_rate"
+            ),
+            "protected_missing_provider_candidate_generator_missing_positive_capacity_count": protected_missing_provider_gate.get(
+                "candidate_generator_missing_positive_capacity_count"
+            ),
+            "protected_missing_provider_validated_candidate_set_status": protected_missing_provider_gate.get(
+                "validated_candidate_set_status"
+            ),
+            "protected_missing_provider_validated_candidate_set_added_positive_capacity_count": protected_missing_provider_gate.get(
+                "validated_candidate_set_added_positive_capacity_count"
+            ),
+            "protected_missing_provider_validated_candidate_set_added_negative_capacity_count": protected_missing_provider_gate.get(
+                "validated_candidate_set_added_negative_capacity_count"
+            ),
+            "protected_missing_provider_validated_candidate_set_candidate_generator_runtime_allowed": protected_missing_provider_gate.get(
+                "validated_candidate_set_candidate_generator_runtime_allowed"
+            ),
+            "protected_missing_provider_two_stage_review_status": protected_missing_provider_gate.get(
+                "two_stage_review_status"
+            ),
+            "protected_missing_provider_two_stage_review_candidate_generator_runtime_allowed": protected_missing_provider_gate.get(
+                "two_stage_review_candidate_generator_runtime_allowed"
+            ),
+            "protected_missing_provider_two_stage_benchmark_plan_status": protected_missing_provider_gate.get(
+                "two_stage_benchmark_plan_status"
+            ),
+            "protected_missing_provider_two_stage_benchmark_status": protected_missing_provider_gate.get(
+                "two_stage_benchmark_status"
+            ),
+            "protected_missing_provider_two_stage_benchmark_current_positive_recall_rate": protected_missing_provider_gate.get(
+                "two_stage_benchmark_current_positive_recall_rate"
+            ),
+            "protected_missing_provider_two_stage_benchmark_expanded_positive_recall_rate": protected_missing_provider_gate.get(
+                "two_stage_benchmark_expanded_positive_recall_rate"
+            ),
+            "protected_missing_provider_two_stage_benchmark_expanded_negative_inclusion_rate": protected_missing_provider_gate.get(
+                "two_stage_benchmark_expanded_negative_inclusion_rate"
+            ),
+            "protected_missing_provider_two_stage_benchmark_selector_ready": protected_missing_provider_gate.get(
+                "two_stage_benchmark_selector_ready"
+            ),
+            "protected_missing_provider_two_stage_benchmark_best_negative_suppression": protected_missing_provider_gate.get(
+                "two_stage_benchmark_best_negative_suppression"
+            ),
+            "protected_missing_provider_two_stage_benchmark_stage7_training_leakage": protected_missing_provider_gate.get(
+                "two_stage_benchmark_stage7_training_leakage"
+            ),
+            "protected_missing_provider_two_stage_benchmark_candidate_generator_runtime_allowed": protected_missing_provider_gate.get(
+                "two_stage_benchmark_candidate_generator_runtime_allowed"
+            ),
+            "protected_missing_provider_two_stage_benchmark_selector_training_allowed": protected_missing_provider_gate.get(
+                "two_stage_benchmark_selector_training_allowed"
             ),
             "protected_missing_provider_runtime_work_allowed": protected_missing_provider_gate.get(
                 "runtime_work_allowed"

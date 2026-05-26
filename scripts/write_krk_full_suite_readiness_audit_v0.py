@@ -56,6 +56,21 @@ SOURCES = {
     "protected_provider_capacity_frame_training_semantics_review": (
         "reports/krk_protected_provider_capacity_frame_training_semantics_review_v0.json"
     ),
+    "candidate_generator_coverage_audit": (
+        "reports/krk_candidate_generator_coverage_audit_v0.json"
+    ),
+    "validated_provider_candidate_set_audit": (
+        "reports/krk_validated_provider_candidate_set_audit_v0.json"
+    ),
+    "two_stage_candidate_selection_review": (
+        "reports/krk_two_stage_candidate_selection_review_v0.json"
+    ),
+    "two_stage_candidate_selection_benchmark_plan": (
+        "reports/krk_two_stage_candidate_selection_benchmark_plan_v0.json"
+    ),
+    "two_stage_candidate_selection_benchmark": (
+        "reports/krk_two_stage_candidate_selection_benchmark_v0.json"
+    ),
     "active_protected_stack": "reports/krk_active_protected_stack_v0.json",
     "clean_stack_validation": "reports/krk_clean_stack_post_replacement_validation_v0.json",
     "preservation_checks": "reports/krk_clean_retrain_retry1_preservation_checks_v0.json",
@@ -348,6 +363,19 @@ def build_payload() -> dict[str, Any]:
     ]
     protected_capacity_frame_semantics = payloads[
         "protected_provider_capacity_frame_training_semantics_review"
+    ]
+    candidate_generator_coverage = payloads["candidate_generator_coverage_audit"]
+    validated_provider_candidate_set = payloads[
+        "validated_provider_candidate_set_audit"
+    ]
+    two_stage_candidate_selection_review = payloads[
+        "two_stage_candidate_selection_review"
+    ]
+    two_stage_candidate_selection_benchmark_plan = payloads[
+        "two_stage_candidate_selection_benchmark_plan"
+    ]
+    two_stage_candidate_selection_benchmark = payloads[
+        "two_stage_candidate_selection_benchmark"
     ]
     runner = payloads["stage7_sampling_runner"]
     output_validation = payloads["stage7_sampling_output_validation"]
@@ -1150,6 +1178,168 @@ def build_payload() -> dict[str, Any]:
             "training_semantics_blocked_uses": protected_capacity_frame_semantics.get(
                 "blocked_uses"
             ),
+            "candidate_generator_coverage_status": candidate_generator_coverage.get(
+                "decision", {}
+            ).get("status"),
+            "candidate_generator_coverage_next_step": (
+                candidate_generator_coverage.get("decision", {}).get(
+                    "recommended_next_step"
+                )
+            ),
+            "candidate_generator_runtime_work_allowed": (
+                candidate_generator_coverage.get("decision", {}).get(
+                    "runtime_work_allowed"
+                )
+            ),
+            "candidate_generator_selector_training_allowed": (
+                candidate_generator_coverage.get("decision", {}).get(
+                    "selector_training_allowed"
+                )
+            ),
+            "candidate_generator_positive_recall_count": (
+                candidate_generator_coverage.get("summary", {}).get(
+                    "runtime_proposal_positive_recall_count"
+                )
+            ),
+            "candidate_generator_positive_recall_rate": (
+                candidate_generator_coverage.get("summary", {}).get(
+                    "runtime_proposal_positive_recall_rate"
+                )
+            ),
+            "candidate_generator_missing_positive_capacity_count": (
+                candidate_generator_coverage.get("summary", {}).get(
+                    "missing_positive_capacity_count"
+                )
+            ),
+            "validated_candidate_set_status": validated_provider_candidate_set.get(
+                "decision", {}
+            ).get("status"),
+            "validated_candidate_set_next_step": validated_provider_candidate_set.get(
+                "decision", {}
+            ).get("recommended_next_step"),
+            "validated_candidate_set_candidate_generator_runtime_allowed": (
+                validated_provider_candidate_set.get("decision", {}).get(
+                    "candidate_generator_runtime_allowed"
+                )
+            ),
+            "validated_candidate_set_selector_training_allowed": (
+                validated_provider_candidate_set.get("decision", {}).get(
+                    "selector_training_allowed"
+                )
+            ),
+            "validated_candidate_set_state_count": validated_provider_candidate_set.get(
+                "summary", {}
+            ).get("state_count"),
+            "validated_candidate_set_added_candidate_count": (
+                validated_provider_candidate_set.get("summary", {}).get(
+                    "added_candidate_count"
+                )
+            ),
+            "validated_candidate_set_added_positive_capacity_count": (
+                validated_provider_candidate_set.get("summary", {}).get(
+                    "added_positive_capacity_count"
+                )
+            ),
+            "validated_candidate_set_added_negative_capacity_count": (
+                validated_provider_candidate_set.get("summary", {}).get(
+                    "added_negative_capacity_count"
+                )
+            ),
+            "validated_candidate_set_positive_capacity_recall_if_included": (
+                validated_provider_candidate_set.get("summary", {}).get(
+                    "positive_capacity_recall_if_included"
+                )
+            ),
+            "two_stage_review_status": two_stage_candidate_selection_review.get(
+                "decision", {}
+            ).get("status"),
+            "two_stage_review_next_step": two_stage_candidate_selection_review.get(
+                "decision", {}
+            ).get("recommended_next_step"),
+            "two_stage_review_candidate_generator_runtime_allowed": (
+                two_stage_candidate_selection_review.get("decision", {}).get(
+                    "candidate_generator_runtime_allowed"
+                )
+            ),
+            "two_stage_review_selector_training_allowed": (
+                two_stage_candidate_selection_review.get("decision", {}).get(
+                    "selector_training_allowed"
+                )
+            ),
+            "two_stage_review_positive_capacity_recovered": (
+                two_stage_candidate_selection_review.get("current_evidence", {}).get(
+                    "positive_capacity_recovered_by_validated_provider_set"
+                )
+            ),
+            "two_stage_review_negative_capacity_also_included": (
+                two_stage_candidate_selection_review.get("current_evidence", {}).get(
+                    "negative_capacity_also_included"
+                )
+            ),
+            "two_stage_benchmark_plan_status": (
+                two_stage_candidate_selection_benchmark_plan.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "two_stage_benchmark_plan_next_step": (
+                two_stage_candidate_selection_benchmark_plan.get("decision", {}).get(
+                    "recommended_next_step"
+                )
+            ),
+            "two_stage_benchmark_status": two_stage_candidate_selection_benchmark.get(
+                "decision", {}
+            ).get("status"),
+            "two_stage_benchmark_next_step": (
+                two_stage_candidate_selection_benchmark.get("decision", {}).get(
+                    "recommended_next_step"
+                )
+            ),
+            "two_stage_benchmark_candidate_generator_runtime_allowed": (
+                two_stage_candidate_selection_benchmark.get("decision", {}).get(
+                    "candidate_generator_runtime_allowed"
+                )
+            ),
+            "two_stage_benchmark_selector_training_allowed": (
+                two_stage_candidate_selection_benchmark.get("decision", {}).get(
+                    "selector_training_allowed"
+                )
+            ),
+            "two_stage_benchmark_current_positive_recall_rate": (
+                two_stage_candidate_selection_benchmark.get(
+                    "candidate_generation_track", {}
+                )
+                .get("current_runtime_proposal_frames", {})
+                .get("positive_capacity_recall_rate")
+            ),
+            "two_stage_benchmark_expanded_positive_recall_rate": (
+                two_stage_candidate_selection_benchmark.get(
+                    "candidate_generation_track", {}
+                )
+                .get("validated_provider_candidate_set_expansion", {})
+                .get("positive_capacity_recall_rate")
+            ),
+            "two_stage_benchmark_expanded_negative_inclusion_rate": (
+                two_stage_candidate_selection_benchmark.get(
+                    "candidate_generation_track", {}
+                )
+                .get("validated_provider_candidate_set_expansion", {})
+                .get("negative_capacity_inclusion_rate")
+            ),
+            "two_stage_benchmark_selector_ready": (
+                two_stage_candidate_selection_benchmark.get(
+                    "strategy_selection_track", {}
+                ).get("selector_ready")
+            ),
+            "two_stage_benchmark_best_negative_suppression": (
+                two_stage_candidate_selection_benchmark.get(
+                    "strategy_selection_track", {}
+                ).get("best_negative_suppression")
+            ),
+            "two_stage_benchmark_stage7_training_leakage": (
+                two_stage_candidate_selection_benchmark.get(
+                    "strategy_selection_track", {}
+                ).get("stage7_training_leakage")
+            ),
             "runtime_work_allowed": False,
             "selector_training_allowed": False,
             "stage7_promotion_allowed": False,
@@ -1583,6 +1773,18 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- training_semantics_runtime_work_allowed: `{missing_provider['training_semantics_runtime_work_allowed']}`",
             f"- training_semantics_training_row_count: `{missing_provider['training_semantics_training_row_count']}`",
             f"- training_semantics_runtime_proposal_row_count: `{missing_provider['training_semantics_runtime_proposal_row_count']}`",
+            f"- candidate_generator_coverage_status: `{missing_provider['candidate_generator_coverage_status']}`",
+            f"- candidate_generator_positive_recall_rate: `{missing_provider['candidate_generator_positive_recall_rate']}`",
+            f"- candidate_generator_missing_positive_capacity_count: `{missing_provider['candidate_generator_missing_positive_capacity_count']}`",
+            f"- validated_candidate_set_status: `{missing_provider['validated_candidate_set_status']}`",
+            f"- validated_candidate_set_added_positive_capacity_count: `{missing_provider['validated_candidate_set_added_positive_capacity_count']}`",
+            f"- validated_candidate_set_added_negative_capacity_count: `{missing_provider['validated_candidate_set_added_negative_capacity_count']}`",
+            f"- two_stage_review_status: `{missing_provider['two_stage_review_status']}`",
+            f"- two_stage_benchmark_plan_status: `{missing_provider['two_stage_benchmark_plan_status']}`",
+            f"- two_stage_benchmark_status: `{missing_provider['two_stage_benchmark_status']}`",
+            f"- two_stage_benchmark_current_positive_recall_rate: `{missing_provider['two_stage_benchmark_current_positive_recall_rate']}`",
+            f"- two_stage_benchmark_expanded_positive_recall_rate: `{missing_provider['two_stage_benchmark_expanded_positive_recall_rate']}`",
+            f"- two_stage_benchmark_selector_ready: `{missing_provider['two_stage_benchmark_selector_ready']}`",
             f"- runtime_work_allowed: `{missing_provider['runtime_work_allowed']}`",
             f"- selector_training_allowed: `{missing_provider['selector_training_allowed']}`",
             f"- stage7_promotion_allowed: `{missing_provider['stage7_promotion_allowed']}`",
