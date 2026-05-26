@@ -99,6 +99,8 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_processed_job_count: `0`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_executed_job_count: `0`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_collection_run_allowed: `False`
+- sequence_policy_underpowered_pilot_protected_failure_contrast_approval_receipt_present: `False`
+- sequence_policy_underpowered_pilot_protected_failure_contrast_approval_receipt_valid: `False`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_post_success_refresh_required: `True`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runtime_behavior_changed: `False`
@@ -122,6 +124,8 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - stage8_training_readiness_boundary_violation_count: `0`
 - stage8_training_readiness_source_artifact_count: `44`
 - stage8_training_readiness_protected_failure_contrast_post_success_refresh_required: `True`
+- stage8_training_readiness_protected_failure_contrast_approval_receipt_present: `False`
+- stage8_training_readiness_protected_failure_contrast_approval_receipt_valid: `False`
 - stage8_training_readiness_protected_failure_contrast_runtime_direct_routing: `False`
 - stage8_training_readiness_protected_failure_contrast_hidden_python_controller: `False`
 - stage7_post_label_outcome_status: `post_label_outcome_waiting_on_explicit_protected_failure_contrast_collection`
@@ -132,6 +136,8 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - stage7_post_label_outcome_protected_failure_contrast_runner_processed_job_count: `0`
 - stage7_post_label_outcome_protected_failure_contrast_runner_executed_job_count: `0`
 - stage7_post_label_outcome_protected_failure_contrast_runner_collection_run_allowed: `False`
+- stage7_post_label_outcome_protected_failure_contrast_approval_receipt_present: `False`
+- stage7_post_label_outcome_protected_failure_contrast_approval_receipt_valid: `False`
 - stage7_post_label_outcome_protected_failure_contrast_post_success_refresh_required: `True`
 - stage7_post_label_outcome_protected_failure_contrast_post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - stage7_post_label_outcome_protected_failure_contrast_runtime_direct_routing: `False`

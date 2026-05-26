@@ -347,6 +347,18 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     )
     assert (
         payload["summary"][
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_approval_receipt_present"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_approval_receipt_valid"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
             "sequence_policy_underpowered_pilot_protected_failure_contrast_post_success_refresh_required"
         ]
         is True
@@ -446,6 +458,18 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     )
     assert (
         payload["summary"][
+            "stage8_training_readiness_protected_failure_contrast_approval_receipt_present"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "stage8_training_readiness_protected_failure_contrast_approval_receipt_valid"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
             "stage8_training_readiness_protected_failure_contrast_runtime_direct_routing"
         ]
         is False
@@ -481,6 +505,18 @@ def test_gate_advancement_writer_includes_all_passive_steps():
             "stage7_post_label_outcome_protected_failure_contrast_runner_executed_job_count"
         ]
         == 0
+    )
+    assert (
+        payload["summary"][
+            "stage7_post_label_outcome_protected_failure_contrast_approval_receipt_present"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "stage7_post_label_outcome_protected_failure_contrast_approval_receipt_valid"
+        ]
+        is False
     )
     assert (
         payload["summary"][

@@ -142,6 +142,14 @@ def test_stage7_post_label_outcome_current_artifact_reports_sequence_policy_gap(
         ]
         is False
     )
+    assert (
+        payload["summary"]["protected_failure_contrast_approval_receipt_present"]
+        is False
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_approval_receipt_valid"]
+        is False
+    )
     assert payload["summary"][
         "protected_failure_contrast_approval_receipt_blockers"
     ] == ["approval_receipt_missing"]

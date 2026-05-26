@@ -830,6 +830,12 @@ def build_payload() -> dict[str, Any]:
             "sequence_policy_underpowered_pilot_protected_failure_contrast_runner_collection_run_allowed": underpowered_pilot.get(
                 "summary", {}
             ).get("protected_failure_contrast_runner_collection_run_allowed"),
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_approval_receipt_present": underpowered_pilot.get(
+                "summary", {}
+            ).get("protected_failure_contrast_approval_receipt_present"),
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_approval_receipt_valid": underpowered_pilot.get(
+                "summary", {}
+            ).get("protected_failure_contrast_approval_receipt_valid"),
             "sequence_policy_underpowered_pilot_protected_failure_contrast_post_success_refresh_required": underpowered_pilot.get(
                 "summary", {}
             ).get("protected_failure_contrast_post_success_refresh_required"),
@@ -895,6 +901,12 @@ def build_payload() -> dict[str, Any]:
             "stage8_training_readiness_protected_failure_contrast_post_success_refresh_required": stage8_review.get(
                 "requirements", {}
             ).get("protected_failure_contrast_post_success_refresh_required"),
+            "stage8_training_readiness_protected_failure_contrast_approval_receipt_present": stage8_review.get(
+                "requirements", {}
+            ).get("protected_failure_contrast_approval_receipt_present"),
+            "stage8_training_readiness_protected_failure_contrast_approval_receipt_valid": stage8_review.get(
+                "requirements", {}
+            ).get("protected_failure_contrast_approval_receipt_valid"),
             "stage8_training_readiness_protected_failure_contrast_runtime_direct_routing": stage8_review.get(
                 "requirements", {}
             ).get("protected_failure_contrast_runtime_direct_routing"),
@@ -925,6 +937,12 @@ def build_payload() -> dict[str, Any]:
             "stage7_post_label_outcome_protected_failure_contrast_runner_collection_run_allowed": post_label_review.get(
                 "summary", {}
             ).get("protected_failure_contrast_runner_collection_run_allowed"),
+            "stage7_post_label_outcome_protected_failure_contrast_approval_receipt_present": post_label_review.get(
+                "summary", {}
+            ).get("protected_failure_contrast_approval_receipt_present"),
+            "stage7_post_label_outcome_protected_failure_contrast_approval_receipt_valid": post_label_review.get(
+                "summary", {}
+            ).get("protected_failure_contrast_approval_receipt_valid"),
             "stage7_post_label_outcome_protected_failure_contrast_post_success_refresh_required": post_label_review.get(
                 "summary", {}
             ).get("protected_failure_contrast_post_success_refresh_required"),

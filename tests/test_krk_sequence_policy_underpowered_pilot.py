@@ -168,6 +168,14 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
         ]
         is False
     )
+    assert (
+        payload["summary"]["protected_failure_contrast_approval_receipt_present"]
+        is False
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_approval_receipt_valid"]
+        is False
+    )
     assert payload["summary"][
         "protected_failure_contrast_approval_receipt_blockers"
     ] == ["approval_receipt_missing"]

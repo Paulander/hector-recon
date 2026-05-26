@@ -51,6 +51,8 @@
       "approval_receipt_missing"
     ],
     "protected_failure_contrast_approval_receipt_created_by_request": false,
+    "protected_failure_contrast_approval_receipt_present": false,
+    "protected_failure_contrast_approval_receipt_valid": false,
     "protected_failure_contrast_approval_request_artifact": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_approval_request_v0.json",
     "protected_failure_contrast_approval_request_blockers": [],
     "protected_failure_contrast_approval_request_ready_for_collection": true,

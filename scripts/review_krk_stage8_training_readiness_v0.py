@@ -315,6 +315,12 @@ def build_payload(
             "protected_failure_contrast_approval_receipt_created_by_request": (
                 protected_failure_contrast.get("approval_receipt_created_by_request")
             ),
+            "protected_failure_contrast_approval_receipt_present": (
+                protected_failure_contrast.get("approval_receipt_present")
+            ),
+            "protected_failure_contrast_approval_receipt_valid": (
+                protected_failure_contrast.get("approval_receipt_valid")
+            ),
             "protected_failure_contrast_approval_receipt_blockers": (
                 protected_failure_contrast.get("approval_receipt_blockers") or []
             ),
