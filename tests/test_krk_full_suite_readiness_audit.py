@@ -78,6 +78,20 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         payload["source_artifacts"]["stage7_sampling_manifest"]
         == "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json"
     )
+    assert (
+        payload["source_artifacts"]["protected_proposal_coverage_expansion_plan"]
+        == "reports/krk_protected_proposal_coverage_expansion_plan_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["protected_provider_coverage_frames"]
+        == "reports/krk_protected_provider_coverage_frames_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "protected_provider_capacity_frame_training_semantics_review"
+        ]
+        == "reports/krk_protected_provider_capacity_frame_training_semantics_review_v0.json"
+    )
 
 
 def test_full_suite_readiness_identifies_current_gate():
@@ -367,6 +381,44 @@ def test_full_suite_readiness_identifies_current_gate():
     assert missing_provider["provider_missing_from_frame_count"] == 16
     assert missing_provider["missing_provider_mate_label_count"] == 11
     assert missing_provider["current_gap_blocks_selector_training"] is True
+    assert (
+        missing_provider["coverage_expansion_plan_status"]
+        == "protected_proposal_coverage_expansion_plan_ready"
+    )
+    assert missing_provider["coverage_expansion_rows_to_create"] == 16
+    assert missing_provider["coverage_expansion_training_allowed_initially"] is False
+    assert (
+        missing_provider[
+            "coverage_expansion_requires_followup_review_before_training_use"
+        ]
+        is True
+    )
+    assert (
+        missing_provider["coverage_frames_status"]
+        == "protected_provider_coverage_frames_built"
+    )
+    assert missing_provider["coverage_frame_row_count"] == 16
+    assert missing_provider["coverage_frame_positive_capacity_count"] == 11
+    assert missing_provider["coverage_frame_negative_capacity_count"] == 5
+    assert missing_provider["coverage_frame_stage7_row_count"] == 0
+    assert missing_provider["coverage_frame_training_row_count"] == 0
+    assert missing_provider["coverage_frame_runtime_proposal_row_count"] == 0
+    assert (
+        missing_provider["training_semantics_review_status"]
+        == "capacity_frames_diagnostic_not_selector_training_ready"
+    )
+    assert missing_provider["training_semantics_selector_training_allowed"] is False
+    assert missing_provider["training_semantics_runtime_work_allowed"] is False
+    assert missing_provider["training_semantics_row_count"] == 16
+    assert missing_provider["training_semantics_positive_capacity_count"] == 11
+    assert missing_provider["training_semantics_negative_capacity_count"] == 5
+    assert missing_provider["training_semantics_stage7_row_count"] == 0
+    assert missing_provider["training_semantics_training_row_count"] == 0
+    assert missing_provider["training_semantics_runtime_proposal_row_count"] == 0
+    assert (
+        "direct_selector_training_positive"
+        in missing_provider["training_semantics_blocked_uses"]
+    )
     assert missing_provider["runtime_work_allowed"] is False
     assert missing_provider["selector_training_allowed"] is False
     assert missing_provider["stage7_promotion_allowed"] is False

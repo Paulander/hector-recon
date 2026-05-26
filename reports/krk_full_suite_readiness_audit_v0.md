@@ -122,7 +122,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `c14e962a852887fc355f597db679d1f445e598e8f302e7566feab69141824c9c`
+- expected_readiness_fingerprint: `13284240d3aafeb7b34279bd3c5a5eee99c8690b5898bd51de3f5292c1afa02c`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -156,6 +156,18 @@
 - provider_missing_from_frame_count: `16`
 - missing_provider_mate_label_count: `11`
 - current_gap_blocks_selector_training: `True`
+- coverage_expansion_plan_status: `protected_proposal_coverage_expansion_plan_ready`
+- coverage_expansion_rows_to_create: `16`
+- coverage_expansion_training_allowed_initially: `False`
+- coverage_frames_status: `protected_provider_coverage_frames_built`
+- coverage_frame_row_count: `16`
+- coverage_frame_training_row_count: `0`
+- coverage_frame_runtime_proposal_row_count: `0`
+- training_semantics_review_status: `capacity_frames_diagnostic_not_selector_training_ready`
+- training_semantics_selector_training_allowed: `False`
+- training_semantics_runtime_work_allowed: `False`
+- training_semantics_training_row_count: `0`
+- training_semantics_runtime_proposal_row_count: `0`
 - runtime_work_allowed: `False`
 - selector_training_allowed: `False`
 - stage7_promotion_allowed: `False`
@@ -183,5 +195,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `451`
+- checked_flag_count: `472`
 - violation_count: `0`

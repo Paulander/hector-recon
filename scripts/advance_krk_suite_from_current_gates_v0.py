@@ -1034,6 +1034,54 @@ def build_payload() -> dict[str, Any]:
             "protected_missing_provider_gap_blocks_selector_training": protected_missing_provider_gate.get(
                 "current_gap_blocks_selector_training"
             ),
+            "protected_missing_provider_coverage_expansion_plan_status": protected_missing_provider_gate.get(
+                "coverage_expansion_plan_status"
+            ),
+            "protected_missing_provider_coverage_expansion_rows_to_create": protected_missing_provider_gate.get(
+                "coverage_expansion_rows_to_create"
+            ),
+            "protected_missing_provider_coverage_expansion_training_allowed_initially": protected_missing_provider_gate.get(
+                "coverage_expansion_training_allowed_initially"
+            ),
+            "protected_missing_provider_coverage_expansion_requires_followup_review_before_training_use": protected_missing_provider_gate.get(
+                "coverage_expansion_requires_followup_review_before_training_use"
+            ),
+            "protected_missing_provider_coverage_frames_status": protected_missing_provider_gate.get(
+                "coverage_frames_status"
+            ),
+            "protected_missing_provider_coverage_frame_row_count": protected_missing_provider_gate.get(
+                "coverage_frame_row_count"
+            ),
+            "protected_missing_provider_coverage_frame_positive_capacity_count": protected_missing_provider_gate.get(
+                "coverage_frame_positive_capacity_count"
+            ),
+            "protected_missing_provider_coverage_frame_negative_capacity_count": protected_missing_provider_gate.get(
+                "coverage_frame_negative_capacity_count"
+            ),
+            "protected_missing_provider_coverage_frame_stage7_row_count": protected_missing_provider_gate.get(
+                "coverage_frame_stage7_row_count"
+            ),
+            "protected_missing_provider_coverage_frame_training_row_count": protected_missing_provider_gate.get(
+                "coverage_frame_training_row_count"
+            ),
+            "protected_missing_provider_coverage_frame_runtime_proposal_row_count": protected_missing_provider_gate.get(
+                "coverage_frame_runtime_proposal_row_count"
+            ),
+            "protected_missing_provider_training_semantics_review_status": protected_missing_provider_gate.get(
+                "training_semantics_review_status"
+            ),
+            "protected_missing_provider_training_semantics_selector_training_allowed": protected_missing_provider_gate.get(
+                "training_semantics_selector_training_allowed"
+            ),
+            "protected_missing_provider_training_semantics_runtime_work_allowed": protected_missing_provider_gate.get(
+                "training_semantics_runtime_work_allowed"
+            ),
+            "protected_missing_provider_training_semantics_training_row_count": protected_missing_provider_gate.get(
+                "training_semantics_training_row_count"
+            ),
+            "protected_missing_provider_training_semantics_runtime_proposal_row_count": protected_missing_provider_gate.get(
+                "training_semantics_runtime_proposal_row_count"
+            ),
             "protected_missing_provider_runtime_work_allowed": protected_missing_provider_gate.get(
                 "runtime_work_allowed"
             ),

@@ -47,6 +47,15 @@ SOURCES = {
     "ranked_proposal_protected_provider_coverage_review": (
         "reports/krk_ranked_proposal_frame_protected_provider_coverage_review_v0.json"
     ),
+    "protected_proposal_coverage_expansion_plan": (
+        "reports/krk_protected_proposal_coverage_expansion_plan_v0.json"
+    ),
+    "protected_provider_coverage_frames": (
+        "reports/krk_protected_provider_coverage_frames_v0.json"
+    ),
+    "protected_provider_capacity_frame_training_semantics_review": (
+        "reports/krk_protected_provider_capacity_frame_training_semantics_review_v0.json"
+    ),
     "active_protected_stack": "reports/krk_active_protected_stack_v0.json",
     "clean_stack_validation": "reports/krk_clean_stack_post_replacement_validation_v0.json",
     "preservation_checks": "reports/krk_clean_retrain_retry1_preservation_checks_v0.json",
@@ -330,6 +339,15 @@ def build_payload() -> dict[str, Any]:
     ]
     protected_missing_provider_coverage = payloads[
         "ranked_proposal_protected_provider_coverage_review"
+    ]
+    protected_coverage_expansion_plan = payloads[
+        "protected_proposal_coverage_expansion_plan"
+    ]
+    protected_provider_coverage_frames = payloads[
+        "protected_provider_coverage_frames"
+    ]
+    protected_capacity_frame_semantics = payloads[
+        "protected_provider_capacity_frame_training_semantics_review"
     ]
     runner = payloads["stage7_sampling_runner"]
     output_validation = payloads["stage7_sampling_output_validation"]
@@ -1034,6 +1052,104 @@ def build_payload() -> dict[str, Any]:
                 protected_missing_provider_coverage.get("decision", {}).get("status")
                 == "proposal_provider_coverage_gap_blocks_selector_training"
             ),
+            "coverage_expansion_plan_status": protected_coverage_expansion_plan.get(
+                "decision", {}
+            ).get("status"),
+            "coverage_expansion_plan_next_step": protected_coverage_expansion_plan.get(
+                "decision", {}
+            ).get("recommended_next_step"),
+            "coverage_expansion_rows_to_create": protected_coverage_expansion_plan.get(
+                "expansion_design", {}
+            ).get("rows_to_create"),
+            "coverage_expansion_training_allowed_initially": (
+                protected_coverage_expansion_plan.get("acceptance_for_next_slice", {}).get(
+                    "training_allowed_initially"
+                )
+            ),
+            "coverage_expansion_requires_followup_review_before_training_use": (
+                protected_coverage_expansion_plan.get("acceptance_for_next_slice", {}).get(
+                    "requires_followup_review_before_training_use"
+                )
+            ),
+            "coverage_frames_status": protected_provider_coverage_frames.get(
+                "decision", {}
+            ).get("status"),
+            "coverage_frames_next_step": protected_provider_coverage_frames.get(
+                "decision", {}
+            ).get("recommended_next_step"),
+            "coverage_frame_row_count": protected_provider_coverage_frames.get(
+                "summary", {}
+            ).get("row_count"),
+            "coverage_frame_positive_capacity_count": (
+                protected_provider_coverage_frames.get("summary", {})
+                .get("capacity_label_counts", {})
+                .get("positive_capacity")
+            ),
+            "coverage_frame_negative_capacity_count": (
+                protected_provider_coverage_frames.get("summary", {})
+                .get("capacity_label_counts", {})
+                .get("negative_capacity")
+            ),
+            "coverage_frame_stage7_row_count": protected_provider_coverage_frames.get(
+                "summary", {}
+            ).get("stage7_row_count"),
+            "coverage_frame_training_row_count": protected_provider_coverage_frames.get(
+                "summary", {}
+            ).get("training_row_count"),
+            "coverage_frame_runtime_proposal_row_count": (
+                protected_provider_coverage_frames.get("summary", {}).get(
+                    "runtime_proposal_row_count"
+                )
+            ),
+            "training_semantics_review_status": protected_capacity_frame_semantics.get(
+                "decision", {}
+            ).get("status"),
+            "training_semantics_review_next_step": (
+                protected_capacity_frame_semantics.get("decision", {}).get(
+                    "recommended_next_step"
+                )
+            ),
+            "training_semantics_selector_training_allowed": (
+                protected_capacity_frame_semantics.get("decision", {}).get(
+                    "selector_training_allowed"
+                )
+            ),
+            "training_semantics_runtime_work_allowed": (
+                protected_capacity_frame_semantics.get("decision", {}).get(
+                    "runtime_work_allowed"
+                )
+            ),
+            "training_semantics_row_count": protected_capacity_frame_semantics.get(
+                "summary", {}
+            ).get("row_count"),
+            "training_semantics_positive_capacity_count": (
+                protected_capacity_frame_semantics.get("summary", {}).get(
+                    "positive_capacity_count"
+                )
+            ),
+            "training_semantics_negative_capacity_count": (
+                protected_capacity_frame_semantics.get("summary", {}).get(
+                    "negative_capacity_count"
+                )
+            ),
+            "training_semantics_stage7_row_count": (
+                protected_capacity_frame_semantics.get("summary", {}).get(
+                    "stage7_row_count"
+                )
+            ),
+            "training_semantics_training_row_count": (
+                protected_capacity_frame_semantics.get("summary", {}).get(
+                    "training_row_count"
+                )
+            ),
+            "training_semantics_runtime_proposal_row_count": (
+                protected_capacity_frame_semantics.get("summary", {}).get(
+                    "runtime_proposal_row_count"
+                )
+            ),
+            "training_semantics_blocked_uses": protected_capacity_frame_semantics.get(
+                "blocked_uses"
+            ),
             "runtime_work_allowed": False,
             "selector_training_allowed": False,
             "stage7_promotion_allowed": False,
@@ -1455,6 +1571,18 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- provider_missing_from_frame_count: `{missing_provider['provider_missing_from_frame_count']}`",
             f"- missing_provider_mate_label_count: `{missing_provider['missing_provider_mate_label_count']}`",
             f"- current_gap_blocks_selector_training: `{missing_provider['current_gap_blocks_selector_training']}`",
+            f"- coverage_expansion_plan_status: `{missing_provider['coverage_expansion_plan_status']}`",
+            f"- coverage_expansion_rows_to_create: `{missing_provider['coverage_expansion_rows_to_create']}`",
+            f"- coverage_expansion_training_allowed_initially: `{missing_provider['coverage_expansion_training_allowed_initially']}`",
+            f"- coverage_frames_status: `{missing_provider['coverage_frames_status']}`",
+            f"- coverage_frame_row_count: `{missing_provider['coverage_frame_row_count']}`",
+            f"- coverage_frame_training_row_count: `{missing_provider['coverage_frame_training_row_count']}`",
+            f"- coverage_frame_runtime_proposal_row_count: `{missing_provider['coverage_frame_runtime_proposal_row_count']}`",
+            f"- training_semantics_review_status: `{missing_provider['training_semantics_review_status']}`",
+            f"- training_semantics_selector_training_allowed: `{missing_provider['training_semantics_selector_training_allowed']}`",
+            f"- training_semantics_runtime_work_allowed: `{missing_provider['training_semantics_runtime_work_allowed']}`",
+            f"- training_semantics_training_row_count: `{missing_provider['training_semantics_training_row_count']}`",
+            f"- training_semantics_runtime_proposal_row_count: `{missing_provider['training_semantics_runtime_proposal_row_count']}`",
             f"- runtime_work_allowed: `{missing_provider['runtime_work_allowed']}`",
             f"- selector_training_allowed: `{missing_provider['selector_training_allowed']}`",
             f"- stage7_promotion_allowed: `{missing_provider['stage7_promotion_allowed']}`",

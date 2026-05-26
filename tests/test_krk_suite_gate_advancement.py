@@ -156,6 +156,98 @@ def test_gate_advancement_reports_current_stage7_blocker():
         is True
     )
     assert (
+        payload["summary"][
+            "protected_missing_provider_coverage_expansion_plan_status"
+        ]
+        == "protected_proposal_coverage_expansion_plan_ready"
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_coverage_expansion_rows_to_create"
+        ]
+        == 16
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_coverage_expansion_training_allowed_initially"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_coverage_expansion_requires_followup_review_before_training_use"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"]["protected_missing_provider_coverage_frames_status"]
+        == "protected_provider_coverage_frames_built"
+    )
+    assert (
+        payload["summary"]["protected_missing_provider_coverage_frame_row_count"]
+        == 16
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_coverage_frame_positive_capacity_count"
+        ]
+        == 11
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_coverage_frame_negative_capacity_count"
+        ]
+        == 5
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_coverage_frame_stage7_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_coverage_frame_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_coverage_frame_runtime_proposal_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_training_semantics_review_status"
+        ]
+        == "capacity_frames_diagnostic_not_selector_training_ready"
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_training_semantics_selector_training_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_training_semantics_runtime_work_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_training_semantics_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_training_semantics_runtime_proposal_row_count"
+        ]
+        == 0
+    )
+    assert (
         payload["summary"]["protected_missing_provider_runtime_work_allowed"] is False
     )
 
