@@ -428,7 +428,8 @@ def _approval_receipt_blockers(
         blockers.append("approval_receipt_manifest_fingerprint_mismatch")
     if approval_scope.get("readiness_fingerprint") != expected_readiness_fingerprint:
         blockers.append("approval_receipt_readiness_fingerprint_mismatch")
-    if int(approval_scope.get("job_count") or 0) != job_count:
+    approval_job_count = approval_scope.get("job_count")
+    if type(approval_job_count) is not int or approval_job_count != job_count:
         blockers.append("approval_receipt_job_count_mismatch")
     if approval_scope.get("max_jobs") != max_jobs:
         blockers.append("approval_receipt_max_jobs_mismatch")
