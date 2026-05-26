@@ -103,6 +103,31 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
     )
     assert (
         payload["summary"][
+            "sequence_policy_after_protected_failure_contrast_refresh_status"
+        ]
+        == "sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs"
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_after_protected_failure_contrast_boundaries_preserved"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_after_protected_failure_contrast_boundary_violation_count"
+        ]
+        == 0
+    )
+    assert payload["summary"]["sequence_policy_after_protected_failure_contrast_rows"] == 0
+    assert (
+        payload["summary"][
+            "sequence_policy_after_protected_failure_contrast_stage7_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
             "protected_failure_contrast_approval_receipt_created_by_request"
         ]
         is False

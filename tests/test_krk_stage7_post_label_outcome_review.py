@@ -50,6 +50,31 @@ def test_stage7_post_label_outcome_current_artifact_reports_sequence_policy_gap(
     assert payload["summary"]["stage7_training_row_count"] == 0
     assert payload["summary"]["selector_training_row_count"] == 0
     assert payload["summary"]["runtime_authorization_row_count"] == 0
+    assert (
+        payload["summary"][
+            "sequence_policy_after_protected_failure_contrast_refresh_status"
+        ]
+        == "sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs"
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_after_protected_failure_contrast_boundaries_preserved"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_after_protected_failure_contrast_boundary_violation_count"
+        ]
+        == 0
+    )
+    assert payload["summary"]["sequence_policy_after_protected_failure_contrast_rows"] == 0
+    assert (
+        payload["summary"][
+            "sequence_policy_after_protected_failure_contrast_stage7_training_row_count"
+        ]
+        == 0
+    )
     assert payload["summary"]["protected_failure_contrast_ready_for_explicit_approval"] is True
     assert payload["summary"]["protected_failure_contrast_integration_ready"] is False
     assert (

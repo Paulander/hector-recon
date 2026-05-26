@@ -196,6 +196,25 @@ def build_payload(
             "sequence_policy_cross_stage_sequence_evidence_met": sequence_policy.get(
                 "cross_stage_sequence_evidence_met"
             ),
+            "sequence_policy_after_protected_failure_contrast_refresh_status": (
+                sequence_policy.get("post_failure_contrast_refresh_status")
+            ),
+            "sequence_policy_after_protected_failure_contrast_boundaries_preserved": (
+                sequence_policy.get("post_failure_contrast_refresh_boundaries_preserved")
+            ),
+            "sequence_policy_after_protected_failure_contrast_boundary_violation_count": (
+                sequence_policy.get(
+                    "post_failure_contrast_refresh_boundary_violation_count"
+                )
+            ),
+            "sequence_policy_after_protected_failure_contrast_rows": (
+                sequence_policy.get("post_failure_contrast_refresh_row_count")
+            ),
+            "sequence_policy_after_protected_failure_contrast_stage7_training_row_count": (
+                sequence_policy.get(
+                    "post_failure_contrast_refresh_stage7_training_row_count"
+                )
+            ),
             "sequence_policy_forbidden_training_or_runtime_input_blocked": (
                 sequence_forbidden_training_or_runtime_inputs
             ),

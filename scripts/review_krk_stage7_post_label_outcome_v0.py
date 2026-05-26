@@ -91,6 +91,12 @@ def build_payload(
     explicit_gate_blockers = set(readiness.get("explicit_gate_blockers") or [])
     hard_blockers = set(readiness.get("hard_blockers") or [])
     sequence_policy = readiness.get("sequence_policy") or {}
+    post_failure_contrast_refresh_boundaries_preserved = sequence_policy.get(
+        "post_failure_contrast_refresh_boundaries_preserved"
+    )
+    post_failure_contrast_refresh_boundary_violation_count = sequence_policy.get(
+        "post_failure_contrast_refresh_boundary_violation_count"
+    )
     benchmark_review_blockers = set(benchmark_review.get("blockers") or [])
     protected_failure_contrast_pending_approval = (
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
@@ -223,6 +229,23 @@ def build_payload(
             ),
             "sequence_policy_forbidden_training_or_runtime_input_blockers": (
                 forbidden_input_blockers
+            ),
+            "sequence_policy_after_protected_failure_contrast_refresh_status": (
+                sequence_policy.get("post_failure_contrast_refresh_status")
+            ),
+            "sequence_policy_after_protected_failure_contrast_boundaries_preserved": (
+                post_failure_contrast_refresh_boundaries_preserved
+            ),
+            "sequence_policy_after_protected_failure_contrast_boundary_violation_count": (
+                post_failure_contrast_refresh_boundary_violation_count
+            ),
+            "sequence_policy_after_protected_failure_contrast_rows": (
+                sequence_policy.get("post_failure_contrast_refresh_row_count")
+            ),
+            "sequence_policy_after_protected_failure_contrast_stage7_training_row_count": (
+                sequence_policy.get(
+                    "post_failure_contrast_refresh_stage7_training_row_count"
+                )
             ),
             "stage7_runner_invalid_existing_output_count": readiness_stage7.get(
                 "invalid_existing_output_count"

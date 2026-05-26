@@ -90,6 +90,7 @@ def build_payload(
     benchmark_review_decision = benchmark_review.get("decision") or {}
     backfill_summary = backfill_audit.get("summary") or {}
     protected_failure_contrast = readiness.get("protected_failure_contrast_gate") or {}
+    sequence_policy = readiness.get("sequence_policy") or {}
     explicit_gate_blockers = set(readiness.get("explicit_gate_blockers") or [])
     protected_failure_contrast_pending_approval = (
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
@@ -239,6 +240,25 @@ def build_payload(
             ),
             "protected_failure_contrast_approval_receipt_blockers": (
                 protected_failure_contrast.get("approval_receipt_blockers") or []
+            ),
+            "sequence_policy_after_protected_failure_contrast_refresh_status": (
+                sequence_policy.get("post_failure_contrast_refresh_status")
+            ),
+            "sequence_policy_after_protected_failure_contrast_boundaries_preserved": (
+                sequence_policy.get("post_failure_contrast_refresh_boundaries_preserved")
+            ),
+            "sequence_policy_after_protected_failure_contrast_boundary_violation_count": (
+                sequence_policy.get(
+                    "post_failure_contrast_refresh_boundary_violation_count"
+                )
+            ),
+            "sequence_policy_after_protected_failure_contrast_rows": (
+                sequence_policy.get("post_failure_contrast_refresh_row_count")
+            ),
+            "sequence_policy_after_protected_failure_contrast_stage7_training_row_count": (
+                sequence_policy.get(
+                    "post_failure_contrast_refresh_stage7_training_row_count"
+                )
             ),
             "selector_training_row_count": input_summary.get("selector_training_row_count"),
             "runtime_authorization_row_count": input_summary.get(

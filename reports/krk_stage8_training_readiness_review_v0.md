@@ -23,6 +23,11 @@ This review is non-causal. It does not train Stage 8, promote Stage 7, change ru
 - sequence_policy_cross_stage_requirements_status: `cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark`
 - sequence_policy_replay_free_protected_cross_stage_evidence: `True`
 - sequence_policy_cross_stage_sequence_evidence_met: `True`
+- sequence_policy_after_protected_failure_contrast_refresh_status: `sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs`
+- sequence_policy_after_protected_failure_contrast_boundaries_preserved: `True`
+- sequence_policy_after_protected_failure_contrast_boundary_violation_count: `0`
+- sequence_policy_after_protected_failure_contrast_rows: `0`
+- sequence_policy_after_protected_failure_contrast_stage7_training_row_count: `0`
 - sequence_policy_forbidden_training_or_runtime_input_blocked: `False`
 - sequence_policy_forbidden_training_or_runtime_input_blockers: `[]`
 - protected_failure_contrast_collection_ready_for_explicit_approval: `True`

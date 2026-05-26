@@ -24,6 +24,11 @@ This review is passive. It does not execute labels, change runtime behavior, tra
 - sequence_policy_inputs_ready: `True`
 - sequence_policy_forbidden_training_or_runtime_input_blocked: `False`
 - sequence_policy_forbidden_training_or_runtime_input_blockers: `[]`
+- sequence_policy_after_protected_failure_contrast_refresh_status: `sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs`
+- sequence_policy_after_protected_failure_contrast_boundaries_preserved: `True`
+- sequence_policy_after_protected_failure_contrast_boundary_violation_count: `0`
+- sequence_policy_after_protected_failure_contrast_rows: `0`
+- sequence_policy_after_protected_failure_contrast_stage7_training_row_count: `0`
 - stage7_runner_invalid_existing_output_count: `0`
 - protected_failure_contrast_ready_for_explicit_approval: `True`
 - protected_failure_contrast_integration_ready: `False`

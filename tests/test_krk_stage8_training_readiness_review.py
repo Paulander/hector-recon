@@ -76,6 +76,34 @@ def test_stage8_training_readiness_review_blocks_current_state():
     )
     assert (
         payload["requirements"][
+            "sequence_policy_after_protected_failure_contrast_refresh_status"
+        ]
+        == "sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs"
+    )
+    assert (
+        payload["requirements"][
+            "sequence_policy_after_protected_failure_contrast_boundaries_preserved"
+        ]
+        is True
+    )
+    assert (
+        payload["requirements"][
+            "sequence_policy_after_protected_failure_contrast_boundary_violation_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["requirements"]["sequence_policy_after_protected_failure_contrast_rows"]
+        == 0
+    )
+    assert (
+        payload["requirements"][
+            "sequence_policy_after_protected_failure_contrast_stage7_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["requirements"][
             "protected_failure_contrast_collection_ready_for_explicit_approval"
         ]
         is True
