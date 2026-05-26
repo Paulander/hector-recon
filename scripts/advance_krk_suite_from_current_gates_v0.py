@@ -65,6 +65,7 @@ PROTECTED_FAILURE_CONTRAST_EXECUTION_READINESS_STATUSES = {
 
 PROTECTED_FAILURE_CONTRAST_CONTROL_PLANE_GATE_REVIEW_STATUSES = {
     "krk_suite_protected_failure_contrast_unblocker_blocked_pending_control_plane_gate_review",
+    "krk_suite_readiness_blocked_pending_protected_failure_contrast_control_plane_gate_review",
 }
 
 
@@ -414,6 +415,10 @@ def build_payload() -> dict[str, Any]:
     current_gate_collection_command_available = bool(
         current_gate_collection_option.get("command_if_explicitly_approved")
     )
+    readiness_control_plane_gate_review_blockers = (
+        readiness.get("control_plane_gate_review_blockers") or []
+    )
+    readiness_explicit_gate_blockers = readiness.get("explicit_gate_blockers") or []
     stage4_approval_request = _load_json(
         "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
     )
@@ -619,6 +624,9 @@ def build_payload() -> dict[str, Any]:
         and not current_gate_collection_command_available
         and (
             current_gate_collection_option_available is False
+            or bool(readiness_control_plane_gate_review_blockers)
+            or readiness.get("decision", {}).get("status")
+            in PROTECTED_FAILURE_CONTRAST_CONTROL_PLANE_GATE_REVIEW_STATUSES
             or unblocker.get("decision", {}).get("status")
             in PROTECTED_FAILURE_CONTRAST_CONTROL_PLANE_GATE_REVIEW_STATUSES
         )
@@ -848,6 +856,10 @@ def build_payload() -> dict[str, Any]:
             "sequence_policy_forbidden_training_or_runtime_input_blockers": (
                 sequence_forbidden_blockers
             ),
+            "readiness_control_plane_gate_review_blockers": (
+                readiness_control_plane_gate_review_blockers
+            ),
+            "readiness_explicit_gate_blockers": readiness_explicit_gate_blockers,
             "current_control_plane_gate_status": current_control_plane_gate.get(
                 "decision", {}
             ).get("status"),

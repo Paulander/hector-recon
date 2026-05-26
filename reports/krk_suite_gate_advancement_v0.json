@@ -751,6 +751,10 @@
     "protected_stack_status": "retry1_protected_stage5_6_stack_adopted_manifest_only",
     "readiness_boundary_violation_count": 0,
     "readiness_checked_flag_count": 430,
+    "readiness_control_plane_gate_review_blockers": [],
+    "readiness_explicit_gate_blockers": [
+      "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+    ],
     "readiness_source_artifact_count": 44,
     "readiness_status": "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection",
     "sequence_policy_after_protected_failure_contrast_boundaries_preserved": true,

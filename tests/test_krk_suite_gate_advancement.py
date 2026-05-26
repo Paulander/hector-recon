@@ -95,6 +95,10 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["current_control_plane_gate_status"]
         == "krk_control_plane_waiting_on_explicit_gate_choice"
     )
+    assert payload["summary"]["readiness_control_plane_gate_review_blockers"] == []
+    assert payload["summary"]["readiness_explicit_gate_blockers"] == [
+        "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+    ]
     assert (
         "approve_protected_plan_window_failure_contrast_collection"
         in payload["summary"]["current_control_plane_approval_option_ids"]
@@ -1085,6 +1089,71 @@ def test_gate_advancement_routes_missing_collection_option_to_gate_review(monkey
             "protected_plan_window_failure_contrast_collection_blocked_by_option_id"
         ]
         == "review_protected_plan_window_failure_contrast_execution_readiness"
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["label_run_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
+
+
+def test_gate_advancement_routes_readiness_gate_review_blocker_to_gate_review(
+    monkeypatch,
+):
+    real_load_json = _advance._load_json
+
+    def no_op_run_script(script: str, args: list[str] | None = None):
+        return {"script": script, "args": list(args or []), "ran": False}
+
+    def tainted_load_json(relative: str):
+        payload = json.loads(json.dumps(real_load_json(relative)))
+        if relative == "reports/krk_current_control_plane_gate_v0.json":
+            for option in payload.get("approval_options") or []:
+                if (
+                    option.get("option_id")
+                    == "approve_protected_plan_window_failure_contrast_collection"
+                ):
+                    option["command_if_explicitly_approved"] = None
+        if relative == "reports/krk_full_suite_readiness_audit_v0.json":
+            payload["control_plane_gate_review_blockers"] = [
+                "protected_plan_window_failure_contrast_control_plane_gate_review_required"
+            ]
+            payload["blockers"] = payload["control_plane_gate_review_blockers"]
+            payload.setdefault("decision", {})["status"] = (
+                "krk_suite_readiness_blocked_pending_"
+                "protected_failure_contrast_control_plane_gate_review"
+            )
+            payload["decision"]["recommended_next_step"] = (
+                "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+            )
+        return payload
+
+    monkeypatch.setattr(_advance, "_run_script", no_op_run_script)
+    monkeypatch.setattr(_advance, "_load_json", tainted_load_json)
+
+    payload = _advance.build_payload()
+
+    assert (
+        payload["decision"]["status"]
+        == "krk_suite_passive_advancement_blocked_pending_"
+        "protected_failure_contrast_control_plane_gate_review"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+    )
+    assert payload["summary"]["readiness_control_plane_gate_review_blockers"] == [
+        "protected_plan_window_failure_contrast_control_plane_gate_review_required"
+    ]
+    assert (
+        payload["summary"][
+            "protected_plan_window_failure_contrast_collection_option_available"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "protected_plan_window_failure_contrast_collection_command_available"
+        ]
+        is False
     )
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False

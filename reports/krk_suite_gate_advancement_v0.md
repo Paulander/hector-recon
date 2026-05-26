@@ -50,6 +50,8 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - cross_stage_plan_capsule_requirements_status: `cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark`
 - sequence_policy_forbidden_training_or_runtime_input_blocked: `False`
 - sequence_policy_forbidden_training_or_runtime_input_blockers: `[]`
+- readiness_control_plane_gate_review_blockers: `[]`
+- readiness_explicit_gate_blockers: `['protected_plan_window_failure_contrast_collection_pending_explicit_approval']`
 - current_control_plane_gate_status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - current_control_plane_approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'approve_protected_plan_window_failure_contrast_collection']`
 - protected_plan_window_failure_contrast_collection_option_available: `True`
