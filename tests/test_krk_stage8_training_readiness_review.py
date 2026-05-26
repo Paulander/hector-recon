@@ -44,6 +44,9 @@ def test_stage8_training_readiness_review_blocks_current_state():
     assert payload["gameplay_topology_mutation"] is False
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
+    assert payload["requirements"]["readiness_checked_flag_count"] >= 430
+    assert payload["requirements"]["readiness_boundary_violation_count"] == 0
+    assert payload["requirements"]["readiness_source_artifact_count"] >= 44
     assert payload["requirements"]["protected_stage5_6_stack_ready"] is True
     assert payload["requirements"]["stage7_clean_success_controls_ready"] is True
     assert payload["requirements"]["sequence_policy_benchmark_review_ready"] is True

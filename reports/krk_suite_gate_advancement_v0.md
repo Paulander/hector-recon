@@ -98,8 +98,14 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - sequence_policy_underpowered_pilot_protected_failure_contrast_stage7_promotion_allowed: `False`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_stage8_training_allowed: `False`
 - readiness_status: `krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection`
+- readiness_checked_flag_count: `430`
+- readiness_boundary_violation_count: `0`
+- readiness_source_artifact_count: `44`
 - unblocker_status: `krk_suite_protected_failure_contrast_unblocker_ready_pending_explicit_collection_approval`
 - stage8_training_readiness_status: `stage8_training_blocked_pending_protected_failure_contrast_collection`
+- stage8_training_readiness_checked_flag_count: `430`
+- stage8_training_readiness_boundary_violation_count: `0`
+- stage8_training_readiness_source_artifact_count: `44`
 - stage8_training_readiness_protected_failure_contrast_post_success_refresh_required: `True`
 - stage8_training_readiness_protected_failure_contrast_runtime_direct_routing: `False`
 - stage8_training_readiness_protected_failure_contrast_hidden_python_controller: `False`

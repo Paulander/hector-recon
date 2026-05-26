@@ -382,6 +382,12 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         payload["summary"]["stage8_training_readiness_status"]
         == "stage8_training_blocked_pending_protected_failure_contrast_collection"
     )
+    assert payload["summary"]["readiness_checked_flag_count"] >= 430
+    assert payload["summary"]["readiness_boundary_violation_count"] == 0
+    assert payload["summary"]["readiness_source_artifact_count"] >= 44
+    assert payload["summary"]["stage8_training_readiness_checked_flag_count"] >= 430
+    assert payload["summary"]["stage8_training_readiness_boundary_violation_count"] == 0
+    assert payload["summary"]["stage8_training_readiness_source_artifact_count"] >= 44
     assert (
         payload["summary"][
             "stage8_training_readiness_protected_failure_contrast_post_success_refresh_required"

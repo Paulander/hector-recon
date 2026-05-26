@@ -438,6 +438,7 @@ def build_payload() -> dict[str, Any]:
         output_validation.get("summary", {}).get("output_valid_count") or 0
     ) > 0
     protected_stack = readiness.get("protected_stack") or {}
+    readiness_boundaries = readiness.get("runtime_and_training_boundaries") or {}
     sequence_forbidden_blockers = sorted(
         FORBIDDEN_INPUT_BLOCKERS
         & (
@@ -788,10 +789,28 @@ def build_payload() -> dict[str, Any]:
                 "summary", {}
             ).get("protected_failure_contrast_stage8_training_allowed"),
             "readiness_status": readiness.get("decision", {}).get("status"),
+            "readiness_checked_flag_count": readiness_boundaries.get(
+                "checked_flag_count"
+            ),
+            "readiness_boundary_violation_count": readiness_boundaries.get(
+                "violation_count"
+            ),
+            "readiness_source_artifact_count": len(
+                readiness.get("source_artifacts") or {}
+            ),
             "unblocker_status": unblocker.get("decision", {}).get("status"),
             "stage8_training_readiness_status": stage8_review.get("decision", {}).get(
                 "status"
             ),
+            "stage8_training_readiness_checked_flag_count": stage8_review.get(
+                "requirements", {}
+            ).get("readiness_checked_flag_count"),
+            "stage8_training_readiness_boundary_violation_count": stage8_review.get(
+                "requirements", {}
+            ).get("readiness_boundary_violation_count"),
+            "stage8_training_readiness_source_artifact_count": stage8_review.get(
+                "requirements", {}
+            ).get("readiness_source_artifact_count"),
             "stage8_training_readiness_protected_failure_contrast_post_success_refresh_required": stage8_review.get(
                 "requirements", {}
             ).get("protected_failure_contrast_post_success_refresh_required"),

@@ -67,6 +67,7 @@ def build_payload(
     stage7 = stage_status.get("stage7") or {}
     stage4 = stage_status.get("stage4") or {}
     protected_failure_contrast = readiness.get("protected_failure_contrast_gate") or {}
+    readiness_boundaries = readiness.get("runtime_and_training_boundaries") or {}
     explicit_gate_blockers = set(readiness.get("explicit_gate_blockers") or [])
     hard_blockers = set(readiness.get("hard_blockers") or [])
     sequence_policy = readiness.get("sequence_policy") or {}
@@ -166,6 +167,13 @@ def build_payload(
             "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
         ],
         "requirements": {
+            "readiness_checked_flag_count": readiness_boundaries.get("checked_flag_count"),
+            "readiness_boundary_violation_count": readiness_boundaries.get(
+                "violation_count"
+            ),
+            "readiness_source_artifact_count": len(
+                readiness.get("source_artifacts") or {}
+            ),
             "protected_stage5_6_stack_ready": protected_ready,
             "m1_m4_preservation_passed": protected.get("m1_m4_preservation_passed"),
             "kpk_kqk_bridge_preservation_passed": protected.get(

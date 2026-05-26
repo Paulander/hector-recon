@@ -734,6 +734,9 @@
     "protected_stack_rollback_paths_preserved": true,
     "protected_stack_rollback_paths_safe": true,
     "protected_stack_status": "retry1_protected_stage5_6_stack_adopted_manifest_only",
+    "readiness_boundary_violation_count": 0,
+    "readiness_checked_flag_count": 430,
+    "readiness_source_artifact_count": 44,
     "readiness_status": "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection",
     "sequence_policy_after_protected_failure_contrast_boundaries_preserved": true,
     "sequence_policy_after_protected_failure_contrast_boundary_violation_count": 0,
@@ -805,9 +808,12 @@
     "stage7_success_controls": 11,
     "stage7_success_controls_ready": true,
     "stage7_success_controls_required": 5,
+    "stage8_training_readiness_boundary_violation_count": 0,
+    "stage8_training_readiness_checked_flag_count": 430,
     "stage8_training_readiness_protected_failure_contrast_hidden_python_controller": false,
     "stage8_training_readiness_protected_failure_contrast_post_success_refresh_required": true,
     "stage8_training_readiness_protected_failure_contrast_runtime_direct_routing": false,
+    "stage8_training_readiness_source_artifact_count": 44,
     "stage8_training_readiness_status": "stage8_training_blocked_pending_protected_failure_contrast_collection",
     "unblocker_status": "krk_suite_protected_failure_contrast_unblocker_ready_pending_explicit_collection_approval"
   }
