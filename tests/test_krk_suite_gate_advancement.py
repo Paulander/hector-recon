@@ -2088,6 +2088,45 @@ def test_gate_advancement_reports_current_stage7_blocker():
     )
     assert payload["summary"]["strategy_arbitration_stage7_promotion_allowed"] is False
     assert payload["summary"]["strategy_arbitration_stage8_training_allowed"] is False
+    assert (
+        payload["summary"][
+            "strategy_monitor_plan_do_not_implement_as_causal_affordances"
+        ]
+        is True
+    )
+    assert payload["summary"]["strategy_monitor_records_monitor_record_count"] == 108
+    assert (
+        payload["summary"]["strategy_monitor_companion_audit_v1_visible_term_count"]
+        == 6
+    )
+    assert (
+        payload["summary"][
+            "strategy_monitor_companion_audit_v1_still_missing_term_count"
+        ]
+        == 11
+    )
+    assert payload["summary"]["strategy_monitor_maturity_term_count"] == 6
+    assert payload["summary"]["strategy_monitor_maturity_causal_ready_terms"] == []
+    assert (
+        payload["summary"][
+            "strategy_monitor_maturity_strongest_internal_terminal_candidates"
+        ]
+        == ["post_plan_stagnation", "local_provider_competition_failed"]
+    )
+    assert (
+        payload["summary"]["strategy_monitor_maturity_recommended_next_step"]
+        == "broader_evidence_collection_or_internal_monitor_design_review"
+    )
+    assert payload["summary"]["strategy_monitor_runtime_work_allowed"] is False
+    assert payload["summary"]["strategy_monitor_runtime_terminals_allowed"] is False
+    assert payload["summary"]["strategy_monitor_runtime_arbiter_allowed"] is False
+    assert (
+        payload["summary"]["strategy_monitor_monitor_to_provider_routing_allowed"]
+        is False
+    )
+    assert payload["summary"]["strategy_monitor_selector_training_allowed"] is False
+    assert payload["summary"]["strategy_monitor_stage7_promotion_allowed"] is False
+    assert payload["summary"]["strategy_monitor_stage8_training_allowed"] is False
 
 
 def test_gate_advancement_writer_includes_all_passive_steps():

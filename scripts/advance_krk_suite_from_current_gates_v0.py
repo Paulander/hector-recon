@@ -609,6 +609,9 @@ def build_payload() -> dict[str, Any]:
         readiness.get("candidate_generation_trace_context_gate") or {}
     )
     strategy_arbitration_gate = readiness.get("strategy_arbitration_gate") or {}
+    strategy_monitor_maturity_gate = (
+        readiness.get("strategy_monitor_maturity_gate") or {}
+    )
     protected_stack_repair_statuses = {
         "sequence_policy_pilot_blocked_pending_protected_stack_repair",
         "stage8_training_blocked_pending_protected_stack_repair",
@@ -2248,6 +2251,51 @@ def build_payload() -> dict[str, Any]:
                 "stage7_promotion_allowed"
             ),
             "strategy_arbitration_stage8_training_allowed": strategy_arbitration_gate.get(
+                "stage8_training_allowed"
+            ),
+            "strategy_monitor_plan_do_not_implement_as_causal_affordances": strategy_monitor_maturity_gate.get(
+                "plan_do_not_implement_as_causal_affordances"
+            ),
+            "strategy_monitor_records_monitor_record_count": strategy_monitor_maturity_gate.get(
+                "records_monitor_record_count"
+            ),
+            "strategy_monitor_companion_audit_v1_visible_term_count": strategy_monitor_maturity_gate.get(
+                "companion_audit_v1_visible_term_count"
+            ),
+            "strategy_monitor_companion_audit_v1_still_missing_term_count": strategy_monitor_maturity_gate.get(
+                "companion_audit_v1_still_missing_term_count"
+            ),
+            "strategy_monitor_maturity_term_count": strategy_monitor_maturity_gate.get(
+                "maturity_term_count"
+            ),
+            "strategy_monitor_maturity_causal_ready_terms": strategy_monitor_maturity_gate.get(
+                "maturity_causal_ready_terms"
+            ),
+            "strategy_monitor_maturity_strongest_internal_terminal_candidates": strategy_monitor_maturity_gate.get(
+                "maturity_strongest_internal_terminal_candidates"
+            ),
+            "strategy_monitor_maturity_recommended_next_step": strategy_monitor_maturity_gate.get(
+                "maturity_recommended_next_step"
+            ),
+            "strategy_monitor_runtime_work_allowed": strategy_monitor_maturity_gate.get(
+                "runtime_work_allowed"
+            ),
+            "strategy_monitor_runtime_terminals_allowed": strategy_monitor_maturity_gate.get(
+                "runtime_terminals_allowed"
+            ),
+            "strategy_monitor_runtime_arbiter_allowed": strategy_monitor_maturity_gate.get(
+                "runtime_arbiter_allowed"
+            ),
+            "strategy_monitor_monitor_to_provider_routing_allowed": strategy_monitor_maturity_gate.get(
+                "monitor_to_provider_routing_allowed"
+            ),
+            "strategy_monitor_selector_training_allowed": strategy_monitor_maturity_gate.get(
+                "selector_training_allowed"
+            ),
+            "strategy_monitor_stage7_promotion_allowed": strategy_monitor_maturity_gate.get(
+                "stage7_promotion_allowed"
+            ),
+            "strategy_monitor_stage8_training_allowed": strategy_monitor_maturity_gate.get(
                 "stage8_training_allowed"
             ),
             "sequence_policy_underpowered_pilot_status": underpowered_pilot.get(

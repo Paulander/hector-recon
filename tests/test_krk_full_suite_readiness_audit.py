@@ -95,6 +95,34 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/strategy_arbitration/krk_strategy_missing_feature_candidates.json"
     )
     assert (
+        payload["source_artifacts"]["strategy_monitor_v0_plan"]
+        == "reports/strategy_arbitration/krk_strategy_monitor_v0_plan.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_monitor_records_v0"]
+        == "reports/strategy_arbitration/krk_strategy_monitor_records_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_monitor_companion_terms_v0"]
+        == "reports/strategy_arbitration/krk_strategy_monitor_companion_terms_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_monitor_companion_audit_v0"]
+        == "reports/strategy_arbitration/krk_strategy_monitor_companion_audit_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["visible_monitor_terms_v0"]
+        == "reports/strategy_arbitration/krk_visible_monitor_terms_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_monitor_companion_audit_v1"]
+        == "reports/strategy_arbitration/krk_strategy_monitor_companion_audit_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_monitor_maturity_gate_v0"]
+        == "reports/strategy_arbitration/krk_strategy_monitor_maturity_gate_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["stage7_sampling_manifest"]
         == "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json"
     )
@@ -999,6 +1027,57 @@ def test_full_suite_readiness_identifies_current_gate():
     assert strategy_arbitration["selector_training_allowed"] is False
     assert strategy_arbitration["stage7_promotion_allowed"] is False
     assert strategy_arbitration["stage8_training_allowed"] is False
+
+    strategy_monitor = payload["strategy_monitor_maturity_gate"]
+    assert strategy_monitor["plan_do_not_implement_as_causal_affordances"] is True
+    assert (
+        "implement_runtime_arbiter" in strategy_monitor["plan_blocked_next_steps"]
+    )
+    assert strategy_monitor["records_dataset_record_count"] == 33
+    assert strategy_monitor["records_monitor_definition_count"] == 5
+    assert strategy_monitor["records_monitor_record_count"] == 108
+    assert strategy_monitor["records_by_monitor_type"] == {
+        "OwnerExitMonitor": 25,
+        "PhaseBoundaryMonitor": 52,
+        "PlanSelectionNeededMonitor": 9,
+        "RepairNeededMonitor": 22,
+    }
+    assert strategy_monitor["records_rejected_definition_count"] == 1
+    assert strategy_monitor["companion_terms_causal_terms_authorized"] is False
+    assert strategy_monitor["companion_terms_runtime_arbiter_authorized"] is False
+    assert strategy_monitor["companion_terms_stage7_repair_authorized"] is False
+    assert strategy_monitor["companion_audit_v0_all_terms_available"] is False
+    assert strategy_monitor["visible_terms_record_count"] == 33
+    assert strategy_monitor["visible_terms_term_names"] == [
+        "king_support_improves_after_move",
+        "cut_or_fence_restored_after_move",
+        "safe_repair_move_exists",
+        "box_area_no_longer_decision_relevant",
+        "post_plan_stagnation",
+        "local_provider_competition_failed",
+    ]
+    assert strategy_monitor["companion_audit_v1_all_terms_available"] is False
+    assert strategy_monitor["companion_audit_v1_visible_terms_applied"] is True
+    assert strategy_monitor["companion_audit_v1_visible_term_count"] == 6
+    assert strategy_monitor["companion_audit_v1_still_missing_term_count"] == 11
+    assert strategy_monitor["maturity_term_count"] == 6
+    assert strategy_monitor["maturity_causal_ready_terms"] == []
+    assert strategy_monitor["maturity_strongest_internal_terminal_candidates"] == [
+        "post_plan_stagnation",
+        "local_provider_competition_failed",
+    ]
+    assert strategy_monitor["maturity_recommended_next_step"] == (
+        "broader_evidence_collection_or_internal_monitor_design_review"
+    )
+    assert "runtime_terminals" in strategy_monitor["maturity_blocked_next_steps"]
+    assert strategy_monitor["runtime_work_allowed"] is False
+    assert strategy_monitor["runtime_terminals_allowed"] is False
+    assert strategy_monitor["runtime_arbiter_allowed"] is False
+    assert strategy_monitor["monitor_to_provider_routing_allowed"] is False
+    assert strategy_monitor["runtime_dtm_or_tablebase_lookup"] is False
+    assert strategy_monitor["selector_training_allowed"] is False
+    assert strategy_monitor["stage7_promotion_allowed"] is False
+    assert strategy_monitor["stage8_training_allowed"] is False
 
     repair_monitor_trace = payload["repair_monitor_trace_feature_gate"]
     assert (

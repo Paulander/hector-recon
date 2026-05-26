@@ -129,7 +129,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `8eef08eb648508cea49b5dea397eb60a6ec152e086836ac5a04b42a0e259ae36`
+- expected_readiness_fingerprint: `52e09737daa2a32e81ecc75f49a1d9a2f79e8867b1d907040d5ba0e2757088b7`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -292,6 +292,36 @@
 - missing_feature_recommended_next_step: `stop_for_architecture_review_before_any_terminal_or_affordance_runtime_sandbox`
 - runtime_work_allowed: `False`
 - runtime_arbiter_allowed: `False`
+- selector_training_allowed: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
+## Strategy Monitor Maturity Evidence
+
+- plan_do_not_implement_as_causal_affordances: `True`
+- records_dataset_record_count: `33`
+- records_monitor_definition_count: `5`
+- records_monitor_record_count: `108`
+- records_by_monitor_type: `{'OwnerExitMonitor': 25, 'PhaseBoundaryMonitor': 52, 'PlanSelectionNeededMonitor': 9, 'RepairNeededMonitor': 22}`
+- companion_terms_causal_terms_authorized: `False`
+- companion_terms_runtime_arbiter_authorized: `False`
+- companion_terms_stage7_repair_authorized: `False`
+- companion_audit_v0_all_terms_available: `False`
+- visible_terms_record_count: `33`
+- visible_terms_term_names: `['king_support_improves_after_move', 'cut_or_fence_restored_after_move', 'safe_repair_move_exists', 'box_area_no_longer_decision_relevant', 'post_plan_stagnation', 'local_provider_competition_failed']`
+- companion_audit_v1_all_terms_available: `False`
+- companion_audit_v1_visible_terms_applied: `True`
+- companion_audit_v1_visible_term_count: `6`
+- companion_audit_v1_still_missing_term_count: `11`
+- maturity_term_count: `6`
+- maturity_status_counts: `{'context_feature': 2, 'internal_terminal_candidate': 2, 'monitor_candidate': 1, 'too_broad': 1}`
+- maturity_causal_ready_terms: `[]`
+- maturity_strongest_internal_terminal_candidates: `['post_plan_stagnation', 'local_provider_competition_failed']`
+- maturity_recommended_next_step: `broader_evidence_collection_or_internal_monitor_design_review`
+- runtime_work_allowed: `False`
+- runtime_terminals_allowed: `False`
+- runtime_arbiter_allowed: `False`
+- monitor_to_provider_routing_allowed: `False`
 - selector_training_allowed: `False`
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
@@ -577,5 +607,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1496`
+- checked_flag_count: `1538`
 - violation_count: `0`

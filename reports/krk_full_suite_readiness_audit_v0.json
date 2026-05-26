@@ -32,8 +32,8 @@
         "readiness_audit": "reports/krk_full_suite_readiness_audit_v0.json",
         "readiness_audit_status": "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection",
         "readiness_boundary_violation_count": 0,
-        "readiness_checked_flag_count": 1496,
-        "readiness_source_artifact_count": 170,
+        "readiness_checked_flag_count": 1538,
+        "readiness_source_artifact_count": 177,
         "runtime_change_class": "default_off_candidate_move_frame_sandbox_only",
         "runtime_dtm_or_tablebase_lookup": false,
         "sandbox_scope_id": "default_off_stage4_candidate_move_first_move_contrast_sandbox_only",
@@ -280,7 +280,7 @@
     "execution_jobs_passing": 6,
     "execution_readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
     "expected_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
-    "expected_readiness_fingerprint": "8eef08eb648508cea49b5dea397eb60a6ec152e086836ac5a04b42a0e259ae36",
+    "expected_readiness_fingerprint": "52e09737daa2a32e81ecc75f49a1d9a2f79e8867b1d907040d5ba0e2757088b7",
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "integrated_new_failure_count": 0,
@@ -515,7 +515,7 @@
     "trace_features_trace_frame_count": 6
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 1496,
+    "checked_flag_count": 1538,
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "runtime_behavior_changed": false,
@@ -847,6 +847,12 @@
     "strategy_arbitration_decision_gate": "reports/strategy_arbitration/krk_strategy_arbitration_decision_gate.json",
     "strategy_arbitration_probe": "reports/strategy_arbitration/krk_strategy_arbitration_probe_v0.json",
     "strategy_missing_feature_candidates": "reports/strategy_arbitration/krk_strategy_missing_feature_candidates.json",
+    "strategy_monitor_companion_audit_v0": "reports/strategy_arbitration/krk_strategy_monitor_companion_audit_v0.json",
+    "strategy_monitor_companion_audit_v1": "reports/strategy_arbitration/krk_strategy_monitor_companion_audit_v1.json",
+    "strategy_monitor_companion_terms_v0": "reports/strategy_arbitration/krk_strategy_monitor_companion_terms_v0.json",
+    "strategy_monitor_maturity_gate_v0": "reports/strategy_arbitration/krk_strategy_monitor_maturity_gate_v0.json",
+    "strategy_monitor_records_v0": "reports/strategy_arbitration/krk_strategy_monitor_records_v0.json",
+    "strategy_monitor_v0_plan": "reports/strategy_arbitration/krk_strategy_monitor_v0_plan.json",
     "strategy_sequence_candidate_frame_quality_v1": "reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_quality_v1.json",
     "strategy_sequence_candidate_frame_schema_v1": "reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_v1.json",
     "strategy_sequence_candidate_frames_v1": "reports/strategy_arbitration/krk_strategy_sequence_candidate_frames_v1.json",
@@ -874,7 +880,8 @@
     "two_stage_candidate_selection_benchmark": "reports/krk_two_stage_candidate_selection_benchmark_v0.json",
     "two_stage_candidate_selection_benchmark_plan": "reports/krk_two_stage_candidate_selection_benchmark_plan_v0.json",
     "two_stage_candidate_selection_review": "reports/krk_two_stage_candidate_selection_review_v0.json",
-    "validated_provider_candidate_set_audit": "reports/krk_validated_provider_candidate_set_audit_v0.json"
+    "validated_provider_candidate_set_audit": "reports/krk_validated_provider_candidate_set_audit_v0.json",
+    "visible_monitor_terms_v0": "reports/strategy_arbitration/krk_visible_monitor_terms_v0.json"
   },
   "stage4_first_move_diagnostic_gate": {
     "all_unique_failures_already_in_selector_seed": true,
@@ -1122,6 +1129,111 @@
     "selector_training_allowed": false,
     "stage7_promotion_allowed": false,
     "stage8_training_allowed": false
+  },
+  "strategy_monitor_maturity_gate": {
+    "companion_audit_v0_all_terms_available": false,
+    "companion_audit_v0_term_status_counts": {
+      "available_exact": 3,
+      "available_expression": 1,
+      "missing_requires_visible_extraction": 14,
+      "proxy_available": 16
+    },
+    "companion_audit_v1_all_terms_available": false,
+    "companion_audit_v1_recommended_next_step": "architecture_review_before_runtime_or_new_extraction",
+    "companion_audit_v1_still_missing_term_count": 11,
+    "companion_audit_v1_term_status_counts": {
+      "available_exact": 3,
+      "available_expression": 1,
+      "available_extracted": 6,
+      "missing_requires_visible_extraction": 11,
+      "proxy_available": 13
+    },
+    "companion_audit_v1_visible_term_count": 6,
+    "companion_audit_v1_visible_terms_applied": true,
+    "companion_terms_causal_terms_authorized": false,
+    "companion_terms_runtime_arbiter_authorized": false,
+    "companion_terms_stage7_repair_authorized": false,
+    "maturity_backlog_priority_counts": {
+      "backlog": 3,
+      "high": 5,
+      "lower_defer": 3
+    },
+    "maturity_blocked_next_steps": [
+      "runtime_terminals",
+      "causal_affordances",
+      "runtime_arbiter",
+      "stage7_repair",
+      "stage8_training",
+      "stage7_promotion",
+      "runtime_dtm_or_tablebase",
+      "gameplay_topology_mutation",
+      "monitor_to_provider_routing"
+    ],
+    "maturity_causal_ready_terms": [],
+    "maturity_recommended_next_step": "broader_evidence_collection_or_internal_monitor_design_review",
+    "maturity_status_counts": {
+      "context_feature": 2,
+      "internal_terminal_candidate": 2,
+      "monitor_candidate": 1,
+      "too_broad": 1
+    },
+    "maturity_strongest_internal_terminal_candidates": [
+      "post_plan_stagnation",
+      "local_provider_competition_failed"
+    ],
+    "maturity_term_count": 6,
+    "monitor_to_provider_routing_allowed": false,
+    "plan_accepted_source": "reports/strategy_arbitration/krk_feature_candidate_validation_v0.json",
+    "plan_blocked_next_steps": [
+      "implement_runtime_arbiter",
+      "add_causal_terminals",
+      "add_stage7_repair",
+      "train_stage8",
+      "promote_stage7",
+      "use_runtime_dtm_or_tablebase",
+      "mutate_topology_during_gameplay"
+    ],
+    "plan_do_not_implement_as_causal_affordances": true,
+    "records_by_associated_outcome": {
+      "mate": 39,
+      "max_plies": 60,
+      "unknown": 9
+    },
+    "records_by_monitor_type": {
+      "OwnerExitMonitor": 25,
+      "PhaseBoundaryMonitor": 52,
+      "PlanSelectionNeededMonitor": 9,
+      "RepairNeededMonitor": 22
+    },
+    "records_dataset_record_count": 33,
+    "records_monitor_definition_count": 5,
+    "records_monitor_record_count": 108,
+    "records_rejected_definition_count": 1,
+    "runtime_arbiter_allowed": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "runtime_terminals_allowed": false,
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "visible_terms_confidence_counts": {
+      "expression_from_current_state_terms": 66,
+      "expression_from_provider_outcome_evidence": 33,
+      "extracted_from_existing_candidate_or_context_terms": 30,
+      "extracted_from_trace_window": 2,
+      "not_observed": 43,
+      "proxy_from_current_state_repair_availability": 22,
+      "proxy_from_failure_family_labels": 2
+    },
+    "visible_terms_record_count": 33,
+    "visible_terms_term_names": [
+      "king_support_improves_after_move",
+      "cut_or_fence_restored_after_move",
+      "safe_repair_move_exists",
+      "box_area_no_longer_decision_relevant",
+      "post_plan_stagnation",
+      "local_provider_competition_failed"
+    ]
   },
   "strategy_sequence_candidate_source_gate": {
     "broader_strategy_source_status": "broader_strategy_observation_source_schema_ready_but_stage7_only",

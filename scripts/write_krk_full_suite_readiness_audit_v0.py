@@ -47,6 +47,27 @@ SOURCES = {
     "strategy_missing_feature_candidates": (
         "reports/strategy_arbitration/krk_strategy_missing_feature_candidates.json"
     ),
+    "strategy_monitor_v0_plan": (
+        "reports/strategy_arbitration/krk_strategy_monitor_v0_plan.json"
+    ),
+    "strategy_monitor_records_v0": (
+        "reports/strategy_arbitration/krk_strategy_monitor_records_v0.json"
+    ),
+    "strategy_monitor_companion_terms_v0": (
+        "reports/strategy_arbitration/krk_strategy_monitor_companion_terms_v0.json"
+    ),
+    "strategy_monitor_companion_audit_v0": (
+        "reports/strategy_arbitration/krk_strategy_monitor_companion_audit_v0.json"
+    ),
+    "visible_monitor_terms_v0": (
+        "reports/strategy_arbitration/krk_visible_monitor_terms_v0.json"
+    ),
+    "strategy_monitor_companion_audit_v1": (
+        "reports/strategy_arbitration/krk_strategy_monitor_companion_audit_v1.json"
+    ),
+    "strategy_monitor_maturity_gate_v0": (
+        "reports/strategy_arbitration/krk_strategy_monitor_maturity_gate_v0.json"
+    ),
     "control_plane_stage7_boundary_refresh": (
         "reports/krk_control_plane_stage7_boundary_refresh_v0.json"
     ),
@@ -727,6 +748,21 @@ def build_payload() -> dict[str, Any]:
     strategy_arbitration_decision_gate = payloads["strategy_arbitration_decision_gate"]
     strategy_missing_feature_candidates = payloads[
         "strategy_missing_feature_candidates"
+    ]
+    strategy_monitor_v0_plan = payloads["strategy_monitor_v0_plan"]
+    strategy_monitor_records_v0 = payloads["strategy_monitor_records_v0"]
+    strategy_monitor_companion_terms_v0 = payloads[
+        "strategy_monitor_companion_terms_v0"
+    ]
+    strategy_monitor_companion_audit_v0 = payloads[
+        "strategy_monitor_companion_audit_v0"
+    ]
+    visible_monitor_terms_v0 = payloads["visible_monitor_terms_v0"]
+    strategy_monitor_companion_audit_v1 = payloads[
+        "strategy_monitor_companion_audit_v1"
+    ]
+    strategy_monitor_maturity_gate_v0 = payloads[
+        "strategy_monitor_maturity_gate_v0"
     ]
     candidate_proposal_coverage = payloads["candidate_proposal_coverage"]
     candidate_generation_strategy_review = payloads[
@@ -2543,6 +2579,133 @@ def build_payload() -> dict[str, Any]:
             ),
             "runtime_work_allowed": False,
             "runtime_arbiter_allowed": False,
+            "runtime_dtm_or_tablebase_lookup": False,
+            "selector_training_allowed": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": False,
+        },
+        "strategy_monitor_maturity_gate": {
+            "plan_do_not_implement_as_causal_affordances": (
+                strategy_monitor_v0_plan.get("decision", {}).get(
+                    "do_not_implement_as_causal_affordances"
+                )
+            ),
+            "plan_accepted_source": strategy_monitor_v0_plan.get(
+                "decision", {}
+            ).get("accepted_source"),
+            "plan_blocked_next_steps": strategy_monitor_v0_plan.get(
+                "blocked_next_steps"
+            ),
+            "records_dataset_record_count": strategy_monitor_records_v0.get(
+                "summary", {}
+            ).get("dataset_record_count"),
+            "records_monitor_definition_count": strategy_monitor_records_v0.get(
+                "summary", {}
+            ).get("monitor_definition_count"),
+            "records_monitor_record_count": strategy_monitor_records_v0.get(
+                "summary", {}
+            ).get("monitor_record_count"),
+            "records_by_monitor_type": strategy_monitor_records_v0.get(
+                "summary", {}
+            ).get("records_by_monitor_type"),
+            "records_by_associated_outcome": strategy_monitor_records_v0.get(
+                "summary", {}
+            ).get("records_by_associated_outcome"),
+            "records_rejected_definition_count": strategy_monitor_records_v0.get(
+                "summary", {}
+            ).get("rejected_definition_count"),
+            "companion_terms_causal_terms_authorized": (
+                strategy_monitor_companion_terms_v0.get("summary", {}).get(
+                    "causal_terms_authorized"
+                )
+            ),
+            "companion_terms_runtime_arbiter_authorized": (
+                strategy_monitor_companion_terms_v0.get("summary", {}).get(
+                    "runtime_arbiter_authorized"
+                )
+            ),
+            "companion_terms_stage7_repair_authorized": (
+                strategy_monitor_companion_terms_v0.get("summary", {}).get(
+                    "stage7_repair_authorized"
+                )
+            ),
+            "companion_audit_v0_all_terms_available": (
+                strategy_monitor_companion_audit_v0.get("summary", {}).get(
+                    "all_terms_available_without_new_extraction"
+                )
+            ),
+            "companion_audit_v0_term_status_counts": (
+                strategy_monitor_companion_audit_v0.get("summary", {}).get(
+                    "term_status_counts"
+                )
+            ),
+            "visible_terms_record_count": visible_monitor_terms_v0.get(
+                "summary", {}
+            ).get("record_count"),
+            "visible_terms_term_names": visible_monitor_terms_v0.get(
+                "summary", {}
+            ).get("term_names"),
+            "visible_terms_confidence_counts": visible_monitor_terms_v0.get(
+                "summary", {}
+            ).get("confidence_counts"),
+            "companion_audit_v1_all_terms_available": (
+                strategy_monitor_companion_audit_v1.get("summary", {}).get(
+                    "all_terms_available_without_new_extraction"
+                )
+            ),
+            "companion_audit_v1_visible_terms_applied": (
+                strategy_monitor_companion_audit_v1.get("summary", {}).get(
+                    "visible_terms_applied"
+                )
+            ),
+            "companion_audit_v1_visible_term_count": (
+                strategy_monitor_companion_audit_v1.get("summary", {}).get(
+                    "visible_term_count"
+                )
+            ),
+            "companion_audit_v1_still_missing_term_count": len(
+                strategy_monitor_companion_audit_v1.get("summary", {}).get(
+                    "still_missing_terms"
+                )
+                or []
+            ),
+            "companion_audit_v1_term_status_counts": (
+                strategy_monitor_companion_audit_v1.get("summary", {}).get(
+                    "term_status_counts"
+                )
+            ),
+            "companion_audit_v1_recommended_next_step": (
+                strategy_monitor_companion_audit_v1.get("summary", {}).get(
+                    "recommended_next_step"
+                )
+            ),
+            "maturity_term_count": strategy_monitor_maturity_gate_v0.get(
+                "summary", {}
+            ).get("term_count"),
+            "maturity_status_counts": strategy_monitor_maturity_gate_v0.get(
+                "summary", {}
+            ).get("maturity_status_counts"),
+            "maturity_causal_ready_terms": strategy_monitor_maturity_gate_v0.get(
+                "summary", {}
+            ).get("causal_ready_terms"),
+            "maturity_strongest_internal_terminal_candidates": (
+                strategy_monitor_maturity_gate_v0.get("summary", {}).get(
+                    "strongest_internal_terminal_candidates"
+                )
+            ),
+            "maturity_backlog_priority_counts": strategy_monitor_maturity_gate_v0.get(
+                "summary", {}
+            ).get("backlog_priority_counts"),
+            "maturity_recommended_next_step": strategy_monitor_maturity_gate_v0.get(
+                "summary", {}
+            ).get("recommended_next_step"),
+            "maturity_blocked_next_steps": strategy_monitor_maturity_gate_v0.get(
+                "blocked_next_steps"
+            ),
+            "runtime_work_allowed": False,
+            "runtime_terminals_allowed": False,
+            "runtime_arbiter_allowed": False,
+            "monitor_to_provider_routing_allowed": False,
             "runtime_dtm_or_tablebase_lookup": False,
             "selector_training_allowed": False,
             "stage7_promotion_allowed": False,
@@ -4603,6 +4766,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     missing_provider = payload["protected_missing_provider_gate"]
     strategy_source = payload["strategy_sequence_candidate_source_gate"]
     strategy_arbitration = payload["strategy_arbitration_gate"]
+    strategy_monitor = payload["strategy_monitor_maturity_gate"]
     repair_monitor_trace = payload["repair_monitor_trace_feature_gate"]
     stage5_6_refresh = payload["stage5_6_candidate_generation_refresh_gate"]
     cross_stage_scope = payload["cross_stage_candidate_generation_scope_gate"]
@@ -4917,6 +5081,36 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- selector_training_allowed: `{strategy_arbitration['selector_training_allowed']}`",
             f"- stage7_promotion_allowed: `{strategy_arbitration['stage7_promotion_allowed']}`",
             f"- stage8_training_allowed: `{strategy_arbitration['stage8_training_allowed']}`",
+            "",
+            "## Strategy Monitor Maturity Evidence",
+            "",
+            f"- plan_do_not_implement_as_causal_affordances: `{strategy_monitor['plan_do_not_implement_as_causal_affordances']}`",
+            f"- records_dataset_record_count: `{strategy_monitor['records_dataset_record_count']}`",
+            f"- records_monitor_definition_count: `{strategy_monitor['records_monitor_definition_count']}`",
+            f"- records_monitor_record_count: `{strategy_monitor['records_monitor_record_count']}`",
+            f"- records_by_monitor_type: `{strategy_monitor['records_by_monitor_type']}`",
+            f"- companion_terms_causal_terms_authorized: `{strategy_monitor['companion_terms_causal_terms_authorized']}`",
+            f"- companion_terms_runtime_arbiter_authorized: `{strategy_monitor['companion_terms_runtime_arbiter_authorized']}`",
+            f"- companion_terms_stage7_repair_authorized: `{strategy_monitor['companion_terms_stage7_repair_authorized']}`",
+            f"- companion_audit_v0_all_terms_available: `{strategy_monitor['companion_audit_v0_all_terms_available']}`",
+            f"- visible_terms_record_count: `{strategy_monitor['visible_terms_record_count']}`",
+            f"- visible_terms_term_names: `{strategy_monitor['visible_terms_term_names']}`",
+            f"- companion_audit_v1_all_terms_available: `{strategy_monitor['companion_audit_v1_all_terms_available']}`",
+            f"- companion_audit_v1_visible_terms_applied: `{strategy_monitor['companion_audit_v1_visible_terms_applied']}`",
+            f"- companion_audit_v1_visible_term_count: `{strategy_monitor['companion_audit_v1_visible_term_count']}`",
+            f"- companion_audit_v1_still_missing_term_count: `{strategy_monitor['companion_audit_v1_still_missing_term_count']}`",
+            f"- maturity_term_count: `{strategy_monitor['maturity_term_count']}`",
+            f"- maturity_status_counts: `{strategy_monitor['maturity_status_counts']}`",
+            f"- maturity_causal_ready_terms: `{strategy_monitor['maturity_causal_ready_terms']}`",
+            f"- maturity_strongest_internal_terminal_candidates: `{strategy_monitor['maturity_strongest_internal_terminal_candidates']}`",
+            f"- maturity_recommended_next_step: `{strategy_monitor['maturity_recommended_next_step']}`",
+            f"- runtime_work_allowed: `{strategy_monitor['runtime_work_allowed']}`",
+            f"- runtime_terminals_allowed: `{strategy_monitor['runtime_terminals_allowed']}`",
+            f"- runtime_arbiter_allowed: `{strategy_monitor['runtime_arbiter_allowed']}`",
+            f"- monitor_to_provider_routing_allowed: `{strategy_monitor['monitor_to_provider_routing_allowed']}`",
+            f"- selector_training_allowed: `{strategy_monitor['selector_training_allowed']}`",
+            f"- stage7_promotion_allowed: `{strategy_monitor['stage7_promotion_allowed']}`",
+            f"- stage8_training_allowed: `{strategy_monitor['stage8_training_allowed']}`",
             "",
             "## Repair-Monitor Trace-Feature Evidence",
             "",
