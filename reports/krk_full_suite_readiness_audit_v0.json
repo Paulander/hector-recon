@@ -32,8 +32,8 @@
         "readiness_audit": "reports/krk_full_suite_readiness_audit_v0.json",
         "readiness_audit_status": "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection",
         "readiness_boundary_violation_count": 0,
-        "readiness_checked_flag_count": 430,
-        "readiness_source_artifact_count": 44,
+        "readiness_checked_flag_count": 451,
+        "readiness_source_artifact_count": 47,
         "runtime_change_class": "default_off_candidate_move_frame_sandbox_only",
         "runtime_dtm_or_tablebase_lookup": false,
         "sandbox_scope_id": "default_off_stage4_candidate_move_first_move_contrast_sandbox_only",
@@ -112,7 +112,7 @@
     "execution_jobs_passing": 6,
     "execution_readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
     "expected_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
-    "expected_readiness_fingerprint": "38a151e2dbbbd5170d583947d1204d837dc82954ee19ae8a824c30d9637ef033",
+    "expected_readiness_fingerprint": "c14e962a852887fc355f597db679d1f445e598e8f302e7566feab69141824c9c",
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "integrated_new_failure_count": 0,
@@ -148,6 +148,33 @@
     "stage8_training_allowed": false,
     "unique_failure_count": 1
   },
+  "protected_missing_provider_gate": {
+    "coverage_frames_present_count": 16,
+    "coverage_label_count": 16,
+    "coverage_next_step": "design_non_causal_proposal_coverage_expansion_for_protected_states",
+    "coverage_status": "proposal_provider_coverage_gap_blocks_selector_training",
+    "current_gap_blocks_selector_training": true,
+    "label_count": 16,
+    "label_result_counts": {
+      "mate": 11,
+      "max_plies": 5
+    },
+    "labels_next_step": "merge_missing_provider_labels_and_refresh_strategy_sequence_inventory",
+    "labels_status": "protected_missing_provider_capacity_labels_completed",
+    "matched_label_count": 0,
+    "merge_next_step": "review_ranked_proposal_frame_coverage_for_protected_missing_provider_states",
+    "merge_status": "protected_missing_provider_labels_unmatched_by_current_proposal_frames",
+    "missing_provider_mate_label_count": 11,
+    "provider_missing_from_frame_count": 16,
+    "provider_present_in_frame_count": 0,
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_label_count": 0,
+    "stage7_promotion_allowed": false,
+    "stage7_training_label_count": 0,
+    "stage8_training_allowed": false,
+    "unmatched_label_count": 16
+  },
   "protected_stack": {
     "active_stack_path_status": {
       "all_paths_exist": true,
@@ -177,7 +204,7 @@
     "status": "retry1_protected_stage5_6_stack_adopted_manifest_only"
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 430,
+    "checked_flag_count": 451,
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "runtime_behavior_changed": false,
@@ -258,7 +285,10 @@
     "protected_failure_contrast_output_validation": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_output_validation_v0.json",
     "protected_failure_contrast_plan": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_plan_v0.json",
     "protected_failure_contrast_runner": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_runner_v0.json",
+    "protected_missing_provider_capacity_labels": "reports/krk_protected_missing_provider_capacity_labels_v0.json",
+    "protected_missing_provider_label_merge_review": "reports/krk_protected_missing_provider_label_merge_review_v0.json",
     "protected_plan_window_frames": "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json",
+    "ranked_proposal_protected_provider_coverage_review": "reports/krk_ranked_proposal_frame_protected_provider_coverage_review_v0.json",
     "sequence_benchmark": "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
     "sequence_benchmark_design": "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json",
     "sequence_benchmark_inputs": "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json",

@@ -122,7 +122,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `38a151e2dbbbd5170d583947d1204d837dc82954ee19ae8a824c30d9637ef033`
+- expected_readiness_fingerprint: `c14e962a852887fc355f597db679d1f445e598e8f302e7566feab69141824c9c`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -132,6 +132,31 @@
 - runtime_dtm_or_tablebase_lookup: `False`
 - hidden_python_controller: `False`
 - gameplay_topology_mutation: `False`
+- selector_training_allowed: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
+## Protected Missing-Provider Evidence
+
+- labels_status: `protected_missing_provider_capacity_labels_completed`
+- labels_next_step: `merge_missing_provider_labels_and_refresh_strategy_sequence_inventory`
+- label_count: `16`
+- label_result_counts: `{'mate': 11, 'max_plies': 5}`
+- stage7_label_count: `0`
+- stage7_training_label_count: `0`
+- merge_status: `protected_missing_provider_labels_unmatched_by_current_proposal_frames`
+- merge_next_step: `review_ranked_proposal_frame_coverage_for_protected_missing_provider_states`
+- matched_label_count: `0`
+- unmatched_label_count: `16`
+- coverage_status: `proposal_provider_coverage_gap_blocks_selector_training`
+- coverage_next_step: `design_non_causal_proposal_coverage_expansion_for_protected_states`
+- coverage_label_count: `16`
+- coverage_frames_present_count: `16`
+- provider_present_in_frame_count: `0`
+- provider_missing_from_frame_count: `16`
+- missing_provider_mate_label_count: `11`
+- current_gap_blocks_selector_training: `True`
+- runtime_work_allowed: `False`
 - selector_training_allowed: `False`
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
@@ -158,5 +183,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `430`
+- checked_flag_count: `451`
 - violation_count: `0`

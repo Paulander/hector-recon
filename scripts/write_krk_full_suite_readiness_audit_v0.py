@@ -38,6 +38,15 @@ SOURCES = {
     "control_plane_stage7_boundary_refresh": (
         "reports/krk_control_plane_stage7_boundary_refresh_v0.json"
     ),
+    "protected_missing_provider_capacity_labels": (
+        "reports/krk_protected_missing_provider_capacity_labels_v0.json"
+    ),
+    "protected_missing_provider_label_merge_review": (
+        "reports/krk_protected_missing_provider_label_merge_review_v0.json"
+    ),
+    "ranked_proposal_protected_provider_coverage_review": (
+        "reports/krk_ranked_proposal_frame_protected_provider_coverage_review_v0.json"
+    ),
     "active_protected_stack": "reports/krk_active_protected_stack_v0.json",
     "clean_stack_validation": "reports/krk_clean_stack_post_replacement_validation_v0.json",
     "preservation_checks": "reports/krk_clean_retrain_retry1_preservation_checks_v0.json",
@@ -312,6 +321,15 @@ def build_payload() -> dict[str, Any]:
     failure_contrast_integration = payloads["protected_failure_contrast_integration"]
     post_failure_contrast_sequence_refresh = payloads[
         "post_failure_contrast_sequence_refresh"
+    ]
+    protected_missing_provider_labels = payloads[
+        "protected_missing_provider_capacity_labels"
+    ]
+    protected_missing_provider_merge = payloads[
+        "protected_missing_provider_label_merge_review"
+    ]
+    protected_missing_provider_coverage = payloads[
+        "ranked_proposal_protected_provider_coverage_review"
     ]
     runner = payloads["stage7_sampling_runner"]
     output_validation = payloads["stage7_sampling_output_validation"]
@@ -954,6 +972,73 @@ def build_payload() -> dict[str, Any]:
             "stage7_promotion_allowed": False,
             "stage8_training_allowed": False,
         },
+        "protected_missing_provider_gate": {
+            "labels_status": protected_missing_provider_labels.get(
+                "decision", {}
+            ).get("status"),
+            "labels_next_step": protected_missing_provider_labels.get(
+                "decision", {}
+            ).get("recommended_next_step"),
+            "label_count": protected_missing_provider_labels.get("summary", {}).get(
+                "label_count"
+            ),
+            "label_result_counts": protected_missing_provider_labels.get(
+                "summary", {}
+            ).get("result_counts"),
+            "stage7_label_count": protected_missing_provider_labels.get(
+                "summary", {}
+            ).get("stage7_labels"),
+            "stage7_training_label_count": protected_missing_provider_labels.get(
+                "summary", {}
+            ).get("stage7_training_labels"),
+            "merge_status": protected_missing_provider_merge.get(
+                "decision", {}
+            ).get("status"),
+            "merge_next_step": protected_missing_provider_merge.get(
+                "decision", {}
+            ).get("recommended_next_step"),
+            "matched_label_count": protected_missing_provider_merge.get(
+                "summary", {}
+            ).get("matched_protected_label_count"),
+            "unmatched_label_count": protected_missing_provider_merge.get(
+                "summary", {}
+            ).get("unmatched_protected_label_count"),
+            "coverage_status": protected_missing_provider_coverage.get(
+                "decision", {}
+            ).get("status"),
+            "coverage_next_step": protected_missing_provider_coverage.get(
+                "decision", {}
+            ).get("recommended_next_step"),
+            "coverage_label_count": protected_missing_provider_coverage.get(
+                "summary", {}
+            ).get("label_count"),
+            "coverage_frames_present_count": protected_missing_provider_coverage.get(
+                "summary", {}
+            ).get("frames_present_count"),
+            "provider_present_in_frame_count": (
+                protected_missing_provider_coverage.get("summary", {}).get(
+                    "provider_present_in_frame_count"
+                )
+            ),
+            "provider_missing_from_frame_count": (
+                protected_missing_provider_coverage.get("summary", {}).get(
+                    "provider_missing_from_frame_count"
+                )
+            ),
+            "missing_provider_mate_label_count": (
+                protected_missing_provider_coverage.get("summary", {}).get(
+                    "missing_provider_mate_label_count"
+                )
+            ),
+            "current_gap_blocks_selector_training": (
+                protected_missing_provider_coverage.get("decision", {}).get("status")
+                == "proposal_provider_coverage_gap_blocks_selector_training"
+            ),
+            "runtime_work_allowed": False,
+            "selector_training_allowed": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": False,
+        },
         "stage7_sampling_gate": {
             "runner_status": runner.get("decision", {}).get("status"),
             "runner_dry_run": runner.get("summary", {}).get("dry_run"),
@@ -1202,6 +1287,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     stage7 = payload["stage7_sampling_gate"]
     sequence = payload["sequence_policy"]
     protected_failure_contrast = payload["protected_failure_contrast_gate"]
+    missing_provider = payload["protected_missing_provider_gate"]
     current_gate = payload["current_control_plane_gate"]
     decision = payload["decision"]
     lines = [
@@ -1348,6 +1434,31 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- selector_training_allowed: `{protected_failure_contrast['selector_training_allowed']}`",
             f"- stage7_promotion_allowed: `{protected_failure_contrast['stage7_promotion_allowed']}`",
             f"- stage8_training_allowed: `{protected_failure_contrast['stage8_training_allowed']}`",
+            "",
+            "## Protected Missing-Provider Evidence",
+            "",
+            f"- labels_status: `{missing_provider['labels_status']}`",
+            f"- labels_next_step: `{missing_provider['labels_next_step']}`",
+            f"- label_count: `{missing_provider['label_count']}`",
+            f"- label_result_counts: `{missing_provider['label_result_counts']}`",
+            f"- stage7_label_count: `{missing_provider['stage7_label_count']}`",
+            f"- stage7_training_label_count: `{missing_provider['stage7_training_label_count']}`",
+            f"- merge_status: `{missing_provider['merge_status']}`",
+            f"- merge_next_step: `{missing_provider['merge_next_step']}`",
+            f"- matched_label_count: `{missing_provider['matched_label_count']}`",
+            f"- unmatched_label_count: `{missing_provider['unmatched_label_count']}`",
+            f"- coverage_status: `{missing_provider['coverage_status']}`",
+            f"- coverage_next_step: `{missing_provider['coverage_next_step']}`",
+            f"- coverage_label_count: `{missing_provider['coverage_label_count']}`",
+            f"- coverage_frames_present_count: `{missing_provider['coverage_frames_present_count']}`",
+            f"- provider_present_in_frame_count: `{missing_provider['provider_present_in_frame_count']}`",
+            f"- provider_missing_from_frame_count: `{missing_provider['provider_missing_from_frame_count']}`",
+            f"- missing_provider_mate_label_count: `{missing_provider['missing_provider_mate_label_count']}`",
+            f"- current_gap_blocks_selector_training: `{missing_provider['current_gap_blocks_selector_training']}`",
+            f"- runtime_work_allowed: `{missing_provider['runtime_work_allowed']}`",
+            f"- selector_training_allowed: `{missing_provider['selector_training_allowed']}`",
+            f"- stage7_promotion_allowed: `{missing_provider['stage7_promotion_allowed']}`",
+            f"- stage8_training_allowed: `{missing_provider['stage8_training_allowed']}`",
             "",
             "## Current Control Plane Gate",
             "",

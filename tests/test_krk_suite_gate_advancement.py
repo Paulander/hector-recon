@@ -127,6 +127,37 @@ def test_gate_advancement_reports_current_stage7_blocker():
         ]
         is None
     )
+    assert (
+        payload["summary"]["protected_missing_provider_labels_status"]
+        == "protected_missing_provider_capacity_labels_completed"
+    )
+    assert payload["summary"]["protected_missing_provider_label_count"] == 16
+    assert payload["summary"]["protected_missing_provider_stage7_label_count"] == 0
+    assert (
+        payload["summary"]["protected_missing_provider_stage7_training_label_count"]
+        == 0
+    )
+    assert (
+        payload["summary"]["protected_missing_provider_merge_status"]
+        == "protected_missing_provider_labels_unmatched_by_current_proposal_frames"
+    )
+    assert payload["summary"]["protected_missing_provider_unmatched_label_count"] == 16
+    assert (
+        payload["summary"]["protected_missing_provider_coverage_status"]
+        == "proposal_provider_coverage_gap_blocks_selector_training"
+    )
+    assert (
+        payload["summary"]["protected_missing_provider_missing_from_frame_count"]
+        == 16
+    )
+    assert payload["summary"]["protected_missing_provider_mate_label_count"] == 11
+    assert (
+        payload["summary"]["protected_missing_provider_gap_blocks_selector_training"]
+        is True
+    )
+    assert (
+        payload["summary"]["protected_missing_provider_runtime_work_allowed"] is False
+    )
 
 
 def test_gate_advancement_writer_includes_all_passive_steps():

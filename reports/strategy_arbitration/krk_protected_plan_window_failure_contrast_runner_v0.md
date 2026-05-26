@@ -28,7 +28,7 @@ Default mode is dry-run only. Executing collection requires explicit user approv
 - execution_readiness_protected_failure_contrast_collection_blocked_by_option_id: `None`
 - execution_readiness_jobs_passing: `6`
 - execution_readiness_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- execution_readiness_fingerprint: `38a151e2dbbbd5170d583947d1204d837dc82954ee19ae8a824c30d9637ef033`
+- execution_readiness_fingerprint: `c14e962a852887fc355f597db679d1f445e598e8f302e7566feab69141824c9c`
 - execution_readiness_all_jobs_pass: `True`
 - execution_readiness_protected_stack_status: `retry1_protected_stage5_6_stack_adopted_manifest_only`
 - execution_readiness_protected_stack_ready: `True`
@@ -40,9 +40,9 @@ Default mode is dry-run only. Executing collection requires explicit user approv
 - execution_readiness_protected_stack_rollback_common_paths_distinct: `True`
 - execution_readiness_protected_stack_filesystem_snapshots_replaced: `False`
 - execution_readiness_protected_stack_hard_blockers: `[]`
-- execution_readiness_checked_flag_count: `430`
+- execution_readiness_checked_flag_count: `451`
 - execution_readiness_boundary_violation_count: `0`
-- execution_readiness_source_artifact_count: `44`
+- execution_readiness_source_artifact_count: `47`
 - approval_receipt_required_for_execution: `True`
 - approval_receipt_present: `False`
 - approval_receipt_valid: `False`

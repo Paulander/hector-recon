@@ -342,6 +342,36 @@ def test_full_suite_readiness_identifies_current_gate():
     assert protected_failure_contrast["stage7_promotion_allowed"] is False
     assert protected_failure_contrast["stage8_training_allowed"] is False
 
+    missing_provider = payload["protected_missing_provider_gate"]
+    assert (
+        missing_provider["labels_status"]
+        == "protected_missing_provider_capacity_labels_completed"
+    )
+    assert missing_provider["label_count"] == 16
+    assert missing_provider["label_result_counts"] == {"mate": 11, "max_plies": 5}
+    assert missing_provider["stage7_label_count"] == 0
+    assert missing_provider["stage7_training_label_count"] == 0
+    assert (
+        missing_provider["merge_status"]
+        == "protected_missing_provider_labels_unmatched_by_current_proposal_frames"
+    )
+    assert missing_provider["matched_label_count"] == 0
+    assert missing_provider["unmatched_label_count"] == 16
+    assert (
+        missing_provider["coverage_status"]
+        == "proposal_provider_coverage_gap_blocks_selector_training"
+    )
+    assert missing_provider["coverage_label_count"] == 16
+    assert missing_provider["coverage_frames_present_count"] == 16
+    assert missing_provider["provider_present_in_frame_count"] == 0
+    assert missing_provider["provider_missing_from_frame_count"] == 16
+    assert missing_provider["missing_provider_mate_label_count"] == 11
+    assert missing_provider["current_gap_blocks_selector_training"] is True
+    assert missing_provider["runtime_work_allowed"] is False
+    assert missing_provider["selector_training_allowed"] is False
+    assert missing_provider["stage7_promotion_allowed"] is False
+    assert missing_provider["stage8_training_allowed"] is False
+
 
 def test_full_suite_readiness_writer_helpers_are_deterministic():
     payload = _audit.build_payload()
@@ -462,6 +492,15 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
     assert "selector_training_allowed: `False`" in rendered
     assert "stage7_promotion_allowed: `False`" in rendered
     assert "stage8_training_allowed: `False`" in rendered
+    assert "## Protected Missing-Provider Evidence" in rendered
+    assert "label_count: `16`" in rendered
+    assert "stage7_training_label_count: `0`" in rendered
+    assert (
+        "coverage_status: "
+        "`proposal_provider_coverage_gap_blocks_selector_training`"
+        in rendered
+    )
+    assert "current_gap_blocks_selector_training: `True`" in rendered
     assert (
         "passive_design_without_new_labels_status: "
         "`non_causal_sequence_policy_design_without_new_labels_ready`"

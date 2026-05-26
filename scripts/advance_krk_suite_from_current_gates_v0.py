@@ -555,6 +555,9 @@ def build_payload() -> dict[str, Any]:
     active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
     readiness_boundaries = readiness.get("runtime_and_training_boundaries") or {}
+    protected_missing_provider_gate = (
+        readiness.get("protected_missing_provider_gate") or {}
+    )
     protected_stack_repair_statuses = {
         "sequence_policy_pilot_blocked_pending_protected_stack_repair",
         "stage8_training_blocked_pending_protected_stack_repair",
@@ -1001,6 +1004,39 @@ def build_payload() -> dict[str, Any]:
             "sequence_policy_after_protected_failure_contrast_runtime_authorization_row_count": post_failure_refresh.get(
                 "summary", {}
             ).get("runtime_authorization_row_count"),
+            "protected_missing_provider_labels_status": protected_missing_provider_gate.get(
+                "labels_status"
+            ),
+            "protected_missing_provider_label_count": protected_missing_provider_gate.get(
+                "label_count"
+            ),
+            "protected_missing_provider_stage7_label_count": protected_missing_provider_gate.get(
+                "stage7_label_count"
+            ),
+            "protected_missing_provider_stage7_training_label_count": protected_missing_provider_gate.get(
+                "stage7_training_label_count"
+            ),
+            "protected_missing_provider_merge_status": protected_missing_provider_gate.get(
+                "merge_status"
+            ),
+            "protected_missing_provider_unmatched_label_count": protected_missing_provider_gate.get(
+                "unmatched_label_count"
+            ),
+            "protected_missing_provider_coverage_status": protected_missing_provider_gate.get(
+                "coverage_status"
+            ),
+            "protected_missing_provider_missing_from_frame_count": protected_missing_provider_gate.get(
+                "provider_missing_from_frame_count"
+            ),
+            "protected_missing_provider_mate_label_count": protected_missing_provider_gate.get(
+                "missing_provider_mate_label_count"
+            ),
+            "protected_missing_provider_gap_blocks_selector_training": protected_missing_provider_gate.get(
+                "current_gap_blocks_selector_training"
+            ),
+            "protected_missing_provider_runtime_work_allowed": protected_missing_provider_gate.get(
+                "runtime_work_allowed"
+            ),
             "sequence_policy_underpowered_pilot_status": underpowered_pilot.get(
                 "decision", {}
             ).get("status"),
