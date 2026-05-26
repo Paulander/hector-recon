@@ -406,6 +406,24 @@ def test_current_control_plane_gate_requires_explicit_choice():
         "protected_plan_window_failure_contrast_approval_receipt_blockers"
     ] == ["approval_receipt_missing"]
     assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_post_success_refresh_required"
+        ]
+        is True
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_post_success_refresh_script"
+        ]
+        == "scripts/advance_krk_suite_from_current_gates_v0.py"
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_post_success_refresh_scope"
+        ]
+        == "full_passive_krk_suite_gate_stack"
+    )
+    assert (
         payload["current_state"]["protected_plan_window_failure_contrast_output_validation"]
         == "protected_plan_window_failure_contrast_outputs_validation_pending"
     )
@@ -536,6 +554,13 @@ def test_current_control_plane_gate_requires_explicit_choice():
     assert len(review_option["safety_scope"]["expected_readiness_fingerprint"]) == 64
     assert review_option["safety_scope"]["per_job_timeout_seconds"] == 900
     assert review_option["safety_scope"]["refresh_after_run"] is True
+    assert review_option["safety_scope"]["post_success_refresh_required"] is True
+    assert review_option["safety_scope"]["post_success_refresh_script"] == (
+        "scripts/advance_krk_suite_from_current_gates_v0.py"
+    )
+    assert review_option["safety_scope"]["post_success_refresh_scope"] == (
+        "full_passive_krk_suite_gate_stack"
+    )
     assert review_option["safety_scope"]["processed_job_count"] == 0
     assert review_option["safety_scope"]["executed_job_count"] == 0
     assert review_option["safety_scope"]["output_valid_count"] == 0

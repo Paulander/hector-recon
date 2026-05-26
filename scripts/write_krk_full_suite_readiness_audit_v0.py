@@ -396,6 +396,9 @@ def build_payload() -> dict[str, Any]:
         and post_failure_contrast_refresh_summary.get("all_boundaries_preserved") is True
     )
     failure_contrast_runner_summary = failure_contrast_runner.get("summary", {})
+    failure_contrast_approval_request_summary = (
+        failure_contrast_approval_request.get("summary") or {}
+    )
     failure_contrast_approval_receipt_path = (
         failure_contrast_runner.get("approval_receipt_path")
         or DEFAULT_FAILURE_CONTRAST_APPROVAL_RECEIPT
@@ -718,6 +721,21 @@ def build_payload() -> dict[str, Any]:
             "approval_receipt_created_by_request": (
                 failure_contrast_approval_request.get("approval_receipt_created")
             ),
+            "post_success_refresh_required": (
+                failure_contrast_approval_request_summary.get(
+                    "post_success_refresh_required"
+                )
+            ),
+            "post_success_refresh_script": (
+                failure_contrast_approval_request_summary.get(
+                    "post_success_refresh_script"
+                )
+            ),
+            "post_success_refresh_scope": (
+                failure_contrast_approval_request_summary.get(
+                    "post_success_refresh_scope"
+                )
+            ),
             "expected_manifest_fingerprint": (
                 failure_contrast_runner_summary.get(
                     "execution_readiness_manifest_fingerprint"
@@ -822,6 +840,21 @@ def build_payload() -> dict[str, Any]:
                 "status": failure_contrast_execution_readiness.get("decision", {}).get(
                     "status",
                     failure_contrast_runner.get("decision", {}).get("status"),
+                ),
+                "post_success_refresh_required": (
+                    failure_contrast_approval_request_summary.get(
+                        "post_success_refresh_required"
+                    )
+                ),
+                "post_success_refresh_script": (
+                    failure_contrast_approval_request_summary.get(
+                        "post_success_refresh_script"
+                    )
+                ),
+                "post_success_refresh_scope": (
+                    failure_contrast_approval_request_summary.get(
+                        "post_success_refresh_scope"
+                    )
                 ),
                 "why": (
                     "Sequence-policy inputs contain forbidden training or runtime "
@@ -1008,6 +1041,9 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- approval_request_artifact: `{protected_failure_contrast['approval_request_artifact']}`",
             f"- approval_request_status: `{protected_failure_contrast['approval_request_status']}`",
             f"- approval_receipt_created_by_request: `{protected_failure_contrast['approval_receipt_created_by_request']}`",
+            f"- post_success_refresh_required: `{protected_failure_contrast['post_success_refresh_required']}`",
+            f"- post_success_refresh_script: `{protected_failure_contrast['post_success_refresh_script']}`",
+            f"- post_success_refresh_scope: `{protected_failure_contrast['post_success_refresh_scope']}`",
             f"- expected_manifest_fingerprint: `{protected_failure_contrast['expected_manifest_fingerprint']}`",
             f"- expected_readiness_fingerprint: `{protected_failure_contrast['expected_readiness_fingerprint']}`",
             f"- command_if_explicitly_approved: `{protected_failure_contrast['command_if_explicitly_approved']}`",

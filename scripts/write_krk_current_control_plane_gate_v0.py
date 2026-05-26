@@ -274,6 +274,9 @@ def build_payload(
         "collection_constraints", {}
     )
     failure_contrast_runner_summary = failure_contrast_runner.get("summary", {})
+    failure_contrast_approval_request_summary = (
+        failure_contrast_approval_request.get("summary") or {}
+    )
     post_failure_contrast_sequence_refresh_summary = (
         post_failure_contrast_sequence_refresh.get("summary") or {}
     )
@@ -581,6 +584,21 @@ def build_payload(
                             "approval_receipt_created"
                         )
                     ),
+                    "post_success_refresh_required": (
+                        failure_contrast_approval_request_summary.get(
+                            "post_success_refresh_required"
+                        )
+                    ),
+                    "post_success_refresh_script": (
+                        failure_contrast_approval_request_summary.get(
+                            "post_success_refresh_script"
+                        )
+                    ),
+                    "post_success_refresh_scope": (
+                        failure_contrast_approval_request_summary.get(
+                            "post_success_refresh_scope"
+                        )
+                    ),
                     "expected_manifest_fingerprint": (
                         failure_contrast_runner_summary.get(
                             "execution_readiness_manifest_fingerprint"
@@ -867,6 +885,21 @@ def build_payload(
             ),
             "protected_plan_window_failure_contrast_approval_receipt_blockers": failure_contrast_approval_request.get(
                 "approval_receipt_blockers"
+            ),
+            "protected_plan_window_failure_contrast_post_success_refresh_required": (
+                failure_contrast_approval_request_summary.get(
+                    "post_success_refresh_required"
+                )
+            ),
+            "protected_plan_window_failure_contrast_post_success_refresh_script": (
+                failure_contrast_approval_request_summary.get(
+                    "post_success_refresh_script"
+                )
+            ),
+            "protected_plan_window_failure_contrast_post_success_refresh_scope": (
+                failure_contrast_approval_request_summary.get(
+                    "post_success_refresh_scope"
+                )
             ),
             "protected_plan_window_failure_contrast_output_validation": failure_contrast_output_validation.get(
                 "decision", {}

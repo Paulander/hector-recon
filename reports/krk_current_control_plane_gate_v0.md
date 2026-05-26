@@ -68,6 +68,9 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - protected_plan_window_failure_contrast_approval_request: `protected_plan_window_failure_contrast_approval_request_ready`
 - protected_plan_window_failure_contrast_approval_receipt_created: `False`
 - protected_plan_window_failure_contrast_approval_receipt_blockers: `['approval_receipt_missing']`
+- protected_plan_window_failure_contrast_post_success_refresh_required: `True`
+- protected_plan_window_failure_contrast_post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
+- protected_plan_window_failure_contrast_post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - protected_plan_window_failure_contrast_output_validation: `protected_plan_window_failure_contrast_outputs_validation_pending`
 - protected_plan_window_failure_contrast_output_exists_count: `0`
 - protected_plan_window_failure_contrast_output_valid_count: `0`
@@ -140,6 +143,9 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
   - approval_receipt_blockers: `['approval_receipt_missing']`
   - approval_request_status: `protected_plan_window_failure_contrast_approval_request_ready`
   - approval_receipt_created_by_request: `False`
+  - post_success_refresh_required: `True`
+  - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
+  - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
   - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
   - expected_readiness_fingerprint: `351a366042e7e888018897007e29e096afdb180a9c4f4eb02853940b82228c66`
   - per_job_timeout_seconds: `900`

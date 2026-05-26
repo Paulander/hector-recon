@@ -240,6 +240,13 @@ def test_full_suite_readiness_identifies_current_gate():
         == "protected_plan_window_failure_contrast_approval_request_ready"
     )
     assert protected_failure_contrast["approval_receipt_created_by_request"] is False
+    assert protected_failure_contrast["post_success_refresh_required"] is True
+    assert protected_failure_contrast["post_success_refresh_script"] == (
+        "scripts/advance_krk_suite_from_current_gates_v0.py"
+    )
+    assert protected_failure_contrast["post_success_refresh_scope"] == (
+        "full_passive_krk_suite_gate_stack"
+    )
     assert len(protected_failure_contrast["expected_manifest_fingerprint"]) == 64
     assert len(protected_failure_contrast["expected_readiness_fingerprint"]) == 64
     assert protected_failure_contrast["command_if_explicitly_approved"] == (
@@ -287,6 +294,18 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
         ]
         is True
     )
+    assert (
+        payload["approval_gates"]["protected_plan_window_failure_contrast_collection"][
+            "post_success_refresh_required"
+        ]
+        is True
+    )
+    assert (
+        payload["approval_gates"]["protected_plan_window_failure_contrast_collection"][
+            "post_success_refresh_script"
+        ]
+        == "scripts/advance_krk_suite_from_current_gates_v0.py"
+    )
     assert "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection" in rendered
     assert "protected_plan_window_failure_contrast_runner_dry_run_ready" in rendered
     assert "approval_receipt_blockers: `['approval_receipt_missing']`" in rendered
@@ -296,6 +315,13 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
         in rendered
     )
     assert "approval_receipt_created_by_request: `False`" in rendered
+    assert "post_success_refresh_required: `True`" in rendered
+    assert (
+        "post_success_refresh_script: "
+        "`scripts/advance_krk_suite_from_current_gates_v0.py`"
+        in rendered
+    )
+    assert "post_success_refresh_scope: `full_passive_krk_suite_gate_stack`" in rendered
     assert (
         "passive_design_without_new_labels_status: "
         "`non_causal_sequence_policy_design_without_new_labels_ready`"

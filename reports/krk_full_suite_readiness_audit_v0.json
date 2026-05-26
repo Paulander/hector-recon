@@ -2,6 +2,9 @@
   "approval_gates": {
     "protected_plan_window_failure_contrast_collection": {
       "current_artifact_allows_collection": false,
+      "post_success_refresh_required": true,
+      "post_success_refresh_scope": "full_passive_krk_suite_gate_stack",
+      "post_success_refresh_script": "scripts/advance_krk_suite_from_current_gates_v0.py",
       "ready_for_explicit_approval": true,
       "status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
       "why": "The sequence-policy benchmark is mixed/underpowered on protected plan-window failures; bounded observation-only collection is the current explicit gate."
@@ -80,6 +83,9 @@
     "output_valid_count": 0,
     "output_validation_status": "protected_plan_window_failure_contrast_outputs_validation_pending",
     "plan_status": "protected_plan_window_failure_contrast_plan_ready_pending_explicit_collection_approval",
+    "post_success_refresh_required": true,
+    "post_success_refresh_scope": "full_passive_krk_suite_gate_stack",
+    "post_success_refresh_script": "scripts/advance_krk_suite_from_current_gates_v0.py",
     "ready_for_explicit_approval": true,
     "runner_executed_job_count": 0,
     "runner_processed_job_count": 0,
