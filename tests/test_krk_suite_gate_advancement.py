@@ -214,6 +214,55 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["strategy_owner_contrast_runtime_terminals_added"] is False
     assert payload["summary"]["strategy_owner_contrast_stage7_promotion_allowed"] is False
     assert payload["summary"]["strategy_owner_contrast_stage8_training_allowed"] is False
+    assert payload["summary"]["selector_objective_normalization_passive_ready"] is True
+    assert (
+        payload["summary"]["selector_objective_arbitration_status"]
+        == "additive_support_objective_rejected_design_normalized_selector_objective"
+    )
+    assert (
+        payload["summary"]["selector_objective_normalized_status"]
+        == "normalized_selector_objective_design_ready_for_offline_probe"
+    )
+    assert (
+        payload["summary"]["selector_objective_normalized_probe_status"]
+        == "normalized_objective_probe_underpowered_fields_available"
+    )
+    assert payload["summary"]["selector_objective_normalized_probe_underpowered"] is True
+    assert (
+        payload["summary"]["selector_objective_architecture_status"]
+        == "selector_objective_needs_stratified_label_expansion_before_sandbox"
+    )
+    assert payload["summary"]["selector_objective_architecture_sandbox_ready"] is False
+    assert (
+        payload["summary"]["selector_objective_split_dataset_status"]
+        == "split_selector_objective_channels_with_ownership_labels"
+    )
+    assert payload["summary"]["selector_objective_split_dataset_row_count"] == 136
+    assert (
+        payload["summary"][
+            "selector_objective_split_dataset_selector_training_row_count"
+        ]
+        == 0
+    )
+    assert payload["summary"]["selector_objective_split_dataset_stage7_row_count"] == 0
+    assert (
+        payload["summary"]["selector_objective_split_readiness_status"]
+        == "ownership_labels_recovered_but_underpowered"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_split_readiness_selector_training_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_objective_split_readiness_ownership_underpowered"]
+        is True
+    )
+    assert payload["summary"]["selector_objective_runtime_selector_implemented"] is False
+    assert payload["summary"]["selector_objective_runtime_terminals_added"] is False
+    assert payload["summary"]["selector_objective_stage7_promotion_allowed"] is False
+    assert payload["summary"]["selector_objective_stage8_training_allowed"] is False
     assert payload["summary"]["clean_replacement_review_passive_ready"] is True
     assert (
         payload["summary"]["clean_replacement_review_packet_status"]

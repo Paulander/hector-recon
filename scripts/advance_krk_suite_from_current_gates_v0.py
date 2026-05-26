@@ -584,6 +584,9 @@ def build_payload() -> dict[str, Any]:
         readiness.get("strategy_sequence_architecture_gate") or {}
     )
     strategy_owner_contrast_gate = readiness.get("strategy_owner_contrast_gate") or {}
+    selector_objective_normalization_gate = (
+        readiness.get("selector_objective_normalization_gate") or {}
+    )
     clean_replacement_review_gate = readiness.get("clean_replacement_review_gate") or {}
     active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
@@ -983,6 +986,72 @@ def build_payload() -> dict[str, Any]:
             ),
             "strategy_owner_contrast_stage8_training_allowed": (
                 strategy_owner_contrast_gate.get("stage8_training_allowed")
+            ),
+            "selector_objective_normalization_passive_ready": (
+                selector_objective_normalization_gate.get("passive_objective_ready")
+            ),
+            "selector_objective_arbitration_status": (
+                selector_objective_normalization_gate.get("arbitration_objective_status")
+            ),
+            "selector_objective_normalized_status": (
+                selector_objective_normalization_gate.get("normalized_objective_status")
+            ),
+            "selector_objective_normalized_probe_status": (
+                selector_objective_normalization_gate.get("normalized_probe_status")
+            ),
+            "selector_objective_normalized_probe_underpowered": (
+                selector_objective_normalization_gate.get(
+                    "normalized_probe_benchmark_underpowered"
+                )
+            ),
+            "selector_objective_architecture_status": (
+                selector_objective_normalization_gate.get("selector_architecture_status")
+            ),
+            "selector_objective_architecture_sandbox_ready": (
+                selector_objective_normalization_gate.get(
+                    "selector_architecture_sandbox_ready"
+                )
+            ),
+            "selector_objective_split_dataset_status": (
+                selector_objective_normalization_gate.get("split_dataset_status")
+            ),
+            "selector_objective_split_dataset_row_count": (
+                selector_objective_normalization_gate.get(
+                    "split_dataset_objective_row_count"
+                )
+            ),
+            "selector_objective_split_dataset_selector_training_row_count": (
+                selector_objective_normalization_gate.get(
+                    "split_dataset_selector_training_row_count"
+                )
+            ),
+            "selector_objective_split_dataset_stage7_row_count": (
+                selector_objective_normalization_gate.get("split_dataset_stage7_row_count")
+            ),
+            "selector_objective_split_readiness_status": (
+                selector_objective_normalization_gate.get("split_readiness_status")
+            ),
+            "selector_objective_split_readiness_selector_training_allowed": (
+                selector_objective_normalization_gate.get(
+                    "split_readiness_selector_training_allowed"
+                )
+            ),
+            "selector_objective_split_readiness_ownership_underpowered": (
+                selector_objective_normalization_gate.get(
+                    "split_readiness_ownership_probe_underpowered"
+                )
+            ),
+            "selector_objective_runtime_selector_implemented": (
+                selector_objective_normalization_gate.get("runtime_selector_implemented")
+            ),
+            "selector_objective_runtime_terminals_added": (
+                selector_objective_normalization_gate.get("runtime_terminals_added")
+            ),
+            "selector_objective_stage7_promotion_allowed": (
+                selector_objective_normalization_gate.get("stage7_promotion_allowed")
+            ),
+            "selector_objective_stage8_training_allowed": (
+                selector_objective_normalization_gate.get("stage8_training_allowed")
             ),
             "clean_replacement_review_passive_ready": clean_replacement_review_gate.get(
                 "passive_review_ready"

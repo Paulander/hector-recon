@@ -532,6 +532,30 @@ SOURCES = {
     "strategy_owner_contrast_probe": (
         "reports/krk_strategy_owner_contrast_probe_v0.json"
     ),
+    "arbitration_objective_review_v1": (
+        "reports/krk_arbitration_objective_review_v1.json"
+    ),
+    "normalized_strategy_selector_objective_v1": (
+        "reports/krk_normalized_strategy_selector_objective_v1.json"
+    ),
+    "normalized_strategy_selector_objective_probe_v1": (
+        "reports/krk_normalized_strategy_selector_objective_probe_v1.json"
+    ),
+    "normalized_selector_probe_review_v1": (
+        "reports/krk_normalized_selector_probe_review_v1.json"
+    ),
+    "selector_objective_architecture_review_v1": (
+        "reports/krk_selector_objective_architecture_review_v1.json"
+    ),
+    "selector_objective_label_semantics_v0": (
+        "reports/krk_selector_objective_label_semantics_v0.json"
+    ),
+    "split_selector_objective_dataset_v3": (
+        "reports/krk_split_selector_objective_dataset_v3.json"
+    ),
+    "split_selector_objective_readiness_v3": (
+        "reports/krk_split_selector_objective_readiness_v3.json"
+    ),
     "clean_retrain_retry1_replacement_readiness_review": (
         "reports/krk_clean_retrain_retry1_replacement_readiness_review_v0.json"
     ),
@@ -1258,6 +1282,28 @@ def build_payload() -> dict[str, Any]:
     ]
     strategy_owner_contrast_dataset = payloads["strategy_owner_contrast_dataset"]
     strategy_owner_contrast_probe = payloads["strategy_owner_contrast_probe"]
+    arbitration_objective_review_v1 = payloads["arbitration_objective_review_v1"]
+    normalized_strategy_selector_objective_v1 = payloads[
+        "normalized_strategy_selector_objective_v1"
+    ]
+    normalized_strategy_selector_objective_probe_v1 = payloads[
+        "normalized_strategy_selector_objective_probe_v1"
+    ]
+    normalized_selector_probe_review_v1 = payloads[
+        "normalized_selector_probe_review_v1"
+    ]
+    selector_objective_architecture_review_v1 = payloads[
+        "selector_objective_architecture_review_v1"
+    ]
+    selector_objective_label_semantics_v0 = payloads[
+        "selector_objective_label_semantics_v0"
+    ]
+    split_selector_objective_dataset_v3 = payloads[
+        "split_selector_objective_dataset_v3"
+    ]
+    split_selector_objective_readiness_v3 = payloads[
+        "split_selector_objective_readiness_v3"
+    ]
     clean_replacement_readiness = payloads[
         "clean_retrain_retry1_replacement_readiness_review"
     ]
@@ -1549,6 +1595,85 @@ def build_payload() -> dict[str, Any]:
         and strategy_owner_contrast_probe.get("runtime_terminals_added") is False
         and strategy_owner_contrast_probe.get("stage7_promotion_allowed") is False
         and strategy_owner_contrast_probe.get("stage8_training_allowed") is False
+    )
+    arbitration_objective_decision = arbitration_objective_review_v1.get(
+        "decision"
+    ) or {}
+    arbitration_objective_metrics = arbitration_objective_review_v1.get(
+        "key_metrics"
+    ) or {}
+    normalized_objective_decision = (
+        normalized_strategy_selector_objective_v1.get("decision") or {}
+    )
+    normalized_probe_decision = (
+        normalized_strategy_selector_objective_probe_v1.get("decision") or {}
+    )
+    normalized_probe_review_decision = (
+        normalized_selector_probe_review_v1.get("decision") or {}
+    )
+    normalized_probe_review_summary = (
+        normalized_selector_probe_review_v1.get("probe_summary") or {}
+    )
+    selector_architecture_decision = (
+        selector_objective_architecture_review_v1.get("decision") or {}
+    )
+    split_dataset_decision = split_selector_objective_dataset_v3.get("decision") or {}
+    split_dataset_summary = split_selector_objective_dataset_v3.get("summary") or {}
+    split_readiness_decision = (
+        split_selector_objective_readiness_v3.get("decision") or {}
+    )
+    split_readiness_summary = split_selector_objective_readiness_v3.get("summary") or {}
+    split_readiness_channels = (
+        split_selector_objective_readiness_v3.get("channel_summary") or {}
+    )
+    selector_objective_normalization_passive = (
+        arbitration_objective_decision.get("status")
+        == "additive_support_objective_rejected_design_normalized_selector_objective"
+        and arbitration_objective_decision.get("runtime_test_allowed_next") is False
+        and arbitration_objective_decision.get("stage7_promotion_allowed") is False
+        and arbitration_objective_decision.get("stage8_training_allowed") is False
+        and normalized_objective_decision.get("status")
+        == "normalized_selector_objective_design_ready_for_offline_probe"
+        and normalized_objective_decision.get("runtime_test_allowed_next") is False
+        and normalized_probe_decision.get("status")
+        == "normalized_objective_probe_underpowered_fields_available"
+        and normalized_probe_decision.get("runtime_test_allowed_next") is False
+        and normalized_probe_review_decision.get("status")
+        == "normalized_selector_signal_promising_more_ranked_frames_required"
+        and normalized_probe_review_decision.get("runtime_test_allowed_next") is False
+        and normalized_probe_review_summary.get("benchmark_underpowered") is True
+        and normalized_probe_review_summary.get("stage7_training_leakage") is False
+        and selector_architecture_decision.get("status")
+        == "selector_objective_needs_stratified_label_expansion_before_sandbox"
+        and selector_architecture_decision.get("runtime_arbiter_allowed") is False
+        and selector_architecture_decision.get("selector_sandbox_ready") is False
+        and selector_objective_label_semantics_v0.get("sandbox_ready") is False
+        and split_dataset_decision.get("status")
+        == "split_selector_objective_channels_with_ownership_labels"
+        and split_dataset_decision.get("runtime_work_allowed") is False
+        and split_dataset_decision.get("selector_training_allowed") is False
+        and split_dataset_summary.get("selector_training_row_count") == 0
+        and split_dataset_summary.get("stage7_row_count") == 0
+        and split_readiness_decision.get("status")
+        == "ownership_labels_recovered_but_underpowered"
+        and split_readiness_decision.get("runtime_work_allowed") is False
+        and split_readiness_decision.get("selector_training_allowed") is False
+        and split_readiness_summary.get("ownership_probe_underpowered") is True
+        and split_readiness_summary.get("selector_training_row_count") == 0
+        and split_readiness_summary.get("stage7_row_count") == 0
+        and split_selector_objective_readiness_v3.get("runtime_behavior_changed") is False
+        and split_selector_objective_readiness_v3.get("runtime_defaults_changed") is False
+        and split_selector_objective_readiness_v3.get("runtime_selector_implemented")
+        is False
+        and split_selector_objective_readiness_v3.get(
+            "runtime_candidate_generator_implemented"
+        )
+        is False
+        and split_selector_objective_readiness_v3.get("runtime_terminals_added") is False
+        and split_selector_objective_readiness_v3.get("stage7_promotion_allowed")
+        is False
+        and split_selector_objective_readiness_v3.get("stage8_training_allowed")
+        is False
     )
     replacement_readiness_decision = clean_replacement_readiness.get("decision") or {}
     replacement_packet_decision = clean_stack_replacement_packet.get("decision") or {}
@@ -2357,6 +2482,132 @@ def build_payload() -> dict[str, Any]:
                 "stage7_promotion_allowed"
             ),
             "stage8_training_allowed": strategy_owner_contrast_probe.get(
+                "stage8_training_allowed"
+            ),
+        },
+        "selector_objective_normalization_gate": {
+            "status": split_readiness_decision.get("status"),
+            "passive_objective_ready": selector_objective_normalization_passive,
+            "arbitration_objective_status": arbitration_objective_decision.get("status"),
+            "arbitration_runtime_test_allowed_next": (
+                arbitration_objective_decision.get("runtime_test_allowed_next")
+            ),
+            "arbitration_contrast_positive_provider_families": (
+                arbitration_objective_metrics.get("contrast_positive_provider_families")
+                or []
+            ),
+            "arbitration_contrast_training_positive_label_count": (
+                arbitration_objective_metrics.get("contrast_training_positive_label_count")
+            ),
+            "arbitration_contrast_training_negative_label_count": (
+                arbitration_objective_metrics.get("contrast_training_negative_label_count")
+            ),
+            "normalized_objective_status": normalized_objective_decision.get("status"),
+            "normalized_objective_runtime_test_allowed_next": (
+                normalized_objective_decision.get("runtime_test_allowed_next")
+            ),
+            "normalized_objective_forbidden_uses": (
+                normalized_strategy_selector_objective_v1.get("forbidden_uses") or []
+            ),
+            "normalized_probe_status": normalized_probe_decision.get("status"),
+            "normalized_probe_benchmark_underpowered": (
+                normalized_strategy_selector_objective_probe_v1.get(
+                    "benchmark_underpowered"
+                )
+            ),
+            "normalized_probe_fields_available": (
+                normalized_strategy_selector_objective_probe_v1.get(
+                    "normalized_fields_available"
+                )
+            ),
+            "normalized_probe_review_status": normalized_probe_review_decision.get(
+                "status"
+            ),
+            "normalized_probe_review_stage7_training_leakage": (
+                normalized_probe_review_summary.get("stage7_training_leakage")
+            ),
+            "normalized_probe_review_best_provenance_accuracy": (
+                normalized_probe_review_summary.get("best_provenance_accuracy")
+            ),
+            "selector_architecture_status": selector_architecture_decision.get("status"),
+            "selector_architecture_runtime_arbiter_allowed": (
+                selector_architecture_decision.get("runtime_arbiter_allowed")
+            ),
+            "selector_architecture_sandbox_ready": selector_architecture_decision.get(
+                "selector_sandbox_ready"
+            ),
+            "selector_label_semantics_sandbox_ready": (
+                selector_objective_label_semantics_v0.get("sandbox_ready")
+            ),
+            "selector_label_semantics_target_kind_count": len(
+                selector_objective_label_semantics_v0.get("target_kinds") or []
+            ),
+            "split_dataset_status": split_dataset_decision.get("status"),
+            "split_dataset_objective_row_count": split_dataset_summary.get(
+                "objective_row_count"
+            ),
+            "split_dataset_ownership_selection_row_count": split_dataset_summary.get(
+                "ownership_selection_row_count"
+            ),
+            "split_dataset_selector_training_row_count": split_dataset_summary.get(
+                "selector_training_row_count"
+            ),
+            "split_dataset_stage7_row_count": split_dataset_summary.get(
+                "stage7_row_count"
+            ),
+            "split_readiness_status": split_readiness_decision.get("status"),
+            "split_readiness_runtime_work_allowed": split_readiness_decision.get(
+                "runtime_work_allowed"
+            ),
+            "split_readiness_selector_training_allowed": split_readiness_decision.get(
+                "selector_training_allowed"
+            ),
+            "split_readiness_ownership_available": split_readiness_summary.get(
+                "ownership_selection_available"
+            ),
+            "split_readiness_ownership_row_count": split_readiness_summary.get(
+                "ownership_selection_row_count"
+            ),
+            "split_readiness_ownership_probe_underpowered": split_readiness_summary.get(
+                "ownership_probe_underpowered"
+            ),
+            "split_readiness_ownership_probe_positive_recall": split_readiness_summary.get(
+                "ownership_probe_positive_recall"
+            ),
+            "split_readiness_ownership_probe_negative_suppression": (
+                split_readiness_summary.get("ownership_probe_negative_suppression")
+            ),
+            "split_readiness_selector_training_row_count": split_readiness_summary.get(
+                "selector_training_row_count"
+            ),
+            "split_readiness_stage7_row_count": split_readiness_summary.get(
+                "stage7_row_count"
+            ),
+            "split_readiness_channel_counts": {
+                name: channel.get("row_count")
+                for name, channel in split_readiness_channels.items()
+            },
+            "runtime_behavior_changed": split_selector_objective_readiness_v3.get(
+                "runtime_behavior_changed"
+            ),
+            "runtime_defaults_changed": split_selector_objective_readiness_v3.get(
+                "runtime_defaults_changed"
+            ),
+            "runtime_selector_implemented": split_selector_objective_readiness_v3.get(
+                "runtime_selector_implemented"
+            ),
+            "runtime_candidate_generator_implemented": (
+                split_selector_objective_readiness_v3.get(
+                    "runtime_candidate_generator_implemented"
+                )
+            ),
+            "runtime_terminals_added": split_selector_objective_readiness_v3.get(
+                "runtime_terminals_added"
+            ),
+            "stage7_promotion_allowed": split_selector_objective_readiness_v3.get(
+                "stage7_promotion_allowed"
+            ),
+            "stage8_training_allowed": split_selector_objective_readiness_v3.get(
                 "stage8_training_allowed"
             ),
         },
@@ -5988,6 +6239,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     clean_curriculum = payload["clean_curriculum_run_lineage_gate"]
     strategy_sequence_architecture = payload["strategy_sequence_architecture_gate"]
     strategy_owner_contrast = payload["strategy_owner_contrast_gate"]
+    selector_objective_normalization = payload["selector_objective_normalization_gate"]
     clean_replacement = payload["clean_replacement_review_gate"]
     stage7 = payload["stage7_sampling_gate"]
     sequence = payload["sequence_policy"]
@@ -6112,6 +6364,30 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- runtime_terminals_added: `{strategy_owner_contrast['runtime_terminals_added']}`",
         f"- stage7_promotion_allowed: `{strategy_owner_contrast['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{strategy_owner_contrast['stage8_training_allowed']}`",
+        "",
+        "## Selector Objective Normalization",
+        "",
+        f"- passive_objective_ready: `{selector_objective_normalization['passive_objective_ready']}`",
+        f"- arbitration_objective_status: `{selector_objective_normalization['arbitration_objective_status']}`",
+        f"- normalized_objective_status: `{selector_objective_normalization['normalized_objective_status']}`",
+        f"- normalized_probe_status: `{selector_objective_normalization['normalized_probe_status']}`",
+        f"- normalized_probe_benchmark_underpowered: `{selector_objective_normalization['normalized_probe_benchmark_underpowered']}`",
+        f"- normalized_probe_review_status: `{selector_objective_normalization['normalized_probe_review_status']}`",
+        f"- normalized_probe_review_stage7_training_leakage: `{selector_objective_normalization['normalized_probe_review_stage7_training_leakage']}`",
+        f"- selector_architecture_status: `{selector_objective_normalization['selector_architecture_status']}`",
+        f"- selector_architecture_sandbox_ready: `{selector_objective_normalization['selector_architecture_sandbox_ready']}`",
+        f"- selector_label_semantics_sandbox_ready: `{selector_objective_normalization['selector_label_semantics_sandbox_ready']}`",
+        f"- split_dataset_status: `{selector_objective_normalization['split_dataset_status']}`",
+        f"- split_dataset_objective_row_count: `{selector_objective_normalization['split_dataset_objective_row_count']}`",
+        f"- split_dataset_selector_training_row_count: `{selector_objective_normalization['split_dataset_selector_training_row_count']}`",
+        f"- split_dataset_stage7_row_count: `{selector_objective_normalization['split_dataset_stage7_row_count']}`",
+        f"- split_readiness_status: `{selector_objective_normalization['split_readiness_status']}`",
+        f"- split_readiness_selector_training_allowed: `{selector_objective_normalization['split_readiness_selector_training_allowed']}`",
+        f"- split_readiness_ownership_probe_underpowered: `{selector_objective_normalization['split_readiness_ownership_probe_underpowered']}`",
+        f"- runtime_selector_implemented: `{selector_objective_normalization['runtime_selector_implemented']}`",
+        f"- runtime_terminals_added: `{selector_objective_normalization['runtime_terminals_added']}`",
+        f"- stage7_promotion_allowed: `{selector_objective_normalization['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{selector_objective_normalization['stage8_training_allowed']}`",
         "",
         "## Clean Replacement Review",
         "",

@@ -447,6 +447,30 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_strategy_owner_contrast_probe_v0.json"
     )
     assert (
+        payload["source_artifacts"]["arbitration_objective_review_v1"]
+        == "reports/krk_arbitration_objective_review_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["normalized_strategy_selector_objective_v1"]
+        == "reports/krk_normalized_strategy_selector_objective_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["normalized_selector_probe_review_v1"]
+        == "reports/krk_normalized_selector_probe_review_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_objective_architecture_review_v1"]
+        == "reports/krk_selector_objective_architecture_review_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["split_selector_objective_dataset_v3"]
+        == "reports/krk_split_selector_objective_dataset_v3.json"
+    )
+    assert (
+        payload["source_artifacts"]["split_selector_objective_readiness_v3"]
+        == "reports/krk_split_selector_objective_readiness_v3.json"
+    )
+    assert (
         payload["source_artifacts"][
             "clean_retrain_retry1_replacement_readiness_review"
         ]
@@ -678,6 +702,68 @@ def test_full_suite_readiness_identifies_current_gate():
     assert strategy_owner["runtime_terminals_added"] is False
     assert strategy_owner["stage7_promotion_allowed"] is False
     assert strategy_owner["stage8_training_allowed"] is False
+
+    selector_objective = payload["selector_objective_normalization_gate"]
+    assert selector_objective["passive_objective_ready"] is True
+    assert (
+        selector_objective["arbitration_objective_status"]
+        == "additive_support_objective_rejected_design_normalized_selector_objective"
+    )
+    assert selector_objective["arbitration_runtime_test_allowed_next"] is False
+    assert selector_objective["arbitration_contrast_positive_provider_families"] == [
+        "drive_to_edge",
+        "edge_trap",
+        "fence_established",
+    ]
+    assert (
+        selector_objective["normalized_objective_status"]
+        == "normalized_selector_objective_design_ready_for_offline_probe"
+    )
+    assert selector_objective["normalized_objective_runtime_test_allowed_next"] is False
+    assert (
+        selector_objective["normalized_probe_status"]
+        == "normalized_objective_probe_underpowered_fields_available"
+    )
+    assert selector_objective["normalized_probe_benchmark_underpowered"] is True
+    assert selector_objective["normalized_probe_fields_available"] is True
+    assert (
+        selector_objective["normalized_probe_review_status"]
+        == "normalized_selector_signal_promising_more_ranked_frames_required"
+    )
+    assert selector_objective["normalized_probe_review_stage7_training_leakage"] is False
+    assert (
+        selector_objective["selector_architecture_status"]
+        == "selector_objective_needs_stratified_label_expansion_before_sandbox"
+    )
+    assert selector_objective["selector_architecture_runtime_arbiter_allowed"] is False
+    assert selector_objective["selector_architecture_sandbox_ready"] is False
+    assert selector_objective["selector_label_semantics_sandbox_ready"] is False
+    assert selector_objective["selector_label_semantics_target_kind_count"] == 6
+    assert (
+        selector_objective["split_dataset_status"]
+        == "split_selector_objective_channels_with_ownership_labels"
+    )
+    assert selector_objective["split_dataset_objective_row_count"] == 136
+    assert selector_objective["split_dataset_ownership_selection_row_count"] == 34
+    assert selector_objective["split_dataset_selector_training_row_count"] == 0
+    assert selector_objective["split_dataset_stage7_row_count"] == 0
+    assert selector_objective["split_readiness_status"] == (
+        "ownership_labels_recovered_but_underpowered"
+    )
+    assert selector_objective["split_readiness_runtime_work_allowed"] is False
+    assert selector_objective["split_readiness_selector_training_allowed"] is False
+    assert selector_objective["split_readiness_ownership_available"] is True
+    assert selector_objective["split_readiness_ownership_row_count"] == 34
+    assert selector_objective["split_readiness_ownership_probe_underpowered"] is True
+    assert selector_objective["split_readiness_selector_training_row_count"] == 0
+    assert selector_objective["split_readiness_stage7_row_count"] == 0
+    assert selector_objective["runtime_behavior_changed"] is False
+    assert selector_objective["runtime_defaults_changed"] is False
+    assert selector_objective["runtime_selector_implemented"] is False
+    assert selector_objective["runtime_candidate_generator_implemented"] is False
+    assert selector_objective["runtime_terminals_added"] is False
+    assert selector_objective["stage7_promotion_allowed"] is False
+    assert selector_objective["stage8_training_allowed"] is False
 
     clean_replacement = payload["clean_replacement_review_gate"]
     assert clean_replacement["passive_review_ready"] is True

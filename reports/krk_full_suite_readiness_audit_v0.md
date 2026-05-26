@@ -103,6 +103,30 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Selector Objective Normalization
+
+- passive_objective_ready: `True`
+- arbitration_objective_status: `additive_support_objective_rejected_design_normalized_selector_objective`
+- normalized_objective_status: `normalized_selector_objective_design_ready_for_offline_probe`
+- normalized_probe_status: `normalized_objective_probe_underpowered_fields_available`
+- normalized_probe_benchmark_underpowered: `True`
+- normalized_probe_review_status: `normalized_selector_signal_promising_more_ranked_frames_required`
+- normalized_probe_review_stage7_training_leakage: `False`
+- selector_architecture_status: `selector_objective_needs_stratified_label_expansion_before_sandbox`
+- selector_architecture_sandbox_ready: `False`
+- selector_label_semantics_sandbox_ready: `False`
+- split_dataset_status: `split_selector_objective_channels_with_ownership_labels`
+- split_dataset_objective_row_count: `136`
+- split_dataset_selector_training_row_count: `0`
+- split_dataset_stage7_row_count: `0`
+- split_readiness_status: `ownership_labels_recovered_but_underpowered`
+- split_readiness_selector_training_allowed: `False`
+- split_readiness_ownership_probe_underpowered: `True`
+- runtime_selector_implemented: `False`
+- runtime_terminals_added: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Clean Replacement Review
 
 - passive_review_ready: `True`
@@ -225,7 +249,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `b7b98c28b10c0df379ef8e345273beef6c0c180fdc4a2e132666bd896a7eda11`
+- expected_readiness_fingerprint: `01bd87c79f5d77ff74511236e671a57bd74c22f6d9d2fc02075d90b10af82b5f`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -754,5 +778,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1817`
+- checked_flag_count: `1857`
 - violation_count: `0`
