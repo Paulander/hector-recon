@@ -12,6 +12,12 @@ This is a dry-run preflight only. It does not execute collection, run labels, ch
 - job_readiness_blocker_count: `0`
 - manifest_status: `protected_plan_window_failure_contrast_manifest_ready_for_review`
 - manifest_review_status: `protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval`
+- current_control_plane_gate_status: `krk_control_plane_waiting_on_explicit_gate_choice`
+- current_control_plane_approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'approve_protected_plan_window_failure_contrast_collection']`
+- protected_failure_contrast_collection_option_available: `True`
+- protected_failure_contrast_collection_command_available: `True`
+- protected_failure_contrast_collection_option_id: `approve_protected_plan_window_failure_contrast_collection`
+- protected_failure_contrast_collection_blocked_by_option_id: `None`
 - manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
 - recorded_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
 - review_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
@@ -34,7 +40,7 @@ This is a dry-run preflight only. It does not execute collection, run labels, ch
 - readiness_checked_flag_count: `430`
 - readiness_boundary_violation_count: `0`
 - readiness_source_artifact_count: `44`
-- readiness_fingerprint: `3d8481218b7f46804e054090e7bd83b4a8a39d341a3290a537068a0a7b586987`
+- readiness_fingerprint: `38a151e2dbbbd5170d583947d1204d837dc82954ee19ae8a824c30d9637ef033`
 
 ## Jobs
 

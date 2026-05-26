@@ -15,6 +15,7 @@ MANIFEST = (
     ROOT
     / "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json"
 )
+CURRENT_CONTROL_PLANE_GATE = ROOT / "reports/krk_current_control_plane_gate_v0.json"
 OUTPUT_JSON = (
     ROOT
     / "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_review_v0.json"
@@ -70,6 +71,22 @@ def _load(path: Path) -> dict[str, Any]:
     return data
 
 
+def _find_approval_option(payload: dict[str, Any], option_id: str) -> dict[str, Any]:
+    for option in payload.get("approval_options") or []:
+        if option.get("option_id") == option_id:
+            return option
+    return {}
+
+
+def _find_first_approval_option(
+    payload: dict[str, Any], option_ids: tuple[str, ...]
+) -> dict[str, Any]:
+    for option in payload.get("approval_options") or []:
+        if option.get("option_id") in option_ids:
+            return option
+    return {}
+
+
 def _safe_relative(path_value: Any, *, required_root: Path | None = None) -> bool:
     if not isinstance(path_value, str) or not path_value:
         return False
@@ -116,8 +133,32 @@ def _manifest_fingerprint(manifest: dict[str, Any]) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
-def build_payload(*, manifest: dict[str, Any] | None = None) -> dict[str, Any]:
+def build_payload(
+    *,
+    manifest: dict[str, Any] | None = None,
+    current_control_plane_gate: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     manifest = manifest or _load(MANIFEST)
+    current_control_plane_gate = current_control_plane_gate or _load(
+        CURRENT_CONTROL_PLANE_GATE
+    )
+    collection_option = _find_approval_option(
+        current_control_plane_gate,
+        "approve_protected_plan_window_failure_contrast_collection",
+    )
+    blocking_option = _find_first_approval_option(
+        current_control_plane_gate,
+        (
+            "repair_protected_failure_contrast_approval_request_scope",
+            "review_protected_plan_window_failure_contrast_execution_readiness",
+            "review_protected_plan_window_failure_contrast_manifest",
+            "review_protected_plan_window_failure_contrast_plan",
+        ),
+    )
+    collection_option_available = bool(collection_option)
+    collection_command_available = bool(
+        collection_option.get("command_if_explicitly_approved")
+    )
     jobs = manifest.get("jobs") or []
     violations: list[dict[str, Any]] = []
     manifest_fingerprint = _manifest_fingerprint(manifest)
@@ -174,12 +215,14 @@ def build_payload(*, manifest: dict[str, Any] | None = None) -> dict[str, Any]:
     if not required_stages_present:
         violations.append({"job_id": None, "violation": "required_source_stage_missing"})
     review_passed = not violations
+    control_plane_gate_review_required = review_passed and not collection_command_available
     return {
         "schema_version": SCHEMA_VERSION,
         "causal_status": "non_causal_collection_manifest_review",
         **COMMON_FALSE_FLAGS,
         "source_artifacts": [
-            "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json"
+            "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json",
+            "reports/krk_current_control_plane_gate_v0.json",
         ],
         "review_summary": {
             "job_count": len(jobs),
@@ -198,14 +241,39 @@ def build_payload(*, manifest: dict[str, Any] | None = None) -> dict[str, Any]:
             "label_run_allowed_now": False,
             "runtime_work_allowed": False,
             "review_passed": review_passed,
+            "current_control_plane_gate_status": current_control_plane_gate.get(
+                "decision", {}
+            ).get("status"),
+            "current_control_plane_approval_option_ids": [
+                option.get("option_id")
+                for option in current_control_plane_gate.get("approval_options") or []
+            ],
+            "protected_failure_contrast_collection_option_available": (
+                collection_option_available
+            ),
+            "protected_failure_contrast_collection_command_available": (
+                collection_command_available
+            ),
+            "protected_failure_contrast_collection_option_id": collection_option.get(
+                "option_id"
+            ),
+            "protected_failure_contrast_collection_blocked_by_option_id": (
+                blocking_option.get("option_id")
+            ),
         },
         "decision": {
             "status": (
+                "protected_plan_window_failure_contrast_manifest_review_passed_pending_control_plane_gate_review"
+                if control_plane_gate_review_required
+                else
                 "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
                 if review_passed
                 else "protected_plan_window_failure_contrast_manifest_review_failed"
             ),
             "recommended_next_step": (
+                "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+                if control_plane_gate_review_required
+                else
                 "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
                 if review_passed
                 else "fix_protected_plan_window_failure_contrast_manifest"

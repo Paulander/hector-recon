@@ -16,6 +16,11 @@
   "hidden_python_controller": false,
   "review_summary": {
     "collection_run_allowed_now": false,
+    "current_control_plane_approval_option_ids": [
+      "approve_stage4_first_move_contrast_sandbox",
+      "approve_protected_plan_window_failure_contrast_collection"
+    ],
+    "current_control_plane_gate_status": "krk_control_plane_waiting_on_explicit_gate_choice",
     "family_counts": {
       "drive_to_edge_plan_window": 2,
       "fence_handoff_plan_window": 2,
@@ -26,6 +31,10 @@
     "manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
     "manifest_fingerprint_matches": true,
     "max_collection_jobs": 6,
+    "protected_failure_contrast_collection_blocked_by_option_id": null,
+    "protected_failure_contrast_collection_command_available": true,
+    "protected_failure_contrast_collection_option_available": true,
+    "protected_failure_contrast_collection_option_id": "approve_protected_plan_window_failure_contrast_collection",
     "recorded_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
     "required_stages_present": true,
     "review_passed": true,
@@ -46,7 +55,8 @@
   "runtime_selector_implemented": false,
   "schema_version": "krk_protected_plan_window_failure_contrast_manifest_review.v0",
   "source_artifacts": [
-    "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json"
+    "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json",
+    "reports/krk_current_control_plane_gate_v0.json"
   ],
   "stage7_promotion_allowed": false,
   "stage8_training_allowed": false

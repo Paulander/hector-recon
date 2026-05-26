@@ -20,9 +20,15 @@ Default mode is dry-run only. Executing collection requires explicit user approv
 - job_timeout_seconds: `900`
 - overwrite_existing_outputs: `False`
 - execution_readiness_status: `protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval`
+- execution_readiness_current_control_plane_gate_status: `krk_control_plane_waiting_on_explicit_gate_choice`
+- execution_readiness_current_control_plane_approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'approve_protected_plan_window_failure_contrast_collection']`
+- execution_readiness_protected_failure_contrast_collection_option_available: `True`
+- execution_readiness_protected_failure_contrast_collection_command_available: `True`
+- execution_readiness_protected_failure_contrast_collection_option_id: `approve_protected_plan_window_failure_contrast_collection`
+- execution_readiness_protected_failure_contrast_collection_blocked_by_option_id: `None`
 - execution_readiness_jobs_passing: `6`
 - execution_readiness_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- execution_readiness_fingerprint: `3d8481218b7f46804e054090e7bd83b4a8a39d341a3290a537068a0a7b586987`
+- execution_readiness_fingerprint: `38a151e2dbbbd5170d583947d1204d837dc82954ee19ae8a824c30d9637ef033`
 - execution_readiness_all_jobs_pass: `True`
 - execution_readiness_protected_stack_status: `retry1_protected_stage5_6_stack_adopted_manifest_only`
 - execution_readiness_protected_stack_ready: `True`

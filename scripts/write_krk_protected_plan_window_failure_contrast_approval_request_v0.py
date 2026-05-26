@@ -212,6 +212,30 @@ def build_payload(
             "readiness_checked_flag_count": readiness_checked_flag_count,
             "readiness_boundary_violation_count": readiness_boundary_violation_count,
             "readiness_source_artifact_count": readiness_source_artifact_count,
+            "current_control_plane_gate_status": readiness_summary.get(
+                "current_control_plane_gate_status"
+            ),
+            "current_control_plane_approval_option_ids": readiness_summary.get(
+                "current_control_plane_approval_option_ids"
+            ),
+            "protected_failure_contrast_collection_option_available": (
+                readiness_summary.get(
+                    "protected_failure_contrast_collection_option_available"
+                )
+            ),
+            "protected_failure_contrast_collection_command_available": (
+                readiness_summary.get(
+                    "protected_failure_contrast_collection_command_available"
+                )
+            ),
+            "protected_failure_contrast_collection_option_id": readiness_summary.get(
+                "protected_failure_contrast_collection_option_id"
+            ),
+            "protected_failure_contrast_collection_blocked_by_option_id": (
+                readiness_summary.get(
+                    "protected_failure_contrast_collection_blocked_by_option_id"
+                )
+            ),
         },
         "decision": {
             "status": APPROVAL_STATUS,
@@ -304,6 +328,30 @@ def build_payload(
             "protected_stack_filesystem_snapshots_replaced": protected_stack_safety[
                 "filesystem_snapshots_replaced"
             ],
+            "current_control_plane_gate_status": readiness_summary.get(
+                "current_control_plane_gate_status"
+            ),
+            "current_control_plane_approval_option_ids": readiness_summary.get(
+                "current_control_plane_approval_option_ids"
+            ),
+            "protected_failure_contrast_collection_option_available": (
+                readiness_summary.get(
+                    "protected_failure_contrast_collection_option_available"
+                )
+            ),
+            "protected_failure_contrast_collection_command_available": (
+                readiness_summary.get(
+                    "protected_failure_contrast_collection_command_available"
+                )
+            ),
+            "protected_failure_contrast_collection_option_id": readiness_summary.get(
+                "protected_failure_contrast_collection_option_id"
+            ),
+            "protected_failure_contrast_collection_blocked_by_option_id": (
+                readiness_summary.get(
+                    "protected_failure_contrast_collection_blocked_by_option_id"
+                )
+            ),
             "approval_receipt_required": True,
             "approval_receipt_missing": not bool(runner_summary.get("approval_receipt_present")),
         },

@@ -191,7 +191,7 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
   - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
   - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
   - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-  - expected_readiness_fingerprint: `3d8481218b7f46804e054090e7bd83b4a8a39d341a3290a537068a0a7b586987`
+  - expected_readiness_fingerprint: `38a151e2dbbbd5170d583947d1204d837dc82954ee19ae8a824c30d9637ef033`
   - readiness_checked_flag_count: `430`
   - readiness_boundary_violation_count: `0`
   - readiness_source_artifact_count: `44`

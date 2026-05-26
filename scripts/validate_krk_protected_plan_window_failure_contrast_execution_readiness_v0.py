@@ -160,6 +160,12 @@ def _readiness_fingerprint(payload: dict[str, Any]) -> str:
             "job_readiness_blocker_count",
             "manifest_status",
             "manifest_review_status",
+            "current_control_plane_gate_status",
+            "current_control_plane_approval_option_ids",
+            "protected_failure_contrast_collection_option_available",
+            "protected_failure_contrast_collection_command_available",
+            "protected_failure_contrast_collection_option_id",
+            "protected_failure_contrast_collection_blocked_by_option_id",
             "manifest_fingerprint",
             "recorded_manifest_fingerprint",
             "review_manifest_fingerprint",
@@ -209,6 +215,13 @@ def build_payload(
     manifest_status = manifest.get("decision", {}).get("status")
     review_status = review.get("decision", {}).get("status")
     protected_stack = full_suite_readiness.get("protected_stack") or {}
+    current_gate = full_suite_readiness.get("current_control_plane_gate") or {}
+    protected_collection_option_available = bool(
+        current_gate.get("protected_failure_contrast_collection_option_available")
+    )
+    protected_collection_command_available = bool(
+        current_gate.get("protected_failure_contrast_collection_command_available")
+    )
     readiness_boundaries = full_suite_readiness.get("runtime_and_training_boundaries") or {}
     active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
@@ -225,9 +238,19 @@ def build_payload(
         blockers.append("manifest_not_ready_for_review")
     if (
         review_status
-        != "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
+        not in {
+            "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval",
+            "protected_plan_window_failure_contrast_manifest_review_passed_pending_control_plane_gate_review",
+        }
     ):
         blockers.append("manifest_review_not_passed")
+    if (
+        "protected_failure_contrast_collection_command_available" in current_gate
+        and not protected_collection_command_available
+    ):
+        blockers.append(
+            "protected_plan_window_failure_contrast_control_plane_gate_review_required"
+        )
     if len(jobs) == 0:
         blockers.append("no_jobs_bound")
     if len(jobs) > MAX_COLLECTION_JOBS:
@@ -288,6 +311,10 @@ def build_payload(
     job_blocker_count = sum(len(row["readiness_blockers"]) for row in job_checks)
     if job_blocker_count:
         blockers.append("job_readiness_blockers_present")
+    control_plane_gate_review_required = (
+        "protected_plan_window_failure_contrast_control_plane_gate_review_required"
+        in blockers
+    )
     ready = not blockers
     payload = {
         "schema_version": SCHEMA_VERSION,
@@ -305,6 +332,22 @@ def build_payload(
             "job_readiness_blocker_count": job_blocker_count,
             "manifest_status": manifest_status,
             "manifest_review_status": review_status,
+            "current_control_plane_gate_status": current_gate.get("status"),
+            "current_control_plane_approval_option_ids": (
+                current_gate.get("approval_option_ids") or []
+            ),
+            "protected_failure_contrast_collection_option_available": (
+                protected_collection_option_available
+            ),
+            "protected_failure_contrast_collection_command_available": (
+                protected_collection_command_available
+            ),
+            "protected_failure_contrast_collection_option_id": current_gate.get(
+                "protected_failure_contrast_collection_option_id"
+            ),
+            "protected_failure_contrast_collection_blocked_by_option_id": current_gate.get(
+                "protected_failure_contrast_collection_blocked_by_option_id"
+            ),
             "manifest_fingerprint": manifest_fingerprint,
             "recorded_manifest_fingerprint": recorded_manifest_fingerprint,
             "review_manifest_fingerprint": review_manifest_fingerprint,
@@ -352,11 +395,17 @@ def build_payload(
         "job_checks": job_checks,
         "decision": {
             "status": (
+                "protected_plan_window_failure_contrast_execution_readiness_blocked_pending_control_plane_gate_review"
+                if control_plane_gate_review_required
+                else
                 "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
                 if ready
                 else "protected_plan_window_failure_contrast_execution_readiness_blocked"
             ),
             "recommended_next_step": (
+                "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+                if control_plane_gate_review_required
+                else
                 "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
                 if ready
                 else "fix_protected_plan_window_failure_contrast_execution_readiness"

@@ -482,6 +482,16 @@ def _approval_receipt_blockers(
     ):
         if approval_scope.get(key) != readiness_summary.get(key):
             blockers.append(f"approval_receipt_{key}_mismatch")
+    for key in (
+        "current_control_plane_gate_status",
+        "current_control_plane_approval_option_ids",
+        "protected_failure_contrast_collection_option_available",
+        "protected_failure_contrast_collection_command_available",
+        "protected_failure_contrast_collection_option_id",
+        "protected_failure_contrast_collection_blocked_by_option_id",
+    ):
+        if key in readiness_summary and approval_scope.get(key) != readiness_summary.get(key):
+            blockers.append(f"approval_receipt_{key}_mismatch")
     expected_receipt_path = str(receipt_path.relative_to(ROOT))
     if receipt.get("receipt_path") != expected_receipt_path:
         blockers.append("approval_receipt_path_mismatch")
@@ -535,6 +545,16 @@ def _validate_ready(
         "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
     ):
         blockers.append("execution_readiness_not_ready")
+    readiness_summary = readiness.get("summary") or {}
+    if (
+        "protected_failure_contrast_collection_command_available" in readiness_summary
+        and not readiness_summary.get(
+            "protected_failure_contrast_collection_command_available"
+        )
+    ):
+        blockers.append(
+            "protected_plan_window_failure_contrast_control_plane_gate_review_required"
+        )
     if not readiness.get("summary", {}).get("all_jobs_pass_readiness"):
         blockers.append("not_all_jobs_pass_readiness")
     if manifest.get("decision", {}).get("runtime_changes_allowed"):
@@ -691,6 +711,24 @@ def build_payload(
             "job_timeout_seconds": job_timeout_seconds,
             "overwrite_existing_outputs": overwrite_existing_outputs,
             "execution_readiness_status": readiness.get("decision", {}).get("status"),
+            "execution_readiness_current_control_plane_gate_status": readiness.get(
+                "summary", {}
+            ).get("current_control_plane_gate_status"),
+            "execution_readiness_current_control_plane_approval_option_ids": readiness.get(
+                "summary", {}
+            ).get("current_control_plane_approval_option_ids"),
+            "execution_readiness_protected_failure_contrast_collection_option_available": readiness.get(
+                "summary", {}
+            ).get("protected_failure_contrast_collection_option_available"),
+            "execution_readiness_protected_failure_contrast_collection_command_available": readiness.get(
+                "summary", {}
+            ).get("protected_failure_contrast_collection_command_available"),
+            "execution_readiness_protected_failure_contrast_collection_option_id": readiness.get(
+                "summary", {}
+            ).get("protected_failure_contrast_collection_option_id"),
+            "execution_readiness_protected_failure_contrast_collection_blocked_by_option_id": readiness.get(
+                "summary", {}
+            ).get("protected_failure_contrast_collection_blocked_by_option_id"),
             "execution_readiness_jobs_passing": readiness.get("summary", {}).get(
                 "jobs_passing_readiness"
             ),
@@ -763,6 +801,11 @@ def build_payload(
             "recommended_next_step": (
                 "obtain_matching_approval_receipt_then_run_with_explicit_execute_flag"
                 if not execute and not blockers
+                else "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+                if (
+                    "protected_plan_window_failure_contrast_control_plane_gate_review_required"
+                    in blockers
+                )
                 else "run_passive_sequence_policy_refresh"
                 if execute and not failed_jobs and not blockers
                 else "review_runner_blockers_or_failed_jobs"

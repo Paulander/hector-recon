@@ -31,11 +31,17 @@ This is a passive request packet only. It does not create the approval receipt, 
 - pre_collection_sequence_policy_after_protected_failure_contrast_rows: `0`
 - pre_collection_sequence_policy_after_protected_failure_contrast_stage7_training_row_count: `0`
 - manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- readiness_fingerprint: `3d8481218b7f46804e054090e7bd83b4a8a39d341a3290a537068a0a7b586987`
+- readiness_fingerprint: `38a151e2dbbbd5170d583947d1204d837dc82954ee19ae8a824c30d9637ef033`
 - protected_stack_status: `retry1_protected_stage5_6_stack_adopted_manifest_only`
 - protected_stack_ready: `True`
 - protected_stack_rollback_paths_preserved: `True`
 - protected_stack_filesystem_snapshots_replaced: `False`
+- current_control_plane_gate_status: `krk_control_plane_waiting_on_explicit_gate_choice`
+- current_control_plane_approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'approve_protected_plan_window_failure_contrast_collection']`
+- protected_failure_contrast_collection_option_available: `True`
+- protected_failure_contrast_collection_command_available: `True`
+- protected_failure_contrast_collection_option_id: `approve_protected_plan_window_failure_contrast_collection`
+- protected_failure_contrast_collection_blocked_by_option_id: `None`
 - approval_receipt_required: `True`
 - approval_receipt_missing: `True`
 
@@ -66,6 +72,11 @@ This is a passive request packet only. It does not create the approval receipt, 
 {
   "approval_id": "approve_protected_plan_window_failure_contrast_collection",
   "approval_scope": {
+    "current_control_plane_approval_option_ids": [
+      "approve_stage4_first_move_contrast_sandbox",
+      "approve_protected_plan_window_failure_contrast_collection"
+    ],
+    "current_control_plane_gate_status": "krk_control_plane_waiting_on_explicit_gate_choice",
     "job_count": 6,
     "job_timeout_seconds": 900,
     "manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
@@ -75,6 +86,10 @@ This is a passive request packet only. It does not create the approval receipt, 
     "post_success_refresh_required": true,
     "post_success_refresh_scope": "full_passive_krk_suite_gate_stack",
     "post_success_refresh_script": "scripts/advance_krk_suite_from_current_gates_v0.py",
+    "protected_failure_contrast_collection_blocked_by_option_id": null,
+    "protected_failure_contrast_collection_command_available": true,
+    "protected_failure_contrast_collection_option_available": true,
+    "protected_failure_contrast_collection_option_id": "approve_protected_plan_window_failure_contrast_collection",
     "protected_stack_active_paths_exist": true,
     "protected_stack_active_paths_safe": true,
     "protected_stack_filesystem_snapshots_replaced": false,
@@ -87,7 +102,7 @@ This is a passive request packet only. It does not create the approval receipt, 
     "protected_stack_status": "retry1_protected_stage5_6_stack_adopted_manifest_only",
     "readiness_boundary_violation_count": 0,
     "readiness_checked_flag_count": 430,
-    "readiness_fingerprint": "3d8481218b7f46804e054090e7bd83b4a8a39d341a3290a537068a0a7b586987",
+    "readiness_fingerprint": "38a151e2dbbbd5170d583947d1204d837dc82954ee19ae8a824c30d9637ef033",
     "readiness_source_artifact_count": 44,
     "readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
     "refresh_after_run": true
