@@ -129,7 +129,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `dfc28ec8f589ee3e2a851a329db26e6553d132d7417a8610f3cf1d830cdb8629`
+- expected_readiness_fingerprint: `8eef08eb648508cea49b5dea397eb60a6ec152e086836ac5a04b42a0e259ae36`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -266,6 +266,32 @@
 - repair_monitor_review_status: `protected_repair_monitor_observation_source_review_ready`
 - repair_monitor_review_implementation_authorized: `False`
 - runtime_work_allowed: `False`
+- selector_training_allowed: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
+## Strategy Arbitration Missing-Feature Gate
+
+- dataset_record_count: `33`
+- dataset_proposal_count: `87`
+- dataset_records_by_source_stage: `{'stage4': 6, 'stage5': 8, 'stage6': 10, 'stage7': 9}`
+- dataset_records_with_terminal_context: `33`
+- probe_status: `missing_feature_first`
+- probe_next_step: `Propose non-causal terminal/affordance candidates and a separability audit.`
+- probe_raw_global_provider_hit_rate: `0.9285714285714286`
+- probe_visible_heuristic_hit_rate: `0.07142857142857142`
+- probe_provider_local_rank1_coverage_rate: `1.0`
+- probe_stage7_record_count: `9`
+- probe_missing_terms_obvious: `True`
+- probe_stage7_failures_cluster_by_phase_boundary: `True`
+- decision_status: `missing_feature_first`
+- decision_next_class: `non_causal_terminal_affordance_candidate_audit`
+- decision_stop_after_next_class: `True`
+- missing_feature_candidate_count: `6`
+- missing_feature_challenge_family_count: `6`
+- missing_feature_recommended_next_step: `stop_for_architecture_review_before_any_terminal_or_affordance_runtime_sandbox`
+- runtime_work_allowed: `False`
+- runtime_arbiter_allowed: `False`
 - selector_training_allowed: `False`
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
@@ -551,5 +577,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1476`
+- checked_flag_count: `1496`
 - violation_count: `0`

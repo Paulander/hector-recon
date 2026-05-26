@@ -2049,6 +2049,45 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["candidate_generation_trace_stage8_training_allowed"]
         is False
     )
+    assert (
+        payload["summary"]["strategy_arbitration_decision_status"]
+        == "missing_feature_first"
+    )
+    assert (
+        payload["summary"]["strategy_arbitration_decision_next_class"]
+        == "non_causal_terminal_affordance_candidate_audit"
+    )
+    assert payload["summary"]["strategy_arbitration_dataset_record_count"] == 33
+    assert payload["summary"]["strategy_arbitration_dataset_proposal_count"] == 87
+    assert payload["summary"]["strategy_arbitration_probe_stage7_record_count"] == 9
+    assert (
+        payload["summary"][
+            "strategy_arbitration_probe_raw_global_provider_hit_rate"
+        ]
+        == 0.9285714285714286
+    )
+    assert (
+        payload["summary"]["strategy_arbitration_probe_visible_heuristic_hit_rate"]
+        == 0.07142857142857142
+    )
+    assert (
+        payload["summary"]["strategy_arbitration_missing_feature_candidate_count"]
+        == 6
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbitration_missing_feature_recommended_next_step"
+        ]
+        == "stop_for_architecture_review_before_any_terminal_or_affordance_runtime_sandbox"
+    )
+    assert payload["summary"]["strategy_arbitration_runtime_work_allowed"] is False
+    assert payload["summary"]["strategy_arbitration_runtime_arbiter_allowed"] is False
+    assert (
+        payload["summary"]["strategy_arbitration_selector_training_allowed"]
+        is False
+    )
+    assert payload["summary"]["strategy_arbitration_stage7_promotion_allowed"] is False
+    assert payload["summary"]["strategy_arbitration_stage8_training_allowed"] is False
 
 
 def test_gate_advancement_writer_includes_all_passive_steps():

@@ -35,6 +35,18 @@ SOURCES = {
     "control_plane_strategy_baseline": (
         "reports/krk_control_plane_strategy_arbitration_baseline_v1.json"
     ),
+    "strategy_arbitration_dataset": (
+        "reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.json"
+    ),
+    "strategy_arbitration_probe": (
+        "reports/strategy_arbitration/krk_strategy_arbitration_probe_v0.json"
+    ),
+    "strategy_arbitration_decision_gate": (
+        "reports/strategy_arbitration/krk_strategy_arbitration_decision_gate.json"
+    ),
+    "strategy_missing_feature_candidates": (
+        "reports/strategy_arbitration/krk_strategy_missing_feature_candidates.json"
+    ),
     "control_plane_stage7_boundary_refresh": (
         "reports/krk_control_plane_stage7_boundary_refresh_v0.json"
     ),
@@ -709,6 +721,12 @@ def build_payload() -> dict[str, Any]:
     ]
     two_stage_candidate_selection_benchmark = payloads[
         "two_stage_candidate_selection_benchmark"
+    ]
+    strategy_arbitration_dataset = payloads["strategy_arbitration_dataset"]
+    strategy_arbitration_probe = payloads["strategy_arbitration_probe"]
+    strategy_arbitration_decision_gate = payloads["strategy_arbitration_decision_gate"]
+    strategy_missing_feature_candidates = payloads[
+        "strategy_missing_feature_candidates"
     ]
     candidate_proposal_coverage = payloads["candidate_proposal_coverage"]
     candidate_generation_strategy_review = payloads[
@@ -2431,6 +2449,101 @@ def build_payload() -> dict[str, Any]:
             "runtime_work_allowed": False,
             "runtime_candidate_generation_allowed": False,
             "selector_allowed": False,
+            "selector_training_allowed": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": False,
+        },
+        "strategy_arbitration_gate": {
+            "dataset_record_count": strategy_arbitration_dataset.get(
+                "summary", {}
+            ).get("record_count"),
+            "dataset_proposal_count": strategy_arbitration_dataset.get(
+                "summary", {}
+            ).get("proposal_count"),
+            "dataset_records_by_source_stage": strategy_arbitration_dataset.get(
+                "summary", {}
+            ).get("records_by_source_stage"),
+            "dataset_records_with_terminal_context": strategy_arbitration_dataset.get(
+                "summary", {}
+            ).get("records_with_terminal_context"),
+            "dataset_result_label_counts": strategy_arbitration_dataset.get(
+                "summary", {}
+            ).get("result_label_counts"),
+            "probe_status": strategy_arbitration_probe.get("decision", {}).get(
+                "status"
+            ),
+            "probe_next_step": strategy_arbitration_probe.get("decision", {}).get(
+                "next_step"
+            ),
+            "probe_forbidden_runtime_work": strategy_arbitration_probe.get(
+                "decision", {}
+            ).get("forbidden_runtime_work"),
+            "probe_raw_global_provider_hit_rate": strategy_arbitration_probe.get(
+                "metrics", {}
+            )
+            .get("raw_global_provider_score", {})
+            .get("hit_rate"),
+            "probe_normalized_provider_hit_rate": strategy_arbitration_probe.get(
+                "metrics", {}
+            )
+            .get("normalized_provider_score", {})
+            .get("hit_rate"),
+            "probe_visible_heuristic_hit_rate": strategy_arbitration_probe.get(
+                "metrics", {}
+            )
+            .get("visible_heuristic_arbiter", {})
+            .get("hit_rate"),
+            "probe_provider_local_rank1_coverage_rate": strategy_arbitration_probe.get(
+                "metrics", {}
+            )
+            .get("provider_local_rank1_coverage", {})
+            .get("coverage_rate"),
+            "probe_stage7_record_count": strategy_arbitration_probe.get(
+                "metrics", {}
+            )
+            .get("stage7_cluster_summary", {})
+            .get("stage7_record_count"),
+            "probe_missing_terms_obvious": strategy_arbitration_probe.get(
+                "answers", {}
+            ).get("missing_terms_obvious"),
+            "probe_stage7_failures_cluster_by_phase_boundary": (
+                strategy_arbitration_probe.get("answers", {}).get(
+                    "stage7_failures_cluster_by_phase_boundary"
+                )
+            ),
+            "decision_status": strategy_arbitration_decision_gate.get(
+                "selected_status"
+            ),
+            "decision_next_class": strategy_arbitration_decision_gate.get(
+                "recommendation", {}
+            ).get("next_class"),
+            "decision_next_step": strategy_arbitration_decision_gate.get(
+                "recommendation", {}
+            ).get("next_step"),
+            "decision_stop_after_next_class": strategy_arbitration_decision_gate.get(
+                "recommendation", {}
+            ).get("stop_after_next_class"),
+            "decision_forbidden_next_steps": strategy_arbitration_decision_gate.get(
+                "forbidden_next_steps"
+            ),
+            "missing_feature_candidate_count": strategy_missing_feature_candidates.get(
+                "candidate_count"
+            ),
+            "missing_feature_challenge_family_count": (
+                strategy_missing_feature_candidates.get("challenge_family_count")
+            ),
+            "missing_feature_source_decision_status": (
+                strategy_missing_feature_candidates.get("source_decision_status")
+            ),
+            "missing_feature_recommended_next_step": (
+                strategy_missing_feature_candidates.get("recommended_next_step")
+            ),
+            "missing_feature_blocked_next_steps": (
+                strategy_missing_feature_candidates.get("blocked_next_steps")
+            ),
+            "runtime_work_allowed": False,
+            "runtime_arbiter_allowed": False,
+            "runtime_dtm_or_tablebase_lookup": False,
             "selector_training_allowed": False,
             "stage7_promotion_allowed": False,
             "stage8_training_allowed": False,
@@ -4489,6 +4602,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     protected_failure_contrast = payload["protected_failure_contrast_gate"]
     missing_provider = payload["protected_missing_provider_gate"]
     strategy_source = payload["strategy_sequence_candidate_source_gate"]
+    strategy_arbitration = payload["strategy_arbitration_gate"]
     repair_monitor_trace = payload["repair_monitor_trace_feature_gate"]
     stage5_6_refresh = payload["stage5_6_candidate_generation_refresh_gate"]
     cross_stage_scope = payload["cross_stage_candidate_generation_scope_gate"]
@@ -4777,6 +4891,32 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- selector_training_allowed: `{strategy_source['selector_training_allowed']}`",
             f"- stage7_promotion_allowed: `{strategy_source['stage7_promotion_allowed']}`",
             f"- stage8_training_allowed: `{strategy_source['stage8_training_allowed']}`",
+            "",
+            "## Strategy Arbitration Missing-Feature Gate",
+            "",
+            f"- dataset_record_count: `{strategy_arbitration['dataset_record_count']}`",
+            f"- dataset_proposal_count: `{strategy_arbitration['dataset_proposal_count']}`",
+            f"- dataset_records_by_source_stage: `{strategy_arbitration['dataset_records_by_source_stage']}`",
+            f"- dataset_records_with_terminal_context: `{strategy_arbitration['dataset_records_with_terminal_context']}`",
+            f"- probe_status: `{strategy_arbitration['probe_status']}`",
+            f"- probe_next_step: `{strategy_arbitration['probe_next_step']}`",
+            f"- probe_raw_global_provider_hit_rate: `{strategy_arbitration['probe_raw_global_provider_hit_rate']}`",
+            f"- probe_visible_heuristic_hit_rate: `{strategy_arbitration['probe_visible_heuristic_hit_rate']}`",
+            f"- probe_provider_local_rank1_coverage_rate: `{strategy_arbitration['probe_provider_local_rank1_coverage_rate']}`",
+            f"- probe_stage7_record_count: `{strategy_arbitration['probe_stage7_record_count']}`",
+            f"- probe_missing_terms_obvious: `{strategy_arbitration['probe_missing_terms_obvious']}`",
+            f"- probe_stage7_failures_cluster_by_phase_boundary: `{strategy_arbitration['probe_stage7_failures_cluster_by_phase_boundary']}`",
+            f"- decision_status: `{strategy_arbitration['decision_status']}`",
+            f"- decision_next_class: `{strategy_arbitration['decision_next_class']}`",
+            f"- decision_stop_after_next_class: `{strategy_arbitration['decision_stop_after_next_class']}`",
+            f"- missing_feature_candidate_count: `{strategy_arbitration['missing_feature_candidate_count']}`",
+            f"- missing_feature_challenge_family_count: `{strategy_arbitration['missing_feature_challenge_family_count']}`",
+            f"- missing_feature_recommended_next_step: `{strategy_arbitration['missing_feature_recommended_next_step']}`",
+            f"- runtime_work_allowed: `{strategy_arbitration['runtime_work_allowed']}`",
+            f"- runtime_arbiter_allowed: `{strategy_arbitration['runtime_arbiter_allowed']}`",
+            f"- selector_training_allowed: `{strategy_arbitration['selector_training_allowed']}`",
+            f"- stage7_promotion_allowed: `{strategy_arbitration['stage7_promotion_allowed']}`",
+            f"- stage8_training_allowed: `{strategy_arbitration['stage8_training_allowed']}`",
             "",
             "## Repair-Monitor Trace-Feature Evidence",
             "",

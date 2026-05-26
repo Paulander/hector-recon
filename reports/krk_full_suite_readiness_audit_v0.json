@@ -32,8 +32,8 @@
         "readiness_audit": "reports/krk_full_suite_readiness_audit_v0.json",
         "readiness_audit_status": "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection",
         "readiness_boundary_violation_count": 0,
-        "readiness_checked_flag_count": 1476,
-        "readiness_source_artifact_count": 166,
+        "readiness_checked_flag_count": 1496,
+        "readiness_source_artifact_count": 170,
         "runtime_change_class": "default_off_candidate_move_frame_sandbox_only",
         "runtime_dtm_or_tablebase_lookup": false,
         "sandbox_scope_id": "default_off_stage4_candidate_move_first_move_contrast_sandbox_only",
@@ -280,7 +280,7 @@
     "execution_jobs_passing": 6,
     "execution_readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
     "expected_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
-    "expected_readiness_fingerprint": "dfc28ec8f589ee3e2a851a329db26e6553d132d7417a8610f3cf1d830cdb8629",
+    "expected_readiness_fingerprint": "8eef08eb648508cea49b5dea397eb60a6ec152e086836ac5a04b42a0e259ae36",
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "integrated_new_failure_count": 0,
@@ -515,7 +515,7 @@
     "trace_features_trace_frame_count": 6
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 1476,
+    "checked_flag_count": 1496,
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "runtime_behavior_changed": false,
@@ -843,6 +843,10 @@
     "stage7_sampling_output_validation": "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json",
     "stage7_sampling_runner": "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json",
     "stage_conditioned_candidate_generation_benchmark_v3": "reports/strategy_arbitration/krk_stage_conditioned_candidate_generation_benchmark_v3.json",
+    "strategy_arbitration_dataset": "reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.json",
+    "strategy_arbitration_decision_gate": "reports/strategy_arbitration/krk_strategy_arbitration_decision_gate.json",
+    "strategy_arbitration_probe": "reports/strategy_arbitration/krk_strategy_arbitration_probe_v0.json",
+    "strategy_missing_feature_candidates": "reports/strategy_arbitration/krk_strategy_missing_feature_candidates.json",
     "strategy_sequence_candidate_frame_quality_v1": "reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_quality_v1.json",
     "strategy_sequence_candidate_frame_schema_v1": "reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_v1.json",
     "strategy_sequence_candidate_frames_v1": "reports/strategy_arbitration/krk_strategy_sequence_candidate_frames_v1.json",
@@ -1052,6 +1056,72 @@
       "ready_for_training": false,
       "status": "blocked"
     }
+  },
+  "strategy_arbitration_gate": {
+    "dataset_proposal_count": 87,
+    "dataset_record_count": 33,
+    "dataset_records_by_source_stage": {
+      "stage4": 6,
+      "stage5": 8,
+      "stage6": 10,
+      "stage7": 9
+    },
+    "dataset_records_with_terminal_context": 33,
+    "dataset_result_label_counts": {
+      "None": 5,
+      "mate": 12,
+      "max_plies": 16
+    },
+    "decision_forbidden_next_steps": [
+      "train_stage8",
+      "promote_stage7",
+      "implement_runtime_arbiter",
+      "add_stage7_runtime_repair",
+      "add_support_adapter",
+      "add_score_bonus_or_provider_penalty",
+      "use_runtime_dtm_or_tablebase",
+      "mutate_topology_during_gameplay"
+    ],
+    "decision_next_class": "non_causal_terminal_affordance_candidate_audit",
+    "decision_next_step": "Propose non-causal terminal/affordance candidates and a separability audit; do not implement them causally.",
+    "decision_status": "missing_feature_first",
+    "decision_stop_after_next_class": true,
+    "missing_feature_blocked_next_steps": [
+      "implement_runtime_arbiter",
+      "add_causal_terminal",
+      "add_stage7_repair",
+      "train_stage8",
+      "promote_stage7",
+      "use_runtime_dtm_or_tablebase",
+      "mutate_topology_during_gameplay"
+    ],
+    "missing_feature_candidate_count": 6,
+    "missing_feature_challenge_family_count": 6,
+    "missing_feature_recommended_next_step": "stop_for_architecture_review_before_any_terminal_or_affordance_runtime_sandbox",
+    "missing_feature_source_decision_status": "missing_feature_first",
+    "probe_forbidden_runtime_work": [
+      "train_stage8",
+      "promote_stage7",
+      "implement_runtime_arbiter",
+      "add_stage7_repair",
+      "use_runtime_dtm_or_tablebase",
+      "mutate_topology_during_gameplay"
+    ],
+    "probe_missing_terms_obvious": true,
+    "probe_next_step": "Propose non-causal terminal/affordance candidates and a separability audit.",
+    "probe_normalized_provider_hit_rate": 0.9285714285714286,
+    "probe_provider_local_rank1_coverage_rate": 1.0,
+    "probe_raw_global_provider_hit_rate": 0.9285714285714286,
+    "probe_stage7_failures_cluster_by_phase_boundary": true,
+    "probe_stage7_record_count": 9,
+    "probe_status": "missing_feature_first",
+    "probe_visible_heuristic_hit_rate": 0.07142857142857142,
+    "runtime_arbiter_allowed": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false
   },
   "strategy_sequence_candidate_source_gate": {
     "broader_strategy_source_status": "broader_strategy_observation_source_schema_ready_but_stage7_only",

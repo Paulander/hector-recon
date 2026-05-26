@@ -79,6 +79,22 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/strategy_arbitration/krk_sequence_policy_input_probe_v0.json"
     )
     assert (
+        payload["source_artifacts"]["strategy_arbitration_dataset"]
+        == "reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_arbitration_probe"]
+        == "reports/strategy_arbitration/krk_strategy_arbitration_probe_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_arbitration_decision_gate"]
+        == "reports/strategy_arbitration/krk_strategy_arbitration_decision_gate.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_missing_feature_candidates"]
+        == "reports/strategy_arbitration/krk_strategy_missing_feature_candidates.json"
+    )
+    assert (
         payload["source_artifacts"]["stage7_sampling_manifest"]
         == "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json"
     )
@@ -923,6 +939,66 @@ def test_full_suite_readiness_identifies_current_gate():
     assert strategy_source["selector_training_allowed"] is False
     assert strategy_source["stage7_promotion_allowed"] is False
     assert strategy_source["stage8_training_allowed"] is False
+
+    strategy_arbitration = payload["strategy_arbitration_gate"]
+    assert strategy_arbitration["dataset_record_count"] == 33
+    assert strategy_arbitration["dataset_proposal_count"] == 87
+    assert strategy_arbitration["dataset_records_by_source_stage"] == {
+        "stage4": 6,
+        "stage5": 8,
+        "stage6": 10,
+        "stage7": 9,
+    }
+    assert strategy_arbitration["dataset_records_with_terminal_context"] == 33
+    assert strategy_arbitration["probe_status"] == "missing_feature_first"
+    assert strategy_arbitration["probe_stage7_record_count"] == 9
+    assert strategy_arbitration["probe_raw_global_provider_hit_rate"] == (
+        0.9285714285714286
+    )
+    assert strategy_arbitration["probe_normalized_provider_hit_rate"] == (
+        0.9285714285714286
+    )
+    assert strategy_arbitration["probe_visible_heuristic_hit_rate"] == (
+        0.07142857142857142
+    )
+    assert strategy_arbitration["probe_provider_local_rank1_coverage_rate"] == 1.0
+    assert strategy_arbitration["probe_missing_terms_obvious"] is True
+    assert (
+        strategy_arbitration["probe_stage7_failures_cluster_by_phase_boundary"]
+        is True
+    )
+    assert strategy_arbitration["decision_status"] == "missing_feature_first"
+    assert strategy_arbitration["decision_next_class"] == (
+        "non_causal_terminal_affordance_candidate_audit"
+    )
+    assert strategy_arbitration["decision_stop_after_next_class"] is True
+    assert (
+        "implement_runtime_arbiter"
+        in strategy_arbitration["decision_forbidden_next_steps"]
+    )
+    assert "train_stage8" in strategy_arbitration["decision_forbidden_next_steps"]
+    assert "promote_stage7" in strategy_arbitration["decision_forbidden_next_steps"]
+    assert "use_runtime_dtm_or_tablebase" in (
+        strategy_arbitration["decision_forbidden_next_steps"]
+    )
+    assert strategy_arbitration["missing_feature_candidate_count"] == 6
+    assert strategy_arbitration["missing_feature_challenge_family_count"] == 6
+    assert (
+        strategy_arbitration["missing_feature_source_decision_status"]
+        == "missing_feature_first"
+    )
+    assert strategy_arbitration["missing_feature_recommended_next_step"] == (
+        "stop_for_architecture_review_before_any_terminal_or_affordance_runtime_sandbox"
+    )
+    assert "add_causal_terminal" in (
+        strategy_arbitration["missing_feature_blocked_next_steps"]
+    )
+    assert strategy_arbitration["runtime_work_allowed"] is False
+    assert strategy_arbitration["runtime_arbiter_allowed"] is False
+    assert strategy_arbitration["runtime_dtm_or_tablebase_lookup"] is False
+    assert strategy_arbitration["selector_training_allowed"] is False
+    assert strategy_arbitration["stage7_promotion_allowed"] is False
+    assert strategy_arbitration["stage8_training_allowed"] is False
 
     repair_monitor_trace = payload["repair_monitor_trace_feature_gate"]
     assert (

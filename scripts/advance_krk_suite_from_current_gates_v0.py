@@ -608,6 +608,7 @@ def build_payload() -> dict[str, Any]:
     candidate_generation_trace_context_gate = (
         readiness.get("candidate_generation_trace_context_gate") or {}
     )
+    strategy_arbitration_gate = readiness.get("strategy_arbitration_gate") or {}
     protected_stack_repair_statuses = {
         "sequence_policy_pilot_blocked_pending_protected_stack_repair",
         "stage8_training_blocked_pending_protected_stack_repair",
@@ -2205,6 +2206,48 @@ def build_payload() -> dict[str, Any]:
                 "stage7_promotion_allowed"
             ),
             "candidate_generation_trace_stage8_training_allowed": candidate_generation_trace_context_gate.get(
+                "stage8_training_allowed"
+            ),
+            "strategy_arbitration_decision_status": strategy_arbitration_gate.get(
+                "decision_status"
+            ),
+            "strategy_arbitration_decision_next_class": strategy_arbitration_gate.get(
+                "decision_next_class"
+            ),
+            "strategy_arbitration_dataset_record_count": strategy_arbitration_gate.get(
+                "dataset_record_count"
+            ),
+            "strategy_arbitration_dataset_proposal_count": strategy_arbitration_gate.get(
+                "dataset_proposal_count"
+            ),
+            "strategy_arbitration_probe_stage7_record_count": strategy_arbitration_gate.get(
+                "probe_stage7_record_count"
+            ),
+            "strategy_arbitration_probe_raw_global_provider_hit_rate": strategy_arbitration_gate.get(
+                "probe_raw_global_provider_hit_rate"
+            ),
+            "strategy_arbitration_probe_visible_heuristic_hit_rate": strategy_arbitration_gate.get(
+                "probe_visible_heuristic_hit_rate"
+            ),
+            "strategy_arbitration_missing_feature_candidate_count": strategy_arbitration_gate.get(
+                "missing_feature_candidate_count"
+            ),
+            "strategy_arbitration_missing_feature_recommended_next_step": strategy_arbitration_gate.get(
+                "missing_feature_recommended_next_step"
+            ),
+            "strategy_arbitration_runtime_work_allowed": strategy_arbitration_gate.get(
+                "runtime_work_allowed"
+            ),
+            "strategy_arbitration_runtime_arbiter_allowed": strategy_arbitration_gate.get(
+                "runtime_arbiter_allowed"
+            ),
+            "strategy_arbitration_selector_training_allowed": strategy_arbitration_gate.get(
+                "selector_training_allowed"
+            ),
+            "strategy_arbitration_stage7_promotion_allowed": strategy_arbitration_gate.get(
+                "stage7_promotion_allowed"
+            ),
+            "strategy_arbitration_stage8_training_allowed": strategy_arbitration_gate.get(
                 "stage8_training_allowed"
             ),
             "sequence_policy_underpowered_pilot_status": underpowered_pilot.get(
