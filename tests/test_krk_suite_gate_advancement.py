@@ -474,6 +474,105 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["abstention_runtime_dtm_or_tablebase_lookup"] is False
     assert payload["summary"]["abstention_stage7_promotion_allowed"] is False
     assert payload["summary"]["abstention_stage8_training_allowed"] is False
+    assert payload["summary"]["two_stage_abstention_no_go_passive_ready"] is True
+    assert payload["summary"]["two_stage_abstention_objective_probe_status"] == (
+        "two_stage_abstention_signal_present_runtime_review_required"
+    )
+    assert payload["summary"]["two_stage_abstention_objective_probe_row_count"] == 51
+    assert (
+        payload["summary"][
+            "two_stage_abstention_objective_probe_threshold_passing_count"
+        ]
+        == 12
+    )
+    assert payload["summary"]["two_stage_abstention_runtime_review_status"] == (
+        "two_stage_abstention_review_ready_implementation_blocked"
+    )
+    assert (
+        payload["summary"][
+            "two_stage_abstention_runtime_review_implementation_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "two_stage_abstention_runtime_review_runtime_test_allowed_next"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["two_stage_abstention_default_off_status"]
+        == "default_off_equivalent"
+    )
+    assert (
+        payload["summary"]["two_stage_abstention_default_off_same_core_metrics"]
+        is True
+    )
+    assert payload["summary"]["two_stage_abstention_enabled_smoke_status"] == (
+        "enabled_tiny_smoke_no_behavior_delta"
+    )
+    assert (
+        payload["summary"][
+            "two_stage_abstention_enabled_smoke_total_penalized_count"
+        ]
+        == 24
+    )
+    assert (
+        payload["summary"][
+            "two_stage_abstention_enabled_smoke_total_selected_penalized_count"
+        ]
+        == 0
+    )
+    assert payload["summary"]["two_stage_abstention_stage7_challenge_status"] == (
+        "stage7_challenge_no_target_improvement"
+    )
+    assert (
+        payload["summary"]["two_stage_abstention_stage7_challenge_target_improved"]
+        is False
+    )
+    assert (
+        payload["summary"]["two_stage_abstention_status"]
+        == "no_go_for_scaling_or_promotion"
+    )
+    assert payload["summary"]["two_stage_abstention_go_no_go_allowed_status"] == (
+        "keep_default_off_runtime_test_code_and_artifacts"
+    )
+    assert payload["summary"]["two_stage_abstention_rollback_tag"] == (
+        "pre-two-stage-abstention-runtime"
+    )
+    assert (
+        payload["summary"]["two_stage_abstention_runtime_defaults_changed"]
+        is False
+    )
+    assert (
+        payload["summary"]["two_stage_abstention_runtime_dtm_or_tablebase_lookup"]
+        is False
+    )
+    assert (
+        payload["summary"]["two_stage_abstention_gameplay_topology_mutation"]
+        is False
+    )
+    assert (
+        payload["summary"]["two_stage_abstention_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["two_stage_abstention_stage8_training_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["two_stage_abstention_runtime_repair_not_promoted"]
+        is True
+    )
+    assert (
+        payload["summary"]["two_stage_abstention_stage7_remains_quarantined"]
+        is True
+    )
+    assert (
+        payload["summary"]["two_stage_abstention_stage8_remains_blocked"]
+        is True
+    )
+    assert payload["summary"]["two_stage_abstention_no_hidden_controller"] is True
     assert payload["summary"]["targeted_ownership_recovery_passive_ready"] is True
     assert (
         payload["summary"]["targeted_ownership_non_stage0_manifest_status"]

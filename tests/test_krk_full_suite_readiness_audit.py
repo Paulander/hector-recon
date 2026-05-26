@@ -539,6 +539,36 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_abstention_feature_gap_review_v0.json"
     )
     assert (
+        payload["source_artifacts"]["two_stage_abstention_objective_probe_v0"]
+        == "reports/krk_two_stage_abstention_objective_probe_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "two_stage_abstention_runtime_review_packet_v0"
+        ]
+        == "reports/krk_two_stage_abstention_runtime_review_packet_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "two_stage_abstention_default_off_equivalence_v0"
+        ]
+        == "reports/krk_two_stage_abstention_default_off_equivalence_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["two_stage_abstention_enabled_smoke_v0"]
+        == "reports/krk_two_stage_abstention_enabled_smoke_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "two_stage_abstention_stage7_challenge_smoke_v0"
+        ]
+        == "reports/krk_two_stage_abstention_stage7_challenge_smoke_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["two_stage_abstention_runtime_go_no_go_v0"]
+        == "reports/krk_two_stage_abstention_runtime_go_no_go_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["targeted_non_stage0_ownership_labels_v0"]
         == "reports/krk_targeted_non_stage0_ownership_labels_v0.json"
     )
@@ -1179,6 +1209,55 @@ def test_full_suite_readiness_identifies_current_gate():
     assert abstention["runtime_dtm_or_tablebase_lookup"] is False
     assert abstention["stage7_promotion_allowed"] is False
     assert abstention["stage8_training_allowed"] is False
+
+    two_stage_abstention = payload["two_stage_abstention_no_go_gate"]
+    assert two_stage_abstention["passive_no_go_ready"] is True
+    assert two_stage_abstention["objective_probe_status"] == (
+        "two_stage_abstention_signal_present_runtime_review_required"
+    )
+    assert two_stage_abstention["objective_probe_row_count"] == 51
+    assert (
+        two_stage_abstention["objective_probe_threshold_passing_objective_count"]
+        == 12
+    )
+    assert two_stage_abstention["runtime_review_status"] == (
+        "two_stage_abstention_review_ready_implementation_blocked"
+    )
+    assert two_stage_abstention["runtime_review_implementation_allowed"] is False
+    assert two_stage_abstention["runtime_review_runtime_test_allowed_next"] is False
+    assert two_stage_abstention["runtime_review_evidence_row_count"] == 51
+    assert two_stage_abstention["default_off_status"] == "default_off_equivalent"
+    assert two_stage_abstention["default_off_same_core_metrics"] is True
+    assert two_stage_abstention["default_off_stop_condition_fired"] is False
+    assert (
+        two_stage_abstention["enabled_smoke_status"]
+        == "enabled_tiny_smoke_no_behavior_delta"
+    )
+    assert two_stage_abstention["enabled_smoke_total_penalized_count"] == 24
+    assert two_stage_abstention["enabled_smoke_total_selected_penalized_count"] == 0
+    assert two_stage_abstention["enabled_smoke_conversion_regressions"] == []
+    assert two_stage_abstention["stage7_challenge_status"] == (
+        "stage7_challenge_no_target_improvement"
+    )
+    assert two_stage_abstention["stage7_challenge_conversion_delta_mates"] == 0
+    assert two_stage_abstention["stage7_challenge_target_improved"] is False
+    assert two_stage_abstention["stage7_challenge_no_regression_detected"] is True
+    assert two_stage_abstention["status"] == "no_go_for_scaling_or_promotion"
+    assert two_stage_abstention["go_no_go_allowed_status"] == (
+        "keep_default_off_runtime_test_code_and_artifacts"
+    )
+    assert two_stage_abstention["rollback_tag"] == (
+        "pre-two-stage-abstention-runtime"
+    )
+    assert two_stage_abstention["runtime_defaults_changed"] is False
+    assert two_stage_abstention["runtime_dtm_or_tablebase_lookup"] is False
+    assert two_stage_abstention["gameplay_topology_mutation"] is False
+    assert two_stage_abstention["stage7_promotion_allowed"] is False
+    assert two_stage_abstention["stage8_training_allowed"] is False
+    assert two_stage_abstention["runtime_repair_not_promoted"] is True
+    assert two_stage_abstention["stage7_remains_quarantined"] is True
+    assert two_stage_abstention["stage8_remains_blocked"] is True
+    assert two_stage_abstention["no_hidden_controller"] is True
 
     targeted_ownership = payload["targeted_ownership_recovery_gate"]
     assert targeted_ownership["passive_recovery_ready"] is True

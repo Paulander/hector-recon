@@ -597,6 +597,9 @@ def build_payload() -> dict[str, Any]:
     abstention_selector_safety_gate = (
         readiness.get("abstention_selector_safety_gate") or {}
     )
+    two_stage_abstention_no_go_gate = (
+        readiness.get("two_stage_abstention_no_go_gate") or {}
+    )
     targeted_ownership_recovery_gate = (
         readiness.get("targeted_ownership_recovery_gate") or {}
     )
@@ -1311,6 +1314,98 @@ def build_payload() -> dict[str, Any]:
             ),
             "abstention_stage8_training_allowed": (
                 abstention_selector_safety_gate.get("stage8_training_allowed")
+            ),
+            "two_stage_abstention_no_go_passive_ready": (
+                two_stage_abstention_no_go_gate.get("passive_no_go_ready")
+            ),
+            "two_stage_abstention_objective_probe_status": (
+                two_stage_abstention_no_go_gate.get("objective_probe_status")
+            ),
+            "two_stage_abstention_objective_probe_row_count": (
+                two_stage_abstention_no_go_gate.get("objective_probe_row_count")
+            ),
+            "two_stage_abstention_objective_probe_threshold_passing_count": (
+                two_stage_abstention_no_go_gate.get(
+                    "objective_probe_threshold_passing_objective_count"
+                )
+            ),
+            "two_stage_abstention_runtime_review_status": (
+                two_stage_abstention_no_go_gate.get("runtime_review_status")
+            ),
+            "two_stage_abstention_runtime_review_implementation_allowed": (
+                two_stage_abstention_no_go_gate.get(
+                    "runtime_review_implementation_allowed"
+                )
+            ),
+            "two_stage_abstention_runtime_review_runtime_test_allowed_next": (
+                two_stage_abstention_no_go_gate.get(
+                    "runtime_review_runtime_test_allowed_next"
+                )
+            ),
+            "two_stage_abstention_default_off_status": (
+                two_stage_abstention_no_go_gate.get("default_off_status")
+            ),
+            "two_stage_abstention_default_off_same_core_metrics": (
+                two_stage_abstention_no_go_gate.get("default_off_same_core_metrics")
+            ),
+            "two_stage_abstention_enabled_smoke_status": (
+                two_stage_abstention_no_go_gate.get("enabled_smoke_status")
+            ),
+            "two_stage_abstention_enabled_smoke_total_penalized_count": (
+                two_stage_abstention_no_go_gate.get(
+                    "enabled_smoke_total_penalized_count"
+                )
+            ),
+            "two_stage_abstention_enabled_smoke_total_selected_penalized_count": (
+                two_stage_abstention_no_go_gate.get(
+                    "enabled_smoke_total_selected_penalized_count"
+                )
+            ),
+            "two_stage_abstention_stage7_challenge_status": (
+                two_stage_abstention_no_go_gate.get("stage7_challenge_status")
+            ),
+            "two_stage_abstention_stage7_challenge_target_improved": (
+                two_stage_abstention_no_go_gate.get(
+                    "stage7_challenge_target_improved"
+                )
+            ),
+            "two_stage_abstention_status": (
+                two_stage_abstention_no_go_gate.get("status")
+            ),
+            "two_stage_abstention_go_no_go_allowed_status": (
+                two_stage_abstention_no_go_gate.get("go_no_go_allowed_status")
+            ),
+            "two_stage_abstention_rollback_tag": (
+                two_stage_abstention_no_go_gate.get("rollback_tag")
+            ),
+            "two_stage_abstention_runtime_defaults_changed": (
+                two_stage_abstention_no_go_gate.get("runtime_defaults_changed")
+            ),
+            "two_stage_abstention_runtime_dtm_or_tablebase_lookup": (
+                two_stage_abstention_no_go_gate.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "two_stage_abstention_gameplay_topology_mutation": (
+                two_stage_abstention_no_go_gate.get("gameplay_topology_mutation")
+            ),
+            "two_stage_abstention_stage7_promotion_allowed": (
+                two_stage_abstention_no_go_gate.get("stage7_promotion_allowed")
+            ),
+            "two_stage_abstention_stage8_training_allowed": (
+                two_stage_abstention_no_go_gate.get("stage8_training_allowed")
+            ),
+            "two_stage_abstention_runtime_repair_not_promoted": (
+                two_stage_abstention_no_go_gate.get("runtime_repair_not_promoted")
+            ),
+            "two_stage_abstention_stage7_remains_quarantined": (
+                two_stage_abstention_no_go_gate.get("stage7_remains_quarantined")
+            ),
+            "two_stage_abstention_stage8_remains_blocked": (
+                two_stage_abstention_no_go_gate.get("stage8_remains_blocked")
+            ),
+            "two_stage_abstention_no_hidden_controller": (
+                two_stage_abstention_no_go_gate.get("no_hidden_controller")
             ),
             "targeted_ownership_recovery_passive_ready": (
                 targeted_ownership_recovery_gate.get("passive_recovery_ready")

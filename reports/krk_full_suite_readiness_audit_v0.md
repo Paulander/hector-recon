@@ -229,6 +229,36 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Two-Stage Abstention No-Go
+
+- passive_no_go_ready: `True`
+- objective_probe_status: `two_stage_abstention_signal_present_runtime_review_required`
+- objective_probe_row_count: `51`
+- objective_probe_threshold_passing_objective_count: `12`
+- runtime_review_status: `two_stage_abstention_review_ready_implementation_blocked`
+- runtime_review_implementation_allowed: `False`
+- runtime_review_runtime_test_allowed_next: `False`
+- default_off_status: `default_off_equivalent`
+- default_off_same_core_metrics: `True`
+- enabled_smoke_status: `enabled_tiny_smoke_no_behavior_delta`
+- enabled_smoke_total_penalized_count: `24`
+- enabled_smoke_total_selected_penalized_count: `0`
+- stage7_challenge_status: `stage7_challenge_no_target_improvement`
+- stage7_challenge_conversion_delta_mates: `0`
+- stage7_challenge_target_improved: `False`
+- status: `no_go_for_scaling_or_promotion`
+- go_no_go_allowed_status: `keep_default_off_runtime_test_code_and_artifacts`
+- rollback_tag: `pre-two-stage-abstention-runtime`
+- runtime_defaults_changed: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- gameplay_topology_mutation: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+- runtime_repair_not_promoted: `True`
+- stage7_remains_quarantined: `True`
+- stage8_remains_blocked: `True`
+- no_hidden_controller: `True`
+
 ## Targeted Ownership Recovery
 
 - passive_recovery_ready: `True`
@@ -573,7 +603,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `9c85fc5248ef0384e615aa6a4127deffc21779a6deedfc51a586a9fffed00661`
+- expected_readiness_fingerprint: `247ec7bfc8e80432e31e82f94aa25e37aa6769ce11d0ebe0bf81f9bb0d25e6fa`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1102,5 +1132,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2293`
+- checked_flag_count: `2319`
 - violation_count: `0`
