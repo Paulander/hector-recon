@@ -681,6 +681,15 @@ def build_payload(
                     "stage7_training_row_count": failure_contrast_runner_summary.get(
                         "stage7_training_row_count"
                     ),
+                    "runtime_behavior_changed": False,
+                    "runtime_defaults_changed": False,
+                    "runtime_selector_implemented": False,
+                    "runtime_score_changes": False,
+                    "runtime_dtm_or_tablebase_lookup": False,
+                    "gameplay_topology_mutation": False,
+                    "selector_training_allowed": False,
+                    "stage7_promotion_allowed": False,
+                    "stage8_training_allowed": False,
                 }
                 if failure_contrast_ready_for_collection
                 else None

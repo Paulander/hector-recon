@@ -585,6 +585,15 @@ def test_current_control_plane_gate_requires_explicit_choice():
     assert review_option["safety_scope"]["output_valid_count"] == 0
     assert review_option["safety_scope"]["runtime_authorization_row_count"] == 0
     assert review_option["safety_scope"]["stage7_training_row_count"] == 0
+    assert review_option["safety_scope"]["runtime_behavior_changed"] is False
+    assert review_option["safety_scope"]["runtime_defaults_changed"] is False
+    assert review_option["safety_scope"]["runtime_selector_implemented"] is False
+    assert review_option["safety_scope"]["runtime_score_changes"] is False
+    assert review_option["safety_scope"]["runtime_dtm_or_tablebase_lookup"] is False
+    assert review_option["safety_scope"]["gameplay_topology_mutation"] is False
+    assert review_option["safety_scope"]["selector_training_allowed"] is False
+    assert review_option["safety_scope"]["stage7_promotion_allowed"] is False
+    assert review_option["safety_scope"]["stage8_training_allowed"] is False
     assert "runtime default changes" in review_option["what_it_does_not_allow"]
     assert "runtime DTM or tablebase lookup" in review_option["what_it_does_not_allow"]
     assert "gameplay-time topology mutation" in review_option["what_it_does_not_allow"]

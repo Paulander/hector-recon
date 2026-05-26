@@ -172,6 +172,15 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
   - output_valid_count: `0`
   - runtime_authorization_row_count: `0`
   - stage7_training_row_count: `0`
+  - runtime_behavior_changed: `False`
+  - runtime_defaults_changed: `False`
+  - runtime_selector_implemented: `False`
+  - runtime_score_changes: `False`
+  - runtime_dtm_or_tablebase_lookup: `False`
+  - gameplay_topology_mutation: `False`
+  - selector_training_allowed: `False`
+  - stage7_promotion_allowed: `False`
+  - stage8_training_allowed: `False`
 - does_not_allow:
   - runtime selector
   - runtime default changes
