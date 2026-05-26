@@ -172,6 +172,21 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     assert payload["current_state"]["protected_plan_window_failure_contrast_runner_processed_job_count"] == 0
     assert payload["current_state"]["protected_plan_window_failure_contrast_runner_executed_job_count"] == 0
     assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_approval_request_status"
+        ]
+        == "protected_plan_window_failure_contrast_approval_request_ready"
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_approval_receipt_created"
+        ]
+        is False
+    )
+    assert payload["current_state"][
+        "protected_plan_window_failure_contrast_approval_receipt_blockers"
+    ] == ["approval_receipt_missing"]
+    assert (
         payload["current_state"]["protected_plan_window_failure_contrast_output_validation_status"]
         == "protected_plan_window_failure_contrast_outputs_validation_pending"
     )
@@ -235,6 +250,15 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
         in rendered
     )
     assert "approval_receipt_created_by_request: `False`" in rendered
+    assert (
+        "protected_plan_window_failure_contrast_approval_request_status: "
+        "`protected_plan_window_failure_contrast_approval_request_ready`"
+        in rendered
+    )
+    assert (
+        "protected_plan_window_failure_contrast_approval_receipt_created: `False`"
+        in rendered
+    )
     assert (
         "approval_receipt_path: `reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_collection_approval_v0.json`"

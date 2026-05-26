@@ -371,6 +371,15 @@ def build_payload() -> dict[str, Any]:
             "protected_plan_window_failure_contrast_runner_executed_job_count": failure_contrast_runner.get(
                 "summary", {}
             ).get("executed_job_count"),
+            "protected_plan_window_failure_contrast_approval_request_status": failure_contrast_approval_request.get(
+                "decision", {}
+            ).get("status"),
+            "protected_plan_window_failure_contrast_approval_receipt_created": failure_contrast_approval_request.get(
+                "approval_receipt_created"
+            ),
+            "protected_plan_window_failure_contrast_approval_receipt_blockers": failure_contrast_approval_request.get(
+                "approval_receipt_blockers"
+            ),
             "protected_plan_window_failure_contrast_output_validation_status": failure_contrast_output_validation.get(
                 "decision", {}
             ).get("status"),
@@ -683,6 +692,9 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- protected_plan_window_failure_contrast_runner_status: `{state['protected_plan_window_failure_contrast_runner_status']}`",
         f"- protected_plan_window_failure_contrast_runner_processed_job_count: `{state['protected_plan_window_failure_contrast_runner_processed_job_count']}`",
         f"- protected_plan_window_failure_contrast_runner_executed_job_count: `{state['protected_plan_window_failure_contrast_runner_executed_job_count']}`",
+        f"- protected_plan_window_failure_contrast_approval_request_status: `{state['protected_plan_window_failure_contrast_approval_request_status']}`",
+        f"- protected_plan_window_failure_contrast_approval_receipt_created: `{state['protected_plan_window_failure_contrast_approval_receipt_created']}`",
+        f"- protected_plan_window_failure_contrast_approval_receipt_blockers: `{state['protected_plan_window_failure_contrast_approval_receipt_blockers']}`",
         f"- protected_plan_window_failure_contrast_output_validation_status: `{state['protected_plan_window_failure_contrast_output_validation_status']}`",
         f"- protected_plan_window_failure_contrast_output_exists_count: `{state['protected_plan_window_failure_contrast_output_exists_count']}`",
         f"- protected_plan_window_failure_contrast_output_valid_count: `{state['protected_plan_window_failure_contrast_output_valid_count']}`",

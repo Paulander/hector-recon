@@ -329,6 +329,19 @@ def test_current_control_plane_gate_requires_explicit_choice():
     assert payload["current_state"]["protected_plan_window_failure_contrast_runner_processed_job_count"] == 0
     assert payload["current_state"]["protected_plan_window_failure_contrast_runner_executed_job_count"] == 0
     assert (
+        payload["current_state"]["protected_plan_window_failure_contrast_approval_request"]
+        == "protected_plan_window_failure_contrast_approval_request_ready"
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_approval_receipt_created"
+        ]
+        is False
+    )
+    assert payload["current_state"][
+        "protected_plan_window_failure_contrast_approval_receipt_blockers"
+    ] == ["approval_receipt_missing"]
+    assert (
         payload["current_state"]["protected_plan_window_failure_contrast_output_validation"]
         == "protected_plan_window_failure_contrast_outputs_validation_pending"
     )

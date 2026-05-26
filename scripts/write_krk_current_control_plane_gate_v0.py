@@ -721,6 +721,15 @@ def build_payload(
             "protected_plan_window_failure_contrast_runner_executed_job_count": failure_contrast_runner.get(
                 "summary", {}
             ).get("executed_job_count"),
+            "protected_plan_window_failure_contrast_approval_request": failure_contrast_approval_request.get(
+                "decision", {}
+            ).get("status", "not_written"),
+            "protected_plan_window_failure_contrast_approval_receipt_created": failure_contrast_approval_request.get(
+                "approval_receipt_created"
+            ),
+            "protected_plan_window_failure_contrast_approval_receipt_blockers": failure_contrast_approval_request.get(
+                "approval_receipt_blockers"
+            ),
             "protected_plan_window_failure_contrast_output_validation": failure_contrast_output_validation.get(
                 "decision", {}
             ).get("status", "not_written"),
