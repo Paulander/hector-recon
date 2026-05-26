@@ -414,6 +414,56 @@ def test_gate_advancement_reports_current_stage7_blocker():
         is False
     )
     assert payload["summary"]["balanced_hard_negative_stage8_training_allowed"] is False
+    assert payload["summary"]["stronger_selector_feature_passive_ready"] is True
+    assert payload["summary"]["stronger_selector_feature_ablation_status"] == (
+        "hard_negative_feature_ablation_promising_underpowered"
+    )
+    assert payload["summary"]["stronger_selector_feature_ablation_underpowered"] is True
+    assert payload["summary"]["stronger_selector_feature_ablation_row_count"] == 40
+    assert (
+        payload["summary"]["stronger_selector_feature_ablation_stage7_row_count"]
+        == 0
+    )
+    assert payload["summary"]["stronger_selector_feature_review_status"] == (
+        "stronger_features_review_ready_runtime_still_blocked"
+    )
+    assert (
+        payload["summary"]["stronger_selector_feature_improved_over_v2_ablation"]
+        is True
+    )
+    assert payload["summary"][
+        "stronger_selector_feature_previous_best_negative_suppression"
+    ] == 0.2222222222222222
+    assert (
+        payload["summary"]["stronger_selector_feature_best_negative_suppression"]
+        == 0.7777777777777778
+    )
+    assert payload["summary"]["stronger_selector_feature_best_positive_recall"] == (
+        0.9032258064516129
+    )
+    assert payload["summary"]["stronger_selector_feature_review_stage7_row_count"] == 0
+    assert (
+        payload["summary"]["stronger_selector_feature_runtime_selector_implemented"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "stronger_selector_feature_runtime_candidate_generator_implemented"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["stronger_selector_feature_runtime_dtm_or_tablebase_lookup"]
+        is False
+    )
+    assert (
+        payload["summary"]["stronger_selector_feature_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["stronger_selector_feature_stage8_training_allowed"]
+        is False
+    )
     assert payload["summary"]["state_local_paired_ownership_passive_ready"] is True
     assert (
         payload["summary"]["state_local_paired_hard_negative_target_status"]

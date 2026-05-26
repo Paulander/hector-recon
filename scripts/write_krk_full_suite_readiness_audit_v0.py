@@ -610,6 +610,12 @@ SOURCES = {
     "balanced_hard_negative_evidence_review_v0": (
         "reports/krk_balanced_hard_negative_evidence_review_v0.json"
     ),
+    "hard_negative_selector_feature_ablation_v2": (
+        "reports/krk_hard_negative_selector_feature_ablation_v2.json"
+    ),
+    "stronger_selector_feature_review_v0": (
+        "reports/krk_stronger_selector_feature_review_v0.json"
+    ),
     "hard_negative_selector_target_dataset_v2": (
         "reports/krk_hard_negative_selector_target_dataset_v2.json"
     ),
@@ -1479,6 +1485,12 @@ def build_payload() -> dict[str, Any]:
     balanced_hard_negative_evidence_review_v0 = payloads[
         "balanced_hard_negative_evidence_review_v0"
     ]
+    hard_negative_selector_feature_ablation_v2 = payloads[
+        "hard_negative_selector_feature_ablation_v2"
+    ]
+    stronger_selector_feature_review_v0 = payloads[
+        "stronger_selector_feature_review_v0"
+    ]
     hard_negative_selector_target_dataset_v2 = payloads[
         "hard_negative_selector_target_dataset_v2"
     ]
@@ -2233,6 +2245,96 @@ def build_payload() -> dict[str, Any]:
     )
     hard_negative_semantics_summary = (
         hard_negative_selector_target_training_semantics_review_v0.get("summary") or {}
+    )
+    feature_ablation_decision = (
+        hard_negative_selector_feature_ablation_v2.get("decision") or {}
+    )
+    feature_ablation_summary = (
+        hard_negative_selector_feature_ablation_v2.get("summary") or {}
+    )
+    feature_ablation_best_result = (
+        hard_negative_selector_feature_ablation_v2.get("best_result") or {}
+    )
+    stronger_feature_decision = stronger_selector_feature_review_v0.get("decision") or {}
+    stronger_feature_summary = stronger_selector_feature_review_v0.get("summary") or {}
+    stronger_feature_best_result = (
+        stronger_selector_feature_review_v0.get("best_result") or {}
+    )
+    stronger_selector_feature_passive = (
+        hard_negative_selector_feature_ablation_v2.get("causal_status")
+        == "non_causal_feature_ablation"
+        and feature_ablation_decision.get("status")
+        == "hard_negative_feature_ablation_promising_underpowered"
+        and feature_ablation_decision.get("runtime_work_allowed") is False
+        and feature_ablation_decision.get("selector_training_allowed") is False
+        and feature_ablation_decision.get("stage7_promotion_allowed") is False
+        and feature_ablation_decision.get("stage8_training_allowed") is False
+        and feature_ablation_summary.get("underpowered") is True
+        and feature_ablation_summary.get("row_count") == 40
+        and feature_ablation_summary.get("stage7_row_count") == 0
+        and hard_negative_selector_feature_ablation_v2.get("runtime_behavior_changed")
+        is False
+        and hard_negative_selector_feature_ablation_v2.get("runtime_defaults_changed")
+        is False
+        and hard_negative_selector_feature_ablation_v2.get(
+            "runtime_selector_implemented"
+        )
+        is False
+        and hard_negative_selector_feature_ablation_v2.get(
+            "runtime_candidate_generator_implemented"
+        )
+        is False
+        and hard_negative_selector_feature_ablation_v2.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and hard_negative_selector_feature_ablation_v2.get("runtime_terminals_added")
+        is False
+        and hard_negative_selector_feature_ablation_v2.get(
+            "gameplay_topology_mutation"
+        )
+        is False
+        and hard_negative_selector_feature_ablation_v2.get(
+            "stage7_promotion_allowed"
+        )
+        is False
+        and hard_negative_selector_feature_ablation_v2.get("stage8_training_allowed")
+        is False
+        and stronger_selector_feature_review_v0.get("causal_status")
+        == "non_causal_feature_review"
+        and stronger_feature_decision.get("status")
+        == "stronger_features_review_ready_runtime_still_blocked"
+        and stronger_feature_decision.get("runtime_work_allowed") is False
+        and stronger_feature_decision.get("selector_training_allowed") is False
+        and stronger_feature_decision.get("stage7_promotion_allowed") is False
+        and stronger_feature_decision.get("stage8_training_allowed") is False
+        and stronger_feature_summary.get("improved_over_v2_ablation") is True
+        and stronger_feature_summary.get("row_count") == 40
+        and stronger_feature_summary.get("stage7_row_count") == 0
+        and stronger_feature_best_result.get("negative_suppression")
+        == stronger_feature_summary.get("best_negative_suppression")
+        and stronger_selector_feature_review_v0.get("runtime_behavior_changed")
+        is False
+        and stronger_selector_feature_review_v0.get("runtime_defaults_changed")
+        is False
+        and stronger_selector_feature_review_v0.get("runtime_selector_implemented")
+        is False
+        and stronger_selector_feature_review_v0.get(
+            "runtime_candidate_generator_implemented"
+        )
+        is False
+        and stronger_selector_feature_review_v0.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and stronger_selector_feature_review_v0.get("runtime_terminals_added")
+        is False
+        and stronger_selector_feature_review_v0.get("gameplay_topology_mutation")
+        is False
+        and stronger_selector_feature_review_v0.get("stage7_promotion_allowed")
+        is False
+        and stronger_selector_feature_review_v0.get("stage8_training_allowed")
+        is False
     )
     ownership_context_decision = ownership_context_feature_review_v3.get(
         "decision"
@@ -3878,6 +3980,104 @@ def build_payload() -> dict[str, Any]:
                 "stage7_promotion_allowed"
             ),
             "stage8_training_allowed": balanced_hard_negative_evidence_review_v0.get(
+                "stage8_training_allowed"
+            ),
+        },
+        "stronger_selector_feature_gate": {
+            "status": stronger_feature_decision.get("status"),
+            "passive_feature_review_ready": stronger_selector_feature_passive,
+            "feature_ablation_status": feature_ablation_decision.get("status"),
+            "feature_ablation_underpowered": feature_ablation_summary.get(
+                "underpowered"
+            ),
+            "feature_ablation_row_count": feature_ablation_summary.get("row_count"),
+            "feature_ablation_state_count": feature_ablation_summary.get(
+                "state_count"
+            ),
+            "feature_ablation_hard_negative_count": feature_ablation_summary.get(
+                "hard_negative_count"
+            ),
+            "feature_ablation_positive_context_count": (
+                feature_ablation_summary.get("positive_context_count")
+            ),
+            "feature_ablation_stage7_row_count": (
+                feature_ablation_summary.get("stage7_row_count")
+            ),
+            "feature_ablation_best_objective": feature_ablation_best_result.get(
+                "objective"
+            ),
+            "feature_ablation_best_negative_suppression": (
+                feature_ablation_best_result.get("negative_suppression")
+            ),
+            "feature_review_status": stronger_feature_decision.get("status"),
+            "feature_review_recommended_next_step": (
+                stronger_feature_decision.get("recommended_next_step")
+            ),
+            "feature_review_improved_over_v2_ablation": stronger_feature_summary.get(
+                "improved_over_v2_ablation"
+            ),
+            "feature_review_row_count": stronger_feature_summary.get("row_count"),
+            "feature_review_state_count": stronger_feature_summary.get("state_count"),
+            "feature_review_hard_negative_count": stronger_feature_summary.get(
+                "hard_negative_count"
+            ),
+            "feature_review_positive_context_count": stronger_feature_summary.get(
+                "positive_context_count"
+            ),
+            "feature_review_stage7_row_count": stronger_feature_summary.get(
+                "stage7_row_count"
+            ),
+            "feature_review_previous_best_negative_suppression": (
+                stronger_feature_summary.get("previous_best_negative_suppression")
+            ),
+            "feature_review_best_negative_suppression": (
+                stronger_feature_summary.get("best_negative_suppression")
+            ),
+            "feature_review_previous_best_positive_recall": (
+                stronger_feature_summary.get("previous_best_positive_recall")
+            ),
+            "feature_review_best_positive_recall": stronger_feature_summary.get(
+                "best_positive_recall"
+            ),
+            "feature_review_best_objective": stronger_feature_best_result.get(
+                "objective"
+            ),
+            "feature_review_best_accuracy": stronger_feature_best_result.get(
+                "accuracy"
+            ),
+            "feature_review_best_false_negative": stronger_feature_best_result.get(
+                "false_negative"
+            ),
+            "feature_review_best_false_positive": stronger_feature_best_result.get(
+                "false_positive"
+            ),
+            "runtime_behavior_changed": stronger_selector_feature_review_v0.get(
+                "runtime_behavior_changed"
+            ),
+            "runtime_defaults_changed": stronger_selector_feature_review_v0.get(
+                "runtime_defaults_changed"
+            ),
+            "runtime_selector_implemented": stronger_selector_feature_review_v0.get(
+                "runtime_selector_implemented"
+            ),
+            "runtime_candidate_generator_implemented": (
+                stronger_selector_feature_review_v0.get(
+                    "runtime_candidate_generator_implemented"
+                )
+            ),
+            "runtime_dtm_or_tablebase_lookup": stronger_selector_feature_review_v0.get(
+                "runtime_dtm_or_tablebase_lookup"
+            ),
+            "runtime_terminals_added": stronger_selector_feature_review_v0.get(
+                "runtime_terminals_added"
+            ),
+            "gameplay_topology_mutation": stronger_selector_feature_review_v0.get(
+                "gameplay_topology_mutation"
+            ),
+            "stage7_promotion_allowed": stronger_selector_feature_review_v0.get(
+                "stage7_promotion_allowed"
+            ),
+            "stage8_training_allowed": stronger_selector_feature_review_v0.get(
                 "stage8_training_allowed"
             ),
         },
@@ -7922,6 +8122,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     abstention_selector_safety = payload["abstention_selector_safety_gate"]
     targeted_ownership_recovery = payload["targeted_ownership_recovery_gate"]
     balanced_hard_negative = payload["balanced_hard_negative_gate"]
+    stronger_selector_feature = payload["stronger_selector_feature_gate"]
     state_local_paired_ownership = payload["state_local_paired_ownership_gate"]
     selected_owner_failure_risk = payload["selected_owner_failure_risk_proxy_gate"]
     progress_window_reconsideration = payload["progress_window_reconsideration_gate"]
@@ -8148,6 +8349,31 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- runtime_terminals_added: `{balanced_hard_negative['runtime_terminals_added']}`",
         f"- stage7_promotion_allowed: `{balanced_hard_negative['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{balanced_hard_negative['stage8_training_allowed']}`",
+        "",
+        "## Stronger Selector Feature Review",
+        "",
+        f"- passive_feature_review_ready: `{stronger_selector_feature['passive_feature_review_ready']}`",
+        f"- feature_ablation_status: `{stronger_selector_feature['feature_ablation_status']}`",
+        f"- feature_ablation_underpowered: `{stronger_selector_feature['feature_ablation_underpowered']}`",
+        f"- feature_ablation_row_count: `{stronger_selector_feature['feature_ablation_row_count']}`",
+        f"- feature_ablation_stage7_row_count: `{stronger_selector_feature['feature_ablation_stage7_row_count']}`",
+        f"- feature_ablation_best_objective: `{stronger_selector_feature['feature_ablation_best_objective']}`",
+        f"- feature_ablation_best_negative_suppression: `{stronger_selector_feature['feature_ablation_best_negative_suppression']}`",
+        f"- feature_review_status: `{stronger_selector_feature['feature_review_status']}`",
+        f"- feature_review_recommended_next_step: `{stronger_selector_feature['feature_review_recommended_next_step']}`",
+        f"- feature_review_improved_over_v2_ablation: `{stronger_selector_feature['feature_review_improved_over_v2_ablation']}`",
+        f"- feature_review_row_count: `{stronger_selector_feature['feature_review_row_count']}`",
+        f"- feature_review_stage7_row_count: `{stronger_selector_feature['feature_review_stage7_row_count']}`",
+        f"- feature_review_previous_best_negative_suppression: `{stronger_selector_feature['feature_review_previous_best_negative_suppression']}`",
+        f"- feature_review_best_negative_suppression: `{stronger_selector_feature['feature_review_best_negative_suppression']}`",
+        f"- feature_review_best_positive_recall: `{stronger_selector_feature['feature_review_best_positive_recall']}`",
+        f"- feature_review_best_objective: `{stronger_selector_feature['feature_review_best_objective']}`",
+        f"- runtime_selector_implemented: `{stronger_selector_feature['runtime_selector_implemented']}`",
+        f"- runtime_candidate_generator_implemented: `{stronger_selector_feature['runtime_candidate_generator_implemented']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{stronger_selector_feature['runtime_dtm_or_tablebase_lookup']}`",
+        f"- runtime_terminals_added: `{stronger_selector_feature['runtime_terminals_added']}`",
+        f"- stage7_promotion_allowed: `{stronger_selector_feature['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{stronger_selector_feature['stage8_training_allowed']}`",
         "",
         "## State-Local Paired Ownership",
         "",

@@ -511,6 +511,14 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_balanced_hard_negative_evidence_review_v0.json"
     )
     assert (
+        payload["source_artifacts"]["hard_negative_selector_feature_ablation_v2"]
+        == "reports/krk_hard_negative_selector_feature_ablation_v2.json"
+    )
+    assert (
+        payload["source_artifacts"]["stronger_selector_feature_review_v0"]
+        == "reports/krk_stronger_selector_feature_review_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["hard_negative_selector_target_dataset_v2"]
         == "reports/krk_hard_negative_selector_target_dataset_v2.json"
     )
@@ -1000,6 +1008,59 @@ def test_full_suite_readiness_identifies_current_gate():
     assert balanced_hard_negative["runtime_terminals_added"] is False
     assert balanced_hard_negative["stage7_promotion_allowed"] is False
     assert balanced_hard_negative["stage8_training_allowed"] is False
+
+    stronger_feature = payload["stronger_selector_feature_gate"]
+    assert stronger_feature["passive_feature_review_ready"] is True
+    assert stronger_feature["feature_ablation_status"] == (
+        "hard_negative_feature_ablation_promising_underpowered"
+    )
+    assert stronger_feature["feature_ablation_underpowered"] is True
+    assert stronger_feature["feature_ablation_row_count"] == 40
+    assert stronger_feature["feature_ablation_state_count"] == 14
+    assert stronger_feature["feature_ablation_hard_negative_count"] == 9
+    assert stronger_feature["feature_ablation_positive_context_count"] == 31
+    assert stronger_feature["feature_ablation_stage7_row_count"] == 0
+    assert stronger_feature["feature_ablation_best_objective"] == (
+        "provider_piece_king_delta@0.5"
+    )
+    assert stronger_feature["feature_ablation_best_negative_suppression"] == (
+        0.2222222222222222
+    )
+    assert stronger_feature["feature_review_status"] == (
+        "stronger_features_review_ready_runtime_still_blocked"
+    )
+    assert stronger_feature["feature_review_recommended_next_step"] == (
+        "architecture_review_before_selector_training_or_runtime"
+    )
+    assert stronger_feature["feature_review_improved_over_v2_ablation"] is True
+    assert stronger_feature["feature_review_row_count"] == 40
+    assert stronger_feature["feature_review_state_count"] == 14
+    assert stronger_feature["feature_review_hard_negative_count"] == 9
+    assert stronger_feature["feature_review_positive_context_count"] == 31
+    assert stronger_feature["feature_review_stage7_row_count"] == 0
+    assert stronger_feature["feature_review_previous_best_negative_suppression"] == (
+        0.2222222222222222
+    )
+    assert stronger_feature["feature_review_best_negative_suppression"] == (
+        0.7777777777777778
+    )
+    assert stronger_feature["feature_review_previous_best_positive_recall"] == 1.0
+    assert stronger_feature["feature_review_best_positive_recall"] == (
+        0.9032258064516129
+    )
+    assert stronger_feature["feature_review_best_objective"] == "piece_motion@0.5"
+    assert stronger_feature["feature_review_best_accuracy"] == 0.875
+    assert stronger_feature["feature_review_best_false_negative"] == 3
+    assert stronger_feature["feature_review_best_false_positive"] == 2
+    assert stronger_feature["runtime_behavior_changed"] is False
+    assert stronger_feature["runtime_defaults_changed"] is False
+    assert stronger_feature["runtime_selector_implemented"] is False
+    assert stronger_feature["runtime_candidate_generator_implemented"] is False
+    assert stronger_feature["runtime_dtm_or_tablebase_lookup"] is False
+    assert stronger_feature["runtime_terminals_added"] is False
+    assert stronger_feature["gameplay_topology_mutation"] is False
+    assert stronger_feature["stage7_promotion_allowed"] is False
+    assert stronger_feature["stage8_training_allowed"] is False
 
     state_local = payload["state_local_paired_ownership_gate"]
     assert state_local["passive_semantic_gate_ready"] is True

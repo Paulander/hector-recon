@@ -594,6 +594,9 @@ def build_payload() -> dict[str, Any]:
         readiness.get("targeted_ownership_recovery_gate") or {}
     )
     balanced_hard_negative_gate = readiness.get("balanced_hard_negative_gate") or {}
+    stronger_selector_feature_gate = (
+        readiness.get("stronger_selector_feature_gate") or {}
+    )
     state_local_paired_ownership_gate = (
         readiness.get("state_local_paired_ownership_gate") or {}
     )
@@ -1265,6 +1268,62 @@ def build_payload() -> dict[str, Any]:
             ),
             "balanced_hard_negative_stage8_training_allowed": (
                 balanced_hard_negative_gate.get("stage8_training_allowed")
+            ),
+            "stronger_selector_feature_passive_ready": (
+                stronger_selector_feature_gate.get("passive_feature_review_ready")
+            ),
+            "stronger_selector_feature_ablation_status": (
+                stronger_selector_feature_gate.get("feature_ablation_status")
+            ),
+            "stronger_selector_feature_ablation_underpowered": (
+                stronger_selector_feature_gate.get("feature_ablation_underpowered")
+            ),
+            "stronger_selector_feature_ablation_row_count": (
+                stronger_selector_feature_gate.get("feature_ablation_row_count")
+            ),
+            "stronger_selector_feature_ablation_stage7_row_count": (
+                stronger_selector_feature_gate.get("feature_ablation_stage7_row_count")
+            ),
+            "stronger_selector_feature_review_status": (
+                stronger_selector_feature_gate.get("feature_review_status")
+            ),
+            "stronger_selector_feature_improved_over_v2_ablation": (
+                stronger_selector_feature_gate.get(
+                    "feature_review_improved_over_v2_ablation"
+                )
+            ),
+            "stronger_selector_feature_previous_best_negative_suppression": (
+                stronger_selector_feature_gate.get(
+                    "feature_review_previous_best_negative_suppression"
+                )
+            ),
+            "stronger_selector_feature_best_negative_suppression": (
+                stronger_selector_feature_gate.get(
+                    "feature_review_best_negative_suppression"
+                )
+            ),
+            "stronger_selector_feature_best_positive_recall": (
+                stronger_selector_feature_gate.get("feature_review_best_positive_recall")
+            ),
+            "stronger_selector_feature_review_stage7_row_count": (
+                stronger_selector_feature_gate.get("feature_review_stage7_row_count")
+            ),
+            "stronger_selector_feature_runtime_selector_implemented": (
+                stronger_selector_feature_gate.get("runtime_selector_implemented")
+            ),
+            "stronger_selector_feature_runtime_candidate_generator_implemented": (
+                stronger_selector_feature_gate.get(
+                    "runtime_candidate_generator_implemented"
+                )
+            ),
+            "stronger_selector_feature_runtime_dtm_or_tablebase_lookup": (
+                stronger_selector_feature_gate.get("runtime_dtm_or_tablebase_lookup")
+            ),
+            "stronger_selector_feature_stage7_promotion_allowed": (
+                stronger_selector_feature_gate.get("stage7_promotion_allowed")
+            ),
+            "stronger_selector_feature_stage8_training_allowed": (
+                stronger_selector_feature_gate.get("stage8_training_allowed")
             ),
             "state_local_paired_ownership_passive_ready": (
                 state_local_paired_ownership_gate.get("passive_semantic_gate_ready")

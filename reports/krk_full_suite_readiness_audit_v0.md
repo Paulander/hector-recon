@@ -202,6 +202,31 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Stronger Selector Feature Review
+
+- passive_feature_review_ready: `True`
+- feature_ablation_status: `hard_negative_feature_ablation_promising_underpowered`
+- feature_ablation_underpowered: `True`
+- feature_ablation_row_count: `40`
+- feature_ablation_stage7_row_count: `0`
+- feature_ablation_best_objective: `provider_piece_king_delta@0.5`
+- feature_ablation_best_negative_suppression: `0.2222222222222222`
+- feature_review_status: `stronger_features_review_ready_runtime_still_blocked`
+- feature_review_recommended_next_step: `architecture_review_before_selector_training_or_runtime`
+- feature_review_improved_over_v2_ablation: `True`
+- feature_review_row_count: `40`
+- feature_review_stage7_row_count: `0`
+- feature_review_previous_best_negative_suppression: `0.2222222222222222`
+- feature_review_best_negative_suppression: `0.7777777777777778`
+- feature_review_best_positive_recall: `0.9032258064516129`
+- feature_review_best_objective: `piece_motion@0.5`
+- runtime_selector_implemented: `False`
+- runtime_candidate_generator_implemented: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- runtime_terminals_added: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## State-Local Paired Ownership
 
 - passive_semantic_gate_ready: `True`
@@ -415,7 +440,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `3a0357f20b4ecaffb293efabbda2293d16d0717ba9ce64d484091744832a0c34`
+- expected_readiness_fingerprint: `3cce9292f5a014c961157aa3a89ac5f9a26dabf127e1698e4d4dce16b4060229`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -944,5 +969,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2149`
+- checked_flag_count: `2163`
 - violation_count: `0`
