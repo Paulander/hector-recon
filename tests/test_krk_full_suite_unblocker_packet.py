@@ -87,6 +87,15 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     assert primary["scope"]["approval_receipt_present"] is False
     assert primary["scope"]["approval_receipt_valid"] is False
     assert primary["scope"]["approval_receipt_blockers"] == ["approval_receipt_missing"]
+    assert primary["scope"]["approval_request_artifact"] == (
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
+    )
+    assert (
+        primary["scope"]["approval_request_status"]
+        == "protected_plan_window_failure_contrast_approval_request_ready"
+    )
+    assert primary["scope"]["approval_receipt_created_by_request"] is False
     assert len(primary["scope"]["expected_manifest_fingerprint"]) == 64
     assert len(primary["scope"]["expected_readiness_fingerprint"]) == 64
     assert primary["scope"]["timed_out_job_count"] == 0
@@ -220,6 +229,12 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
     assert "per_job_timeout_seconds: `900`" in rendered
     assert "approval_receipt_required: `True`" in rendered
     assert "approval_receipt_blockers: `['approval_receipt_missing']`" in rendered
+    assert (
+        "approval_request_status: "
+        "`protected_plan_window_failure_contrast_approval_request_ready`"
+        in rendered
+    )
+    assert "approval_receipt_created_by_request: `False`" in rendered
     assert (
         "approval_receipt_path: `reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_collection_approval_v0.json`"

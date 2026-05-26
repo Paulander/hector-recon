@@ -397,6 +397,15 @@ def test_current_control_plane_gate_requires_explicit_choice():
     assert review_option["safety_scope"]["approval_receipt_blockers"] == [
         "approval_receipt_missing"
     ]
+    assert review_option["approval_request_artifact"] == (
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_approval_request_v0.md"
+    )
+    assert (
+        review_option["safety_scope"]["approval_request_status"]
+        == "protected_plan_window_failure_contrast_approval_request_ready"
+    )
+    assert review_option["safety_scope"]["approval_receipt_created_by_request"] is False
     assert len(review_option["safety_scope"]["expected_manifest_fingerprint"]) == 64
     assert len(review_option["safety_scope"]["expected_readiness_fingerprint"]) == 64
     assert review_option["safety_scope"]["per_job_timeout_seconds"] == 900

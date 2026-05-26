@@ -74,10 +74,13 @@
       "approval_receipt_blockers": [
         "approval_receipt_missing"
       ],
+      "approval_receipt_created_by_request": false,
       "approval_receipt_path": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json",
       "approval_receipt_present": false,
       "approval_receipt_required": true,
       "approval_receipt_valid": false,
+      "approval_request_artifact": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_approval_request_v0.json",
+      "approval_request_status": "protected_plan_window_failure_contrast_approval_request_ready",
       "execution_readiness_recomputed_live": true,
       "expected_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
       "expected_readiness_fingerprint": "9e3760e042b380429e8c2b1b7c533296cb98bb59fbf31b287e2bfdae30abdc0d",
@@ -117,6 +120,7 @@
     "additional_sampling_manifest": "reports/structural_candidates/stage7_additional_clean_sampling_manifest_v0.json",
     "additional_sampling_runner": "reports/structural_candidates/stage7_additional_clean_sampling_runner_v0.json",
     "label_distribution_review": "reports/structural_candidates/stage7_diverse_clean_label_distribution_review_v0.json",
+    "protected_plan_window_failure_contrast_approval_request": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_approval_request_v0.json",
     "protected_plan_window_failure_contrast_execution_readiness": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_execution_readiness_v0.json",
     "protected_plan_window_failure_contrast_integration": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_integration_v0.json",
     "protected_plan_window_failure_contrast_manifest": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json",

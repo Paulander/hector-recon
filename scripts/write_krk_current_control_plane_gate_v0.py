@@ -52,6 +52,11 @@ FAILURE_CONTRAST_RUNNER = (
     / "reports/strategy_arbitration/"
     "krk_protected_plan_window_failure_contrast_runner_v0.json"
 )
+FAILURE_CONTRAST_APPROVAL_REQUEST = (
+    ROOT
+    / "reports/strategy_arbitration/"
+    "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
+)
 FAILURE_CONTRAST_OUTPUT_VALIDATION = (
     ROOT
     / "reports/strategy_arbitration/"
@@ -130,6 +135,7 @@ def build_payload(
     failure_contrast_manifest_review: dict[str, Any] | None = None,
     failure_contrast_execution_readiness: dict[str, Any] | None = None,
     failure_contrast_runner: dict[str, Any] | None = None,
+    failure_contrast_approval_request: dict[str, Any] | None = None,
     failure_contrast_output_validation: dict[str, Any] | None = None,
     failure_contrast_integration: dict[str, Any] | None = None,
     post_failure_contrast_sequence_refresh: dict[str, Any] | None = None,
@@ -162,6 +168,10 @@ def build_payload(
     )
     failure_contrast_runner = failure_contrast_runner or _load_optional(
         FAILURE_CONTRAST_RUNNER
+    )
+    failure_contrast_approval_request = (
+        failure_contrast_approval_request
+        or _load_optional(FAILURE_CONTRAST_APPROVAL_REQUEST)
     )
     failure_contrast_output_validation = failure_contrast_output_validation or _load_optional(
         FAILURE_CONTRAST_OUTPUT_VALIDATION
@@ -428,6 +438,12 @@ def build_payload(
             "command_if_explicitly_approved": (
                 failure_contrast_command if failure_contrast_ready_for_collection else None
             ),
+            "approval_request_artifact": (
+                "reports/strategy_arbitration/"
+                "krk_protected_plan_window_failure_contrast_approval_request_v0.md"
+            )
+            if failure_contrast_ready_for_collection
+            else None,
             "safety_scope": (
                 {
                     "max_jobs": failure_contrast_manifest_summary.get("job_count"),
@@ -470,6 +486,14 @@ def build_payload(
                     ),
                     "approval_receipt_blockers": failure_contrast_runner_summary.get(
                         "approval_receipt_blockers"
+                    ),
+                    "approval_request_status": failure_contrast_approval_request.get(
+                        "decision", {}
+                    ).get("status"),
+                    "approval_receipt_created_by_request": (
+                        failure_contrast_approval_request.get(
+                            "approval_receipt_created"
+                        )
                     ),
                     "expected_manifest_fingerprint": (
                         failure_contrast_runner_summary.get(
@@ -553,6 +577,7 @@ def build_payload(
             "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_review_v0.json",
             "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_execution_readiness_v0.json",
             "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_runner_v0.json",
+            "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_approval_request_v0.json",
             "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_output_validation_v0.json",
             "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_integration_v0.json",
             "reports/strategy_arbitration/krk_sequence_policy_after_protected_failure_contrast_refresh_v0.json",
@@ -828,6 +853,11 @@ def write_markdown(payload: dict[str, Any]) -> str:
             lines.append(
                 "- command_if_explicitly_approved: "
                 f"`{option['command_if_explicitly_approved']}`"
+            )
+        if option.get("approval_request_artifact"):
+            lines.append(
+                "- approval_request_artifact: "
+                f"`{option['approval_request_artifact']}`"
             )
         if option.get("safety_scope"):
             lines.append("- safety_scope:")

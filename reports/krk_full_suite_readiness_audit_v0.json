@@ -52,10 +52,13 @@
     "approval_receipt_blockers": [
       "approval_receipt_missing"
     ],
+    "approval_receipt_created_by_request": false,
     "approval_receipt_path": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json",
     "approval_receipt_present": false,
     "approval_receipt_required": true,
     "approval_receipt_valid": false,
+    "approval_request_artifact": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_approval_request_v0.json",
+    "approval_request_status": "protected_plan_window_failure_contrast_approval_request_ready",
     "command_if_explicitly_approved": "UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json",
     "current_artifact_allows_collection": false,
     "execution_jobs_passing": 6,
@@ -108,7 +111,7 @@
     "status": "retry1_protected_stage5_6_stack_adopted_manifest_only"
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 155,
+    "checked_flag_count": 164,
     "gameplay_topology_mutation": false,
     "runtime_behavior_changed": false,
     "runtime_defaults_changed": false,
@@ -143,6 +146,7 @@
     "control_plane_gate": "reports/krk_current_control_plane_gate_v0.json",
     "current_brief": "reports/current_agent_brief.md",
     "preservation_checks": "reports/krk_clean_retrain_retry1_preservation_checks_v0.json",
+    "protected_failure_contrast_approval_request": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_approval_request_v0.json",
     "protected_failure_contrast_execution_readiness": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_execution_readiness_v0.json",
     "protected_failure_contrast_integration": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_integration_v0.json",
     "protected_failure_contrast_manifest": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json",

@@ -86,6 +86,7 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - allows: explicitly approved bounded observation-only protected plan-window failure-contrast collection
 - recommended_if: manifest review passed and you want to collect bounded observation-only failure contrasts
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
+- approval_request_artifact: `reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_approval_request_v0.md`
 - safety_scope:
   - max_jobs: `6`
   - horizon: `h40`
@@ -102,6 +103,8 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
   - approval_receipt_present: `False`
   - approval_receipt_valid: `False`
   - approval_receipt_blockers: `['approval_receipt_missing']`
+  - approval_request_status: `protected_plan_window_failure_contrast_approval_request_ready`
+  - approval_receipt_created_by_request: `False`
   - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
   - expected_readiness_fingerprint: `9e3760e042b380429e8c2b1b7c533296cb98bb59fbf31b287e2bfdae30abdc0d`
   - per_job_timeout_seconds: `900`

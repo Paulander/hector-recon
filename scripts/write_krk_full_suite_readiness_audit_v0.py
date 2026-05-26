@@ -48,6 +48,10 @@ SOURCES = {
     "protected_failure_contrast_runner": (
         "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_runner_v0.json"
     ),
+    "protected_failure_contrast_approval_request": (
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
+    ),
     "protected_failure_contrast_output_validation": (
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_output_validation_v0.json"
@@ -215,6 +219,9 @@ def build_payload() -> dict[str, Any]:
         "protected_failure_contrast_execution_readiness"
     ]
     failure_contrast_runner = payloads["protected_failure_contrast_runner"]
+    failure_contrast_approval_request = payloads[
+        "protected_failure_contrast_approval_request"
+    ]
     failure_contrast_output_validation = payloads[
         "protected_failure_contrast_output_validation"
     ]
@@ -603,6 +610,16 @@ def build_payload() -> dict[str, Any]:
             "approval_receipt_blockers": (
                 failure_contrast_runner_summary.get("approval_receipt_blockers") or []
             ),
+            "approval_request_artifact": (
+                "reports/strategy_arbitration/"
+                "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
+            ),
+            "approval_request_status": failure_contrast_approval_request.get(
+                "decision", {}
+            ).get("status"),
+            "approval_receipt_created_by_request": (
+                failure_contrast_approval_request.get("approval_receipt_created")
+            ),
             "expected_manifest_fingerprint": (
                 failure_contrast_runner_summary.get(
                     "execution_readiness_manifest_fingerprint"
@@ -855,6 +872,9 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- approval_receipt_present: `{protected_failure_contrast['approval_receipt_present']}`",
             f"- approval_receipt_valid: `{protected_failure_contrast['approval_receipt_valid']}`",
             f"- approval_receipt_blockers: `{protected_failure_contrast['approval_receipt_blockers']}`",
+            f"- approval_request_artifact: `{protected_failure_contrast['approval_request_artifact']}`",
+            f"- approval_request_status: `{protected_failure_contrast['approval_request_status']}`",
+            f"- approval_receipt_created_by_request: `{protected_failure_contrast['approval_receipt_created_by_request']}`",
             f"- expected_manifest_fingerprint: `{protected_failure_contrast['expected_manifest_fingerprint']}`",
             f"- expected_readiness_fingerprint: `{protected_failure_contrast['expected_readiness_fingerprint']}`",
             f"- command_if_explicitly_approved: `{protected_failure_contrast['command_if_explicitly_approved']}`",

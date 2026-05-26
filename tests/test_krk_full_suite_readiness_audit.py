@@ -179,6 +179,15 @@ def test_full_suite_readiness_identifies_current_gate():
     assert protected_failure_contrast["approval_receipt_blockers"] == [
         "approval_receipt_missing"
     ]
+    assert protected_failure_contrast["approval_request_artifact"] == (
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
+    )
+    assert (
+        protected_failure_contrast["approval_request_status"]
+        == "protected_plan_window_failure_contrast_approval_request_ready"
+    )
+    assert protected_failure_contrast["approval_receipt_created_by_request"] is False
     assert len(protected_failure_contrast["expected_manifest_fingerprint"]) == 64
     assert len(protected_failure_contrast["expected_readiness_fingerprint"]) == 64
     assert protected_failure_contrast["command_if_explicitly_approved"] == (
@@ -217,6 +226,12 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
     assert "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection" in rendered
     assert "protected_plan_window_failure_contrast_runner_dry_run_ready" in rendered
     assert "approval_receipt_blockers: `['approval_receipt_missing']`" in rendered
+    assert (
+        "approval_request_status: "
+        "`protected_plan_window_failure_contrast_approval_request_ready`"
+        in rendered
+    )
+    assert "approval_receipt_created_by_request: `False`" in rendered
     assert "label_run_allowed: `false`" in rendered
 
 

@@ -43,6 +43,11 @@ FAILURE_CONTRAST_RUNNER = (
     / "reports/strategy_arbitration/"
     "krk_protected_plan_window_failure_contrast_runner_v0.json"
 )
+FAILURE_CONTRAST_APPROVAL_REQUEST = (
+    ROOT
+    / "reports/strategy_arbitration/"
+    "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
+)
 FAILURE_CONTRAST_OUTPUT_VALIDATION = (
     ROOT
     / "reports/strategy_arbitration/"
@@ -94,6 +99,9 @@ def build_payload() -> dict[str, Any]:
         FAILURE_CONTRAST_EXECUTION_READINESS
     )
     failure_contrast_runner = _load_optional(FAILURE_CONTRAST_RUNNER)
+    failure_contrast_approval_request = _load_optional(
+        FAILURE_CONTRAST_APPROVAL_REQUEST
+    )
     failure_contrast_output_validation = _load_optional(FAILURE_CONTRAST_OUTPUT_VALIDATION)
     failure_contrast_integration = _load_optional(FAILURE_CONTRAST_INTEGRATION)
     post_failure_contrast_sequence_refresh = _load_optional(
@@ -241,6 +249,10 @@ def build_payload() -> dict[str, Any]:
             "protected_plan_window_failure_contrast_runner": (
                 "reports/strategy_arbitration/"
                 "krk_protected_plan_window_failure_contrast_runner_v0.json"
+            ),
+            "protected_plan_window_failure_contrast_approval_request": (
+                "reports/strategy_arbitration/"
+                "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
             ),
             "protected_plan_window_failure_contrast_output_validation": (
                 "reports/strategy_arbitration/"
@@ -522,6 +534,22 @@ def build_payload() -> dict[str, Any]:
                     if failure_contrast_primary
                     else None
                 ),
+                "approval_request_artifact": (
+                    "reports/strategy_arbitration/"
+                    "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
+                    if failure_contrast_primary
+                    else None
+                ),
+                "approval_request_status": (
+                    failure_contrast_approval_request.get("decision", {}).get("status")
+                    if failure_contrast_primary
+                    else None
+                ),
+                "approval_receipt_created_by_request": (
+                    failure_contrast_approval_request.get("approval_receipt_created")
+                    if failure_contrast_primary
+                    else None
+                ),
                 "expected_manifest_fingerprint": (
                     failure_contrast_runner_summary.get(
                         "execution_readiness_manifest_fingerprint"
@@ -692,6 +720,9 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- approval_receipt_present: `{primary['scope']['approval_receipt_present']}`",
             f"- approval_receipt_valid: `{primary['scope']['approval_receipt_valid']}`",
             f"- approval_receipt_blockers: `{primary['scope']['approval_receipt_blockers']}`",
+            f"- approval_request_artifact: `{primary['scope']['approval_request_artifact']}`",
+            f"- approval_request_status: `{primary['scope']['approval_request_status']}`",
+            f"- approval_receipt_created_by_request: `{primary['scope']['approval_receipt_created_by_request']}`",
             f"- expected_manifest_fingerprint: `{primary['scope']['expected_manifest_fingerprint']}`",
             f"- expected_readiness_fingerprint: `{primary['scope']['expected_readiness_fingerprint']}`",
             f"- post_success_refresh: `{primary['scope']['post_success_refresh']}`",
