@@ -106,6 +106,10 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
         == "protected_plan_window_failure_contrast_approval_request_ready"
     )
     assert (
+        payload["summary"]["protected_failure_contrast_approval_request_blockers"]
+        == []
+    )
+    assert (
         payload["summary"][
             "sequence_policy_after_protected_failure_contrast_refresh_status"
         ]

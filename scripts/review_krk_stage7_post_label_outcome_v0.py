@@ -285,6 +285,9 @@ def build_payload(
             "protected_failure_contrast_approval_request_status": (
                 protected_failure_contrast.get("approval_request_status")
             ),
+            "protected_failure_contrast_approval_request_blockers": (
+                protected_failure_contrast.get("approval_request_blockers") or []
+            ),
             "protected_failure_contrast_approval_receipt_created_by_request": (
                 protected_failure_contrast.get("approval_receipt_created_by_request")
             ),

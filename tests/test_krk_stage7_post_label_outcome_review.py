@@ -105,6 +105,10 @@ def test_stage7_post_label_outcome_current_artifact_reports_sequence_policy_gap(
         == "protected_plan_window_failure_contrast_approval_request_ready"
     )
     assert (
+        payload["summary"]["protected_failure_contrast_approval_request_blockers"]
+        == []
+    )
+    assert (
         payload["summary"][
             "protected_failure_contrast_approval_receipt_created_by_request"
         ]

@@ -137,6 +137,12 @@ def test_stage8_training_readiness_review_blocks_current_state():
     )
     assert (
         payload["requirements"][
+            "protected_failure_contrast_approval_request_blockers"
+        ]
+        == []
+    )
+    assert (
+        payload["requirements"][
             "protected_failure_contrast_approval_receipt_created_by_request"
         ]
         is False
