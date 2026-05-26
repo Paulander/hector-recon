@@ -84,6 +84,8 @@
     "stage8_training_allowed": false,
     "status": "krk_suite_protected_failure_contrast_unblocker_ready_pending_explicit_collection_approval"
   },
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "low_value_safe_work_remaining": [
     "Rerunning Stage 7 label commands without overwrite will skip existing outputs; the Stage 7 success-control gap is already closed.",
     "Passive benchmark and cross-stage design summaries are current; the next useful gate-moving work is explicit protected plan-window failure-contrast collection approval, or separately explicit Stage 4 runtime-sandbox approval."
@@ -146,6 +148,12 @@
     },
     "status": "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
   },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
   "schema_version": "krk_full_suite_unblocker_packet.v0",
   "secondary_unblocker": {
     "approval_request_artifact": "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md",
@@ -196,6 +204,8 @@
     "stage4_unblocker": "reports/krk_stage4_caveat_unblocker_packet_v0.json",
     "stage7_runner": "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json"
   },
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
   "why_agent_stops_here": [
     "The Stage 7 held-out clean label gate is closed; the remaining non-causal benchmark review identifies protected plan-window failure-contrast sparsity.",
     "Runtime changes, Stage 7 promotion, and Stage 8 training remain gated by repository reports and architecture policy.",

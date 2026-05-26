@@ -216,6 +216,16 @@ def build_payload() -> dict[str, Any]:
     return {
         "schema_version": "krk_full_suite_unblocker_packet.v0",
         "causal_status": "non_causal_approval_packet",
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_selector_implemented": False,
+        "runtime_score_changes": False,
+        "runtime_direct_routing": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "hidden_python_controller": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
         "source_artifacts": {
             "readiness_audit": "reports/krk_full_suite_readiness_audit_v0.json",
             "stage7_runner": (

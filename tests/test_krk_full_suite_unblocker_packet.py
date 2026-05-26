@@ -35,6 +35,16 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
 
     assert payload["schema_version"] == "krk_full_suite_unblocker_packet.v0"
     assert payload["causal_status"] == "non_causal_approval_packet"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_defaults_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_score_changes"] is False
+    assert payload["runtime_direct_routing"] is False
+    assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["hidden_python_controller"] is False
+    assert payload["gameplay_topology_mutation"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
     assert (
         payload["decision"]["status"]
         == "krk_suite_protected_failure_contrast_unblocker_ready_pending_explicit_collection_approval"

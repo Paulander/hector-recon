@@ -72,7 +72,9 @@
   "explicit_gate_blockers": [
     "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
   ],
+  "gameplay_topology_mutation": false,
   "hard_blockers": [],
+  "hidden_python_controller": false,
   "protected_failure_contrast_gate": {
     "approval_receipt_blockers": [
       "approval_receipt_missing"
@@ -164,6 +166,12 @@
     "violation_count": 0,
     "violations": []
   },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
   "schema_version": "krk_full_suite_readiness_audit.v0",
   "sequence_policy": {
     "benchmark_design_status": "sequence_policy_benchmark_design_ready_non_causal",
@@ -225,6 +233,7 @@
     "stage7_sampling_output_validation": "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json",
     "stage7_sampling_runner": "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json"
   },
+  "stage7_promotion_allowed": false,
   "stage7_sampling_gate": {
     "combined_failure_controls": 39,
     "combined_success_controls": 11,
@@ -256,6 +265,7 @@
     "success_controls_required": 5,
     "timed_out_job_count": 0
   },
+  "stage8_training_allowed": false,
   "stage_status": {
     "stage1": {
       "ready_for_current_suite": true,

@@ -35,6 +35,16 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
 
     assert payload["schema_version"] == "krk_full_suite_readiness_audit.v0"
     assert payload["causal_status"] == "non_causal_readiness_audit"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_defaults_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_score_changes"] is False
+    assert payload["runtime_direct_routing"] is False
+    assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["hidden_python_controller"] is False
+    assert payload["gameplay_topology_mutation"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False
     assert payload["decision"]["selector_allowed"] is False
