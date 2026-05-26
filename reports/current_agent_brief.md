@@ -194,6 +194,23 @@ krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection
 
 Meaning: the retry1 protected Stage 5/6 stack is adopted and validated, M1-M4 and KPK→KQK preservation checks pass, and runtime/default/topology boundaries remain clean. Stage 7 clean held-out controls now satisfy the sequence-policy input gate, but Stage 7 remains held out and not promoted. The remaining KRK-suite blocker is explicit approval for bounded protected plan-window failure-contrast collection.
 
+Current control-plane approval option inventory:
+
+```text
+approve_stage4_first_move_contrast_sandbox
+approve_protected_plan_window_failure_contrast_collection
+```
+
+Current protected failure-contrast collection option exposure:
+
+```text
+protected_plan_window_failure_contrast_collection_option_available=true
+protected_plan_window_failure_contrast_collection_command_available=true
+protected_plan_window_failure_contrast_collection_blocked_by_option_id=null
+```
+
+Meaning: the current control-plane gate exposes a protected collection command only as an explicitly approved option. This is not execution authorization. The command remains unusable unless a matching approval receipt exists at `reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json` and the runner is invoked with the explicit execute flag. The current repository state has no such receipt.
+
 Current unblocker packet:
 
 ```text
@@ -217,7 +234,7 @@ Current passive advancement decision:
 krk_suite_passive_advancement_ready_for_protected_failure_contrast_collection
 ```
 
-This harness reruns only safe passive integration/readiness artifacts. It does not execute labels, implement runtime behavior, train selectors, promote Stage 7, or train Stage 8.
+This harness reruns only safe passive integration/readiness artifacts. It does not execute labels, implement runtime behavior, train selectors, promote Stage 7, or train Stage 8. It also checks the current control-plane gate directly; if the protected collection option or command is not exposed, the top-level advancement decision must route to current-gate review instead of reporting collection readiness.
 
 Current protected failure-contrast collection gate:
 
@@ -236,6 +253,19 @@ protected_plan_window_failure_contrast_integration_pending_outputs
 ```
 
 Meaning: the protected failure-contrast manifest is reviewed and ready for explicit approval, but no protected collection has been run in the current gate state. The runner is dry-run only with `execution_requested=false`, `processed_job_count=0`, and `executed_job_count=0`.
+
+Current approval-receipt and execution state:
+
+```text
+approval_receipt_present=false
+approval_receipt_valid=false
+collection_run_allowed=false
+execution_requested=false
+processed_job_count=0
+executed_job_count=0
+```
+
+Do not create `reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json` unless the user explicitly approves the protected failure-contrast collection scope. Do not run `scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json` without that matching receipt and explicit approval.
 
 Current Stage 7 diverse-clean status:
 
