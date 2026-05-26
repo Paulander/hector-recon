@@ -253,6 +253,27 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## State-Local Contrast
+
+- passive_contrast_ready: `True`
+- labels_status: `state_local_contrast_labels_v2_joined`
+- labels_row_count: `20`
+- labels_training_contrast_label_counts: `{'negative': 3, 'positive': 9}`
+- labels_stage7_challenge_row_count: `8`
+- labels_stage7_contrast_label_counts: `{'negative': 8}`
+- labels_usable_training_row_count: `12`
+- probe_status: `state_local_contrast_signal_not_ready`
+- probe_training_row_count: `12`
+- probe_stage7_eval_row_count: `8`
+- probe_stage7_training_leakage: `False`
+- readiness_status: `runtime_selector_blocked_negative_suppression_zero`
+- readiness_recommended_next_step: `architecture_review_before_more_runtime_tests`
+- readiness_runtime_test_allowed_next: `False`
+- runtime_selector_implemented: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## State-Local Paired Ownership
 
 - passive_semantic_gate_ready: `True`
@@ -466,7 +487,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `f2e3fbea9adeda7e1399c03baa87f280311517c8a6e94799765875b28293558b`
+- expected_readiness_fingerprint: `6f6600139fb02263e7d504b494fc149587d6318444f2246a3d4a71c52c033a97`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -995,5 +1016,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2188`
+- checked_flag_count: `2207`
 - violation_count: `0`

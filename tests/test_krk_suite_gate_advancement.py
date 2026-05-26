@@ -521,6 +521,40 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["selected_provider_diversity_stage8_training_allowed"]
         is False
     )
+    assert payload["summary"]["state_local_contrast_passive_ready"] is True
+    assert (
+        payload["summary"]["state_local_contrast_labels_status"]
+        == "state_local_contrast_labels_v2_joined"
+    )
+    assert payload["summary"]["state_local_contrast_labels_row_count"] == 20
+    assert (
+        payload["summary"]["state_local_contrast_labels_stage7_challenge_row_count"]
+        == 8
+    )
+    assert payload["summary"]["state_local_contrast_labels_usable_training_row_count"] == 12
+    assert payload["summary"]["state_local_contrast_probe_status"] == (
+        "state_local_contrast_signal_not_ready"
+    )
+    assert payload["summary"]["state_local_contrast_probe_training_row_count"] == 12
+    assert payload["summary"]["state_local_contrast_probe_stage7_eval_row_count"] == 8
+    assert payload["summary"]["state_local_contrast_probe_stage7_training_leakage"] is False
+    assert payload["summary"]["state_local_contrast_readiness_status"] == (
+        "runtime_selector_blocked_negative_suppression_zero"
+    )
+    assert (
+        payload["summary"]["state_local_contrast_readiness_runtime_test_allowed_next"]
+        is False
+    )
+    assert (
+        payload["summary"]["state_local_contrast_runtime_selector_implemented"]
+        is False
+    )
+    assert (
+        payload["summary"]["state_local_contrast_runtime_dtm_or_tablebase_lookup"]
+        is False
+    )
+    assert payload["summary"]["state_local_contrast_stage7_promotion_allowed"] is False
+    assert payload["summary"]["state_local_contrast_stage8_training_allowed"] is False
     assert payload["summary"]["state_local_paired_ownership_passive_ready"] is True
     assert (
         payload["summary"]["state_local_paired_hard_negative_target_status"]

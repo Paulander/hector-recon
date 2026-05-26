@@ -537,6 +537,18 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_selected_provider_diversity_architecture_review_v0.json"
     )
     assert (
+        payload["source_artifacts"]["state_local_contrast_labels_v2"]
+        == "reports/krk_state_local_contrast_labels_v2.json"
+    )
+    assert (
+        payload["source_artifacts"]["state_local_contrast_selector_probe_v2"]
+        == "reports/krk_state_local_contrast_selector_probe_v2.json"
+    )
+    assert (
+        payload["source_artifacts"]["state_local_contrast_readiness_review_v2"]
+        == "reports/krk_state_local_contrast_readiness_review_v2.json"
+    )
+    assert (
         payload["source_artifacts"]["hard_negative_selector_target_dataset_v2"]
         == "reports/krk_hard_negative_selector_target_dataset_v2.json"
     )
@@ -1142,6 +1154,51 @@ def test_full_suite_readiness_identifies_current_gate():
     assert provider_diversity["gameplay_topology_mutation"] is False
     assert provider_diversity["stage7_promotion_allowed"] is False
     assert provider_diversity["stage8_training_allowed"] is False
+
+    state_local_contrast = payload["state_local_contrast_gate"]
+    assert state_local_contrast["passive_contrast_ready"] is True
+    assert state_local_contrast["labels_status"] == "state_local_contrast_labels_v2_joined"
+    assert state_local_contrast["labels_row_count"] == 20
+    assert state_local_contrast["labels_state_count"] == 10
+    assert state_local_contrast["labels_contrast_label_counts"] == {
+        "negative": 11,
+        "positive": 9,
+    }
+    assert state_local_contrast["labels_training_contrast_label_counts"] == {
+        "negative": 3,
+        "positive": 9,
+    }
+    assert state_local_contrast["labels_stage7_challenge_row_count"] == 8
+    assert state_local_contrast["labels_stage7_contrast_label_counts"] == {
+        "negative": 8,
+    }
+    assert state_local_contrast["labels_usable_training_row_count"] == 12
+    assert state_local_contrast["labels_runtime_test_allowed_next"] is False
+    assert state_local_contrast["probe_status"] == "state_local_contrast_signal_not_ready"
+    assert state_local_contrast["probe_row_count"] == 20
+    assert state_local_contrast["probe_training_row_count"] == 12
+    assert state_local_contrast["probe_stage7_eval_row_count"] == 8
+    assert state_local_contrast["probe_stage7_training_leakage"] is False
+    assert state_local_contrast["probe_training_label_counts"] == {
+        "negative": 3,
+        "positive": 9,
+    }
+    assert state_local_contrast["probe_stage7_label_counts"] == {"negative": 8}
+    assert state_local_contrast["probe_runtime_test_allowed_next"] is False
+    assert state_local_contrast["readiness_status"] == (
+        "runtime_selector_blocked_negative_suppression_zero"
+    )
+    assert state_local_contrast["readiness_recommended_next_step"] == (
+        "architecture_review_before_more_runtime_tests"
+    )
+    assert state_local_contrast["readiness_runtime_test_allowed_next"] is False
+    assert "runtime_selector" in state_local_contrast["readiness_blocked_next_steps"]
+    assert state_local_contrast["runtime_behavior_changed"] is False
+    assert state_local_contrast["runtime_defaults_changed"] is False
+    assert state_local_contrast["runtime_selector_implemented"] is False
+    assert state_local_contrast["runtime_dtm_or_tablebase_lookup"] is False
+    assert state_local_contrast["stage7_promotion_allowed"] is False
+    assert state_local_contrast["stage8_training_allowed"] is False
 
     state_local = payload["state_local_paired_ownership_gate"]
     assert state_local["passive_semantic_gate_ready"] is True

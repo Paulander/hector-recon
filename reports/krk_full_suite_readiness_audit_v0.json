@@ -78,8 +78,8 @@
         "readiness_audit": "reports/krk_full_suite_readiness_audit_v0.json",
         "readiness_audit_status": "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection",
         "readiness_boundary_violation_count": 0,
-        "readiness_checked_flag_count": 2188,
-        "readiness_source_artifact_count": 275,
+        "readiness_checked_flag_count": 2207,
+        "readiness_source_artifact_count": 278,
         "runtime_change_class": "default_off_candidate_move_frame_sandbox_only",
         "runtime_dtm_or_tablebase_lookup": false,
         "sandbox_scope_id": "default_off_stage4_candidate_move_first_move_contrast_sandbox_only",
@@ -631,7 +631,7 @@
     "execution_jobs_passing": 6,
     "execution_readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
     "expected_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
-    "expected_readiness_fingerprint": "f2e3fbea9adeda7e1399c03baa87f280311517c8a6e94799765875b28293558b",
+    "expected_readiness_fingerprint": "6f6600139fb02263e7d504b494fc149587d6318444f2246a3d4a71c52c033a97",
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "integrated_new_failure_count": 0,
@@ -866,7 +866,7 @@
     "trace_features_trace_frame_count": 6
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 2188,
+    "checked_flag_count": 2207,
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "runtime_behavior_changed": false,
@@ -1468,6 +1468,9 @@
     "stage7_sampling_runner": "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json",
     "stage7_to_stage8_blocker_review": "reports/structural_candidates/stage7_to_stage8_blocker_review_v0.json",
     "stage_conditioned_candidate_generation_benchmark_v3": "reports/strategy_arbitration/krk_stage_conditioned_candidate_generation_benchmark_v3.json",
+    "state_local_contrast_labels_v2": "reports/krk_state_local_contrast_labels_v2.json",
+    "state_local_contrast_readiness_review_v2": "reports/krk_state_local_contrast_readiness_review_v2.json",
+    "state_local_contrast_selector_probe_v2": "reports/krk_state_local_contrast_selector_probe_v2.json",
     "state_local_paired_ownership_error_audit_v0": "reports/krk_state_local_paired_ownership_error_audit_v0.json",
     "state_local_paired_ownership_inventory_v1": "reports/krk_state_local_paired_ownership_inventory_v1.json",
     "state_local_paired_ownership_objective_plan_v0": "reports/krk_state_local_paired_ownership_objective_plan_v0.json",
@@ -1716,6 +1719,64 @@
       "ready_for_training": false,
       "status": "blocked"
     }
+  },
+  "state_local_contrast_gate": {
+    "labels_contrast_label_counts": {
+      "negative": 11,
+      "positive": 9
+    },
+    "labels_provider_family_counts": {
+      "drive_to_edge": 2,
+      "edge_trap": 9,
+      "fence_established": 2,
+      "stage0_basin": 7
+    },
+    "labels_row_count": 20,
+    "labels_runtime_test_allowed_next": false,
+    "labels_stage7_challenge_row_count": 8,
+    "labels_stage7_contrast_label_counts": {
+      "negative": 8
+    },
+    "labels_state_count": 10,
+    "labels_status": "state_local_contrast_labels_v2_joined",
+    "labels_training_contrast_label_counts": {
+      "negative": 3,
+      "positive": 9
+    },
+    "labels_usable_training_row_count": 12,
+    "passive_contrast_ready": true,
+    "probe_row_count": 20,
+    "probe_runtime_test_allowed_next": false,
+    "probe_stage7_eval_row_count": 8,
+    "probe_stage7_label_counts": {
+      "negative": 8
+    },
+    "probe_stage7_training_leakage": false,
+    "probe_status": "state_local_contrast_signal_not_ready",
+    "probe_training_label_counts": {
+      "negative": 3,
+      "positive": 9
+    },
+    "probe_training_row_count": 12,
+    "readiness_blocked_next_steps": [
+      "runtime_selector",
+      "stage7_repair",
+      "stage7_promotion",
+      "stage8_training",
+      "runtime_dtm_or_tablebase",
+      "gameplay_topology_mutation",
+      "m3_m4_arbitration_update"
+    ],
+    "readiness_recommended_next_step": "architecture_review_before_more_runtime_tests",
+    "readiness_runtime_test_allowed_next": false,
+    "readiness_status": "runtime_selector_blocked_negative_suppression_zero",
+    "runtime_behavior_changed": false,
+    "runtime_defaults_changed": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "runtime_selector_implemented": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "runtime_selector_blocked_negative_suppression_zero"
   },
   "state_local_paired_ownership_gate": {
     "error_audit_false_negative_count": 1,

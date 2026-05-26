@@ -600,6 +600,7 @@ def build_payload() -> dict[str, Any]:
     selected_provider_diversity_gate = (
         readiness.get("selected_provider_diversity_gate") or {}
     )
+    state_local_contrast_gate = readiness.get("state_local_contrast_gate") or {}
     state_local_paired_ownership_gate = (
         readiness.get("state_local_paired_ownership_gate") or {}
     )
@@ -1382,6 +1383,51 @@ def build_payload() -> dict[str, Any]:
             ),
             "selected_provider_diversity_stage8_training_allowed": (
                 selected_provider_diversity_gate.get("stage8_training_allowed")
+            ),
+            "state_local_contrast_passive_ready": (
+                state_local_contrast_gate.get("passive_contrast_ready")
+            ),
+            "state_local_contrast_labels_status": (
+                state_local_contrast_gate.get("labels_status")
+            ),
+            "state_local_contrast_labels_row_count": (
+                state_local_contrast_gate.get("labels_row_count")
+            ),
+            "state_local_contrast_labels_stage7_challenge_row_count": (
+                state_local_contrast_gate.get("labels_stage7_challenge_row_count")
+            ),
+            "state_local_contrast_labels_usable_training_row_count": (
+                state_local_contrast_gate.get("labels_usable_training_row_count")
+            ),
+            "state_local_contrast_probe_status": (
+                state_local_contrast_gate.get("probe_status")
+            ),
+            "state_local_contrast_probe_training_row_count": (
+                state_local_contrast_gate.get("probe_training_row_count")
+            ),
+            "state_local_contrast_probe_stage7_eval_row_count": (
+                state_local_contrast_gate.get("probe_stage7_eval_row_count")
+            ),
+            "state_local_contrast_probe_stage7_training_leakage": (
+                state_local_contrast_gate.get("probe_stage7_training_leakage")
+            ),
+            "state_local_contrast_readiness_status": (
+                state_local_contrast_gate.get("readiness_status")
+            ),
+            "state_local_contrast_readiness_runtime_test_allowed_next": (
+                state_local_contrast_gate.get("readiness_runtime_test_allowed_next")
+            ),
+            "state_local_contrast_runtime_selector_implemented": (
+                state_local_contrast_gate.get("runtime_selector_implemented")
+            ),
+            "state_local_contrast_runtime_dtm_or_tablebase_lookup": (
+                state_local_contrast_gate.get("runtime_dtm_or_tablebase_lookup")
+            ),
+            "state_local_contrast_stage7_promotion_allowed": (
+                state_local_contrast_gate.get("stage7_promotion_allowed")
+            ),
+            "state_local_contrast_stage8_training_allowed": (
+                state_local_contrast_gate.get("stage8_training_allowed")
             ),
             "state_local_paired_ownership_passive_ready": (
                 state_local_paired_ownership_gate.get("passive_semantic_gate_ready")

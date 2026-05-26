@@ -628,6 +628,15 @@ SOURCES = {
     "selected_provider_diversity_architecture_review_v0": (
         "reports/krk_selected_provider_diversity_architecture_review_v0.json"
     ),
+    "state_local_contrast_labels_v2": (
+        "reports/krk_state_local_contrast_labels_v2.json"
+    ),
+    "state_local_contrast_selector_probe_v2": (
+        "reports/krk_state_local_contrast_selector_probe_v2.json"
+    ),
+    "state_local_contrast_readiness_review_v2": (
+        "reports/krk_state_local_contrast_readiness_review_v2.json"
+    ),
     "hard_negative_selector_target_dataset_v2": (
         "reports/krk_hard_negative_selector_target_dataset_v2.json"
     ),
@@ -1514,6 +1523,15 @@ def build_payload() -> dict[str, Any]:
     ]
     selected_provider_diversity_architecture_review_v0 = payloads[
         "selected_provider_diversity_architecture_review_v0"
+    ]
+    state_local_contrast_labels_v2 = payloads[
+        "state_local_contrast_labels_v2"
+    ]
+    state_local_contrast_selector_probe_v2 = payloads[
+        "state_local_contrast_selector_probe_v2"
+    ]
+    state_local_contrast_readiness_review_v2 = payloads[
+        "state_local_contrast_readiness_review_v2"
     ]
     hard_negative_selector_target_dataset_v2 = payloads[
         "hard_negative_selector_target_dataset_v2"
@@ -2455,6 +2473,81 @@ def build_payload() -> dict[str, Any]:
         is False
         and selected_provider_diversity_ownership_labels_v1.get(
             "runtime_candidate_generator_implemented"
+        )
+        is False
+    )
+    state_local_contrast_labels_decision = (
+        state_local_contrast_labels_v2.get("decision") or {}
+    )
+    state_local_contrast_labels_summary = (
+        state_local_contrast_labels_v2.get("summary") or {}
+    )
+    state_local_contrast_probe_decision = (
+        state_local_contrast_selector_probe_v2.get("decision") or {}
+    )
+    state_local_contrast_probe_summary = (
+        state_local_contrast_selector_probe_v2.get("summary") or {}
+    )
+    state_local_contrast_readiness_decision = (
+        state_local_contrast_readiness_review_v2.get("decision") or {}
+    )
+    state_local_contrast_passive = (
+        state_local_contrast_labels_v2.get("causal_status")
+        == "non_causal_state_local_contrast_dataset"
+        and state_local_contrast_labels_decision.get("status")
+        == "state_local_contrast_labels_v2_joined"
+        and state_local_contrast_labels_decision.get("runtime_test_allowed_next")
+        is False
+        and state_local_contrast_labels_decision.get("stage7_promotion_allowed")
+        is False
+        and state_local_contrast_labels_decision.get("stage8_training_allowed")
+        is False
+        and state_local_contrast_labels_summary.get("row_count") == 20
+        and state_local_contrast_labels_summary.get("usable_training_row_count") == 12
+        and state_local_contrast_labels_summary.get("stage7_challenge_row_count") == 8
+        and state_local_contrast_labels_summary.get("training_contrast_label_counts")
+        == {"negative": 3, "positive": 9}
+        and state_local_contrast_labels_summary.get("stage7_contrast_label_counts")
+        == {"negative": 8}
+        and state_local_contrast_selector_probe_v2.get("causal_status")
+        == "non_causal_offline_probe"
+        and state_local_contrast_probe_decision.get("status")
+        == "state_local_contrast_signal_not_ready"
+        and state_local_contrast_probe_decision.get("runtime_test_allowed_next")
+        is False
+        and state_local_contrast_probe_decision.get("stage7_promotion_allowed")
+        is False
+        and state_local_contrast_probe_decision.get("stage8_training_allowed")
+        is False
+        and state_local_contrast_probe_summary.get("training_row_count") == 12
+        and state_local_contrast_probe_summary.get("stage7_eval_row_count") == 8
+        and state_local_contrast_probe_summary.get("stage7_training_leakage") is False
+        and state_local_contrast_readiness_review_v2.get("causal_status")
+        == "non_causal_readiness_review"
+        and state_local_contrast_readiness_decision.get("status")
+        == "runtime_selector_blocked_negative_suppression_zero"
+        and state_local_contrast_readiness_decision.get("runtime_test_allowed_next")
+        is False
+        and state_local_contrast_readiness_review_v2.get("stage7_promotion_allowed")
+        is False
+        and state_local_contrast_readiness_review_v2.get("stage8_training_allowed")
+        is False
+        and "runtime_selector"
+        in (state_local_contrast_readiness_decision.get("blocked_next_steps") or [])
+        and all(
+            artifact.get("runtime_behavior_changed") is False
+            and artifact.get("runtime_defaults_changed") is False
+            and artifact.get("runtime_dtm_or_tablebase_lookup") is False
+            and artifact.get("stage7_promotion_allowed") is False
+            and artifact.get("stage8_training_allowed") is False
+            for artifact in [
+                state_local_contrast_labels_v2,
+                state_local_contrast_selector_probe_v2,
+                state_local_contrast_readiness_review_v2,
+            ]
+        )
+        and state_local_contrast_readiness_review_v2.get(
+            "runtime_selector_implemented"
         )
         is False
     )
@@ -4322,6 +4415,100 @@ def build_payload() -> dict[str, Any]:
             ),
             "stage8_training_allowed": (
                 selected_provider_diversity_ownership_labels_v1.get(
+                    "stage8_training_allowed"
+                )
+            ),
+        },
+        "state_local_contrast_gate": {
+            "status": state_local_contrast_readiness_decision.get("status"),
+            "passive_contrast_ready": state_local_contrast_passive,
+            "labels_status": state_local_contrast_labels_decision.get("status"),
+            "labels_row_count": state_local_contrast_labels_summary.get("row_count"),
+            "labels_state_count": state_local_contrast_labels_summary.get(
+                "state_count"
+            ),
+            "labels_provider_family_counts": (
+                state_local_contrast_labels_summary.get("provider_family_counts") or {}
+            ),
+            "labels_contrast_label_counts": (
+                state_local_contrast_labels_summary.get("contrast_label_counts") or {}
+            ),
+            "labels_training_contrast_label_counts": (
+                state_local_contrast_labels_summary.get(
+                    "training_contrast_label_counts"
+                )
+                or {}
+            ),
+            "labels_stage7_challenge_row_count": (
+                state_local_contrast_labels_summary.get("stage7_challenge_row_count")
+            ),
+            "labels_stage7_contrast_label_counts": (
+                state_local_contrast_labels_summary.get(
+                    "stage7_contrast_label_counts"
+                )
+                or {}
+            ),
+            "labels_usable_training_row_count": (
+                state_local_contrast_labels_summary.get("usable_training_row_count")
+            ),
+            "labels_runtime_test_allowed_next": (
+                state_local_contrast_labels_decision.get("runtime_test_allowed_next")
+            ),
+            "probe_status": state_local_contrast_probe_decision.get("status"),
+            "probe_row_count": state_local_contrast_probe_summary.get("row_count"),
+            "probe_training_row_count": state_local_contrast_probe_summary.get(
+                "training_row_count"
+            ),
+            "probe_stage7_eval_row_count": (
+                state_local_contrast_probe_summary.get("stage7_eval_row_count")
+            ),
+            "probe_stage7_training_leakage": (
+                state_local_contrast_probe_summary.get("stage7_training_leakage")
+            ),
+            "probe_training_label_counts": (
+                state_local_contrast_probe_summary.get("training_label_counts") or {}
+            ),
+            "probe_stage7_label_counts": (
+                state_local_contrast_probe_summary.get("stage7_label_counts") or {}
+            ),
+            "probe_runtime_test_allowed_next": (
+                state_local_contrast_probe_decision.get("runtime_test_allowed_next")
+            ),
+            "readiness_status": state_local_contrast_readiness_decision.get("status"),
+            "readiness_recommended_next_step": (
+                state_local_contrast_readiness_decision.get("recommended_next_step")
+            ),
+            "readiness_runtime_test_allowed_next": (
+                state_local_contrast_readiness_decision.get(
+                    "runtime_test_allowed_next"
+                )
+            ),
+            "readiness_blocked_next_steps": (
+                state_local_contrast_readiness_decision.get("blocked_next_steps") or []
+            ),
+            "runtime_behavior_changed": state_local_contrast_readiness_review_v2.get(
+                "runtime_behavior_changed"
+            ),
+            "runtime_defaults_changed": state_local_contrast_readiness_review_v2.get(
+                "runtime_defaults_changed"
+            ),
+            "runtime_selector_implemented": (
+                state_local_contrast_readiness_review_v2.get(
+                    "runtime_selector_implemented"
+                )
+            ),
+            "runtime_dtm_or_tablebase_lookup": (
+                state_local_contrast_readiness_review_v2.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "stage7_promotion_allowed": (
+                state_local_contrast_readiness_review_v2.get(
+                    "stage7_promotion_allowed"
+                )
+            ),
+            "stage8_training_allowed": (
+                state_local_contrast_readiness_review_v2.get(
                     "stage8_training_allowed"
                 )
             ),
@@ -8369,6 +8556,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     balanced_hard_negative = payload["balanced_hard_negative_gate"]
     stronger_selector_feature = payload["stronger_selector_feature_gate"]
     selected_provider_diversity = payload["selected_provider_diversity_gate"]
+    state_local_contrast = payload["state_local_contrast_gate"]
     state_local_paired_ownership = payload["state_local_paired_ownership_gate"]
     selected_owner_failure_risk = payload["selected_owner_failure_risk_proxy_gate"]
     progress_window_reconsideration = payload["progress_window_reconsideration_gate"]
@@ -8646,6 +8834,27 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- runtime_terminals_added: `{selected_provider_diversity['runtime_terminals_added']}`",
         f"- stage7_promotion_allowed: `{selected_provider_diversity['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{selected_provider_diversity['stage8_training_allowed']}`",
+        "",
+        "## State-Local Contrast",
+        "",
+        f"- passive_contrast_ready: `{state_local_contrast['passive_contrast_ready']}`",
+        f"- labels_status: `{state_local_contrast['labels_status']}`",
+        f"- labels_row_count: `{state_local_contrast['labels_row_count']}`",
+        f"- labels_training_contrast_label_counts: `{state_local_contrast['labels_training_contrast_label_counts']}`",
+        f"- labels_stage7_challenge_row_count: `{state_local_contrast['labels_stage7_challenge_row_count']}`",
+        f"- labels_stage7_contrast_label_counts: `{state_local_contrast['labels_stage7_contrast_label_counts']}`",
+        f"- labels_usable_training_row_count: `{state_local_contrast['labels_usable_training_row_count']}`",
+        f"- probe_status: `{state_local_contrast['probe_status']}`",
+        f"- probe_training_row_count: `{state_local_contrast['probe_training_row_count']}`",
+        f"- probe_stage7_eval_row_count: `{state_local_contrast['probe_stage7_eval_row_count']}`",
+        f"- probe_stage7_training_leakage: `{state_local_contrast['probe_stage7_training_leakage']}`",
+        f"- readiness_status: `{state_local_contrast['readiness_status']}`",
+        f"- readiness_recommended_next_step: `{state_local_contrast['readiness_recommended_next_step']}`",
+        f"- readiness_runtime_test_allowed_next: `{state_local_contrast['readiness_runtime_test_allowed_next']}`",
+        f"- runtime_selector_implemented: `{state_local_contrast['runtime_selector_implemented']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{state_local_contrast['runtime_dtm_or_tablebase_lookup']}`",
+        f"- stage7_promotion_allowed: `{state_local_contrast['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{state_local_contrast['stage8_training_allowed']}`",
         "",
         "## State-Local Paired Ownership",
         "",
