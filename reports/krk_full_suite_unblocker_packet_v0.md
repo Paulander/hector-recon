@@ -76,6 +76,16 @@
 - max_jobs: `6`
 - horizon: `h40`
 - stage: `protected_plan_window_failure_contrast_evidence_only`
+- protected_stack_readiness_required: `True`
+- protected_stack_status: `retry1_protected_stage5_6_stack_adopted_manifest_only`
+- protected_stack_ready: `True`
+- protected_stack_rollback_paths_preserved: `True`
+- protected_stack_active_paths_safe: `True`
+- protected_stack_active_paths_exist: `True`
+- protected_stack_rollback_paths_safe: `True`
+- protected_stack_rollback_paths_exist: `True`
+- protected_stack_rollback_common_paths_distinct: `True`
+- protected_stack_filesystem_snapshots_replaced: `False`
 - stop_after_unique_failures: `4`
 - observation_only: `True`
 - resume_safe: `True`

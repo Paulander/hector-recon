@@ -68,6 +68,19 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     assert primary["scope"]["max_jobs"] == 6
     assert primary["scope"]["horizon"] == "h40"
     assert primary["scope"]["stage"] == "protected_plan_window_failure_contrast_evidence_only"
+    assert primary["scope"]["protected_stack_readiness_required"] is True
+    assert (
+        primary["scope"]["protected_stack_status"]
+        == "retry1_protected_stage5_6_stack_adopted_manifest_only"
+    )
+    assert primary["scope"]["protected_stack_ready"] is True
+    assert primary["scope"]["protected_stack_rollback_paths_preserved"] is True
+    assert primary["scope"]["protected_stack_active_paths_safe"] is True
+    assert primary["scope"]["protected_stack_active_paths_exist"] is True
+    assert primary["scope"]["protected_stack_rollback_paths_safe"] is True
+    assert primary["scope"]["protected_stack_rollback_paths_exist"] is True
+    assert primary["scope"]["protected_stack_rollback_common_paths_distinct"] is True
+    assert primary["scope"]["protected_stack_filesystem_snapshots_replaced"] is False
     assert primary["scope"]["source_stage_counts"] == {
         "stage4": 2,
         "stage5": 2,
@@ -271,6 +284,11 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
         in rendered
     )
     assert "approval_receipt_created_by_request: `False`" in rendered
+    assert "protected_stack_readiness_required: `True`" in rendered
+    assert (
+        "protected_stack_status: "
+        "`retry1_protected_stage5_6_stack_adopted_manifest_only`" in rendered
+    )
     assert "protected_stack_rollback_paths_preserved: `True`" in rendered
     assert "protected_stack_filesystem_snapshots_replaced: `False`" in rendered
     assert (

@@ -110,6 +110,8 @@ def build_payload() -> dict[str, Any]:
     stage7_gate = readiness["stage7_sampling_gate"]
     sequence = readiness["sequence_policy"]
     protected = readiness["protected_stack"]
+    active_stack_path_status = protected.get("active_stack_path_status") or {}
+    rollback_stack_path_status = protected.get("rollback_stack_path_status") or {}
     stage4_decision = stage4_unblocker.get("decision") or {}
     stage4_current = stage4_unblocker.get("current_stage4_status") or {}
     sequence_forbidden_training_or_runtime_inputs = bool(
@@ -513,6 +515,50 @@ def build_payload() -> dict[str, Any]:
                     if failure_contrast_primary
                     else "stage7_held_out_evidence_only"
                 ),
+                "protected_stack_readiness_required": (
+                    True if failure_contrast_primary else None
+                ),
+                "protected_stack_status": (
+                    protected.get("status") if failure_contrast_primary else None
+                ),
+                "protected_stack_ready": (
+                    protected.get("ready") if failure_contrast_primary else None
+                ),
+                "protected_stack_rollback_paths_preserved": (
+                    protected.get("rollback_paths_preserved")
+                    if failure_contrast_primary
+                    else None
+                ),
+                "protected_stack_active_paths_safe": (
+                    active_stack_path_status.get("all_paths_safe")
+                    if failure_contrast_primary
+                    else None
+                ),
+                "protected_stack_active_paths_exist": (
+                    active_stack_path_status.get("all_paths_exist")
+                    if failure_contrast_primary
+                    else None
+                ),
+                "protected_stack_rollback_paths_safe": (
+                    rollback_stack_path_status.get("all_paths_safe")
+                    if failure_contrast_primary
+                    else None
+                ),
+                "protected_stack_rollback_paths_exist": (
+                    rollback_stack_path_status.get("all_paths_exist")
+                    if failure_contrast_primary
+                    else None
+                ),
+                "protected_stack_rollback_common_paths_distinct": (
+                    protected.get("rollback_common_paths_distinct")
+                    if failure_contrast_primary
+                    else None
+                ),
+                "protected_stack_filesystem_snapshots_replaced": (
+                    protected.get("filesystem_snapshots_replaced")
+                    if failure_contrast_primary
+                    else None
+                ),
                 "source_stage_counts": (
                     failure_contrast_manifest_summary.get("source_stage_counts")
                     if failure_contrast_primary
@@ -764,6 +810,16 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- max_jobs: `{primary['scope']['max_jobs']}`",
             f"- horizon: `{primary['scope']['horizon']}`",
             f"- stage: `{primary['scope']['stage']}`",
+            f"- protected_stack_readiness_required: `{primary['scope']['protected_stack_readiness_required']}`",
+            f"- protected_stack_status: `{primary['scope']['protected_stack_status']}`",
+            f"- protected_stack_ready: `{primary['scope']['protected_stack_ready']}`",
+            f"- protected_stack_rollback_paths_preserved: `{primary['scope']['protected_stack_rollback_paths_preserved']}`",
+            f"- protected_stack_active_paths_safe: `{primary['scope']['protected_stack_active_paths_safe']}`",
+            f"- protected_stack_active_paths_exist: `{primary['scope']['protected_stack_active_paths_exist']}`",
+            f"- protected_stack_rollback_paths_safe: `{primary['scope']['protected_stack_rollback_paths_safe']}`",
+            f"- protected_stack_rollback_paths_exist: `{primary['scope']['protected_stack_rollback_paths_exist']}`",
+            f"- protected_stack_rollback_common_paths_distinct: `{primary['scope']['protected_stack_rollback_common_paths_distinct']}`",
+            f"- protected_stack_filesystem_snapshots_replaced: `{primary['scope']['protected_stack_filesystem_snapshots_replaced']}`",
             f"- stop_after_unique_failures: `{primary['scope']['stop_after_unique_failures']}`",
             f"- observation_only: `{primary['scope']['observation_only']}`",
             f"- resume_safe: `{primary['scope']['resume_safe']}`",
