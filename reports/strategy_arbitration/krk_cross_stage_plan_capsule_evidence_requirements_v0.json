@@ -20,6 +20,7 @@
       "approval_receipt_missing"
     ],
     "protected_failure_contrast_approval_request_blockers": [],
+    "protected_failure_contrast_approval_request_ready_for_collection": true,
     "protected_failure_contrast_approval_request_status": "protected_plan_window_failure_contrast_approval_request_ready",
     "remaining_evidence_gap": "protected_plan_window_failure_evidence_sparse",
     "replay_free_protected_cross_stage_evidence": true,

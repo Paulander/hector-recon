@@ -19,6 +19,7 @@ This is a non-causal requirements artifact. It does not implement PlanCapsule ru
 - remaining_evidence_gap: `protected_plan_window_failure_evidence_sparse`
 - protected_failure_contrast_approval_request_status: `protected_plan_window_failure_contrast_approval_request_ready`
 - protected_failure_contrast_approval_request_blockers: `[]`
+- protected_failure_contrast_approval_request_ready_for_collection: `True`
 - protected_failure_contrast_approval_receipt_blockers: `['approval_receipt_missing']`
 - control_plane_gate_status: `krk_control_plane_waiting_on_explicit_gate_choice`
 

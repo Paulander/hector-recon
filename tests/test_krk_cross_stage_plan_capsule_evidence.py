@@ -73,6 +73,12 @@ def test_cross_stage_plan_capsule_requirements_remain_non_causal():
         == "protected_plan_window_failure_contrast_approval_request_ready"
     )
     assert readiness["protected_failure_contrast_approval_request_blockers"] == []
+    assert (
+        readiness[
+            "protected_failure_contrast_approval_request_ready_for_collection"
+        ]
+        is True
+    )
     assert readiness["protected_failure_contrast_approval_receipt_blockers"] == [
         "approval_receipt_missing"
     ]
@@ -138,6 +144,9 @@ def test_cross_stage_plan_capsule_requirements_propagates_collection_request_blo
                 "protected_plan_window_failure_contrast_approval_request_blockers": [
                     "full_suite_readiness_audit_not_clean"
                 ],
+                "protected_plan_window_failure_contrast_approval_request_ready_for_collection": (
+                    False
+                ),
                 "protected_plan_window_failure_contrast_approval_receipt_blockers": [
                     "approval_receipt_missing"
                 ],
@@ -153,6 +162,12 @@ def test_cross_stage_plan_capsule_requirements_propagates_collection_request_blo
     assert readiness["protected_failure_contrast_approval_request_blockers"] == [
         "full_suite_readiness_audit_not_clean"
     ]
+    assert (
+        readiness[
+            "protected_failure_contrast_approval_request_ready_for_collection"
+        ]
+        is False
+    )
     assert readiness["protected_failure_contrast_approval_receipt_blockers"] == [
         "approval_receipt_missing"
     ]

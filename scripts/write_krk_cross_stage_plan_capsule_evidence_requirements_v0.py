@@ -119,6 +119,11 @@ def build_payload(
                 )
                 or []
             ),
+            "protected_failure_contrast_approval_request_ready_for_collection": (
+                control_state.get(
+                    "protected_plan_window_failure_contrast_approval_request_ready_for_collection"
+                )
+            ),
             "protected_failure_contrast_approval_receipt_blockers": (
                 control_state.get(
                     "protected_plan_window_failure_contrast_approval_receipt_blockers"
