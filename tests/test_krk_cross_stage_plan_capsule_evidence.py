@@ -68,6 +68,11 @@ def test_cross_stage_plan_capsule_requirements_remain_non_causal():
         == "non_causal_sequence_policy_design_without_new_labels_ready"
     )
     assert readiness["remaining_evidence_gap"] == "protected_plan_window_failure_evidence_sparse"
+    assert (
+        readiness["protected_failure_contrast_approval_request_status"]
+        == "protected_plan_window_failure_contrast_approval_request_ready"
+    )
+    assert readiness["protected_failure_contrast_approval_request_blockers"] == []
     assert readiness["protected_failure_contrast_approval_receipt_blockers"] == [
         "approval_receipt_missing"
     ]
@@ -104,6 +109,55 @@ def test_cross_stage_plan_capsule_requirements_fixture_can_be_ready():
     )
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["stage8_training_allowed"] is False
+
+
+def test_cross_stage_plan_capsule_requirements_propagates_collection_request_blockers():
+    payload = _requirements.build_payload(
+        plan_capsule_review={
+            "readiness": {
+                "stage7_only_evidence": False,
+                "protected_cross_stage_evidence": True,
+                "policy_succeeded": False,
+            }
+        },
+        sequence_policy_design={
+            "readiness": {
+                "stage7_clean_success_controls_met": True,
+                "stage7_clean_failure_controls_met": True,
+                "benchmark_ready": True,
+                "cross_stage_sequence_evidence_met": True,
+                "protected_plan_window_evidence_met": True,
+            }
+        },
+        control_plane_gate={
+            "decision": {"status": "fixture_gate"},
+            "current_state": {
+                "protected_plan_window_failure_contrast_approval_request": (
+                    "protected_plan_window_failure_contrast_approval_request_blocked"
+                ),
+                "protected_plan_window_failure_contrast_approval_request_blockers": [
+                    "full_suite_readiness_audit_not_clean"
+                ],
+                "protected_plan_window_failure_contrast_approval_receipt_blockers": [
+                    "approval_receipt_missing"
+                ],
+            },
+        },
+    )
+
+    readiness = payload["current_readiness"]
+    assert (
+        readiness["protected_failure_contrast_approval_request_status"]
+        == "protected_plan_window_failure_contrast_approval_request_blocked"
+    )
+    assert readiness["protected_failure_contrast_approval_request_blockers"] == [
+        "full_suite_readiness_audit_not_clean"
+    ]
+    assert readiness["protected_failure_contrast_approval_receipt_blockers"] == [
+        "approval_receipt_missing"
+    ]
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["label_run_allowed"] is False
 
 
 def test_protected_plan_window_frames_are_bounded_and_non_causal():

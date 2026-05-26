@@ -108,6 +108,17 @@ def build_payload(
             ),
             "sequence_policy_passive_design_status": passive_design.get("status"),
             "remaining_evidence_gap": current_evidence_limit,
+            "protected_failure_contrast_approval_request_status": (
+                control_state.get(
+                    "protected_plan_window_failure_contrast_approval_request"
+                )
+            ),
+            "protected_failure_contrast_approval_request_blockers": (
+                control_state.get(
+                    "protected_plan_window_failure_contrast_approval_request_blockers"
+                )
+                or []
+            ),
             "protected_failure_contrast_approval_receipt_blockers": (
                 control_state.get(
                     "protected_plan_window_failure_contrast_approval_receipt_blockers"

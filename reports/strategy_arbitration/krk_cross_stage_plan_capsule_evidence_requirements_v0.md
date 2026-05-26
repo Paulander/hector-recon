@@ -17,6 +17,8 @@ This is a non-causal requirements artifact. It does not implement PlanCapsule ru
 - sequence_policy_current_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered`
 - sequence_policy_passive_design_status: `non_causal_sequence_policy_design_without_new_labels_ready`
 - remaining_evidence_gap: `protected_plan_window_failure_evidence_sparse`
+- protected_failure_contrast_approval_request_status: `protected_plan_window_failure_contrast_approval_request_ready`
+- protected_failure_contrast_approval_request_blockers: `[]`
 - protected_failure_contrast_approval_receipt_blockers: `['approval_receipt_missing']`
 - control_plane_gate_status: `krk_control_plane_waiting_on_explicit_gate_choice`
 
