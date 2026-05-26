@@ -489,6 +489,38 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_strategy_arbiter_out_of_sample_architecture_review_v0.json"
     )
     assert (
+        payload["source_artifacts"]["strategy_arbiter_default_off_design_review_v1"]
+        == "reports/krk_strategy_arbiter_default_off_design_review_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_arbiter_runtime_review_packet_v1"]
+        == "reports/krk_strategy_arbiter_runtime_review_packet_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_arbiter_runtime_sandbox_smoke_v1"]
+        == "reports/krk_strategy_arbiter_runtime_sandbox_smoke_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_arbiter_protected_control_matrix_v2"]
+        == "reports/krk_strategy_arbiter_protected_control_matrix_v2.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_arbiter_stage7_holdout_lock_v1"]
+        == "reports/krk_strategy_arbiter_stage7_holdout_lock_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_arbiter_stage7_challenge_probe_v1"]
+        == "reports/krk_strategy_arbiter_stage7_challenge_probe_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_arbiter_support_sensitivity_v1"]
+        == "reports/krk_strategy_arbiter_support_sensitivity_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_arbiter_runtime_test_review_v2"]
+        == "reports/krk_strategy_arbiter_runtime_test_review_v2.json"
+    )
+    assert (
         payload["source_artifacts"]["arbitration_objective_review_v1"]
         == "reports/krk_arbitration_objective_review_v1.json"
     )
@@ -1043,6 +1075,124 @@ def test_full_suite_readiness_identifies_current_gate():
     assert out_of_sample["gameplay_topology_mutation"] is False
     assert out_of_sample["stage7_promotion_allowed"] is False
     assert out_of_sample["stage8_training_allowed"] is False
+
+    runtime_no_scale = payload["strategy_arbiter_runtime_no_scale_gate"]
+    assert runtime_no_scale["passive_no_scale_ready"] is True
+    assert (
+        runtime_no_scale["status"]
+        == "runtime_sandbox_safe_but_additive_support_not_ready_to_scale"
+    )
+    assert (
+        runtime_no_scale["default_off_design_status"]
+        == "default_off_strategy_arbiter_design_ready_for_external_review"
+    )
+    assert runtime_no_scale["default_off_design_implementation_allowed"] is False
+    assert runtime_no_scale["default_off_design_runtime_arbiter_allowed"] is False
+    assert runtime_no_scale["default_off_design_selector_sandbox_ready"] is False
+    assert runtime_no_scale["default_off_future_contract_default_enabled"] is False
+    assert (
+        runtime_no_scale["runtime_review_packet_status"]
+        == "runtime_review_packet_ready"
+    )
+    assert runtime_no_scale["runtime_review_packet_implementation_allowed"] is False
+    assert runtime_no_scale["runtime_review_packet_runtime_arbiter_allowed"] is False
+    assert runtime_no_scale["runtime_review_packet_selector_sandbox_ready"] is False
+    assert runtime_no_scale["runtime_review_packet_blocked_until_review"] is True
+    assert runtime_no_scale["runtime_review_packet_stage7_heldout_row_count"] == 4
+    assert (
+        runtime_no_scale["runtime_sandbox_smoke_status"]
+        == "runtime_sandbox_smoke_passed"
+    )
+    assert runtime_no_scale["runtime_sandbox_default_off_equivalence_passed"] is True
+    assert runtime_no_scale["runtime_sandbox_enabled_support_trace_visible"] is True
+    assert (
+        runtime_no_scale[
+            "runtime_sandbox_flag_present_default_off_decision_matches_baseline"
+        ]
+        is True
+    )
+    assert (
+        runtime_no_scale[
+            "runtime_sandbox_flag_present_default_off_outcome_matches_baseline"
+        ]
+        is True
+    )
+    assert runtime_no_scale["runtime_sandbox_direct_request"] is False
+    assert runtime_no_scale["runtime_sandbox_support_was_applied"] is True
+    assert (
+        runtime_no_scale["protected_control_matrix_status"]
+        == "protected_control_matrix_v2_passed"
+    )
+    assert runtime_no_scale["protected_control_default_off_equivalence_passed"] is True
+    assert runtime_no_scale["protected_control_no_conversion_regression"] is True
+    assert runtime_no_scale["protected_control_no_no_move_or_draw_spike"] is True
+    assert runtime_no_scale["protected_control_stage7_rows"] == 0
+    assert (
+        runtime_no_scale["stage7_holdout_status"] == "stage7_holdout_lock_passed"
+    )
+    assert (
+        runtime_no_scale["stage7_holdout_enabled_blocked_matches_baseline"] is True
+    )
+    assert runtime_no_scale["stage7_holdout_support_blocked"] is True
+    assert runtime_no_scale["stage7_holdout_allow_stage7_challenge"] is False
+    assert (
+        runtime_no_scale["stage7_challenge_status"]
+        == "stage7_challenge_probe_no_regression"
+    )
+    assert runtime_no_scale["stage7_challenge_conversion_delta"] == 0
+    assert runtime_no_scale["stage7_challenge_selected_supported_count"] == 0
+    assert runtime_no_scale["stage7_challenge_no_no_move_or_draw_spike"] is True
+    assert (
+        runtime_no_scale["support_sensitivity_status"]
+        == "support_sensitivity_measured"
+    )
+    assert (
+        runtime_no_scale["support_sensitivity_protected_control_status"]
+        == "high_support_changes_protected_one_ply_ownership"
+    )
+    assert (
+        runtime_no_scale["support_sensitivity_stage7_runtime_test_status"]
+        == "no_low_support_ownership_effect"
+    )
+    assert runtime_no_scale["support_sensitivity_low_support_cap"] == 5.0
+    assert (
+        runtime_no_scale["support_sensitivity_stage7_changes_under_low_support_cap"]
+        is False
+    )
+    assert runtime_no_scale["support_sensitivity_scale_risk"] == (
+        "high_support_changes_protected_ownership_before_safe_stage7_evidence"
+    )
+    assert (
+        runtime_no_scale["runtime_test_review_status"]
+        == "runtime_sandbox_safe_but_additive_support_not_ready_to_scale"
+    )
+    assert runtime_no_scale["runtime_test_review_runtime_promotion_allowed"] is False
+    assert (
+        runtime_no_scale["runtime_test_review_small_support_protected_no_regression"]
+        is True
+    )
+    assert (
+        runtime_no_scale["runtime_test_review_small_support_stage7_effective"]
+        is False
+    )
+    assert runtime_no_scale["runtime_test_review_high_support_scale_risk"] is True
+    assert (
+        runtime_no_scale["runtime_test_review_stage7_holdout_locked_by_default"]
+        is True
+    )
+    assert runtime_no_scale["runtime_test_blocked_path"] == (
+        "raise_additive_support_bonus"
+    )
+    assert "increase_broad_additive_support" in runtime_no_scale["blocked_next_steps"]
+    assert "stage7_promotion" in runtime_no_scale["blocked_next_steps"]
+    assert "stage8_training" in runtime_no_scale["blocked_next_steps"]
+    assert "runtime_dtm_or_tablebase" in runtime_no_scale["blocked_next_steps"]
+    assert "gameplay_topology_mutation" in runtime_no_scale["blocked_next_steps"]
+    assert runtime_no_scale["runtime_defaults_changed"] is False
+    assert runtime_no_scale["runtime_dtm_or_tablebase_lookup"] is False
+    assert runtime_no_scale["gameplay_topology_mutation"] is False
+    assert runtime_no_scale["stage7_promotion_allowed"] is False
+    assert runtime_no_scale["stage8_training_allowed"] is False
 
     selector_objective = payload["selector_objective_normalization_gate"]
     assert selector_objective["passive_objective_ready"] is True

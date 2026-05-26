@@ -327,6 +327,94 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["strategy_arbiter_out_of_sample_stage8_training_allowed"]
         is False
     )
+    assert (
+        payload["summary"]["strategy_arbiter_runtime_no_scale_passive_ready"]
+        is True
+    )
+    assert payload["summary"]["strategy_arbiter_runtime_no_scale_status"] == (
+        "runtime_sandbox_safe_but_additive_support_not_ready_to_scale"
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_runtime_no_scale_default_off_design_status"
+        ]
+        == "default_off_strategy_arbiter_design_ready_for_external_review"
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_runtime_no_scale_runtime_review_packet_status"
+        ]
+        == "runtime_review_packet_ready"
+    )
+    assert (
+        payload["summary"]["strategy_arbiter_runtime_no_scale_smoke_status"]
+        == "runtime_sandbox_smoke_passed"
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_runtime_no_scale_protected_matrix_status"
+        ]
+        == "protected_control_matrix_v2_passed"
+    )
+    assert (
+        payload["summary"]["strategy_arbiter_runtime_no_scale_stage7_holdout_status"]
+        == "stage7_holdout_lock_passed"
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_runtime_no_scale_stage7_challenge_status"
+        ]
+        == "stage7_challenge_probe_no_regression"
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_runtime_no_scale_support_sensitivity_status"
+        ]
+        == "support_sensitivity_measured"
+    )
+    assert payload["summary"]["strategy_arbiter_runtime_no_scale_support_scale_risk"] == (
+        "high_support_changes_protected_ownership_before_safe_stage7_evidence"
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_runtime_no_scale_runtime_promotion_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_runtime_no_scale_small_support_stage7_effective"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_runtime_no_scale_high_support_scale_risk"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_runtime_no_scale_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_runtime_no_scale_gameplay_topology_mutation"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_runtime_no_scale_stage7_promotion_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["strategy_arbiter_runtime_no_scale_stage8_training_allowed"]
+        is False
+    )
     assert payload["summary"]["selector_objective_normalization_passive_ready"] is True
     assert (
         payload["summary"]["selector_objective_arbitration_status"]

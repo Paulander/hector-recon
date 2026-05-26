@@ -587,6 +587,9 @@ def build_payload() -> dict[str, Any]:
     strategy_arbiter_out_of_sample_gate = (
         readiness.get("strategy_arbiter_out_of_sample_gate") or {}
     )
+    strategy_arbiter_runtime_no_scale_gate = (
+        readiness.get("strategy_arbiter_runtime_no_scale_gate") or {}
+    )
     selector_objective_normalization_gate = (
         readiness.get("selector_objective_normalization_gate") or {}
     )
@@ -1106,6 +1109,77 @@ def build_payload() -> dict[str, Any]:
             ),
             "strategy_arbiter_out_of_sample_stage8_training_allowed": (
                 strategy_arbiter_out_of_sample_gate.get("stage8_training_allowed")
+            ),
+            "strategy_arbiter_runtime_no_scale_passive_ready": (
+                strategy_arbiter_runtime_no_scale_gate.get("passive_no_scale_ready")
+            ),
+            "strategy_arbiter_runtime_no_scale_status": (
+                strategy_arbiter_runtime_no_scale_gate.get("status")
+            ),
+            "strategy_arbiter_runtime_no_scale_default_off_design_status": (
+                strategy_arbiter_runtime_no_scale_gate.get("default_off_design_status")
+            ),
+            "strategy_arbiter_runtime_no_scale_runtime_review_packet_status": (
+                strategy_arbiter_runtime_no_scale_gate.get(
+                    "runtime_review_packet_status"
+                )
+            ),
+            "strategy_arbiter_runtime_no_scale_smoke_status": (
+                strategy_arbiter_runtime_no_scale_gate.get(
+                    "runtime_sandbox_smoke_status"
+                )
+            ),
+            "strategy_arbiter_runtime_no_scale_protected_matrix_status": (
+                strategy_arbiter_runtime_no_scale_gate.get(
+                    "protected_control_matrix_status"
+                )
+            ),
+            "strategy_arbiter_runtime_no_scale_stage7_holdout_status": (
+                strategy_arbiter_runtime_no_scale_gate.get("stage7_holdout_status")
+            ),
+            "strategy_arbiter_runtime_no_scale_stage7_challenge_status": (
+                strategy_arbiter_runtime_no_scale_gate.get("stage7_challenge_status")
+            ),
+            "strategy_arbiter_runtime_no_scale_support_sensitivity_status": (
+                strategy_arbiter_runtime_no_scale_gate.get(
+                    "support_sensitivity_status"
+                )
+            ),
+            "strategy_arbiter_runtime_no_scale_support_scale_risk": (
+                strategy_arbiter_runtime_no_scale_gate.get(
+                    "support_sensitivity_scale_risk"
+                )
+            ),
+            "strategy_arbiter_runtime_no_scale_runtime_promotion_allowed": (
+                strategy_arbiter_runtime_no_scale_gate.get(
+                    "runtime_test_review_runtime_promotion_allowed"
+                )
+            ),
+            "strategy_arbiter_runtime_no_scale_small_support_stage7_effective": (
+                strategy_arbiter_runtime_no_scale_gate.get(
+                    "runtime_test_review_small_support_stage7_effective"
+                )
+            ),
+            "strategy_arbiter_runtime_no_scale_high_support_scale_risk": (
+                strategy_arbiter_runtime_no_scale_gate.get(
+                    "runtime_test_review_high_support_scale_risk"
+                )
+            ),
+            "strategy_arbiter_runtime_no_scale_runtime_dtm_or_tablebase_lookup": (
+                strategy_arbiter_runtime_no_scale_gate.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "strategy_arbiter_runtime_no_scale_gameplay_topology_mutation": (
+                strategy_arbiter_runtime_no_scale_gate.get(
+                    "gameplay_topology_mutation"
+                )
+            ),
+            "strategy_arbiter_runtime_no_scale_stage7_promotion_allowed": (
+                strategy_arbiter_runtime_no_scale_gate.get("stage7_promotion_allowed")
+            ),
+            "strategy_arbiter_runtime_no_scale_stage8_training_allowed": (
+                strategy_arbiter_runtime_no_scale_gate.get("stage8_training_allowed")
             ),
             "selector_objective_normalization_passive_ready": (
                 selector_objective_normalization_gate.get("passive_objective_ready")

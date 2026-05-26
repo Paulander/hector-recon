@@ -592,6 +592,30 @@ SOURCES = {
     "strategy_arbiter_out_of_sample_architecture_review_v0": (
         "reports/krk_strategy_arbiter_out_of_sample_architecture_review_v0.json"
     ),
+    "strategy_arbiter_default_off_design_review_v1": (
+        "reports/krk_strategy_arbiter_default_off_design_review_v1.json"
+    ),
+    "strategy_arbiter_runtime_review_packet_v1": (
+        "reports/krk_strategy_arbiter_runtime_review_packet_v1.json"
+    ),
+    "strategy_arbiter_runtime_sandbox_smoke_v1": (
+        "reports/krk_strategy_arbiter_runtime_sandbox_smoke_v1.json"
+    ),
+    "strategy_arbiter_protected_control_matrix_v2": (
+        "reports/krk_strategy_arbiter_protected_control_matrix_v2.json"
+    ),
+    "strategy_arbiter_stage7_holdout_lock_v1": (
+        "reports/krk_strategy_arbiter_stage7_holdout_lock_v1.json"
+    ),
+    "strategy_arbiter_stage7_challenge_probe_v1": (
+        "reports/krk_strategy_arbiter_stage7_challenge_probe_v1.json"
+    ),
+    "strategy_arbiter_support_sensitivity_v1": (
+        "reports/krk_strategy_arbiter_support_sensitivity_v1.json"
+    ),
+    "strategy_arbiter_runtime_test_review_v2": (
+        "reports/krk_strategy_arbiter_runtime_test_review_v2.json"
+    ),
     "arbitration_objective_review_v1": (
         "reports/krk_arbitration_objective_review_v1.json"
     ),
@@ -1583,6 +1607,30 @@ def build_payload() -> dict[str, Any]:
     strategy_arbiter_out_of_sample_architecture_review_v0 = payloads[
         "strategy_arbiter_out_of_sample_architecture_review_v0"
     ]
+    strategy_arbiter_default_off_design_review_v1 = payloads[
+        "strategy_arbiter_default_off_design_review_v1"
+    ]
+    strategy_arbiter_runtime_review_packet_v1 = payloads[
+        "strategy_arbiter_runtime_review_packet_v1"
+    ]
+    strategy_arbiter_runtime_sandbox_smoke_v1 = payloads[
+        "strategy_arbiter_runtime_sandbox_smoke_v1"
+    ]
+    strategy_arbiter_protected_control_matrix_v2 = payloads[
+        "strategy_arbiter_protected_control_matrix_v2"
+    ]
+    strategy_arbiter_stage7_holdout_lock_v1 = payloads[
+        "strategy_arbiter_stage7_holdout_lock_v1"
+    ]
+    strategy_arbiter_stage7_challenge_probe_v1 = payloads[
+        "strategy_arbiter_stage7_challenge_probe_v1"
+    ]
+    strategy_arbiter_support_sensitivity_v1 = payloads[
+        "strategy_arbiter_support_sensitivity_v1"
+    ]
+    strategy_arbiter_runtime_test_review_v2 = payloads[
+        "strategy_arbiter_runtime_test_review_v2"
+    ]
     arbitration_objective_review_v1 = payloads["arbitration_objective_review_v1"]
     normalized_strategy_selector_objective_v1 = payloads[
         "normalized_strategy_selector_objective_v1"
@@ -2339,6 +2387,300 @@ def build_payload() -> dict[str, Any]:
         and strategy_arbiter_out_of_sample_architecture_review_v0.get(
             "stage8_training_allowed"
         )
+        is False
+    )
+    default_off_design_decision = (
+        strategy_arbiter_default_off_design_review_v1.get("decision") or {}
+    )
+    default_off_future_contract = (
+        strategy_arbiter_default_off_design_review_v1.get("future_sandbox_contract")
+        or {}
+    )
+    runtime_review_packet_decision = (
+        strategy_arbiter_runtime_review_packet_v1.get("decision") or {}
+    )
+    runtime_review_packet_evidence = (
+        strategy_arbiter_runtime_review_packet_v1.get("evidence_summary") or {}
+    )
+    runtime_sandbox_smoke_decision = (
+        strategy_arbiter_runtime_sandbox_smoke_v1.get("decision") or {}
+    )
+    runtime_sandbox_smoke_equivalence = (
+        strategy_arbiter_runtime_sandbox_smoke_v1.get("equivalence") or {}
+    )
+    runtime_sandbox_smoke_enabled = (
+        strategy_arbiter_runtime_sandbox_smoke_v1.get("enabled_sandbox") or {}
+    )
+    protected_control_matrix_decision = (
+        strategy_arbiter_protected_control_matrix_v2.get("decision") or {}
+    )
+    protected_control_matrix_summary = (
+        strategy_arbiter_protected_control_matrix_v2.get("summary") or {}
+    )
+    protected_control_matrix_sample = (
+        strategy_arbiter_protected_control_matrix_v2.get("sample") or {}
+    )
+    stage7_holdout_decision = (
+        strategy_arbiter_stage7_holdout_lock_v1.get("decision") or {}
+    )
+    stage7_holdout_equivalence = (
+        strategy_arbiter_stage7_holdout_lock_v1.get("equivalence") or {}
+    )
+    stage7_holdout_sample = (
+        strategy_arbiter_stage7_holdout_lock_v1.get("sample") or {}
+    )
+    stage7_challenge_decision = (
+        strategy_arbiter_stage7_challenge_probe_v1.get("decision") or {}
+    )
+    stage7_challenge_summary = (
+        strategy_arbiter_stage7_challenge_probe_v1.get("summary") or {}
+    )
+    support_sensitivity_decision = (
+        strategy_arbiter_support_sensitivity_v1.get("decision") or {}
+    )
+    support_sensitivity_summary = (
+        strategy_arbiter_support_sensitivity_v1.get("summary") or {}
+    )
+    runtime_test_review_decision = (
+        strategy_arbiter_runtime_test_review_v2.get("decision") or {}
+    )
+    runtime_test_review_findings = (
+        strategy_arbiter_runtime_test_review_v2.get("findings") or {}
+    )
+    runtime_test_review_interpretation = (
+        strategy_arbiter_runtime_test_review_v2.get("interpretation") or {}
+    )
+    runtime_test_blocked_steps = (
+        strategy_arbiter_runtime_test_review_v2.get("blocked_next_steps") or []
+    )
+    strategy_arbiter_runtime_no_scale_passive = (
+        strategy_arbiter_default_off_design_review_v1.get("causal_status")
+        == "non_causal_design_review"
+        and default_off_design_decision.get("status")
+        == "default_off_strategy_arbiter_design_ready_for_external_review"
+        and default_off_design_decision.get("implementation_allowed") is False
+        and default_off_design_decision.get("runtime_arbiter_allowed") is False
+        and default_off_design_decision.get("selector_sandbox_ready") is False
+        and default_off_future_contract.get("default_enabled") is False
+        and strategy_arbiter_default_off_design_review_v1.get(
+            "runtime_arbiter_implemented"
+        )
+        is False
+        and strategy_arbiter_default_off_design_review_v1.get(
+            "runtime_behavior_changed"
+        )
+        is False
+        and strategy_arbiter_default_off_design_review_v1.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and strategy_arbiter_default_off_design_review_v1.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and strategy_arbiter_default_off_design_review_v1.get(
+            "gameplay_topology_mutation"
+        )
+        is False
+        and strategy_arbiter_default_off_design_review_v1.get(
+            "stage7_promotion_allowed"
+        )
+        is False
+        and strategy_arbiter_default_off_design_review_v1.get(
+            "stage8_training_allowed"
+        )
+        is False
+        and strategy_arbiter_runtime_review_packet_v1.get("causal_status")
+        == "non_causal_review_packet"
+        and runtime_review_packet_decision.get("status") == "runtime_review_packet_ready"
+        and runtime_review_packet_decision.get("implementation_allowed") is False
+        and runtime_review_packet_decision.get("runtime_arbiter_allowed") is False
+        and runtime_review_packet_decision.get("selector_sandbox_ready") is False
+        and strategy_arbiter_runtime_review_packet_v1.get(
+            "implementation_blocked_until_review"
+        )
+        is True
+        and strategy_arbiter_runtime_review_packet_v1.get(
+            "runtime_arbiter_implemented"
+        )
+        is False
+        and strategy_arbiter_runtime_review_packet_v1.get("runtime_behavior_changed")
+        is False
+        and strategy_arbiter_runtime_review_packet_v1.get("runtime_defaults_changed")
+        is False
+        and strategy_arbiter_runtime_review_packet_v1.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and strategy_arbiter_runtime_review_packet_v1.get("gameplay_topology_mutation")
+        is False
+        and strategy_arbiter_runtime_review_packet_v1.get("stage7_promotion_allowed")
+        is False
+        and strategy_arbiter_runtime_review_packet_v1.get("stage8_training_allowed")
+        is False
+        and strategy_arbiter_runtime_sandbox_smoke_v1.get("causal_status")
+        == "runtime_test_sandbox_smoke"
+        and runtime_sandbox_smoke_decision.get("status")
+        == "runtime_sandbox_smoke_passed"
+        and runtime_sandbox_smoke_decision.get("default_off_equivalence_passed")
+        is True
+        and runtime_sandbox_smoke_decision.get("enabled_support_trace_visible")
+        is True
+        and runtime_sandbox_smoke_equivalence.get(
+            "flag_present_default_off_decision_matches_baseline"
+        )
+        is True
+        and runtime_sandbox_smoke_equivalence.get(
+            "flag_present_default_off_outcome_matches_baseline"
+        )
+        is True
+        and runtime_sandbox_smoke_enabled.get("direct_request") is False
+        and runtime_sandbox_smoke_enabled.get("support_was_applied") is True
+        and strategy_arbiter_runtime_sandbox_smoke_v1.get("runtime_defaults_changed")
+        is False
+        and strategy_arbiter_runtime_sandbox_smoke_v1.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and strategy_arbiter_runtime_sandbox_smoke_v1.get(
+            "gameplay_topology_mutation"
+        )
+        is False
+        and strategy_arbiter_runtime_sandbox_smoke_v1.get("stage7_promotion_allowed")
+        is False
+        and strategy_arbiter_runtime_sandbox_smoke_v1.get("stage8_training_allowed")
+        is False
+        and strategy_arbiter_protected_control_matrix_v2.get("causal_status")
+        == "runtime_test_protected_control_matrix"
+        and protected_control_matrix_decision.get("status")
+        == "protected_control_matrix_v2_passed"
+        and protected_control_matrix_summary.get("default_off_equivalence_passed")
+        is True
+        and protected_control_matrix_summary.get("enabled_has_no_conversion_regression")
+        is True
+        and protected_control_matrix_summary.get("enabled_has_no_no_move_or_draw_spike")
+        is True
+        and protected_control_matrix_sample.get("stage7_rows") == 0
+        and strategy_arbiter_protected_control_matrix_v2.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and strategy_arbiter_protected_control_matrix_v2.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and strategy_arbiter_protected_control_matrix_v2.get(
+            "gameplay_topology_mutation"
+        )
+        is False
+        and strategy_arbiter_protected_control_matrix_v2.get(
+            "stage7_promotion_allowed"
+        )
+        is False
+        and strategy_arbiter_protected_control_matrix_v2.get(
+            "stage8_training_allowed"
+        )
+        is False
+        and strategy_arbiter_stage7_holdout_lock_v1.get("causal_status")
+        == "runtime_test_stage7_holdout_lock"
+        and stage7_holdout_decision.get("status") == "stage7_holdout_lock_passed"
+        and stage7_holdout_equivalence.get("enabled_blocked_matches_baseline") is True
+        and stage7_holdout_equivalence.get("support_blocked") is True
+        and stage7_holdout_sample.get("allow_stage7_challenge") is False
+        and strategy_arbiter_stage7_holdout_lock_v1.get("runtime_defaults_changed")
+        is False
+        and strategy_arbiter_stage7_holdout_lock_v1.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and strategy_arbiter_stage7_holdout_lock_v1.get("gameplay_topology_mutation")
+        is False
+        and strategy_arbiter_stage7_holdout_lock_v1.get("stage7_promotion_allowed")
+        is False
+        and strategy_arbiter_stage7_holdout_lock_v1.get("stage8_training_allowed")
+        is False
+        and strategy_arbiter_stage7_challenge_probe_v1.get("causal_status")
+        == "runtime_test_stage7_challenge_probe"
+        and stage7_challenge_decision.get("status")
+        == "stage7_challenge_probe_no_regression"
+        and stage7_challenge_summary.get("conversion_delta") == 0
+        and stage7_challenge_summary.get("selected_supported_count") == 0
+        and stage7_challenge_summary.get("no_no_move_or_draw_spike") is True
+        and strategy_arbiter_stage7_challenge_probe_v1.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and strategy_arbiter_stage7_challenge_probe_v1.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and strategy_arbiter_stage7_challenge_probe_v1.get(
+            "gameplay_topology_mutation"
+        )
+        is False
+        and strategy_arbiter_stage7_challenge_probe_v1.get(
+            "stage7_promotion_allowed"
+        )
+        is False
+        and strategy_arbiter_stage7_challenge_probe_v1.get("stage8_training_allowed")
+        is False
+        and strategy_arbiter_support_sensitivity_v1.get("causal_status")
+        == "runtime_test_one_ply_sensitivity"
+        and support_sensitivity_decision.get("status") == "support_sensitivity_measured"
+        and support_sensitivity_decision.get("protected_control_status")
+        == "high_support_changes_protected_one_ply_ownership"
+        and support_sensitivity_decision.get("stage7_runtime_test_status")
+        == "no_low_support_ownership_effect"
+        and support_sensitivity_summary.get("low_support_cap") == 5.0
+        and support_sensitivity_summary.get("stage7_changes_under_low_support_cap")
+        is False
+        and support_sensitivity_summary.get("support_scale_risk")
+        == "high_support_changes_protected_ownership_before_safe_stage7_evidence"
+        and strategy_arbiter_support_sensitivity_v1.get("runtime_defaults_changed")
+        is False
+        and strategy_arbiter_support_sensitivity_v1.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and strategy_arbiter_support_sensitivity_v1.get("gameplay_topology_mutation")
+        is False
+        and strategy_arbiter_support_sensitivity_v1.get("stage7_promotion_allowed")
+        is False
+        and strategy_arbiter_support_sensitivity_v1.get("stage8_training_allowed")
+        is False
+        and strategy_arbiter_runtime_test_review_v2.get("causal_status")
+        == "runtime_test_review_non_promoting"
+        and runtime_test_review_decision.get("status")
+        == "runtime_sandbox_safe_but_additive_support_not_ready_to_scale"
+        and runtime_test_review_decision.get("runtime_promotion_allowed") is False
+        and runtime_test_review_decision.get("stage7_promotion_allowed") is False
+        and runtime_test_review_decision.get("stage8_training_allowed") is False
+        and runtime_test_review_findings.get("default_off_equivalence_passed") is True
+        and runtime_test_review_findings.get("small_support_protected_no_regression")
+        is True
+        and runtime_test_review_findings.get("small_support_stage7_effective")
+        is False
+        and runtime_test_review_findings.get("high_support_scale_risk") is True
+        and runtime_test_review_findings.get("stage7_holdout_locked_by_default")
+        is True
+        and runtime_test_review_interpretation.get("blocked_path")
+        == "raise_additive_support_bonus"
+        and "increase_broad_additive_support" in runtime_test_blocked_steps
+        and "stage7_promotion" in runtime_test_blocked_steps
+        and "stage8_training" in runtime_test_blocked_steps
+        and "runtime_dtm_or_tablebase" in runtime_test_blocked_steps
+        and "gameplay_topology_mutation" in runtime_test_blocked_steps
+        and strategy_arbiter_runtime_test_review_v2.get("runtime_defaults_changed")
+        is False
+        and strategy_arbiter_runtime_test_review_v2.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and strategy_arbiter_runtime_test_review_v2.get("gameplay_topology_mutation")
+        is False
+        and strategy_arbiter_runtime_test_review_v2.get("stage7_promotion_allowed")
+        is False
+        and strategy_arbiter_runtime_test_review_v2.get("stage8_training_allowed")
         is False
     )
     arbitration_objective_decision = arbitration_objective_review_v1.get(
@@ -4909,6 +5251,172 @@ def build_payload() -> dict[str, Any]:
             ),
             "stage8_training_allowed": (
                 strategy_arbiter_out_of_sample_architecture_review_v0.get(
+                    "stage8_training_allowed"
+                )
+            ),
+        },
+        "strategy_arbiter_runtime_no_scale_gate": {
+            "status": runtime_test_review_decision.get("status"),
+            "passive_no_scale_ready": strategy_arbiter_runtime_no_scale_passive,
+            "default_off_design_status": default_off_design_decision.get("status"),
+            "default_off_design_implementation_allowed": (
+                default_off_design_decision.get("implementation_allowed")
+            ),
+            "default_off_design_runtime_arbiter_allowed": (
+                default_off_design_decision.get("runtime_arbiter_allowed")
+            ),
+            "default_off_design_selector_sandbox_ready": (
+                default_off_design_decision.get("selector_sandbox_ready")
+            ),
+            "default_off_future_contract_default_enabled": (
+                default_off_future_contract.get("default_enabled")
+            ),
+            "runtime_review_packet_status": runtime_review_packet_decision.get(
+                "status"
+            ),
+            "runtime_review_packet_implementation_allowed": (
+                runtime_review_packet_decision.get("implementation_allowed")
+            ),
+            "runtime_review_packet_runtime_arbiter_allowed": (
+                runtime_review_packet_decision.get("runtime_arbiter_allowed")
+            ),
+            "runtime_review_packet_selector_sandbox_ready": (
+                runtime_review_packet_decision.get("selector_sandbox_ready")
+            ),
+            "runtime_review_packet_blocked_until_review": (
+                strategy_arbiter_runtime_review_packet_v1.get(
+                    "implementation_blocked_until_review"
+                )
+            ),
+            "runtime_review_packet_stage7_heldout_row_count": (
+                runtime_review_packet_evidence.get("stage7_heldout_row_count")
+            ),
+            "runtime_sandbox_smoke_status": runtime_sandbox_smoke_decision.get(
+                "status"
+            ),
+            "runtime_sandbox_default_off_equivalence_passed": (
+                runtime_sandbox_smoke_decision.get("default_off_equivalence_passed")
+            ),
+            "runtime_sandbox_enabled_support_trace_visible": (
+                runtime_sandbox_smoke_decision.get("enabled_support_trace_visible")
+            ),
+            "runtime_sandbox_flag_present_default_off_decision_matches_baseline": (
+                runtime_sandbox_smoke_equivalence.get(
+                    "flag_present_default_off_decision_matches_baseline"
+                )
+            ),
+            "runtime_sandbox_flag_present_default_off_outcome_matches_baseline": (
+                runtime_sandbox_smoke_equivalence.get(
+                    "flag_present_default_off_outcome_matches_baseline"
+                )
+            ),
+            "runtime_sandbox_direct_request": (
+                runtime_sandbox_smoke_enabled.get("direct_request")
+            ),
+            "runtime_sandbox_support_was_applied": (
+                runtime_sandbox_smoke_enabled.get("support_was_applied")
+            ),
+            "protected_control_matrix_status": protected_control_matrix_decision.get(
+                "status"
+            ),
+            "protected_control_default_off_equivalence_passed": (
+                protected_control_matrix_summary.get("default_off_equivalence_passed")
+            ),
+            "protected_control_no_conversion_regression": (
+                protected_control_matrix_summary.get(
+                    "enabled_has_no_conversion_regression"
+                )
+            ),
+            "protected_control_no_no_move_or_draw_spike": (
+                protected_control_matrix_summary.get(
+                    "enabled_has_no_no_move_or_draw_spike"
+                )
+            ),
+            "protected_control_stage7_rows": (
+                protected_control_matrix_sample.get("stage7_rows")
+            ),
+            "stage7_holdout_status": stage7_holdout_decision.get("status"),
+            "stage7_holdout_enabled_blocked_matches_baseline": (
+                stage7_holdout_equivalence.get("enabled_blocked_matches_baseline")
+            ),
+            "stage7_holdout_support_blocked": (
+                stage7_holdout_equivalence.get("support_blocked")
+            ),
+            "stage7_holdout_allow_stage7_challenge": (
+                stage7_holdout_sample.get("allow_stage7_challenge")
+            ),
+            "stage7_challenge_status": stage7_challenge_decision.get("status"),
+            "stage7_challenge_conversion_delta": (
+                stage7_challenge_summary.get("conversion_delta")
+            ),
+            "stage7_challenge_selected_supported_count": (
+                stage7_challenge_summary.get("selected_supported_count")
+            ),
+            "stage7_challenge_no_no_move_or_draw_spike": (
+                stage7_challenge_summary.get("no_no_move_or_draw_spike")
+            ),
+            "support_sensitivity_status": support_sensitivity_decision.get("status"),
+            "support_sensitivity_protected_control_status": (
+                support_sensitivity_decision.get("protected_control_status")
+            ),
+            "support_sensitivity_stage7_runtime_test_status": (
+                support_sensitivity_decision.get("stage7_runtime_test_status")
+            ),
+            "support_sensitivity_low_support_cap": (
+                support_sensitivity_summary.get("low_support_cap")
+            ),
+            "support_sensitivity_stage7_changes_under_low_support_cap": (
+                support_sensitivity_summary.get(
+                    "stage7_changes_under_low_support_cap"
+                )
+            ),
+            "support_sensitivity_scale_risk": (
+                support_sensitivity_summary.get("support_scale_risk")
+            ),
+            "runtime_test_review_status": runtime_test_review_decision.get("status"),
+            "runtime_test_review_runtime_promotion_allowed": (
+                runtime_test_review_decision.get("runtime_promotion_allowed")
+            ),
+            "runtime_test_review_small_support_protected_no_regression": (
+                runtime_test_review_findings.get(
+                    "small_support_protected_no_regression"
+                )
+            ),
+            "runtime_test_review_small_support_stage7_effective": (
+                runtime_test_review_findings.get("small_support_stage7_effective")
+            ),
+            "runtime_test_review_high_support_scale_risk": (
+                runtime_test_review_findings.get("high_support_scale_risk")
+            ),
+            "runtime_test_review_stage7_holdout_locked_by_default": (
+                runtime_test_review_findings.get("stage7_holdout_locked_by_default")
+            ),
+            "runtime_test_blocked_path": (
+                runtime_test_review_interpretation.get("blocked_path")
+            ),
+            "blocked_next_steps": runtime_test_blocked_steps,
+            "runtime_defaults_changed": (
+                strategy_arbiter_runtime_test_review_v2.get(
+                    "runtime_defaults_changed"
+                )
+            ),
+            "runtime_dtm_or_tablebase_lookup": (
+                strategy_arbiter_runtime_test_review_v2.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "gameplay_topology_mutation": (
+                strategy_arbiter_runtime_test_review_v2.get(
+                    "gameplay_topology_mutation"
+                )
+            ),
+            "stage7_promotion_allowed": (
+                strategy_arbiter_runtime_test_review_v2.get(
+                    "stage7_promotion_allowed"
+                )
+            ),
+            "stage8_training_allowed": (
+                strategy_arbiter_runtime_test_review_v2.get(
                     "stage8_training_allowed"
                 )
             ),
@@ -10153,6 +10661,9 @@ def write_markdown(payload: dict[str, Any]) -> str:
     strategy_sequence_architecture = payload["strategy_sequence_architecture_gate"]
     strategy_owner_contrast = payload["strategy_owner_contrast_gate"]
     strategy_arbiter_out_of_sample = payload["strategy_arbiter_out_of_sample_gate"]
+    strategy_arbiter_runtime_no_scale = payload[
+        "strategy_arbiter_runtime_no_scale_gate"
+    ]
     selector_objective_normalization = payload["selector_objective_normalization_gate"]
     selector_label_balance = payload["selector_label_balance_gate"]
     ownership_selection_context = payload["ownership_selection_context_gate"]
@@ -10322,6 +10833,46 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- gameplay_topology_mutation: `{strategy_arbiter_out_of_sample['gameplay_topology_mutation']}`",
         f"- stage7_promotion_allowed: `{strategy_arbiter_out_of_sample['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{strategy_arbiter_out_of_sample['stage8_training_allowed']}`",
+        "",
+        "## Strategy Arbiter Runtime No-Scale Review",
+        "",
+        f"- passive_no_scale_ready: `{strategy_arbiter_runtime_no_scale['passive_no_scale_ready']}`",
+        f"- status: `{strategy_arbiter_runtime_no_scale['status']}`",
+        f"- default_off_design_status: `{strategy_arbiter_runtime_no_scale['default_off_design_status']}`",
+        f"- default_off_design_implementation_allowed: `{strategy_arbiter_runtime_no_scale['default_off_design_implementation_allowed']}`",
+        f"- default_off_design_runtime_arbiter_allowed: `{strategy_arbiter_runtime_no_scale['default_off_design_runtime_arbiter_allowed']}`",
+        f"- default_off_design_selector_sandbox_ready: `{strategy_arbiter_runtime_no_scale['default_off_design_selector_sandbox_ready']}`",
+        f"- default_off_future_contract_default_enabled: `{strategy_arbiter_runtime_no_scale['default_off_future_contract_default_enabled']}`",
+        f"- runtime_review_packet_status: `{strategy_arbiter_runtime_no_scale['runtime_review_packet_status']}`",
+        f"- runtime_review_packet_implementation_allowed: `{strategy_arbiter_runtime_no_scale['runtime_review_packet_implementation_allowed']}`",
+        f"- runtime_review_packet_selector_sandbox_ready: `{strategy_arbiter_runtime_no_scale['runtime_review_packet_selector_sandbox_ready']}`",
+        f"- runtime_review_packet_blocked_until_review: `{strategy_arbiter_runtime_no_scale['runtime_review_packet_blocked_until_review']}`",
+        f"- runtime_sandbox_smoke_status: `{strategy_arbiter_runtime_no_scale['runtime_sandbox_smoke_status']}`",
+        f"- runtime_sandbox_default_off_equivalence_passed: `{strategy_arbiter_runtime_no_scale['runtime_sandbox_default_off_equivalence_passed']}`",
+        f"- runtime_sandbox_enabled_support_trace_visible: `{strategy_arbiter_runtime_no_scale['runtime_sandbox_enabled_support_trace_visible']}`",
+        f"- runtime_sandbox_direct_request: `{strategy_arbiter_runtime_no_scale['runtime_sandbox_direct_request']}`",
+        f"- runtime_sandbox_support_was_applied: `{strategy_arbiter_runtime_no_scale['runtime_sandbox_support_was_applied']}`",
+        f"- protected_control_matrix_status: `{strategy_arbiter_runtime_no_scale['protected_control_matrix_status']}`",
+        f"- protected_control_no_conversion_regression: `{strategy_arbiter_runtime_no_scale['protected_control_no_conversion_regression']}`",
+        f"- protected_control_no_no_move_or_draw_spike: `{strategy_arbiter_runtime_no_scale['protected_control_no_no_move_or_draw_spike']}`",
+        f"- protected_control_stage7_rows: `{strategy_arbiter_runtime_no_scale['protected_control_stage7_rows']}`",
+        f"- stage7_holdout_status: `{strategy_arbiter_runtime_no_scale['stage7_holdout_status']}`",
+        f"- stage7_holdout_support_blocked: `{strategy_arbiter_runtime_no_scale['stage7_holdout_support_blocked']}`",
+        f"- stage7_holdout_allow_stage7_challenge: `{strategy_arbiter_runtime_no_scale['stage7_holdout_allow_stage7_challenge']}`",
+        f"- stage7_challenge_status: `{strategy_arbiter_runtime_no_scale['stage7_challenge_status']}`",
+        f"- stage7_challenge_conversion_delta: `{strategy_arbiter_runtime_no_scale['stage7_challenge_conversion_delta']}`",
+        f"- stage7_challenge_selected_supported_count: `{strategy_arbiter_runtime_no_scale['stage7_challenge_selected_supported_count']}`",
+        f"- support_sensitivity_status: `{strategy_arbiter_runtime_no_scale['support_sensitivity_status']}`",
+        f"- support_sensitivity_scale_risk: `{strategy_arbiter_runtime_no_scale['support_sensitivity_scale_risk']}`",
+        f"- runtime_test_review_runtime_promotion_allowed: `{strategy_arbiter_runtime_no_scale['runtime_test_review_runtime_promotion_allowed']}`",
+        f"- runtime_test_review_small_support_stage7_effective: `{strategy_arbiter_runtime_no_scale['runtime_test_review_small_support_stage7_effective']}`",
+        f"- runtime_test_review_high_support_scale_risk: `{strategy_arbiter_runtime_no_scale['runtime_test_review_high_support_scale_risk']}`",
+        f"- runtime_test_blocked_path: `{strategy_arbiter_runtime_no_scale['runtime_test_blocked_path']}`",
+        f"- blocked_next_steps: `{strategy_arbiter_runtime_no_scale['blocked_next_steps']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{strategy_arbiter_runtime_no_scale['runtime_dtm_or_tablebase_lookup']}`",
+        f"- gameplay_topology_mutation: `{strategy_arbiter_runtime_no_scale['gameplay_topology_mutation']}`",
+        f"- stage7_promotion_allowed: `{strategy_arbiter_runtime_no_scale['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{strategy_arbiter_runtime_no_scale['stage8_training_allowed']}`",
         "",
         "## Selector Objective Normalization",
         "",

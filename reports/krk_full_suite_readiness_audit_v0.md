@@ -132,6 +132,46 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Strategy Arbiter Runtime No-Scale Review
+
+- passive_no_scale_ready: `True`
+- status: `runtime_sandbox_safe_but_additive_support_not_ready_to_scale`
+- default_off_design_status: `default_off_strategy_arbiter_design_ready_for_external_review`
+- default_off_design_implementation_allowed: `False`
+- default_off_design_runtime_arbiter_allowed: `False`
+- default_off_design_selector_sandbox_ready: `False`
+- default_off_future_contract_default_enabled: `False`
+- runtime_review_packet_status: `runtime_review_packet_ready`
+- runtime_review_packet_implementation_allowed: `False`
+- runtime_review_packet_selector_sandbox_ready: `False`
+- runtime_review_packet_blocked_until_review: `True`
+- runtime_sandbox_smoke_status: `runtime_sandbox_smoke_passed`
+- runtime_sandbox_default_off_equivalence_passed: `True`
+- runtime_sandbox_enabled_support_trace_visible: `True`
+- runtime_sandbox_direct_request: `False`
+- runtime_sandbox_support_was_applied: `True`
+- protected_control_matrix_status: `protected_control_matrix_v2_passed`
+- protected_control_no_conversion_regression: `True`
+- protected_control_no_no_move_or_draw_spike: `True`
+- protected_control_stage7_rows: `0`
+- stage7_holdout_status: `stage7_holdout_lock_passed`
+- stage7_holdout_support_blocked: `True`
+- stage7_holdout_allow_stage7_challenge: `False`
+- stage7_challenge_status: `stage7_challenge_probe_no_regression`
+- stage7_challenge_conversion_delta: `0`
+- stage7_challenge_selected_supported_count: `0`
+- support_sensitivity_status: `support_sensitivity_measured`
+- support_sensitivity_scale_risk: `high_support_changes_protected_ownership_before_safe_stage7_evidence`
+- runtime_test_review_runtime_promotion_allowed: `False`
+- runtime_test_review_small_support_stage7_effective: `False`
+- runtime_test_review_high_support_scale_risk: `True`
+- runtime_test_blocked_path: `raise_additive_support_bonus`
+- blocked_next_steps: `['increase_broad_additive_support', 'stage7_repair', 'stage7_promotion', 'stage8_training', 'runtime_dtm_or_tablebase', 'gameplay_topology_mutation']`
+- runtime_dtm_or_tablebase_lookup: `False`
+- gameplay_topology_mutation: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Selector Objective Normalization
 
 - passive_objective_ready: `True`
@@ -632,7 +672,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `fb0ca9d381206a61fd22002948a92f9382fbd20bb60ffaf82b1bd4e105b14cdc`
+- expected_readiness_fingerprint: `38fe3056acb39d6ed8a68907e9b170dd830be2d567bc42ad36cec53f14548c0b`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1161,5 +1201,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2353`
+- checked_flag_count: `2395`
 - violation_count: `0`
