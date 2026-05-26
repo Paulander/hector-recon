@@ -485,7 +485,13 @@ def build_payload(
             else None,
             "safety_scope": (
                 {
+                    "manifest_job_count": failure_contrast_manifest_summary.get(
+                        "job_count"
+                    ),
                     "max_jobs": failure_contrast_manifest_summary.get("job_count"),
+                    "runner_max_jobs_option": failure_contrast_runner_summary.get(
+                        "max_jobs"
+                    ),
                     "horizon": (
                         f"h{failure_contrast_constraints.get('horizon')}"
                         if failure_contrast_constraints.get("horizon")

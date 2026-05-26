@@ -502,6 +502,16 @@ def build_payload() -> dict[str, Any]:
                     if additional_ready
                     else 8
                 ),
+                "manifest_job_count": (
+                    failure_contrast_manifest_summary.get("job_count")
+                    if failure_contrast_primary
+                    else None
+                ),
+                "runner_max_jobs_option": (
+                    failure_contrast_runner_summary.get("max_jobs")
+                    if failure_contrast_primary
+                    else None
+                ),
                 "horizon": (
                     f"h{failure_contrast_constraints.get('horizon')}"
                     if failure_contrast_primary
@@ -813,6 +823,8 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- purpose: {primary['purpose']}",
             f"- command_if_explicitly_approved: `{primary['command_if_explicitly_approved']}`",
             f"- max_jobs: `{primary['scope']['max_jobs']}`",
+            f"- manifest_job_count: `{primary['scope']['manifest_job_count']}`",
+            f"- runner_max_jobs_option: `{primary['scope']['runner_max_jobs_option']}`",
             f"- horizon: `{primary['scope']['horizon']}`",
             f"- stage: `{primary['scope']['stage']}`",
             f"- protected_stack_readiness_required: `{primary['scope']['protected_stack_readiness_required']}`",

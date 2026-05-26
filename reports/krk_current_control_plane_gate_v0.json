@@ -41,6 +41,7 @@
         "expected_readiness_fingerprint": "351a366042e7e888018897007e29e096afdb180a9c4f4eb02853940b82228c66",
         "horizon": "h40",
         "invalid_existing_outputs_block_without_overwrite": true,
+        "manifest_job_count": 6,
         "max_jobs": 6,
         "observation_only": true,
         "output_valid_count": 0,
@@ -56,6 +57,7 @@
         "protected_stack_rollback_paths_safe": true,
         "refresh_after_run": true,
         "resume_safe": true,
+        "runner_max_jobs_option": null,
         "runtime_authorization_row_count": 0,
         "skip_existing_outputs_by_default": true,
         "source_stage_counts": {

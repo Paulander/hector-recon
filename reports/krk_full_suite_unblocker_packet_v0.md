@@ -74,6 +74,8 @@
 - purpose: Review the bounded protected plan-window failure-contrast manifest before any explicitly approved collection run.
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - max_jobs: `6`
+- manifest_job_count: `6`
+- runner_max_jobs_option: `None`
 - horizon: `h40`
 - stage: `protected_plan_window_failure_contrast_evidence_only`
 - protected_stack_readiness_required: `True`

@@ -411,6 +411,8 @@ def test_current_control_plane_gate_requires_explicit_choice():
         "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
     )
     assert review_option["safety_scope"]["max_jobs"] == 6
+    assert review_option["safety_scope"]["manifest_job_count"] == 6
+    assert review_option["safety_scope"]["runner_max_jobs_option"] is None
     assert review_option["safety_scope"]["horizon"] == "h40"
     assert (
         review_option["safety_scope"]["stage"]

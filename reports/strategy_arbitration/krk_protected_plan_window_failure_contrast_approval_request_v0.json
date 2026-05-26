@@ -103,7 +103,11 @@
     "readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
     "runner_executed_job_count": 0,
     "runner_execution_requested": false,
+    "runner_job_timeout_seconds": 900,
+    "runner_max_jobs_option": null,
+    "runner_overwrite_existing_outputs": false,
     "runner_processed_job_count": 0,
+    "runner_refresh_after_run_requested": true,
     "runner_status": "protected_plan_window_failure_contrast_runner_dry_run_ready"
   }
 }

@@ -434,6 +434,10 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
     assert payload["summary"]["runner_execution_requested"] is False
     assert payload["summary"]["runner_processed_job_count"] == 0
     assert payload["summary"]["runner_executed_job_count"] == 0
+    assert payload["summary"]["runner_max_jobs_option"] is None
+    assert payload["summary"]["runner_job_timeout_seconds"] == 900
+    assert payload["summary"]["runner_overwrite_existing_outputs"] is False
+    assert payload["summary"]["runner_refresh_after_run_requested"] is True
     assert payload["summary"]["approval_receipt_required"] is True
     assert (
         payload["summary"]["protected_stack_status"]

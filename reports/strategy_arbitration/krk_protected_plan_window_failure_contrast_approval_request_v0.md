@@ -13,6 +13,10 @@ This is a passive request packet only. It does not create the approval receipt, 
 - runner_execution_requested: `False`
 - runner_processed_job_count: `0`
 - runner_executed_job_count: `0`
+- runner_max_jobs_option: `None`
+- runner_job_timeout_seconds: `900`
+- runner_overwrite_existing_outputs: `False`
+- runner_refresh_after_run_requested: `True`
 - manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
 - readiness_fingerprint: `351a366042e7e888018897007e29e096afdb180a9c4f4eb02853940b82228c66`
 - protected_stack_status: `retry1_protected_stage5_6_stack_adopted_manifest_only`

@@ -192,6 +192,14 @@ def build_payload(
             "runner_execution_requested": runner.get("execution_requested"),
             "runner_processed_job_count": runner_summary.get("processed_job_count"),
             "runner_executed_job_count": runner_summary.get("executed_job_count"),
+            "runner_max_jobs_option": runner_summary.get("max_jobs"),
+            "runner_job_timeout_seconds": runner_summary.get("job_timeout_seconds"),
+            "runner_overwrite_existing_outputs": runner_summary.get(
+                "overwrite_existing_outputs"
+            ),
+            "runner_refresh_after_run_requested": runner_summary.get(
+                "refresh_after_run_requested"
+            ),
             "manifest_fingerprint": readiness_summary.get("manifest_fingerprint"),
             "readiness_fingerprint": readiness_summary.get("readiness_fingerprint"),
             "protected_stack_status": protected_stack_safety["status"],

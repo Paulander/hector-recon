@@ -66,6 +66,8 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     )
     assert primary["scope"]["resume_safe"] is True
     assert primary["scope"]["max_jobs"] == 6
+    assert primary["scope"]["manifest_job_count"] == 6
+    assert primary["scope"]["runner_max_jobs_option"] is None
     assert primary["scope"]["horizon"] == "h40"
     assert primary["scope"]["stage"] == "protected_plan_window_failure_contrast_evidence_only"
     assert primary["scope"]["protected_stack_readiness_required"] is True
@@ -271,6 +273,8 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
         in rendered
     )
     assert "max_jobs: `6`" in rendered
+    assert "manifest_job_count: `6`" in rendered
+    assert "runner_max_jobs_option: `None`" in rendered
     assert "stage: `protected_plan_window_failure_contrast_evidence_only`" in rendered
     assert "stop_after_unique_failures: `4`" in rendered
     assert "observation_only: `True`" in rendered
