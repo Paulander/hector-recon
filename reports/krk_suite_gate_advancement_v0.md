@@ -110,6 +110,9 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - stage8_training_readiness_protected_failure_contrast_runtime_direct_routing: `False`
 - stage8_training_readiness_protected_failure_contrast_hidden_python_controller: `False`
 - stage7_post_label_outcome_status: `post_label_outcome_waiting_on_explicit_protected_failure_contrast_collection`
+- stage7_post_label_outcome_readiness_checked_flag_count: `430`
+- stage7_post_label_outcome_readiness_boundary_violation_count: `0`
+- stage7_post_label_outcome_readiness_source_artifact_count: `44`
 - stage7_post_label_outcome_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - stage7_post_label_outcome_protected_failure_contrast_runner_processed_job_count: `0`
 - stage7_post_label_outcome_protected_failure_contrast_runner_executed_job_count: `0`

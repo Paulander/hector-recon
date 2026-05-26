@@ -89,6 +89,7 @@ def build_payload(
     readiness_status = (readiness.get("decision") or {}).get("status")
     stage8_status = (stage8_review.get("decision") or {}).get("status")
     protected_failure_contrast = readiness.get("protected_failure_contrast_gate") or {}
+    readiness_boundaries = readiness.get("runtime_and_training_boundaries") or {}
     explicit_gate_blockers = set(readiness.get("explicit_gate_blockers") or [])
     hard_blockers = set(readiness.get("hard_blockers") or [])
     sequence_policy = readiness.get("sequence_policy") or {}
@@ -214,6 +215,15 @@ def build_payload(
             "pipeline_status": pipeline_status,
             "benchmark_review_status": benchmark_review_status,
             "readiness_status": readiness_status,
+            "readiness_checked_flag_count": readiness_boundaries.get(
+                "checked_flag_count"
+            ),
+            "readiness_boundary_violation_count": readiness_boundaries.get(
+                "violation_count"
+            ),
+            "readiness_source_artifact_count": len(
+                readiness.get("source_artifacts") or {}
+            ),
             "stage8_status": stage8_status,
             "outputs_present_count": outputs_present,
             "outputs_valid_count": outputs_valid,

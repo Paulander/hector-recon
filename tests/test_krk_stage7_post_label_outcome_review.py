@@ -44,6 +44,9 @@ def test_stage7_post_label_outcome_current_artifact_reports_sequence_policy_gap(
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
     assert payload["summary"]["outputs_present_count"] == 8
+    assert payload["summary"]["readiness_checked_flag_count"] >= 430
+    assert payload["summary"]["readiness_boundary_violation_count"] == 0
+    assert payload["summary"]["readiness_source_artifact_count"] >= 44
     assert payload["summary"]["output_validation_status"] == (
         "stage7_diverse_clean_sampling_outputs_valid_ready_for_integration"
     )

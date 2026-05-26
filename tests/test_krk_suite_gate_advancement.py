@@ -410,6 +410,12 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         payload["summary"]["stage7_post_label_outcome_status"]
         == "post_label_outcome_waiting_on_explicit_protected_failure_contrast_collection"
     )
+    assert payload["summary"]["stage7_post_label_outcome_readiness_checked_flag_count"] >= 430
+    assert (
+        payload["summary"]["stage7_post_label_outcome_readiness_boundary_violation_count"]
+        == 0
+    )
+    assert payload["summary"]["stage7_post_label_outcome_readiness_source_artifact_count"] >= 44
     assert (
         payload["summary"]["stage7_post_label_outcome_next_step"]
         == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"

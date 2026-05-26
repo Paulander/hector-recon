@@ -823,6 +823,15 @@ def build_payload() -> dict[str, Any]:
             "stage7_post_label_outcome_status": post_label_review.get("decision", {}).get(
                 "status"
             ),
+            "stage7_post_label_outcome_readiness_checked_flag_count": post_label_review.get(
+                "summary", {}
+            ).get("readiness_checked_flag_count"),
+            "stage7_post_label_outcome_readiness_boundary_violation_count": post_label_review.get(
+                "summary", {}
+            ).get("readiness_boundary_violation_count"),
+            "stage7_post_label_outcome_readiness_source_artifact_count": post_label_review.get(
+                "summary", {}
+            ).get("readiness_source_artifact_count"),
             "stage7_post_label_outcome_next_step": post_label_review.get("decision", {}).get(
                 "recommended_next_step"
             ),
