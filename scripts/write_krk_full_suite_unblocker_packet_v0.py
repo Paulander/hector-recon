@@ -143,10 +143,13 @@ def build_payload() -> dict[str, Any]:
         and failure_contrast_approval_request_summary.get("request_ready") is True
         and not (failure_contrast_approval_request.get("blockers") or [])
     )
-    stage4_approval_request_ready = (
-        stage4_current.get("approval_request_status")
-        == "stage4_first_move_contrast_sandbox_approval_request_ready"
-        and not (stage4_current.get("approval_request_blockers") or [])
+    stage4_approval_request_ready = bool(
+        stage4_current.get(
+            "approval_request_ready_for_runtime_approval",
+            stage4_current.get("approval_request_status")
+            == "stage4_first_move_contrast_sandbox_approval_request_ready"
+            and not (stage4_current.get("approval_request_blockers") or []),
+        )
     )
     failure_contrast_integration_ready = bool(
         failure_contrast_integration.get("summary", {}).get("integration_ready")

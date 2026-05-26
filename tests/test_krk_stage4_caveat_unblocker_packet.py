@@ -62,6 +62,12 @@ def test_stage4_caveat_unblocker_is_review_ready_but_not_authorized():
         == "stage4_first_move_contrast_sandbox_approval_request_ready"
     )
     assert payload["current_stage4_status"]["approval_request_blockers"] == []
+    assert (
+        payload["current_stage4_status"][
+            "approval_request_ready_for_runtime_approval"
+        ]
+        is True
+    )
     assert payload["current_stage4_status"]["approval_request_created"] is False
     assert (
         payload["current_stage4_status"]["implementation_authorized_by_approval_request"]
@@ -105,6 +111,7 @@ def test_stage4_caveat_unblocker_writer_is_deterministic():
 
     assert "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval" in rendered
     assert "approval_request_blockers: `[]`" in rendered
+    assert "approval_request_ready_for_runtime_approval: `True`" in rendered
     assert "implementation_allowed_by_this_packet: `False`" in rendered
     assert payload["evidence"]["stratified_gap_variant_count"] == 4
     assert payload["current_stage4_status"]["runtime_review_ready"] is True
@@ -134,6 +141,12 @@ def test_stage4_caveat_unblocker_propagates_approval_request_blockers(monkeypatc
     assert payload["current_stage4_status"]["approval_request_blockers"] == [
         "full_suite_readiness_audit_not_clean"
     ]
+    assert (
+        payload["current_stage4_status"][
+            "approval_request_ready_for_runtime_approval"
+        ]
+        is False
+    )
     assert "stage4_first_move_contrast_approval_request_not_ready" in payload["blockers"]
     assert (
         "stage4_first_move_contrast_approval_request_has_blockers"
@@ -143,6 +156,7 @@ def test_stage4_caveat_unblocker_propagates_approval_request_blockers(monkeypatc
         "approval_request_blockers: `['full_suite_readiness_audit_not_clean']`"
         in rendered
     )
+    assert "approval_request_ready_for_runtime_approval: `False`" in rendered
     assert payload["decision"]["runtime_changes_allowed"] is False
 
 
