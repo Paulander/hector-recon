@@ -890,6 +890,37 @@ def build_payload() -> dict[str, Any]:
             "sequence_policy_inputs_ready": pipeline.get("summary", {}).get(
                 "sequence_policy_inputs_ready"
             ),
+            "sequence_policy_input_probe_status": readiness.get(
+                "sequence_policy", {}
+            ).get("input_probe_status"),
+            "sequence_policy_input_probe_row_count": readiness.get(
+                "sequence_policy", {}
+            ).get("input_probe_row_count"),
+            "sequence_policy_input_probe_benchmark_input_ready": readiness.get(
+                "sequence_policy", {}
+            ).get("input_probe_benchmark_input_ready"),
+            "sequence_policy_input_probe_stage4_topk_signal": readiness.get(
+                "sequence_policy", {}
+            ).get("input_probe_stage4_topk_signal"),
+            "sequence_policy_input_probe_protected_plan_window_failure_sparse": readiness.get(
+                "sequence_policy", {}
+            ).get("input_probe_protected_plan_window_failure_sparse"),
+            "sequence_policy_input_probe_protected_failure_contrast_collection_option_available": readiness.get(
+                "sequence_policy", {}
+            ).get(
+                "input_probe_protected_failure_contrast_collection_option_available"
+            ),
+            "sequence_policy_input_probe_protected_failure_contrast_collection_command_available": readiness.get(
+                "sequence_policy", {}
+            ).get(
+                "input_probe_protected_failure_contrast_collection_command_available"
+            ),
+            "sequence_policy_input_probe_selector_training_row_count": readiness.get(
+                "sequence_policy", {}
+            ).get("input_probe_selector_training_row_count"),
+            "sequence_policy_input_probe_runtime_authorization_row_count": readiness.get(
+                "sequence_policy", {}
+            ).get("input_probe_runtime_authorization_row_count"),
             "sequence_policy_benchmark_ready": benchmark_ready,
             "sequence_policy_benchmark_review_status": benchmark_review.get("decision", {}).get(
                 "status"

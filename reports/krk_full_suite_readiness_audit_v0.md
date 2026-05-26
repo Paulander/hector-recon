@@ -65,6 +65,13 @@
 ## Sequence Policy
 
 - pipeline_status: `sequence_policy_pipeline_refreshed_ready_for_non_causal_benchmark_review`
+- input_probe_status: `sequence_policy_input_probe_ready_for_full_non_causal_benchmark`
+- input_probe_row_count: `118`
+- input_probe_benchmark_input_ready: `True`
+- input_probe_stage4_topk_signal: `True`
+- input_probe_protected_plan_window_failure_sparse: `True`
+- input_probe_selector_training_row_count: `0`
+- input_probe_runtime_authorization_row_count: `0`
 - benchmark_status: `sequence_policy_benchmark_ready_non_causal_results_available`
 - benchmark_design_status: `sequence_policy_benchmark_design_ready_non_causal`
 - benchmark_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered`
@@ -122,7 +129,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `ac2ce0ad75f392f73eb5b41cbc35b5a66661a01eb722963c2c1b6824124a9a25`
+- expected_readiness_fingerprint: `ba23f2581ff769167dc194ab149ae8aff9d3273e312f711bf7131b5ebc68ae4f`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -504,5 +511,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1338`
+- checked_flag_count: `1347`
 - violation_count: `0`

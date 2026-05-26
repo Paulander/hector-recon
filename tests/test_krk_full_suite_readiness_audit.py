@@ -75,6 +75,10 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json"
     )
     assert (
+        payload["source_artifacts"]["sequence_policy_input_probe"]
+        == "reports/strategy_arbitration/krk_sequence_policy_input_probe_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["stage7_sampling_manifest"]
         == "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json"
     )
@@ -384,6 +388,28 @@ def test_full_suite_readiness_identifies_current_gate():
     )
 
     sequence = payload["sequence_policy"]
+    assert (
+        sequence["input_probe_status"]
+        == "sequence_policy_input_probe_ready_for_full_non_causal_benchmark"
+    )
+    assert sequence["input_probe_row_count"] == 118
+    assert sequence["input_probe_benchmark_input_ready"] is True
+    assert sequence["input_probe_stage4_topk_signal"] is True
+    assert sequence["input_probe_protected_plan_window_failure_sparse"] is True
+    assert (
+        sequence[
+            "input_probe_protected_failure_contrast_collection_option_available"
+        ]
+        is True
+    )
+    assert (
+        sequence[
+            "input_probe_protected_failure_contrast_collection_command_available"
+        ]
+        is True
+    )
+    assert sequence["input_probe_selector_training_row_count"] == 0
+    assert sequence["input_probe_runtime_authorization_row_count"] == 0
     assert (
         sequence["benchmark_design_status"]
         == "sequence_policy_benchmark_design_ready_non_causal"

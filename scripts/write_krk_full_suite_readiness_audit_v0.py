@@ -373,6 +373,9 @@ SOURCES = {
     "sequence_benchmark_inputs": (
         "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json"
     ),
+    "sequence_policy_input_probe": (
+        "reports/strategy_arbitration/krk_sequence_policy_input_probe_v0.json"
+    ),
     "sequence_benchmark": "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
     "sequence_benchmark_design": (
         "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json"
@@ -609,6 +612,7 @@ def build_payload() -> dict[str, Any]:
     stage4_runtime_review = payloads["stage4_first_move_contrast_runtime_review"]
     stage4_approval_request = payloads["stage4_sandbox_approval_request"]
     pipeline = payloads["sequence_pipeline_refresh"]
+    sequence_policy_input_probe = payloads["sequence_policy_input_probe"]
     benchmark = payloads["sequence_benchmark"]
     benchmark_design = payloads["sequence_benchmark_design"]
     benchmark_review = payloads["sequence_benchmark_review"]
@@ -1348,6 +1352,47 @@ def build_payload() -> dict[str, Any]:
         "stage_status": stage_status,
         "sequence_policy": {
             "pipeline_status": pipeline.get("decision", {}).get("status"),
+            "input_probe_status": (
+                sequence_policy_input_probe.get("decision", {}).get("status")
+            ),
+            "input_probe_row_count": (
+                sequence_policy_input_probe.get("summary", {}).get("row_count")
+            ),
+            "input_probe_benchmark_input_ready": (
+                sequence_policy_input_probe.get("summary", {}).get(
+                    "benchmark_input_ready"
+                )
+            ),
+            "input_probe_stage4_topk_signal": (
+                sequence_policy_input_probe.get("summary", {}).get(
+                    "stage4_topk_signal"
+                )
+            ),
+            "input_probe_protected_plan_window_failure_sparse": (
+                sequence_policy_input_probe.get("summary", {}).get(
+                    "protected_plan_window_failure_sparse"
+                )
+            ),
+            "input_probe_protected_failure_contrast_collection_option_available": (
+                sequence_policy_input_probe.get("summary", {}).get(
+                    "protected_failure_contrast_collection_option_available"
+                )
+            ),
+            "input_probe_protected_failure_contrast_collection_command_available": (
+                sequence_policy_input_probe.get("summary", {}).get(
+                    "protected_failure_contrast_collection_command_available"
+                )
+            ),
+            "input_probe_selector_training_row_count": (
+                sequence_policy_input_probe.get("summary", {}).get(
+                    "selector_training_row_count"
+                )
+            ),
+            "input_probe_runtime_authorization_row_count": (
+                sequence_policy_input_probe.get("summary", {}).get(
+                    "runtime_authorization_row_count"
+                )
+            ),
             "benchmark_status": benchmark_decision.get("status"),
             "benchmark_design_status": benchmark_design_decision.get("status"),
             "benchmark_review_status": sequence_review_status,
@@ -4206,6 +4251,13 @@ def write_markdown(payload: dict[str, Any]) -> str:
             "## Sequence Policy",
             "",
             f"- pipeline_status: `{sequence['pipeline_status']}`",
+            f"- input_probe_status: `{sequence['input_probe_status']}`",
+            f"- input_probe_row_count: `{sequence['input_probe_row_count']}`",
+            f"- input_probe_benchmark_input_ready: `{sequence['input_probe_benchmark_input_ready']}`",
+            f"- input_probe_stage4_topk_signal: `{sequence['input_probe_stage4_topk_signal']}`",
+            f"- input_probe_protected_plan_window_failure_sparse: `{sequence['input_probe_protected_plan_window_failure_sparse']}`",
+            f"- input_probe_selector_training_row_count: `{sequence['input_probe_selector_training_row_count']}`",
+            f"- input_probe_runtime_authorization_row_count: `{sequence['input_probe_runtime_authorization_row_count']}`",
             f"- benchmark_status: `{sequence['benchmark_status']}`",
             f"- benchmark_design_status: `{sequence['benchmark_design_status']}`",
             f"- benchmark_review_status: `{sequence['benchmark_review_status']}`",

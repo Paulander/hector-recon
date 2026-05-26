@@ -90,6 +90,44 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["stage7_clean_success_backfill_available"] is True
     assert payload["summary"]["stage7_clean_success_backfill_eligible_new_success"] == 0
     assert payload["summary"]["sequence_policy_inputs_ready"] is True
+    assert (
+        payload["summary"]["sequence_policy_input_probe_status"]
+        == "sequence_policy_input_probe_ready_for_full_non_causal_benchmark"
+    )
+    assert payload["summary"]["sequence_policy_input_probe_row_count"] == 118
+    assert (
+        payload["summary"]["sequence_policy_input_probe_benchmark_input_ready"]
+        is True
+    )
+    assert payload["summary"]["sequence_policy_input_probe_stage4_topk_signal"] is True
+    assert (
+        payload["summary"][
+            "sequence_policy_input_probe_protected_plan_window_failure_sparse"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_input_probe_protected_failure_contrast_collection_option_available"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_input_probe_protected_failure_contrast_collection_command_available"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"]["sequence_policy_input_probe_selector_training_row_count"]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_input_probe_runtime_authorization_row_count"
+        ]
+        == 0
+    )
     assert payload["summary"]["sequence_policy_benchmark_ready"] is True
     assert (
         payload["summary"]["current_control_plane_gate_status"]
