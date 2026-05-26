@@ -46,6 +46,17 @@ def _read_report(path: str) -> dict:
     return payload
 
 
+def _walk_json(value, path=()):
+    if isinstance(value, dict):
+        for key, child in value.items():
+            yield from _walk_json(child, (*path, str(key)))
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            yield from _walk_json(child, (*path, str(index)))
+    else:
+        yield path, value
+
+
 def _ready_execution_summary(job_count: int = 1) -> dict:
     return {
         "all_jobs_pass_readiness": True,
@@ -79,6 +90,43 @@ def _approval_receipt(job_count: int = 1) -> dict:
             "stage8_training_allowed": False,
         },
     }
+
+
+def test_checked_in_reports_preserve_protected_collection_receipt_gate():
+    stale_next_step = "explicitly_approve_protected_plan_window_failure_contrast_collection"
+    protected_runner = "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py"
+    forbidden_true_keys = {
+        "collection_run_allowed",
+        "execution_requested",
+        "gameplay_topology_mutation",
+        "label_run_allowed",
+        "runtime_behavior_changed",
+        "runtime_changes_allowed",
+        "runtime_defaults_changed",
+        "runtime_dtm_or_tablebase_lookup",
+        "runtime_selector_implemented",
+        "selector_training_allowed",
+        "stage7_promotion_allowed",
+        "stage8_training_allowed",
+        "would_execute",
+    }
+
+    for base in (ROOT / "reports", ROOT / "scripts"):
+        for path in sorted(base.rglob("*")):
+            if path.suffix not in {".json", ".md", ".py"}:
+                continue
+            text = path.read_text(encoding="utf-8")
+            relative_path = path.relative_to(ROOT)
+            assert stale_next_step not in text, relative_path
+            for line_number, line in enumerate(text.splitlines(), start=1):
+                if protected_runner in line and "--execute-reviewed-collection" in line:
+                    assert "--approval-receipt" in line, f"{relative_path}:{line_number}"
+
+    for path in sorted((ROOT / "reports").rglob("*.json")):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        for json_path, value in _walk_json(payload):
+            if json_path and json_path[-1] in forbidden_true_keys:
+                assert value is not True, f"{path.relative_to(ROOT)}:{'.'.join(json_path)}"
 
 
 def test_failure_contrast_manifest_is_bounded_review_only():
