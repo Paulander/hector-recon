@@ -122,7 +122,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `bbaa1e5614ca6f895d0d579a936a6849d4227f264665c6678e7d00b0cd8d7a7d`
+- expected_readiness_fingerprint: `33a462821c76b5aa38a00155a119a4a46d7ccdd7be2b61f020d67050d77b19ee`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -181,6 +181,41 @@
 - two_stage_benchmark_expanded_positive_recall_rate: `1.0`
 - two_stage_benchmark_selector_ready: `False`
 - runtime_work_allowed: `False`
+- selector_training_allowed: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
+## Selector Objective Lineage Evidence
+
+- ownership_recovery_status: `ownership_label_recovery_seed_manifest_ready_selector_blocked`
+- ownership_recovery_joined_state_count: `4`
+- ownership_recovery_selected_failure_with_visible_positive_count: `2`
+- seed_manifest_v0_status: `selector_objective_seed_manifest_ready_non_causal`
+- seed_manifest_v0_seed_row_count: `4`
+- seed_probe_v0_status: `selector_objective_seed_probe_underpowered_semantics_confirmed`
+- collection_manifest_status: `joined_trace_ownership_collection_manifest_ready_for_review`
+- collection_review_status: `joined_trace_ownership_observation_collection_review_ready`
+- collection_review_implementation_authorized: `False`
+- joined_collection_status: `joined_trace_ownership_collection_complete_seed_improved`
+- joined_collection_collected_row_count: `8`
+- joined_collection_generated_frame_count: `80`
+- joined_collection_selected_move_delta_count: `0`
+- joined_collection_selected_provider_delta_count: `0`
+- joined_collection_score_delta_count: `0`
+- joined_collection_routing_delta_count: `0`
+- seed_manifest_v1_status: `selector_objective_seed_manifest_v1_ready_non_causal`
+- seed_manifest_v1_seed_row_count: `12`
+- seed_probe_v1_status: `selector_objective_seed_ready_for_non_causal_feature_probe`
+- feature_probe_status: `selector_objective_feature_probe_no_runtime_ready_features`
+- feature_probe_runtime_threshold_passing_model_count: `0`
+- feature_probe_review_status: `selector_feature_probe_blocks_runtime_needs_diverse_evidence`
+- feature_probe_review_best_switch_recall: `0.75`
+- feature_probe_review_best_preserve_recall: `1.0`
+- diversity_gap_status: `selector_objective_diversity_gap_requires_stage4_scope_review`
+- diversity_gap_remaining_stage4_selected_failure_count: `6`
+- diversity_gap_remaining_stage5_6_selected_failure_count: `0`
+- stage4_scope_review_status: `stage4_joined_trace_ownership_scope_review_ready`
+- stage4_scope_review_implementation_authorized: `False`
 - selector_training_allowed: `False`
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
@@ -313,5 +348,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `868`
+- checked_flag_count: `976`
 - violation_count: `0`

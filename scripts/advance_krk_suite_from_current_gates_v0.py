@@ -583,6 +583,9 @@ def build_payload() -> dict[str, Any]:
     protected_missing_provider_gate = (
         readiness.get("protected_missing_provider_gate") or {}
     )
+    selector_objective_lineage_gate = (
+        readiness.get("selector_objective_lineage_gate") or {}
+    )
     selector_objective_gate = readiness.get("selector_objective_gate") or {}
     stage4_first_move_diagnostic_gate = (
         readiness.get("stage4_first_move_diagnostic_gate") or {}
@@ -1176,6 +1179,114 @@ def build_payload() -> dict[str, Any]:
             ),
             "protected_missing_provider_runtime_work_allowed": protected_missing_provider_gate.get(
                 "runtime_work_allowed"
+            ),
+            "selector_objective_lineage_ownership_recovery_status": selector_objective_lineage_gate.get(
+                "ownership_recovery_status"
+            ),
+            "selector_objective_lineage_ownership_recovery_joined_state_count": selector_objective_lineage_gate.get(
+                "ownership_recovery_joined_state_count"
+            ),
+            "selector_objective_lineage_ownership_recovery_selected_failure_with_visible_positive_count": selector_objective_lineage_gate.get(
+                "ownership_recovery_selected_failure_with_visible_positive_count"
+            ),
+            "selector_objective_lineage_seed_manifest_v0_status": selector_objective_lineage_gate.get(
+                "seed_manifest_v0_status"
+            ),
+            "selector_objective_lineage_seed_manifest_v0_seed_row_count": selector_objective_lineage_gate.get(
+                "seed_manifest_v0_seed_row_count"
+            ),
+            "selector_objective_lineage_seed_probe_v0_status": selector_objective_lineage_gate.get(
+                "seed_probe_v0_status"
+            ),
+            "selector_objective_lineage_seed_probe_v0_runtime_feature_eligible_prediction_count": selector_objective_lineage_gate.get(
+                "seed_probe_v0_runtime_feature_eligible_prediction_count"
+            ),
+            "selector_objective_lineage_collection_manifest_status": selector_objective_lineage_gate.get(
+                "collection_manifest_status"
+            ),
+            "selector_objective_lineage_collection_manifest_runtime_collection_allowed_row_count": selector_objective_lineage_gate.get(
+                "collection_manifest_runtime_collection_allowed_row_count"
+            ),
+            "selector_objective_lineage_collection_review_status": selector_objective_lineage_gate.get(
+                "collection_review_status"
+            ),
+            "selector_objective_lineage_collection_review_implementation_authorized": selector_objective_lineage_gate.get(
+                "collection_review_implementation_authorized"
+            ),
+            "selector_objective_lineage_joined_collection_status": selector_objective_lineage_gate.get(
+                "joined_collection_status"
+            ),
+            "selector_objective_lineage_joined_collection_collected_row_count": selector_objective_lineage_gate.get(
+                "joined_collection_collected_row_count"
+            ),
+            "selector_objective_lineage_joined_collection_generated_frame_count": selector_objective_lineage_gate.get(
+                "joined_collection_generated_frame_count"
+            ),
+            "selector_objective_lineage_joined_collection_selected_move_delta_count": selector_objective_lineage_gate.get(
+                "joined_collection_selected_move_delta_count"
+            ),
+            "selector_objective_lineage_joined_collection_selected_provider_delta_count": selector_objective_lineage_gate.get(
+                "joined_collection_selected_provider_delta_count"
+            ),
+            "selector_objective_lineage_joined_collection_score_delta_count": selector_objective_lineage_gate.get(
+                "joined_collection_score_delta_count"
+            ),
+            "selector_objective_lineage_joined_collection_routing_delta_count": selector_objective_lineage_gate.get(
+                "joined_collection_routing_delta_count"
+            ),
+            "selector_objective_lineage_seed_manifest_v1_status": selector_objective_lineage_gate.get(
+                "seed_manifest_v1_status"
+            ),
+            "selector_objective_lineage_seed_manifest_v1_seed_row_count": selector_objective_lineage_gate.get(
+                "seed_manifest_v1_seed_row_count"
+            ),
+            "selector_objective_lineage_seed_manifest_v1_selector_training_row_count": selector_objective_lineage_gate.get(
+                "seed_manifest_v1_selector_training_row_count"
+            ),
+            "selector_objective_lineage_seed_manifest_v1_stage7_training_row_count": selector_objective_lineage_gate.get(
+                "seed_manifest_v1_stage7_training_row_count"
+            ),
+            "selector_objective_lineage_seed_probe_v1_status": selector_objective_lineage_gate.get(
+                "seed_probe_v1_status"
+            ),
+            "selector_objective_lineage_feature_probe_status": selector_objective_lineage_gate.get(
+                "feature_probe_status"
+            ),
+            "selector_objective_lineage_feature_probe_runtime_threshold_passing_model_count": selector_objective_lineage_gate.get(
+                "feature_probe_runtime_threshold_passing_model_count"
+            ),
+            "selector_objective_lineage_feature_probe_review_status": selector_objective_lineage_gate.get(
+                "feature_probe_review_status"
+            ),
+            "selector_objective_lineage_feature_probe_review_best_switch_recall": selector_objective_lineage_gate.get(
+                "feature_probe_review_best_switch_recall"
+            ),
+            "selector_objective_lineage_feature_probe_review_best_preserve_recall": selector_objective_lineage_gate.get(
+                "feature_probe_review_best_preserve_recall"
+            ),
+            "selector_objective_lineage_diversity_gap_status": selector_objective_lineage_gate.get(
+                "diversity_gap_status"
+            ),
+            "selector_objective_lineage_diversity_gap_remaining_stage4_selected_failure_count": selector_objective_lineage_gate.get(
+                "diversity_gap_remaining_stage4_selected_failure_count"
+            ),
+            "selector_objective_lineage_diversity_gap_remaining_stage5_6_selected_failure_count": selector_objective_lineage_gate.get(
+                "diversity_gap_remaining_stage5_6_selected_failure_count"
+            ),
+            "selector_objective_lineage_stage4_scope_review_status": selector_objective_lineage_gate.get(
+                "stage4_scope_review_status"
+            ),
+            "selector_objective_lineage_stage4_scope_review_implementation_authorized": selector_objective_lineage_gate.get(
+                "stage4_scope_review_implementation_authorized"
+            ),
+            "selector_objective_lineage_selector_training_allowed": selector_objective_lineage_gate.get(
+                "selector_training_allowed"
+            ),
+            "selector_objective_lineage_stage7_promotion_allowed": selector_objective_lineage_gate.get(
+                "stage7_promotion_allowed"
+            ),
+            "selector_objective_lineage_stage8_training_allowed": selector_objective_lineage_gate.get(
+                "stage8_training_allowed"
             ),
             "selector_objective_stage4_collection_status": selector_objective_gate.get(
                 "stage4_collection_status"

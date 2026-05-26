@@ -361,6 +361,190 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["protected_missing_provider_runtime_work_allowed"] is False
     )
     assert (
+        payload["summary"]["selector_objective_lineage_ownership_recovery_status"]
+        == "ownership_label_recovery_seed_manifest_ready_selector_blocked"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_ownership_recovery_joined_state_count"
+        ]
+        == 4
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_ownership_recovery_selected_failure_with_visible_positive_count"
+        ]
+        == 2
+    )
+    assert (
+        payload["summary"]["selector_objective_lineage_seed_manifest_v0_status"]
+        == "selector_objective_seed_manifest_ready_non_causal"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_seed_manifest_v0_seed_row_count"
+        ]
+        == 4
+    )
+    assert (
+        payload["summary"]["selector_objective_lineage_seed_probe_v0_status"]
+        == "selector_objective_seed_probe_underpowered_semantics_confirmed"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_seed_probe_v0_runtime_feature_eligible_prediction_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["selector_objective_lineage_collection_manifest_status"]
+        == "joined_trace_ownership_collection_manifest_ready_for_review"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_collection_manifest_runtime_collection_allowed_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["selector_objective_lineage_collection_review_status"]
+        == "joined_trace_ownership_observation_collection_review_ready"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_collection_review_implementation_authorized"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_objective_lineage_joined_collection_status"]
+        == "joined_trace_ownership_collection_complete_seed_improved"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_joined_collection_collected_row_count"
+        ]
+        == 8
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_joined_collection_generated_frame_count"
+        ]
+        == 80
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_joined_collection_selected_move_delta_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_joined_collection_selected_provider_delta_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["selector_objective_lineage_joined_collection_score_delta_count"]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_joined_collection_routing_delta_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["selector_objective_lineage_seed_manifest_v1_status"]
+        == "selector_objective_seed_manifest_v1_ready_non_causal"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_seed_manifest_v1_seed_row_count"
+        ]
+        == 12
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_seed_manifest_v1_selector_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_seed_manifest_v1_stage7_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["selector_objective_lineage_seed_probe_v1_status"]
+        == "selector_objective_seed_ready_for_non_causal_feature_probe"
+    )
+    assert (
+        payload["summary"]["selector_objective_lineage_feature_probe_status"]
+        == "selector_objective_feature_probe_no_runtime_ready_features"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_feature_probe_runtime_threshold_passing_model_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["selector_objective_lineage_feature_probe_review_status"]
+        == "selector_feature_probe_blocks_runtime_needs_diverse_evidence"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_feature_probe_review_best_switch_recall"
+        ]
+        == 0.75
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_feature_probe_review_best_preserve_recall"
+        ]
+        == 1.0
+    )
+    assert (
+        payload["summary"]["selector_objective_lineage_diversity_gap_status"]
+        == "selector_objective_diversity_gap_requires_stage4_scope_review"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_diversity_gap_remaining_stage4_selected_failure_count"
+        ]
+        == 6
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_diversity_gap_remaining_stage5_6_selected_failure_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["selector_objective_lineage_stage4_scope_review_status"]
+        == "stage4_joined_trace_ownership_scope_review_ready"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_stage4_scope_review_implementation_authorized"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_objective_lineage_selector_training_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_objective_lineage_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_objective_lineage_stage8_training_allowed"]
+        is False
+    )
+    assert (
         payload["summary"]["selector_objective_stage4_collection_status"]
         == "stage4_joined_trace_ownership_collection_complete"
     )

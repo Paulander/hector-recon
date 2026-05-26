@@ -105,6 +105,28 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_two_stage_candidate_selection_benchmark_v0.json"
     )
     assert (
+        payload["source_artifacts"]["ownership_label_recovery_review"]
+        == "reports/strategy_arbitration/krk_ownership_label_recovery_review_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_objective_seed_manifest_v0"]
+        == "reports/strategy_arbitration/krk_selector_objective_seed_manifest_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["joined_trace_ownership_collection"]
+        == "reports/strategy_arbitration/krk_joined_trace_ownership_collection_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_objective_feature_probe_review"]
+        == "reports/strategy_arbitration/krk_selector_objective_feature_probe_review_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "stage4_joined_trace_ownership_scope_review_packet"
+        ]
+        == "reports/strategy_arbitration/krk_stage4_joined_trace_ownership_scope_review_packet_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["stage4_joined_trace_ownership_collection"]
         == "reports/strategy_arbitration/krk_stage4_joined_trace_ownership_collection_v0.json"
     )
@@ -527,6 +549,100 @@ def test_full_suite_readiness_identifies_current_gate():
     assert missing_provider["selector_training_allowed"] is False
     assert missing_provider["stage7_promotion_allowed"] is False
     assert missing_provider["stage8_training_allowed"] is False
+
+    lineage = payload["selector_objective_lineage_gate"]
+    assert (
+        lineage["ownership_recovery_status"]
+        == "ownership_label_recovery_seed_manifest_ready_selector_blocked"
+    )
+    assert lineage["ownership_recovery_joined_state_count"] == 4
+    assert lineage["ownership_recovery_selected_failure_with_visible_positive_count"] == 2
+    assert lineage["ownership_recovery_safe_preservation_with_visible_positive_count"] == 2
+    assert lineage["ownership_recovery_selector_training_row_count"] == 0
+    assert lineage["ownership_recovery_stage7_row_count"] == 0
+    assert (
+        lineage["seed_manifest_v0_status"]
+        == "selector_objective_seed_manifest_ready_non_causal"
+    )
+    assert lineage["seed_manifest_v0_seed_row_count"] == 4
+    assert lineage["seed_manifest_v0_candidate_switch_count"] == 2
+    assert lineage["seed_manifest_v0_safe_preservation_count"] == 2
+    assert (
+        lineage["seed_probe_v0_status"]
+        == "selector_objective_seed_probe_underpowered_semantics_confirmed"
+    )
+    assert lineage["seed_probe_v0_runtime_feature_eligible_prediction_count"] == 0
+    assert lineage["seed_probe_v0_benchmark_underpowered"] is True
+    assert (
+        lineage["collection_manifest_status"]
+        == "joined_trace_ownership_collection_manifest_ready_for_review"
+    )
+    assert lineage["collection_manifest_approved_observation_scope_candidate_count"] == 18
+    assert lineage["collection_manifest_excluded_requires_separate_review_count"] == 19
+    assert lineage["collection_manifest_runtime_collection_allowed_row_count"] == 0
+    assert (
+        lineage["collection_review_status"]
+        == "joined_trace_ownership_observation_collection_review_ready"
+    )
+    assert lineage["collection_review_runtime_review_ready"] is True
+    assert lineage["collection_review_implementation_authorized"] is False
+    assert lineage["collection_review_max_rows_if_later_authorized"] == 8
+    assert (
+        lineage["joined_collection_status"]
+        == "joined_trace_ownership_collection_complete_seed_improved"
+    )
+    assert lineage["joined_collection_collected_row_count"] == 8
+    assert lineage["joined_collection_generated_frame_count"] == 80
+    assert lineage["joined_collection_default_off_equivalence_passed"] is True
+    assert lineage["joined_collection_selected_move_delta_count"] == 0
+    assert lineage["joined_collection_selected_provider_delta_count"] == 0
+    assert lineage["joined_collection_score_delta_count"] == 0
+    assert lineage["joined_collection_routing_delta_count"] == 0
+    assert (
+        lineage["seed_manifest_v1_status"]
+        == "selector_objective_seed_manifest_v1_ready_non_causal"
+    )
+    assert lineage["seed_manifest_v1_seed_row_count"] == 12
+    assert lineage["seed_manifest_v1_candidate_switch_count"] == 4
+    assert lineage["seed_manifest_v1_safe_preservation_count"] == 8
+    assert lineage["seed_manifest_v1_selector_training_row_count"] == 0
+    assert lineage["seed_manifest_v1_stage7_training_row_count"] == 0
+    assert (
+        lineage["seed_probe_v1_status"]
+        == "selector_objective_seed_ready_for_non_causal_feature_probe"
+    )
+    assert lineage["seed_probe_v1_runtime_feature_eligible_prediction_count"] == 0
+    assert (
+        lineage["feature_probe_status"]
+        == "selector_objective_feature_probe_no_runtime_ready_features"
+    )
+    assert lineage["feature_probe_runtime_threshold_passing_model_count"] == 0
+    assert lineage["feature_probe_best_switch_recall"] == 0.75
+    assert (
+        lineage["feature_probe_review_status"]
+        == "selector_feature_probe_blocks_runtime_needs_diverse_evidence"
+    )
+    assert lineage["feature_probe_review_best_switch_recall"] == 0.75
+    assert lineage["feature_probe_review_best_preserve_recall"] == 1.0
+    assert lineage["feature_probe_review_runtime_threshold_passing_model_count"] == 0
+    assert (
+        lineage["diversity_gap_status"]
+        == "selector_objective_diversity_gap_requires_stage4_scope_review"
+    )
+    assert lineage["diversity_gap_remaining_stage4_selected_failure_count"] == 6
+    assert lineage["diversity_gap_remaining_stage5_6_selected_failure_count"] == 0
+    assert (
+        lineage["stage4_scope_review_status"]
+        == "stage4_joined_trace_ownership_scope_review_ready"
+    )
+    assert lineage["stage4_scope_review_runtime_review_ready"] is True
+    assert lineage["stage4_scope_review_implementation_authorized"] is False
+    assert lineage["stage4_scope_review_max_rows_if_later_authorized"] == 6
+    assert lineage["runtime_work_allowed"] is False
+    assert lineage["selector_allowed"] is False
+    assert lineage["selector_training_allowed"] is False
+    assert lineage["stage7_promotion_allowed"] is False
+    assert lineage["stage8_training_allowed"] is False
 
     selector = payload["selector_objective_gate"]
     assert (

@@ -71,6 +71,42 @@ SOURCES = {
     "two_stage_candidate_selection_benchmark": (
         "reports/krk_two_stage_candidate_selection_benchmark_v0.json"
     ),
+    "ownership_label_recovery_review": (
+        "reports/strategy_arbitration/krk_ownership_label_recovery_review_v0.json"
+    ),
+    "selector_objective_seed_manifest_v0": (
+        "reports/strategy_arbitration/krk_selector_objective_seed_manifest_v0.json"
+    ),
+    "selector_objective_seed_probe_v0": (
+        "reports/strategy_arbitration/krk_selector_objective_seed_probe_v0.json"
+    ),
+    "joined_trace_ownership_collection_manifest": (
+        "reports/strategy_arbitration/krk_joined_trace_ownership_collection_manifest_v0.json"
+    ),
+    "joined_trace_ownership_collection_review_packet": (
+        "reports/strategy_arbitration/krk_joined_trace_ownership_collection_review_packet_v0.json"
+    ),
+    "joined_trace_ownership_collection": (
+        "reports/strategy_arbitration/krk_joined_trace_ownership_collection_v0.json"
+    ),
+    "selector_objective_seed_manifest_v1": (
+        "reports/strategy_arbitration/krk_selector_objective_seed_manifest_v1.json"
+    ),
+    "selector_objective_seed_probe_v1": (
+        "reports/strategy_arbitration/krk_selector_objective_seed_probe_v1.json"
+    ),
+    "selector_objective_feature_probe": (
+        "reports/strategy_arbitration/krk_selector_objective_feature_probe_v0.json"
+    ),
+    "selector_objective_feature_probe_review": (
+        "reports/strategy_arbitration/krk_selector_objective_feature_probe_review_v0.json"
+    ),
+    "selector_objective_diversity_gap_review": (
+        "reports/strategy_arbitration/krk_selector_objective_diversity_gap_review_v0.json"
+    ),
+    "stage4_joined_trace_ownership_scope_review_packet": (
+        "reports/strategy_arbitration/krk_stage4_joined_trace_ownership_scope_review_packet_v0.json"
+    ),
     "stage4_joined_trace_ownership_collection": (
         "reports/strategy_arbitration/krk_stage4_joined_trace_ownership_collection_v0.json"
     ),
@@ -498,6 +534,34 @@ def build_payload() -> dict[str, Any]:
     ]
     two_stage_candidate_selection_benchmark = payloads[
         "two_stage_candidate_selection_benchmark"
+    ]
+    ownership_label_recovery_review = payloads["ownership_label_recovery_review"]
+    selector_objective_seed_manifest_v0 = payloads[
+        "selector_objective_seed_manifest_v0"
+    ]
+    selector_objective_seed_probe_v0 = payloads["selector_objective_seed_probe_v0"]
+    joined_trace_ownership_collection_manifest = payloads[
+        "joined_trace_ownership_collection_manifest"
+    ]
+    joined_trace_ownership_collection_review_packet = payloads[
+        "joined_trace_ownership_collection_review_packet"
+    ]
+    joined_trace_ownership_collection = payloads[
+        "joined_trace_ownership_collection"
+    ]
+    selector_objective_seed_manifest_v1 = payloads[
+        "selector_objective_seed_manifest_v1"
+    ]
+    selector_objective_seed_probe_v1 = payloads["selector_objective_seed_probe_v1"]
+    selector_objective_feature_probe = payloads["selector_objective_feature_probe"]
+    selector_objective_feature_probe_review = payloads[
+        "selector_objective_feature_probe_review"
+    ]
+    selector_objective_diversity_gap_review = payloads[
+        "selector_objective_diversity_gap_review"
+    ]
+    stage4_joined_trace_ownership_scope_review_packet = payloads[
+        "stage4_joined_trace_ownership_scope_review_packet"
     ]
     stage4_joined_trace_ownership_collection = payloads[
         "stage4_joined_trace_ownership_collection"
@@ -1558,6 +1622,254 @@ def build_payload() -> dict[str, Any]:
                 ).get("stage7_training_leakage")
             ),
             "runtime_work_allowed": False,
+            "selector_training_allowed": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": False,
+        },
+        "selector_objective_lineage_gate": {
+            "ownership_recovery_status": (
+                ownership_label_recovery_review.get("decision", {}).get("status")
+            ),
+            "ownership_recovery_joined_state_count": (
+                ownership_label_recovery_review.get("summary", {}).get(
+                    "joined_state_count"
+                )
+            ),
+            "ownership_recovery_selected_failure_with_visible_positive_count": (
+                ownership_label_recovery_review.get("summary", {}).get(
+                    "selected_failure_with_visible_positive_alternative_count"
+                )
+            ),
+            "ownership_recovery_safe_preservation_with_visible_positive_count": (
+                ownership_label_recovery_review.get("summary", {}).get(
+                    "safe_preservation_with_visible_positive_alternative_count"
+                )
+            ),
+            "ownership_recovery_selector_training_row_count": (
+                ownership_label_recovery_review.get("summary", {}).get(
+                    "selector_training_row_count"
+                )
+            ),
+            "ownership_recovery_stage7_row_count": (
+                ownership_label_recovery_review.get("summary", {}).get(
+                    "stage7_row_count"
+                )
+            ),
+            "seed_manifest_v0_status": selector_objective_seed_manifest_v0.get(
+                "decision", {}
+            ).get("status"),
+            "seed_manifest_v0_seed_row_count": (
+                selector_objective_seed_manifest_v0.get("summary", {}).get(
+                    "seed_row_count"
+                )
+            ),
+            "seed_manifest_v0_candidate_switch_count": (
+                selector_objective_seed_manifest_v0.get("summary", {}).get(
+                    "candidate_switch_contrast_seed_count"
+                )
+            ),
+            "seed_manifest_v0_safe_preservation_count": (
+                selector_objective_seed_manifest_v0.get("summary", {}).get(
+                    "safe_preservation_contrast_seed_count"
+                )
+            ),
+            "seed_probe_v0_status": selector_objective_seed_probe_v0.get(
+                "decision", {}
+            ).get("status"),
+            "seed_probe_v0_runtime_feature_eligible_prediction_count": (
+                selector_objective_seed_probe_v0.get("summary", {}).get(
+                    "runtime_feature_eligible_prediction_count"
+                )
+            ),
+            "seed_probe_v0_benchmark_underpowered": (
+                selector_objective_seed_probe_v0.get("summary", {}).get(
+                    "benchmark_underpowered"
+                )
+            ),
+            "collection_manifest_status": (
+                joined_trace_ownership_collection_manifest.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "collection_manifest_approved_observation_scope_candidate_count": (
+                joined_trace_ownership_collection_manifest.get("summary", {}).get(
+                    "approved_observation_scope_candidate_count"
+                )
+            ),
+            "collection_manifest_excluded_requires_separate_review_count": (
+                joined_trace_ownership_collection_manifest.get("summary", {}).get(
+                    "excluded_requires_separate_review_count"
+                )
+            ),
+            "collection_manifest_runtime_collection_allowed_row_count": (
+                joined_trace_ownership_collection_manifest.get("summary", {}).get(
+                    "runtime_collection_allowed_row_count"
+                )
+            ),
+            "collection_review_status": (
+                joined_trace_ownership_collection_review_packet.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "collection_review_runtime_review_ready": (
+                joined_trace_ownership_collection_review_packet.get(
+                    "decision", {}
+                ).get("runtime_review_ready")
+            ),
+            "collection_review_implementation_authorized": (
+                joined_trace_ownership_collection_review_packet.get(
+                    "decision", {}
+                ).get("implementation_authorized_by_this_packet")
+            ),
+            "collection_review_max_rows_if_later_authorized": (
+                joined_trace_ownership_collection_review_packet.get(
+                    "approved_if_later_explicitly_authorized", {}
+                ).get("max_rows")
+            ),
+            "joined_collection_status": (
+                joined_trace_ownership_collection.get("decision", {}).get("status")
+            ),
+            "joined_collection_collected_row_count": (
+                joined_trace_ownership_collection.get("summary", {}).get(
+                    "collected_row_count"
+                )
+            ),
+            "joined_collection_generated_frame_count": (
+                joined_trace_ownership_collection.get("summary", {}).get(
+                    "generated_frame_count"
+                )
+            ),
+            "joined_collection_default_off_equivalence_passed": (
+                joined_trace_ownership_collection.get("summary", {}).get(
+                    "default_off_equivalence_passed"
+                )
+            ),
+            "joined_collection_selected_move_delta_count": (
+                joined_trace_ownership_collection.get("summary", {}).get(
+                    "selected_move_delta_count"
+                )
+            ),
+            "joined_collection_selected_provider_delta_count": (
+                joined_trace_ownership_collection.get("summary", {}).get(
+                    "selected_provider_delta_count"
+                )
+            ),
+            "joined_collection_score_delta_count": (
+                joined_trace_ownership_collection.get("summary", {}).get(
+                    "score_delta_count"
+                )
+            ),
+            "joined_collection_routing_delta_count": (
+                joined_trace_ownership_collection.get("summary", {}).get(
+                    "routing_delta_count"
+                )
+            ),
+            "seed_manifest_v1_status": selector_objective_seed_manifest_v1.get(
+                "decision", {}
+            ).get("status"),
+            "seed_manifest_v1_seed_row_count": (
+                selector_objective_seed_manifest_v1.get("summary", {}).get(
+                    "seed_row_count"
+                )
+            ),
+            "seed_manifest_v1_candidate_switch_count": (
+                selector_objective_seed_manifest_v1.get("summary", {}).get(
+                    "candidate_switch_contrast_seed_count"
+                )
+            ),
+            "seed_manifest_v1_safe_preservation_count": (
+                selector_objective_seed_manifest_v1.get("summary", {}).get(
+                    "safe_preservation_contrast_seed_count"
+                )
+            ),
+            "seed_manifest_v1_selector_training_row_count": (
+                selector_objective_seed_manifest_v1.get("summary", {}).get(
+                    "selector_training_row_count"
+                )
+            ),
+            "seed_manifest_v1_stage7_training_row_count": (
+                selector_objective_seed_manifest_v1.get("summary", {}).get(
+                    "stage7_training_row_count"
+                )
+            ),
+            "seed_probe_v1_status": selector_objective_seed_probe_v1.get(
+                "decision", {}
+            ).get("status"),
+            "seed_probe_v1_runtime_feature_eligible_prediction_count": (
+                selector_objective_seed_probe_v1.get("summary", {}).get(
+                    "runtime_feature_eligible_prediction_count"
+                )
+            ),
+            "feature_probe_status": selector_objective_feature_probe.get(
+                "decision", {}
+            ).get("status"),
+            "feature_probe_runtime_threshold_passing_model_count": (
+                selector_objective_feature_probe.get("summary", {}).get(
+                    "runtime_threshold_passing_model_count"
+                )
+            ),
+            "feature_probe_best_switch_recall": (
+                selector_objective_feature_probe.get("summary", {}).get(
+                    "best_runtime_switch_recall"
+                )
+            ),
+            "feature_probe_review_status": (
+                selector_objective_feature_probe_review.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "feature_probe_review_best_switch_recall": (
+                selector_objective_feature_probe_review.get("summary", {}).get(
+                    "best_switch_recall"
+                )
+            ),
+            "feature_probe_review_best_preserve_recall": (
+                selector_objective_feature_probe_review.get("summary", {}).get(
+                    "best_preserve_recall"
+                )
+            ),
+            "feature_probe_review_runtime_threshold_passing_model_count": (
+                selector_objective_feature_probe_review.get("summary", {}).get(
+                    "runtime_threshold_passing_model_count"
+                )
+            ),
+            "diversity_gap_status": (
+                selector_objective_diversity_gap_review.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "diversity_gap_remaining_stage4_selected_failure_count": (
+                selector_objective_diversity_gap_review.get("summary", {}).get(
+                    "remaining_stage4_selected_failure_count"
+                )
+            ),
+            "diversity_gap_remaining_stage5_6_selected_failure_count": (
+                selector_objective_diversity_gap_review.get("summary", {}).get(
+                    "remaining_stage5_6_selected_failure_count"
+                )
+            ),
+            "stage4_scope_review_status": (
+                stage4_joined_trace_ownership_scope_review_packet.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "stage4_scope_review_runtime_review_ready": (
+                stage4_joined_trace_ownership_scope_review_packet.get(
+                    "decision", {}
+                ).get("runtime_review_ready")
+            ),
+            "stage4_scope_review_implementation_authorized": (
+                stage4_joined_trace_ownership_scope_review_packet.get(
+                    "decision", {}
+                ).get("implementation_authorized_by_this_packet")
+            ),
+            "stage4_scope_review_max_rows_if_later_authorized": (
+                stage4_joined_trace_ownership_scope_review_packet.get(
+                    "approved_if_later_explicitly_authorized", {}
+                ).get("max_rows")
+            ),
+            "runtime_work_allowed": False,
+            "selector_allowed": False,
             "selector_training_allowed": False,
             "stage7_promotion_allowed": False,
             "stage8_training_allowed": False,
@@ -2649,6 +2961,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     sequence = payload["sequence_policy"]
     protected_failure_contrast = payload["protected_failure_contrast_gate"]
     missing_provider = payload["protected_missing_provider_gate"]
+    selector_lineage = payload["selector_objective_lineage_gate"]
     selector_objective = payload["selector_objective_gate"]
     stage4_diagnostic = payload["stage4_first_move_diagnostic_gate"]
     candidate_generation_refresh = payload["candidate_generation_training_refresh_gate"]
@@ -2848,6 +3161,41 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- selector_training_allowed: `{missing_provider['selector_training_allowed']}`",
             f"- stage7_promotion_allowed: `{missing_provider['stage7_promotion_allowed']}`",
             f"- stage8_training_allowed: `{missing_provider['stage8_training_allowed']}`",
+            "",
+            "## Selector Objective Lineage Evidence",
+            "",
+            f"- ownership_recovery_status: `{selector_lineage['ownership_recovery_status']}`",
+            f"- ownership_recovery_joined_state_count: `{selector_lineage['ownership_recovery_joined_state_count']}`",
+            f"- ownership_recovery_selected_failure_with_visible_positive_count: `{selector_lineage['ownership_recovery_selected_failure_with_visible_positive_count']}`",
+            f"- seed_manifest_v0_status: `{selector_lineage['seed_manifest_v0_status']}`",
+            f"- seed_manifest_v0_seed_row_count: `{selector_lineage['seed_manifest_v0_seed_row_count']}`",
+            f"- seed_probe_v0_status: `{selector_lineage['seed_probe_v0_status']}`",
+            f"- collection_manifest_status: `{selector_lineage['collection_manifest_status']}`",
+            f"- collection_review_status: `{selector_lineage['collection_review_status']}`",
+            f"- collection_review_implementation_authorized: `{selector_lineage['collection_review_implementation_authorized']}`",
+            f"- joined_collection_status: `{selector_lineage['joined_collection_status']}`",
+            f"- joined_collection_collected_row_count: `{selector_lineage['joined_collection_collected_row_count']}`",
+            f"- joined_collection_generated_frame_count: `{selector_lineage['joined_collection_generated_frame_count']}`",
+            f"- joined_collection_selected_move_delta_count: `{selector_lineage['joined_collection_selected_move_delta_count']}`",
+            f"- joined_collection_selected_provider_delta_count: `{selector_lineage['joined_collection_selected_provider_delta_count']}`",
+            f"- joined_collection_score_delta_count: `{selector_lineage['joined_collection_score_delta_count']}`",
+            f"- joined_collection_routing_delta_count: `{selector_lineage['joined_collection_routing_delta_count']}`",
+            f"- seed_manifest_v1_status: `{selector_lineage['seed_manifest_v1_status']}`",
+            f"- seed_manifest_v1_seed_row_count: `{selector_lineage['seed_manifest_v1_seed_row_count']}`",
+            f"- seed_probe_v1_status: `{selector_lineage['seed_probe_v1_status']}`",
+            f"- feature_probe_status: `{selector_lineage['feature_probe_status']}`",
+            f"- feature_probe_runtime_threshold_passing_model_count: `{selector_lineage['feature_probe_runtime_threshold_passing_model_count']}`",
+            f"- feature_probe_review_status: `{selector_lineage['feature_probe_review_status']}`",
+            f"- feature_probe_review_best_switch_recall: `{selector_lineage['feature_probe_review_best_switch_recall']}`",
+            f"- feature_probe_review_best_preserve_recall: `{selector_lineage['feature_probe_review_best_preserve_recall']}`",
+            f"- diversity_gap_status: `{selector_lineage['diversity_gap_status']}`",
+            f"- diversity_gap_remaining_stage4_selected_failure_count: `{selector_lineage['diversity_gap_remaining_stage4_selected_failure_count']}`",
+            f"- diversity_gap_remaining_stage5_6_selected_failure_count: `{selector_lineage['diversity_gap_remaining_stage5_6_selected_failure_count']}`",
+            f"- stage4_scope_review_status: `{selector_lineage['stage4_scope_review_status']}`",
+            f"- stage4_scope_review_implementation_authorized: `{selector_lineage['stage4_scope_review_implementation_authorized']}`",
+            f"- selector_training_allowed: `{selector_lineage['selector_training_allowed']}`",
+            f"- stage7_promotion_allowed: `{selector_lineage['stage7_promotion_allowed']}`",
+            f"- stage8_training_allowed: `{selector_lineage['stage8_training_allowed']}`",
             "",
             "## Selector Objective Evidence",
             "",
