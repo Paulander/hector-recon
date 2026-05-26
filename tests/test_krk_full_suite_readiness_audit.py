@@ -143,6 +143,24 @@ def test_full_suite_readiness_identifies_current_gate():
         == "sequence_policy_benchmark_design_ready_non_causal"
     )
     assert (
+        sequence["post_failure_contrast_refresh_status"]
+        == "sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs"
+    )
+    assert (
+        sequence["post_failure_contrast_refresh_next_step"]
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+    )
+    assert sequence["post_failure_contrast_refresh_boundaries_preserved"] is True
+    assert sequence["post_failure_contrast_refresh_boundary_violation_count"] == 0
+    assert (
+        sequence["post_failure_contrast_refresh_integration_status"]
+        == "protected_plan_window_failure_contrast_integration_pending_outputs"
+    )
+    assert sequence["post_failure_contrast_refresh_integration_ready"] is False
+    assert sequence["post_failure_contrast_refresh_integrated_new_failure_count"] == 0
+    assert sequence["post_failure_contrast_refresh_row_count"] == 0
+    assert sequence["post_failure_contrast_refresh_stage7_training_row_count"] == 0
+    assert (
         sequence["passive_design_without_new_labels_status"]
         == "non_causal_sequence_policy_design_without_new_labels_ready"
     )
@@ -284,6 +302,13 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
         in rendered
     )
     assert (
+        "post_failure_contrast_refresh_status: "
+        "`sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs`"
+        in rendered
+    )
+    assert "post_failure_contrast_refresh_boundaries_preserved: `True`" in rendered
+    assert "post_failure_contrast_refresh_row_count: `0`" in rendered
+    assert (
         "approval_request_status: "
         "`stage4_first_move_contrast_sandbox_approval_request_ready`"
         in rendered
@@ -338,6 +363,52 @@ def test_full_suite_readiness_routes_forbidden_training_rows_to_input_repair(mon
         is False
     )
     assert payload["decision"]["selector_training_allowed"] is False
+
+
+def test_full_suite_readiness_blocks_post_failure_refresh_boundary_violation(monkeypatch):
+    real_load_json = _audit.load_json
+
+    def tainted_load_json(relative: str):
+        payload = json.loads(json.dumps(real_load_json(relative)))
+        if (
+            relative
+            == "reports/strategy_arbitration/"
+            "krk_sequence_policy_after_protected_failure_contrast_refresh_v0.json"
+        ):
+            payload.setdefault("summary", {})["all_boundaries_preserved"] = False
+            payload.setdefault("summary", {})["boundary_violation_count"] = 1
+            payload.setdefault("summary", {})["boundary_violations"] = [
+                {
+                    "step_id": "sequence_policy_benchmark",
+                    "field": "runtime_changes_allowed",
+                    "script": "scripts/run_krk_sequence_policy_benchmark_v0.py",
+                }
+            ]
+            payload.setdefault("decision", {})["status"] = (
+                "sequence_policy_after_protected_failure_contrast_refresh_blocked_boundary_violation"
+            )
+        return payload
+
+    monkeypatch.setattr(_audit, "load_json", tainted_load_json)
+
+    payload = _audit.build_payload()
+
+    assert payload["sequence_policy"][
+        "post_failure_contrast_refresh_boundaries_preserved"
+    ] is False
+    assert (
+        payload["sequence_policy"][
+            "post_failure_contrast_refresh_boundary_violation_count"
+        ]
+        == 1
+    )
+    assert (
+        "post_failure_contrast_sequence_refresh_boundary_violation"
+        in payload["hard_blockers"]
+    )
+    assert payload["decision"]["status"].startswith("krk_suite_readiness_blocked")
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
 
 
 def test_full_suite_readiness_blocks_unsafe_protected_stack_paths(monkeypatch):

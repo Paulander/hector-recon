@@ -69,6 +69,10 @@ SOURCES = {
     "protected_failure_contrast_integration": (
         "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_integration_v0.json"
     ),
+    "post_failure_contrast_sequence_refresh": (
+        "reports/strategy_arbitration/"
+        "krk_sequence_policy_after_protected_failure_contrast_refresh_v0.json"
+    ),
     "stage7_sampling_runner": (
         "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json"
     ),
@@ -239,6 +243,9 @@ def build_payload() -> dict[str, Any]:
         "protected_failure_contrast_output_validation"
     ]
     failure_contrast_integration = payloads["protected_failure_contrast_integration"]
+    post_failure_contrast_sequence_refresh = payloads[
+        "post_failure_contrast_sequence_refresh"
+    ]
     runner = payloads["stage7_sampling_runner"]
     output_validation = payloads["stage7_sampling_output_validation"]
     integration = payloads["stage7_sampling_integration"]
@@ -375,6 +382,19 @@ def build_payload() -> dict[str, Any]:
     protected_failure_contrast_integration_ready = bool(
         failure_contrast_integration.get("summary", {}).get("integration_ready")
     )
+    post_failure_contrast_refresh_summary = (
+        post_failure_contrast_sequence_refresh.get("summary") or {}
+    )
+    post_failure_contrast_refresh_decision = (
+        post_failure_contrast_sequence_refresh.get("decision") or {}
+    )
+    post_failure_contrast_refresh_boundary_violation_count = int(
+        post_failure_contrast_refresh_summary.get("boundary_violation_count") or 0
+    )
+    post_failure_contrast_refresh_boundaries_preserved = (
+        post_failure_contrast_refresh_boundary_violation_count == 0
+        and post_failure_contrast_refresh_summary.get("all_boundaries_preserved") is True
+    )
     failure_contrast_runner_summary = failure_contrast_runner.get("summary", {})
     failure_contrast_approval_receipt_path = (
         failure_contrast_runner.get("approval_receipt_path")
@@ -494,6 +514,8 @@ def build_payload() -> dict[str, Any]:
         hard_blockers.append("sequence_policy_benchmark_not_ready")
     if sequence_forbidden_training_or_runtime_inputs:
         hard_blockers.append("sequence_policy_forbidden_training_or_runtime_rows")
+    if not post_failure_contrast_refresh_boundaries_preserved:
+        hard_blockers.append("post_failure_contrast_sequence_refresh_boundary_violation")
     if boundaries["violation_count"]:
         hard_blockers.append("hard_invariant_violation_detected")
     explicit_gate_blockers: list[str] = []
@@ -562,6 +584,35 @@ def build_payload() -> dict[str, Any]:
             "benchmark_status": benchmark_decision.get("status"),
             "benchmark_design_status": benchmark_design_decision.get("status"),
             "benchmark_review_status": sequence_review_status,
+            "post_failure_contrast_refresh_status": (
+                post_failure_contrast_refresh_decision.get("status")
+            ),
+            "post_failure_contrast_refresh_next_step": (
+                post_failure_contrast_refresh_decision.get("recommended_next_step")
+            ),
+            "post_failure_contrast_refresh_boundaries_preserved": (
+                post_failure_contrast_refresh_boundaries_preserved
+            ),
+            "post_failure_contrast_refresh_boundary_violation_count": (
+                post_failure_contrast_refresh_boundary_violation_count
+            ),
+            "post_failure_contrast_refresh_integration_status": (
+                post_failure_contrast_refresh_summary.get("integration_status")
+            ),
+            "post_failure_contrast_refresh_integration_ready": (
+                post_failure_contrast_refresh_summary.get("integration_ready")
+            ),
+            "post_failure_contrast_refresh_integrated_new_failure_count": (
+                post_failure_contrast_refresh_summary.get("integrated_new_failure_count")
+            ),
+            "post_failure_contrast_refresh_row_count": (
+                post_failure_contrast_refresh_summary.get(
+                    "protected_failure_contrast_row_count"
+                )
+            ),
+            "post_failure_contrast_refresh_stage7_training_row_count": (
+                post_failure_contrast_refresh_summary.get("stage7_training_row_count")
+            ),
             "benchmark_preflight_blockers": benchmark_preflight.get("blockers") or [],
             "benchmark_review_blockers": benchmark_review_blockers,
             "passive_design_without_new_labels_status": passive_design.get("status"),
@@ -911,6 +962,11 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- benchmark_status: `{sequence['benchmark_status']}`",
             f"- benchmark_design_status: `{sequence['benchmark_design_status']}`",
             f"- benchmark_review_status: `{sequence['benchmark_review_status']}`",
+            f"- post_failure_contrast_refresh_status: `{sequence['post_failure_contrast_refresh_status']}`",
+            f"- post_failure_contrast_refresh_boundaries_preserved: `{sequence['post_failure_contrast_refresh_boundaries_preserved']}`",
+            f"- post_failure_contrast_refresh_boundary_violation_count: `{sequence['post_failure_contrast_refresh_boundary_violation_count']}`",
+            f"- post_failure_contrast_refresh_row_count: `{sequence['post_failure_contrast_refresh_row_count']}`",
+            f"- post_failure_contrast_refresh_stage7_training_row_count: `{sequence['post_failure_contrast_refresh_stage7_training_row_count']}`",
             f"- passive_design_without_new_labels_status: `{sequence['passive_design_without_new_labels_status']}`",
             f"- passive_design_current_evidence_limit: `{sequence['passive_design_current_evidence_limit']}`",
             f"- passive_design_depends_on_new_label_execution: `{sequence['passive_design_depends_on_new_label_execution']}`",
