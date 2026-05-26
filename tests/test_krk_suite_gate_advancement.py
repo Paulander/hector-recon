@@ -214,6 +214,78 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["strategy_owner_contrast_runtime_terminals_added"] is False
     assert payload["summary"]["strategy_owner_contrast_stage7_promotion_allowed"] is False
     assert payload["summary"]["strategy_owner_contrast_stage8_training_allowed"] is False
+    assert payload["summary"]["strategy_arbiter_semantics_passive_ready"] is True
+    assert payload["summary"]["strategy_arbiter_semantics_status"] == (
+        "selector_objective_and_label_semantics_review_required"
+    )
+    assert payload["summary"]["strategy_arbiter_semantics_risk_review_status"] == (
+        "runtime_sandbox_blocked_pending_semantics_review"
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_semantics_risk_runtime_sandbox_allowed"
+        ]
+        is False
+    )
+    assert payload["summary"]["strategy_arbiter_semantics_stratified_probe_status"] == (
+        "protected_forced_controls_promising_stage7_gap_confirmed"
+    )
+    assert (
+        payload["summary"]["strategy_arbiter_semantics_stratified_stage7_hit_rate"]
+        == 0.5
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_semantics_architecture_review_status"
+        ]
+        == "trace_only_observability_skeleton_allowed"
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_semantics_architecture_runtime_arbiter_allowed"
+        ]
+        is False
+    )
+    assert payload["summary"]["strategy_arbiter_semantics_sandbox_readiness_status"] == (
+        "readiness_criteria_defined_sandbox_still_blocked"
+    )
+    assert (
+        payload["summary"]["strategy_arbiter_semantics_selector_sandbox_ready"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_semantics_control_plane_labeled_controls"
+        ]
+        == "mixed"
+    )
+    assert payload["summary"]["strategy_arbiter_semantics_control_plane_stage7"] == (
+        "held_out_unlabeled_challenge"
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_semantics_control_plane_runtime_arbiter_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_semantics_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["strategy_arbiter_semantics_gameplay_topology_mutation"]
+        is False
+    )
+    assert (
+        payload["summary"]["strategy_arbiter_semantics_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["strategy_arbiter_semantics_stage8_training_allowed"]
+        is False
+    )
     assert (
         payload["summary"]["strategy_arbiter_out_of_sample_passive_ready"]
         is True

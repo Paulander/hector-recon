@@ -447,6 +447,28 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_strategy_owner_contrast_probe_v0.json"
     )
     assert (
+        payload["source_artifacts"]["strategy_arbiter_evidence_risk_review_v0"]
+        == "reports/krk_strategy_arbiter_evidence_risk_review_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_arbiter_stratified_probe_v2"]
+        == "reports/krk_strategy_arbiter_stratified_probe_v2.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_arbiter_architecture_review_v1"]
+        == "reports/krk_strategy_arbiter_architecture_review_v1.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "strategy_arbiter_sandbox_readiness_criteria_v0"
+        ]
+        == "reports/krk_strategy_arbiter_sandbox_readiness_criteria_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_arbiter_control_plane_review_v0"]
+        == "reports/krk_strategy_arbiter_control_plane_review_v0.json"
+    )
+    assert (
         payload["source_artifacts"][
             "strategy_arbiter_out_of_sample_control_plan_v0"
         ]
@@ -1006,6 +1028,110 @@ def test_full_suite_readiness_identifies_current_gate():
     assert strategy_owner["runtime_terminals_added"] is False
     assert strategy_owner["stage7_promotion_allowed"] is False
     assert strategy_owner["stage8_training_allowed"] is False
+
+    arbiter_semantics = payload["strategy_arbiter_semantics_blocker_gate"]
+    assert arbiter_semantics["passive_semantics_blocker_ready"] is True
+    assert (
+        arbiter_semantics["status"]
+        == "selector_objective_and_label_semantics_review_required"
+    )
+    assert (
+        arbiter_semantics["risk_review_status"]
+        == "runtime_sandbox_blocked_pending_semantics_review"
+    )
+    assert arbiter_semantics["risk_review_runtime_sandbox_allowed"] is False
+    assert arbiter_semantics["risk_review_benchmark_frame_count"] == 28
+    assert arbiter_semantics["risk_review_max_only_frame_count"] == 14
+    assert arbiter_semantics["risk_review_provider_mate_frame_count"] == 14
+    assert arbiter_semantics["risk_review_label_semantic_counts"] == {
+        "forced_provider_outcome": 24,
+        "same_move_unselected_provider_playout": 18,
+        "selected_provider_playout": 24,
+    }
+    assert "runtime_arbiter" in arbiter_semantics["risk_review_blocked_next_steps"]
+    assert "runtime_internal_terminal" in (
+        arbiter_semantics["risk_review_blocked_next_steps"]
+    )
+    assert "runtime_dtm_or_tablebase" in (
+        arbiter_semantics["risk_review_blocked_next_steps"]
+    )
+    assert (
+        arbiter_semantics["stratified_probe_status"]
+        == "protected_forced_controls_promising_stage7_gap_confirmed"
+    )
+    assert arbiter_semantics["stratified_probe_runtime_sandbox_allowed"] is False
+    assert arbiter_semantics["stratified_probe_selected_provider_hit_rate"] == 1.0
+    assert arbiter_semantics["stratified_probe_forced_control_hit_rate"] == 1.0
+    assert (
+        arbiter_semantics["stratified_probe_stage7_forced_provider_hit_rate"]
+        == 0.5
+    )
+    assert (
+        arbiter_semantics["architecture_review_status"]
+        == "trace_only_observability_skeleton_allowed"
+    )
+    assert arbiter_semantics["architecture_runtime_arbiter_allowed"] is False
+    assert arbiter_semantics["architecture_runtime_defaults_may_change"] is False
+    assert arbiter_semantics["architecture_stage7_gap_status"] == (
+        "held_out_challenge_gap"
+    )
+    assert arbiter_semantics["architecture_allowed_next_scope"] == (
+        "default_off_trace_only"
+    )
+    assert arbiter_semantics["architecture_allowed_next_default_enabled"] is False
+    assert arbiter_semantics["architecture_allowed_next_may_change_scores"] is False
+    assert arbiter_semantics["architecture_allowed_next_may_request_provider"] is False
+    assert (
+        arbiter_semantics["sandbox_readiness_decision_status"]
+        == "readiness_criteria_defined_sandbox_still_blocked"
+    )
+    assert arbiter_semantics["sandbox_readiness_runtime_arbiter_allowed"] is False
+    assert arbiter_semantics["sandbox_readiness_selector_sandbox_ready"] is False
+    assert arbiter_semantics["sandbox_readiness_stage7_repair_allowed"] is False
+    assert arbiter_semantics["sandbox_readiness_stage7_promotion_allowed"] is False
+    assert arbiter_semantics["sandbox_readiness_stage8_training_allowed"] is False
+    assert arbiter_semantics["sandbox_readiness_stage7_holdout_status"] == "met"
+    assert (
+        arbiter_semantics["sandbox_readiness_out_of_sample_controls_status"]
+        == "missing"
+    )
+    assert arbiter_semantics["control_plane_observability_skeleton"] == (
+        "implemented_default_off_trace_only"
+    )
+    assert arbiter_semantics["control_plane_labeled_controls"] == "mixed"
+    assert arbiter_semantics["control_plane_stage7"] == (
+        "held_out_unlabeled_challenge"
+    )
+    assert arbiter_semantics["control_plane_runtime_arbiter_allowed"] is False
+    assert arbiter_semantics["control_plane_sandbox_ready"] is False
+    assert arbiter_semantics["control_plane_observability_smoke_status"] == "passed"
+    assert (
+        arbiter_semantics["control_plane_observability_behavior_metrics_match"]
+        is True
+    )
+    assert arbiter_semantics["control_plane_labeled_controls_probe_status"] == (
+        "labeled_controls_mixed_no_sandbox"
+    )
+    assert arbiter_semantics["control_plane_stage7_unknown_count"] == 6
+    assert arbiter_semantics["control_plane_recommended_next_step_id"] == (
+        "krk_selector_objective_label_semantics_v0"
+    )
+    assert arbiter_semantics["control_plane_must_remain_non_causal"] is True
+    assert "default_off_selector_sandbox" in (
+        arbiter_semantics["control_plane_blocked_next_work"]
+    )
+    assert "stage7_promotion" in arbiter_semantics["control_plane_blocked_next_work"]
+    assert "stage8_training" in arbiter_semantics["control_plane_blocked_next_work"]
+    assert "runtime_dtm_or_tablebase" in (
+        arbiter_semantics["control_plane_blocked_next_work"]
+    )
+    assert arbiter_semantics["runtime_arbiter_implemented"] is False
+    assert arbiter_semantics["runtime_behavior_changed"] is False
+    assert arbiter_semantics["runtime_defaults_changed"] is False
+    assert arbiter_semantics["runtime_dtm_or_tablebase_lookup"] is False
+    assert arbiter_semantics["gameplay_topology_mutation"] is False
+    assert arbiter_semantics["stage7_promotion_allowed"] is False
+    assert arbiter_semantics["stage8_training_allowed"] is False
 
     out_of_sample = payload["strategy_arbiter_out_of_sample_gate"]
     assert out_of_sample["passive_out_of_sample_ready"] is True

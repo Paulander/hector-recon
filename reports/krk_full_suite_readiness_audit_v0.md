@@ -103,6 +103,38 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Strategy Arbiter Semantics Blocker
+
+- passive_semantics_blocker_ready: `True`
+- status: `selector_objective_and_label_semantics_review_required`
+- risk_review_status: `runtime_sandbox_blocked_pending_semantics_review`
+- risk_review_runtime_sandbox_allowed: `False`
+- risk_review_benchmark_frame_count: `28`
+- risk_review_max_only_frame_count: `14`
+- stratified_probe_status: `protected_forced_controls_promising_stage7_gap_confirmed`
+- stratified_probe_selected_provider_hit_rate: `1.0`
+- stratified_probe_forced_control_hit_rate: `1.0`
+- stratified_probe_stage7_forced_provider_hit_rate: `0.5`
+- architecture_review_status: `trace_only_observability_skeleton_allowed`
+- architecture_runtime_arbiter_allowed: `False`
+- architecture_allowed_next_scope: `default_off_trace_only`
+- architecture_allowed_next_default_enabled: `False`
+- sandbox_readiness_decision_status: `readiness_criteria_defined_sandbox_still_blocked`
+- sandbox_readiness_selector_sandbox_ready: `False`
+- sandbox_readiness_out_of_sample_controls_status: `missing`
+- control_plane_observability_skeleton: `implemented_default_off_trace_only`
+- control_plane_labeled_controls: `mixed`
+- control_plane_stage7: `held_out_unlabeled_challenge`
+- control_plane_runtime_arbiter_allowed: `False`
+- control_plane_sandbox_ready: `False`
+- control_plane_recommended_next_step_id: `krk_selector_objective_label_semantics_v0`
+- control_plane_blocked_next_work: `['runtime_arbiter', 'default_off_selector_sandbox', 'score_bonus_or_provider_penalty', 'provider_support_adapter', 'stage7_repair', 'stage7_promotion', 'stage8_training', 'runtime_dtm_or_tablebase', 'gameplay_topology_mutation', 'm3_m4_arbitration_update']`
+- runtime_arbiter_implemented: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- gameplay_topology_mutation: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Strategy Arbiter Out-Of-Sample Controls
 
 - passive_out_of_sample_ready: `True`
@@ -672,7 +704,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `38fe3056acb39d6ed8a68907e9b170dd830be2d567bc42ad36cec53f14548c0b`
+- expected_readiness_fingerprint: `4a2102df5e5c09695afd85c64244079c9cda9b8d9533003f2714062a42c50c9c`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1201,5 +1233,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2395`
+- checked_flag_count: `2411`
 - violation_count: `0`

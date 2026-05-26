@@ -584,6 +584,9 @@ def build_payload() -> dict[str, Any]:
         readiness.get("strategy_sequence_architecture_gate") or {}
     )
     strategy_owner_contrast_gate = readiness.get("strategy_owner_contrast_gate") or {}
+    strategy_arbiter_semantics_gate = (
+        readiness.get("strategy_arbiter_semantics_blocker_gate") or {}
+    )
     strategy_arbiter_out_of_sample_gate = (
         readiness.get("strategy_arbiter_out_of_sample_gate") or {}
     )
@@ -1025,6 +1028,73 @@ def build_payload() -> dict[str, Any]:
             ),
             "strategy_owner_contrast_stage8_training_allowed": (
                 strategy_owner_contrast_gate.get("stage8_training_allowed")
+            ),
+            "strategy_arbiter_semantics_passive_ready": (
+                strategy_arbiter_semantics_gate.get(
+                    "passive_semantics_blocker_ready"
+                )
+            ),
+            "strategy_arbiter_semantics_status": (
+                strategy_arbiter_semantics_gate.get("status")
+            ),
+            "strategy_arbiter_semantics_risk_review_status": (
+                strategy_arbiter_semantics_gate.get("risk_review_status")
+            ),
+            "strategy_arbiter_semantics_risk_runtime_sandbox_allowed": (
+                strategy_arbiter_semantics_gate.get(
+                    "risk_review_runtime_sandbox_allowed"
+                )
+            ),
+            "strategy_arbiter_semantics_stratified_probe_status": (
+                strategy_arbiter_semantics_gate.get("stratified_probe_status")
+            ),
+            "strategy_arbiter_semantics_stratified_stage7_hit_rate": (
+                strategy_arbiter_semantics_gate.get(
+                    "stratified_probe_stage7_forced_provider_hit_rate"
+                )
+            ),
+            "strategy_arbiter_semantics_architecture_review_status": (
+                strategy_arbiter_semantics_gate.get("architecture_review_status")
+            ),
+            "strategy_arbiter_semantics_architecture_runtime_arbiter_allowed": (
+                strategy_arbiter_semantics_gate.get(
+                    "architecture_runtime_arbiter_allowed"
+                )
+            ),
+            "strategy_arbiter_semantics_sandbox_readiness_status": (
+                strategy_arbiter_semantics_gate.get(
+                    "sandbox_readiness_decision_status"
+                )
+            ),
+            "strategy_arbiter_semantics_selector_sandbox_ready": (
+                strategy_arbiter_semantics_gate.get(
+                    "sandbox_readiness_selector_sandbox_ready"
+                )
+            ),
+            "strategy_arbiter_semantics_control_plane_labeled_controls": (
+                strategy_arbiter_semantics_gate.get("control_plane_labeled_controls")
+            ),
+            "strategy_arbiter_semantics_control_plane_stage7": (
+                strategy_arbiter_semantics_gate.get("control_plane_stage7")
+            ),
+            "strategy_arbiter_semantics_control_plane_runtime_arbiter_allowed": (
+                strategy_arbiter_semantics_gate.get(
+                    "control_plane_runtime_arbiter_allowed"
+                )
+            ),
+            "strategy_arbiter_semantics_runtime_dtm_or_tablebase_lookup": (
+                strategy_arbiter_semantics_gate.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "strategy_arbiter_semantics_gameplay_topology_mutation": (
+                strategy_arbiter_semantics_gate.get("gameplay_topology_mutation")
+            ),
+            "strategy_arbiter_semantics_stage7_promotion_allowed": (
+                strategy_arbiter_semantics_gate.get("stage7_promotion_allowed")
+            ),
+            "strategy_arbiter_semantics_stage8_training_allowed": (
+                strategy_arbiter_semantics_gate.get("stage8_training_allowed")
             ),
             "strategy_arbiter_out_of_sample_passive_ready": (
                 strategy_arbiter_out_of_sample_gate.get(

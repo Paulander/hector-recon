@@ -571,6 +571,21 @@ SOURCES = {
     "strategy_owner_contrast_probe": (
         "reports/krk_strategy_owner_contrast_probe_v0.json"
     ),
+    "strategy_arbiter_evidence_risk_review_v0": (
+        "reports/krk_strategy_arbiter_evidence_risk_review_v0.json"
+    ),
+    "strategy_arbiter_stratified_probe_v2": (
+        "reports/krk_strategy_arbiter_stratified_probe_v2.json"
+    ),
+    "strategy_arbiter_architecture_review_v1": (
+        "reports/krk_strategy_arbiter_architecture_review_v1.json"
+    ),
+    "strategy_arbiter_sandbox_readiness_criteria_v0": (
+        "reports/krk_strategy_arbiter_sandbox_readiness_criteria_v0.json"
+    ),
+    "strategy_arbiter_control_plane_review_v0": (
+        "reports/krk_strategy_arbiter_control_plane_review_v0.json"
+    ),
     "strategy_arbiter_out_of_sample_control_plan_v0": (
         "reports/krk_strategy_arbiter_out_of_sample_control_plan_v0.json"
     ),
@@ -1586,6 +1601,21 @@ def build_payload() -> dict[str, Any]:
     ]
     strategy_owner_contrast_dataset = payloads["strategy_owner_contrast_dataset"]
     strategy_owner_contrast_probe = payloads["strategy_owner_contrast_probe"]
+    strategy_arbiter_evidence_risk_review_v0 = payloads[
+        "strategy_arbiter_evidence_risk_review_v0"
+    ]
+    strategy_arbiter_stratified_probe_v2 = payloads[
+        "strategy_arbiter_stratified_probe_v2"
+    ]
+    strategy_arbiter_architecture_review_v1 = payloads[
+        "strategy_arbiter_architecture_review_v1"
+    ]
+    strategy_arbiter_sandbox_readiness_criteria_v0 = payloads[
+        "strategy_arbiter_sandbox_readiness_criteria_v0"
+    ]
+    strategy_arbiter_control_plane_review_v0 = payloads[
+        "strategy_arbiter_control_plane_review_v0"
+    ]
     strategy_arbiter_out_of_sample_control_plan_v0 = payloads[
         "strategy_arbiter_out_of_sample_control_plan_v0"
     ]
@@ -2119,6 +2149,197 @@ def build_payload() -> dict[str, Any]:
         and strategy_owner_contrast_probe.get("runtime_terminals_added") is False
         and strategy_owner_contrast_probe.get("stage7_promotion_allowed") is False
         and strategy_owner_contrast_probe.get("stage8_training_allowed") is False
+    )
+    arbiter_risk_decision = (
+        strategy_arbiter_evidence_risk_review_v0.get("decision") or {}
+    )
+    arbiter_risk_summary = (
+        strategy_arbiter_evidence_risk_review_v0.get("summary") or {}
+    )
+    arbiter_risk_blocked_steps = (
+        strategy_arbiter_evidence_risk_review_v0.get("blocked_next_steps") or []
+    )
+    arbiter_stratified_decision = (
+        strategy_arbiter_stratified_probe_v2.get("decision") or {}
+    )
+    arbiter_stratified_summary = (
+        strategy_arbiter_stratified_probe_v2.get("summary") or {}
+    )
+    arbiter_architecture_evidence = (
+        strategy_arbiter_architecture_review_v1.get("evidence_summary") or {}
+    )
+    arbiter_architecture_allowed_next = (
+        strategy_arbiter_architecture_review_v1.get("allowed_next_implementation")
+        or {}
+    )
+    arbiter_architecture_blocked = (
+        strategy_arbiter_architecture_review_v1.get("blocked_implementation") or []
+    )
+    sandbox_criteria_decision = (
+        strategy_arbiter_sandbox_readiness_criteria_v0.get("decision") or {}
+    )
+    sandbox_criteria_requirements = {
+        requirement.get("id"): requirement
+        for requirement in strategy_arbiter_sandbox_readiness_criteria_v0.get(
+            "minimum_evidence_requirements"
+        )
+        or []
+    }
+    sandbox_profile_constraints = (
+        strategy_arbiter_sandbox_readiness_criteria_v0.get(
+            "sandbox_profile_constraints"
+        )
+        or {}
+    )
+    arbiter_control_current = (
+        strategy_arbiter_control_plane_review_v0.get("current_status") or {}
+    )
+    arbiter_control_evidence = (
+        strategy_arbiter_control_plane_review_v0.get("evidence") or {}
+    )
+    arbiter_control_recommended = (
+        strategy_arbiter_control_plane_review_v0.get("recommended_next_step") or {}
+    )
+    arbiter_control_blocked_work = (
+        strategy_arbiter_control_plane_review_v0.get("blocked_next_work") or []
+    )
+    arbiter_semantics_blocker_passive = (
+        strategy_arbiter_evidence_risk_review_v0.get("causal_status")
+        == "non_causal_review"
+        and arbiter_risk_decision.get("status")
+        == "runtime_sandbox_blocked_pending_semantics_review"
+        and arbiter_risk_decision.get("runtime_sandbox_allowed") is False
+        and arbiter_risk_summary.get("benchmark_frame_count") == 28
+        and arbiter_risk_summary.get("max_only_frame_count") == 14
+        and arbiter_risk_summary.get("provider_mate_frame_count") == 14
+        and "runtime_arbiter" in arbiter_risk_blocked_steps
+        and "runtime_internal_terminal" in arbiter_risk_blocked_steps
+        and "stage7_promotion" in arbiter_risk_blocked_steps
+        and "stage8_training" in arbiter_risk_blocked_steps
+        and "runtime_dtm_or_tablebase" in arbiter_risk_blocked_steps
+        and "gameplay_topology_mutation" in arbiter_risk_blocked_steps
+        and strategy_arbiter_evidence_risk_review_v0.get(
+            "runtime_arbiter_implemented"
+        )
+        is False
+        and strategy_arbiter_evidence_risk_review_v0.get(
+            "runtime_behavior_changed"
+        )
+        is False
+        and strategy_arbiter_evidence_risk_review_v0.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and strategy_arbiter_evidence_risk_review_v0.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and strategy_arbiter_evidence_risk_review_v0.get("gameplay_topology_mutation")
+        is False
+        and strategy_arbiter_evidence_risk_review_v0.get("stage7_promotion_allowed")
+        is False
+        and strategy_arbiter_evidence_risk_review_v0.get("stage8_training_allowed")
+        is False
+        and strategy_arbiter_stratified_probe_v2.get("causal_status")
+        == "non_causal_probe"
+        and arbiter_stratified_decision.get("status")
+        == "protected_forced_controls_promising_stage7_gap_confirmed"
+        and arbiter_stratified_decision.get("runtime_sandbox_allowed") is False
+        and arbiter_stratified_summary.get("best_selected_provider_positive_hit_rate")
+        == 1.0
+        and arbiter_stratified_summary.get(
+            "best_forced_provider_control_positive_hit_rate"
+        )
+        == 1.0
+        and arbiter_stratified_summary.get("best_forced_provider_positive_hit_rate")
+        == 0.5
+        and strategy_arbiter_stratified_probe_v2.get("runtime_arbiter_implemented")
+        is False
+        and strategy_arbiter_stratified_probe_v2.get("runtime_behavior_changed")
+        is False
+        and strategy_arbiter_stratified_probe_v2.get("runtime_defaults_changed")
+        is False
+        and strategy_arbiter_stratified_probe_v2.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and strategy_arbiter_stratified_probe_v2.get("gameplay_topology_mutation")
+        is False
+        and strategy_arbiter_stratified_probe_v2.get("stage7_promotion_allowed")
+        is False
+        and strategy_arbiter_stratified_probe_v2.get("stage8_training_allowed")
+        is False
+        and strategy_arbiter_architecture_review_v1.get("causal_status")
+        == "non_causal_review"
+        and strategy_arbiter_architecture_review_v1.get("decision_status")
+        == "trace_only_observability_skeleton_allowed"
+        and strategy_arbiter_architecture_review_v1.get("runtime_arbiter_allowed")
+        is False
+        and strategy_arbiter_architecture_review_v1.get("runtime_defaults_may_change")
+        is False
+        and strategy_arbiter_architecture_review_v1.get("stage7_promotion_allowed")
+        is False
+        and strategy_arbiter_architecture_review_v1.get("stage8_training_allowed")
+        is False
+        and arbiter_architecture_allowed_next.get("default_enabled") is False
+        and arbiter_architecture_allowed_next.get("may_change_scores") is False
+        and arbiter_architecture_allowed_next.get("may_change_selected_move") is False
+        and arbiter_architecture_allowed_next.get("may_change_selected_provider")
+        is False
+        and arbiter_architecture_allowed_next.get("may_request_provider") is False
+        and "runtime_provider_selection_arbiter" in arbiter_architecture_blocked
+        and "stage7_promotion" in arbiter_architecture_blocked
+        and "stage8_training" in arbiter_architecture_blocked
+        and "runtime_dtm_or_tablebase_lookup" in arbiter_architecture_blocked
+        and strategy_arbiter_sandbox_readiness_criteria_v0.get("causal_status")
+        == "non_causal_design_review"
+        and strategy_arbiter_sandbox_readiness_criteria_v0.get("readiness_status")
+        == "sandbox_not_ready_criteria_defined"
+        and sandbox_criteria_decision.get("status")
+        == "readiness_criteria_defined_sandbox_still_blocked"
+        and sandbox_criteria_decision.get("runtime_arbiter_allowed") is False
+        and sandbox_criteria_decision.get("selector_sandbox_ready") is False
+        and sandbox_criteria_decision.get("stage7_repair_allowed") is False
+        and sandbox_criteria_decision.get("stage7_promotion_allowed") is False
+        and sandbox_criteria_decision.get("stage8_training_allowed") is False
+        and sandbox_criteria_requirements.get("held_out_stage7_challenges", {}).get(
+            "current_status"
+        )
+        == "met"
+        and sandbox_criteria_requirements.get("out_of_sample_controls", {}).get(
+            "current_status"
+        )
+        == "missing"
+        and sandbox_profile_constraints.get("default_off") is True
+        and strategy_arbiter_sandbox_readiness_criteria_v0.get(
+            "runtime_behavior_changed"
+        )
+        is False
+        and strategy_arbiter_sandbox_readiness_criteria_v0.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and strategy_arbiter_sandbox_readiness_criteria_v0.get(
+            "runtime_arbiter_implemented"
+        )
+        is False
+        and strategy_arbiter_control_plane_review_v0.get("causal_status")
+        == "non_causal_architecture_review"
+        and strategy_arbiter_control_plane_review_v0.get("decision_status")
+        == "selector_objective_and_label_semantics_review_required"
+        and arbiter_control_current.get("observability_skeleton")
+        == "implemented_default_off_trace_only"
+        and arbiter_control_current.get("labeled_controls") == "mixed"
+        and arbiter_control_current.get("stage7") == "held_out_unlabeled_challenge"
+        and arbiter_control_current.get("runtime_arbiter_allowed") is False
+        and arbiter_control_current.get("sandbox_ready") is False
+        and "runtime_arbiter" in arbiter_control_blocked_work
+        and "default_off_selector_sandbox" in arbiter_control_blocked_work
+        and "stage7_promotion" in arbiter_control_blocked_work
+        and "stage8_training" in arbiter_control_blocked_work
+        and "runtime_dtm_or_tablebase" in arbiter_control_blocked_work
+        and "gameplay_topology_mutation" in arbiter_control_blocked_work
+        and arbiter_control_recommended.get("must_remain_non_causal") is True
     )
     out_of_sample_plan_decision = (
         strategy_arbiter_out_of_sample_control_plan_v0.get("decision") or {}
@@ -5101,6 +5322,199 @@ def build_payload() -> dict[str, Any]:
             ),
             "stage8_training_allowed": strategy_owner_contrast_probe.get(
                 "stage8_training_allowed"
+            ),
+        },
+        "strategy_arbiter_semantics_blocker_gate": {
+            "status": strategy_arbiter_control_plane_review_v0.get(
+                "decision_status"
+            ),
+            "passive_semantics_blocker_ready": arbiter_semantics_blocker_passive,
+            "risk_review_status": arbiter_risk_decision.get("status"),
+            "risk_review_runtime_sandbox_allowed": (
+                arbiter_risk_decision.get("runtime_sandbox_allowed")
+            ),
+            "risk_review_recommended_next_step": (
+                arbiter_risk_decision.get("recommended_next_step")
+            ),
+            "risk_review_benchmark_frame_count": (
+                arbiter_risk_summary.get("benchmark_frame_count")
+            ),
+            "risk_review_max_only_frame_count": (
+                arbiter_risk_summary.get("max_only_frame_count")
+            ),
+            "risk_review_provider_mate_frame_count": (
+                arbiter_risk_summary.get("provider_mate_frame_count")
+            ),
+            "risk_review_label_semantic_counts": (
+                arbiter_risk_summary.get("label_semantic_counts") or {}
+            ),
+            "risk_review_blocked_next_steps": arbiter_risk_blocked_steps,
+            "stratified_probe_status": arbiter_stratified_decision.get("status"),
+            "stratified_probe_runtime_sandbox_allowed": (
+                arbiter_stratified_decision.get("runtime_sandbox_allowed")
+            ),
+            "stratified_probe_selected_provider_hit_rate": (
+                arbiter_stratified_summary.get(
+                    "best_selected_provider_positive_hit_rate"
+                )
+            ),
+            "stratified_probe_forced_control_hit_rate": (
+                arbiter_stratified_summary.get(
+                    "best_forced_provider_control_positive_hit_rate"
+                )
+            ),
+            "stratified_probe_stage7_forced_provider_hit_rate": (
+                arbiter_stratified_summary.get(
+                    "best_forced_provider_positive_hit_rate"
+                )
+            ),
+            "architecture_review_status": (
+                strategy_arbiter_architecture_review_v1.get("decision_status")
+            ),
+            "architecture_runtime_arbiter_allowed": (
+                strategy_arbiter_architecture_review_v1.get(
+                    "runtime_arbiter_allowed"
+                )
+            ),
+            "architecture_runtime_defaults_may_change": (
+                strategy_arbiter_architecture_review_v1.get(
+                    "runtime_defaults_may_change"
+                )
+            ),
+            "architecture_stage7_status": (
+                strategy_arbiter_architecture_review_v1.get("stage7_status")
+            ),
+            "architecture_stage7_gap_status": (
+                (
+                    arbiter_architecture_evidence.get(
+                        "stage7_forced_provider_residuals"
+                    )
+                    or {}
+                ).get("status")
+            ),
+            "architecture_allowed_next_scope": (
+                arbiter_architecture_allowed_next.get("scope")
+            ),
+            "architecture_allowed_next_default_enabled": (
+                arbiter_architecture_allowed_next.get("default_enabled")
+            ),
+            "architecture_allowed_next_may_change_scores": (
+                arbiter_architecture_allowed_next.get("may_change_scores")
+            ),
+            "architecture_allowed_next_may_request_provider": (
+                arbiter_architecture_allowed_next.get("may_request_provider")
+            ),
+            "sandbox_readiness_status": (
+                strategy_arbiter_sandbox_readiness_criteria_v0.get(
+                    "readiness_status"
+                )
+            ),
+            "sandbox_readiness_decision_status": sandbox_criteria_decision.get(
+                "status"
+            ),
+            "sandbox_readiness_runtime_arbiter_allowed": (
+                sandbox_criteria_decision.get("runtime_arbiter_allowed")
+            ),
+            "sandbox_readiness_selector_sandbox_ready": (
+                sandbox_criteria_decision.get("selector_sandbox_ready")
+            ),
+            "sandbox_readiness_stage7_repair_allowed": (
+                sandbox_criteria_decision.get("stage7_repair_allowed")
+            ),
+            "sandbox_readiness_stage7_promotion_allowed": (
+                sandbox_criteria_decision.get("stage7_promotion_allowed")
+            ),
+            "sandbox_readiness_stage8_training_allowed": (
+                sandbox_criteria_decision.get("stage8_training_allowed")
+            ),
+            "sandbox_readiness_stage7_holdout_status": (
+                sandbox_criteria_requirements.get(
+                    "held_out_stage7_challenges", {}
+                ).get("current_status")
+            ),
+            "sandbox_readiness_out_of_sample_controls_status": (
+                sandbox_criteria_requirements.get(
+                    "out_of_sample_controls", {}
+                ).get("current_status")
+            ),
+            "control_plane_status": (
+                strategy_arbiter_control_plane_review_v0.get("decision_status")
+            ),
+            "control_plane_observability_skeleton": (
+                arbiter_control_current.get("observability_skeleton")
+            ),
+            "control_plane_labeled_controls": (
+                arbiter_control_current.get("labeled_controls")
+            ),
+            "control_plane_stage7": arbiter_control_current.get("stage7"),
+            "control_plane_runtime_arbiter_allowed": (
+                arbiter_control_current.get("runtime_arbiter_allowed")
+            ),
+            "control_plane_sandbox_ready": (
+                arbiter_control_current.get("sandbox_ready")
+            ),
+            "control_plane_observability_smoke_status": (
+                (arbiter_control_evidence.get("observability_smoke") or {}).get(
+                    "status"
+                )
+            ),
+            "control_plane_observability_behavior_metrics_match": (
+                (arbiter_control_evidence.get("observability_smoke") or {}).get(
+                    "behavior_metrics_match"
+                )
+            ),
+            "control_plane_labeled_controls_probe_status": (
+                (arbiter_control_evidence.get("labeled_controls_probe") or {}).get(
+                    "status"
+                )
+            ),
+            "control_plane_labeled_controls_positive_rate": (
+                (arbiter_control_evidence.get("labeled_controls_probe") or {}).get(
+                    "selected_positive_rate_on_labeled_controls"
+                )
+            ),
+            "control_plane_stage7_unknown_count": (
+                (arbiter_control_evidence.get("labeled_controls_probe") or {}).get(
+                    "stage7_unknown_count"
+                )
+            ),
+            "control_plane_recommended_next_step_id": (
+                arbiter_control_recommended.get("step_id")
+            ),
+            "control_plane_must_remain_non_causal": (
+                arbiter_control_recommended.get("must_remain_non_causal")
+            ),
+            "control_plane_blocked_next_work": arbiter_control_blocked_work,
+            "runtime_arbiter_implemented": (
+                strategy_arbiter_stratified_probe_v2.get(
+                    "runtime_arbiter_implemented"
+                )
+            ),
+            "runtime_behavior_changed": (
+                strategy_arbiter_stratified_probe_v2.get("runtime_behavior_changed")
+            ),
+            "runtime_defaults_changed": (
+                strategy_arbiter_stratified_probe_v2.get("runtime_defaults_changed")
+            ),
+            "runtime_dtm_or_tablebase_lookup": (
+                strategy_arbiter_stratified_probe_v2.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "gameplay_topology_mutation": (
+                strategy_arbiter_stratified_probe_v2.get(
+                    "gameplay_topology_mutation"
+                )
+            ),
+            "stage7_promotion_allowed": (
+                strategy_arbiter_stratified_probe_v2.get(
+                    "stage7_promotion_allowed"
+                )
+            ),
+            "stage8_training_allowed": (
+                strategy_arbiter_stratified_probe_v2.get(
+                    "stage8_training_allowed"
+                )
             ),
         },
         "strategy_arbiter_out_of_sample_gate": {
@@ -10660,6 +11074,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     clean_curriculum = payload["clean_curriculum_run_lineage_gate"]
     strategy_sequence_architecture = payload["strategy_sequence_architecture_gate"]
     strategy_owner_contrast = payload["strategy_owner_contrast_gate"]
+    strategy_arbiter_semantics = payload["strategy_arbiter_semantics_blocker_gate"]
     strategy_arbiter_out_of_sample = payload["strategy_arbiter_out_of_sample_gate"]
     strategy_arbiter_runtime_no_scale = payload[
         "strategy_arbiter_runtime_no_scale_gate"
@@ -10804,6 +11219,38 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- runtime_terminals_added: `{strategy_owner_contrast['runtime_terminals_added']}`",
         f"- stage7_promotion_allowed: `{strategy_owner_contrast['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{strategy_owner_contrast['stage8_training_allowed']}`",
+        "",
+        "## Strategy Arbiter Semantics Blocker",
+        "",
+        f"- passive_semantics_blocker_ready: `{strategy_arbiter_semantics['passive_semantics_blocker_ready']}`",
+        f"- status: `{strategy_arbiter_semantics['status']}`",
+        f"- risk_review_status: `{strategy_arbiter_semantics['risk_review_status']}`",
+        f"- risk_review_runtime_sandbox_allowed: `{strategy_arbiter_semantics['risk_review_runtime_sandbox_allowed']}`",
+        f"- risk_review_benchmark_frame_count: `{strategy_arbiter_semantics['risk_review_benchmark_frame_count']}`",
+        f"- risk_review_max_only_frame_count: `{strategy_arbiter_semantics['risk_review_max_only_frame_count']}`",
+        f"- stratified_probe_status: `{strategy_arbiter_semantics['stratified_probe_status']}`",
+        f"- stratified_probe_selected_provider_hit_rate: `{strategy_arbiter_semantics['stratified_probe_selected_provider_hit_rate']}`",
+        f"- stratified_probe_forced_control_hit_rate: `{strategy_arbiter_semantics['stratified_probe_forced_control_hit_rate']}`",
+        f"- stratified_probe_stage7_forced_provider_hit_rate: `{strategy_arbiter_semantics['stratified_probe_stage7_forced_provider_hit_rate']}`",
+        f"- architecture_review_status: `{strategy_arbiter_semantics['architecture_review_status']}`",
+        f"- architecture_runtime_arbiter_allowed: `{strategy_arbiter_semantics['architecture_runtime_arbiter_allowed']}`",
+        f"- architecture_allowed_next_scope: `{strategy_arbiter_semantics['architecture_allowed_next_scope']}`",
+        f"- architecture_allowed_next_default_enabled: `{strategy_arbiter_semantics['architecture_allowed_next_default_enabled']}`",
+        f"- sandbox_readiness_decision_status: `{strategy_arbiter_semantics['sandbox_readiness_decision_status']}`",
+        f"- sandbox_readiness_selector_sandbox_ready: `{strategy_arbiter_semantics['sandbox_readiness_selector_sandbox_ready']}`",
+        f"- sandbox_readiness_out_of_sample_controls_status: `{strategy_arbiter_semantics['sandbox_readiness_out_of_sample_controls_status']}`",
+        f"- control_plane_observability_skeleton: `{strategy_arbiter_semantics['control_plane_observability_skeleton']}`",
+        f"- control_plane_labeled_controls: `{strategy_arbiter_semantics['control_plane_labeled_controls']}`",
+        f"- control_plane_stage7: `{strategy_arbiter_semantics['control_plane_stage7']}`",
+        f"- control_plane_runtime_arbiter_allowed: `{strategy_arbiter_semantics['control_plane_runtime_arbiter_allowed']}`",
+        f"- control_plane_sandbox_ready: `{strategy_arbiter_semantics['control_plane_sandbox_ready']}`",
+        f"- control_plane_recommended_next_step_id: `{strategy_arbiter_semantics['control_plane_recommended_next_step_id']}`",
+        f"- control_plane_blocked_next_work: `{strategy_arbiter_semantics['control_plane_blocked_next_work']}`",
+        f"- runtime_arbiter_implemented: `{strategy_arbiter_semantics['runtime_arbiter_implemented']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{strategy_arbiter_semantics['runtime_dtm_or_tablebase_lookup']}`",
+        f"- gameplay_topology_mutation: `{strategy_arbiter_semantics['gameplay_topology_mutation']}`",
+        f"- stage7_promotion_allowed: `{strategy_arbiter_semantics['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{strategy_arbiter_semantics['stage8_training_allowed']}`",
         "",
         "## Strategy Arbiter Out-Of-Sample Controls",
         "",
