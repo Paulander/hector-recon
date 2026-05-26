@@ -23,7 +23,8 @@
     "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_integration_v0.json",
     "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json",
     "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
-    "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
+    "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
+    "reports/krk_current_control_plane_gate_v0.json"
   ],
   "source_scripts": [
     "scripts/assemble_krk_sequence_policy_benchmark_inputs_v0.py",
@@ -83,9 +84,18 @@
     "all_boundaries_preserved": true,
     "boundary_violation_count": 0,
     "boundary_violations": [],
+    "current_control_plane_approval_option_ids": [
+      "approve_stage4_first_move_contrast_sandbox",
+      "approve_protected_plan_window_failure_contrast_collection"
+    ],
+    "current_gate_status": "krk_control_plane_waiting_on_explicit_gate_choice",
     "integrated_new_failure_count": 0,
     "integration_ready": false,
     "integration_status": "protected_plan_window_failure_contrast_integration_pending_outputs",
+    "protected_failure_contrast_collection_blocked_by_option_id": null,
+    "protected_failure_contrast_collection_command_available": true,
+    "protected_failure_contrast_collection_option_available": true,
+    "protected_failure_contrast_collection_option_id": "approve_protected_plan_window_failure_contrast_collection",
     "protected_failure_contrast_row_count": 0,
     "runtime_authorization_row_count": 0,
     "selector_training_row_count": 0,

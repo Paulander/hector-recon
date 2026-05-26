@@ -21,6 +21,7 @@ INTEGRATION = (
     / "reports/strategy_arbitration/"
     "krk_protected_plan_window_failure_contrast_integration_v0.json"
 )
+CONTROL_PLANE_GATE = ROOT / "reports/krk_current_control_plane_gate_v0.json"
 OUTPUT_JSON = (
     ROOT
     / "reports/strategy_arbitration/"
@@ -99,8 +100,26 @@ def _load_relative(path: str) -> dict[str, Any]:
     return _load(ROOT / path)
 
 
+def _find_approval_option(gate: dict[str, Any], option_id: str) -> dict[str, Any]:
+    for option in gate.get("approval_options") or []:
+        if option.get("option_id") == option_id:
+            return option
+    return {}
+
+
+def _find_first_approval_option(
+    gate: dict[str, Any], option_ids: tuple[str, ...]
+) -> dict[str, Any]:
+    for option_id in option_ids:
+        option = _find_approval_option(gate, option_id)
+        if option:
+            return option
+    return {}
+
+
 def build_payload() -> dict[str, Any]:
     integration = _load(INTEGRATION)
+    gate = _load(CONTROL_PLANE_GATE)
     step_results = []
     for step in STEPS:
         module = _load_module(ROOT / step["script"])
@@ -139,9 +158,38 @@ def build_payload() -> dict[str, Any]:
     all_boundaries_preserved = not boundary_violations
     integration_ready = bool(integration_summary.get("integration_ready"))
     protected_failure_rows = int(input_summary.get("protected_failure_contrast_row_count") or 0)
+    protected_collection_option = _find_approval_option(
+        gate,
+        "approve_protected_plan_window_failure_contrast_collection",
+    )
+    protected_collection_blocking_option = _find_first_approval_option(
+        gate,
+        (
+            "repair_protected_stack_validation",
+            "repair_protected_failure_contrast_approval_request_scope",
+            "review_protected_plan_window_failure_contrast_execution_readiness",
+            "review_protected_plan_window_failure_contrast_manifest",
+            "review_protected_plan_window_failure_contrast_plan",
+        ),
+    )
+    protected_collection_option_available = bool(protected_collection_option)
+    protected_collection_command_available = bool(
+        protected_collection_option.get("command_if_explicitly_approved")
+    )
+    waiting_on_collection_outputs = not integration_ready or protected_failure_rows <= 0
+    missing_collection_command = (
+        all_boundaries_preserved
+        and waiting_on_collection_outputs
+        and not protected_collection_command_available
+    )
     status = (
         "sequence_policy_after_protected_failure_contrast_refresh_blocked_boundary_violation"
         if not all_boundaries_preserved
+        else (
+            "sequence_policy_after_protected_failure_contrast_refresh_blocked_pending_"
+            "protected_failure_contrast_control_plane_gate_review"
+        )
+        if missing_collection_command
         else "sequence_policy_after_protected_failure_contrast_refresh_ready_for_review"
         if integration_ready and protected_failure_rows > 0
         else "sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs"
@@ -155,6 +203,7 @@ def build_payload() -> dict[str, Any]:
             "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json",
             "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
             "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
+            "reports/krk_current_control_plane_gate_v0.json",
         ],
         "source_scripts": [step["script"] for step in STEPS],
         "step_results": step_results,
@@ -176,12 +225,30 @@ def build_payload() -> dict[str, Any]:
             "runtime_authorization_row_count": input_summary.get(
                 "runtime_authorization_row_count"
             ),
+            "current_gate_status": gate.get("decision", {}).get("status"),
+            "current_control_plane_approval_option_ids": [
+                option.get("option_id") for option in gate.get("approval_options") or []
+            ],
+            "protected_failure_contrast_collection_option_available": (
+                protected_collection_option_available
+            ),
+            "protected_failure_contrast_collection_command_available": (
+                protected_collection_command_available
+            ),
+            "protected_failure_contrast_collection_option_id": (
+                protected_collection_option.get("option_id")
+            ),
+            "protected_failure_contrast_collection_blocked_by_option_id": (
+                protected_collection_blocking_option.get("option_id")
+            ),
         },
         "decision": {
             "status": status,
             "recommended_next_step": (
                 "inspect_post_protected_failure_contrast_refresh_boundary_violation"
                 if not all_boundaries_preserved
+                else "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+                if missing_collection_command
                 else
                 "review_non_causal_sequence_policy_benchmark_with_protected_failure_contrasts"
                 if integration_ready and protected_failure_rows > 0

@@ -19,6 +19,12 @@ This passive refresh consumes integrated protected failure contrasts when availa
 - stage7_training_row_count: `0`
 - selector_training_row_count: `0`
 - runtime_authorization_row_count: `0`
+- current_gate_status: `krk_control_plane_waiting_on_explicit_gate_choice`
+- current_control_plane_approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'approve_protected_plan_window_failure_contrast_collection']`
+- protected_failure_contrast_collection_option_available: `True`
+- protected_failure_contrast_collection_command_available: `True`
+- protected_failure_contrast_collection_option_id: `approve_protected_plan_window_failure_contrast_collection`
+- protected_failure_contrast_collection_blocked_by_option_id: `None`
 
 ## Steps
 

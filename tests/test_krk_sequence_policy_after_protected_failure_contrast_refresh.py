@@ -64,6 +64,26 @@ def test_after_protected_failure_contrast_refresh_waits_on_outputs():
     assert payload["summary"]["integrated_new_failure_count"] == 0
     assert payload["summary"]["protected_failure_contrast_row_count"] == 0
     assert (
+        "approve_protected_plan_window_failure_contrast_collection"
+        in payload["summary"]["current_control_plane_approval_option_ids"]
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_option_available"]
+        is True
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_command_available"]
+        is True
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_option_id"]
+        == "approve_protected_plan_window_failure_contrast_collection"
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_blocked_by_option_id"]
+        is None
+    )
+    assert (
         payload["decision"]["status"]
         == "sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs"
     )
@@ -149,18 +169,32 @@ def test_after_protected_failure_contrast_refresh_blocks_boundary_violation(monk
     }
 
     monkeypatch.setattr(_refresh, "_load_module", lambda _path: FakeModule)
-    monkeypatch.setattr(
-        _refresh,
-        "_load",
-        lambda _path: {
+    def fake_load(path):
+        if path == _refresh.CONTROL_PLANE_GATE:
+            return {
+                "decision": {"status": "krk_control_plane_waiting_on_explicit_gate_choice"},
+                "approval_options": [
+                    {
+                        "option_id": (
+                            "approve_protected_plan_window_failure_contrast_collection"
+                        ),
+                        "command_if_explicitly_approved": (
+                            "uv run python scripts/run_krk_protected_plan_window_"
+                            "failure_contrast_collection_v0.py --execute-reviewed-collection"
+                        ),
+                    }
+                ],
+            }
+        return {
             "decision": {
                 "status": (
                     "protected_plan_window_failure_contrast_integration_ready_for_passive_benchmark_refresh"
                 )
             },
             "summary": {"integration_ready": True, "integrated_new_failure_count": 4},
-        },
-    )
+        }
+
+    monkeypatch.setattr(_refresh, "_load", fake_load)
     monkeypatch.setattr(_refresh, "_load_relative", lambda path: outputs[path])
 
     payload = _refresh.build_payload()
@@ -182,4 +216,115 @@ def test_after_protected_failure_contrast_refresh_blocks_boundary_violation(monk
         }
     ]
     assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
+
+
+def test_after_protected_failure_contrast_refresh_routes_missing_collection_option_to_gate_review(
+    monkeypatch,
+):
+    class FakeModule:
+        @staticmethod
+        def main():
+            return None
+
+    outputs = {
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json": {
+            "summary": {
+                "protected_failure_contrast_row_count": 0,
+                "row_count": 118,
+                "selector_training_row_count": 0,
+                "runtime_authorization_row_count": 0,
+            },
+            "decision": {
+                "status": "sequence_policy_benchmark_inputs_ready_non_causal",
+                "runtime_changes_allowed": False,
+                "label_run_allowed": False,
+                "selector_training_allowed": False,
+                "stage7_promotion_allowed": False,
+                "stage8_training_allowed": False,
+            },
+        },
+        "reports/strategy_arbitration/krk_sequence_policy_input_probe_v0.json": {
+            "decision": {
+                "status": "sequence_policy_input_probe_ready_for_full_non_causal_benchmark",
+                "runtime_changes_allowed": False,
+                "label_run_allowed": False,
+                "selector_training_allowed": False,
+                "stage7_promotion_allowed": False,
+                "stage8_training_allowed": False,
+            }
+        },
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json": {
+            "decision": {
+                "status": "sequence_policy_benchmark_ready_non_causal_results_available",
+                "runtime_changes_allowed": False,
+                "label_run_allowed": False,
+                "selector_training_allowed": False,
+                "stage7_promotion_allowed": False,
+                "stage8_training_allowed": False,
+            }
+        },
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json": {
+            "decision": {
+                "status": "sequence_policy_benchmark_mixed_plan_window_underpowered",
+                "runtime_changes_allowed": False,
+                "label_run_allowed": False,
+                "selector_training_allowed": False,
+                "stage7_promotion_allowed": False,
+                "stage8_training_allowed": False,
+            }
+        },
+    }
+
+    def fake_load(path):
+        if path == _refresh.CONTROL_PLANE_GATE:
+            return {
+                "decision": {"status": "krk_control_plane_waiting_on_explicit_gate_choice"},
+                "approval_options": [
+                    {
+                        "option_id": (
+                            "review_protected_plan_window_failure_contrast_execution_readiness"
+                        ),
+                        "command_if_explicitly_approved": None,
+                    }
+                ],
+            }
+        return {
+            "decision": {
+                "status": "protected_plan_window_failure_contrast_integration_pending_outputs"
+            },
+            "summary": {"integration_ready": False, "integrated_new_failure_count": 0},
+        }
+
+    monkeypatch.setattr(_refresh, "_load_module", lambda _path: FakeModule)
+    monkeypatch.setattr(_refresh, "_load", fake_load)
+    monkeypatch.setattr(_refresh, "_load_relative", lambda path: outputs[path])
+
+    payload = _refresh.build_payload()
+
+    assert (
+        payload["decision"]["status"]
+        == "sequence_policy_after_protected_failure_contrast_refresh_blocked_pending_"
+        "protected_failure_contrast_control_plane_gate_review"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_option_available"]
+        is False
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_command_available"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "protected_failure_contrast_collection_blocked_by_option_id"
+        ]
+        == "review_protected_plan_window_failure_contrast_execution_readiness"
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["label_run_allowed"] is False
     assert payload["decision"]["stage8_training_allowed"] is False
