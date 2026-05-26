@@ -69,10 +69,7 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     assert primary["id"] == "protected_plan_window_failure_contrast_collection"
     assert primary["approval_required"] is True
     assert primary["implementation_allowed_by_this_packet"] is False
-    assert (
-        primary["status"]
-        == "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
-    )
+    assert primary["status"] == "ready_pending_explicit_approval"
     assert primary["command_if_explicitly_approved"] == (
         "UV_CACHE_DIR=/tmp/uv-cache uv run python "
         "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py "
@@ -606,6 +603,89 @@ def test_unblocker_packet_blocks_collection_when_approval_request_blocked(monkey
         "full_suite_readiness_audit_not_clean"
     ]
     assert primary["scope"]["approval_request_ready_for_collection"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
+
+
+def test_unblocker_packet_blocks_collection_when_execution_not_ready(monkeypatch):
+    real_load = _packet._load
+
+    def tainted_load(path: Path):
+        payload = json.loads(json.dumps(real_load(path)))
+        if path == _packet.FAILURE_CONTRAST_EXECUTION_READINESS:
+            payload.setdefault("decision", {})["status"] = (
+                "protected_plan_window_failure_contrast_execution_blocked"
+            )
+            payload.setdefault("summary", {})["jobs_passing_readiness"] = False
+        return payload
+
+    monkeypatch.setattr(_packet, "_load", tainted_load)
+
+    payload = _packet.build_payload()
+    primary = payload["primary_unblocker"]
+
+    assert (
+        payload["decision"]["status"]
+        == "krk_suite_protected_failure_contrast_unblocker_blocked_pending_"
+        "execution_readiness"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_protected_plan_window_failure_contrast_execution_readiness"
+    )
+    assert (
+        primary["status"]
+        == "blocked_pending_protected_failure_contrast_execution_readiness"
+    )
+    assert primary["command_if_explicitly_approved"] is None
+    assert primary["scope"]["approval_request_ready_for_collection"] is True
+    assert primary["scope"]["protected_stack_ready"] is True
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_execution_readiness_status"
+        ]
+        == "protected_plan_window_failure_contrast_execution_blocked"
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
+
+
+def test_unblocker_packet_blocks_collection_when_protected_stack_not_ready(monkeypatch):
+    real_load = _packet._load
+
+    def tainted_load(path: Path):
+        payload = json.loads(json.dumps(real_load(path)))
+        if path == _packet.READINESS:
+            protected = payload.setdefault("protected_stack", {})
+            protected["ready"] = False
+            protected["rollback_paths_preserved"] = False
+            protected.setdefault("active_stack_path_status", {})[
+                "all_paths_safe"
+            ] = False
+            payload.setdefault("hard_blockers", []).append(
+                "protected_retry1_stage5_6_stack_not_validated"
+            )
+        return payload
+
+    monkeypatch.setattr(_packet, "_load", tainted_load)
+
+    payload = _packet.build_payload()
+    primary = payload["primary_unblocker"]
+
+    assert (
+        payload["decision"]["status"]
+        == "krk_suite_protected_failure_contrast_unblocker_blocked_pending_"
+        "protected_stack_repair"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "repair_protected_stack_validation"
+    )
+    assert primary["status"] == "blocked_pending_protected_stack_repair"
+    assert primary["command_if_explicitly_approved"] is None
+    assert primary["scope"]["protected_stack_ready"] is False
+    assert primary["scope"]["protected_stack_rollback_paths_preserved"] is False
+    assert primary["scope"]["protected_stack_active_paths_safe"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["stage8_training_allowed"] is False
 

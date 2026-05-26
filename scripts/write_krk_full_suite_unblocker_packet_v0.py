@@ -169,6 +169,15 @@ def build_payload() -> dict[str, Any]:
         failure_contrast_manifest_review.get("decision", {}).get("status")
         == "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
     )
+    protected_stack_ready = bool(protected.get("ready"))
+    failure_contrast_execution_ready = (
+        failure_contrast_execution_readiness.get("decision", {}).get("status")
+        == "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+    )
+    failure_contrast_runner_dry_run_ready = (
+        failure_contrast_runner.get("decision", {}).get("status")
+        == "protected_plan_window_failure_contrast_runner_dry_run_ready"
+    )
 
     primary_ready = (
         stage7_gate["runner_status"] == "stage7_diverse_clean_sampling_runner_dry_run_ready"
@@ -214,7 +223,31 @@ def build_payload() -> dict[str, Any]:
     failure_contrast_approval_request_repair_required = (
         failure_contrast_primary
         and failure_contrast_manifest_review_passed
+        and protected_stack_ready
         and not failure_contrast_approval_request_ready
+    )
+    failure_contrast_stack_repair_required = (
+        failure_contrast_primary
+        and failure_contrast_manifest_review_passed
+        and not protected_stack_ready
+    )
+    failure_contrast_execution_review_required = (
+        failure_contrast_primary
+        and failure_contrast_manifest_review_passed
+        and protected_stack_ready
+        and failure_contrast_approval_request_ready
+        and (
+            not failure_contrast_execution_ready
+            or not failure_contrast_runner_dry_run_ready
+        )
+    )
+    failure_contrast_collection_ready = (
+        failure_contrast_primary
+        and failure_contrast_manifest_review_passed
+        and protected_stack_ready
+        and failure_contrast_approval_request_ready
+        and failure_contrast_execution_ready
+        and failure_contrast_runner_dry_run_ready
     )
     if sequence_forbidden_training_or_runtime_inputs:
         decision_status = "krk_suite_unblocker_blocked_forbidden_training_or_runtime_rows"
@@ -227,12 +260,26 @@ def build_payload() -> dict[str, Any]:
             "krk_suite_additional_stage7_label_unblocker_ready_pending_explicit_approval"
         )
         recommended_next_step = "explicitly_approve_stage7_additional_clean_label_execution"
+    elif failure_contrast_stack_repair_required:
+        decision_status = (
+            "krk_suite_protected_failure_contrast_unblocker_blocked_pending_"
+            "protected_stack_repair"
+        )
+        recommended_next_step = "repair_protected_stack_validation"
     elif failure_contrast_approval_request_repair_required:
         decision_status = (
             "krk_suite_protected_failure_contrast_unblocker_blocked_pending_"
             "approval_request_repair"
         )
         recommended_next_step = "repair_protected_failure_contrast_approval_request_scope"
+    elif failure_contrast_execution_review_required:
+        decision_status = (
+            "krk_suite_protected_failure_contrast_unblocker_blocked_pending_"
+            "execution_readiness"
+        )
+        recommended_next_step = (
+            "review_protected_plan_window_failure_contrast_execution_readiness"
+        )
     elif stage7_gate["success_controls_ready"] and sequence["benchmark_ready"]:
         decision_status = (
             "krk_suite_protected_failure_contrast_unblocker_ready_pending_explicit_collection_approval"
@@ -569,10 +616,14 @@ def build_payload() -> dict[str, Any]:
             "status": (
                 "blocked_forbidden_training_or_runtime_rows"
                 if sequence_forbidden_training_or_runtime_inputs
+                else "blocked_pending_protected_stack_repair"
+                if failure_contrast_stack_repair_required
                 else "blocked_pending_protected_failure_contrast_approval_request_repair"
                 if failure_contrast_approval_request_repair_required
+                else "blocked_pending_protected_failure_contrast_execution_readiness"
+                if failure_contrast_execution_review_required
                 else "ready_pending_explicit_approval"
-                if primary_ready
+                if primary_ready or failure_contrast_collection_ready
                 else "additional_manifest_ready_pending_explicit_approval"
                 if additional_ready
                 else failure_contrast_manifest_review.get("decision", {}).get(
@@ -590,8 +641,12 @@ def build_payload() -> dict[str, Any]:
             "purpose": (
                 "Remove forbidden selector-training or runtime-authorization rows from passive sequence-policy inputs before any protected collection review."
                 if sequence_forbidden_training_or_runtime_inputs
+                else "Repair protected stack validation before any collection command is made approvable."
+                if failure_contrast_stack_repair_required
                 else "Repair the protected failure-contrast approval request scope before any collection command is made approvable."
                 if failure_contrast_approval_request_repair_required
+                else "Review protected failure-contrast execution readiness before any collection command is made approvable."
+                if failure_contrast_execution_review_required
                 else
                 "Review the bounded protected plan-window failure-contrast manifest before any explicitly approved collection run."
                 if failure_contrast_primary
@@ -600,8 +655,7 @@ def build_payload() -> dict[str, Any]:
             "command_if_explicitly_approved": None
             if sequence_forbidden_training_or_runtime_inputs
             or failure_contrast_primary
-            and failure_contrast_runner.get("decision", {}).get("status")
-            != "protected_plan_window_failure_contrast_runner_dry_run_ready"
+            and not failure_contrast_collection_ready
             or failure_contrast_primary
             and not failure_contrast_approval_request_ready
             else failure_contrast_command
