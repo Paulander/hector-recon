@@ -406,6 +406,7 @@ def build_payload() -> dict[str, Any]:
     stage7_outputs_valid = int(
         output_validation.get("summary", {}).get("output_valid_count") or 0
     ) > 0
+    protected_stack = readiness.get("protected_stack") or {}
     sequence_forbidden_blockers = sorted(
         FORBIDDEN_INPUT_BLOCKERS
         & (
@@ -487,6 +488,29 @@ def build_payload() -> dict[str, Any]:
         "step_results": step_results,
         "summary": {
             "all_boundaries_preserved": all_boundaries_preserved,
+            "protected_stack_status": protected_stack.get("status"),
+            "protected_stack_ready": protected_stack.get("ready"),
+            "protected_stack_rollback_paths_preserved": protected_stack.get(
+                "rollback_paths_preserved"
+            ),
+            "protected_stack_active_paths_safe": (
+                protected_stack.get("active_stack_path_status") or {}
+            ).get("all_paths_safe"),
+            "protected_stack_active_paths_exist": (
+                protected_stack.get("active_stack_path_status") or {}
+            ).get("all_paths_exist"),
+            "protected_stack_rollback_paths_safe": (
+                protected_stack.get("rollback_stack_path_status") or {}
+            ).get("all_paths_safe"),
+            "protected_stack_rollback_paths_exist": (
+                protected_stack.get("rollback_stack_path_status") or {}
+            ).get("all_paths_exist"),
+            "protected_stack_rollback_common_paths_distinct": protected_stack.get(
+                "rollback_common_paths_distinct"
+            ),
+            "protected_stack_filesystem_snapshots_replaced": protected_stack.get(
+                "filesystem_snapshots_replaced"
+            ),
             "stage7_output_validation_status": output_validation.get("decision", {}).get(
                 "status"
             ),

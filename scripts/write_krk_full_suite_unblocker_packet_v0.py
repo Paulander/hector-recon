@@ -273,6 +273,28 @@ def build_payload() -> dict[str, Any]:
         },
         "current_state": {
             "protected_stack_ready": protected["ready"],
+            "protected_stack_status": protected.get("status"),
+            "protected_stack_rollback_paths_preserved": protected.get(
+                "rollback_paths_preserved"
+            ),
+            "protected_stack_active_paths_safe": (
+                protected.get("active_stack_path_status") or {}
+            ).get("all_paths_safe"),
+            "protected_stack_active_paths_exist": (
+                protected.get("active_stack_path_status") or {}
+            ).get("all_paths_exist"),
+            "protected_stack_rollback_paths_safe": (
+                protected.get("rollback_stack_path_status") or {}
+            ).get("all_paths_safe"),
+            "protected_stack_rollback_paths_exist": (
+                protected.get("rollback_stack_path_status") or {}
+            ).get("all_paths_exist"),
+            "protected_stack_rollback_common_paths_distinct": protected.get(
+                "rollback_common_paths_distinct"
+            ),
+            "protected_stack_filesystem_snapshots_replaced": protected.get(
+                "filesystem_snapshots_replaced"
+            ),
             "stage7_success_controls": stage7_gate["combined_success_controls"],
             "stage7_success_controls_required": stage7_gate["success_controls_required"],
             "sequence_policy_inputs_ready": sequence["inputs_ready"],
@@ -675,6 +697,14 @@ def write_markdown(payload: dict[str, Any]) -> str:
         "## Current State",
         "",
         f"- protected_stack_ready: `{state['protected_stack_ready']}`",
+        f"- protected_stack_status: `{state['protected_stack_status']}`",
+        f"- protected_stack_rollback_paths_preserved: `{state['protected_stack_rollback_paths_preserved']}`",
+        f"- protected_stack_active_paths_safe: `{state['protected_stack_active_paths_safe']}`",
+        f"- protected_stack_active_paths_exist: `{state['protected_stack_active_paths_exist']}`",
+        f"- protected_stack_rollback_paths_safe: `{state['protected_stack_rollback_paths_safe']}`",
+        f"- protected_stack_rollback_paths_exist: `{state['protected_stack_rollback_paths_exist']}`",
+        f"- protected_stack_rollback_common_paths_distinct: `{state['protected_stack_rollback_common_paths_distinct']}`",
+        f"- protected_stack_filesystem_snapshots_replaced: `{state['protected_stack_filesystem_snapshots_replaced']}`",
         f"- stage7_success_controls: `{state['stage7_success_controls']}`",
         f"- stage7_success_controls_required: `{state['stage7_success_controls_required']}`",
         f"- sequence_policy_inputs_ready: `{state['sequence_policy_inputs_ready']}`",

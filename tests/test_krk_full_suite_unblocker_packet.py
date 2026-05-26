@@ -104,6 +104,18 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     assert primary["scope"]["stage7_promotion_allowed"] is False
     assert primary["scope"]["stage8_training_allowed"] is False
     assert (
+        payload["current_state"]["protected_stack_status"]
+        == "retry1_protected_stage5_6_stack_adopted_manifest_only"
+    )
+    assert payload["current_state"]["protected_stack_ready"] is True
+    assert payload["current_state"]["protected_stack_rollback_paths_preserved"] is True
+    assert payload["current_state"]["protected_stack_active_paths_safe"] is True
+    assert payload["current_state"]["protected_stack_active_paths_exist"] is True
+    assert payload["current_state"]["protected_stack_rollback_paths_safe"] is True
+    assert payload["current_state"]["protected_stack_rollback_paths_exist"] is True
+    assert payload["current_state"]["protected_stack_rollback_common_paths_distinct"] is True
+    assert payload["current_state"]["protected_stack_filesystem_snapshots_replaced"] is False
+    assert (
         payload["current_state"]["stage7_output_validation_status"]
         == "stage7_diverse_clean_sampling_outputs_valid_ready_for_integration"
     )
@@ -259,6 +271,8 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
         in rendered
     )
     assert "approval_receipt_created_by_request: `False`" in rendered
+    assert "protected_stack_rollback_paths_preserved: `True`" in rendered
+    assert "protected_stack_filesystem_snapshots_replaced: `False`" in rendered
     assert (
         "approval_request_status: "
         "`stage4_first_move_contrast_sandbox_approval_request_ready`"

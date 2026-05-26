@@ -68,6 +68,18 @@ def test_gate_advancement_reports_current_stage7_blocker():
         == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
     assert payload["summary"]["stage7_success_controls"] == 11
+    assert (
+        payload["summary"]["protected_stack_status"]
+        == "retry1_protected_stage5_6_stack_adopted_manifest_only"
+    )
+    assert payload["summary"]["protected_stack_ready"] is True
+    assert payload["summary"]["protected_stack_rollback_paths_preserved"] is True
+    assert payload["summary"]["protected_stack_active_paths_safe"] is True
+    assert payload["summary"]["protected_stack_active_paths_exist"] is True
+    assert payload["summary"]["protected_stack_rollback_paths_safe"] is True
+    assert payload["summary"]["protected_stack_rollback_paths_exist"] is True
+    assert payload["summary"]["protected_stack_rollback_common_paths_distinct"] is True
+    assert payload["summary"]["protected_stack_filesystem_snapshots_replaced"] is False
     assert payload["summary"]["stage7_success_controls_required"] == 5
     assert payload["summary"]["stage7_success_controls_ready"] is True
     assert (

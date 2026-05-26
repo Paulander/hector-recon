@@ -7,6 +7,15 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 ## Summary
 
 - all_boundaries_preserved: `True`
+- protected_stack_status: `retry1_protected_stage5_6_stack_adopted_manifest_only`
+- protected_stack_ready: `True`
+- protected_stack_rollback_paths_preserved: `True`
+- protected_stack_active_paths_safe: `True`
+- protected_stack_active_paths_exist: `True`
+- protected_stack_rollback_paths_safe: `True`
+- protected_stack_rollback_paths_exist: `True`
+- protected_stack_rollback_common_paths_distinct: `True`
+- protected_stack_filesystem_snapshots_replaced: `False`
 - stage7_output_validation_status: `stage7_diverse_clean_sampling_outputs_valid_ready_for_integration`
 - stage7_output_valid_count: `8`
 - stage7_clean_success_backfill_status: `stage7_clean_success_backfill_available`
