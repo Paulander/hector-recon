@@ -14,6 +14,7 @@
   "blockers": [],
   "causal_status": "non_causal_stage4_unblocker_packet",
   "current_stage4_status": {
+    "approval_request_blockers": [],
     "approval_request_created": false,
     "approval_request_status": "stage4_first_move_contrast_sandbox_approval_request_ready",
     "approval_scope_default_enabled": false,

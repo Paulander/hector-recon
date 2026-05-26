@@ -68,6 +68,7 @@ def build_payload() -> dict[str, Any]:
     stage4_option = _find_stage4_option(control_gate)
     runtime_decision = runtime_packet.get("decision") or {}
     approval_request_decision = approval_request.get("decision") or {}
+    approval_request_blockers = approval_request.get("blockers") or []
     approval_scope = approval_request.get("required_scope_if_user_approves") or {}
     sequence_summary = sequence_review.get("summary") or {}
     stratified_summary = stratified_validation.get("summary") or {}
@@ -89,6 +90,8 @@ def build_payload() -> dict[str, Any]:
         != "stage4_first_move_contrast_sandbox_approval_request_ready"
     ):
         blockers.append("stage4_first_move_contrast_approval_request_not_ready")
+    if approval_request_blockers:
+        blockers.append("stage4_first_move_contrast_approval_request_has_blockers")
     if caveat_control.get("status") != "stage4_caveat_reproduces_in_base_control_no_overlay_regression":
         blockers.append("stage4_caveat_control_status_unexpected")
     if not stratified_summary.get("gap_variant_count"):
@@ -122,6 +125,7 @@ def build_payload() -> dict[str, Any]:
             or "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md",
             "runtime_review_ready": runtime_decision.get("runtime_review_ready"),
             "approval_request_status": approval_request_decision.get("status"),
+            "approval_request_blockers": approval_request_blockers,
             "approval_request_created": approval_request.get("approval_request_created"),
             "implementation_authorized_by_approval_request": approval_request.get(
                 "implementation_authorized_by_request"
