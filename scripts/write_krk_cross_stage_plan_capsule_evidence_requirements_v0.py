@@ -41,6 +41,15 @@ def _load(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _find_approval_option(
+    control_plane_gate: dict[str, Any], option_id: str
+) -> dict[str, Any]:
+    for option in control_plane_gate.get("approval_options") or []:
+        if option.get("option_id") == option_id:
+            return option
+    return {}
+
+
 def build_payload(
     *,
     plan_capsule_review: dict[str, Any] | None = None,
@@ -69,6 +78,42 @@ def build_payload(
     clean_failure_met = bool(seq_readiness.get("stage7_clean_failure_controls_met", False))
     benchmark_ready = bool(seq_readiness.get("benchmark_ready"))
     current_evidence_limit = passive_design.get("current_evidence_limit")
+    protected_collection_option = _find_approval_option(
+        control_plane_gate,
+        "approve_protected_plan_window_failure_contrast_collection",
+    )
+    protected_collection_option_scope = (
+        protected_collection_option.get("safety_scope") or {}
+    )
+    protected_request_status = control_state.get(
+        "protected_plan_window_failure_contrast_approval_request"
+    ) or protected_collection_option_scope.get("approval_request_status")
+    protected_request_blockers = (
+        control_state.get(
+            "protected_plan_window_failure_contrast_approval_request_blockers"
+        )
+        or protected_collection_option_scope.get("approval_request_blockers")
+        or []
+    )
+    protected_request_ready_value = control_state.get(
+        "protected_plan_window_failure_contrast_approval_request_ready_for_collection"
+    )
+    protected_option_ready_value = protected_collection_option.get(
+        "approval_request_ready_for_collection"
+    )
+    protected_request_ready = (
+        bool(protected_request_ready_value)
+        if protected_request_ready_value is not None
+        else (
+            bool(protected_option_ready_value)
+            if protected_option_ready_value is not None
+            else (
+                protected_request_status
+                == "protected_plan_window_failure_contrast_approval_request_ready"
+                and not protected_request_blockers
+            )
+        )
+    )
 
     evidence_ready = benchmark_ready and cross_stage_sequence_evidence_met
     status = (
@@ -109,20 +154,13 @@ def build_payload(
             "sequence_policy_passive_design_status": passive_design.get("status"),
             "remaining_evidence_gap": current_evidence_limit,
             "protected_failure_contrast_approval_request_status": (
-                control_state.get(
-                    "protected_plan_window_failure_contrast_approval_request"
-                )
+                protected_request_status
             ),
             "protected_failure_contrast_approval_request_blockers": (
-                control_state.get(
-                    "protected_plan_window_failure_contrast_approval_request_blockers"
-                )
-                or []
+                protected_request_blockers
             ),
             "protected_failure_contrast_approval_request_ready_for_collection": (
-                control_state.get(
-                    "protected_plan_window_failure_contrast_approval_request_ready_for_collection"
-                )
+                protected_request_ready
             ),
             "protected_failure_contrast_approval_receipt_blockers": (
                 control_state.get(

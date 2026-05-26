@@ -175,6 +175,77 @@ def test_cross_stage_plan_capsule_requirements_propagates_collection_request_blo
     assert payload["decision"]["label_run_allowed"] is False
 
 
+def test_cross_stage_plan_capsule_requirements_falls_back_for_null_request_ready():
+    payload = _requirements.build_payload(
+        plan_capsule_review={
+            "readiness": {
+                "stage7_only_evidence": False,
+                "protected_cross_stage_evidence": True,
+                "policy_succeeded": False,
+            }
+        },
+        sequence_policy_design={
+            "readiness": {
+                "stage7_clean_success_controls_met": True,
+                "stage7_clean_failure_controls_met": True,
+                "benchmark_ready": True,
+                "cross_stage_sequence_evidence_met": True,
+                "protected_plan_window_evidence_met": True,
+            },
+            "passive_design_without_new_labels": {
+                "status": "non_causal_sequence_policy_design_without_new_labels_ready"
+            },
+        },
+        control_plane_gate={
+            "decision": {"status": "krk_control_plane_waiting_on_explicit_gate_choice"},
+            "current_state": {
+                "protected_plan_window_failure_contrast_approval_request": (
+                    "protected_plan_window_failure_contrast_approval_request_ready"
+                ),
+                "protected_plan_window_failure_contrast_approval_request_blockers": [],
+                "protected_plan_window_failure_contrast_approval_request_ready_for_collection": (
+                    None
+                ),
+                "protected_plan_window_failure_contrast_approval_receipt_blockers": [
+                    "approval_receipt_missing"
+                ],
+            },
+            "approval_options": [
+                {
+                    "option_id": (
+                        "approve_protected_plan_window_failure_contrast_collection"
+                    ),
+                    "approval_request_ready_for_collection": True,
+                    "safety_scope": {
+                        "approval_request_status": (
+                            "protected_plan_window_failure_contrast_approval_request_ready"
+                        ),
+                        "approval_request_blockers": [],
+                    },
+                }
+            ],
+        },
+    )
+
+    readiness = payload["current_readiness"]
+    assert (
+        readiness["protected_failure_contrast_approval_request_status"]
+        == "protected_plan_window_failure_contrast_approval_request_ready"
+    )
+    assert readiness["protected_failure_contrast_approval_request_blockers"] == []
+    assert (
+        readiness[
+            "protected_failure_contrast_approval_request_ready_for_collection"
+        ]
+        is True
+    )
+    assert readiness["protected_failure_contrast_approval_receipt_blockers"] == [
+        "approval_receipt_missing"
+    ]
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["label_run_allowed"] is False
+
+
 def test_protected_plan_window_frames_are_bounded_and_non_causal():
     payload = _read_report(
         "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json"
