@@ -381,6 +381,7 @@ def _approval_receipt_blockers(
     max_jobs: int | None,
     job_timeout_seconds: int,
     overwrite_existing_outputs: bool,
+    refresh_after_run: bool,
 ) -> list[str]:
     blockers: list[str] = []
     if receipt is None:
@@ -435,6 +436,8 @@ def _approval_receipt_blockers(
         blockers.append("approval_receipt_job_timeout_seconds_mismatch")
     if approval_scope.get("overwrite_existing_outputs") != overwrite_existing_outputs:
         blockers.append("approval_receipt_overwrite_existing_outputs_mismatch")
+    if approval_scope.get("refresh_after_run") != refresh_after_run:
+        blockers.append("approval_receipt_refresh_after_run_mismatch")
     if approval_scope.get("manifest_status") != manifest.get("decision", {}).get("status"):
         blockers.append("approval_receipt_manifest_status_mismatch")
     if (
@@ -581,6 +584,7 @@ def build_payload(
             max_jobs=max_jobs,
             job_timeout_seconds=job_timeout_seconds,
             overwrite_existing_outputs=overwrite_existing_outputs,
+            refresh_after_run=refresh_after_run,
         )
     )
     if execute:

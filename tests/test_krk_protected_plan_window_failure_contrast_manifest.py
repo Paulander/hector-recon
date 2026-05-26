@@ -86,6 +86,7 @@ def _approval_receipt(
     max_jobs: int | None = None,
     job_timeout_seconds: int = 900,
     overwrite_existing_outputs: bool = False,
+    refresh_after_run: bool = False,
 ) -> dict:
     return {
         "schema_version": _runner.APPROVAL_SCHEMA_VERSION,
@@ -98,6 +99,7 @@ def _approval_receipt(
             "max_jobs": max_jobs,
             "job_timeout_seconds": job_timeout_seconds,
             "overwrite_existing_outputs": overwrite_existing_outputs,
+            "refresh_after_run": refresh_after_run,
             "manifest_status": "protected_plan_window_failure_contrast_manifest_ready_for_review",
             "readiness_status": (
                 "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
@@ -459,6 +461,7 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
     assert required["approval_scope"]["max_jobs"] is None
     assert required["approval_scope"]["job_timeout_seconds"] == 900
     assert required["approval_scope"]["overwrite_existing_outputs"] is False
+    assert required["approval_scope"]["refresh_after_run"] is False
     assert (
         required["approval_scope"]["manifest_fingerprint"]
         == payload["summary"]["manifest_fingerprint"]
@@ -567,6 +570,7 @@ def test_failure_contrast_approval_request_fixture_tracks_current_scope():
         "max_jobs": None,
         "job_timeout_seconds": None,
         "overwrite_existing_outputs": None,
+        "refresh_after_run": None,
         "manifest_status": "protected_plan_window_failure_contrast_manifest_ready_for_review",
         "readiness_status": (
             "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
@@ -1161,6 +1165,7 @@ def test_failure_contrast_runner_blocks_receipt_execution_option_drift(monkeypat
         execute=True,
         job_timeout_seconds=1,
         overwrite_existing_outputs=True,
+        refresh_after_run=True,
         run_post_success_refresh=False,
     )
 
@@ -1169,6 +1174,9 @@ def test_failure_contrast_runner_blocks_receipt_execution_option_drift(monkeypat
         "execution_blockers"
     ]
     assert "approval_receipt_overwrite_existing_outputs_mismatch" in payload[
+        "execution_blockers"
+    ]
+    assert "approval_receipt_refresh_after_run_mismatch" in payload[
         "execution_blockers"
     ]
     assert payload["summary"]["approval_receipt_present"] is True

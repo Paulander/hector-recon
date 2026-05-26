@@ -119,6 +119,7 @@ def build_payload(
             "overwrite_existing_outputs": runner_summary.get(
                 "overwrite_existing_outputs"
             ),
+            "refresh_after_run": runner_summary.get("refresh_after_run_requested"),
             "manifest_status": manifest.get("decision", {}).get("status"),
             "readiness_status": readiness.get("decision", {}).get("status"),
             "protected_stack_status": readiness_summary.get("protected_stack_status"),

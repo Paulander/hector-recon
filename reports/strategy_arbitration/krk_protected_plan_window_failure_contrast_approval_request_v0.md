@@ -66,7 +66,8 @@ This is a passive request packet only. It does not create the approval receipt, 
     "protected_stack_rollback_paths_safe": true,
     "protected_stack_status": "retry1_protected_stage5_6_stack_adopted_manifest_only",
     "readiness_fingerprint": "351a366042e7e888018897007e29e096afdb180a9c4f4eb02853940b82228c66",
-    "readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+    "readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
+    "refresh_after_run": false
   },
   "decision": {
     "gameplay_topology_mutation": false,
