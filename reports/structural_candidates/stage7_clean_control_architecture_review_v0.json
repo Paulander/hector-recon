@@ -12,10 +12,11 @@
     "Stage 7 clean success controls and hard negatives now meet the minimum sequence-policy evidence threshold.",
     "Stage 7 remains held out as challenge/evaluation evidence; the closed clean-control gate does not authorize runtime behavior, Stage 7 promotion, or Stage 8 training.",
     "Additional Stage 7 h40 labels are not the primary current unblocker; the active sequence-policy gap is protected plan-window failure-contrast evidence.",
-    "Runtime selector/arbiter work remains blocked pending explicit protected failure-contrast collection/review and separate runtime review."
+    "Runtime selector/arbiter work remains blocked pending explicit protected failure-contrast collection/review and separate runtime review.",
+    "The current protected failure-contrast runner remains dry-run only; collection still requires a matching approval receipt and explicit execute flag."
   ],
   "decision": {
-    "recommended_next_step": "continue_protected_failure_contrast_sequence_policy_gate_review",
+    "recommended_next_step": "obtain_matching_approval_receipt_before_protected_failure_contrast_collection",
     "runtime_work_allowed": false,
     "status": "stage7_clean_control_collection_closed_heldout_only"
   },
@@ -29,7 +30,19 @@
     "clean_sequence_hard_negatives": 39,
     "clean_sequence_success_controls": 11,
     "clean_sequence_success_required": 5,
-    "sampling_overlap_detected": true
+    "protected_failure_contrast_approval_receipt_present": false,
+    "protected_failure_contrast_approval_receipt_valid": false,
+    "protected_failure_contrast_collection_blocked_by_option_id": null,
+    "protected_failure_contrast_collection_command_available": true,
+    "protected_failure_contrast_collection_option_available": true,
+    "protected_failure_contrast_collection_option_id": "approve_protected_plan_window_failure_contrast_collection",
+    "protected_failure_contrast_gate_status": "protected_plan_window_failure_contrast_runner_dry_run_ready",
+    "protected_failure_contrast_runner_collection_run_allowed": false,
+    "protected_failure_contrast_runner_executed_job_count": 0,
+    "protected_failure_contrast_runner_execution_requested": false,
+    "protected_failure_contrast_runner_processed_job_count": 0,
+    "sampling_overlap_detected": true,
+    "suite_gate_advancement_status": "krk_suite_passive_advancement_ready_for_protected_failure_contrast_collection"
   },
   "gameplay_topology_mutation": false,
   "recommended_paths": [
@@ -55,7 +68,10 @@
     "reports/structural_candidates/stage7_clean_artifact_manifest_v0.json",
     "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json",
     "reports/structural_candidates/stage7_clean_h40_label_run_review_v0.json",
-    "reports/structural_candidates/stage7_clean_control_sampling_review_v0.json"
+    "reports/structural_candidates/stage7_clean_control_sampling_review_v0.json",
+    "reports/krk_full_suite_readiness_audit_v0.json",
+    "reports/krk_suite_gate_advancement_v0.json",
+    "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_runner_v0.json"
   ],
   "stage7_promotion_allowed": false,
   "stage8_training_allowed": false

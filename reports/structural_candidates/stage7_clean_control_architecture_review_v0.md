@@ -13,6 +13,18 @@ Non-causal closure review for the Stage 7 clean-control collection branch.
 - bounded_label_run_playouts: `{'mate': 3, 'max_plies': 7}`
 - bounded_label_run_novel_controls: `0`
 - sampling_overlap_detected: `True`
+- protected_failure_contrast_gate_status: `protected_plan_window_failure_contrast_runner_dry_run_ready`
+- protected_failure_contrast_collection_option_available: `True`
+- protected_failure_contrast_collection_command_available: `True`
+- protected_failure_contrast_collection_option_id: `approve_protected_plan_window_failure_contrast_collection`
+- protected_failure_contrast_collection_blocked_by_option_id: `None`
+- protected_failure_contrast_approval_receipt_present: `False`
+- protected_failure_contrast_approval_receipt_valid: `False`
+- protected_failure_contrast_runner_collection_run_allowed: `False`
+- protected_failure_contrast_runner_execution_requested: `False`
+- protected_failure_contrast_runner_processed_job_count: `0`
+- protected_failure_contrast_runner_executed_job_count: `0`
+- suite_gate_advancement_status: `krk_suite_passive_advancement_ready_for_protected_failure_contrast_collection`
 
 ## Conclusions
 
@@ -20,6 +32,7 @@ Non-causal closure review for the Stage 7 clean-control collection branch.
 - Stage 7 remains held out as challenge/evaluation evidence; the closed clean-control gate does not authorize runtime behavior, Stage 7 promotion, or Stage 8 training.
 - Additional Stage 7 h40 labels are not the primary current unblocker; the active sequence-policy gap is protected plan-window failure-contrast evidence.
 - Runtime selector/arbiter work remains blocked pending explicit protected failure-contrast collection/review and separate runtime review.
+- The current protected failure-contrast runner remains dry-run only; collection still requires a matching approval receipt and explicit execute flag.
 
 ## Recommended Paths
 
@@ -35,4 +48,4 @@ Non-causal closure review for the Stage 7 clean-control collection branch.
 - `runtime selector/arbiter implementation from this evidence`
 - `support bonus or provider penalty tuning`
 
-Recommended next step: `continue_protected_failure_contrast_sequence_policy_gate_review`
+Recommended next step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`

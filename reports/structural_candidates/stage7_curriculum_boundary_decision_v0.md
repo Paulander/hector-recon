@@ -15,7 +15,7 @@ Stage 7 `box_shrink` is no longer treated as a standalone repair target. It rema
 ## Current Evidence State
 
 - stage7_clean_review_status: `stage7_clean_control_collection_closed_heldout_only`
-- stage7_clean_review_next_step: `continue_protected_failure_contrast_sequence_policy_gate_review`
+- stage7_clean_review_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - strategy_sequence_inventory_status: `replay_free_inventory_state_holdout_gap_blocks_runtime`
 - strategy_sequence_inventory_next_step: `review_state_holdout_signal_before_runtime_or_continue_protected_failure_contrast_gate`
 - stage7_clean_success_controls_met: `True`
@@ -46,4 +46,4 @@ Stage 7 `box_shrink` is no longer treated as a standalone repair target. It rema
 - `runtime DTM/tablebase selector`
 - `unreviewed additional Stage 7 labels`
 
-Recommended next step: `continue_protected_failure_contrast_sequence_policy_gate_review`
+Recommended next step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`

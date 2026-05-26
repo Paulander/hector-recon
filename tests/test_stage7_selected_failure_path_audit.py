@@ -362,8 +362,15 @@ def test_stage7_clean_control_architecture_review_pauses_stage7_collection() -> 
     assert payload["decision"]["status"] == "stage7_clean_control_collection_closed_heldout_only"
     assert (
         payload["decision"]["recommended_next_step"]
-        == "continue_protected_failure_contrast_sequence_policy_gate_review"
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
+    assert payload["evidence"]["protected_failure_contrast_collection_command_available"] is True
+    assert payload["evidence"]["protected_failure_contrast_approval_receipt_present"] is False
+    assert payload["evidence"]["protected_failure_contrast_approval_receipt_valid"] is False
+    assert payload["evidence"]["protected_failure_contrast_runner_collection_run_allowed"] is False
+    assert payload["evidence"]["protected_failure_contrast_runner_execution_requested"] is False
+    assert payload["evidence"]["protected_failure_contrast_runner_processed_job_count"] == 0
+    assert payload["evidence"]["protected_failure_contrast_runner_executed_job_count"] == 0
     assert any("now meet" in item for item in payload["conclusions"])
     assert "unreviewed additional Stage 7 h40 labels" in payload["blocked_next_steps"]
     preferred = [path for path in payload["recommended_paths"] if path["preferred"] is True]
@@ -474,11 +481,15 @@ def test_stage7_curriculum_boundary_decision_reclassifies_box_shrink() -> None:
     assert payload["decision"]["status"] == "box_shrink_reclassified_as_local_evidence_handoff_trigger"
     assert (
         payload["decision"]["recommended_next_step"]
-        == "continue_protected_failure_contrast_sequence_policy_gate_review"
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
     assert payload["decision"]["stage7_standalone_repair_target"] is False
     assert payload["decision"]["box_shrink_promotable_independent_stage"] is False
     assert payload["current_evidence_state"]["stage7_clean_success_controls_met"] is True
     assert payload["current_evidence_state"]["stage7_clean_hard_negatives_met"] is True
+    assert (
+        payload["current_evidence_state"]["stage7_clean_review_next_step"]
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+    )
     assert payload["new_role_for_stage7"]["stage7_residuals_role"] == "heldout_challenge_set"
     assert "more Stage 7 local move-shape tuning" in payload["explicitly_rejected_next_steps"]

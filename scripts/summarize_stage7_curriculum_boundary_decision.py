@@ -43,6 +43,10 @@ def build_decision() -> dict:
     clean_gate_closed = clean_review_decision.get("status") == (
         "stage7_clean_control_collection_closed_heldout_only"
     )
+    clean_review_next_step = (
+        clean_review_decision.get("recommended_next_step")
+        or "continue_protected_failure_contrast_sequence_policy_gate_review"
+    )
     return {
         "schema_version": "stage7_curriculum_boundary_decision.v0",
         "causal_status": "non_causal_architecture_decision",
@@ -61,7 +65,7 @@ def build_decision() -> dict:
             "box_shrink_promotable_independent_stage": False,
             "runtime_work_allowed": False,
             "recommended_next_step": (
-                "continue_protected_failure_contrast_sequence_policy_gate_review"
+                clean_review_next_step
                 if clean_gate_closed
                 else "use_stage7_as_heldout_challenge_for_broader_krk_strategy_sequence_work"
             ),
