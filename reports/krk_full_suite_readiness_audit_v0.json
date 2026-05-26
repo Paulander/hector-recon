@@ -49,8 +49,11 @@
   ],
   "causal_status": "non_causal_readiness_audit",
   "current_control_plane_gate": {
+    "hidden_python_controller": false,
     "label_run_allowed": false,
     "runtime_changes_allowed": false,
+    "runtime_direct_routing": false,
+    "selector_allowed": false,
     "selector_training_allowed": false,
     "stage7_promotion_allowed": false,
     "stage8_training_allowed": false,
@@ -147,7 +150,7 @@
     "status": "retry1_protected_stage5_6_stack_adopted_manifest_only"
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 202,
+    "checked_flag_count": 203,
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "runtime_behavior_changed": false,

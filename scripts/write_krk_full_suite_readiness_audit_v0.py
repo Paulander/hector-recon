@@ -828,9 +828,12 @@ def build_payload() -> dict[str, Any]:
             "status": gate.get("decision", {}).get("status"),
             "label_run_allowed": gate.get("decision", {}).get("label_run_allowed"),
             "runtime_changes_allowed": gate.get("decision", {}).get("runtime_changes_allowed"),
+            "selector_allowed": gate.get("decision", {}).get("selector_allowed"),
             "selector_training_allowed": gate.get("decision", {}).get(
                 "selector_training_allowed"
             ),
+            "runtime_direct_routing": gate.get("runtime_direct_routing"),
+            "hidden_python_controller": gate.get("hidden_python_controller"),
             "stage7_promotion_allowed": gate.get("decision", {}).get("stage7_promotion_allowed"),
             "stage8_training_allowed": gate.get("decision", {}).get("stage8_training_allowed"),
         },

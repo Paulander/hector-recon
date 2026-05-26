@@ -307,6 +307,9 @@ def build_payload() -> dict[str, Any]:
                 "artifact_runtime_dtm_or_tablebase_lookup": bool(
                     output.get("runtime_dtm_or_tablebase_lookup", False)
                 ),
+                "artifact_hidden_python_controller": bool(
+                    output.get("hidden_python_controller", False)
+                ),
                 "artifact_gameplay_topology_mutation": bool(
                     output.get("gameplay_topology_mutation", False)
                 ),

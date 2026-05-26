@@ -139,6 +139,9 @@ def test_full_suite_readiness_identifies_current_gate():
         "Stage 8 training remains blocked even though Stage 7 held-out controls "
         "are balanced."
     )
+    assert payload["current_control_plane_gate"]["selector_allowed"] is False
+    assert payload["current_control_plane_gate"]["runtime_direct_routing"] is False
+    assert payload["current_control_plane_gate"]["hidden_python_controller"] is False
 
     sequence = payload["sequence_policy"]
     assert (

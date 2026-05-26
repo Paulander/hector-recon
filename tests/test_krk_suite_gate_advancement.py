@@ -529,6 +529,7 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         assert step["artifact_runtime_score_changes"] is False
         assert step["artifact_runtime_direct_routing"] is False
         assert step["artifact_runtime_dtm_or_tablebase_lookup"] is False
+        assert step["artifact_hidden_python_controller"] is False
         assert step["artifact_gameplay_topology_mutation"] is False
         assert step["artifact_stage7_promotion_allowed"] is False
         assert step["artifact_stage8_training_allowed"] is False

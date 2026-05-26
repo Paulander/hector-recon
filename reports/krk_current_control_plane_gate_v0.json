@@ -58,6 +58,7 @@
         "expected_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
         "expected_readiness_fingerprint": "351a366042e7e888018897007e29e096afdb180a9c4f4eb02853940b82228c66",
         "gameplay_topology_mutation": false,
+        "hidden_python_controller": false,
         "horizon": "h40",
         "invalid_existing_outputs_block_without_overwrite": true,
         "manifest_job_count": 6,
@@ -83,6 +84,7 @@
         "runtime_authorization_row_count": 0,
         "runtime_behavior_changed": false,
         "runtime_defaults_changed": false,
+        "runtime_direct_routing": false,
         "runtime_dtm_or_tablebase_lookup": false,
         "runtime_score_changes": false,
         "runtime_selector_implemented": false,
@@ -103,6 +105,8 @@
       "what_it_allows": "explicitly approved bounded observation-only protected plan-window failure-contrast collection",
       "what_it_does_not_allow": [
         "runtime selector",
+        "runtime direct routing",
+        "hidden Python controller",
         "runtime default changes",
         "runtime DTM or tablebase lookup",
         "gameplay-time topology mutation",
@@ -211,6 +215,7 @@
     "status": "krk_control_plane_waiting_on_explicit_gate_choice"
   },
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "recommendation": {
     "preferred_next_if_no_user_approval": "wait_for_explicit_protected_plan_window_failure_contrast_collection_approval",
     "preferred_next_if_user_approves_collection": "create_matching_approval_receipt_then_execute_bounded_protected_plan_window_failure_contrast_collection_from_reviewed_manifest",
