@@ -257,6 +257,15 @@ def test_full_suite_readiness_identifies_current_gate():
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
     )
+    assert protected_failure_contrast["runtime_behavior_changed"] is False
+    assert protected_failure_contrast["runtime_defaults_changed"] is False
+    assert protected_failure_contrast["runtime_selector_implemented"] is False
+    assert protected_failure_contrast["runtime_score_changes"] is False
+    assert protected_failure_contrast["runtime_dtm_or_tablebase_lookup"] is False
+    assert protected_failure_contrast["gameplay_topology_mutation"] is False
+    assert protected_failure_contrast["selector_training_allowed"] is False
+    assert protected_failure_contrast["stage7_promotion_allowed"] is False
+    assert protected_failure_contrast["stage8_training_allowed"] is False
 
 
 def test_full_suite_readiness_writer_helpers_are_deterministic():
@@ -340,6 +349,15 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
         in rendered
     )
     assert "post_success_refresh_scope: `full_passive_krk_suite_gate_stack`" in rendered
+    assert "runtime_behavior_changed: `False`" in rendered
+    assert "runtime_defaults_changed: `False`" in rendered
+    assert "runtime_selector_implemented: `False`" in rendered
+    assert "runtime_score_changes: `False`" in rendered
+    assert "runtime_dtm_or_tablebase_lookup: `False`" in rendered
+    assert "gameplay_topology_mutation: `False`" in rendered
+    assert "selector_training_allowed: `False`" in rendered
+    assert "stage7_promotion_allowed: `False`" in rendered
+    assert "stage8_training_allowed: `False`" in rendered
     assert (
         "passive_design_without_new_labels_status: "
         "`non_causal_sequence_policy_design_without_new_labels_ready`"
