@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """Run the non-causal KRK sequence-policy benchmark when inputs are ready.
 
-The benchmark is deliberately gate-aware. With the current repository state it
-should normally refuse full execution because Stage 7 clean success controls
-are still under threshold. Once the approved diverse-clean label outputs are
-available and integrated, this same script can produce a non-causal benchmark
-without adding runtime behavior or training a selector.
+The benchmark is deliberately gate-aware. It reports the specific missing input
+class rather than defaulting every not-ready state to Stage 7 label work, and it
+never adds runtime behavior or trains a selector.
 """
 
 from __future__ import annotations
@@ -109,7 +107,12 @@ def _stage4_objective(rows: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def _plan_window_objective(rows: list[dict[str, Any]]) -> dict[str, Any]:
-    plan_rows = [row for row in rows if row.get("input_group") == "protected_plan_window"]
+    plan_rows = [
+        row
+        for row in rows
+        if row.get("input_group")
+        in {"protected_plan_window", "protected_plan_window_failure_contrast"}
+    ]
     outcome_counts = Counter(row.get("target_label") for row in plan_rows)
     term_counts: dict[str, Counter] = defaultdict(Counter)
     for row in plan_rows:
@@ -135,6 +138,7 @@ def _plan_window_objective(rows: list[dict[str, Any]]) -> dict[str, Any]:
     return {
         "objective_id": "protected_plan_window_entry_progress_exit_abort",
         "row_count": len(plan_rows),
+        "input_group_counts": dict(Counter(row.get("input_group") for row in plan_rows)),
         "target_label_counts": dict(outcome_counts),
         "failure_evidence_sparse": outcome_counts.get("conversion_failure", 0) < 5,
         "top_terms": top_terms[:10],
@@ -171,6 +175,17 @@ def build_payload(*, inputs: dict[str, Any] | None = None) -> dict[str, Any]:
         blockers.append("stage7_clean_success_controls_missing")
     if not summary.get("stage7_clean_failure_controls_met"):
         blockers.append("stage7_clean_failure_controls_missing")
+    selector_training_row_count = sum(
+        1 for row in rows if row.get("usable_for_selector_training")
+    )
+    runtime_authorization_row_count = sum(
+        1 for row in rows if row.get("usable_for_runtime_authorization")
+    )
+    if selector_training_row_count:
+        blockers.append("selector_training_rows_forbidden")
+    if runtime_authorization_row_count:
+        blockers.append("runtime_authorization_rows_forbidden")
+    benchmark_can_execute = input_ready and not blockers
 
     objectives = [
         _stage4_objective(rows),
@@ -179,10 +194,35 @@ def build_payload(*, inputs: dict[str, Any] | None = None) -> dict[str, Any]:
     ]
     status = (
         "sequence_policy_benchmark_ready_non_causal_results_available"
-        if input_ready
+        if benchmark_can_execute
+        else "sequence_policy_benchmark_blocked_forbidden_training_or_runtime_rows"
+        if (
+            "selector_training_rows_forbidden" in blockers
+            or "runtime_authorization_rows_forbidden" in blockers
+        )
         else "sequence_policy_benchmark_blocked_pending_stage7_success_controls"
         if "stage7_clean_success_controls_missing" in blockers
+        else "sequence_policy_benchmark_blocked_pending_stage7_failure_controls"
+        if "stage7_clean_failure_controls_missing" in blockers
+        else "sequence_policy_benchmark_blocked_pending_protected_plan_window_evidence"
+        if "protected_plan_window_evidence_missing" in blockers
         else "sequence_policy_benchmark_blocked_pending_inputs"
+    )
+    recommended_next_step = (
+        "review_non_causal_sequence_policy_results"
+        if benchmark_can_execute
+        else "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+        if (
+            "selector_training_rows_forbidden" in blockers
+            or "runtime_authorization_rows_forbidden" in blockers
+        )
+        else "fill_stage7_clean_success_controls_before_treating_benchmark_as_ready"
+        if "stage7_clean_success_controls_missing" in blockers
+        else "fill_stage7_clean_failure_controls_before_treating_benchmark_as_ready"
+        if "stage7_clean_failure_controls_missing" in blockers
+        else "repair_protected_plan_window_input_gap_before_treating_benchmark_as_ready"
+        if "protected_plan_window_evidence_missing" in blockers
+        else "repair_sequence_policy_input_gap_before_treating_benchmark_as_ready"
     )
     return {
         "schema_version": SCHEMA_VERSION,
@@ -195,12 +235,8 @@ def build_payload(*, inputs: dict[str, Any] | None = None) -> dict[str, Any]:
             "benchmark_input_ready": input_ready,
             "blockers": blockers,
             "row_count": len(rows),
-            "selector_training_row_count": sum(
-                1 for row in rows if row.get("usable_for_selector_training")
-            ),
-            "runtime_authorization_row_count": sum(
-                1 for row in rows if row.get("usable_for_runtime_authorization")
-            ),
+            "selector_training_row_count": selector_training_row_count,
+            "runtime_authorization_row_count": runtime_authorization_row_count,
             "stage7_heldout_row_count": sum(
                 1 for row in rows if row.get("stage7_heldout_challenge")
             ),
@@ -208,12 +244,8 @@ def build_payload(*, inputs: dict[str, Any] | None = None) -> dict[str, Any]:
         "objectives": objectives,
         "decision": {
             "status": status,
-            "benchmark_executed_as_ready": input_ready,
-            "recommended_next_step": (
-                "fill_stage7_clean_success_controls_before_treating_benchmark_as_ready"
-                if not input_ready
-                else "review_non_causal_sequence_policy_results"
-            ),
+            "benchmark_executed_as_ready": benchmark_can_execute,
+            "recommended_next_step": recommended_next_step,
             "runtime_changes_allowed": False,
             "label_run_allowed": False,
             "selector_allowed": False,

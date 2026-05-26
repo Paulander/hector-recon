@@ -28,6 +28,7 @@ def build_review() -> dict:
     filtered = _load(FILTERED)
     probe = _load(PROBE)
     baseline = _load(BASELINE)
+    boundary_decision = boundary.get("decision") or {}
     summary = filtered.get("summary", {})
     stage_ready = summary.get("strategy_ready_by_stage") or {}
     stage7_ready = int(stage_ready.get("stage7", 0) or 0)
@@ -48,7 +49,9 @@ def build_review() -> dict:
         "stage7_promotion_allowed": False,
         "stage8_training_allowed": False,
         "source_artifacts": [str(BOUNDARY), str(FILTERED), str(PROBE), str(BASELINE)],
-        "boundary_decision_status": (boundary.get("decision") or {}).get("status"),
+        "boundary_decision_status": boundary_decision.get("status"),
+        "boundary_recommended_next_step": boundary_decision.get("recommended_next_step"),
+        "boundary_current_evidence_state": boundary.get("current_evidence_state") or {},
         "filtered_frame_summary": {
             "strategy_ready_frame_count": summary.get("strategy_ready_frame_count"),
             "strategy_ready_by_stage": stage_ready,
@@ -71,7 +74,10 @@ def build_review() -> dict:
         },
         "decision": {
             "status": status,
-            "recommended_next_step": "continue_broader_krk_strategy_sequence_work_with_stage7_heldout",
+            "recommended_next_step": (
+                boundary_decision.get("recommended_next_step")
+                or "continue_broader_krk_strategy_sequence_work_with_stage7_heldout"
+            ),
             "runtime_work_allowed": False,
         },
     }
@@ -95,6 +101,10 @@ def render_markdown(payload: dict) -> str:
         lines.append(f"- {key}: `{value}`")
     lines.extend(["", "## Baseline", ""])
     for key, value in payload["baseline_summary"].items():
+        lines.append(f"- {key}: `{value}`")
+    lines.extend(["", "## Boundary Evidence", ""])
+    lines.append(f"- boundary_recommended_next_step: `{payload['boundary_recommended_next_step']}`")
+    for key, value in payload["boundary_current_evidence_state"].items():
         lines.append(f"- {key}: `{value}`")
     lines.extend(["", f"Recommended next step: `{payload['decision']['recommended_next_step']}`", ""])
     return "\n".join(lines)

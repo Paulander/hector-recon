@@ -16,10 +16,21 @@ STAGE7_POST_BOX_CONTROLS = ROOT / "reports/structural_candidates/stage7_post_box
 STAGE7_CLEAN_CONTROLS = ROOT / "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json"
 STAGE7_SAMPLING_MANIFEST = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json"
 PROTECTED_PLAN_WINDOWS = ROOT / "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json"
+BENCHMARK_REVIEW = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
 OUTPUT_JSON = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json"
 OUTPUT_MD = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.md"
 
 SCHEMA_VERSION = "krk_sequence_policy_benchmark_design.v0"
+
+FORBIDDEN_INPUT_BLOCKERS = {
+    "selector_training_rows_forbidden",
+    "runtime_authorization_rows_forbidden",
+}
+
+FORBIDDEN_INPUT_STATUSES = {
+    "sequence_policy_benchmark_blocked_forbidden_training_or_runtime_rows",
+    "sequence_policy_benchmark_review_blocked_forbidden_training_or_runtime_rows",
+}
 
 
 COMMON_FALSE_FLAGS = {
@@ -54,7 +65,20 @@ def build_payload(
     clean_controls: dict[str, Any] | None = None,
     sampling_manifest: dict[str, Any] | None = None,
     protected_plan_windows: dict[str, Any] | None = None,
+    benchmark_review: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    loading_repo_defaults = all(
+        item is None
+        for item in (
+            contrast_probe,
+            contrast_dataset,
+            plan_capsule_review,
+            post_box_controls,
+            clean_controls,
+            sampling_manifest,
+            protected_plan_windows,
+        )
+    )
     contrast_probe = contrast_probe or _load(CONTRAST_PROBE)
     contrast_dataset = contrast_dataset or _load(CONTRAST_DATASET)
     plan_capsule_review = plan_capsule_review or _load(PLAN_CAPSULE_REVIEW)
@@ -62,6 +86,8 @@ def build_payload(
     clean_controls = clean_controls or _load(STAGE7_CLEAN_CONTROLS)
     sampling_manifest = sampling_manifest or _load(STAGE7_SAMPLING_MANIFEST)
     protected_plan_windows = protected_plan_windows or _load_optional(PROTECTED_PLAN_WINDOWS)
+    if benchmark_review is None:
+        benchmark_review = _load_optional(BENCHMARK_REVIEW) if loading_repo_defaults else {}
 
     clean_success = int(
         clean_controls.get("summary", {})
@@ -90,7 +116,23 @@ def build_payload(
     clean_fail_met = clean_fail >= 5
     cross_stage_sequence_evidence_met = (not plan_capsule_stage7_only) or protected_plan_window_met
     benchmark_ready = clean_success_met and clean_fail_met and cross_stage_sequence_evidence_met
+    benchmark_review_status = benchmark_review.get("decision", {}).get("status")
+    benchmark_review_next_step = benchmark_review.get("decision", {}).get("recommended_next_step")
+    forbidden_input_blockers = sorted(
+        FORBIDDEN_INPUT_BLOCKERS & set(benchmark_review.get("blockers") or [])
+    )
+    forbidden_training_or_runtime_inputs = bool(forbidden_input_blockers) or (
+        benchmark_review_status in FORBIDDEN_INPUT_STATUSES
+    )
+    benchmark_review_current = benchmark_review_status in {
+        "sequence_policy_benchmark_supports_non_causal_sequence_policy_review",
+        "sequence_policy_benchmark_mixed_plan_window_underpowered",
+        "sequence_policy_benchmark_mixed_or_insufficient",
+    }
     status = (
+        "sequence_policy_benchmark_design_blocked_forbidden_training_or_runtime_rows"
+        if forbidden_training_or_runtime_inputs
+        else
         "sequence_policy_benchmark_blocked_pending_clean_stage7_controls"
         if not clean_success_met
         else "sequence_policy_benchmark_blocked_pending_cross_stage_sequence_evidence"
@@ -110,6 +152,7 @@ def build_payload(
             "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json",
             "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
             "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json",
+            "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
         ],
         "readiness": {
             "stage4_first_move_contrast_sandbox_review_ready": stage4_review_ready,
@@ -128,6 +171,13 @@ def build_payload(
                 plan_capsule_review.get("readiness", {}).get("policy_succeeded")
             ),
             "benchmark_ready": benchmark_ready,
+            "current_benchmark_review_status": benchmark_review_status,
+            "current_benchmark_review_next_step": benchmark_review_next_step,
+            "current_benchmark_review_available": benchmark_review_current,
+            "forbidden_training_or_runtime_input_blocked": (
+                forbidden_training_or_runtime_inputs
+            ),
+            "forbidden_training_or_runtime_input_blockers": forbidden_input_blockers,
         },
         "benchmark_design": {
             "name": "krk_sequence_policy_benchmark_v0",
@@ -200,10 +250,15 @@ def build_payload(
         "decision": {
             "status": status,
             "recommended_next_step": (
+                "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+                if forbidden_training_or_runtime_inputs
+                else
                 "approve_stage7_diverse_clean_label_run_or_defer_to_non_causal_design"
                 if not clean_success_met
                 else "collect_cross_stage_sequence_evidence"
                 if not cross_stage_sequence_evidence_met
+                else benchmark_review_next_step
+                if benchmark_review_current and benchmark_review_next_step
                 else "implement_non_causal_sequence_policy_benchmark"
             ),
             "runtime_changes_allowed": False,

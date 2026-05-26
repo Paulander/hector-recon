@@ -30,7 +30,7 @@ def _read_report(path: str) -> dict:
     return payload
 
 
-def test_sequence_policy_benchmark_design_blocks_training_and_runtime():
+def test_sequence_policy_benchmark_design_is_ready_but_blocks_training_and_runtime():
     payload = _read_report(
         "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json"
     )
@@ -47,17 +47,31 @@ def test_sequence_policy_benchmark_design_blocks_training_and_runtime():
     assert payload["stage8_training_allowed"] is False
     assert (
         payload["decision"]["status"]
-        == "sequence_policy_benchmark_blocked_pending_clean_stage7_controls"
+        == "sequence_policy_benchmark_design_ready_non_causal"
     )
     assert payload["readiness"]["stage4_first_move_contrast_sandbox_review_ready"] is True
-    assert payload["readiness"]["stage7_clean_success_controls"] == 2
-    assert payload["readiness"]["stage7_clean_failure_controls"] == 8
-    assert payload["readiness"]["stage7_clean_success_controls_met"] is False
+    assert payload["readiness"]["stage7_clean_success_controls"] == 11
+    assert payload["readiness"]["stage7_clean_failure_controls"] == 39
+    assert payload["readiness"]["stage7_clean_success_controls_met"] is True
+    assert payload["readiness"]["stage7_clean_failure_controls_met"] is True
     assert payload["readiness"]["post_box_controls_runtime_authorization_eligible"] is False
     assert payload["readiness"]["protected_plan_window_frame_count"] >= 20
     assert payload["readiness"]["protected_plan_window_evidence_met"] is True
     assert payload["readiness"]["cross_stage_sequence_evidence_met"] is True
-    assert payload["readiness"]["benchmark_ready"] is False
+    assert payload["readiness"]["benchmark_ready"] is True
+    assert (
+        payload["readiness"]["current_benchmark_review_status"]
+        == "sequence_policy_benchmark_mixed_plan_window_underpowered"
+    )
+    assert (
+        payload["readiness"]["current_benchmark_review_next_step"]
+        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+    )
+    assert payload["readiness"]["current_benchmark_review_available"] is True
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+    )
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["selector_training_allowed"] is False
     assert payload["decision"]["stage7_promotion_allowed"] is False
@@ -135,4 +149,56 @@ def test_sequence_policy_benchmark_design_fixture_can_become_ready_non_causally(
     assert payload["decision"]["status"] == "sequence_policy_benchmark_design_ready_non_causal"
     assert payload["readiness"]["benchmark_ready"] is True
     assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["selector_training_allowed"] is False
+
+
+def test_sequence_policy_benchmark_design_routes_forbidden_rows_to_repair():
+    payload = _design.build_payload(
+        contrast_probe={
+            "readiness": {"stage4_first_move_contrast_sandbox_review_ready": True}
+        },
+        contrast_dataset={},
+        plan_capsule_review={
+            "readiness": {
+                "stage7_only_evidence": False,
+                "policy_succeeded": False,
+            }
+        },
+        post_box_controls={"summary": {"control_count": 14}},
+        clean_controls={
+            "summary": {
+                "role_counts": {
+                    "clean_sequence_success_control": 5,
+                    "clean_sequence_hard_negative": 5,
+                }
+            }
+        },
+        sampling_manifest={"decision": {"status": "review_ready"}},
+        protected_plan_windows={
+            "summary": {
+                "frame_count": 21,
+                "protected_cross_stage_evidence_met": True,
+            }
+        },
+        benchmark_review={
+            "decision": {
+                "status": "sequence_policy_benchmark_review_blocked_forbidden_training_or_runtime_rows",
+                "recommended_next_step": "repair_sequence_policy_inputs_remove_training_or_runtime_rows",
+            },
+            "blockers": ["selector_training_rows_forbidden"],
+        },
+    )
+
+    assert payload["readiness"]["forbidden_training_or_runtime_input_blocked"] is True
+    assert (
+        payload["decision"]["status"]
+        == "sequence_policy_benchmark_design_blocked_forbidden_training_or_runtime_rows"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+    )
+    assert "selector_training_rows_forbidden" in payload["readiness"][
+        "forbidden_training_or_runtime_input_blockers"
+    ]
     assert payload["decision"]["selector_training_allowed"] is False

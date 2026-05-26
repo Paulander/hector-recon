@@ -54,7 +54,7 @@
     },
     {
       "item": "sequence_policy_benchmark",
-      "status": "blocked_until_clean_success_controls_or_cross_stage_evidence"
+      "status": "ready_non_causal"
     },
     {
       "item": "protected_plan_window_frames",
@@ -63,29 +63,32 @@
   ],
   "causal_status": "non_causal_sequence_policy_design",
   "decision": {
-    "recommended_next_step": "approve_stage7_diverse_clean_label_run_or_defer_to_non_causal_design",
+    "recommended_next_step": "explicitly_approve_protected_plan_window_failure_contrast_collection",
     "runtime_changes_allowed": false,
     "selector_allowed": false,
     "selector_training_allowed": false,
     "stage7_promotion_allowed": false,
     "stage8_training_allowed": false,
-    "status": "sequence_policy_benchmark_blocked_pending_clean_stage7_controls"
+    "status": "sequence_policy_benchmark_design_ready_non_causal"
   },
   "gameplay_topology_mutation": false,
   "readiness": {
-    "benchmark_ready": false,
+    "benchmark_ready": true,
     "cross_stage_sequence_evidence_met": true,
+    "current_benchmark_review_available": true,
+    "current_benchmark_review_next_step": "explicitly_approve_protected_plan_window_failure_contrast_collection",
+    "current_benchmark_review_status": "sequence_policy_benchmark_mixed_plan_window_underpowered",
     "plan_capsule_policy_succeeded": false,
     "plan_capsule_stage7_only_evidence": true,
     "post_box_controls_runtime_authorization_eligible": false,
-    "post_box_sandbox_sourced_success_controls": 14,
+    "post_box_sandbox_sourced_success_controls": 16,
     "protected_plan_window_evidence_met": true,
-    "protected_plan_window_frame_count": 21,
+    "protected_plan_window_frame_count": 20,
     "stage4_first_move_contrast_sandbox_review_ready": true,
-    "stage7_clean_failure_controls": 8,
+    "stage7_clean_failure_controls": 39,
     "stage7_clean_failure_controls_met": true,
-    "stage7_clean_success_controls": 2,
-    "stage7_clean_success_controls_met": false,
+    "stage7_clean_success_controls": 11,
+    "stage7_clean_success_controls_met": true,
     "stage7_clean_success_controls_required": 5
   },
   "runtime_behavior_changed": false,
@@ -102,7 +105,8 @@
     "reports/structural_candidates/stage7_post_box_sequence_control_recovery_v0.json",
     "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json",
     "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
-    "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json"
+    "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json",
+    "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
   ],
   "stage7_promotion_allowed": false,
   "stage8_training_allowed": false

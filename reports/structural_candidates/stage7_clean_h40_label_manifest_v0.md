@@ -1,15 +1,15 @@
 # Stage 7 Clean h40 Label Manifest v0
 
-Status: `bounded_clean_h40_label_manifest_ready`
+Status: `no_label_run_needed_or_topology_missing`
 
 Bounded non-causal label manifest to fill clean Stage 7 sequence-control gaps. This is a data-labeling job only; it does not enable any runtime repair.
 
 ## Current Gap
 
-- clean_sequence_success_controls_have: `2`
+- clean_sequence_success_controls_have: `11`
 - clean_sequence_success_controls_required: `5`
-- clean_sequence_success_controls_gap: `3`
-- clean_sequence_hard_negatives_have: `8`
+- clean_sequence_success_controls_gap: `0`
+- clean_sequence_hard_negatives_have: `39`
 
 ## Job
 
@@ -39,4 +39,4 @@ Forbidden flags:
 - `--enable-krk-strategy-arbiter-sandbox`
 - `--enable-krk-two-stage-abstention-selector`
 
-Next step: `run_single_bounded_clean_h40_label_job`
+Next step: `review_clean_control_gap`

@@ -600,6 +600,129 @@
       "total": null
     },
     {
+      "artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_a_seed149_8_h40.json",
+      "candidate_for_clean_control_recovery": true,
+      "classification": "clean_baseline_candidate",
+      "default_off_or_baseline_marker": false,
+      "enabled_flags": [],
+      "explicit_runtime_enabled_name": false,
+      "filename_repair_markers": [],
+      "has_box_context": true,
+      "has_outcomes": true,
+      "label": "box_shrink",
+      "playouts": {
+        "mate": 1,
+        "max_plies": 7
+      },
+      "positive_support_or_bonus_fields": [],
+      "runtime_test_activity_fields": [],
+      "total": 8
+    },
+    {
+      "artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_b_seed151_8_h40.json",
+      "candidate_for_clean_control_recovery": true,
+      "classification": "clean_baseline_candidate",
+      "default_off_or_baseline_marker": false,
+      "enabled_flags": [],
+      "explicit_runtime_enabled_name": false,
+      "filename_repair_markers": [],
+      "has_box_context": true,
+      "has_outcomes": true,
+      "label": "box_shrink",
+      "playouts": {
+        "mate": 3,
+        "max_plies": 5
+      },
+      "positive_support_or_bonus_fields": [],
+      "runtime_test_activity_fields": [],
+      "total": 8
+    },
+    {
+      "artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_c_seed157_8_h40.json",
+      "candidate_for_clean_control_recovery": true,
+      "classification": "clean_baseline_candidate",
+      "default_off_or_baseline_marker": false,
+      "enabled_flags": [],
+      "explicit_runtime_enabled_name": false,
+      "filename_repair_markers": [],
+      "has_box_context": true,
+      "has_outcomes": true,
+      "label": "box_shrink",
+      "playouts": {
+        "mate": 3,
+        "max_plies": 5
+      },
+      "positive_support_or_bonus_fields": [],
+      "runtime_test_activity_fields": [],
+      "total": 8
+    },
+    {
+      "artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_d_seed163_8_h40.json",
+      "candidate_for_clean_control_recovery": true,
+      "classification": "clean_baseline_candidate",
+      "default_off_or_baseline_marker": false,
+      "enabled_flags": [],
+      "explicit_runtime_enabled_name": false,
+      "filename_repair_markers": [],
+      "has_box_context": true,
+      "has_outcomes": true,
+      "label": "box_shrink",
+      "playouts": {
+        "max_plies": 8
+      },
+      "positive_support_or_bonus_fields": [],
+      "runtime_test_activity_fields": [],
+      "total": 8
+    },
+    {
+      "artifact": "reports/structural_candidates/stage7_additional_clean_sampling_manifest_v0.json",
+      "candidate_for_clean_control_recovery": false,
+      "classification": "metadata_or_design_only",
+      "default_off_or_baseline_marker": false,
+      "enabled_flags": [],
+      "explicit_runtime_enabled_name": false,
+      "filename_repair_markers": [],
+      "has_box_context": true,
+      "has_outcomes": false,
+      "label": null,
+      "playouts": null,
+      "positive_support_or_bonus_fields": [],
+      "runtime_test_activity_fields": [],
+      "total": null
+    },
+    {
+      "artifact": "reports/structural_candidates/stage7_additional_clean_sampling_output_validation_v0.json",
+      "candidate_for_clean_control_recovery": false,
+      "classification": "metadata_or_design_only",
+      "default_off_or_baseline_marker": false,
+      "enabled_flags": [],
+      "explicit_runtime_enabled_name": false,
+      "filename_repair_markers": [],
+      "has_box_context": true,
+      "has_outcomes": false,
+      "label": null,
+      "playouts": null,
+      "positive_support_or_bonus_fields": [],
+      "runtime_test_activity_fields": [],
+      "total": null
+    },
+    {
+      "artifact": "reports/structural_candidates/stage7_additional_clean_sampling_runner_v0.json",
+      "candidate_for_clean_control_recovery": false,
+      "classification": "metadata_or_design_only",
+      "default_off_or_baseline_marker": false,
+      "enabled_flags": [],
+      "explicit_runtime_enabled_name": false,
+      "filename_repair_markers": [],
+      "has_box_context": true,
+      "has_outcomes": false,
+      "label": null,
+      "playouts": null,
+      "positive_support_or_bonus_fields": [],
+      "runtime_test_activity_fields": [],
+      "total": null
+    },
+    {
       "artifact": "reports/structural_candidates/stage7_allow_post_drive_repair_10_h40.json",
       "candidate_for_clean_control_recovery": false,
       "classification": "repair_sandbox_sourced",
@@ -1333,6 +1456,172 @@
       "candidate_for_clean_control_recovery": false,
       "classification": "metadata_or_design_only",
       "default_off_or_baseline_marker": true,
+      "enabled_flags": [],
+      "explicit_runtime_enabled_name": false,
+      "filename_repair_markers": [],
+      "has_box_context": true,
+      "has_outcomes": false,
+      "label": null,
+      "playouts": null,
+      "positive_support_or_bonus_fields": [],
+      "runtime_test_activity_fields": [],
+      "total": null
+    },
+    {
+      "artifact": "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_a_seed127_8_h40.json",
+      "candidate_for_clean_control_recovery": true,
+      "classification": "clean_baseline_candidate",
+      "default_off_or_baseline_marker": false,
+      "enabled_flags": [],
+      "explicit_runtime_enabled_name": false,
+      "filename_repair_markers": [],
+      "has_box_context": true,
+      "has_outcomes": true,
+      "label": "box_shrink",
+      "playouts": {
+        "mate": 5,
+        "max_plies": 3
+      },
+      "positive_support_or_bonus_fields": [],
+      "runtime_test_activity_fields": [],
+      "total": 8
+    },
+    {
+      "artifact": "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_b_seed131_8_h40.json",
+      "candidate_for_clean_control_recovery": true,
+      "classification": "clean_baseline_candidate",
+      "default_off_or_baseline_marker": false,
+      "enabled_flags": [],
+      "explicit_runtime_enabled_name": false,
+      "filename_repair_markers": [],
+      "has_box_context": true,
+      "has_outcomes": true,
+      "label": "box_shrink",
+      "playouts": {
+        "mate": 5,
+        "max_plies": 3
+      },
+      "positive_support_or_bonus_fields": [],
+      "runtime_test_activity_fields": [],
+      "total": 8
+    },
+    {
+      "artifact": "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_c_seed137_8_h40.json",
+      "candidate_for_clean_control_recovery": true,
+      "classification": "clean_baseline_candidate",
+      "default_off_or_baseline_marker": false,
+      "enabled_flags": [],
+      "explicit_runtime_enabled_name": false,
+      "filename_repair_markers": [],
+      "has_box_context": true,
+      "has_outcomes": true,
+      "label": "box_shrink",
+      "playouts": {
+        "mate": 3,
+        "max_plies": 5
+      },
+      "positive_support_or_bonus_fields": [],
+      "runtime_test_activity_fields": [],
+      "total": 8
+    },
+    {
+      "artifact": "reports/structural_candidates/stage7_diverse_clean_box_medium_edge_deep_seed113_8_h40.json",
+      "candidate_for_clean_control_recovery": true,
+      "classification": "clean_baseline_candidate",
+      "default_off_or_baseline_marker": false,
+      "enabled_flags": [],
+      "explicit_runtime_enabled_name": false,
+      "filename_repair_markers": [],
+      "has_box_context": true,
+      "has_outcomes": true,
+      "label": "box_shrink",
+      "playouts": {
+        "max_plies": 8
+      },
+      "positive_support_or_bonus_fields": [],
+      "runtime_test_activity_fields": [],
+      "total": 8
+    },
+    {
+      "artifact": "reports/structural_candidates/stage7_diverse_clean_box_medium_seed103_8_h40.json",
+      "candidate_for_clean_control_recovery": true,
+      "classification": "clean_baseline_candidate",
+      "default_off_or_baseline_marker": false,
+      "enabled_flags": [],
+      "explicit_runtime_enabled_name": false,
+      "filename_repair_markers": [],
+      "has_box_context": true,
+      "has_outcomes": true,
+      "label": "box_shrink",
+      "playouts": {
+        "max_plies": 8
+      },
+      "positive_support_or_bonus_fields": [],
+      "runtime_test_activity_fields": [],
+      "total": 8
+    },
+    {
+      "artifact": "reports/structural_candidates/stage7_diverse_clean_box_small_medium_seed109_8_h40.json",
+      "candidate_for_clean_control_recovery": true,
+      "classification": "clean_baseline_candidate",
+      "default_off_or_baseline_marker": false,
+      "enabled_flags": [],
+      "explicit_runtime_enabled_name": false,
+      "filename_repair_markers": [],
+      "has_box_context": true,
+      "has_outcomes": true,
+      "label": "box_shrink",
+      "playouts": {
+        "mate": 3,
+        "max_plies": 5
+      },
+      "positive_support_or_bonus_fields": [],
+      "runtime_test_activity_fields": [],
+      "total": 8
+    },
+    {
+      "artifact": "reports/structural_candidates/stage7_diverse_clean_box_small_seed101_8_h40.json",
+      "candidate_for_clean_control_recovery": true,
+      "classification": "clean_baseline_candidate",
+      "default_off_or_baseline_marker": false,
+      "enabled_flags": [],
+      "explicit_runtime_enabled_name": false,
+      "filename_repair_markers": [],
+      "has_box_context": true,
+      "has_outcomes": true,
+      "label": "box_shrink",
+      "playouts": {
+        "mate": 6,
+        "max_plies": 2
+      },
+      "positive_support_or_bonus_fields": [],
+      "runtime_test_activity_fields": [],
+      "total": 8
+    },
+    {
+      "artifact": "reports/structural_candidates/stage7_diverse_clean_edge_fence_deep_seed107_8_h40.json",
+      "candidate_for_clean_control_recovery": true,
+      "classification": "clean_baseline_candidate",
+      "default_off_or_baseline_marker": false,
+      "enabled_flags": [],
+      "explicit_runtime_enabled_name": false,
+      "filename_repair_markers": [],
+      "has_box_context": true,
+      "has_outcomes": true,
+      "label": "box_shrink",
+      "playouts": {
+        "mate": 2,
+        "max_plies": 6
+      },
+      "positive_support_or_bonus_fields": [],
+      "runtime_test_activity_fields": [],
+      "total": 8
+    },
+    {
+      "artifact": "reports/structural_candidates/stage7_diverse_clean_label_distribution_review_v0.json",
+      "candidate_for_clean_control_recovery": false,
+      "classification": "metadata_or_design_only",
+      "default_off_or_baseline_marker": false,
       "enabled_flags": [],
       "explicit_runtime_enabled_name": false,
       "filename_repair_markers": [],
@@ -6691,16 +6980,16 @@
   "stage8_training_allowed": false,
   "summary": {
     "ambiguous_count": 1,
-    "artifact_count": 346,
+    "artifact_count": 362,
     "classification_counts": {
       "ambiguous_needs_manual_review": 1,
-      "clean_baseline_candidate": 3,
+      "clean_baseline_candidate": 15,
       "clean_current_profile_candidate": 8,
       "clean_default_off_candidate": 23,
-      "metadata_or_design_only": 193,
+      "metadata_or_design_only": 197,
       "repair_sandbox_sourced": 118
     },
-    "clean_candidate_count": 34,
+    "clean_candidate_count": 46,
     "repair_sandbox_sourced_count": 118
   }
 }

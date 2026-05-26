@@ -35,7 +35,7 @@ def _read_report() -> dict:
     return payload
 
 
-def test_sequence_policy_benchmark_review_blocks_current_underpowered_inputs():
+def test_sequence_policy_benchmark_review_reports_current_mixed_result():
     payload = _read_report()
 
     assert payload["schema_version"] == "krk_sequence_policy_benchmark_review.v0"
@@ -50,16 +50,21 @@ def test_sequence_policy_benchmark_review_blocks_current_underpowered_inputs():
     assert payload["stage8_training_allowed"] is False
     assert (
         payload["decision"]["status"]
-        == "sequence_policy_benchmark_review_blocked_pending_ready_inputs"
+        == "sequence_policy_benchmark_mixed_plan_window_underpowered"
     )
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False
     assert payload["decision"]["selector_training_allowed"] is False
     assert payload["decision"]["stage7_promotion_allowed"] is False
     assert payload["decision"]["stage8_training_allowed"] is False
-    assert "stage7_clean_success_controls_missing" in payload["blockers"]
+    assert "protected_plan_window_failure_evidence_sparse" in payload["blockers"]
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+    )
     assert "stage4_topk_sequence_signal_present" in payload["findings"]
     assert "stage4_binary_rule_insufficient" in payload["findings"]
+    assert "stage7_heldout_controls_balanced" in payload["findings"]
 
 
 def test_sequence_policy_benchmark_review_ready_fixture_supports_review_packet():
@@ -166,5 +171,72 @@ def test_sequence_policy_benchmark_review_ready_fixture_can_still_be_underpowere
     payload = _review.build_payload(benchmark=benchmark)
 
     assert payload["decision"]["status"] == "sequence_policy_benchmark_mixed_plan_window_underpowered"
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+    )
     assert "protected_plan_window_failure_evidence_sparse" in payload["blockers"]
     assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_sequence_policy_benchmark_review_not_ready_routes_by_preflight_blocker():
+    payload = _review.build_payload(
+        benchmark={
+            "preflight": {
+                "benchmark_input_ready": False,
+                "blockers": ["protected_plan_window_evidence_missing"],
+                "row_count": 10,
+                "selector_training_row_count": 0,
+                "runtime_authorization_row_count": 0,
+                "stage7_heldout_row_count": 10,
+            },
+            "decision": {"benchmark_executed_as_ready": False},
+            "objectives": [],
+        }
+    )
+
+    assert (
+        payload["decision"]["status"]
+        == "sequence_policy_benchmark_review_blocked_pending_ready_inputs"
+    )
+    assert payload["blockers"] == ["protected_plan_window_evidence_missing"]
+    assert payload["decision"]["recommended_next_step"] == "repair_protected_plan_window_input_gap"
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["label_run_allowed"] is False
+
+
+def test_sequence_policy_benchmark_review_blocks_forbidden_training_or_runtime_rows():
+    payload = _review.build_payload(
+        benchmark={
+            "preflight": {
+                "benchmark_input_ready": True,
+                "blockers": ["selector_training_rows_forbidden"],
+                "row_count": 10,
+                "selector_training_row_count": 1,
+                "runtime_authorization_row_count": 0,
+                "stage7_heldout_row_count": 0,
+            },
+            "decision": {
+                "benchmark_executed_as_ready": False,
+                "runtime_changes_allowed": False,
+                "label_run_allowed": False,
+                "selector_training_allowed": False,
+                "stage7_promotion_allowed": False,
+                "stage8_training_allowed": False,
+            },
+            "objectives": [],
+        }
+    )
+
+    assert (
+        payload["decision"]["status"]
+        == "sequence_policy_benchmark_review_blocked_forbidden_training_or_runtime_rows"
+    )
+    assert payload["decision"]["recommended_next_step"] == (
+        "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+    )
+    assert payload["blockers"] == ["selector_training_rows_forbidden"]
+    assert payload["benchmark_preflight"]["selector_training_row_count"] == 1
+    assert payload["decision"]["selector_training_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False

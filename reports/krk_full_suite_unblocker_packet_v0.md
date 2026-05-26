@@ -2,8 +2,8 @@
 
 ## Decision
 
-- status: `krk_suite_primary_unblocker_ready_pending_explicit_label_approval`
-- recommended_next_step: `explicitly_approve_stage7_diverse_clean_label_execution`
+- status: `krk_suite_protected_failure_contrast_unblocker_ready_pending_explicit_collection_approval`
+- recommended_next_step: `explicitly_approve_protected_plan_window_failure_contrast_collection`
 - implementation_allowed_by_this_packet: `False`
 - label_run_allowed: `False`
 - runtime_changes_allowed: `False`
@@ -11,30 +11,62 @@
 ## Current State
 
 - protected_stack_ready: `True`
-- stage7_success_controls: `2`
+- stage7_success_controls: `11`
 - stage7_success_controls_required: `5`
-- sequence_policy_inputs_ready: `False`
-- sequence_policy_benchmark_ready: `False`
+- sequence_policy_inputs_ready: `True`
+- sequence_policy_benchmark_ready: `True`
 - stage8_training_ready: `False`
-- stage7_output_validation_status: `stage7_diverse_clean_sampling_outputs_validation_pending`
+- stage7_output_validation_status: `stage7_diverse_clean_sampling_outputs_valid_ready_for_integration`
 - stage7_invalid_existing_output_count: `0`
 - stage7_overwrite_existing_outputs: `False`
 - stage7_processed_job_count: `0`
 - stage7_executed_job_count: `0`
+- stage7_historical_processed_job_count: `8`
+- stage7_historical_executed_job_count: `8`
 - stage7_skipped_existing_output_count: `0`
+- stage7_label_distribution_review_status: `stage7_label_distribution_review_success_gate_closed`
+- stage7_label_distribution_unique_new_success: `2`
+- stage7_label_distribution_duplicate_playouts: `50`
+- stage7_additional_clean_sampling_manifest_status: `stage7_additional_clean_sampling_manifest_not_applicable_success_gate_closed`
+- stage7_additional_clean_sampling_runner_status: `stage7_additional_clean_sampling_runner_not_applicable_success_gate_closed`
+- stage7_additional_clean_sampling_job_count: `0`
+- protected_plan_window_failure_contrast_plan_status: `protected_plan_window_failure_contrast_plan_ready_pending_explicit_collection_approval`
+- protected_plan_window_unique_failure_count: `1`
+- protected_plan_window_minimum_new_failures_needed: `4`
+- protected_plan_window_failure_contrast_manifest_status: `protected_plan_window_failure_contrast_manifest_ready_for_review`
+- protected_plan_window_failure_contrast_manifest_job_count: `6`
+- protected_plan_window_failure_contrast_manifest_review_status: `protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval`
+- protected_plan_window_failure_contrast_execution_readiness_status: `protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval`
+- protected_plan_window_failure_contrast_execution_jobs_passing: `6`
+- protected_plan_window_failure_contrast_runner_status: `protected_plan_window_failure_contrast_runner_dry_run_ready`
+- protected_plan_window_failure_contrast_runner_processed_job_count: `0`
+- protected_plan_window_failure_contrast_runner_executed_job_count: `0`
+- protected_plan_window_failure_contrast_output_validation_status: `protected_plan_window_failure_contrast_outputs_validation_pending`
+- protected_plan_window_failure_contrast_output_exists_count: `0`
+- protected_plan_window_failure_contrast_output_valid_count: `0`
+- protected_plan_window_failure_contrast_integration_status: `protected_plan_window_failure_contrast_integration_pending_outputs`
+- protected_plan_window_failure_contrast_integrated_new_failure_count: `0`
+- protected_plan_window_failure_contrast_integration_ready: `False`
+- sequence_policy_after_protected_failure_contrast_refresh_status: `sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs`
+- sequence_policy_after_protected_failure_contrast_rows: `0`
 
 ## Why Work Stops At This Gate
 
-- The next highest-value action creates new Stage 7 h40 labels or implements a reviewed runtime sandbox.
-- Those actions are gated by repository reports and architecture policy, not by a hidden disk config that limits session length.
-- The current /goal authorizes autonomous safe work, but it does not by itself authorize gated label execution, runtime behavior, Stage 7 promotion, or Stage 8 training.
+- The Stage 7 held-out clean label gate is closed; the remaining non-causal benchmark review identifies protected plan-window failure-contrast sparsity.
+- Runtime changes, Stage 7 promotion, and Stage 8 training remain gated by repository reports and architecture policy.
+- The current /goal does not by itself authorize runtime behavior, Stage 7 promotion, or Stage 8 training.
 
 ## Primary Unblocker
 
-- id: `stage7_diverse_clean_label_execution`
-- status: `ready_pending_explicit_approval`
-- purpose: Fill held-out Stage 7 clean success controls so the sequence-policy benchmark can run.
-- command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_stage7_diverse_clean_sampling_jobs_v0.py --execute-reviewed-label-run --job-timeout-seconds 900 --refresh-after-run`
+- id: `protected_plan_window_failure_contrast_collection`
+- status: `protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval`
+- purpose: Review the bounded protected plan-window failure-contrast manifest before any explicitly approved collection run.
+- command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run`
+- max_jobs: `6`
+- horizon: `h40`
+- stage: `protected_plan_window_failure_contrast_evidence_only`
+- stop_after_unique_failures: `4`
+- observation_only: `True`
 - resume_safe: `True`
 - skip_existing_outputs_by_default: `True`
 - invalid_existing_outputs_block_without_overwrite: `True`
@@ -49,9 +81,9 @@
 - id: `stage4_first_move_contrast_sandbox`
 - status: `stage4_caveat_unblocker_ready_pending_explicit_runtime_approval`
 - purpose: Address the separate Stage 4 h40 caveat through a reviewed default-off sandbox path.
-- why_secondary: This may reduce Stage 4 debt, but it does not directly fill the Stage 7 clean success controls currently blocking sequence-policy benchmarking.
+- why_secondary: This may reduce Stage 4 debt, but it does not directly fill the protected plan-window failure-contrast sparsity now blocking sequence-policy review.
 
 ## Low-Value Safe Work Remaining
 
-- More passive summaries can be written, but they will not unblock Stage 8 or the sequence-policy benchmark.
-- Further non-causal candidate-generation analysis is lower leverage until Stage 7 clean success controls are filled.
+- Rerunning Stage 7 label commands without overwrite will skip existing outputs; the Stage 7 success-control gap is already closed.
+- More passive summaries can be written, but the next useful work is benchmark review or protected plan-window failure-contrast collection.

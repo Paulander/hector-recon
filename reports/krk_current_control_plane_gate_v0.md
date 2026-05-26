@@ -5,25 +5,60 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 ## Current State
 
 - protected_stack: `retry1_stage5_6_active_manifest_validated`
+- protected_stack_ready: `True`
+- protected_stack_hard_blockers: `[]`
 - stage4: `first_move_contrast_runtime_review_ready_pending_explicit_approval`
-- stage7: `heldout_clean_success_controls_insufficient_sampling_manifest_ready`
-- stage7_label_execution_readiness: `stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval`
-- stage7_label_output_integration: `stage7_diverse_clean_sampling_outputs_pending`
-- stage7_label_runner: `stage7_diverse_clean_sampling_runner_dry_run_ready`
-- stage7_label_runner_output_validation_status: `stage7_diverse_clean_sampling_outputs_validation_pending`
+- stage7: `heldout_clean_success_controls_ready_sequence_benchmark_available`
+- stage7_success_controls_ready: `True`
+- stage7_success_controls: `11`
+- stage7_success_controls_required: `5`
+- stage7_label_execution_readiness: `not_applicable_stage7_success_gate_closed`
+- stage7_label_historical_execution_readiness: `stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval`
+- stage7_label_output_integration: `stage7_diverse_clean_sampling_integration_success_controls_met`
+- stage7_label_runner: `stage7_diverse_clean_sampling_runner_executed_success`
+- stage7_label_runner_output_validation_status: `stage7_diverse_clean_sampling_outputs_valid_ready_for_integration`
+- stage7_label_output_validation_status: `stage7_diverse_clean_sampling_outputs_valid_ready_for_integration`
+- stage7_label_distribution_review: `stage7_label_distribution_review_success_gate_closed`
+- stage7_additional_label_manifest: `stage7_additional_clean_sampling_manifest_not_applicable_success_gate_closed`
+- stage7_additional_label_runner: `stage7_additional_clean_sampling_runner_not_applicable_success_gate_closed`
+- stage7_additional_label_runner_job_count: `0`
 - stage7_label_runner_execution_readiness_source: `live_recomputed`
-- stage7_label_runner_execution_readiness_status: `stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval`
+- stage7_label_runner_execution_readiness_status: `not_applicable_stage7_success_gate_closed`
+- stage7_label_runner_historical_execution_readiness_status: `stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval`
 - stage7_label_runner_execution_readiness_jobs_passing: `8`
 - stage7_label_runner_invalid_existing_output_count: `0`
 - stage7_label_runner_processed_job_count: `0`
 - stage7_label_runner_executed_job_count: `0`
+- stage7_label_runner_historical_processed_job_count: `8`
+- stage7_label_runner_historical_executed_job_count: `8`
 - stage7_label_runner_skipped_existing_output_count: `0`
 - stage7_label_runner_job_timeout_seconds: `900`
 - stage7_label_runner_timed_out_job_count: `0`
-- stage7_post_label_outcome: `post_label_outcome_pending_explicit_label_outputs`
+- stage7_post_label_outcome: `post_label_outcome_waiting_on_explicit_protected_failure_contrast_collection`
 - protected_plan_window_evidence: `available_non_causal`
-- sequence_policy: `sequence_policy_benchmark_blocked_pending_clean_stage7_controls`
-- sequence_policy_inputs: `sequence_policy_benchmark_inputs_blocked_pending_stage7_success_controls`
+- sequence_policy: `sequence_policy_benchmark_mixed_plan_window_underpowered`
+- sequence_policy_forbidden_training_or_runtime_input_blocked: `False`
+- sequence_policy_forbidden_training_or_runtime_input_blockers: `[]`
+- protected_plan_window_failure_contrast_plan: `protected_plan_window_failure_contrast_plan_ready_pending_explicit_collection_approval`
+- protected_plan_window_unique_failure_count: `1`
+- protected_plan_window_minimum_new_failures_needed: `4`
+- protected_plan_window_failure_contrast_manifest: `protected_plan_window_failure_contrast_manifest_ready_for_review`
+- protected_plan_window_failure_contrast_manifest_job_count: `6`
+- protected_plan_window_failure_contrast_manifest_review: `protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval`
+- protected_plan_window_failure_contrast_execution_readiness: `protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval`
+- protected_plan_window_failure_contrast_execution_jobs_passing: `6`
+- protected_plan_window_failure_contrast_runner: `protected_plan_window_failure_contrast_runner_dry_run_ready`
+- protected_plan_window_failure_contrast_runner_processed_job_count: `0`
+- protected_plan_window_failure_contrast_runner_executed_job_count: `0`
+- protected_plan_window_failure_contrast_output_validation: `protected_plan_window_failure_contrast_outputs_validation_pending`
+- protected_plan_window_failure_contrast_output_exists_count: `0`
+- protected_plan_window_failure_contrast_output_valid_count: `0`
+- protected_plan_window_failure_contrast_integration: `protected_plan_window_failure_contrast_integration_pending_outputs`
+- protected_plan_window_failure_contrast_integrated_new_failure_count: `0`
+- protected_plan_window_failure_contrast_integration_ready: `False`
+- sequence_policy_after_protected_failure_contrast_refresh: `sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs`
+- sequence_policy_after_protected_failure_contrast_rows: `0`
+- sequence_policy_inputs: `sequence_policy_benchmark_inputs_ready_non_causal`
 - stage8: `blocked`
 - runtime_selector: `blocked`
 
@@ -44,42 +79,48 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
   - Stage 7 promotion
   - Stage 8 training
 
-### approve_stage7_diverse_clean_label_run
+### approve_protected_plan_window_failure_contrast_collection
 
-- artifact: `reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.md`
-- status: `stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval`
-- allows: run 8 bounded h40 clean Stage 7 label jobs, 64 samples total
-- recommended_if: you want to fill the Stage 7 clean success-control gap before broader sequence-policy benchmarking
+- artifact: `reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_review_v0.md`
+- status: `protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval`
+- allows: explicitly approved bounded observation-only protected plan-window failure-contrast collection
+- recommended_if: manifest review passed and you want to collect bounded observation-only failure contrasts
+- command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - safety_scope:
+  - max_jobs: `6`
+  - horizon: `h40`
+  - stage: `protected_plan_window_failure_contrast_evidence_only`
+  - source_stage_counts: `{'stage4': 2, 'stage5': 2, 'stage6': 2}`
+  - stop_after_unique_failures: `4`
+  - observation_only: `True`
   - resume_safe: `True`
   - skip_existing_outputs_by_default: `True`
   - invalid_existing_outputs_block_without_overwrite: `True`
   - execution_readiness_recomputed_live: `True`
+  - approval_receipt_required: `True`
+  - approval_receipt_path: `reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
+  - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
+  - expected_readiness_fingerprint: `2a1b10fb7e14001a58397f74fbce3fb68941305b01378c14676a0f1948d5889d`
   - per_job_timeout_seconds: `900`
-  - timed_out_job_count: `0`
-  - stage7_training_rows: `0`
-- does_not_allow:
-  - runtime behavior
-  - selector training
-  - Stage 7 promotion
-  - Stage 8 training
-  - Stage 7 repair flags
-
-### defer_runtime_and_labels_review_cross_stage_plan_capsule_evidence
-
-- artifact: `reports/strategy_arbitration/krk_protected_plan_window_frames_v0.md`
-- status: `sequence_policy_benchmark_blocked_pending_clean_stage7_controls`
-- allows: non-causal protected Stage 4/5/6 plan-window evidence review only
-- recommended_if: already executed replay-free; remaining sequence-policy gap is Stage 7 clean success controls
+  - processed_job_count: `0`
+  - executed_job_count: `0`
+  - output_valid_count: `0`
+  - runtime_authorization_row_count: `0`
+  - stage7_training_row_count: `0`
 - does_not_allow:
   - runtime selector
-  - label execution
+  - runtime default changes
+  - runtime DTM or tablebase lookup
+  - gameplay-time topology mutation
+  - unreviewed or unbounded label execution
+  - selector training
   - Stage 7 promotion
   - Stage 8 training
 
 ## Recommendation
 
-- if_no_user_approval: `stop_at_gate_or_design_non_causal_sequence_policy_only`
+- if_no_user_approval: `wait_for_explicit_protected_plan_window_failure_contrast_collection_approval`
 - if_runtime_approved: `implement_stage4_default_off_first_move_contrast_sandbox`
-- if_labels_approved: `run_stage7_diverse_clean_sampling_manifest_and_recover_controls`
-- reason: Replay-free protected plan-window evidence now satisfies the Stage 4/5/6 cross-stage side. The remaining empirical blocker for the sequence-policy benchmark is clean Stage 7 success controls, while Stage 4 runtime work still requires explicit sandbox approval.
+- if_collection_approved: `execute_bounded_protected_plan_window_failure_contrast_collection_from_reviewed_manifest`
+- if_labels_approved: `not_applicable_stage7_success_gate_closed`
+- reason: Stage 7 held-out clean controls now satisfy the benchmark gate; the remaining work is non-causal benchmark review/protected plan-window contrast analysis, while Stage 4 runtime work still requires explicit sandbox approval.

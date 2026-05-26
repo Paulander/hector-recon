@@ -189,10 +189,10 @@ reports/krk_full_suite_readiness_audit_v0.json
 Current full-suite decision:
 
 ```text
-krk_suite_readiness_blocked_pending_stage7_clean_success_controls
+krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection
 ```
 
-Meaning: the retry1 protected Stage 5/6 stack is adopted and validated, M1-M4 and KPK→KQK preservation checks pass, and runtime/default/topology boundaries remain clean. The remaining KRK-suite blocker is that Stage 7 is still held out with insufficient clean success controls, so the sequence-policy benchmark remains blocked and Stage 8 remains blocked.
+Meaning: the retry1 protected Stage 5/6 stack is adopted and validated, M1-M4 and KPK→KQK preservation checks pass, and runtime/default/topology boundaries remain clean. Stage 7 clean held-out controls now satisfy the sequence-policy input gate, but Stage 7 remains held out and not promoted. The remaining KRK-suite blocker is explicit approval for bounded protected plan-window failure-contrast collection.
 
 Current unblocker packet:
 
@@ -201,7 +201,7 @@ reports/krk_full_suite_unblocker_packet_v0.md
 reports/krk_full_suite_unblocker_packet_v0.json
 ```
 
-This packet identifies the primary unblocker as explicit approval for the bounded Stage 7 diverse-clean h40 label execution. It does not authorize execution by itself.
+This packet identifies the primary unblocker as explicit approval for bounded protected plan-window failure-contrast collection. It does not authorize collection or runtime changes by itself.
 
 Current passive gate advancement harness:
 
@@ -214,33 +214,37 @@ reports/krk_suite_gate_advancement_v0.json
 Current passive advancement decision:
 
 ```text
-krk_suite_passive_advancement_blocked_pending_stage7_label_outputs
+krk_suite_passive_advancement_ready_for_protected_failure_contrast_collection
 ```
 
 This harness reruns only safe passive integration/readiness artifacts. It does not execute labels, implement runtime behavior, train selectors, promote Stage 7, or train Stage 8.
 
-Current Stage 7 diverse-clean output validation gate:
+Current protected failure-contrast collection gate:
 
 ```text
-reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.md
-reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json
+reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_review_v0.md
+reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_runner_v0.md
+reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_integration_v0.md
 ```
 
-Current validation decision:
+Current protected gate decisions:
 
 ```text
-stage7_diverse_clean_sampling_outputs_validation_pending
+protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval
+protected_plan_window_failure_contrast_runner_dry_run_ready
+protected_plan_window_failure_contrast_integration_pending_outputs
 ```
 
-Meaning: no Stage 7 diverse-clean label outputs are present yet. Once explicitly approved label outputs exist, this passive gate validates parseability, h40 consistency, and held-out/non-training status before those outputs are consumed by the sequence-policy pipeline.
+Meaning: the protected failure-contrast manifest is reviewed and ready for explicit approval, but no protected collection has been run in the current gate state. The runner is dry-run only with `execution_requested=false`, `processed_job_count=0`, and `executed_job_count=0`.
 
-Current Stage 7 diverse-clean runner status:
+Current Stage 7 diverse-clean status:
 
 ```text
-stage7_diverse_clean_sampling_runner_dry_run_ready
+stage7_diverse_clean_sampling_integration_success_controls_met
+stage7_diverse_clean_sampling_runner_executed_success
 ```
 
-Meaning: the approval-gated runner is dry-run ready and resume-safe. If a later explicitly approved label run is interrupted after writing some reviewed outputs, existing output files are skipped by default rather than overwritten. Overwriting requires the separate `--overwrite-existing-outputs` flag. The runner preflights passive output validation and blocks execution if invalid existing outputs are present without explicit overwrite/cleanup. Runner counts distinguish `processed_job_count` from actually-run `executed_job_count` and `skipped_existing_output_count`, so resumed runs remain auditable. This runner still does not authorize labels by itself and does not authorize runtime behavior, selector training, Stage 7 promotion, or Stage 8 training.
+Meaning: the prior reviewed Stage 7 diverse-clean run is historical evidence only. Current Stage 7 label execution is closed/not applicable: current `execution_requested=false`, `label_run_allowed=false`, `processed_job_count=0`, and `executed_job_count=0`; historical counts are preserved separately as `historical_processed_job_count=8` and `historical_executed_job_count=8`. This does not authorize more labels, runtime behavior, selector training, Stage 7 promotion, or Stage 8 training.
 
 Current Stage 4 caveat unblocker packet:
 
@@ -267,10 +271,10 @@ reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json
 Current review decision:
 
 ```text
-sequence_policy_benchmark_review_blocked_pending_ready_inputs
+sequence_policy_benchmark_mixed_plan_window_underpowered
 ```
 
-Meaning: the review gate is wired and will classify sequence-policy benchmark results once Stage 7 held-out success controls are filled. Current evidence still shows Stage 4 top-k signal, sparse protected plan-window failure evidence, and missing Stage 7 success controls.
+Meaning: sequence-policy inputs and the non-causal benchmark are available. Current evidence shows Stage 4 top-k signal and balanced Stage 7 held-out controls, but protected plan-window failure evidence remains sparse. The next reviewed step is explicit approval for bounded protected plan-window failure-contrast collection.
 
 Current Stage 8 training-readiness review:
 
@@ -282,10 +286,10 @@ reports/krk_stage8_training_readiness_review_v0.json
 Current Stage 8 review decision:
 
 ```text
-stage8_training_blocked_pending_stage7_sequence_gate
+stage8_training_blocked_pending_protected_failure_contrast_collection
 ```
 
-Meaning: Stage 8 training remains blocked. The retry1 protected stack is ready, but Stage 7 held-out success controls and the sequence-policy benchmark review are not ready. This review does not authorize Stage 8 training by itself even if it later reaches review-ready status.
+Meaning: Stage 8 training remains blocked. The retry1 protected stack and Stage 7 held-out clean-control gate are ready, but protected failure-contrast evidence is pending explicit collection approval and integration. This review does not authorize Stage 8 training by itself even if it later reaches review-ready status.
 
 Immediate status:
 
@@ -1437,23 +1441,23 @@ Stage 4 stratified contrast validation is complete. The identity, file-mirrored,
 
 The Stage 4 first-move contrast runtime review packet is ready, but it does not authorize implementation. If explicitly approved later, the only reviewed scope is a default-off Stage 4 CandidateMoveFrame first-move contrast sandbox using visible move-shape terms, with no exact-state/runtime exception, no selector training, no broad stage0 penalty, no provider suppression, no Stage 7 promotion, and no Stage 8 training. The packet is `stage4_first_move_contrast_runtime_review_ready_pending_explicit_approval`.
 
-The KRK sequence-control contrast dataset/probe v0 unifies the current non-causal control-plane evidence: 48 Stage 4 forced-first-move contrast rows, 18 Stage 4/5/6 ownership-seed context rows, and 10 held-out Stage 7 clean sequence-control rows. It confirms the current fork: Stage 4 has a review-ready but not implementation-authorized first-move contrast sandbox, while Stage 7 still lacks enough clean success controls for a broader sequence-policy benchmark (2 successes, 8 failures). Stage 8 remains blocked and no row is a selector-training or runtime-authorization row.
+The KRK sequence-control contrast dataset/probe v0 unifies the non-causal control-plane evidence: 48 Stage 4 forced-first-move contrast rows, Stage 4/5/6 ownership/protected plan-window context rows, and held-out Stage 7 clean sequence-control rows. The current fork is no longer a Stage 7 clean-control blocker: Stage 4 has a review-ready but not implementation-authorized first-move contrast sandbox, Stage 7 clean controls are balanced and held out, and protected plan-window failure evidence is still too sparse for the broader sequence-policy gate. Stage 8 remains blocked and no row is a selector-training or runtime-authorization row.
 
-The Stage 7 diverse clean sampling manifest v0 is ready for review but not execution. It proposes 8 bounded h40 jobs (64 samples total) over disjoint `Box_Small`, `Box_Medium`, and `Edge_Fence_Deep` source cells using the active retry1 Stage 6 topology, with all Stage 7 repair/sandbox flags forbidden. The purpose is to fill the clean Stage 7 success-control gap without another blind duplicate label run. It requires explicit approval before running, creates no training rows, and does not authorize Stage 7 promotion or Stage 8 training.
+The Stage 7 diverse clean sampling run is historical evidence only in the current gate state. Its successful outputs satisfy the held-out clean-control input side, but current Stage 7 label execution is closed/not applicable: current `execution_requested=false`, `label_run_allowed=false`, `processed_job_count=0`, and `executed_job_count=0`, with historical counts preserved separately. It does not authorize more labels, selector training, runtime behavior, Stage 7 promotion, or Stage 8 training.
 
-The current KRK control-plane gate is summarized in `reports/krk_current_control_plane_gate_v0.md/json`. Immediate causal or label-running progress still requires one explicit choice: approve the default-off Stage 4 first-move contrast sandbox, approve the bounded Stage 7 diverse clean label run, or defer both and continue non-causal broader sequence-policy design. Without that choice, no runtime or label-run step is authorized.
+The current KRK control-plane gate is summarized in `reports/krk_current_control_plane_gate_v0.md/json`. Immediate gated progress requires one explicit choice: approve the default-off Stage 4 first-move contrast sandbox, approve bounded protected plan-window failure-contrast collection, or defer both and continue passive non-causal review. Without that choice, no runtime, label, collection, promotion, or training step is authorized.
 
-The non-causal KRK sequence-policy benchmark design v0 is complete. It defines candidate objectives for Stage 4 state-local first-move contrast, Stage 7 post-box sequence success vs hard negatives, PlanCapsule entry/progress/exit/abort, and cross-stage owner preservation vs switch. The protected Stage 4/5/6 cross-stage plan-window side is now replay-free extracted in `reports/strategy_arbitration/krk_protected_plan_window_frames_v0.md/json` with 21 non-causal frames. The benchmark inputs are assembled in `reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.md/json` with 79 non-causal rows: 48 Stage 4 first-move contrast rows, 21 protected plan-window rows, and 10 Stage 7 held-out clean controls. The partial input probe in `reports/strategy_arbitration/krk_sequence_policy_input_probe_v0.md/json` shows Stage 4 top-k signal but insufficient one-term binary recall, sparse protected plan-window failures, and underpowered Stage 7 success controls. The benchmark harness in `reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.md/json` is wired but correctly refuses ready-status execution until the Stage 7 success-control gate is met. The passive refresh in `reports/strategy_arbitration/krk_sequence_policy_pipeline_refresh_v0.md/json` reruns integration, inputs, probe, benchmark, and current gate without labels or runtime changes. The Stage 7 diverse clean sampling commands pass dry-run readiness in `reports/structural_candidates/stage7_diverse_clean_sampling_execution_readiness_v0.md/json`, `reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.md/json` is dry-run ready, and `reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.md/json` is ready to integrate outputs after the run. Execution still requires explicit approval via the runner flag. The benchmark remains blocked because clean Stage 7 success controls are still below threshold (2 success / 8 failure; need at least 5 success / 5 failure). These artifacts do not train, sandbox, route, score, promote Stage 7, or unblock Stage 8.
+The non-causal KRK sequence-policy benchmark design v0 is complete. It defines candidate objectives for Stage 4 state-local first-move contrast, Stage 7 post-box sequence success vs hard negatives, PlanCapsule entry/progress/exit/abort, and cross-stage owner preservation vs switch. The protected Stage 4/5/6 cross-stage plan-window side is replay-free extracted in `reports/strategy_arbitration/krk_protected_plan_window_frames_v0.md/json`; the benchmark inputs include Stage 4 first-move contrast rows, protected plan-window rows, and held-out Stage 7 clean controls. The current benchmark review is `sequence_policy_benchmark_mixed_plan_window_underpowered`: Stage 4 top-k signal and balanced Stage 7 held-out controls are available, but protected plan-window failure evidence remains sparse. The next reviewed step is bounded protected plan-window failure-contrast collection, pending explicit approval. These artifacts do not train, sandbox, route, score, promote Stage 7, or unblock Stage 8.
 
-The Stage 7 diverse clean sampling runner now recomputes execution readiness live from the current manifest before dry-run or execution paths, instead of trusting only the persisted readiness artifact. The top-level readiness, unblocker, and control-plane gate artifacts expose `execution_readiness_source=live_recomputed`, 8/8 jobs passing readiness, zero invalid existing outputs, and zero executed jobs. This removes a stale-preflight risk, but it does not authorize the label run; the remaining blocker is still explicit approval for the bounded Stage 7 held-out label execution or a separate approved runtime sandbox.
+The protected plan-window failure-contrast manifest/review/runner stack is ready for an explicit gate choice but has not executed. The runner is dry-run only in the current state, with `execution_requested=false`, `processed_job_count=0`, and `executed_job_count=0`. This removes ambiguity about the next collection step but does not authorize collection, runtime changes, selector training, promotion, or Stage 8 training.
 
-The Stage 7 diverse clean sampling runner is also bounded per job: `job_timeout_seconds=900` by default, with explicit `timed_out_job_count` in the runner, readiness, unblocker, and control-plane gate artifacts. A timed-out approved label job is reported as return code 124 and blocks post-run refresh like any failed job. This preserves resume safety and prevents future approved label execution from turning into an unbounded run.
+The protected failure-contrast runner is bounded and review-driven. If explicitly approved later, it must run through the reviewed collection command and then refresh passive reports; until that gate is granted, the current artifacts remain dry-run/readiness evidence only.
 
-If a future explicitly approved Stage 7 diverse clean label run succeeds with `--refresh-after-run`, the runner now writes its own execution result first and then refreshes the full passive KRK suite gate stack via `scripts/advance_krk_suite_from_current_gates_v0.py`. This replaces the older sequence-policy-only refresh path, so successful approved labels should immediately update the sequence-policy benchmark review, full-suite readiness audit, unblocker packet, Stage 8 readiness review, and post-label outcome review. This remains non-causal post-run reporting and does not authorize labels by itself.
+If a future explicitly approved protected failure-contrast collection succeeds with `--refresh-after-run`, the runner should refresh the full passive KRK suite gate stack via `scripts/advance_krk_suite_from_current_gates_v0.py`. This remains non-causal post-run reporting and does not authorize collection by itself.
 
-The replay-free Stage 7 clean success-control backfill audit is complete in `reports/structural_candidates/stage7_clean_success_backfill_audit_v0.md/json`. Existing clean/default-off Stage 7 artifacts contain 67 raw h40 mate rows, but they collapse to only 2 unique clean FEN/move success controls already present in the recovery artifact. There are 14 sandbox-sourced post-box success controls, but they remain non-backfillable for the clean held-out gate. The sequence-policy benchmark therefore remains blocked on clean Stage 7 success controls; replay-free backfill cannot close the gate.
+The replay-free Stage 7 clean success-control backfill audit remains useful historical context: older clean/default-off Stage 7 artifacts had duplicate success coverage and could not close the gate by themselves. The later reviewed diverse-clean run closed the held-out clean-control input side, but Stage 7 remains held out and not promotable.
 
-The underpowered KRK sequence-policy pilot review is complete in `reports/strategy_arbitration/krk_sequence_policy_underpowered_pilot_v0.md/json`. It preserves current diagnostic signal without relaxing the benchmark gate: Stage 4 has a state-local top-k signal, the one-term binary rule remains insufficient, protected plan-window failures are sparse, and Stage 7 still needs 3 additional unique clean success controls. The pilot is ready for the full non-causal benchmark after the Stage 7 clean label gate is filled, but it authorizes no labels, runtime behavior, selector training, Stage 7 promotion, or Stage 8 training.
+The KRK sequence-policy review preserves current diagnostic signal without relaxing the benchmark gate: Stage 4 has a state-local top-k signal, simple one-term binary rules remain insufficient, Stage 7 held-out controls are balanced, and protected plan-window failures are sparse. The benchmark remains blocked pending explicit protected failure-contrast collection and integration, and it authorizes no labels, runtime behavior, selector training, Stage 7 promotion, or Stage 8 training.
 
 ## Runtime Approval Rule
 

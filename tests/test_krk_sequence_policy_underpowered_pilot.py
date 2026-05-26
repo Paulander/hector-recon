@@ -61,16 +61,41 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
 
     assert (
         payload["decision"]["status"]
-        == "sequence_policy_pilot_ready_for_full_benchmark_after_label_gate"
+        == "sequence_policy_pilot_underpowered_pending_protected_failure_contrast_collection"
     )
-    assert payload["summary"]["benchmark_executed_as_ready"] is False
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+    )
+    assert payload["summary"]["benchmark_executed_as_ready"] is True
+    assert (
+        payload["summary"]["benchmark_review_status"]
+        == "sequence_policy_benchmark_mixed_plan_window_underpowered"
+    )
+    assert payload["summary"]["forbidden_training_or_runtime_input_blocked"] is False
     assert payload["summary"]["stage4_topk_signal"] is True
     assert payload["summary"]["stage4_binary_rule_insufficient"] is True
-    assert payload["summary"]["stage7_success_gap"] == 3
-    assert payload["summary"]["stage7_replay_free_backfill_exhausted"] is True
+    assert payload["summary"]["stage7_success_gap"] == 0
+    assert payload["summary"]["stage7_replay_free_backfill_exhausted"] is False
+    assert payload["summary"]["protected_failure_contrast_ready_for_explicit_approval"] is True
+    assert payload["summary"]["protected_failure_contrast_integration_ready"] is False
+    assert (
+        payload["summary"]["protected_failure_contrast_runner_status"]
+        == "protected_plan_window_failure_contrast_runner_dry_run_ready"
+    )
+    assert payload["summary"]["protected_failure_contrast_runner_processed_job_count"] == 0
+    assert payload["summary"]["protected_failure_contrast_runner_executed_job_count"] == 0
+    assert payload["summary"]["protected_failure_contrast_command_if_explicitly_approved"] == (
+        "UV_CACHE_DIR=/tmp/uv-cache uv run python "
+        "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py "
+        "--execute-reviewed-collection --refresh-after-run"
+    )
     assert "stage4_state_local_topk_signal_present" in payload["pilot_findings"]
-    assert "stage7_clean_success_controls_missing" in payload["blockers"]
-    assert "stage7_replay_free_backfill_exhausted" in payload["blockers"]
+    assert "stage7_clean_success_controls_missing" not in payload["blockers"]
+    assert (
+        "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+        in payload["blockers"]
+    )
 
 
 def test_underpowered_pilot_fixture_without_stage7_gap_needs_review():
@@ -113,13 +138,90 @@ def test_underpowered_pilot_fixture_without_stage7_gap_needs_review():
         }
     }
     backfill = {"decision": {"status": "not_needed"}, "summary": {}}
+    benchmark_review = {
+        "decision": {"status": "sequence_policy_benchmark_mixed_or_insufficient"},
+        "blockers": [],
+    }
+    readiness = {"protected_failure_contrast_gate": {}, "explicit_gate_blockers": []}
 
     payload = _pilot.build_payload(
         benchmark=benchmark,
+        benchmark_review=benchmark_review,
         inputs=inputs,
         backfill_audit=backfill,
+        readiness=readiness,
     )
 
     assert payload["summary"]["stage7_success_gap"] == 0
     assert payload["decision"]["status"] == "sequence_policy_pilot_underpowered_needs_review"
     assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_underpowered_pilot_routes_forbidden_training_rows_to_input_repair():
+    benchmark = {
+        "decision": {
+            "benchmark_executed_as_ready": False,
+            "status": "sequence_policy_benchmark_blocked_forbidden_training_or_runtime_rows",
+        },
+        "preflight": {"blockers": ["selector_training_rows_forbidden"]},
+        "objectives": [
+            {
+                "objective_id": "stage4_state_local_first_move_contrast",
+                "metrics": {
+                    "top1_conversion_positive_by_state": 1.0,
+                    "top3_conversion_positive_by_state": 1.0,
+                    "precision": 0.8,
+                    "recall": 0.4,
+                    "negative_suppression": 0.9,
+                },
+            },
+            {
+                "objective_id": "protected_plan_window_entry_progress_exit_abort",
+                "failure_evidence_sparse": True,
+            },
+            {
+                "objective_id": "stage7_heldout_sequence_success_vs_hard_negative",
+                "target_label_counts": {"conversion_positive": 5, "conversion_failure": 5},
+            },
+        ],
+    }
+    benchmark_review = {
+        "decision": {
+            "status": "sequence_policy_benchmark_review_blocked_forbidden_training_or_runtime_rows"
+        },
+        "blockers": ["selector_training_rows_forbidden"],
+    }
+    inputs = {
+        "summary": {
+            "row_count": 21,
+            "stage7_clean_success_controls_required": 5,
+            "selector_training_row_count": 1,
+            "runtime_authorization_row_count": 0,
+        }
+    }
+    backfill = {"decision": {"status": "not_needed"}, "summary": {}}
+    readiness = {
+        "protected_failure_contrast_gate": {"ready_for_explicit_approval": True},
+        "explicit_gate_blockers": [
+            "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+        ],
+    }
+
+    payload = _pilot.build_payload(
+        benchmark=benchmark,
+        benchmark_review=benchmark_review,
+        inputs=inputs,
+        backfill_audit=backfill,
+        readiness=readiness,
+    )
+
+    assert payload["summary"]["forbidden_training_or_runtime_input_blocked"] is True
+    assert payload["decision"]["status"] == (
+        "sequence_policy_pilot_blocked_forbidden_training_or_runtime_rows"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+    )
+    assert "selector_training_rows_forbidden" in payload["blockers"]
+    assert payload["decision"]["selector_training_allowed"] is False

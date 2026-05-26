@@ -2,14 +2,14 @@
   "backfillable_success_keys": [],
   "causal_status": "non_causal_replay_free_backfill_audit",
   "clean_hard_negative_key_audit": {
-    "current_recovered_unique_key_count": 8,
-    "raw_row_count": 80,
-    "unique_key_count": 8
+    "current_recovered_unique_key_count": 39,
+    "raw_row_count": 145,
+    "unique_key_count": 39
   },
   "clean_success_key_audit": {
-    "duplicate_row_count": 65,
-    "raw_row_count": 67,
-    "unique_key_count": 2,
+    "duplicate_row_count": 87,
+    "raw_row_count": 98,
+    "unique_key_count": 11,
     "unique_keys": [
       {
         "example_sources": [
@@ -17,15 +17,69 @@
           "reports/structural_candidates/stage7_candidate_move_layer_default_off_10_h40.json",
           "reports/structural_candidates/stage7_candidate_move_layer_default_off_25_h40.json",
           "reports/structural_candidates/stage7_clean_h40_label_run_seed17_10_h40.json",
-          "reports/structural_candidates/stage7_family_ac_fence_noaugment_default_off_5_h40.json",
-          "reports/structural_candidates/stage7_family_drive_default_off_A_base_5_h40.json",
-          "reports/structural_candidates/stage7_family_drive_default_off_B_sandbox_5_h40.json",
-          "reports/structural_candidates/stage7_family_drive_moveshape_default_off_A_base_5_h40.json"
+          "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_a_seed127_8_h40.json",
+          "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_b_seed131_8_h40.json",
+          "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_c_seed137_8_h40.json",
+          "reports/structural_candidates/stage7_diverse_clean_box_small_medium_seed109_8_h40.json"
         ],
         "fen": "2k5/8/2K1R3/8/8/8/8/8 w - - 0 1",
         "move_uci": "e6e8",
         "result": "mate",
-        "source_count": 28
+        "source_count": 39
+      },
+      {
+        "example_sources": [
+          "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_b_seed151_8_h40.json"
+        ],
+        "fen": "3K2k1/8/8/8/8/8/1R6/8 w - - 0 1",
+        "move_uci": "b2b7",
+        "result": "mate",
+        "source_count": 1
+      },
+      {
+        "example_sources": [
+          "reports/structural_candidates/stage7_diverse_clean_edge_fence_deep_seed107_8_h40.json"
+        ],
+        "fen": "7k/8/8/8/R7/8/K7/8 w - - 0 1",
+        "move_uci": "a4h4",
+        "result": "mate",
+        "source_count": 1
+      },
+      {
+        "example_sources": [
+          "reports/structural_candidates/stage7_diverse_clean_edge_fence_deep_seed107_8_h40.json"
+        ],
+        "fen": "8/3R4/8/7k/8/8/1K6/8 w - - 0 1",
+        "move_uci": "b2c1",
+        "result": "mate",
+        "source_count": 1
+      },
+      {
+        "example_sources": [
+          "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_c_seed157_8_h40.json"
+        ],
+        "fen": "8/8/2R5/8/8/8/6k1/3K4 w - - 0 1",
+        "move_uci": "c6c8",
+        "result": "mate",
+        "source_count": 1
+      },
+      {
+        "example_sources": [
+          "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_b_seed151_8_h40.json"
+        ],
+        "fen": "8/8/3R4/6K1/8/6k1/8/8 w - - 0 1",
+        "move_uci": "d6a6",
+        "result": "mate",
+        "source_count": 1
+      },
+      {
+        "example_sources": [
+          "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_b_seed151_8_h40.json"
+        ],
+        "fen": "8/8/6R1/4K3/8/7k/8/8 w - - 0 1",
+        "move_uci": "g6g1",
+        "result": "mate",
+        "source_count": 1
       },
       {
         "example_sources": [
@@ -33,31 +87,58 @@
           "reports/structural_candidates/stage7_2cc_frozen_model_default_off_smoke_5_h20.json",
           "reports/structural_candidates/stage7_candidate_move_layer_default_off_10_h40.json",
           "reports/structural_candidates/stage7_candidate_move_layer_default_off_25_h40.json",
-          "reports/structural_candidates/stage7_family_ac_fence_noaugment_default_off_5_h40.json",
-          "reports/structural_candidates/stage7_family_drive_default_off_A_base_5_h40.json",
-          "reports/structural_candidates/stage7_family_drive_default_off_B_sandbox_5_h40.json",
-          "reports/structural_candidates/stage7_family_drive_moveshape_default_off_A_base_5_h40.json"
+          "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_a_seed127_8_h40.json",
+          "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_b_seed131_8_h40.json",
+          "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_c_seed137_8_h40.json",
+          "reports/structural_candidates/stage7_diverse_clean_box_small_medium_seed109_8_h40.json"
         ],
         "fen": "8/8/8/8/8/5K2/5R2/6k1 w - - 0 1",
         "move_uci": "f3g3",
         "result": "mate",
-        "source_count": 39
+        "source_count": 50
+      },
+      {
+        "example_sources": [
+          "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_c_seed157_8_h40.json"
+        ],
+        "fen": "8/8/8/8/8/8/k1K5/3R4 w - - 0 1",
+        "move_uci": "d1d3",
+        "result": "mate",
+        "source_count": 1
+      },
+      {
+        "example_sources": [
+          "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_a_seed149_8_h40.json"
+        ],
+        "fen": "8/8/8/R7/8/8/1K2k3/8 w - - 0 1",
+        "move_uci": "a5h5",
+        "result": "mate",
+        "source_count": 1
+      },
+      {
+        "example_sources": [
+          "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_c_seed157_8_h40.json"
+        ],
+        "fen": "8/8/R3K3/8/5k2/8/8/8 w - - 0 1",
+        "move_uci": "e6f6",
+        "result": "mate",
+        "source_count": 1
       }
     ]
   },
   "decision": {
     "label_run_allowed": false,
-    "recommended_next_step": "explicitly_approve_stage7_diverse_clean_label_execution_or_defer_sequence_benchmark",
+    "recommended_next_step": "refresh_sequence_policy_inputs_with_replay_free_backfill",
     "runtime_changes_allowed": false,
     "selector_allowed": false,
     "selector_training_allowed": false,
     "stage7_promotion_allowed": false,
     "stage8_training_allowed": false,
-    "status": "stage7_clean_success_backfill_exhausted_pending_label_execution"
+    "status": "stage7_clean_success_backfill_available"
   },
   "gameplay_topology_mutation": false,
   "non_backfillable_success_evidence": {
-    "control_count": 14,
+    "control_count": 16,
     "example_controls": [
       {
         "control_quality": "sandbox_sourced_replay_free_success_control",
@@ -89,49 +170,49 @@
       },
       {
         "control_quality": "sandbox_sourced_replay_free_success_control",
-        "fen": "8/8/8/8/4K3/R7/4k3/8 w - - 0 1",
-        "move_uci": "a3e3",
-        "source_artifact": "reports/structural_candidates/stage7_box_priority_rolesupport_10_h40.json",
-        "state_id": "recovered.9f8ab6426844"
+        "fen": "8/8/8/R7/8/8/1K2k3/8 w - - 0 1",
+        "move_uci": "a5h5",
+        "source_artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_a_seed149_8_h40.json",
+        "state_id": "recovered.e6aae4bd3f00"
       },
       {
         "control_quality": "sandbox_sourced_replay_free_success_control",
-        "fen": "8/8/8/8/4K3/R7/4k3/8 w - - 0 1",
-        "move_uci": "a3a2",
-        "source_artifact": "reports/structural_candidates/stage7_candidate_move_layer_10_h40_support30.json",
-        "state_id": "recovered.47ca2631ae72"
+        "fen": "3K2k1/8/8/8/8/8/1R6/8 w - - 0 1",
+        "move_uci": "b2b7",
+        "source_artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_b_seed151_8_h40.json",
+        "state_id": "recovered.f0332fb4fa91"
       },
       {
         "control_quality": "sandbox_sourced_replay_free_success_control",
-        "fen": "4k3/8/8/8/R7/8/4K3/8 w - - 0 1",
-        "move_uci": "a4a8",
-        "source_artifact": "reports/structural_candidates/stage7_drive_repair_olddist_25_h40.json",
-        "state_id": "recovered.21c50a23a5b3"
+        "fen": "8/8/6R1/4K3/8/7k/8/8 w - - 0 1",
+        "move_uci": "g6g1",
+        "source_artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_b_seed151_8_h40.json",
+        "state_id": "recovered.dd557d6ba8ec"
       },
       {
         "control_quality": "sandbox_sourced_replay_free_success_control",
-        "fen": "8/8/8/8/R7/8/2k1K3/8 w - - 0 1",
-        "move_uci": "a4a8",
-        "source_artifact": "reports/structural_candidates/stage7_drive_repair_on_25_h40.json",
-        "state_id": "recovered.b3c7fac85a49"
+        "fen": "8/8/3R4/6K1/8/6k1/8/8 w - - 0 1",
+        "move_uci": "d6a6",
+        "source_artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_b_seed151_8_h40.json",
+        "state_id": "recovered.98246f5e3a9a"
       },
       {
         "control_quality": "sandbox_sourced_replay_free_success_control",
-        "fen": "7k/8/8/8/R7/8/5K2/8 w - - 0 1",
-        "move_uci": "a4a7",
-        "source_artifact": "reports/structural_candidates/stage7_king_tempo_single_use_on_10_h40.json",
-        "state_id": "recovered.14a0b07b100e"
+        "fen": "8/8/R3K3/8/5k2/8/8/8 w - - 0 1",
+        "move_uci": "e6f6",
+        "source_artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_c_seed157_8_h40.json",
+        "state_id": "recovered.f9287ffdcd68"
       },
       {
         "control_quality": "sandbox_sourced_replay_free_success_control",
-        "fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
-        "move_uci": "a1a5",
-        "source_artifact": "reports/structural_candidates/stage7_plan_capsule_drive_priority_ttl3_10_h40.json",
-        "state_id": "recovered.baaf1f5fc8bd"
+        "fen": "8/8/2R5/8/8/8/6k1/3K4 w - - 0 1",
+        "move_uci": "c6c8",
+        "source_artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_c_seed157_8_h40.json",
+        "state_id": "recovered.ff1c3efc46ec"
       }
     ],
     "reason": "sandbox_or_repair_sourced_success_controls_are_not_clean_heldout_controls",
-    "unique_key_count": 10
+    "unique_key_count": 15
   },
   "runtime_behavior_changed": false,
   "runtime_defaults_changed": false,
@@ -148,24 +229,24 @@
   "stage7_promotion_allowed": false,
   "stage8_training_allowed": false,
   "summary": {
-    "can_close_success_gate_replay_free": false,
+    "can_close_success_gate_replay_free": true,
     "clean_success_controls_required": 5,
-    "current_clean_hard_negative_controls": 8,
-    "current_clean_success_controls": 2,
+    "current_clean_hard_negative_controls": 39,
+    "current_clean_success_controls": 11,
     "eligible_new_success_controls": 0,
-    "manifest_clean_candidate_count": 34,
+    "manifest_clean_candidate_count": 46,
     "manifest_h40_compatible_result_counts": {
-      "mate": 67,
-      "max_plies": 80
+      "mate": 98,
+      "max_plies": 145
     },
-    "manifest_h40_compatible_row_count": 147,
-    "manifest_unique_hard_negative_controls": 8,
-    "manifest_unique_success_controls": 2,
-    "projected_success_controls_after_backfill": 2,
+    "manifest_h40_compatible_row_count": 243,
+    "manifest_unique_hard_negative_controls": 39,
+    "manifest_unique_success_controls": 11,
+    "projected_success_controls_after_backfill": 11,
     "runtime_authorization_row_count": 0,
     "sandbox_sourced_controls_usable_for_clean_gate": false,
-    "sandbox_sourced_post_box_success_controls": 14,
-    "sandbox_sourced_post_box_unique_success_controls": 10,
+    "sandbox_sourced_post_box_success_controls": 16,
+    "sandbox_sourced_post_box_unique_success_controls": 15,
     "selector_training_row_count": 0,
     "skipped_counts": {
       "not_h40_compatible": 93

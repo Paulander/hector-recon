@@ -6,13 +6,13 @@ The v1 dataset adds replay-free successful post-box sequence controls recovered 
 
 ## Summary
 
-- row_count: `30`
-- target_counts: `{'stage7.selected_path.strategy_ownership_gap.v0': 14, 'stage7.selected_path.sequence_continuation_gap.v0': 16}`
-- row_role_counts: `{'stage7_selected_owner_failed_positive': 2, 'protected_safe_owner_control': 12, 'stage7_sequence_gap_unresolved': 2, 'stage7_sequence_success_control_recovered': 14}`
+- row_count: `32`
+- target_counts: `{'stage7.selected_path.strategy_ownership_gap.v0': 14, 'stage7.selected_path.sequence_continuation_gap.v0': 18}`
+- row_role_counts: `{'stage7_selected_owner_failed_positive': 2, 'protected_safe_owner_control': 12, 'stage7_sequence_gap_unresolved': 2, 'stage7_sequence_success_control_recovered': 16}`
 - ownership_target_minimally_trainable: `True`
 - sequence_target_minimally_trainable: `True`
 - benchmark_underpowered: `False`
-- sequence_controls_recovered: `14`
+- sequence_controls_recovered: `16`
 - sequence_control_caveat: `sandbox_sourced_controls_offline_only`
 
 Recommended next step: `run_non_causal_split_target_probe_only`

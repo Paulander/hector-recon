@@ -8,9 +8,18 @@ Stage 7 `box_shrink` is no longer treated as a standalone repair target. It rema
 
 - Stage 7 box_shrink can be locally useful, but repeated local, arbitration, support, candidate-move, Plan Capsule, and training-objective work did not produce reliable conversion.
 - Selected-path evidence split the residuals into strategy-ownership gaps and sequence/continuation gaps, which means the failure is not one local move-shape defect.
-- Clean-control collection recovered enough hard negatives but too few unique clean successes, and a bounded current-default h40 run produced no novel de-duplicated success controls.
-- Continuing to crack Stage 7 as a standalone problem risks overfitting the lab to a noisy curriculum boundary.
+- Clean-control evidence now meets the Stage 7 held-out sequence threshold; this closes the local clean-control collection branch without authorizing Stage 7 promotion or Stage 8 training.
+- Continuing to crack Stage 7 as a standalone problem risks overfitting the lab to a noisy curriculum boundary; the active sequence-policy gap is protected plan-window failure-contrast evidence.
 - The better abstraction is to treat box_shrink as local evidence that can help trigger owner exit, handoff, or broader KRK strategy/sequence selection.
+
+## Current Evidence State
+
+- stage7_clean_review_status: `stage7_clean_control_collection_closed_heldout_only`
+- stage7_clean_review_next_step: `continue_protected_failure_contrast_sequence_policy_gate_review`
+- strategy_sequence_inventory_status: `replay_free_inventory_state_holdout_gap_blocks_runtime`
+- strategy_sequence_inventory_next_step: `review_state_holdout_signal_before_runtime_or_continue_protected_failure_contrast_gate`
+- stage7_clean_success_controls_met: `True`
+- stage7_clean_hard_negatives_met: `True`
 
 ## New Role
 
@@ -37,4 +46,4 @@ Stage 7 `box_shrink` is no longer treated as a standalone repair target. It rema
 - `runtime DTM/tablebase selector`
 - `unreviewed additional Stage 7 labels`
 
-Recommended next step: `use_stage7_as_heldout_challenge_for_broader_krk_strategy_sequence_work`
+Recommended next step: `continue_protected_failure_contrast_sequence_policy_gate_review`

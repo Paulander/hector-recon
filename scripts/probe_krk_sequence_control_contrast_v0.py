@@ -10,6 +10,9 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 INPUT_JSON = ROOT / "reports/strategy_arbitration/krk_sequence_control_contrast_dataset_v0.json"
+STAGE7_INTEGRATION = (
+    ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json"
+)
 OUTPUT_JSON = ROOT / "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.json"
 OUTPUT_MD = ROOT / "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.md"
 
@@ -41,8 +44,12 @@ def _rows_by(dataset: dict[str, Any], **criteria: Any) -> list[dict[str, Any]]:
     return rows
 
 
-def build_payload(dataset: dict[str, Any] | None = None) -> dict[str, Any]:
+def build_payload(
+    dataset: dict[str, Any] | None = None,
+    stage7_integration: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     dataset = dataset or _load(INPUT_JSON)
+    stage7_integration = stage7_integration or _load(STAGE7_INTEGRATION)
     rows = dataset.get("rows", [])
     stage4_forced = _rows_by(dataset, source_stage="stage4", row_type="forced_first_move_candidate")
     stage7_controls = _rows_by(dataset, source_stage="stage7", row_type="stage7_clean_sequence_control")
@@ -66,8 +73,17 @@ def build_payload(dataset: dict[str, Any] | None = None) -> dict[str, Any]:
         dataset.get("stage4_review_gate", {}).get("runtime_review_ready")
         and not dataset.get("stage4_review_gate", {}).get("implementation_authorized_by_packet")
     )
-    stage7_success_met = len(stage7_success) >= 5
-    stage7_negative_met = len(stage7_fail) >= 5
+    current_stage7 = stage7_integration.get("summary") or {}
+    stage7_success_required = int(current_stage7.get("success_controls_required") or 5)
+    stage7_failure_required = int(current_stage7.get("failure_controls_required") or 5)
+    current_stage7_success = int(
+        current_stage7.get("combined_success_controls") or len(stage7_success)
+    )
+    current_stage7_failure = int(
+        current_stage7.get("combined_failure_controls") or len(stage7_fail)
+    )
+    stage7_success_met = current_stage7_success >= stage7_success_required
+    stage7_negative_met = current_stage7_failure >= stage7_failure_required
     protected_selector_seed_balanced = len(selector_switch) >= 4 and len(selector_preserve) >= 4
 
     if stage4_review_ready and not stage7_success_met:
@@ -75,16 +91,34 @@ def build_payload(dataset: dict[str, Any] | None = None) -> dict[str, Any]:
         recommended_next = "choose_stage4_sandbox_approval_or_design_diverse_stage7_sampling_manifest"
     elif stage7_success_met and stage7_negative_met and protected_selector_seed_balanced:
         status = "sequence_control_dataset_ready_for_broader_sequence_policy_review"
-        recommended_next = "design_non_causal_sequence_policy_benchmark"
+        recommended_next = "review_current_sequence_policy_benchmark_and_protected_failure_contrast_gate"
     else:
         status = "sequence_control_dataset_underpowered"
         recommended_next = "collect_reviewed_non_causal_controls"
+
+    blockers = [
+        "Stage 4 first-move contrast sandbox still requires explicit approval before implementation.",
+        "No row in this dataset is an ownership-training row or runtime-authorization row.",
+    ]
+    if not stage7_success_met:
+        blockers.insert(
+            1,
+            "Stage 7 clean success controls remain below the minimum threshold for sequence-policy benchmarking.",
+        )
+    else:
+        blockers.insert(
+            1,
+            "Stage 7 clean success controls are satisfied in the integrated current gate; Stage 7 remains held out and not promoted.",
+        )
 
     return {
         "schema_version": SCHEMA_VERSION,
         "causal_status": "non_causal_sequence_control_contrast_probe",
         **COMMON_FALSE_FLAGS,
-        "source_artifacts": ["reports/strategy_arbitration/krk_sequence_control_contrast_dataset_v0.json"],
+        "source_artifacts": [
+            "reports/strategy_arbitration/krk_sequence_control_contrast_dataset_v0.json",
+            "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json",
+        ],
         "summary": {
             "row_count": len(rows),
             "stage4_forced_candidate_count": len(stage4_forced),
@@ -95,10 +129,18 @@ def build_payload(dataset: dict[str, Any] | None = None) -> dict[str, Any]:
             "selector_preserve_seed_count": len(selector_preserve),
             "protected_selector_seed_balanced": protected_selector_seed_balanced,
             "stage7_control_count": len(stage7_controls),
-            "stage7_success_control_count": len(stage7_success),
-            "stage7_failure_control_count": len(stage7_fail),
+            "stage7_dataset_success_control_count": len(stage7_success),
+            "stage7_dataset_failure_control_count": len(stage7_fail),
+            "stage7_success_control_count": current_stage7_success,
+            "stage7_success_controls_required": stage7_success_required,
+            "stage7_failure_control_count": current_stage7_failure,
+            "stage7_failure_controls_required": stage7_failure_required,
             "stage7_success_controls_met": stage7_success_met,
             "stage7_failure_controls_met": stage7_negative_met,
+            "stage7_integration_status": stage7_integration.get("decision", {}).get(
+                "status"
+            ),
+            "stage7_rows_are_current_gate_evidence_not_promotion": True,
             "selector_training_row_count": dataset.get("summary", {}).get("selector_training_row_count"),
             "runtime_authorization_row_count": dataset.get("summary", {}).get("runtime_authorization_row_count"),
         },
@@ -117,11 +159,7 @@ def build_payload(dataset: dict[str, Any] | None = None) -> dict[str, Any]:
             "stage7_promotion_allowed": False,
             "stage8_training_allowed": False,
         },
-        "blockers": [
-            "Stage 4 first-move contrast sandbox still requires explicit approval before implementation.",
-            "Stage 7 clean success controls remain below the minimum threshold for sequence-policy benchmarking.",
-            "No row in this dataset is an ownership-training row or runtime-authorization row.",
-        ],
+        "blockers": blockers,
     }
 
 
@@ -147,8 +185,12 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- stage4_review_ready_pending_approval: `{summary['stage4_review_ready_pending_approval']}`",
         f"- selector_switch_seed_count: `{summary['selector_switch_seed_count']}`",
         f"- selector_preserve_seed_count: `{summary['selector_preserve_seed_count']}`",
+        f"- stage7_dataset_success_control_count: `{summary['stage7_dataset_success_control_count']}`",
+        f"- stage7_dataset_failure_control_count: `{summary['stage7_dataset_failure_control_count']}`",
         f"- stage7_success_control_count: `{summary['stage7_success_control_count']}`",
+        f"- stage7_success_controls_required: `{summary['stage7_success_controls_required']}`",
         f"- stage7_failure_control_count: `{summary['stage7_failure_control_count']}`",
+        f"- stage7_failure_controls_required: `{summary['stage7_failure_controls_required']}`",
         "",
         "## Readiness",
         "",

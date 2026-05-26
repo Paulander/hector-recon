@@ -1,24 +1,24 @@
 {
   "blockers": [
     "Stage 4 first-move contrast sandbox still requires explicit approval before implementation.",
-    "Stage 7 clean success controls remain below the minimum threshold for sequence-policy benchmarking.",
+    "Stage 7 clean success controls are satisfied in the integrated current gate; Stage 7 remains held out and not promoted.",
     "No row in this dataset is an ownership-training row or runtime-authorization row."
   ],
   "causal_status": "non_causal_sequence_control_contrast_probe",
   "decision": {
-    "recommended_next_step": "choose_stage4_sandbox_approval_or_design_diverse_stage7_sampling_manifest",
+    "recommended_next_step": "review_current_sequence_policy_benchmark_and_protected_failure_contrast_gate",
     "runtime_changes_allowed": false,
     "selector_allowed": false,
     "selector_training_allowed": false,
     "stage7_promotion_allowed": false,
     "stage8_training_allowed": false,
-    "status": "sequence_control_stage4_review_ready_stage7_success_controls_insufficient"
+    "status": "sequence_control_dataset_ready_for_broader_sequence_policy_review"
   },
   "gameplay_topology_mutation": false,
   "readiness": {
     "broader_runtime_selector_ready": false,
     "stage4_first_move_contrast_sandbox_review_ready": true,
-    "stage7_sequence_policy_benchmark_ready": false,
+    "stage7_sequence_policy_benchmark_ready": true,
     "stage8_training_ready": false
   },
   "runtime_behavior_changed": false,
@@ -29,7 +29,8 @@
   "runtime_selector_implemented": false,
   "schema_version": "krk_sequence_control_contrast_probe.v0",
   "source_artifacts": [
-    "reports/strategy_arbitration/krk_sequence_control_contrast_dataset_v0.json"
+    "reports/strategy_arbitration/krk_sequence_control_contrast_dataset_v0.json",
+    "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json"
   ],
   "stage7_promotion_allowed": false,
   "stage8_training_allowed": false,
@@ -45,9 +46,15 @@
     "stage4_positive_count": 26,
     "stage4_review_ready_pending_approval": true,
     "stage7_control_count": 10,
-    "stage7_failure_control_count": 8,
+    "stage7_dataset_failure_control_count": 8,
+    "stage7_dataset_success_control_count": 2,
+    "stage7_failure_control_count": 39,
     "stage7_failure_controls_met": true,
-    "stage7_success_control_count": 2,
-    "stage7_success_controls_met": false
+    "stage7_failure_controls_required": 5,
+    "stage7_integration_status": "stage7_diverse_clean_sampling_integration_success_controls_met",
+    "stage7_rows_are_current_gate_evidence_not_promotion": true,
+    "stage7_success_control_count": 11,
+    "stage7_success_controls_met": true,
+    "stage7_success_controls_required": 5
   }
 }

@@ -30,7 +30,7 @@ def _read_report(path: str) -> dict:
     return payload
 
 
-def test_sequence_policy_benchmark_blocks_current_underpowered_inputs():
+def test_sequence_policy_benchmark_runs_current_ready_inputs():
     payload = _read_report(
         "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json"
     )
@@ -45,15 +45,15 @@ def test_sequence_policy_benchmark_blocks_current_underpowered_inputs():
     assert payload["gameplay_topology_mutation"] is False
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
-    assert payload["preflight"]["benchmark_input_ready"] is False
-    assert payload["preflight"]["blockers"] == ["stage7_clean_success_controls_missing"]
+    assert payload["preflight"]["benchmark_input_ready"] is True
+    assert payload["preflight"]["blockers"] == []
     assert payload["preflight"]["selector_training_row_count"] == 0
     assert payload["preflight"]["runtime_authorization_row_count"] == 0
     assert (
         payload["decision"]["status"]
-        == "sequence_policy_benchmark_blocked_pending_stage7_success_controls"
+        == "sequence_policy_benchmark_ready_non_causal_results_available"
     )
-    assert payload["decision"]["benchmark_executed_as_ready"] is False
+    assert payload["decision"]["benchmark_executed_as_ready"] is True
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False
     assert payload["decision"]["selector_training_allowed"] is False
@@ -144,3 +144,103 @@ def test_sequence_policy_benchmark_fixture_runs_when_inputs_ready():
     assert payload["preflight"]["runtime_authorization_row_count"] == 0
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["selector_training_allowed"] is False
+
+
+def test_sequence_policy_benchmark_reports_protected_plan_window_input_gap():
+    payload = _benchmark.build_payload(
+        inputs={
+            "summary": {
+                "benchmark_input_ready": False,
+                "protected_plan_window_evidence_met": False,
+                "stage7_clean_success_controls_met": True,
+                "stage7_clean_failure_controls_met": True,
+            },
+            "rows": [],
+        }
+    )
+
+    assert payload["preflight"]["blockers"] == ["protected_plan_window_evidence_missing"]
+    assert (
+        payload["decision"]["status"]
+        == "sequence_policy_benchmark_blocked_pending_protected_plan_window_evidence"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "repair_protected_plan_window_input_gap_before_treating_benchmark_as_ready"
+    )
+    assert payload["decision"]["label_run_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_sequence_policy_benchmark_blocks_selector_training_rows():
+    payload = _benchmark.build_payload(
+        inputs={
+            "summary": {
+                "benchmark_input_ready": True,
+                "protected_plan_window_evidence_met": True,
+                "stage7_clean_success_controls_met": True,
+                "stage7_clean_failure_controls_met": True,
+            },
+            "rows": [
+                {
+                    "row_id": "tainted.selector",
+                    "input_group": "protected_plan_window_failure_contrast",
+                    "target_label": "conversion_failure",
+                    "features": {},
+                    "stage7_heldout_challenge": False,
+                    "usable_for_selector_training": True,
+                    "usable_for_runtime_authorization": False,
+                }
+            ],
+        }
+    )
+
+    assert payload["preflight"]["benchmark_input_ready"] is True
+    assert payload["preflight"]["selector_training_row_count"] == 1
+    assert payload["preflight"]["runtime_authorization_row_count"] == 0
+    assert payload["preflight"]["blockers"] == ["selector_training_rows_forbidden"]
+    assert (
+        payload["decision"]["status"]
+        == "sequence_policy_benchmark_blocked_forbidden_training_or_runtime_rows"
+    )
+    assert payload["decision"]["benchmark_executed_as_ready"] is False
+    assert payload["decision"]["recommended_next_step"] == (
+        "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+    )
+    assert payload["decision"]["selector_training_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_sequence_policy_benchmark_blocks_runtime_authorization_rows():
+    payload = _benchmark.build_payload(
+        inputs={
+            "summary": {
+                "benchmark_input_ready": True,
+                "protected_plan_window_evidence_met": True,
+                "stage7_clean_success_controls_met": True,
+                "stage7_clean_failure_controls_met": True,
+            },
+            "rows": [
+                {
+                    "row_id": "tainted.runtime",
+                    "input_group": "protected_plan_window_failure_contrast",
+                    "target_label": "conversion_failure",
+                    "features": {},
+                    "stage7_heldout_challenge": False,
+                    "usable_for_selector_training": False,
+                    "usable_for_runtime_authorization": True,
+                }
+            ],
+        }
+    )
+
+    assert payload["preflight"]["selector_training_row_count"] == 0
+    assert payload["preflight"]["runtime_authorization_row_count"] == 1
+    assert payload["preflight"]["blockers"] == ["runtime_authorization_rows_forbidden"]
+    assert (
+        payload["decision"]["status"]
+        == "sequence_policy_benchmark_blocked_forbidden_training_or_runtime_rows"
+    )
+    assert payload["decision"]["benchmark_executed_as_ready"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False

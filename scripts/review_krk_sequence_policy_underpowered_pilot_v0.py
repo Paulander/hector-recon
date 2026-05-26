@@ -16,12 +16,26 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 BENCHMARK = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json"
+BENCHMARK_REVIEW = (
+    ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
+)
 INPUTS = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json"
 BACKFILL_AUDIT = ROOT / "reports/structural_candidates/stage7_clean_success_backfill_audit_v0.json"
+READINESS = ROOT / "reports/krk_full_suite_readiness_audit_v0.json"
 OUTPUT_JSON = ROOT / "reports/strategy_arbitration/krk_sequence_policy_underpowered_pilot_v0.json"
 OUTPUT_MD = ROOT / "reports/strategy_arbitration/krk_sequence_policy_underpowered_pilot_v0.md"
 
 SCHEMA_VERSION = "krk_sequence_policy_underpowered_pilot.v0"
+
+FORBIDDEN_INPUT_BLOCKERS = {
+    "selector_training_rows_forbidden",
+    "runtime_authorization_rows_forbidden",
+}
+
+FORBIDDEN_INPUT_STATUSES = {
+    "sequence_policy_benchmark_blocked_forbidden_training_or_runtime_rows",
+    "sequence_policy_benchmark_review_blocked_forbidden_training_or_runtime_rows",
+}
 
 COMMON_FALSE_FLAGS = {
     "runtime_behavior_changed": False,
@@ -53,12 +67,16 @@ def _objective(benchmark: dict[str, Any], objective_id: str) -> dict[str, Any]:
 def build_payload(
     *,
     benchmark: dict[str, Any] | None = None,
+    benchmark_review: dict[str, Any] | None = None,
     inputs: dict[str, Any] | None = None,
     backfill_audit: dict[str, Any] | None = None,
+    readiness: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     benchmark = benchmark or _load(BENCHMARK)
+    benchmark_review = benchmark_review or _load(BENCHMARK_REVIEW)
     inputs = inputs or _load(INPUTS)
     backfill_audit = backfill_audit or _load(BACKFILL_AUDIT)
+    readiness = readiness or _load(READINESS)
 
     stage4 = _objective(benchmark, "stage4_state_local_first_move_contrast")
     plan_window = _objective(benchmark, "protected_plan_window_entry_progress_exit_abort")
@@ -67,7 +85,16 @@ def build_payload(
     stage7_counts = stage7.get("target_label_counts") or {}
     plan_counts = plan_window.get("target_label_counts") or {}
     input_summary = inputs.get("summary") or {}
+    benchmark_preflight = benchmark.get("preflight") or {}
+    benchmark_decision = benchmark.get("decision") or {}
+    benchmark_review_decision = benchmark_review.get("decision") or {}
     backfill_summary = backfill_audit.get("summary") or {}
+    protected_failure_contrast = readiness.get("protected_failure_contrast_gate") or {}
+    explicit_gate_blockers = set(readiness.get("explicit_gate_blockers") or [])
+    protected_failure_contrast_pending_approval = (
+        "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+        in explicit_gate_blockers
+    )
 
     stage4_topk_signal = (
         (stage4_metrics.get("top1_conversion_positive_by_state") or 0) >= 0.7
@@ -88,6 +115,19 @@ def build_payload(
         backfill_audit.get("decision", {}).get("status")
         == "stage7_clean_success_backfill_exhausted_pending_label_execution"
     )
+    forbidden_input_blockers_set = FORBIDDEN_INPUT_BLOCKERS & (
+        set(benchmark_preflight.get("blockers") or [])
+        | set(benchmark_review.get("blockers") or [])
+    )
+    if int(input_summary.get("selector_training_row_count") or 0) > 0:
+        forbidden_input_blockers_set.add("selector_training_rows_forbidden")
+    if int(input_summary.get("runtime_authorization_row_count") or 0) > 0:
+        forbidden_input_blockers_set.add("runtime_authorization_rows_forbidden")
+    forbidden_input_blockers = sorted(forbidden_input_blockers_set)
+    forbidden_training_or_runtime_inputs = bool(forbidden_input_blockers) or (
+        benchmark_decision.get("status") in FORBIDDEN_INPUT_STATUSES
+        or benchmark_review_decision.get("status") in FORBIDDEN_INPUT_STATUSES
+    )
 
     findings: list[str] = []
     blockers: list[str] = []
@@ -96,17 +136,46 @@ def build_payload(
     if stage4_binary_insufficient:
         findings.append("stage4_one_term_binary_rule_insufficient")
     if protected_plan_window_underpowered:
-        blockers.append("protected_plan_window_failure_evidence_sparse")
+        if protected_failure_contrast_pending_approval:
+            blockers.append(
+                "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+            )
+        else:
+            blockers.append("protected_plan_window_failure_evidence_sparse")
     if stage7_success_gap:
         blockers.append("stage7_clean_success_controls_missing")
     if replay_free_backfill_exhausted:
         blockers.append("stage7_replay_free_backfill_exhausted")
+    if forbidden_training_or_runtime_inputs:
+        blockers.extend(forbidden_input_blockers or ["forbidden_training_or_runtime_rows"])
 
-    decision_status = (
-        "sequence_policy_pilot_ready_for_full_benchmark_after_label_gate"
-        if stage4_topk_signal and stage7_success_gap and replay_free_backfill_exhausted
-        else "sequence_policy_pilot_underpowered_needs_review"
-    )
+    if forbidden_training_or_runtime_inputs:
+        decision_status = "sequence_policy_pilot_blocked_forbidden_training_or_runtime_rows"
+        recommended_next_step = "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+    elif stage4_topk_signal and stage7_success_gap and replay_free_backfill_exhausted:
+        decision_status = "sequence_policy_pilot_ready_for_full_benchmark_after_label_gate"
+        recommended_next_step = (
+            "explicitly_approve_stage7_diverse_clean_label_execution_before_full_sequence_policy_benchmark"
+        )
+    elif protected_plan_window_underpowered and protected_failure_contrast_pending_approval:
+        decision_status = (
+            "sequence_policy_pilot_underpowered_pending_protected_failure_contrast_collection"
+        )
+        recommended_next_step = (
+            "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        )
+    else:
+        decision_status = "sequence_policy_pilot_underpowered_needs_review"
+        recommended_next_step = "review_underpowered_sequence_policy_pilot"
+
+    if (
+        not forbidden_training_or_runtime_inputs
+        and stage7_success_gap
+        and replay_free_backfill_exhausted
+    ):
+        recommended_next_step = (
+            "explicitly_approve_stage7_diverse_clean_label_execution_before_full_sequence_policy_benchmark"
+        )
 
     return {
         "schema_version": SCHEMA_VERSION,
@@ -114,12 +183,21 @@ def build_payload(
         **COMMON_FALSE_FLAGS,
         "source_artifacts": [
             "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
+            "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
             "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json",
             "reports/structural_candidates/stage7_clean_success_backfill_audit_v0.json",
+            "reports/krk_full_suite_readiness_audit_v0.json",
         ],
         "summary": {
             "benchmark_executed_as_ready": bool(
-                benchmark.get("decision", {}).get("benchmark_executed_as_ready")
+                benchmark_decision.get("benchmark_executed_as_ready")
+            ),
+            "benchmark_status": benchmark_decision.get("status"),
+            "benchmark_preflight_blockers": benchmark_preflight.get("blockers") or [],
+            "benchmark_review_status": benchmark_review_decision.get("status"),
+            "benchmark_review_blockers": benchmark_review.get("blockers") or [],
+            "forbidden_training_or_runtime_input_blocked": (
+                forbidden_training_or_runtime_inputs
             ),
             "input_row_count": input_summary.get("row_count"),
             "stage4_topk_signal": stage4_topk_signal,
@@ -131,6 +209,24 @@ def build_payload(
             "stage7_replay_free_backfill_exhausted": replay_free_backfill_exhausted,
             "stage7_backfillable_success_controls": backfill_summary.get(
                 "eligible_new_success_controls"
+            ),
+            "protected_failure_contrast_ready_for_explicit_approval": (
+                protected_failure_contrast.get("ready_for_explicit_approval")
+            ),
+            "protected_failure_contrast_integration_ready": (
+                protected_failure_contrast.get("integration_ready")
+            ),
+            "protected_failure_contrast_runner_status": protected_failure_contrast.get(
+                "runner_status"
+            ),
+            "protected_failure_contrast_runner_processed_job_count": (
+                protected_failure_contrast.get("runner_processed_job_count")
+            ),
+            "protected_failure_contrast_runner_executed_job_count": (
+                protected_failure_contrast.get("runner_executed_job_count")
+            ),
+            "protected_failure_contrast_command_if_explicitly_approved": (
+                protected_failure_contrast.get("command_if_explicitly_approved")
             ),
             "selector_training_row_count": input_summary.get("selector_training_row_count"),
             "runtime_authorization_row_count": input_summary.get(
@@ -172,11 +268,7 @@ def build_payload(
         },
         "decision": {
             "status": decision_status,
-            "recommended_next_step": (
-                "explicitly_approve_stage7_diverse_clean_label_execution_before_full_sequence_policy_benchmark"
-                if stage7_success_gap and replay_free_backfill_exhausted
-                else "review_underpowered_sequence_policy_pilot"
-            ),
+            "recommended_next_step": recommended_next_step,
             "runtime_changes_allowed": False,
             "label_run_allowed": False,
             "selector_allowed": False,

@@ -60,7 +60,7 @@
         "fp": 0,
         "precision": 1.0,
         "recall": 1.0,
-        "tn": 14,
+        "tn": 16,
         "tp": 2
       },
       {
@@ -69,7 +69,7 @@
         "fp": 0,
         "precision": 1.0,
         "recall": 1.0,
-        "tn": 14,
+        "tn": 16,
         "tp": 2
       },
       {
@@ -78,7 +78,7 @@
         "fp": 0,
         "precision": 1.0,
         "recall": 1.0,
-        "tn": 14,
+        "tn": 16,
         "tp": 2
       }
     ],
@@ -94,13 +94,13 @@
   "summary": {
     "ownership_row_count": 14,
     "ownership_state_count": 10,
-    "row_count": 30,
-    "sequence_row_count": 16,
+    "row_count": 32,
+    "sequence_row_count": 18,
     "sequence_source_counts": {
       "gap_or_unqualified": 2,
-      "sandbox_sourced_replay_free_success_control": 14
+      "sandbox_sourced_replay_free_success_control": 16
     },
-    "sequence_state_count": 16,
+    "sequence_state_count": 18,
     "source_bias_detected": true
   }
 }

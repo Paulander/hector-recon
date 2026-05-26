@@ -21,6 +21,17 @@ OUTPUT_MD = ROOT / "reports/strategy_arbitration/krk_sequence_policy_pipeline_re
 
 SCHEMA_VERSION = "krk_sequence_policy_pipeline_refresh.v0"
 
+FORBIDDEN_INPUT_BLOCKERS = {
+    "selector_training_rows_forbidden",
+    "runtime_authorization_rows_forbidden",
+}
+
+FORBIDDEN_INPUT_STATUSES = {
+    "sequence_policy_benchmark_blocked_forbidden_training_or_runtime_rows",
+    "sequence_policy_benchmark_review_blocked_forbidden_training_or_runtime_rows",
+    "sequence_policy_input_probe_blocked_forbidden_training_or_runtime_rows",
+}
+
 COMMON_FALSE_FLAGS = {
     "runtime_behavior_changed": False,
     "runtime_defaults_changed": False,
@@ -46,6 +57,11 @@ STEPS = [
         "output_json": "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json",
     },
     {
+        "step_id": "protected_plan_window_frames",
+        "script": "scripts/extract_krk_protected_plan_window_frames_v0.py",
+        "output_json": "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json",
+    },
+    {
         "step_id": "sequence_policy_inputs",
         "script": "scripts/assemble_krk_sequence_policy_benchmark_inputs_v0.py",
         "output_json": "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json",
@@ -59,6 +75,11 @@ STEPS = [
         "step_id": "sequence_policy_benchmark",
         "script": "scripts/run_krk_sequence_policy_benchmark_v0.py",
         "output_json": "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
+    },
+    {
+        "step_id": "sequence_policy_benchmark_review",
+        "script": "scripts/review_krk_sequence_policy_benchmark_v0.py",
+        "output_json": "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
     },
     {
         "step_id": "current_control_plane_gate",
@@ -114,8 +135,34 @@ def run_refresh() -> dict[str, Any]:
     integration = _load_json("reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json")
     inputs = _load_json("reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json")
     benchmark = _load_json("reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json")
+    benchmark_review = _load_json(
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
+    )
     gate = _load_json("reports/krk_current_control_plane_gate_v0.json")
-    benchmark_ready = bool(inputs.get("summary", {}).get("benchmark_input_ready"))
+    input_summary = inputs.get("summary", {})
+    benchmark_ready = bool(input_summary.get("benchmark_input_ready"))
+    benchmark_decision = benchmark.get("decision", {})
+    benchmark_review_decision = benchmark_review.get("decision", {})
+    benchmark_review_blockers = benchmark_review.get("blockers") or []
+    probe_step = next(
+        (step for step in step_results if step["step_id"] == "sequence_policy_input_probe"),
+        {},
+    )
+    forbidden_input_blockers_set = FORBIDDEN_INPUT_BLOCKERS & (
+        set(benchmark.get("preflight", {}).get("blockers") or [])
+        | set(benchmark_review_blockers)
+    )
+    if int(input_summary.get("selector_training_row_count") or 0) > 0:
+        forbidden_input_blockers_set.add("selector_training_rows_forbidden")
+    if int(input_summary.get("runtime_authorization_row_count") or 0) > 0:
+        forbidden_input_blockers_set.add("runtime_authorization_rows_forbidden")
+    forbidden_input_blockers = sorted(forbidden_input_blockers_set)
+    forbidden_training_or_runtime_inputs = (
+        bool(forbidden_input_blockers)
+        or benchmark_decision.get("status") in FORBIDDEN_INPUT_STATUSES
+        or benchmark_review_decision.get("status") in FORBIDDEN_INPUT_STATUSES
+        or probe_step.get("decision_status") in FORBIDDEN_INPUT_STATUSES
+    )
     all_boundaries_preserved = all(
         not result["runtime_changes_allowed"]
         and not result["label_run_allowed"]
@@ -123,6 +170,24 @@ def run_refresh() -> dict[str, Any]:
         and not result["stage8_training_allowed"]
         for result in step_results
     )
+    if forbidden_training_or_runtime_inputs:
+        status = "sequence_policy_pipeline_refreshed_blocked_forbidden_training_or_runtime_rows"
+        recommended_next_step = "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+    elif benchmark_ready:
+        status = "sequence_policy_pipeline_refreshed_ready_for_non_causal_benchmark_review"
+        recommended_next_step = benchmark_review_decision.get("recommended_next_step")
+    elif not input_summary.get("stage7_clean_success_controls_met"):
+        status = "sequence_policy_pipeline_refreshed_blocked_pending_stage7_success_controls"
+        recommended_next_step = "run_explicitly_approved_stage7_diverse_clean_label_jobs"
+    elif not input_summary.get("stage7_clean_failure_controls_met"):
+        status = "sequence_policy_pipeline_refreshed_blocked_pending_stage7_failure_controls"
+        recommended_next_step = "review_stage7_clean_failure_control_inputs"
+    elif not input_summary.get("protected_plan_window_evidence_met"):
+        status = "sequence_policy_pipeline_refreshed_blocked_pending_protected_plan_window_inputs"
+        recommended_next_step = "repair_protected_plan_window_input_gap"
+    else:
+        status = "sequence_policy_pipeline_refreshed_blocked_pending_sequence_policy_inputs"
+        recommended_next_step = "inspect_sequence_policy_input_assembly"
     return {
         "schema_version": SCHEMA_VERSION,
         "causal_status": "non_causal_passive_pipeline_refresh",
@@ -135,27 +200,37 @@ def run_refresh() -> dict[str, Any]:
             "stage7_outputs_present_count": integration.get("summary", {}).get(
                 "outputs_present_count", 0
             ),
-            "stage7_success_controls": inputs.get("summary", {}).get(
-                "stage7_clean_success_controls", 0
-            ),
-            "stage7_success_controls_required": inputs.get("summary", {}).get(
+            "stage7_success_controls": input_summary.get("stage7_clean_success_controls", 0),
+            "stage7_success_controls_required": input_summary.get(
                 "stage7_clean_success_controls_required", 5
             ),
+            "stage7_failure_controls": input_summary.get("stage7_clean_failure_controls", 0),
+            "stage7_failure_controls_required": input_summary.get(
+                "stage7_clean_failure_controls_required", 5
+            ),
+            "protected_plan_window_evidence_met": bool(
+                input_summary.get("protected_plan_window_evidence_met")
+            ),
             "sequence_policy_inputs_ready": benchmark_ready,
-            "sequence_policy_benchmark_status": benchmark.get("decision", {}).get("status"),
+            "sequence_policy_benchmark_status": benchmark_decision.get("status"),
+            "sequence_policy_benchmark_review_status": benchmark_review_decision.get("status"),
+            "sequence_policy_benchmark_review_blockers": benchmark_review_blockers,
+            "selector_training_row_count": input_summary.get("selector_training_row_count"),
+            "runtime_authorization_row_count": input_summary.get(
+                "runtime_authorization_row_count"
+            ),
+            "forbidden_training_or_runtime_input_blocked": (
+                forbidden_training_or_runtime_inputs
+            ),
+            "forbidden_training_or_runtime_input_blockers": forbidden_input_blockers,
+            "sequence_policy_benchmark_review_next_step": benchmark_review_decision.get(
+                "recommended_next_step"
+            ),
             "current_gate_status": gate.get("decision", {}).get("status"),
         },
         "decision": {
-            "status": (
-                "sequence_policy_pipeline_refreshed_ready_for_non_causal_benchmark_review"
-                if benchmark_ready
-                else "sequence_policy_pipeline_refreshed_still_blocked_by_stage7_success_controls"
-            ),
-            "recommended_next_step": (
-                "review_non_causal_sequence_policy_benchmark"
-                if benchmark_ready
-                else "run_explicitly_approved_stage7_diverse_clean_label_jobs"
-            ),
+            "status": status,
+            "recommended_next_step": recommended_next_step,
             "runtime_changes_allowed": False,
             "label_run_allowed": False,
             "selector_allowed": False,

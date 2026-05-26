@@ -35,7 +35,7 @@ def _read_report() -> dict:
     return payload
 
 
-def test_stage7_diverse_clean_output_validation_waits_for_outputs():
+def test_stage7_diverse_clean_output_validation_reports_valid_outputs():
     payload = _read_report()
 
     assert payload["schema_version"] == "stage7_diverse_clean_sampling_output_validation.v0"
@@ -49,14 +49,16 @@ def test_stage7_diverse_clean_output_validation_waits_for_outputs():
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
     assert payload["summary"]["job_count"] == 8
-    assert payload["summary"]["output_exists_count"] == 0
-    assert payload["summary"]["output_valid_count"] == 0
+    assert payload["summary"]["output_exists_count"] == 8
+    assert payload["summary"]["output_valid_count"] == 8
+    assert payload["summary"]["all_outputs_present"] is True
+    assert payload["summary"]["all_outputs_valid"] is True
     assert payload["summary"]["stage7_training_row_count"] == 0
     assert payload["summary"]["selector_training_row_count"] == 0
     assert payload["summary"]["runtime_authorization_row_count"] == 0
     assert (
         payload["decision"]["status"]
-        == "stage7_diverse_clean_sampling_outputs_validation_pending"
+        == "stage7_diverse_clean_sampling_outputs_valid_ready_for_integration"
     )
     assert payload["decision"]["label_run_allowed"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False

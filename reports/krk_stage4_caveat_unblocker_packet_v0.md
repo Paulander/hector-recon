@@ -14,7 +14,7 @@ This packet is non-causal. It consolidates Stage 4 caveat evidence and the revie
 - caveat_control_status: `stage4_caveat_reproduces_in_base_control_no_overlay_regression`
 - sequence_review_status: `stage4_caveat_sequence_followup_gap_review_ready`
 - stratified_validation_status: `stage4_stratified_contrast_validation_supports_first_move_ranking_gap`
-- sequence_contrast_status: `sequence_control_stage4_review_ready_stage7_success_controls_insufficient`
+- sequence_contrast_status: `sequence_control_dataset_ready_for_broader_sequence_policy_review`
 
 ## Evidence
 

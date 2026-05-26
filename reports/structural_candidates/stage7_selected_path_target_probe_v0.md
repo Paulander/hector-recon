@@ -6,12 +6,12 @@ This is a non-causal offline probe. It does not authorize runtime behavior.
 
 ## Summary
 
-- row_count: `30`
+- row_count: `32`
 - ownership_row_count: `14`
-- sequence_row_count: `16`
+- sequence_row_count: `18`
 - ownership_state_count: `10`
-- sequence_state_count: `16`
-- sequence_source_counts: `{'gap_or_unqualified': 2, 'sandbox_sourced_replay_free_success_control': 14}`
+- sequence_state_count: `18`
+- sequence_source_counts: `{'gap_or_unqualified': 2, 'sandbox_sourced_replay_free_success_control': 16}`
 - source_bias_detected: `True`
 
 ## Ownership Target

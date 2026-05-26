@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -33,6 +34,20 @@ COMMON_FALSE_FLAGS = {
     "stage8_training_allowed": False,
 }
 
+FORBIDDEN_INPUT_BLOCKERS = {
+    "selector_training_rows_forbidden",
+    "runtime_authorization_rows_forbidden",
+    "sequence_policy_forbidden_training_or_runtime_rows",
+}
+
+FORBIDDEN_INPUT_STATUSES = {
+    "sequence_policy_benchmark_blocked_forbidden_training_or_runtime_rows",
+    "sequence_policy_benchmark_review_blocked_forbidden_training_or_runtime_rows",
+    "sequence_policy_pilot_blocked_forbidden_training_or_runtime_rows",
+    "krk_suite_readiness_blocked_forbidden_training_or_runtime_rows",
+    "krk_suite_unblocker_blocked_forbidden_training_or_runtime_rows",
+}
+
 
 PASSIVE_STEPS = [
     {
@@ -44,6 +59,16 @@ PASSIVE_STEPS = [
         "step_id": "stage4_caveat_unblocker_packet",
         "script": "scripts/write_krk_stage4_caveat_unblocker_packet_v0.py",
         "output_json": "reports/krk_stage4_caveat_unblocker_packet_v0.json",
+    },
+    {
+        "step_id": "stage7_clean_artifact_manifest",
+        "script": "scripts/build_stage7_clean_artifact_manifest.py",
+        "output_json": "reports/structural_candidates/stage7_clean_artifact_manifest_v0.json",
+    },
+    {
+        "step_id": "stage7_clean_sequence_control_recovery",
+        "script": "scripts/recover_stage7_clean_sequence_controls.py",
+        "output_json": "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json",
     },
     {
         "step_id": "stage7_clean_success_backfill_audit",
@@ -61,6 +86,72 @@ PASSIVE_STEPS = [
         "output_json": "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
     },
     {
+        "step_id": "protected_plan_window_failure_contrast_plan",
+        "script": "scripts/write_krk_protected_plan_window_failure_contrast_plan_v0.py",
+        "output_json": (
+            "reports/strategy_arbitration/"
+            "krk_protected_plan_window_failure_contrast_plan_v0.json"
+        ),
+    },
+    {
+        "step_id": "protected_plan_window_failure_contrast_manifest",
+        "script": "scripts/write_krk_protected_plan_window_failure_contrast_manifest_v0.py",
+        "output_json": (
+            "reports/strategy_arbitration/"
+            "krk_protected_plan_window_failure_contrast_manifest_v0.json"
+        ),
+    },
+    {
+        "step_id": "protected_plan_window_failure_contrast_manifest_review",
+        "script": "scripts/review_krk_protected_plan_window_failure_contrast_manifest_v0.py",
+        "output_json": (
+            "reports/strategy_arbitration/"
+            "krk_protected_plan_window_failure_contrast_manifest_review_v0.json"
+        ),
+    },
+    {
+        "step_id": "protected_plan_window_failure_contrast_execution_readiness",
+        "script": (
+            "scripts/validate_krk_protected_plan_window_failure_contrast_execution_readiness_v0.py"
+        ),
+        "output_json": (
+            "reports/strategy_arbitration/"
+            "krk_protected_plan_window_failure_contrast_execution_readiness_v0.json"
+        ),
+    },
+    {
+        "step_id": "protected_plan_window_failure_contrast_runner",
+        "script": "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py",
+        "output_json": (
+            "reports/strategy_arbitration/"
+            "krk_protected_plan_window_failure_contrast_runner_v0.json"
+        ),
+    },
+    {
+        "step_id": "protected_plan_window_failure_contrast_output_validation",
+        "script": "scripts/validate_krk_protected_plan_window_failure_contrast_outputs_v0.py",
+        "output_json": (
+            "reports/strategy_arbitration/"
+            "krk_protected_plan_window_failure_contrast_output_validation_v0.json"
+        ),
+    },
+    {
+        "step_id": "protected_plan_window_failure_contrast_integration",
+        "script": "scripts/integrate_krk_protected_plan_window_failure_contrasts_v0.py",
+        "output_json": (
+            "reports/strategy_arbitration/"
+            "krk_protected_plan_window_failure_contrast_integration_v0.json"
+        ),
+    },
+    {
+        "step_id": "sequence_policy_after_protected_failure_contrast_refresh",
+        "script": "scripts/refresh_krk_sequence_policy_after_protected_failure_contrasts_v0.py",
+        "output_json": (
+            "reports/strategy_arbitration/"
+            "krk_sequence_policy_after_protected_failure_contrast_refresh_v0.json"
+        ),
+    },
+    {
         "step_id": "sequence_policy_underpowered_pilot_review",
         "script": "scripts/review_krk_sequence_policy_underpowered_pilot_v0.py",
         "output_json": "reports/strategy_arbitration/krk_sequence_policy_underpowered_pilot_v0.json",
@@ -71,11 +162,6 @@ PASSIVE_STEPS = [
         "output_json": "reports/krk_full_suite_readiness_audit_v0.json",
     },
     {
-        "step_id": "full_suite_unblocker_packet",
-        "script": "scripts/write_krk_full_suite_unblocker_packet_v0.py",
-        "output_json": "reports/krk_full_suite_unblocker_packet_v0.json",
-    },
-    {
         "step_id": "stage8_training_readiness_review",
         "script": "scripts/review_krk_stage8_training_readiness_v0.py",
         "output_json": "reports/krk_stage8_training_readiness_review_v0.json",
@@ -84,6 +170,46 @@ PASSIVE_STEPS = [
         "step_id": "stage7_post_label_outcome_review",
         "script": "scripts/review_krk_stage7_post_label_outcome_v0.py",
         "output_json": "reports/krk_stage7_post_label_outcome_review_v0.json",
+    },
+    {
+        "step_id": "stage7_label_distribution_review",
+        "script": "scripts/review_stage7_diverse_clean_label_distribution_v0.py",
+        "output_json": (
+            "reports/structural_candidates/"
+            "stage7_diverse_clean_label_distribution_review_v0.json"
+        ),
+    },
+    {
+        "step_id": "stage7_additional_clean_sampling_manifest",
+        "script": "scripts/write_stage7_additional_clean_sampling_manifest_v0.py",
+        "output_json": (
+            "reports/structural_candidates/stage7_additional_clean_sampling_manifest_v0.json"
+        ),
+    },
+    {
+        "step_id": "stage7_additional_clean_output_validation",
+        "script": "scripts/validate_stage7_additional_clean_sampling_outputs_v0.py",
+        "output_json": (
+            "reports/structural_candidates/"
+            "stage7_additional_clean_sampling_output_validation_v0.json"
+        ),
+    },
+    {
+        "step_id": "stage7_additional_clean_sampling_runner",
+        "script": "scripts/run_stage7_additional_clean_sampling_jobs_v0.py",
+        "output_json": (
+            "reports/structural_candidates/stage7_additional_clean_sampling_runner_v0.json"
+        ),
+    },
+    {
+        "step_id": "current_control_plane_gate",
+        "script": "scripts/write_krk_current_control_plane_gate_v0.py",
+        "output_json": "reports/krk_current_control_plane_gate_v0.json",
+    },
+    {
+        "step_id": "full_suite_unblocker_packet",
+        "script": "scripts/write_krk_full_suite_unblocker_packet_v0.py",
+        "output_json": "reports/krk_full_suite_unblocker_packet_v0.json",
     },
 ]
 
@@ -108,7 +234,14 @@ def _run_script(script: str) -> dict[str, Any]:
     module = _load_module(ROOT / script)
     if not hasattr(module, "main"):
         raise RuntimeError(f"script has no main(): {script}")
-    module.main()
+    original_argv = sys.argv
+    try:
+        # Passive refresh imports scripts in-process; never let caller CLI flags
+        # such as --execute-reviewed-label-run leak into imported script parsers.
+        sys.argv = [script]
+        module.main()
+    finally:
+        sys.argv = original_argv
     return {"script": script, "ran": True}
 
 
@@ -123,6 +256,33 @@ def build_payload() -> dict[str, Any]:
                 "script": step["script"],
                 "output_json": step["output_json"],
                 "decision_status": (output.get("decision") or {}).get("status"),
+                "artifact_runtime_behavior_changed": bool(
+                    output.get("runtime_behavior_changed", False)
+                ),
+                "artifact_runtime_defaults_changed": bool(
+                    output.get("runtime_defaults_changed", False)
+                ),
+                "artifact_runtime_selector_implemented": bool(
+                    output.get("runtime_selector_implemented", False)
+                ),
+                "artifact_runtime_score_changes": bool(
+                    output.get("runtime_score_changes", False)
+                ),
+                "artifact_runtime_direct_routing": bool(
+                    output.get("runtime_direct_routing", False)
+                ),
+                "artifact_runtime_dtm_or_tablebase_lookup": bool(
+                    output.get("runtime_dtm_or_tablebase_lookup", False)
+                ),
+                "artifact_gameplay_topology_mutation": bool(
+                    output.get("gameplay_topology_mutation", False)
+                ),
+                "artifact_stage7_promotion_allowed": bool(
+                    output.get("stage7_promotion_allowed", False)
+                ),
+                "artifact_stage8_training_allowed": bool(
+                    output.get("stage8_training_allowed", False)
+                ),
                 "runtime_changes_allowed": bool(
                     (output.get("decision") or {}).get("runtime_changes_allowed", False)
                 ),
@@ -155,11 +315,48 @@ def build_payload() -> dict[str, Any]:
     benchmark_review = _load_json(
         "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
     )
+    failure_contrast_plan = _load_json(
+        "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_plan_v0.json"
+    )
+    failure_contrast_manifest = _load_json(
+        "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json"
+    )
+    failure_contrast_manifest_review = _load_json(
+        "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_review_v0.json"
+    )
+    failure_contrast_execution_readiness = _load_json(
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_execution_readiness_v0.json"
+    )
+    failure_contrast_runner = _load_json(
+        "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_runner_v0.json"
+    )
+    failure_contrast_output_validation = _load_json(
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_output_validation_v0.json"
+    )
+    failure_contrast_integration = _load_json(
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_integration_v0.json"
+    )
+    post_failure_refresh = _load_json(
+        "reports/strategy_arbitration/"
+        "krk_sequence_policy_after_protected_failure_contrast_refresh_v0.json"
+    )
     underpowered_pilot = _load_json(
         "reports/strategy_arbitration/krk_sequence_policy_underpowered_pilot_v0.json"
     )
     stage8_review = _load_json("reports/krk_stage8_training_readiness_review_v0.json")
     post_label_review = _load_json("reports/krk_stage7_post_label_outcome_review_v0.json")
+    label_distribution_review = _load_json(
+        "reports/structural_candidates/stage7_diverse_clean_label_distribution_review_v0.json"
+    )
+    additional_manifest = _load_json(
+        "reports/structural_candidates/stage7_additional_clean_sampling_manifest_v0.json"
+    )
+    additional_runner = _load_json(
+        "reports/structural_candidates/stage7_additional_clean_sampling_runner_v0.json"
+    )
 
     all_boundaries_preserved = all(
         not result["runtime_changes_allowed"]
@@ -167,16 +364,90 @@ def build_payload() -> dict[str, Any]:
         and not result["selector_training_allowed"]
         and not result["stage7_promotion_allowed"]
         and not result["stage8_training_allowed"]
+        and not result["artifact_runtime_behavior_changed"]
+        and not result["artifact_runtime_defaults_changed"]
+        and not result["artifact_runtime_selector_implemented"]
+        and not result["artifact_runtime_score_changes"]
+        and not result["artifact_runtime_direct_routing"]
+        and not result["artifact_runtime_dtm_or_tablebase_lookup"]
+        and not result["artifact_gameplay_topology_mutation"]
+        and not result["artifact_stage7_promotion_allowed"]
+        and not result["artifact_stage8_training_allowed"]
         for result in step_results
     )
     benchmark_ready = bool(benchmark.get("decision", {}).get("benchmark_executed_as_ready"))
     stage7_ready = bool(
         readiness.get("stage7_sampling_gate", {}).get("success_controls_ready")
     )
+    stage7_outputs_valid = int(
+        output_validation.get("summary", {}).get("output_valid_count") or 0
+    ) > 0
+    sequence_forbidden_blockers = sorted(
+        FORBIDDEN_INPUT_BLOCKERS
+        & (
+            set(benchmark.get("preflight", {}).get("blockers") or [])
+            | set(benchmark_review.get("blockers") or [])
+            | set(underpowered_pilot.get("blockers") or [])
+            | set(readiness.get("hard_blockers") or [])
+        )
+    )
+    sequence_forbidden_training_or_runtime_inputs = (
+        bool(sequence_forbidden_blockers)
+        or benchmark.get("decision", {}).get("status") in FORBIDDEN_INPUT_STATUSES
+        or benchmark_review.get("decision", {}).get("status") in FORBIDDEN_INPUT_STATUSES
+        or underpowered_pilot.get("decision", {}).get("status") in FORBIDDEN_INPUT_STATUSES
+        or readiness.get("decision", {}).get("status") in FORBIDDEN_INPUT_STATUSES
+        or unblocker.get("decision", {}).get("status") in FORBIDDEN_INPUT_STATUSES
+        or bool(
+            underpowered_pilot.get("summary", {}).get(
+                "forbidden_training_or_runtime_input_blocked"
+            )
+        )
+        or bool(
+            readiness.get("sequence_policy", {}).get(
+                "forbidden_training_or_runtime_input_blocked"
+            )
+        )
+        or bool(
+            unblocker.get("current_state", {}).get(
+                "sequence_policy_forbidden_training_or_runtime_input_blocked"
+            )
+        )
+    )
 
-    if benchmark_ready:
-        status = "krk_suite_passive_advancement_ready_for_sequence_policy_review"
-        next_step = "review_non_causal_sequence_policy_benchmark_results"
+    if sequence_forbidden_training_or_runtime_inputs:
+        status = "krk_suite_passive_advancement_blocked_forbidden_training_or_runtime_rows"
+        next_step = "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+    elif benchmark_ready:
+        status = (
+            "krk_suite_passive_advancement_ready_for_protected_failure_contrast_collection"
+        )
+        next_step = (
+            failure_contrast_integration.get("decision", {}).get("recommended_next_step")
+            if failure_contrast_integration.get("summary", {}).get("integration_ready")
+            else None
+        ) or (
+            failure_contrast_manifest_review.get("decision", {}).get("recommended_next_step")
+            or failure_contrast_plan.get("decision", {}).get("recommended_next_step")
+            if benchmark_review.get("decision", {}).get("status")
+            == "sequence_policy_benchmark_mixed_plan_window_underpowered"
+            else "review_non_causal_sequence_policy_benchmark_results"
+        )
+    elif (
+        not stage7_ready
+        and stage7_outputs_valid
+        and additional_runner.get("decision", {}).get("status")
+        == "stage7_additional_clean_sampling_runner_dry_run_ready"
+    ):
+        status = "krk_suite_passive_advancement_blocked_pending_explicit_additional_stage7_label_approval"
+        next_step = "explicitly_approve_stage7_additional_clean_label_execution"
+    elif not stage7_ready and stage7_outputs_valid:
+        status = "krk_suite_passive_advancement_blocked_pending_additional_stage7_sampling_plan"
+        next_step = (
+            label_distribution_review.get("decision", {}).get("recommended_next_step")
+            or post_label_review.get("decision", {}).get("recommended_next_step")
+            or "write_additional_stage7_clean_sampling_manifest_for_remaining_success_gap"
+        )
     elif not stage7_ready:
         status = "krk_suite_passive_advancement_blocked_pending_stage7_label_outputs"
         next_step = "explicitly_approve_stage7_diverse_clean_label_execution"
@@ -224,15 +495,87 @@ def build_payload() -> dict[str, Any]:
             "sequence_policy_benchmark_review_status": benchmark_review.get("decision", {}).get(
                 "status"
             ),
+            "sequence_policy_forbidden_training_or_runtime_input_blocked": (
+                sequence_forbidden_training_or_runtime_inputs
+            ),
+            "sequence_policy_forbidden_training_or_runtime_input_blockers": (
+                sequence_forbidden_blockers
+            ),
+            "protected_plan_window_failure_contrast_plan_status": failure_contrast_plan.get(
+                "decision", {}
+            ).get("status"),
+            "protected_plan_window_unique_failure_count": failure_contrast_plan.get(
+                "summary", {}
+            ).get("unique_failure_count"),
+            "protected_plan_window_minimum_new_failures_needed": failure_contrast_plan.get(
+                "summary", {}
+            ).get("minimum_new_unique_failures_needed"),
+            "protected_plan_window_failure_contrast_manifest_status": failure_contrast_manifest.get(
+                "decision", {}
+            ).get("status"),
+            "protected_plan_window_failure_contrast_manifest_job_count": failure_contrast_manifest.get(
+                "summary", {}
+            ).get("job_count"),
+            "protected_plan_window_failure_contrast_manifest_review_status": failure_contrast_manifest_review.get(
+                "decision", {}
+            ).get("status"),
+            "protected_plan_window_failure_contrast_execution_readiness_status": failure_contrast_execution_readiness.get(
+                "decision", {}
+            ).get("status"),
+            "protected_plan_window_failure_contrast_execution_jobs_passing": failure_contrast_execution_readiness.get(
+                "summary", {}
+            ).get("jobs_passing_readiness"),
+            "protected_plan_window_failure_contrast_runner_status": failure_contrast_runner.get(
+                "decision", {}
+            ).get("status"),
+            "protected_plan_window_failure_contrast_runner_processed_job_count": failure_contrast_runner.get(
+                "summary", {}
+            ).get("processed_job_count"),
+            "protected_plan_window_failure_contrast_runner_executed_job_count": failure_contrast_runner.get(
+                "summary", {}
+            ).get("executed_job_count"),
+            "protected_plan_window_failure_contrast_output_validation_status": failure_contrast_output_validation.get(
+                "decision", {}
+            ).get("status"),
+            "protected_plan_window_failure_contrast_output_exists_count": failure_contrast_output_validation.get(
+                "summary", {}
+            ).get("output_exists_count"),
+            "protected_plan_window_failure_contrast_output_valid_count": failure_contrast_output_validation.get(
+                "summary", {}
+            ).get("output_valid_count"),
+            "protected_plan_window_failure_contrast_integration_status": failure_contrast_integration.get(
+                "decision", {}
+            ).get("status"),
+            "protected_plan_window_failure_contrast_integrated_new_failure_count": failure_contrast_integration.get(
+                "summary", {}
+            ).get("integrated_new_failure_count"),
+            "protected_plan_window_failure_contrast_integration_ready": failure_contrast_integration.get(
+                "summary", {}
+            ).get("integration_ready"),
+            "sequence_policy_after_protected_failure_contrast_refresh_status": post_failure_refresh.get(
+                "decision", {}
+            ).get("status"),
+            "sequence_policy_after_protected_failure_contrast_rows": post_failure_refresh.get(
+                "summary", {}
+            ).get("protected_failure_contrast_row_count"),
             "sequence_policy_underpowered_pilot_status": underpowered_pilot.get(
                 "decision", {}
             ).get("status"),
+            "sequence_policy_underpowered_pilot_next_step": underpowered_pilot.get(
+                "decision", {}
+            ).get("recommended_next_step"),
             "sequence_policy_underpowered_pilot_stage4_topk_signal": underpowered_pilot.get(
                 "summary", {}
             ).get("stage4_topk_signal"),
             "sequence_policy_underpowered_pilot_stage7_success_gap": underpowered_pilot.get(
                 "summary", {}
             ).get("stage7_success_gap"),
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_runner_processed_job_count": underpowered_pilot.get(
+                "summary", {}
+            ).get("protected_failure_contrast_runner_processed_job_count"),
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_runner_executed_job_count": underpowered_pilot.get(
+                "summary", {}
+            ).get("protected_failure_contrast_runner_executed_job_count"),
             "readiness_status": readiness.get("decision", {}).get("status"),
             "unblocker_status": unblocker.get("decision", {}).get("status"),
             "stage8_training_readiness_status": stage8_review.get("decision", {}).get(
@@ -244,6 +587,36 @@ def build_payload() -> dict[str, Any]:
             "stage7_post_label_outcome_next_step": post_label_review.get("decision", {}).get(
                 "recommended_next_step"
             ),
+            "stage7_post_label_outcome_protected_failure_contrast_runner_processed_job_count": post_label_review.get(
+                "summary", {}
+            ).get("protected_failure_contrast_runner_processed_job_count"),
+            "stage7_post_label_outcome_protected_failure_contrast_runner_executed_job_count": post_label_review.get(
+                "summary", {}
+            ).get("protected_failure_contrast_runner_executed_job_count"),
+            "stage7_label_distribution_review_status": label_distribution_review.get(
+                "decision", {}
+            ).get("status"),
+            "stage7_label_distribution_review_next_step": label_distribution_review.get(
+                "decision", {}
+            ).get("recommended_next_step"),
+            "stage7_label_distribution_unique_new_success": label_distribution_review.get(
+                "summary", {}
+            ).get("unique_new_success_key_count_vs_pre_run"),
+            "stage7_label_distribution_duplicate_playouts": label_distribution_review.get(
+                "summary", {}
+            ).get("duplicate_playout_count"),
+            "stage7_additional_clean_sampling_manifest_status": additional_manifest.get(
+                "decision", {}
+            ).get("status"),
+            "stage7_additional_clean_sampling_runner_status": additional_runner.get(
+                "decision", {}
+            ).get("status"),
+            "stage7_additional_clean_sampling_job_count": additional_runner.get(
+                "summary", {}
+            ).get("job_count"),
+            "stage7_additional_clean_sampling_max_samples": additional_manifest.get(
+                "summary", {}
+            ).get("max_total_samples"),
         },
         "decision": {
             "status": status,
@@ -276,7 +649,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     lines.extend(["", "## Steps", ""])
     for result in payload["step_results"]:
         lines.append(
-            f"- `{result['step_id']}` status=`{result['decision_status']}` labels=`{result['label_run_allowed']}` runtime=`{result['runtime_changes_allowed']}`"
+            f"- `{result['step_id']}` status=`{result['decision_status']}` labels=`{result['label_run_allowed']}` runtime=`{result['runtime_changes_allowed']}` artifact_runtime=`{result['artifact_runtime_behavior_changed']}`"
         )
     lines.extend(
         [

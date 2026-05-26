@@ -56,19 +56,36 @@ def test_full_suite_readiness_identifies_current_gate():
     assert payload["protected_stack"]["ready"] is True
     assert payload["protected_stack"]["clean_stack_adopted"] is True
     assert payload["protected_stack"]["clean_stack_adopted_and_validated"] is True
+    assert payload["protected_stack"]["post_adoption_validation_required"] is True
+    assert payload["protected_stack"]["rollback_paths_preserved"] is True
+    assert payload["protected_stack"]["active_stack_path_status"]["all_paths_safe"] is True
+    assert payload["protected_stack"]["active_stack_path_status"]["all_paths_exist"] is True
+    assert payload["protected_stack"]["rollback_stack_path_status"]["all_paths_safe"] is True
+    assert payload["protected_stack"]["rollback_stack_path_status"]["all_paths_exist"] is True
+    assert payload["protected_stack"]["rollback_common_paths_distinct"] is True
     assert payload["protected_stack"]["m1_m4_preservation_passed"] is True
     assert payload["protected_stack"]["kpk_kqk_bridge_preservation_passed"] is True
 
     stage7 = payload["stage7_sampling_gate"]
-    assert stage7["runner_status"] == "stage7_diverse_clean_sampling_runner_dry_run_ready"
+    assert stage7["runner_status"] == "stage7_diverse_clean_sampling_runner_executed_success"
     assert stage7["processed_job_count"] == 0
     assert stage7["executed_job_count"] == 0
+    assert stage7["historical_processed_job_count"] == 8
+    assert stage7["historical_executed_job_count"] == 8
     assert stage7["output_validation_status"] == (
-        "stage7_diverse_clean_sampling_outputs_validation_pending"
+        "stage7_diverse_clean_sampling_outputs_valid_ready_for_integration"
     )
+    assert stage7["runner_output_validation_status"] == (
+        "stage7_diverse_clean_sampling_outputs_valid_ready_for_integration"
+    )
+    assert stage7["output_valid_count"] == 8
     assert stage7["execution_readiness_source"] == "live_recomputed"
     assert (
         stage7["execution_readiness_status"]
+        == "not_applicable_stage7_success_gate_closed"
+    )
+    assert (
+        stage7["historical_execution_readiness_status"]
         == "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval"
     )
     assert stage7["execution_readiness_jobs_passing"] == 8
@@ -76,8 +93,12 @@ def test_full_suite_readiness_identifies_current_gate():
     assert stage7["job_timeout_seconds"] == 900
     assert stage7["timed_out_job_count"] == 0
     assert stage7["overwrite_existing_outputs"] is False
-    assert stage7["success_controls_ready"] is False
-    assert stage7["combined_success_controls"] < stage7["success_controls_required"]
+    assert stage7["success_controls_ready"] is True
+    assert stage7["label_gate_status"] == "stage7_success_gate_closed_no_current_label_approval"
+    assert stage7["label_run_allowed_by_artifact"] is False
+    assert stage7["historical_label_run_allowed_by_runner"] is True
+    assert stage7["combined_success_controls"] == 11
+    assert stage7["combined_success_controls"] >= stage7["success_controls_required"]
 
     stage4 = payload["stage_status"]["stage4"]
     assert (
@@ -89,10 +110,70 @@ def test_full_suite_readiness_identifies_current_gate():
 
     assert (
         payload["decision"]["status"]
-        == "krk_suite_readiness_blocked_pending_stage7_clean_success_controls"
+        == "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection"
     )
-    assert "stage7_clean_success_controls_missing" in payload["blockers"]
-    assert "sequence_policy_benchmark_not_ready" in payload["blockers"]
+    assert payload["hard_blockers"] == []
+    assert payload["explicit_gate_blockers"] == [
+        "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+    ]
+    assert payload["blockers"] == payload["explicit_gate_blockers"]
+    assert payload["stage_status"]["stage8"]["blocker"] == (
+        "Protected plan-window failure-contrast evidence is not integrated; "
+        "Stage 8 remains blocked pending explicit protected failure-contrast "
+        "collection and passive integration."
+    )
+    assert payload["approval_gates"]["stage8_training"]["why"] == (
+        "Protected plan-window failure-contrast evidence is not integrated; "
+        "Stage 8 training remains blocked even though Stage 7 held-out controls "
+        "are balanced."
+    )
+
+    protected_failure_contrast = payload["protected_failure_contrast_gate"]
+    assert (
+        protected_failure_contrast["plan_status"]
+        == "protected_plan_window_failure_contrast_plan_ready_pending_explicit_collection_approval"
+    )
+    assert protected_failure_contrast["unique_failure_count"] == 1
+    assert protected_failure_contrast["minimum_new_failures_needed"] == 4
+    assert (
+        protected_failure_contrast["manifest_status"]
+        == "protected_plan_window_failure_contrast_manifest_ready_for_review"
+    )
+    assert protected_failure_contrast["manifest_job_count"] == 6
+    assert (
+        protected_failure_contrast["manifest_review_status"]
+        == "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
+    )
+    assert (
+        protected_failure_contrast["execution_readiness_status"]
+        == "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+    )
+    assert protected_failure_contrast["execution_jobs_passing"] == 6
+    assert (
+        protected_failure_contrast["runner_status"]
+        == "protected_plan_window_failure_contrast_runner_dry_run_ready"
+    )
+    assert protected_failure_contrast["runner_processed_job_count"] == 0
+    assert protected_failure_contrast["runner_executed_job_count"] == 0
+    assert (
+        protected_failure_contrast["output_validation_status"]
+        == "protected_plan_window_failure_contrast_outputs_validation_pending"
+    )
+    assert protected_failure_contrast["output_exists_count"] == 0
+    assert protected_failure_contrast["output_valid_count"] == 0
+    assert (
+        protected_failure_contrast["integration_status"]
+        == "protected_plan_window_failure_contrast_integration_pending_outputs"
+    )
+    assert protected_failure_contrast["integrated_new_failure_count"] == 0
+    assert protected_failure_contrast["integration_ready"] is False
+    assert protected_failure_contrast["ready_for_explicit_approval"] is True
+    assert protected_failure_contrast["current_artifact_allows_collection"] is False
+    assert protected_failure_contrast["command_if_explicitly_approved"] == (
+        "UV_CACHE_DIR=/tmp/uv-cache uv run python "
+        "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py "
+        "--execute-reviewed-collection --refresh-after-run"
+    )
 
 
 def test_full_suite_readiness_writer_helpers_are_deterministic():
@@ -112,5 +193,85 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
         payload["approval_gates"]["stage4_first_move_contrast_sandbox"]["status"]
         == "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval"
     )
-    assert "krk_suite_readiness_blocked_pending_stage7_clean_success_controls" in rendered
+    assert (
+        payload["approval_gates"]["protected_plan_window_failure_contrast_collection"][
+            "ready_for_explicit_approval"
+        ]
+        is True
+    )
+    assert "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection" in rendered
+    assert "protected_plan_window_failure_contrast_runner_dry_run_ready" in rendered
     assert "label_run_allowed: `false`" in rendered
+
+
+def test_full_suite_readiness_routes_forbidden_training_rows_to_input_repair(monkeypatch):
+    real_load_json = _audit.load_json
+
+    def tainted_load_json(relative: str):
+        payload = json.loads(json.dumps(real_load_json(relative)))
+        if relative == "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json":
+            payload.setdefault("preflight", {})["selector_training_row_count"] = 1
+            payload.setdefault("preflight", {})["blockers"] = [
+                "selector_training_rows_forbidden"
+            ]
+            payload.setdefault("decision", {})["status"] = (
+                "sequence_policy_benchmark_blocked_forbidden_training_or_runtime_rows"
+            )
+        if (
+            relative
+            == "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
+        ):
+            payload["blockers"] = ["selector_training_rows_forbidden"]
+            payload.setdefault("decision", {})["status"] = (
+                "sequence_policy_benchmark_review_blocked_forbidden_training_or_runtime_rows"
+            )
+        return payload
+
+    monkeypatch.setattr(_audit, "load_json", tainted_load_json)
+
+    payload = _audit.build_payload()
+
+    assert (
+        payload["decision"]["status"]
+        == "krk_suite_readiness_blocked_forbidden_training_or_runtime_rows"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+    )
+    assert "sequence_policy_forbidden_training_or_runtime_rows" in payload["hard_blockers"]
+    assert payload["sequence_policy"]["forbidden_training_or_runtime_input_blocked"] is True
+    assert payload["protected_failure_contrast_gate"]["ready_for_explicit_approval"] is False
+    assert payload["protected_failure_contrast_gate"]["command_if_explicitly_approved"] is None
+    assert (
+        payload["approval_gates"]["protected_plan_window_failure_contrast_collection"][
+            "ready_for_explicit_approval"
+        ]
+        is False
+    )
+    assert payload["decision"]["selector_training_allowed"] is False
+
+
+def test_full_suite_readiness_blocks_unsafe_protected_stack_paths(monkeypatch):
+    real_load_json = _audit.load_json
+
+    def tainted_load_json(relative: str):
+        payload = json.loads(json.dumps(real_load_json(relative)))
+        if relative == "reports/krk_active_protected_stack_v0.json":
+            payload["active_protected_stack"]["stage6_drive_overlay"][
+                "topology"
+            ] = "../unsafe_topology.json"
+        return payload
+
+    monkeypatch.setattr(_audit, "load_json", tainted_load_json)
+
+    payload = _audit.build_payload()
+
+    assert payload["protected_stack"]["ready"] is False
+    assert payload["protected_stack"]["active_stack_path_status"]["all_paths_safe"] is False
+    assert "stage6_drive_overlay.topology" in payload["protected_stack"][
+        "active_stack_path_status"
+    ]["unsafe_paths"]
+    assert "protected_retry1_stage5_6_stack_not_validated" in payload["hard_blockers"]
+    assert payload["decision"]["status"].startswith("krk_suite_readiness_blocked")
+    assert payload["decision"]["runtime_changes_allowed"] is False

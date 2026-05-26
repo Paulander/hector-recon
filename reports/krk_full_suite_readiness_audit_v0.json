@@ -1,5 +1,11 @@
 {
   "approval_gates": {
+    "protected_plan_window_failure_contrast_collection": {
+      "current_artifact_allows_collection": false,
+      "ready_for_explicit_approval": true,
+      "status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
+      "why": "The sequence-policy benchmark is mixed/underpowered on protected plan-window failures; bounded observation-only collection is the current explicit gate."
+    },
     "stage4_first_move_contrast_sandbox": {
       "current_artifact_allows_implementation": false,
       "ready_for_explicit_approval": true,
@@ -8,17 +14,16 @@
     },
     "stage7_diverse_clean_label_execution": {
       "current_artifact_allows_execution": false,
-      "ready_for_explicit_approval": true,
-      "why": "The runner is dry-run ready, validates/skips existing outputs safely, but execution requires explicit approval because it creates new Stage 7 h40 labels."
+      "ready_for_explicit_approval": false,
+      "why": "The Stage 7 clean success-control gate is already closed; additional Stage 7 labels are not the primary current unblocker."
     },
     "stage8_training": {
       "ready_for_explicit_approval": false,
-      "why": "Stage 7 is still quarantined and sequence-policy benchmark is blocked."
+      "why": "Protected plan-window failure-contrast evidence is not integrated; Stage 8 training remains blocked even though Stage 7 held-out controls are balanced."
     }
   },
   "blockers": [
-    "stage7_clean_success_controls_missing",
-    "sequence_policy_benchmark_not_ready"
+    "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
   ],
   "causal_status": "non_causal_readiness_audit",
   "current_control_plane_gate": {
@@ -31,27 +36,70 @@
   },
   "decision": {
     "label_run_allowed": false,
-    "recommended_next_step": "explicitly_approve_stage7_diverse_clean_sampling_or_choose_stage4_sandbox_gate",
+    "recommended_next_step": "explicitly_approve_protected_plan_window_failure_contrast_collection",
     "runtime_changes_allowed": false,
     "selector_allowed": false,
     "selector_training_allowed": false,
     "stage7_promotion_allowed": false,
     "stage8_training_allowed": false,
-    "status": "krk_suite_readiness_blocked_pending_stage7_clean_success_controls"
+    "status": "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection"
+  },
+  "explicit_gate_blockers": [
+    "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+  ],
+  "hard_blockers": [],
+  "protected_failure_contrast_gate": {
+    "command_if_explicitly_approved": "UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run",
+    "current_artifact_allows_collection": false,
+    "execution_jobs_passing": 6,
+    "execution_readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
+    "integrated_new_failure_count": 0,
+    "integration_ready": false,
+    "integration_status": "protected_plan_window_failure_contrast_integration_pending_outputs",
+    "manifest_job_count": 6,
+    "manifest_review_status": "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval",
+    "manifest_status": "protected_plan_window_failure_contrast_manifest_ready_for_review",
+    "minimum_new_failures_needed": 4,
+    "output_exists_count": 0,
+    "output_valid_count": 0,
+    "output_validation_status": "protected_plan_window_failure_contrast_outputs_validation_pending",
+    "plan_status": "protected_plan_window_failure_contrast_plan_ready_pending_explicit_collection_approval",
+    "ready_for_explicit_approval": true,
+    "runner_executed_job_count": 0,
+    "runner_processed_job_count": 0,
+    "runner_status": "protected_plan_window_failure_contrast_runner_dry_run_ready",
+    "unique_failure_count": 1
   },
   "protected_stack": {
+    "active_stack_path_status": {
+      "all_paths_exist": true,
+      "all_paths_safe": true,
+      "checked_path_count": 9,
+      "missing_paths": [],
+      "unsafe_paths": []
+    },
     "clean_stack_adopted": true,
     "clean_stack_adopted_and_validated": true,
     "filesystem_snapshots_replaced": false,
     "kpk_kqk_bridge_preservation_passed": true,
     "m1_m4_preservation_passed": true,
+    "post_adoption_validation_required": true,
     "ready": true,
+    "rollback_common_paths_distinct": true,
+    "rollback_paths_preserved": true,
+    "rollback_stack_path_status": {
+      "all_paths_exist": true,
+      "all_paths_safe": true,
+      "checked_path_count": 8,
+      "missing_paths": [],
+      "unsafe_paths": []
+    },
     "stage5_conversion_preservation_passed": true,
     "stage6_drive_validation_passed": true,
     "status": "retry1_protected_stage5_6_stack_adopted_manifest_only"
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 74,
+    "checked_flag_count": 155,
     "gameplay_topology_mutation": false,
     "runtime_behavior_changed": false,
     "runtime_defaults_changed": false,
@@ -64,14 +112,21 @@
   },
   "schema_version": "krk_full_suite_readiness_audit.v0",
   "sequence_policy": {
-    "benchmark_ready": false,
-    "benchmark_status": "sequence_policy_benchmark_blocked_pending_stage7_success_controls",
-    "input_row_count": 79,
-    "inputs_ready": false,
-    "pipeline_status": "sequence_policy_pipeline_refreshed_still_blocked_by_stage7_success_controls",
+    "benchmark_preflight_blockers": [],
+    "benchmark_ready": true,
+    "benchmark_review_blockers": [
+      "protected_plan_window_failure_evidence_sparse"
+    ],
+    "benchmark_review_status": "sequence_policy_benchmark_mixed_plan_window_underpowered",
+    "benchmark_status": "sequence_policy_benchmark_ready_non_causal_results_available",
+    "forbidden_training_or_runtime_input_blocked": false,
+    "forbidden_training_or_runtime_input_blockers": [],
+    "input_row_count": 118,
+    "inputs_ready": true,
+    "pipeline_status": "sequence_policy_pipeline_refreshed_ready_for_non_causal_benchmark_review",
     "runtime_authorization_row_count": 0,
     "selector_training_row_count": 0,
-    "stage7_heldout_row_count": 10
+    "stage7_heldout_row_count": 50
   },
   "source_artifacts": {
     "active_protected_stack": "reports/krk_active_protected_stack_v0.json",
@@ -79,33 +134,49 @@
     "control_plane_gate": "reports/krk_current_control_plane_gate_v0.json",
     "current_brief": "reports/current_agent_brief.md",
     "preservation_checks": "reports/krk_clean_retrain_retry1_preservation_checks_v0.json",
+    "protected_failure_contrast_execution_readiness": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_execution_readiness_v0.json",
+    "protected_failure_contrast_integration": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_integration_v0.json",
+    "protected_failure_contrast_manifest": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json",
+    "protected_failure_contrast_manifest_review": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_review_v0.json",
+    "protected_failure_contrast_output_validation": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_output_validation_v0.json",
+    "protected_failure_contrast_plan": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_plan_v0.json",
+    "protected_failure_contrast_runner": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_runner_v0.json",
     "sequence_benchmark": "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
+    "sequence_benchmark_review": "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
     "sequence_pipeline_refresh": "reports/strategy_arbitration/krk_sequence_policy_pipeline_refresh_v0.json",
     "stage4_caveat_unblocker": "reports/krk_stage4_caveat_unblocker_packet_v0.json",
     "stage7_sampling_integration": "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json",
+    "stage7_sampling_output_validation": "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json",
     "stage7_sampling_runner": "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json"
   },
   "stage7_sampling_gate": {
-    "combined_failure_controls": 8,
-    "combined_success_controls": 2,
+    "combined_failure_controls": 39,
+    "combined_success_controls": 11,
     "executed_job_count": 0,
     "execution_readiness_jobs_passing": 8,
     "execution_readiness_source": "live_recomputed",
-    "execution_readiness_status": "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval",
+    "execution_readiness_status": "not_applicable_stage7_success_gate_closed",
     "failure_controls_required": 5,
-    "integration_status": "stage7_diverse_clean_sampling_outputs_pending",
+    "historical_executed_job_count": 8,
+    "historical_execution_readiness_status": "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval",
+    "historical_label_run_allowed_by_runner": true,
+    "historical_processed_job_count": 8,
+    "integration_status": "stage7_diverse_clean_sampling_integration_success_controls_met",
     "invalid_existing_output_count": 0,
     "job_timeout_seconds": 900,
+    "label_gate_status": "stage7_success_gate_closed_no_current_label_approval",
     "label_run_allowed_by_artifact": false,
-    "output_validation_status": "stage7_diverse_clean_sampling_outputs_validation_pending",
-    "outputs_present_count": 0,
+    "output_valid_count": 8,
+    "output_validation_status": "stage7_diverse_clean_sampling_outputs_valid_ready_for_integration",
+    "outputs_present_count": 8,
     "overwrite_existing_outputs": false,
     "processed_job_count": 0,
-    "runner_dry_run": true,
+    "runner_dry_run": false,
     "runner_job_count": 8,
-    "runner_status": "stage7_diverse_clean_sampling_runner_dry_run_ready",
+    "runner_output_validation_status": "stage7_diverse_clean_sampling_outputs_valid_ready_for_integration",
+    "runner_status": "stage7_diverse_clean_sampling_runner_executed_success",
     "skipped_existing_output_count": 0,
-    "success_controls_ready": false,
+    "success_controls_ready": true,
     "success_controls_required": 5,
     "timed_out_job_count": 0
   },
@@ -130,22 +201,24 @@
       "status": "protected_retry1_overlay_validated"
     },
     "stage7": {
+      "historical_sampling_runner_execution_readiness_status": "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval",
       "ready_for_promotion": false,
-      "sampling_outputs_status": "stage7_diverse_clean_sampling_outputs_pending",
+      "sampling_output_validation_status": "stage7_diverse_clean_sampling_outputs_valid_ready_for_integration",
+      "sampling_outputs_status": "stage7_diverse_clean_sampling_integration_success_controls_met",
       "sampling_runner_execution_readiness_source": "live_recomputed",
-      "sampling_runner_execution_readiness_status": "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval",
+      "sampling_runner_execution_readiness_status": "not_applicable_stage7_success_gate_closed",
       "sampling_runner_invalid_existing_output_count": 0,
       "sampling_runner_job_timeout_seconds": 900,
-      "sampling_runner_output_validation_status": "stage7_diverse_clean_sampling_outputs_validation_pending",
-      "sampling_runner_status": "stage7_diverse_clean_sampling_runner_dry_run_ready",
+      "sampling_runner_output_validation_status": "stage7_diverse_clean_sampling_outputs_valid_ready_for_integration",
+      "sampling_runner_status": "stage7_diverse_clean_sampling_runner_executed_success",
       "sampling_runner_timed_out_job_count": 0,
       "status": "held_out_challenge_quarantined",
-      "success_controls": 2,
-      "success_controls_ready": false,
+      "success_controls": 11,
+      "success_controls_ready": true,
       "success_controls_required": 5
     },
     "stage8": {
-      "blocker": "Stage 7 remains quarantined and sequence-policy benchmark is not ready",
+      "blocker": "Protected plan-window failure-contrast evidence is not integrated; Stage 8 remains blocked pending explicit protected failure-contrast collection and passive integration.",
       "ready_for_training": false,
       "status": "blocked"
     }

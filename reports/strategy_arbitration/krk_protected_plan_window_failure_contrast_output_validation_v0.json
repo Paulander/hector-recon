@@ -1,0 +1,112 @@
+{
+  "causal_status": "non_causal_output_validation",
+  "decision": {
+    "collection_run_allowed": false,
+    "label_run_allowed": false,
+    "recommended_next_step": "explicitly_approve_protected_plan_window_failure_contrast_collection",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "protected_plan_window_failure_contrast_outputs_validation_pending"
+  },
+  "gameplay_topology_mutation": false,
+  "output_checks": [
+    {
+      "expected_output_json": "reports/strategy_arbitration/protected_plan_window_failure_contrasts/protected_plan_failure.01.planwin.a8dd289c75b7.json",
+      "issues": [
+        "output_missing"
+      ],
+      "job_id": "protected_plan_failure.01.planwin.a8dd289c75b7",
+      "output_exists": false,
+      "runtime_authorization_row_count": 0,
+      "stage7_training_row_count": 0,
+      "valid": false
+    },
+    {
+      "expected_output_json": "reports/strategy_arbitration/protected_plan_window_failure_contrasts/protected_plan_failure.02.planwin.6ffab60fb0d0.json",
+      "issues": [
+        "output_missing"
+      ],
+      "job_id": "protected_plan_failure.02.planwin.6ffab60fb0d0",
+      "output_exists": false,
+      "runtime_authorization_row_count": 0,
+      "stage7_training_row_count": 0,
+      "valid": false
+    },
+    {
+      "expected_output_json": "reports/strategy_arbitration/protected_plan_window_failure_contrasts/protected_plan_failure.03.planwin.4f9789a608c4.json",
+      "issues": [
+        "output_missing"
+      ],
+      "job_id": "protected_plan_failure.03.planwin.4f9789a608c4",
+      "output_exists": false,
+      "runtime_authorization_row_count": 0,
+      "stage7_training_row_count": 0,
+      "valid": false
+    },
+    {
+      "expected_output_json": "reports/strategy_arbitration/protected_plan_window_failure_contrasts/protected_plan_failure.04.planwin.e09fb2b8a021.json",
+      "issues": [
+        "output_missing"
+      ],
+      "job_id": "protected_plan_failure.04.planwin.e09fb2b8a021",
+      "output_exists": false,
+      "runtime_authorization_row_count": 0,
+      "stage7_training_row_count": 0,
+      "valid": false
+    },
+    {
+      "expected_output_json": "reports/strategy_arbitration/protected_plan_window_failure_contrasts/protected_plan_failure.05.planwin.23c0bb760d87.json",
+      "issues": [
+        "output_missing"
+      ],
+      "job_id": "protected_plan_failure.05.planwin.23c0bb760d87",
+      "output_exists": false,
+      "runtime_authorization_row_count": 0,
+      "stage7_training_row_count": 0,
+      "valid": false
+    },
+    {
+      "expected_output_json": "reports/strategy_arbitration/protected_plan_window_failure_contrasts/protected_plan_failure.06.planwin.d90d6f3d623a.json",
+      "issues": [
+        "output_missing"
+      ],
+      "job_id": "protected_plan_failure.06.planwin.d90d6f3d623a",
+      "output_exists": false,
+      "runtime_authorization_row_count": 0,
+      "stage7_training_row_count": 0,
+      "valid": false
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_protected_plan_window_failure_contrast_output_validation.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "all_outputs_present": false,
+    "all_outputs_valid": false,
+    "all_present_outputs_valid": true,
+    "h40_outcome_label_counts": {},
+    "issue_counts": {
+      "output_missing": 6
+    },
+    "job_count": 6,
+    "output_exists_count": 0,
+    "output_valid_count": 0,
+    "parse_error_count": 0,
+    "runtime_authorization_row_count": 0,
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0,
+    "unique_failure_candidate_count": 0
+  }
+}

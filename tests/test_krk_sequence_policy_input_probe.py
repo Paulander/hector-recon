@@ -30,7 +30,7 @@ def _read_report(path: str) -> dict:
     return payload
 
 
-def test_sequence_policy_input_probe_is_non_causal_and_partial():
+def test_sequence_policy_input_probe_is_non_causal_and_ready():
     payload = _read_report(
         "reports/strategy_arbitration/krk_sequence_policy_input_probe_v0.json"
     )
@@ -45,16 +45,29 @@ def test_sequence_policy_input_probe_is_non_causal_and_partial():
     assert payload["gameplay_topology_mutation"] is False
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
-    assert payload["summary"]["row_count"] == 79
+    assert payload["summary"]["row_count"] == 118
     assert payload["summary"]["stage4_topk_signal"] is True
     assert payload["summary"]["stage4_binary_heuristic_sufficient"] is False
     assert payload["summary"]["protected_plan_window_failure_sparse"] is True
-    assert payload["summary"]["stage7_underpowered"] is True
+    assert payload["summary"]["stage7_underpowered"] is False
     assert payload["summary"]["selector_training_row_count"] == 0
     assert payload["summary"]["runtime_authorization_row_count"] == 0
     assert (
+        payload["summary"]["current_benchmark_review_status"]
+        == "sequence_policy_benchmark_mixed_plan_window_underpowered"
+    )
+    assert (
+        payload["summary"]["current_benchmark_review_next_step"]
+        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+    )
+    assert payload["summary"]["current_benchmark_review_available"] is True
+    assert (
         payload["decision"]["status"]
-        == "sequence_policy_input_probe_partial_stage7_success_controls_missing"
+        == "sequence_policy_input_probe_ready_for_full_non_causal_benchmark"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
     )
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False
@@ -123,4 +136,62 @@ def test_sequence_policy_input_probe_fixture_can_be_ready_with_balanced_stage7()
     )
     assert payload["stage7_heldout_probe"]["underpowered"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["selector_training_allowed"] is False
+
+
+def test_sequence_policy_input_probe_routes_forbidden_training_rows_to_repair():
+    rows = []
+    for idx in range(5):
+        rows.append(
+            {
+                "row_id": f"stage7.success.{idx}",
+                "input_group": "stage7_clean_heldout_control",
+                "target_label": "conversion_positive",
+                "features": {},
+                "usable_for_selector_training": False,
+                "usable_for_runtime_authorization": False,
+            }
+        )
+        rows.append(
+            {
+                "row_id": f"stage7.failure.{idx}",
+                "input_group": "stage7_clean_heldout_control",
+                "target_label": "conversion_failure",
+                "features": {},
+                "usable_for_selector_training": False,
+                "usable_for_runtime_authorization": False,
+            }
+        )
+    rows.append(
+        {
+            "row_id": "tainted.selector",
+            "input_group": "protected_plan_window",
+            "target_label": "conversion_failure",
+            "features": {},
+            "source_stage": "stage5",
+            "usable_for_selector_training": True,
+            "usable_for_runtime_authorization": False,
+        }
+    )
+
+    payload = _probe.build_payload(
+        inputs={"summary": {"benchmark_input_ready": True}, "rows": rows},
+        benchmark_review={
+            "decision": {
+                "status": "sequence_policy_benchmark_review_blocked_forbidden_training_or_runtime_rows"
+            },
+            "blockers": ["selector_training_rows_forbidden"],
+        },
+    )
+
+    assert payload["summary"]["forbidden_training_or_runtime_input_blocked"] is True
+    assert payload["summary"]["selector_training_row_count"] == 1
+    assert (
+        payload["decision"]["status"]
+        == "sequence_policy_input_probe_blocked_forbidden_training_or_runtime_rows"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+    )
     assert payload["decision"]["selector_training_allowed"] is False

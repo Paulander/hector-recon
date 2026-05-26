@@ -185,14 +185,25 @@ def _select_balanced(frames: list[dict[str, Any]], *, per_stage_success: int = 6
         by_stage[frame["source_stage"]].append(frame)
     for stage in sorted(by_stage):
         stage_frames = by_stage[stage]
-        successes = [frame for frame in stage_frames if frame["outcome_bucket"] == "success"][:per_stage_success]
+        stage_successes = [frame for frame in stage_frames if frame["outcome_bucket"] == "success"]
         failures = [frame for frame in stage_frames if frame["outcome_bucket"] == "failure"][:per_stage_failure]
         # Stage 5/6 may have no failures in protected traces; include extra
-        # successes so cross-stage coverage is still useful.
+        # successes so cross-stage coverage is still useful. Only draw from
+        # success rows here; stage_frames can contain failures and would
+        # otherwise duplicate a sparse failure row in the selected evidence.
+        successes = stage_successes[:per_stage_success]
         if len(failures) < per_stage_failure:
-            successes = stage_frames[: per_stage_success + (per_stage_failure - len(failures))]
+            successes = stage_successes[: per_stage_success + (per_stage_failure - len(failures))]
         selected.extend(successes + failures)
-    return selected
+    deduped = []
+    seen_frame_ids: set[str] = set()
+    for frame in selected:
+        frame_id = str(frame.get("frame_id"))
+        if frame_id in seen_frame_ids:
+            continue
+        seen_frame_ids.add(frame_id)
+        deduped.append(frame)
+    return deduped
 
 
 def build_payload(requirements: dict[str, Any] | None = None) -> dict[str, Any]:

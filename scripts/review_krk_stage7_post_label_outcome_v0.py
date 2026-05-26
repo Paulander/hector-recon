@@ -32,6 +32,19 @@ OUT_MD = ROOT / "reports/krk_stage7_post_label_outcome_review_v0.md"
 
 SCHEMA_VERSION = "krk_stage7_post_label_outcome_review.v0"
 
+FORBIDDEN_INPUT_BLOCKERS = {
+    "selector_training_rows_forbidden",
+    "runtime_authorization_rows_forbidden",
+    "sequence_policy_forbidden_training_or_runtime_rows",
+}
+
+FORBIDDEN_INPUT_STATUSES = {
+    "sequence_policy_benchmark_blocked_forbidden_training_or_runtime_rows",
+    "sequence_policy_benchmark_review_blocked_forbidden_training_or_runtime_rows",
+    "krk_suite_readiness_blocked_forbidden_training_or_runtime_rows",
+    "stage8_training_blocked_forbidden_training_or_runtime_rows",
+}
+
 COMMON_FALSE_FLAGS = {
     "runtime_behavior_changed": False,
     "runtime_defaults_changed": False,
@@ -74,6 +87,15 @@ def build_payload(
     benchmark_review_status = (benchmark_review.get("decision") or {}).get("status")
     readiness_status = (readiness.get("decision") or {}).get("status")
     stage8_status = (stage8_review.get("decision") or {}).get("status")
+    protected_failure_contrast = readiness.get("protected_failure_contrast_gate") or {}
+    explicit_gate_blockers = set(readiness.get("explicit_gate_blockers") or [])
+    hard_blockers = set(readiness.get("hard_blockers") or [])
+    sequence_policy = readiness.get("sequence_policy") or {}
+    benchmark_review_blockers = set(benchmark_review.get("blockers") or [])
+    protected_failure_contrast_pending_approval = (
+        "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+        in explicit_gate_blockers
+    )
 
     validation_summary = output_validation.get("summary") or {}
     integration_summary = integration.get("summary") or {}
@@ -90,6 +112,23 @@ def build_payload(
     failure_controls_met = bool(integration_summary.get("failure_controls_met"))
     benchmark_inputs_ready = bool((pipeline.get("summary") or {}).get("sequence_policy_inputs_ready"))
     stage8_training_ready = stage8_status == "stage8_training_review_ready_pending_explicit_approval"
+    forbidden_input_blockers = sorted(
+        FORBIDDEN_INPUT_BLOCKERS
+        & (
+            hard_blockers
+            | benchmark_review_blockers
+            | set(sequence_policy.get("benchmark_preflight_blockers") or [])
+            | set(sequence_policy.get("benchmark_review_blockers") or [])
+            | set(sequence_policy.get("forbidden_training_or_runtime_input_blockers") or [])
+        )
+    )
+    sequence_forbidden_training_or_runtime_inputs = (
+        bool(forbidden_input_blockers)
+        or bool(sequence_policy.get("forbidden_training_or_runtime_input_blocked"))
+        or readiness_status in FORBIDDEN_INPUT_STATUSES
+        or benchmark_review_status in FORBIDDEN_INPUT_STATUSES
+        or stage8_status in FORBIDDEN_INPUT_STATUSES
+    )
 
     blockers: list[str] = []
     findings: list[str] = []
@@ -116,6 +155,10 @@ def build_payload(
         blockers.append("sequence_policy_inputs_not_ready_after_controls")
         status = "post_label_outcome_controls_met_pipeline_not_ready"
         next_step = "inspect_sequence_policy_pipeline_refresh"
+    elif sequence_forbidden_training_or_runtime_inputs:
+        blockers.append("sequence_policy_forbidden_training_or_runtime_rows")
+        status = "post_label_outcome_blocked_forbidden_training_or_runtime_rows"
+        next_step = "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
     elif benchmark_review_status == "sequence_policy_benchmark_supports_non_causal_sequence_policy_review":
         findings.append("sequence_policy_benchmark_supportive")
         if stage8_training_ready:
@@ -125,9 +168,18 @@ def build_payload(
             status = "post_label_outcome_sequence_policy_review_ready_stage8_blocked"
             next_step = "inspect_stage8_training_readiness_review"
     elif benchmark_review_status == "sequence_policy_benchmark_mixed_plan_window_underpowered":
-        blockers.append("protected_plan_window_failure_evidence_sparse")
-        status = "post_label_outcome_sequence_policy_mixed_plan_window_underpowered"
-        next_step = "collect_protected_plan_window_failure_contrasts"
+        if protected_failure_contrast_pending_approval:
+            blockers.append(
+                "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+            )
+            findings.append("protected_plan_window_failure_contrast_gate_ready_for_approval")
+            status = (
+                "post_label_outcome_waiting_on_explicit_protected_failure_contrast_collection"
+            )
+        else:
+            blockers.append("protected_plan_window_failure_evidence_sparse")
+            status = "post_label_outcome_sequence_policy_mixed_plan_window_underpowered"
+        next_step = "explicitly_approve_protected_plan_window_failure_contrast_collection"
     elif benchmark_review_status == "sequence_policy_benchmark_review_blocked_pending_ready_inputs":
         blockers.append("sequence_policy_benchmark_review_not_ready")
         status = "post_label_outcome_benchmark_review_still_blocked"
@@ -166,8 +218,32 @@ def build_payload(
             "failure_controls_required": failure_required,
             "failure_controls_met": failure_controls_met,
             "sequence_policy_inputs_ready": benchmark_inputs_ready,
+            "sequence_policy_forbidden_training_or_runtime_input_blocked": (
+                sequence_forbidden_training_or_runtime_inputs
+            ),
+            "sequence_policy_forbidden_training_or_runtime_input_blockers": (
+                forbidden_input_blockers
+            ),
             "stage7_runner_invalid_existing_output_count": readiness_stage7.get(
                 "invalid_existing_output_count"
+            ),
+            "protected_failure_contrast_ready_for_explicit_approval": (
+                protected_failure_contrast.get("ready_for_explicit_approval")
+            ),
+            "protected_failure_contrast_integration_ready": (
+                protected_failure_contrast.get("integration_ready")
+            ),
+            "protected_failure_contrast_runner_status": protected_failure_contrast.get(
+                "runner_status"
+            ),
+            "protected_failure_contrast_runner_processed_job_count": (
+                protected_failure_contrast.get("runner_processed_job_count")
+            ),
+            "protected_failure_contrast_runner_executed_job_count": (
+                protected_failure_contrast.get("runner_executed_job_count")
+            ),
+            "protected_failure_contrast_command_if_explicitly_approved": (
+                protected_failure_contrast.get("command_if_explicitly_approved")
             ),
             "stage7_training_row_count": 0,
             "selector_training_row_count": 0,

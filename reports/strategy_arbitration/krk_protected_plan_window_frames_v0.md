@@ -6,9 +6,9 @@ Replay-free extraction of protected Stage 4/5/6 plan-window evidence from existi
 
 ## Summary
 
-- frame_count: `21`
-- source_stage_counts: `{'stage4': 11, 'stage5': 6, 'stage6': 4}`
-- outcome_bucket_counts: `{'success': 19, 'failure': 2}`
+- frame_count: `20`
+- source_stage_counts: `{'stage4': 10, 'stage5': 6, 'stage6': 4}`
+- outcome_bucket_counts: `{'success': 19, 'failure': 1}`
 - protected_cross_stage_evidence_met: `True`
 - selector_training_row_count: `0`
 - runtime_authorization_row_count: `0`

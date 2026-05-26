@@ -2709,6 +2709,10 @@ def test_krk_control_plane_stage7_boundary_refresh_keeps_stage7_heldout(tmp_path
     assert review["stage7_promotion_allowed"] is False
     assert review["stage8_training_allowed"] is False
     assert review["decision"]["status"] == "control_plane_respects_stage7_boundary"
+    assert (
+        review["decision"]["recommended_next_step"]
+        == "continue_broader_krk_strategy_sequence_work_with_stage7_heldout"
+    )
     assert review["filtered_frame_summary"]["strategy_ready_by_stage"] == {"stage5": 1}
     assert review["filtered_frame_summary"]["stage7_boundary_heldout_frame_count"] == 1
 

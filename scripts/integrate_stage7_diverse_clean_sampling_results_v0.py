@@ -255,7 +255,11 @@ def build_payload(
     output_checks = []
     new_controls = []
     skipped = Counter()
-    seen_keys: set[tuple[str, str, str]] = set()
+    seen_keys: set[tuple[str, str, str]] = {
+        (control["fen"], control["move_uci"], control["result"])
+        for control in base_controls.get("controls") or []
+        if control.get("fen") and control.get("move_uci") and control.get("result")
+    }
     for job in jobs:
         output = job.get("json_output")
         output_path = ROOT / str(output) if output else None
@@ -268,7 +272,7 @@ def build_payload(
             for control in rows:
                 key = (control["fen"], control["move_uci"], control["result"])
                 if key in seen_keys:
-                    skipped["duplicate_diverse_control"] += 1
+                    skipped["duplicate_base_or_diverse_control"] += 1
                     continue
                 seen_keys.add(key)
                 new_controls.append(control)

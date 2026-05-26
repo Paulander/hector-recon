@@ -1,43 +1,41 @@
 {
   "benchmark_preflight": {
-    "benchmark_input_ready": false,
-    "blockers": [
-      "stage7_clean_success_controls_missing"
-    ],
-    "row_count": 79,
+    "benchmark_input_ready": true,
+    "blockers": [],
+    "row_count": 118,
     "runtime_authorization_row_count": 0,
     "selector_training_row_count": 0,
-    "stage7_heldout_row_count": 10
+    "stage7_heldout_row_count": 50
   },
   "blockers": [
-    "stage7_clean_success_controls_missing"
+    "protected_plan_window_failure_evidence_sparse"
   ],
   "causal_status": "non_causal_benchmark_review",
   "decision": {
     "label_run_allowed": false,
-    "recommended_next_step": "fill_stage7_clean_success_controls_and_rerun_passive_gate_advancement",
+    "recommended_next_step": "explicitly_approve_protected_plan_window_failure_contrast_collection",
     "runtime_changes_allowed": false,
     "selector_allowed": false,
     "selector_training_allowed": false,
     "stage7_promotion_allowed": false,
     "stage8_training_allowed": false,
-    "status": "sequence_policy_benchmark_review_blocked_pending_ready_inputs"
+    "status": "sequence_policy_benchmark_mixed_plan_window_underpowered"
   },
   "findings": [
     "stage4_topk_sequence_signal_present",
     "stage4_binary_rule_insufficient",
     "stage4_negative_suppression_reasonable",
     "protected_plan_window_failure_evidence_sparse",
-    "stage7_success_controls_missing"
+    "stage7_heldout_controls_balanced"
   ],
   "gameplay_topology_mutation": false,
   "objective_review": {
     "protected_plan_window": {
       "failure_evidence_sparse": true,
       "interpretation": "needs_more_failure_contrasts",
-      "row_count": 21,
+      "row_count": 20,
       "target_label_counts": {
-        "conversion_failure": 2,
+        "conversion_failure": 1,
         "conversion_positive": 19
       }
     },
@@ -52,12 +50,12 @@
     },
     "stage7_heldout": {
       "failure_controls_met": true,
-      "interpretation": "success_controls_missing",
-      "row_count": 10,
-      "success_controls_met": false,
+      "interpretation": "balanced_heldout_controls",
+      "row_count": 50,
+      "success_controls_met": true,
       "target_label_counts": {
-        "conversion_failure": 8,
-        "conversion_positive": 2
+        "conversion_failure": 39,
+        "conversion_positive": 11
       }
     }
   },

@@ -2,18 +2,20 @@
   "causal_status": "non_causal_replay_free_inventory",
   "curriculum_boundary_inventory": {
     "stage7_clean_control_collection_paused": true,
-    "stage7_clean_review_recommendation": "return_to_broader_krk_strategy_or_sequence_architecture_review",
+    "stage7_clean_review_recommendation": "continue_protected_failure_contrast_sequence_policy_gate_review",
     "stage7_is_held_out": true
   },
   "decision": {
-    "recommended_next_step": "review_diverse_sequence_policy_controls_or_curriculum_boundary",
+    "recommended_next_step": "review_state_holdout_signal_before_runtime_or_continue_protected_failure_contrast_gate",
     "runtime_work_allowed": false,
-    "status": "replay_free_inventory_complete_sequence_gap_blocks_runtime"
+    "status": "replay_free_inventory_state_holdout_gap_blocks_runtime"
   },
   "gameplay_topology_mutation": false,
   "gap_summary": {
     "runtime_work_allowed": false,
-    "sequence_policy_has_clean_success_gap": true,
+    "sequence_policy_clean_gate_closed": true,
+    "sequence_policy_has_clean_success_gap": false,
+    "state_holdout_gap_blocks_runtime": true,
     "strategy_ownership_has_some_signal": true,
     "strategy_ownership_state_holdout_ready": false
   },
@@ -23,19 +25,20 @@
   "runtime_selector_implemented": false,
   "schema_version": "krk_strategy_sequence_inventory.v0",
   "sequence_policy_inventory": {
-    "clean_control_count": 10,
+    "clean_control_count": 50,
     "hard_negatives_met": true,
     "ready_for_runtime_review": false,
     "role_counts": {
-      "clean_sequence_hard_negative": 8,
-      "clean_sequence_success_control": 2
+      "clean_sequence_hard_negative": 39,
+      "clean_sequence_success_control": 11
     },
     "source_classification_counts": {
+      "clean_baseline_candidate": 40,
       "clean_current_profile_candidate": 5,
       "clean_default_off_candidate": 5
     },
-    "stage7_clean_review_status": "stage7_clean_control_collection_paused_architecture_review_required",
-    "success_controls_met": false
+    "stage7_clean_review_status": "stage7_clean_control_collection_closed_heldout_only",
+    "success_controls_met": true
   },
   "source_artifacts": [
     "reports/krk_strategy_sequence_evidence_plan_v0.json",

@@ -235,8 +235,8 @@ def test_stage7_clean_sequence_control_recovery_uses_manifest_clean_candidates_o
     assert payload["summary"]["usable_for_runtime_authorization"] is False
     assert payload["summary"]["control_count"] > 0
     assert payload["summary"]["role_counts"]["clean_sequence_hard_negative"] >= 5
-    assert payload["acceptance"]["clean_sequence_success_controls_met"] is False
-    assert payload["decision"]["status"] == "clean_sequence_controls_insufficient"
+    assert payload["acceptance"]["clean_sequence_success_controls_met"] is True
+    assert payload["decision"]["status"] == "clean_sequence_controls_recovered_for_offline_source_bias_audit"
 
     for control in payload["controls"]:
         assert control["source_classification"] != "repair_sandbox_sourced"
@@ -265,7 +265,7 @@ def test_stage7_clean_h40_label_manifest_is_bounded_and_non_causal() -> None:
     assert payload["stage8_training_allowed"] is False
     assert payload["summary"]["max_total_samples"] <= 10
     assert payload["summary"]["max_horizon"] == 40
-    assert payload["decision"]["status"] == "bounded_clean_h40_label_manifest_ready"
+    assert payload["decision"]["status"] == "no_label_run_needed_or_topology_missing"
     assert payload["decision"]["runtime_work_allowed"] is False
 
     job = payload["jobs"][0]
@@ -350,7 +350,12 @@ def test_stage7_clean_control_architecture_review_pauses_stage7_collection() -> 
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
     assert payload["decision"]["runtime_work_allowed"] is False
-    assert payload["decision"]["status"] == "stage7_clean_control_collection_paused_architecture_review_required"
+    assert payload["decision"]["status"] == "stage7_clean_control_collection_closed_heldout_only"
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "continue_protected_failure_contrast_sequence_policy_gate_review"
+    )
+    assert any("now meet" in item for item in payload["conclusions"])
     assert "unreviewed additional Stage 7 h40 labels" in payload["blocked_next_steps"]
     preferred = [path for path in payload["recommended_paths"] if path["preferred"] is True]
     assert preferred[0]["path_id"] == "broader_krk_strategy_sequence_architecture_review"
@@ -427,7 +432,17 @@ def test_krk_strategy_sequence_inventory_blocks_runtime_on_sequence_gap() -> Non
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
     assert payload["decision"]["runtime_work_allowed"] is False
-    assert payload["gap_summary"]["sequence_policy_has_clean_success_gap"] is True
+    assert (
+        payload["decision"]["status"]
+        == "replay_free_inventory_state_holdout_gap_blocks_runtime"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_state_holdout_signal_before_runtime_or_continue_protected_failure_contrast_gate"
+    )
+    assert payload["gap_summary"]["sequence_policy_has_clean_success_gap"] is False
+    assert payload["gap_summary"]["sequence_policy_clean_gate_closed"] is True
+    assert payload["gap_summary"]["state_holdout_gap_blocks_runtime"] is True
     assert payload["sequence_policy_inventory"]["ready_for_runtime_review"] is False
 
 
@@ -448,7 +463,13 @@ def test_stage7_curriculum_boundary_decision_reclassifies_box_shrink() -> None:
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
     assert payload["decision"]["status"] == "box_shrink_reclassified_as_local_evidence_handoff_trigger"
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "continue_protected_failure_contrast_sequence_policy_gate_review"
+    )
     assert payload["decision"]["stage7_standalone_repair_target"] is False
     assert payload["decision"]["box_shrink_promotable_independent_stage"] is False
+    assert payload["current_evidence_state"]["stage7_clean_success_controls_met"] is True
+    assert payload["current_evidence_state"]["stage7_clean_hard_negatives_met"] is True
     assert payload["new_role_for_stage7"]["stage7_residuals_role"] == "heldout_challenge_set"
     assert "more Stage 7 local move-shape tuning" in payload["explicitly_rejected_next_steps"]

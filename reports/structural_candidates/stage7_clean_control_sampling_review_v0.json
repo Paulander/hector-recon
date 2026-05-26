@@ -20,9 +20,9 @@
   ],
   "causal_status": "non_causal_sampling_review",
   "decision": {
-    "recommended_next_step": "architecture_review_before_more_stage7_clean_labels",
+    "recommended_next_step": "build_clean_selected_path_dataset_and_source_bias_audit",
     "runtime_work_allowed": false,
-    "status": "clean_success_collection_blocked_by_sampling_overlap"
+    "status": "clean_success_collection_requirement_met"
   },
   "gameplay_topology_mutation": false,
   "interpretation": [
@@ -45,8 +45,8 @@
   "summary": {
     "bounded_label_run_mates": 3,
     "bounded_label_run_novel_controls": 0,
-    "clean_sequence_hard_negatives_have": 8,
-    "clean_sequence_success_controls_have": 2,
+    "clean_sequence_hard_negatives_have": 39,
+    "clean_sequence_success_controls_have": 11,
     "clean_sequence_success_controls_required": 5,
     "runtime_work_allowed": false,
     "sampling_overlap_detected": true

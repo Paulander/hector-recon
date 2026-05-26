@@ -196,7 +196,7 @@ def test_stage7_diverse_clean_sampling_readiness_fixture_detects_forbidden_flag(
     assert payload["decision"]["label_run_allowed"] is False
 
 
-def test_stage7_diverse_clean_sampling_integration_waits_for_outputs():
+def test_stage7_diverse_clean_sampling_integration_reports_closed_success_gate():
     payload = _read_report(
         "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json"
     )
@@ -212,13 +212,20 @@ def test_stage7_diverse_clean_sampling_integration_waits_for_outputs():
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
     assert payload["summary"]["job_count"] == 8
-    assert payload["summary"]["outputs_present_count"] == 0
-    assert payload["summary"]["combined_success_controls"] == 2
-    assert payload["summary"]["success_controls_met"] is False
+    assert payload["summary"]["outputs_present_count"] == 8
+    assert payload["summary"]["all_outputs_present"] is True
+    assert payload["summary"]["new_control_count"] == 0
+    assert payload["summary"]["new_role_counts"] == {}
+    assert payload["summary"]["combined_success_controls"] == 11
+    assert payload["summary"]["success_controls_met"] is True
+    assert payload["summary"]["skipped_counts"]["duplicate_base_or_diverse_control"] == 64
     assert payload["summary"]["stage7_training_row_count"] == 0
     assert payload["summary"]["selector_training_row_count"] == 0
     assert payload["summary"]["runtime_authorization_row_count"] == 0
-    assert payload["decision"]["status"] == "stage7_diverse_clean_sampling_outputs_pending"
+    assert (
+        payload["decision"]["status"]
+        == "stage7_diverse_clean_sampling_integration_success_controls_met"
+    )
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False
     assert payload["decision"]["selector_training_allowed"] is False
@@ -337,6 +344,76 @@ def test_stage7_diverse_clean_sampling_integration_fixture_closes_success_gap(tm
     assert payload["decision"]["label_run_allowed"] is False
 
 
+def test_stage7_diverse_clean_sampling_integration_dedupes_against_base_controls(
+    tmp_path, monkeypatch
+):
+    output = tmp_path / "out.json"
+    output.write_text(
+        json.dumps(
+            {
+                "handoff_packets": [
+                    {
+                        "phase": "post_opponent_reply",
+                        "evidence_terms": {
+                            "label": "box_shrink",
+                            "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                            "move": "a1a2",
+                            "successor_selected_skill": "krk.edge_trap_close",
+                            "successor_skills": {
+                                "krk.edge_trap_close": {"best_move": "a2a8"}
+                            },
+                        },
+                    },
+                    {
+                        "phase": "playout_summary",
+                        "evidence_terms": {
+                            "label": "box_shrink",
+                            "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                            "move": "a1a2",
+                            "playout_result": "mate",
+                            "plies": 20,
+                            "max_plies": 40,
+                        },
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_integration, "ROOT", tmp_path)
+    manifest = {
+        "jobs": [
+            {
+                "job_id": "fixture.job",
+                "json_output": "out.json",
+                "source_stage_names": ["Box_Small"],
+            }
+        ]
+    }
+    base_controls = {
+        "acceptance": {"clean_sequence_success_controls_required": 5},
+        "controls": [
+            {
+                "control_role": "clean_sequence_success_control",
+                "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                "move_uci": "a1a2",
+                "result": "mate",
+            },
+            {"control_role": "clean_sequence_success_control"},
+        ],
+    }
+
+    payload = _integration.build_payload(manifest=manifest, base_controls=base_controls)
+
+    assert payload["summary"]["new_control_count"] == 0
+    assert payload["summary"]["combined_success_controls"] == 2
+    assert payload["summary"]["skipped_counts"] == {"duplicate_base_or_diverse_control": 1}
+    assert (
+        payload["decision"]["status"]
+        == "stage7_diverse_clean_sampling_integration_gap_still_open"
+    )
+
+
 def test_stage7_diverse_clean_sampling_integration_blocks_invalid_validated_outputs():
     manifest = {
         "jobs": [
@@ -404,7 +481,7 @@ def test_stage7_diverse_clean_sampling_integration_blocks_invalid_validated_outp
     assert payload["decision"]["stage8_training_allowed"] is False
 
 
-def test_stage7_diverse_clean_sampling_runner_defaults_to_dry_run():
+def test_stage7_diverse_clean_sampling_runner_records_approved_execution():
     payload = _read_report(
         "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json"
     )
@@ -420,16 +497,21 @@ def test_stage7_diverse_clean_sampling_runner_defaults_to_dry_run():
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
     assert payload["execution_requested"] is False
-    assert payload["summary"]["dry_run"] is True
+    assert payload["historical_execution_requested"] is True
+    assert payload["summary"]["dry_run"] is False
     assert payload["summary"]["job_count"] == 8
     assert payload["summary"]["processed_job_count"] == 0
     assert payload["summary"]["executed_job_count"] == 0
+    assert payload["summary"]["historical_processed_job_count"] == 8
+    assert payload["summary"]["historical_executed_job_count"] == 8
     assert payload["summary"]["job_timeout_seconds"] == 900
     assert payload["summary"]["timed_out_job_count"] == 0
-    assert payload["summary"]["refresh_after_run_requested"] is False
-    assert payload["summary"]["refresh_after_run_performed"] is False
+    assert payload["summary"]["refresh_after_run_requested"] is True
+    assert payload["summary"]["refresh_after_run_performed"] is True
     assert payload["summary"]["stage7_training_row_count"] == 0
     assert payload["summary"]["runtime_authorization_row_count"] == 0
+    assert payload["summary"]["current_label_run_allowed"] is False
+    assert payload["summary"]["historical_label_run_allowed_by_runner"] is True
     assert payload["summary"]["execution_readiness_source"] == "live_recomputed"
     assert (
         payload["summary"]["execution_readiness_status"]
@@ -437,15 +519,25 @@ def test_stage7_diverse_clean_sampling_runner_defaults_to_dry_run():
     )
     assert payload["summary"]["execution_readiness_all_jobs_pass"] is True
     assert payload["summary"]["execution_readiness_jobs_passing"] == 8
-    assert payload["post_run_refresh"] is None
-    assert payload["decision"]["status"] == "stage7_diverse_clean_sampling_runner_dry_run_ready"
+    assert payload["post_run_refresh"]["status"] == (
+        "krk_suite_passive_advancement_ready_for_protected_failure_contrast_collection"
+    )
+    assert payload["post_run_refresh"]["sequence_policy_inputs_ready"] is True
+    assert payload["post_run_refresh"]["sequence_policy_benchmark_ready"] is True
+    assert (
+        payload["decision"]["status"]
+        == "stage7_diverse_clean_sampling_runner_executed_success"
+    )
     assert payload["decision"]["label_run_allowed"] is False
+    assert payload["decision"]["historical_label_run_allowed_by_runner"] is True
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["selector_training_allowed"] is False
     assert payload["decision"]["stage7_promotion_allowed"] is False
     assert payload["decision"]["stage8_training_allowed"] is False
     for command in payload["commands"]:
         assert command["would_execute"] is False
+        assert command["current_would_execute"] is False
+        assert command["historical_executed_under_prior_approval"] is True
 
 
 def test_stage7_diverse_clean_sampling_runner_blocks_when_readiness_fails(monkeypatch):
@@ -495,6 +587,8 @@ def test_stage7_diverse_clean_sampling_runner_refresh_requires_execution():
     assert payload["summary"]["refresh_after_run_performed"] is False
     assert payload["post_run_refresh"] is None
     assert payload["decision"]["label_run_allowed"] is False
+    assert payload["summary"]["current_label_run_allowed"] is False
+    assert payload["summary"]["historical_label_run_allowed_by_runner"] is False
 
 
 def test_stage7_diverse_clean_sampling_runner_post_success_refresh_uses_full_gate(
@@ -538,7 +632,7 @@ def test_stage7_diverse_clean_sampling_runner_post_success_refresh_uses_full_gat
 
     refresh_payload = {
         "script": "scripts/advance_krk_suite_from_current_gates_v0.py",
-        "status": "krk_suite_passive_advancement_ready_for_sequence_policy_review",
+        "status": "krk_suite_passive_advancement_ready_for_protected_failure_contrast_collection",
         "stage7_success_controls": 5,
         "sequence_policy_inputs_ready": True,
         "sequence_policy_benchmark_ready": True,
@@ -561,8 +655,10 @@ def test_stage7_diverse_clean_sampling_runner_post_success_refresh_uses_full_gat
         output_validation={"decision": {"status": "stage7_outputs_pending"}},
     )
 
-    assert payload["summary"]["processed_job_count"] == 1
-    assert payload["summary"]["executed_job_count"] == 1
+    assert payload["summary"]["processed_job_count"] == 0
+    assert payload["summary"]["executed_job_count"] == 0
+    assert payload["summary"]["historical_processed_job_count"] == 1
+    assert payload["summary"]["historical_executed_job_count"] == 1
     assert payload["summary"]["failed_job_count"] == 0
     assert payload["summary"]["refresh_after_run_performed"] is True
     assert payload["post_run_refresh"] == refresh_payload
@@ -572,6 +668,8 @@ def test_stage7_diverse_clean_sampling_runner_post_success_refresh_uses_full_gat
     )
     assert payload["post_run_refresh"]["runtime_changes_allowed"] is False
     assert payload["post_run_refresh"]["stage8_training_allowed"] is False
+    assert payload["summary"]["current_label_run_allowed"] is False
+    assert payload["summary"]["historical_label_run_allowed_by_runner"] is True
     assert (
         payload["decision"]["status"]
         == "stage7_diverse_clean_sampling_runner_executed_success"
@@ -688,14 +786,20 @@ def test_stage7_diverse_clean_sampling_runner_skips_existing_outputs_by_default(
 
     payload = _runner.build_payload(execute=True, max_jobs=1)
 
-    assert payload["summary"]["processed_job_count"] == 1
+    assert payload["summary"]["processed_job_count"] == 0
     assert payload["summary"]["executed_job_count"] == 0
+    assert payload["summary"]["historical_processed_job_count"] == 1
+    assert payload["summary"]["historical_executed_job_count"] == 0
     assert payload["summary"]["skipped_existing_output_count"] == 1
     assert payload["summary"]["failed_job_count"] == 0
     assert payload["summary"]["timed_out_job_count"] == 0
     assert payload["summary"]["overwrite_existing_outputs"] is False
     assert payload["commands"][0]["would_execute"] is False
-    assert payload["commands"][0]["would_skip_existing_output"] is True
+    assert payload["commands"][0]["would_skip_existing_output"] is False
+    assert (
+        payload["commands"][0]["historical_skipped_existing_output_under_prior_approval"]
+        is True
+    )
     assert payload["executed_jobs"][0]["skipped_existing_output"] is True
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["stage7_promotion_allowed"] is False
@@ -831,8 +935,10 @@ def test_stage7_diverse_clean_sampling_runner_marks_job_timeout(tmp_path, monkey
         output_validation={"decision": {"status": "stage7_outputs_pending"}},
     )
 
-    assert payload["summary"]["processed_job_count"] == 1
-    assert payload["summary"]["executed_job_count"] == 1
+    assert payload["summary"]["processed_job_count"] == 0
+    assert payload["summary"]["executed_job_count"] == 0
+    assert payload["summary"]["historical_processed_job_count"] == 1
+    assert payload["summary"]["historical_executed_job_count"] == 1
     assert payload["summary"]["failed_job_count"] == 1
     assert payload["summary"]["timed_out_job_count"] == 1
     assert payload["summary"]["job_timeout_seconds"] == 1

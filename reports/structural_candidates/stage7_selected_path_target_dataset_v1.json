@@ -440,6 +440,153 @@
       "causal_status": "non_causal_replay_free_label",
       "features": {
         "control_quality": "sandbox_sourced_replay_free_success_control",
+        "plies_to_mate": 37,
+        "semantic_alignment_status": "reward_contract_mismatch",
+        "source_artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_a_seed149_8_h40.json"
+      },
+      "label": "sequence_continuation_success_recovered",
+      "outcome": "mate",
+      "row_role": "stage7_sequence_success_control_recovered",
+      "schema_version": "stage7_selected_path_target_row.v1",
+      "selected_move": "a5h5",
+      "selected_provider": "unknown_recovered_success_path",
+      "selected_provider_family": "unknown_recovered_success_path",
+      "source_stage": "stage7",
+      "state_id": "recovered.e6aae4bd3f00",
+      "target_id": "stage7.selected_path.sequence_continuation_gap.v0",
+      "target_provider": "unknown_recovered_success_path"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "causal_status": "non_causal_replay_free_label",
+      "features": {
+        "control_quality": "sandbox_sourced_replay_free_success_control",
+        "plies_to_mate": 13,
+        "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+        "source_artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_b_seed151_8_h40.json"
+      },
+      "label": "sequence_continuation_success_recovered",
+      "outcome": "mate",
+      "row_role": "stage7_sequence_success_control_recovered",
+      "schema_version": "stage7_selected_path_target_row.v1",
+      "selected_move": "b2b7",
+      "selected_provider": "unknown_recovered_success_path",
+      "selected_provider_family": "unknown_recovered_success_path",
+      "source_stage": "stage7",
+      "state_id": "recovered.f0332fb4fa91",
+      "target_id": "stage7.selected_path.sequence_continuation_gap.v0",
+      "target_provider": "unknown_recovered_success_path"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "causal_status": "non_causal_replay_free_label",
+      "features": {
+        "control_quality": "sandbox_sourced_replay_free_success_control",
+        "plies_to_mate": 39,
+        "semantic_alignment_status": "visible_contract_without_reward",
+        "source_artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_b_seed151_8_h40.json"
+      },
+      "label": "sequence_continuation_success_recovered",
+      "outcome": "mate",
+      "row_role": "stage7_sequence_success_control_recovered",
+      "schema_version": "stage7_selected_path_target_row.v1",
+      "selected_move": "g6g1",
+      "selected_provider": "unknown_recovered_success_path",
+      "selected_provider_family": "unknown_recovered_success_path",
+      "source_stage": "stage7",
+      "state_id": "recovered.dd557d6ba8ec",
+      "target_id": "stage7.selected_path.sequence_continuation_gap.v0",
+      "target_provider": "unknown_recovered_success_path"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "causal_status": "non_causal_replay_free_label",
+      "features": {
+        "control_quality": "sandbox_sourced_replay_free_success_control",
+        "plies_to_mate": 19,
+        "semantic_alignment_status": "neither_reward_nor_visible_contract",
+        "source_artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_b_seed151_8_h40.json"
+      },
+      "label": "sequence_continuation_success_recovered",
+      "outcome": "mate",
+      "row_role": "stage7_sequence_success_control_recovered",
+      "schema_version": "stage7_selected_path_target_row.v1",
+      "selected_move": "d6a6",
+      "selected_provider": "unknown_recovered_success_path",
+      "selected_provider_family": "unknown_recovered_success_path",
+      "source_stage": "stage7",
+      "state_id": "recovered.98246f5e3a9a",
+      "target_id": "stage7.selected_path.sequence_continuation_gap.v0",
+      "target_provider": "unknown_recovered_success_path"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "causal_status": "non_causal_replay_free_label",
+      "features": {
+        "control_quality": "sandbox_sourced_replay_free_success_control",
+        "plies_to_mate": 21,
+        "semantic_alignment_status": "reward_contract_mismatch",
+        "source_artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_c_seed157_8_h40.json"
+      },
+      "label": "sequence_continuation_success_recovered",
+      "outcome": "mate",
+      "row_role": "stage7_sequence_success_control_recovered",
+      "schema_version": "stage7_selected_path_target_row.v1",
+      "selected_move": "e6f6",
+      "selected_provider": "unknown_recovered_success_path",
+      "selected_provider_family": "unknown_recovered_success_path",
+      "source_stage": "stage7",
+      "state_id": "recovered.f9287ffdcd68",
+      "target_id": "stage7.selected_path.sequence_continuation_gap.v0",
+      "target_provider": "unknown_recovered_success_path"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "causal_status": "non_causal_replay_free_label",
+      "features": {
+        "control_quality": "sandbox_sourced_replay_free_success_control",
+        "plies_to_mate": 33,
+        "semantic_alignment_status": "neither_reward_nor_visible_contract",
+        "source_artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_c_seed157_8_h40.json"
+      },
+      "label": "sequence_continuation_success_recovered",
+      "outcome": "mate",
+      "row_role": "stage7_sequence_success_control_recovered",
+      "schema_version": "stage7_selected_path_target_row.v1",
+      "selected_move": "c6c8",
+      "selected_provider": "unknown_recovered_success_path",
+      "selected_provider_family": "unknown_recovered_success_path",
+      "source_stage": "stage7",
+      "state_id": "recovered.ff1c3efc46ec",
+      "target_id": "stage7.selected_path.sequence_continuation_gap.v0",
+      "target_provider": "unknown_recovered_success_path"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "causal_status": "non_causal_replay_free_label",
+      "features": {
+        "control_quality": "sandbox_sourced_replay_free_success_control",
+        "plies_to_mate": 3,
+        "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+        "source_artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_c_seed157_8_h40.json"
+      },
+      "label": "sequence_continuation_success_recovered",
+      "outcome": "mate",
+      "row_role": "stage7_sequence_success_control_recovered",
+      "schema_version": "stage7_selected_path_target_row.v1",
+      "selected_move": "d1d3",
+      "selected_provider": "unknown_recovered_success_path",
+      "selected_provider_family": "unknown_recovered_success_path",
+      "source_stage": "stage7",
+      "state_id": "recovered.5c671f3fcf86",
+      "target_id": "stage7.selected_path.sequence_continuation_gap.v0",
+      "target_provider": "unknown_recovered_success_path"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "causal_status": "non_causal_replay_free_label",
+      "features": {
+        "control_quality": "sandbox_sourced_replay_free_success_control",
         "plies_to_mate": 29,
         "semantic_alignment_status": "reward_contract_mismatch",
         "source_artifact": "reports/structural_candidates/stage7_box_priority_rolesupport_10_h40.json"
@@ -482,6 +629,48 @@
       "causal_status": "non_causal_replay_free_label",
       "features": {
         "control_quality": "sandbox_sourced_replay_free_success_control",
+        "plies_to_mate": 25,
+        "semantic_alignment_status": "visible_contract_without_reward",
+        "source_artifact": "reports/structural_candidates/stage7_diverse_clean_edge_fence_deep_seed107_8_h40.json"
+      },
+      "label": "sequence_continuation_success_recovered",
+      "outcome": "mate",
+      "row_role": "stage7_sequence_success_control_recovered",
+      "schema_version": "stage7_selected_path_target_row.v1",
+      "selected_move": "a4h4",
+      "selected_provider": "unknown_recovered_success_path",
+      "selected_provider_family": "unknown_recovered_success_path",
+      "source_stage": "stage7",
+      "state_id": "recovered.cc05651ecb21",
+      "target_id": "stage7.selected_path.sequence_continuation_gap.v0",
+      "target_provider": "unknown_recovered_success_path"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "causal_status": "non_causal_replay_free_label",
+      "features": {
+        "control_quality": "sandbox_sourced_replay_free_success_control",
+        "plies_to_mate": 35,
+        "semantic_alignment_status": "visible_contract_without_reward",
+        "source_artifact": "reports/structural_candidates/stage7_diverse_clean_edge_fence_deep_seed107_8_h40.json"
+      },
+      "label": "sequence_continuation_success_recovered",
+      "outcome": "mate",
+      "row_role": "stage7_sequence_success_control_recovered",
+      "schema_version": "stage7_selected_path_target_row.v1",
+      "selected_move": "b2c1",
+      "selected_provider": "unknown_recovered_success_path",
+      "selected_provider_family": "unknown_recovered_success_path",
+      "source_stage": "stage7",
+      "state_id": "recovered.8e7467fb4a51",
+      "target_id": "stage7.selected_path.sequence_continuation_gap.v0",
+      "target_provider": "unknown_recovered_success_path"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "causal_status": "non_causal_replay_free_label",
+      "features": {
+        "control_quality": "sandbox_sourced_replay_free_success_control",
         "plies_to_mate": 23,
         "semantic_alignment_status": "visible_contract_without_reward",
         "source_artifact": "reports/structural_candidates/stage7_drive_repair_olddist_25_h40.json"
@@ -495,153 +684,6 @@
       "selected_provider_family": "unknown_recovered_success_path",
       "source_stage": "stage7",
       "state_id": "recovered.21c50a23a5b3",
-      "target_id": "stage7.selected_path.sequence_continuation_gap.v0",
-      "target_provider": "unknown_recovered_success_path"
-    },
-    {
-      "active_landmark_label": "box_shrink",
-      "causal_status": "non_causal_replay_free_label",
-      "features": {
-        "control_quality": "sandbox_sourced_replay_free_success_control",
-        "plies_to_mate": 37,
-        "semantic_alignment_status": "neither_reward_nor_visible_contract",
-        "source_artifact": "reports/structural_candidates/stage7_drive_repair_on_25_h40.json"
-      },
-      "label": "sequence_continuation_success_recovered",
-      "outcome": "mate",
-      "row_role": "stage7_sequence_success_control_recovered",
-      "schema_version": "stage7_selected_path_target_row.v1",
-      "selected_move": "a4a8",
-      "selected_provider": "unknown_recovered_success_path",
-      "selected_provider_family": "unknown_recovered_success_path",
-      "source_stage": "stage7",
-      "state_id": "recovered.b3c7fac85a49",
-      "target_id": "stage7.selected_path.sequence_continuation_gap.v0",
-      "target_provider": "unknown_recovered_success_path"
-    },
-    {
-      "active_landmark_label": "box_shrink",
-      "causal_status": "non_causal_replay_free_label",
-      "features": {
-        "control_quality": "sandbox_sourced_replay_free_success_control",
-        "plies_to_mate": 21,
-        "semantic_alignment_status": "reward_visible_fence_aligned_survived",
-        "source_artifact": "reports/structural_candidates/stage7_king_tempo_single_use_on_10_h40.json"
-      },
-      "label": "sequence_continuation_success_recovered",
-      "outcome": "mate",
-      "row_role": "stage7_sequence_success_control_recovered",
-      "schema_version": "stage7_selected_path_target_row.v1",
-      "selected_move": "a4a7",
-      "selected_provider": "unknown_recovered_success_path",
-      "selected_provider_family": "unknown_recovered_success_path",
-      "source_stage": "stage7",
-      "state_id": "recovered.14a0b07b100e",
-      "target_id": "stage7.selected_path.sequence_continuation_gap.v0",
-      "target_provider": "unknown_recovered_success_path"
-    },
-    {
-      "active_landmark_label": "box_shrink",
-      "causal_status": "non_causal_replay_free_label",
-      "features": {
-        "control_quality": "sandbox_sourced_replay_free_success_control",
-        "plies_to_mate": 11,
-        "semantic_alignment_status": "reward_contract_mismatch",
-        "source_artifact": "reports/structural_candidates/stage7_plan_capsule_drive_priority_ttl3_10_h40.json"
-      },
-      "label": "sequence_continuation_success_recovered",
-      "outcome": "mate",
-      "row_role": "stage7_sequence_success_control_recovered",
-      "schema_version": "stage7_selected_path_target_row.v1",
-      "selected_move": "a1a5",
-      "selected_provider": "unknown_recovered_success_path",
-      "selected_provider_family": "unknown_recovered_success_path",
-      "source_stage": "stage7",
-      "state_id": "recovered.baaf1f5fc8bd",
-      "target_id": "stage7.selected_path.sequence_continuation_gap.v0",
-      "target_provider": "unknown_recovered_success_path"
-    },
-    {
-      "active_landmark_label": "box_shrink",
-      "causal_status": "non_causal_replay_free_label",
-      "features": {
-        "control_quality": "sandbox_sourced_replay_free_success_control",
-        "plies_to_mate": 9,
-        "semantic_alignment_status": "reward_contract_mismatch",
-        "source_artifact": "reports/structural_candidates/stage7_plan_capsule_drive_priority_ttl3_10_h40_rerun.json"
-      },
-      "label": "sequence_continuation_success_recovered",
-      "outcome": "mate",
-      "row_role": "stage7_sequence_success_control_recovered",
-      "schema_version": "stage7_selected_path_target_row.v1",
-      "selected_move": "a4h4",
-      "selected_provider": "unknown_recovered_success_path",
-      "selected_provider_family": "unknown_recovered_success_path",
-      "source_stage": "stage7",
-      "state_id": "recovered.ecc9c9c6d8a6",
-      "target_id": "stage7.selected_path.sequence_continuation_gap.v0",
-      "target_provider": "unknown_recovered_success_path"
-    },
-    {
-      "active_landmark_label": "box_shrink",
-      "causal_status": "non_causal_replay_free_label",
-      "features": {
-        "control_quality": "sandbox_sourced_replay_free_success_control",
-        "plies_to_mate": 31,
-        "semantic_alignment_status": "reward_visible_fence_aligned_survived",
-        "source_artifact": "reports/structural_candidates/stage7_post_king_tempo_scoped_on_100_h40.json"
-      },
-      "label": "sequence_continuation_success_recovered",
-      "outcome": "mate",
-      "row_role": "stage7_sequence_success_control_recovered",
-      "schema_version": "stage7_selected_path_target_row.v1",
-      "selected_move": "a4a7",
-      "selected_provider": "unknown_recovered_success_path",
-      "selected_provider_family": "unknown_recovered_success_path",
-      "source_stage": "stage7",
-      "state_id": "recovered.c50bc5b257aa",
-      "target_id": "stage7.selected_path.sequence_continuation_gap.v0",
-      "target_provider": "unknown_recovered_success_path"
-    },
-    {
-      "active_landmark_label": "box_shrink",
-      "causal_status": "non_causal_replay_free_label",
-      "features": {
-        "control_quality": "sandbox_sourced_replay_free_success_control",
-        "plies_to_mate": 7,
-        "semantic_alignment_status": "reward_contract_mismatch",
-        "source_artifact": "reports/structural_candidates/stage7_trace_role_full_sandbox_25_h40.json"
-      },
-      "label": "sequence_continuation_success_recovered",
-      "outcome": "mate",
-      "row_role": "stage7_sequence_success_control_recovered",
-      "schema_version": "stage7_selected_path_target_row.v1",
-      "selected_move": "a3e3",
-      "selected_provider": "unknown_recovered_success_path",
-      "selected_provider_family": "unknown_recovered_success_path",
-      "source_stage": "stage7",
-      "state_id": "recovered.b1908f04a92b",
-      "target_id": "stage7.selected_path.sequence_continuation_gap.v0",
-      "target_provider": "unknown_recovered_success_path"
-    },
-    {
-      "active_landmark_label": "box_shrink",
-      "causal_status": "non_causal_replay_free_label",
-      "features": {
-        "control_quality": "sandbox_sourced_replay_free_success_control",
-        "plies_to_mate": 17,
-        "semantic_alignment_status": "reward_visible_fence_aligned_survived",
-        "source_artifact": "reports/structural_candidates/stage7_trace_role_king_tempo_only_25_h40.json"
-      },
-      "label": "sequence_continuation_success_recovered",
-      "outcome": "mate",
-      "row_role": "stage7_sequence_success_control_recovered",
-      "schema_version": "stage7_selected_path_target_row.v1",
-      "selected_move": "a3a2",
-      "selected_provider": "unknown_recovered_success_path",
-      "selected_provider_family": "unknown_recovered_success_path",
-      "source_stage": "stage7",
-      "state_id": "recovered.7b2a4760aaec",
       "target_id": "stage7.selected_path.sequence_continuation_gap.v0",
       "target_provider": "unknown_recovered_success_path"
     }
@@ -662,18 +704,18 @@
   "summary": {
     "benchmark_underpowered": false,
     "ownership_target_minimally_trainable": true,
-    "row_count": 30,
+    "row_count": 32,
     "row_role_counts": {
       "protected_safe_owner_control": 12,
       "stage7_selected_owner_failed_positive": 2,
       "stage7_sequence_gap_unresolved": 2,
-      "stage7_sequence_success_control_recovered": 14
+      "stage7_sequence_success_control_recovered": 16
     },
     "sequence_control_caveat": "sandbox_sourced_controls_offline_only",
-    "sequence_controls_recovered": 14,
+    "sequence_controls_recovered": 16,
     "sequence_target_minimally_trainable": true,
     "target_counts": {
-      "stage7.selected_path.sequence_continuation_gap.v0": 16,
+      "stage7.selected_path.sequence_continuation_gap.v0": 18,
       "stage7.selected_path.strategy_ownership_gap.v0": 14
     }
   }

@@ -46,11 +46,23 @@ def test_sequence_policy_pipeline_refresh_preserves_boundaries():
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
     assert payload["summary"]["all_boundaries_preserved"] is True
-    assert payload["summary"]["stage7_success_controls"] == 2
-    assert payload["summary"]["sequence_policy_inputs_ready"] is False
+    assert payload["summary"]["stage7_success_controls"] == 11
+    assert payload["summary"]["sequence_policy_inputs_ready"] is True
+    assert (
+        payload["summary"]["sequence_policy_benchmark_review_status"]
+        == "sequence_policy_benchmark_mixed_plan_window_underpowered"
+    )
+    assert (
+        payload["summary"]["sequence_policy_benchmark_review_next_step"]
+        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+    )
     assert (
         payload["decision"]["status"]
-        == "sequence_policy_pipeline_refreshed_still_blocked_by_stage7_success_controls"
+        == "sequence_policy_pipeline_refreshed_ready_for_non_causal_benchmark_review"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
     )
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False
@@ -86,11 +98,13 @@ def test_sequence_policy_pipeline_refresh_ready_status_logic():
             "stage7_success_controls_required": 5,
             "sequence_policy_inputs_ready": True,
             "sequence_policy_benchmark_status": "sequence_policy_benchmark_ready_non_causal_results_available",
+            "sequence_policy_benchmark_review_status": "sequence_policy_benchmark_mixed_plan_window_underpowered",
+            "sequence_policy_benchmark_review_next_step": "explicitly_approve_protected_plan_window_failure_contrast_collection",
             "current_gate_status": "krk_control_plane_waiting_on_explicit_gate_choice",
         },
         "decision": {
             "status": "sequence_policy_pipeline_refreshed_ready_for_non_causal_benchmark_review",
-            "recommended_next_step": "review_non_causal_sequence_policy_benchmark",
+            "recommended_next_step": "explicitly_approve_protected_plan_window_failure_contrast_collection",
             "runtime_changes_allowed": False,
             "label_run_allowed": False,
             "selector_training_allowed": False,
@@ -103,3 +117,109 @@ def test_sequence_policy_pipeline_refresh_ready_status_logic():
 
     assert "sequence_policy_pipeline_refreshed_ready_for_non_causal_benchmark_review" in rendered
     assert "runtime_changes_allowed: `false`" in rendered
+
+
+def test_sequence_policy_pipeline_refresh_reports_protected_plan_window_input_gap(
+    monkeypatch,
+):
+    mapping = {
+        "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json": {
+            "summary": {"outputs_present_count": 8}
+        },
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json": {
+            "summary": {
+                "benchmark_input_ready": False,
+                "stage7_clean_success_controls": 5,
+                "stage7_clean_success_controls_required": 5,
+                "stage7_clean_success_controls_met": True,
+                "stage7_clean_failure_controls": 5,
+                "stage7_clean_failure_controls_required": 5,
+                "stage7_clean_failure_controls_met": True,
+                "protected_plan_window_evidence_met": False,
+            }
+        },
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json": {
+            "decision": {
+                "status": "sequence_policy_benchmark_blocked_pending_protected_plan_window_evidence"
+            }
+        },
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json": {
+            "decision": {"status": "sequence_policy_benchmark_review_blocked_pending_ready_inputs"}
+        },
+        "reports/krk_current_control_plane_gate_v0.json": {
+            "decision": {"status": "krk_control_plane_waiting_on_explicit_gate_choice"}
+        },
+    }
+
+    monkeypatch.setattr(_refresh, "STEPS", [])
+    monkeypatch.setattr(_refresh, "_load_json", lambda path: mapping[str(path)])
+
+    payload = _refresh.run_refresh()
+
+    assert (
+        payload["decision"]["status"]
+        == "sequence_policy_pipeline_refreshed_blocked_pending_protected_plan_window_inputs"
+    )
+    assert payload["decision"]["recommended_next_step"] == "repair_protected_plan_window_input_gap"
+    assert payload["summary"]["stage7_success_controls"] == 5
+    assert payload["summary"]["stage7_failure_controls"] == 5
+    assert payload["summary"]["protected_plan_window_evidence_met"] is False
+    assert payload["decision"]["label_run_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_sequence_policy_pipeline_refresh_routes_forbidden_rows_to_repair(monkeypatch):
+    mapping = {
+        "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json": {
+            "summary": {"outputs_present_count": 8}
+        },
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json": {
+            "summary": {
+                "benchmark_input_ready": True,
+                "stage7_clean_success_controls": 5,
+                "stage7_clean_success_controls_required": 5,
+                "stage7_clean_success_controls_met": True,
+                "stage7_clean_failure_controls": 5,
+                "stage7_clean_failure_controls_required": 5,
+                "stage7_clean_failure_controls_met": True,
+                "protected_plan_window_evidence_met": True,
+                "selector_training_row_count": 1,
+                "runtime_authorization_row_count": 0,
+            }
+        },
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json": {
+            "preflight": {"blockers": ["selector_training_rows_forbidden"]},
+            "decision": {
+                "status": "sequence_policy_benchmark_blocked_forbidden_training_or_runtime_rows"
+            },
+        },
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json": {
+            "blockers": ["selector_training_rows_forbidden"],
+            "decision": {
+                "status": "sequence_policy_benchmark_review_blocked_forbidden_training_or_runtime_rows",
+                "recommended_next_step": "repair_sequence_policy_inputs_remove_training_or_runtime_rows",
+            },
+        },
+        "reports/krk_current_control_plane_gate_v0.json": {
+            "decision": {"status": "krk_control_plane_waiting_on_explicit_gate_choice"}
+        },
+    }
+
+    monkeypatch.setattr(_refresh, "STEPS", [])
+    monkeypatch.setattr(_refresh, "_load_json", lambda path: mapping[str(path)])
+
+    payload = _refresh.run_refresh()
+
+    assert (
+        payload["decision"]["status"]
+        == "sequence_policy_pipeline_refreshed_blocked_forbidden_training_or_runtime_rows"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+    )
+    assert payload["summary"]["forbidden_training_or_runtime_input_blocked"] is True
+    assert "selector_training_rows_forbidden" in payload["summary"][
+        "forbidden_training_or_runtime_input_blockers"
+    ]
+    assert payload["decision"]["selector_training_allowed"] is False

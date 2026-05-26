@@ -108,6 +108,7 @@ def test_protected_plan_window_frames_are_bounded_and_non_causal():
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["selector_training_allowed"] is False
     assert payload["decision"]["stage8_training_allowed"] is False
+    assert len({frame["frame_id"] for frame in payload["frames"]}) == len(payload["frames"])
 
     for frame in payload["frames"]:
         assert frame["causal_status"] == "non_causal_replay_free_protected_plan_window"

@@ -28,8 +28,38 @@ SOURCES = {
         "reports/strategy_arbitration/krk_sequence_policy_pipeline_refresh_v0.json"
     ),
     "sequence_benchmark": "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
+    "sequence_benchmark_review": (
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
+    ),
+    "protected_failure_contrast_plan": (
+        "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_plan_v0.json"
+    ),
+    "protected_failure_contrast_manifest": (
+        "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json"
+    ),
+    "protected_failure_contrast_manifest_review": (
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_manifest_review_v0.json"
+    ),
+    "protected_failure_contrast_execution_readiness": (
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_execution_readiness_v0.json"
+    ),
+    "protected_failure_contrast_runner": (
+        "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_runner_v0.json"
+    ),
+    "protected_failure_contrast_output_validation": (
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_output_validation_v0.json"
+    ),
+    "protected_failure_contrast_integration": (
+        "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_integration_v0.json"
+    ),
     "stage7_sampling_runner": (
         "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json"
+    ),
+    "stage7_sampling_output_validation": (
+        "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json"
     ),
     "stage7_sampling_integration": (
         "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json"
@@ -47,6 +77,16 @@ FORBIDDEN_FLAGS = {
     "gameplay_topology_mutation": False,
     "stage7_promotion_allowed": False,
     "stage8_training_allowed": False,
+}
+
+FORBIDDEN_INPUT_BLOCKERS = {
+    "selector_training_rows_forbidden",
+    "runtime_authorization_rows_forbidden",
+}
+
+FORBIDDEN_INPUT_STATUSES = {
+    "sequence_policy_benchmark_blocked_forbidden_training_or_runtime_rows",
+    "sequence_policy_benchmark_review_blocked_forbidden_training_or_runtime_rows",
 }
 
 
@@ -71,6 +111,51 @@ def flag_value(payload: dict[str, Any], key: str) -> Any:
 
 def artifact_ok(payload: dict[str, Any]) -> bool:
     return payload.get("_missing") is not True
+
+
+def safe_relative_path(path_value: Any) -> bool:
+    if not isinstance(path_value, str) or not path_value:
+        return False
+    path = Path(path_value)
+    return not path.is_absolute() and ".." not in path.parts
+
+
+def stack_path_status(stack: dict[str, Any]) -> dict[str, Any]:
+    unsafe_paths: list[str] = []
+    missing_paths: list[str] = []
+    checked = 0
+    for stack_name, entries in stack.items():
+        if not isinstance(entries, dict):
+            unsafe_paths.append(str(stack_name))
+            continue
+        for key, path_value in entries.items():
+            label = f"{stack_name}.{key}"
+            checked += 1
+            if not safe_relative_path(path_value):
+                unsafe_paths.append(label)
+                continue
+            if not (ROOT / str(path_value)).exists():
+                missing_paths.append(label)
+    return {
+        "checked_path_count": checked,
+        "unsafe_paths": unsafe_paths,
+        "missing_paths": missing_paths,
+        "all_paths_safe": not unsafe_paths,
+        "all_paths_exist": not missing_paths,
+    }
+
+
+def rollback_distinct_for_common_paths(
+    active_stack: dict[str, Any], rollback_stack: dict[str, Any]
+) -> bool:
+    for stack_name, active_entries in active_stack.items():
+        rollback_entries = rollback_stack.get(stack_name)
+        if not isinstance(active_entries, dict) or not isinstance(rollback_entries, dict):
+            continue
+        for key, active_path in active_entries.items():
+            if key in rollback_entries and rollback_entries[key] == active_path:
+                return False
+    return True
 
 
 def boundary_status(payloads: dict[str, dict[str, Any]]) -> dict[str, Any]:
@@ -117,7 +202,20 @@ def build_payload() -> dict[str, Any]:
     stage4_unblocker = payloads["stage4_caveat_unblocker"]
     pipeline = payloads["sequence_pipeline_refresh"]
     benchmark = payloads["sequence_benchmark"]
+    benchmark_review = payloads["sequence_benchmark_review"]
+    failure_contrast_plan = payloads["protected_failure_contrast_plan"]
+    failure_contrast_manifest = payloads["protected_failure_contrast_manifest"]
+    failure_contrast_manifest_review = payloads["protected_failure_contrast_manifest_review"]
+    failure_contrast_execution_readiness = payloads[
+        "protected_failure_contrast_execution_readiness"
+    ]
+    failure_contrast_runner = payloads["protected_failure_contrast_runner"]
+    failure_contrast_output_validation = payloads[
+        "protected_failure_contrast_output_validation"
+    ]
+    failure_contrast_integration = payloads["protected_failure_contrast_integration"]
     runner = payloads["stage7_sampling_runner"]
+    output_validation = payloads["stage7_sampling_output_validation"]
     integration = payloads["stage7_sampling_integration"]
     gate = payloads["control_plane_gate"]
 
@@ -125,24 +223,136 @@ def build_payload() -> dict[str, Any]:
     stage7_summary = integration.get("summary", {})
     sequence_summary = pipeline.get("summary", {})
     benchmark_preflight = benchmark.get("preflight", {})
+    output_validation_status = output_validation.get("decision", {}).get(
+        "status",
+        runner.get("summary", {}).get("output_validation_status"),
+    )
 
+    active_stack = active.get("active_protected_stack") or {}
+    rollback_stack = active.get("rollback_protected_stack") or {}
+    active_stack_paths = stack_path_status(active_stack)
+    rollback_stack_paths = stack_path_status(rollback_stack)
+    rollback_common_paths_distinct = rollback_distinct_for_common_paths(
+        active_stack, rollback_stack
+    )
     protected_stack_validated = (
         active.get("decision", {}).get("clean_stack_adopted") is True
+        and active.get("decision", {}).get("filesystem_snapshots_replaced") is False
+        and active.get("decision", {}).get("post_adoption_validation_required") is True
+        and active.get("invariants", {}).get("rollback_paths_preserved") is True
+        and active.get("invariants", {}).get("files_copied_or_replaced") is False
         and clean.get("decision", {}).get("clean_stack_adopted_and_validated") is True
+        and clean.get("invariants", {}).get("rollback_paths_preserved") is True
+        and clean.get("invariants", {}).get("files_copied_or_replaced") is False
         and preservation.get("decision", {}).get("m1_m4_preservation_passed") is True
         and preservation.get("decision", {}).get("kpk_kqk_bridge_preservation_passed") is True
         and clean.get("validation", {}).get("stage5_conversion_preservation_guardrail", {}).get("passed")
         is True
         and clean.get("validation", {}).get("stage6_drive_h40_historical_bonus", {}).get("passed")
         is True
+        and active_stack_paths["all_paths_safe"]
+        and active_stack_paths["all_paths_exist"]
+        and rollback_stack_paths["all_paths_safe"]
+        and rollback_stack_paths["all_paths_exist"]
+        and rollback_common_paths_distinct
     )
 
     stage7_success_controls = int(stage7_summary.get("combined_success_controls", 0) or 0)
     stage7_success_required = int(stage7_summary.get("success_controls_required", 5) or 5)
     stage7_success_ready = stage7_success_controls >= stage7_success_required
+    raw_stage7_execution_readiness_status = runner.get("summary", {}).get(
+        "execution_readiness_status"
+    )
+    stage7_label_gate_closed = (
+        stage7_success_ready
+        and runner.get("decision", {}).get("status")
+        == "stage7_diverse_clean_sampling_runner_executed_success"
+    )
+    current_stage7_execution_readiness_status = (
+        "not_applicable_stage7_success_gate_closed"
+        if stage7_label_gate_closed
+        else raw_stage7_execution_readiness_status
+    )
+    current_stage7_label_run_allowed = (
+        False
+        if stage7_label_gate_closed
+        else bool(
+            runner.get("summary", {}).get(
+                "current_label_run_allowed",
+                runner.get("decision", {}).get("label_run_allowed", False),
+            )
+        )
+    )
+    historical_stage7_label_run_allowed = bool(
+        runner.get("decision", {}).get(
+            "historical_label_run_allowed_by_runner",
+            runner.get("summary", {}).get(
+                "historical_label_run_allowed_by_runner",
+                runner.get("decision", {}).get("label_run_allowed", False),
+            ),
+        )
+    )
+    runner_summary = runner.get("summary", {})
+    current_stage7_processed_job_count = int(
+        runner_summary.get("processed_job_count", 0) or 0
+    )
+    current_stage7_executed_job_count = int(
+        runner_summary.get("executed_job_count", 0) or 0
+    )
+    historical_stage7_processed_job_count = int(
+        runner_summary.get(
+            "historical_processed_job_count",
+            current_stage7_processed_job_count,
+        )
+        or 0
+    )
+    historical_stage7_executed_job_count = int(
+        runner_summary.get(
+            "historical_executed_job_count",
+            current_stage7_executed_job_count,
+        )
+        or 0
+    )
 
+    benchmark_decision = benchmark.get("decision", {})
+    benchmark_review_blockers = benchmark_review.get("blockers") or []
     sequence_ready = bool(sequence_summary.get("sequence_policy_inputs_ready")) and bool(
-        benchmark.get("decision", {}).get("benchmark_executed_as_ready")
+        benchmark_decision.get("benchmark_executed_as_ready")
+    )
+    sequence_review_status = benchmark_review.get("decision", {}).get("status")
+    forbidden_input_blockers_set = FORBIDDEN_INPUT_BLOCKERS & (
+        set(benchmark_preflight.get("blockers") or []) | set(benchmark_review_blockers)
+    )
+    if int(benchmark_preflight.get("selector_training_row_count") or 0) > 0:
+        forbidden_input_blockers_set.add("selector_training_rows_forbidden")
+    if int(benchmark_preflight.get("runtime_authorization_row_count") or 0) > 0:
+        forbidden_input_blockers_set.add("runtime_authorization_rows_forbidden")
+    forbidden_input_blockers = sorted(forbidden_input_blockers_set)
+    sequence_forbidden_training_or_runtime_inputs = bool(forbidden_input_blockers) or (
+        benchmark_decision.get("status") in FORBIDDEN_INPUT_STATUSES
+        or sequence_review_status in FORBIDDEN_INPUT_STATUSES
+    )
+    protected_failure_contrast_collection_ready = (
+        failure_contrast_manifest_review.get("decision", {}).get("status")
+        == "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
+        and failure_contrast_execution_readiness.get("decision", {}).get("status")
+        == "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+        and failure_contrast_runner.get("decision", {}).get("status")
+        == "protected_plan_window_failure_contrast_runner_dry_run_ready"
+    )
+    protected_failure_contrast_ready_for_explicit_approval = (
+        protected_failure_contrast_collection_ready
+        and not sequence_forbidden_training_or_runtime_inputs
+    )
+    protected_failure_contrast_integration_ready = bool(
+        failure_contrast_integration.get("summary", {}).get("integration_ready")
+    )
+    protected_failure_contrast_pending = (
+        stage7_success_ready
+        and sequence_ready
+        and sequence_review_status == "sequence_policy_benchmark_mixed_plan_window_underpowered"
+        and not sequence_forbidden_training_or_runtime_inputs
+        and not protected_failure_contrast_integration_ready
     )
 
     stage4_decision = stage4_unblocker.get("decision") or {}
@@ -186,11 +396,15 @@ def build_payload() -> dict[str, Any]:
             "sampling_runner_output_validation_status": runner.get("summary", {}).get(
                 "output_validation_status"
             ),
+            "sampling_output_validation_status": output_validation_status,
             "sampling_runner_execution_readiness_source": runner.get("summary", {}).get(
                 "execution_readiness_source"
             ),
-            "sampling_runner_execution_readiness_status": runner.get("summary", {}).get(
-                "execution_readiness_status"
+            "sampling_runner_execution_readiness_status": (
+                current_stage7_execution_readiness_status
+            ),
+            "historical_sampling_runner_execution_readiness_status": (
+                raw_stage7_execution_readiness_status
             ),
             "sampling_runner_invalid_existing_output_count": runner.get("summary", {}).get(
                 "invalid_existing_output_count"
@@ -206,26 +420,55 @@ def build_payload() -> dict[str, Any]:
         "stage8": {
             "status": "blocked",
             "ready_for_training": False,
-            "blocker": "Stage 7 remains quarantined and sequence-policy benchmark is not ready",
+            "blocker": (
+                "Protected plan-window failure-contrast evidence is not integrated; "
+                "Stage 8 remains blocked pending explicit protected failure-contrast "
+                "collection and passive integration."
+                if protected_failure_contrast_pending
+                else (
+                    "Sequence-policy inputs contain forbidden training or runtime "
+                    "authorization rows and must be repaired before Stage 8 review."
+                )
+                if sequence_forbidden_training_or_runtime_inputs
+                else "Stage 7 remains quarantined or the sequence-policy benchmark is not ready"
+            ),
         },
     }
 
-    blockers: list[str] = []
+    hard_blockers: list[str] = []
     if not protected_stack_validated:
-        blockers.append("protected_retry1_stage5_6_stack_not_validated")
+        hard_blockers.append("protected_retry1_stage5_6_stack_not_validated")
     if not stage7_success_ready:
-        blockers.append("stage7_clean_success_controls_missing")
+        hard_blockers.append("stage7_clean_success_controls_missing")
     if not sequence_ready:
-        blockers.append("sequence_policy_benchmark_not_ready")
+        hard_blockers.append("sequence_policy_benchmark_not_ready")
+    if sequence_forbidden_training_or_runtime_inputs:
+        hard_blockers.append("sequence_policy_forbidden_training_or_runtime_rows")
     if boundaries["violation_count"]:
-        blockers.append("hard_invariant_violation_detected")
+        hard_blockers.append("hard_invariant_violation_detected")
+    explicit_gate_blockers: list[str] = []
+    if protected_failure_contrast_pending:
+        explicit_gate_blockers.append(
+            "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+        )
+    blockers = hard_blockers + explicit_gate_blockers
 
-    if not blockers:
+    if sequence_forbidden_training_or_runtime_inputs:
+        decision_status = "krk_suite_readiness_blocked_forbidden_training_or_runtime_rows"
+        next_step = "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+    elif hard_blockers:
+        decision_status = "krk_suite_readiness_blocked_pending_stage7_clean_success_controls"
+        next_step = (
+            "explicitly_approve_stage7_diverse_clean_sampling_or_choose_stage4_sandbox_gate"
+        )
+    elif explicit_gate_blockers:
+        decision_status = (
+            "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection"
+        )
+        next_step = "explicitly_approve_protected_plan_window_failure_contrast_collection"
+    else:
         decision_status = "krk_suite_readiness_ready_for_next_runtime_or_training_review"
         next_step = "prepare_explicit_runtime_or_training_review_packet"
-    else:
-        decision_status = "krk_suite_readiness_blocked_pending_stage7_clean_success_controls"
-        next_step = "explicitly_approve_stage7_diverse_clean_sampling_or_choose_stage4_sandbox_gate"
 
     return {
         "schema_version": "krk_full_suite_readiness_audit.v0",
@@ -240,6 +483,15 @@ def build_payload() -> dict[str, Any]:
             "clean_stack_adopted_and_validated": clean.get("decision", {}).get(
                 "clean_stack_adopted_and_validated"
             ),
+            "post_adoption_validation_required": active.get("decision", {}).get(
+                "post_adoption_validation_required"
+            ),
+            "rollback_paths_preserved": active.get("invariants", {}).get(
+                "rollback_paths_preserved"
+            ),
+            "active_stack_path_status": active_stack_paths,
+            "rollback_stack_path_status": rollback_stack_paths,
+            "rollback_common_paths_distinct": rollback_common_paths_distinct,
             "stage5_conversion_preservation_passed": clean.get("validation", {})
             .get("stage5_conversion_preservation_guardrail", {})
             .get("passed"),
@@ -257,37 +509,107 @@ def build_payload() -> dict[str, Any]:
         "stage_status": stage_status,
         "sequence_policy": {
             "pipeline_status": pipeline.get("decision", {}).get("status"),
-            "benchmark_status": benchmark.get("decision", {}).get("status"),
+            "benchmark_status": benchmark_decision.get("status"),
+            "benchmark_review_status": sequence_review_status,
+            "benchmark_preflight_blockers": benchmark_preflight.get("blockers") or [],
+            "benchmark_review_blockers": benchmark_review_blockers,
+            "forbidden_training_or_runtime_input_blocked": (
+                sequence_forbidden_training_or_runtime_inputs
+            ),
+            "forbidden_training_or_runtime_input_blockers": forbidden_input_blockers,
             "input_row_count": benchmark_preflight.get("row_count"),
             "inputs_ready": sequence_summary.get("sequence_policy_inputs_ready"),
-            "benchmark_ready": benchmark.get("decision", {}).get("benchmark_executed_as_ready"),
+            "benchmark_ready": benchmark_decision.get("benchmark_executed_as_ready"),
             "stage7_heldout_row_count": benchmark_preflight.get("stage7_heldout_row_count"),
             "selector_training_row_count": benchmark_preflight.get("selector_training_row_count"),
             "runtime_authorization_row_count": benchmark_preflight.get(
                 "runtime_authorization_row_count"
             ),
         },
+        "protected_failure_contrast_gate": {
+            "plan_status": failure_contrast_plan.get("decision", {}).get("status"),
+            "unique_failure_count": failure_contrast_plan.get("summary", {}).get(
+                "unique_failure_count"
+            ),
+            "minimum_new_failures_needed": failure_contrast_plan.get("summary", {}).get(
+                "minimum_new_unique_failures_needed"
+            ),
+            "manifest_status": failure_contrast_manifest.get("decision", {}).get(
+                "status"
+            ),
+            "manifest_job_count": failure_contrast_manifest.get("summary", {}).get(
+                "job_count"
+            ),
+            "manifest_review_status": failure_contrast_manifest_review.get(
+                "decision", {}
+            ).get("status"),
+            "execution_readiness_status": failure_contrast_execution_readiness.get(
+                "decision", {}
+            ).get("status"),
+            "execution_jobs_passing": failure_contrast_execution_readiness.get(
+                "summary", {}
+            ).get("jobs_passing_readiness"),
+            "runner_status": failure_contrast_runner.get("decision", {}).get("status"),
+            "runner_processed_job_count": failure_contrast_runner.get(
+                "summary", {}
+            ).get("processed_job_count"),
+            "runner_executed_job_count": failure_contrast_runner.get("summary", {}).get(
+                "executed_job_count"
+            ),
+            "output_validation_status": failure_contrast_output_validation.get(
+                "decision", {}
+            ).get("status"),
+            "output_exists_count": failure_contrast_output_validation.get(
+                "summary", {}
+            ).get("output_exists_count"),
+            "output_valid_count": failure_contrast_output_validation.get(
+                "summary", {}
+            ).get("output_valid_count"),
+            "integration_status": failure_contrast_integration.get("decision", {}).get(
+                "status"
+            ),
+            "integrated_new_failure_count": failure_contrast_integration.get(
+                "summary", {}
+            ).get("integrated_new_failure_count"),
+            "integration_ready": protected_failure_contrast_integration_ready,
+            "ready_for_explicit_approval": (
+                protected_failure_contrast_ready_for_explicit_approval
+            ),
+            "current_artifact_allows_collection": False,
+            "command_if_explicitly_approved": (
+                "UV_CACHE_DIR=/tmp/uv-cache uv run python "
+                "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py "
+                "--execute-reviewed-collection --refresh-after-run"
+                if protected_failure_contrast_ready_for_explicit_approval
+                else None
+            ),
+        },
         "stage7_sampling_gate": {
             "runner_status": runner.get("decision", {}).get("status"),
             "runner_dry_run": runner.get("summary", {}).get("dry_run"),
             "runner_job_count": runner.get("summary", {}).get("job_count"),
-            "processed_job_count": runner.get("summary", {}).get("processed_job_count"),
-            "executed_job_count": runner.get("summary", {}).get("executed_job_count"),
+            "processed_job_count": current_stage7_processed_job_count,
+            "executed_job_count": current_stage7_executed_job_count,
+            "historical_processed_job_count": historical_stage7_processed_job_count,
+            "historical_executed_job_count": historical_stage7_executed_job_count,
             "skipped_existing_output_count": runner.get("summary", {}).get(
                 "skipped_existing_output_count"
             ),
             "overwrite_existing_outputs": runner.get("summary", {}).get(
                 "overwrite_existing_outputs"
             ),
-            "output_validation_status": runner.get("summary", {}).get(
+            "output_validation_status": output_validation_status,
+            "runner_output_validation_status": runner.get("summary", {}).get(
                 "output_validation_status"
+            ),
+            "output_valid_count": output_validation.get("summary", {}).get(
+                "output_valid_count"
             ),
             "execution_readiness_source": runner.get("summary", {}).get(
                 "execution_readiness_source"
             ),
-            "execution_readiness_status": runner.get("summary", {}).get(
-                "execution_readiness_status"
-            ),
+            "execution_readiness_status": current_stage7_execution_readiness_status,
+            "historical_execution_readiness_status": raw_stage7_execution_readiness_status,
             "execution_readiness_jobs_passing": runner.get("summary", {}).get(
                 "execution_readiness_jobs_passing"
             ),
@@ -303,7 +625,13 @@ def build_payload() -> dict[str, Any]:
             "combined_failure_controls": stage7_summary.get("combined_failure_controls"),
             "failure_controls_required": stage7_summary.get("failure_controls_required"),
             "success_controls_ready": stage7_success_ready,
-            "label_run_allowed_by_artifact": runner.get("decision", {}).get("label_run_allowed"),
+            "label_gate_status": (
+                "stage7_success_gate_closed_no_current_label_approval"
+                if stage7_label_gate_closed
+                else "stage7_label_gate_pending_or_not_ready"
+            ),
+            "label_run_allowed_by_artifact": current_stage7_label_run_allowed,
+            "historical_label_run_allowed_by_runner": historical_stage7_label_run_allowed,
         },
         "runtime_and_training_boundaries": boundaries,
         "current_control_plane_gate": {
@@ -317,13 +645,39 @@ def build_payload() -> dict[str, Any]:
             "stage8_training_allowed": gate.get("decision", {}).get("stage8_training_allowed"),
         },
         "blockers": blockers,
+        "hard_blockers": hard_blockers,
+        "explicit_gate_blockers": explicit_gate_blockers,
         "approval_gates": {
             "stage7_diverse_clean_label_execution": {
                 "ready_for_explicit_approval": runner.get("decision", {}).get("status")
                 == "stage7_diverse_clean_sampling_runner_dry_run_ready"
                 and not (runner.get("summary", {}).get("invalid_existing_output_count") or 0),
                 "current_artifact_allows_execution": False,
-                "why": "The runner is dry-run ready, validates/skips existing outputs safely, but execution requires explicit approval because it creates new Stage 7 h40 labels.",
+                "why": (
+                    "The Stage 7 clean success-control gate is already closed; "
+                    "additional Stage 7 labels are not the primary current unblocker."
+                    if stage7_success_ready
+                    else "The runner is dry-run ready, validates/skips existing outputs safely, but execution requires explicit approval because it creates new Stage 7 h40 labels."
+                ),
+            },
+            "protected_plan_window_failure_contrast_collection": {
+                "ready_for_explicit_approval": (
+                    protected_failure_contrast_ready_for_explicit_approval
+                ),
+                "current_artifact_allows_collection": False,
+                "status": failure_contrast_execution_readiness.get("decision", {}).get(
+                    "status",
+                    failure_contrast_runner.get("decision", {}).get("status"),
+                ),
+                "why": (
+                    "Sequence-policy inputs contain forbidden training or runtime "
+                    "authorization rows; repair inputs before considering protected "
+                    "failure-contrast collection."
+                    if sequence_forbidden_training_or_runtime_inputs
+                    else "The sequence-policy benchmark is mixed/underpowered on protected "
+                    "plan-window failures; bounded observation-only collection is the "
+                    "current explicit gate."
+                ),
             },
             "stage4_first_move_contrast_sandbox": {
                 "ready_for_explicit_approval": stage4_ready_for_explicit_approval,
@@ -335,7 +689,15 @@ def build_payload() -> dict[str, Any]:
             },
             "stage8_training": {
                 "ready_for_explicit_approval": False,
-                "why": "Stage 7 is still quarantined and sequence-policy benchmark is blocked.",
+                "why": (
+                    "Protected plan-window failure-contrast evidence is not integrated; "
+                    "Stage 8 training remains blocked even though Stage 7 held-out controls "
+                    "are balanced."
+                    if protected_failure_contrast_pending
+                    else "Sequence-policy inputs require repair before Stage 8 training can be reviewed."
+                    if sequence_forbidden_training_or_runtime_inputs
+                    else "Stage 7 is still quarantined or the sequence-policy benchmark is not ready."
+                ),
             },
         },
         "decision": {
@@ -355,6 +717,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     protected = payload["protected_stack"]
     stage7 = payload["stage7_sampling_gate"]
     sequence = payload["sequence_policy"]
+    protected_failure_contrast = payload["protected_failure_contrast_gate"]
     decision = payload["decision"]
     lines = [
         "# KRK Full Suite Readiness Audit v0",
@@ -375,6 +738,13 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- clean_stack_adopted: `{protected['clean_stack_adopted']}`",
         f"- filesystem_snapshots_replaced: `{protected['filesystem_snapshots_replaced']}`",
         f"- clean_stack_adopted_and_validated: `{protected['clean_stack_adopted_and_validated']}`",
+        f"- post_adoption_validation_required: `{protected['post_adoption_validation_required']}`",
+        f"- rollback_paths_preserved: `{protected['rollback_paths_preserved']}`",
+        f"- active_stack_paths_safe: `{protected['active_stack_path_status']['all_paths_safe']}`",
+        f"- active_stack_paths_exist: `{protected['active_stack_path_status']['all_paths_exist']}`",
+        f"- rollback_stack_paths_safe: `{protected['rollback_stack_path_status']['all_paths_safe']}`",
+        f"- rollback_stack_paths_exist: `{protected['rollback_stack_path_status']['all_paths_exist']}`",
+        f"- rollback_common_paths_distinct: `{protected['rollback_common_paths_distinct']}`",
         f"- stage5_conversion_preservation_passed: `{protected['stage5_conversion_preservation_passed']}`",
         f"- stage6_drive_validation_passed: `{protected['stage6_drive_validation_passed']}`",
         f"- m1_m4_preservation_passed: `{protected['m1_m4_preservation_passed']}`",
@@ -414,10 +784,34 @@ def write_markdown(payload: dict[str, Any]) -> str:
             "",
             f"- pipeline_status: `{sequence['pipeline_status']}`",
             f"- benchmark_status: `{sequence['benchmark_status']}`",
+            f"- benchmark_review_status: `{sequence['benchmark_review_status']}`",
             f"- input_row_count: `{sequence['input_row_count']}`",
             f"- inputs_ready: `{sequence['inputs_ready']}`",
             f"- benchmark_ready: `{sequence['benchmark_ready']}`",
             f"- selector_training_row_count: `{sequence['selector_training_row_count']}`",
+            "",
+            "## Protected Failure Contrast Gate",
+            "",
+            f"- plan_status: `{protected_failure_contrast['plan_status']}`",
+            f"- unique_failure_count: `{protected_failure_contrast['unique_failure_count']}`",
+            f"- minimum_new_failures_needed: `{protected_failure_contrast['minimum_new_failures_needed']}`",
+            f"- manifest_status: `{protected_failure_contrast['manifest_status']}`",
+            f"- manifest_job_count: `{protected_failure_contrast['manifest_job_count']}`",
+            f"- manifest_review_status: `{protected_failure_contrast['manifest_review_status']}`",
+            f"- execution_readiness_status: `{protected_failure_contrast['execution_readiness_status']}`",
+            f"- execution_jobs_passing: `{protected_failure_contrast['execution_jobs_passing']}`",
+            f"- runner_status: `{protected_failure_contrast['runner_status']}`",
+            f"- runner_processed_job_count: `{protected_failure_contrast['runner_processed_job_count']}`",
+            f"- runner_executed_job_count: `{protected_failure_contrast['runner_executed_job_count']}`",
+            f"- output_validation_status: `{protected_failure_contrast['output_validation_status']}`",
+            f"- output_exists_count: `{protected_failure_contrast['output_exists_count']}`",
+            f"- output_valid_count: `{protected_failure_contrast['output_valid_count']}`",
+            f"- integration_status: `{protected_failure_contrast['integration_status']}`",
+            f"- integrated_new_failure_count: `{protected_failure_contrast['integrated_new_failure_count']}`",
+            f"- integration_ready: `{protected_failure_contrast['integration_ready']}`",
+            f"- ready_for_explicit_approval: `{protected_failure_contrast['ready_for_explicit_approval']}`",
+            f"- current_artifact_allows_collection: `{protected_failure_contrast['current_artifact_allows_collection']}`",
+            f"- command_if_explicitly_approved: `{protected_failure_contrast['command_if_explicitly_approved']}`",
             "",
             "## Blockers",
             "",

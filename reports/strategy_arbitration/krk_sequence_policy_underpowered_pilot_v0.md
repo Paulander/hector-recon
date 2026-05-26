@@ -1,21 +1,32 @@
 # KRK Sequence-Policy Underpowered Pilot v0
 
-Status: `sequence_policy_pilot_ready_for_full_benchmark_after_label_gate`
+Status: `sequence_policy_pilot_underpowered_pending_protected_failure_contrast_collection`
 
 This is a non-causal pilot review over underpowered inputs. It preserves diagnostic signal but does not relax the full benchmark gate, authorize labels, train a selector, change runtime behavior, promote Stage 7, or train Stage 8.
 
 ## Summary
 
-- benchmark_executed_as_ready: `False`
-- input_row_count: `79`
+- benchmark_executed_as_ready: `True`
+- benchmark_status: `sequence_policy_benchmark_ready_non_causal_results_available`
+- benchmark_preflight_blockers: `[]`
+- benchmark_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered`
+- benchmark_review_blockers: `['protected_plan_window_failure_evidence_sparse']`
+- forbidden_training_or_runtime_input_blocked: `False`
+- input_row_count: `118`
 - stage4_topk_signal: `True`
 - stage4_binary_rule_insufficient: `True`
 - protected_plan_window_failure_evidence_sparse: `True`
-- stage7_success_controls: `2`
-- stage7_failure_controls: `8`
-- stage7_success_gap: `3`
-- stage7_replay_free_backfill_exhausted: `True`
+- stage7_success_controls: `11`
+- stage7_failure_controls: `39`
+- stage7_success_gap: `0`
+- stage7_replay_free_backfill_exhausted: `False`
 - stage7_backfillable_success_controls: `0`
+- protected_failure_contrast_ready_for_explicit_approval: `True`
+- protected_failure_contrast_integration_ready: `False`
+- protected_failure_contrast_runner_status: `protected_plan_window_failure_contrast_runner_dry_run_ready`
+- protected_failure_contrast_runner_processed_job_count: `0`
+- protected_failure_contrast_runner_executed_job_count: `0`
+- protected_failure_contrast_command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run`
 - selector_training_row_count: `0`
 - runtime_authorization_row_count: `0`
 - stage7_training_row_count: `0`
@@ -27,9 +38,7 @@ This is a non-causal pilot review over underpowered inputs. It preserves diagnos
 
 ## Blockers
 
-- `protected_plan_window_failure_evidence_sparse`
-- `stage7_clean_success_controls_missing`
-- `stage7_replay_free_backfill_exhausted`
+- `protected_plan_window_failure_contrast_collection_pending_explicit_approval`
 
 ## Stage 4 Signal
 
@@ -42,7 +51,7 @@ This is a non-causal pilot review over underpowered inputs. It preserves diagnos
 
 ## Decision
 
-- recommended_next_step: `explicitly_approve_stage7_diverse_clean_label_execution_before_full_sequence_policy_benchmark`
+- recommended_next_step: `explicitly_approve_protected_plan_window_failure_contrast_collection`
 - runtime_changes_allowed: `false`
 - label_run_allowed: `false`
 - selector_training_allowed: `false`

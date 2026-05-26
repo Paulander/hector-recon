@@ -8,10 +8,19 @@
     },
     "strategy_benchmark_frame_count": 24
   },
+  "boundary_current_evidence_state": {
+    "stage7_clean_hard_negatives_met": true,
+    "stage7_clean_review_next_step": "continue_protected_failure_contrast_sequence_policy_gate_review",
+    "stage7_clean_review_status": "stage7_clean_control_collection_closed_heldout_only",
+    "stage7_clean_success_controls_met": true,
+    "strategy_sequence_inventory_next_step": "review_state_holdout_signal_before_runtime_or_continue_protected_failure_contrast_gate",
+    "strategy_sequence_inventory_status": "replay_free_inventory_state_holdout_gap_blocks_runtime"
+  },
   "boundary_decision_status": "box_shrink_reclassified_as_local_evidence_handoff_trigger",
+  "boundary_recommended_next_step": "continue_protected_failure_contrast_sequence_policy_gate_review",
   "causal_status": "non_causal_artifact_review",
   "decision": {
-    "recommended_next_step": "continue_broader_krk_strategy_sequence_work_with_stage7_heldout",
+    "recommended_next_step": "continue_protected_failure_contrast_sequence_policy_gate_review",
     "runtime_work_allowed": false,
     "status": "control_plane_respects_stage7_boundary"
   },

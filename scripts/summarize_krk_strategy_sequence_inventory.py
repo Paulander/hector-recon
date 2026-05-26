@@ -54,6 +54,10 @@ def build_inventory() -> dict[str, Any]:
         status = "replay_free_inventory_ready_for_review"
     elif not strategy_ready:
         status = "replay_free_inventory_strategy_ownership_gap"
+    elif not state_holdout_ready:
+        status = "replay_free_inventory_state_holdout_gap_blocks_runtime"
+    elif not sequence_ready:
+        status = "replay_free_inventory_sequence_policy_gap_blocks_runtime"
 
     return {
         "schema_version": "krk_strategy_sequence_inventory.v0",
@@ -105,11 +109,17 @@ def build_inventory() -> dict[str, Any]:
             "sequence_policy_has_clean_success_gap": not bool(
                 control_acceptance.get("clean_sequence_success_controls_met")
             ),
+            "sequence_policy_clean_gate_closed": sequence_ready,
+            "state_holdout_gap_blocks_runtime": not state_holdout_ready,
             "runtime_work_allowed": False,
         },
         "decision": {
             "status": status,
-            "recommended_next_step": "review_diverse_sequence_policy_controls_or_curriculum_boundary",
+            "recommended_next_step": (
+                "review_state_holdout_signal_before_runtime_or_continue_protected_failure_contrast_gate"
+                if not state_holdout_ready
+                else "review_diverse_sequence_policy_controls_or_curriculum_boundary"
+            ),
             "runtime_work_allowed": False,
         },
     }

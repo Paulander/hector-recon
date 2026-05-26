@@ -11,10 +11,21 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 INPUTS = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json"
+BENCHMARK_REVIEW = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
 OUTPUT_JSON = ROOT / "reports/strategy_arbitration/krk_sequence_policy_input_probe_v0.json"
 OUTPUT_MD = ROOT / "reports/strategy_arbitration/krk_sequence_policy_input_probe_v0.md"
 
 SCHEMA_VERSION = "krk_sequence_policy_input_probe.v0"
+
+FORBIDDEN_INPUT_BLOCKERS = {
+    "selector_training_rows_forbidden",
+    "runtime_authorization_rows_forbidden",
+}
+
+FORBIDDEN_INPUT_STATUSES = {
+    "sequence_policy_benchmark_blocked_forbidden_training_or_runtime_rows",
+    "sequence_policy_benchmark_review_blocked_forbidden_training_or_runtime_rows",
+}
 
 COMMON_FALSE_FLAGS = {
     "runtime_behavior_changed": False,
@@ -31,6 +42,12 @@ COMMON_FALSE_FLAGS = {
 
 def _load(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _load_optional(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    return _load(path)
 
 
 def _binary_metrics(rows: list[dict[str, Any]], predictions: dict[str, bool]) -> dict[str, Any]:
@@ -101,7 +118,12 @@ def _stage4_probe(rows: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def _plan_window_probe(rows: list[dict[str, Any]]) -> dict[str, Any]:
-    plan_rows = [row for row in rows if row.get("input_group") == "protected_plan_window"]
+    plan_rows = [
+        row
+        for row in rows
+        if row.get("input_group")
+        in {"protected_plan_window", "protected_plan_window_failure_contrast"}
+    ]
     term_stats: dict[str, Counter] = defaultdict(Counter)
     for row in plan_rows:
         label = str(row.get("target_label"))
@@ -129,6 +151,7 @@ def _plan_window_probe(rows: list[dict[str, Any]]) -> dict[str, Any]:
     outcome_counts = Counter(row.get("target_label") for row in plan_rows)
     return {
         "row_count": len(plan_rows),
+        "input_group_counts": dict(Counter(row.get("input_group") for row in plan_rows)),
         "source_stage_counts": dict(Counter(row.get("source_stage") for row in plan_rows)),
         "target_label_counts": dict(outcome_counts),
         "failure_row_count": outcome_counts.get("conversion_failure", 0),
@@ -161,14 +184,48 @@ def _stage7_probe(rows: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
-def build_payload(*, inputs: dict[str, Any] | None = None) -> dict[str, Any]:
+def build_payload(
+    *,
+    inputs: dict[str, Any] | None = None,
+    benchmark_review: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    loading_repo_defaults = inputs is None
     inputs = inputs or _load(INPUTS)
+    if benchmark_review is None:
+        benchmark_review = _load_optional(BENCHMARK_REVIEW) if loading_repo_defaults else {}
     rows = inputs.get("rows") or []
     stage4 = _stage4_probe(rows)
     plan_windows = _plan_window_probe(rows)
     stage7 = _stage7_probe(rows)
     full_ready = bool(inputs.get("summary", {}).get("benchmark_input_ready"))
+    benchmark_review_status = benchmark_review.get("decision", {}).get("status")
+    benchmark_review_next_step = benchmark_review.get("decision", {}).get("recommended_next_step")
+    selector_training_row_count = sum(
+        1 for row in rows if row.get("usable_for_selector_training")
+    )
+    runtime_authorization_row_count = sum(
+        1 for row in rows if row.get("usable_for_runtime_authorization")
+    )
+    forbidden_input_blockers_set = FORBIDDEN_INPUT_BLOCKERS & set(
+        benchmark_review.get("blockers") or []
+    )
+    if selector_training_row_count:
+        forbidden_input_blockers_set.add("selector_training_rows_forbidden")
+    if runtime_authorization_row_count:
+        forbidden_input_blockers_set.add("runtime_authorization_rows_forbidden")
+    forbidden_input_blockers = sorted(forbidden_input_blockers_set)
+    forbidden_training_or_runtime_inputs = bool(forbidden_input_blockers) or (
+        benchmark_review_status in FORBIDDEN_INPUT_STATUSES
+    )
+    benchmark_review_current = benchmark_review_status in {
+        "sequence_policy_benchmark_supports_non_causal_sequence_policy_review",
+        "sequence_policy_benchmark_mixed_plan_window_underpowered",
+        "sequence_policy_benchmark_mixed_or_insufficient",
+    }
     status = (
+        "sequence_policy_input_probe_blocked_forbidden_training_or_runtime_rows"
+        if forbidden_training_or_runtime_inputs
+        else
         "sequence_policy_input_probe_ready_for_full_non_causal_benchmark"
         if full_ready
         else "sequence_policy_input_probe_partial_stage7_success_controls_missing"
@@ -178,7 +235,8 @@ def build_payload(*, inputs: dict[str, Any] | None = None) -> dict[str, Any]:
         "causal_status": "non_causal_sequence_policy_input_probe",
         **COMMON_FALSE_FLAGS,
         "source_artifacts": [
-            "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json"
+            "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json",
+            "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
         ],
         "summary": {
             "row_count": len(rows),
@@ -197,12 +255,15 @@ def build_payload(*, inputs: dict[str, Any] | None = None) -> dict[str, Any]:
             ),
             "protected_plan_window_failure_sparse": plan_windows["failure_evidence_sparse"],
             "stage7_underpowered": stage7["underpowered"],
-            "selector_training_row_count": sum(
-                1 for row in rows if row.get("usable_for_selector_training")
+            "selector_training_row_count": selector_training_row_count,
+            "runtime_authorization_row_count": runtime_authorization_row_count,
+            "forbidden_training_or_runtime_input_blocked": (
+                forbidden_training_or_runtime_inputs
             ),
-            "runtime_authorization_row_count": sum(
-                1 for row in rows if row.get("usable_for_runtime_authorization")
-            ),
+            "forbidden_training_or_runtime_input_blockers": forbidden_input_blockers,
+            "current_benchmark_review_status": benchmark_review_status,
+            "current_benchmark_review_next_step": benchmark_review_next_step,
+            "current_benchmark_review_available": benchmark_review_current,
         },
         "stage4_first_move_contrast_probe": stage4,
         "protected_plan_window_probe": plan_windows,
@@ -210,8 +271,13 @@ def build_payload(*, inputs: dict[str, Any] | None = None) -> dict[str, Any]:
         "decision": {
             "status": status,
             "recommended_next_step": (
+                "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+                if forbidden_training_or_runtime_inputs
+                else
                 "fill_stage7_clean_success_controls_before_full_sequence_policy_benchmark"
                 if stage7["underpowered"]
+                else benchmark_review_next_step
+                if full_ready and benchmark_review_current and benchmark_review_next_step
                 else "run_full_non_causal_sequence_policy_benchmark"
             ),
             "runtime_changes_allowed": False,

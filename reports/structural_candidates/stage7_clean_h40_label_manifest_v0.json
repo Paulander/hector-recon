@@ -1,15 +1,15 @@
 {
   "causal_status": "non_causal_label_manifest",
   "current_control_gap": {
-    "clean_sequence_hard_negatives_have": 8,
-    "clean_sequence_success_controls_gap": 3,
-    "clean_sequence_success_controls_have": 2,
+    "clean_sequence_hard_negatives_have": 39,
+    "clean_sequence_success_controls_gap": 0,
+    "clean_sequence_success_controls_have": 11,
     "clean_sequence_success_controls_required": 5
   },
   "decision": {
-    "recommended_next_step": "run_single_bounded_clean_h40_label_job",
+    "recommended_next_step": "review_clean_control_gap",
     "runtime_work_allowed": false,
-    "status": "bounded_clean_h40_label_manifest_ready"
+    "status": "no_label_run_needed_or_topology_missing"
   },
   "gameplay_topology_mutation": false,
   "jobs": [
@@ -79,7 +79,7 @@
   "stage8_training_allowed": false,
   "summary": {
     "job_count": 1,
-    "label_run_allowed_by_manifest": true,
+    "label_run_allowed_by_manifest": false,
     "max_horizon": 40,
     "max_total_samples": 10,
     "planned_output": "reports/structural_candidates/stage7_clean_h40_label_run_seed17_10_h40.json",

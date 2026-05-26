@@ -22,10 +22,10 @@ Review of the single bounded current-default Stage 7 h40 label job.
 
 ## Recovery After Run
 
-- control_count: `10`
-- role_counts: `{'clean_sequence_hard_negative': 8, 'clean_sequence_success_control': 2}`
-- source_artifact_counts: `{'reports/krk_two_stage_abstention_stage7_baseline_3_seed11_h40.json': 3, 'reports/structural_candidates/stage7_2cc_frozen_model_default_off_smoke_5_h20.json': 1, 'reports/structural_candidates/stage7_candidate_move_layer_default_off_10_h40.json': 2, 'reports/structural_candidates/stage7_family_ac_fence_noaugment_default_off_5_h40.json': 2, 'reports/structural_candidates/stage7_king_tempo_baseline_10_h40.json': 2}`
+- control_count: `50`
+- role_counts: `{'clean_sequence_hard_negative': 39, 'clean_sequence_success_control': 11}`
+- source_artifact_counts: `{'reports/krk_two_stage_abstention_stage7_baseline_3_seed11_h40.json': 3, 'reports/structural_candidates/stage7_2cc_frozen_model_default_off_smoke_5_h20.json': 1, 'reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_a_seed149_8_h40.json': 8, 'reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_b_seed151_8_h40.json': 8, 'reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_c_seed157_8_h40.json': 8, 'reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_d_seed163_8_h40.json': 8, 'reports/structural_candidates/stage7_candidate_move_layer_default_off_10_h40.json': 2, 'reports/structural_candidates/stage7_diverse_clean_edge_fence_deep_seed107_8_h40.json': 8, 'reports/structural_candidates/stage7_family_ac_fence_noaugment_default_off_5_h40.json': 2, 'reports/structural_candidates/stage7_king_tempo_baseline_10_h40.json': 2}`
 - controls_recovered_from_run: `0`
-- clean_success_gap_closed: `False`
+- clean_success_gap_closed: `True`
 
 Next step: `review_sampling_diversity_or_architecture_boundary_before_more_labels`

@@ -1,14 +1,14 @@
 # Stage 7 Clean Control Sampling Review v0
 
-Status: `clean_success_collection_blocked_by_sampling_overlap`
+Status: `clean_success_collection_requirement_met`
 
 Non-causal review of clean Stage 7 control collection after the bounded h40 label job.
 
 ## Summary
 
-- clean_sequence_success_controls_have: `2`
+- clean_sequence_success_controls_have: `11`
 - clean_sequence_success_controls_required: `5`
-- clean_sequence_hard_negatives_have: `8`
+- clean_sequence_hard_negatives_have: `39`
 - bounded_label_run_mates: `3`
 - bounded_label_run_novel_controls: `0`
 - sampling_overlap_detected: `True`
@@ -33,4 +33,4 @@ Non-causal review of clean Stage 7 control collection after the bounded h40 labe
 - `Stage 7 promotion`
 - `Stage 8 training`
 
-Recommended next step: `architecture_review_before_more_stage7_clean_labels`
+Recommended next step: `build_clean_selected_path_dataset_and_source_bias_audit`

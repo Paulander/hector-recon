@@ -82,14 +82,28 @@ def test_sequence_control_contrast_probe_keeps_stage8_blocked():
     assert payload["stage8_training_allowed"] is False
     assert (
         payload["decision"]["status"]
-        == "sequence_control_stage4_review_ready_stage7_success_controls_insufficient"
+        == "sequence_control_dataset_ready_for_broader_sequence_policy_review"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_current_sequence_policy_benchmark_and_protected_failure_contrast_gate"
     )
     assert payload["readiness"]["stage4_first_move_contrast_sandbox_review_ready"] is True
-    assert payload["readiness"]["stage7_sequence_policy_benchmark_ready"] is False
+    assert payload["readiness"]["stage7_sequence_policy_benchmark_ready"] is True
     assert payload["readiness"]["broader_runtime_selector_ready"] is False
     assert payload["readiness"]["stage8_training_ready"] is False
-    assert payload["summary"]["stage7_success_control_count"] == 2
-    assert payload["summary"]["stage7_failure_control_count"] == 8
+    assert payload["summary"]["stage7_dataset_success_control_count"] == 2
+    assert payload["summary"]["stage7_dataset_failure_control_count"] == 8
+    assert payload["summary"]["stage7_success_control_count"] == 11
+    assert payload["summary"]["stage7_success_controls_required"] == 5
+    assert payload["summary"]["stage7_failure_control_count"] == 39
+    assert payload["summary"]["stage7_failure_controls_required"] == 5
+    assert payload["summary"]["stage7_success_controls_met"] is True
+    assert payload["summary"]["stage7_rows_are_current_gate_evidence_not_promotion"] is True
+    assert (
+        "Stage 7 clean success controls are satisfied in the integrated current gate; "
+        "Stage 7 remains held out and not promoted."
+    ) in payload["blockers"]
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["selector_training_allowed"] is False
 
@@ -183,7 +197,7 @@ def test_sequence_control_contrast_probe_fixture_detects_stage7_success_gap():
         ],
     }
 
-    payload = _probe.build_payload(dataset=dataset)
+    payload = _probe.build_payload(dataset=dataset, stage7_integration={"summary": {}})
 
     assert (
         payload["decision"]["status"]
@@ -211,53 +225,186 @@ def test_current_control_plane_gate_requires_explicit_choice():
     assert payload["decision"]["label_run_allowed"] is False
     assert payload["decision"]["stage7_promotion_allowed"] is False
     assert payload["decision"]["stage8_training_allowed"] is False
+    assert payload["current_state"]["protected_stack_ready"] is True
+    assert payload["current_state"]["protected_stack_hard_blockers"] == []
     option_ids = {option["option_id"] for option in payload["approval_options"]}
     assert option_ids == {
         "approve_stage4_first_move_contrast_sandbox",
-        "approve_stage7_diverse_clean_label_run",
-        "defer_runtime_and_labels_review_cross_stage_plan_capsule_evidence",
+        "approve_protected_plan_window_failure_contrast_collection",
     }
     assert (
         payload["current_state"]["sequence_policy"]
-        == "sequence_policy_benchmark_blocked_pending_clean_stage7_controls"
+        == "sequence_policy_benchmark_mixed_plan_window_underpowered"
     )
     assert (
         payload["current_state"]["sequence_policy_inputs"]
-        == "sequence_policy_benchmark_inputs_blocked_pending_stage7_success_controls"
+        == "sequence_policy_benchmark_inputs_ready_non_causal"
     )
+    assert payload["current_state"]["stage7_success_controls_ready"] is True
+    assert payload["current_state"]["stage7_success_controls"] == 11
+    assert payload["current_state"]["stage7_success_controls_required"] == 5
     assert (
         payload["current_state"]["stage7_label_execution_readiness"]
+        == "not_applicable_stage7_success_gate_closed"
+    )
+    assert (
+        payload["current_state"]["stage7_label_historical_execution_readiness"]
         == "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval"
     )
     assert (
         payload["current_state"]["stage7_label_output_integration"]
-        == "stage7_diverse_clean_sampling_outputs_pending"
+        == "stage7_diverse_clean_sampling_integration_success_controls_met"
     )
     assert (
         payload["current_state"]["stage7_label_runner"]
-        == "stage7_diverse_clean_sampling_runner_dry_run_ready"
+        == "stage7_diverse_clean_sampling_runner_executed_success"
     )
     assert (
         payload["current_state"]["stage7_label_runner_output_validation_status"]
-        == "stage7_diverse_clean_sampling_outputs_validation_pending"
+        == "stage7_diverse_clean_sampling_outputs_valid_ready_for_integration"
+    )
+    assert (
+        payload["current_state"]["stage7_label_output_validation_status"]
+        == "stage7_diverse_clean_sampling_outputs_valid_ready_for_integration"
     )
     assert payload["current_state"]["stage7_label_runner_invalid_existing_output_count"] == 0
+    assert (
+        payload["current_state"]["stage7_label_runner_execution_readiness_status"]
+        == "not_applicable_stage7_success_gate_closed"
+    )
+    assert (
+        payload["current_state"][
+            "stage7_label_runner_historical_execution_readiness_status"
+        ]
+        == "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval"
+    )
     assert payload["current_state"]["stage7_label_runner_processed_job_count"] == 0
     assert payload["current_state"]["stage7_label_runner_executed_job_count"] == 0
+    assert payload["current_state"]["stage7_label_runner_historical_processed_job_count"] == 8
+    assert payload["current_state"]["stage7_label_runner_historical_executed_job_count"] == 8
     assert payload["current_state"]["stage7_label_runner_skipped_existing_output_count"] == 0
     assert (
         payload["current_state"]["stage7_post_label_outcome"]
-        == "post_label_outcome_pending_explicit_label_outputs"
+        == "post_label_outcome_waiting_on_explicit_protected_failure_contrast_collection"
     )
-    label_option = [
+    assert (
+        payload["current_state"]["stage7_label_distribution_review"]
+        == "stage7_label_distribution_review_success_gate_closed"
+    )
+    assert (
+        payload["current_state"]["stage7_additional_label_manifest"]
+        == "stage7_additional_clean_sampling_manifest_not_applicable_success_gate_closed"
+    )
+    assert (
+        payload["current_state"]["stage7_additional_label_runner"]
+        == "stage7_additional_clean_sampling_runner_not_applicable_success_gate_closed"
+    )
+    assert payload["current_state"]["stage7_additional_label_runner_job_count"] == 0
+    assert (
+        payload["current_state"]["protected_plan_window_failure_contrast_plan"]
+        == "protected_plan_window_failure_contrast_plan_ready_pending_explicit_collection_approval"
+    )
+    assert payload["current_state"]["protected_plan_window_unique_failure_count"] == 1
+    assert payload["current_state"]["protected_plan_window_minimum_new_failures_needed"] == 4
+    assert (
+        payload["current_state"]["protected_plan_window_failure_contrast_manifest"]
+        == "protected_plan_window_failure_contrast_manifest_ready_for_review"
+    )
+    assert payload["current_state"]["protected_plan_window_failure_contrast_manifest_job_count"] == 6
+    assert (
+        payload["current_state"]["protected_plan_window_failure_contrast_manifest_review"]
+        == "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_execution_readiness"
+        ]
+        == "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+    )
+    assert payload["current_state"]["protected_plan_window_failure_contrast_execution_jobs_passing"] == 6
+    assert (
+        payload["current_state"]["protected_plan_window_failure_contrast_runner"]
+        == "protected_plan_window_failure_contrast_runner_dry_run_ready"
+    )
+    assert payload["current_state"]["protected_plan_window_failure_contrast_runner_processed_job_count"] == 0
+    assert payload["current_state"]["protected_plan_window_failure_contrast_runner_executed_job_count"] == 0
+    assert (
+        payload["current_state"]["protected_plan_window_failure_contrast_output_validation"]
+        == "protected_plan_window_failure_contrast_outputs_validation_pending"
+    )
+    assert payload["current_state"]["protected_plan_window_failure_contrast_output_exists_count"] == 0
+    assert payload["current_state"]["protected_plan_window_failure_contrast_output_valid_count"] == 0
+    assert (
+        payload["current_state"]["protected_plan_window_failure_contrast_integration"]
+        == "protected_plan_window_failure_contrast_integration_pending_outputs"
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_integrated_new_failure_count"
+        ]
+        == 0
+    )
+    assert payload["current_state"]["protected_plan_window_failure_contrast_integration_ready"] is False
+    assert (
+        payload["current_state"]["sequence_policy_after_protected_failure_contrast_refresh"]
+        == "sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs"
+    )
+    assert payload["current_state"]["sequence_policy_after_protected_failure_contrast_rows"] == 0
+    review_option = [
         option
         for option in payload["approval_options"]
-        if option["option_id"] == "approve_stage7_diverse_clean_label_run"
+        if option["option_id"] == "approve_protected_plan_window_failure_contrast_collection"
     ][0]
-    assert label_option["safety_scope"]["resume_safe"] is True
-    assert label_option["safety_scope"]["skip_existing_outputs_by_default"] is True
-    assert label_option["safety_scope"]["invalid_existing_outputs_block_without_overwrite"] is True
-    assert label_option["safety_scope"]["stage7_training_rows"] == 0
+    assert (
+        review_option["status"]
+        == "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+    )
+    assert review_option["command_if_explicitly_approved"] == (
+        "UV_CACHE_DIR=/tmp/uv-cache uv run python "
+        "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py "
+        "--execute-reviewed-collection --refresh-after-run "
+        "--approval-receipt "
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
+    )
+    assert review_option["safety_scope"]["max_jobs"] == 6
+    assert review_option["safety_scope"]["horizon"] == "h40"
+    assert (
+        review_option["safety_scope"]["stage"]
+        == "protected_plan_window_failure_contrast_evidence_only"
+    )
+    assert review_option["safety_scope"]["source_stage_counts"] == {
+        "stage4": 2,
+        "stage5": 2,
+        "stage6": 2,
+    }
+    assert review_option["safety_scope"]["stop_after_unique_failures"] == 4
+    assert review_option["safety_scope"]["observation_only"] is True
+    assert review_option["safety_scope"]["resume_safe"] is True
+    assert review_option["safety_scope"]["skip_existing_outputs_by_default"] is True
+    assert (
+        review_option["safety_scope"]["invalid_existing_outputs_block_without_overwrite"]
+        is True
+    )
+    assert review_option["safety_scope"]["execution_readiness_recomputed_live"] is True
+    assert review_option["safety_scope"]["approval_receipt_required"] is True
+    assert review_option["safety_scope"]["approval_receipt_path"] == (
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
+    )
+    assert len(review_option["safety_scope"]["expected_manifest_fingerprint"]) == 64
+    assert len(review_option["safety_scope"]["expected_readiness_fingerprint"]) == 64
+    assert review_option["safety_scope"]["per_job_timeout_seconds"] == 900
+    assert review_option["safety_scope"]["processed_job_count"] == 0
+    assert review_option["safety_scope"]["executed_job_count"] == 0
+    assert review_option["safety_scope"]["output_valid_count"] == 0
+    assert review_option["safety_scope"]["runtime_authorization_row_count"] == 0
+    assert review_option["safety_scope"]["stage7_training_row_count"] == 0
+    assert "runtime default changes" in review_option["what_it_does_not_allow"]
+    assert "runtime DTM or tablebase lookup" in review_option["what_it_does_not_allow"]
+    assert "gameplay-time topology mutation" in review_option["what_it_does_not_allow"]
+    assert "selector training" in review_option["what_it_does_not_allow"]
+    assert "unreviewed or unbounded label execution" in review_option["what_it_does_not_allow"]
 
 
 def test_current_control_plane_gate_fixture_preserves_no_implicit_approval():
@@ -272,9 +419,107 @@ def test_current_control_plane_gate_fixture_preserves_no_implicit_approval():
     assert payload["decision"]["label_run_allowed"] is False
     assert (
         payload["recommendation"]["preferred_next_if_no_user_approval"]
-        == "stop_at_gate_or_design_non_causal_sequence_policy_only"
+        == "wait_for_explicit_protected_plan_window_failure_contrast_collection_approval"
+    )
+    assert (
+        payload["recommendation"]["preferred_next_if_user_approves_collection"]
+        == "execute_bounded_protected_plan_window_failure_contrast_collection_from_reviewed_manifest"
+    )
+    assert (
+        payload["recommendation"]["preferred_next_if_user_approves_labels"]
+        == "not_applicable_stage7_success_gate_closed"
     )
     assert (
         payload["recommendation"]["preferred_next_if_user_defers_both"]
         == "non_causal_sequence_policy_design_without_new_labels"
     )
+
+
+def test_current_control_plane_gate_routes_forbidden_sequence_inputs_to_repair():
+    payload = _current_gate.build_payload(
+        sequence_policy_inputs={
+            "decision": {"status": "sequence_policy_benchmark_inputs_ready_non_causal"},
+            "summary": {
+                "selector_training_row_count": 1,
+                "runtime_authorization_row_count": 0,
+            },
+        },
+        sequence_policy_benchmark_review={
+            "decision": {
+                "status": "sequence_policy_benchmark_review_blocked_forbidden_training_or_runtime_rows"
+            },
+            "blockers": ["selector_training_rows_forbidden"],
+        },
+    )
+
+    option_ids = {option["option_id"] for option in payload["approval_options"]}
+    assert "repair_sequence_policy_inputs_remove_training_or_runtime_rows" in option_ids
+    assert "approve_protected_plan_window_failure_contrast_collection" not in option_ids
+    repair_option = [
+        option
+        for option in payload["approval_options"]
+        if option["option_id"] == "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+    ][0]
+    assert repair_option["command_if_explicitly_approved"] is None
+    assert repair_option["safety_scope"]["selector_training_row_count"] == 1
+    assert repair_option["safety_scope"]["runtime_authorization_row_count"] == 0
+    assert "selector_training_rows_forbidden" in repair_option["safety_scope"]["blockers"]
+    assert payload["current_state"][
+        "sequence_policy_forbidden_training_or_runtime_input_blocked"
+    ] is True
+    assert (
+        payload["recommendation"]["preferred_next_if_no_user_approval"]
+        == "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+    )
+    assert (
+        payload["recommendation"]["preferred_next_if_user_approves_collection"]
+        == "not_applicable_pending_sequence_policy_input_repair"
+    )
+    assert payload["decision"]["selector_training_allowed"] is False
+
+
+def test_current_control_plane_gate_blocks_collection_when_protected_stack_not_ready():
+    payload = _current_gate.build_payload(
+        full_suite_readiness={
+            "decision": {"status": "krk_suite_readiness_blocked_pending_stack"},
+            "protected_stack": {"ready": False},
+            "hard_blockers": ["protected_retry1_stage5_6_stack_not_validated"],
+        },
+        sequence_policy_inputs={
+            "decision": {"status": "sequence_policy_benchmark_inputs_ready_non_causal"},
+            "summary": {
+                "selector_training_row_count": 0,
+                "runtime_authorization_row_count": 0,
+            },
+        },
+        sequence_policy_benchmark_review={
+            "decision": {"status": "sequence_policy_benchmark_mixed_plan_window_underpowered"},
+            "blockers": ["protected_plan_window_failure_evidence_sparse"],
+        },
+    )
+
+    option_ids = {option["option_id"] for option in payload["approval_options"]}
+    assert "repair_protected_stack_validation" in option_ids
+    assert "approve_protected_plan_window_failure_contrast_collection" not in option_ids
+    repair_option = [
+        option
+        for option in payload["approval_options"]
+        if option["option_id"] == "repair_protected_stack_validation"
+    ][0]
+    assert repair_option["command_if_explicitly_approved"] is None
+    assert repair_option["safety_scope"]["protected_stack_ready"] is False
+    assert (
+        "protected_retry1_stage5_6_stack_not_validated"
+        in repair_option["safety_scope"]["hard_blockers"]
+    )
+    assert payload["current_state"]["protected_stack"] == "protected_stack_validation_blocked"
+    assert payload["current_state"]["protected_stack_ready"] is False
+    assert (
+        payload["recommendation"]["preferred_next_if_no_user_approval"]
+        == "repair_protected_stack_validation"
+    )
+    assert (
+        payload["recommendation"]["preferred_next_if_user_approves_collection"]
+        == "not_applicable_pending_protected_stack_validation"
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False

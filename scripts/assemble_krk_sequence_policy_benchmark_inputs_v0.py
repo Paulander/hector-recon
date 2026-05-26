@@ -20,7 +20,15 @@ CONTRAST_DATASET = ROOT / "reports/strategy_arbitration/krk_sequence_control_con
 PROTECTED_PLAN_WINDOWS = ROOT / "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json"
 STAGE7_CLEAN_CONTROLS = ROOT / "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json"
 STAGE7_DIVERSE_INTEGRATION = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json"
+PROTECTED_FAILURE_CONTRAST_INTEGRATION = (
+    ROOT
+    / "reports/strategy_arbitration/"
+    "krk_protected_plan_window_failure_contrast_integration_v0.json"
+)
 SEQUENCE_POLICY_DESIGN = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json"
+SEQUENCE_POLICY_BENCHMARK_REVIEW = (
+    ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
+)
 OUTPUT_JSON = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json"
 OUTPUT_MD = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.md"
 
@@ -37,6 +45,10 @@ COMMON_FALSE_FLAGS = {
     "stage7_promotion_allowed": False,
     "stage8_training_allowed": False,
 }
+
+PROTECTED_FAILURE_INTEGRATION_READY_STATUS = (
+    "protected_plan_window_failure_contrast_integration_ready_for_passive_benchmark_refresh"
+)
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -109,6 +121,65 @@ def _protected_plan_window_rows(protected_plan_windows: dict[str, Any]) -> list[
     return rows
 
 
+def _protected_failure_contrast_rows(
+    integration: dict[str, Any],
+) -> tuple[list[dict[str, Any]], Counter[str]]:
+    skipped: Counter[str] = Counter()
+    if not integration.get("summary", {}).get("integration_ready"):
+        skipped_count = len(integration.get("integrated_failure_contrasts") or [])
+        if skipped_count:
+            skipped["integration_not_ready"] += skipped_count
+        return [], skipped
+    if integration.get("decision", {}).get("status") != PROTECTED_FAILURE_INTEGRATION_READY_STATUS:
+        skipped_count = len(integration.get("integrated_failure_contrasts") or [])
+        if skipped_count:
+            skipped["integration_status_not_ready"] += skipped_count
+        return [], skipped
+    rows = []
+    for row in integration.get("integrated_failure_contrasts") or []:
+        row_blockers = []
+        if row.get("h40_outcome_label") != "conversion_failure":
+            row_blockers.append("not_conversion_failure")
+        if row.get("control_role") != "protected_plan_window_failure_contrast":
+            row_blockers.append("unexpected_control_role")
+        if row.get("stage7_training_row") is not False:
+            row_blockers.append("stage7_training_row_must_be_false")
+        if row.get("usable_for_selector_training") is not False:
+            row_blockers.append("selector_training_must_be_false")
+        if row.get("usable_for_runtime_authorization") is not False:
+            row_blockers.append("runtime_authorization_must_be_false")
+        if row.get("stage7_heldout_challenge") is not False:
+            row_blockers.append("stage7_heldout_challenge_must_be_false")
+        if row_blockers:
+            skipped.update(row_blockers)
+            continue
+        rows.append(
+            {
+                "schema_version": "krk_sequence_policy_benchmark_input_row.v0",
+                "row_id": f"seq_input.{row.get('row_id')}",
+                "input_group": "protected_plan_window_failure_contrast",
+                "source_stage": row.get("source_stage"),
+                "source_family": row.get("source_family"),
+                "state_id": row.get("seed_frame_id"),
+                "fen": row.get("fen"),
+                "move_uci": row.get("anchor_move_uci"),
+                "target_label": "conversion_failure",
+                "outcome": row.get("result"),
+                "features": {
+                    "control_role": row.get("control_role"),
+                    "source_job_id": row.get("job_id"),
+                    "source_track": "protected_failure_contrast_integration",
+                    "validated_failure_contrast": True,
+                },
+                "stage7_heldout_challenge": False,
+                "usable_for_selector_training": False,
+                "usable_for_runtime_authorization": False,
+                "causal_status": "non_causal_sequence_policy_input",
+            }
+        )
+    return rows, skipped
+
+
 def _stage7_clean_rows(
     stage7_clean_controls: dict[str, Any],
     *,
@@ -161,13 +232,34 @@ def build_payload(
     protected_plan_windows: dict[str, Any] | None = None,
     stage7_clean_controls: dict[str, Any] | None = None,
     stage7_diverse_integration: dict[str, Any] | None = None,
+    protected_failure_contrast_integration: dict[str, Any] | None = None,
     sequence_policy_design: dict[str, Any] | None = None,
+    sequence_policy_benchmark_review: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    loading_repo_defaults = all(
+        item is None
+        for item in (
+            contrast_dataset,
+            protected_plan_windows,
+            stage7_clean_controls,
+            stage7_diverse_integration,
+            protected_failure_contrast_integration,
+            sequence_policy_design,
+        )
+    )
     contrast_dataset = contrast_dataset or _load(CONTRAST_DATASET)
     protected_plan_windows = protected_plan_windows or _load(PROTECTED_PLAN_WINDOWS)
     stage7_clean_controls = stage7_clean_controls or _load(STAGE7_CLEAN_CONTROLS)
     stage7_diverse_integration = stage7_diverse_integration or _load_optional(STAGE7_DIVERSE_INTEGRATION)
+    protected_failure_contrast_integration = (
+        protected_failure_contrast_integration
+        or _load_optional(PROTECTED_FAILURE_CONTRAST_INTEGRATION)
+    )
     sequence_policy_design = sequence_policy_design or _load(SEQUENCE_POLICY_DESIGN)
+    if sequence_policy_benchmark_review is None:
+        sequence_policy_benchmark_review = (
+            _load_optional(SEQUENCE_POLICY_BENCHMARK_REVIEW) if loading_repo_defaults else {}
+        )
 
     stage7_rows = [
         *_stage7_clean_rows(stage7_clean_controls),
@@ -186,9 +278,13 @@ def build_payload(
         seen_stage7_keys.add(key)
         deduped_stage7_rows.append(row)
 
+    protected_failure_rows, protected_failure_skipped = _protected_failure_contrast_rows(
+        protected_failure_contrast_integration
+    )
     rows = [
         *_stage4_rows(contrast_dataset),
         *_protected_plan_window_rows(protected_plan_windows),
+        *protected_failure_rows,
         *deduped_stage7_rows,
     ]
     input_counts = Counter(row["input_group"] for row in rows)
@@ -216,11 +312,22 @@ def build_payload(
         protected_plan_windows.get("summary", {}).get("protected_cross_stage_evidence_met")
     )
     benchmark_input_ready = protected_plan_window_met and stage7_success_met and stage7_failure_met
+    benchmark_review_status = sequence_policy_benchmark_review.get("decision", {}).get("status")
+    benchmark_review_next_step = sequence_policy_benchmark_review.get("decision", {}).get(
+        "recommended_next_step"
+    )
+    benchmark_review_current = benchmark_review_status in {
+        "sequence_policy_benchmark_supports_non_causal_sequence_policy_review",
+        "sequence_policy_benchmark_mixed_plan_window_underpowered",
+        "sequence_policy_benchmark_mixed_or_insufficient",
+    }
     status = (
         "sequence_policy_benchmark_inputs_ready_non_causal"
         if benchmark_input_ready
         else "sequence_policy_benchmark_inputs_blocked_pending_stage7_success_controls"
         if not stage7_success_met
+        else "sequence_policy_benchmark_inputs_blocked_pending_stage7_failure_controls"
+        if not stage7_failure_met
         else "sequence_policy_benchmark_inputs_blocked_pending_protected_plan_windows"
     )
 
@@ -233,7 +340,9 @@ def build_payload(
             "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json",
             "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json",
             "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json",
+            "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_integration_v0.json",
             "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json",
+            "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
         ],
         "summary": {
             "row_count": len(rows),
@@ -253,6 +362,19 @@ def build_payload(
             "stage7_diverse_new_controls": int(
                 stage7_diverse_integration.get("summary", {}).get("new_control_count", 0) or 0
             ),
+            "protected_failure_contrast_integration_status": protected_failure_contrast_integration.get(
+                "decision", {}
+            ).get("status"),
+            "protected_failure_contrast_integration_ready": bool(
+                protected_failure_contrast_integration.get("summary", {}).get("integration_ready")
+            ),
+            "protected_failure_contrast_row_count": input_counts.get(
+                "protected_plan_window_failure_contrast", 0
+            ),
+            "protected_failure_contrast_skipped_counts": dict(protected_failure_skipped),
+            "current_benchmark_review_status": benchmark_review_status,
+            "current_benchmark_review_next_step": benchmark_review_next_step,
+            "current_benchmark_review_available": benchmark_review_current,
             "stage7_heldout_row_count": sum(1 for row in rows if row["stage7_heldout_challenge"]),
             "selector_training_row_count": sum(1 for row in rows if row["usable_for_selector_training"]),
             "runtime_authorization_row_count": sum(
@@ -273,6 +395,10 @@ def build_payload(
             "recommended_next_step": (
                 "approve_stage7_diverse_clean_label_run_to_fill_success_controls"
                 if not stage7_success_met
+                else "approve_stage7_clean_failure_control_collection_or_repair_inputs"
+                if not stage7_failure_met
+                else benchmark_review_next_step
+                if benchmark_input_ready and benchmark_review_current and benchmark_review_next_step
                 else "implement_non_causal_sequence_policy_benchmark"
                 if benchmark_input_ready
                 else "repair_protected_plan_window_input_gap"

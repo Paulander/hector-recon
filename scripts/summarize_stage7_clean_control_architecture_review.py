@@ -44,8 +44,31 @@ def build_review() -> dict[str, Any]:
     }
     success_gap_open = success_have < success_required
     sampling_overlap = bool(evidence["sampling_overlap_detected"])
-    status = "stage7_clean_control_collection_paused_architecture_review_required"
-    next_step = "return_to_broader_krk_strategy_or_sequence_architecture_review"
+    status = (
+        "stage7_clean_control_collection_closed_heldout_only"
+        if not success_gap_open
+        else "stage7_clean_control_collection_paused_architecture_review_required"
+    )
+    next_step = (
+        "continue_protected_failure_contrast_sequence_policy_gate_review"
+        if not success_gap_open
+        else "return_to_broader_krk_strategy_or_sequence_architecture_review"
+    )
+    conclusions = (
+        [
+            "Stage 7 clean success controls and hard negatives now meet the minimum sequence-policy evidence threshold.",
+            "Stage 7 remains held out as challenge/evaluation evidence; the closed clean-control gate does not authorize runtime behavior, Stage 7 promotion, or Stage 8 training.",
+            "Additional Stage 7 h40 labels are not the primary current unblocker; the active sequence-policy gap is protected plan-window failure-contrast evidence.",
+            "Runtime selector/arbiter work remains blocked pending explicit protected failure-contrast collection/review and separate runtime review.",
+        ]
+        if not success_gap_open
+        else [
+            "Stage 7 clean hard negatives are available, but clean success controls remain below the minimum threshold.",
+            "A bounded current-default h40 label job produced mates but no novel de-duplicated controls, indicating sampling overlap in the current curriculum slice.",
+            "More unreviewed Stage 7 label runs are unlikely to be a principled next step and risk re-entering Stage 7 micro-work.",
+            "Runtime selector/arbiter work remains blocked by insufficient clean Stage 7 success-control evidence and unresolved curriculum-boundary concerns.",
+        ]
+    )
     return {
         "schema_version": "stage7_clean_control_architecture_review.v0",
         "causal_status": "non_causal_architecture_review",
@@ -58,12 +81,7 @@ def build_review() -> dict[str, Any]:
         "stage8_training_allowed": False,
         "source_artifacts": [str(MANIFEST), str(RECOVERY), str(RUN_REVIEW), str(SAMPLING_REVIEW)],
         "evidence": evidence,
-        "conclusions": [
-            "Stage 7 clean hard negatives are available, but clean success controls remain below the minimum threshold.",
-            "A bounded current-default h40 label job produced mates but no novel de-duplicated controls, indicating sampling overlap in the current curriculum slice.",
-            "More unreviewed Stage 7 label runs are unlikely to be a principled next step and risk re-entering Stage 7 micro-work.",
-            "Runtime selector/arbiter work remains blocked by insufficient clean Stage 7 success-control evidence and unresolved curriculum-boundary concerns.",
-        ],
+        "conclusions": conclusions,
         "recommended_paths": [
             {
                 "path_id": "broader_krk_strategy_sequence_architecture_review",

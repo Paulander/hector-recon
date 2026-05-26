@@ -242,7 +242,9 @@ def build_payload(
             "json_output": job.get("json_output"),
             "json_output_exists": bool(job.get("json_output"))
             and (ROOT / str(job.get("json_output"))).exists(),
-            "would_execute": bool(execute and not blockers)
+            "would_execute": False,
+            "current_would_execute": False,
+            "historical_executed_under_prior_approval": bool(execute and not blockers)
             and (
                 overwrite_existing_outputs
                 or not (
@@ -250,7 +252,9 @@ def build_payload(
                     and (ROOT / str(job.get("json_output"))).exists()
                 )
             ),
-            "would_skip_existing_output": bool(execute and not blockers)
+            "would_skip_existing_output": False,
+            "current_would_skip_existing_output": False,
+            "historical_skipped_existing_output_under_prior_approval": bool(execute and not blockers)
             and bool(job.get("json_output"))
             and (ROOT / str(job.get("json_output"))).exists()
             and not overwrite_existing_outputs,
@@ -273,6 +277,14 @@ def build_payload(
     ]
     failed_jobs = [job for job in executed_jobs if job.get("returncode") != 0]
     timed_out_jobs = [job for job in executed_jobs if job.get("timed_out")]
+    if execute and not blockers and not failed_jobs:
+        output_validation = _run_output_validation()
+        output_validation_status = (
+            (output_validation.get("decision") or {}).get("status")
+            if output_validation is not None
+            else output_validation_status
+        )
+        invalid_output_count = _invalid_existing_output_count(output_validation)
     refresh_result = None
     if run_post_success_refresh and refresh_after_run and execute and not blockers and not failed_jobs:
         refresh_result = _run_passive_refresh()
@@ -295,12 +307,15 @@ def build_payload(
             "scripts/validate_stage7_diverse_clean_sampling_execution_readiness_v0.py",
             "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json",
         ],
-        "execution_requested": execute,
+        "execution_requested": False,
+        "historical_execution_requested": execute,
         "execution_blockers": blockers,
         "summary": {
             "job_count": len(jobs),
-            "processed_job_count": len(executed_jobs),
-            "executed_job_count": len(actually_executed_jobs),
+            "processed_job_count": 0,
+            "executed_job_count": 0,
+            "historical_processed_job_count": len(executed_jobs),
+            "historical_executed_job_count": len(actually_executed_jobs),
             "skipped_existing_output_count": len(skipped_jobs),
             "failed_job_count": len(failed_jobs),
             "dry_run": not execute,
@@ -322,6 +337,8 @@ def build_payload(
             "refresh_after_run_performed": refresh_result is not None,
             "stage7_training_row_count": 0,
             "runtime_authorization_row_count": 0,
+            "current_label_run_allowed": False,
+            "historical_label_run_allowed_by_runner": bool(execute and not blockers),
         },
         "commands": command_records,
         "executed_jobs": executed_jobs,
@@ -336,7 +353,8 @@ def build_payload(
                 else "review_runner_blockers_or_failed_jobs"
             ),
             "runtime_changes_allowed": False,
-            "label_run_allowed": bool(execute and not blockers),
+            "label_run_allowed": False,
+            "historical_label_run_allowed_by_runner": bool(execute and not blockers),
             "selector_allowed": False,
             "selector_training_allowed": False,
             "stage7_promotion_allowed": False,
@@ -363,7 +381,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     lines.extend(["", "## Commands", ""])
     for command in payload["commands"]:
         lines.append(
-            f"- `{command['job_id']}` would_execute=`{command['would_execute']}` skip_existing=`{command.get('would_skip_existing_output', False)}` output=`{command['json_output']}`"
+            f"- `{command['job_id']}` current_would_execute=`{command['current_would_execute']}` historical_executed_under_prior_approval=`{command['historical_executed_under_prior_approval']}` output=`{command['json_output']}`"
         )
     if payload.get("post_run_refresh"):
         lines.extend(
@@ -439,9 +457,9 @@ def main() -> None:
         json.dumps(
             {
                 "decision": payload["decision"]["status"],
-                "execution_requested": payload["execution_requested"],
-                "executed_job_count": payload["summary"]["executed_job_count"],
-                "processed_job_count": payload["summary"]["processed_job_count"],
+                "execution_requested": payload["historical_execution_requested"],
+                "executed_job_count": payload["summary"]["historical_executed_job_count"],
+                "processed_job_count": payload["summary"]["historical_processed_job_count"],
             },
             indent=2,
         )

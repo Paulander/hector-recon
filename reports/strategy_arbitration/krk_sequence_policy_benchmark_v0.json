@@ -1,15 +1,15 @@
 {
   "causal_status": "non_causal_sequence_policy_benchmark",
   "decision": {
-    "benchmark_executed_as_ready": false,
+    "benchmark_executed_as_ready": true,
     "label_run_allowed": false,
-    "recommended_next_step": "fill_stage7_clean_success_controls_before_treating_benchmark_as_ready",
+    "recommended_next_step": "review_non_causal_sequence_policy_results",
     "runtime_changes_allowed": false,
     "selector_allowed": false,
     "selector_training_allowed": false,
     "stage7_promotion_allowed": false,
     "stage8_training_allowed": false,
-    "status": "sequence_policy_benchmark_blocked_pending_stage7_success_controls"
+    "status": "sequence_policy_benchmark_ready_non_causal_results_available"
   },
   "gameplay_topology_mutation": false,
   "objectives": [
@@ -34,48 +34,51 @@
     },
     {
       "failure_evidence_sparse": true,
+      "input_group_counts": {
+        "protected_plan_window": 20
+      },
       "objective_id": "protected_plan_window_entry_progress_exit_abort",
-      "row_count": 21,
+      "row_count": 20,
       "runtime_ready": false,
       "target_label_counts": {
-        "conversion_failure": 2,
+        "conversion_failure": 1,
         "conversion_positive": 19
       },
       "top_terms": [
         {
-          "failure_precision": 0.09523809523809523,
-          "success_precision": 0.9047619047619048,
-          "support": 21,
+          "failure_precision": 0.05,
+          "success_precision": 0.95,
+          "support": 20,
           "term": "entry_terms_confirmed:enemy_king_boxed_after_own_move"
         },
         {
-          "failure_precision": 0.09523809523809523,
-          "success_precision": 0.9047619047619048,
-          "support": 21,
+          "failure_precision": 0.05,
+          "success_precision": 0.95,
+          "support": 20,
           "term": "entry_terms_confirmed:rook_safe_after_own_move"
         },
         {
-          "failure_precision": 0.09523809523809523,
-          "success_precision": 0.9047619047619048,
-          "support": 21,
+          "failure_precision": 0.05,
+          "success_precision": 0.95,
+          "support": 20,
           "term": "entry_terms_confirmed:visible_fence_contract_confirmed"
         },
         {
-          "failure_precision": 0.09523809523809523,
-          "success_precision": 0.9047619047619048,
-          "support": 21,
+          "failure_precision": 0.05,
+          "success_precision": 0.95,
+          "support": 20,
           "term": "progress_terms_after_first_reply:handoff_gap_absent"
         },
         {
-          "failure_precision": 0.1,
-          "success_precision": 0.9,
-          "support": 20,
+          "failure_precision": 0.05263157894736842,
+          "success_precision": 0.9473684210526315,
+          "support": 19,
           "term": "progress_terms_after_first_reply:enemy_king_boxed_after_reply"
         },
         {
-          "failure_precision": 0.1,
-          "success_precision": 0.9,
-          "support": 20,
+          "failure_precision": 0.05263157894736842,
+          "success_precision": 0.9473684210526315,
+          "support": 19,
           "term": "progress_terms_after_first_reply:fence_survived_reply"
         },
         {
@@ -91,15 +94,15 @@
           "term": "progress_terms_after_first_reply:successor_affordance"
         },
         {
-          "failure_precision": 0.16666666666666666,
-          "success_precision": 0.8333333333333334,
-          "support": 12,
+          "failure_precision": 0.09090909090909091,
+          "success_precision": 0.9090909090909091,
+          "support": 11,
           "term": "abort_terms:provider_selected_without_role_license"
         },
         {
-          "failure_precision": 0.2,
-          "success_precision": 0.8,
-          "support": 10,
+          "failure_precision": 0.1111111111111111,
+          "success_precision": 0.8888888888888888,
+          "support": 9,
           "term": "selected_successor:krk.stage0_basin"
         }
       ]
@@ -107,35 +110,36 @@
     {
       "failure_controls_met": true,
       "objective_id": "stage7_heldout_sequence_success_vs_hard_negative",
-      "row_count": 10,
+      "row_count": 50,
       "runtime_ready": false,
       "selected_provider_counts": {
         "None": 1,
-        "krk.edge_trap_close": 2,
-        "krk.stage0_basin": 7
+        "krk.drive_to_edge": 9,
+        "krk.edge_trap_close": 6,
+        "krk.fence_established": 1,
+        "krk.stage0_basin": 33
       },
       "semantic_alignment_counts": {
-        "neither_reward_nor_visible_contract": 2,
-        "reward_contract_mismatch": 3,
+        "neither_reward_nor_visible_contract": 21,
+        "reward_contract_mismatch": 12,
         "reward_visible_fence_aligned_reply_not_checked": 1,
-        "reward_visible_fence_aligned_survived": 4
+        "reward_visible_fence_aligned_survived": 7,
+        "visible_contract_without_reward": 9
       },
-      "success_controls_met": false,
+      "success_controls_met": true,
       "target_label_counts": {
-        "conversion_failure": 8,
-        "conversion_positive": 2
+        "conversion_failure": 39,
+        "conversion_positive": 11
       }
     }
   ],
   "preflight": {
-    "benchmark_input_ready": false,
-    "blockers": [
-      "stage7_clean_success_controls_missing"
-    ],
-    "row_count": 79,
+    "benchmark_input_ready": true,
+    "blockers": [],
+    "row_count": 118,
     "runtime_authorization_row_count": 0,
     "selector_training_row_count": 0,
-    "stage7_heldout_row_count": 10
+    "stage7_heldout_row_count": 50
   },
   "runtime_behavior_changed": false,
   "runtime_defaults_changed": false,

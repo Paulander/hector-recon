@@ -55,19 +55,19 @@ def test_stage7_clean_success_backfill_audit_preserves_boundaries():
     assert payload["decision"]["stage8_training_allowed"] is False
 
 
-def test_stage7_clean_success_backfill_audit_explains_no_replay_free_unblock():
+def test_stage7_clean_success_backfill_audit_reports_closed_gate():
     payload = _read_report()
     summary = payload["summary"]
 
     assert (
         payload["decision"]["status"]
-        == "stage7_clean_success_backfill_exhausted_pending_label_execution"
+        == "stage7_clean_success_backfill_available"
     )
-    assert summary["current_clean_success_controls"] == 2
+    assert summary["current_clean_success_controls"] == 11
     assert summary["clean_success_controls_required"] == 5
-    assert summary["manifest_unique_success_controls"] == 2
+    assert summary["manifest_unique_success_controls"] == 11
     assert summary["eligible_new_success_controls"] == 0
-    assert summary["can_close_success_gate_replay_free"] is False
+    assert summary["can_close_success_gate_replay_free"] is True
     assert summary["sandbox_sourced_post_box_success_controls"] > 0
     assert summary["sandbox_sourced_controls_usable_for_clean_gate"] is False
     assert payload["clean_success_key_audit"]["raw_row_count"] > summary[

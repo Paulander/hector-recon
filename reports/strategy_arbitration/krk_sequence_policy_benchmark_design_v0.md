@@ -1,25 +1,28 @@
 # KRK Sequence-Policy Benchmark Design v0
 
-Status: `sequence_policy_benchmark_blocked_pending_clean_stage7_controls`
+Status: `sequence_policy_benchmark_design_ready_non_causal`
 
 This is a non-causal benchmark design/readiness artifact. It does not train a model, implement a sandbox, or authorize runtime behavior.
 
 ## Readiness
 
 - stage4_first_move_contrast_sandbox_review_ready: `True`
-- stage7_clean_success_controls: `2`
-- stage7_clean_failure_controls: `8`
+- stage7_clean_success_controls: `11`
+- stage7_clean_failure_controls: `39`
 - stage7_clean_success_controls_required: `5`
-- stage7_clean_success_controls_met: `False`
+- stage7_clean_success_controls_met: `True`
 - stage7_clean_failure_controls_met: `True`
-- post_box_sandbox_sourced_success_controls: `14`
+- post_box_sandbox_sourced_success_controls: `16`
 - post_box_controls_runtime_authorization_eligible: `False`
 - plan_capsule_stage7_only_evidence: `True`
-- protected_plan_window_frame_count: `21`
+- protected_plan_window_frame_count: `20`
 - protected_plan_window_evidence_met: `True`
 - cross_stage_sequence_evidence_met: `True`
 - plan_capsule_policy_succeeded: `False`
-- benchmark_ready: `False`
+- benchmark_ready: `True`
+- current_benchmark_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered`
+- current_benchmark_review_next_step: `explicitly_approve_protected_plan_window_failure_contrast_collection`
+- current_benchmark_review_available: `True`
 
 ## Candidate Objectives
 
@@ -65,7 +68,7 @@ This is a non-causal benchmark design/readiness artifact. It does not train a mo
 
 ## Decision
 
-- recommended_next_step: `approve_stage7_diverse_clean_label_run_or_defer_to_non_causal_design`
+- recommended_next_step: `explicitly_approve_protected_plan_window_failure_contrast_collection`
 - runtime_changes_allowed: `false`
 - selector_training_allowed: `false`
 - Stage 7 promotion and Stage 8 training remain blocked.

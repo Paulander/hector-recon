@@ -94,14 +94,36 @@ def build_payload(*, benchmark: dict[str, Any] | None = None) -> dict[str, Any]:
         blockers.append("protected_plan_window_failure_evidence_sparse")
 
     if not ready:
-        status = "sequence_policy_benchmark_review_blocked_pending_ready_inputs"
-        recommended_next_step = "fill_stage7_clean_success_controls_and_rerun_passive_gate_advancement"
+        if (
+            "selector_training_rows_forbidden" in blockers
+            or "runtime_authorization_rows_forbidden" in blockers
+        ):
+            status = "sequence_policy_benchmark_review_blocked_forbidden_training_or_runtime_rows"
+            recommended_next_step = (
+                "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+            )
+        elif "stage7_clean_success_controls_missing" in blockers:
+            status = "sequence_policy_benchmark_review_blocked_pending_ready_inputs"
+            recommended_next_step = (
+                "fill_stage7_clean_success_controls_and_rerun_passive_gate_advancement"
+            )
+        elif "stage7_clean_failure_controls_missing" in blockers:
+            status = "sequence_policy_benchmark_review_blocked_pending_ready_inputs"
+            recommended_next_step = "review_stage7_clean_failure_control_inputs"
+        elif "protected_plan_window_evidence_missing" in blockers:
+            status = "sequence_policy_benchmark_review_blocked_pending_ready_inputs"
+            recommended_next_step = "repair_protected_plan_window_input_gap"
+        else:
+            status = "sequence_policy_benchmark_review_blocked_pending_ready_inputs"
+            recommended_next_step = (
+                "repair_sequence_policy_benchmark_inputs_and_rerun_passive_gate_advancement"
+            )
     elif stage4_top3 >= 0.9 and stage7_success_met and stage7_failure_met and not plan_failure_sparse:
         status = "sequence_policy_benchmark_supports_non_causal_sequence_policy_review"
         recommended_next_step = "write_sequence_policy_runtime_or_training_review_packet"
     elif stage4_top3 >= 0.9 and stage7_success_met and stage7_failure_met:
         status = "sequence_policy_benchmark_mixed_plan_window_underpowered"
-        recommended_next_step = "collect_protected_plan_window_failure_contrasts"
+        recommended_next_step = "explicitly_approve_protected_plan_window_failure_contrast_collection"
     else:
         status = "sequence_policy_benchmark_mixed_or_insufficient"
         recommended_next_step = "review_sequence_policy_objective_or_collect_more_balanced_controls"
