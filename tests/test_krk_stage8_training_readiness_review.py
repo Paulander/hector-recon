@@ -154,6 +154,44 @@ def test_stage8_training_readiness_review_blocks_current_state():
         payload["requirements"]["protected_failure_contrast_post_success_refresh_scope"]
         == "full_passive_krk_suite_gate_stack"
     )
+    assert (
+        payload["requirements"]["protected_failure_contrast_runtime_behavior_changed"]
+        is False
+    )
+    assert (
+        payload["requirements"]["protected_failure_contrast_runtime_defaults_changed"]
+        is False
+    )
+    assert (
+        payload["requirements"]["protected_failure_contrast_runtime_selector_implemented"]
+        is False
+    )
+    assert (
+        payload["requirements"]["protected_failure_contrast_runtime_score_changes"]
+        is False
+    )
+    assert (
+        payload["requirements"][
+            "protected_failure_contrast_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        payload["requirements"]["protected_failure_contrast_gameplay_topology_mutation"]
+        is False
+    )
+    assert (
+        payload["requirements"]["protected_failure_contrast_selector_training_allowed"]
+        is False
+    )
+    assert (
+        payload["requirements"]["protected_failure_contrast_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["requirements"]["protected_failure_contrast_stage8_training_allowed"]
+        is False
+    )
     assert "stage7_clean_success_controls_missing" not in payload["blockers"]
     assert (
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"

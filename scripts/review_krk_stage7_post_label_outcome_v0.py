@@ -289,6 +289,33 @@ def build_payload(
             "protected_failure_contrast_post_success_refresh_scope": (
                 protected_failure_contrast.get("post_success_refresh_scope")
             ),
+            "protected_failure_contrast_runtime_behavior_changed": (
+                protected_failure_contrast.get("runtime_behavior_changed", False)
+            ),
+            "protected_failure_contrast_runtime_defaults_changed": (
+                protected_failure_contrast.get("runtime_defaults_changed", False)
+            ),
+            "protected_failure_contrast_runtime_selector_implemented": (
+                protected_failure_contrast.get("runtime_selector_implemented", False)
+            ),
+            "protected_failure_contrast_runtime_score_changes": (
+                protected_failure_contrast.get("runtime_score_changes", False)
+            ),
+            "protected_failure_contrast_runtime_dtm_or_tablebase_lookup": (
+                protected_failure_contrast.get("runtime_dtm_or_tablebase_lookup", False)
+            ),
+            "protected_failure_contrast_gameplay_topology_mutation": (
+                protected_failure_contrast.get("gameplay_topology_mutation", False)
+            ),
+            "protected_failure_contrast_selector_training_allowed": (
+                protected_failure_contrast.get("selector_training_allowed", False)
+            ),
+            "protected_failure_contrast_stage7_promotion_allowed": (
+                protected_failure_contrast.get("stage7_promotion_allowed", False)
+            ),
+            "protected_failure_contrast_stage8_training_allowed": (
+                protected_failure_contrast.get("stage8_training_allowed", False)
+            ),
             "stage7_training_row_count": 0,
             "selector_training_row_count": 0,
             "runtime_authorization_row_count": 0,

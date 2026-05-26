@@ -43,6 +43,15 @@ This review is passive. It does not execute labels, change runtime behavior, tra
 - protected_failure_contrast_post_success_refresh_required: `True`
 - protected_failure_contrast_post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - protected_failure_contrast_post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
+- protected_failure_contrast_runtime_behavior_changed: `False`
+- protected_failure_contrast_runtime_defaults_changed: `False`
+- protected_failure_contrast_runtime_selector_implemented: `False`
+- protected_failure_contrast_runtime_score_changes: `False`
+- protected_failure_contrast_runtime_dtm_or_tablebase_lookup: `False`
+- protected_failure_contrast_gameplay_topology_mutation: `False`
+- protected_failure_contrast_selector_training_allowed: `False`
+- protected_failure_contrast_stage7_promotion_allowed: `False`
+- protected_failure_contrast_stage8_training_allowed: `False`
 - stage7_training_row_count: `0`
 - selector_training_row_count: `0`
 - runtime_authorization_row_count: `0`
