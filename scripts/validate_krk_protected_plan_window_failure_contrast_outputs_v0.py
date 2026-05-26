@@ -19,6 +19,7 @@ MANIFEST = (
     ROOT
     / "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json"
 )
+CONTROL_PLANE_GATE = ROOT / "reports/krk_current_control_plane_gate_v0.json"
 OUTPUT_JSON = (
     ROOT
     / "reports/strategy_arbitration/"
@@ -63,6 +64,23 @@ def _safe_relative_output(path_value: Any) -> bool:
     if path.is_absolute() or ".." in path.parts:
         return False
     return path.parts[: len(OUTPUT_ROOT.parts)] == OUTPUT_ROOT.parts
+
+
+def _find_approval_option(gate: dict[str, Any], option_id: str) -> dict[str, Any]:
+    for option in gate.get("approval_options") or []:
+        if option.get("option_id") == option_id:
+            return option
+    return {}
+
+
+def _find_first_approval_option(
+    gate: dict[str, Any], option_ids: tuple[str, ...]
+) -> dict[str, Any]:
+    for option_id in option_ids:
+        option = _find_approval_option(gate, option_id)
+        if option:
+            return option
+    return {}
 
 
 def _expected_label(result: Any) -> str | None:
@@ -131,8 +149,13 @@ def _validate_output(job: dict[str, Any], payload: dict[str, Any]) -> dict[str, 
     }
 
 
-def build_payload(*, manifest: dict[str, Any] | None = None) -> dict[str, Any]:
+def build_payload(
+    *,
+    manifest: dict[str, Any] | None = None,
+    gate: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     manifest = manifest or _load(MANIFEST)
+    gate = gate or _load(CONTROL_PLANE_GATE)
     jobs = manifest.get("jobs") or []
     output_checks: list[dict[str, Any]] = []
     issue_counts: Counter[str] = Counter()
@@ -196,9 +219,38 @@ def build_payload(*, manifest: dict[str, Any] | None = None) -> dict[str, Any]:
     all_outputs_present = output_exists_count == len(jobs) and len(jobs) > 0
     all_present_outputs_valid = output_exists_count == output_valid_count
     all_outputs_valid = all_outputs_present and all_present_outputs_valid and parse_error_count == 0
+    protected_collection_option = _find_approval_option(
+        gate,
+        "approve_protected_plan_window_failure_contrast_collection",
+    )
+    protected_collection_blocking_option = _find_first_approval_option(
+        gate,
+        (
+            "repair_protected_stack_validation",
+            "repair_protected_failure_contrast_approval_request_scope",
+            "review_protected_plan_window_failure_contrast_execution_readiness",
+            "review_protected_plan_window_failure_contrast_manifest",
+            "review_protected_plan_window_failure_contrast_plan",
+        ),
+    )
+    protected_collection_option_available = bool(protected_collection_option)
+    protected_collection_command_available = bool(
+        protected_collection_option.get("command_if_explicitly_approved")
+    )
     if not any_outputs_present:
-        status = "protected_plan_window_failure_contrast_outputs_validation_pending"
-        next_step = "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        if protected_collection_command_available:
+            status = "protected_plan_window_failure_contrast_outputs_validation_pending"
+            next_step = (
+                "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+            )
+        else:
+            status = (
+                "protected_plan_window_failure_contrast_outputs_validation_pending_"
+                "protected_failure_contrast_control_plane_gate_review"
+            )
+            next_step = (
+                "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+            )
     elif all_outputs_valid:
         status = "protected_plan_window_failure_contrast_outputs_valid_ready_for_integration"
         next_step = "integrate_protected_plan_window_failure_contrasts_passively"
@@ -214,7 +266,8 @@ def build_payload(*, manifest: dict[str, Any] | None = None) -> dict[str, Any]:
         "causal_status": "non_causal_output_validation",
         **COMMON_FALSE_FLAGS,
         "source_artifacts": [
-            "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json"
+            "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json",
+            "reports/krk_current_control_plane_gate_v0.json",
         ],
         "summary": {
             "job_count": len(jobs),
@@ -230,6 +283,22 @@ def build_payload(*, manifest: dict[str, Any] | None = None) -> dict[str, Any]:
             "stage7_training_row_count": 0,
             "selector_training_row_count": 0,
             "runtime_authorization_row_count": 0,
+            "current_gate_status": gate.get("decision", {}).get("status"),
+            "current_control_plane_approval_option_ids": [
+                option.get("option_id") for option in gate.get("approval_options") or []
+            ],
+            "protected_failure_contrast_collection_option_available": (
+                protected_collection_option_available
+            ),
+            "protected_failure_contrast_collection_command_available": (
+                protected_collection_command_available
+            ),
+            "protected_failure_contrast_collection_option_id": (
+                protected_collection_option.get("option_id")
+            ),
+            "protected_failure_contrast_collection_blocked_by_option_id": (
+                protected_collection_blocking_option.get("option_id")
+            ),
         },
         "output_checks": output_checks,
         "decision": {

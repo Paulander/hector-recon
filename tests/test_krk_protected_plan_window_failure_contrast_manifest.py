@@ -83,6 +83,29 @@ def _ready_execution_summary(job_count: int = 1) -> dict:
     }
 
 
+def _collection_gate(command: str | None = "approved command") -> dict:
+    if command is None:
+        approval_options = [
+            {
+                "option_id": (
+                    "review_protected_plan_window_failure_contrast_execution_readiness"
+                ),
+                "command_if_explicitly_approved": None,
+            }
+        ]
+    else:
+        approval_options = [
+            {
+                "option_id": "approve_protected_plan_window_failure_contrast_collection",
+                "command_if_explicitly_approved": command,
+            }
+        ]
+    return {
+        "decision": {"status": "krk_control_plane_waiting_on_explicit_gate_choice"},
+        "approval_options": approval_options,
+    }
+
+
 def _approval_receipt(
     job_count: int = 1,
     *,
@@ -351,6 +374,26 @@ def test_failure_contrast_output_validation_is_pending_before_collection():
     assert payload["summary"]["output_valid_count"] == 0
     assert payload["summary"]["all_outputs_valid"] is False
     assert payload["summary"]["unique_failure_candidate_count"] == 0
+    assert (
+        "approve_protected_plan_window_failure_contrast_collection"
+        in payload["summary"]["current_control_plane_approval_option_ids"]
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_option_available"]
+        is True
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_command_available"]
+        is True
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_option_id"]
+        == "approve_protected_plan_window_failure_contrast_collection"
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_blocked_by_option_id"]
+        is None
+    )
     assert payload["hidden_python_controller"] is False
     assert payload["decision"]["collection_run_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False
@@ -358,6 +401,54 @@ def test_failure_contrast_output_validation_is_pending_before_collection():
     assert payload["decision"]["selector_training_allowed"] is False
     assert payload["decision"]["stage7_promotion_allowed"] is False
     assert payload["decision"]["stage8_training_allowed"] is False
+
+
+def test_failure_contrast_output_validation_routes_missing_collection_option_to_gate_review():
+    payload = _output_validation.build_payload(
+        manifest={
+            "jobs": [
+                {
+                    "job_id": "pending",
+                    "source_stage": "stage5",
+                    "source_family": "fence_handoff_plan_window",
+                    "seed_frame_id": "seed.pending",
+                    "anchor_move_uci": "a1a2",
+                    "expected_output_json": (
+                        "reports/strategy_arbitration/"
+                        "protected_plan_window_failure_contrasts/pending.json"
+                    ),
+                }
+            ]
+        },
+        gate=_collection_gate(None),
+    )
+
+    assert (
+        payload["decision"]["status"]
+        == "protected_plan_window_failure_contrast_outputs_validation_pending_"
+        "protected_failure_contrast_control_plane_gate_review"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_option_available"]
+        is False
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_command_available"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "protected_failure_contrast_collection_blocked_by_option_id"
+        ]
+        == "review_protected_plan_window_failure_contrast_execution_readiness"
+    )
+    assert payload["decision"]["collection_run_allowed"] is False
+    assert payload["decision"]["label_run_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
 
 
 def test_failure_contrast_runner_is_dry_run_ready_without_authorizing_collection():

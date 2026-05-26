@@ -89,7 +89,8 @@
   "runtime_selector_implemented": false,
   "schema_version": "krk_protected_plan_window_failure_contrast_output_validation.v0",
   "source_artifacts": [
-    "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json"
+    "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json",
+    "reports/krk_current_control_plane_gate_v0.json"
   ],
   "stage7_promotion_allowed": false,
   "stage8_training_allowed": false,
@@ -97,6 +98,11 @@
     "all_outputs_present": false,
     "all_outputs_valid": false,
     "all_present_outputs_valid": true,
+    "current_control_plane_approval_option_ids": [
+      "approve_stage4_first_move_contrast_sandbox",
+      "approve_protected_plan_window_failure_contrast_collection"
+    ],
+    "current_gate_status": "krk_control_plane_waiting_on_explicit_gate_choice",
     "h40_outcome_label_counts": {},
     "issue_counts": {
       "output_missing": 6
@@ -105,6 +111,10 @@
     "output_exists_count": 0,
     "output_valid_count": 0,
     "parse_error_count": 0,
+    "protected_failure_contrast_collection_blocked_by_option_id": null,
+    "protected_failure_contrast_collection_command_available": true,
+    "protected_failure_contrast_collection_option_available": true,
+    "protected_failure_contrast_collection_option_id": "approve_protected_plan_window_failure_contrast_collection",
     "runtime_authorization_row_count": 0,
     "selector_training_row_count": 0,
     "stage7_training_row_count": 0,
