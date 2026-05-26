@@ -266,7 +266,9 @@ def test_current_control_plane_gate_requires_explicit_choice():
         stage4_option["approval_request_status"]
         == "stage4_first_move_contrast_sandbox_approval_request_ready"
     )
+    assert stage4_option["approval_request_blockers"] == []
     assert stage4_option["approval_request_created"] is False
+    assert stage4_option["safety_scope"]["approval_request_blockers"] == []
     assert (
         stage4_option["safety_scope"]["sandbox_scope_id"]
         == "default_off_stage4_candidate_move_first_move_contrast_sandbox_only"
@@ -293,6 +295,18 @@ def test_current_control_plane_gate_requires_explicit_choice():
     assert stage4_option["safety_scope"]["readiness_checked_flag_count"] >= 430
     assert stage4_option["safety_scope"]["readiness_boundary_violation_count"] == 0
     assert stage4_option["safety_scope"]["readiness_source_artifact_count"] >= 44
+    assert (
+        payload["current_state"][
+            "stage4_first_move_contrast_sandbox_approval_request"
+        ]
+        == "stage4_first_move_contrast_sandbox_approval_request_ready"
+    )
+    assert (
+        payload["current_state"][
+            "stage4_first_move_contrast_sandbox_approval_request_blockers"
+        ]
+        == []
+    )
     assert (
         payload["current_state"]["sequence_policy"]
         == "sequence_policy_benchmark_mixed_plan_window_underpowered"
@@ -696,6 +710,80 @@ def test_current_control_plane_gate_routes_forbidden_sequence_inputs_to_repair()
         == "not_applicable_pending_sequence_policy_input_repair"
     )
     assert payload["decision"]["selector_training_allowed"] is False
+
+
+def test_current_control_plane_gate_blocks_stage4_runtime_when_approval_request_blocked():
+    payload = _current_gate.build_payload(
+        stage4_approval_request={
+            "approval_request_created": False,
+            "implementation_authorized_by_request": False,
+            "blockers": ["full_suite_readiness_audit_not_clean"],
+            "decision": {
+                "status": "stage4_first_move_contrast_sandbox_approval_request_blocked"
+            },
+            "required_scope_if_user_approves": {
+                "approval_id": "approve_stage4_first_move_contrast_sandbox",
+                "sandbox_scope_id": (
+                    "default_off_stage4_candidate_move_first_move_contrast_sandbox_only"
+                ),
+                "default_off": True,
+                "default_enabled": False,
+                "approval_request_created": False,
+                "implementation_authorized_by_request": False,
+                "runtime_change_class": (
+                    "default_off_candidate_move_frame_sandbox_only"
+                ),
+                "exact_state_or_exact_move_exception": False,
+                "runtime_dtm_or_tablebase_lookup": False,
+                "hidden_python_controller": False,
+                "selector_training_allowed": False,
+                "provider_suppression_allowed": False,
+                "broad_stage0_penalty_allowed": False,
+                "gameplay_topology_mutation": False,
+                "stage7_promotion_allowed": False,
+                "stage8_training_allowed": False,
+                "readiness_audit": "reports/krk_full_suite_readiness_audit_v0.json",
+                "readiness_checked_flag_count": 430,
+                "readiness_boundary_violation_count": 1,
+                "readiness_source_artifact_count": 44,
+            },
+        }
+    )
+
+    option_ids = {option["option_id"] for option in payload["approval_options"]}
+    assert "approve_stage4_first_move_contrast_sandbox" not in option_ids
+    assert (
+        "repair_stage4_first_move_contrast_sandbox_approval_request_scope"
+        in option_ids
+    )
+    repair_option = [
+        option
+        for option in payload["approval_options"]
+        if option["option_id"]
+        == "repair_stage4_first_move_contrast_sandbox_approval_request_scope"
+    ][0]
+    assert repair_option["artifact"] == (
+        "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md"
+    )
+    assert (
+        repair_option["approval_request_status"]
+        == "stage4_first_move_contrast_sandbox_approval_request_blocked"
+    )
+    assert repair_option["approval_request_blockers"] == [
+        "full_suite_readiness_audit_not_clean"
+    ]
+    assert repair_option["safety_scope"]["approval_request_blockers"] == [
+        "full_suite_readiness_audit_not_clean"
+    ]
+    assert repair_option["safety_scope"]["runtime_dtm_or_tablebase_lookup"] is False
+    assert repair_option["safety_scope"]["hidden_python_controller"] is False
+    assert repair_option["safety_scope"]["stage7_promotion_allowed"] is False
+    assert repair_option["safety_scope"]["stage8_training_allowed"] is False
+    assert (
+        payload["recommendation"]["preferred_next_if_user_approves_runtime"]
+        == "not_applicable_pending_stage4_sandbox_approval_request_repair"
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
 
 
 def test_current_control_plane_gate_blocks_collection_when_approval_request_blocked():

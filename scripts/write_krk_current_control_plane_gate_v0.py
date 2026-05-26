@@ -306,23 +306,47 @@ def build_payload(
     stage4_approval_scope = (
         stage4_approval_request.get("required_scope_if_user_approves") or {}
     )
+    stage4_approval_request_ready = (
+        stage4_approval_request.get("decision", {}).get("status")
+        == "stage4_first_move_contrast_sandbox_approval_request_ready"
+        and not (stage4_approval_request.get("blockers") or [])
+    )
     approval_options = [
         {
-            "option_id": "approve_stage4_first_move_contrast_sandbox",
-            "artifact": "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.md",
+            "option_id": (
+                "approve_stage4_first_move_contrast_sandbox"
+                if stage4_approval_request_ready
+                else "repair_stage4_first_move_contrast_sandbox_approval_request_scope"
+            ),
+            "artifact": (
+                "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.md"
+                if stage4_approval_request_ready
+                else "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md"
+            ),
             "approval_request_artifact": (
                 "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md"
             ),
             "approval_request_status": stage4_approval_request.get("decision", {}).get(
                 "status"
             ),
+            "approval_request_blockers": stage4_approval_request.get("blockers") or [],
             "approval_request_created": stage4_approval_request.get(
                 "approval_request_created"
             ),
-            "status": stage4_packet.get("decision", {}).get("status"),
-            "what_it_allows": "default-off Stage 4 CandidateMoveFrame first-move contrast sandbox only",
+            "status": (
+                stage4_packet.get("decision", {}).get("status")
+                if stage4_approval_request_ready
+                else stage4_approval_request.get("decision", {}).get("status")
+            ),
+            "what_it_allows": (
+                "default-off Stage 4 CandidateMoveFrame first-move contrast sandbox only"
+                if stage4_approval_request_ready
+                else "non-causal Stage 4 sandbox approval-request scope repair only"
+            ),
             "safety_scope": {
                 "approval_id": stage4_approval_scope.get("approval_id"),
+                "approval_request_blockers": stage4_approval_request.get("blockers")
+                or [],
                 "sandbox_scope_id": stage4_approval_scope.get("sandbox_scope_id"),
                 "default_off": stage4_approval_scope.get("default_off"),
                 "default_enabled": stage4_approval_scope.get("default_enabled"),
@@ -385,7 +409,11 @@ def build_payload(
                 "Stage 7 promotion",
                 "Stage 8 training",
             ],
-            "recommended_if": "you want to reduce the known Stage 4 h40 caveat now",
+            "recommended_if": (
+                "you want to reduce the known Stage 4 h40 caveat now"
+                if stage4_approval_request_ready
+                else "Stage 4 sandbox approval request is blocked; repair readiness or scope blockers before runtime work can be approved"
+            ),
         },
     ]
     if not stage7_success_ready:
@@ -832,6 +860,12 @@ def build_payload(
                 full_suite_readiness.get("source_artifacts") or {}
             ),
             "stage4": "first_move_contrast_runtime_review_ready_pending_explicit_approval",
+            "stage4_first_move_contrast_sandbox_approval_request": stage4_approval_request.get(
+                "decision", {}
+            ).get("status"),
+            "stage4_first_move_contrast_sandbox_approval_request_blockers": (
+                stage4_approval_request.get("blockers") or []
+            ),
             "stage7": "heldout_clean_success_controls_ready_sequence_benchmark_available"
             if stage7_success_ready
             else "heldout_clean_success_controls_insufficient_sampling_manifest_ready",
@@ -1089,7 +1123,11 @@ def build_payload(
             else "review_non_causal_sequence_policy_benchmark_results"
             if sequence_inputs_ready
             else "stop_at_gate_or_design_non_causal_sequence_policy_only",
-            "preferred_next_if_user_approves_runtime": "implement_stage4_default_off_first_move_contrast_sandbox",
+            "preferred_next_if_user_approves_runtime": (
+                "implement_stage4_default_off_first_move_contrast_sandbox"
+                if stage4_approval_request_ready
+                else "not_applicable_pending_stage4_sandbox_approval_request_repair"
+            ),
             "preferred_next_if_user_approves_collection": (
                 "not_applicable_pending_protected_stack_validation"
             if not protected_stack_ready

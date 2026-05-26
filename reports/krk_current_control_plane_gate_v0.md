@@ -19,6 +19,8 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - readiness_boundary_violation_count: `0`
 - readiness_source_artifact_count: `44`
 - stage4: `first_move_contrast_runtime_review_ready_pending_explicit_approval`
+- stage4_first_move_contrast_sandbox_approval_request: `stage4_first_move_contrast_sandbox_approval_request_ready`
+- stage4_first_move_contrast_sandbox_approval_request_blockers: `[]`
 - stage7: `heldout_clean_success_controls_ready_sequence_benchmark_available`
 - stage7_success_controls_ready: `True`
 - stage7_success_controls: `11`
@@ -104,6 +106,7 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - approval_request_status: `stage4_first_move_contrast_sandbox_approval_request_ready`
 - safety_scope:
   - approval_id: `approve_stage4_first_move_contrast_sandbox`
+  - approval_request_blockers: `[]`
   - sandbox_scope_id: `default_off_stage4_candidate_move_first_move_contrast_sandbox_only`
   - default_off: `True`
   - default_enabled: `False`

@@ -2,6 +2,7 @@
   "approval_options": [
     {
       "approval_request_artifact": "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md",
+      "approval_request_blockers": [],
       "approval_request_created": false,
       "approval_request_status": "stage4_first_move_contrast_sandbox_approval_request_ready",
       "artifact": "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.md",
@@ -9,6 +10,7 @@
       "recommended_if": "you want to reduce the known Stage 4 h40 caveat now",
       "safety_scope": {
         "approval_id": "approve_stage4_first_move_contrast_sandbox",
+        "approval_request_blockers": [],
         "approval_request_created": false,
         "broad_stage0_penalty_allowed": false,
         "default_enabled": false,
@@ -189,6 +191,8 @@
     "sequence_policy_passive_design_without_new_labels": "non_causal_sequence_policy_design_without_new_labels_ready",
     "sequence_policy_replay_free_protected_cross_stage_evidence": true,
     "stage4": "first_move_contrast_runtime_review_ready_pending_explicit_approval",
+    "stage4_first_move_contrast_sandbox_approval_request": "stage4_first_move_contrast_sandbox_approval_request_ready",
+    "stage4_first_move_contrast_sandbox_approval_request_blockers": [],
     "stage7": "heldout_clean_success_controls_ready_sequence_benchmark_available",
     "stage7_additional_label_manifest": "stage7_additional_clean_sampling_manifest_not_applicable_success_gate_closed",
     "stage7_additional_label_runner": "stage7_additional_clean_sampling_runner_not_applicable_success_gate_closed",
