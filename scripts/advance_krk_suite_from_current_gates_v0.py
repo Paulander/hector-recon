@@ -50,6 +50,23 @@ FORBIDDEN_INPUT_STATUSES = {
 }
 
 
+def _approval_ready_with_status_fallback(
+    *,
+    explicit_value: Any,
+    status: Any,
+    ready_status: str,
+    blockers: list[Any],
+    summary_ready: Any = None,
+) -> bool:
+    if explicit_value is not None:
+        return bool(explicit_value)
+    return (
+        status == ready_status
+        and not blockers
+        and summary_ready is not False
+    )
+
+
 PASSIVE_STEPS = [
     {
         "step_id": "stage7_diverse_clean_output_validation",
@@ -388,6 +405,23 @@ def build_payload() -> dict[str, Any]:
         failure_contrast_approval_request.get("summary") or {}
     )
     protected_failure_contrast_gate = readiness.get("protected_failure_contrast_gate") or {}
+    stage4_approval_request_ready = _approval_ready_with_status_fallback(
+        explicit_value=stage4_current.get(
+            "approval_request_ready_for_runtime_approval"
+        ),
+        status=stage4_approval_request.get("decision", {}).get("status"),
+        ready_status="stage4_first_move_contrast_sandbox_approval_request_ready",
+        blockers=stage4_approval_request.get("blockers") or [],
+    )
+    failure_contrast_approval_request_ready = _approval_ready_with_status_fallback(
+        explicit_value=protected_failure_contrast_gate.get(
+            "approval_request_ready_for_collection"
+        ),
+        status=failure_contrast_approval_request.get("decision", {}).get("status"),
+        ready_status="protected_plan_window_failure_contrast_approval_request_ready",
+        blockers=failure_contrast_approval_request.get("blockers") or [],
+        summary_ready=failure_contrast_approval_request_summary.get("request_ready"),
+    )
     failure_contrast_output_validation = _load_json(
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_output_validation_v0.json"
@@ -570,7 +604,7 @@ def build_payload() -> dict[str, Any]:
                 stage4_approval_request.get("blockers") or []
             ),
             "stage4_first_move_contrast_sandbox_approval_request_ready_for_runtime_approval": (
-                stage4_current.get("approval_request_ready_for_runtime_approval")
+                stage4_approval_request_ready
             ),
             "stage4_first_move_contrast_sandbox_approval_request_created": stage4_approval_request.get(
                 "approval_request_created"
@@ -686,7 +720,7 @@ def build_payload() -> dict[str, Any]:
                 failure_contrast_approval_request.get("blockers") or []
             ),
             "protected_plan_window_failure_contrast_approval_request_ready_for_collection": (
-                protected_failure_contrast_gate.get("approval_request_ready_for_collection")
+                failure_contrast_approval_request_ready
             ),
             "protected_plan_window_failure_contrast_approval_receipt_created": failure_contrast_approval_request.get(
                 "approval_receipt_created"

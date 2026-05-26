@@ -734,3 +734,64 @@ def test_gate_advancement_routes_forbidden_training_rows_to_input_repair(monkeyp
         in payload["summary"]["sequence_policy_forbidden_training_or_runtime_input_blockers"]
     )
     assert payload["decision"]["selector_training_allowed"] is False
+
+
+def test_gate_advancement_summary_falls_back_when_request_ready_flags_are_null(monkeypatch):
+    real_load_json = _advance._load_json
+
+    def no_op_run_script(script: str, args: list[str] | None = None):
+        return {"script": script, "args": list(args or []), "ran": False}
+
+    def tainted_load_json(relative: str):
+        payload = json.loads(json.dumps(real_load_json(relative)))
+        if relative == "reports/krk_stage4_caveat_unblocker_packet_v0.json":
+            payload.setdefault("current_stage4_status", {})[
+                "approval_request_ready_for_runtime_approval"
+            ] = None
+        if relative == "reports/krk_full_suite_readiness_audit_v0.json":
+            payload.setdefault("protected_failure_contrast_gate", {})[
+                "approval_request_ready_for_collection"
+            ] = None
+        return payload
+
+    monkeypatch.setattr(_advance, "_run_script", no_op_run_script)
+    monkeypatch.setattr(_advance, "_load_json", tainted_load_json)
+
+    payload = _advance.build_payload()
+
+    assert (
+        payload["summary"][
+            "stage4_first_move_contrast_sandbox_approval_request_status"
+        ]
+        == "stage4_first_move_contrast_sandbox_approval_request_ready"
+    )
+    assert (
+        payload["summary"][
+            "stage4_first_move_contrast_sandbox_approval_request_blockers"
+        ]
+        == []
+    )
+    assert (
+        payload["summary"][
+            "stage4_first_move_contrast_sandbox_approval_request_ready_for_runtime_approval"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "protected_plan_window_failure_contrast_approval_request_status"
+        ]
+        == "protected_plan_window_failure_contrast_approval_request_ready"
+    )
+    assert (
+        payload["summary"][
+            "protected_plan_window_failure_contrast_approval_request_blockers"
+        ]
+        == []
+    )
+    assert (
+        payload["summary"][
+            "protected_plan_window_failure_contrast_approval_request_ready_for_collection"
+        ]
+        is True
+    )
