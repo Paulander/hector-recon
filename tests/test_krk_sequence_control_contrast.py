@@ -904,6 +904,54 @@ def test_current_control_plane_gate_blocks_collection_when_approval_request_bloc
     assert payload["decision"]["runtime_changes_allowed"] is False
 
 
+def test_current_control_plane_gate_blocks_collection_when_execution_not_ready():
+    payload = _current_gate.build_payload(
+        failure_contrast_execution_readiness={
+            "decision": {
+                "status": "protected_plan_window_failure_contrast_execution_blocked"
+            },
+            "summary": {
+                "jobs_passing_readiness": False,
+                "manifest_fingerprint": "0" * 64,
+                "readiness_fingerprint": "1" * 64,
+            },
+        }
+    )
+
+    option_ids = {option["option_id"] for option in payload["approval_options"]}
+    assert "approve_protected_plan_window_failure_contrast_collection" not in option_ids
+    assert (
+        "review_protected_plan_window_failure_contrast_execution_readiness"
+        in option_ids
+    )
+    review_option = [
+        option
+        for option in payload["approval_options"]
+        if option["option_id"]
+        == "review_protected_plan_window_failure_contrast_execution_readiness"
+    ][0]
+    assert review_option["command_if_explicitly_approved"] is None
+    assert (
+        review_option["artifact"]
+        == "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_execution_readiness_v0.md"
+    )
+    assert (
+        review_option["what_it_allows"]
+        == "non-causal protected failure-contrast execution-readiness review only"
+    )
+    assert review_option["approval_request_ready_for_collection"] is True
+    assert (
+        payload["recommendation"]["preferred_next_if_no_user_approval"]
+        == "review_protected_plan_window_failure_contrast_execution_readiness"
+    )
+    assert (
+        payload["recommendation"]["preferred_next_if_user_approves_collection"]
+        == "not_applicable_pending_protected_failure_contrast_execution_readiness"
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+
+
 def test_current_control_plane_gate_blocks_collection_when_protected_stack_not_ready():
     payload = _current_gate.build_payload(
         full_suite_readiness={

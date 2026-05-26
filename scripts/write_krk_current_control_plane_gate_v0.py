@@ -299,8 +299,29 @@ def build_payload(
             and not (failure_contrast_approval_request.get("blockers") or [])
         )
     )
+    failure_contrast_execution_ready = (
+        failure_contrast_execution_readiness.get("decision", {}).get("status")
+        == "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+    )
+    failure_contrast_runner_dry_run_ready = (
+        failure_contrast_runner.get("decision", {}).get("status")
+        == "protected_plan_window_failure_contrast_runner_dry_run_ready"
+    )
     failure_contrast_ready_for_collection = (
-        failure_contrast_manifest_review_passed and failure_contrast_approval_request_ready
+        failure_contrast_manifest_review_passed
+        and failure_contrast_approval_request_ready
+        and protected_stack_ready
+        and failure_contrast_execution_ready
+        and failure_contrast_runner_dry_run_ready
+    )
+    failure_contrast_execution_review_required = (
+        failure_contrast_manifest_review_passed
+        and failure_contrast_approval_request_ready
+        and protected_stack_ready
+        and (
+            not failure_contrast_execution_ready
+            or not failure_contrast_runner_dry_run_ready
+        )
     )
     failure_contrast_command = (
         "UV_CACHE_DIR=/tmp/uv-cache uv run python "
@@ -565,6 +586,8 @@ def build_payload(
             {
                 "option_id": "approve_protected_plan_window_failure_contrast_collection"
             if failure_contrast_ready_for_collection
+            else "review_protected_plan_window_failure_contrast_execution_readiness"
+            if failure_contrast_execution_review_required
             else "repair_protected_failure_contrast_approval_request_scope"
             if failure_contrast_manifest_review_passed
             else "review_protected_plan_window_failure_contrast_manifest"
@@ -581,6 +604,17 @@ def build_payload(
                 "krk_protected_plan_window_failure_contrast_approval_request_v0.md"
             )
             if failure_contrast_manifest_review_passed and not failure_contrast_ready_for_collection
+            and not failure_contrast_execution_review_required
+            else (
+                "reports/strategy_arbitration/"
+                "krk_protected_plan_window_failure_contrast_execution_readiness_v0.md"
+            )
+            if failure_contrast_execution_review_required and not failure_contrast_execution_ready
+            else (
+                "reports/strategy_arbitration/"
+                "krk_protected_plan_window_failure_contrast_runner_v0.md"
+            )
+            if failure_contrast_execution_review_required
             else (
                 "reports/strategy_arbitration/"
                 "krk_protected_plan_window_failure_contrast_manifest_review_v0.md"
@@ -609,6 +643,8 @@ def build_payload(
             or sequence_policy_status,
             "what_it_allows": "explicitly approved bounded observation-only protected plan-window failure-contrast collection"
             if failure_contrast_ready_for_collection
+            else "non-causal protected failure-contrast execution-readiness review only"
+            if failure_contrast_execution_review_required
             else "non-causal protected failure-contrast approval-request scope repair only"
             if failure_contrast_manifest_review_passed
             else "non-causal protected plan-window failure-contrast manifest review only"
@@ -823,6 +859,8 @@ def build_payload(
             ],
             "recommended_if": "manifest review passed and you want to collect bounded observation-only failure contrasts"
             if failure_contrast_ready_for_collection
+            else "execution readiness or runner dry-run is not ready; refresh or review before protected collection can be approved"
+            if failure_contrast_execution_review_required
             else "approval request scope is blocked; repair blockers before protected collection can be approved"
             if failure_contrast_manifest_review_passed
             else "benchmark review found sparse protected plan-window failure evidence"
@@ -1176,6 +1214,8 @@ def build_payload(
             if failure_contrast_integration_ready
             else "wait_for_explicit_protected_plan_window_failure_contrast_collection_approval"
             if failure_contrast_ready_for_collection
+            else "review_protected_plan_window_failure_contrast_execution_readiness"
+            if failure_contrast_execution_review_required
             else "repair_protected_failure_contrast_approval_request_scope"
             if failure_contrast_manifest_review_passed
             else "review_protected_plan_window_failure_contrast_manifest"
@@ -1199,6 +1239,8 @@ def build_payload(
             if sequence_forbidden_training_or_runtime_inputs
             else "create_matching_approval_receipt_then_execute_bounded_protected_plan_window_failure_contrast_collection_from_reviewed_manifest"
             if failure_contrast_ready_for_collection
+                else "not_applicable_pending_protected_failure_contrast_execution_readiness"
+            if failure_contrast_execution_review_required
                 else "not_applicable_pending_protected_failure_contrast_approval_request_repair"
             if failure_contrast_manifest_review_passed
                 else "not_applicable_pending_protected_failure_contrast_manifest_review"
