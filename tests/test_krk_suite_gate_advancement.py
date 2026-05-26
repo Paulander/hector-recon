@@ -316,6 +316,62 @@ def test_gate_advancement_reports_current_stage7_blocker():
     )
     assert payload["summary"]["selector_label_balance_stage7_promotion_allowed"] is False
     assert payload["summary"]["selector_label_balance_stage8_training_allowed"] is False
+    assert payload["summary"]["ownership_selection_context_passive_ready"] is True
+    assert payload["summary"]["ownership_selection_context_label_dataset_status"] == (
+        "ownership_selection_labels_expanded_with_targeted_false_positive_risk_cells"
+    )
+    assert (
+        payload["summary"]["ownership_selection_context_label_dataset_merged_row_count"]
+        == 41
+    )
+    assert (
+        payload["summary"][
+            "ownership_selection_context_label_dataset_selector_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["ownership_selection_context_label_dataset_stage7_row_count"]
+        == 0
+    )
+    assert payload["summary"]["ownership_selection_context_dataset_status"] == (
+        "ownership_selection_context_dataset_ready_for_non_causal_probe"
+    )
+    assert payload["summary"]["ownership_selection_context_dataset_row_count"] == 41
+    assert (
+        payload["summary"][
+            "ownership_selection_context_dataset_selector_training_row_count"
+        ]
+        == 0
+    )
+    assert payload["summary"]["ownership_selection_context_dataset_stage7_row_count"] == 0
+    assert (
+        payload["summary"]["ownership_selection_context_probe_status"]
+        == "context_features_underpowered"
+    )
+    assert payload["summary"]["ownership_selection_context_probe_underpowered"] is True
+    assert payload["summary"]["ownership_selection_source_diversity_status"] == (
+        "source_diversity_gap_blocks_runtime"
+    )
+    assert (
+        payload["summary"][
+            "ownership_selection_source_diversity_non_stage0_ownership_row_count"
+        ]
+        == 4
+    )
+    assert (
+        payload["summary"]["ownership_selection_context_runtime_selector_implemented"]
+        is False
+    )
+    assert (
+        payload["summary"]["ownership_selection_context_runtime_dtm_or_tablebase_lookup"]
+        is False
+    )
+    assert (
+        payload["summary"]["ownership_selection_context_stage7_promotion_allowed"]
+        is False
+    )
+    assert payload["summary"]["ownership_selection_context_stage8_training_allowed"] is False
     assert payload["summary"]["abstention_selector_safety_passive_ready"] is True
     assert (
         payload["summary"]["abstention_selector_first_objective_status"]

@@ -371,6 +371,21 @@ SOURCES = {
     "selector_balanced_architecture_review_v1": (
         "reports/krk_selector_balanced_architecture_review_v1.json"
     ),
+    "ownership_selection_label_dataset_v5": (
+        "reports/krk_ownership_selection_label_dataset_v5.json"
+    ),
+    "ownership_selection_context_dataset_v3": (
+        "reports/krk_ownership_selection_context_dataset_v3.json"
+    ),
+    "ownership_selection_context_feature_probe_v3": (
+        "reports/krk_ownership_selection_context_feature_probe_v3.json"
+    ),
+    "ownership_selection_labeling_review_v0": (
+        "reports/krk_ownership_selection_labeling_review_v0.json"
+    ),
+    "ownership_source_diversity_review_v0": (
+        "reports/krk_ownership_source_diversity_review_v0.json"
+    ),
     "stage4_failure_discovery": "reports/krk_stage4_failure_discovery_v0.json",
     "stage4_caveat_sequence_review": (
         "reports/krk_stage4_caveat_sequence_review_v0.json"
@@ -1343,6 +1358,21 @@ def build_payload() -> dict[str, Any]:
     selector_balanced_architecture_review_v1 = payloads[
         "selector_balanced_architecture_review_v1"
     ]
+    ownership_selection_label_dataset_v5 = payloads[
+        "ownership_selection_label_dataset_v5"
+    ]
+    ownership_selection_context_dataset_v3 = payloads[
+        "ownership_selection_context_dataset_v3"
+    ]
+    ownership_selection_context_feature_probe_v3 = payloads[
+        "ownership_selection_context_feature_probe_v3"
+    ]
+    ownership_selection_labeling_review_v0 = payloads[
+        "ownership_selection_labeling_review_v0"
+    ]
+    ownership_source_diversity_review_v0 = payloads[
+        "ownership_source_diversity_review_v0"
+    ]
     stage4_failure_discovery = payloads["stage4_failure_discovery"]
     stage4_caveat_sequence_review = payloads["stage4_caveat_sequence_review"]
     stage4_sequence_candidate_review = payloads["stage4_sequence_candidate_review"]
@@ -2140,6 +2170,118 @@ def build_payload() -> dict[str, Any]:
             "runtime_arbiter_implemented"
         )
         is False
+    )
+    ownership_selection_label_decision = (
+        ownership_selection_label_dataset_v5.get("decision") or {}
+    )
+    ownership_selection_label_summary = (
+        ownership_selection_label_dataset_v5.get("summary") or {}
+    )
+    ownership_selection_context_decision = (
+        ownership_selection_context_dataset_v3.get("decision") or {}
+    )
+    ownership_selection_context_summary = (
+        ownership_selection_context_dataset_v3.get("summary") or {}
+    )
+    ownership_selection_context_probe_decision = (
+        ownership_selection_context_feature_probe_v3.get("decision") or {}
+    )
+    ownership_selection_context_probe_summary = (
+        ownership_selection_context_feature_probe_v3.get("summary") or {}
+    )
+    ownership_selection_labeling_review_decision = (
+        ownership_selection_labeling_review_v0.get("decision") or {}
+    )
+    ownership_selection_labeling_review_summary = (
+        ownership_selection_labeling_review_v0.get("summary") or {}
+    )
+    ownership_source_diversity_decision = (
+        ownership_source_diversity_review_v0.get("decision") or {}
+    )
+    ownership_source_diversity_summary = (
+        ownership_source_diversity_review_v0.get("summary") or {}
+    )
+    ownership_selection_context_passive = (
+        ownership_selection_label_dataset_v5.get("causal_status")
+        == "non_causal_ownership_label_dataset"
+        and ownership_selection_label_decision.get("status")
+        == "ownership_selection_labels_expanded_with_targeted_false_positive_risk_cells"
+        and ownership_selection_label_decision.get("runtime_work_allowed") is False
+        and ownership_selection_label_decision.get("selector_training_allowed") is False
+        and ownership_selection_label_decision.get("stage7_promotion_allowed") is False
+        and ownership_selection_label_decision.get("stage8_training_allowed") is False
+        and ownership_selection_label_summary.get("merged_row_count") == 41
+        and ownership_selection_label_summary.get("selector_training_row_count") == 0
+        and ownership_selection_label_summary.get("stage7_row_count") == 0
+        and ownership_selection_context_dataset_v3.get("causal_status")
+        == "non_causal_context_feature_dataset"
+        and ownership_selection_context_decision.get("status")
+        == "ownership_selection_context_dataset_ready_for_non_causal_probe"
+        and ownership_selection_context_decision.get("runtime_work_allowed") is False
+        and ownership_selection_context_decision.get("selector_training_allowed")
+        is False
+        and ownership_selection_context_decision.get("stage7_promotion_allowed")
+        is False
+        and ownership_selection_context_decision.get("stage8_training_allowed")
+        is False
+        and ownership_selection_context_summary.get("row_count") == 41
+        and ownership_selection_context_summary.get("selector_training_row_count") == 0
+        and ownership_selection_context_summary.get("stage7_row_count") == 0
+        and ownership_selection_context_feature_probe_v3.get("causal_status")
+        == "non_causal_offline_probe"
+        and ownership_selection_context_probe_decision.get("status")
+        == "context_features_underpowered"
+        and ownership_selection_context_probe_decision.get("runtime_work_allowed")
+        is False
+        and ownership_selection_context_probe_decision.get("selector_training_allowed")
+        is False
+        and ownership_selection_context_probe_decision.get("stage7_promotion_allowed")
+        is False
+        and ownership_selection_context_probe_decision.get("stage8_training_allowed")
+        is False
+        and ownership_selection_context_probe_summary.get("underpowered") is True
+        and ownership_selection_context_probe_summary.get("stage7_row_count") == 0
+        and ownership_selection_labeling_review_v0.get("causal_status")
+        == "non_causal_review"
+        and ownership_selection_labeling_review_decision.get("status")
+        == "ownership_labels_improved_but_selector_runtime_blocked"
+        and ownership_selection_labeling_review_decision.get("runtime_work_allowed")
+        is False
+        and ownership_selection_labeling_review_decision.get(
+            "selector_training_allowed"
+        )
+        is False
+        and ownership_selection_labeling_review_summary.get("selector_training_rows")
+        == 0
+        and ownership_selection_labeling_review_summary.get("stage7_rows") == 0
+        and ownership_source_diversity_review_v0.get("causal_status")
+        == "non_causal_review"
+        and ownership_source_diversity_decision.get("status")
+        == "source_diversity_gap_blocks_runtime"
+        and ownership_source_diversity_decision.get("runtime_work_allowed") is False
+        and ownership_source_diversity_decision.get("selector_training_allowed")
+        is False
+        and ownership_source_diversity_decision.get("stage7_promotion_allowed")
+        is False
+        and ownership_source_diversity_decision.get("stage8_training_allowed")
+        is False
+        and ownership_source_diversity_summary.get("ownership_row_count") == 35
+        and all(
+            artifact.get("runtime_behavior_changed") is False
+            and artifact.get("runtime_defaults_changed") is False
+            and artifact.get("runtime_selector_implemented") is False
+            and artifact.get("runtime_dtm_or_tablebase_lookup") is False
+            and artifact.get("runtime_terminals_added") is False
+            and artifact.get("stage7_promotion_allowed") is False
+            and artifact.get("stage8_training_allowed") is False
+            for artifact in [
+                ownership_selection_label_dataset_v5,
+                ownership_selection_context_dataset_v3,
+                ownership_selection_context_feature_probe_v3,
+                ownership_selection_labeling_review_v0,
+                ownership_source_diversity_review_v0,
+            ]
+        )
     )
     abstention_objective_decision = (
         abstention_first_selector_objective_v0.get("decision") or {}
@@ -4219,6 +4361,125 @@ def build_payload() -> dict[str, Any]:
             ),
             "stage8_training_allowed": (
                 selector_balanced_architecture_decision.get("stage8_training_allowed")
+            ),
+        },
+        "ownership_selection_context_gate": {
+            "status": ownership_source_diversity_decision.get("status"),
+            "passive_context_ready": ownership_selection_context_passive,
+            "label_dataset_status": ownership_selection_label_decision.get("status"),
+            "label_dataset_merged_row_count": (
+                ownership_selection_label_summary.get("merged_row_count")
+            ),
+            "label_dataset_state_count": (
+                ownership_selection_label_summary.get("state_count")
+            ),
+            "label_dataset_target_label_counts": (
+                ownership_selection_label_summary.get("target_label_counts") or {}
+            ),
+            "label_dataset_targeted_added_row_count": (
+                ownership_selection_label_summary.get("targeted_added_row_count")
+            ),
+            "label_dataset_selector_training_row_count": (
+                ownership_selection_label_summary.get("selector_training_row_count")
+            ),
+            "label_dataset_stage7_row_count": (
+                ownership_selection_label_summary.get("stage7_row_count")
+            ),
+            "context_dataset_status": ownership_selection_context_decision.get(
+                "status"
+            ),
+            "context_dataset_row_count": (
+                ownership_selection_context_summary.get("row_count")
+            ),
+            "context_dataset_exact_move_context_count": (
+                ownership_selection_context_summary.get("exact_move_context_count")
+            ),
+            "context_dataset_label_counts": (
+                ownership_selection_context_summary.get("label_counts") or {}
+            ),
+            "context_dataset_provider_family_counts": (
+                ownership_selection_context_summary.get("provider_family_counts") or {}
+            ),
+            "context_dataset_selector_training_row_count": (
+                ownership_selection_context_summary.get("selector_training_row_count")
+            ),
+            "context_dataset_stage7_row_count": (
+                ownership_selection_context_summary.get("stage7_row_count")
+            ),
+            "context_probe_status": (
+                ownership_selection_context_probe_decision.get("status")
+            ),
+            "context_probe_underpowered": (
+                ownership_selection_context_probe_summary.get("underpowered")
+            ),
+            "context_probe_row_count": (
+                ownership_selection_context_probe_summary.get("row_count")
+            ),
+            "context_probe_positive_owner_count": (
+                ownership_selection_context_probe_summary.get("positive_owner_count")
+            ),
+            "context_probe_negative_owner_count": (
+                ownership_selection_context_probe_summary.get("negative_owner_count")
+            ),
+            "context_probe_stage7_row_count": (
+                ownership_selection_context_probe_summary.get("stage7_row_count")
+            ),
+            "labeling_review_status": (
+                ownership_selection_labeling_review_decision.get("status")
+            ),
+            "labeling_review_best_objective": (
+                (
+                    ownership_selection_labeling_review_summary.get(
+                        "best_ownership_probe"
+                    )
+                    or {}
+                ).get("objective")
+            ),
+            "labeling_review_selector_training_rows": (
+                ownership_selection_labeling_review_summary.get(
+                    "selector_training_rows"
+                )
+            ),
+            "labeling_review_stage7_rows": (
+                ownership_selection_labeling_review_summary.get("stage7_rows")
+            ),
+            "source_diversity_status": ownership_source_diversity_decision.get(
+                "status"
+            ),
+            "source_diversity_non_stage0_ownership_row_count": (
+                ownership_source_diversity_summary.get(
+                    "non_stage0_ownership_row_count"
+                )
+            ),
+            "source_diversity_ownership_row_count": (
+                ownership_source_diversity_summary.get("ownership_row_count")
+            ),
+            "source_diversity_provider_counts": (
+                ownership_source_diversity_summary.get("ownership_provider_counts")
+                or {}
+            ),
+            "runtime_behavior_changed": ownership_source_diversity_review_v0.get(
+                "runtime_behavior_changed"
+            ),
+            "runtime_defaults_changed": ownership_source_diversity_review_v0.get(
+                "runtime_defaults_changed"
+            ),
+            "runtime_selector_implemented": ownership_source_diversity_review_v0.get(
+                "runtime_selector_implemented"
+            ),
+            "runtime_dtm_or_tablebase_lookup": (
+                ownership_source_diversity_review_v0.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "runtime_terminals_added": ownership_source_diversity_review_v0.get(
+                "runtime_terminals_added"
+            ),
+            "stage7_promotion_allowed": ownership_source_diversity_decision.get(
+                "stage7_promotion_allowed"
+            ),
+            "stage8_training_allowed": ownership_source_diversity_decision.get(
+                "stage8_training_allowed"
             ),
         },
         "abstention_selector_safety_gate": {
@@ -8910,6 +9171,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     strategy_owner_contrast = payload["strategy_owner_contrast_gate"]
     selector_objective_normalization = payload["selector_objective_normalization_gate"]
     selector_label_balance = payload["selector_label_balance_gate"]
+    ownership_selection_context = payload["ownership_selection_context_gate"]
     abstention_selector_safety = payload["abstention_selector_safety_gate"]
     targeted_ownership_recovery = payload["targeted_ownership_recovery_gate"]
     balanced_hard_negative = payload["balanced_hard_negative_gate"]
@@ -9095,6 +9357,35 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- runtime_terminals_added: `{selector_label_balance['runtime_terminals_added']}`",
         f"- stage7_promotion_allowed: `{selector_label_balance['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{selector_label_balance['stage8_training_allowed']}`",
+        "",
+        "## Ownership Selection Context",
+        "",
+        f"- passive_context_ready: `{ownership_selection_context['passive_context_ready']}`",
+        f"- label_dataset_status: `{ownership_selection_context['label_dataset_status']}`",
+        f"- label_dataset_merged_row_count: `{ownership_selection_context['label_dataset_merged_row_count']}`",
+        f"- label_dataset_target_label_counts: `{ownership_selection_context['label_dataset_target_label_counts']}`",
+        f"- label_dataset_targeted_added_row_count: `{ownership_selection_context['label_dataset_targeted_added_row_count']}`",
+        f"- label_dataset_selector_training_row_count: `{ownership_selection_context['label_dataset_selector_training_row_count']}`",
+        f"- label_dataset_stage7_row_count: `{ownership_selection_context['label_dataset_stage7_row_count']}`",
+        f"- context_dataset_status: `{ownership_selection_context['context_dataset_status']}`",
+        f"- context_dataset_row_count: `{ownership_selection_context['context_dataset_row_count']}`",
+        f"- context_dataset_exact_move_context_count: `{ownership_selection_context['context_dataset_exact_move_context_count']}`",
+        f"- context_dataset_label_counts: `{ownership_selection_context['context_dataset_label_counts']}`",
+        f"- context_dataset_provider_family_counts: `{ownership_selection_context['context_dataset_provider_family_counts']}`",
+        f"- context_dataset_selector_training_row_count: `{ownership_selection_context['context_dataset_selector_training_row_count']}`",
+        f"- context_dataset_stage7_row_count: `{ownership_selection_context['context_dataset_stage7_row_count']}`",
+        f"- context_probe_status: `{ownership_selection_context['context_probe_status']}`",
+        f"- context_probe_underpowered: `{ownership_selection_context['context_probe_underpowered']}`",
+        f"- context_probe_positive_owner_count: `{ownership_selection_context['context_probe_positive_owner_count']}`",
+        f"- context_probe_negative_owner_count: `{ownership_selection_context['context_probe_negative_owner_count']}`",
+        f"- source_diversity_status: `{ownership_selection_context['source_diversity_status']}`",
+        f"- source_diversity_non_stage0_ownership_row_count: `{ownership_selection_context['source_diversity_non_stage0_ownership_row_count']}`",
+        f"- source_diversity_provider_counts: `{ownership_selection_context['source_diversity_provider_counts']}`",
+        f"- runtime_selector_implemented: `{ownership_selection_context['runtime_selector_implemented']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{ownership_selection_context['runtime_dtm_or_tablebase_lookup']}`",
+        f"- runtime_terminals_added: `{ownership_selection_context['runtime_terminals_added']}`",
+        f"- stage7_promotion_allowed: `{ownership_selection_context['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{ownership_selection_context['stage8_training_allowed']}`",
         "",
         "## Abstention Selector Safety",
         "",

@@ -588,6 +588,9 @@ def build_payload() -> dict[str, Any]:
         readiness.get("selector_objective_normalization_gate") or {}
     )
     selector_label_balance_gate = readiness.get("selector_label_balance_gate") or {}
+    ownership_selection_context_gate = (
+        readiness.get("ownership_selection_context_gate") or {}
+    )
     abstention_selector_safety_gate = (
         readiness.get("abstention_selector_safety_gate") or {}
     )
@@ -1132,6 +1135,63 @@ def build_payload() -> dict[str, Any]:
             ),
             "selector_label_balance_stage8_training_allowed": (
                 selector_label_balance_gate.get("stage8_training_allowed")
+            ),
+            "ownership_selection_context_passive_ready": (
+                ownership_selection_context_gate.get("passive_context_ready")
+            ),
+            "ownership_selection_context_label_dataset_status": (
+                ownership_selection_context_gate.get("label_dataset_status")
+            ),
+            "ownership_selection_context_label_dataset_merged_row_count": (
+                ownership_selection_context_gate.get("label_dataset_merged_row_count")
+            ),
+            "ownership_selection_context_label_dataset_selector_training_row_count": (
+                ownership_selection_context_gate.get(
+                    "label_dataset_selector_training_row_count"
+                )
+            ),
+            "ownership_selection_context_label_dataset_stage7_row_count": (
+                ownership_selection_context_gate.get("label_dataset_stage7_row_count")
+            ),
+            "ownership_selection_context_dataset_status": (
+                ownership_selection_context_gate.get("context_dataset_status")
+            ),
+            "ownership_selection_context_dataset_row_count": (
+                ownership_selection_context_gate.get("context_dataset_row_count")
+            ),
+            "ownership_selection_context_dataset_selector_training_row_count": (
+                ownership_selection_context_gate.get(
+                    "context_dataset_selector_training_row_count"
+                )
+            ),
+            "ownership_selection_context_dataset_stage7_row_count": (
+                ownership_selection_context_gate.get("context_dataset_stage7_row_count")
+            ),
+            "ownership_selection_context_probe_status": (
+                ownership_selection_context_gate.get("context_probe_status")
+            ),
+            "ownership_selection_context_probe_underpowered": (
+                ownership_selection_context_gate.get("context_probe_underpowered")
+            ),
+            "ownership_selection_source_diversity_status": (
+                ownership_selection_context_gate.get("source_diversity_status")
+            ),
+            "ownership_selection_source_diversity_non_stage0_ownership_row_count": (
+                ownership_selection_context_gate.get(
+                    "source_diversity_non_stage0_ownership_row_count"
+                )
+            ),
+            "ownership_selection_context_runtime_selector_implemented": (
+                ownership_selection_context_gate.get("runtime_selector_implemented")
+            ),
+            "ownership_selection_context_runtime_dtm_or_tablebase_lookup": (
+                ownership_selection_context_gate.get("runtime_dtm_or_tablebase_lookup")
+            ),
+            "ownership_selection_context_stage7_promotion_allowed": (
+                ownership_selection_context_gate.get("stage7_promotion_allowed")
+            ),
+            "ownership_selection_context_stage8_training_allowed": (
+                ownership_selection_context_gate.get("stage8_training_allowed")
             ),
             "abstention_selector_safety_passive_ready": (
                 abstention_selector_safety_gate.get("passive_safety_ready")

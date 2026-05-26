@@ -78,8 +78,8 @@
         "readiness_audit": "reports/krk_full_suite_readiness_audit_v0.json",
         "readiness_audit_status": "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection",
         "readiness_boundary_violation_count": 0,
-        "readiness_checked_flag_count": 2238,
-        "readiness_source_artifact_count": 286,
+        "readiness_checked_flag_count": 2273,
+        "readiness_source_artifact_count": 291,
         "runtime_change_class": "default_off_candidate_move_frame_sandbox_only",
         "runtime_dtm_or_tablebase_lookup": false,
         "sandbox_scope_id": "default_off_stage4_candidate_move_first_move_contrast_sandbox_only",
@@ -579,6 +579,59 @@
     ],
     "validation_terminal_count": 4
   },
+  "ownership_selection_context_gate": {
+    "context_dataset_exact_move_context_count": 41,
+    "context_dataset_label_counts": {
+      "selected_owner_converted": 31,
+      "selected_owner_failed": 10
+    },
+    "context_dataset_provider_family_counts": {
+      "edge_trap": 3,
+      "fence_established": 1,
+      "stage0_basin": 37
+    },
+    "context_dataset_row_count": 41,
+    "context_dataset_selector_training_row_count": 0,
+    "context_dataset_stage7_row_count": 0,
+    "context_dataset_status": "ownership_selection_context_dataset_ready_for_non_causal_probe",
+    "context_probe_negative_owner_count": 10,
+    "context_probe_positive_owner_count": 31,
+    "context_probe_row_count": 41,
+    "context_probe_stage7_row_count": 0,
+    "context_probe_status": "context_features_underpowered",
+    "context_probe_underpowered": true,
+    "label_dataset_merged_row_count": 41,
+    "label_dataset_selector_training_row_count": 0,
+    "label_dataset_stage7_row_count": 0,
+    "label_dataset_state_count": 41,
+    "label_dataset_status": "ownership_selection_labels_expanded_with_targeted_false_positive_risk_cells",
+    "label_dataset_target_label_counts": {
+      "selected_owner_converted": 31,
+      "selected_owner_failed": 10
+    },
+    "label_dataset_targeted_added_row_count": 6,
+    "labeling_review_best_objective": "stage_provider_family@0.75",
+    "labeling_review_selector_training_rows": 0,
+    "labeling_review_stage7_rows": 0,
+    "labeling_review_status": "ownership_labels_improved_but_selector_runtime_blocked",
+    "passive_context_ready": true,
+    "runtime_behavior_changed": false,
+    "runtime_defaults_changed": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "runtime_selector_implemented": false,
+    "runtime_terminals_added": false,
+    "source_diversity_non_stage0_ownership_row_count": 4,
+    "source_diversity_ownership_row_count": 35,
+    "source_diversity_provider_counts": {
+      "krk.edge_trap_close": 3,
+      "krk.fence_established": 1,
+      "krk.stage0_basin": 31
+    },
+    "source_diversity_status": "source_diversity_gap_blocks_runtime",
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "source_diversity_gap_blocks_runtime"
+  },
   "progress_window_reconsideration_gate": {
     "classification_labels": [
       "candidate_set_missing_good_alternative",
@@ -631,7 +684,7 @@
     "execution_jobs_passing": 6,
     "execution_readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
     "expected_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
-    "expected_readiness_fingerprint": "224af9325712f7d07c42d0fff39dd1195e7a4ca0e15871cf8714eb9247e67581",
+    "expected_readiness_fingerprint": "a788d0049a4900a9430478e0077ac2db271bd2e097e5c886e06b1855f4de02a8",
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "integrated_new_failure_count": 0,
@@ -866,7 +919,7 @@
     "trace_features_trace_frame_count": 6
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 2238,
+    "checked_flag_count": 2273,
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "runtime_behavior_changed": false,
@@ -1441,6 +1494,11 @@
     "ownership_context_feature_review_v3": "reports/krk_ownership_context_feature_review_v3.json",
     "ownership_label_recovery_review": "reports/strategy_arbitration/krk_ownership_label_recovery_review_v0.json",
     "ownership_objective_architecture_review_v0": "reports/krk_ownership_objective_architecture_review_v0.json",
+    "ownership_selection_context_dataset_v3": "reports/krk_ownership_selection_context_dataset_v3.json",
+    "ownership_selection_context_feature_probe_v3": "reports/krk_ownership_selection_context_feature_probe_v3.json",
+    "ownership_selection_label_dataset_v5": "reports/krk_ownership_selection_label_dataset_v5.json",
+    "ownership_selection_labeling_review_v0": "reports/krk_ownership_selection_labeling_review_v0.json",
+    "ownership_source_diversity_review_v0": "reports/krk_ownership_source_diversity_review_v0.json",
     "plan_capsule_sequence_candidate_observation_review_v1": "reports/strategy_arbitration/krk_plan_capsule_sequence_candidate_observation_review_v1.json",
     "post_failure_contrast_sequence_refresh": "reports/strategy_arbitration/krk_sequence_policy_after_protected_failure_contrast_refresh_v0.json",
     "preservation_checks": "reports/krk_clean_retrain_retry1_preservation_checks_v0.json",

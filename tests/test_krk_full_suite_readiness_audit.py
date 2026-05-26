@@ -491,6 +491,26 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_selector_balanced_architecture_review_v1.json"
     )
     assert (
+        payload["source_artifacts"]["ownership_selection_label_dataset_v5"]
+        == "reports/krk_ownership_selection_label_dataset_v5.json"
+    )
+    assert (
+        payload["source_artifacts"]["ownership_selection_context_dataset_v3"]
+        == "reports/krk_ownership_selection_context_dataset_v3.json"
+    )
+    assert (
+        payload["source_artifacts"]["ownership_selection_context_feature_probe_v3"]
+        == "reports/krk_ownership_selection_context_feature_probe_v3.json"
+    )
+    assert (
+        payload["source_artifacts"]["ownership_selection_labeling_review_v0"]
+        == "reports/krk_ownership_selection_labeling_review_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["ownership_source_diversity_review_v0"]
+        == "reports/krk_ownership_source_diversity_review_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["abstention_first_selector_objective_v0"]
         == "reports/krk_abstention_first_selector_objective_v0.json"
     )
@@ -995,6 +1015,59 @@ def test_full_suite_readiness_identifies_current_gate():
     assert selector_balance["runtime_terminals_added"] is False
     assert selector_balance["stage7_promotion_allowed"] is False
     assert selector_balance["stage8_training_allowed"] is False
+
+    ownership_context = payload["ownership_selection_context_gate"]
+    assert ownership_context["passive_context_ready"] is True
+    assert ownership_context["label_dataset_status"] == (
+        "ownership_selection_labels_expanded_with_targeted_false_positive_risk_cells"
+    )
+    assert ownership_context["label_dataset_merged_row_count"] == 41
+    assert ownership_context["label_dataset_target_label_counts"] == {
+        "selected_owner_converted": 31,
+        "selected_owner_failed": 10,
+    }
+    assert ownership_context["label_dataset_targeted_added_row_count"] == 6
+    assert ownership_context["label_dataset_selector_training_row_count"] == 0
+    assert ownership_context["label_dataset_stage7_row_count"] == 0
+    assert ownership_context["context_dataset_status"] == (
+        "ownership_selection_context_dataset_ready_for_non_causal_probe"
+    )
+    assert ownership_context["context_dataset_row_count"] == 41
+    assert ownership_context["context_dataset_exact_move_context_count"] == 41
+    assert ownership_context["context_dataset_label_counts"] == {
+        "selected_owner_converted": 31,
+        "selected_owner_failed": 10,
+    }
+    assert ownership_context["context_dataset_provider_family_counts"] == {
+        "edge_trap": 3,
+        "fence_established": 1,
+        "stage0_basin": 37,
+    }
+    assert ownership_context["context_dataset_selector_training_row_count"] == 0
+    assert ownership_context["context_dataset_stage7_row_count"] == 0
+    assert ownership_context["context_probe_status"] == "context_features_underpowered"
+    assert ownership_context["context_probe_underpowered"] is True
+    assert ownership_context["context_probe_row_count"] == 41
+    assert ownership_context["context_probe_positive_owner_count"] == 31
+    assert ownership_context["context_probe_negative_owner_count"] == 10
+    assert ownership_context["context_probe_stage7_row_count"] == 0
+    assert ownership_context["labeling_review_status"] == (
+        "ownership_labels_improved_but_selector_runtime_blocked"
+    )
+    assert ownership_context["labeling_review_selector_training_rows"] == 0
+    assert ownership_context["labeling_review_stage7_rows"] == 0
+    assert ownership_context["source_diversity_status"] == (
+        "source_diversity_gap_blocks_runtime"
+    )
+    assert ownership_context["source_diversity_non_stage0_ownership_row_count"] == 4
+    assert ownership_context["source_diversity_ownership_row_count"] == 35
+    assert ownership_context["runtime_behavior_changed"] is False
+    assert ownership_context["runtime_defaults_changed"] is False
+    assert ownership_context["runtime_selector_implemented"] is False
+    assert ownership_context["runtime_dtm_or_tablebase_lookup"] is False
+    assert ownership_context["runtime_terminals_added"] is False
+    assert ownership_context["stage7_promotion_allowed"] is False
+    assert ownership_context["stage8_training_allowed"] is False
 
     abstention = payload["abstention_selector_safety_gate"]
     assert abstention["passive_safety_ready"] is True
