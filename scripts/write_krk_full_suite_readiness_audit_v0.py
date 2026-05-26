@@ -511,6 +511,27 @@ SOURCES = {
         "reports/krk_strategy_sequence_evidence_plan_v0.json"
     ),
     "strategy_sequence_inventory": "reports/krk_strategy_sequence_inventory_v0.json",
+    "strategy_owner_contrast_label_plan": (
+        "reports/krk_strategy_owner_contrast_label_plan_v0.json"
+    ),
+    "strategy_owner_contrast_label_plan_review": (
+        "reports/krk_strategy_owner_contrast_label_plan_review_v0.json"
+    ),
+    "strategy_owner_contrast_execution_manifest": (
+        "reports/krk_strategy_owner_contrast_execution_manifest_v0.json"
+    ),
+    "strategy_owner_contrast_execution_manifest_review": (
+        "reports/krk_strategy_owner_contrast_execution_manifest_review_v0.json"
+    ),
+    "strategy_owner_contrast_control_labels": (
+        "reports/krk_strategy_owner_contrast_control_labels_v0.json"
+    ),
+    "strategy_owner_contrast_dataset": (
+        "reports/krk_strategy_owner_contrast_dataset_v0.json"
+    ),
+    "strategy_owner_contrast_probe": (
+        "reports/krk_strategy_owner_contrast_probe_v0.json"
+    ),
     "clean_retrain_retry1_replacement_readiness_review": (
         "reports/krk_clean_retrain_retry1_replacement_readiness_review_v0.json"
     ),
@@ -1220,6 +1241,23 @@ def build_payload() -> dict[str, Any]:
     ]
     strategy_sequence_evidence_plan = payloads["strategy_sequence_evidence_plan"]
     strategy_sequence_inventory = payloads["strategy_sequence_inventory"]
+    strategy_owner_contrast_label_plan = payloads[
+        "strategy_owner_contrast_label_plan"
+    ]
+    strategy_owner_contrast_label_plan_review = payloads[
+        "strategy_owner_contrast_label_plan_review"
+    ]
+    strategy_owner_contrast_execution_manifest = payloads[
+        "strategy_owner_contrast_execution_manifest"
+    ]
+    strategy_owner_contrast_execution_manifest_review = payloads[
+        "strategy_owner_contrast_execution_manifest_review"
+    ]
+    strategy_owner_contrast_control_labels = payloads[
+        "strategy_owner_contrast_control_labels"
+    ]
+    strategy_owner_contrast_dataset = payloads["strategy_owner_contrast_dataset"]
+    strategy_owner_contrast_probe = payloads["strategy_owner_contrast_probe"]
     clean_replacement_readiness = payloads[
         "clean_retrain_retry1_replacement_readiness_review"
     ]
@@ -1434,6 +1472,83 @@ def build_payload() -> dict[str, Any]:
         and strategy_sequence_inventory.get("runtime_dtm_or_tablebase_lookup") is False
         and strategy_sequence_inventory.get("stage7_promotion_allowed") is False
         and strategy_sequence_inventory.get("stage8_training_allowed") is False
+    )
+    strategy_owner_plan_decision = strategy_owner_contrast_label_plan.get(
+        "decision"
+    ) or {}
+    strategy_owner_plan_review_decision = (
+        strategy_owner_contrast_label_plan_review.get("decision") or {}
+    )
+    strategy_owner_plan_review_summary = (
+        strategy_owner_contrast_label_plan_review.get("review_summary") or {}
+    )
+    strategy_owner_manifest_decision = (
+        strategy_owner_contrast_execution_manifest.get("decision") or {}
+    )
+    strategy_owner_manifest_binding = (
+        strategy_owner_contrast_execution_manifest.get("binding_summary") or {}
+    )
+    strategy_owner_manifest_review_decision = (
+        strategy_owner_contrast_execution_manifest_review.get("decision") or {}
+    )
+    strategy_owner_manifest_review_summary = (
+        strategy_owner_contrast_execution_manifest_review.get("review_summary") or {}
+    )
+    strategy_owner_labels_summary = (
+        strategy_owner_contrast_control_labels.get("summary") or {}
+    )
+    strategy_owner_dataset_decision = (
+        strategy_owner_contrast_dataset.get("decision") or {}
+    )
+    strategy_owner_dataset_summary = strategy_owner_contrast_dataset.get("summary") or {}
+    strategy_owner_readiness_v2 = (
+        strategy_owner_contrast_dataset.get("readiness_v2_assessment") or {}
+    )
+    strategy_owner_probe_decision = strategy_owner_contrast_probe.get("decision") or {}
+    strategy_owner_probe_metrics = strategy_owner_contrast_probe.get("metrics") or {}
+    strategy_owner_probe_passive = (
+        strategy_owner_plan_decision.get("status")
+        == "protected_strategy_owner_contrast_label_plan_defined_execution_review_required"
+        and strategy_owner_plan_decision.get("runtime_arbiter_allowed") is False
+        and strategy_owner_plan_decision.get("selector_sandbox_ready") is False
+        and strategy_owner_contrast_label_plan.get("labels_generated_in_this_slice")
+        is False
+        and len(strategy_owner_contrast_label_plan.get("jobs") or []) == 12
+        and strategy_owner_plan_review_decision.get("status")
+        == "contrast_label_plan_review_passed_binding_required"
+        and strategy_owner_plan_review_decision.get("labels_allowed_now") is False
+        and strategy_owner_plan_review_summary.get("stage7_jobs") == 0
+        and strategy_owner_manifest_decision.get("status")
+        == "contrast_execution_manifest_bound_review_required"
+        and strategy_owner_manifest_decision.get("labels_allowed_now") is False
+        and strategy_owner_manifest_binding.get("all_bindings_valid") is True
+        and strategy_owner_manifest_binding.get("missing_path_count") == 0
+        and strategy_owner_manifest_binding.get("stage7_jobs") == 0
+        and strategy_owner_manifest_review_decision.get("status")
+        == "contrast_execution_manifest_review_passed_labels_allowed"
+        and strategy_owner_manifest_review_summary.get("labels_allowed") is True
+        and strategy_owner_manifest_review_summary.get("stage7_jobs") == 0
+        and strategy_owner_labels_summary.get("label_count") == 12
+        and strategy_owner_labels_summary.get("stage7_labels") == 0
+        and strategy_owner_labels_summary.get("trace_failures_only") is True
+        and strategy_owner_dataset_decision.get("status")
+        == "strategy_owner_contrast_dataset_ready_for_non_causal_probe_selector_sandbox_blocked"
+        and strategy_owner_readiness_v2.get("contrast_probe_ready") is True
+        and strategy_owner_readiness_v2.get("selector_sandbox_ready") is False
+        and strategy_owner_readiness_v2.get("stage7_training_rows") == 0
+        and strategy_owner_dataset_summary.get("stage7_training_rows") == 0
+        and strategy_owner_dataset_summary.get("held_out_challenge_row_count") == 4
+        and strategy_owner_probe_decision.get("status")
+        == "strategy_owner_contrast_signal_present_selector_sandbox_blocked"
+        and "insufficient_selected_provider_family_diversity"
+        in (strategy_owner_probe_metrics.get("readiness_blockers") or [])
+        and strategy_owner_contrast_probe.get("runtime_arbiter_implemented") is False
+        and strategy_owner_contrast_probe.get("runtime_behavior_changed") is False
+        and strategy_owner_contrast_probe.get("runtime_defaults_changed") is False
+        and strategy_owner_contrast_probe.get("runtime_dtm_or_tablebase_lookup") is False
+        and strategy_owner_contrast_probe.get("runtime_terminals_added") is False
+        and strategy_owner_contrast_probe.get("stage7_promotion_allowed") is False
+        and strategy_owner_contrast_probe.get("stage8_training_allowed") is False
     )
     replacement_readiness_decision = clean_replacement_readiness.get("decision") or {}
     replacement_packet_decision = clean_stack_replacement_packet.get("decision") or {}
@@ -2103,6 +2218,145 @@ def build_payload() -> dict[str, Any]:
                 "stage7_promotion_allowed"
             ),
             "stage8_training_allowed": strategy_sequence_inventory.get(
+                "stage8_training_allowed"
+            ),
+        },
+        "strategy_owner_contrast_gate": {
+            "status": strategy_owner_probe_decision.get("status"),
+            "passive_probe_ready": strategy_owner_probe_passive,
+            "label_plan_status": strategy_owner_plan_decision.get("status"),
+            "label_plan_job_count": len(
+                strategy_owner_contrast_label_plan.get("jobs") or []
+            ),
+            "label_plan_stage7_job_count": sum(
+                1
+                for job in strategy_owner_contrast_label_plan.get("jobs") or []
+                if job.get("source_stage") == "stage7"
+            ),
+            "label_plan_labels_generated": (
+                strategy_owner_contrast_label_plan.get("labels_generated_in_this_slice")
+            ),
+            "label_plan_runtime_arbiter_allowed": strategy_owner_plan_decision.get(
+                "runtime_arbiter_allowed"
+            ),
+            "label_plan_selector_sandbox_ready": strategy_owner_plan_decision.get(
+                "selector_sandbox_ready"
+            ),
+            "label_plan_review_status": strategy_owner_plan_review_decision.get(
+                "status"
+            ),
+            "label_plan_review_allowed_to_bind_manifest": (
+                strategy_owner_plan_review_summary.get(
+                    "allowed_to_bind_execution_manifest"
+                )
+            ),
+            "label_plan_review_allowed_to_run_labels": (
+                strategy_owner_plan_review_summary.get("allowed_to_run_labels")
+            ),
+            "label_plan_review_stage7_jobs": strategy_owner_plan_review_summary.get(
+                "stage7_jobs"
+            ),
+            "execution_manifest_status": strategy_owner_manifest_decision.get("status"),
+            "execution_manifest_labels_allowed_now": (
+                strategy_owner_manifest_decision.get("labels_allowed_now")
+            ),
+            "execution_manifest_all_bindings_valid": strategy_owner_manifest_binding.get(
+                "all_bindings_valid"
+            ),
+            "execution_manifest_missing_path_count": (
+                strategy_owner_manifest_binding.get("missing_path_count")
+            ),
+            "execution_manifest_stage7_jobs": strategy_owner_manifest_binding.get(
+                "stage7_jobs"
+            ),
+            "execution_manifest_review_status": (
+                strategy_owner_manifest_review_decision.get("status")
+            ),
+            "execution_manifest_review_labels_allowed": (
+                strategy_owner_manifest_review_summary.get("labels_allowed")
+            ),
+            "execution_manifest_review_stage7_jobs": (
+                strategy_owner_manifest_review_summary.get("stage7_jobs")
+            ),
+            "control_label_count": strategy_owner_labels_summary.get("label_count"),
+            "control_label_stage7_count": strategy_owner_labels_summary.get(
+                "stage7_labels"
+            ),
+            "control_label_trace_failures_only": strategy_owner_labels_summary.get(
+                "trace_failures_only"
+            ),
+            "control_label_result_counts": strategy_owner_labels_summary.get(
+                "result_counts"
+            )
+            or {},
+            "dataset_status": strategy_owner_dataset_decision.get("status"),
+            "dataset_row_count": strategy_owner_dataset_summary.get("row_count"),
+            "dataset_training_eligible_row_count": strategy_owner_dataset_summary.get(
+                "training_eligible_row_count"
+            ),
+            "dataset_held_out_challenge_row_count": strategy_owner_dataset_summary.get(
+                "held_out_challenge_row_count"
+            ),
+            "dataset_stage7_training_rows": strategy_owner_dataset_summary.get(
+                "stage7_training_rows"
+            ),
+            "dataset_training_positive_provider_label_count": (
+                strategy_owner_dataset_summary.get("training_positive_provider_label_count")
+            ),
+            "dataset_training_negative_provider_label_count": (
+                strategy_owner_dataset_summary.get("training_negative_provider_label_count")
+            ),
+            "dataset_selected_training_provider_families": (
+                strategy_owner_dataset_summary.get("selected_training_provider_families")
+                or []
+            ),
+            "readiness_contrast_probe_ready": strategy_owner_readiness_v2.get(
+                "contrast_probe_ready"
+            ),
+            "readiness_selector_sandbox_ready": strategy_owner_readiness_v2.get(
+                "selector_sandbox_ready"
+            ),
+            "readiness_stage7_training_rows": strategy_owner_readiness_v2.get(
+                "stage7_training_rows"
+            ),
+            "readiness_blockers": strategy_owner_readiness_v2.get("blockers") or [],
+            "probe_status": strategy_owner_probe_decision.get("status"),
+            "probe_training_row_count": strategy_owner_probe_metrics.get(
+                "training_row_count"
+            ),
+            "probe_heldout_row_count": strategy_owner_probe_metrics.get(
+                "heldout_row_count"
+            ),
+            "probe_training_positive_label_count": strategy_owner_probe_metrics.get(
+                "training_positive_label_count"
+            ),
+            "probe_training_negative_label_count": strategy_owner_probe_metrics.get(
+                "training_negative_label_count"
+            ),
+            "probe_readiness_blockers": strategy_owner_probe_metrics.get(
+                "readiness_blockers"
+            )
+            or [],
+            "probe_findings": strategy_owner_contrast_probe.get("findings") or [],
+            "runtime_arbiter_implemented": strategy_owner_contrast_probe.get(
+                "runtime_arbiter_implemented"
+            ),
+            "runtime_behavior_changed": strategy_owner_contrast_probe.get(
+                "runtime_behavior_changed"
+            ),
+            "runtime_defaults_changed": strategy_owner_contrast_probe.get(
+                "runtime_defaults_changed"
+            ),
+            "runtime_dtm_or_tablebase_lookup": strategy_owner_contrast_probe.get(
+                "runtime_dtm_or_tablebase_lookup"
+            ),
+            "runtime_terminals_added": strategy_owner_contrast_probe.get(
+                "runtime_terminals_added"
+            ),
+            "stage7_promotion_allowed": strategy_owner_contrast_probe.get(
+                "stage7_promotion_allowed"
+            ),
+            "stage8_training_allowed": strategy_owner_contrast_probe.get(
                 "stage8_training_allowed"
             ),
         },
@@ -5733,6 +5987,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     protected = payload["protected_stack"]
     clean_curriculum = payload["clean_curriculum_run_lineage_gate"]
     strategy_sequence_architecture = payload["strategy_sequence_architecture_gate"]
+    strategy_owner_contrast = payload["strategy_owner_contrast_gate"]
     clean_replacement = payload["clean_replacement_review_gate"]
     stage7 = payload["stage7_sampling_gate"]
     sequence = payload["sequence_policy"]
@@ -5831,6 +6086,32 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- runtime_selector_implemented: `{strategy_sequence_architecture['runtime_selector_implemented']}`",
         f"- stage7_promotion_allowed: `{strategy_sequence_architecture['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{strategy_sequence_architecture['stage8_training_allowed']}`",
+        "",
+        "## Strategy Owner Contrast",
+        "",
+        f"- passive_probe_ready: `{strategy_owner_contrast['passive_probe_ready']}`",
+        f"- label_plan_status: `{strategy_owner_contrast['label_plan_status']}`",
+        f"- label_plan_job_count: `{strategy_owner_contrast['label_plan_job_count']}`",
+        f"- label_plan_stage7_job_count: `{strategy_owner_contrast['label_plan_stage7_job_count']}`",
+        f"- label_plan_labels_generated: `{strategy_owner_contrast['label_plan_labels_generated']}`",
+        f"- label_plan_review_status: `{strategy_owner_contrast['label_plan_review_status']}`",
+        f"- execution_manifest_status: `{strategy_owner_contrast['execution_manifest_status']}`",
+        f"- execution_manifest_all_bindings_valid: `{strategy_owner_contrast['execution_manifest_all_bindings_valid']}`",
+        f"- execution_manifest_review_status: `{strategy_owner_contrast['execution_manifest_review_status']}`",
+        f"- control_label_count: `{strategy_owner_contrast['control_label_count']}`",
+        f"- control_label_stage7_count: `{strategy_owner_contrast['control_label_stage7_count']}`",
+        f"- dataset_status: `{strategy_owner_contrast['dataset_status']}`",
+        f"- dataset_row_count: `{strategy_owner_contrast['dataset_row_count']}`",
+        f"- dataset_stage7_training_rows: `{strategy_owner_contrast['dataset_stage7_training_rows']}`",
+        f"- readiness_selector_sandbox_ready: `{strategy_owner_contrast['readiness_selector_sandbox_ready']}`",
+        f"- probe_status: `{strategy_owner_contrast['probe_status']}`",
+        f"- probe_training_row_count: `{strategy_owner_contrast['probe_training_row_count']}`",
+        f"- probe_heldout_row_count: `{strategy_owner_contrast['probe_heldout_row_count']}`",
+        f"- probe_readiness_blockers: `{strategy_owner_contrast['probe_readiness_blockers']}`",
+        f"- runtime_arbiter_implemented: `{strategy_owner_contrast['runtime_arbiter_implemented']}`",
+        f"- runtime_terminals_added: `{strategy_owner_contrast['runtime_terminals_added']}`",
+        f"- stage7_promotion_allowed: `{strategy_owner_contrast['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{strategy_owner_contrast['stage8_training_allowed']}`",
         "",
         "## Clean Replacement Review",
         "",

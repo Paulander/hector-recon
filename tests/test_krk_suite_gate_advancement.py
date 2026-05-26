@@ -176,6 +176,44 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["strategy_sequence_runtime_selector_implemented"] is False
     assert payload["summary"]["strategy_sequence_stage7_promotion_allowed"] is False
     assert payload["summary"]["strategy_sequence_stage8_training_allowed"] is False
+    assert payload["summary"]["strategy_owner_contrast_passive_probe_ready"] is True
+    assert (
+        payload["summary"]["strategy_owner_contrast_label_plan_status"]
+        == "protected_strategy_owner_contrast_label_plan_defined_execution_review_required"
+    )
+    assert payload["summary"]["strategy_owner_contrast_label_plan_job_count"] == 12
+    assert payload["summary"]["strategy_owner_contrast_label_plan_stage7_job_count"] == 0
+    assert (
+        payload["summary"]["strategy_owner_contrast_execution_manifest_status"]
+        == "contrast_execution_manifest_bound_review_required"
+    )
+    assert payload["summary"]["strategy_owner_contrast_execution_manifest_stage7_jobs"] == 0
+    assert payload["summary"]["strategy_owner_contrast_control_label_count"] == 12
+    assert payload["summary"]["strategy_owner_contrast_control_label_stage7_count"] == 0
+    assert (
+        payload["summary"]["strategy_owner_contrast_dataset_status"]
+        == "strategy_owner_contrast_dataset_ready_for_non_causal_probe_selector_sandbox_blocked"
+    )
+    assert payload["summary"]["strategy_owner_contrast_dataset_row_count"] == 13
+    assert payload["summary"]["strategy_owner_contrast_dataset_stage7_training_rows"] == 0
+    assert (
+        payload["summary"]["strategy_owner_contrast_readiness_selector_sandbox_ready"]
+        is False
+    )
+    assert (
+        payload["summary"]["strategy_owner_contrast_probe_status"]
+        == "strategy_owner_contrast_signal_present_selector_sandbox_blocked"
+    )
+    assert payload["summary"]["strategy_owner_contrast_probe_readiness_blockers"] == [
+        "insufficient_selected_provider_family_diversity"
+    ]
+    assert (
+        payload["summary"]["strategy_owner_contrast_runtime_arbiter_implemented"]
+        is False
+    )
+    assert payload["summary"]["strategy_owner_contrast_runtime_terminals_added"] is False
+    assert payload["summary"]["strategy_owner_contrast_stage7_promotion_allowed"] is False
+    assert payload["summary"]["strategy_owner_contrast_stage8_training_allowed"] is False
     assert payload["summary"]["clean_replacement_review_passive_ready"] is True
     assert (
         payload["summary"]["clean_replacement_review_packet_status"]

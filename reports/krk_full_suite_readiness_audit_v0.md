@@ -77,6 +77,32 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Strategy Owner Contrast
+
+- passive_probe_ready: `True`
+- label_plan_status: `protected_strategy_owner_contrast_label_plan_defined_execution_review_required`
+- label_plan_job_count: `12`
+- label_plan_stage7_job_count: `0`
+- label_plan_labels_generated: `False`
+- label_plan_review_status: `contrast_label_plan_review_passed_binding_required`
+- execution_manifest_status: `contrast_execution_manifest_bound_review_required`
+- execution_manifest_all_bindings_valid: `True`
+- execution_manifest_review_status: `contrast_execution_manifest_review_passed_labels_allowed`
+- control_label_count: `12`
+- control_label_stage7_count: `0`
+- dataset_status: `strategy_owner_contrast_dataset_ready_for_non_causal_probe_selector_sandbox_blocked`
+- dataset_row_count: `13`
+- dataset_stage7_training_rows: `0`
+- readiness_selector_sandbox_ready: `False`
+- probe_status: `strategy_owner_contrast_signal_present_selector_sandbox_blocked`
+- probe_training_row_count: `9`
+- probe_heldout_row_count: `4`
+- probe_readiness_blockers: `['insufficient_selected_provider_family_diversity']`
+- runtime_arbiter_implemented: `False`
+- runtime_terminals_added: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Clean Replacement Review
 
 - passive_review_ready: `True`
@@ -199,7 +225,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `51f049ca5434c140bee1199d5a9de70b69516948559d324ed4a2b025ec8449f9`
+- expected_readiness_fingerprint: `b7b98c28b10c0df379ef8e345273beef6c0c180fdc4a2e132666bd896a7eda11`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -728,5 +754,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1775`
+- checked_flag_count: `1817`
 - violation_count: `0`

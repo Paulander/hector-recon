@@ -427,6 +427,26 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_strategy_sequence_inventory_v0.json"
     )
     assert (
+        payload["source_artifacts"]["strategy_owner_contrast_label_plan"]
+        == "reports/krk_strategy_owner_contrast_label_plan_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_owner_contrast_execution_manifest"]
+        == "reports/krk_strategy_owner_contrast_execution_manifest_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_owner_contrast_control_labels"]
+        == "reports/krk_strategy_owner_contrast_control_labels_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_owner_contrast_dataset"]
+        == "reports/krk_strategy_owner_contrast_dataset_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_owner_contrast_probe"]
+        == "reports/krk_strategy_owner_contrast_probe_v0.json"
+    )
+    assert (
         payload["source_artifacts"][
             "clean_retrain_retry1_replacement_readiness_review"
         ]
@@ -592,6 +612,72 @@ def test_full_suite_readiness_identifies_current_gate():
     assert strategy_sequence["runtime_dtm_or_tablebase_lookup"] is False
     assert strategy_sequence["stage7_promotion_allowed"] is False
     assert strategy_sequence["stage8_training_allowed"] is False
+
+    strategy_owner = payload["strategy_owner_contrast_gate"]
+    assert strategy_owner["passive_probe_ready"] is True
+    assert (
+        strategy_owner["label_plan_status"]
+        == "protected_strategy_owner_contrast_label_plan_defined_execution_review_required"
+    )
+    assert strategy_owner["label_plan_job_count"] == 12
+    assert strategy_owner["label_plan_stage7_job_count"] == 0
+    assert strategy_owner["label_plan_labels_generated"] is False
+    assert strategy_owner["label_plan_runtime_arbiter_allowed"] is False
+    assert strategy_owner["label_plan_selector_sandbox_ready"] is False
+    assert (
+        strategy_owner["label_plan_review_status"]
+        == "contrast_label_plan_review_passed_binding_required"
+    )
+    assert strategy_owner["label_plan_review_allowed_to_bind_manifest"] is True
+    assert strategy_owner["label_plan_review_allowed_to_run_labels"] is False
+    assert strategy_owner["label_plan_review_stage7_jobs"] == 0
+    assert (
+        strategy_owner["execution_manifest_status"]
+        == "contrast_execution_manifest_bound_review_required"
+    )
+    assert strategy_owner["execution_manifest_labels_allowed_now"] is False
+    assert strategy_owner["execution_manifest_all_bindings_valid"] is True
+    assert strategy_owner["execution_manifest_missing_path_count"] == 0
+    assert strategy_owner["execution_manifest_stage7_jobs"] == 0
+    assert (
+        strategy_owner["execution_manifest_review_status"]
+        == "contrast_execution_manifest_review_passed_labels_allowed"
+    )
+    assert strategy_owner["execution_manifest_review_labels_allowed"] is True
+    assert strategy_owner["execution_manifest_review_stage7_jobs"] == 0
+    assert strategy_owner["control_label_count"] == 12
+    assert strategy_owner["control_label_stage7_count"] == 0
+    assert strategy_owner["control_label_trace_failures_only"] is True
+    assert (
+        strategy_owner["dataset_status"]
+        == "strategy_owner_contrast_dataset_ready_for_non_causal_probe_selector_sandbox_blocked"
+    )
+    assert strategy_owner["dataset_row_count"] == 13
+    assert strategy_owner["dataset_training_eligible_row_count"] == 9
+    assert strategy_owner["dataset_held_out_challenge_row_count"] == 4
+    assert strategy_owner["dataset_stage7_training_rows"] == 0
+    assert strategy_owner["readiness_contrast_probe_ready"] is True
+    assert strategy_owner["readiness_selector_sandbox_ready"] is False
+    assert strategy_owner["readiness_stage7_training_rows"] == 0
+    assert strategy_owner["readiness_blockers"] == [
+        "insufficient_selected_provider_family_diversity"
+    ]
+    assert (
+        strategy_owner["probe_status"]
+        == "strategy_owner_contrast_signal_present_selector_sandbox_blocked"
+    )
+    assert strategy_owner["probe_training_row_count"] == 9
+    assert strategy_owner["probe_heldout_row_count"] == 4
+    assert strategy_owner["probe_readiness_blockers"] == [
+        "insufficient_selected_provider_family_diversity"
+    ]
+    assert strategy_owner["runtime_arbiter_implemented"] is False
+    assert strategy_owner["runtime_behavior_changed"] is False
+    assert strategy_owner["runtime_defaults_changed"] is False
+    assert strategy_owner["runtime_dtm_or_tablebase_lookup"] is False
+    assert strategy_owner["runtime_terminals_added"] is False
+    assert strategy_owner["stage7_promotion_allowed"] is False
+    assert strategy_owner["stage8_training_allowed"] is False
 
     clean_replacement = payload["clean_replacement_review_gate"]
     assert clean_replacement["passive_review_ready"] is True

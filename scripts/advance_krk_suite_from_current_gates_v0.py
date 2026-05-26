@@ -583,6 +583,7 @@ def build_payload() -> dict[str, Any]:
     strategy_sequence_architecture_gate = (
         readiness.get("strategy_sequence_architecture_gate") or {}
     )
+    strategy_owner_contrast_gate = readiness.get("strategy_owner_contrast_gate") or {}
     clean_replacement_review_gate = readiness.get("clean_replacement_review_gate") or {}
     active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
@@ -928,6 +929,60 @@ def build_payload() -> dict[str, Any]:
             ),
             "strategy_sequence_stage8_training_allowed": (
                 strategy_sequence_architecture_gate.get("stage8_training_allowed")
+            ),
+            "strategy_owner_contrast_passive_probe_ready": (
+                strategy_owner_contrast_gate.get("passive_probe_ready")
+            ),
+            "strategy_owner_contrast_label_plan_status": (
+                strategy_owner_contrast_gate.get("label_plan_status")
+            ),
+            "strategy_owner_contrast_label_plan_job_count": (
+                strategy_owner_contrast_gate.get("label_plan_job_count")
+            ),
+            "strategy_owner_contrast_label_plan_stage7_job_count": (
+                strategy_owner_contrast_gate.get("label_plan_stage7_job_count")
+            ),
+            "strategy_owner_contrast_execution_manifest_status": (
+                strategy_owner_contrast_gate.get("execution_manifest_status")
+            ),
+            "strategy_owner_contrast_execution_manifest_stage7_jobs": (
+                strategy_owner_contrast_gate.get("execution_manifest_stage7_jobs")
+            ),
+            "strategy_owner_contrast_control_label_count": (
+                strategy_owner_contrast_gate.get("control_label_count")
+            ),
+            "strategy_owner_contrast_control_label_stage7_count": (
+                strategy_owner_contrast_gate.get("control_label_stage7_count")
+            ),
+            "strategy_owner_contrast_dataset_status": (
+                strategy_owner_contrast_gate.get("dataset_status")
+            ),
+            "strategy_owner_contrast_dataset_row_count": (
+                strategy_owner_contrast_gate.get("dataset_row_count")
+            ),
+            "strategy_owner_contrast_dataset_stage7_training_rows": (
+                strategy_owner_contrast_gate.get("dataset_stage7_training_rows")
+            ),
+            "strategy_owner_contrast_readiness_selector_sandbox_ready": (
+                strategy_owner_contrast_gate.get("readiness_selector_sandbox_ready")
+            ),
+            "strategy_owner_contrast_probe_status": (
+                strategy_owner_contrast_gate.get("probe_status")
+            ),
+            "strategy_owner_contrast_probe_readiness_blockers": (
+                strategy_owner_contrast_gate.get("probe_readiness_blockers")
+            ),
+            "strategy_owner_contrast_runtime_arbiter_implemented": (
+                strategy_owner_contrast_gate.get("runtime_arbiter_implemented")
+            ),
+            "strategy_owner_contrast_runtime_terminals_added": (
+                strategy_owner_contrast_gate.get("runtime_terminals_added")
+            ),
+            "strategy_owner_contrast_stage7_promotion_allowed": (
+                strategy_owner_contrast_gate.get("stage7_promotion_allowed")
+            ),
+            "strategy_owner_contrast_stage8_training_allowed": (
+                strategy_owner_contrast_gate.get("stage8_training_allowed")
             ),
             "clean_replacement_review_passive_ready": clean_replacement_review_gate.get(
                 "passive_review_ready"
