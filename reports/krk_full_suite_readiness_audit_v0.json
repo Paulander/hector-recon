@@ -49,6 +49,9 @@
   ],
   "hard_blockers": [],
   "protected_failure_contrast_gate": {
+    "approval_receipt_blockers": [
+      "approval_receipt_missing"
+    ],
     "approval_receipt_path": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json",
     "approval_receipt_present": false,
     "approval_receipt_required": true,

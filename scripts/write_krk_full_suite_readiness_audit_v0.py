@@ -600,6 +600,9 @@ def build_payload() -> dict[str, Any]:
             "approval_receipt_valid": failure_contrast_runner_summary.get(
                 "approval_receipt_valid"
             ),
+            "approval_receipt_blockers": (
+                failure_contrast_runner_summary.get("approval_receipt_blockers") or []
+            ),
             "expected_manifest_fingerprint": (
                 failure_contrast_runner_summary.get(
                     "execution_readiness_manifest_fingerprint"
@@ -851,6 +854,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- approval_receipt_path: `{protected_failure_contrast['approval_receipt_path']}`",
             f"- approval_receipt_present: `{protected_failure_contrast['approval_receipt_present']}`",
             f"- approval_receipt_valid: `{protected_failure_contrast['approval_receipt_valid']}`",
+            f"- approval_receipt_blockers: `{protected_failure_contrast['approval_receipt_blockers']}`",
             f"- expected_manifest_fingerprint: `{protected_failure_contrast['expected_manifest_fingerprint']}`",
             f"- expected_readiness_fingerprint: `{protected_failure_contrast['expected_readiness_fingerprint']}`",
             f"- command_if_explicitly_approved: `{protected_failure_contrast['command_if_explicitly_approved']}`",

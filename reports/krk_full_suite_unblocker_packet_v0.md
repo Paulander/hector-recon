@@ -75,6 +75,7 @@
 - approval_receipt_path: `reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - approval_receipt_present: `False`
 - approval_receipt_valid: `False`
+- approval_receipt_blockers: `['approval_receipt_missing']`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
 - expected_readiness_fingerprint: `9e3760e042b380429e8c2b1b7c533296cb98bb59fbf31b287e2bfdae30abdc0d`
 - post_success_refresh: `full_passive_krk_suite_gate_stack`

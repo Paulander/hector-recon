@@ -176,6 +176,9 @@ def test_full_suite_readiness_identifies_current_gate():
     )
     assert protected_failure_contrast["approval_receipt_present"] is False
     assert protected_failure_contrast["approval_receipt_valid"] is False
+    assert protected_failure_contrast["approval_receipt_blockers"] == [
+        "approval_receipt_missing"
+    ]
     assert len(protected_failure_contrast["expected_manifest_fingerprint"]) == 64
     assert len(protected_failure_contrast["expected_readiness_fingerprint"]) == 64
     assert protected_failure_contrast["command_if_explicitly_approved"] == (
@@ -213,6 +216,7 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
     )
     assert "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection" in rendered
     assert "protected_plan_window_failure_contrast_runner_dry_run_ready" in rendered
+    assert "approval_receipt_blockers: `['approval_receipt_missing']`" in rendered
     assert "label_run_allowed: `false`" in rendered
 
 

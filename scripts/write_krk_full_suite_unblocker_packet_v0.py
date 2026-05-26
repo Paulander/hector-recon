@@ -516,6 +516,12 @@ def build_payload() -> dict[str, Any]:
                     if failure_contrast_primary
                     else None
                 ),
+                "approval_receipt_blockers": (
+                    failure_contrast_runner_summary.get("approval_receipt_blockers")
+                    or []
+                    if failure_contrast_primary
+                    else None
+                ),
                 "expected_manifest_fingerprint": (
                     failure_contrast_runner_summary.get(
                         "execution_readiness_manifest_fingerprint"
@@ -685,6 +691,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- approval_receipt_path: `{primary['scope']['approval_receipt_path']}`",
             f"- approval_receipt_present: `{primary['scope']['approval_receipt_present']}`",
             f"- approval_receipt_valid: `{primary['scope']['approval_receipt_valid']}`",
+            f"- approval_receipt_blockers: `{primary['scope']['approval_receipt_blockers']}`",
             f"- expected_manifest_fingerprint: `{primary['scope']['expected_manifest_fingerprint']}`",
             f"- expected_readiness_fingerprint: `{primary['scope']['expected_readiness_fingerprint']}`",
             f"- post_success_refresh: `{primary['scope']['post_success_refresh']}`",
