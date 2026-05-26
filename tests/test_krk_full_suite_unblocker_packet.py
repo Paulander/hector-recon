@@ -537,3 +537,27 @@ def test_unblocker_packet_routes_forbidden_training_rows_to_input_repair(monkeyp
         "sequence_policy_forbidden_training_or_runtime_input_blocked"
     ] is True
     assert payload["decision"]["selector_training_allowed"] is False
+
+
+def test_unblocker_packet_falls_back_when_stage4_request_ready_is_null(monkeypatch):
+    real_load = _packet._load
+
+    def tainted_load(path: Path):
+        payload = json.loads(json.dumps(real_load(path)))
+        if path == _packet.STAGE4_UNBLOCKER:
+            payload.setdefault("current_stage4_status", {})[
+                "approval_request_ready_for_runtime_approval"
+            ] = None
+        return payload
+
+    monkeypatch.setattr(_packet, "_load", tainted_load)
+
+    payload = _packet.build_payload()
+    secondary = payload["secondary_unblocker"]
+
+    assert secondary["approval_request_status"] == (
+        "stage4_first_move_contrast_sandbox_approval_request_ready"
+    )
+    assert secondary["approval_request_blockers"] == []
+    assert secondary["approval_request_ready_for_runtime_approval"] is True
+    assert secondary["scope"]["approval_request_ready_for_runtime_approval"] is True
