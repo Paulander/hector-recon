@@ -129,7 +129,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `52e09737daa2a32e81ecc75f49a1d9a2f79e8867b1d907040d5ba0e2757088b7`
+- expected_readiness_fingerprint: `eba7136f45f43af942b45d2b80d2779e880e6de46b104e7849b0d63b19281ffa`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -320,6 +320,36 @@
 - maturity_recommended_next_step: `broader_evidence_collection_or_internal_monitor_design_review`
 - runtime_work_allowed: `False`
 - runtime_terminals_allowed: `False`
+- runtime_arbiter_allowed: `False`
+- monitor_to_provider_routing_allowed: `False`
+- selector_training_allowed: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
+## Internal Terminal Readiness Evidence
+
+- feature_candidate_all_non_causal: `True`
+- feature_candidate_count: `6`
+- feature_candidate_sandbox_ready_candidate_ids: `[]`
+- candidate_spec_count: `4`
+- candidate_terminal_ids: `['terminal.krk.local_provider_competition_failed', 'terminal.krk.post_plan_stagnation', 'terminal.krk.box_shrink_owner_exit_pressure', 'terminal.krk.repair_needed_monitor']`
+- candidate_maturity_statuses: `['internal_terminal_candidate', 'internal_terminal_candidate', 'needs_more_evidence', 'monitoring_only']`
+- validation_terminal_count: `4`
+- validation_record_count: `30`
+- validation_causal_ready_terminals: `[]`
+- validation_all_causal_use_blocked: `True`
+- evidence_terminal_count: `4`
+- evidence_combined_record_count: `24`
+- evidence_causal_ready_terminals: `[]`
+- evidence_monitoring_only_candidates: `['terminal.krk.box_shrink_owner_exit_pressure', 'terminal.krk.repair_needed_monitor']`
+- evidence_stage7_only_candidates: `['terminal.krk.local_provider_competition_failed', 'terminal.krk.post_plan_stagnation', 'terminal.krk.box_shrink_owner_exit_pressure']`
+- evidence_all_causal_ready_false: `True`
+- design_review_causal_ready_terminals: `[]`
+- design_review_all_causal_ready_false: `True`
+- design_review_recommended_next_step: `broader_replay_free_monitor_evidence_collection_or_review`
+- runtime_work_allowed: `False`
+- runtime_terminals_allowed: `False`
+- causal_affordances_allowed: `False`
 - runtime_arbiter_allowed: `False`
 - monitor_to_provider_routing_allowed: `False`
 - selector_training_allowed: `False`
@@ -607,5 +637,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1538`
+- checked_flag_count: `1568`
 - violation_count: `0`

@@ -32,8 +32,8 @@
         "readiness_audit": "reports/krk_full_suite_readiness_audit_v0.json",
         "readiness_audit_status": "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection",
         "readiness_boundary_violation_count": 0,
-        "readiness_checked_flag_count": 1538,
-        "readiness_source_artifact_count": 177,
+        "readiness_checked_flag_count": 1568,
+        "readiness_source_artifact_count": 182,
         "runtime_change_class": "default_off_candidate_move_frame_sandbox_only",
         "runtime_dtm_or_tablebase_lookup": false,
         "sandbox_scope_id": "default_off_stage4_candidate_move_first_move_contrast_sandbox_only",
@@ -262,6 +262,91 @@
   "gameplay_topology_mutation": false,
   "hard_blockers": [],
   "hidden_python_controller": false,
+  "internal_terminal_readiness_gate": {
+    "candidate_blocked_next_steps": [
+      "runtime_terminals",
+      "causal_affordances",
+      "runtime_arbiter",
+      "stage7_repair",
+      "stage8_training",
+      "stage7_promotion",
+      "runtime_dtm_or_tablebase",
+      "gameplay_topology_mutation",
+      "monitor_to_provider_routing"
+    ],
+    "candidate_maturity_statuses": [
+      "internal_terminal_candidate",
+      "internal_terminal_candidate",
+      "needs_more_evidence",
+      "monitoring_only"
+    ],
+    "candidate_spec_count": 4,
+    "candidate_terminal_ids": [
+      "terminal.krk.local_provider_competition_failed",
+      "terminal.krk.post_plan_stagnation",
+      "terminal.krk.box_shrink_owner_exit_pressure",
+      "terminal.krk.repair_needed_monitor"
+    ],
+    "causal_affordances_allowed": false,
+    "design_review_all_causal_ready_false": true,
+    "design_review_blocked_next_steps": [
+      "runtime_terminals",
+      "causal_affordances",
+      "runtime_arbiter",
+      "stage7_repair",
+      "stage8_training",
+      "stage7_promotion",
+      "runtime_dtm_or_tablebase",
+      "gameplay_topology_mutation",
+      "monitor_to_provider_routing"
+    ],
+    "design_review_causal_ready_terminals": [],
+    "design_review_main_conclusion": "Internal terminals are useful monitor/evidence objects, not runtime controls. local_provider_competition_failed and post_plan_stagnation are the strongest but remain sparse and Stage7-only; repair_needed_monitor is broader but noisy; box_shrink_owner_exit_pressure needs companion handoff-target evidence.",
+    "design_review_recommended_next_step": "broader_replay_free_monitor_evidence_collection_or_review",
+    "evidence_all_causal_ready_false": true,
+    "evidence_causal_ready_terminals": [],
+    "evidence_combined_record_count": 24,
+    "evidence_monitoring_only_candidates": [
+      "terminal.krk.box_shrink_owner_exit_pressure",
+      "terminal.krk.repair_needed_monitor"
+    ],
+    "evidence_recommended_next_step": "internal_terminal_design_review_before_any_runtime_work",
+    "evidence_stage7_only_candidates": [
+      "terminal.krk.local_provider_competition_failed",
+      "terminal.krk.post_plan_stagnation",
+      "terminal.krk.box_shrink_owner_exit_pressure"
+    ],
+    "evidence_strongest_internal_terminal_candidates": [
+      "terminal.krk.local_provider_competition_failed",
+      "terminal.krk.post_plan_stagnation"
+    ],
+    "evidence_terminal_count": 4,
+    "feature_candidate_all_non_causal": true,
+    "feature_candidate_causal_recommendation_counts": {
+      "needs-more-evidence": 1,
+      "non-causal only": 1,
+      "sandbox-blocked": 4
+    },
+    "feature_candidate_count": 6,
+    "feature_candidate_recommended_next_step": "architecture_review_or_refine_companion_terms_before_any_runtime_sandbox",
+    "feature_candidate_sandbox_ready_candidate_ids": [],
+    "monitor_to_provider_routing_allowed": false,
+    "runtime_arbiter_allowed": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "runtime_terminals_allowed": false,
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "validation_all_causal_use_blocked": true,
+    "validation_causal_ready_terminals": [],
+    "validation_record_count": 30,
+    "validation_strongest_internal_terminal_candidates": [
+      "terminal.krk.local_provider_competition_failed",
+      "terminal.krk.post_plan_stagnation"
+    ],
+    "validation_terminal_count": 4
+  },
   "protected_failure_contrast_gate": {
     "approval_receipt_blockers": [
       "approval_receipt_missing"
@@ -280,7 +365,7 @@
     "execution_jobs_passing": 6,
     "execution_readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
     "expected_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
-    "expected_readiness_fingerprint": "52e09737daa2a32e81ecc75f49a1d9a2f79e8867b1d907040d5ba0e2757088b7",
+    "expected_readiness_fingerprint": "eba7136f45f43af942b45d2b80d2779e880e6de46b104e7849b0d63b19281ffa",
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "integrated_new_failure_count": 0,
@@ -515,7 +600,7 @@
     "trace_features_trace_frame_count": 6
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 1538,
+    "checked_flag_count": 1568,
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "runtime_behavior_changed": false,
@@ -768,6 +853,11 @@
     "exact_trace_enrichment_coverage": "reports/strategy_arbitration/krk_exact_trace_enrichment_coverage_analysis_v0.json",
     "exact_trace_enrichment_runtime_review": "reports/strategy_arbitration/krk_exact_trace_enrichment_runtime_review_packet_v0.json",
     "exact_trace_enrichment_sandbox": "reports/strategy_arbitration/krk_exact_trace_enrichment_sandbox_v0.json",
+    "feature_candidate_validation": "reports/strategy_arbitration/krk_feature_candidate_validation_v0.json",
+    "internal_terminal_candidates": "reports/strategy_arbitration/krk_internal_terminal_candidates_v0.json",
+    "internal_terminal_design_review_v1": "reports/strategy_arbitration/krk_internal_terminal_design_review_v1.json",
+    "internal_terminal_evidence_v1": "reports/strategy_arbitration/krk_internal_terminal_evidence_v1.json",
+    "internal_terminal_validation": "reports/strategy_arbitration/krk_internal_terminal_validation_v0.json",
     "joined_trace_ownership_collection": "reports/strategy_arbitration/krk_joined_trace_ownership_collection_v0.json",
     "joined_trace_ownership_collection_manifest": "reports/strategy_arbitration/krk_joined_trace_ownership_collection_manifest_v0.json",
     "joined_trace_ownership_collection_review_packet": "reports/strategy_arbitration/krk_joined_trace_ownership_collection_review_packet_v0.json",

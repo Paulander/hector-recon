@@ -612,6 +612,9 @@ def build_payload() -> dict[str, Any]:
     strategy_monitor_maturity_gate = (
         readiness.get("strategy_monitor_maturity_gate") or {}
     )
+    internal_terminal_readiness_gate = (
+        readiness.get("internal_terminal_readiness_gate") or {}
+    )
     protected_stack_repair_statuses = {
         "sequence_policy_pilot_blocked_pending_protected_stack_repair",
         "stage8_training_blocked_pending_protected_stack_repair",
@@ -2296,6 +2299,57 @@ def build_payload() -> dict[str, Any]:
                 "stage7_promotion_allowed"
             ),
             "strategy_monitor_stage8_training_allowed": strategy_monitor_maturity_gate.get(
+                "stage8_training_allowed"
+            ),
+            "internal_terminal_feature_candidate_all_non_causal": internal_terminal_readiness_gate.get(
+                "feature_candidate_all_non_causal"
+            ),
+            "internal_terminal_candidate_spec_count": internal_terminal_readiness_gate.get(
+                "candidate_spec_count"
+            ),
+            "internal_terminal_validation_causal_ready_terminals": internal_terminal_readiness_gate.get(
+                "validation_causal_ready_terminals"
+            ),
+            "internal_terminal_validation_all_causal_use_blocked": internal_terminal_readiness_gate.get(
+                "validation_all_causal_use_blocked"
+            ),
+            "internal_terminal_evidence_causal_ready_terminals": internal_terminal_readiness_gate.get(
+                "evidence_causal_ready_terminals"
+            ),
+            "internal_terminal_evidence_all_causal_ready_false": internal_terminal_readiness_gate.get(
+                "evidence_all_causal_ready_false"
+            ),
+            "internal_terminal_design_review_causal_ready_terminals": internal_terminal_readiness_gate.get(
+                "design_review_causal_ready_terminals"
+            ),
+            "internal_terminal_design_review_all_causal_ready_false": internal_terminal_readiness_gate.get(
+                "design_review_all_causal_ready_false"
+            ),
+            "internal_terminal_design_review_recommended_next_step": internal_terminal_readiness_gate.get(
+                "design_review_recommended_next_step"
+            ),
+            "internal_terminal_runtime_work_allowed": internal_terminal_readiness_gate.get(
+                "runtime_work_allowed"
+            ),
+            "internal_terminal_runtime_terminals_allowed": internal_terminal_readiness_gate.get(
+                "runtime_terminals_allowed"
+            ),
+            "internal_terminal_causal_affordances_allowed": internal_terminal_readiness_gate.get(
+                "causal_affordances_allowed"
+            ),
+            "internal_terminal_runtime_arbiter_allowed": internal_terminal_readiness_gate.get(
+                "runtime_arbiter_allowed"
+            ),
+            "internal_terminal_monitor_to_provider_routing_allowed": internal_terminal_readiness_gate.get(
+                "monitor_to_provider_routing_allowed"
+            ),
+            "internal_terminal_selector_training_allowed": internal_terminal_readiness_gate.get(
+                "selector_training_allowed"
+            ),
+            "internal_terminal_stage7_promotion_allowed": internal_terminal_readiness_gate.get(
+                "stage7_promotion_allowed"
+            ),
+            "internal_terminal_stage8_training_allowed": internal_terminal_readiness_gate.get(
                 "stage8_training_allowed"
             ),
             "sequence_policy_underpowered_pilot_status": underpowered_pilot.get(

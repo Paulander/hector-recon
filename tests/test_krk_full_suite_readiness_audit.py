@@ -123,6 +123,26 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/strategy_arbitration/krk_strategy_monitor_maturity_gate_v0.json"
     )
     assert (
+        payload["source_artifacts"]["feature_candidate_validation"]
+        == "reports/strategy_arbitration/krk_feature_candidate_validation_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["internal_terminal_candidates"]
+        == "reports/strategy_arbitration/krk_internal_terminal_candidates_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["internal_terminal_validation"]
+        == "reports/strategy_arbitration/krk_internal_terminal_validation_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["internal_terminal_evidence_v1"]
+        == "reports/strategy_arbitration/krk_internal_terminal_evidence_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["internal_terminal_design_review_v1"]
+        == "reports/strategy_arbitration/krk_internal_terminal_design_review_v1.json"
+    )
+    assert (
         payload["source_artifacts"]["stage7_sampling_manifest"]
         == "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json"
     )
@@ -1078,6 +1098,67 @@ def test_full_suite_readiness_identifies_current_gate():
     assert strategy_monitor["selector_training_allowed"] is False
     assert strategy_monitor["stage7_promotion_allowed"] is False
     assert strategy_monitor["stage8_training_allowed"] is False
+
+    internal_terminal = payload["internal_terminal_readiness_gate"]
+    assert internal_terminal["feature_candidate_all_non_causal"] is True
+    assert internal_terminal["feature_candidate_count"] == 6
+    assert internal_terminal["feature_candidate_sandbox_ready_candidate_ids"] == []
+    assert internal_terminal["feature_candidate_recommended_next_step"] == (
+        "architecture_review_or_refine_companion_terms_before_any_runtime_sandbox"
+    )
+    assert internal_terminal["candidate_spec_count"] == 4
+    assert internal_terminal["candidate_terminal_ids"] == [
+        "terminal.krk.local_provider_competition_failed",
+        "terminal.krk.post_plan_stagnation",
+        "terminal.krk.box_shrink_owner_exit_pressure",
+        "terminal.krk.repair_needed_monitor",
+    ]
+    assert internal_terminal["candidate_maturity_statuses"] == [
+        "internal_terminal_candidate",
+        "internal_terminal_candidate",
+        "needs_more_evidence",
+        "monitoring_only",
+    ]
+    assert "runtime_terminals" in internal_terminal["candidate_blocked_next_steps"]
+    assert internal_terminal["validation_terminal_count"] == 4
+    assert internal_terminal["validation_record_count"] == 30
+    assert internal_terminal["validation_causal_ready_terminals"] == []
+    assert internal_terminal["validation_strongest_internal_terminal_candidates"] == [
+        "terminal.krk.local_provider_competition_failed",
+        "terminal.krk.post_plan_stagnation",
+    ]
+    assert internal_terminal["validation_all_causal_use_blocked"] is True
+    assert internal_terminal["evidence_terminal_count"] == 4
+    assert internal_terminal["evidence_combined_record_count"] == 24
+    assert internal_terminal["evidence_causal_ready_terminals"] == []
+    assert internal_terminal["evidence_monitoring_only_candidates"] == [
+        "terminal.krk.box_shrink_owner_exit_pressure",
+        "terminal.krk.repair_needed_monitor",
+    ]
+    assert internal_terminal["evidence_stage7_only_candidates"] == [
+        "terminal.krk.local_provider_competition_failed",
+        "terminal.krk.post_plan_stagnation",
+        "terminal.krk.box_shrink_owner_exit_pressure",
+    ]
+    assert internal_terminal["evidence_all_causal_ready_false"] is True
+    assert internal_terminal["evidence_recommended_next_step"] == (
+        "internal_terminal_design_review_before_any_runtime_work"
+    )
+    assert internal_terminal["design_review_causal_ready_terminals"] == []
+    assert internal_terminal["design_review_all_causal_ready_false"] is True
+    assert internal_terminal["design_review_recommended_next_step"] == (
+        "broader_replay_free_monitor_evidence_collection_or_review"
+    )
+    assert "runtime_terminals" in internal_terminal["design_review_blocked_next_steps"]
+    assert internal_terminal["runtime_work_allowed"] is False
+    assert internal_terminal["runtime_terminals_allowed"] is False
+    assert internal_terminal["causal_affordances_allowed"] is False
+    assert internal_terminal["runtime_arbiter_allowed"] is False
+    assert internal_terminal["monitor_to_provider_routing_allowed"] is False
+    assert internal_terminal["runtime_dtm_or_tablebase_lookup"] is False
+    assert internal_terminal["selector_training_allowed"] is False
+    assert internal_terminal["stage7_promotion_allowed"] is False
+    assert internal_terminal["stage8_training_allowed"] is False
 
     repair_monitor_trace = payload["repair_monitor_trace_feature_gate"]
     assert (

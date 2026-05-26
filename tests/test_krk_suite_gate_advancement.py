@@ -2127,6 +2127,53 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["strategy_monitor_selector_training_allowed"] is False
     assert payload["summary"]["strategy_monitor_stage7_promotion_allowed"] is False
     assert payload["summary"]["strategy_monitor_stage8_training_allowed"] is False
+    assert (
+        payload["summary"]["internal_terminal_feature_candidate_all_non_causal"]
+        is True
+    )
+    assert payload["summary"]["internal_terminal_candidate_spec_count"] == 4
+    assert (
+        payload["summary"]["internal_terminal_validation_causal_ready_terminals"]
+        == []
+    )
+    assert (
+        payload["summary"]["internal_terminal_validation_all_causal_use_blocked"]
+        is True
+    )
+    assert payload["summary"]["internal_terminal_evidence_causal_ready_terminals"] == []
+    assert (
+        payload["summary"]["internal_terminal_evidence_all_causal_ready_false"]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "internal_terminal_design_review_causal_ready_terminals"
+        ]
+        == []
+    )
+    assert (
+        payload["summary"][
+            "internal_terminal_design_review_all_causal_ready_false"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "internal_terminal_design_review_recommended_next_step"
+        ]
+        == "broader_replay_free_monitor_evidence_collection_or_review"
+    )
+    assert payload["summary"]["internal_terminal_runtime_work_allowed"] is False
+    assert payload["summary"]["internal_terminal_runtime_terminals_allowed"] is False
+    assert payload["summary"]["internal_terminal_causal_affordances_allowed"] is False
+    assert payload["summary"]["internal_terminal_runtime_arbiter_allowed"] is False
+    assert (
+        payload["summary"]["internal_terminal_monitor_to_provider_routing_allowed"]
+        is False
+    )
+    assert payload["summary"]["internal_terminal_selector_training_allowed"] is False
+    assert payload["summary"]["internal_terminal_stage7_promotion_allowed"] is False
+    assert payload["summary"]["internal_terminal_stage8_training_allowed"] is False
 
 
 def test_gate_advancement_writer_includes_all_passive_steps():

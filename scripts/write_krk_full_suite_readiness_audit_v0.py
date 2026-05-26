@@ -68,6 +68,21 @@ SOURCES = {
     "strategy_monitor_maturity_gate_v0": (
         "reports/strategy_arbitration/krk_strategy_monitor_maturity_gate_v0.json"
     ),
+    "feature_candidate_validation": (
+        "reports/strategy_arbitration/krk_feature_candidate_validation_v0.json"
+    ),
+    "internal_terminal_candidates": (
+        "reports/strategy_arbitration/krk_internal_terminal_candidates_v0.json"
+    ),
+    "internal_terminal_validation": (
+        "reports/strategy_arbitration/krk_internal_terminal_validation_v0.json"
+    ),
+    "internal_terminal_evidence_v1": (
+        "reports/strategy_arbitration/krk_internal_terminal_evidence_v1.json"
+    ),
+    "internal_terminal_design_review_v1": (
+        "reports/strategy_arbitration/krk_internal_terminal_design_review_v1.json"
+    ),
     "control_plane_stage7_boundary_refresh": (
         "reports/krk_control_plane_stage7_boundary_refresh_v0.json"
     ),
@@ -763,6 +778,13 @@ def build_payload() -> dict[str, Any]:
     ]
     strategy_monitor_maturity_gate_v0 = payloads[
         "strategy_monitor_maturity_gate_v0"
+    ]
+    feature_candidate_validation = payloads["feature_candidate_validation"]
+    internal_terminal_candidates = payloads["internal_terminal_candidates"]
+    internal_terminal_validation = payloads["internal_terminal_validation"]
+    internal_terminal_evidence_v1 = payloads["internal_terminal_evidence_v1"]
+    internal_terminal_design_review_v1 = payloads[
+        "internal_terminal_design_review_v1"
     ]
     candidate_proposal_coverage = payloads["candidate_proposal_coverage"]
     candidate_generation_strategy_review = payloads[
@@ -2704,6 +2726,120 @@ def build_payload() -> dict[str, Any]:
             ),
             "runtime_work_allowed": False,
             "runtime_terminals_allowed": False,
+            "runtime_arbiter_allowed": False,
+            "monitor_to_provider_routing_allowed": False,
+            "runtime_dtm_or_tablebase_lookup": False,
+            "selector_training_allowed": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": False,
+        },
+        "internal_terminal_readiness_gate": {
+            "feature_candidate_all_non_causal": feature_candidate_validation.get(
+                "summary", {}
+            ).get("all_candidates_remain_non_causal"),
+            "feature_candidate_count": feature_candidate_validation.get(
+                "summary", {}
+            ).get("candidate_count"),
+            "feature_candidate_causal_recommendation_counts": (
+                feature_candidate_validation.get("summary", {}).get(
+                    "causal_recommendation_counts"
+                )
+            ),
+            "feature_candidate_sandbox_ready_candidate_ids": (
+                feature_candidate_validation.get("summary", {}).get(
+                    "sandbox_ready_candidate_ids"
+                )
+            ),
+            "feature_candidate_recommended_next_step": (
+                feature_candidate_validation.get("recommended_next_step")
+            ),
+            "candidate_spec_count": len(
+                internal_terminal_candidates.get("specs") or []
+            ),
+            "candidate_terminal_ids": [
+                spec.get("terminal_id")
+                for spec in internal_terminal_candidates.get("specs") or []
+            ],
+            "candidate_maturity_statuses": [
+                spec.get("maturity_status")
+                for spec in internal_terminal_candidates.get("specs") or []
+            ],
+            "candidate_blocked_next_steps": internal_terminal_candidates.get(
+                "blocked_next_steps"
+            ),
+            "validation_terminal_count": internal_terminal_validation.get(
+                "summary", {}
+            ).get("terminal_count"),
+            "validation_record_count": internal_terminal_validation.get(
+                "summary", {}
+            ).get("validation_record_count"),
+            "validation_causal_ready_terminals": internal_terminal_validation.get(
+                "summary", {}
+            ).get("causal_ready_terminals"),
+            "validation_strongest_internal_terminal_candidates": (
+                internal_terminal_validation.get("summary", {}).get(
+                    "strongest_internal_terminal_candidates"
+                )
+            ),
+            "validation_all_causal_use_blocked": all(
+                item.get("causal_use_blocked") is True
+                for item in internal_terminal_validation.get("terminal_validations")
+                or []
+            ),
+            "evidence_terminal_count": internal_terminal_evidence_v1.get(
+                "summary", {}
+            ).get("terminal_count"),
+            "evidence_combined_record_count": internal_terminal_evidence_v1.get(
+                "summary", {}
+            ).get("combined_record_count"),
+            "evidence_causal_ready_terminals": internal_terminal_evidence_v1.get(
+                "summary", {}
+            ).get("causal_ready_terminals"),
+            "evidence_monitoring_only_candidates": internal_terminal_evidence_v1.get(
+                "summary", {}
+            ).get("monitoring_only_candidates"),
+            "evidence_stage7_only_candidates": internal_terminal_evidence_v1.get(
+                "summary", {}
+            ).get("stage7_only_candidates"),
+            "evidence_strongest_internal_terminal_candidates": (
+                internal_terminal_evidence_v1.get("summary", {}).get(
+                    "strongest_internal_terminal_candidates"
+                )
+            ),
+            "evidence_all_causal_ready_false": all(
+                item.get("causal_ready") is False
+                for item in internal_terminal_evidence_v1.get("terminal_evidence")
+                or []
+            ),
+            "evidence_recommended_next_step": internal_terminal_evidence_v1.get(
+                "summary", {}
+            ).get("recommended_next_step"),
+            "design_review_main_conclusion": internal_terminal_design_review_v1.get(
+                "summary", {}
+            ).get("main_conclusion"),
+            "design_review_causal_ready_terminals": (
+                internal_terminal_design_review_v1.get("summary", {}).get(
+                    "causal_ready_terminals"
+                )
+            ),
+            "design_review_all_causal_ready_false": all(
+                item.get("causal_ready") is False
+                for item in internal_terminal_design_review_v1.get(
+                    "terminal_readiness"
+                )
+                or []
+            ),
+            "design_review_recommended_next_step": (
+                internal_terminal_design_review_v1.get("summary", {}).get(
+                    "recommended_next_step"
+                )
+            ),
+            "design_review_blocked_next_steps": internal_terminal_design_review_v1.get(
+                "blocked_next_steps"
+            ),
+            "runtime_work_allowed": False,
+            "runtime_terminals_allowed": False,
+            "causal_affordances_allowed": False,
             "runtime_arbiter_allowed": False,
             "monitor_to_provider_routing_allowed": False,
             "runtime_dtm_or_tablebase_lookup": False,
@@ -4767,6 +4903,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     strategy_source = payload["strategy_sequence_candidate_source_gate"]
     strategy_arbitration = payload["strategy_arbitration_gate"]
     strategy_monitor = payload["strategy_monitor_maturity_gate"]
+    internal_terminal = payload["internal_terminal_readiness_gate"]
     repair_monitor_trace = payload["repair_monitor_trace_feature_gate"]
     stage5_6_refresh = payload["stage5_6_candidate_generation_refresh_gate"]
     cross_stage_scope = payload["cross_stage_candidate_generation_scope_gate"]
@@ -5111,6 +5248,36 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- selector_training_allowed: `{strategy_monitor['selector_training_allowed']}`",
             f"- stage7_promotion_allowed: `{strategy_monitor['stage7_promotion_allowed']}`",
             f"- stage8_training_allowed: `{strategy_monitor['stage8_training_allowed']}`",
+            "",
+            "## Internal Terminal Readiness Evidence",
+            "",
+            f"- feature_candidate_all_non_causal: `{internal_terminal['feature_candidate_all_non_causal']}`",
+            f"- feature_candidate_count: `{internal_terminal['feature_candidate_count']}`",
+            f"- feature_candidate_sandbox_ready_candidate_ids: `{internal_terminal['feature_candidate_sandbox_ready_candidate_ids']}`",
+            f"- candidate_spec_count: `{internal_terminal['candidate_spec_count']}`",
+            f"- candidate_terminal_ids: `{internal_terminal['candidate_terminal_ids']}`",
+            f"- candidate_maturity_statuses: `{internal_terminal['candidate_maturity_statuses']}`",
+            f"- validation_terminal_count: `{internal_terminal['validation_terminal_count']}`",
+            f"- validation_record_count: `{internal_terminal['validation_record_count']}`",
+            f"- validation_causal_ready_terminals: `{internal_terminal['validation_causal_ready_terminals']}`",
+            f"- validation_all_causal_use_blocked: `{internal_terminal['validation_all_causal_use_blocked']}`",
+            f"- evidence_terminal_count: `{internal_terminal['evidence_terminal_count']}`",
+            f"- evidence_combined_record_count: `{internal_terminal['evidence_combined_record_count']}`",
+            f"- evidence_causal_ready_terminals: `{internal_terminal['evidence_causal_ready_terminals']}`",
+            f"- evidence_monitoring_only_candidates: `{internal_terminal['evidence_monitoring_only_candidates']}`",
+            f"- evidence_stage7_only_candidates: `{internal_terminal['evidence_stage7_only_candidates']}`",
+            f"- evidence_all_causal_ready_false: `{internal_terminal['evidence_all_causal_ready_false']}`",
+            f"- design_review_causal_ready_terminals: `{internal_terminal['design_review_causal_ready_terminals']}`",
+            f"- design_review_all_causal_ready_false: `{internal_terminal['design_review_all_causal_ready_false']}`",
+            f"- design_review_recommended_next_step: `{internal_terminal['design_review_recommended_next_step']}`",
+            f"- runtime_work_allowed: `{internal_terminal['runtime_work_allowed']}`",
+            f"- runtime_terminals_allowed: `{internal_terminal['runtime_terminals_allowed']}`",
+            f"- causal_affordances_allowed: `{internal_terminal['causal_affordances_allowed']}`",
+            f"- runtime_arbiter_allowed: `{internal_terminal['runtime_arbiter_allowed']}`",
+            f"- monitor_to_provider_routing_allowed: `{internal_terminal['monitor_to_provider_routing_allowed']}`",
+            f"- selector_training_allowed: `{internal_terminal['selector_training_allowed']}`",
+            f"- stage7_promotion_allowed: `{internal_terminal['stage7_promotion_allowed']}`",
+            f"- stage8_training_allowed: `{internal_terminal['stage8_training_allowed']}`",
             "",
             "## Repair-Monitor Trace-Feature Evidence",
             "",
