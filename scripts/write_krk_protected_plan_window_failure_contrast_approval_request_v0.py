@@ -44,6 +44,7 @@ POST_FAILURE_CONTRAST_SEQUENCE_REFRESH = (
     "krk_sequence_policy_after_protected_failure_contrast_refresh_v0.json"
 )
 POST_SUCCESS_REFRESH_SCRIPT = "scripts/advance_krk_suite_from_current_gates_v0.py"
+POST_SUCCESS_REFRESH_SCOPE = "full_passive_krk_suite_gate_stack"
 
 SCHEMA_VERSION = "krk_protected_plan_window_failure_contrast_approval_request.v0"
 APPROVAL_SCHEMA_VERSION = (
@@ -130,6 +131,9 @@ def build_payload(
                 "overwrite_existing_outputs"
             ),
             "refresh_after_run": runner_summary.get("refresh_after_run_requested"),
+            "post_success_refresh_required": True,
+            "post_success_refresh_script": POST_SUCCESS_REFRESH_SCRIPT,
+            "post_success_refresh_scope": POST_SUCCESS_REFRESH_SCOPE,
             "manifest_status": manifest.get("decision", {}).get("status"),
             "readiness_status": readiness.get("decision", {}).get("status"),
             "protected_stack_status": readiness_summary.get("protected_stack_status"),
@@ -213,7 +217,7 @@ def build_payload(
             ),
             "post_success_refresh_required": True,
             "post_success_refresh_script": POST_SUCCESS_REFRESH_SCRIPT,
-            "post_success_refresh_scope": "full_passive_krk_suite_gate_stack",
+            "post_success_refresh_scope": POST_SUCCESS_REFRESH_SCOPE,
             "pre_collection_sequence_policy_after_protected_failure_contrast_refresh_status": (
                 sequence_policy.get("post_failure_contrast_refresh_status")
             ),

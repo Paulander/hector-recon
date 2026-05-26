@@ -53,6 +53,8 @@ EXECUTION_READINESS_SCRIPT = (
     / "scripts/validate_krk_protected_plan_window_failure_contrast_execution_readiness_v0.py"
 )
 FULL_GATE_ADVANCEMENT_SCRIPT = ROOT / "scripts/advance_krk_suite_from_current_gates_v0.py"
+POST_SUCCESS_REFRESH_SCRIPT = "scripts/advance_krk_suite_from_current_gates_v0.py"
+POST_SUCCESS_REFRESH_SCOPE = "full_passive_krk_suite_gate_stack"
 OUTPUT_JSON = (
     ROOT
     / "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_runner_v0.json"
@@ -446,6 +448,12 @@ def _approval_receipt_blockers(
         blockers.append("approval_receipt_overwrite_existing_outputs_mismatch")
     if approval_scope.get("refresh_after_run") != refresh_after_run:
         blockers.append("approval_receipt_refresh_after_run_mismatch")
+    if approval_scope.get("post_success_refresh_required") is not True:
+        blockers.append("approval_receipt_post_success_refresh_required_mismatch")
+    if approval_scope.get("post_success_refresh_script") != POST_SUCCESS_REFRESH_SCRIPT:
+        blockers.append("approval_receipt_post_success_refresh_script_mismatch")
+    if approval_scope.get("post_success_refresh_scope") != POST_SUCCESS_REFRESH_SCOPE:
+        blockers.append("approval_receipt_post_success_refresh_scope_mismatch")
     if approval_scope.get("manifest_status") != manifest.get("decision", {}).get("status"):
         blockers.append("approval_receipt_manifest_status_mismatch")
     if (
