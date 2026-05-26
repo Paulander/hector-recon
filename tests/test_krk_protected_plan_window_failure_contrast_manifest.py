@@ -381,6 +381,11 @@ def test_failure_contrast_runner_is_dry_run_ready_without_authorizing_collection
         "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
     )
     assert payload["summary"]["job_count"] == 6
+    assert payload["summary"]["manifest_status"] == (
+        "protected_plan_window_failure_contrast_manifest_ready_for_review"
+    )
+    assert payload["summary"]["manifest_declared_job_count"] == 6
+    assert len(payload["summary"]["manifest_fingerprint"]) == 64
     assert payload["summary"]["processed_job_count"] == 0
     assert payload["summary"]["executed_job_count"] == 0
     assert payload["summary"]["refresh_after_run_requested"] is True

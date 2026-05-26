@@ -674,6 +674,13 @@ def build_payload(
         "execution_blockers": blockers,
         "summary": {
             "job_count": len(jobs),
+            "manifest_status": manifest.get("decision", {}).get("status"),
+            "manifest_declared_job_count": (manifest.get("summary") or {}).get(
+                "job_count"
+            ),
+            "manifest_fingerprint": (manifest.get("summary") or {}).get(
+                "manifest_fingerprint"
+            ),
             "processed_job_count": len(executed_jobs),
             "executed_job_count": len(actually_executed_jobs),
             "skipped_existing_output_count": len(skipped_jobs),
