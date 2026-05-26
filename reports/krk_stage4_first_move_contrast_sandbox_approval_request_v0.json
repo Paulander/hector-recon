@@ -16,6 +16,7 @@
   },
   "exact_approval_request": "Approve default-off Stage 4 first-move contrast sandbox implementation only within krk_stage4_first_move_contrast_runtime_review_packet_v0: CandidateMoveFrame legal first-move hypotheses in KRK Stage 4 edge_trap_wrong_tempo contexts; no default enablement, no exact-state or exact-move exception, no runtime DTM/tablebase lookup, no hidden controller, no selector training, no provider suppression, no broad stage0 penalty, no gameplay topology mutation, no Stage 7 promotion, and no Stage 8 training.",
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "implementation_authorized_by_request": false,
   "required_scope_if_user_approves": {
     "acceptance_if_later_approved": {

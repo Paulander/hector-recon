@@ -44,6 +44,7 @@ def test_stage4_caveat_unblocker_is_review_ready_but_not_authorized():
     assert payload["runtime_score_changes"] is False
     assert payload["runtime_direct_routing"] is False
     assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["hidden_python_controller"] is False
     assert payload["gameplay_topology_mutation"] is False
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
@@ -128,6 +129,7 @@ def test_stage4_sandbox_approval_request_is_not_authorization():
     assert payload["runtime_defaults_changed"] is False
     assert payload["runtime_selector_implemented"] is False
     assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["hidden_python_controller"] is False
     assert payload["gameplay_topology_mutation"] is False
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False

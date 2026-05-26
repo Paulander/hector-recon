@@ -68,6 +68,7 @@
     "Stage 8 training"
   ],
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "required_approval_scope_if_user_approves": {
     "acceptance_if_later_approved": {
       "default_off_equivalence_passes": true,
