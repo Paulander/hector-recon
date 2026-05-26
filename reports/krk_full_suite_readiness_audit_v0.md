@@ -346,6 +346,13 @@
 - failure_risk_evidence_row_count: `48`
 - visible_proxy_precision: `1.0`
 - visible_proxy_recall: `1.0`
+- visible_proxy_probe_v0_status: `visible_failure_risk_proxy_candidate_needs_out_of_sample_validation`
+- independent_validation_v0_status: `independent_proxy_validation_failed_or_underpowered`
+- independent_validation_v0_threshold_met: `False`
+- independent_validation_v0_safe_preservation_recall: `0.42857142857142855`
+- blocker_review_v0_status: `failed_proxy_closed_next_evidence_v1_required`
+- blocker_review_v0_threshold_met: `False`
+- blocker_review_v0_false_positive_count: `4`
 - proxy_v1_probe_status: `proxy_v1_independent_candidate_found`
 - proxy_v1_independent_passing_proxy_count: `3`
 - independent_label_count: `8`
@@ -515,7 +522,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `841793084b25cd7e398f8b32e55cc4240b9f42177788e27e101df909260d837f`
+- expected_readiness_fingerprint: `224af9325712f7d07c42d0fff39dd1195e7a4ca0e15871cf8714eb9247e67581`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1044,5 +1051,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2217`
+- checked_flag_count: `2238`
 - violation_count: `0`

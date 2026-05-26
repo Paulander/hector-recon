@@ -1616,6 +1616,29 @@ def build_payload() -> dict[str, Any]:
             "selected_owner_failure_risk_visible_proxy_recall": (
                 selected_owner_failure_risk_proxy_gate.get("visible_proxy_recall")
             ),
+            "selected_owner_failure_risk_visible_proxy_probe_v0_status": (
+                selected_owner_failure_risk_proxy_gate.get(
+                    "visible_proxy_probe_v0_status"
+                )
+            ),
+            "selected_owner_failure_risk_independent_validation_v0_status": (
+                selected_owner_failure_risk_proxy_gate.get(
+                    "independent_validation_v0_status"
+                )
+            ),
+            "selected_owner_failure_risk_independent_validation_v0_threshold_met": (
+                selected_owner_failure_risk_proxy_gate.get(
+                    "independent_validation_v0_threshold_met"
+                )
+            ),
+            "selected_owner_failure_risk_blocker_review_v0_status": (
+                selected_owner_failure_risk_proxy_gate.get("blocker_review_v0_status")
+            ),
+            "selected_owner_failure_risk_blocker_review_v0_threshold_met": (
+                selected_owner_failure_risk_proxy_gate.get(
+                    "blocker_review_v0_threshold_met"
+                )
+            ),
             "selected_owner_failure_risk_proxy_v1_probe_status": (
                 selected_owner_failure_risk_proxy_gate.get("proxy_v1_probe_status")
             ),

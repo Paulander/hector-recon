@@ -594,6 +594,24 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
     )
     assert (
         payload["source_artifacts"][
+            "selected_owner_failure_risk_visible_proxy_probe_v0"
+        ]
+        == "reports/krk_selected_owner_failure_risk_visible_proxy_probe_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "selected_owner_failure_risk_proxy_independent_validation_v0"
+        ]
+        == "reports/krk_selected_owner_failure_risk_proxy_independent_validation_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "selected_owner_failure_risk_proxy_blocker_review_v0"
+        ]
+        == "reports/krk_selected_owner_failure_risk_proxy_blocker_review_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
             "selected_owner_failure_risk_proxy_independent_validation_v1"
         ]
         == "reports/krk_selected_owner_failure_risk_proxy_independent_validation_v1.json"
@@ -1406,6 +1424,30 @@ def test_full_suite_readiness_identifies_current_gate():
         "visible_failure_risk_proxy_candidate_identified_not_runtime_ready"
     )
     assert failure_risk["visible_proxy_review_threshold_met"] is True
+    assert failure_risk["visible_proxy_probe_v0_status"] == (
+        "visible_failure_risk_proxy_candidate_needs_out_of_sample_validation"
+    )
+    assert failure_risk["visible_proxy_probe_v0_review_threshold_met"] is True
+    assert failure_risk["visible_proxy_probe_v0_row_count"] == 40
+    assert failure_risk["visible_proxy_probe_v0_stage7_row_count"] == 0
+    assert failure_risk["independent_validation_v0_status"] == (
+        "independent_proxy_validation_failed_or_underpowered"
+    )
+    assert failure_risk["independent_validation_v0_threshold_met"] is False
+    assert failure_risk["independent_validation_v0_proxy_precision"] == 0.0
+    assert failure_risk["independent_validation_v0_proxy_recall"] == 0.0
+    assert (
+        failure_risk["independent_validation_v0_safe_preservation_recall"]
+        == 0.42857142857142855
+    )
+    assert failure_risk["independent_validation_v0_stage7_row_count"] == 0
+    assert failure_risk["blocker_review_v0_status"] == (
+        "failed_proxy_closed_next_evidence_v1_required"
+    )
+    assert failure_risk["blocker_review_v0_threshold_met"] is False
+    assert failure_risk["blocker_review_v0_false_positive_count"] == 4
+    assert failure_risk["blocker_review_v0_false_negative_count"] == 1
+    assert failure_risk["blocker_review_v0_stage7_row_count"] == 0
     assert failure_risk["proxy_v1_probe_status"] == "proxy_v1_independent_candidate_found"
     assert failure_risk["proxy_v1_probe_row_count"] == 48
     assert failure_risk["proxy_v1_independent_passing_proxy_count"] == 3

@@ -706,6 +706,15 @@ SOURCES = {
     "selected_owner_failure_risk_visible_proxy_review_v0": (
         "reports/krk_selected_owner_failure_risk_visible_proxy_review_v0.json"
     ),
+    "selected_owner_failure_risk_visible_proxy_probe_v0": (
+        "reports/krk_selected_owner_failure_risk_visible_proxy_probe_v0.json"
+    ),
+    "selected_owner_failure_risk_proxy_independent_validation_v0": (
+        "reports/krk_selected_owner_failure_risk_proxy_independent_validation_v0.json"
+    ),
+    "selected_owner_failure_risk_proxy_blocker_review_v0": (
+        "reports/krk_selected_owner_failure_risk_proxy_blocker_review_v0.json"
+    ),
     "selected_owner_failure_risk_proxy_probe_v1": (
         "reports/krk_selected_owner_failure_risk_proxy_probe_v1.json"
     ),
@@ -1614,6 +1623,15 @@ def build_payload() -> dict[str, Any]:
     ]
     selected_owner_failure_risk_visible_proxy_review_v0 = payloads[
         "selected_owner_failure_risk_visible_proxy_review_v0"
+    ]
+    selected_owner_failure_risk_visible_proxy_probe_v0 = payloads[
+        "selected_owner_failure_risk_visible_proxy_probe_v0"
+    ]
+    selected_owner_failure_risk_proxy_independent_validation_v0 = payloads[
+        "selected_owner_failure_risk_proxy_independent_validation_v0"
+    ]
+    selected_owner_failure_risk_proxy_blocker_review_v0 = payloads[
+        "selected_owner_failure_risk_proxy_blocker_review_v0"
     ]
     selected_owner_failure_risk_proxy_probe_v1 = payloads[
         "selected_owner_failure_risk_proxy_probe_v1"
@@ -2851,6 +2869,26 @@ def build_payload() -> dict[str, Any]:
     failure_risk_visible_review_summary = (
         selected_owner_failure_risk_visible_proxy_review_v0.get("summary") or {}
     )
+    failure_risk_visible_probe_decision = (
+        selected_owner_failure_risk_visible_proxy_probe_v0.get("decision") or {}
+    )
+    failure_risk_visible_probe_summary = (
+        selected_owner_failure_risk_visible_proxy_probe_v0.get("summary") or {}
+    )
+    failure_risk_independent_validation_v0_decision = (
+        selected_owner_failure_risk_proxy_independent_validation_v0.get("decision")
+        or {}
+    )
+    failure_risk_independent_validation_v0_summary = (
+        selected_owner_failure_risk_proxy_independent_validation_v0.get("summary")
+        or {}
+    )
+    failure_risk_blocker_review_decision = (
+        selected_owner_failure_risk_proxy_blocker_review_v0.get("decision") or {}
+    )
+    failure_risk_blocker_review_summary = (
+        selected_owner_failure_risk_proxy_blocker_review_v0.get("summary") or {}
+    )
     failure_risk_proxy_probe_decision = (
         selected_owner_failure_risk_proxy_probe_v1.get("decision") or {}
     )
@@ -2947,6 +2985,46 @@ def build_payload() -> dict[str, Any]:
         )
         is True
         and failure_risk_visible_review_summary.get("stage7_row_count") == 0
+        and failure_risk_visible_probe_decision.get("status")
+        == "visible_failure_risk_proxy_candidate_needs_out_of_sample_validation"
+        and failure_risk_visible_probe_decision.get("runtime_work_allowed") is False
+        and failure_risk_visible_probe_decision.get("selector_training_allowed")
+        is False
+        and failure_risk_visible_probe_summary.get("row_count") == 40
+        and failure_risk_visible_probe_summary.get("stage7_row_count") == 0
+        and failure_risk_visible_probe_summary.get("review_threshold_met") is True
+        and failure_risk_independent_validation_v0_decision.get("status")
+        == "independent_proxy_validation_failed_or_underpowered"
+        and failure_risk_independent_validation_v0_decision.get("runtime_work_allowed")
+        is False
+        and failure_risk_independent_validation_v0_decision.get(
+            "selector_training_allowed"
+        )
+        is False
+        and failure_risk_independent_validation_v0_summary.get("threshold_met")
+        is False
+        and failure_risk_independent_validation_v0_summary.get("stage7_row_count") == 0
+        and failure_risk_blocker_review_decision.get("status")
+        == "failed_proxy_closed_next_evidence_v1_required"
+        and failure_risk_blocker_review_decision.get("runtime_work_allowed") is False
+        and failure_risk_blocker_review_decision.get("selector_training_allowed")
+        is False
+        and failure_risk_blocker_review_summary.get("threshold_met") is False
+        and failure_risk_blocker_review_summary.get("stage7_row_count") == 0
+        and all(
+            artifact.get("runtime_behavior_changed") is False
+            and artifact.get("runtime_defaults_changed") is False
+            and artifact.get("runtime_selector_implemented") is False
+            and artifact.get("runtime_dtm_or_tablebase_lookup") is False
+            and artifact.get("runtime_terminals_added") is False
+            and artifact.get("stage7_promotion_allowed") is False
+            and artifact.get("stage8_training_allowed") is False
+            for artifact in [
+                selected_owner_failure_risk_visible_proxy_probe_v0,
+                selected_owner_failure_risk_proxy_independent_validation_v0,
+                selected_owner_failure_risk_proxy_blocker_review_v0,
+            ]
+        )
         and failure_risk_proxy_probe_decision.get("status")
         == "proxy_v1_independent_candidate_found"
         and failure_risk_proxy_probe_decision.get("runtime_work_allowed") is False
@@ -4941,6 +5019,53 @@ def build_payload() -> dict[str, Any]:
                 failure_risk_visible_review_summary.get(
                     "review_threshold_met_on_current_dataset"
                 )
+            ),
+            "visible_proxy_probe_v0_status": (
+                failure_risk_visible_probe_decision.get("status")
+            ),
+            "visible_proxy_probe_v0_review_threshold_met": (
+                failure_risk_visible_probe_summary.get("review_threshold_met")
+            ),
+            "visible_proxy_probe_v0_row_count": (
+                failure_risk_visible_probe_summary.get("row_count")
+            ),
+            "visible_proxy_probe_v0_stage7_row_count": (
+                failure_risk_visible_probe_summary.get("stage7_row_count")
+            ),
+            "independent_validation_v0_status": (
+                failure_risk_independent_validation_v0_decision.get("status")
+            ),
+            "independent_validation_v0_threshold_met": (
+                failure_risk_independent_validation_v0_summary.get("threshold_met")
+            ),
+            "independent_validation_v0_proxy_precision": (
+                failure_risk_independent_validation_v0_summary.get("proxy_precision")
+            ),
+            "independent_validation_v0_proxy_recall": (
+                failure_risk_independent_validation_v0_summary.get("proxy_recall")
+            ),
+            "independent_validation_v0_safe_preservation_recall": (
+                failure_risk_independent_validation_v0_summary.get(
+                    "safe_preservation_recall"
+                )
+            ),
+            "independent_validation_v0_stage7_row_count": (
+                failure_risk_independent_validation_v0_summary.get("stage7_row_count")
+            ),
+            "blocker_review_v0_status": failure_risk_blocker_review_decision.get(
+                "status"
+            ),
+            "blocker_review_v0_threshold_met": (
+                failure_risk_blocker_review_summary.get("threshold_met")
+            ),
+            "blocker_review_v0_false_positive_count": (
+                failure_risk_blocker_review_summary.get("false_positive_count")
+            ),
+            "blocker_review_v0_false_negative_count": (
+                failure_risk_blocker_review_summary.get("false_negative_count")
+            ),
+            "blocker_review_v0_stage7_row_count": (
+                failure_risk_blocker_review_summary.get("stage7_row_count")
             ),
             "proxy_v1_probe_status": failure_risk_proxy_probe_decision.get("status"),
             "proxy_v1_probe_row_count": failure_risk_proxy_probe_summary.get(
@@ -9162,6 +9287,13 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- failure_risk_evidence_row_count: `{selected_owner_failure_risk['failure_risk_evidence_row_count']}`",
         f"- visible_proxy_precision: `{selected_owner_failure_risk['visible_proxy_precision']}`",
         f"- visible_proxy_recall: `{selected_owner_failure_risk['visible_proxy_recall']}`",
+        f"- visible_proxy_probe_v0_status: `{selected_owner_failure_risk['visible_proxy_probe_v0_status']}`",
+        f"- independent_validation_v0_status: `{selected_owner_failure_risk['independent_validation_v0_status']}`",
+        f"- independent_validation_v0_threshold_met: `{selected_owner_failure_risk['independent_validation_v0_threshold_met']}`",
+        f"- independent_validation_v0_safe_preservation_recall: `{selected_owner_failure_risk['independent_validation_v0_safe_preservation_recall']}`",
+        f"- blocker_review_v0_status: `{selected_owner_failure_risk['blocker_review_v0_status']}`",
+        f"- blocker_review_v0_threshold_met: `{selected_owner_failure_risk['blocker_review_v0_threshold_met']}`",
+        f"- blocker_review_v0_false_positive_count: `{selected_owner_failure_risk['blocker_review_v0_false_positive_count']}`",
         f"- proxy_v1_probe_status: `{selected_owner_failure_risk['proxy_v1_probe_status']}`",
         f"- proxy_v1_independent_passing_proxy_count: `{selected_owner_failure_risk['proxy_v1_independent_passing_proxy_count']}`",
         f"- independent_label_count: `{selected_owner_failure_risk['independent_label_count']}`",

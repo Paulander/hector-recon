@@ -709,6 +709,21 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["selected_owner_failure_risk_evidence_row_count"] == 48
     assert payload["summary"]["selected_owner_failure_risk_visible_proxy_precision"] == 1.0
     assert payload["summary"]["selected_owner_failure_risk_visible_proxy_recall"] == 1.0
+    assert payload["summary"][
+        "selected_owner_failure_risk_visible_proxy_probe_v0_status"
+    ] == "visible_failure_risk_proxy_candidate_needs_out_of_sample_validation"
+    assert payload["summary"][
+        "selected_owner_failure_risk_independent_validation_v0_status"
+    ] == "independent_proxy_validation_failed_or_underpowered"
+    assert payload["summary"][
+        "selected_owner_failure_risk_independent_validation_v0_threshold_met"
+    ] is False
+    assert payload["summary"][
+        "selected_owner_failure_risk_blocker_review_v0_status"
+    ] == "failed_proxy_closed_next_evidence_v1_required"
+    assert payload["summary"][
+        "selected_owner_failure_risk_blocker_review_v0_threshold_met"
+    ] is False
     assert payload["summary"]["selected_owner_failure_risk_proxy_v1_probe_status"] == (
         "proxy_v1_independent_candidate_found"
     )
