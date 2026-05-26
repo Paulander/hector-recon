@@ -15,6 +15,7 @@
     "status": "stage8_training_blocked_pending_protected_failure_contrast_collection"
   },
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "requirements": {
     "kpk_kqk_bridge_preservation_passed": true,
     "m1_m4_preservation_passed": true,
@@ -27,6 +28,7 @@
     "protected_failure_contrast_collection_ready_for_explicit_approval": true,
     "protected_failure_contrast_command_if_explicitly_approved": "UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json",
     "protected_failure_contrast_gameplay_topology_mutation": false,
+    "protected_failure_contrast_hidden_python_controller": false,
     "protected_failure_contrast_integration_ready": false,
     "protected_failure_contrast_post_success_refresh_required": true,
     "protected_failure_contrast_post_success_refresh_scope": "full_passive_krk_suite_gate_stack",
@@ -36,6 +38,7 @@
     "protected_failure_contrast_runner_status": "protected_plan_window_failure_contrast_runner_dry_run_ready",
     "protected_failure_contrast_runtime_behavior_changed": false,
     "protected_failure_contrast_runtime_defaults_changed": false,
+    "protected_failure_contrast_runtime_direct_routing": false,
     "protected_failure_contrast_runtime_dtm_or_tablebase_lookup": false,
     "protected_failure_contrast_runtime_score_changes": false,
     "protected_failure_contrast_runtime_selector_implemented": false,

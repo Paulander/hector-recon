@@ -81,6 +81,7 @@ COMMON_FALSE_FLAGS = {
     "runtime_score_changes": False,
     "runtime_direct_routing": False,
     "runtime_dtm_or_tablebase_lookup": False,
+    "hidden_python_controller": False,
     "gameplay_topology_mutation": False,
     "stage7_promotion_allowed": False,
     "stage8_training_allowed": False,
@@ -420,6 +421,8 @@ def _approval_receipt_blockers(
         blockers.append("approval_receipt_must_not_allow_runtime_direct_routing")
     if decision.get("runtime_dtm_or_tablebase_lookup") is not False:
         blockers.append("approval_receipt_must_not_allow_runtime_dtm_or_tablebase_lookup")
+    if decision.get("hidden_python_controller") is not False:
+        blockers.append("approval_receipt_must_not_allow_hidden_python_controller")
     if decision.get("gameplay_topology_mutation") is not False:
         blockers.append("approval_receipt_must_not_allow_gameplay_topology_mutation")
     if decision.get("stage7_promotion_allowed") is not False:

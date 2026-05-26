@@ -40,6 +40,7 @@ def test_stage8_training_readiness_review_blocks_current_state():
     assert payload["runtime_score_changes"] is False
     assert payload["runtime_direct_routing"] is False
     assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["hidden_python_controller"] is False
     assert payload["gameplay_topology_mutation"] is False
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
@@ -171,9 +172,17 @@ def test_stage8_training_readiness_review_blocks_current_state():
         is False
     )
     assert (
+        payload["requirements"]["protected_failure_contrast_runtime_direct_routing"]
+        is False
+    )
+    assert (
         payload["requirements"][
             "protected_failure_contrast_runtime_dtm_or_tablebase_lookup"
         ]
+        is False
+    )
+    assert (
+        payload["requirements"]["protected_failure_contrast_hidden_python_controller"]
         is False
     )
     assert (

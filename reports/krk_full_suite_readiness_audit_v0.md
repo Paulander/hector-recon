@@ -124,7 +124,9 @@
 - runtime_defaults_changed: `False`
 - runtime_selector_implemented: `False`
 - runtime_score_changes: `False`
+- runtime_direct_routing: `False`
 - runtime_dtm_or_tablebase_lookup: `False`
+- hidden_python_controller: `False`
 - gameplay_topology_mutation: `False`
 - selector_training_allowed: `False`
 - stage7_promotion_allowed: `False`
@@ -143,5 +145,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `200`
+- checked_flag_count: `202`
 - violation_count: `0`

@@ -47,7 +47,9 @@ This review is passive. It does not execute labels, change runtime behavior, tra
 - protected_failure_contrast_runtime_defaults_changed: `False`
 - protected_failure_contrast_runtime_selector_implemented: `False`
 - protected_failure_contrast_runtime_score_changes: `False`
+- protected_failure_contrast_runtime_direct_routing: `False`
 - protected_failure_contrast_runtime_dtm_or_tablebase_lookup: `False`
+- protected_failure_contrast_hidden_python_controller: `False`
 - protected_failure_contrast_gameplay_topology_mutation: `False`
 - protected_failure_contrast_selector_training_allowed: `False`
 - protected_failure_contrast_stage7_promotion_allowed: `False`

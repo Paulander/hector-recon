@@ -19,6 +19,7 @@
     "status": "protected_plan_window_failure_contrast_approval_request_ready"
   },
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "protected_stack_safety": {
     "active_paths_exist": true,
     "active_paths_safe": true,
@@ -59,6 +60,7 @@
     },
     "decision": {
       "gameplay_topology_mutation": false,
+      "hidden_python_controller": false,
       "label_run_allowed": false,
       "runtime_behavior_changed": false,
       "runtime_changes_allowed": false,

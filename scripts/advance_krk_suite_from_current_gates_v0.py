@@ -29,6 +29,7 @@ COMMON_FALSE_FLAGS = {
     "runtime_score_changes": False,
     "runtime_direct_routing": False,
     "runtime_dtm_or_tablebase_lookup": False,
+    "hidden_python_controller": False,
     "gameplay_topology_mutation": False,
     "stage7_promotion_allowed": False,
     "stage8_training_allowed": False,
@@ -681,6 +682,12 @@ def build_payload() -> dict[str, Any]:
                     "post_success_refresh_scope"
                 )
             ),
+            "protected_plan_window_failure_contrast_runtime_direct_routing": readiness.get(
+                "protected_failure_contrast_gate", {}
+            ).get("runtime_direct_routing"),
+            "protected_plan_window_failure_contrast_hidden_python_controller": readiness.get(
+                "protected_failure_contrast_gate", {}
+            ).get("hidden_python_controller"),
             "protected_plan_window_failure_contrast_output_validation_status": failure_contrast_output_validation.get(
                 "decision", {}
             ).get("status"),
@@ -756,9 +763,15 @@ def build_payload() -> dict[str, Any]:
             "sequence_policy_underpowered_pilot_protected_failure_contrast_runtime_score_changes": underpowered_pilot.get(
                 "summary", {}
             ).get("protected_failure_contrast_runtime_score_changes"),
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_runtime_direct_routing": underpowered_pilot.get(
+                "summary", {}
+            ).get("protected_failure_contrast_runtime_direct_routing"),
             "sequence_policy_underpowered_pilot_protected_failure_contrast_runtime_dtm_or_tablebase_lookup": underpowered_pilot.get(
                 "summary", {}
             ).get("protected_failure_contrast_runtime_dtm_or_tablebase_lookup"),
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_hidden_python_controller": underpowered_pilot.get(
+                "summary", {}
+            ).get("protected_failure_contrast_hidden_python_controller"),
             "sequence_policy_underpowered_pilot_protected_failure_contrast_gameplay_topology_mutation": underpowered_pilot.get(
                 "summary", {}
             ).get("protected_failure_contrast_gameplay_topology_mutation"),
@@ -779,6 +792,12 @@ def build_payload() -> dict[str, Any]:
             "stage8_training_readiness_protected_failure_contrast_post_success_refresh_required": stage8_review.get(
                 "requirements", {}
             ).get("protected_failure_contrast_post_success_refresh_required"),
+            "stage8_training_readiness_protected_failure_contrast_runtime_direct_routing": stage8_review.get(
+                "requirements", {}
+            ).get("protected_failure_contrast_runtime_direct_routing"),
+            "stage8_training_readiness_protected_failure_contrast_hidden_python_controller": stage8_review.get(
+                "requirements", {}
+            ).get("protected_failure_contrast_hidden_python_controller"),
             "stage7_post_label_outcome_status": post_label_review.get("decision", {}).get(
                 "status"
             ),
@@ -797,6 +816,12 @@ def build_payload() -> dict[str, Any]:
             "stage7_post_label_outcome_protected_failure_contrast_post_success_refresh_script": post_label_review.get(
                 "summary", {}
             ).get("protected_failure_contrast_post_success_refresh_script"),
+            "stage7_post_label_outcome_protected_failure_contrast_runtime_direct_routing": post_label_review.get(
+                "summary", {}
+            ).get("protected_failure_contrast_runtime_direct_routing"),
+            "stage7_post_label_outcome_protected_failure_contrast_hidden_python_controller": post_label_review.get(
+                "summary", {}
+            ).get("protected_failure_contrast_hidden_python_controller"),
             "stage7_label_distribution_review_status": label_distribution_review.get(
                 "decision", {}
             ).get("status"),

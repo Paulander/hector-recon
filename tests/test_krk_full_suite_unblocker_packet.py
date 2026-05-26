@@ -123,6 +123,9 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     assert len(primary["scope"]["expected_readiness_fingerprint"]) == 64
     assert primary["scope"]["timed_out_job_count"] == 0
     assert primary["scope"]["post_success_refresh"] == "full_passive_krk_suite_gate_stack"
+    assert primary["scope"]["runtime_behavior_changed"] is False
+    assert primary["scope"]["runtime_direct_routing"] is False
+    assert primary["scope"]["hidden_python_controller"] is False
     assert primary["scope"]["stage7_training_rows"] == 0
     assert primary["scope"]["stage7_promotion_allowed"] is False
     assert primary["scope"]["stage8_training_allowed"] is False
@@ -438,6 +441,8 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
     assert "timed_out_job_count: `0`" in rendered
     assert "post_success_refresh: `full_passive_krk_suite_gate_stack`" in rendered
     assert "runtime_behavior_changed: `False`" in rendered
+    assert "runtime_direct_routing: `False`" in rendered
+    assert "hidden_python_controller: `False`" in rendered
     assert "stage7_training_rows: `0`" in rendered
     assert "stage7_promotion_allowed: `False`" in rendered
     assert "stage8_training_allowed: `False`" in rendered

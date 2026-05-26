@@ -46,7 +46,10 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
     assert boundaries["violation_count"] == 0
     assert boundaries["runtime_behavior_changed"] is False
     assert boundaries["runtime_selector_implemented"] is False
+    assert boundaries["runtime_score_changes"] is False
+    assert boundaries["runtime_direct_routing"] is False
     assert boundaries["runtime_dtm_or_tablebase_lookup"] is False
+    assert boundaries["hidden_python_controller"] is False
     assert boundaries["gameplay_topology_mutation"] is False
 
 
@@ -261,7 +264,9 @@ def test_full_suite_readiness_identifies_current_gate():
     assert protected_failure_contrast["runtime_defaults_changed"] is False
     assert protected_failure_contrast["runtime_selector_implemented"] is False
     assert protected_failure_contrast["runtime_score_changes"] is False
+    assert protected_failure_contrast["runtime_direct_routing"] is False
     assert protected_failure_contrast["runtime_dtm_or_tablebase_lookup"] is False
+    assert protected_failure_contrast["hidden_python_controller"] is False
     assert protected_failure_contrast["gameplay_topology_mutation"] is False
     assert protected_failure_contrast["selector_training_allowed"] is False
     assert protected_failure_contrast["stage7_promotion_allowed"] is False
@@ -353,7 +358,9 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
     assert "runtime_defaults_changed: `False`" in rendered
     assert "runtime_selector_implemented: `False`" in rendered
     assert "runtime_score_changes: `False`" in rendered
+    assert "runtime_direct_routing: `False`" in rendered
     assert "runtime_dtm_or_tablebase_lookup: `False`" in rendered
+    assert "hidden_python_controller: `False`" in rendered
     assert "gameplay_topology_mutation: `False`" in rendered
     assert "selector_training_allowed: `False`" in rendered
     assert "stage7_promotion_allowed: `False`" in rendered

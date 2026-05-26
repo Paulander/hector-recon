@@ -37,7 +37,9 @@ def test_stage7_post_label_outcome_current_artifact_reports_sequence_policy_gap(
     assert payload["causal_status"] == "non_causal_post_label_outcome_review"
     assert payload["runtime_behavior_changed"] is False
     assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_direct_routing"] is False
     assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["hidden_python_controller"] is False
     assert payload["gameplay_topology_mutation"] is False
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
@@ -129,10 +131,12 @@ def test_stage7_post_label_outcome_current_artifact_reports_sequence_policy_gap(
         is False
     )
     assert payload["summary"]["protected_failure_contrast_runtime_score_changes"] is False
+    assert payload["summary"]["protected_failure_contrast_runtime_direct_routing"] is False
     assert (
         payload["summary"]["protected_failure_contrast_runtime_dtm_or_tablebase_lookup"]
         is False
     )
+    assert payload["summary"]["protected_failure_contrast_hidden_python_controller"] is False
     assert (
         payload["summary"]["protected_failure_contrast_gameplay_topology_mutation"]
         is False

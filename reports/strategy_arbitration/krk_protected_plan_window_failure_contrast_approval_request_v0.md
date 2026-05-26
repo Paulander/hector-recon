@@ -86,6 +86,7 @@ This is a passive request packet only. It does not create the approval receipt, 
   },
   "decision": {
     "gameplay_topology_mutation": false,
+    "hidden_python_controller": false,
     "label_run_allowed": false,
     "runtime_behavior_changed": false,
     "runtime_changes_allowed": false,

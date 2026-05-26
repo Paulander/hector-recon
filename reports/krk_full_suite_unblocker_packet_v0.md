@@ -121,6 +121,8 @@
 - timed_out_job_count: `0`
 - post_success_refresh: `full_passive_krk_suite_gate_stack`
 - runtime_behavior_changed: `False`
+- runtime_direct_routing: `False`
+- hidden_python_controller: `False`
 - stage7_training_rows: `0`
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`

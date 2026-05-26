@@ -133,6 +133,7 @@ def _approval_receipt(
             "runtime_score_changes": False,
             "runtime_direct_routing": False,
             "runtime_dtm_or_tablebase_lookup": False,
+            "hidden_python_controller": False,
             "gameplay_topology_mutation": False,
             "stage7_promotion_allowed": False,
             "stage8_training_allowed": False,
@@ -551,6 +552,7 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
     assert required["decision"]["runtime_score_changes"] is False
     assert required["decision"]["runtime_direct_routing"] is False
     assert required["decision"]["runtime_dtm_or_tablebase_lookup"] is False
+    assert required["decision"]["hidden_python_controller"] is False
     assert required["decision"]["gameplay_topology_mutation"] is False
     assert required["decision"]["stage7_promotion_allowed"] is False
     assert required["decision"]["stage8_training_allowed"] is False
@@ -1574,6 +1576,7 @@ def test_failure_contrast_runner_blocks_runtime_expansive_approval_receipt(monke
     expansive_receipt["decision"]["selector_allowed"] = True
     expansive_receipt["decision"]["runtime_selector_implemented"] = True
     expansive_receipt["decision"]["runtime_dtm_or_tablebase_lookup"] = True
+    expansive_receipt["decision"]["hidden_python_controller"] = True
     expansive_receipt["decision"]["gameplay_topology_mutation"] = True
     monkeypatch.setattr(_runner, "_load_optional", lambda _path: expansive_receipt)
     monkeypatch.setattr(
@@ -1618,6 +1621,9 @@ def test_failure_contrast_runner_blocks_runtime_expansive_approval_receipt(monke
         "execution_blockers"
     ]
     assert "approval_receipt_must_not_allow_runtime_dtm_or_tablebase_lookup" in payload[
+        "execution_blockers"
+    ]
+    assert "approval_receipt_must_not_allow_hidden_python_controller" in payload[
         "execution_blockers"
     ]
     assert "approval_receipt_must_not_allow_gameplay_topology_mutation" in payload[

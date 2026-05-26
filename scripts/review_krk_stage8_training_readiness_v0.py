@@ -40,6 +40,7 @@ COMMON_FALSE_FLAGS = {
     "runtime_score_changes": False,
     "runtime_direct_routing": False,
     "runtime_dtm_or_tablebase_lookup": False,
+    "hidden_python_controller": False,
     "gameplay_topology_mutation": False,
     "stage7_promotion_allowed": False,
     "stage8_training_allowed": False,
@@ -272,8 +273,14 @@ def build_payload(
             "protected_failure_contrast_runtime_score_changes": (
                 protected_failure_contrast.get("runtime_score_changes", False)
             ),
+            "protected_failure_contrast_runtime_direct_routing": (
+                protected_failure_contrast.get("runtime_direct_routing", False)
+            ),
             "protected_failure_contrast_runtime_dtm_or_tablebase_lookup": (
                 protected_failure_contrast.get("runtime_dtm_or_tablebase_lookup", False)
+            ),
+            "protected_failure_contrast_hidden_python_controller": (
+                protected_failure_contrast.get("hidden_python_controller", False)
             ),
             "protected_failure_contrast_gameplay_topology_mutation": (
                 protected_failure_contrast.get("gameplay_topology_mutation", False)

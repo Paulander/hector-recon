@@ -42,6 +42,7 @@ def test_gate_advancement_artifact_is_passive_and_boundary_clean():
     assert payload["runtime_score_changes"] is False
     assert payload["runtime_direct_routing"] is False
     assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["hidden_python_controller"] is False
     assert payload["gameplay_topology_mutation"] is False
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
@@ -218,6 +219,14 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         == "full_passive_krk_suite_gate_stack"
     )
     assert (
+        payload["summary"]["protected_plan_window_failure_contrast_runtime_direct_routing"]
+        is False
+    )
+    assert (
+        payload["summary"]["protected_plan_window_failure_contrast_hidden_python_controller"]
+        is False
+    )
+    assert (
         payload["summary"]["protected_plan_window_failure_contrast_output_validation_status"]
         == "protected_plan_window_failure_contrast_outputs_validation_pending"
     )
@@ -324,7 +333,19 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     )
     assert (
         payload["summary"][
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_runtime_direct_routing"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
             "sequence_policy_underpowered_pilot_protected_failure_contrast_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_hidden_python_controller"
         ]
         is False
     )
@@ -368,6 +389,18 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         is True
     )
     assert (
+        payload["summary"][
+            "stage8_training_readiness_protected_failure_contrast_runtime_direct_routing"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "stage8_training_readiness_protected_failure_contrast_hidden_python_controller"
+        ]
+        is False
+    )
+    assert (
         payload["summary"]["stage7_post_label_outcome_status"]
         == "post_label_outcome_waiting_on_explicit_protected_failure_contrast_collection"
     )
@@ -398,6 +431,18 @@ def test_gate_advancement_writer_includes_all_passive_steps():
             "stage7_post_label_outcome_protected_failure_contrast_post_success_refresh_script"
         ]
         == "scripts/advance_krk_suite_from_current_gates_v0.py"
+    )
+    assert (
+        payload["summary"][
+            "stage7_post_label_outcome_protected_failure_contrast_runtime_direct_routing"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "stage7_post_label_outcome_protected_failure_contrast_hidden_python_controller"
+        ]
+        is False
     )
     assert (
         payload["summary"]["stage7_label_distribution_review_status"]
