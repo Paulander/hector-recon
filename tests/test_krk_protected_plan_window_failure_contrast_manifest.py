@@ -645,6 +645,42 @@ def test_failure_contrast_approval_request_uses_runner_job_scope():
     assert scope["refresh_after_run"] is True
 
 
+def test_failure_contrast_runner_blocks_malformed_receipt_sections():
+    blockers = _runner._approval_receipt_blockers(
+        receipt={
+            "schema_version": _runner.APPROVAL_SCHEMA_VERSION,
+            "approval_id": "approve_protected_plan_window_failure_contrast_collection",
+            "receipt_path": str(_runner.DEFAULT_APPROVAL_RECEIPT.relative_to(ROOT)),
+            "decision": ["not", "a", "mapping"],
+            "approval_scope": ["not", "a", "mapping"],
+        },
+        receipt_path=_runner.DEFAULT_APPROVAL_RECEIPT,
+        manifest={
+            "decision": {
+                "status": "protected_plan_window_failure_contrast_manifest_ready_for_review"
+            }
+        },
+        readiness={
+            "decision": {
+                "status": (
+                    "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+                )
+            },
+            "summary": _ready_execution_summary(),
+        },
+        job_count=1,
+        max_jobs=None,
+        job_timeout_seconds=900,
+        overwrite_existing_outputs=False,
+        refresh_after_run=True,
+    )
+
+    assert "approval_receipt_decision_invalid" in blockers
+    assert "approval_receipt_approval_scope_invalid" in blockers
+    assert "approval_receipt_status_not_approved" in blockers
+    assert "approval_receipt_job_count_mismatch" in blockers
+
+
 def test_failure_contrast_runner_fixture_blocks_without_review(monkeypatch):
     monkeypatch.setattr(
         _runner,

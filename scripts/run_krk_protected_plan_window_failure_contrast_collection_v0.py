@@ -390,40 +390,47 @@ def _approval_receipt_blockers(
         blockers.append("approval_receipt_schema_version_invalid")
     if receipt.get("approval_id") != "approve_protected_plan_window_failure_contrast_collection":
         blockers.append("approval_receipt_approval_id_invalid")
-    if receipt.get("decision", {}).get("status") != APPROVAL_STATUS:
+    decision = receipt.get("decision")
+    if not isinstance(decision, dict):
+        blockers.append("approval_receipt_decision_invalid")
+        decision = {}
+    if decision.get("status") != APPROVAL_STATUS:
         blockers.append("approval_receipt_status_not_approved")
-    if receipt.get("decision", {}).get("single_execution_only") is not True:
+    if decision.get("single_execution_only") is not True:
         blockers.append("approval_receipt_must_be_single_execution_only")
-    if receipt.get("decision", {}).get("runtime_changes_allowed") is not False:
+    if decision.get("runtime_changes_allowed") is not False:
         blockers.append("approval_receipt_must_not_allow_runtime_changes")
-    if receipt.get("decision", {}).get("label_run_allowed") is not False:
+    if decision.get("label_run_allowed") is not False:
         blockers.append("approval_receipt_must_not_allow_label_run")
-    if receipt.get("decision", {}).get("selector_allowed") is not False:
+    if decision.get("selector_allowed") is not False:
         blockers.append("approval_receipt_must_not_allow_selector")
-    if receipt.get("decision", {}).get("selector_training_allowed") is not False:
+    if decision.get("selector_training_allowed") is not False:
         blockers.append("approval_receipt_must_not_allow_selector_training")
-    if receipt.get("decision", {}).get("runtime_behavior_changed") is not False:
+    if decision.get("runtime_behavior_changed") is not False:
         blockers.append("approval_receipt_must_not_allow_runtime_behavior_change")
-    if receipt.get("decision", {}).get("runtime_defaults_changed") is not False:
+    if decision.get("runtime_defaults_changed") is not False:
         blockers.append("approval_receipt_must_not_allow_runtime_default_change")
-    if receipt.get("decision", {}).get("runtime_selector_implemented") is not False:
+    if decision.get("runtime_selector_implemented") is not False:
         blockers.append("approval_receipt_must_not_allow_runtime_selector")
-    if receipt.get("decision", {}).get("runtime_score_changes") is not False:
+    if decision.get("runtime_score_changes") is not False:
         blockers.append("approval_receipt_must_not_allow_runtime_score_changes")
-    if receipt.get("decision", {}).get("runtime_direct_routing") is not False:
+    if decision.get("runtime_direct_routing") is not False:
         blockers.append("approval_receipt_must_not_allow_runtime_direct_routing")
-    if receipt.get("decision", {}).get("runtime_dtm_or_tablebase_lookup") is not False:
+    if decision.get("runtime_dtm_or_tablebase_lookup") is not False:
         blockers.append("approval_receipt_must_not_allow_runtime_dtm_or_tablebase_lookup")
-    if receipt.get("decision", {}).get("gameplay_topology_mutation") is not False:
+    if decision.get("gameplay_topology_mutation") is not False:
         blockers.append("approval_receipt_must_not_allow_gameplay_topology_mutation")
-    if receipt.get("decision", {}).get("stage7_promotion_allowed") is not False:
+    if decision.get("stage7_promotion_allowed") is not False:
         blockers.append("approval_receipt_must_not_allow_stage7_promotion")
-    if receipt.get("decision", {}).get("stage8_training_allowed") is not False:
+    if decision.get("stage8_training_allowed") is not False:
         blockers.append("approval_receipt_must_not_allow_stage8_training")
 
     expected_manifest_fingerprint = readiness.get("summary", {}).get("manifest_fingerprint")
     expected_readiness_fingerprint = readiness.get("summary", {}).get("readiness_fingerprint")
-    approval_scope = receipt.get("approval_scope") or {}
+    approval_scope = receipt.get("approval_scope")
+    if not isinstance(approval_scope, dict):
+        blockers.append("approval_receipt_approval_scope_invalid")
+        approval_scope = {}
     if approval_scope.get("manifest_fingerprint") != expected_manifest_fingerprint:
         blockers.append("approval_receipt_manifest_fingerprint_mismatch")
     if approval_scope.get("readiness_fingerprint") != expected_readiness_fingerprint:
