@@ -53,7 +53,7 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
     assert payload["decision"]["stage8_training_allowed"] is False
 
     boundaries = payload["runtime_and_training_boundaries"]
-    assert boundaries["checked_flag_count"] >= 300
+    assert boundaries["checked_flag_count"] >= 330
     assert boundaries["violation_count"] == 0
     assert boundaries["runtime_behavior_changed"] is False
     assert boundaries["runtime_selector_implemented"] is False

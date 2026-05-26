@@ -22,11 +22,11 @@
     "stage8": "unchanged_blocked"
   },
   "approval_record": {
-    "approval_date": "2026-05-25T11:27:52+02:00",
+    "approval_date": "2026-05-26T17:08:39+02:00",
     "approval_kind": "user_explicit_rollback_aware_adoption",
     "approval_text_summary": "User approved continuing with rollback-aware retry1 adoption path."
   },
-  "created_at": "2026-05-25T11:27:52+02:00",
+  "created_at": "2026-05-26T17:08:39+02:00",
   "decision": {
     "adoption_mechanism": "tracked_active_stack_manifest",
     "clean_stack_adopted": true,
@@ -34,10 +34,13 @@
     "post_adoption_validation_required": true,
     "recommended_next_step": "run_or_record_post_adoption_validation"
   },
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "invariants": {
     "active_stack_reference_updated": true,
     "files_copied_or_replaced": false,
     "gameplay_topology_mutation": false,
+    "hidden_python_controller": false,
     "rollback_paths_preserved": true,
     "runtime_behavior_changed": false,
     "runtime_defaults_changed": false,
@@ -46,7 +49,9 @@
     "runtime_score_changes": false,
     "runtime_selector_implemented": false,
     "stage7_promotion": false,
-    "stage8_training": false
+    "stage7_promotion_allowed": false,
+    "stage8_training": false,
+    "stage8_training_allowed": false
   },
   "rollback_protected_stack": {
     "stage5_fence": {
@@ -69,10 +74,18 @@
     "A rollback must restore the previous protected topology/provider pointers without retraining.",
     "Stage 7 remains held-out/quarantined and cannot be included in the replacement stack."
   ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
   "schema_version": "krk_active_protected_stack.v0",
   "source_artifacts": [
     "reports/krk_clean_retrain_retry1_clean_stack_replacement_review_packet_v0.json",
     "reports/krk_clean_retrain_retry1_protected_stack_snapshot_manifest_v0.json"
   ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
   "status": "retry1_protected_stage5_6_stack_adopted_manifest_only"
 }

@@ -24,6 +24,19 @@ ACTIVE_MD = Path("reports/krk_active_protected_stack_v0.md")
 VALIDATION_JSON = Path("reports/krk_clean_stack_post_replacement_validation_v0.json")
 VALIDATION_MD = Path("reports/krk_clean_stack_post_replacement_validation_v0.md")
 
+COMMON_FALSE_FLAGS = {
+    "runtime_behavior_changed": False,
+    "runtime_defaults_changed": False,
+    "runtime_selector_implemented": False,
+    "runtime_score_changes": False,
+    "runtime_direct_routing": False,
+    "runtime_dtm_or_tablebase_lookup": False,
+    "hidden_python_controller": False,
+    "gameplay_topology_mutation": False,
+    "stage7_promotion_allowed": False,
+    "stage8_training_allowed": False,
+}
+
 
 def _load(path: Path) -> dict[str, Any]:
     payload = json.loads((ROOT / path).read_text(encoding="utf-8"))
@@ -61,9 +74,12 @@ def _common_invariants(*, adopted: bool) -> dict[str, bool]:
         "runtime_score_changes": False,
         "runtime_direct_routing": False,
         "runtime_dtm_or_tablebase_lookup": False,
+        "hidden_python_controller": False,
         "gameplay_topology_mutation": False,
         "stage7_promotion": False,
+        "stage7_promotion_allowed": False,
         "stage8_training": False,
+        "stage8_training_allowed": False,
     }
 
 
@@ -82,6 +98,7 @@ def build_active_stack(now: str) -> dict[str, Any]:
         "schema_version": "krk_active_protected_stack.v0",
         "created_at": now,
         "status": "retry1_protected_stage5_6_stack_adopted_manifest_only",
+        **COMMON_FALSE_FLAGS,
         "adoption_scope": {
             "stage5": "retry1_fence_handoff",
             "stage6": "retry1_drive_overlay_composed",
@@ -137,6 +154,7 @@ def build_validation(now: str, active: dict[str, Any]) -> dict[str, Any]:
             if validation_passed
             else "clean_stack_adopted_validation_failed"
         ),
+        **COMMON_FALSE_FLAGS,
         "source_artifacts": [
             str(ACTIVE_JSON),
             str(STAGE4_REVIEW),

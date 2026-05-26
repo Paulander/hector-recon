@@ -1,8 +1,8 @@
 {
   "causal_status": "non_causal_label_manifest_review_only",
   "current_gap": {
-    "clean_sequence_hard_negatives_have": 8,
-    "clean_sequence_success_controls_have": 2,
+    "clean_sequence_hard_negatives_have": 39,
+    "clean_sequence_success_controls_have": 11,
     "clean_sequence_success_controls_required": 5,
     "sampling_overlap_detected": true
   },
@@ -26,6 +26,7 @@
     "gameplay_topology_mutation"
   ],
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "jobs": [
     {
       "command": [

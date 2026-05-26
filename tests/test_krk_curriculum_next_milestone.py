@@ -122,8 +122,11 @@ def test_retry1_active_stack_manifest_is_rollback_aware_and_non_destructive():
     assert payload["invariants"]["active_stack_reference_updated"] is True
     assert payload["invariants"]["files_copied_or_replaced"] is False
     assert payload["invariants"]["rollback_paths_preserved"] is True
+    assert payload["hidden_python_controller"] is False
     assert payload["invariants"]["runtime_defaults_changed"] is False
+    assert payload["stage7_promotion_allowed"] is False
     assert payload["invariants"]["stage7_promotion"] is False
+    assert payload["stage8_training_allowed"] is False
     assert payload["invariants"]["stage8_training"] is False
 
 
@@ -146,5 +149,8 @@ def test_retry1_post_replacement_validation_passes_without_runtime_changes():
     assert payload["invariants"]["runtime_behavior_changed"] is False
     assert payload["invariants"]["runtime_defaults_changed"] is False
     assert payload["invariants"]["files_copied_or_replaced"] is False
+    assert payload["hidden_python_controller"] is False
+    assert payload["stage7_promotion_allowed"] is False
     assert payload["invariants"]["stage7_promotion"] is False
+    assert payload["stage8_training_allowed"] is False
     assert payload["invariants"]["stage8_training"] is False

@@ -29,6 +29,19 @@ FOCUSED_COMMAND = [
     "tests/test_endgame_components.py",
 ]
 
+COMMON_FALSE_FLAGS = {
+    "runtime_behavior_changed": False,
+    "runtime_defaults_changed": False,
+    "runtime_selector_implemented": False,
+    "runtime_score_changes": False,
+    "runtime_direct_routing": False,
+    "runtime_dtm_or_tablebase_lookup": False,
+    "hidden_python_controller": False,
+    "gameplay_topology_mutation": False,
+    "stage7_promotion_allowed": False,
+    "stage8_training_allowed": False,
+}
+
 
 def _load(path: Path) -> dict[str, Any]:
     payload = json.loads((ROOT / path).read_text(encoding="utf-8"))
@@ -43,6 +56,7 @@ def build_payload() -> dict[str, Any]:
         "schema_version": "krk_clean_retrain_retry1_preservation_checks.v0",
         "created_at": datetime.now().astimezone().isoformat(timespec="seconds"),
         "status": "retry1_m1_m4_and_bridge_preservation_checks_passed",
+        **COMMON_FALSE_FLAGS,
         "source_artifacts": [str(STAGE4_REVIEW)],
         "decision": {
             "stage4_caveat_control_review_passed": stage4.get("status")
@@ -85,9 +99,12 @@ def build_payload() -> dict[str, Any]:
             "runtime_score_changes": False,
             "runtime_direct_routing": False,
             "runtime_dtm_or_tablebase_lookup": False,
+            "hidden_python_controller": False,
             "gameplay_topology_mutation": False,
             "stage7_promotion": False,
+            "stage7_promotion_allowed": False,
             "stage8_training": False,
+            "stage8_training_allowed": False,
         },
     }
 

@@ -6,9 +6,9 @@ This is a reviewed label-run manifest only. It does not authorize execution by i
 
 ## Current Gap
 
-- clean_sequence_success_controls_have: `2`
+- clean_sequence_success_controls_have: `11`
 - clean_sequence_success_controls_required: `5`
-- clean_sequence_hard_negatives_have: `8`
+- clean_sequence_hard_negatives_have: `39`
 - sampling_overlap_detected: `True`
 
 ## Sampling Policy

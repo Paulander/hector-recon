@@ -443,6 +443,7 @@
   "runtime_defaults_changed": false,
   "runtime_direct_routing": false,
   "runtime_dtm_or_tablebase_lookup": false,
+  "hidden_python_controller": false,
   "runtime_score_changes": false,
   "runtime_selector_implemented": false,
   "schema_version": "stage7_diverse_clean_sampling_runner.v0",

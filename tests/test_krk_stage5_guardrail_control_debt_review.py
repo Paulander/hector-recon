@@ -324,8 +324,12 @@ def test_retry1_preservation_checks_artifact_passes_but_does_not_replace():
     assert payload["test_run"]["result"] == "passed"
     assert payload["test_run"]["passed_count"] == 78
     assert "protected_stack_snapshot_manifest" in payload["remaining_required_checks"]
+    assert payload["runtime_behavior_changed"] is False
     assert payload["invariants"]["runtime_defaults_changed"] is False
+    assert payload["hidden_python_controller"] is False
     assert payload["invariants"]["gameplay_topology_mutation"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
 
 
 def test_retry1_snapshot_manifest_records_paths_without_replacement():
