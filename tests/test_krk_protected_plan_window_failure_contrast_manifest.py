@@ -38,6 +38,10 @@ _runner = _load_module(
     "run_krk_protected_plan_window_failure_contrast_collection_v0",
     "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py",
 )
+_approval_request = _load_module(
+    "write_krk_protected_plan_window_failure_contrast_approval_request_v0",
+    "scripts/write_krk_protected_plan_window_failure_contrast_approval_request_v0.py",
+)
 
 
 def _read_report(path: str) -> dict:
@@ -321,6 +325,105 @@ def test_failure_contrast_runner_is_dry_run_ready_without_authorizing_collection
     assert payload["decision"]["stage7_promotion_allowed"] is False
     assert payload["decision"]["stage8_training_allowed"] is False
     assert all(row["would_execute"] is False for row in payload["commands"])
+
+
+def test_failure_contrast_approval_request_is_not_an_approval_receipt():
+    payload = _read_report(
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
+    )
+
+    assert (
+        payload["schema_version"]
+        == "krk_protected_plan_window_failure_contrast_approval_request.v0"
+    )
+    assert payload["causal_status"] == "non_causal_approval_request_packet"
+    assert payload["approval_receipt_path"] == (
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
+    )
+    assert payload["approval_receipt_created"] is False
+    assert payload["approval_receipt_present"] is False
+    assert payload["approval_receipt_valid"] is False
+    assert payload["approval_receipt_blockers"] == ["approval_receipt_missing"]
+    assert payload["summary"]["job_count"] == 6
+    assert payload["summary"]["runner_execution_requested"] is False
+    assert payload["summary"]["runner_processed_job_count"] == 0
+    assert payload["summary"]["runner_executed_job_count"] == 0
+    assert payload["summary"]["approval_receipt_required"] is True
+    assert len(payload["summary"]["manifest_fingerprint"]) == 64
+    assert len(payload["summary"]["readiness_fingerprint"]) == 64
+    required = payload["required_receipt_if_user_approves"]
+    assert required["approval_id"] == "approve_protected_plan_window_failure_contrast_collection"
+    assert required["receipt_path"] == payload["approval_receipt_path"]
+    assert required["approval_scope"]["job_count"] == 6
+    assert (
+        required["approval_scope"]["manifest_fingerprint"]
+        == payload["summary"]["manifest_fingerprint"]
+    )
+    assert (
+        required["approval_scope"]["readiness_fingerprint"]
+        == payload["summary"]["readiness_fingerprint"]
+    )
+    assert required["decision"]["runtime_changes_allowed"] is False
+    assert required["decision"]["label_run_allowed"] is False
+    assert required["decision"]["selector_training_allowed"] is False
+    assert required["decision"]["stage7_promotion_allowed"] is False
+    assert required["decision"]["stage8_training_allowed"] is False
+    assert payload["decision"]["collection_run_allowed"] is False
+    assert payload["decision"]["label_run_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["selector_training_allowed"] is False
+    assert payload["decision"]["stage7_promotion_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
+
+
+def test_failure_contrast_approval_request_fixture_tracks_current_scope():
+    payload = _approval_request.build_payload(
+        manifest={
+            "decision": {"status": "protected_plan_window_failure_contrast_manifest_ready_for_review"},
+            "summary": {"job_count": 2},
+            "jobs": [{"job_id": "a"}, {"job_id": "b"}],
+        },
+        readiness={
+            "decision": {
+                "status": (
+                    "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+                )
+            },
+            "summary": {
+                "manifest_fingerprint": "m" * 64,
+                "readiness_fingerprint": "r" * 64,
+            },
+        },
+        runner={
+            "approval_receipt_path": (
+                "reports/strategy_arbitration/"
+                "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
+            ),
+            "execution_requested": False,
+            "decision": {"status": "protected_plan_window_failure_contrast_runner_dry_run_ready"},
+            "summary": {
+                "approval_receipt_present": False,
+                "approval_receipt_valid": False,
+                "approval_receipt_blockers": ["approval_receipt_missing"],
+                "processed_job_count": 0,
+                "executed_job_count": 0,
+            },
+        },
+    )
+
+    assert payload["approval_receipt_created"] is False
+    assert payload["required_receipt_if_user_approves"]["approval_scope"] == {
+        "manifest_fingerprint": "m" * 64,
+        "readiness_fingerprint": "r" * 64,
+        "job_count": 2,
+        "manifest_status": "protected_plan_window_failure_contrast_manifest_ready_for_review",
+        "readiness_status": (
+            "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+        ),
+    }
+    assert payload["decision"]["collection_run_allowed"] is False
 
 
 def test_failure_contrast_runner_fixture_blocks_without_review(monkeypatch):

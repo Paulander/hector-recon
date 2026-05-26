@@ -32,6 +32,9 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - protected_plan_window_failure_contrast_runner_status: `protected_plan_window_failure_contrast_runner_dry_run_ready`
 - protected_plan_window_failure_contrast_runner_processed_job_count: `0`
 - protected_plan_window_failure_contrast_runner_executed_job_count: `0`
+- protected_plan_window_failure_contrast_approval_request_status: `protected_plan_window_failure_contrast_approval_request_ready`
+- protected_plan_window_failure_contrast_approval_receipt_created: `False`
+- protected_plan_window_failure_contrast_approval_receipt_blockers: `['approval_receipt_missing']`
 - protected_plan_window_failure_contrast_output_validation_status: `protected_plan_window_failure_contrast_outputs_validation_pending`
 - protected_plan_window_failure_contrast_output_exists_count: `0`
 - protected_plan_window_failure_contrast_output_valid_count: `0`
@@ -76,6 +79,7 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - `protected_plan_window_failure_contrast_manifest_review` status=`protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval` labels=`False` runtime=`False` artifact_runtime=`False`
 - `protected_plan_window_failure_contrast_execution_readiness` status=`protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval` labels=`False` runtime=`False` artifact_runtime=`False`
 - `protected_plan_window_failure_contrast_runner` status=`protected_plan_window_failure_contrast_runner_dry_run_ready` labels=`False` runtime=`False` artifact_runtime=`False`
+- `protected_plan_window_failure_contrast_approval_request` status=`protected_plan_window_failure_contrast_approval_request_ready` labels=`False` runtime=`False` artifact_runtime=`False`
 - `protected_plan_window_failure_contrast_output_validation` status=`protected_plan_window_failure_contrast_outputs_validation_pending` labels=`False` runtime=`False` artifact_runtime=`False`
 - `protected_plan_window_failure_contrast_integration` status=`protected_plan_window_failure_contrast_integration_pending_outputs` labels=`False` runtime=`False` artifact_runtime=`False`
 - `sequence_policy_after_protected_failure_contrast_refresh` status=`sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs` labels=`False` runtime=`False` artifact_runtime=`False`

@@ -98,6 +98,7 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         "protected_plan_window_failure_contrast_manifest_review",
         "protected_plan_window_failure_contrast_execution_readiness",
         "protected_plan_window_failure_contrast_runner",
+        "protected_plan_window_failure_contrast_approval_request",
         "protected_plan_window_failure_contrast_output_validation",
         "protected_plan_window_failure_contrast_integration",
         "sequence_policy_after_protected_failure_contrast_refresh",
@@ -148,6 +149,17 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     )
     assert payload["summary"]["protected_plan_window_failure_contrast_runner_processed_job_count"] == 0
     assert payload["summary"]["protected_plan_window_failure_contrast_runner_executed_job_count"] == 0
+    assert (
+        payload["summary"]["protected_plan_window_failure_contrast_approval_request_status"]
+        == "protected_plan_window_failure_contrast_approval_request_ready"
+    )
+    assert (
+        payload["summary"]["protected_plan_window_failure_contrast_approval_receipt_created"]
+        is False
+    )
+    assert payload["summary"][
+        "protected_plan_window_failure_contrast_approval_receipt_blockers"
+    ] == ["approval_receipt_missing"]
     assert (
         payload["summary"]["protected_plan_window_failure_contrast_output_validation_status"]
         == "protected_plan_window_failure_contrast_outputs_validation_pending"

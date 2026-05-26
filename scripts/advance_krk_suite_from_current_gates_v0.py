@@ -128,6 +128,16 @@ PASSIVE_STEPS = [
         ),
     },
     {
+        "step_id": "protected_plan_window_failure_contrast_approval_request",
+        "script": (
+            "scripts/write_krk_protected_plan_window_failure_contrast_approval_request_v0.py"
+        ),
+        "output_json": (
+            "reports/strategy_arbitration/"
+            "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
+        ),
+    },
+    {
         "step_id": "protected_plan_window_failure_contrast_output_validation",
         "script": "scripts/validate_krk_protected_plan_window_failure_contrast_outputs_v0.py",
         "output_json": (
@@ -330,6 +340,10 @@ def build_payload() -> dict[str, Any]:
     )
     failure_contrast_runner = _load_json(
         "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_runner_v0.json"
+    )
+    failure_contrast_approval_request = _load_json(
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
     )
     failure_contrast_output_validation = _load_json(
         "reports/strategy_arbitration/"
@@ -534,6 +548,15 @@ def build_payload() -> dict[str, Any]:
             "protected_plan_window_failure_contrast_runner_executed_job_count": failure_contrast_runner.get(
                 "summary", {}
             ).get("executed_job_count"),
+            "protected_plan_window_failure_contrast_approval_request_status": failure_contrast_approval_request.get(
+                "decision", {}
+            ).get("status"),
+            "protected_plan_window_failure_contrast_approval_receipt_created": failure_contrast_approval_request.get(
+                "approval_receipt_created"
+            ),
+            "protected_plan_window_failure_contrast_approval_receipt_blockers": failure_contrast_approval_request.get(
+                "approval_receipt_blockers"
+            ),
             "protected_plan_window_failure_contrast_output_validation_status": failure_contrast_output_validation.get(
                 "decision", {}
             ).get("status"),
