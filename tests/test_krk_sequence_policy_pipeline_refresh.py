@@ -42,6 +42,7 @@ def test_sequence_policy_pipeline_refresh_preserves_boundaries():
     assert payload["runtime_score_changes"] is False
     assert payload["runtime_direct_routing"] is False
     assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["hidden_python_controller"] is False
     assert payload["gameplay_topology_mutation"] is False
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
@@ -98,6 +99,7 @@ def test_sequence_policy_pipeline_refresh_ready_status_logic():
         "runtime_score_changes": False,
         "runtime_direct_routing": False,
         "runtime_dtm_or_tablebase_lookup": False,
+        "hidden_python_controller": False,
         "gameplay_topology_mutation": False,
         "stage7_promotion_allowed": False,
         "stage8_training_allowed": False,

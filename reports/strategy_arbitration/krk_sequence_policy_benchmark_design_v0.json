@@ -72,6 +72,7 @@
     "status": "sequence_policy_benchmark_design_ready_non_causal"
   },
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "passive_design_without_new_labels": {
     "allowed_work": [
       "refine objective definitions against existing non-causal benchmark rows",

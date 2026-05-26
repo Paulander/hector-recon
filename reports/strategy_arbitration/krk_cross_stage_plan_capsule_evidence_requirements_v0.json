@@ -39,6 +39,7 @@
     "status": "cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark"
   },
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "non_causal_collection_options": [
     {
       "description": "recover plan-window terms from existing protected Stage 4/5/6 traces if available",
