@@ -282,9 +282,18 @@ def build_payload(
     post_failure_contrast_sequence_refresh_summary = (
         post_failure_contrast_sequence_refresh.get("summary") or {}
     )
-    failure_contrast_ready_for_collection = (
+    failure_contrast_manifest_review_passed = (
         failure_contrast_manifest_review.get("decision", {}).get("status")
         == "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
+    )
+    failure_contrast_approval_request_ready = (
+        failure_contrast_approval_request.get("decision", {}).get("status")
+        == "protected_plan_window_failure_contrast_approval_request_ready"
+        and failure_contrast_approval_request_summary.get("request_ready") is True
+        and not (failure_contrast_approval_request.get("blockers") or [])
+    )
+    failure_contrast_ready_for_collection = (
+        failure_contrast_manifest_review_passed and failure_contrast_approval_request_ready
     )
     failure_contrast_command = (
         "UV_CACHE_DIR=/tmp/uv-cache uv run python "
@@ -507,8 +516,9 @@ def build_payload(
         approval_options.append(
             {
                 "option_id": "approve_protected_plan_window_failure_contrast_collection"
-            if failure_contrast_manifest_review.get("decision", {}).get("status")
-            == "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
+            if failure_contrast_ready_for_collection
+            else "repair_protected_failure_contrast_approval_request_scope"
+            if failure_contrast_manifest_review_passed
             else "review_protected_plan_window_failure_contrast_manifest"
             if failure_contrast_manifest.get("decision", {}).get("status")
             == "protected_plan_window_failure_contrast_manifest_ready_for_review"
@@ -520,10 +530,14 @@ def build_payload(
             else "defer_runtime_and_labels_review_cross_stage_plan_capsule_evidence",
             "artifact": (
                 "reports/strategy_arbitration/"
+                "krk_protected_plan_window_failure_contrast_approval_request_v0.md"
+            )
+            if failure_contrast_manifest_review_passed and not failure_contrast_ready_for_collection
+            else (
+                "reports/strategy_arbitration/"
                 "krk_protected_plan_window_failure_contrast_manifest_review_v0.md"
             )
-            if failure_contrast_manifest_review.get("decision", {}).get("status")
-            == "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
+            if failure_contrast_ready_for_collection
             else (
                 "reports/strategy_arbitration/"
                 "krk_protected_plan_window_failure_contrast_manifest_v0.md"
@@ -547,6 +561,8 @@ def build_payload(
             or sequence_policy_status,
             "what_it_allows": "explicitly approved bounded observation-only protected plan-window failure-contrast collection"
             if failure_contrast_ready_for_collection
+            else "non-causal protected failure-contrast approval-request scope repair only"
+            if failure_contrast_manifest_review_passed
             else "non-causal protected plan-window failure-contrast manifest review only"
             if failure_contrast_manifest.get("decision", {}).get("status")
             == "protected_plan_window_failure_contrast_manifest_ready_for_review"
@@ -563,7 +579,7 @@ def build_payload(
                 "reports/strategy_arbitration/"
                 "krk_protected_plan_window_failure_contrast_approval_request_v0.md"
             )
-            if failure_contrast_ready_for_collection
+            if failure_contrast_manifest_review_passed
             else None,
             "safety_scope": (
                 {
@@ -720,7 +736,7 @@ def build_payload(
                     "stage7_promotion_allowed": False,
                     "stage8_training_allowed": False,
                 }
-                if failure_contrast_ready_for_collection
+                if failure_contrast_manifest_review_passed
                 else None
             ),
             "what_it_does_not_allow": [
@@ -736,8 +752,9 @@ def build_payload(
                 "Stage 8 training",
             ],
             "recommended_if": "manifest review passed and you want to collect bounded observation-only failure contrasts"
-            if failure_contrast_manifest_review.get("decision", {}).get("status")
-            == "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
+            if failure_contrast_ready_for_collection
+            else "approval request scope is blocked; repair blockers before protected collection can be approved"
+            if failure_contrast_manifest_review_passed
             else "benchmark review found sparse protected plan-window failure evidence"
             if failure_contrast_plan.get("decision", {}).get("status")
             == "protected_plan_window_failure_contrast_plan_ready_pending_explicit_collection_approval"
@@ -1060,8 +1077,9 @@ def build_payload(
             )
             if failure_contrast_integration_ready
             else "wait_for_explicit_protected_plan_window_failure_contrast_collection_approval"
-            if failure_contrast_manifest_review.get("decision", {}).get("status")
-            == "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
+            if failure_contrast_ready_for_collection
+            else "repair_protected_failure_contrast_approval_request_scope"
+            if failure_contrast_manifest_review_passed
             else "review_protected_plan_window_failure_contrast_manifest"
             if failure_contrast_manifest.get("decision", {}).get("status")
             == "protected_plan_window_failure_contrast_manifest_ready_for_review"
@@ -1079,6 +1097,8 @@ def build_payload(
             if sequence_forbidden_training_or_runtime_inputs
             else "create_matching_approval_receipt_then_execute_bounded_protected_plan_window_failure_contrast_collection_from_reviewed_manifest"
             if failure_contrast_ready_for_collection
+                else "not_applicable_pending_protected_failure_contrast_approval_request_repair"
+            if failure_contrast_manifest_review_passed
                 else "not_applicable_pending_protected_failure_contrast_manifest_review"
             ),
             "preferred_next_if_user_approves_labels": "not_applicable_stage7_success_gate_closed"

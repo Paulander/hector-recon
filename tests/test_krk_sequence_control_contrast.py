@@ -698,6 +698,58 @@ def test_current_control_plane_gate_routes_forbidden_sequence_inputs_to_repair()
     assert payload["decision"]["selector_training_allowed"] is False
 
 
+def test_current_control_plane_gate_blocks_collection_when_approval_request_blocked():
+    payload = _current_gate.build_payload(
+        failure_contrast_approval_request={
+            "approval_receipt_created": False,
+            "approval_receipt_blockers": ["approval_receipt_missing"],
+            "blockers": ["full_suite_readiness_audit_not_clean"],
+            "decision": {
+                "status": "protected_plan_window_failure_contrast_approval_request_blocked"
+            },
+            "summary": {
+                "request_ready": False,
+                "request_blockers": ["full_suite_readiness_audit_not_clean"],
+                "post_success_refresh_required": True,
+                "post_success_refresh_script": (
+                    "scripts/advance_krk_suite_from_current_gates_v0.py"
+                ),
+                "post_success_refresh_scope": "full_passive_krk_suite_gate_stack",
+            },
+        }
+    )
+
+    option_ids = {option["option_id"] for option in payload["approval_options"]}
+    assert "approve_protected_plan_window_failure_contrast_collection" not in option_ids
+    assert "repair_protected_failure_contrast_approval_request_scope" in option_ids
+    repair_option = [
+        option
+        for option in payload["approval_options"]
+        if option["option_id"] == "repair_protected_failure_contrast_approval_request_scope"
+    ][0]
+    assert repair_option["command_if_explicitly_approved"] is None
+    assert (
+        repair_option["approval_request_artifact"]
+        == "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_approval_request_v0.md"
+    )
+    assert (
+        repair_option["safety_scope"]["approval_request_status"]
+        == "protected_plan_window_failure_contrast_approval_request_blocked"
+    )
+    assert repair_option["safety_scope"]["approval_request_blockers"] == [
+        "full_suite_readiness_audit_not_clean"
+    ]
+    assert (
+        payload["recommendation"]["preferred_next_if_no_user_approval"]
+        == "repair_protected_failure_contrast_approval_request_scope"
+    )
+    assert (
+        payload["recommendation"]["preferred_next_if_user_approves_collection"]
+        == "not_applicable_pending_protected_failure_contrast_approval_request_repair"
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+
+
 def test_current_control_plane_gate_blocks_collection_when_protected_stack_not_ready():
     payload = _current_gate.build_payload(
         full_suite_readiness={
