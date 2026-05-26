@@ -449,7 +449,7 @@ def _approval_receipt_blockers(
         if approval_scope.get(key) != readiness_summary.get(key):
             blockers.append(f"approval_receipt_{key}_mismatch")
     expected_receipt_path = str(receipt_path.relative_to(ROOT))
-    if receipt.get("receipt_path") not in {None, expected_receipt_path}:
+    if receipt.get("receipt_path") != expected_receipt_path:
         blockers.append("approval_receipt_path_mismatch")
     return blockers
 
