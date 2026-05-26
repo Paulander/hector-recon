@@ -117,6 +117,23 @@ def _load_json(path: str | Path) -> dict[str, Any]:
     return json.loads(full.read_text(encoding="utf-8"))
 
 
+def _find_approval_option(gate: dict[str, Any], option_id: str) -> dict[str, Any]:
+    for option in gate.get("approval_options") or []:
+        if option.get("option_id") == option_id:
+            return option
+    return {}
+
+
+def _find_first_approval_option(
+    gate: dict[str, Any], option_ids: tuple[str, ...]
+) -> dict[str, Any]:
+    for option_id in option_ids:
+        option = _find_approval_option(gate, option_id)
+        if option:
+            return option
+    return {}
+
+
 def run_refresh() -> dict[str, Any]:
     step_results = []
     for step in STEPS:
@@ -159,10 +176,32 @@ def run_refresh() -> dict[str, Any]:
         "reports/strategy_arbitration/krk_cross_stage_plan_capsule_evidence_requirements_v0.json"
     )
     gate = _load_json("reports/krk_current_control_plane_gate_v0.json")
+    protected_collection_option = _find_approval_option(
+        gate,
+        "approve_protected_plan_window_failure_contrast_collection",
+    )
+    protected_collection_blocking_option = _find_first_approval_option(
+        gate,
+        (
+            "repair_protected_stack_validation",
+            "repair_protected_failure_contrast_approval_request_scope",
+            "review_protected_plan_window_failure_contrast_execution_readiness",
+            "review_protected_plan_window_failure_contrast_manifest",
+            "review_protected_plan_window_failure_contrast_plan",
+        ),
+    )
+    protected_collection_option_available = bool(protected_collection_option)
+    protected_collection_command_available = bool(
+        protected_collection_option.get("command_if_explicitly_approved")
+    )
     input_summary = inputs.get("summary", {})
     benchmark_ready = bool(input_summary.get("benchmark_input_ready"))
     benchmark_decision = benchmark.get("decision", {})
     benchmark_review_decision = benchmark_review.get("decision", {})
+    protected_collection_recommended = (
+        benchmark_review_decision.get("recommended_next_step")
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+    )
     benchmark_review_blockers = benchmark_review.get("blockers") or []
     probe_step = next(
         (step for step in step_results if step["step_id"] == "sequence_policy_input_probe"),
@@ -194,8 +233,17 @@ def run_refresh() -> dict[str, Any]:
         status = "sequence_policy_pipeline_refreshed_blocked_forbidden_training_or_runtime_rows"
         recommended_next_step = "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
     elif benchmark_ready:
-        status = "sequence_policy_pipeline_refreshed_ready_for_non_causal_benchmark_review"
-        recommended_next_step = benchmark_review_decision.get("recommended_next_step")
+        if protected_collection_recommended and not protected_collection_command_available:
+            status = (
+                "sequence_policy_pipeline_refreshed_blocked_pending_"
+                "protected_failure_contrast_control_plane_gate_review"
+            )
+            recommended_next_step = (
+                "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+            )
+        else:
+            status = "sequence_policy_pipeline_refreshed_ready_for_non_causal_benchmark_review"
+            recommended_next_step = benchmark_review_decision.get("recommended_next_step")
     elif not input_summary.get("stage7_clean_success_controls_met"):
         status = "sequence_policy_pipeline_refreshed_blocked_pending_stage7_success_controls"
         recommended_next_step = "run_explicitly_approved_stage7_diverse_clean_label_jobs"
@@ -256,6 +304,21 @@ def run_refresh() -> dict[str, Any]:
                 "recommended_next_step"
             ),
             "current_gate_status": gate.get("decision", {}).get("status"),
+            "current_control_plane_approval_option_ids": [
+                option.get("option_id") for option in gate.get("approval_options") or []
+            ],
+            "protected_plan_window_failure_contrast_collection_option_available": (
+                protected_collection_option_available
+            ),
+            "protected_plan_window_failure_contrast_collection_command_available": (
+                protected_collection_command_available
+            ),
+            "protected_plan_window_failure_contrast_collection_option_id": (
+                protected_collection_option.get("option_id")
+            ),
+            "protected_plan_window_failure_contrast_collection_blocked_by_option_id": (
+                protected_collection_blocking_option.get("option_id")
+            ),
         },
         "decision": {
             "status": status,

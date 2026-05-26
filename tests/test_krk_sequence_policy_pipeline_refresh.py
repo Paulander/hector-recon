@@ -70,6 +70,34 @@ def test_sequence_policy_pipeline_refresh_preserves_boundaries():
         == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
     assert (
+        "approve_protected_plan_window_failure_contrast_collection"
+        in payload["summary"]["current_control_plane_approval_option_ids"]
+    )
+    assert (
+        payload["summary"][
+            "protected_plan_window_failure_contrast_collection_option_available"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "protected_plan_window_failure_contrast_collection_command_available"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "protected_plan_window_failure_contrast_collection_option_id"
+        ]
+        == "approve_protected_plan_window_failure_contrast_collection"
+    )
+    assert (
+        payload["summary"][
+            "protected_plan_window_failure_contrast_collection_blocked_by_option_id"
+        ]
+        is None
+    )
+    assert (
         payload["decision"]["status"]
         == "sequence_policy_pipeline_refreshed_ready_for_non_causal_benchmark_review"
     )
@@ -251,3 +279,97 @@ def test_sequence_policy_pipeline_refresh_routes_forbidden_rows_to_repair(monkey
         "forbidden_training_or_runtime_input_blockers"
     ]
     assert payload["decision"]["selector_training_allowed"] is False
+
+
+def test_sequence_policy_pipeline_refresh_routes_missing_collection_option_to_gate_review(
+    monkeypatch,
+):
+    mapping = {
+        "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json": {
+            "summary": {"outputs_present_count": 8}
+        },
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json": {
+            "summary": {
+                "benchmark_input_ready": True,
+                "stage7_clean_success_controls": 5,
+                "stage7_clean_success_controls_required": 5,
+                "stage7_clean_success_controls_met": True,
+                "stage7_clean_failure_controls": 5,
+                "stage7_clean_failure_controls_required": 5,
+                "stage7_clean_failure_controls_met": True,
+                "protected_plan_window_evidence_met": True,
+                "selector_training_row_count": 0,
+                "runtime_authorization_row_count": 0,
+            }
+        },
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json": {
+            "preflight": {"blockers": []},
+            "decision": {
+                "status": "sequence_policy_benchmark_ready_non_causal_results_available"
+            },
+        },
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json": {
+            "blockers": [],
+            "decision": {
+                "status": "sequence_policy_benchmark_mixed_plan_window_underpowered",
+                "recommended_next_step": (
+                    "obtain_matching_approval_receipt_before_"
+                    "protected_failure_contrast_collection"
+                ),
+            },
+        },
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json": {
+            "decision": {"status": "sequence_policy_benchmark_design_ready_non_causal"},
+            "passive_design_without_new_labels": {"status": "fixture_passive"},
+        },
+        "reports/strategy_arbitration/krk_cross_stage_plan_capsule_evidence_requirements_v0.json": {
+            "decision": {"status": "fixture_cross_stage"}
+        },
+        "reports/krk_current_control_plane_gate_v0.json": {
+            "decision": {"status": "krk_control_plane_waiting_on_explicit_gate_choice"},
+            "approval_options": [
+                {
+                    "option_id": (
+                        "review_protected_plan_window_failure_contrast_execution_readiness"
+                    ),
+                    "command_if_explicitly_approved": None,
+                }
+            ],
+        },
+    }
+
+    monkeypatch.setattr(_refresh, "STEPS", [])
+    monkeypatch.setattr(_refresh, "_load_json", lambda path: mapping[str(path)])
+
+    payload = _refresh.run_refresh()
+
+    assert (
+        payload["decision"]["status"]
+        == "sequence_policy_pipeline_refreshed_blocked_pending_"
+        "protected_failure_contrast_control_plane_gate_review"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+    )
+    assert (
+        payload["summary"][
+            "protected_plan_window_failure_contrast_collection_option_available"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "protected_plan_window_failure_contrast_collection_command_available"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "protected_plan_window_failure_contrast_collection_blocked_by_option_id"
+        ]
+        == "review_protected_plan_window_failure_contrast_execution_readiness"
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["label_run_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False

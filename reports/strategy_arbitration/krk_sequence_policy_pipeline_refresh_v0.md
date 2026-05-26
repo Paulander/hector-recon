@@ -27,6 +27,11 @@ This passive refresh reruns integration, input assembly, probe, benchmark, and g
 - forbidden_training_or_runtime_input_blockers: `[]`
 - sequence_policy_benchmark_review_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - current_gate_status: `krk_control_plane_waiting_on_explicit_gate_choice`
+- current_control_plane_approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'approve_protected_plan_window_failure_contrast_collection']`
+- protected_plan_window_failure_contrast_collection_option_available: `True`
+- protected_plan_window_failure_contrast_collection_command_available: `True`
+- protected_plan_window_failure_contrast_collection_option_id: `approve_protected_plan_window_failure_contrast_collection`
+- protected_plan_window_failure_contrast_collection_blocked_by_option_id: `None`
 
 ## Steps
 
