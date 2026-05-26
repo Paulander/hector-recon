@@ -7,7 +7,11 @@
       "why": "The sequence-policy benchmark is mixed/underpowered on protected plan-window failures; bounded observation-only collection is the current explicit gate."
     },
     "stage4_first_move_contrast_sandbox": {
+      "approval_request_artifact": "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json",
+      "approval_request_created": false,
+      "approval_request_status": "stage4_first_move_contrast_sandbox_approval_request_ready",
       "current_artifact_allows_implementation": false,
+      "implementation_authorized_by_approval_request": false,
       "ready_for_explicit_approval": true,
       "status": "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval",
       "why": "Stage 4 has a reviewed default-off first-move contrast sandbox scope, but implementation still requires explicit sandbox approval."
@@ -111,7 +115,7 @@
     "status": "retry1_protected_stage5_6_stack_adopted_manifest_only"
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 164,
+    "checked_flag_count": 173,
     "gameplay_topology_mutation": false,
     "runtime_behavior_changed": false,
     "runtime_defaults_changed": false,
@@ -158,6 +162,7 @@
     "sequence_benchmark_review": "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
     "sequence_pipeline_refresh": "reports/strategy_arbitration/krk_sequence_policy_pipeline_refresh_v0.json",
     "stage4_caveat_unblocker": "reports/krk_stage4_caveat_unblocker_packet_v0.json",
+    "stage4_sandbox_approval_request": "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json",
     "stage7_sampling_integration": "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json",
     "stage7_sampling_output_validation": "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json",
     "stage7_sampling_runner": "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json"
@@ -199,8 +204,12 @@
       "status": "protected_component_from_current_brief"
     },
     "stage4": {
+      "approval_request_artifact": "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json",
+      "approval_request_created": false,
+      "approval_request_status": "stage4_first_move_contrast_sandbox_approval_request_ready",
       "blocker": "stage4 h40 caveat remains separate guardrail/control debt",
       "implementation_allowed_by_current_artifact": false,
+      "implementation_authorized_by_approval_request": false,
       "ready_for_current_suite": false,
       "ready_for_explicit_runtime_approval": true,
       "status": "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval"

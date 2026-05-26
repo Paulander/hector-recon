@@ -94,6 +94,10 @@
 - id: `stage4_first_move_contrast_sandbox`
 - status: `stage4_caveat_unblocker_ready_pending_explicit_runtime_approval`
 - purpose: Address the separate Stage 4 h40 caveat through a reviewed default-off sandbox path.
+- approval_request_artifact: `reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md`
+- approval_request_status: `stage4_first_move_contrast_sandbox_approval_request_ready`
+- approval_request_created: `False`
+- implementation_authorized_by_approval_request: `False`
 - why_secondary: This may reduce Stage 4 debt, but it does not directly fill the protected plan-window failure-contrast sparsity now blocking sequence-policy review.
 
 ## Low-Value Safe Work Remaining

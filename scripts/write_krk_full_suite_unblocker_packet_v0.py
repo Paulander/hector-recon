@@ -111,6 +111,7 @@ def build_payload() -> dict[str, Any]:
     sequence = readiness["sequence_policy"]
     protected = readiness["protected_stack"]
     stage4_decision = stage4_unblocker.get("decision") or {}
+    stage4_current = stage4_unblocker.get("current_stage4_status") or {}
     sequence_forbidden_training_or_runtime_inputs = bool(
         sequence.get("forbidden_training_or_runtime_input_blocked")
     ) or (
@@ -217,6 +218,9 @@ def build_payload() -> dict[str, Any]:
             ),
             "stage4_gate": "reports/krk_current_control_plane_gate_v0.json",
             "stage4_unblocker": "reports/krk_stage4_caveat_unblocker_packet_v0.json",
+            "stage4_sandbox_approval_request": (
+                "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
+            ),
             "label_distribution_review": (
                 "reports/structural_candidates/"
                 "stage7_diverse_clean_label_distribution_review_v0.json"
@@ -609,6 +613,15 @@ def build_payload() -> dict[str, Any]:
             "id": "stage4_first_move_contrast_sandbox",
             "status": stage4_decision.get("status"),
             "purpose": "Address the separate Stage 4 h40 caveat through a reviewed default-off sandbox path.",
+            "approval_request_artifact": (
+                stage4_current.get("control_plane_approval_request_artifact")
+                or "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md"
+            ),
+            "approval_request_status": stage4_current.get("approval_request_status"),
+            "approval_request_created": stage4_current.get("approval_request_created"),
+            "implementation_authorized_by_approval_request": stage4_current.get(
+                "implementation_authorized_by_approval_request"
+            ),
             "why_secondary": (
                 "This may reduce Stage 4 debt, but it does not directly fill the protected "
                 "plan-window failure-contrast sparsity now blocking sequence-policy review."
@@ -747,6 +760,10 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- id: `{secondary['id']}`",
             f"- status: `{secondary['status']}`",
             f"- purpose: {secondary['purpose']}",
+            f"- approval_request_artifact: `{secondary['approval_request_artifact']}`",
+            f"- approval_request_status: `{secondary['approval_request_status']}`",
+            f"- approval_request_created: `{secondary['approval_request_created']}`",
+            f"- implementation_authorized_by_approval_request: `{secondary['implementation_authorized_by_approval_request']}`",
             f"- why_secondary: {secondary['why_secondary']}",
             "",
             "## Low-Value Safe Work Remaining",

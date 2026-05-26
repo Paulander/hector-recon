@@ -114,9 +114,13 @@
   },
   "schema_version": "krk_full_suite_unblocker_packet.v0",
   "secondary_unblocker": {
+    "approval_request_artifact": "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md",
+    "approval_request_created": false,
+    "approval_request_status": "stage4_first_move_contrast_sandbox_approval_request_ready",
     "approval_required": true,
     "id": "stage4_first_move_contrast_sandbox",
     "implementation_allowed_by_this_packet": false,
+    "implementation_authorized_by_approval_request": false,
     "purpose": "Address the separate Stage 4 h40 caveat through a reviewed default-off sandbox path.",
     "status": "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval",
     "why_secondary": "This may reduce Stage 4 debt, but it does not directly fill the protected plan-window failure-contrast sparsity now blocking sequence-policy review."
@@ -137,6 +141,7 @@
     "sequence_policy_after_protected_failure_contrast_refresh": "reports/strategy_arbitration/krk_sequence_policy_after_protected_failure_contrast_refresh_v0.json",
     "sequence_policy_benchmark_review": "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
     "stage4_gate": "reports/krk_current_control_plane_gate_v0.json",
+    "stage4_sandbox_approval_request": "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json",
     "stage4_unblocker": "reports/krk_stage4_caveat_unblocker_packet_v0.json",
     "stage7_runner": "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json"
   },

@@ -218,6 +218,15 @@ def test_unblocker_packet_keeps_stage4_as_secondary_gate():
 
     assert secondary["id"] == "stage4_first_move_contrast_sandbox"
     assert secondary["status"] == "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval"
+    assert secondary["approval_request_artifact"] == (
+        "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md"
+    )
+    assert (
+        secondary["approval_request_status"]
+        == "stage4_first_move_contrast_sandbox_approval_request_ready"
+    )
+    assert secondary["approval_request_created"] is False
+    assert secondary["implementation_authorized_by_approval_request"] is False
     assert secondary["approval_required"] is True
     assert secondary["implementation_allowed_by_this_packet"] is False
 
@@ -250,6 +259,12 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
         in rendered
     )
     assert "approval_receipt_created_by_request: `False`" in rendered
+    assert (
+        "approval_request_status: "
+        "`stage4_first_move_contrast_sandbox_approval_request_ready`"
+        in rendered
+    )
+    assert "implementation_authorized_by_approval_request: `False`" in rendered
     assert (
         "protected_plan_window_failure_contrast_approval_request_status: "
         "`protected_plan_window_failure_contrast_approval_request_ready`"

@@ -107,6 +107,15 @@ def test_full_suite_readiness_identifies_current_gate():
     )
     assert stage4["ready_for_explicit_runtime_approval"] is True
     assert stage4["implementation_allowed_by_current_artifact"] is False
+    assert stage4["approval_request_artifact"] == (
+        "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
+    )
+    assert (
+        stage4["approval_request_status"]
+        == "stage4_first_move_contrast_sandbox_approval_request_ready"
+    )
+    assert stage4["approval_request_created"] is False
+    assert stage4["implementation_authorized_by_approval_request"] is False
 
     assert (
         payload["decision"]["status"]
@@ -218,6 +227,18 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
         == "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval"
     )
     assert (
+        payload["approval_gates"]["stage4_first_move_contrast_sandbox"][
+            "approval_request_status"
+        ]
+        == "stage4_first_move_contrast_sandbox_approval_request_ready"
+    )
+    assert (
+        payload["approval_gates"]["stage4_first_move_contrast_sandbox"][
+            "implementation_authorized_by_approval_request"
+        ]
+        is False
+    )
+    assert (
         payload["approval_gates"]["protected_plan_window_failure_contrast_collection"][
             "ready_for_explicit_approval"
         ]
@@ -232,6 +253,12 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
         in rendered
     )
     assert "approval_receipt_created_by_request: `False`" in rendered
+    assert (
+        "approval_request_status: "
+        "`stage4_first_move_contrast_sandbox_approval_request_ready`"
+        in rendered
+    )
+    assert "approval_request_created: `False`" in rendered
     assert "label_run_allowed: `false`" in rendered
 
 

@@ -32,6 +32,9 @@
 
 - `stage1`: `protected_component_from_current_brief`
 - `stage4`: `stage4_caveat_unblocker_ready_pending_explicit_runtime_approval`
+  - approval_request_artifact: `reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json`
+  - approval_request_status: `stage4_first_move_contrast_sandbox_approval_request_ready`
+  - approval_request_created: `False`
 - `stage5`: `protected_retry1_stack_validated`
 - `stage6`: `protected_retry1_overlay_validated`
 - `stage7`: `held_out_challenge_quarantined`
@@ -115,5 +118,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `164`
+- checked_flag_count: `173`
 - violation_count: `0`

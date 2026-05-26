@@ -24,6 +24,9 @@ SOURCES = {
     "clean_stack_validation": "reports/krk_clean_stack_post_replacement_validation_v0.json",
     "preservation_checks": "reports/krk_clean_retrain_retry1_preservation_checks_v0.json",
     "stage4_caveat_unblocker": "reports/krk_stage4_caveat_unblocker_packet_v0.json",
+    "stage4_sandbox_approval_request": (
+        "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
+    ),
     "sequence_pipeline_refresh": (
         "reports/strategy_arbitration/krk_sequence_policy_pipeline_refresh_v0.json"
     ),
@@ -209,6 +212,7 @@ def build_payload() -> dict[str, Any]:
     clean = payloads["clean_stack_validation"]
     preservation = payloads["preservation_checks"]
     stage4_unblocker = payloads["stage4_caveat_unblocker"]
+    stage4_approval_request = payloads["stage4_sandbox_approval_request"]
     pipeline = payloads["sequence_pipeline_refresh"]
     benchmark = payloads["sequence_benchmark"]
     benchmark_review = payloads["sequence_benchmark_review"]
@@ -386,6 +390,7 @@ def build_payload() -> dict[str, Any]:
     stage4_ready_for_explicit_approval = (
         stage4_status == "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval"
     )
+    stage4_approval_request_decision = stage4_approval_request.get("decision") or {}
 
     stage_status = {
         "stage1": {
@@ -399,6 +404,16 @@ def build_payload() -> dict[str, Any]:
             "ready_for_explicit_runtime_approval": stage4_ready_for_explicit_approval,
             "implementation_allowed_by_current_artifact": stage4_decision.get(
                 "implementation_allowed_by_this_packet"
+            ),
+            "approval_request_artifact": (
+                "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
+            ),
+            "approval_request_status": stage4_approval_request_decision.get("status"),
+            "approval_request_created": stage4_approval_request.get(
+                "approval_request_created"
+            ),
+            "implementation_authorized_by_approval_request": stage4_approval_request.get(
+                "implementation_authorized_by_request"
             ),
         },
         "stage5": {
@@ -741,6 +756,18 @@ def build_payload() -> dict[str, Any]:
                     stage4_decision.get("implementation_allowed_by_this_packet")
                 ),
                 "status": stage4_status,
+                "approval_request_artifact": (
+                    "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
+                ),
+                "approval_request_status": stage4_approval_request_decision.get(
+                    "status"
+                ),
+                "approval_request_created": stage4_approval_request.get(
+                    "approval_request_created"
+                ),
+                "implementation_authorized_by_approval_request": (
+                    stage4_approval_request.get("implementation_authorized_by_request")
+                ),
                 "why": "Stage 4 has a reviewed default-off first-move contrast sandbox scope, but implementation still requires explicit sandbox approval.",
             },
             "stage8_training": {
@@ -811,6 +838,16 @@ def write_markdown(payload: dict[str, Any]) -> str:
     ]
     for stage, status in payload["stage_status"].items():
         lines.append(f"- `{stage}`: `{status['status']}`")
+        if stage == "stage4":
+            lines.append(
+                f"  - approval_request_artifact: `{status['approval_request_artifact']}`"
+            )
+            lines.append(
+                f"  - approval_request_status: `{status['approval_request_status']}`"
+            )
+            lines.append(
+                f"  - approval_request_created: `{status['approval_request_created']}`"
+            )
     lines.extend(
         [
             "",
