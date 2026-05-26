@@ -263,7 +263,7 @@ def test_sequence_policy_benchmark_design_routes_forbidden_rows_to_repair():
     assert payload["decision"]["selector_training_allowed"] is False
 
 
-def test_sequence_policy_benchmark_design_propagates_stage4_approval_request_blockers():
+def test_sequence_policy_benchmark_design_propagates_stage4_approval_request_not_ready():
     payload = _design.build_payload(
         contrast_probe={
             "readiness": {"stage4_first_move_contrast_sandbox_review_ready": True}
@@ -294,10 +294,11 @@ def test_sequence_policy_benchmark_design_propagates_stage4_approval_request_blo
         stage4_approval_request={
             "decision": {
                 "status": (
-                    "stage4_first_move_contrast_sandbox_approval_request_blocked"
+                    "stage4_first_move_contrast_sandbox_approval_request_ready"
                 )
             },
-            "blockers": ["full_suite_readiness_audit_not_clean"],
+            "blockers": [],
+            "approval_request_ready_for_runtime_approval": False,
         },
     )
 
@@ -309,13 +310,13 @@ def test_sequence_policy_benchmark_design_propagates_stage4_approval_request_blo
         payload["readiness"][
             "stage4_first_move_contrast_sandbox_approval_request_status"
         ]
-        == "stage4_first_move_contrast_sandbox_approval_request_blocked"
+        == "stage4_first_move_contrast_sandbox_approval_request_ready"
     )
     assert (
         payload["readiness"][
             "stage4_first_move_contrast_sandbox_approval_request_blockers"
         ]
-        == ["full_suite_readiness_audit_not_clean"]
+        == []
     )
     assert (
         payload["readiness"][
@@ -335,8 +336,6 @@ def test_sequence_policy_benchmark_design_propagates_stage4_approval_request_blo
         if item["item"] == "stage4_first_move_contrast_sandbox"
     ][0]
     assert stage4_pending["status"] == "approval_request_blocked_pending_repair"
-    assert stage4_pending["approval_request_blockers"] == [
-        "full_suite_readiness_audit_not_clean"
-    ]
+    assert stage4_pending["approval_request_blockers"] == []
     assert stage4_pending["approval_request_ready_for_runtime_approval"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False

@@ -736,14 +736,15 @@ def test_current_control_plane_gate_routes_forbidden_sequence_inputs_to_repair()
     assert payload["decision"]["selector_training_allowed"] is False
 
 
-def test_current_control_plane_gate_blocks_stage4_runtime_when_approval_request_blocked():
+def test_current_control_plane_gate_blocks_stage4_runtime_when_approval_request_not_ready():
     payload = _current_gate.build_payload(
         stage4_approval_request={
             "approval_request_created": False,
+            "approval_request_ready_for_runtime_approval": False,
             "implementation_authorized_by_request": False,
-            "blockers": ["full_suite_readiness_audit_not_clean"],
+            "blockers": [],
             "decision": {
-                "status": "stage4_first_move_contrast_sandbox_approval_request_blocked"
+                "status": "stage4_first_move_contrast_sandbox_approval_request_ready"
             },
             "required_scope_if_user_approves": {
                 "approval_id": "approve_stage4_first_move_contrast_sandbox",
@@ -791,15 +792,11 @@ def test_current_control_plane_gate_blocks_stage4_runtime_when_approval_request_
     )
     assert (
         repair_option["approval_request_status"]
-        == "stage4_first_move_contrast_sandbox_approval_request_blocked"
+        == "stage4_first_move_contrast_sandbox_approval_request_ready"
     )
-    assert repair_option["approval_request_blockers"] == [
-        "full_suite_readiness_audit_not_clean"
-    ]
+    assert repair_option["approval_request_blockers"] == []
     assert repair_option["approval_request_ready_for_runtime_approval"] is False
-    assert repair_option["safety_scope"]["approval_request_blockers"] == [
-        "full_suite_readiness_audit_not_clean"
-    ]
+    assert repair_option["safety_scope"]["approval_request_blockers"] == []
     assert (
         repair_option["safety_scope"][
             "approval_request_ready_for_runtime_approval"

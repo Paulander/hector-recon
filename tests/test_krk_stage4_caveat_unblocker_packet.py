@@ -128,6 +128,7 @@ def test_stage4_caveat_unblocker_propagates_approval_request_blockers(monkeypatc
                 "stage4_first_move_contrast_sandbox_approval_request_blocked"
             )
             payload["blockers"] = ["full_suite_readiness_audit_not_clean"]
+            payload["approval_request_ready_for_runtime_approval"] = False
         return payload
 
     monkeypatch.setattr(_packet, "_load", fake_load)
@@ -175,6 +176,7 @@ def test_stage4_sandbox_approval_request_is_not_authorization():
     assert payload["causal_status"] == "non_causal_runtime_approval_request_packet"
     assert payload["approval_id"] == "approve_stage4_first_move_contrast_sandbox"
     assert payload["approval_request_created"] is False
+    assert payload["approval_request_ready_for_runtime_approval"] is True
     assert payload["implementation_authorized_by_request"] is False
     assert payload["runtime_changes_allowed_by_request"] is False
     assert payload["runtime_behavior_changed"] is False
@@ -189,6 +191,7 @@ def test_stage4_sandbox_approval_request_is_not_authorization():
         payload["decision"]["status"]
         == "stage4_first_move_contrast_sandbox_approval_request_ready"
     )
+    assert payload["summary"]["approval_request_ready_for_runtime_approval"] is True
     assert payload["decision"]["implementation_allowed_by_this_request"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert "no runtime DTM/tablebase lookup" in payload["exact_approval_request"]

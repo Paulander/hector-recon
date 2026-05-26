@@ -1,6 +1,7 @@
 {
   "approval_id": "approve_stage4_first_move_contrast_sandbox",
   "approval_request_created": false,
+  "approval_request_ready_for_runtime_approval": true,
   "blockers": [],
   "causal_status": "non_causal_runtime_approval_request_packet",
   "decision": {
@@ -98,6 +99,7 @@
   "stage7_promotion_allowed": false,
   "stage8_training_allowed": false,
   "summary": {
+    "approval_request_ready_for_runtime_approval": true,
     "default_enabled": false,
     "default_off": true,
     "evidence_passed": true,

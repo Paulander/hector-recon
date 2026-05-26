@@ -116,10 +116,17 @@ def build_payload(
         "status"
     )
     stage4_approval_request_blockers = stage4_approval_request.get("blockers") or []
+    stage4_approval_request_ready_value = stage4_approval_request.get(
+        "approval_request_ready_for_runtime_approval"
+    )
     stage4_approval_request_ready = (
-        stage4_approval_request_status
-        == "stage4_first_move_contrast_sandbox_approval_request_ready"
-        and not stage4_approval_request_blockers
+        bool(stage4_approval_request_ready_value)
+        if stage4_approval_request_ready_value is not None
+        else (
+            stage4_approval_request_status
+            == "stage4_first_move_contrast_sandbox_approval_request_ready"
+            and not stage4_approval_request_blockers
+        )
     )
     plan_capsule_stage7_only = bool(
         plan_capsule_review.get("readiness", {}).get("stage7_only_evidence")

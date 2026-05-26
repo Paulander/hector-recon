@@ -11,6 +11,7 @@ This is a passive request packet only. It does not approve or implement runtime 
 ## Summary
 
 - runtime_review_ready: `True`
+- approval_request_ready_for_runtime_approval: `True`
 - runtime_review_status: `stage4_first_move_contrast_runtime_review_ready_pending_explicit_approval`
 - evidence_passed: `True`
 - implementation_authorized_by_runtime_packet: `False`

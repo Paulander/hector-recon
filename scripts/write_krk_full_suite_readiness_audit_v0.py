@@ -494,10 +494,17 @@ def build_payload() -> dict[str, Any]:
     )
     stage4_approval_request_decision = stage4_approval_request.get("decision") or {}
     stage4_approval_request_blockers = stage4_approval_request.get("blockers") or []
+    stage4_approval_request_ready_value = stage4_approval_request.get(
+        "approval_request_ready_for_runtime_approval"
+    )
     stage4_approval_request_ready = (
-        stage4_approval_request_decision.get("status")
-        == "stage4_first_move_contrast_sandbox_approval_request_ready"
-        and not stage4_approval_request_blockers
+        bool(stage4_approval_request_ready_value)
+        if stage4_approval_request_ready_value is not None
+        else (
+            stage4_approval_request_decision.get("status")
+            == "stage4_first_move_contrast_sandbox_approval_request_ready"
+            and not stage4_approval_request_blockers
+        )
     )
     stage4_approval_scope = (
         stage4_approval_request.get("required_scope_if_user_approves") or {}

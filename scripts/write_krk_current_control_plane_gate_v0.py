@@ -306,10 +306,17 @@ def build_payload(
     stage4_approval_scope = (
         stage4_approval_request.get("required_scope_if_user_approves") or {}
     )
+    stage4_approval_request_ready_value = stage4_approval_request.get(
+        "approval_request_ready_for_runtime_approval"
+    )
     stage4_approval_request_ready = (
-        stage4_approval_request.get("decision", {}).get("status")
-        == "stage4_first_move_contrast_sandbox_approval_request_ready"
-        and not (stage4_approval_request.get("blockers") or [])
+        bool(stage4_approval_request_ready_value)
+        if stage4_approval_request_ready_value is not None
+        else (
+            stage4_approval_request.get("decision", {}).get("status")
+            == "stage4_first_move_contrast_sandbox_approval_request_ready"
+            and not (stage4_approval_request.get("blockers") or [])
+        )
     )
     approval_options = [
         {

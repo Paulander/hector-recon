@@ -69,10 +69,17 @@ def build_payload() -> dict[str, Any]:
     runtime_decision = runtime_packet.get("decision") or {}
     approval_request_decision = approval_request.get("decision") or {}
     approval_request_blockers = approval_request.get("blockers") or []
+    approval_request_ready_value = approval_request.get(
+        "approval_request_ready_for_runtime_approval"
+    )
     approval_request_ready_for_runtime_approval = (
-        approval_request_decision.get("status")
-        == "stage4_first_move_contrast_sandbox_approval_request_ready"
-        and not approval_request_blockers
+        bool(approval_request_ready_value)
+        if approval_request_ready_value is not None
+        else (
+            approval_request_decision.get("status")
+            == "stage4_first_move_contrast_sandbox_approval_request_ready"
+            and not approval_request_blockers
+        )
     )
     approval_scope = approval_request.get("required_scope_if_user_approves") or {}
     sequence_summary = sequence_review.get("summary") or {}

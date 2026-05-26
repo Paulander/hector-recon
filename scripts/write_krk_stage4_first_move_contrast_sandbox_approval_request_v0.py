@@ -100,6 +100,9 @@ def build_payload(
         if runtime_review_ready and readiness_audit_ready
         else "stage4_first_move_contrast_sandbox_approval_request_blocked"
     )
+    approval_request_ready_for_runtime_approval = (
+        runtime_review_ready and readiness_audit_ready and not blockers
+    )
     exact_approval_request = (
         "Approve default-off Stage 4 first-move contrast sandbox implementation "
         "only within krk_stage4_first_move_contrast_runtime_review_packet_v0: "
@@ -121,6 +124,9 @@ def build_payload(
         ],
         "approval_id": APPROVAL_ID,
         "approval_request_created": False,
+        "approval_request_ready_for_runtime_approval": (
+            approval_request_ready_for_runtime_approval
+        ),
         "implementation_authorized_by_request": False,
         "runtime_changes_allowed_by_request": False,
         "exact_approval_request": exact_approval_request,
@@ -153,6 +159,9 @@ def build_payload(
         },
         "summary": {
             "runtime_review_ready": decision.get("runtime_review_ready"),
+            "approval_request_ready_for_runtime_approval": (
+                approval_request_ready_for_runtime_approval
+            ),
             "runtime_review_status": decision.get("status"),
             "evidence_passed": review_summary.get("evidence_passed"),
             "implementation_authorized_by_runtime_packet": decision.get(

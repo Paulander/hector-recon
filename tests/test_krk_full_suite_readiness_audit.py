@@ -553,16 +553,17 @@ def test_full_suite_readiness_routes_blocked_protected_collection_request_to_rep
     assert payload["decision"]["runtime_changes_allowed"] is False
 
 
-def test_full_suite_readiness_gates_stage4_runtime_on_approval_request_blockers(monkeypatch):
+def test_full_suite_readiness_gates_stage4_runtime_on_approval_request_not_ready(monkeypatch):
     real_load_json = _audit.load_json
 
     def tainted_load_json(relative: str):
         payload = json.loads(json.dumps(real_load_json(relative)))
         if relative == "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json":
             payload.setdefault("decision", {})["status"] = (
-                "stage4_first_move_contrast_sandbox_approval_request_blocked"
+                "stage4_first_move_contrast_sandbox_approval_request_ready"
             )
-            payload["blockers"] = ["full_suite_readiness_audit_not_clean"]
+            payload["blockers"] = []
+            payload["approval_request_ready_for_runtime_approval"] = False
         return payload
 
     monkeypatch.setattr(_audit, "load_json", tainted_load_json)
@@ -573,9 +574,7 @@ def test_full_suite_readiness_gates_stage4_runtime_on_approval_request_blockers(
 
     assert stage4["ready_for_explicit_runtime_approval"] is False
     assert stage4["approval_request_ready_for_runtime_approval"] is False
-    assert stage4["approval_request_blockers"] == [
-        "full_suite_readiness_audit_not_clean"
-    ]
+    assert stage4["approval_request_blockers"] == []
     assert stage4_gate["ready_for_explicit_approval"] is False
     assert stage4_gate["approval_request_ready_for_runtime_approval"] is False
     assert (
