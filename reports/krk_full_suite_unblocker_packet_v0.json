@@ -162,6 +162,7 @@
   "schema_version": "krk_full_suite_unblocker_packet.v0",
   "secondary_unblocker": {
     "approval_request_artifact": "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md",
+    "approval_request_blockers": [],
     "approval_request_created": false,
     "approval_request_status": "stage4_first_move_contrast_sandbox_approval_request_ready",
     "approval_required": true,
@@ -171,6 +172,7 @@
     "purpose": "Address the separate Stage 4 h40 caveat through a reviewed default-off sandbox path.",
     "scope": {
       "approval_id": "approve_stage4_first_move_contrast_sandbox",
+      "approval_request_blockers": [],
       "broad_stage0_penalty_allowed": false,
       "default_enabled": false,
       "default_off": true,

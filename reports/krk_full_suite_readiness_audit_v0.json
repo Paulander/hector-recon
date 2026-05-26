@@ -11,6 +11,7 @@
     },
     "stage4_first_move_contrast_sandbox": {
       "approval_request_artifact": "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json",
+      "approval_request_blockers": [],
       "approval_request_created": false,
       "approval_request_status": "stage4_first_move_contrast_sandbox_approval_request_ready",
       "current_artifact_allows_implementation": false,
@@ -18,6 +19,7 @@
       "ready_for_explicit_approval": true,
       "safety_scope": {
         "approval_id": "approve_stage4_first_move_contrast_sandbox",
+        "approval_request_blockers": [],
         "default_enabled": false,
         "default_off": true,
         "exact_state_or_exact_move_exception": false,
@@ -299,6 +301,7 @@
     },
     "stage4": {
       "approval_request_artifact": "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json",
+      "approval_request_blockers": [],
       "approval_request_created": false,
       "approval_request_status": "stage4_first_move_contrast_sandbox_approval_request_ready",
       "blocker": "stage4 h40 caveat remains separate guardrail/control debt",

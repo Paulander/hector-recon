@@ -564,6 +564,9 @@ def build_payload() -> dict[str, Any]:
             "stage4_first_move_contrast_sandbox_approval_request_status": stage4_approval_request.get(
                 "decision", {}
             ).get("status"),
+            "stage4_first_move_contrast_sandbox_approval_request_blockers": (
+                stage4_approval_request.get("blockers") or []
+            ),
             "stage4_first_move_contrast_sandbox_approval_request_created": stage4_approval_request.get(
                 "approval_request_created"
             ),

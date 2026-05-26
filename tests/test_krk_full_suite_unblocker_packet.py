@@ -341,12 +341,14 @@ def test_unblocker_packet_keeps_stage4_as_secondary_gate():
         secondary["approval_request_status"]
         == "stage4_first_move_contrast_sandbox_approval_request_ready"
     )
+    assert secondary["approval_request_blockers"] == []
     assert secondary["approval_request_created"] is False
     assert secondary["implementation_authorized_by_approval_request"] is False
     assert (
         secondary["scope"]["sandbox_scope_id"]
         == "default_off_stage4_candidate_move_first_move_contrast_sandbox_only"
     )
+    assert secondary["scope"]["approval_request_blockers"] == []
     assert secondary["scope"]["default_off"] is True
     assert secondary["scope"]["default_enabled"] is False
     assert secondary["scope"]["implementation_authorized_by_request"] is False

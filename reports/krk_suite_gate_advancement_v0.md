@@ -23,6 +23,7 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - stage7_clean_success_backfill_eligible_new_success: `0`
 - stage4_caveat_unblocker_status: `stage4_caveat_unblocker_ready_pending_explicit_runtime_approval`
 - stage4_first_move_contrast_sandbox_approval_request_status: `stage4_first_move_contrast_sandbox_approval_request_ready`
+- stage4_first_move_contrast_sandbox_approval_request_blockers: `[]`
 - stage4_first_move_contrast_sandbox_approval_request_created: `False`
 - stage4_first_move_contrast_sandbox_implementation_authorized_by_request: `False`
 - stage4_first_move_contrast_sandbox_scope_id: `default_off_stage4_candidate_move_first_move_contrast_sandbox_only`

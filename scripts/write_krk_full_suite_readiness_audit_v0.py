@@ -497,6 +497,7 @@ def build_payload() -> dict[str, Any]:
                 "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
             ),
             "approval_request_status": stage4_approval_request_decision.get("status"),
+            "approval_request_blockers": stage4_approval_request.get("blockers") or [],
             "approval_request_created": stage4_approval_request.get(
                 "approval_request_created"
             ),
@@ -958,6 +959,9 @@ def build_payload() -> dict[str, Any]:
                 "approval_request_status": stage4_approval_request_decision.get(
                     "status"
                 ),
+                "approval_request_blockers": (
+                    stage4_approval_request.get("blockers") or []
+                ),
                 "approval_request_created": stage4_approval_request.get(
                     "approval_request_created"
                 ),
@@ -966,6 +970,9 @@ def build_payload() -> dict[str, Any]:
                 ),
                 "safety_scope": {
                     "approval_id": stage4_approval_scope.get("approval_id"),
+                    "approval_request_blockers": (
+                        stage4_approval_request.get("blockers") or []
+                    ),
                     "sandbox_scope_id": stage4_approval_scope.get("sandbox_scope_id"),
                     "default_off": stage4_approval_scope.get("default_off"),
                     "default_enabled": stage4_approval_scope.get("default_enabled"),

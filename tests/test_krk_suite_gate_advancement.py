@@ -506,6 +506,12 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     )
     assert (
         payload["summary"][
+            "stage4_first_move_contrast_sandbox_approval_request_blockers"
+        ]
+        == []
+    )
+    assert (
+        payload["summary"][
             "stage4_first_move_contrast_sandbox_approval_request_created"
         ]
         is False

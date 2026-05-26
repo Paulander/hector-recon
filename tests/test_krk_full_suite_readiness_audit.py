@@ -144,6 +144,7 @@ def test_full_suite_readiness_identifies_current_gate():
         stage4["approval_request_status"]
         == "stage4_first_move_contrast_sandbox_approval_request_ready"
     )
+    assert stage4["approval_request_blockers"] == []
     assert stage4["approval_request_created"] is False
     assert stage4["implementation_authorized_by_approval_request"] is False
 
@@ -329,6 +330,12 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
     )
     assert (
         payload["approval_gates"]["stage4_first_move_contrast_sandbox"][
+            "approval_request_blockers"
+        ]
+        == []
+    )
+    assert (
+        payload["approval_gates"]["stage4_first_move_contrast_sandbox"][
             "implementation_authorized_by_approval_request"
         ]
         is False
@@ -340,6 +347,7 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
         stage4_scope["sandbox_scope_id"]
         == "default_off_stage4_candidate_move_first_move_contrast_sandbox_only"
     )
+    assert stage4_scope["approval_request_blockers"] == []
     assert stage4_scope["default_off"] is True
     assert stage4_scope["default_enabled"] is False
     assert stage4_scope["implementation_authorized_by_request"] is False
