@@ -577,6 +577,9 @@ def build_payload() -> dict[str, Any]:
         output_validation.get("summary", {}).get("output_valid_count") or 0
     ) > 0
     protected_stack = readiness.get("protected_stack") or {}
+    clean_curriculum_run_lineage_gate = (
+        readiness.get("clean_curriculum_run_lineage_gate") or {}
+    )
     clean_replacement_review_gate = readiness.get("clean_replacement_review_gate") or {}
     active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
@@ -818,6 +821,64 @@ def build_payload() -> dict[str, Any]:
             ),
             "protected_stack_filesystem_snapshots_replaced": protected_stack.get(
                 "filesystem_snapshots_replaced"
+            ),
+            "clean_curriculum_run_lineage_passive_ready": (
+                clean_curriculum_run_lineage_gate.get("passive_lineage_ready")
+            ),
+            "clean_curriculum_checkpoint_plan_status": (
+                clean_curriculum_run_lineage_gate.get("checkpoint_plan_status")
+            ),
+            "clean_curriculum_execution_manifest_status": (
+                clean_curriculum_run_lineage_gate.get("execution_manifest_status")
+            ),
+            "clean_curriculum_execution_manifest_full_run_authorized": (
+                clean_curriculum_run_lineage_gate.get(
+                    "execution_manifest_full_run_authorized"
+                )
+            ),
+            "clean_curriculum_preflight_status": (
+                clean_curriculum_run_lineage_gate.get("preflight_status")
+            ),
+            "clean_curriculum_preflight_blocker_count": (
+                clean_curriculum_run_lineage_gate.get("preflight_blocker_count")
+            ),
+            "clean_curriculum_smoke_result_status": (
+                clean_curriculum_run_lineage_gate.get("smoke_result_status")
+            ),
+            "clean_curriculum_initial_run_status": (
+                clean_curriculum_run_lineage_gate.get("initial_run_status")
+            ),
+            "clean_curriculum_initial_run_complete": (
+                clean_curriculum_run_lineage_gate.get(
+                    "initial_run_full_clean_retrain_complete"
+                )
+            ),
+            "clean_curriculum_retry1_status": (
+                clean_curriculum_run_lineage_gate.get("retry1_status")
+            ),
+            "clean_curriculum_retry1_complete_through_stage6": (
+                clean_curriculum_run_lineage_gate.get("retry1_complete_through_stage6")
+            ),
+            "clean_curriculum_retry1_promoted_by_this_artifact": (
+                clean_curriculum_run_lineage_gate.get("retry1_promoted_by_this_artifact")
+            ),
+            "clean_curriculum_guardrail_status": (
+                clean_curriculum_run_lineage_gate.get("guardrail_status")
+            ),
+            "clean_curriculum_stage6_gap_status": (
+                clean_curriculum_run_lineage_gate.get("stage6_gap_status")
+            ),
+            "clean_curriculum_stage5_control_debt_status": (
+                clean_curriculum_run_lineage_gate.get("stage5_control_debt_status")
+            ),
+            "clean_curriculum_stage4_caveat_control_status": (
+                clean_curriculum_run_lineage_gate.get("stage4_caveat_control_status")
+            ),
+            "clean_curriculum_stage7_promotion_allowed": (
+                clean_curriculum_run_lineage_gate.get("stage7_promotion_allowed")
+            ),
+            "clean_curriculum_stage8_training_allowed": (
+                clean_curriculum_run_lineage_gate.get("stage8_training_allowed")
             ),
             "clean_replacement_review_passive_ready": clean_replacement_review_gate.get(
                 "passive_review_ready"

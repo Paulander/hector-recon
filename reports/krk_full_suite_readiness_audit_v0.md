@@ -28,6 +28,34 @@
 - m1_m4_preservation_passed: `True`
 - kpk_kqk_bridge_preservation_passed: `True`
 
+## Clean Curriculum Run Lineage
+
+- passive_lineage_ready: `True`
+- checkpoint_plan_status: `clean_curriculum_checkpoint_plan_ready_full_run_requires_review`
+- execution_manifest_status: `clean_retrain_execution_manifest_ready_not_run`
+- execution_manifest_full_run_authorized: `False`
+- stage6_compose_manifest_status: `stage6_overlay_compose_manifest_ready_not_run`
+- stage6_compose_manifest_run_authorized: `False`
+- preflight_status: `clean_retrain_preflight_ready_for_run_review`
+- preflight_blocker_count: `0`
+- smoke_result_status: `clean_retrain_smoke_plumbing_passed_semantic_smoke_too_tiny`
+- smoke_command_plumbing_validated: `True`
+- smoke_curriculum_semantics_validated: `False`
+- initial_run_status: `clean_retrain_full_run_incomplete_stage2a_no_promotable_checkpoint`
+- initial_run_full_clean_retrain_complete: `False`
+- retry1_status: `clean_retrain_retry1_completed_through_stage6_overlay_compose_basic_checks_passed`
+- retry1_complete_through_stage6: `True`
+- retry1_promoted_by_this_artifact: `False`
+- guardrail_status: `clean_retrain_retry1_stage6_overlay_quarantined_guardrails_partial`
+- stage6_gap_status: `stage6_gap_explained_by_validation_profile_mismatch`
+- stage5_control_debt_status: `stage5_one_ply_guardrail_control_debt_confirmed`
+- stage5_semantics_status: `stage5_guardrail_semantics_split_defined`
+- stage4_caveat_control_status: `stage4_caveat_reproduces_in_base_control_no_overlay_regression`
+- curriculum_stage7_status: `stage7_unlock_path_identified_broader_sequence_control_not_micro_repair`
+- curriculum_stage8_status: `stage8_remains_blocked_with_review`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Clean Replacement Review
 
 - passive_review_ready: `True`
@@ -150,7 +178,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `d8501dcfead251aa785d693d34b28b9807a28fd9b83bf0236eb027ca15a6772c`
+- expected_readiness_fingerprint: `7ec29dd06ff28d21435d2612e0e58ea407e052f62f66028ed4bad337a60c43bf`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -679,5 +707,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1635`
+- checked_flag_count: `1754`
 - violation_count: `0`

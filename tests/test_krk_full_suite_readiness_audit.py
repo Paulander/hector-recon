@@ -383,6 +383,38 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/strategy_arbitration/krk_candidate_generation_v5_next_boundary_review_v0.json"
     )
     assert (
+        payload["source_artifacts"]["clean_curriculum_checkpoint_plan"]
+        == "reports/krk_clean_curriculum_checkpoint_plan_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["clean_retrain_execution_manifest"]
+        == "reports/krk_clean_retrain_execution_manifest_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["stage6_overlay_compose_manifest"]
+        == "reports/krk_stage6_overlay_compose_manifest_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["clean_retrain_retry1_result"]
+        == "reports/krk_clean_retrain_retry1_result_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["clean_retrain_retry1_stage6_gap_inspection"]
+        == "reports/krk_clean_retrain_retry1_stage6_gap_inspection_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["stage5_guardrail_semantics_split"]
+        == "reports/krk_stage5_guardrail_semantics_split_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["curriculum_next_milestone_decision"]
+        == "reports/krk_curriculum_next_milestone_decision_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["stage7_to_stage8_blocker_review"]
+        == "reports/structural_candidates/stage7_to_stage8_blocker_review_v0.json"
+    )
+    assert (
         payload["source_artifacts"][
             "clean_retrain_retry1_replacement_readiness_review"
         ]
@@ -425,6 +457,91 @@ def test_full_suite_readiness_identifies_current_gate():
     assert payload["protected_stack"]["rollback_common_paths_distinct"] is True
     assert payload["protected_stack"]["m1_m4_preservation_passed"] is True
     assert payload["protected_stack"]["kpk_kqk_bridge_preservation_passed"] is True
+
+    clean_curriculum = payload["clean_curriculum_run_lineage_gate"]
+    assert clean_curriculum["passive_lineage_ready"] is True
+    assert (
+        clean_curriculum["checkpoint_plan_status"]
+        == "clean_curriculum_checkpoint_plan_ready_full_run_requires_review"
+    )
+    assert (
+        clean_curriculum["execution_manifest_status"]
+        == "clean_retrain_execution_manifest_ready_not_run"
+    )
+    assert clean_curriculum["execution_manifest_full_run_authorized"] is False
+    assert (
+        clean_curriculum["stage6_compose_manifest_status"]
+        == "stage6_overlay_compose_manifest_ready_not_run"
+    )
+    assert clean_curriculum["stage6_compose_manifest_run_authorized"] is False
+    assert (
+        clean_curriculum["preflight_status"]
+        == "clean_retrain_preflight_ready_for_run_review"
+    )
+    assert clean_curriculum["preflight_blocker_count"] == 0
+    assert clean_curriculum["preflight_command_violation_count"] == 0
+    assert clean_curriculum["preflight_protected_overwrite_count"] == 0
+    assert (
+        clean_curriculum["smoke_result_status"]
+        == "clean_retrain_smoke_plumbing_passed_semantic_smoke_too_tiny"
+    )
+    assert clean_curriculum["smoke_command_plumbing_validated"] is True
+    assert clean_curriculum["smoke_curriculum_semantics_validated"] is False
+    assert (
+        clean_curriculum["initial_run_status"]
+        == "clean_retrain_full_run_incomplete_stage2a_no_promotable_checkpoint"
+    )
+    assert clean_curriculum["initial_run_full_clean_retrain_complete"] is False
+    assert clean_curriculum["initial_run_stage2a_complete"] is False
+    assert (
+        clean_curriculum["retry1_status"]
+        == "clean_retrain_retry1_completed_through_stage6_overlay_compose_basic_checks_passed"
+    )
+    assert clean_curriculum["retry1_complete_through_stage6"] is True
+    assert clean_curriculum["retry1_stage_count"] == 6
+    assert clean_curriculum["retry1_promoted_by_this_artifact"] is False
+    assert clean_curriculum["retry1_protected_snapshots_overwritten"] is False
+    assert clean_curriculum["retry1_stage7_training_or_promotion"] is False
+    assert clean_curriculum["retry1_stage8_training"] is False
+    assert clean_curriculum["retry1_runtime_selector_or_routing_change"] is False
+    assert (
+        clean_curriculum["guardrail_status"]
+        == "clean_retrain_retry1_stage6_overlay_quarantined_guardrails_partial"
+    )
+    assert clean_curriculum["guardrail_promotion_status"] == "quarantine"
+    assert clean_curriculum["guardrail_retry1_can_replace_protected_stack"] is False
+    assert (
+        clean_curriculum["stage6_gap_status"]
+        == "stage6_gap_explained_by_validation_profile_mismatch"
+    )
+    assert clean_curriculum["stage6_gap_corrected_profile_restores_conversion"] is True
+    assert clean_curriculum["stage6_gap_retry1_can_replace_protected_stack"] is False
+    assert (
+        clean_curriculum["stage5_control_debt_status"]
+        == "stage5_one_ply_guardrail_control_debt_confirmed"
+    )
+    assert clean_curriculum["stage5_control_debt_conversion_preserved"] is True
+    assert clean_curriculum["stage5_control_debt_quarantines_stage6_overlay"] is False
+    assert (
+        clean_curriculum["stage5_semantics_status"]
+        == "stage5_guardrail_semantics_split_defined"
+    )
+    assert clean_curriculum["stage5_semantics_overlay_use_allowed_as_overlay_only"] is True
+    assert clean_curriculum["stage5_semantics_clean_stack_replacement_allowed"] is False
+    assert (
+        clean_curriculum["stage4_caveat_control_status"]
+        == "stage4_caveat_reproduces_in_base_control_no_overlay_regression"
+    )
+    assert (
+        clean_curriculum["stage4_caveat_overlay_regressed_vs_base_control"] is False
+    )
+    assert (
+        clean_curriculum["curriculum_stage7_status"]
+        == "stage7_unlock_path_identified_broader_sequence_control_not_micro_repair"
+    )
+    assert clean_curriculum["curriculum_stage8_status"] == "stage8_remains_blocked_with_review"
+    assert clean_curriculum["stage7_promotion_allowed"] is False
+    assert clean_curriculum["stage8_training_allowed"] is False
 
     clean_replacement = payload["clean_replacement_review_gate"]
     assert clean_replacement["passive_review_ready"] is True

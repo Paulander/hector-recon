@@ -81,6 +81,63 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["protected_stack_rollback_paths_exist"] is True
     assert payload["summary"]["protected_stack_rollback_common_paths_distinct"] is True
     assert payload["summary"]["protected_stack_filesystem_snapshots_replaced"] is False
+    assert payload["summary"]["clean_curriculum_run_lineage_passive_ready"] is True
+    assert (
+        payload["summary"]["clean_curriculum_checkpoint_plan_status"]
+        == "clean_curriculum_checkpoint_plan_ready_full_run_requires_review"
+    )
+    assert (
+        payload["summary"]["clean_curriculum_execution_manifest_status"]
+        == "clean_retrain_execution_manifest_ready_not_run"
+    )
+    assert (
+        payload["summary"]["clean_curriculum_execution_manifest_full_run_authorized"]
+        is False
+    )
+    assert (
+        payload["summary"]["clean_curriculum_preflight_status"]
+        == "clean_retrain_preflight_ready_for_run_review"
+    )
+    assert payload["summary"]["clean_curriculum_preflight_blocker_count"] == 0
+    assert (
+        payload["summary"]["clean_curriculum_smoke_result_status"]
+        == "clean_retrain_smoke_plumbing_passed_semantic_smoke_too_tiny"
+    )
+    assert (
+        payload["summary"]["clean_curriculum_initial_run_status"]
+        == "clean_retrain_full_run_incomplete_stage2a_no_promotable_checkpoint"
+    )
+    assert payload["summary"]["clean_curriculum_initial_run_complete"] is False
+    assert (
+        payload["summary"]["clean_curriculum_retry1_status"]
+        == "clean_retrain_retry1_completed_through_stage6_overlay_compose_basic_checks_passed"
+    )
+    assert (
+        payload["summary"]["clean_curriculum_retry1_complete_through_stage6"]
+        is True
+    )
+    assert (
+        payload["summary"]["clean_curriculum_retry1_promoted_by_this_artifact"]
+        is False
+    )
+    assert (
+        payload["summary"]["clean_curriculum_guardrail_status"]
+        == "clean_retrain_retry1_stage6_overlay_quarantined_guardrails_partial"
+    )
+    assert (
+        payload["summary"]["clean_curriculum_stage6_gap_status"]
+        == "stage6_gap_explained_by_validation_profile_mismatch"
+    )
+    assert (
+        payload["summary"]["clean_curriculum_stage5_control_debt_status"]
+        == "stage5_one_ply_guardrail_control_debt_confirmed"
+    )
+    assert (
+        payload["summary"]["clean_curriculum_stage4_caveat_control_status"]
+        == "stage4_caveat_reproduces_in_base_control_no_overlay_regression"
+    )
+    assert payload["summary"]["clean_curriculum_stage7_promotion_allowed"] is False
+    assert payload["summary"]["clean_curriculum_stage8_training_allowed"] is False
     assert payload["summary"]["clean_replacement_review_passive_ready"] is True
     assert (
         payload["summary"]["clean_replacement_review_packet_status"]

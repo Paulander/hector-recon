@@ -459,6 +459,51 @@ SOURCES = {
     "candidate_generation_v5_next_boundary_review": (
         "reports/strategy_arbitration/krk_candidate_generation_v5_next_boundary_review_v0.json"
     ),
+    "clean_curriculum_checkpoint_plan": (
+        "reports/krk_clean_curriculum_checkpoint_plan_v0.json"
+    ),
+    "clean_retrain_execution_manifest": (
+        "reports/krk_clean_retrain_execution_manifest_v0.json"
+    ),
+    "stage6_overlay_compose_manifest": (
+        "reports/krk_stage6_overlay_compose_manifest_v0.json"
+    ),
+    "clean_retrain_preflight": "reports/krk_clean_retrain_preflight_v0.json",
+    "clean_retrain_smoke_manifest": (
+        "reports/krk_clean_retrain_smoke_manifest_v0.json"
+    ),
+    "clean_retrain_smoke_result": "reports/krk_clean_retrain_smoke_result_v0.json",
+    "clean_retrain_run_result": "reports/krk_clean_retrain_run_result_v0.json",
+    "clean_retrain_retry1_result": (
+        "reports/krk_clean_retrain_retry1_result_v1.json"
+    ),
+    "clean_retrain_retry1_guardrail_result": (
+        "reports/krk_clean_retrain_retry1_guardrail_result_v1.json"
+    ),
+    "clean_retrain_retry1_stage6_gap_inspection": (
+        "reports/krk_clean_retrain_retry1_stage6_gap_inspection_v1.json"
+    ),
+    "stage5_guardrail_control_debt_review": (
+        "reports/krk_stage5_guardrail_control_debt_review_v0.json"
+    ),
+    "stage5_guardrail_semantics_split": (
+        "reports/krk_stage5_guardrail_semantics_split_v0.json"
+    ),
+    "stage5_local_reward_contract_debt_audit": (
+        "reports/krk_stage5_local_reward_contract_debt_audit_v0.json"
+    ),
+    "clean_retrain_retry1_stage4_caveat_control_review": (
+        "reports/krk_clean_retrain_retry1_stage4_caveat_control_review_v0.json"
+    ),
+    "curriculum_next_milestone_decision": (
+        "reports/krk_curriculum_next_milestone_decision_v0.json"
+    ),
+    "stage7_heldout_unlock_review": (
+        "reports/structural_candidates/stage7_heldout_unlock_review_v0.json"
+    ),
+    "stage7_to_stage8_blocker_review": (
+        "reports/structural_candidates/stage7_to_stage8_blocker_review_v0.json"
+    ),
     "clean_retrain_retry1_replacement_readiness_review": (
         "reports/krk_clean_retrain_retry1_replacement_readiness_review_v0.json"
     ),
@@ -1134,6 +1179,35 @@ def build_payload() -> dict[str, Any]:
     candidate_generation_v5_next_boundary_review = payloads[
         "candidate_generation_v5_next_boundary_review"
     ]
+    clean_curriculum_checkpoint_plan = payloads["clean_curriculum_checkpoint_plan"]
+    clean_retrain_execution_manifest = payloads["clean_retrain_execution_manifest"]
+    stage6_overlay_compose_manifest = payloads["stage6_overlay_compose_manifest"]
+    clean_retrain_preflight = payloads["clean_retrain_preflight"]
+    clean_retrain_smoke_manifest = payloads["clean_retrain_smoke_manifest"]
+    clean_retrain_smoke_result = payloads["clean_retrain_smoke_result"]
+    clean_retrain_run_result = payloads["clean_retrain_run_result"]
+    clean_retrain_retry1_result = payloads["clean_retrain_retry1_result"]
+    clean_retrain_retry1_guardrail_result = payloads[
+        "clean_retrain_retry1_guardrail_result"
+    ]
+    clean_retrain_retry1_stage6_gap_inspection = payloads[
+        "clean_retrain_retry1_stage6_gap_inspection"
+    ]
+    stage5_guardrail_control_debt_review = payloads[
+        "stage5_guardrail_control_debt_review"
+    ]
+    stage5_guardrail_semantics_split = payloads["stage5_guardrail_semantics_split"]
+    stage5_local_reward_contract_debt_audit = payloads[
+        "stage5_local_reward_contract_debt_audit"
+    ]
+    clean_retrain_retry1_stage4_caveat_control_review = payloads[
+        "clean_retrain_retry1_stage4_caveat_control_review"
+    ]
+    curriculum_next_milestone_decision = payloads[
+        "curriculum_next_milestone_decision"
+    ]
+    stage7_heldout_unlock_review = payloads["stage7_heldout_unlock_review"]
+    stage7_to_stage8_blocker_review = payloads["stage7_to_stage8_blocker_review"]
     clean_replacement_readiness = payloads[
         "clean_retrain_retry1_replacement_readiness_review"
     ]
@@ -1191,6 +1265,97 @@ def build_payload() -> dict[str, Any]:
     )
     snapshot_retry1_stack_path_status = flatten_bool_tree(
         snapshot_path_existence.get("retry1_candidate_stack") or {}
+    )
+    clean_retrain_execution_decision = (
+        clean_retrain_execution_manifest.get("decision") or {}
+    )
+    stage6_overlay_compose_decision = (
+        stage6_overlay_compose_manifest.get("decision") or {}
+    )
+    clean_retrain_preflight_summary = clean_retrain_preflight.get("summary") or {}
+    clean_retrain_smoke_decision = clean_retrain_smoke_manifest.get("decision") or {}
+    clean_retrain_smoke_summary = clean_retrain_smoke_result.get("summary") or {}
+    clean_retrain_initial_decision = clean_retrain_run_result.get("decision") or {}
+    clean_retrain_retry1_decision = clean_retrain_retry1_result.get("decision") or {}
+    clean_retrain_retry1_run_scope = clean_retrain_retry1_result.get("run_scope") or {}
+    clean_retrain_retry1_stages = clean_retrain_retry1_result.get("stages") or {}
+    clean_retrain_guardrail_decision = (
+        clean_retrain_retry1_guardrail_result.get("decision") or {}
+    )
+    stage6_gap_decision = clean_retrain_retry1_stage6_gap_inspection.get(
+        "decision"
+    ) or {}
+    stage5_control_debt_decision = (
+        stage5_guardrail_control_debt_review.get("decision") or {}
+    )
+    stage5_semantics_decision = stage5_guardrail_semantics_split.get("decision") or {}
+    stage5_local_debt_decision = (
+        stage5_local_reward_contract_debt_audit.get("decision") or {}
+    )
+    stage4_caveat_control_decision = (
+        clean_retrain_retry1_stage4_caveat_control_review.get("decision") or {}
+    )
+    curriculum_next_invariants = curriculum_next_milestone_decision.get(
+        "invariants"
+    ) or {}
+    clean_curriculum_run_lineage_passive = (
+        clean_retrain_execution_decision.get("full_run_authorized_by_this_manifest")
+        is False
+        and stage6_overlay_compose_decision.get("compose_run_authorized_by_this_manifest")
+        is False
+        and stage6_overlay_compose_decision.get("full_run_authorized_by_this_manifest")
+        is False
+        and clean_retrain_preflight.get("decision", {}).get("training_started") is False
+        and int(clean_retrain_preflight_summary.get("blocker_count") or 0) == 0
+        and int(clean_retrain_preflight_summary.get("command_violation_count") or 0)
+        == 0
+        and int(clean_retrain_preflight_summary.get("protected_overwrite_count") or 0)
+        == 0
+        and clean_retrain_smoke_decision.get("full_run_authorized_by_this_manifest")
+        is False
+        and clean_retrain_smoke_decision.get("smoke_run_authorized_by_this_manifest")
+        is False
+        and clean_retrain_smoke_summary.get("command_plumbing_validated") is True
+        and clean_retrain_smoke_summary.get("curriculum_semantics_validated") is False
+        and clean_retrain_initial_decision.get("full_clean_retrain_complete") is False
+        and clean_retrain_retry1_decision.get(
+            "clean_retrain_retry_complete_through_stage6"
+        )
+        is True
+        and clean_retrain_retry1_decision.get("promoted_by_this_artifact") is False
+        and clean_retrain_retry1_run_scope.get("protected_snapshots_overwritten")
+        is False
+        and clean_retrain_retry1_run_scope.get("stage7_training_or_promotion") is False
+        and clean_retrain_retry1_run_scope.get("stage8_training") is False
+        and clean_retrain_retry1_run_scope.get("runtime_selector_or_routing_change")
+        is False
+        and clean_retrain_guardrail_decision.get("retry1_can_replace_protected_stack")
+        is False
+        and stage6_gap_decision.get("corrected_profile_bonus_restores_stage6_conversion")
+        is True
+        and stage5_control_debt_decision.get("stage5_conversion_preserved") is True
+        and stage5_control_debt_decision.get(
+            "should_quarantine_stage6_overlay_for_stage5_one_ply_debt"
+        )
+        is False
+        and stage5_semantics_decision.get("stage6_overlay_use_allowed_as_overlay_only")
+        is True
+        and stage5_semantics_decision.get("clean_stack_replacement_allowed") is False
+        and stage5_local_debt_decision.get("conversion_preserved") is True
+        and stage5_local_debt_decision.get("local_reward_debt_is_stage6_regression")
+        is False
+        and stage4_caveat_control_decision.get("stage4_overlay_regressed_vs_base_control")
+        is False
+        and curriculum_next_invariants.get("protected_stack_replacement_performed")
+        is False
+        and curriculum_next_invariants.get("runtime_behavior_changed") is False
+        and curriculum_next_invariants.get("runtime_defaults_changed") is False
+        and curriculum_next_invariants.get("stage7_promotion") is False
+        and curriculum_next_invariants.get("stage8_training") is False
+        and stage7_heldout_unlock_review.get("status")
+        == "stage7_unlock_path_identified_broader_sequence_control_not_micro_repair"
+        and stage7_to_stage8_blocker_review.get("stage7_promotion_allowed") is False
+        and stage7_to_stage8_blocker_review.get("stage8_training_allowed") is False
     )
     replacement_readiness_decision = clean_replacement_readiness.get("decision") or {}
     replacement_packet_decision = clean_stack_replacement_packet.get("decision") or {}
@@ -1619,6 +1784,172 @@ def build_payload() -> dict[str, Any]:
                 "kpk_kqk_bridge_preservation_passed"
             ),
             "ready": protected_stack_validated,
+        },
+        "clean_curriculum_run_lineage_gate": {
+            "status": curriculum_next_milestone_decision.get("status"),
+            "passive_lineage_ready": clean_curriculum_run_lineage_passive,
+            "checkpoint_plan_status": (
+                clean_curriculum_checkpoint_plan.get("decision", {}).get("status")
+            ),
+            "checkpoint_plan_stage7_remains_quarantined": (
+                clean_curriculum_checkpoint_plan.get("decision", {}).get(
+                    "stage7_remains_quarantined"
+                )
+            ),
+            "checkpoint_plan_stage8_remains_blocked": (
+                clean_curriculum_checkpoint_plan.get("decision", {}).get(
+                    "stage8_remains_blocked"
+                )
+            ),
+            "execution_manifest_status": clean_retrain_execution_decision.get("status"),
+            "execution_manifest_full_run_authorized": (
+                clean_retrain_execution_decision.get(
+                    "full_run_authorized_by_this_manifest"
+                )
+            ),
+            "stage6_compose_manifest_status": stage6_overlay_compose_decision.get(
+                "status"
+            ),
+            "stage6_compose_manifest_run_authorized": (
+                stage6_overlay_compose_decision.get(
+                    "compose_run_authorized_by_this_manifest"
+                )
+            ),
+            "preflight_status": clean_retrain_preflight.get("decision", {}).get(
+                "status"
+            ),
+            "preflight_safe_to_request_run_review": clean_retrain_preflight.get(
+                "decision", {}
+            ).get("safe_to_request_run_review"),
+            "preflight_blocker_count": clean_retrain_preflight_summary.get(
+                "blocker_count"
+            ),
+            "preflight_command_violation_count": clean_retrain_preflight_summary.get(
+                "command_violation_count"
+            ),
+            "preflight_protected_overwrite_count": clean_retrain_preflight_summary.get(
+                "protected_overwrite_count"
+            ),
+            "smoke_manifest_status": clean_retrain_smoke_decision.get("status"),
+            "smoke_manifest_run_authorized": clean_retrain_smoke_decision.get(
+                "smoke_run_authorized_by_this_manifest"
+            ),
+            "smoke_result_status": clean_retrain_smoke_result.get("decision", {}).get(
+                "status"
+            ),
+            "smoke_command_plumbing_validated": clean_retrain_smoke_summary.get(
+                "command_plumbing_validated"
+            ),
+            "smoke_curriculum_semantics_validated": clean_retrain_smoke_summary.get(
+                "curriculum_semantics_validated"
+            ),
+            "initial_run_status": clean_retrain_run_result.get("status"),
+            "initial_run_full_clean_retrain_complete": (
+                clean_retrain_initial_decision.get("full_clean_retrain_complete")
+            ),
+            "initial_run_stage2a_complete": clean_retrain_initial_decision.get(
+                "stage2a_complete"
+            ),
+            "retry1_status": clean_retrain_retry1_result.get("status"),
+            "retry1_complete_through_stage6": clean_retrain_retry1_decision.get(
+                "clean_retrain_retry_complete_through_stage6"
+            ),
+            "retry1_stage_count": len(clean_retrain_retry1_stages),
+            "retry1_promoted_by_this_artifact": clean_retrain_retry1_decision.get(
+                "promoted_by_this_artifact"
+            ),
+            "retry1_protected_snapshots_overwritten": (
+                clean_retrain_retry1_run_scope.get("protected_snapshots_overwritten")
+            ),
+            "retry1_stage7_training_or_promotion": (
+                clean_retrain_retry1_run_scope.get("stage7_training_or_promotion")
+            ),
+            "retry1_stage8_training": clean_retrain_retry1_run_scope.get(
+                "stage8_training"
+            ),
+            "retry1_runtime_selector_or_routing_change": (
+                clean_retrain_retry1_run_scope.get("runtime_selector_or_routing_change")
+            ),
+            "guardrail_status": clean_retrain_retry1_guardrail_result.get("status"),
+            "guardrail_promotion_status": clean_retrain_guardrail_decision.get(
+                "promotion_status"
+            ),
+            "guardrail_stage5_overlay_conversion_preserved": (
+                clean_retrain_guardrail_decision.get(
+                    "stage5_overlay_conversion_preserved"
+                )
+            ),
+            "guardrail_retry1_can_replace_protected_stack": (
+                clean_retrain_guardrail_decision.get(
+                    "retry1_can_replace_protected_stack"
+                )
+            ),
+            "stage6_gap_status": clean_retrain_retry1_stage6_gap_inspection.get(
+                "status"
+            ),
+            "stage6_gap_corrected_profile_restores_conversion": (
+                stage6_gap_decision.get(
+                    "corrected_profile_bonus_restores_stage6_conversion"
+                )
+            ),
+            "stage6_gap_retry1_can_replace_protected_stack": (
+                stage6_gap_decision.get("retry1_can_replace_protected_stack")
+            ),
+            "stage5_control_debt_status": stage5_guardrail_control_debt_review.get(
+                "status"
+            ),
+            "stage5_control_debt_conversion_preserved": (
+                stage5_control_debt_decision.get("stage5_conversion_preserved")
+            ),
+            "stage5_control_debt_quarantines_stage6_overlay": (
+                stage5_control_debt_decision.get(
+                    "should_quarantine_stage6_overlay_for_stage5_one_ply_debt"
+                )
+            ),
+            "stage5_semantics_status": stage5_guardrail_semantics_split.get("status"),
+            "stage5_semantics_overlay_use_allowed_as_overlay_only": (
+                stage5_semantics_decision.get("stage6_overlay_use_allowed_as_overlay_only")
+            ),
+            "stage5_semantics_clean_stack_replacement_allowed": (
+                stage5_semantics_decision.get("clean_stack_replacement_allowed")
+            ),
+            "stage5_local_debt_status": stage5_local_reward_contract_debt_audit.get(
+                "status"
+            ),
+            "stage5_local_debt_is_stage6_regression": (
+                stage5_local_debt_decision.get("local_reward_debt_is_stage6_regression")
+            ),
+            "stage4_caveat_control_status": (
+                clean_retrain_retry1_stage4_caveat_control_review.get("status")
+            ),
+            "stage4_caveat_overlay_regressed_vs_base_control": (
+                stage4_caveat_control_decision.get(
+                    "stage4_overlay_regressed_vs_base_control"
+                )
+            ),
+            "curriculum_decision_states": (
+                curriculum_next_milestone_decision.get("decision_states") or []
+            ),
+            "curriculum_stage4_status": curriculum_next_milestone_decision.get(
+                "stage4_status"
+            ),
+            "curriculum_stage7_status": curriculum_next_milestone_decision.get(
+                "stage7_status"
+            ),
+            "curriculum_stage8_status": curriculum_next_milestone_decision.get(
+                "stage8_status"
+            ),
+            "curriculum_forbidden_next_steps": (
+                curriculum_next_milestone_decision.get("what_remains_forbidden") or []
+            ),
+            "stage7_unlock_status": stage7_heldout_unlock_review.get("status"),
+            "stage8_blocker_status": stage7_to_stage8_blocker_review.get("status"),
+            "stage7_promotion_allowed": stage7_to_stage8_blocker_review.get(
+                "stage7_promotion_allowed"
+            ),
+            "stage8_training_allowed": stage7_to_stage8_blocker_review.get(
+                "stage8_training_allowed"
+            ),
         },
         "clean_replacement_review_gate": {
             "status": clean_stack_replacement_packet.get("status"),
@@ -5245,6 +5576,7 @@ def build_payload() -> dict[str, Any]:
 
 def write_markdown(payload: dict[str, Any]) -> str:
     protected = payload["protected_stack"]
+    clean_curriculum = payload["clean_curriculum_run_lineage_gate"]
     clean_replacement = payload["clean_replacement_review_gate"]
     stage7 = payload["stage7_sampling_gate"]
     sequence = payload["sequence_policy"]
@@ -5294,6 +5626,34 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- stage6_drive_validation_passed: `{protected['stage6_drive_validation_passed']}`",
         f"- m1_m4_preservation_passed: `{protected['m1_m4_preservation_passed']}`",
         f"- kpk_kqk_bridge_preservation_passed: `{protected['kpk_kqk_bridge_preservation_passed']}`",
+        "",
+        "## Clean Curriculum Run Lineage",
+        "",
+        f"- passive_lineage_ready: `{clean_curriculum['passive_lineage_ready']}`",
+        f"- checkpoint_plan_status: `{clean_curriculum['checkpoint_plan_status']}`",
+        f"- execution_manifest_status: `{clean_curriculum['execution_manifest_status']}`",
+        f"- execution_manifest_full_run_authorized: `{clean_curriculum['execution_manifest_full_run_authorized']}`",
+        f"- stage6_compose_manifest_status: `{clean_curriculum['stage6_compose_manifest_status']}`",
+        f"- stage6_compose_manifest_run_authorized: `{clean_curriculum['stage6_compose_manifest_run_authorized']}`",
+        f"- preflight_status: `{clean_curriculum['preflight_status']}`",
+        f"- preflight_blocker_count: `{clean_curriculum['preflight_blocker_count']}`",
+        f"- smoke_result_status: `{clean_curriculum['smoke_result_status']}`",
+        f"- smoke_command_plumbing_validated: `{clean_curriculum['smoke_command_plumbing_validated']}`",
+        f"- smoke_curriculum_semantics_validated: `{clean_curriculum['smoke_curriculum_semantics_validated']}`",
+        f"- initial_run_status: `{clean_curriculum['initial_run_status']}`",
+        f"- initial_run_full_clean_retrain_complete: `{clean_curriculum['initial_run_full_clean_retrain_complete']}`",
+        f"- retry1_status: `{clean_curriculum['retry1_status']}`",
+        f"- retry1_complete_through_stage6: `{clean_curriculum['retry1_complete_through_stage6']}`",
+        f"- retry1_promoted_by_this_artifact: `{clean_curriculum['retry1_promoted_by_this_artifact']}`",
+        f"- guardrail_status: `{clean_curriculum['guardrail_status']}`",
+        f"- stage6_gap_status: `{clean_curriculum['stage6_gap_status']}`",
+        f"- stage5_control_debt_status: `{clean_curriculum['stage5_control_debt_status']}`",
+        f"- stage5_semantics_status: `{clean_curriculum['stage5_semantics_status']}`",
+        f"- stage4_caveat_control_status: `{clean_curriculum['stage4_caveat_control_status']}`",
+        f"- curriculum_stage7_status: `{clean_curriculum['curriculum_stage7_status']}`",
+        f"- curriculum_stage8_status: `{clean_curriculum['curriculum_stage8_status']}`",
+        f"- stage7_promotion_allowed: `{clean_curriculum['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{clean_curriculum['stage8_training_allowed']}`",
         "",
         "## Clean Replacement Review",
         "",
