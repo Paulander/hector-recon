@@ -93,6 +93,17 @@ def build_payload(
     explicit_gate_blockers = set(readiness.get("explicit_gate_blockers") or [])
     hard_blockers = set(readiness.get("hard_blockers") or [])
     sequence_policy = readiness.get("sequence_policy") or {}
+    protected_failure_contrast_request_status = protected_failure_contrast.get(
+        "approval_request_status"
+    )
+    protected_failure_contrast_request_blockers = (
+        protected_failure_contrast.get("approval_request_blockers") or []
+    )
+    protected_failure_contrast_request_ready = (
+        not protected_failure_contrast_request_blockers
+        and protected_failure_contrast_request_status
+        in (None, "protected_plan_window_failure_contrast_approval_request_ready")
+    )
     post_failure_contrast_refresh_boundaries_preserved = sequence_policy.get(
         "post_failure_contrast_refresh_boundaries_preserved"
     )
@@ -103,6 +114,7 @@ def build_payload(
     protected_failure_contrast_pending_approval = (
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
         in explicit_gate_blockers
+        and protected_failure_contrast_request_ready
     )
 
     validation_summary = output_validation.get("summary") or {}
@@ -176,7 +188,15 @@ def build_payload(
             status = "post_label_outcome_sequence_policy_review_ready_stage8_blocked"
             next_step = "inspect_stage8_training_readiness_review"
     elif benchmark_review_status == "sequence_policy_benchmark_mixed_plan_window_underpowered":
-        if protected_failure_contrast_pending_approval:
+        if not protected_failure_contrast_request_ready:
+            blockers.append(
+                "protected_plan_window_failure_contrast_approval_request_blocked"
+            )
+            status = (
+                "post_label_outcome_blocked_pending_protected_failure_contrast_approval_request_repair"
+            )
+            next_step = "repair_protected_failure_contrast_approval_request_scope"
+        elif protected_failure_contrast_pending_approval:
             blockers.append(
                 "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
             )
@@ -184,10 +204,11 @@ def build_payload(
             status = (
                 "post_label_outcome_waiting_on_explicit_protected_failure_contrast_collection"
             )
+            next_step = "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
         else:
             blockers.append("protected_plan_window_failure_evidence_sparse")
             status = "post_label_outcome_sequence_policy_mixed_plan_window_underpowered"
-        next_step = "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+            next_step = "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     elif benchmark_review_status == "sequence_policy_benchmark_review_blocked_pending_ready_inputs":
         blockers.append("sequence_policy_benchmark_review_not_ready")
         status = "post_label_outcome_benchmark_review_still_blocked"
@@ -262,7 +283,8 @@ def build_payload(
                 "invalid_existing_output_count"
             ),
             "protected_failure_contrast_ready_for_explicit_approval": (
-                protected_failure_contrast.get("ready_for_explicit_approval")
+                bool(protected_failure_contrast.get("ready_for_explicit_approval"))
+                and protected_failure_contrast_request_ready
             ),
             "protected_failure_contrast_integration_ready": (
                 protected_failure_contrast.get("integration_ready")
@@ -283,10 +305,13 @@ def build_payload(
                 protected_failure_contrast.get("approval_request_artifact")
             ),
             "protected_failure_contrast_approval_request_status": (
-                protected_failure_contrast.get("approval_request_status")
+                protected_failure_contrast_request_status
             ),
             "protected_failure_contrast_approval_request_blockers": (
-                protected_failure_contrast.get("approval_request_blockers") or []
+                protected_failure_contrast_request_blockers
+            ),
+            "protected_failure_contrast_approval_request_ready_for_collection": (
+                protected_failure_contrast_request_ready
             ),
             "protected_failure_contrast_approval_receipt_created_by_request": (
                 protected_failure_contrast.get("approval_receipt_created_by_request")

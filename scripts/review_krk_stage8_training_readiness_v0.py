@@ -85,9 +85,20 @@ def build_payload(
         sequence_decision.get("status")
         == "sequence_policy_benchmark_supports_non_causal_sequence_policy_review"
     )
+    protected_failure_contrast_request_status = protected_failure_contrast.get(
+        "approval_request_status"
+    )
+    protected_failure_contrast_request_blockers = (
+        protected_failure_contrast.get("approval_request_blockers") or []
+    )
+    protected_failure_contrast_request_ready = (
+        not protected_failure_contrast_request_blockers
+        and protected_failure_contrast_request_status
+        in (None, "protected_plan_window_failure_contrast_approval_request_ready")
+    )
     protected_failure_contrast_collection_ready = bool(
         protected_failure_contrast.get("ready_for_explicit_approval")
-    )
+    ) and protected_failure_contrast_request_ready
     protected_failure_contrast_integration_ready = bool(
         protected_failure_contrast.get("integration_ready")
     )
@@ -122,7 +133,11 @@ def build_payload(
     if not sequence_review_ready:
         blockers.append("sequence_policy_benchmark_review_not_ready")
     elif not sequence_review_supportive:
-        if protected_failure_contrast_collection_blocker:
+        if not protected_failure_contrast_request_ready:
+            blockers.append(
+                "protected_plan_window_failure_contrast_approval_request_blocked"
+            )
+        elif protected_failure_contrast_collection_blocker:
             blockers.append(
                 "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
             )
@@ -145,6 +160,11 @@ def build_payload(
         elif "protected_plan_window_failure_contrast_collection_pending_explicit_approval" in blockers:
             status = "stage8_training_blocked_pending_protected_failure_contrast_collection"
             next_step = "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        elif "protected_plan_window_failure_contrast_approval_request_blocked" in blockers:
+            status = (
+                "stage8_training_blocked_pending_protected_failure_contrast_approval_request_repair"
+            )
+            next_step = "repair_protected_failure_contrast_approval_request_scope"
         elif "sequence_policy_benchmark_mixed_or_underpowered" in blockers:
             status = "stage8_training_blocked_pending_sequence_policy_benchmark_review"
             next_step = "inspect_sequence_policy_benchmark_review_before_stage8_training"
@@ -252,10 +272,13 @@ def build_payload(
                 protected_failure_contrast.get("approval_request_artifact")
             ),
             "protected_failure_contrast_approval_request_status": (
-                protected_failure_contrast.get("approval_request_status")
+                protected_failure_contrast_request_status
             ),
             "protected_failure_contrast_approval_request_blockers": (
-                protected_failure_contrast.get("approval_request_blockers") or []
+                protected_failure_contrast_request_blockers
+            ),
+            "protected_failure_contrast_approval_request_ready_for_collection": (
+                protected_failure_contrast_request_ready
             ),
             "protected_failure_contrast_approval_receipt_created_by_request": (
                 protected_failure_contrast.get("approval_receipt_created_by_request")

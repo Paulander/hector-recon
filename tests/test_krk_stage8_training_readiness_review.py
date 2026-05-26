@@ -143,6 +143,12 @@ def test_stage8_training_readiness_review_blocks_current_state():
     )
     assert (
         payload["requirements"][
+            "protected_failure_contrast_approval_request_ready_for_collection"
+        ]
+        is True
+    )
+    assert (
+        payload["requirements"][
             "protected_failure_contrast_approval_receipt_created_by_request"
         ]
         is False
@@ -318,6 +324,70 @@ def test_stage8_training_readiness_review_fixture_blocks_mixed_sequence_result()
         == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
     assert "stage7_not_promoted_and_must_remain_held_out_without_explicit_gate" in payload["warnings"]
+    assert payload["decision"]["stage8_training_allowed"] is False
+
+
+def test_stage8_training_readiness_review_routes_blocked_collection_request_to_repair():
+    readiness = {
+        "protected_stack": {
+            "ready": True,
+            "m1_m4_preservation_passed": True,
+            "kpk_kqk_bridge_preservation_passed": True,
+        },
+        "stage_status": {
+            "stage4": {"ready_for_current_suite": True},
+            "stage7": {
+                "success_controls_ready": True,
+                "success_controls": 5,
+                "success_controls_required": 5,
+                "ready_for_promotion": False,
+            },
+        },
+        "protected_failure_contrast_gate": {
+            "ready_for_explicit_approval": True,
+            "approval_request_status": (
+                "protected_plan_window_failure_contrast_approval_request_blocked"
+            ),
+            "approval_request_blockers": ["full_suite_readiness_audit_not_clean"],
+            "integration_ready": False,
+            "runner_status": "protected_plan_window_failure_contrast_runner_dry_run_ready",
+            "runner_processed_job_count": 0,
+            "runner_executed_job_count": 0,
+        },
+        "explicit_gate_blockers": [
+            "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+        ],
+    }
+    benchmark_review = {
+        "decision": {"status": "sequence_policy_benchmark_mixed_plan_window_underpowered"}
+    }
+
+    payload = _review.build_payload(readiness=readiness, benchmark_review=benchmark_review)
+
+    assert (
+        payload["requirements"][
+            "protected_failure_contrast_collection_ready_for_explicit_approval"
+        ]
+        is False
+    )
+    assert (
+        payload["requirements"][
+            "protected_failure_contrast_approval_request_ready_for_collection"
+        ]
+        is False
+    )
+    assert (
+        "protected_plan_window_failure_contrast_approval_request_blocked"
+        in payload["blockers"]
+    )
+    assert (
+        payload["decision"]["status"]
+        == "stage8_training_blocked_pending_protected_failure_contrast_approval_request_repair"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "repair_protected_failure_contrast_approval_request_scope"
+    )
     assert payload["decision"]["stage8_training_allowed"] is False
 
 

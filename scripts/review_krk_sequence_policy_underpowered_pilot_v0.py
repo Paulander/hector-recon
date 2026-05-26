@@ -94,9 +94,21 @@ def build_payload(
     sequence_policy = readiness.get("sequence_policy") or {}
     readiness_boundaries = readiness.get("runtime_and_training_boundaries") or {}
     explicit_gate_blockers = set(readiness.get("explicit_gate_blockers") or [])
+    protected_failure_contrast_request_status = protected_failure_contrast.get(
+        "approval_request_status"
+    )
+    protected_failure_contrast_request_blockers = (
+        protected_failure_contrast.get("approval_request_blockers") or []
+    )
+    protected_failure_contrast_request_ready = (
+        not protected_failure_contrast_request_blockers
+        and protected_failure_contrast_request_status
+        in (None, "protected_plan_window_failure_contrast_approval_request_ready")
+    )
     protected_failure_contrast_pending_approval = (
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
         in explicit_gate_blockers
+        and protected_failure_contrast_request_ready
     )
 
     stage4_topk_signal = (
@@ -139,7 +151,11 @@ def build_payload(
     if stage4_binary_insufficient:
         findings.append("stage4_one_term_binary_rule_insufficient")
     if protected_plan_window_underpowered:
-        if protected_failure_contrast_pending_approval:
+        if not protected_failure_contrast_request_ready:
+            blockers.append(
+                "protected_plan_window_failure_contrast_approval_request_blocked"
+            )
+        elif protected_failure_contrast_pending_approval:
             blockers.append(
                 "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
             )
@@ -160,6 +176,11 @@ def build_payload(
         recommended_next_step = (
             "explicitly_approve_stage7_diverse_clean_label_execution_before_full_sequence_policy_benchmark"
         )
+    elif protected_plan_window_underpowered and not protected_failure_contrast_request_ready:
+        decision_status = (
+            "sequence_policy_pilot_blocked_pending_protected_failure_contrast_approval_request_repair"
+        )
+        recommended_next_step = "repair_protected_failure_contrast_approval_request_scope"
     elif protected_plan_window_underpowered and protected_failure_contrast_pending_approval:
         decision_status = (
             "sequence_policy_pilot_underpowered_pending_protected_failure_contrast_collection"
@@ -223,7 +244,8 @@ def build_payload(
                 "eligible_new_success_controls"
             ),
             "protected_failure_contrast_ready_for_explicit_approval": (
-                protected_failure_contrast.get("ready_for_explicit_approval")
+                bool(protected_failure_contrast.get("ready_for_explicit_approval"))
+                and protected_failure_contrast_request_ready
             ),
             "protected_failure_contrast_integration_ready": (
                 protected_failure_contrast.get("integration_ready")
@@ -244,10 +266,13 @@ def build_payload(
                 protected_failure_contrast.get("approval_request_artifact")
             ),
             "protected_failure_contrast_approval_request_status": (
-                protected_failure_contrast.get("approval_request_status")
+                protected_failure_contrast_request_status
             ),
             "protected_failure_contrast_approval_request_blockers": (
-                protected_failure_contrast.get("approval_request_blockers") or []
+                protected_failure_contrast_request_blockers
+            ),
+            "protected_failure_contrast_approval_request_ready_for_collection": (
+                protected_failure_contrast_request_ready
             ),
             "protected_failure_contrast_approval_receipt_created_by_request": (
                 protected_failure_contrast.get("approval_receipt_created_by_request")
