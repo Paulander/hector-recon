@@ -152,7 +152,7 @@
     "status": "retry1_protected_stage5_6_stack_adopted_manifest_only"
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 217,
+    "checked_flag_count": 317,
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "runtime_behavior_changed": false,
@@ -210,7 +210,17 @@
   "source_artifacts": {
     "active_protected_stack": "reports/krk_active_protected_stack_v0.json",
     "clean_stack_validation": "reports/krk_clean_stack_post_replacement_validation_v0.json",
+    "control_plane_evidence_contract": "reports/krk_control_plane_evidence_contract_v0.json",
+    "control_plane_filtered_frames": "reports/krk_control_plane_filtered_frames_v0.json",
+    "control_plane_forced_controls": "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+    "control_plane_frame_quality": "reports/krk_control_plane_frame_quality_report_v0.json",
+    "control_plane_frames": "reports/krk_control_plane_frames_v0.json",
+    "control_plane_gap_report": "reports/krk_control_plane_gap_report_v0.json",
     "control_plane_gate": "reports/krk_current_control_plane_gate_v0.json",
+    "control_plane_manifest": "reports/krk_control_plane_manifest_v0.json",
+    "control_plane_stage7_boundary_refresh": "reports/krk_control_plane_stage7_boundary_refresh_v0.json",
+    "control_plane_strategy_baseline": "reports/krk_control_plane_strategy_arbitration_baseline_v1.json",
+    "control_plane_strategy_probe": "reports/krk_control_plane_strategy_arbitration_probe_v0.json",
     "cross_stage_plan_capsule_requirements": "reports/strategy_arbitration/krk_cross_stage_plan_capsule_evidence_requirements_v0.json",
     "current_brief": "reports/current_agent_brief.md",
     "post_failure_contrast_sequence_refresh": "reports/strategy_arbitration/krk_sequence_policy_after_protected_failure_contrast_refresh_v0.json",

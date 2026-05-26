@@ -145,5 +145,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `217`
+- checked_flag_count: `317`
 - violation_count: `0`

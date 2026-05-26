@@ -53,6 +53,7 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
     assert payload["decision"]["stage8_training_allowed"] is False
 
     boundaries = payload["runtime_and_training_boundaries"]
+    assert boundaries["checked_flag_count"] >= 300
     assert boundaries["violation_count"] == 0
     assert boundaries["runtime_behavior_changed"] is False
     assert boundaries["runtime_selector_implemented"] is False
@@ -61,6 +62,14 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
     assert boundaries["runtime_dtm_or_tablebase_lookup"] is False
     assert boundaries["hidden_python_controller"] is False
     assert boundaries["gameplay_topology_mutation"] is False
+    assert (
+        payload["source_artifacts"]["control_plane_filtered_frames"]
+        == "reports/krk_control_plane_filtered_frames_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["control_plane_forced_controls"]
+        == "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json"
+    )
 
 
 def test_full_suite_readiness_identifies_current_gate():

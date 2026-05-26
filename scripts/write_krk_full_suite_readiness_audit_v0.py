@@ -20,6 +20,24 @@ OUT_MD = ROOT / "reports/krk_full_suite_readiness_audit_v0.md"
 SOURCES = {
     "current_brief": "reports/current_agent_brief.md",
     "control_plane_gate": "reports/krk_current_control_plane_gate_v0.json",
+    "control_plane_evidence_contract": "reports/krk_control_plane_evidence_contract_v0.json",
+    "control_plane_manifest": "reports/krk_control_plane_manifest_v0.json",
+    "control_plane_gap_report": "reports/krk_control_plane_gap_report_v0.json",
+    "control_plane_frames": "reports/krk_control_plane_frames_v0.json",
+    "control_plane_frame_quality": "reports/krk_control_plane_frame_quality_report_v0.json",
+    "control_plane_filtered_frames": "reports/krk_control_plane_filtered_frames_v0.json",
+    "control_plane_forced_controls": (
+        "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json"
+    ),
+    "control_plane_strategy_probe": (
+        "reports/krk_control_plane_strategy_arbitration_probe_v0.json"
+    ),
+    "control_plane_strategy_baseline": (
+        "reports/krk_control_plane_strategy_arbitration_baseline_v1.json"
+    ),
+    "control_plane_stage7_boundary_refresh": (
+        "reports/krk_control_plane_stage7_boundary_refresh_v0.json"
+    ),
     "active_protected_stack": "reports/krk_active_protected_stack_v0.json",
     "clean_stack_validation": "reports/krk_clean_stack_post_replacement_validation_v0.json",
     "preservation_checks": "reports/krk_clean_retrain_retry1_preservation_checks_v0.json",
