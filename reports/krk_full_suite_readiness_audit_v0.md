@@ -103,6 +103,35 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Strategy Arbiter Out-Of-Sample Controls
+
+- passive_out_of_sample_ready: `True`
+- plan_status: `out_of_sample_control_plan_defined_execution_blocked`
+- plan_execute_collection_now: `False`
+- manifest_status: `execution_manifest_ready_for_review`
+- manifest_execute_labels_now: `False`
+- manifest_job_count: `12`
+- manifest_job_count_by_stage: `{'stage4': 4, 'stage5': 4, 'stage6': 4}`
+- manifest_stage7_training_rows: `0`
+- manifest_review_status: `execution_manifest_review_passed_bounded_label_run_allowed`
+- manifest_review_execute_labels_now: `False`
+- label_count: `12`
+- label_stage7_training_rows: `0`
+- label_selected_result_counts: `{'mate': 11, 'max_plies': 1}`
+- probe_status: `out_of_sample_controls_guardrail_positive_selector_sandbox_blocked`
+- probe_sandbox_blockers: `['class_imbalance', 'selected_provider_dominance']`
+- probe_selected_provider_dominance: `1.0`
+- architecture_review_status: `selector_sandbox_blocked_out_of_sample_controls_not_selector_diverse`
+- architecture_selector_signal_status: `not_ready_due_to_class_imbalance_and_provider_dominance`
+- blocked_next_steps: `['runtime_arbiter', 'selector_sandbox', 'stage7_repair', 'stage7_promotion', 'stage8_training', 'runtime_dtm_or_tablebase', 'gameplay_topology_mutation']`
+- runtime_arbiter_allowed: `False`
+- selector_sandbox_ready: `False`
+- runtime_arbiter_implemented: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- gameplay_topology_mutation: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Selector Objective Normalization
 
 - passive_objective_ready: `True`
@@ -603,7 +632,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `247ec7bfc8e80432e31e82f94aa25e37aa6769ce11d0ebe0bf81f9bb0d25e6fa`
+- expected_readiness_fingerprint: `fb0ca9d381206a61fd22002948a92f9382fbd20bb60ffaf82b1bd4e105b14cdc`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1132,5 +1161,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2319`
+- checked_flag_count: `2353`
 - violation_count: `0`

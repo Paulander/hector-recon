@@ -584,6 +584,9 @@ def build_payload() -> dict[str, Any]:
         readiness.get("strategy_sequence_architecture_gate") or {}
     )
     strategy_owner_contrast_gate = readiness.get("strategy_owner_contrast_gate") or {}
+    strategy_arbiter_out_of_sample_gate = (
+        readiness.get("strategy_arbiter_out_of_sample_gate") or {}
+    )
     selector_objective_normalization_gate = (
         readiness.get("selector_objective_normalization_gate") or {}
     )
@@ -1019,6 +1022,90 @@ def build_payload() -> dict[str, Any]:
             ),
             "strategy_owner_contrast_stage8_training_allowed": (
                 strategy_owner_contrast_gate.get("stage8_training_allowed")
+            ),
+            "strategy_arbiter_out_of_sample_passive_ready": (
+                strategy_arbiter_out_of_sample_gate.get(
+                    "passive_out_of_sample_ready"
+                )
+            ),
+            "strategy_arbiter_out_of_sample_plan_status": (
+                strategy_arbiter_out_of_sample_gate.get("plan_status")
+            ),
+            "strategy_arbiter_out_of_sample_plan_execute_collection_now": (
+                strategy_arbiter_out_of_sample_gate.get(
+                    "plan_execute_collection_now"
+                )
+            ),
+            "strategy_arbiter_out_of_sample_manifest_status": (
+                strategy_arbiter_out_of_sample_gate.get("manifest_status")
+            ),
+            "strategy_arbiter_out_of_sample_manifest_execute_labels_now": (
+                strategy_arbiter_out_of_sample_gate.get(
+                    "manifest_execute_labels_now"
+                )
+            ),
+            "strategy_arbiter_out_of_sample_manifest_job_count": (
+                strategy_arbiter_out_of_sample_gate.get("manifest_job_count")
+            ),
+            "strategy_arbiter_out_of_sample_manifest_stage7_training_rows": (
+                strategy_arbiter_out_of_sample_gate.get(
+                    "manifest_stage7_training_rows"
+                )
+            ),
+            "strategy_arbiter_out_of_sample_manifest_review_status": (
+                strategy_arbiter_out_of_sample_gate.get("manifest_review_status")
+            ),
+            "strategy_arbiter_out_of_sample_label_count": (
+                strategy_arbiter_out_of_sample_gate.get("label_count")
+            ),
+            "strategy_arbiter_out_of_sample_label_stage7_training_rows": (
+                strategy_arbiter_out_of_sample_gate.get("label_stage7_training_rows")
+            ),
+            "strategy_arbiter_out_of_sample_probe_status": (
+                strategy_arbiter_out_of_sample_gate.get("probe_status")
+            ),
+            "strategy_arbiter_out_of_sample_probe_sandbox_blockers": (
+                strategy_arbiter_out_of_sample_gate.get("probe_sandbox_blockers")
+            ),
+            "strategy_arbiter_out_of_sample_probe_selected_provider_dominance": (
+                strategy_arbiter_out_of_sample_gate.get(
+                    "probe_selected_provider_dominance"
+                )
+            ),
+            "strategy_arbiter_out_of_sample_architecture_review_status": (
+                strategy_arbiter_out_of_sample_gate.get(
+                    "architecture_review_status"
+                )
+            ),
+            "strategy_arbiter_out_of_sample_architecture_selector_signal_status": (
+                strategy_arbiter_out_of_sample_gate.get(
+                    "architecture_selector_signal_status"
+                )
+            ),
+            "strategy_arbiter_out_of_sample_runtime_arbiter_allowed": (
+                strategy_arbiter_out_of_sample_gate.get("runtime_arbiter_allowed")
+            ),
+            "strategy_arbiter_out_of_sample_selector_sandbox_ready": (
+                strategy_arbiter_out_of_sample_gate.get("selector_sandbox_ready")
+            ),
+            "strategy_arbiter_out_of_sample_runtime_arbiter_implemented": (
+                strategy_arbiter_out_of_sample_gate.get(
+                    "runtime_arbiter_implemented"
+                )
+            ),
+            "strategy_arbiter_out_of_sample_runtime_dtm_or_tablebase_lookup": (
+                strategy_arbiter_out_of_sample_gate.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "strategy_arbiter_out_of_sample_gameplay_topology_mutation": (
+                strategy_arbiter_out_of_sample_gate.get("gameplay_topology_mutation")
+            ),
+            "strategy_arbiter_out_of_sample_stage7_promotion_allowed": (
+                strategy_arbiter_out_of_sample_gate.get("stage7_promotion_allowed")
+            ),
+            "strategy_arbiter_out_of_sample_stage8_training_allowed": (
+                strategy_arbiter_out_of_sample_gate.get("stage8_training_allowed")
             ),
             "selector_objective_normalization_passive_ready": (
                 selector_objective_normalization_gate.get("passive_objective_ready")

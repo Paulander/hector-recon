@@ -447,6 +447,48 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_strategy_owner_contrast_probe_v0.json"
     )
     assert (
+        payload["source_artifacts"][
+            "strategy_arbiter_out_of_sample_control_plan_v0"
+        ]
+        == "reports/krk_strategy_arbiter_out_of_sample_control_plan_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "strategy_arbiter_out_of_sample_plan_review_v0"
+        ]
+        == "reports/krk_strategy_arbiter_out_of_sample_plan_review_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "strategy_arbiter_out_of_sample_execution_manifest_v0"
+        ]
+        == "reports/krk_strategy_arbiter_out_of_sample_execution_manifest_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "strategy_arbiter_out_of_sample_execution_manifest_review_v0"
+        ]
+        == "reports/krk_strategy_arbiter_out_of_sample_execution_manifest_review_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "strategy_arbiter_out_of_sample_control_labels_v0"
+        ]
+        == "reports/krk_strategy_arbiter_out_of_sample_control_labels_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "strategy_arbiter_out_of_sample_control_probe_v0"
+        ]
+        == "reports/krk_strategy_arbiter_out_of_sample_control_probe_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "strategy_arbiter_out_of_sample_architecture_review_v0"
+        ]
+        == "reports/krk_strategy_arbiter_out_of_sample_architecture_review_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["arbitration_objective_review_v1"]
         == "reports/krk_arbitration_objective_review_v1.json"
     )
@@ -932,6 +974,75 @@ def test_full_suite_readiness_identifies_current_gate():
     assert strategy_owner["runtime_terminals_added"] is False
     assert strategy_owner["stage7_promotion_allowed"] is False
     assert strategy_owner["stage8_training_allowed"] is False
+
+    out_of_sample = payload["strategy_arbiter_out_of_sample_gate"]
+    assert out_of_sample["passive_out_of_sample_ready"] is True
+    assert (
+        out_of_sample["plan_status"]
+        == "out_of_sample_control_plan_defined_execution_blocked"
+    )
+    assert out_of_sample["plan_execute_collection_now"] is False
+    assert out_of_sample["plan_stage7_training_rows"] == 0
+    assert (
+        out_of_sample["plan_review_status"]
+        == "plan_review_passed_execution_manifest_needed"
+    )
+    assert out_of_sample["plan_review_execute_collection_now"] is False
+    assert out_of_sample["manifest_status"] == "execution_manifest_ready_for_review"
+    assert out_of_sample["manifest_execute_labels_now"] is False
+    assert out_of_sample["manifest_job_count"] == 12
+    assert out_of_sample["manifest_job_count_by_stage"] == {
+        "stage4": 4,
+        "stage5": 4,
+        "stage6": 4,
+    }
+    assert out_of_sample["manifest_required_stage_coverage_met"] is True
+    assert out_of_sample["manifest_missing_path_count"] == 0
+    assert out_of_sample["manifest_stage7_training_rows"] == 0
+    assert out_of_sample["manifest_labels_generated_in_this_slice"] is False
+    assert out_of_sample["manifest_review_status"] == (
+        "execution_manifest_review_passed_bounded_label_run_allowed"
+    )
+    assert out_of_sample["manifest_review_execute_labels_now"] is False
+    assert out_of_sample["manifest_review_stage7_training_rows"] == 0
+    assert out_of_sample["label_count"] == 12
+    assert out_of_sample["label_stage7_training_rows"] == 0
+    assert out_of_sample["label_trace_failures_only"] is True
+    assert out_of_sample["label_selected_result_counts"] == {
+        "mate": 11,
+        "max_plies": 1,
+    }
+    assert out_of_sample["probe_status"] == (
+        "out_of_sample_controls_guardrail_positive_selector_sandbox_blocked"
+    )
+    assert out_of_sample["probe_sandbox_blockers"] == [
+        "class_imbalance",
+        "selected_provider_dominance",
+    ]
+    assert out_of_sample["probe_selected_provider_dominance"] == 1.0
+    assert (
+        out_of_sample["architecture_review_status"]
+        == "selector_sandbox_blocked_out_of_sample_controls_not_selector_diverse"
+    )
+    assert out_of_sample["architecture_selector_signal_status"] == (
+        "not_ready_due_to_class_imbalance_and_provider_dominance"
+    )
+    assert "runtime_arbiter" in out_of_sample["blocked_next_steps"]
+    assert "selector_sandbox" in out_of_sample["blocked_next_steps"]
+    assert "runtime_dtm_or_tablebase" in out_of_sample["blocked_next_steps"]
+    assert "gameplay_topology_mutation" in out_of_sample["blocked_next_steps"]
+    assert "stage7_promotion" in out_of_sample["blocked_next_steps"]
+    assert "stage8_training" in out_of_sample["blocked_next_steps"]
+    assert out_of_sample["runtime_arbiter_allowed"] is False
+    assert out_of_sample["selector_sandbox_ready"] is False
+    assert out_of_sample["runtime_arbiter_implemented"] is False
+    assert out_of_sample["runtime_behavior_changed"] is False
+    assert out_of_sample["runtime_defaults_changed"] is False
+    assert out_of_sample["runtime_dtm_or_tablebase_lookup"] is False
+    assert out_of_sample["runtime_terminals_added"] is False
+    assert out_of_sample["gameplay_topology_mutation"] is False
+    assert out_of_sample["stage7_promotion_allowed"] is False
+    assert out_of_sample["stage8_training_allowed"] is False
 
     selector_objective = payload["selector_objective_normalization_gate"]
     assert selector_objective["passive_objective_ready"] is True

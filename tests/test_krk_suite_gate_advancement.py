@@ -214,6 +214,119 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["strategy_owner_contrast_runtime_terminals_added"] is False
     assert payload["summary"]["strategy_owner_contrast_stage7_promotion_allowed"] is False
     assert payload["summary"]["strategy_owner_contrast_stage8_training_allowed"] is False
+    assert (
+        payload["summary"]["strategy_arbiter_out_of_sample_passive_ready"]
+        is True
+    )
+    assert payload["summary"]["strategy_arbiter_out_of_sample_plan_status"] == (
+        "out_of_sample_control_plan_defined_execution_blocked"
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_out_of_sample_plan_execute_collection_now"
+        ]
+        is False
+    )
+    assert payload["summary"]["strategy_arbiter_out_of_sample_manifest_status"] == (
+        "execution_manifest_ready_for_review"
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_out_of_sample_manifest_execute_labels_now"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["strategy_arbiter_out_of_sample_manifest_job_count"]
+        == 12
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_out_of_sample_manifest_stage7_training_rows"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_out_of_sample_manifest_review_status"
+        ]
+        == "execution_manifest_review_passed_bounded_label_run_allowed"
+    )
+    assert payload["summary"]["strategy_arbiter_out_of_sample_label_count"] == 12
+    assert (
+        payload["summary"][
+            "strategy_arbiter_out_of_sample_label_stage7_training_rows"
+        ]
+        == 0
+    )
+    assert payload["summary"]["strategy_arbiter_out_of_sample_probe_status"] == (
+        "out_of_sample_controls_guardrail_positive_selector_sandbox_blocked"
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_out_of_sample_probe_sandbox_blockers"
+        ]
+        == [
+            "class_imbalance",
+            "selected_provider_dominance",
+        ]
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_out_of_sample_probe_selected_provider_dominance"
+        ]
+        == 1.0
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_out_of_sample_architecture_review_status"
+        ]
+        == "selector_sandbox_blocked_out_of_sample_controls_not_selector_diverse"
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_out_of_sample_architecture_selector_signal_status"
+        ]
+        == "not_ready_due_to_class_imbalance_and_provider_dominance"
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_out_of_sample_runtime_arbiter_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["strategy_arbiter_out_of_sample_selector_sandbox_ready"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_out_of_sample_runtime_arbiter_implemented"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_out_of_sample_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_out_of_sample_gameplay_topology_mutation"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_out_of_sample_stage7_promotion_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["strategy_arbiter_out_of_sample_stage8_training_allowed"]
+        is False
+    )
     assert payload["summary"]["selector_objective_normalization_passive_ready"] is True
     assert (
         payload["summary"]["selector_objective_arbitration_status"]
