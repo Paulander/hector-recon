@@ -56,6 +56,13 @@ PASSIVE_STEPS = [
         "output_json": "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json",
     },
     {
+        "step_id": "stage4_first_move_contrast_sandbox_approval_request",
+        "script": "scripts/write_krk_stage4_first_move_contrast_sandbox_approval_request_v0.py",
+        "output_json": (
+            "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
+        ),
+    },
+    {
         "step_id": "stage4_caveat_unblocker_packet",
         "script": "scripts/write_krk_stage4_caveat_unblocker_packet_v0.py",
         "output_json": "reports/krk_stage4_caveat_unblocker_packet_v0.json",
@@ -313,6 +320,9 @@ def build_payload() -> dict[str, Any]:
 
     readiness = _load_json("reports/krk_full_suite_readiness_audit_v0.json")
     unblocker = _load_json("reports/krk_full_suite_unblocker_packet_v0.json")
+    stage4_approval_request = _load_json(
+        "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
+    )
     stage4_unblocker = _load_json("reports/krk_stage4_caveat_unblocker_packet_v0.json")
     output_validation = _load_json(
         "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json"
@@ -494,6 +504,15 @@ def build_payload() -> dict[str, Any]:
             ).get("eligible_new_success_controls"),
             "stage4_caveat_unblocker_status": stage4_unblocker.get("decision", {}).get(
                 "status"
+            ),
+            "stage4_first_move_contrast_sandbox_approval_request_status": stage4_approval_request.get(
+                "decision", {}
+            ).get("status"),
+            "stage4_first_move_contrast_sandbox_approval_request_created": stage4_approval_request.get(
+                "approval_request_created"
+            ),
+            "stage4_first_move_contrast_sandbox_implementation_authorized_by_request": stage4_approval_request.get(
+                "implementation_authorized_by_request"
             ),
             "stage7_success_controls": readiness.get("stage7_sampling_gate", {}).get(
                 "combined_success_controls"

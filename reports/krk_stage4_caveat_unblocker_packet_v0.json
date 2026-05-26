@@ -14,9 +14,13 @@
   "blockers": [],
   "causal_status": "non_causal_stage4_unblocker_packet",
   "current_stage4_status": {
+    "approval_request_created": false,
+    "approval_request_status": "stage4_first_move_contrast_sandbox_approval_request_ready",
     "caveat_control_status": "stage4_caveat_reproduces_in_base_control_no_overlay_regression",
+    "control_plane_approval_request_artifact": "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md",
     "control_plane_option_artifact": "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.md",
     "control_plane_option_status": "stage4_first_move_contrast_runtime_review_ready_pending_explicit_approval",
+    "implementation_authorized_by_approval_request": false,
     "implementation_authorized_by_review_packet": false,
     "requires_explicit_approval_before_implementation": true,
     "runtime_review_ready": true,
@@ -68,6 +72,7 @@
   "source_artifacts": [
     "reports/krk_current_control_plane_gate_v0.json",
     "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json",
+    "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json",
     "reports/krk_clean_retrain_retry1_stage4_caveat_control_review_v0.json",
     "reports/krk_stage4_caveat_sequence_review_v0.json",
     "reports/krk_stage4_stratified_contrast_validation_v0.json",

@@ -10,6 +10,9 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 STAGE4_PACKET = ROOT / "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json"
+STAGE4_APPROVAL_REQUEST = (
+    ROOT / "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
+)
 STAGE7_MANIFEST = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json"
 STAGE7_EXECUTION_READINESS = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_execution_readiness_v0.json"
 STAGE7_INTEGRATION = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json"
@@ -118,6 +121,7 @@ def _load_optional(path: Path) -> dict[str, Any]:
 def build_payload(
     *,
     stage4_packet: dict[str, Any] | None = None,
+    stage4_approval_request: dict[str, Any] | None = None,
     stage7_manifest: dict[str, Any] | None = None,
     stage7_execution_readiness: dict[str, Any] | None = None,
     stage7_integration: dict[str, Any] | None = None,
@@ -144,6 +148,9 @@ def build_payload(
     full_suite_readiness: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     stage4_packet = stage4_packet or _load(STAGE4_PACKET)
+    stage4_approval_request = stage4_approval_request or _load_optional(
+        STAGE4_APPROVAL_REQUEST
+    )
     stage7_manifest = stage7_manifest or _load(STAGE7_MANIFEST)
     stage7_execution_readiness = stage7_execution_readiness or _load_optional(STAGE7_EXECUTION_READINESS)
     stage7_integration = stage7_integration or _load_optional(STAGE7_INTEGRATION)
@@ -266,6 +273,15 @@ def build_payload(
         {
             "option_id": "approve_stage4_first_move_contrast_sandbox",
             "artifact": "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.md",
+            "approval_request_artifact": (
+                "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md"
+            ),
+            "approval_request_status": stage4_approval_request.get("decision", {}).get(
+                "status"
+            ),
+            "approval_request_created": stage4_approval_request.get(
+                "approval_request_created"
+            ),
             "status": stage4_packet.get("decision", {}).get("status"),
             "what_it_allows": "default-off Stage 4 CandidateMoveFrame first-move contrast sandbox only",
             "what_it_does_not_allow": [
@@ -560,6 +576,7 @@ def build_payload(
         **COMMON_FALSE_FLAGS,
         "source_artifacts": [
             "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json",
+            "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json",
             "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
             "reports/structural_candidates/stage7_diverse_clean_sampling_execution_readiness_v0.json",
             "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json",
@@ -867,6 +884,11 @@ def write_markdown(payload: dict[str, Any]) -> str:
             lines.append(
                 "- approval_request_artifact: "
                 f"`{option['approval_request_artifact']}`"
+            )
+        if option.get("approval_request_status"):
+            lines.append(
+                "- approval_request_status: "
+                f"`{option['approval_request_status']}`"
             )
         if option.get("safety_scope"):
             lines.append("- safety_scope:")

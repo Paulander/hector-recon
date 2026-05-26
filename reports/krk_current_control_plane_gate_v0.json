@@ -1,6 +1,9 @@
 {
   "approval_options": [
     {
+      "approval_request_artifact": "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md",
+      "approval_request_created": false,
+      "approval_request_status": "stage4_first_move_contrast_sandbox_approval_request_ready",
       "artifact": "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.md",
       "option_id": "approve_stage4_first_move_contrast_sandbox",
       "recommended_if": "you want to reduce the known Stage 4 h40 caveat now",
@@ -161,6 +164,7 @@
   "schema_version": "krk_current_control_plane_gate.v0",
   "source_artifacts": [
     "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json",
+    "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json",
     "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
     "reports/structural_candidates/stage7_diverse_clean_sampling_execution_readiness_v0.json",
     "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json",

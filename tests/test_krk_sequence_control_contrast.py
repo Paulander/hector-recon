@@ -232,6 +232,19 @@ def test_current_control_plane_gate_requires_explicit_choice():
         "approve_stage4_first_move_contrast_sandbox",
         "approve_protected_plan_window_failure_contrast_collection",
     }
+    stage4_option = [
+        option
+        for option in payload["approval_options"]
+        if option["option_id"] == "approve_stage4_first_move_contrast_sandbox"
+    ][0]
+    assert stage4_option["approval_request_artifact"] == (
+        "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md"
+    )
+    assert (
+        stage4_option["approval_request_status"]
+        == "stage4_first_move_contrast_sandbox_approval_request_ready"
+    )
+    assert stage4_option["approval_request_created"] is False
     assert (
         payload["current_state"]["sequence_policy"]
         == "sequence_policy_benchmark_mixed_plan_window_underpowered"

@@ -87,6 +87,7 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     step_ids = {step["step_id"] for step in payload["step_results"]}
     assert step_ids == {
         "stage7_diverse_clean_output_validation",
+        "stage4_first_move_contrast_sandbox_approval_request",
         "stage4_caveat_unblocker_packet",
         "stage7_clean_artifact_manifest",
         "stage7_clean_sequence_control_recovery",
@@ -251,6 +252,24 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     assert (
         payload["summary"]["stage4_caveat_unblocker_status"]
         == "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval"
+    )
+    assert (
+        payload["summary"][
+            "stage4_first_move_contrast_sandbox_approval_request_status"
+        ]
+        == "stage4_first_move_contrast_sandbox_approval_request_ready"
+    )
+    assert (
+        payload["summary"][
+            "stage4_first_move_contrast_sandbox_approval_request_created"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "stage4_first_move_contrast_sandbox_implementation_authorized_by_request"
+        ]
+        is False
     )
     for step in payload["step_results"]:
         assert step["label_run_allowed"] is False

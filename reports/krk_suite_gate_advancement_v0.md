@@ -13,6 +13,9 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - stage7_clean_success_backfill_available: `True`
 - stage7_clean_success_backfill_eligible_new_success: `0`
 - stage4_caveat_unblocker_status: `stage4_caveat_unblocker_ready_pending_explicit_runtime_approval`
+- stage4_first_move_contrast_sandbox_approval_request_status: `stage4_first_move_contrast_sandbox_approval_request_ready`
+- stage4_first_move_contrast_sandbox_approval_request_created: `False`
+- stage4_first_move_contrast_sandbox_implementation_authorized_by_request: `False`
 - stage7_success_controls: `11`
 - stage7_success_controls_required: `5`
 - stage7_success_controls_ready: `True`
@@ -68,6 +71,7 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 ## Steps
 
 - `stage7_diverse_clean_output_validation` status=`stage7_diverse_clean_sampling_outputs_valid_ready_for_integration` labels=`False` runtime=`False` artifact_runtime=`False`
+- `stage4_first_move_contrast_sandbox_approval_request` status=`stage4_first_move_contrast_sandbox_approval_request_ready` labels=`False` runtime=`False` artifact_runtime=`False`
 - `stage4_caveat_unblocker_packet` status=`stage4_caveat_unblocker_ready_pending_explicit_runtime_approval` labels=`False` runtime=`False` artifact_runtime=`False`
 - `stage7_clean_artifact_manifest` status=`clean_artifact_manifest_ready` labels=`False` runtime=`False` artifact_runtime=`False`
 - `stage7_clean_sequence_control_recovery` status=`clean_sequence_controls_recovered_for_offline_source_bias_audit` labels=`False` runtime=`False` artifact_runtime=`False`

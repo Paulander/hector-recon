@@ -1,0 +1,92 @@
+{
+  "approval_id": "approve_stage4_first_move_contrast_sandbox",
+  "approval_request_created": false,
+  "blockers": [],
+  "causal_status": "non_causal_runtime_approval_request_packet",
+  "decision": {
+    "implementation_allowed_by_this_request": false,
+    "label_run_allowed": false,
+    "recommended_next_step": "user_may_explicitly_approve_stage4_sandbox_only_if_runtime_work_is_intended",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "stage4_first_move_contrast_sandbox_approval_request_ready"
+  },
+  "exact_approval_request": "Approve default-off Stage 4 first-move contrast sandbox implementation only within krk_stage4_first_move_contrast_runtime_review_packet_v0: CandidateMoveFrame legal first-move hypotheses in KRK Stage 4 edge_trap_wrong_tempo contexts; no default enablement, no exact-state or exact-move exception, no runtime DTM/tablebase lookup, no hidden controller, no selector training, no provider suppression, no broad stage0 penalty, no gameplay topology mutation, no Stage 7 promotion, and no Stage 8 training.",
+  "gameplay_topology_mutation": false,
+  "implementation_authorized_by_request": false,
+  "required_scope_if_user_approves": {
+    "acceptance_if_later_approved": {
+      "default_off_equivalence_passes": true,
+      "default_off_score_delta_count": 0,
+      "default_off_selected_move_delta_count": 0,
+      "runtime_dtm_or_tablebase_lookup": false,
+      "stage7_training_row_count": 0,
+      "stage8_training_row_count": 0,
+      "target_smoke_required": [
+        "identity Stage 4 caveat state",
+        "file-mirrored Stage 4 caveat state",
+        "rank-mirrored Stage 4 caveat state",
+        "rotated Stage 4 caveat state"
+      ],
+      "topology_mutation": false
+    },
+    "allowed_runtime_behavior": [
+      "enumerate legal CandidateMoveFrame first-move hypotheses in Stage 4 contexts",
+      "attach visible first-move contrast terms to candidate frames",
+      "apply a bounded default-off support only if a later packet explicitly authorizes it"
+    ],
+    "approval_id": "approve_stage4_first_move_contrast_sandbox",
+    "default_off": true,
+    "implementation_boundaries": {
+      "guardrails_before_target_smoke": false,
+      "implementation_allowed_by_this_packet": false,
+      "promotion_allowed": false,
+      "requires_later_explicit_approval": true,
+      "selector_allowed": false,
+      "selector_training_allowed": false,
+      "target_smoke_before_guardrails": true
+    },
+    "review_packet": "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json",
+    "review_packet_status": "stage4_first_move_contrast_runtime_review_ready_pending_explicit_approval",
+    "sandbox_id": "sandbox.krk.stage4_first_move_contrast_v0",
+    "scope": {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "domain": "KRK",
+      "exact_state_exception_allowed": false,
+      "stage": "stage4",
+      "stage5_stage6_guardrails_required_before_promotion": true,
+      "stage7_allowed": false,
+      "stage8_allowed": false
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_changes_allowed_by_request": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_stage4_first_move_contrast_sandbox_approval_request.v0",
+  "source_artifacts": [
+    "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "default_enabled": false,
+    "default_off": true,
+    "evidence_passed": true,
+    "hidden_python_controller": false,
+    "implementation_authorized_by_runtime_packet": false,
+    "requires_explicit_approval_before_implementation": true,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "runtime_review_ready": true,
+    "runtime_review_status": "stage4_first_move_contrast_runtime_review_ready_pending_explicit_approval",
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false
+  }
+}

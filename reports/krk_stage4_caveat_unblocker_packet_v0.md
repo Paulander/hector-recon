@@ -8,7 +8,11 @@ This packet is non-causal. It consolidates Stage 4 caveat evidence and the revie
 
 - control_plane_option_status: `stage4_first_move_contrast_runtime_review_ready_pending_explicit_approval`
 - control_plane_option_artifact: `reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.md`
+- control_plane_approval_request_artifact: `reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md`
 - runtime_review_ready: `True`
+- approval_request_status: `stage4_first_move_contrast_sandbox_approval_request_ready`
+- approval_request_created: `False`
+- implementation_authorized_by_approval_request: `False`
 - implementation_authorized_by_review_packet: `False`
 - requires_explicit_approval_before_implementation: `True`
 - caveat_control_status: `stage4_caveat_reproduces_in_base_control_no_overlay_regression`

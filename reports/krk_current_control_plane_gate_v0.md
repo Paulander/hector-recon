@@ -73,6 +73,8 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - status: `stage4_first_move_contrast_runtime_review_ready_pending_explicit_approval`
 - allows: default-off Stage 4 CandidateMoveFrame first-move contrast sandbox only
 - recommended_if: you want to reduce the known Stage 4 h40 caveat now
+- approval_request_artifact: `reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md`
+- approval_request_status: `stage4_first_move_contrast_sandbox_approval_request_ready`
 - does_not_allow:
   - default enablement
   - exact-state or exact-move runtime exception

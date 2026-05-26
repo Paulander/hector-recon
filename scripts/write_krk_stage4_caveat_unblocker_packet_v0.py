@@ -16,6 +16,9 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 CONTROL_GATE = ROOT / "reports/krk_current_control_plane_gate_v0.json"
 RUNTIME_PACKET = ROOT / "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json"
+APPROVAL_REQUEST = (
+    ROOT / "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
+)
 CAVEAT_CONTROL = ROOT / "reports/krk_clean_retrain_retry1_stage4_caveat_control_review_v0.json"
 SEQUENCE_REVIEW = ROOT / "reports/krk_stage4_caveat_sequence_review_v0.json"
 STRATIFIED_VALIDATION = ROOT / "reports/krk_stage4_stratified_contrast_validation_v0.json"
@@ -55,6 +58,7 @@ def _find_stage4_option(control_gate: dict[str, Any]) -> dict[str, Any]:
 def build_payload() -> dict[str, Any]:
     control_gate = _load(CONTROL_GATE)
     runtime_packet = _load(RUNTIME_PACKET)
+    approval_request = _load(APPROVAL_REQUEST)
     caveat_control = _load(CAVEAT_CONTROL)
     sequence_review = _load(SEQUENCE_REVIEW)
     stratified_validation = _load(STRATIFIED_VALIDATION)
@@ -62,6 +66,7 @@ def build_payload() -> dict[str, Any]:
 
     stage4_option = _find_stage4_option(control_gate)
     runtime_decision = runtime_packet.get("decision") or {}
+    approval_request_decision = approval_request.get("decision") or {}
     sequence_summary = sequence_review.get("summary") or {}
     stratified_summary = stratified_validation.get("summary") or {}
     contrast_summary = sequence_contrast.get("summary") or {}
@@ -77,6 +82,11 @@ def build_payload() -> dict[str, Any]:
     blockers: list[str] = []
     if not runtime_review_ready:
         blockers.append("stage4_first_move_contrast_runtime_review_not_ready")
+    if (
+        approval_request_decision.get("status")
+        != "stage4_first_move_contrast_sandbox_approval_request_ready"
+    ):
+        blockers.append("stage4_first_move_contrast_approval_request_not_ready")
     if caveat_control.get("status") != "stage4_caveat_reproduces_in_base_control_no_overlay_regression":
         blockers.append("stage4_caveat_control_status_unexpected")
     if not stratified_summary.get("gap_variant_count"):
@@ -95,6 +105,7 @@ def build_payload() -> dict[str, Any]:
         "source_artifacts": [
             "reports/krk_current_control_plane_gate_v0.json",
             "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json",
+            "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json",
             "reports/krk_clean_retrain_retry1_stage4_caveat_control_review_v0.json",
             "reports/krk_stage4_caveat_sequence_review_v0.json",
             "reports/krk_stage4_stratified_contrast_validation_v0.json",
@@ -103,7 +114,16 @@ def build_payload() -> dict[str, Any]:
         "current_stage4_status": {
             "control_plane_option_status": stage4_option.get("status"),
             "control_plane_option_artifact": stage4_option.get("artifact"),
+            "control_plane_approval_request_artifact": stage4_option.get(
+                "approval_request_artifact"
+            )
+            or "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md",
             "runtime_review_ready": runtime_decision.get("runtime_review_ready"),
+            "approval_request_status": approval_request_decision.get("status"),
+            "approval_request_created": approval_request.get("approval_request_created"),
+            "implementation_authorized_by_approval_request": approval_request.get(
+                "implementation_authorized_by_request"
+            ),
             "implementation_authorized_by_review_packet": runtime_decision.get(
                 "implementation_authorized_by_this_packet"
             ),
