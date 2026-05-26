@@ -1,6 +1,7 @@
 {
   "approval_gates": {
     "protected_plan_window_failure_contrast_collection": {
+      "approval_request_ready_for_collection": true,
       "current_artifact_allows_collection": false,
       "post_success_refresh_required": true,
       "post_success_refresh_scope": "full_passive_krk_suite_gate_stack",
@@ -13,6 +14,7 @@
       "approval_request_artifact": "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json",
       "approval_request_blockers": [],
       "approval_request_created": false,
+      "approval_request_ready_for_runtime_approval": true,
       "approval_request_status": "stage4_first_move_contrast_sandbox_approval_request_ready",
       "current_artifact_allows_implementation": false,
       "implementation_authorized_by_approval_request": false,
@@ -20,6 +22,7 @@
       "safety_scope": {
         "approval_id": "approve_stage4_first_move_contrast_sandbox",
         "approval_request_blockers": [],
+        "approval_request_ready_for_runtime_approval": true,
         "default_enabled": false,
         "default_off": true,
         "exact_state_or_exact_move_exception": false,
@@ -93,6 +96,7 @@
     "approval_receipt_valid": false,
     "approval_request_artifact": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_approval_request_v0.json",
     "approval_request_blockers": [],
+    "approval_request_ready_for_collection": true,
     "approval_request_status": "protected_plan_window_failure_contrast_approval_request_ready",
     "command_if_explicitly_approved": "UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json",
     "current_artifact_allows_collection": false,
@@ -303,6 +307,7 @@
       "approval_request_artifact": "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json",
       "approval_request_blockers": [],
       "approval_request_created": false,
+      "approval_request_ready_for_runtime_approval": true,
       "approval_request_status": "stage4_first_move_contrast_sandbox_approval_request_ready",
       "blocker": "stage4 h40 caveat remains separate guardrail/control debt",
       "implementation_allowed_by_current_artifact": false,

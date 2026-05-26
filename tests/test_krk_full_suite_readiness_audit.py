@@ -145,6 +145,7 @@ def test_full_suite_readiness_identifies_current_gate():
         == "stage4_first_move_contrast_sandbox_approval_request_ready"
     )
     assert stage4["approval_request_blockers"] == []
+    assert stage4["approval_request_ready_for_runtime_approval"] is True
     assert stage4["approval_request_created"] is False
     assert stage4["implementation_authorized_by_approval_request"] is False
 
@@ -254,6 +255,7 @@ def test_full_suite_readiness_identifies_current_gate():
     assert protected_failure_contrast["integrated_new_failure_count"] == 0
     assert protected_failure_contrast["integration_ready"] is False
     assert protected_failure_contrast["ready_for_explicit_approval"] is True
+    assert protected_failure_contrast["approval_request_ready_for_collection"] is True
     assert protected_failure_contrast["current_artifact_allows_collection"] is False
     assert protected_failure_contrast["approval_receipt_required"] is True
     assert protected_failure_contrast["approval_receipt_path"] == (
@@ -336,6 +338,12 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
     )
     assert (
         payload["approval_gates"]["stage4_first_move_contrast_sandbox"][
+            "approval_request_ready_for_runtime_approval"
+        ]
+        is True
+    )
+    assert (
+        payload["approval_gates"]["stage4_first_move_contrast_sandbox"][
             "implementation_authorized_by_approval_request"
         ]
         is False
@@ -348,6 +356,7 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
         == "default_off_stage4_candidate_move_first_move_contrast_sandbox_only"
     )
     assert stage4_scope["approval_request_blockers"] == []
+    assert stage4_scope["approval_request_ready_for_runtime_approval"] is True
     assert stage4_scope["default_off"] is True
     assert stage4_scope["default_enabled"] is False
     assert stage4_scope["implementation_authorized_by_request"] is False
@@ -369,6 +378,12 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
     assert (
         payload["approval_gates"]["protected_plan_window_failure_contrast_collection"][
             "ready_for_explicit_approval"
+        ]
+        is True
+    )
+    assert (
+        payload["approval_gates"]["protected_plan_window_failure_contrast_collection"][
+            "approval_request_ready_for_collection"
         ]
         is True
     )
@@ -478,6 +493,96 @@ def test_full_suite_readiness_routes_forbidden_training_rows_to_input_repair(mon
         is False
     )
     assert payload["decision"]["selector_training_allowed"] is False
+
+
+def test_full_suite_readiness_routes_blocked_protected_collection_request_to_repair(monkeypatch):
+    real_load_json = _audit.load_json
+
+    def tainted_load_json(relative: str):
+        payload = json.loads(json.dumps(real_load_json(relative)))
+        if (
+            relative
+            == "reports/strategy_arbitration/"
+            "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
+        ):
+            payload.setdefault("decision", {})["status"] = (
+                "protected_plan_window_failure_contrast_approval_request_blocked"
+            )
+            payload["blockers"] = ["full_suite_readiness_audit_not_clean"]
+        return payload
+
+    monkeypatch.setattr(_audit, "load_json", tainted_load_json)
+
+    payload = _audit.build_payload()
+    gate = payload["protected_failure_contrast_gate"]
+
+    assert gate["approval_request_status"] == (
+        "protected_plan_window_failure_contrast_approval_request_blocked"
+    )
+    assert gate["approval_request_blockers"] == [
+        "full_suite_readiness_audit_not_clean"
+    ]
+    assert gate["approval_request_ready_for_collection"] is False
+    assert gate["ready_for_explicit_approval"] is False
+    assert gate["command_if_explicitly_approved"] is None
+    assert (
+        "protected_plan_window_failure_contrast_approval_request_blocked"
+        in payload["hard_blockers"]
+    )
+    assert payload["explicit_gate_blockers"] == []
+    assert (
+        payload["decision"]["status"]
+        == "krk_suite_readiness_blocked_pending_protected_failure_contrast_approval_request_repair"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "repair_protected_failure_contrast_approval_request_scope"
+    )
+    assert (
+        payload["approval_gates"]["protected_plan_window_failure_contrast_collection"][
+            "ready_for_explicit_approval"
+        ]
+        is False
+    )
+    assert (
+        payload["approval_gates"]["protected_plan_window_failure_contrast_collection"][
+            "approval_request_ready_for_collection"
+        ]
+        is False
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_full_suite_readiness_gates_stage4_runtime_on_approval_request_blockers(monkeypatch):
+    real_load_json = _audit.load_json
+
+    def tainted_load_json(relative: str):
+        payload = json.loads(json.dumps(real_load_json(relative)))
+        if relative == "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json":
+            payload.setdefault("decision", {})["status"] = (
+                "stage4_first_move_contrast_sandbox_approval_request_blocked"
+            )
+            payload["blockers"] = ["full_suite_readiness_audit_not_clean"]
+        return payload
+
+    monkeypatch.setattr(_audit, "load_json", tainted_load_json)
+
+    payload = _audit.build_payload()
+    stage4 = payload["stage_status"]["stage4"]
+    stage4_gate = payload["approval_gates"]["stage4_first_move_contrast_sandbox"]
+
+    assert stage4["ready_for_explicit_runtime_approval"] is False
+    assert stage4["approval_request_ready_for_runtime_approval"] is False
+    assert stage4["approval_request_blockers"] == [
+        "full_suite_readiness_audit_not_clean"
+    ]
+    assert stage4_gate["ready_for_explicit_approval"] is False
+    assert stage4_gate["approval_request_ready_for_runtime_approval"] is False
+    assert (
+        stage4_gate["safety_scope"]["approval_request_ready_for_runtime_approval"]
+        is False
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
 
 
 def test_full_suite_readiness_blocks_post_failure_refresh_boundary_violation(monkeypatch):

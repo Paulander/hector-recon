@@ -417,6 +417,17 @@ def build_payload() -> dict[str, Any]:
         benchmark_decision.get("status") in FORBIDDEN_INPUT_STATUSES
         or sequence_review_status in FORBIDDEN_INPUT_STATUSES
     )
+    failure_contrast_approval_request_decision = (
+        failure_contrast_approval_request.get("decision") or {}
+    )
+    failure_contrast_approval_request_blockers = (
+        failure_contrast_approval_request.get("blockers") or []
+    )
+    failure_contrast_approval_request_ready = (
+        failure_contrast_approval_request_decision.get("status")
+        == "protected_plan_window_failure_contrast_approval_request_ready"
+        and not failure_contrast_approval_request_blockers
+    )
     protected_failure_contrast_collection_ready = (
         failure_contrast_manifest_review.get("decision", {}).get("status")
         == "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
@@ -428,6 +439,7 @@ def build_payload() -> dict[str, Any]:
     protected_failure_contrast_ready_for_explicit_approval = (
         protected_failure_contrast_collection_ready
         and not sequence_forbidden_training_or_runtime_inputs
+        and failure_contrast_approval_request_ready
     )
     protected_failure_contrast_integration_ready = bool(
         failure_contrast_integration.get("summary", {}).get("integration_ready")
@@ -466,6 +478,11 @@ def build_payload() -> dict[str, Any]:
         and not sequence_forbidden_training_or_runtime_inputs
         and not protected_failure_contrast_integration_ready
     )
+    protected_failure_contrast_approval_request_repair_pending = (
+        protected_failure_contrast_pending
+        and protected_failure_contrast_collection_ready
+        and not failure_contrast_approval_request_ready
+    )
 
     stage4_decision = stage4_unblocker.get("decision") or {}
     stage4_status = (
@@ -476,6 +493,12 @@ def build_payload() -> dict[str, Any]:
         stage4_status == "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval"
     )
     stage4_approval_request_decision = stage4_approval_request.get("decision") or {}
+    stage4_approval_request_blockers = stage4_approval_request.get("blockers") or []
+    stage4_approval_request_ready = (
+        stage4_approval_request_decision.get("status")
+        == "stage4_first_move_contrast_sandbox_approval_request_ready"
+        and not stage4_approval_request_blockers
+    )
     stage4_approval_scope = (
         stage4_approval_request.get("required_scope_if_user_approves") or {}
     )
@@ -489,7 +512,9 @@ def build_payload() -> dict[str, Any]:
             "status": stage4_status,
             "ready_for_current_suite": False,
             "blocker": "stage4 h40 caveat remains separate guardrail/control debt",
-            "ready_for_explicit_runtime_approval": stage4_ready_for_explicit_approval,
+            "ready_for_explicit_runtime_approval": (
+                stage4_ready_for_explicit_approval and stage4_approval_request_ready
+            ),
             "implementation_allowed_by_current_artifact": stage4_decision.get(
                 "implementation_allowed_by_this_packet"
             ),
@@ -497,7 +522,8 @@ def build_payload() -> dict[str, Any]:
                 "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
             ),
             "approval_request_status": stage4_approval_request_decision.get("status"),
-            "approval_request_blockers": stage4_approval_request.get("blockers") or [],
+            "approval_request_blockers": stage4_approval_request_blockers,
+            "approval_request_ready_for_runtime_approval": stage4_approval_request_ready,
             "approval_request_created": stage4_approval_request.get(
                 "approval_request_created"
             ),
@@ -571,12 +597,16 @@ def build_payload() -> dict[str, Any]:
         hard_blockers.append("sequence_policy_benchmark_not_ready")
     if sequence_forbidden_training_or_runtime_inputs:
         hard_blockers.append("sequence_policy_forbidden_training_or_runtime_rows")
+    if protected_failure_contrast_approval_request_repair_pending:
+        hard_blockers.append(
+            "protected_plan_window_failure_contrast_approval_request_blocked"
+        )
     if not post_failure_contrast_refresh_boundaries_preserved:
         hard_blockers.append("post_failure_contrast_sequence_refresh_boundary_violation")
     if boundaries["violation_count"]:
         hard_blockers.append("hard_invariant_violation_detected")
     explicit_gate_blockers: list[str] = []
-    if protected_failure_contrast_pending:
+    if protected_failure_contrast_pending and failure_contrast_approval_request_ready:
         explicit_gate_blockers.append(
             "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
         )
@@ -585,6 +615,11 @@ def build_payload() -> dict[str, Any]:
     if sequence_forbidden_training_or_runtime_inputs:
         decision_status = "krk_suite_readiness_blocked_forbidden_training_or_runtime_rows"
         next_step = "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+    elif protected_failure_contrast_approval_request_repair_pending:
+        decision_status = (
+            "krk_suite_readiness_blocked_pending_protected_failure_contrast_approval_request_repair"
+        )
+        next_step = "repair_protected_failure_contrast_approval_request_scope"
     elif hard_blockers:
         decision_status = "krk_suite_readiness_blocked_pending_stage7_clean_success_controls"
         next_step = (
@@ -763,6 +798,9 @@ def build_payload() -> dict[str, Any]:
             "ready_for_explicit_approval": (
                 protected_failure_contrast_ready_for_explicit_approval
             ),
+            "approval_request_ready_for_collection": (
+                failure_contrast_approval_request_ready
+            ),
             "current_artifact_allows_collection": False,
             "approval_receipt_required": True,
             "approval_receipt_path": failure_contrast_approval_receipt_path,
@@ -783,7 +821,7 @@ def build_payload() -> dict[str, Any]:
                 "decision", {}
             ).get("status"),
             "approval_request_blockers": (
-                failure_contrast_approval_request.get("blockers") or []
+                failure_contrast_approval_request_blockers
             ),
             "approval_receipt_created_by_request": (
                 failure_contrast_approval_request.get("approval_receipt_created")
@@ -917,6 +955,9 @@ def build_payload() -> dict[str, Any]:
                 "ready_for_explicit_approval": (
                     protected_failure_contrast_ready_for_explicit_approval
                 ),
+                "approval_request_ready_for_collection": (
+                    failure_contrast_approval_request_ready
+                ),
                 "current_artifact_allows_collection": False,
                 "status": failure_contrast_execution_readiness.get("decision", {}).get(
                     "status",
@@ -938,6 +979,9 @@ def build_payload() -> dict[str, Any]:
                     )
                 ),
                 "why": (
+                    "The protected failure-contrast approval-request packet is blocked; repair it before considering collection approval."
+                    if protected_failure_contrast_approval_request_repair_pending
+                    else
                     "Sequence-policy inputs contain forbidden training or runtime "
                     "authorization rows; repair inputs before considering protected "
                     "failure-contrast collection."
@@ -948,7 +992,9 @@ def build_payload() -> dict[str, Any]:
                 ),
             },
             "stage4_first_move_contrast_sandbox": {
-                "ready_for_explicit_approval": stage4_ready_for_explicit_approval,
+                "ready_for_explicit_approval": (
+                    stage4_ready_for_explicit_approval and stage4_approval_request_ready
+                ),
                 "current_artifact_allows_implementation": bool(
                     stage4_decision.get("implementation_allowed_by_this_packet")
                 ),
@@ -960,7 +1006,10 @@ def build_payload() -> dict[str, Any]:
                     "status"
                 ),
                 "approval_request_blockers": (
-                    stage4_approval_request.get("blockers") or []
+                    stage4_approval_request_blockers
+                ),
+                "approval_request_ready_for_runtime_approval": (
+                    stage4_approval_request_ready
                 ),
                 "approval_request_created": stage4_approval_request.get(
                     "approval_request_created"
@@ -971,7 +1020,10 @@ def build_payload() -> dict[str, Any]:
                 "safety_scope": {
                     "approval_id": stage4_approval_scope.get("approval_id"),
                     "approval_request_blockers": (
-                        stage4_approval_request.get("blockers") or []
+                        stage4_approval_request_blockers
+                    ),
+                    "approval_request_ready_for_runtime_approval": (
+                        stage4_approval_request_ready
                     ),
                     "sandbox_scope_id": stage4_approval_scope.get("sandbox_scope_id"),
                     "default_off": stage4_approval_scope.get("default_off"),
