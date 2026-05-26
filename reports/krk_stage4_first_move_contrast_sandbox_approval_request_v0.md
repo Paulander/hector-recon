@@ -25,9 +25,9 @@ This is a passive request packet only. It does not approve or implement runtime 
 - stage8_training_allowed: `False`
 - readiness_audit: `reports/krk_full_suite_readiness_audit_v0.json`
 - readiness_audit_status: `krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection`
-- readiness_checked_flag_count: `1081`
+- readiness_checked_flag_count: `1205`
 - readiness_boundary_violation_count: `0`
-- readiness_source_artifact_count: `121`
+- readiness_source_artifact_count: `135`
 
 ## Required Scope If User Approves
 
@@ -47,9 +47,9 @@ This is a passive request packet only. It does not approve or implement runtime 
 - stage8_training_allowed: `False`
 - readiness_audit: `reports/krk_full_suite_readiness_audit_v0.json`
 - readiness_audit_status: `krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection`
-- readiness_checked_flag_count: `1081`
+- readiness_checked_flag_count: `1205`
 - readiness_boundary_violation_count: `0`
-- readiness_source_artifact_count: `121`
+- readiness_source_artifact_count: `135`
 
 ## Blockers
 

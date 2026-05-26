@@ -123,6 +123,26 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/strategy_arbitration/krk_protected_strategy_monitor_observation_source_review_packet_v1.json"
     )
     assert (
+        payload["source_artifacts"]["repair_monitor_observation_source_smoke_v1"]
+        == "reports/strategy_arbitration/krk_repair_monitor_observation_source_smoke_v1.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "strategy_sequence_repair_monitor_trace_features_v1"
+        ]
+        == "reports/strategy_arbitration/krk_strategy_sequence_repair_monitor_trace_features_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_sequence_dataset_v2"]
+        == "reports/strategy_arbitration/krk_strategy_sequence_dataset_v2.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "candidate_generation_refresh_probe_v2_after_labels"
+        ]
+        == "reports/strategy_arbitration/krk_candidate_generation_refresh_probe_v2_after_labels.json"
+    )
+    assert (
         payload["source_artifacts"]["ownership_label_recovery_review"]
         == "reports/strategy_arbitration/krk_ownership_label_recovery_review_v0.json"
     )
@@ -664,6 +684,145 @@ def test_full_suite_readiness_identifies_current_gate():
     assert strategy_source["selector_training_allowed"] is False
     assert strategy_source["stage7_promotion_allowed"] is False
     assert strategy_source["stage8_training_allowed"] is False
+
+    repair_monitor_trace = payload["repair_monitor_trace_feature_gate"]
+    assert (
+        repair_monitor_trace["smoke_status"]
+        == "repair_monitor_observation_source_wired_default_off_equivalent"
+    )
+    assert repair_monitor_trace["smoke_case_count"] == 3
+    assert repair_monitor_trace["smoke_repair_monitor_frame_count"] == 3
+    assert repair_monitor_trace["smoke_selected_move_provider_delta_count"] == 0
+    assert repair_monitor_trace["smoke_invariant_failure_count"] == 0
+    assert repair_monitor_trace["smoke_stage7_case_count"] == 0
+    assert (
+        repair_monitor_trace["coverage_status"]
+        == "repair_monitor_observation_source_coverage_ready_for_guarded_analysis"
+    )
+    assert repair_monitor_trace["coverage_repair_monitor_frame_count"] == 3
+    assert repair_monitor_trace["coverage_stage7_case_count"] == 0
+    assert (
+        repair_monitor_trace["broadened_status"]
+        == "repair_monitor_observation_source_broadened_default_off_equivalent"
+    )
+    assert repair_monitor_trace["broadened_case_count"] == 6
+    assert repair_monitor_trace["broadened_case_count_by_stage"] == {
+        "stage4": 1,
+        "stage5": 4,
+        "stage6": 1,
+    }
+    assert repair_monitor_trace["broadened_repair_monitor_frame_count"] == 6
+    assert repair_monitor_trace["broadened_selected_move_provider_delta_count"] == 0
+    assert repair_monitor_trace["broadened_invariant_failure_count"] == 0
+    assert repair_monitor_trace["broadened_stage7_case_count"] == 0
+    assert (
+        repair_monitor_trace["quality_status"]
+        == "repair_monitor_observation_source_quality_trace_only_retained"
+    )
+    assert repair_monitor_trace["quality_source_stable"] is True
+    assert repair_monitor_trace["quality_risk_term_set_count"] == 1
+    assert repair_monitor_trace["quality_stage7_case_count"] == 0
+    assert (
+        repair_monitor_trace["trace_features_status"]
+        == "repair_monitor_trace_features_folded_non_causal"
+    )
+    assert repair_monitor_trace["trace_features_trace_frame_count"] == 6
+    assert repair_monitor_trace["trace_features_stage7_trace_frame_count"] == 0
+    assert repair_monitor_trace["trace_features_selector_training_row_count"] == 0
+    assert (
+        repair_monitor_trace[
+            "trace_features_candidate_generation_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        repair_monitor_trace["integration_review_status"]
+        == "strategy_sequence_trace_features_integrated_selector_still_blocked"
+    )
+    assert repair_monitor_trace["integration_review_trace_integration_safe"] is True
+    assert repair_monitor_trace["integration_review_trace_frame_count"] == 6
+    assert repair_monitor_trace["integration_review_trace_selector_training_row_count"] == 0
+    assert repair_monitor_trace["integration_review_trace_stage7_frame_count"] == 0
+    assert (
+        repair_monitor_trace["dataset_design_status"]
+        == "strategy_sequence_dataset_design_v2_ready"
+    )
+    assert repair_monitor_trace["dataset_design_implementation_allowed"] is False
+    assert (
+        repair_monitor_trace["dataset_v2_status"]
+        == "strategy_sequence_dataset_v2_refreshed_non_causal_selector_blocked"
+    )
+    assert repair_monitor_trace["dataset_v2_row_count"] == 262
+    assert repair_monitor_trace["dataset_v2_runtime_trace_feature_row_count"] == 6
+    assert repair_monitor_trace["dataset_v2_candidate_generation_training_row_count"] == 11
+    assert repair_monitor_trace["dataset_v2_selector_training_row_count"] == 0
+    assert repair_monitor_trace["dataset_v2_stage7_challenge_row_count"] == 198
+    assert repair_monitor_trace["dataset_v2_stage7_readiness_training_row_count"] == 0
+    assert (
+        repair_monitor_trace["dataset_v2_quality_status"]
+        == "strategy_sequence_dataset_v2_quality_candidate_generation_ready_selector_blocked"
+    )
+    assert repair_monitor_trace["dataset_v2_quality_runtime_flags_false"] is True
+    assert repair_monitor_trace["dataset_v2_quality_selector_rows_absent"] is True
+    assert repair_monitor_trace["dataset_v2_quality_stage7_excluded_from_readiness"] is True
+    assert (
+        repair_monitor_trace["refresh_probe_status"]
+        == "candidate_generation_refresh_underpowered_selector_blocked"
+    )
+    assert (
+        repair_monitor_trace["refresh_probe_best_policy"]
+        == "stage_family_pure_positive_with_support_2"
+    )
+    assert repair_monitor_trace["refresh_probe_positive_recall"] == 0.6363636363636364
+    assert repair_monitor_trace["refresh_probe_negative_suppression"] == 1
+    assert (
+        repair_monitor_trace["capacity_manifest_status"]
+        == "candidate_generation_capacity_evidence_manifest_ready"
+    )
+    assert repair_monitor_trace["capacity_manifest_labels_run_by_this_artifact"] is False
+    assert repair_monitor_trace["capacity_manifest_job_count"] == 12
+    assert repair_monitor_trace["capacity_manifest_stage7_job_count"] == 0
+    assert (
+        repair_monitor_trace["capacity_labels_status"]
+        == "candidate_generation_capacity_evidence_labels_completed"
+    )
+    assert repair_monitor_trace["capacity_labels_label_count"] == 12
+    assert repair_monitor_trace["capacity_labels_stage7_label_count"] == 0
+    assert repair_monitor_trace["capacity_labels_stage7_training_label_count"] == 0
+    assert (
+        repair_monitor_trace["dataset_v2_capacity_merged_status"]
+        == "strategy_sequence_dataset_v2_capacity_merged_non_causal"
+    )
+    assert repair_monitor_trace["dataset_v2_capacity_merged_row_count"] == 274
+    assert (
+        repair_monitor_trace[
+            "dataset_v2_capacity_merged_candidate_generation_training_row_count"
+        ]
+        == 19
+    )
+    assert repair_monitor_trace["dataset_v2_capacity_merged_selector_training_row_count"] == 0
+    assert (
+        repair_monitor_trace[
+            "dataset_v2_capacity_merged_stage7_readiness_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        repair_monitor_trace["refresh_after_labels_status"]
+        == "candidate_generation_refresh_supported_selector_blocked"
+    )
+    assert (
+        repair_monitor_trace["refresh_after_labels_best_policy"]
+        == "stage_family_pure_positive_with_support_2"
+    )
+    assert repair_monitor_trace["refresh_after_labels_positive_recall"] == 0.7368421052631579
+    assert repair_monitor_trace["refresh_after_labels_negative_suppression"] == 1
+    assert repair_monitor_trace["runtime_work_allowed"] is False
+    assert repair_monitor_trace["runtime_candidate_generation_allowed"] is False
+    assert repair_monitor_trace["selector_allowed"] is False
+    assert repair_monitor_trace["selector_training_allowed"] is False
+    assert repair_monitor_trace["stage7_promotion_allowed"] is False
+    assert repair_monitor_trace["stage8_training_allowed"] is False
 
     lineage = payload["selector_objective_lineage_gate"]
     assert (

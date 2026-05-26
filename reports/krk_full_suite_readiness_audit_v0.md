@@ -122,7 +122,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `5b3214a20bfa40c31343c4c8a912f9a2a2d056e9ff52616f47fd5992b62dcc2b`
+- expected_readiness_fingerprint: `de85065167641e990331c66c46f3a10da12acad5ca58fb09cf29c012a521a034`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -218,6 +218,54 @@
 - protected_monitor_quality_strong_failure_family_count: `1`
 - repair_monitor_review_status: `protected_repair_monitor_observation_source_review_ready`
 - repair_monitor_review_implementation_authorized: `False`
+- runtime_work_allowed: `False`
+- selector_training_allowed: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
+## Repair-Monitor Trace-Feature Evidence
+
+- smoke_status: `repair_monitor_observation_source_wired_default_off_equivalent`
+- smoke_case_count: `3`
+- smoke_repair_monitor_frame_count: `3`
+- smoke_selected_move_provider_delta_count: `0`
+- smoke_invariant_failure_count: `0`
+- smoke_stage7_case_count: `0`
+- coverage_status: `repair_monitor_observation_source_coverage_ready_for_guarded_analysis`
+- broadened_status: `repair_monitor_observation_source_broadened_default_off_equivalent`
+- broadened_case_count: `6`
+- broadened_repair_monitor_frame_count: `6`
+- broadened_selected_move_provider_delta_count: `0`
+- broadened_stage7_case_count: `0`
+- quality_status: `repair_monitor_observation_source_quality_trace_only_retained`
+- quality_source_stable: `True`
+- quality_risk_term_set_count: `1`
+- trace_features_status: `repair_monitor_trace_features_folded_non_causal`
+- trace_features_trace_frame_count: `6`
+- trace_features_stage7_trace_frame_count: `0`
+- trace_features_selector_training_row_count: `0`
+- integration_review_status: `strategy_sequence_trace_features_integrated_selector_still_blocked`
+- integration_review_trace_integration_safe: `True`
+- dataset_design_status: `strategy_sequence_dataset_design_v2_ready`
+- dataset_design_implementation_allowed: `False`
+- dataset_v2_status: `strategy_sequence_dataset_v2_refreshed_non_causal_selector_blocked`
+- dataset_v2_row_count: `262`
+- dataset_v2_runtime_trace_feature_row_count: `6`
+- dataset_v2_selector_training_row_count: `0`
+- dataset_v2_stage7_readiness_training_row_count: `0`
+- dataset_v2_quality_status: `strategy_sequence_dataset_v2_quality_candidate_generation_ready_selector_blocked`
+- dataset_v2_quality_runtime_flags_false: `True`
+- dataset_v2_quality_selector_rows_absent: `True`
+- refresh_probe_status: `candidate_generation_refresh_underpowered_selector_blocked`
+- capacity_manifest_status: `candidate_generation_capacity_evidence_manifest_ready`
+- capacity_manifest_labels_run_by_this_artifact: `False`
+- capacity_manifest_stage7_job_count: `0`
+- capacity_labels_status: `candidate_generation_capacity_evidence_labels_completed`
+- capacity_labels_stage7_label_count: `0`
+- dataset_v2_capacity_merged_status: `strategy_sequence_dataset_v2_capacity_merged_non_causal`
+- refresh_after_labels_status: `candidate_generation_refresh_supported_selector_blocked`
+- refresh_after_labels_positive_recall: `0.7368421052631579`
+- refresh_after_labels_negative_suppression: `1.0`
 - runtime_work_allowed: `False`
 - selector_training_allowed: `False`
 - stage7_promotion_allowed: `False`
@@ -386,5 +434,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1081`
+- checked_flag_count: `1205`
 - violation_count: `0`

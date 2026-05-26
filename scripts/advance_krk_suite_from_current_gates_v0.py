@@ -586,6 +586,9 @@ def build_payload() -> dict[str, Any]:
     strategy_sequence_candidate_source_gate = (
         readiness.get("strategy_sequence_candidate_source_gate") or {}
     )
+    repair_monitor_trace_feature_gate = (
+        readiness.get("repair_monitor_trace_feature_gate") or {}
+    )
     selector_objective_lineage_gate = (
         readiness.get("selector_objective_lineage_gate") or {}
     )
@@ -1283,6 +1286,144 @@ def build_payload() -> dict[str, Any]:
                 "stage7_promotion_allowed"
             ),
             "strategy_sequence_candidate_source_stage8_training_allowed": strategy_sequence_candidate_source_gate.get(
+                "stage8_training_allowed"
+            ),
+            "repair_monitor_trace_feature_smoke_status": repair_monitor_trace_feature_gate.get(
+                "smoke_status"
+            ),
+            "repair_monitor_trace_feature_smoke_case_count": repair_monitor_trace_feature_gate.get(
+                "smoke_case_count"
+            ),
+            "repair_monitor_trace_feature_smoke_repair_monitor_frame_count": repair_monitor_trace_feature_gate.get(
+                "smoke_repair_monitor_frame_count"
+            ),
+            "repair_monitor_trace_feature_smoke_selected_move_provider_delta_count": repair_monitor_trace_feature_gate.get(
+                "smoke_selected_move_provider_delta_count"
+            ),
+            "repair_monitor_trace_feature_smoke_stage7_case_count": repair_monitor_trace_feature_gate.get(
+                "smoke_stage7_case_count"
+            ),
+            "repair_monitor_trace_feature_broadened_status": repair_monitor_trace_feature_gate.get(
+                "broadened_status"
+            ),
+            "repair_monitor_trace_feature_broadened_case_count": repair_monitor_trace_feature_gate.get(
+                "broadened_case_count"
+            ),
+            "repair_monitor_trace_feature_broadened_stage7_case_count": repair_monitor_trace_feature_gate.get(
+                "broadened_stage7_case_count"
+            ),
+            "repair_monitor_trace_feature_quality_status": repair_monitor_trace_feature_gate.get(
+                "quality_status"
+            ),
+            "repair_monitor_trace_feature_quality_source_stable": repair_monitor_trace_feature_gate.get(
+                "quality_source_stable"
+            ),
+            "repair_monitor_trace_feature_trace_features_status": repair_monitor_trace_feature_gate.get(
+                "trace_features_status"
+            ),
+            "repair_monitor_trace_feature_trace_frame_count": repair_monitor_trace_feature_gate.get(
+                "trace_features_trace_frame_count"
+            ),
+            "repair_monitor_trace_feature_stage7_trace_frame_count": repair_monitor_trace_feature_gate.get(
+                "trace_features_stage7_trace_frame_count"
+            ),
+            "repair_monitor_trace_feature_selector_training_row_count": repair_monitor_trace_feature_gate.get(
+                "trace_features_selector_training_row_count"
+            ),
+            "repair_monitor_trace_feature_integration_review_status": repair_monitor_trace_feature_gate.get(
+                "integration_review_status"
+            ),
+            "repair_monitor_trace_feature_integration_safe": repair_monitor_trace_feature_gate.get(
+                "integration_review_trace_integration_safe"
+            ),
+            "repair_monitor_trace_feature_dataset_design_status": repair_monitor_trace_feature_gate.get(
+                "dataset_design_status"
+            ),
+            "repair_monitor_trace_feature_dataset_design_implementation_allowed": repair_monitor_trace_feature_gate.get(
+                "dataset_design_implementation_allowed"
+            ),
+            "repair_monitor_trace_feature_dataset_v2_status": repair_monitor_trace_feature_gate.get(
+                "dataset_v2_status"
+            ),
+            "repair_monitor_trace_feature_dataset_v2_row_count": repair_monitor_trace_feature_gate.get(
+                "dataset_v2_row_count"
+            ),
+            "repair_monitor_trace_feature_dataset_v2_runtime_trace_feature_row_count": repair_monitor_trace_feature_gate.get(
+                "dataset_v2_runtime_trace_feature_row_count"
+            ),
+            "repair_monitor_trace_feature_dataset_v2_selector_training_row_count": repair_monitor_trace_feature_gate.get(
+                "dataset_v2_selector_training_row_count"
+            ),
+            "repair_monitor_trace_feature_dataset_v2_stage7_readiness_training_row_count": repair_monitor_trace_feature_gate.get(
+                "dataset_v2_stage7_readiness_training_row_count"
+            ),
+            "repair_monitor_trace_feature_dataset_v2_quality_status": repair_monitor_trace_feature_gate.get(
+                "dataset_v2_quality_status"
+            ),
+            "repair_monitor_trace_feature_dataset_v2_quality_runtime_flags_false": repair_monitor_trace_feature_gate.get(
+                "dataset_v2_quality_runtime_flags_false"
+            ),
+            "repair_monitor_trace_feature_dataset_v2_quality_selector_rows_absent": repair_monitor_trace_feature_gate.get(
+                "dataset_v2_quality_selector_rows_absent"
+            ),
+            "repair_monitor_trace_feature_refresh_probe_status": repair_monitor_trace_feature_gate.get(
+                "refresh_probe_status"
+            ),
+            "repair_monitor_trace_feature_refresh_probe_positive_recall": repair_monitor_trace_feature_gate.get(
+                "refresh_probe_positive_recall"
+            ),
+            "repair_monitor_trace_feature_refresh_probe_negative_suppression": repair_monitor_trace_feature_gate.get(
+                "refresh_probe_negative_suppression"
+            ),
+            "repair_monitor_trace_feature_capacity_manifest_status": repair_monitor_trace_feature_gate.get(
+                "capacity_manifest_status"
+            ),
+            "repair_monitor_trace_feature_capacity_manifest_labels_run_by_this_artifact": repair_monitor_trace_feature_gate.get(
+                "capacity_manifest_labels_run_by_this_artifact"
+            ),
+            "repair_monitor_trace_feature_capacity_manifest_stage7_job_count": repair_monitor_trace_feature_gate.get(
+                "capacity_manifest_stage7_job_count"
+            ),
+            "repair_monitor_trace_feature_capacity_labels_status": repair_monitor_trace_feature_gate.get(
+                "capacity_labels_status"
+            ),
+            "repair_monitor_trace_feature_capacity_labels_stage7_label_count": repair_monitor_trace_feature_gate.get(
+                "capacity_labels_stage7_label_count"
+            ),
+            "repair_monitor_trace_feature_capacity_labels_stage7_training_label_count": repair_monitor_trace_feature_gate.get(
+                "capacity_labels_stage7_training_label_count"
+            ),
+            "repair_monitor_trace_feature_dataset_v2_capacity_merged_status": repair_monitor_trace_feature_gate.get(
+                "dataset_v2_capacity_merged_status"
+            ),
+            "repair_monitor_trace_feature_dataset_v2_capacity_merged_row_count": repair_monitor_trace_feature_gate.get(
+                "dataset_v2_capacity_merged_row_count"
+            ),
+            "repair_monitor_trace_feature_dataset_v2_capacity_merged_selector_training_row_count": repair_monitor_trace_feature_gate.get(
+                "dataset_v2_capacity_merged_selector_training_row_count"
+            ),
+            "repair_monitor_trace_feature_dataset_v2_capacity_merged_stage7_readiness_training_row_count": repair_monitor_trace_feature_gate.get(
+                "dataset_v2_capacity_merged_stage7_readiness_training_row_count"
+            ),
+            "repair_monitor_trace_feature_refresh_after_labels_status": repair_monitor_trace_feature_gate.get(
+                "refresh_after_labels_status"
+            ),
+            "repair_monitor_trace_feature_refresh_after_labels_positive_recall": repair_monitor_trace_feature_gate.get(
+                "refresh_after_labels_positive_recall"
+            ),
+            "repair_monitor_trace_feature_refresh_after_labels_negative_suppression": repair_monitor_trace_feature_gate.get(
+                "refresh_after_labels_negative_suppression"
+            ),
+            "repair_monitor_trace_feature_runtime_work_allowed": repair_monitor_trace_feature_gate.get(
+                "runtime_work_allowed"
+            ),
+            "repair_monitor_trace_feature_selector_training_allowed": repair_monitor_trace_feature_gate.get(
+                "selector_training_allowed"
+            ),
+            "repair_monitor_trace_feature_stage7_promotion_allowed": repair_monitor_trace_feature_gate.get(
+                "stage7_promotion_allowed"
+            ),
+            "repair_monitor_trace_feature_stage8_training_allowed": repair_monitor_trace_feature_gate.get(
                 "stage8_training_allowed"
             ),
             "selector_objective_lineage_ownership_recovery_status": selector_objective_lineage_gate.get(

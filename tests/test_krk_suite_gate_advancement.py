@@ -538,6 +538,210 @@ def test_gate_advancement_reports_current_stage7_blocker():
         is False
     )
     assert (
+        payload["summary"]["repair_monitor_trace_feature_smoke_status"]
+        == "repair_monitor_observation_source_wired_default_off_equivalent"
+    )
+    assert payload["summary"]["repair_monitor_trace_feature_smoke_case_count"] == 3
+    assert (
+        payload["summary"][
+            "repair_monitor_trace_feature_smoke_repair_monitor_frame_count"
+        ]
+        == 3
+    )
+    assert (
+        payload["summary"][
+            "repair_monitor_trace_feature_smoke_selected_move_provider_delta_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_smoke_stage7_case_count"]
+        == 0
+    )
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_broadened_status"]
+        == "repair_monitor_observation_source_broadened_default_off_equivalent"
+    )
+    assert payload["summary"]["repair_monitor_trace_feature_broadened_case_count"] == 6
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_broadened_stage7_case_count"]
+        == 0
+    )
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_quality_status"]
+        == "repair_monitor_observation_source_quality_trace_only_retained"
+    )
+    assert payload["summary"]["repair_monitor_trace_feature_quality_source_stable"] is True
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_trace_features_status"]
+        == "repair_monitor_trace_features_folded_non_causal"
+    )
+    assert payload["summary"]["repair_monitor_trace_feature_trace_frame_count"] == 6
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_stage7_trace_frame_count"]
+        == 0
+    )
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_selector_training_row_count"]
+        == 0
+    )
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_integration_review_status"]
+        == "strategy_sequence_trace_features_integrated_selector_still_blocked"
+    )
+    assert payload["summary"]["repair_monitor_trace_feature_integration_safe"] is True
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_dataset_design_status"]
+        == "strategy_sequence_dataset_design_v2_ready"
+    )
+    assert (
+        payload["summary"][
+            "repair_monitor_trace_feature_dataset_design_implementation_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_dataset_v2_status"]
+        == "strategy_sequence_dataset_v2_refreshed_non_causal_selector_blocked"
+    )
+    assert payload["summary"]["repair_monitor_trace_feature_dataset_v2_row_count"] == 262
+    assert (
+        payload["summary"][
+            "repair_monitor_trace_feature_dataset_v2_runtime_trace_feature_row_count"
+        ]
+        == 6
+    )
+    assert (
+        payload["summary"][
+            "repair_monitor_trace_feature_dataset_v2_selector_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "repair_monitor_trace_feature_dataset_v2_stage7_readiness_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_dataset_v2_quality_status"]
+        == "strategy_sequence_dataset_v2_quality_candidate_generation_ready_selector_blocked"
+    )
+    assert (
+        payload["summary"][
+            "repair_monitor_trace_feature_dataset_v2_quality_runtime_flags_false"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "repair_monitor_trace_feature_dataset_v2_quality_selector_rows_absent"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_refresh_probe_status"]
+        == "candidate_generation_refresh_underpowered_selector_blocked"
+    )
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_refresh_probe_positive_recall"]
+        == 0.6363636363636364
+    )
+    assert (
+        payload["summary"][
+            "repair_monitor_trace_feature_refresh_probe_negative_suppression"
+        ]
+        == 1
+    )
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_capacity_manifest_status"]
+        == "candidate_generation_capacity_evidence_manifest_ready"
+    )
+    assert (
+        payload["summary"][
+            "repair_monitor_trace_feature_capacity_manifest_labels_run_by_this_artifact"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "repair_monitor_trace_feature_capacity_manifest_stage7_job_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_capacity_labels_status"]
+        == "candidate_generation_capacity_evidence_labels_completed"
+    )
+    assert (
+        payload["summary"][
+            "repair_monitor_trace_feature_capacity_labels_stage7_label_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "repair_monitor_trace_feature_capacity_labels_stage7_training_label_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "repair_monitor_trace_feature_dataset_v2_capacity_merged_status"
+        ]
+        == "strategy_sequence_dataset_v2_capacity_merged_non_causal"
+    )
+    assert (
+        payload["summary"][
+            "repair_monitor_trace_feature_dataset_v2_capacity_merged_row_count"
+        ]
+        == 274
+    )
+    assert (
+        payload["summary"][
+            "repair_monitor_trace_feature_dataset_v2_capacity_merged_selector_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "repair_monitor_trace_feature_dataset_v2_capacity_merged_stage7_readiness_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_refresh_after_labels_status"]
+        == "candidate_generation_refresh_supported_selector_blocked"
+    )
+    assert (
+        payload["summary"][
+            "repair_monitor_trace_feature_refresh_after_labels_positive_recall"
+        ]
+        == 0.7368421052631579
+    )
+    assert (
+        payload["summary"][
+            "repair_monitor_trace_feature_refresh_after_labels_negative_suppression"
+        ]
+        == 1
+    )
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_runtime_work_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_selector_training_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["repair_monitor_trace_feature_stage8_training_allowed"]
+        is False
+    )
+    assert (
         payload["summary"]["selector_objective_lineage_ownership_recovery_status"]
         == "ownership_label_recovery_seed_manifest_ready_selector_blocked"
     )
