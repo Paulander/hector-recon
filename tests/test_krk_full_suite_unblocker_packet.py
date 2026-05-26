@@ -382,6 +382,10 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
     assert "protected_stack_rollback_paths_preserved: `True`" in rendered
     assert "protected_stack_filesystem_snapshots_replaced: `False`" in rendered
     assert (
+        "source_stage_counts: `{'stage4': 2, 'stage5': 2, 'stage6': 2}`"
+        in rendered
+    )
+    assert (
         "approval_request_status: "
         "`stage4_first_move_contrast_sandbox_approval_request_ready`"
         in rendered
@@ -429,7 +433,14 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
         "krk_protected_plan_window_failure_contrast_collection_approval_v0.json`"
         in rendered
     )
+    assert "execution_readiness_recomputed_live: `True`" in rendered
+    assert "refresh_after_run: `True`" in rendered
+    assert "timed_out_job_count: `0`" in rendered
     assert "post_success_refresh: `full_passive_krk_suite_gate_stack`" in rendered
+    assert "runtime_behavior_changed: `False`" in rendered
+    assert "stage7_training_rows: `0`" in rendered
+    assert "stage7_promotion_allowed: `False`" in rendered
+    assert "stage8_training_allowed: `False`" in rendered
     assert (
         "sequence_policy_passive_design_without_new_labels_status: "
         "`non_causal_sequence_policy_design_without_new_labels_ready`"
