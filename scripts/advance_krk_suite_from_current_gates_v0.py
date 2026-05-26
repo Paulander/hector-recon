@@ -56,6 +56,13 @@ PROTECTED_FAILURE_CONTRAST_APPROVAL_REQUEST_REPAIR_STATUSES = {
     "krk_suite_readiness_blocked_pending_protected_failure_contrast_approval_request_repair",
 }
 
+PROTECTED_FAILURE_CONTRAST_EXECUTION_READINESS_STATUSES = {
+    "sequence_policy_pilot_blocked_pending_protected_failure_contrast_execution_readiness",
+    "stage8_training_blocked_pending_protected_failure_contrast_execution_readiness",
+    "post_label_outcome_blocked_pending_protected_failure_contrast_execution_readiness",
+    "krk_suite_protected_failure_contrast_unblocker_blocked_pending_execution_readiness",
+}
+
 
 def _approval_ready_with_status_fallback(
     *,
@@ -542,6 +549,25 @@ def build_payload() -> dict[str, Any]:
             in PROTECTED_FAILURE_CONTRAST_APPROVAL_REQUEST_REPAIR_STATUSES
         )
     )
+    protected_failure_contrast_execution_readiness_required = (
+        benchmark_ready
+        and (
+            failure_contrast_execution_readiness.get("decision", {}).get("status")
+            != "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+            or failure_contrast_runner.get("decision", {}).get("status")
+            != "protected_plan_window_failure_contrast_runner_dry_run_ready"
+            or protected_failure_contrast_gate.get("status")
+            == "protected_plan_window_failure_contrast_execution_blocked"
+            or underpowered_pilot.get("decision", {}).get("status")
+            in PROTECTED_FAILURE_CONTRAST_EXECUTION_READINESS_STATUSES
+            or stage8_review.get("decision", {}).get("status")
+            in PROTECTED_FAILURE_CONTRAST_EXECUTION_READINESS_STATUSES
+            or post_label_review.get("decision", {}).get("status")
+            in PROTECTED_FAILURE_CONTRAST_EXECUTION_READINESS_STATUSES
+            or unblocker.get("decision", {}).get("status")
+            in PROTECTED_FAILURE_CONTRAST_EXECUTION_READINESS_STATUSES
+        )
+    )
     sequence_forbidden_blockers = sorted(
         FORBIDDEN_INPUT_BLOCKERS
         & (
@@ -587,6 +613,12 @@ def build_payload() -> dict[str, Any]:
             "protected_failure_contrast_approval_request_repair"
         )
         next_step = "repair_protected_failure_contrast_approval_request_scope"
+    elif protected_failure_contrast_execution_readiness_required:
+        status = (
+            "krk_suite_passive_advancement_blocked_pending_"
+            "protected_failure_contrast_execution_readiness"
+        )
+        next_step = "review_protected_plan_window_failure_contrast_execution_readiness"
     elif benchmark_ready:
         status = (
             "krk_suite_passive_advancement_ready_for_protected_failure_contrast_collection"

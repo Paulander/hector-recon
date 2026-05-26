@@ -919,6 +919,82 @@ def test_gate_advancement_routes_broken_protected_approval_request_to_repair(
     assert payload["decision"]["stage8_training_allowed"] is False
 
 
+def test_gate_advancement_routes_blocked_execution_readiness_to_review(monkeypatch):
+    real_load_json = _advance._load_json
+
+    def no_op_run_script(script: str, args: list[str] | None = None):
+        return {"script": script, "args": list(args or []), "ran": False}
+
+    def tainted_load_json(relative: str):
+        payload = json.loads(json.dumps(real_load_json(relative)))
+        if (
+            relative
+            == "reports/strategy_arbitration/"
+            "krk_protected_plan_window_failure_contrast_execution_readiness_v0.json"
+        ):
+            payload.setdefault("decision", {})["status"] = (
+                "protected_plan_window_failure_contrast_execution_blocked"
+            )
+            payload.setdefault("summary", {})["jobs_passing_readiness"] = False
+        if (
+            relative
+            == "reports/strategy_arbitration/"
+            "krk_protected_plan_window_failure_contrast_runner_v0.json"
+        ):
+            payload.setdefault("decision", {})["status"] = (
+                "protected_plan_window_failure_contrast_runner_blocked"
+            )
+            payload.setdefault("summary", {})["processed_job_count"] = 0
+            payload.setdefault("summary", {})["executed_job_count"] = 0
+        if relative == "reports/krk_full_suite_readiness_audit_v0.json":
+            gate = payload.setdefault("protected_failure_contrast_gate", {})
+            gate["status"] = "protected_plan_window_failure_contrast_execution_blocked"
+            gate["ready_for_explicit_approval"] = False
+            gate["runner_status"] = "protected_plan_window_failure_contrast_runner_blocked"
+            gate["approval_request_ready_for_collection"] = True
+            payload.setdefault("decision", {})["status"] = (
+                "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection"
+            )
+        if (
+            relative
+            == "reports/strategy_arbitration/"
+            "krk_sequence_policy_underpowered_pilot_v0.json"
+        ):
+            payload.setdefault("decision", {})["status"] = (
+                "sequence_policy_pilot_blocked_pending_"
+                "protected_failure_contrast_execution_readiness"
+            )
+        return payload
+
+    monkeypatch.setattr(_advance, "_run_script", no_op_run_script)
+    monkeypatch.setattr(_advance, "_load_json", tainted_load_json)
+
+    payload = _advance.build_payload()
+
+    assert (
+        payload["decision"]["status"]
+        == "krk_suite_passive_advancement_blocked_pending_"
+        "protected_failure_contrast_execution_readiness"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_protected_plan_window_failure_contrast_execution_readiness"
+    )
+    assert (
+        payload["summary"][
+            "protected_plan_window_failure_contrast_execution_readiness_status"
+        ]
+        == "protected_plan_window_failure_contrast_execution_blocked"
+    )
+    assert (
+        payload["summary"]["protected_plan_window_failure_contrast_runner_status"]
+        == "protected_plan_window_failure_contrast_runner_blocked"
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["label_run_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
+
+
 def test_gate_advancement_summary_falls_back_when_request_ready_flags_are_null(monkeypatch):
     real_load_json = _advance._load_json
 
