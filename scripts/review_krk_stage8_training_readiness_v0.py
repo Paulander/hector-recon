@@ -279,6 +279,15 @@ def build_payload(
             "protected_failure_contrast_runner_status": protected_failure_contrast.get(
                 "runner_status"
             ),
+            "protected_failure_contrast_runner_manifest_status": (
+                protected_failure_contrast.get("runner_manifest_status")
+            ),
+            "protected_failure_contrast_runner_manifest_declared_job_count": (
+                protected_failure_contrast.get("runner_manifest_declared_job_count")
+            ),
+            "protected_failure_contrast_runner_manifest_fingerprint": (
+                protected_failure_contrast.get("runner_manifest_fingerprint")
+            ),
             "protected_failure_contrast_runner_processed_job_count": (
                 protected_failure_contrast.get("runner_processed_job_count")
             ),
