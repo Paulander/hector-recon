@@ -129,7 +129,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `489ecc68c45ab9ac5e3c68b3df4d1eb206b376c37370fb539e42c9b0271dd956`
+- expected_readiness_fingerprint: `f4dd7cf407867d1930c6f90719a218a81b7b3e212936443da0ffdd8a5ef47d70`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -444,6 +444,14 @@
 
 ## Cross-Stage Candidate-Generation Scope Evidence
 
+- cross_stage_label_probe_status: `candidate_generation_refresh_supported_selector_blocked`
+- cross_stage_label_probe_best_policy: `stage_family_pure_positive_with_support_2`
+- cross_stage_label_probe_positive_recall: `0.7692307692307693`
+- cross_stage_label_probe_negative_suppression: `1.0`
+- cross_stage_label_probe_capacity_row_count: `36`
+- cross_stage_label_probe_guardrails_allowed: `False`
+- cross_stage_label_probe_selector_allowed: `False`
+- cross_stage_label_probe_promotion_allowed: `False`
 - capacity_review_status: `cross_stage_capacity_review_recommends_stratified_capacity_manifest`
 - capacity_review_capacity_row_count: `28`
 - capacity_manifest_status: `cross_stage_capacity_manifest_ready_partial_target_coverage`
@@ -574,6 +582,11 @@
 - context_benchmark_stage_family_positive_capacity_recall_from_trace: `0.7692307692307693`
 - runtime_boundary_status: `candidate_generation_v3_runtime_boundary_context_ready_selector_blocked`
 - runtime_boundary_new_runtime_behavior_allowed: `False`
+- training_refresh_design_v2_status: `candidate_generation_training_refresh_design_ready`
+- training_refresh_design_v2_runtime_candidate_generator_refresh_allowed: `False`
+- training_refresh_design_v2_selector_allowed: `False`
+- training_refresh_design_v2_guardrails_allowed: `False`
+- training_refresh_design_v2_promotion_allowed: `False`
 - training_refresh_design_status: `candidate_generation_training_refresh_v3_design_ready`
 - training_refresh_design_implementation_allowed: `False`
 - benchmark_status: `candidate_generation_training_refresh_v3_benchmark_passed_runtime_review_needed`
@@ -645,5 +658,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1586`
+- checked_flag_count: `1604`
 - violation_count: `0`

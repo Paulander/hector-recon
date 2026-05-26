@@ -248,6 +248,16 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
     )
     assert (
         payload["source_artifacts"][
+            "candidate_generation_refresh_probe_v2_cross_stage_labels"
+        ]
+        == "reports/strategy_arbitration/krk_candidate_generation_refresh_probe_v2_cross_stage_labels.json"
+    )
+    assert (
+        payload["source_artifacts"]["candidate_generation_training_refresh_design_v2"]
+        == "reports/strategy_arbitration/krk_candidate_generation_training_refresh_design_v2.json"
+    )
+    assert (
+        payload["source_artifacts"][
             "stage5_6_candidate_generation_refresh_review_packet_v3"
         ]
         == "reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_review_packet_v3.json"
@@ -1391,6 +1401,31 @@ def test_full_suite_readiness_identifies_current_gate():
 
     cross_stage_scope = payload["cross_stage_candidate_generation_scope_gate"]
     assert (
+        cross_stage_scope["cross_stage_label_probe_status"]
+        == "candidate_generation_refresh_supported_selector_blocked"
+    )
+    assert (
+        cross_stage_scope["cross_stage_label_probe_best_policy"]
+        == "stage_family_pure_positive_with_support_2"
+    )
+    assert cross_stage_scope["cross_stage_label_probe_positive_recall"] == (
+        0.7692307692307693
+    )
+    assert cross_stage_scope["cross_stage_label_probe_negative_suppression"] == 1.0
+    assert cross_stage_scope["cross_stage_label_probe_capacity_row_count"] == 36
+    assert cross_stage_scope["cross_stage_label_probe_source_stage_counts"] == {
+        "stage4": 11,
+        "stage5": 16,
+        "stage6": 9,
+    }
+    assert cross_stage_scope["cross_stage_label_probe_capacity_label_counts"] == {
+        "negative_capacity": 10,
+        "positive_capacity": 26,
+    }
+    assert cross_stage_scope["cross_stage_label_probe_guardrails_allowed"] is False
+    assert cross_stage_scope["cross_stage_label_probe_selector_allowed"] is False
+    assert cross_stage_scope["cross_stage_label_probe_promotion_allowed"] is False
+    assert (
         cross_stage_scope["capacity_review_status"]
         == "cross_stage_capacity_review_recommends_stratified_capacity_manifest"
     )
@@ -1813,6 +1848,23 @@ def test_full_suite_readiness_identifies_current_gate():
     )
     assert candidate_generation["runtime_boundary_new_runtime_behavior_allowed"] is False
     assert candidate_generation["runtime_boundary_selector_allowed"] is False
+    assert (
+        candidate_generation["training_refresh_design_v2_status"]
+        == "candidate_generation_training_refresh_design_ready"
+    )
+    assert (
+        candidate_generation["training_refresh_design_v2_next_step"]
+        == "candidate_generation_training_refresh_benchmark_or_cross_stage_capacity_review"
+    )
+    assert (
+        candidate_generation[
+            "training_refresh_design_v2_runtime_candidate_generator_refresh_allowed"
+        ]
+        is False
+    )
+    assert candidate_generation["training_refresh_design_v2_selector_allowed"] is False
+    assert candidate_generation["training_refresh_design_v2_guardrails_allowed"] is False
+    assert candidate_generation["training_refresh_design_v2_promotion_allowed"] is False
     assert (
         candidate_generation["training_refresh_review_status"]
         == "candidate_generation_v3_training_refresh_design_ready_non_causal"

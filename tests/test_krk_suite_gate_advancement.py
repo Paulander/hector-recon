@@ -1255,6 +1255,42 @@ def test_gate_advancement_reports_current_stage7_blocker():
     )
     assert (
         payload["summary"][
+            "cross_stage_candidate_generation_scope_cross_stage_label_probe_status"
+        ]
+        == "candidate_generation_refresh_supported_selector_blocked"
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_cross_stage_label_probe_positive_recall"
+        ]
+        == 0.7692307692307693
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_cross_stage_label_probe_negative_suppression"
+        ]
+        == 1.0
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_cross_stage_label_probe_guardrails_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_cross_stage_label_probe_selector_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_cross_stage_label_probe_promotion_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
             "cross_stage_candidate_generation_scope_capacity_review_capacity_row_count"
         ]
         == 28
@@ -1859,6 +1895,34 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert (
         payload["summary"][
             "candidate_generation_training_refresh_runtime_boundary_new_runtime_behavior_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["candidate_generation_training_refresh_design_v2_status"]
+        == "candidate_generation_training_refresh_design_ready"
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_design_v2_runtime_candidate_generator_refresh_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_design_v2_selector_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_design_v2_guardrails_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_design_v2_promotion_allowed"
         ]
         is False
     )

@@ -245,6 +245,12 @@ SOURCES = {
     "candidate_generation_refresh_probe_v2_after_labels": (
         "reports/strategy_arbitration/krk_candidate_generation_refresh_probe_v2_after_labels.json"
     ),
+    "candidate_generation_refresh_probe_v2_cross_stage_labels": (
+        "reports/strategy_arbitration/krk_candidate_generation_refresh_probe_v2_cross_stage_labels.json"
+    ),
+    "candidate_generation_training_refresh_design_v2": (
+        "reports/strategy_arbitration/krk_candidate_generation_training_refresh_design_v2.json"
+    ),
     "stage5_6_candidate_generation_refresh_review_packet_v3": (
         "reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_review_packet_v3.json"
     ),
@@ -911,6 +917,12 @@ def build_payload() -> dict[str, Any]:
     ]
     candidate_generation_refresh_probe_v2_after_labels = payloads[
         "candidate_generation_refresh_probe_v2_after_labels"
+    ]
+    candidate_generation_refresh_probe_v2_cross_stage_labels = payloads[
+        "candidate_generation_refresh_probe_v2_cross_stage_labels"
+    ]
+    candidate_generation_training_refresh_design_v2 = payloads[
+        "candidate_generation_training_refresh_design_v2"
     ]
     stage5_6_candidate_generation_refresh_review_packet_v3 = payloads[
         "stage5_6_candidate_generation_refresh_review_packet_v3"
@@ -3377,6 +3389,60 @@ def build_payload() -> dict[str, Any]:
             "stage8_training_allowed": False,
         },
         "cross_stage_candidate_generation_scope_gate": {
+            "cross_stage_label_probe_status": (
+                candidate_generation_refresh_probe_v2_cross_stage_labels.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "cross_stage_label_probe_best_policy": (
+                candidate_generation_refresh_probe_v2_cross_stage_labels.get(
+                    "summary", {}
+                ).get("best_non_oracle_policy")
+            ),
+            "cross_stage_label_probe_positive_recall": (
+                candidate_generation_refresh_probe_v2_cross_stage_labels.get(
+                    "summary", {}
+                )
+                .get("best_non_oracle_metrics", {})
+                .get("positive_recall")
+            ),
+            "cross_stage_label_probe_negative_suppression": (
+                candidate_generation_refresh_probe_v2_cross_stage_labels.get(
+                    "summary", {}
+                )
+                .get("best_non_oracle_metrics", {})
+                .get("negative_suppression")
+            ),
+            "cross_stage_label_probe_capacity_row_count": (
+                candidate_generation_refresh_probe_v2_cross_stage_labels.get(
+                    "summary", {}
+                ).get("capacity_row_count")
+            ),
+            "cross_stage_label_probe_source_stage_counts": (
+                candidate_generation_refresh_probe_v2_cross_stage_labels.get(
+                    "summary", {}
+                ).get("source_stage_counts")
+            ),
+            "cross_stage_label_probe_capacity_label_counts": (
+                candidate_generation_refresh_probe_v2_cross_stage_labels.get(
+                    "summary", {}
+                ).get("capacity_label_counts")
+            ),
+            "cross_stage_label_probe_guardrails_allowed": (
+                candidate_generation_refresh_probe_v2_cross_stage_labels.get(
+                    "decision", {}
+                ).get("guardrails_allowed")
+            ),
+            "cross_stage_label_probe_selector_allowed": (
+                candidate_generation_refresh_probe_v2_cross_stage_labels.get(
+                    "decision", {}
+                ).get("selector_allowed")
+            ),
+            "cross_stage_label_probe_promotion_allowed": (
+                candidate_generation_refresh_probe_v2_cross_stage_labels.get(
+                    "decision", {}
+                ).get("promotion_allowed")
+            ),
             "capacity_review_status": (
                 candidate_generation_cross_stage_capacity_review_v2.get(
                     "decision", {}
@@ -4314,6 +4380,36 @@ def build_payload() -> dict[str, Any]:
                 candidate_generation_v3_runtime_boundary_review.get(
                     "approved_runtime_boundary", {}
                 ).get("selector_allowed")
+            ),
+            "training_refresh_design_v2_status": (
+                candidate_generation_training_refresh_design_v2.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "training_refresh_design_v2_next_step": (
+                candidate_generation_training_refresh_design_v2.get(
+                    "decision", {}
+                ).get("recommended_next_step")
+            ),
+            "training_refresh_design_v2_runtime_candidate_generator_refresh_allowed": (
+                candidate_generation_training_refresh_design_v2.get(
+                    "decision", {}
+                ).get("runtime_candidate_generator_refresh_allowed")
+            ),
+            "training_refresh_design_v2_selector_allowed": (
+                candidate_generation_training_refresh_design_v2.get(
+                    "decision", {}
+                ).get("selector_allowed")
+            ),
+            "training_refresh_design_v2_guardrails_allowed": (
+                candidate_generation_training_refresh_design_v2.get(
+                    "decision", {}
+                ).get("guardrails_allowed")
+            ),
+            "training_refresh_design_v2_promotion_allowed": (
+                candidate_generation_training_refresh_design_v2.get(
+                    "decision", {}
+                ).get("promotion_allowed")
             ),
             "training_refresh_review_status": (
                 candidate_generation_v3_training_refresh_review.get(
@@ -5452,6 +5548,14 @@ def write_markdown(payload: dict[str, Any]) -> str:
             "",
             "## Cross-Stage Candidate-Generation Scope Evidence",
             "",
+            f"- cross_stage_label_probe_status: `{cross_stage_scope['cross_stage_label_probe_status']}`",
+            f"- cross_stage_label_probe_best_policy: `{cross_stage_scope['cross_stage_label_probe_best_policy']}`",
+            f"- cross_stage_label_probe_positive_recall: `{cross_stage_scope['cross_stage_label_probe_positive_recall']}`",
+            f"- cross_stage_label_probe_negative_suppression: `{cross_stage_scope['cross_stage_label_probe_negative_suppression']}`",
+            f"- cross_stage_label_probe_capacity_row_count: `{cross_stage_scope['cross_stage_label_probe_capacity_row_count']}`",
+            f"- cross_stage_label_probe_guardrails_allowed: `{cross_stage_scope['cross_stage_label_probe_guardrails_allowed']}`",
+            f"- cross_stage_label_probe_selector_allowed: `{cross_stage_scope['cross_stage_label_probe_selector_allowed']}`",
+            f"- cross_stage_label_probe_promotion_allowed: `{cross_stage_scope['cross_stage_label_probe_promotion_allowed']}`",
             f"- capacity_review_status: `{cross_stage_scope['capacity_review_status']}`",
             f"- capacity_review_capacity_row_count: `{cross_stage_scope['capacity_review_capacity_row_count']}`",
             f"- capacity_manifest_status: `{cross_stage_scope['capacity_manifest_status']}`",
@@ -5582,6 +5686,11 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- context_benchmark_stage_family_positive_capacity_recall_from_trace: `{candidate_generation_refresh['context_benchmark_stage_family_positive_capacity_recall_from_trace']}`",
             f"- runtime_boundary_status: `{candidate_generation_refresh['runtime_boundary_status']}`",
             f"- runtime_boundary_new_runtime_behavior_allowed: `{candidate_generation_refresh['runtime_boundary_new_runtime_behavior_allowed']}`",
+            f"- training_refresh_design_v2_status: `{candidate_generation_refresh['training_refresh_design_v2_status']}`",
+            f"- training_refresh_design_v2_runtime_candidate_generator_refresh_allowed: `{candidate_generation_refresh['training_refresh_design_v2_runtime_candidate_generator_refresh_allowed']}`",
+            f"- training_refresh_design_v2_selector_allowed: `{candidate_generation_refresh['training_refresh_design_v2_selector_allowed']}`",
+            f"- training_refresh_design_v2_guardrails_allowed: `{candidate_generation_refresh['training_refresh_design_v2_guardrails_allowed']}`",
+            f"- training_refresh_design_v2_promotion_allowed: `{candidate_generation_refresh['training_refresh_design_v2_promotion_allowed']}`",
             f"- training_refresh_design_status: `{candidate_generation_refresh['training_refresh_design_status']}`",
             f"- training_refresh_design_implementation_allowed: `{candidate_generation_refresh['training_refresh_design_implementation_allowed']}`",
             f"- benchmark_status: `{candidate_generation_refresh['benchmark_status']}`",

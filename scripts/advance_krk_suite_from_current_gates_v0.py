@@ -1719,6 +1719,24 @@ def build_payload() -> dict[str, Any]:
             "cross_stage_candidate_generation_scope_capacity_review_status": cross_stage_candidate_generation_scope_gate.get(
                 "capacity_review_status"
             ),
+            "cross_stage_candidate_generation_scope_cross_stage_label_probe_status": cross_stage_candidate_generation_scope_gate.get(
+                "cross_stage_label_probe_status"
+            ),
+            "cross_stage_candidate_generation_scope_cross_stage_label_probe_positive_recall": cross_stage_candidate_generation_scope_gate.get(
+                "cross_stage_label_probe_positive_recall"
+            ),
+            "cross_stage_candidate_generation_scope_cross_stage_label_probe_negative_suppression": cross_stage_candidate_generation_scope_gate.get(
+                "cross_stage_label_probe_negative_suppression"
+            ),
+            "cross_stage_candidate_generation_scope_cross_stage_label_probe_guardrails_allowed": cross_stage_candidate_generation_scope_gate.get(
+                "cross_stage_label_probe_guardrails_allowed"
+            ),
+            "cross_stage_candidate_generation_scope_cross_stage_label_probe_selector_allowed": cross_stage_candidate_generation_scope_gate.get(
+                "cross_stage_label_probe_selector_allowed"
+            ),
+            "cross_stage_candidate_generation_scope_cross_stage_label_probe_promotion_allowed": cross_stage_candidate_generation_scope_gate.get(
+                "cross_stage_label_probe_promotion_allowed"
+            ),
             "cross_stage_candidate_generation_scope_capacity_review_capacity_row_count": cross_stage_candidate_generation_scope_gate.get(
                 "capacity_review_capacity_row_count"
             ),
@@ -2099,6 +2117,21 @@ def build_payload() -> dict[str, Any]:
             ),
             "candidate_generation_training_refresh_runtime_boundary_new_runtime_behavior_allowed": candidate_generation_training_refresh_gate.get(
                 "runtime_boundary_new_runtime_behavior_allowed"
+            ),
+            "candidate_generation_training_refresh_design_v2_status": candidate_generation_training_refresh_gate.get(
+                "training_refresh_design_v2_status"
+            ),
+            "candidate_generation_training_refresh_design_v2_runtime_candidate_generator_refresh_allowed": candidate_generation_training_refresh_gate.get(
+                "training_refresh_design_v2_runtime_candidate_generator_refresh_allowed"
+            ),
+            "candidate_generation_training_refresh_design_v2_selector_allowed": candidate_generation_training_refresh_gate.get(
+                "training_refresh_design_v2_selector_allowed"
+            ),
+            "candidate_generation_training_refresh_design_v2_guardrails_allowed": candidate_generation_training_refresh_gate.get(
+                "training_refresh_design_v2_guardrails_allowed"
+            ),
+            "candidate_generation_training_refresh_design_v2_promotion_allowed": candidate_generation_training_refresh_gate.get(
+                "training_refresh_design_v2_promotion_allowed"
             ),
             "candidate_generation_training_refresh_design_status": candidate_generation_training_refresh_gate.get(
                 "training_refresh_design_status"
