@@ -14,7 +14,7 @@ This is a passive request packet only. It does not create the approval receipt, 
 - runner_processed_job_count: `0`
 - runner_executed_job_count: `0`
 - manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- readiness_fingerprint: `9e3760e042b380429e8c2b1b7c533296cb98bb59fbf31b287e2bfdae30abdc0d`
+- readiness_fingerprint: `351a366042e7e888018897007e29e096afdb180a9c4f4eb02853940b82228c66`
 - protected_stack_status: `retry1_protected_stage5_6_stack_adopted_manifest_only`
 - protected_stack_ready: `True`
 - protected_stack_rollback_paths_preserved: `True`
@@ -52,7 +52,7 @@ This is a passive request packet only. It does not create the approval receipt, 
     "job_count": 6,
     "manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
     "manifest_status": "protected_plan_window_failure_contrast_manifest_ready_for_review",
-    "readiness_fingerprint": "9e3760e042b380429e8c2b1b7c533296cb98bb59fbf31b287e2bfdae30abdc0d",
+    "readiness_fingerprint": "351a366042e7e888018897007e29e096afdb180a9c4f4eb02853940b82228c66",
     "readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
   },
   "decision": {

@@ -24,6 +24,7 @@ REVIEW = (
     / "reports/strategy_arbitration/"
     "krk_protected_plan_window_failure_contrast_manifest_review_v0.json"
 )
+FULL_SUITE_READINESS = ROOT / "reports/krk_full_suite_readiness_audit_v0.json"
 OUTPUT_JSON = (
     ROOT
     / "reports/strategy_arbitration/"
@@ -166,6 +167,16 @@ def _readiness_fingerprint(payload: dict[str, Any]) -> str:
             "selector_training_row_count",
             "runtime_authorization_row_count",
             "stage7_training_row_count",
+            "protected_stack_status",
+            "protected_stack_ready",
+            "protected_stack_rollback_paths_preserved",
+            "protected_stack_active_paths_safe",
+            "protected_stack_active_paths_exist",
+            "protected_stack_rollback_paths_safe",
+            "protected_stack_rollback_paths_exist",
+            "protected_stack_rollback_common_paths_distinct",
+            "protected_stack_filesystem_snapshots_replaced",
+            "protected_stack_hard_blockers",
         )
     }
     canonical = {
@@ -184,12 +195,18 @@ def build_payload(
     *,
     manifest: dict[str, Any] | None = None,
     review: dict[str, Any] | None = None,
+    full_suite_readiness: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     manifest = manifest or _load(MANIFEST)
     review = review or _load(REVIEW)
+    full_suite_readiness = full_suite_readiness or _load(FULL_SUITE_READINESS)
     jobs = manifest.get("jobs") or []
     manifest_status = manifest.get("decision", {}).get("status")
     review_status = review.get("decision", {}).get("status")
+    protected_stack = full_suite_readiness.get("protected_stack") or {}
+    active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
+    rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
+    protected_stack_hard_blockers = list(full_suite_readiness.get("hard_blockers") or [])
     manifest_fingerprint = _manifest_fingerprint(manifest)
     recorded_manifest_fingerprint = (manifest.get("summary") or {}).get(
         "manifest_fingerprint"
@@ -215,6 +232,24 @@ def build_payload(
         blockers.append("manifest_fingerprint_missing_or_mismatch")
     if review_manifest_fingerprint != manifest_fingerprint:
         blockers.append("manifest_review_fingerprint_mismatch")
+    if protected_stack.get("ready") is not True:
+        blockers.append("protected_stack_not_ready")
+    if protected_stack.get("rollback_paths_preserved") is not True:
+        blockers.append("protected_stack_rollback_paths_not_preserved")
+    if active_stack_path_status.get("all_paths_safe") is not True:
+        blockers.append("protected_stack_active_paths_unsafe")
+    if active_stack_path_status.get("all_paths_exist") is not True:
+        blockers.append("protected_stack_active_paths_missing")
+    if rollback_stack_path_status.get("all_paths_safe") is not True:
+        blockers.append("protected_stack_rollback_paths_unsafe")
+    if rollback_stack_path_status.get("all_paths_exist") is not True:
+        blockers.append("protected_stack_rollback_paths_missing")
+    if protected_stack.get("rollback_common_paths_distinct") is not True:
+        blockers.append("protected_stack_rollback_common_paths_not_distinct")
+    if protected_stack.get("filesystem_snapshots_replaced") is not False:
+        blockers.append("protected_stack_filesystem_snapshot_replacement_detected")
+    if protected_stack_hard_blockers:
+        blockers.append("protected_stack_hard_blockers_present")
 
     seen_job_ids: set[str] = set()
     seen_outputs: set[str] = set()
@@ -252,6 +287,7 @@ def build_payload(
         "source_artifacts": [
             "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json",
             "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_review_v0.json",
+            "reports/krk_full_suite_readiness_audit_v0.json",
         ],
         "summary": {
             "job_count": len(jobs),
@@ -272,6 +308,30 @@ def build_payload(
             "selector_training_row_count": 0,
             "runtime_authorization_row_count": 0,
             "stage7_training_row_count": 0,
+            "protected_stack_status": protected_stack.get("status"),
+            "protected_stack_ready": protected_stack.get("ready"),
+            "protected_stack_rollback_paths_preserved": protected_stack.get(
+                "rollback_paths_preserved"
+            ),
+            "protected_stack_active_paths_safe": active_stack_path_status.get(
+                "all_paths_safe"
+            ),
+            "protected_stack_active_paths_exist": active_stack_path_status.get(
+                "all_paths_exist"
+            ),
+            "protected_stack_rollback_paths_safe": rollback_stack_path_status.get(
+                "all_paths_safe"
+            ),
+            "protected_stack_rollback_paths_exist": rollback_stack_path_status.get(
+                "all_paths_exist"
+            ),
+            "protected_stack_rollback_common_paths_distinct": protected_stack.get(
+                "rollback_common_paths_distinct"
+            ),
+            "protected_stack_filesystem_snapshots_replaced": protected_stack.get(
+                "filesystem_snapshots_replaced"
+            ),
+            "protected_stack_hard_blockers": protected_stack_hard_blockers,
         },
         "job_checks": job_checks,
         "decision": {

@@ -247,6 +247,21 @@ def test_failure_contrast_execution_readiness_is_dry_run_only():
         == payload["summary"]["manifest_fingerprint"]
     )
     assert payload["summary"]["manifest_fingerprints_match"] is True
+    assert (
+        payload["summary"]["protected_stack_status"]
+        == "retry1_protected_stage5_6_stack_adopted_manifest_only"
+    )
+    assert payload["summary"]["protected_stack_ready"] is True
+    assert payload["summary"]["protected_stack_rollback_paths_preserved"] is True
+    assert payload["summary"]["protected_stack_active_paths_safe"] is True
+    assert payload["summary"]["protected_stack_active_paths_exist"] is True
+    assert payload["summary"]["protected_stack_rollback_paths_safe"] is True
+    assert payload["summary"]["protected_stack_rollback_paths_exist"] is True
+    assert (
+        payload["summary"]["protected_stack_rollback_common_paths_distinct"] is True
+    )
+    assert payload["summary"]["protected_stack_filesystem_snapshots_replaced"] is False
+    assert payload["summary"]["protected_stack_hard_blockers"] == []
     assert len(payload["summary"]["readiness_fingerprint"]) == 64
     assert (
         payload["decision"]["status"]
@@ -1273,6 +1288,54 @@ def test_failure_contrast_execution_readiness_rejects_stale_manifest_review():
         "execution_readiness_blockers"
     ]
     assert payload["summary"]["manifest_fingerprints_match"] is False
+
+
+def test_failure_contrast_execution_readiness_blocks_unsafe_protected_stack():
+    manifest = _read_report(
+        "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json"
+    )
+    review = _read_report(
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_manifest_review_v0.json"
+    )
+
+    payload = _readiness.build_payload(
+        manifest=manifest,
+        review=review,
+        full_suite_readiness={
+            "protected_stack": {
+                "status": "fixture_stack_not_ready",
+                "ready": False,
+                "rollback_paths_preserved": False,
+                "active_stack_path_status": {
+                    "all_paths_safe": False,
+                    "all_paths_exist": True,
+                },
+                "rollback_stack_path_status": {
+                    "all_paths_safe": True,
+                    "all_paths_exist": False,
+                },
+                "rollback_common_paths_distinct": False,
+                "filesystem_snapshots_replaced": True,
+            },
+            "hard_blockers": ["protected_retry1_stage5_6_stack_not_validated"],
+        },
+    )
+
+    assert (
+        payload["decision"]["status"]
+        == "protected_plan_window_failure_contrast_execution_readiness_blocked"
+    )
+    assert payload["summary"]["protected_stack_status"] == "fixture_stack_not_ready"
+    assert payload["summary"]["protected_stack_ready"] is False
+    blockers = payload["summary"]["execution_readiness_blockers"]
+    assert "protected_stack_not_ready" in blockers
+    assert "protected_stack_rollback_paths_not_preserved" in blockers
+    assert "protected_stack_active_paths_unsafe" in blockers
+    assert "protected_stack_rollback_paths_missing" in blockers
+    assert "protected_stack_rollback_common_paths_not_distinct" in blockers
+    assert "protected_stack_filesystem_snapshot_replacement_detected" in blockers
+    assert "protected_stack_hard_blockers_present" in blockers
     assert payload["decision"]["collection_run_allowed"] is False
 
 

@@ -21,7 +21,17 @@ This is a dry-run preflight only. It does not execute collection, run labels, ch
 - selector_training_row_count: `0`
 - runtime_authorization_row_count: `0`
 - stage7_training_row_count: `0`
-- readiness_fingerprint: `9e3760e042b380429e8c2b1b7c533296cb98bb59fbf31b287e2bfdae30abdc0d`
+- protected_stack_status: `retry1_protected_stage5_6_stack_adopted_manifest_only`
+- protected_stack_ready: `True`
+- protected_stack_rollback_paths_preserved: `True`
+- protected_stack_active_paths_safe: `True`
+- protected_stack_active_paths_exist: `True`
+- protected_stack_rollback_paths_safe: `True`
+- protected_stack_rollback_paths_exist: `True`
+- protected_stack_rollback_common_paths_distinct: `True`
+- protected_stack_filesystem_snapshots_replaced: `False`
+- protected_stack_hard_blockers: `[]`
+- readiness_fingerprint: `351a366042e7e888018897007e29e096afdb180a9c4f4eb02853940b82228c66`
 
 ## Jobs
 
