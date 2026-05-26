@@ -3892,11 +3892,21 @@
     "current_benchmark_review_available": true,
     "current_benchmark_review_next_step": "obtain_matching_approval_receipt_before_protected_failure_contrast_collection",
     "current_benchmark_review_status": "sequence_policy_benchmark_mixed_plan_window_underpowered",
+    "current_control_plane_approval_option_ids": [
+      "approve_stage4_first_move_contrast_sandbox",
+      "approve_protected_plan_window_failure_contrast_collection"
+    ],
+    "current_control_plane_gate_status": "krk_control_plane_waiting_on_explicit_gate_choice",
     "input_group_counts": {
       "protected_plan_window": 20,
       "stage4_first_move_contrast": 48,
       "stage7_clean_heldout_control": 50
     },
+    "protected_failure_contrast_collection_blocked_by_option_id": null,
+    "protected_failure_contrast_collection_command_available": true,
+    "protected_failure_contrast_collection_option_available": true,
+    "protected_failure_contrast_collection_option_id": "approve_protected_plan_window_failure_contrast_collection",
+    "protected_failure_contrast_control_plane_gate_review_required": false,
     "protected_failure_contrast_integration_ready": false,
     "protected_failure_contrast_integration_status": "protected_plan_window_failure_contrast_integration_pending_outputs",
     "protected_failure_contrast_row_count": 0,

@@ -200,6 +200,19 @@ def build_payload(
     full_ready = bool(inputs.get("summary", {}).get("benchmark_input_ready"))
     benchmark_review_status = benchmark_review.get("decision", {}).get("status")
     benchmark_review_next_step = benchmark_review.get("decision", {}).get("recommended_next_step")
+    benchmark_review_gate = benchmark_review.get("current_control_plane_gate") or {}
+    protected_collection_recommended = (
+        benchmark_review_next_step
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+    )
+    protected_collection_command_available_value = benchmark_review_gate.get(
+        "protected_failure_contrast_collection_command_available"
+    )
+    protected_collection_command_available = (
+        bool(protected_collection_command_available_value)
+        if protected_collection_command_available_value is not None
+        else None
+    )
     selector_training_row_count = sum(
         1 for row in rows if row.get("usable_for_selector_training")
     )
@@ -217,6 +230,12 @@ def build_payload(
     forbidden_training_or_runtime_inputs = bool(forbidden_input_blockers) or (
         benchmark_review_status in FORBIDDEN_INPUT_STATUSES
     )
+    protected_collection_gate_review_required = (
+        full_ready
+        and protected_collection_recommended
+        and protected_collection_command_available is False
+        and not forbidden_training_or_runtime_inputs
+    )
     benchmark_review_current = benchmark_review_status in {
         "sequence_policy_benchmark_supports_non_causal_sequence_policy_review",
         "sequence_policy_benchmark_mixed_plan_window_underpowered",
@@ -225,6 +244,9 @@ def build_payload(
     status = (
         "sequence_policy_input_probe_blocked_forbidden_training_or_runtime_rows"
         if forbidden_training_or_runtime_inputs
+        else
+        "sequence_policy_input_probe_blocked_pending_protected_failure_contrast_control_plane_gate_review"
+        if protected_collection_gate_review_required
         else
         "sequence_policy_input_probe_ready_for_full_non_causal_benchmark"
         if full_ready
@@ -264,6 +286,29 @@ def build_payload(
             "current_benchmark_review_status": benchmark_review_status,
             "current_benchmark_review_next_step": benchmark_review_next_step,
             "current_benchmark_review_available": benchmark_review_current,
+            "current_control_plane_gate_status": benchmark_review_gate.get("status"),
+            "current_control_plane_approval_option_ids": (
+                benchmark_review_gate.get("approval_option_ids") or []
+            ),
+            "protected_failure_contrast_collection_option_available": (
+                benchmark_review_gate.get(
+                    "protected_failure_contrast_collection_option_available"
+                )
+            ),
+            "protected_failure_contrast_collection_command_available": (
+                protected_collection_command_available
+            ),
+            "protected_failure_contrast_collection_option_id": benchmark_review_gate.get(
+                "protected_failure_contrast_collection_option_id"
+            ),
+            "protected_failure_contrast_collection_blocked_by_option_id": (
+                benchmark_review_gate.get(
+                    "protected_failure_contrast_collection_blocked_by_option_id"
+                )
+            ),
+            "protected_failure_contrast_control_plane_gate_review_required": (
+                protected_collection_gate_review_required
+            ),
         },
         "stage4_first_move_contrast_probe": stage4,
         "protected_plan_window_probe": plan_windows,
@@ -276,6 +321,8 @@ def build_payload(
                 else
                 "fill_stage7_clean_success_controls_before_full_sequence_policy_benchmark"
                 if stage7["underpowered"]
+                else "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+                if protected_collection_gate_review_required
                 else benchmark_review_next_step
                 if full_ready and benchmark_review_current and benchmark_review_next_step
                 else "run_full_non_causal_sequence_policy_benchmark"

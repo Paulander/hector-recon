@@ -62,6 +62,24 @@ def test_sequence_policy_input_probe_is_non_causal_and_ready():
     )
     assert payload["summary"]["current_benchmark_review_available"] is True
     assert (
+        payload["summary"][
+            "protected_failure_contrast_collection_option_available"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "protected_failure_contrast_collection_command_available"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "protected_failure_contrast_control_plane_gate_review_required"
+        ]
+        is False
+    )
+    assert (
         payload["decision"]["status"]
         == "sequence_policy_input_probe_ready_for_full_non_causal_benchmark"
     )
@@ -195,3 +213,41 @@ def test_sequence_policy_input_probe_routes_forbidden_training_rows_to_repair():
         == "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
     )
     assert payload["decision"]["selector_training_allowed"] is False
+
+
+def test_sequence_policy_input_probe_routes_missing_collection_command_to_gate_review():
+    benchmark_review = _read_report(
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
+    )
+    benchmark_review["current_control_plane_gate"][
+        "protected_failure_contrast_collection_command_available"
+    ] = False
+    benchmark_review["current_control_plane_gate"][
+        "protected_failure_contrast_collection_blocked_by_option_id"
+    ] = "review_protected_plan_window_failure_contrast_execution_readiness"
+
+    payload = _probe.build_payload(benchmark_review=benchmark_review)
+
+    assert (
+        payload["decision"]["status"]
+        == "sequence_policy_input_probe_blocked_pending_"
+        "protected_failure_contrast_control_plane_gate_review"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+    )
+    assert (
+        payload["summary"][
+            "protected_failure_contrast_control_plane_gate_review_required"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "protected_failure_contrast_collection_command_available"
+        ]
+        is False
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["label_run_allowed"] is False

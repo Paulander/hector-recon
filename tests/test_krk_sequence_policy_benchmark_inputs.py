@@ -72,6 +72,24 @@ def test_sequence_policy_benchmark_inputs_are_non_causal_and_ready_after_stage7_
         == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
     assert payload["summary"]["current_benchmark_review_available"] is True
+    assert (
+        payload["summary"][
+            "protected_failure_contrast_collection_option_available"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "protected_failure_contrast_collection_command_available"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "protected_failure_contrast_control_plane_gate_review_required"
+        ]
+        is False
+    )
     assert payload["summary"]["selector_training_row_count"] == 0
     assert payload["summary"]["runtime_authorization_row_count"] == 0
     assert (
@@ -305,6 +323,44 @@ def test_sequence_policy_benchmark_inputs_fixture_consumes_ready_protected_failu
     assert row["usable_for_selector_training"] is False
     assert row["usable_for_runtime_authorization"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_sequence_policy_benchmark_inputs_routes_missing_collection_command_to_gate_review():
+    benchmark_review = _read_report(
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
+    )
+    benchmark_review["current_control_plane_gate"][
+        "protected_failure_contrast_collection_command_available"
+    ] = False
+    benchmark_review["current_control_plane_gate"][
+        "protected_failure_contrast_collection_blocked_by_option_id"
+    ] = "review_protected_plan_window_failure_contrast_execution_readiness"
+
+    payload = _inputs.build_payload(sequence_policy_benchmark_review=benchmark_review)
+
+    assert (
+        payload["decision"]["status"]
+        == "sequence_policy_benchmark_inputs_blocked_pending_"
+        "protected_failure_contrast_control_plane_gate_review"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+    )
+    assert (
+        payload["summary"][
+            "protected_failure_contrast_control_plane_gate_review_required"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "protected_failure_contrast_collection_command_available"
+        ]
+        is False
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["label_run_allowed"] is False
 
 
 def test_sequence_policy_benchmark_inputs_rejects_unready_protected_failure_rows():

@@ -19,6 +19,13 @@ This is a partial non-causal probe over the currently assembled inputs. It does 
 - current_benchmark_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered`
 - current_benchmark_review_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - current_benchmark_review_available: `True`
+- current_control_plane_gate_status: `krk_control_plane_waiting_on_explicit_gate_choice`
+- current_control_plane_approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'approve_protected_plan_window_failure_contrast_collection']`
+- protected_failure_contrast_collection_option_available: `True`
+- protected_failure_contrast_collection_command_available: `True`
+- protected_failure_contrast_collection_option_id: `approve_protected_plan_window_failure_contrast_collection`
+- protected_failure_contrast_collection_blocked_by_option_id: `None`
+- protected_failure_contrast_control_plane_gate_review_required: `False`
 
 ## Stage 4 First-Move Contrast
 

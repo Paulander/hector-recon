@@ -143,6 +143,25 @@ def build_payload(
     benchmark_ready = clean_success_met and clean_fail_met and cross_stage_sequence_evidence_met
     benchmark_review_status = benchmark_review.get("decision", {}).get("status")
     benchmark_review_next_step = benchmark_review.get("decision", {}).get("recommended_next_step")
+    benchmark_review_gate = benchmark_review.get("current_control_plane_gate") or {}
+    protected_collection_recommended = (
+        benchmark_review_next_step
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+    )
+    protected_collection_command_available_value = benchmark_review_gate.get(
+        "protected_failure_contrast_collection_command_available"
+    )
+    protected_collection_command_available = (
+        bool(protected_collection_command_available_value)
+        if protected_collection_command_available_value is not None
+        else None
+    )
+    protected_collection_gate_review_required = (
+        benchmark_ready
+        and
+        protected_collection_recommended
+        and protected_collection_command_available is False
+    )
     forbidden_input_blockers = sorted(
         FORBIDDEN_INPUT_BLOCKERS & set(benchmark_review.get("blockers") or [])
     )
@@ -169,6 +188,9 @@ def build_payload(
     status = (
         "sequence_policy_benchmark_design_blocked_forbidden_training_or_runtime_rows"
         if forbidden_training_or_runtime_inputs
+        else
+        "sequence_policy_benchmark_design_blocked_pending_protected_failure_contrast_control_plane_gate_review"
+        if protected_collection_gate_review_required
         else
         "sequence_policy_benchmark_blocked_pending_clean_stage7_controls"
         if not clean_success_met
@@ -224,6 +246,29 @@ def build_payload(
             "current_benchmark_review_status": benchmark_review_status,
             "current_benchmark_review_next_step": benchmark_review_next_step,
             "current_benchmark_review_available": benchmark_review_current,
+            "current_control_plane_gate_status": benchmark_review_gate.get("status"),
+            "current_control_plane_approval_option_ids": (
+                benchmark_review_gate.get("approval_option_ids") or []
+            ),
+            "protected_failure_contrast_collection_option_available": (
+                benchmark_review_gate.get(
+                    "protected_failure_contrast_collection_option_available"
+                )
+            ),
+            "protected_failure_contrast_collection_command_available": (
+                protected_collection_command_available
+            ),
+            "protected_failure_contrast_collection_option_id": benchmark_review_gate.get(
+                "protected_failure_contrast_collection_option_id"
+            ),
+            "protected_failure_contrast_collection_blocked_by_option_id": (
+                benchmark_review_gate.get(
+                    "protected_failure_contrast_collection_blocked_by_option_id"
+                )
+            ),
+            "protected_failure_contrast_control_plane_gate_review_required": (
+                protected_collection_gate_review_required
+            ),
             "forbidden_training_or_runtime_input_blocked": (
                 forbidden_training_or_runtime_inputs
             ),
@@ -343,6 +388,9 @@ def build_payload(
             "recommended_next_step": (
                 "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
                 if forbidden_training_or_runtime_inputs
+                else
+                "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+                if protected_collection_gate_review_required
                 else
                 "approve_stage7_diverse_clean_label_run_or_defer_to_non_causal_design"
                 if not clean_success_met
