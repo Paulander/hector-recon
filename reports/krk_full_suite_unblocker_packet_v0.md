@@ -32,6 +32,12 @@
 - sequence_policy_cross_stage_requirements_status: `cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark`
 - sequence_policy_replay_free_protected_cross_stage_evidence: `True`
 - sequence_policy_cross_stage_sequence_evidence_met: `True`
+- current_control_plane_gate_status: `krk_control_plane_waiting_on_explicit_gate_choice`
+- current_control_plane_approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'approve_protected_plan_window_failure_contrast_collection']`
+- protected_plan_window_failure_contrast_collection_option_available: `True`
+- protected_plan_window_failure_contrast_collection_command_available: `True`
+- protected_plan_window_failure_contrast_collection_option_id: `approve_protected_plan_window_failure_contrast_collection`
+- protected_plan_window_failure_contrast_collection_blocked_by_option_id: `None`
 - stage8_training_ready: `False`
 - stage7_output_validation_status: `stage7_diverse_clean_sampling_outputs_valid_ready_for_integration`
 - stage7_invalid_existing_output_count: `0`
@@ -125,6 +131,10 @@
 - approval_request_status: `protected_plan_window_failure_contrast_approval_request_ready`
 - approval_request_blockers: `[]`
 - approval_request_ready_for_collection: `True`
+- collection_option_available: `True`
+- collection_command_available: `True`
+- collection_option_id: `approve_protected_plan_window_failure_contrast_collection`
+- collection_blocked_by_option_id: `None`
 - approval_receipt_created_by_request: `False`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
 - expected_readiness_fingerprint: `3d8481218b7f46804e054090e7bd83b4a8a39d341a3290a537068a0a7b586987`

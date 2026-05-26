@@ -110,6 +110,7 @@ def build_payload() -> dict[str, Any]:
     stage7_gate = readiness["stage7_sampling_gate"]
     sequence = readiness["sequence_policy"]
     protected = readiness["protected_stack"]
+    current_gate = readiness.get("current_control_plane_gate") or {}
     boundary_audit = readiness.get("runtime_and_training_boundaries") or {}
     active_stack_path_status = protected.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected.get("rollback_stack_path_status") or {}
@@ -178,6 +179,14 @@ def build_payload() -> dict[str, Any]:
         failure_contrast_runner.get("decision", {}).get("status")
         == "protected_plan_window_failure_contrast_runner_dry_run_ready"
     )
+    failure_contrast_collection_command_available_value = current_gate.get(
+        "protected_failure_contrast_collection_command_available"
+    )
+    failure_contrast_collection_command_available = (
+        bool(failure_contrast_collection_command_available_value)
+        if failure_contrast_collection_command_available_value is not None
+        else True
+    )
 
     primary_ready = (
         stage7_gate["runner_status"] == "stage7_diverse_clean_sampling_runner_dry_run_ready"
@@ -241,6 +250,15 @@ def build_payload() -> dict[str, Any]:
             or not failure_contrast_runner_dry_run_ready
         )
     )
+    failure_contrast_control_plane_gate_review_required = (
+        failure_contrast_primary
+        and failure_contrast_manifest_review_passed
+        and protected_stack_ready
+        and failure_contrast_approval_request_ready
+        and failure_contrast_execution_ready
+        and failure_contrast_runner_dry_run_ready
+        and not failure_contrast_collection_command_available
+    )
     failure_contrast_collection_ready = (
         failure_contrast_primary
         and failure_contrast_manifest_review_passed
@@ -248,6 +266,7 @@ def build_payload() -> dict[str, Any]:
         and failure_contrast_approval_request_ready
         and failure_contrast_execution_ready
         and failure_contrast_runner_dry_run_ready
+        and failure_contrast_collection_command_available
     )
     if sequence_forbidden_training_or_runtime_inputs:
         decision_status = "krk_suite_unblocker_blocked_forbidden_training_or_runtime_rows"
@@ -279,6 +298,14 @@ def build_payload() -> dict[str, Any]:
         )
         recommended_next_step = (
             "review_protected_plan_window_failure_contrast_execution_readiness"
+        )
+    elif failure_contrast_control_plane_gate_review_required:
+        decision_status = (
+            "krk_suite_protected_failure_contrast_unblocker_blocked_pending_"
+            "control_plane_gate_review"
+        )
+        recommended_next_step = (
+            "review_current_control_plane_gate_for_protected_failure_contrast_collection"
         )
     elif stage7_gate["success_controls_ready"] and sequence["benchmark_ready"]:
         decision_status = (
@@ -431,6 +458,26 @@ def build_payload() -> dict[str, Any]:
             ),
             "sequence_policy_forbidden_training_or_runtime_input_blockers": (
                 sequence.get("forbidden_training_or_runtime_input_blockers") or []
+            ),
+            "current_control_plane_gate_status": current_gate.get("status"),
+            "current_control_plane_approval_option_ids": (
+                current_gate.get("approval_option_ids") or []
+            ),
+            "protected_plan_window_failure_contrast_collection_option_available": (
+                current_gate.get(
+                    "protected_failure_contrast_collection_option_available"
+                )
+            ),
+            "protected_plan_window_failure_contrast_collection_command_available": (
+                failure_contrast_collection_command_available
+            ),
+            "protected_plan_window_failure_contrast_collection_option_id": (
+                current_gate.get("protected_failure_contrast_collection_option_id")
+            ),
+            "protected_plan_window_failure_contrast_collection_blocked_by_option_id": (
+                current_gate.get(
+                    "protected_failure_contrast_collection_blocked_by_option_id"
+                )
             ),
             "stage8_training_ready": False,
             "stage7_output_validation_status": stage7_gate.get("output_validation_status"),
@@ -622,6 +669,8 @@ def build_payload() -> dict[str, Any]:
                 if failure_contrast_approval_request_repair_required
                 else "blocked_pending_protected_failure_contrast_execution_readiness"
                 if failure_contrast_execution_review_required
+                else "blocked_pending_protected_failure_contrast_control_plane_gate_review"
+                if failure_contrast_control_plane_gate_review_required
                 else "ready_pending_explicit_approval"
                 if primary_ready or failure_contrast_collection_ready
                 else "additional_manifest_ready_pending_explicit_approval"
@@ -647,6 +696,8 @@ def build_payload() -> dict[str, Any]:
                 if failure_contrast_approval_request_repair_required
                 else "Review protected failure-contrast execution readiness before any collection command is made approvable."
                 if failure_contrast_execution_review_required
+                else "Review current control-plane gate option exposure before any collection command is made approvable."
+                if failure_contrast_control_plane_gate_review_required
                 else
                 "Review the bounded protected plan-window failure-contrast manifest before any explicitly approved collection run."
                 if failure_contrast_primary
@@ -819,6 +870,30 @@ def build_payload() -> dict[str, Any]:
                 ),
                 "approval_request_ready_for_collection": (
                     failure_contrast_approval_request_ready
+                    if failure_contrast_primary
+                    else None
+                ),
+                "collection_option_available": (
+                    current_gate.get(
+                        "protected_failure_contrast_collection_option_available"
+                    )
+                    if failure_contrast_primary
+                    else None
+                ),
+                "collection_command_available": (
+                    failure_contrast_collection_command_available
+                    if failure_contrast_primary
+                    else None
+                ),
+                "collection_option_id": (
+                    current_gate.get("protected_failure_contrast_collection_option_id")
+                    if failure_contrast_primary
+                    else None
+                ),
+                "collection_blocked_by_option_id": (
+                    current_gate.get(
+                        "protected_failure_contrast_collection_blocked_by_option_id"
+                    )
                     if failure_contrast_primary
                     else None
                 ),
@@ -1026,6 +1101,12 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- sequence_policy_cross_stage_requirements_status: `{state['sequence_policy_cross_stage_requirements_status']}`",
         f"- sequence_policy_replay_free_protected_cross_stage_evidence: `{state['sequence_policy_replay_free_protected_cross_stage_evidence']}`",
         f"- sequence_policy_cross_stage_sequence_evidence_met: `{state['sequence_policy_cross_stage_sequence_evidence_met']}`",
+        f"- current_control_plane_gate_status: `{state['current_control_plane_gate_status']}`",
+        f"- current_control_plane_approval_option_ids: `{state['current_control_plane_approval_option_ids']}`",
+        f"- protected_plan_window_failure_contrast_collection_option_available: `{state['protected_plan_window_failure_contrast_collection_option_available']}`",
+        f"- protected_plan_window_failure_contrast_collection_command_available: `{state['protected_plan_window_failure_contrast_collection_command_available']}`",
+        f"- protected_plan_window_failure_contrast_collection_option_id: `{state['protected_plan_window_failure_contrast_collection_option_id']}`",
+        f"- protected_plan_window_failure_contrast_collection_blocked_by_option_id: `{state['protected_plan_window_failure_contrast_collection_blocked_by_option_id']}`",
         f"- stage8_training_ready: `{state['stage8_training_ready']}`",
         f"- stage7_output_validation_status: `{state['stage7_output_validation_status']}`",
         f"- stage7_invalid_existing_output_count: `{state['stage7_invalid_existing_output_count']}`",
@@ -1121,6 +1202,10 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- approval_request_status: `{primary['scope']['approval_request_status']}`",
             f"- approval_request_blockers: `{primary['scope']['approval_request_blockers']}`",
             f"- approval_request_ready_for_collection: `{primary['scope']['approval_request_ready_for_collection']}`",
+            f"- collection_option_available: `{primary['scope']['collection_option_available']}`",
+            f"- collection_command_available: `{primary['scope']['collection_command_available']}`",
+            f"- collection_option_id: `{primary['scope']['collection_option_id']}`",
+            f"- collection_blocked_by_option_id: `{primary['scope']['collection_blocked_by_option_id']}`",
             f"- approval_receipt_created_by_request: `{primary['scope']['approval_receipt_created_by_request']}`",
             f"- expected_manifest_fingerprint: `{primary['scope']['expected_manifest_fingerprint']}`",
             f"- expected_readiness_fingerprint: `{primary['scope']['expected_readiness_fingerprint']}`",
