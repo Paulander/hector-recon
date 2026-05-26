@@ -22,8 +22,13 @@
       "option_id": "approve_protected_plan_window_failure_contrast_collection",
       "recommended_if": "manifest review passed and you want to collect bounded observation-only failure contrasts",
       "safety_scope": {
+        "approval_receipt_blockers": [
+          "approval_receipt_missing"
+        ],
         "approval_receipt_path": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json",
+        "approval_receipt_present": false,
         "approval_receipt_required": true,
+        "approval_receipt_valid": false,
         "executed_job_count": 0,
         "execution_readiness_recomputed_live": true,
         "expected_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",

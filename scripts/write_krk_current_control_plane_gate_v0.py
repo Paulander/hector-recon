@@ -462,6 +462,15 @@ def build_payload(
                         "reports/strategy_arbitration/"
                         "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
                     ),
+                    "approval_receipt_present": failure_contrast_runner_summary.get(
+                        "approval_receipt_present"
+                    ),
+                    "approval_receipt_valid": failure_contrast_runner_summary.get(
+                        "approval_receipt_valid"
+                    ),
+                    "approval_receipt_blockers": failure_contrast_runner_summary.get(
+                        "approval_receipt_blockers"
+                    ),
                     "expected_manifest_fingerprint": (
                         failure_contrast_runner_summary.get(
                             "execution_readiness_manifest_fingerprint"

@@ -99,6 +99,9 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
   - execution_readiness_recomputed_live: `True`
   - approval_receipt_required: `True`
   - approval_receipt_path: `reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
+  - approval_receipt_present: `False`
+  - approval_receipt_valid: `False`
+  - approval_receipt_blockers: `['approval_receipt_missing']`
   - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
   - expected_readiness_fingerprint: `2a1b10fb7e14001a58397f74fbce3fb68941305b01378c14676a0f1948d5889d`
   - per_job_timeout_seconds: `900`

@@ -392,6 +392,11 @@ def test_current_control_plane_gate_requires_explicit_choice():
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
     )
+    assert review_option["safety_scope"]["approval_receipt_present"] is False
+    assert review_option["safety_scope"]["approval_receipt_valid"] is False
+    assert review_option["safety_scope"]["approval_receipt_blockers"] == [
+        "approval_receipt_missing"
+    ]
     assert len(review_option["safety_scope"]["expected_manifest_fingerprint"]) == 64
     assert len(review_option["safety_scope"]["expected_readiness_fingerprint"]) == 64
     assert review_option["safety_scope"]["per_job_timeout_seconds"] == 900
