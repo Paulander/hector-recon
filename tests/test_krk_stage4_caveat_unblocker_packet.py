@@ -164,6 +164,10 @@ def test_stage4_sandbox_approval_request_is_not_authorization():
     assert scope["gameplay_topology_mutation"] is False
     assert scope["stage7_promotion_allowed"] is False
     assert scope["stage8_training_allowed"] is False
+    assert scope["readiness_audit"] == "reports/krk_full_suite_readiness_audit_v0.json"
+    assert scope["readiness_checked_flag_count"] >= 430
+    assert scope["readiness_boundary_violation_count"] == 0
+    assert scope["readiness_source_artifact_count"] >= 44
 
 
 def test_stage4_sandbox_approval_request_fixture_blocks_unready_review():
@@ -183,4 +187,67 @@ def test_stage4_sandbox_approval_request_fixture_blocks_unready_review():
         == "stage4_first_move_contrast_sandbox_approval_request_blocked"
     )
     assert "stage4_runtime_review_packet_not_ready" in payload["blockers"]
+    assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_stage4_sandbox_approval_request_fixture_blocks_missing_readiness_audit():
+    payload = _approval_request.build_payload(
+        runtime_packet={
+            "decision": {
+                "status": (
+                    "stage4_first_move_contrast_runtime_review_ready_pending_explicit_approval"
+                ),
+                "runtime_review_ready": True,
+                "implementation_authorized_by_this_packet": False,
+                "requires_explicit_approval_before_implementation": True,
+            }
+        },
+        readiness_audit={},
+    )
+
+    assert (
+        payload["decision"]["status"]
+        == "stage4_first_move_contrast_sandbox_approval_request_blocked"
+    )
+    assert "full_suite_readiness_audit_not_clean" in payload["blockers"]
+    assert (
+        payload["required_scope_if_user_approves"]["readiness_checked_flag_count"]
+        is None
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_stage4_sandbox_approval_request_fixture_blocks_readiness_violations():
+    payload = _approval_request.build_payload(
+        runtime_packet={
+            "decision": {
+                "status": (
+                    "stage4_first_move_contrast_runtime_review_ready_pending_explicit_approval"
+                ),
+                "runtime_review_ready": True,
+                "implementation_authorized_by_this_packet": False,
+                "requires_explicit_approval_before_implementation": True,
+            }
+        },
+        readiness_audit={
+            "decision": {"status": "krk_suite_readiness_blocked"},
+            "runtime_and_training_boundaries": {
+                "checked_flag_count": 430,
+                "violation_count": 1,
+            },
+            "source_artifacts": {"sample": "reports/sample.json"},
+        },
+    )
+
+    assert (
+        payload["decision"]["status"]
+        == "stage4_first_move_contrast_sandbox_approval_request_blocked"
+    )
+    assert "full_suite_readiness_audit_not_clean" in payload["blockers"]
+    assert (
+        payload["required_scope_if_user_approves"][
+            "readiness_boundary_violation_count"
+        ]
+        == 1
+    )
     assert payload["decision"]["runtime_changes_allowed"] is False

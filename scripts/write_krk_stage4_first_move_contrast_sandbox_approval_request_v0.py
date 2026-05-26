@@ -69,7 +69,8 @@ def build_payload(
     readiness_audit: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     runtime_packet = runtime_packet or _load(RUNTIME_PACKET)
-    readiness_audit = readiness_audit or _load_optional(READINESS_AUDIT)
+    if readiness_audit is None:
+        readiness_audit = _load_optional(READINESS_AUDIT)
     readiness_scope = _readiness_scope(readiness_audit)
     decision = runtime_packet.get("decision") or {}
     approved_scope = runtime_packet.get("approved_if_later_explicitly_authorized") or {}
@@ -84,12 +85,21 @@ def build_payload(
         and decision.get("implementation_authorized_by_this_packet") is False
         and decision.get("requires_explicit_approval_before_implementation") is True
     )
+    readiness_audit_ready = (
+        readiness_scope["readiness_checked_flag_count"] is not None
+        and readiness_scope["readiness_boundary_violation_count"] == 0
+        and readiness_scope["readiness_source_artifact_count"] > 0
+    )
+    blockers = []
+    if not runtime_review_ready:
+        blockers.append("stage4_runtime_review_packet_not_ready")
+    if not readiness_audit_ready:
+        blockers.append("full_suite_readiness_audit_not_clean")
     status = (
         "stage4_first_move_contrast_sandbox_approval_request_ready"
-        if runtime_review_ready
+        if runtime_review_ready and readiness_audit_ready
         else "stage4_first_move_contrast_sandbox_approval_request_blocked"
     )
-    blockers = [] if runtime_review_ready else ["stage4_runtime_review_packet_not_ready"]
     exact_approval_request = (
         "Approve default-off Stage 4 first-move contrast sandbox implementation "
         "only within krk_stage4_first_move_contrast_runtime_review_packet_v0: "
