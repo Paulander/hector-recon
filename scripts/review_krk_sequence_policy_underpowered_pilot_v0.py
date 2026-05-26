@@ -92,6 +92,7 @@ def build_payload(
     backfill_summary = backfill_audit.get("summary") or {}
     protected_failure_contrast = readiness.get("protected_failure_contrast_gate") or {}
     sequence_policy = readiness.get("sequence_policy") or {}
+    readiness_boundaries = readiness.get("runtime_and_training_boundaries") or {}
     explicit_gate_blockers = set(readiness.get("explicit_gate_blockers") or [])
     protected_failure_contrast_pending_approval = (
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
@@ -198,6 +199,15 @@ def build_payload(
             "benchmark_preflight_blockers": benchmark_preflight.get("blockers") or [],
             "benchmark_review_status": benchmark_review_decision.get("status"),
             "benchmark_review_blockers": benchmark_review.get("blockers") or [],
+            "readiness_checked_flag_count": readiness_boundaries.get(
+                "checked_flag_count"
+            ),
+            "readiness_boundary_violation_count": readiness_boundaries.get(
+                "violation_count"
+            ),
+            "readiness_source_artifact_count": len(
+                readiness.get("source_artifacts") or {}
+            ),
             "forbidden_training_or_runtime_input_blocked": (
                 forbidden_training_or_runtime_inputs
             ),

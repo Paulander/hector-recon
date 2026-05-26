@@ -743,6 +743,15 @@ def build_payload() -> dict[str, Any]:
             "sequence_policy_underpowered_pilot_stage7_success_gap": underpowered_pilot.get(
                 "summary", {}
             ).get("stage7_success_gap"),
+            "sequence_policy_underpowered_pilot_readiness_checked_flag_count": underpowered_pilot.get(
+                "summary", {}
+            ).get("readiness_checked_flag_count"),
+            "sequence_policy_underpowered_pilot_readiness_boundary_violation_count": underpowered_pilot.get(
+                "summary", {}
+            ).get("readiness_boundary_violation_count"),
+            "sequence_policy_underpowered_pilot_readiness_source_artifact_count": underpowered_pilot.get(
+                "summary", {}
+            ).get("readiness_source_artifact_count"),
             "sequence_policy_underpowered_pilot_protected_failure_contrast_runner_processed_job_count": underpowered_pilot.get(
                 "summary", {}
             ).get("protected_failure_contrast_runner_processed_job_count"),

@@ -73,6 +73,9 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
         payload["summary"]["benchmark_review_status"]
         == "sequence_policy_benchmark_mixed_plan_window_underpowered"
     )
+    assert payload["summary"]["readiness_checked_flag_count"] >= 430
+    assert payload["summary"]["readiness_boundary_violation_count"] == 0
+    assert payload["summary"]["readiness_source_artifact_count"] >= 44
     assert payload["summary"]["forbidden_training_or_runtime_input_blocked"] is False
     assert payload["summary"]["stage4_topk_signal"] is True
     assert payload["summary"]["stage4_binary_rule_insufficient"] is True

@@ -82,6 +82,9 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - sequence_policy_underpowered_pilot_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - sequence_policy_underpowered_pilot_stage4_topk_signal: `True`
 - sequence_policy_underpowered_pilot_stage7_success_gap: `0`
+- sequence_policy_underpowered_pilot_readiness_checked_flag_count: `430`
+- sequence_policy_underpowered_pilot_readiness_boundary_violation_count: `0`
+- sequence_policy_underpowered_pilot_readiness_source_artifact_count: `44`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_processed_job_count: `0`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_executed_job_count: `0`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_post_success_refresh_required: `True`
