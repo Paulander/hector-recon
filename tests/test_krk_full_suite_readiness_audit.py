@@ -511,6 +511,18 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_ownership_source_diversity_review_v0.json"
     )
     assert (
+        payload["source_artifacts"]["protected_max_only_frame_review_v0"]
+        == "reports/krk_protected_max_only_frame_review_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_negative_suppression_evidence_v0"]
+        == "reports/krk_selector_negative_suppression_evidence_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["runtime_selector_readiness_review_v1"]
+        == "reports/krk_runtime_selector_readiness_review_v1.json"
+    )
+    assert (
         payload["source_artifacts"]["abstention_first_selector_objective_v0"]
         == "reports/krk_abstention_first_selector_objective_v0.json"
     )
@@ -1068,6 +1080,50 @@ def test_full_suite_readiness_identifies_current_gate():
     assert ownership_context["runtime_terminals_added"] is False
     assert ownership_context["stage7_promotion_allowed"] is False
     assert ownership_context["stage8_training_allowed"] is False
+
+    negative_suppression = payload["selector_negative_suppression_blocker_gate"]
+    assert negative_suppression["passive_blocker_ready"] is True
+    assert (
+        negative_suppression["protected_max_only_status"]
+        == "protected_max_only_frames_block_runtime_selector"
+    )
+    assert negative_suppression["protected_max_only_frame_count"] == 24
+    assert negative_suppression["protected_max_only_frames_with_only_max_plies"] == 12
+    assert negative_suppression["protected_max_only_frames_with_mate_provider"] == 12
+    assert negative_suppression["protected_max_only_by_stage"] == {
+        "stage4": 3,
+        "stage5": 4,
+        "stage6": 5,
+    }
+    assert negative_suppression["protected_max_only_runtime_work_allowed"] is False
+    assert negative_suppression["negative_suppression_status"] == (
+        "selector_negative_suppression_failure_confirmed"
+    )
+    assert negative_suppression["negative_suppression_runtime_work_allowed"] is False
+    assert (
+        negative_suppression["negative_suppression_selector_training_allowed"]
+        is False
+    )
+    assert (
+        negative_suppression[
+            "negative_suppression_candidate_generator_runtime_allowed"
+        ]
+        is False
+    )
+    assert negative_suppression["runtime_selector_readiness_status"] == (
+        "runtime_selector_not_ready_collect_better_contrast_labels"
+    )
+    assert (
+        negative_suppression["runtime_selector_readiness_runtime_test_allowed_next"]
+        is False
+    )
+    assert negative_suppression["runtime_behavior_changed"] is False
+    assert negative_suppression["runtime_defaults_changed"] is False
+    assert negative_suppression["runtime_selector_implemented"] is False
+    assert negative_suppression["runtime_dtm_or_tablebase_lookup"] is False
+    assert negative_suppression["runtime_terminals_added"] is False
+    assert negative_suppression["stage7_promotion_allowed"] is False
+    assert negative_suppression["stage8_training_allowed"] is False
 
     abstention = payload["abstention_selector_safety_gate"]
     assert abstention["passive_safety_ready"] is True

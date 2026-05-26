@@ -591,6 +591,9 @@ def build_payload() -> dict[str, Any]:
     ownership_selection_context_gate = (
         readiness.get("ownership_selection_context_gate") or {}
     )
+    selector_negative_suppression_gate = (
+        readiness.get("selector_negative_suppression_blocker_gate") or {}
+    )
     abstention_selector_safety_gate = (
         readiness.get("abstention_selector_safety_gate") or {}
     )
@@ -1192,6 +1195,59 @@ def build_payload() -> dict[str, Any]:
             ),
             "ownership_selection_context_stage8_training_allowed": (
                 ownership_selection_context_gate.get("stage8_training_allowed")
+            ),
+            "selector_negative_suppression_blocker_passive_ready": (
+                selector_negative_suppression_gate.get("passive_blocker_ready")
+            ),
+            "selector_negative_suppression_protected_max_only_status": (
+                selector_negative_suppression_gate.get("protected_max_only_status")
+            ),
+            "selector_negative_suppression_protected_max_only_frame_count": (
+                selector_negative_suppression_gate.get(
+                    "protected_max_only_frame_count"
+                )
+            ),
+            "selector_negative_suppression_status": (
+                selector_negative_suppression_gate.get("negative_suppression_status")
+            ),
+            "selector_negative_suppression_runtime_work_allowed": (
+                selector_negative_suppression_gate.get(
+                    "negative_suppression_runtime_work_allowed"
+                )
+            ),
+            "selector_negative_suppression_selector_training_allowed": (
+                selector_negative_suppression_gate.get(
+                    "negative_suppression_selector_training_allowed"
+                )
+            ),
+            "selector_negative_suppression_candidate_generator_runtime_allowed": (
+                selector_negative_suppression_gate.get(
+                    "negative_suppression_candidate_generator_runtime_allowed"
+                )
+            ),
+            "selector_negative_suppression_runtime_selector_readiness_status": (
+                selector_negative_suppression_gate.get(
+                    "runtime_selector_readiness_status"
+                )
+            ),
+            "selector_negative_suppression_runtime_test_allowed_next": (
+                selector_negative_suppression_gate.get(
+                    "runtime_selector_readiness_runtime_test_allowed_next"
+                )
+            ),
+            "selector_negative_suppression_runtime_selector_implemented": (
+                selector_negative_suppression_gate.get("runtime_selector_implemented")
+            ),
+            "selector_negative_suppression_runtime_dtm_or_tablebase_lookup": (
+                selector_negative_suppression_gate.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "selector_negative_suppression_stage7_promotion_allowed": (
+                selector_negative_suppression_gate.get("stage7_promotion_allowed")
+            ),
+            "selector_negative_suppression_stage8_training_allowed": (
+                selector_negative_suppression_gate.get("stage8_training_allowed")
             ),
             "abstention_selector_safety_passive_ready": (
                 abstention_selector_safety_gate.get("passive_safety_ready")

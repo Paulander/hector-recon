@@ -372,6 +372,60 @@ def test_gate_advancement_reports_current_stage7_blocker():
         is False
     )
     assert payload["summary"]["ownership_selection_context_stage8_training_allowed"] is False
+    assert (
+        payload["summary"]["selector_negative_suppression_blocker_passive_ready"]
+        is True
+    )
+    assert payload["summary"][
+        "selector_negative_suppression_protected_max_only_status"
+    ] == "protected_max_only_frames_block_runtime_selector"
+    assert (
+        payload["summary"][
+            "selector_negative_suppression_protected_max_only_frame_count"
+        ]
+        == 24
+    )
+    assert payload["summary"]["selector_negative_suppression_status"] == (
+        "selector_negative_suppression_failure_confirmed"
+    )
+    assert (
+        payload["summary"]["selector_negative_suppression_runtime_work_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_negative_suppression_selector_training_allowed"]
+        is False
+    )
+    assert payload["summary"][
+        "selector_negative_suppression_candidate_generator_runtime_allowed"
+    ] is False
+    assert payload["summary"][
+        "selector_negative_suppression_runtime_selector_readiness_status"
+    ] == "runtime_selector_not_ready_collect_better_contrast_labels"
+    assert (
+        payload["summary"]["selector_negative_suppression_runtime_test_allowed_next"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "selector_negative_suppression_runtime_selector_implemented"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "selector_negative_suppression_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_negative_suppression_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_negative_suppression_stage8_training_allowed"]
+        is False
+    )
     assert payload["summary"]["abstention_selector_safety_passive_ready"] is True
     assert (
         payload["summary"]["abstention_selector_first_objective_status"]

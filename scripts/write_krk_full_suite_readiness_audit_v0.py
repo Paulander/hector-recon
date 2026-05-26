@@ -386,6 +386,15 @@ SOURCES = {
     "ownership_source_diversity_review_v0": (
         "reports/krk_ownership_source_diversity_review_v0.json"
     ),
+    "protected_max_only_frame_review_v0": (
+        "reports/krk_protected_max_only_frame_review_v0.json"
+    ),
+    "selector_negative_suppression_evidence_v0": (
+        "reports/krk_selector_negative_suppression_evidence_v0.json"
+    ),
+    "runtime_selector_readiness_review_v1": (
+        "reports/krk_runtime_selector_readiness_review_v1.json"
+    ),
     "stage4_failure_discovery": "reports/krk_stage4_failure_discovery_v0.json",
     "stage4_caveat_sequence_review": (
         "reports/krk_stage4_caveat_sequence_review_v0.json"
@@ -1373,6 +1382,15 @@ def build_payload() -> dict[str, Any]:
     ownership_source_diversity_review_v0 = payloads[
         "ownership_source_diversity_review_v0"
     ]
+    protected_max_only_frame_review_v0 = payloads[
+        "protected_max_only_frame_review_v0"
+    ]
+    selector_negative_suppression_evidence_v0 = payloads[
+        "selector_negative_suppression_evidence_v0"
+    ]
+    runtime_selector_readiness_review_v1 = payloads[
+        "runtime_selector_readiness_review_v1"
+    ]
     stage4_failure_discovery = payloads["stage4_failure_discovery"]
     stage4_caveat_sequence_review = payloads["stage4_caveat_sequence_review"]
     stage4_sequence_candidate_review = payloads["stage4_sequence_candidate_review"]
@@ -2282,6 +2300,83 @@ def build_payload() -> dict[str, Any]:
                 ownership_source_diversity_review_v0,
             ]
         )
+    )
+    protected_max_only_decision = (
+        protected_max_only_frame_review_v0.get("decision") or {}
+    )
+    protected_max_only_summary = (
+        protected_max_only_frame_review_v0.get("summary") or {}
+    )
+    selector_negative_suppression_decision = (
+        selector_negative_suppression_evidence_v0.get("decision") or {}
+    )
+    runtime_selector_readiness_decision = (
+        runtime_selector_readiness_review_v1.get("decision") or {}
+    )
+    selector_negative_suppression_blocker_passive = (
+        protected_max_only_frame_review_v0.get("causal_status")
+        == "non_causal_artifact_review"
+        and protected_max_only_decision.get("status")
+        == "protected_max_only_frames_block_runtime_selector"
+        and protected_max_only_decision.get("runtime_work_allowed") is False
+        and protected_max_only_summary.get("runtime_work_allowed") is False
+        and protected_max_only_frame_review_v0.get("runtime_behavior_changed") is False
+        and protected_max_only_frame_review_v0.get("runtime_defaults_changed") is False
+        and protected_max_only_frame_review_v0.get("runtime_selector_implemented")
+        is False
+        and protected_max_only_frame_review_v0.get("runtime_dtm_or_tablebase_lookup")
+        is False
+        and protected_max_only_frame_review_v0.get("stage7_promotion_allowed") is False
+        and protected_max_only_frame_review_v0.get("stage8_training_allowed") is False
+        and selector_negative_suppression_evidence_v0.get("causal_status")
+        == "non_causal_evidence_audit"
+        and selector_negative_suppression_decision.get("status")
+        == "selector_negative_suppression_failure_confirmed"
+        and selector_negative_suppression_decision.get("runtime_work_allowed") is False
+        and selector_negative_suppression_decision.get("selector_training_allowed")
+        is False
+        and selector_negative_suppression_decision.get(
+            "candidate_generator_runtime_allowed"
+        )
+        is False
+        and selector_negative_suppression_decision.get("stage7_promotion_allowed")
+        is False
+        and selector_negative_suppression_decision.get("stage8_training_allowed")
+        is False
+        and selector_negative_suppression_evidence_v0.get("runtime_behavior_changed")
+        is False
+        and selector_negative_suppression_evidence_v0.get("runtime_defaults_changed")
+        is False
+        and selector_negative_suppression_evidence_v0.get(
+            "runtime_selector_implemented"
+        )
+        is False
+        and selector_negative_suppression_evidence_v0.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and selector_negative_suppression_evidence_v0.get("runtime_terminals_added")
+        is False
+        and runtime_selector_readiness_review_v1.get("causal_status")
+        == "non_causal_readiness_review"
+        and runtime_selector_readiness_decision.get("status")
+        == "runtime_selector_not_ready_collect_better_contrast_labels"
+        and runtime_selector_readiness_decision.get("runtime_test_allowed_next")
+        is False
+        and runtime_selector_readiness_decision.get("stage7_promotion_allowed")
+        is False
+        and runtime_selector_readiness_decision.get("stage8_training_allowed")
+        is False
+        and runtime_selector_readiness_review_v1.get("runtime_behavior_changed")
+        is False
+        and runtime_selector_readiness_review_v1.get("runtime_defaults_changed")
+        is False
+        and runtime_selector_readiness_review_v1.get("runtime_dtm_or_tablebase_lookup")
+        is False
+        and runtime_selector_readiness_review_v1.get("stage7_promotion_allowed")
+        is False
+        and runtime_selector_readiness_review_v1.get("stage8_training_allowed")
+        is False
     )
     abstention_objective_decision = (
         abstention_first_selector_objective_v0.get("decision") or {}
@@ -4480,6 +4575,89 @@ def build_payload() -> dict[str, Any]:
             ),
             "stage8_training_allowed": ownership_source_diversity_decision.get(
                 "stage8_training_allowed"
+            ),
+        },
+        "selector_negative_suppression_blocker_gate": {
+            "status": selector_negative_suppression_decision.get("status"),
+            "passive_blocker_ready": selector_negative_suppression_blocker_passive,
+            "protected_max_only_status": protected_max_only_decision.get("status"),
+            "protected_max_only_frame_count": (
+                protected_max_only_summary.get("strategy_benchmark_frame_count")
+            ),
+            "protected_max_only_frames_with_only_max_plies": (
+                protected_max_only_summary.get(
+                    "frames_with_only_labeled_max_plies_providers"
+                )
+            ),
+            "protected_max_only_frames_with_mate_provider": (
+                protected_max_only_summary.get("frames_with_labeled_mate_provider")
+            ),
+            "protected_max_only_by_stage": (
+                protected_max_only_summary.get("max_only_by_stage") or {}
+            ),
+            "protected_max_only_runtime_work_allowed": (
+                protected_max_only_decision.get("runtime_work_allowed")
+            ),
+            "negative_suppression_status": (
+                selector_negative_suppression_decision.get("status")
+            ),
+            "negative_suppression_recommended_next_step": (
+                selector_negative_suppression_decision.get("recommended_next_step")
+            ),
+            "negative_suppression_runtime_work_allowed": (
+                selector_negative_suppression_decision.get("runtime_work_allowed")
+            ),
+            "negative_suppression_selector_training_allowed": (
+                selector_negative_suppression_decision.get(
+                    "selector_training_allowed"
+                )
+            ),
+            "negative_suppression_candidate_generator_runtime_allowed": (
+                selector_negative_suppression_decision.get(
+                    "candidate_generator_runtime_allowed"
+                )
+            ),
+            "runtime_selector_readiness_status": (
+                runtime_selector_readiness_decision.get("status")
+            ),
+            "runtime_selector_readiness_runtime_test_allowed_next": (
+                runtime_selector_readiness_decision.get("runtime_test_allowed_next")
+            ),
+            "runtime_selector_readiness_recommended_next_step": (
+                runtime_selector_readiness_decision.get("recommended_next_step")
+            ),
+            "runtime_behavior_changed": (
+                selector_negative_suppression_evidence_v0.get(
+                    "runtime_behavior_changed"
+                )
+            ),
+            "runtime_defaults_changed": (
+                selector_negative_suppression_evidence_v0.get(
+                    "runtime_defaults_changed"
+                )
+            ),
+            "runtime_selector_implemented": (
+                selector_negative_suppression_evidence_v0.get(
+                    "runtime_selector_implemented"
+                )
+            ),
+            "runtime_dtm_or_tablebase_lookup": (
+                selector_negative_suppression_evidence_v0.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "runtime_terminals_added": (
+                selector_negative_suppression_evidence_v0.get(
+                    "runtime_terminals_added"
+                )
+            ),
+            "stage7_promotion_allowed": (
+                selector_negative_suppression_decision.get(
+                    "stage7_promotion_allowed"
+                )
+            ),
+            "stage8_training_allowed": (
+                selector_negative_suppression_decision.get("stage8_training_allowed")
             ),
         },
         "abstention_selector_safety_gate": {
@@ -9172,6 +9350,9 @@ def write_markdown(payload: dict[str, Any]) -> str:
     selector_objective_normalization = payload["selector_objective_normalization_gate"]
     selector_label_balance = payload["selector_label_balance_gate"]
     ownership_selection_context = payload["ownership_selection_context_gate"]
+    selector_negative_suppression = payload[
+        "selector_negative_suppression_blocker_gate"
+    ]
     abstention_selector_safety = payload["abstention_selector_safety_gate"]
     targeted_ownership_recovery = payload["targeted_ownership_recovery_gate"]
     balanced_hard_negative = payload["balanced_hard_negative_gate"]
@@ -9386,6 +9567,28 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- runtime_terminals_added: `{ownership_selection_context['runtime_terminals_added']}`",
         f"- stage7_promotion_allowed: `{ownership_selection_context['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{ownership_selection_context['stage8_training_allowed']}`",
+        "",
+        "## Selector Negative-Suppression Blocker",
+        "",
+        f"- passive_blocker_ready: `{selector_negative_suppression['passive_blocker_ready']}`",
+        f"- protected_max_only_status: `{selector_negative_suppression['protected_max_only_status']}`",
+        f"- protected_max_only_frame_count: `{selector_negative_suppression['protected_max_only_frame_count']}`",
+        f"- protected_max_only_frames_with_only_max_plies: `{selector_negative_suppression['protected_max_only_frames_with_only_max_plies']}`",
+        f"- protected_max_only_frames_with_mate_provider: `{selector_negative_suppression['protected_max_only_frames_with_mate_provider']}`",
+        f"- protected_max_only_runtime_work_allowed: `{selector_negative_suppression['protected_max_only_runtime_work_allowed']}`",
+        f"- negative_suppression_status: `{selector_negative_suppression['negative_suppression_status']}`",
+        f"- negative_suppression_recommended_next_step: `{selector_negative_suppression['negative_suppression_recommended_next_step']}`",
+        f"- negative_suppression_runtime_work_allowed: `{selector_negative_suppression['negative_suppression_runtime_work_allowed']}`",
+        f"- negative_suppression_selector_training_allowed: `{selector_negative_suppression['negative_suppression_selector_training_allowed']}`",
+        f"- negative_suppression_candidate_generator_runtime_allowed: `{selector_negative_suppression['negative_suppression_candidate_generator_runtime_allowed']}`",
+        f"- runtime_selector_readiness_status: `{selector_negative_suppression['runtime_selector_readiness_status']}`",
+        f"- runtime_selector_readiness_runtime_test_allowed_next: `{selector_negative_suppression['runtime_selector_readiness_runtime_test_allowed_next']}`",
+        f"- runtime_selector_readiness_recommended_next_step: `{selector_negative_suppression['runtime_selector_readiness_recommended_next_step']}`",
+        f"- runtime_selector_implemented: `{selector_negative_suppression['runtime_selector_implemented']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{selector_negative_suppression['runtime_dtm_or_tablebase_lookup']}`",
+        f"- runtime_terminals_added: `{selector_negative_suppression['runtime_terminals_added']}`",
+        f"- stage7_promotion_allowed: `{selector_negative_suppression['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{selector_negative_suppression['stage8_training_allowed']}`",
         "",
         "## Abstention Selector Safety",
         "",

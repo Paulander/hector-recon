@@ -184,6 +184,28 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Selector Negative-Suppression Blocker
+
+- passive_blocker_ready: `True`
+- protected_max_only_status: `protected_max_only_frames_block_runtime_selector`
+- protected_max_only_frame_count: `24`
+- protected_max_only_frames_with_only_max_plies: `12`
+- protected_max_only_frames_with_mate_provider: `12`
+- protected_max_only_runtime_work_allowed: `False`
+- negative_suppression_status: `selector_negative_suppression_failure_confirmed`
+- negative_suppression_recommended_next_step: `design_non_causal_negative_suppression_feature_and_label_balance_fix`
+- negative_suppression_runtime_work_allowed: `False`
+- negative_suppression_selector_training_allowed: `False`
+- negative_suppression_candidate_generator_runtime_allowed: `False`
+- runtime_selector_readiness_status: `runtime_selector_not_ready_collect_better_contrast_labels`
+- runtime_selector_readiness_runtime_test_allowed_next: `False`
+- runtime_selector_readiness_recommended_next_step: `design_small_diverse_state_local_contrast_label_plan`
+- runtime_selector_implemented: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- runtime_terminals_added: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Abstention Selector Safety
 
 - passive_safety_ready: `True`
@@ -551,7 +573,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `a788d0049a4900a9430478e0077ac2db271bd2e097e5c886e06b1855f4de02a8`
+- expected_readiness_fingerprint: `9c85fc5248ef0384e615aa6a4127deffc21779a6deedfc51a586a9fffed00661`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1080,5 +1102,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2273`
+- checked_flag_count: `2293`
 - violation_count: `0`
