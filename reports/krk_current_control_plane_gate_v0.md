@@ -118,6 +118,11 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
   - gameplay_topology_mutation: `False`
   - stage7_promotion_allowed: `False`
   - stage8_training_allowed: `False`
+  - readiness_audit: `reports/krk_full_suite_readiness_audit_v0.json`
+  - readiness_audit_status: `krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection`
+  - readiness_checked_flag_count: `430`
+  - readiness_boundary_violation_count: `0`
+  - readiness_source_artifact_count: `44`
 - does_not_allow:
   - default enablement
   - exact-state or exact-move runtime exception

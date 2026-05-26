@@ -356,6 +356,13 @@ def test_unblocker_packet_keeps_stage4_as_secondary_gate():
     assert secondary["scope"]["gameplay_topology_mutation"] is False
     assert secondary["scope"]["stage7_promotion_allowed"] is False
     assert secondary["scope"]["stage8_training_allowed"] is False
+    assert (
+        secondary["scope"]["readiness_audit"]
+        == "reports/krk_full_suite_readiness_audit_v0.json"
+    )
+    assert secondary["scope"]["readiness_checked_flag_count"] >= 430
+    assert secondary["scope"]["readiness_boundary_violation_count"] == 0
+    assert secondary["scope"]["readiness_source_artifact_count"] >= 44
     assert secondary["approval_required"] is True
     assert secondary["implementation_allowed_by_this_packet"] is False
 

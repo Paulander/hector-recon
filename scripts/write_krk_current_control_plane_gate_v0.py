@@ -353,6 +353,19 @@ def build_payload(
                 "stage8_training_allowed": stage4_approval_scope.get(
                     "stage8_training_allowed"
                 ),
+                "readiness_audit": stage4_approval_scope.get("readiness_audit"),
+                "readiness_audit_status": stage4_approval_scope.get(
+                    "readiness_audit_status"
+                ),
+                "readiness_checked_flag_count": stage4_approval_scope.get(
+                    "readiness_checked_flag_count"
+                ),
+                "readiness_boundary_violation_count": stage4_approval_scope.get(
+                    "readiness_boundary_violation_count"
+                ),
+                "readiness_source_artifact_count": stage4_approval_scope.get(
+                    "readiness_source_artifact_count"
+                ),
             },
             "what_it_does_not_allow": [
                 "default enablement",

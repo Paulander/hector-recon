@@ -351,6 +351,13 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
     assert stage4_scope["stage7_promotion_allowed"] is False
     assert stage4_scope["stage8_training_allowed"] is False
     assert (
+        stage4_scope["readiness_audit"]
+        == "reports/krk_full_suite_readiness_audit_v0.json"
+    )
+    assert stage4_scope["readiness_checked_flag_count"] >= 430
+    assert stage4_scope["readiness_boundary_violation_count"] == 0
+    assert stage4_scope["readiness_source_artifact_count"] >= 44
+    assert (
         payload["approval_gates"]["protected_plan_window_failure_contrast_collection"][
             "ready_for_explicit_approval"
         ]

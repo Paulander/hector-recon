@@ -15,6 +15,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 RUNTIME_PACKET = ROOT / "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json"
+READINESS_AUDIT = ROOT / "reports/krk_full_suite_readiness_audit_v0.json"
 OUTPUT_JSON = ROOT / "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
 OUTPUT_MD = ROOT / "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md"
 
@@ -43,11 +44,33 @@ def _load(path: Path) -> dict[str, Any]:
     return data
 
 
+def _load_optional(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    return _load(path)
+
+
+def _readiness_scope(readiness_audit: dict[str, Any]) -> dict[str, Any]:
+    boundaries = readiness_audit.get("runtime_and_training_boundaries") or {}
+    source_artifacts = readiness_audit.get("source_artifacts") or {}
+    decision = readiness_audit.get("decision") or {}
+    return {
+        "readiness_audit": "reports/krk_full_suite_readiness_audit_v0.json",
+        "readiness_audit_status": decision.get("status"),
+        "readiness_checked_flag_count": boundaries.get("checked_flag_count"),
+        "readiness_boundary_violation_count": boundaries.get("violation_count"),
+        "readiness_source_artifact_count": len(source_artifacts),
+    }
+
+
 def build_payload(
     *,
     runtime_packet: dict[str, Any] | None = None,
+    readiness_audit: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     runtime_packet = runtime_packet or _load(RUNTIME_PACKET)
+    readiness_audit = readiness_audit or _load_optional(READINESS_AUDIT)
+    readiness_scope = _readiness_scope(readiness_audit)
     decision = runtime_packet.get("decision") or {}
     approved_scope = runtime_packet.get("approved_if_later_explicitly_authorized") or {}
     implementation_boundaries = runtime_packet.get("implementation_boundaries") or {}
@@ -83,7 +106,8 @@ def build_payload(
         "causal_status": "non_causal_runtime_approval_request_packet",
         **COMMON_FALSE_FLAGS,
         "source_artifacts": [
-            "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json"
+            "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json",
+            "reports/krk_full_suite_readiness_audit_v0.json",
         ],
         "approval_id": APPROVAL_ID,
         "approval_request_created": False,
@@ -113,6 +137,7 @@ def build_payload(
             "gameplay_topology_mutation": False,
             "stage7_promotion_allowed": False,
             "stage8_training_allowed": False,
+            **readiness_scope,
             "implementation_boundaries": implementation_boundaries,
             "acceptance_if_later_approved": acceptance,
         },
@@ -133,6 +158,7 @@ def build_payload(
             "selector_training_allowed": False,
             "stage7_promotion_allowed": False,
             "stage8_training_allowed": False,
+            **readiness_scope,
         },
         "blockers": blockers,
         "decision": {
@@ -192,6 +218,11 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- selector_training_allowed: `{required['selector_training_allowed']}`",
             f"- stage7_promotion_allowed: `{required['stage7_promotion_allowed']}`",
             f"- stage8_training_allowed: `{required['stage8_training_allowed']}`",
+            f"- readiness_audit: `{required['readiness_audit']}`",
+            f"- readiness_audit_status: `{required['readiness_audit_status']}`",
+            f"- readiness_checked_flag_count: `{required['readiness_checked_flag_count']}`",
+            f"- readiness_boundary_violation_count: `{required['readiness_boundary_violation_count']}`",
+            f"- readiness_source_artifact_count: `{required['readiness_source_artifact_count']}`",
             "",
             "## Blockers",
             "",

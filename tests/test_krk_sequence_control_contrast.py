@@ -287,6 +287,13 @@ def test_current_control_plane_gate_requires_explicit_choice():
     assert stage4_option["safety_scope"]["stage7_promotion_allowed"] is False
     assert stage4_option["safety_scope"]["stage8_training_allowed"] is False
     assert (
+        stage4_option["safety_scope"]["readiness_audit"]
+        == "reports/krk_full_suite_readiness_audit_v0.json"
+    )
+    assert stage4_option["safety_scope"]["readiness_checked_flag_count"] >= 430
+    assert stage4_option["safety_scope"]["readiness_boundary_violation_count"] == 0
+    assert stage4_option["safety_scope"]["readiness_source_artifact_count"] >= 44
+    assert (
         payload["current_state"]["sequence_policy"]
         == "sequence_policy_benchmark_mixed_plan_window_underpowered"
     )

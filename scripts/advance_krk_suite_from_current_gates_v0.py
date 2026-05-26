@@ -597,6 +597,15 @@ def build_payload() -> dict[str, Any]:
             "stage4_first_move_contrast_sandbox_stage8_training_allowed": stage4_approval_scope.get(
                 "stage8_training_allowed"
             ),
+            "stage4_first_move_contrast_sandbox_readiness_checked_flag_count": stage4_approval_scope.get(
+                "readiness_checked_flag_count"
+            ),
+            "stage4_first_move_contrast_sandbox_readiness_boundary_violation_count": stage4_approval_scope.get(
+                "readiness_boundary_violation_count"
+            ),
+            "stage4_first_move_contrast_sandbox_readiness_source_artifact_count": stage4_approval_scope.get(
+                "readiness_source_artifact_count"
+            ),
             "stage7_success_controls": readiness.get("stage7_sampling_gate", {}).get(
                 "combined_success_controls"
             ),

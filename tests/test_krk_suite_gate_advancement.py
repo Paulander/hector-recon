@@ -544,6 +544,24 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         payload["summary"]["stage4_first_move_contrast_sandbox_stage8_training_allowed"]
         is False
     )
+    assert (
+        payload["summary"][
+            "stage4_first_move_contrast_sandbox_readiness_checked_flag_count"
+        ]
+        >= 430
+    )
+    assert (
+        payload["summary"][
+            "stage4_first_move_contrast_sandbox_readiness_boundary_violation_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "stage4_first_move_contrast_sandbox_readiness_source_artifact_count"
+        ]
+        >= 44
+    )
     for step in payload["step_results"]:
         assert step["label_run_allowed"] is False
         assert step["runtime_changes_allowed"] is False

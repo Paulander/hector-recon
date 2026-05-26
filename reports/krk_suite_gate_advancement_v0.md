@@ -34,6 +34,9 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - stage4_first_move_contrast_sandbox_selector_training_allowed: `False`
 - stage4_first_move_contrast_sandbox_stage7_promotion_allowed: `False`
 - stage4_first_move_contrast_sandbox_stage8_training_allowed: `False`
+- stage4_first_move_contrast_sandbox_readiness_checked_flag_count: `430`
+- stage4_first_move_contrast_sandbox_readiness_boundary_violation_count: `0`
+- stage4_first_move_contrast_sandbox_readiness_source_artifact_count: `44`
 - stage7_success_controls: `11`
 - stage7_success_controls_required: `5`
 - stage7_success_controls_ready: `True`
