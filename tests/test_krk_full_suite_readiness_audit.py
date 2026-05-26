@@ -165,6 +165,24 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/strategy_arbitration/krk_strategy_sequence_dataset_design_v3.json"
     )
     assert (
+        payload["source_artifacts"][
+            "candidate_generation_cross_stage_capacity_review_v2"
+        ]
+        == "reports/strategy_arbitration/krk_candidate_generation_cross_stage_capacity_review_v2.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "strategy_sequence_dataset_v2_cross_stage_capacity_merged"
+        ]
+        == "reports/strategy_arbitration/krk_strategy_sequence_dataset_v2_cross_stage_capacity_merged.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "stage_conditioned_candidate_generation_benchmark_v3"
+        ]
+        == "reports/strategy_arbitration/krk_stage_conditioned_candidate_generation_benchmark_v3.json"
+    )
+    assert (
         payload["source_artifacts"]["ownership_label_recovery_review"]
         == "reports/strategy_arbitration/krk_ownership_label_recovery_review_v0.json"
     )
@@ -927,6 +945,93 @@ def test_full_suite_readiness_identifies_current_gate():
     assert stage5_6_refresh["selector_training_allowed"] is False
     assert stage5_6_refresh["stage7_promotion_allowed"] is False
     assert stage5_6_refresh["stage8_training_allowed"] is False
+
+    cross_stage_scope = payload["cross_stage_candidate_generation_scope_gate"]
+    assert (
+        cross_stage_scope["capacity_review_status"]
+        == "cross_stage_capacity_review_recommends_stratified_capacity_manifest"
+    )
+    assert cross_stage_scope["capacity_review_capacity_row_count"] == 28
+    assert cross_stage_scope["capacity_review_stage_family_cell_count"] == 9
+    assert cross_stage_scope["capacity_review_stage7_readiness_training_row_count"] == 0
+    assert (
+        cross_stage_scope["capacity_manifest_status"]
+        == "cross_stage_capacity_manifest_ready_partial_target_coverage"
+    )
+    assert cross_stage_scope["capacity_manifest_labels_run_by_this_artifact"] is False
+    assert cross_stage_scope["capacity_manifest_job_count"] == 8
+    assert cross_stage_scope["capacity_manifest_stage7_job_count"] == 0
+    assert cross_stage_scope["capacity_manifest_stage7_readiness_training_row_count"] == 0
+    assert (
+        cross_stage_scope["capacity_labels_status"]
+        == "cross_stage_capacity_labels_completed"
+    )
+    assert cross_stage_scope["capacity_labels_label_count"] == 8
+    assert cross_stage_scope["capacity_labels_stage7_label_count"] == 0
+    assert cross_stage_scope["capacity_labels_stage7_training_label_count"] == 0
+    assert cross_stage_scope["capacity_labels_result_counts"] == {
+        "mate": 7,
+        "max_plies": 1,
+    }
+    assert (
+        cross_stage_scope["dataset_cross_stage_merged_status"]
+        == "strategy_sequence_dataset_v2_cross_stage_capacity_merged_non_causal"
+    )
+    assert cross_stage_scope["dataset_cross_stage_merged_row_count"] == 282
+    assert (
+        cross_stage_scope[
+            "dataset_cross_stage_merged_candidate_generation_training_row_count"
+        ]
+        == 26
+    )
+    assert cross_stage_scope["dataset_cross_stage_merged_selector_training_row_count"] == 0
+    assert cross_stage_scope["dataset_cross_stage_merged_stage7_challenge_row_count"] == 198
+    assert (
+        cross_stage_scope[
+            "dataset_cross_stage_merged_stage7_readiness_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        cross_stage_scope["label_outcome_review_status"]
+        == "cross_stage_capacity_labels_improve_in_sample_but_generalization_blocked"
+    )
+    assert (
+        cross_stage_scope["label_outcome_runtime_candidate_generator_refresh_allowed"]
+        is False
+    )
+    assert (
+        cross_stage_scope["scope_review_status"]
+        == "stage_conditioned_candidate_generation_scope_review_ready"
+    )
+    assert (
+        cross_stage_scope["scope_review_runtime_candidate_generator_refresh_allowed"]
+        is False
+    )
+    assert (
+        cross_stage_scope["stage_conditioned_benchmark_status"]
+        == "stage_conditioned_candidate_generation_stage5_6_promising_stage4_blocked"
+    )
+    assert (
+        cross_stage_scope["stage_conditioned_benchmark_best_policy"]
+        == "stage_conditioned_positive_scope"
+    )
+    assert cross_stage_scope["stage_conditioned_benchmark_positive_recall"] == 0.7692307692307693
+    assert cross_stage_scope["stage_conditioned_benchmark_negative_suppression"] == 1
+    assert cross_stage_scope["stage_conditioned_benchmark_stage4_positive_recall"] == 0
+    assert cross_stage_scope["stage_conditioned_benchmark_stage5_6_positive_recall"] == 1
+    assert (
+        cross_stage_scope[
+            "stage_conditioned_benchmark_stage7_readiness_training_row_count"
+        ]
+        == 0
+    )
+    assert cross_stage_scope["runtime_work_allowed"] is False
+    assert cross_stage_scope["runtime_candidate_generation_allowed"] is False
+    assert cross_stage_scope["selector_allowed"] is False
+    assert cross_stage_scope["selector_training_allowed"] is False
+    assert cross_stage_scope["stage7_promotion_allowed"] is False
+    assert cross_stage_scope["stage8_training_allowed"] is False
 
     lineage = payload["selector_objective_lineage_gate"]
     assert (

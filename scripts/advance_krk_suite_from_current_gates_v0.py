@@ -592,6 +592,9 @@ def build_payload() -> dict[str, Any]:
     stage5_6_candidate_generation_refresh_gate = (
         readiness.get("stage5_6_candidate_generation_refresh_gate") or {}
     )
+    cross_stage_candidate_generation_scope_gate = (
+        readiness.get("cross_stage_candidate_generation_scope_gate") or {}
+    )
     selector_objective_lineage_gate = (
         readiness.get("selector_objective_lineage_gate") or {}
     )
@@ -1523,6 +1526,75 @@ def build_payload() -> dict[str, Any]:
                 "stage7_promotion_allowed"
             ),
             "stage5_6_candidate_generation_refresh_stage8_training_allowed": stage5_6_candidate_generation_refresh_gate.get(
+                "stage8_training_allowed"
+            ),
+            "cross_stage_candidate_generation_scope_capacity_review_status": cross_stage_candidate_generation_scope_gate.get(
+                "capacity_review_status"
+            ),
+            "cross_stage_candidate_generation_scope_capacity_review_capacity_row_count": cross_stage_candidate_generation_scope_gate.get(
+                "capacity_review_capacity_row_count"
+            ),
+            "cross_stage_candidate_generation_scope_capacity_manifest_status": cross_stage_candidate_generation_scope_gate.get(
+                "capacity_manifest_status"
+            ),
+            "cross_stage_candidate_generation_scope_capacity_manifest_labels_run_by_this_artifact": cross_stage_candidate_generation_scope_gate.get(
+                "capacity_manifest_labels_run_by_this_artifact"
+            ),
+            "cross_stage_candidate_generation_scope_capacity_manifest_stage7_job_count": cross_stage_candidate_generation_scope_gate.get(
+                "capacity_manifest_stage7_job_count"
+            ),
+            "cross_stage_candidate_generation_scope_capacity_labels_status": cross_stage_candidate_generation_scope_gate.get(
+                "capacity_labels_status"
+            ),
+            "cross_stage_candidate_generation_scope_capacity_labels_label_count": cross_stage_candidate_generation_scope_gate.get(
+                "capacity_labels_label_count"
+            ),
+            "cross_stage_candidate_generation_scope_capacity_labels_stage7_label_count": cross_stage_candidate_generation_scope_gate.get(
+                "capacity_labels_stage7_label_count"
+            ),
+            "cross_stage_candidate_generation_scope_dataset_cross_stage_merged_status": cross_stage_candidate_generation_scope_gate.get(
+                "dataset_cross_stage_merged_status"
+            ),
+            "cross_stage_candidate_generation_scope_dataset_cross_stage_merged_row_count": cross_stage_candidate_generation_scope_gate.get(
+                "dataset_cross_stage_merged_row_count"
+            ),
+            "cross_stage_candidate_generation_scope_dataset_cross_stage_merged_selector_training_row_count": cross_stage_candidate_generation_scope_gate.get(
+                "dataset_cross_stage_merged_selector_training_row_count"
+            ),
+            "cross_stage_candidate_generation_scope_dataset_cross_stage_merged_stage7_readiness_training_row_count": cross_stage_candidate_generation_scope_gate.get(
+                "dataset_cross_stage_merged_stage7_readiness_training_row_count"
+            ),
+            "cross_stage_candidate_generation_scope_label_outcome_review_status": cross_stage_candidate_generation_scope_gate.get(
+                "label_outcome_review_status"
+            ),
+            "cross_stage_candidate_generation_scope_scope_review_status": cross_stage_candidate_generation_scope_gate.get(
+                "scope_review_status"
+            ),
+            "cross_stage_candidate_generation_scope_stage_conditioned_benchmark_status": cross_stage_candidate_generation_scope_gate.get(
+                "stage_conditioned_benchmark_status"
+            ),
+            "cross_stage_candidate_generation_scope_stage_conditioned_benchmark_positive_recall": cross_stage_candidate_generation_scope_gate.get(
+                "stage_conditioned_benchmark_positive_recall"
+            ),
+            "cross_stage_candidate_generation_scope_stage_conditioned_benchmark_negative_suppression": cross_stage_candidate_generation_scope_gate.get(
+                "stage_conditioned_benchmark_negative_suppression"
+            ),
+            "cross_stage_candidate_generation_scope_stage_conditioned_benchmark_stage4_positive_recall": cross_stage_candidate_generation_scope_gate.get(
+                "stage_conditioned_benchmark_stage4_positive_recall"
+            ),
+            "cross_stage_candidate_generation_scope_stage_conditioned_benchmark_stage5_6_positive_recall": cross_stage_candidate_generation_scope_gate.get(
+                "stage_conditioned_benchmark_stage5_6_positive_recall"
+            ),
+            "cross_stage_candidate_generation_scope_runtime_work_allowed": cross_stage_candidate_generation_scope_gate.get(
+                "runtime_work_allowed"
+            ),
+            "cross_stage_candidate_generation_scope_selector_training_allowed": cross_stage_candidate_generation_scope_gate.get(
+                "selector_training_allowed"
+            ),
+            "cross_stage_candidate_generation_scope_stage7_promotion_allowed": cross_stage_candidate_generation_scope_gate.get(
+                "stage7_promotion_allowed"
+            ),
+            "cross_stage_candidate_generation_scope_stage8_training_allowed": cross_stage_candidate_generation_scope_gate.get(
                 "stage8_training_allowed"
             ),
             "selector_objective_lineage_ownership_recovery_status": selector_objective_lineage_gate.get(

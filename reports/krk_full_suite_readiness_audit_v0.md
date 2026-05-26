@@ -122,7 +122,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `769ed046ac9e6cde94f047209da7356dcfb8d34a13c75dad47ec8ec58be3c681`
+- expected_readiness_fingerprint: `e2672fee559872b2b9e1cb265d721b5af88a8a4d4284dbabfef9f56e58a3aa9d`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -309,6 +309,34 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Cross-Stage Candidate-Generation Scope Evidence
+
+- capacity_review_status: `cross_stage_capacity_review_recommends_stratified_capacity_manifest`
+- capacity_review_capacity_row_count: `28`
+- capacity_manifest_status: `cross_stage_capacity_manifest_ready_partial_target_coverage`
+- capacity_manifest_labels_run_by_this_artifact: `False`
+- capacity_manifest_job_count: `8`
+- capacity_manifest_stage7_job_count: `0`
+- capacity_labels_status: `cross_stage_capacity_labels_completed`
+- capacity_labels_label_count: `8`
+- capacity_labels_stage7_label_count: `0`
+- dataset_cross_stage_merged_status: `strategy_sequence_dataset_v2_cross_stage_capacity_merged_non_causal`
+- dataset_cross_stage_merged_row_count: `282`
+- dataset_cross_stage_merged_selector_training_row_count: `0`
+- dataset_cross_stage_merged_stage7_readiness_training_row_count: `0`
+- label_outcome_review_status: `cross_stage_capacity_labels_improve_in_sample_but_generalization_blocked`
+- scope_review_status: `stage_conditioned_candidate_generation_scope_review_ready`
+- stage_conditioned_benchmark_status: `stage_conditioned_candidate_generation_stage5_6_promising_stage4_blocked`
+- stage_conditioned_benchmark_best_policy: `stage_conditioned_positive_scope`
+- stage_conditioned_benchmark_positive_recall: `0.7692307692307693`
+- stage_conditioned_benchmark_negative_suppression: `1.0`
+- stage_conditioned_benchmark_stage4_positive_recall: `0.0`
+- stage_conditioned_benchmark_stage5_6_positive_recall: `1.0`
+- runtime_work_allowed: `False`
+- selector_training_allowed: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Selector Objective Lineage Evidence
 
 - ownership_recovery_status: `ownership_label_recovery_seed_manifest_ready_selector_blocked`
@@ -472,5 +500,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1266`
+- checked_flag_count: `1329`
 - violation_count: `0`

@@ -922,6 +922,140 @@ def test_gate_advancement_reports_current_stage7_blocker():
         is False
     )
     assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_capacity_review_status"
+        ]
+        == "cross_stage_capacity_review_recommends_stratified_capacity_manifest"
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_capacity_review_capacity_row_count"
+        ]
+        == 28
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_capacity_manifest_status"
+        ]
+        == "cross_stage_capacity_manifest_ready_partial_target_coverage"
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_capacity_manifest_labels_run_by_this_artifact"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_capacity_manifest_stage7_job_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_capacity_labels_status"
+        ]
+        == "cross_stage_capacity_labels_completed"
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_capacity_labels_label_count"
+        ]
+        == 8
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_capacity_labels_stage7_label_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_dataset_cross_stage_merged_status"
+        ]
+        == "strategy_sequence_dataset_v2_cross_stage_capacity_merged_non_causal"
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_dataset_cross_stage_merged_row_count"
+        ]
+        == 282
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_dataset_cross_stage_merged_selector_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_dataset_cross_stage_merged_stage7_readiness_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_label_outcome_review_status"
+        ]
+        == "cross_stage_capacity_labels_improve_in_sample_but_generalization_blocked"
+    )
+    assert (
+        payload["summary"]["cross_stage_candidate_generation_scope_scope_review_status"]
+        == "stage_conditioned_candidate_generation_scope_review_ready"
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_stage_conditioned_benchmark_status"
+        ]
+        == "stage_conditioned_candidate_generation_stage5_6_promising_stage4_blocked"
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_stage_conditioned_benchmark_positive_recall"
+        ]
+        == 0.7692307692307693
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_stage_conditioned_benchmark_negative_suppression"
+        ]
+        == 1
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_stage_conditioned_benchmark_stage4_positive_recall"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_stage_conditioned_benchmark_stage5_6_positive_recall"
+        ]
+        == 1
+    )
+    assert (
+        payload["summary"]["cross_stage_candidate_generation_scope_runtime_work_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_selector_training_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_stage7_promotion_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "cross_stage_candidate_generation_scope_stage8_training_allowed"
+        ]
+        is False
+    )
+    assert (
         payload["summary"]["selector_objective_lineage_ownership_recovery_status"]
         == "ownership_label_recovery_seed_manifest_ready_selector_blocked"
     )
