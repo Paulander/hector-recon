@@ -149,6 +149,41 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
         payload["summary"]["protected_failure_contrast_post_success_refresh_scope"]
         == "full_passive_krk_suite_gate_stack"
     )
+    assert (
+        payload["summary"]["protected_failure_contrast_runtime_behavior_changed"]
+        is False
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_runtime_defaults_changed"]
+        is False
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_runtime_selector_implemented"]
+        is False
+    )
+    assert payload["summary"]["protected_failure_contrast_runtime_score_changes"] is False
+    assert (
+        payload["summary"][
+            "protected_failure_contrast_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_gameplay_topology_mutation"]
+        is False
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_selector_training_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_stage8_training_allowed"]
+        is False
+    )
     assert "stage4_state_local_topk_signal_present" in payload["pilot_findings"]
     assert "stage7_clean_success_controls_missing" not in payload["blockers"]
     assert (

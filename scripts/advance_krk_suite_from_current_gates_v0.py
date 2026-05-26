@@ -744,6 +744,33 @@ def build_payload() -> dict[str, Any]:
             "sequence_policy_underpowered_pilot_protected_failure_contrast_post_success_refresh_script": underpowered_pilot.get(
                 "summary", {}
             ).get("protected_failure_contrast_post_success_refresh_script"),
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_runtime_behavior_changed": underpowered_pilot.get(
+                "summary", {}
+            ).get("protected_failure_contrast_runtime_behavior_changed"),
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_runtime_defaults_changed": underpowered_pilot.get(
+                "summary", {}
+            ).get("protected_failure_contrast_runtime_defaults_changed"),
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_runtime_selector_implemented": underpowered_pilot.get(
+                "summary", {}
+            ).get("protected_failure_contrast_runtime_selector_implemented"),
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_runtime_score_changes": underpowered_pilot.get(
+                "summary", {}
+            ).get("protected_failure_contrast_runtime_score_changes"),
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_runtime_dtm_or_tablebase_lookup": underpowered_pilot.get(
+                "summary", {}
+            ).get("protected_failure_contrast_runtime_dtm_or_tablebase_lookup"),
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_gameplay_topology_mutation": underpowered_pilot.get(
+                "summary", {}
+            ).get("protected_failure_contrast_gameplay_topology_mutation"),
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_selector_training_allowed": underpowered_pilot.get(
+                "summary", {}
+            ).get("protected_failure_contrast_selector_training_allowed"),
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_stage7_promotion_allowed": underpowered_pilot.get(
+                "summary", {}
+            ).get("protected_failure_contrast_stage7_promotion_allowed"),
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_stage8_training_allowed": underpowered_pilot.get(
+                "summary", {}
+            ).get("protected_failure_contrast_stage8_training_allowed"),
             "readiness_status": readiness.get("decision", {}).get("status"),
             "unblocker_status": unblocker.get("decision", {}).get("status"),
             "stage8_training_readiness_status": stage8_review.get("decision", {}).get(

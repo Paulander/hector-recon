@@ -299,6 +299,60 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         == "scripts/advance_krk_suite_from_current_gates_v0.py"
     )
     assert (
+        payload["summary"][
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_runtime_behavior_changed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_runtime_defaults_changed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_runtime_selector_implemented"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_runtime_score_changes"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_gameplay_topology_mutation"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_selector_training_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_stage7_promotion_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_stage8_training_allowed"
+        ]
+        is False
+    )
+    assert (
         payload["summary"]["stage7_output_validation_status"]
         == "stage7_diverse_clean_sampling_outputs_valid_ready_for_integration"
     )

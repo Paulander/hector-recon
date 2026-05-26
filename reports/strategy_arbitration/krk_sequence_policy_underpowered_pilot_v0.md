@@ -34,6 +34,15 @@ This is a non-causal pilot review over underpowered inputs. It preserves diagnos
 - protected_failure_contrast_post_success_refresh_required: `True`
 - protected_failure_contrast_post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - protected_failure_contrast_post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
+- protected_failure_contrast_runtime_behavior_changed: `False`
+- protected_failure_contrast_runtime_defaults_changed: `False`
+- protected_failure_contrast_runtime_selector_implemented: `False`
+- protected_failure_contrast_runtime_score_changes: `False`
+- protected_failure_contrast_runtime_dtm_or_tablebase_lookup: `False`
+- protected_failure_contrast_gameplay_topology_mutation: `False`
+- protected_failure_contrast_selector_training_allowed: `False`
+- protected_failure_contrast_stage7_promotion_allowed: `False`
+- protected_failure_contrast_stage8_training_allowed: `False`
 - sequence_policy_after_protected_failure_contrast_refresh_status: `sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs`
 - sequence_policy_after_protected_failure_contrast_boundaries_preserved: `True`
 - sequence_policy_after_protected_failure_contrast_boundary_violation_count: `0`
