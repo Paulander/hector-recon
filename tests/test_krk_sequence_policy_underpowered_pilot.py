@@ -385,9 +385,10 @@ def test_underpowered_pilot_routes_blocked_collection_request_to_repair():
         "protected_failure_contrast_gate": {
             "ready_for_explicit_approval": True,
             "approval_request_status": (
-                "protected_plan_window_failure_contrast_approval_request_blocked"
+                "protected_plan_window_failure_contrast_approval_request_ready"
             ),
-            "approval_request_blockers": ["full_suite_readiness_audit_not_clean"],
+            "approval_request_blockers": [],
+            "approval_request_ready_for_collection": False,
         },
         "explicit_gate_blockers": [
             "protected_plan_window_failure_contrast_collection_pending_explicit_approval"

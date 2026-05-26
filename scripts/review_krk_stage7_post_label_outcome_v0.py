@@ -99,10 +99,17 @@ def build_payload(
     protected_failure_contrast_request_blockers = (
         protected_failure_contrast.get("approval_request_blockers") or []
     )
+    protected_failure_contrast_request_ready_value = protected_failure_contrast.get(
+        "approval_request_ready_for_collection"
+    )
     protected_failure_contrast_request_ready = (
-        not protected_failure_contrast_request_blockers
-        and protected_failure_contrast_request_status
-        in (None, "protected_plan_window_failure_contrast_approval_request_ready")
+        bool(protected_failure_contrast_request_ready_value)
+        if protected_failure_contrast_request_ready_value is not None
+        else (
+            not protected_failure_contrast_request_blockers
+            and protected_failure_contrast_request_status
+            in (None, "protected_plan_window_failure_contrast_approval_request_ready")
+        )
     )
     post_failure_contrast_refresh_boundaries_preserved = sequence_policy.get(
         "post_failure_contrast_refresh_boundaries_preserved"

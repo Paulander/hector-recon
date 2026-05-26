@@ -346,9 +346,10 @@ def test_stage8_training_readiness_review_routes_blocked_collection_request_to_r
         "protected_failure_contrast_gate": {
             "ready_for_explicit_approval": True,
             "approval_request_status": (
-                "protected_plan_window_failure_contrast_approval_request_blocked"
+                "protected_plan_window_failure_contrast_approval_request_ready"
             ),
-            "approval_request_blockers": ["full_suite_readiness_audit_not_clean"],
+            "approval_request_blockers": [],
+            "approval_request_ready_for_collection": False,
             "integration_ready": False,
             "runner_status": "protected_plan_window_failure_contrast_runner_dry_run_ready",
             "runner_processed_job_count": 0,
