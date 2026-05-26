@@ -17,6 +17,14 @@ This is a passive request packet only. It does not create the approval receipt, 
 - runner_job_timeout_seconds: `900`
 - runner_overwrite_existing_outputs: `False`
 - runner_refresh_after_run_requested: `True`
+- post_success_refresh_required: `True`
+- post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
+- post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
+- pre_collection_sequence_policy_after_protected_failure_contrast_refresh_status: `sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs`
+- pre_collection_sequence_policy_after_protected_failure_contrast_boundaries_preserved: `True`
+- pre_collection_sequence_policy_after_protected_failure_contrast_boundary_violation_count: `0`
+- pre_collection_sequence_policy_after_protected_failure_contrast_rows: `0`
+- pre_collection_sequence_policy_after_protected_failure_contrast_stage7_training_row_count: `0`
 - manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
 - readiness_fingerprint: `351a366042e7e888018897007e29e096afdb180a9c4f4eb02853940b82228c66`
 - protected_stack_status: `retry1_protected_stage5_6_stack_adopted_manifest_only`

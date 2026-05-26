@@ -39,6 +39,11 @@ OUTPUT_MD = (
     / "reports/strategy_arbitration/"
     "krk_protected_plan_window_failure_contrast_approval_request_v0.md"
 )
+POST_FAILURE_CONTRAST_SEQUENCE_REFRESH = (
+    "reports/strategy_arbitration/"
+    "krk_sequence_policy_after_protected_failure_contrast_refresh_v0.json"
+)
+POST_SUCCESS_REFRESH_SCRIPT = "scripts/advance_krk_suite_from_current_gates_v0.py"
 
 SCHEMA_VERSION = "krk_protected_plan_window_failure_contrast_approval_request.v0"
 APPROVAL_SCHEMA_VERSION = (
@@ -86,6 +91,7 @@ def build_payload(
     readiness_summary = readiness.get("summary") or {}
     runner_summary = runner.get("summary") or {}
     protected_stack = full_suite_readiness.get("protected_stack") or {}
+    sequence_policy = full_suite_readiness.get("sequence_policy") or {}
     active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
     protected_stack_safety = {
@@ -180,6 +186,7 @@ def build_payload(
             "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_execution_readiness_v0.json",
             "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_runner_v0.json",
             "reports/krk_full_suite_readiness_audit_v0.json",
+            POST_FAILURE_CONTRAST_SEQUENCE_REFRESH,
         ],
         "approval_receipt_path": approval_receipt_path,
         "approval_receipt_created": False,
@@ -203,6 +210,28 @@ def build_payload(
             ),
             "runner_refresh_after_run_requested": runner_summary.get(
                 "refresh_after_run_requested"
+            ),
+            "post_success_refresh_required": True,
+            "post_success_refresh_script": POST_SUCCESS_REFRESH_SCRIPT,
+            "post_success_refresh_scope": "full_passive_krk_suite_gate_stack",
+            "pre_collection_sequence_policy_after_protected_failure_contrast_refresh_status": (
+                sequence_policy.get("post_failure_contrast_refresh_status")
+            ),
+            "pre_collection_sequence_policy_after_protected_failure_contrast_boundaries_preserved": (
+                sequence_policy.get("post_failure_contrast_refresh_boundaries_preserved")
+            ),
+            "pre_collection_sequence_policy_after_protected_failure_contrast_boundary_violation_count": (
+                sequence_policy.get(
+                    "post_failure_contrast_refresh_boundary_violation_count"
+                )
+            ),
+            "pre_collection_sequence_policy_after_protected_failure_contrast_rows": (
+                sequence_policy.get("post_failure_contrast_refresh_row_count")
+            ),
+            "pre_collection_sequence_policy_after_protected_failure_contrast_stage7_training_row_count": (
+                sequence_policy.get(
+                    "post_failure_contrast_refresh_stage7_training_row_count"
+                )
             ),
             "manifest_fingerprint": readiness_summary.get("manifest_fingerprint"),
             "readiness_fingerprint": readiness_summary.get("readiness_fingerprint"),

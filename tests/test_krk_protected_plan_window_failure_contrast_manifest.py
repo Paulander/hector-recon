@@ -438,6 +438,43 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
     assert payload["summary"]["runner_job_timeout_seconds"] == 900
     assert payload["summary"]["runner_overwrite_existing_outputs"] is False
     assert payload["summary"]["runner_refresh_after_run_requested"] is True
+    assert payload["summary"]["post_success_refresh_required"] is True
+    assert payload["summary"]["post_success_refresh_script"] == (
+        "scripts/advance_krk_suite_from_current_gates_v0.py"
+    )
+    assert payload["summary"]["post_success_refresh_scope"] == (
+        "full_passive_krk_suite_gate_stack"
+    )
+    assert (
+        payload["summary"][
+            "pre_collection_sequence_policy_after_protected_failure_contrast_refresh_status"
+        ]
+        == "sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs"
+    )
+    assert (
+        payload["summary"][
+            "pre_collection_sequence_policy_after_protected_failure_contrast_boundaries_preserved"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "pre_collection_sequence_policy_after_protected_failure_contrast_boundary_violation_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "pre_collection_sequence_policy_after_protected_failure_contrast_rows"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "pre_collection_sequence_policy_after_protected_failure_contrast_stage7_training_row_count"
+        ]
+        == 0
+    )
     assert payload["summary"]["approval_receipt_required"] is True
     assert (
         payload["summary"]["protected_stack_status"]
@@ -563,12 +600,31 @@ def test_failure_contrast_approval_request_fixture_tracks_current_scope():
                 "filesystem_snapshots_replaced": False,
             },
             "hard_blockers": [],
+            "sequence_policy": {
+                "post_failure_contrast_refresh_status": "fixture_waiting",
+                "post_failure_contrast_refresh_boundaries_preserved": True,
+                "post_failure_contrast_refresh_boundary_violation_count": 0,
+                "post_failure_contrast_refresh_row_count": 0,
+                "post_failure_contrast_refresh_stage7_training_row_count": 0,
+            },
         },
     )
 
     assert payload["approval_receipt_created"] is False
     assert payload["protected_stack_safety"]["status"] == "fixture_stack_ready"
     assert payload["protected_stack_safety"]["rollback_paths_preserved"] is True
+    assert (
+        payload["summary"][
+            "pre_collection_sequence_policy_after_protected_failure_contrast_refresh_status"
+        ]
+        == "fixture_waiting"
+    )
+    assert (
+        payload["summary"][
+            "pre_collection_sequence_policy_after_protected_failure_contrast_boundaries_preserved"
+        ]
+        is True
+    )
     assert payload["required_receipt_if_user_approves"]["approval_scope"] == {
         "manifest_fingerprint": "m" * 64,
         "readiness_fingerprint": "r" * 64,
