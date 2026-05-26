@@ -548,6 +548,22 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
     )
     assert (
         payload["source_artifacts"][
+            "progress_window_reconsideration_runtime_test_review_v0"
+        ]
+        == "reports/krk_progress_window_reconsideration_runtime_test_review_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["progress_window_reconsideration_runtime_smoke_v0"]
+        == "reports/krk_progress_window_reconsideration_runtime_smoke_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "progress_window_reconsideration_post_activation_audit_v0"
+        ]
+        == "reports/krk_progress_window_reconsideration_post_activation_audit_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
             "clean_retrain_retry1_replacement_readiness_review"
         ]
         == "reports/krk_clean_retrain_retry1_replacement_readiness_review_v0.json"
@@ -1140,6 +1156,57 @@ def test_full_suite_readiness_identifies_current_gate():
     assert failure_risk["runtime_terminals_added"] is False
     assert failure_risk["stage7_promotion_allowed"] is False
     assert failure_risk["stage8_training_allowed"] is False
+
+    progress_reconsideration = payload["progress_window_reconsideration_gate"]
+    assert progress_reconsideration["passive_review_ready"] is True
+    assert progress_reconsideration["runtime_test_review_status"] == (
+        "runtime_test_scaffold_wired_but_policy_insufficient"
+    )
+    assert progress_reconsideration["runtime_test_guardrails_allowed_now"] is False
+    assert progress_reconsideration["runtime_test_promotion_allowed_now"] is False
+    assert (
+        progress_reconsideration["runtime_test_default_off_equivalence_passed"] is True
+    )
+    assert progress_reconsideration["runtime_test_activation_observed"] is True
+    assert progress_reconsideration["runtime_test_target_improvement_observed"] is False
+    assert progress_reconsideration["runtime_test_safe_regression_observed"] is False
+    assert progress_reconsideration["smoke_status"] == (
+        "runtime_smoke_activation_observed_no_target_improvement"
+    )
+    assert progress_reconsideration["smoke_default_off_equivalence_passed"] is True
+    assert progress_reconsideration["smoke_improved_target_failure_count"] == 0
+    assert progress_reconsideration["smoke_safe_regression_count"] == 0
+    assert progress_reconsideration["smoke_target_failure_row_count"] == 1
+    assert progress_reconsideration["smoke_protected_label_count"] == 3
+    assert progress_reconsideration["smoke_enabled_supported_total"] == 518
+    assert progress_reconsideration["smoke_enabled_selected_supported_total"] == 14
+    assert progress_reconsideration["post_activation_status"] == (
+        "post_activation_failure_classified"
+    )
+    assert progress_reconsideration["post_activation_implement_next_fix_now"] is False
+    assert progress_reconsideration["post_activation_recommended_next_step"] == (
+        "return_to_candidate_generation_or_broader_strategy_sequence_track"
+    )
+    assert (
+        progress_reconsideration["classification_primary"]
+        == "candidate_set_missing_good_alternative"
+    )
+    assert progress_reconsideration["classification_labels"] == [
+        "candidate_set_missing_good_alternative",
+        "visible_support_terms_overbroad",
+    ]
+    assert progress_reconsideration["promotion_status"] == (
+        "quarantined_or_analysis_only"
+    )
+    assert (
+        progress_reconsideration["sandbox_status"]
+        == "wired_but_policy_insufficient"
+    )
+    assert progress_reconsideration["runtime_defaults_changed"] is False
+    assert progress_reconsideration["runtime_dtm_or_tablebase_lookup"] is False
+    assert progress_reconsideration["gameplay_topology_mutation"] is False
+    assert progress_reconsideration["stage7_promotion_allowed"] is False
+    assert progress_reconsideration["stage8_training_allowed"] is False
 
     clean_replacement = payload["clean_replacement_review_gate"]
     assert clean_replacement["passive_review_ready"] is True

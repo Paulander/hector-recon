@@ -676,6 +676,15 @@ SOURCES = {
     "state_local_paired_selector_runtime_proxy_review_packet_v1": (
         "reports/krk_state_local_paired_selector_runtime_proxy_review_packet_v1.json"
     ),
+    "progress_window_reconsideration_runtime_test_review_v0": (
+        "reports/krk_progress_window_reconsideration_runtime_test_review_v0.json"
+    ),
+    "progress_window_reconsideration_runtime_smoke_v0": (
+        "reports/krk_progress_window_reconsideration_runtime_smoke_v0.json"
+    ),
+    "progress_window_reconsideration_post_activation_audit_v0": (
+        "reports/krk_progress_window_reconsideration_post_activation_audit_v0.json"
+    ),
     "clean_retrain_retry1_replacement_readiness_review": (
         "reports/krk_clean_retrain_retry1_replacement_readiness_review_v0.json"
     ),
@@ -1535,6 +1544,15 @@ def build_payload() -> dict[str, Any]:
     ]
     state_local_paired_selector_runtime_proxy_review_packet_v1 = payloads[
         "state_local_paired_selector_runtime_proxy_review_packet_v1"
+    ]
+    progress_window_reconsideration_runtime_test_review_v0 = payloads[
+        "progress_window_reconsideration_runtime_test_review_v0"
+    ]
+    progress_window_reconsideration_runtime_smoke_v0 = payloads[
+        "progress_window_reconsideration_runtime_smoke_v0"
+    ]
+    progress_window_reconsideration_post_activation_audit_v0 = payloads[
+        "progress_window_reconsideration_post_activation_audit_v0"
     ]
     clean_replacement_readiness = payloads[
         "clean_retrain_retry1_replacement_readiness_review"
@@ -2397,6 +2415,18 @@ def build_payload() -> dict[str, Any]:
     runtime_proxy_review_packet_v1_summary = (
         state_local_paired_selector_runtime_proxy_review_packet_v1.get("summary") or {}
     )
+    progress_reconsideration_review_decision = (
+        progress_window_reconsideration_runtime_test_review_v0.get("decision") or {}
+    )
+    progress_reconsideration_smoke_decision = (
+        progress_window_reconsideration_runtime_smoke_v0.get("decision") or {}
+    )
+    progress_reconsideration_smoke_summary = (
+        progress_window_reconsideration_runtime_smoke_v0.get("summary") or {}
+    )
+    progress_reconsideration_audit_decision = (
+        progress_window_reconsideration_post_activation_audit_v0.get("decision") or {}
+    )
     selected_owner_failure_risk_proxy_passive = (
         runtime_proxy_design_decision.get("status")
         == "proxy_design_ready_for_replay_free_validation"
@@ -2516,6 +2546,113 @@ def build_payload() -> dict[str, Any]:
         )
         is False
         and state_local_paired_selector_runtime_proxy_review_packet_v1.get(
+            "stage8_training_allowed"
+        )
+        is False
+    )
+    progress_window_reconsideration_passive = (
+        progress_window_reconsideration_runtime_test_review_v0.get("causal_status")
+        == "default_off_runtime_test_scaffold"
+        and progress_reconsideration_review_decision.get("status")
+        == "runtime_test_scaffold_wired_but_policy_insufficient"
+        and progress_reconsideration_review_decision.get("guardrails_allowed_now")
+        is False
+        and progress_reconsideration_review_decision.get("promotion_allowed_now")
+        is False
+        and progress_window_reconsideration_runtime_test_review_v0.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and progress_window_reconsideration_runtime_test_review_v0.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and progress_window_reconsideration_runtime_test_review_v0.get(
+            "gameplay_topology_mutation"
+        )
+        is False
+        and progress_window_reconsideration_runtime_test_review_v0.get(
+            "stage7_promotion_allowed"
+        )
+        is False
+        and progress_window_reconsideration_runtime_test_review_v0.get(
+            "stage8_training_allowed"
+        )
+        is False
+        and progress_window_reconsideration_runtime_test_review_v0.get(
+            "default_off_equivalence_passed"
+        )
+        is True
+        and progress_window_reconsideration_runtime_test_review_v0.get(
+            "target_improvement_observed"
+        )
+        is False
+        and progress_window_reconsideration_runtime_test_review_v0.get(
+            "safe_regression_observed"
+        )
+        is False
+        and progress_window_reconsideration_runtime_smoke_v0.get("causal_status")
+        == "runtime_test_default_off_sandbox_smoke"
+        and progress_reconsideration_smoke_decision.get("status")
+        == "runtime_smoke_activation_observed_no_target_improvement"
+        and progress_reconsideration_smoke_summary.get("default_off_equivalence_passed")
+        is True
+        and progress_reconsideration_smoke_summary.get("improved_target_failure_count")
+        == 0
+        and progress_reconsideration_smoke_summary.get("safe_regression_count") == 0
+        and progress_window_reconsideration_runtime_smoke_v0.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and progress_window_reconsideration_runtime_smoke_v0.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and progress_window_reconsideration_runtime_smoke_v0.get(
+            "gameplay_topology_mutation"
+        )
+        is False
+        and progress_window_reconsideration_runtime_smoke_v0.get(
+            "stage7_promotion_allowed"
+        )
+        is False
+        and progress_window_reconsideration_runtime_smoke_v0.get(
+            "stage8_training_allowed"
+        )
+        is False
+        and progress_window_reconsideration_post_activation_audit_v0.get(
+            "causal_status"
+        )
+        == "non_causal_audit"
+        and progress_reconsideration_audit_decision.get("status")
+        == "post_activation_failure_classified"
+        and progress_reconsideration_audit_decision.get("implement_next_fix_now")
+        is False
+        and progress_window_reconsideration_post_activation_audit_v0.get(
+            "promotion_status"
+        )
+        == "quarantined_or_analysis_only"
+        and progress_window_reconsideration_post_activation_audit_v0.get(
+            "sandbox_status"
+        )
+        == "wired_but_policy_insufficient"
+        and progress_window_reconsideration_post_activation_audit_v0.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and progress_window_reconsideration_post_activation_audit_v0.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and progress_window_reconsideration_post_activation_audit_v0.get(
+            "gameplay_topology_mutation"
+        )
+        is False
+        and progress_window_reconsideration_post_activation_audit_v0.get(
+            "stage7_promotion_allowed"
+        )
+        is False
+        and progress_window_reconsideration_post_activation_audit_v0.get(
             "stage8_training_allowed"
         )
         is False
@@ -4028,6 +4165,127 @@ def build_payload() -> dict[str, Any]:
             ),
             "stage8_training_allowed": (
                 state_local_paired_selector_runtime_proxy_review_packet_v1.get(
+                    "stage8_training_allowed"
+                )
+            ),
+        },
+        "progress_window_reconsideration_gate": {
+            "status": progress_reconsideration_audit_decision.get("status"),
+            "passive_review_ready": progress_window_reconsideration_passive,
+            "runtime_test_review_status": (
+                progress_reconsideration_review_decision.get("status")
+            ),
+            "runtime_test_guardrails_allowed_now": (
+                progress_reconsideration_review_decision.get("guardrails_allowed_now")
+            ),
+            "runtime_test_promotion_allowed_now": (
+                progress_reconsideration_review_decision.get("promotion_allowed_now")
+            ),
+            "runtime_test_default_off_equivalence_passed": (
+                progress_window_reconsideration_runtime_test_review_v0.get(
+                    "default_off_equivalence_passed"
+                )
+            ),
+            "runtime_test_activation_observed": (
+                progress_window_reconsideration_runtime_test_review_v0.get(
+                    "activation_observed"
+                )
+            ),
+            "runtime_test_target_improvement_observed": (
+                progress_window_reconsideration_runtime_test_review_v0.get(
+                    "target_improvement_observed"
+                )
+            ),
+            "runtime_test_safe_regression_observed": (
+                progress_window_reconsideration_runtime_test_review_v0.get(
+                    "safe_regression_observed"
+                )
+            ),
+            "smoke_status": progress_reconsideration_smoke_decision.get("status"),
+            "smoke_default_off_equivalence_passed": (
+                progress_reconsideration_smoke_summary.get(
+                    "default_off_equivalence_passed"
+                )
+            ),
+            "smoke_improved_target_failure_count": (
+                progress_reconsideration_smoke_summary.get(
+                    "improved_target_failure_count"
+                )
+            ),
+            "smoke_safe_regression_count": (
+                progress_reconsideration_smoke_summary.get("safe_regression_count")
+            ),
+            "smoke_target_failure_row_count": (
+                progress_reconsideration_smoke_summary.get("target_failure_row_count")
+            ),
+            "smoke_protected_label_count": (
+                progress_reconsideration_smoke_summary.get("protected_label_count")
+            ),
+            "smoke_enabled_supported_total": (
+                progress_reconsideration_smoke_summary.get("enabled_supported_total")
+            ),
+            "smoke_enabled_selected_supported_total": (
+                progress_reconsideration_smoke_summary.get(
+                    "enabled_selected_supported_total"
+                )
+            ),
+            "post_activation_status": (
+                progress_reconsideration_audit_decision.get("status")
+            ),
+            "post_activation_implement_next_fix_now": (
+                progress_reconsideration_audit_decision.get("implement_next_fix_now")
+            ),
+            "post_activation_recommended_next_step": (
+                progress_reconsideration_audit_decision.get("recommended_next_step")
+            ),
+            "classification_primary": (
+                (
+                    progress_window_reconsideration_post_activation_audit_v0.get(
+                        "classification"
+                    )
+                    or {}
+                ).get("primary")
+            ),
+            "classification_labels": (
+                (
+                    progress_window_reconsideration_post_activation_audit_v0.get(
+                        "classification"
+                    )
+                    or {}
+                ).get("labels")
+            ),
+            "promotion_status": (
+                progress_window_reconsideration_post_activation_audit_v0.get(
+                    "promotion_status"
+                )
+            ),
+            "sandbox_status": (
+                progress_window_reconsideration_post_activation_audit_v0.get(
+                    "sandbox_status"
+                )
+            ),
+            "runtime_defaults_changed": (
+                progress_window_reconsideration_post_activation_audit_v0.get(
+                    "runtime_defaults_changed"
+                )
+            ),
+            "runtime_dtm_or_tablebase_lookup": (
+                progress_window_reconsideration_post_activation_audit_v0.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "gameplay_topology_mutation": (
+                progress_window_reconsideration_post_activation_audit_v0.get(
+                    "gameplay_topology_mutation"
+                )
+            ),
+            "stage7_promotion_allowed": (
+                progress_window_reconsideration_post_activation_audit_v0.get(
+                    "stage7_promotion_allowed"
+                )
+            ),
+            "stage8_training_allowed": (
+                progress_window_reconsideration_post_activation_audit_v0.get(
                     "stage8_training_allowed"
                 )
             ),
@@ -7666,6 +7924,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     balanced_hard_negative = payload["balanced_hard_negative_gate"]
     state_local_paired_ownership = payload["state_local_paired_ownership_gate"]
     selected_owner_failure_risk = payload["selected_owner_failure_risk_proxy_gate"]
+    progress_window_reconsideration = payload["progress_window_reconsideration_gate"]
     clean_replacement = payload["clean_replacement_review_gate"]
     stage7 = payload["stage7_sampling_gate"]
     sequence = payload["sequence_policy"]
@@ -7949,6 +8208,37 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- runtime_terminals_added: `{selected_owner_failure_risk['runtime_terminals_added']}`",
         f"- stage7_promotion_allowed: `{selected_owner_failure_risk['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{selected_owner_failure_risk['stage8_training_allowed']}`",
+        "",
+        "## Progress-Window Reconsideration",
+        "",
+        f"- passive_review_ready: `{progress_window_reconsideration['passive_review_ready']}`",
+        f"- runtime_test_review_status: `{progress_window_reconsideration['runtime_test_review_status']}`",
+        f"- runtime_test_guardrails_allowed_now: `{progress_window_reconsideration['runtime_test_guardrails_allowed_now']}`",
+        f"- runtime_test_promotion_allowed_now: `{progress_window_reconsideration['runtime_test_promotion_allowed_now']}`",
+        f"- runtime_test_default_off_equivalence_passed: `{progress_window_reconsideration['runtime_test_default_off_equivalence_passed']}`",
+        f"- runtime_test_activation_observed: `{progress_window_reconsideration['runtime_test_activation_observed']}`",
+        f"- runtime_test_target_improvement_observed: `{progress_window_reconsideration['runtime_test_target_improvement_observed']}`",
+        f"- runtime_test_safe_regression_observed: `{progress_window_reconsideration['runtime_test_safe_regression_observed']}`",
+        f"- smoke_status: `{progress_window_reconsideration['smoke_status']}`",
+        f"- smoke_default_off_equivalence_passed: `{progress_window_reconsideration['smoke_default_off_equivalence_passed']}`",
+        f"- smoke_improved_target_failure_count: `{progress_window_reconsideration['smoke_improved_target_failure_count']}`",
+        f"- smoke_safe_regression_count: `{progress_window_reconsideration['smoke_safe_regression_count']}`",
+        f"- smoke_target_failure_row_count: `{progress_window_reconsideration['smoke_target_failure_row_count']}`",
+        f"- smoke_protected_label_count: `{progress_window_reconsideration['smoke_protected_label_count']}`",
+        f"- smoke_enabled_supported_total: `{progress_window_reconsideration['smoke_enabled_supported_total']}`",
+        f"- smoke_enabled_selected_supported_total: `{progress_window_reconsideration['smoke_enabled_selected_supported_total']}`",
+        f"- post_activation_status: `{progress_window_reconsideration['post_activation_status']}`",
+        f"- post_activation_implement_next_fix_now: `{progress_window_reconsideration['post_activation_implement_next_fix_now']}`",
+        f"- post_activation_recommended_next_step: `{progress_window_reconsideration['post_activation_recommended_next_step']}`",
+        f"- classification_primary: `{progress_window_reconsideration['classification_primary']}`",
+        f"- classification_labels: `{progress_window_reconsideration['classification_labels']}`",
+        f"- promotion_status: `{progress_window_reconsideration['promotion_status']}`",
+        f"- sandbox_status: `{progress_window_reconsideration['sandbox_status']}`",
+        f"- runtime_defaults_changed: `{progress_window_reconsideration['runtime_defaults_changed']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{progress_window_reconsideration['runtime_dtm_or_tablebase_lookup']}`",
+        f"- gameplay_topology_mutation: `{progress_window_reconsideration['gameplay_topology_mutation']}`",
+        f"- stage7_promotion_allowed: `{progress_window_reconsideration['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{progress_window_reconsideration['stage8_training_allowed']}`",
         "",
         "## Clean Replacement Review",
         "",

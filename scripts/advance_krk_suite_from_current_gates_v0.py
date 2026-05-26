@@ -600,6 +600,9 @@ def build_payload() -> dict[str, Any]:
     selected_owner_failure_risk_proxy_gate = (
         readiness.get("selected_owner_failure_risk_proxy_gate") or {}
     )
+    progress_window_reconsideration_gate = (
+        readiness.get("progress_window_reconsideration_gate") or {}
+    )
     clean_replacement_review_gate = readiness.get("clean_replacement_review_gate") or {}
     active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
@@ -1445,6 +1448,69 @@ def build_payload() -> dict[str, Any]:
             ),
             "selected_owner_failure_risk_stage8_training_allowed": (
                 selected_owner_failure_risk_proxy_gate.get("stage8_training_allowed")
+            ),
+            "progress_window_reconsideration_passive_ready": (
+                progress_window_reconsideration_gate.get("passive_review_ready")
+            ),
+            "progress_window_reconsideration_runtime_test_status": (
+                progress_window_reconsideration_gate.get("runtime_test_review_status")
+            ),
+            "progress_window_reconsideration_runtime_test_guardrails_allowed_now": (
+                progress_window_reconsideration_gate.get(
+                    "runtime_test_guardrails_allowed_now"
+                )
+            ),
+            "progress_window_reconsideration_runtime_test_promotion_allowed_now": (
+                progress_window_reconsideration_gate.get(
+                    "runtime_test_promotion_allowed_now"
+                )
+            ),
+            "progress_window_reconsideration_smoke_status": (
+                progress_window_reconsideration_gate.get("smoke_status")
+            ),
+            "progress_window_reconsideration_default_off_equivalence_passed": (
+                progress_window_reconsideration_gate.get(
+                    "smoke_default_off_equivalence_passed"
+                )
+            ),
+            "progress_window_reconsideration_improved_target_failure_count": (
+                progress_window_reconsideration_gate.get(
+                    "smoke_improved_target_failure_count"
+                )
+            ),
+            "progress_window_reconsideration_safe_regression_count": (
+                progress_window_reconsideration_gate.get("smoke_safe_regression_count")
+            ),
+            "progress_window_reconsideration_target_failure_row_count": (
+                progress_window_reconsideration_gate.get("smoke_target_failure_row_count")
+            ),
+            "progress_window_reconsideration_post_activation_status": (
+                progress_window_reconsideration_gate.get("post_activation_status")
+            ),
+            "progress_window_reconsideration_implement_next_fix_now": (
+                progress_window_reconsideration_gate.get(
+                    "post_activation_implement_next_fix_now"
+                )
+            ),
+            "progress_window_reconsideration_promotion_status": (
+                progress_window_reconsideration_gate.get("promotion_status")
+            ),
+            "progress_window_reconsideration_sandbox_status": (
+                progress_window_reconsideration_gate.get("sandbox_status")
+            ),
+            "progress_window_reconsideration_runtime_defaults_changed": (
+                progress_window_reconsideration_gate.get("runtime_defaults_changed")
+            ),
+            "progress_window_reconsideration_runtime_dtm_or_tablebase_lookup": (
+                progress_window_reconsideration_gate.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "progress_window_reconsideration_stage7_promotion_allowed": (
+                progress_window_reconsideration_gate.get("stage7_promotion_allowed")
+            ),
+            "progress_window_reconsideration_stage8_training_allowed": (
+                progress_window_reconsideration_gate.get("stage8_training_allowed")
             ),
             "clean_replacement_review_passive_ready": clean_replacement_review_gate.get(
                 "passive_review_ready"

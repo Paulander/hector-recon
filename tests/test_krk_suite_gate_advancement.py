@@ -553,6 +553,70 @@ def test_gate_advancement_reports_current_stage7_blocker():
         is False
     )
     assert payload["summary"]["selected_owner_failure_risk_stage8_training_allowed"] is False
+    assert payload["summary"]["progress_window_reconsideration_passive_ready"] is True
+    assert payload["summary"]["progress_window_reconsideration_runtime_test_status"] == (
+        "runtime_test_scaffold_wired_but_policy_insufficient"
+    )
+    assert (
+        payload["summary"][
+            "progress_window_reconsideration_runtime_test_guardrails_allowed_now"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "progress_window_reconsideration_runtime_test_promotion_allowed_now"
+        ]
+        is False
+    )
+    assert payload["summary"]["progress_window_reconsideration_smoke_status"] == (
+        "runtime_smoke_activation_observed_no_target_improvement"
+    )
+    assert (
+        payload["summary"][
+            "progress_window_reconsideration_default_off_equivalence_passed"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "progress_window_reconsideration_improved_target_failure_count"
+        ]
+        == 0
+    )
+    assert payload["summary"]["progress_window_reconsideration_safe_regression_count"] == 0
+    assert payload["summary"]["progress_window_reconsideration_target_failure_row_count"] == 1
+    assert payload["summary"]["progress_window_reconsideration_post_activation_status"] == (
+        "post_activation_failure_classified"
+    )
+    assert (
+        payload["summary"]["progress_window_reconsideration_implement_next_fix_now"]
+        is False
+    )
+    assert payload["summary"]["progress_window_reconsideration_promotion_status"] == (
+        "quarantined_or_analysis_only"
+    )
+    assert payload["summary"]["progress_window_reconsideration_sandbox_status"] == (
+        "wired_but_policy_insufficient"
+    )
+    assert (
+        payload["summary"]["progress_window_reconsideration_runtime_defaults_changed"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "progress_window_reconsideration_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["progress_window_reconsideration_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["progress_window_reconsideration_stage8_training_allowed"]
+        is False
+    )
     assert payload["summary"]["clean_replacement_review_passive_ready"] is True
     assert (
         payload["summary"]["clean_replacement_review_packet_status"]
