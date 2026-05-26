@@ -109,6 +109,20 @@ def test_stage7_post_label_outcome_current_artifact_reports_sequence_policy_gap(
         "protected_failure_contrast_approval_receipt_blockers"
     ] == ["approval_receipt_missing"]
     assert (
+        payload["summary"][
+            "protected_failure_contrast_post_success_refresh_required"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_post_success_refresh_script"]
+        == "scripts/advance_krk_suite_from_current_gates_v0.py"
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_post_success_refresh_scope"]
+        == "full_passive_krk_suite_gate_stack"
+    )
+    assert (
         payload["decision"]["status"]
         == "post_label_outcome_waiting_on_explicit_protected_failure_contrast_collection"
     )

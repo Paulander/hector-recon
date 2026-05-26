@@ -40,6 +40,9 @@ This review is non-causal. It does not train Stage 8, promote Stage 7, change ru
 - protected_failure_contrast_approval_request_status: `protected_plan_window_failure_contrast_approval_request_ready`
 - protected_failure_contrast_approval_receipt_created_by_request: `False`
 - protected_failure_contrast_approval_receipt_blockers: `['approval_receipt_missing']`
+- protected_failure_contrast_post_success_refresh_required: `True`
+- protected_failure_contrast_post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
+- protected_failure_contrast_post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 
 ## Blockers
 

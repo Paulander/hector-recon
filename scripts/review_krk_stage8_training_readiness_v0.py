@@ -251,6 +251,15 @@ def build_payload(
             "protected_failure_contrast_approval_receipt_blockers": (
                 protected_failure_contrast.get("approval_receipt_blockers") or []
             ),
+            "protected_failure_contrast_post_success_refresh_required": (
+                protected_failure_contrast.get("post_success_refresh_required")
+            ),
+            "protected_failure_contrast_post_success_refresh_script": (
+                protected_failure_contrast.get("post_success_refresh_script")
+            ),
+            "protected_failure_contrast_post_success_refresh_scope": (
+                protected_failure_contrast.get("post_success_refresh_scope")
+            ),
         },
         "blockers": blockers,
         "warnings": warnings,

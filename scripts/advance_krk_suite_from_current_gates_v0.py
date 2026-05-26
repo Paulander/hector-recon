@@ -376,6 +376,9 @@ def build_payload() -> dict[str, Any]:
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
     )
+    failure_contrast_approval_request_summary = (
+        failure_contrast_approval_request.get("summary") or {}
+    )
     failure_contrast_output_validation = _load_json(
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_output_validation_v0.json"
@@ -633,6 +636,21 @@ def build_payload() -> dict[str, Any]:
             "protected_plan_window_failure_contrast_approval_receipt_blockers": failure_contrast_approval_request.get(
                 "approval_receipt_blockers"
             ),
+            "protected_plan_window_failure_contrast_post_success_refresh_required": (
+                failure_contrast_approval_request_summary.get(
+                    "post_success_refresh_required"
+                )
+            ),
+            "protected_plan_window_failure_contrast_post_success_refresh_script": (
+                failure_contrast_approval_request_summary.get(
+                    "post_success_refresh_script"
+                )
+            ),
+            "protected_plan_window_failure_contrast_post_success_refresh_scope": (
+                failure_contrast_approval_request_summary.get(
+                    "post_success_refresh_scope"
+                )
+            ),
             "protected_plan_window_failure_contrast_output_validation_status": failure_contrast_output_validation.get(
                 "decision", {}
             ).get("status"),
@@ -690,11 +708,20 @@ def build_payload() -> dict[str, Any]:
             "sequence_policy_underpowered_pilot_protected_failure_contrast_runner_executed_job_count": underpowered_pilot.get(
                 "summary", {}
             ).get("protected_failure_contrast_runner_executed_job_count"),
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_post_success_refresh_required": underpowered_pilot.get(
+                "summary", {}
+            ).get("protected_failure_contrast_post_success_refresh_required"),
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_post_success_refresh_script": underpowered_pilot.get(
+                "summary", {}
+            ).get("protected_failure_contrast_post_success_refresh_script"),
             "readiness_status": readiness.get("decision", {}).get("status"),
             "unblocker_status": unblocker.get("decision", {}).get("status"),
             "stage8_training_readiness_status": stage8_review.get("decision", {}).get(
                 "status"
             ),
+            "stage8_training_readiness_protected_failure_contrast_post_success_refresh_required": stage8_review.get(
+                "requirements", {}
+            ).get("protected_failure_contrast_post_success_refresh_required"),
             "stage7_post_label_outcome_status": post_label_review.get("decision", {}).get(
                 "status"
             ),
@@ -707,6 +734,12 @@ def build_payload() -> dict[str, Any]:
             "stage7_post_label_outcome_protected_failure_contrast_runner_executed_job_count": post_label_review.get(
                 "summary", {}
             ).get("protected_failure_contrast_runner_executed_job_count"),
+            "stage7_post_label_outcome_protected_failure_contrast_post_success_refresh_required": post_label_review.get(
+                "summary", {}
+            ).get("protected_failure_contrast_post_success_refresh_required"),
+            "stage7_post_label_outcome_protected_failure_contrast_post_success_refresh_script": post_label_review.get(
+                "summary", {}
+            ).get("protected_failure_contrast_post_success_refresh_script"),
             "stage7_label_distribution_review_status": label_distribution_review.get(
                 "decision", {}
             ).get("status"),

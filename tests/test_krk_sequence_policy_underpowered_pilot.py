@@ -135,6 +135,20 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
     assert payload["summary"][
         "protected_failure_contrast_approval_receipt_blockers"
     ] == ["approval_receipt_missing"]
+    assert (
+        payload["summary"][
+            "protected_failure_contrast_post_success_refresh_required"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_post_success_refresh_script"]
+        == "scripts/advance_krk_suite_from_current_gates_v0.py"
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_post_success_refresh_scope"]
+        == "full_passive_krk_suite_gate_stack"
+    )
     assert "stage4_state_local_topk_signal_present" in payload["pilot_findings"]
     assert "stage7_clean_success_controls_missing" not in payload["blockers"]
     assert (

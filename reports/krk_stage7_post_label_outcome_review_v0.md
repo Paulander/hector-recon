@@ -40,6 +40,9 @@ This review is passive. It does not execute labels, change runtime behavior, tra
 - protected_failure_contrast_approval_request_status: `protected_plan_window_failure_contrast_approval_request_ready`
 - protected_failure_contrast_approval_receipt_created_by_request: `False`
 - protected_failure_contrast_approval_receipt_blockers: `['approval_receipt_missing']`
+- protected_failure_contrast_post_success_refresh_required: `True`
+- protected_failure_contrast_post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
+- protected_failure_contrast_post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - stage7_training_row_count: `0`
 - selector_training_row_count: `0`
 - runtime_authorization_row_count: `0`

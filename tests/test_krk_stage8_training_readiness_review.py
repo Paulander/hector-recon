@@ -140,6 +140,20 @@ def test_stage8_training_readiness_review_blocks_current_state():
     assert payload["requirements"][
         "protected_failure_contrast_approval_receipt_blockers"
     ] == ["approval_receipt_missing"]
+    assert (
+        payload["requirements"][
+            "protected_failure_contrast_post_success_refresh_required"
+        ]
+        is True
+    )
+    assert (
+        payload["requirements"]["protected_failure_contrast_post_success_refresh_script"]
+        == "scripts/advance_krk_suite_from_current_gates_v0.py"
+    )
+    assert (
+        payload["requirements"]["protected_failure_contrast_post_success_refresh_scope"]
+        == "full_passive_krk_suite_gate_stack"
+    )
     assert "stage7_clean_success_controls_missing" not in payload["blockers"]
     assert (
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"

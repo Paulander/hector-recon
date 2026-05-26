@@ -200,6 +200,24 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         "protected_plan_window_failure_contrast_approval_receipt_blockers"
     ] == ["approval_receipt_missing"]
     assert (
+        payload["summary"][
+            "protected_plan_window_failure_contrast_post_success_refresh_required"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "protected_plan_window_failure_contrast_post_success_refresh_script"
+        ]
+        == "scripts/advance_krk_suite_from_current_gates_v0.py"
+    )
+    assert (
+        payload["summary"][
+            "protected_plan_window_failure_contrast_post_success_refresh_scope"
+        ]
+        == "full_passive_krk_suite_gate_stack"
+    )
+    assert (
         payload["summary"]["protected_plan_window_failure_contrast_output_validation_status"]
         == "protected_plan_window_failure_contrast_outputs_validation_pending"
     )
@@ -269,6 +287,18 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         == 0
     )
     assert (
+        payload["summary"][
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_post_success_refresh_required"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_post_success_refresh_script"
+        ]
+        == "scripts/advance_krk_suite_from_current_gates_v0.py"
+    )
+    assert (
         payload["summary"]["stage7_output_validation_status"]
         == "stage7_diverse_clean_sampling_outputs_valid_ready_for_integration"
     )
@@ -276,6 +306,12 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     assert (
         payload["summary"]["stage8_training_readiness_status"]
         == "stage8_training_blocked_pending_protected_failure_contrast_collection"
+    )
+    assert (
+        payload["summary"][
+            "stage8_training_readiness_protected_failure_contrast_post_success_refresh_required"
+        ]
+        is True
     )
     assert (
         payload["summary"]["stage7_post_label_outcome_status"]
@@ -296,6 +332,18 @@ def test_gate_advancement_writer_includes_all_passive_steps():
             "stage7_post_label_outcome_protected_failure_contrast_runner_executed_job_count"
         ]
         == 0
+    )
+    assert (
+        payload["summary"][
+            "stage7_post_label_outcome_protected_failure_contrast_post_success_refresh_required"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "stage7_post_label_outcome_protected_failure_contrast_post_success_refresh_script"
+        ]
+        == "scripts/advance_krk_suite_from_current_gates_v0.py"
     )
     assert (
         payload["summary"]["stage7_label_distribution_review_status"]
