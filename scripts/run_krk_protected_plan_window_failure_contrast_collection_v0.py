@@ -627,6 +627,36 @@ def build_payload(
             "execution_readiness_all_jobs_pass": readiness.get("summary", {}).get(
                 "all_jobs_pass_readiness"
             ),
+            "execution_readiness_protected_stack_status": readiness.get(
+                "summary", {}
+            ).get("protected_stack_status"),
+            "execution_readiness_protected_stack_ready": readiness.get(
+                "summary", {}
+            ).get("protected_stack_ready"),
+            "execution_readiness_protected_stack_rollback_paths_preserved": readiness.get(
+                "summary", {}
+            ).get("protected_stack_rollback_paths_preserved"),
+            "execution_readiness_protected_stack_active_paths_safe": readiness.get(
+                "summary", {}
+            ).get("protected_stack_active_paths_safe"),
+            "execution_readiness_protected_stack_active_paths_exist": readiness.get(
+                "summary", {}
+            ).get("protected_stack_active_paths_exist"),
+            "execution_readiness_protected_stack_rollback_paths_safe": readiness.get(
+                "summary", {}
+            ).get("protected_stack_rollback_paths_safe"),
+            "execution_readiness_protected_stack_rollback_paths_exist": readiness.get(
+                "summary", {}
+            ).get("protected_stack_rollback_paths_exist"),
+            "execution_readiness_protected_stack_rollback_common_paths_distinct": readiness.get(
+                "summary", {}
+            ).get("protected_stack_rollback_common_paths_distinct"),
+            "execution_readiness_protected_stack_filesystem_snapshots_replaced": readiness.get(
+                "summary", {}
+            ).get("protected_stack_filesystem_snapshots_replaced"),
+            "execution_readiness_protected_stack_hard_blockers": readiness.get(
+                "summary", {}
+            ).get("protected_stack_hard_blockers"),
             "approval_receipt_required_for_execution": True,
             "approval_receipt_present": approval_receipt is not None,
             "approval_receipt_valid": not approval_blockers,

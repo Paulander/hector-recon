@@ -328,6 +328,34 @@ def test_failure_contrast_runner_is_dry_run_ready_without_authorizing_collection
     assert payload["summary"]["execution_readiness_jobs_passing"] == 6
     assert len(payload["summary"]["execution_readiness_manifest_fingerprint"]) == 64
     assert len(payload["summary"]["execution_readiness_fingerprint"]) == 64
+    assert (
+        payload["summary"]["execution_readiness_protected_stack_status"]
+        == "retry1_protected_stage5_6_stack_adopted_manifest_only"
+    )
+    assert payload["summary"]["execution_readiness_protected_stack_ready"] is True
+    assert (
+        payload["summary"][
+            "execution_readiness_protected_stack_rollback_paths_preserved"
+        ]
+        is True
+    )
+    assert payload["summary"]["execution_readiness_protected_stack_active_paths_safe"] is True
+    assert payload["summary"]["execution_readiness_protected_stack_active_paths_exist"] is True
+    assert payload["summary"]["execution_readiness_protected_stack_rollback_paths_safe"] is True
+    assert payload["summary"]["execution_readiness_protected_stack_rollback_paths_exist"] is True
+    assert (
+        payload["summary"][
+            "execution_readiness_protected_stack_rollback_common_paths_distinct"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "execution_readiness_protected_stack_filesystem_snapshots_replaced"
+        ]
+        is False
+    )
+    assert payload["summary"]["execution_readiness_protected_stack_hard_blockers"] == []
     assert payload["summary"]["approval_receipt_required_for_execution"] is True
     assert payload["summary"]["approval_receipt_present"] is False
     assert payload["summary"]["approval_receipt_valid"] is False
