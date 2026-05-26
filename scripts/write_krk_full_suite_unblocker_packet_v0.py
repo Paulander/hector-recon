@@ -114,6 +114,9 @@ def build_payload() -> dict[str, Any]:
     rollback_stack_path_status = protected.get("rollback_stack_path_status") or {}
     stage4_decision = stage4_unblocker.get("decision") or {}
     stage4_current = stage4_unblocker.get("current_stage4_status") or {}
+    stage4_approval_scope = (
+        stage4_unblocker.get("required_approval_scope_if_user_approves") or {}
+    )
     sequence_forbidden_training_or_runtime_inputs = bool(
         sequence.get("forbidden_training_or_runtime_input_blocked")
     ) or (
@@ -738,6 +741,45 @@ def build_payload() -> dict[str, Any]:
             "implementation_authorized_by_approval_request": stage4_current.get(
                 "implementation_authorized_by_approval_request"
             ),
+            "scope": {
+                "approval_id": stage4_approval_scope.get("approval_id"),
+                "sandbox_scope_id": stage4_approval_scope.get("sandbox_scope_id"),
+                "default_off": stage4_approval_scope.get("default_off"),
+                "default_enabled": stage4_approval_scope.get("default_enabled"),
+                "implementation_authorized_by_request": stage4_approval_scope.get(
+                    "implementation_authorized_by_request"
+                ),
+                "runtime_change_class": stage4_approval_scope.get(
+                    "runtime_change_class"
+                ),
+                "exact_state_or_exact_move_exception": stage4_approval_scope.get(
+                    "exact_state_or_exact_move_exception"
+                ),
+                "runtime_dtm_or_tablebase_lookup": stage4_approval_scope.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                ),
+                "hidden_python_controller": stage4_approval_scope.get(
+                    "hidden_python_controller"
+                ),
+                "selector_training_allowed": stage4_approval_scope.get(
+                    "selector_training_allowed"
+                ),
+                "provider_suppression_allowed": stage4_approval_scope.get(
+                    "provider_suppression_allowed"
+                ),
+                "broad_stage0_penalty_allowed": stage4_approval_scope.get(
+                    "broad_stage0_penalty_allowed"
+                ),
+                "gameplay_topology_mutation": stage4_approval_scope.get(
+                    "gameplay_topology_mutation"
+                ),
+                "stage7_promotion_allowed": stage4_approval_scope.get(
+                    "stage7_promotion_allowed"
+                ),
+                "stage8_training_allowed": stage4_approval_scope.get(
+                    "stage8_training_allowed"
+                ),
+            },
             "why_secondary": (
                 "This may reduce Stage 4 debt, but it does not directly fill the protected "
                 "plan-window failure-contrast sparsity now blocking sequence-policy review."

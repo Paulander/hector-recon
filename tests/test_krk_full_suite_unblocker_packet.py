@@ -320,6 +320,26 @@ def test_unblocker_packet_keeps_stage4_as_secondary_gate():
     )
     assert secondary["approval_request_created"] is False
     assert secondary["implementation_authorized_by_approval_request"] is False
+    assert (
+        secondary["scope"]["sandbox_scope_id"]
+        == "default_off_stage4_candidate_move_first_move_contrast_sandbox_only"
+    )
+    assert secondary["scope"]["default_off"] is True
+    assert secondary["scope"]["default_enabled"] is False
+    assert secondary["scope"]["implementation_authorized_by_request"] is False
+    assert (
+        secondary["scope"]["runtime_change_class"]
+        == "default_off_candidate_move_frame_sandbox_only"
+    )
+    assert secondary["scope"]["exact_state_or_exact_move_exception"] is False
+    assert secondary["scope"]["runtime_dtm_or_tablebase_lookup"] is False
+    assert secondary["scope"]["hidden_python_controller"] is False
+    assert secondary["scope"]["selector_training_allowed"] is False
+    assert secondary["scope"]["provider_suppression_allowed"] is False
+    assert secondary["scope"]["broad_stage0_penalty_allowed"] is False
+    assert secondary["scope"]["gameplay_topology_mutation"] is False
+    assert secondary["scope"]["stage7_promotion_allowed"] is False
+    assert secondary["scope"]["stage8_training_allowed"] is False
     assert secondary["approval_required"] is True
     assert secondary["implementation_allowed_by_this_packet"] is False
 

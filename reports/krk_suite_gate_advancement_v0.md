@@ -25,6 +25,15 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - stage4_first_move_contrast_sandbox_approval_request_status: `stage4_first_move_contrast_sandbox_approval_request_ready`
 - stage4_first_move_contrast_sandbox_approval_request_created: `False`
 - stage4_first_move_contrast_sandbox_implementation_authorized_by_request: `False`
+- stage4_first_move_contrast_sandbox_scope_id: `default_off_stage4_candidate_move_first_move_contrast_sandbox_only`
+- stage4_first_move_contrast_sandbox_default_off: `True`
+- stage4_first_move_contrast_sandbox_default_enabled: `False`
+- stage4_first_move_contrast_sandbox_runtime_change_class: `default_off_candidate_move_frame_sandbox_only`
+- stage4_first_move_contrast_sandbox_runtime_dtm_or_tablebase_lookup: `False`
+- stage4_first_move_contrast_sandbox_hidden_python_controller: `False`
+- stage4_first_move_contrast_sandbox_selector_training_allowed: `False`
+- stage4_first_move_contrast_sandbox_stage7_promotion_allowed: `False`
+- stage4_first_move_contrast_sandbox_stage8_training_allowed: `False`
 - stage7_success_controls: `11`
 - stage7_success_controls_required: `5`
 - stage7_success_controls_ready: `True`

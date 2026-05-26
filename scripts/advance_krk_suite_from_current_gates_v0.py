@@ -339,6 +339,9 @@ def build_payload() -> dict[str, Any]:
         "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
     )
     stage4_unblocker = _load_json("reports/krk_stage4_caveat_unblocker_packet_v0.json")
+    stage4_approval_scope = (
+        stage4_unblocker.get("required_approval_scope_if_user_approves") or {}
+    )
     output_validation = _load_json(
         "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json"
     )
@@ -561,6 +564,33 @@ def build_payload() -> dict[str, Any]:
             ),
             "stage4_first_move_contrast_sandbox_implementation_authorized_by_request": stage4_approval_request.get(
                 "implementation_authorized_by_request"
+            ),
+            "stage4_first_move_contrast_sandbox_scope_id": stage4_approval_scope.get(
+                "sandbox_scope_id"
+            ),
+            "stage4_first_move_contrast_sandbox_default_off": stage4_approval_scope.get(
+                "default_off"
+            ),
+            "stage4_first_move_contrast_sandbox_default_enabled": stage4_approval_scope.get(
+                "default_enabled"
+            ),
+            "stage4_first_move_contrast_sandbox_runtime_change_class": stage4_approval_scope.get(
+                "runtime_change_class"
+            ),
+            "stage4_first_move_contrast_sandbox_runtime_dtm_or_tablebase_lookup": stage4_approval_scope.get(
+                "runtime_dtm_or_tablebase_lookup"
+            ),
+            "stage4_first_move_contrast_sandbox_hidden_python_controller": stage4_approval_scope.get(
+                "hidden_python_controller"
+            ),
+            "stage4_first_move_contrast_sandbox_selector_training_allowed": stage4_approval_scope.get(
+                "selector_training_allowed"
+            ),
+            "stage4_first_move_contrast_sandbox_stage7_promotion_allowed": stage4_approval_scope.get(
+                "stage7_promotion_allowed"
+            ),
+            "stage4_first_move_contrast_sandbox_stage8_training_allowed": stage4_approval_scope.get(
+                "stage8_training_allowed"
             ),
             "stage7_success_controls": readiness.get("stage7_sampling_gate", {}).get(
                 "combined_success_controls"

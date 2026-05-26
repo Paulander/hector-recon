@@ -154,6 +154,23 @@
     "implementation_allowed_by_this_packet": false,
     "implementation_authorized_by_approval_request": false,
     "purpose": "Address the separate Stage 4 h40 caveat through a reviewed default-off sandbox path.",
+    "scope": {
+      "approval_id": "approve_stage4_first_move_contrast_sandbox",
+      "broad_stage0_penalty_allowed": false,
+      "default_enabled": false,
+      "default_off": true,
+      "exact_state_or_exact_move_exception": false,
+      "gameplay_topology_mutation": false,
+      "hidden_python_controller": false,
+      "implementation_authorized_by_request": false,
+      "provider_suppression_allowed": false,
+      "runtime_change_class": "default_off_candidate_move_frame_sandbox_only",
+      "runtime_dtm_or_tablebase_lookup": false,
+      "sandbox_scope_id": "default_off_stage4_candidate_move_first_move_contrast_sandbox_only",
+      "selector_training_allowed": false,
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false
+    },
     "status": "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval",
     "why_secondary": "This may reduce Stage 4 debt, but it does not directly fill the protected plan-window failure-contrast sparsity now blocking sequence-policy review."
   },

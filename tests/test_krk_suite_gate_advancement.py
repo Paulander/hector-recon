@@ -387,6 +387,38 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         ]
         is False
     )
+    assert (
+        payload["summary"]["stage4_first_move_contrast_sandbox_scope_id"]
+        == "default_off_stage4_candidate_move_first_move_contrast_sandbox_only"
+    )
+    assert payload["summary"]["stage4_first_move_contrast_sandbox_default_off"] is True
+    assert payload["summary"]["stage4_first_move_contrast_sandbox_default_enabled"] is False
+    assert (
+        payload["summary"]["stage4_first_move_contrast_sandbox_runtime_change_class"]
+        == "default_off_candidate_move_frame_sandbox_only"
+    )
+    assert (
+        payload["summary"][
+            "stage4_first_move_contrast_sandbox_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["stage4_first_move_contrast_sandbox_hidden_python_controller"]
+        is False
+    )
+    assert (
+        payload["summary"]["stage4_first_move_contrast_sandbox_selector_training_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["stage4_first_move_contrast_sandbox_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["stage4_first_move_contrast_sandbox_stage8_training_allowed"]
+        is False
+    )
     for step in payload["step_results"]:
         assert step["label_run_allowed"] is False
         assert step["runtime_changes_allowed"] is False
