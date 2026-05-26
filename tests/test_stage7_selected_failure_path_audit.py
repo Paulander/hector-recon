@@ -51,6 +51,9 @@ def test_stage7_selected_path_target_spec_keeps_targets_split() -> None:
 
     assert payload["runtime_behavior_changed"] is False
     assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_score_changes"] is False
+    assert payload["runtime_direct_routing"] is False
+    assert payload["hidden_python_controller"] is False
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
     assert payload["status"] == "split_targets_required"
@@ -84,6 +87,9 @@ def test_stage7_selected_path_target_dataset_blocks_underpowered_sequence_target
 
     assert payload["runtime_behavior_changed"] is False
     assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_score_changes"] is False
+    assert payload["runtime_direct_routing"] is False
+    assert payload["hidden_python_controller"] is False
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
     assert payload["summary"]["ownership_target_minimally_trainable"] is True
@@ -125,6 +131,9 @@ def test_stage7_sequence_control_recovery_marks_controls_offline_only() -> None:
     )
 
     assert recovery["runtime_behavior_changed"] is False
+    assert recovery["runtime_score_changes"] is False
+    assert recovery["runtime_direct_routing"] is False
+    assert recovery["hidden_python_controller"] is False
     assert recovery["summary"]["usable_for_offline_benchmark"] is True
     assert recovery["summary"]["usable_for_runtime_authorization"] is False
     assert dataset["runtime_selector_implemented"] is False

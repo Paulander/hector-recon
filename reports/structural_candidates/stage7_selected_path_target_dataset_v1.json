@@ -12,6 +12,7 @@
     "status": "split_target_dataset_ready_for_offline_probe_with_sandbox_sourced_sequence_controls"
   },
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "rows": [
     {
       "active_landmark_label": "box_shrink",
@@ -690,7 +691,9 @@
   ],
   "runtime_behavior_changed": false,
   "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
   "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
   "runtime_selector_implemented": false,
   "schema_version": "stage7_selected_path_target_dataset.v1",
   "source_artifacts": [

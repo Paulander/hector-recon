@@ -243,9 +243,12 @@
     }
   ],
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "runtime_behavior_changed": false,
   "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
   "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
   "runtime_selector_implemented": false,
   "schema_version": "stage7_post_box_sequence_control_recovery.v0",
   "stage7_promotion_allowed": false,

@@ -12,6 +12,7 @@
     "status": "ownership_target_minimal_sequence_target_underpowered"
   },
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "rows": [
     {
       "active_landmark_label": "box_shrink",
@@ -354,7 +355,9 @@
   ],
   "runtime_behavior_changed": false,
   "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
   "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
   "runtime_selector_implemented": false,
   "schema_version": "stage7_selected_path_target_dataset.v0",
   "source_artifacts": [

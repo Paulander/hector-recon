@@ -1193,9 +1193,12 @@
     "status": "clean_sequence_controls_recovered_for_offline_source_bias_audit"
   },
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "runtime_behavior_changed": false,
   "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
   "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
   "runtime_selector_implemented": false,
   "schema_version": "stage7_clean_sequence_control_recovery.v0",
   "source_artifacts": [

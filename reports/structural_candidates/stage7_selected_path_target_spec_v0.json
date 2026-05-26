@@ -13,9 +13,12 @@
     "why": "The selected failure path is mixed; a single selector, penalty, or provider boost would conflate ownership errors with continuation-capacity/sequence errors."
   },
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "runtime_behavior_changed": false,
   "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
   "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
   "runtime_selector_implemented": false,
   "schema_version": "stage7_selected_path_target_spec.v0",
   "source_artifacts": [
