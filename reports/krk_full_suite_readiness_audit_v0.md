@@ -129,7 +129,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `eba7136f45f43af942b45d2b80d2779e880e6de46b104e7849b0d63b19281ffa`
+- expected_readiness_fingerprint: `489ecc68c45ab9ac5e3c68b3df4d1eb206b376c37370fb539e42c9b0271dd956`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -524,6 +524,14 @@
 - selector_benchmark_v2_best_runtime_model: `visible_failure_risk_heuristic_v2`
 - selector_benchmark_v2_runtime_threshold_passing_model_count: `1`
 - selector_benchmark_review_status: `selector_objective_benchmark_review_ready_for_independent_validation`
+- independent_validation_manifest_status: `selector_objective_independent_validation_manifest_ready`
+- independent_validation_manifest_job_count: `10`
+- independent_validation_manifest_job_count_by_stage: `{'stage4': 7, 'stage6': 3}`
+- independent_validation_manifest_stage7_training_rows: `0`
+- independent_validation_labels_status: `selector_objective_independent_validation_labels_collected`
+- independent_validation_labels_label_count: `10`
+- independent_validation_labels_selector_training_row_count: `0`
+- independent_validation_labels_stage7_training_row_count: `0`
 - independent_validation_status: `selector_objective_independent_validation_underpowered`
 - independent_validation_target_counts: `{'preserve': 10}`
 - independent_validation_blocker_status: `selector_objective_runtime_blocked_pending_independent_switch_contrasts`
@@ -637,5 +645,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1568`
+- checked_flag_count: `1586`
 - violation_count: `0`

@@ -327,6 +327,14 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/strategy_arbitration/krk_selector_objective_independent_validation_blocker_v0.json"
     )
     assert (
+        payload["source_artifacts"]["selector_objective_independent_validation_manifest"]
+        == "reports/strategy_arbitration/krk_selector_objective_independent_validation_manifest_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_objective_independent_validation_labels"]
+        == "reports/strategy_arbitration/krk_selector_objective_independent_validation_labels_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["stage4_failure_discovery"]
         == "reports/krk_stage4_failure_discovery_v0.json"
     )
@@ -1612,6 +1620,37 @@ def test_full_suite_readiness_identifies_current_gate():
     )
     assert selector["selector_benchmark_review_runtime_review_ready"] is False
     assert selector["selector_benchmark_review_independent_validation_ready"] is True
+    assert (
+        selector["independent_validation_manifest_status"]
+        == "selector_objective_independent_validation_manifest_ready"
+    )
+    assert selector["independent_validation_manifest_labels_allowed_by_review"] is True
+    assert selector["independent_validation_manifest_job_count"] == 10
+    assert selector["independent_validation_manifest_job_count_by_stage"] == {
+        "stage4": 7,
+        "stage6": 3,
+    }
+    assert selector["independent_validation_manifest_all_bindings_valid"] is True
+    assert selector["independent_validation_manifest_excluded_stages"] == [
+        "stage7",
+        "stage8",
+    ]
+    assert selector["independent_validation_manifest_stage7_training_rows"] == 0
+    assert selector["independent_validation_manifest_job_labels_generated_count"] == 0
+    assert (
+        selector["independent_validation_labels_status"]
+        == "selector_objective_independent_validation_labels_collected"
+    )
+    assert selector["independent_validation_labels_label_count"] == 10
+    assert selector["independent_validation_labels_selected_result_counts"] == {
+        "mate": 10
+    }
+    assert selector["independent_validation_labels_result_counts_by_stage"] == {
+        "stage4:mate": 7,
+        "stage6:mate": 3,
+    }
+    assert selector["independent_validation_labels_selector_training_row_count"] == 0
+    assert selector["independent_validation_labels_stage7_training_row_count"] == 0
     assert (
         selector["independent_validation_status"]
         == "selector_objective_independent_validation_underpowered"

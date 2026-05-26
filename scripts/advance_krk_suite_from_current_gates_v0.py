@@ -1959,6 +1959,30 @@ def build_payload() -> dict[str, Any]:
             "selector_objective_benchmark_review_independent_validation_ready": selector_objective_gate.get(
                 "selector_benchmark_review_independent_validation_ready"
             ),
+            "selector_objective_independent_validation_manifest_status": selector_objective_gate.get(
+                "independent_validation_manifest_status"
+            ),
+            "selector_objective_independent_validation_manifest_job_count": selector_objective_gate.get(
+                "independent_validation_manifest_job_count"
+            ),
+            "selector_objective_independent_validation_manifest_stage7_training_rows": selector_objective_gate.get(
+                "independent_validation_manifest_stage7_training_rows"
+            ),
+            "selector_objective_independent_validation_manifest_job_labels_generated_count": selector_objective_gate.get(
+                "independent_validation_manifest_job_labels_generated_count"
+            ),
+            "selector_objective_independent_validation_labels_status": selector_objective_gate.get(
+                "independent_validation_labels_status"
+            ),
+            "selector_objective_independent_validation_labels_label_count": selector_objective_gate.get(
+                "independent_validation_labels_label_count"
+            ),
+            "selector_objective_independent_validation_labels_selector_training_row_count": selector_objective_gate.get(
+                "independent_validation_labels_selector_training_row_count"
+            ),
+            "selector_objective_independent_validation_labels_stage7_training_row_count": selector_objective_gate.get(
+                "independent_validation_labels_stage7_training_row_count"
+            ),
             "selector_objective_independent_validation_status": selector_objective_gate.get(
                 "independent_validation_status"
             ),

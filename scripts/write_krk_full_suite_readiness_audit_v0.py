@@ -338,6 +338,12 @@ SOURCES = {
     "selector_objective_benchmark_review_packet_v2": (
         "reports/strategy_arbitration/krk_selector_objective_benchmark_review_packet_v2.json"
     ),
+    "selector_objective_independent_validation_manifest": (
+        "reports/strategy_arbitration/krk_selector_objective_independent_validation_manifest_v0.json"
+    ),
+    "selector_objective_independent_validation_labels": (
+        "reports/strategy_arbitration/krk_selector_objective_independent_validation_labels_v0.json"
+    ),
     "selector_objective_independent_validation": (
         "reports/strategy_arbitration/krk_selector_objective_independent_validation_v0.json"
     ),
@@ -986,6 +992,12 @@ def build_payload() -> dict[str, Any]:
     selector_objective_benchmark_v2 = payloads["selector_objective_benchmark_v2"]
     selector_objective_benchmark_review_packet_v2 = payloads[
         "selector_objective_benchmark_review_packet_v2"
+    ]
+    selector_objective_independent_validation_manifest = payloads[
+        "selector_objective_independent_validation_manifest"
+    ]
+    selector_objective_independent_validation_labels = payloads[
+        "selector_objective_independent_validation_labels"
     ]
     selector_objective_independent_validation = payloads[
         "selector_objective_independent_validation"
@@ -3952,6 +3964,79 @@ def build_payload() -> dict[str, Any]:
                     "decision", {}
                 ).get("independent_validation_review_ready")
             ),
+            "independent_validation_manifest_status": (
+                selector_objective_independent_validation_manifest.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "independent_validation_manifest_labels_allowed_by_review": (
+                selector_objective_independent_validation_manifest.get(
+                    "decision", {}
+                ).get("labels_allowed_by_review")
+            ),
+            "independent_validation_manifest_job_count": (
+                selector_objective_independent_validation_manifest.get(
+                    "binding_summary", {}
+                ).get("job_count")
+            ),
+            "independent_validation_manifest_job_count_by_stage": (
+                selector_objective_independent_validation_manifest.get(
+                    "binding_summary", {}
+                ).get("job_count_by_stage")
+            ),
+            "independent_validation_manifest_all_bindings_valid": (
+                selector_objective_independent_validation_manifest.get(
+                    "binding_summary", {}
+                ).get("all_bindings_valid")
+            ),
+            "independent_validation_manifest_excluded_stages": (
+                selector_objective_independent_validation_manifest.get(
+                    "selection_policy", {}
+                ).get("excluded_stages")
+            ),
+            "independent_validation_manifest_stage7_training_rows": (
+                selector_objective_independent_validation_manifest.get(
+                    "selection_policy", {}
+                ).get("stage7_training_rows")
+            ),
+            "independent_validation_manifest_job_labels_generated_count": sum(
+                1
+                for job in selector_objective_independent_validation_manifest.get(
+                    "jobs"
+                )
+                or []
+                if job.get("labels_generated")
+            ),
+            "independent_validation_labels_status": (
+                selector_objective_independent_validation_labels.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "independent_validation_labels_label_count": (
+                selector_objective_independent_validation_labels.get(
+                    "summary", {}
+                ).get("label_count")
+            ),
+            "independent_validation_labels_selected_result_counts": (
+                selector_objective_independent_validation_labels.get(
+                    "summary", {}
+                ).get("selected_result_counts")
+            ),
+            "independent_validation_labels_result_counts_by_stage": (
+                selector_objective_independent_validation_labels.get(
+                    "summary", {}
+                ).get("selected_result_counts_by_stage")
+            ),
+            "independent_validation_labels_selector_training_row_count": (
+                selector_objective_independent_validation_labels.get(
+                    "summary", {}
+                ).get("selector_training_row_count")
+            ),
+            "independent_validation_labels_stage7_training_row_count": (
+                selector_objective_independent_validation_labels.get(
+                    "summary", {}
+                ).get("stage7_training_row_count")
+            ),
             "independent_validation_status": (
                 selector_objective_independent_validation.get("decision", {}).get(
                     "status"
@@ -5447,6 +5532,14 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- selector_benchmark_v2_best_runtime_model: `{selector_objective['selector_benchmark_v2_best_runtime_model']}`",
             f"- selector_benchmark_v2_runtime_threshold_passing_model_count: `{selector_objective['selector_benchmark_v2_runtime_threshold_passing_model_count']}`",
             f"- selector_benchmark_review_status: `{selector_objective['selector_benchmark_review_status']}`",
+            f"- independent_validation_manifest_status: `{selector_objective['independent_validation_manifest_status']}`",
+            f"- independent_validation_manifest_job_count: `{selector_objective['independent_validation_manifest_job_count']}`",
+            f"- independent_validation_manifest_job_count_by_stage: `{selector_objective['independent_validation_manifest_job_count_by_stage']}`",
+            f"- independent_validation_manifest_stage7_training_rows: `{selector_objective['independent_validation_manifest_stage7_training_rows']}`",
+            f"- independent_validation_labels_status: `{selector_objective['independent_validation_labels_status']}`",
+            f"- independent_validation_labels_label_count: `{selector_objective['independent_validation_labels_label_count']}`",
+            f"- independent_validation_labels_selector_training_row_count: `{selector_objective['independent_validation_labels_selector_training_row_count']}`",
+            f"- independent_validation_labels_stage7_training_row_count: `{selector_objective['independent_validation_labels_stage7_training_row_count']}`",
             f"- independent_validation_status: `{selector_objective['independent_validation_status']}`",
             f"- independent_validation_target_counts: `{selector_objective['independent_validation_target_counts']}`",
             f"- independent_validation_blocker_status: `{selector_objective['independent_validation_blocker_status']}`",

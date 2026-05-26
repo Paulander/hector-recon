@@ -1651,6 +1651,54 @@ def test_gate_advancement_reports_current_stage7_blocker():
         is True
     )
     assert (
+        payload["summary"][
+            "selector_objective_independent_validation_manifest_status"
+        ]
+        == "selector_objective_independent_validation_manifest_ready"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_independent_validation_manifest_job_count"
+        ]
+        == 10
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_independent_validation_manifest_stage7_training_rows"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_independent_validation_manifest_job_labels_generated_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_independent_validation_labels_status"
+        ]
+        == "selector_objective_independent_validation_labels_collected"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_independent_validation_labels_label_count"
+        ]
+        == 10
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_independent_validation_labels_selector_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_independent_validation_labels_stage7_training_row_count"
+        ]
+        == 0
+    )
+    assert (
         payload["summary"]["selector_objective_independent_validation_status"]
         == "selector_objective_independent_validation_underpowered"
     )

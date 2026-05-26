@@ -32,8 +32,8 @@
         "readiness_audit": "reports/krk_full_suite_readiness_audit_v0.json",
         "readiness_audit_status": "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection",
         "readiness_boundary_violation_count": 0,
-        "readiness_checked_flag_count": 1568,
-        "readiness_source_artifact_count": 182,
+        "readiness_checked_flag_count": 1586,
+        "readiness_source_artifact_count": 184,
         "runtime_change_class": "default_off_candidate_move_frame_sandbox_only",
         "runtime_dtm_or_tablebase_lookup": false,
         "sandbox_scope_id": "default_off_stage4_candidate_move_first_move_contrast_sandbox_only",
@@ -365,7 +365,7 @@
     "execution_jobs_passing": 6,
     "execution_readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
     "expected_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
-    "expected_readiness_fingerprint": "eba7136f45f43af942b45d2b80d2779e880e6de46b104e7849b0d63b19281ffa",
+    "expected_readiness_fingerprint": "489ecc68c45ab9ac5e3c68b3df4d1eb206b376c37370fb539e42c9b0271dd956",
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "integrated_new_failure_count": 0,
@@ -600,7 +600,7 @@
     "trace_features_trace_frame_count": 6
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 1568,
+    "checked_flag_count": 1586,
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "runtime_behavior_changed": false,
@@ -624,6 +624,31 @@
   "selector_objective_gate": {
     "independent_validation_blocker_class": "independent_switch_contrast_absent",
     "independent_validation_blocker_status": "selector_objective_runtime_blocked_pending_independent_switch_contrasts",
+    "independent_validation_labels_label_count": 10,
+    "independent_validation_labels_result_counts_by_stage": {
+      "stage4:mate": 7,
+      "stage6:mate": 3
+    },
+    "independent_validation_labels_selected_result_counts": {
+      "mate": 10
+    },
+    "independent_validation_labels_selector_training_row_count": 0,
+    "independent_validation_labels_stage7_training_row_count": 0,
+    "independent_validation_labels_status": "selector_objective_independent_validation_labels_collected",
+    "independent_validation_manifest_all_bindings_valid": true,
+    "independent_validation_manifest_excluded_stages": [
+      "stage7",
+      "stage8"
+    ],
+    "independent_validation_manifest_job_count": 10,
+    "independent_validation_manifest_job_count_by_stage": {
+      "stage4": 7,
+      "stage6": 3
+    },
+    "independent_validation_manifest_job_labels_generated_count": 0,
+    "independent_validation_manifest_labels_allowed_by_review": true,
+    "independent_validation_manifest_stage7_training_rows": 0,
+    "independent_validation_manifest_status": "selector_objective_independent_validation_manifest_ready",
     "independent_validation_preserve_recall": 1.0,
     "independent_validation_row_count": 10,
     "independent_validation_runtime_selector_blocked": true,
@@ -894,6 +919,8 @@
     "selector_objective_feature_probe_review": "reports/strategy_arbitration/krk_selector_objective_feature_probe_review_v0.json",
     "selector_objective_independent_validation": "reports/strategy_arbitration/krk_selector_objective_independent_validation_v0.json",
     "selector_objective_independent_validation_blocker": "reports/strategy_arbitration/krk_selector_objective_independent_validation_blocker_v0.json",
+    "selector_objective_independent_validation_labels": "reports/strategy_arbitration/krk_selector_objective_independent_validation_labels_v0.json",
+    "selector_objective_independent_validation_manifest": "reports/strategy_arbitration/krk_selector_objective_independent_validation_manifest_v0.json",
     "selector_objective_seed_manifest_v0": "reports/strategy_arbitration/krk_selector_objective_seed_manifest_v0.json",
     "selector_objective_seed_manifest_v1": "reports/strategy_arbitration/krk_selector_objective_seed_manifest_v1.json",
     "selector_objective_seed_manifest_v2": "reports/strategy_arbitration/krk_selector_objective_seed_manifest_v2.json",
