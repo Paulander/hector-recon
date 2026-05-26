@@ -92,6 +92,22 @@ SOURCES = {
     "selector_objective_independent_validation_blocker": (
         "reports/strategy_arbitration/krk_selector_objective_independent_validation_blocker_v0.json"
     ),
+    "stage4_failure_discovery": "reports/krk_stage4_failure_discovery_v0.json",
+    "stage4_caveat_sequence_review": (
+        "reports/krk_stage4_caveat_sequence_review_v0.json"
+    ),
+    "stage4_sequence_candidate_review": (
+        "reports/krk_stage4_sequence_candidate_review_v0.json"
+    ),
+    "stage4_first_move_feature_review": (
+        "reports/krk_stage4_first_move_feature_review_v0.json"
+    ),
+    "stage4_stratified_contrast_validation": (
+        "reports/krk_stage4_stratified_contrast_validation_v0.json"
+    ),
+    "sequence_control_contrast_dataset": (
+        "reports/strategy_arbitration/krk_sequence_control_contrast_dataset_v0.json"
+    ),
     "active_protected_stack": "reports/krk_active_protected_stack_v0.json",
     "clean_stack_validation": "reports/krk_clean_stack_post_replacement_validation_v0.json",
     "preservation_checks": "reports/krk_clean_retrain_retry1_preservation_checks_v0.json",
@@ -344,6 +360,7 @@ def build_payload() -> dict[str, Any]:
     clean = payloads["clean_stack_validation"]
     preservation = payloads["preservation_checks"]
     stage4_unblocker = payloads["stage4_caveat_unblocker"]
+    stage4_runtime_review = payloads["stage4_first_move_contrast_runtime_review"]
     stage4_approval_request = payloads["stage4_sandbox_approval_request"]
     pipeline = payloads["sequence_pipeline_refresh"]
     benchmark = payloads["sequence_benchmark"]
@@ -415,6 +432,15 @@ def build_payload() -> dict[str, Any]:
     selector_objective_independent_validation_blocker = payloads[
         "selector_objective_independent_validation_blocker"
     ]
+    stage4_failure_discovery = payloads["stage4_failure_discovery"]
+    stage4_caveat_sequence_review = payloads["stage4_caveat_sequence_review"]
+    stage4_sequence_candidate_review = payloads["stage4_sequence_candidate_review"]
+    stage4_first_move_feature_review = payloads["stage4_first_move_feature_review"]
+    stage4_stratified_contrast_validation = payloads[
+        "stage4_stratified_contrast_validation"
+    ]
+    sequence_control_contrast_dataset = payloads["sequence_control_contrast_dataset"]
+    sequence_control_contrast_probe = payloads["sequence_control_contrast_probe"]
     runner = payloads["stage7_sampling_runner"]
     output_validation = payloads["stage7_sampling_output_validation"]
     integration = payloads["stage7_sampling_integration"]
@@ -1608,6 +1634,153 @@ def build_payload() -> dict[str, Any]:
             "stage7_promotion_allowed": False,
             "stage8_training_allowed": False,
         },
+        "stage4_first_move_diagnostic_gate": {
+            "failure_discovery_status": (
+                stage4_failure_discovery.get("decision", {}).get("status")
+            ),
+            "failure_discovery_next_step": (
+                stage4_failure_discovery.get("decision", {}).get(
+                    "recommended_next_step"
+                )
+            ),
+            "failure_packet_count": (
+                stage4_failure_discovery.get("summary", {}).get(
+                    "failure_packet_count"
+                )
+            ),
+            "unique_failure_state_move_count": (
+                stage4_failure_discovery.get("summary", {}).get(
+                    "unique_failure_state_move_count"
+                )
+            ),
+            "all_unique_failures_already_in_selector_seed": (
+                stage4_failure_discovery.get("summary", {}).get(
+                    "all_unique_failures_already_in_selector_seed"
+                )
+            ),
+            "sequence_review_status": (
+                stage4_caveat_sequence_review.get("decision", {}).get("status")
+            ),
+            "sequence_review_primary_diagnosis": (
+                stage4_caveat_sequence_review.get("diagnosis", {}).get("primary")
+            ),
+            "sequence_review_single_unique_failure": (
+                stage4_caveat_sequence_review.get("summary", {}).get(
+                    "single_unique_failure"
+                )
+            ),
+            "sequence_review_base_control_reproduces_failure_count": (
+                stage4_caveat_sequence_review.get("summary", {}).get(
+                    "base_control_reproduces_failure_count"
+                )
+            ),
+            "sequence_candidate_status": (
+                stage4_sequence_candidate_review.get("decision", {}).get("status")
+            ),
+            "sequence_candidate_primary": (
+                stage4_sequence_candidate_review.get("classification", {}).get(
+                    "primary"
+                )
+            ),
+            "sequence_candidate_legal_first_move_count": (
+                stage4_sequence_candidate_review.get("summary", {}).get(
+                    "legal_first_move_count"
+                )
+            ),
+            "sequence_candidate_converting_first_move_count": (
+                stage4_sequence_candidate_review.get("classification", {}).get(
+                    "converting_first_move_count"
+                )
+            ),
+            "sequence_candidate_non_converting_first_move_count": (
+                stage4_sequence_candidate_review.get("classification", {}).get(
+                    "non_converting_first_move_count"
+                )
+            ),
+            "feature_review_status": (
+                stage4_first_move_feature_review.get("decision", {}).get("status")
+            ),
+            "feature_review_single_state_only": (
+                stage4_first_move_feature_review.get("summary", {}).get(
+                    "single_state_only"
+                )
+            ),
+            "feature_review_positive_terms": (
+                stage4_first_move_feature_review.get("interpretation", {}).get(
+                    "candidate_positive_terms"
+                )
+            ),
+            "feature_review_failure_terms": (
+                stage4_first_move_feature_review.get("interpretation", {}).get(
+                    "candidate_failure_terms"
+                )
+            ),
+            "stratified_validation_status": (
+                stage4_stratified_contrast_validation.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "stratified_validation_variant_count": (
+                stage4_stratified_contrast_validation.get("summary", {}).get(
+                    "variant_count"
+                )
+            ),
+            "stratified_validation_gap_variant_count": (
+                stage4_stratified_contrast_validation.get("summary", {}).get(
+                    "gap_variant_count"
+                )
+            ),
+            "stratified_validation_candidate_row_count": (
+                stage4_stratified_contrast_validation.get("summary", {}).get(
+                    "candidate_row_count"
+                )
+            ),
+            "runtime_review_status": (
+                stage4_runtime_review.get("decision", {}).get("status")
+            ),
+            "runtime_review_ready": (
+                stage4_runtime_review.get("decision", {}).get("runtime_review_ready")
+            ),
+            "runtime_review_implementation_authorized": (
+                stage4_runtime_review.get("decision", {}).get(
+                    "implementation_authorized_by_this_packet"
+                )
+            ),
+            "sequence_control_dataset_status": (
+                sequence_control_contrast_dataset.get("decision", {}).get("status")
+            ),
+            "sequence_control_dataset_row_count": (
+                sequence_control_contrast_dataset.get("summary", {}).get("row_count")
+            ),
+            "sequence_control_dataset_row_type_counts": (
+                sequence_control_contrast_dataset.get("summary", {}).get(
+                    "row_type_counts"
+                )
+            ),
+            "sequence_control_dataset_runtime_authorization_row_count": (
+                sequence_control_contrast_dataset.get("summary", {}).get(
+                    "runtime_authorization_row_count"
+                )
+            ),
+            "sequence_control_probe_status": (
+                sequence_control_contrast_probe.get("decision", {}).get("status")
+            ),
+            "sequence_control_probe_stage4_review_ready_pending_approval": (
+                sequence_control_contrast_probe.get("summary", {}).get(
+                    "stage4_review_ready_pending_approval"
+                )
+            ),
+            "sequence_control_probe_stage7_rows_are_current_gate_evidence_not_promotion": (
+                sequence_control_contrast_probe.get("summary", {}).get(
+                    "stage7_rows_are_current_gate_evidence_not_promotion"
+                )
+            ),
+            "runtime_work_allowed": False,
+            "selector_allowed": False,
+            "selector_training_allowed": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": False,
+        },
         "stage7_sampling_gate": {
             "runner_status": runner.get("decision", {}).get("status"),
             "runner_dry_run": runner.get("summary", {}).get("dry_run"),
@@ -1858,6 +2031,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     protected_failure_contrast = payload["protected_failure_contrast_gate"]
     missing_provider = payload["protected_missing_provider_gate"]
     selector_objective = payload["selector_objective_gate"]
+    stage4_diagnostic = payload["stage4_first_move_diagnostic_gate"]
     current_gate = payload["current_control_plane_gate"]
     decision = payload["decision"]
     lines = [
@@ -2080,6 +2254,30 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- selector_training_allowed: `{selector_objective['selector_training_allowed']}`",
             f"- stage7_promotion_allowed: `{selector_objective['stage7_promotion_allowed']}`",
             f"- stage8_training_allowed: `{selector_objective['stage8_training_allowed']}`",
+            "",
+            "## Stage 4 First-Move Diagnostic Evidence",
+            "",
+            f"- failure_discovery_status: `{stage4_diagnostic['failure_discovery_status']}`",
+            f"- failure_packet_count: `{stage4_diagnostic['failure_packet_count']}`",
+            f"- unique_failure_state_move_count: `{stage4_diagnostic['unique_failure_state_move_count']}`",
+            f"- sequence_review_status: `{stage4_diagnostic['sequence_review_status']}`",
+            f"- sequence_review_primary_diagnosis: `{stage4_diagnostic['sequence_review_primary_diagnosis']}`",
+            f"- sequence_candidate_status: `{stage4_diagnostic['sequence_candidate_status']}`",
+            f"- sequence_candidate_converting_first_move_count: `{stage4_diagnostic['sequence_candidate_converting_first_move_count']}`",
+            f"- feature_review_status: `{stage4_diagnostic['feature_review_status']}`",
+            f"- feature_review_positive_terms: `{stage4_diagnostic['feature_review_positive_terms']}`",
+            f"- feature_review_failure_terms: `{stage4_diagnostic['feature_review_failure_terms']}`",
+            f"- stratified_validation_status: `{stage4_diagnostic['stratified_validation_status']}`",
+            f"- stratified_validation_gap_variant_count: `{stage4_diagnostic['stratified_validation_gap_variant_count']}`",
+            f"- runtime_review_status: `{stage4_diagnostic['runtime_review_status']}`",
+            f"- runtime_review_implementation_authorized: `{stage4_diagnostic['runtime_review_implementation_authorized']}`",
+            f"- sequence_control_dataset_status: `{stage4_diagnostic['sequence_control_dataset_status']}`",
+            f"- sequence_control_dataset_row_count: `{stage4_diagnostic['sequence_control_dataset_row_count']}`",
+            f"- sequence_control_dataset_runtime_authorization_row_count: `{stage4_diagnostic['sequence_control_dataset_runtime_authorization_row_count']}`",
+            f"- sequence_control_probe_status: `{stage4_diagnostic['sequence_control_probe_status']}`",
+            f"- selector_training_allowed: `{stage4_diagnostic['selector_training_allowed']}`",
+            f"- stage7_promotion_allowed: `{stage4_diagnostic['stage7_promotion_allowed']}`",
+            f"- stage8_training_allowed: `{stage4_diagnostic['stage8_training_allowed']}`",
             "",
             "## Current Control Plane Gate",
             "",

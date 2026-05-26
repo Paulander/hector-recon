@@ -116,6 +116,18 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         payload["source_artifacts"]["selector_objective_independent_validation_blocker"]
         == "reports/strategy_arbitration/krk_selector_objective_independent_validation_blocker_v0.json"
     )
+    assert (
+        payload["source_artifacts"]["stage4_failure_discovery"]
+        == "reports/krk_stage4_failure_discovery_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["stage4_stratified_contrast_validation"]
+        == "reports/krk_stage4_stratified_contrast_validation_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["sequence_control_contrast_dataset"]
+        == "reports/strategy_arbitration/krk_sequence_control_contrast_dataset_v0.json"
+    )
 
 
 def test_full_suite_readiness_identifies_current_gate():
@@ -563,6 +575,91 @@ def test_full_suite_readiness_identifies_current_gate():
     assert selector["selector_training_allowed"] is False
     assert selector["stage7_promotion_allowed"] is False
     assert selector["stage8_training_allowed"] is False
+
+    stage4_diagnostic = payload["stage4_first_move_diagnostic_gate"]
+    assert (
+        stage4_diagnostic["failure_discovery_status"]
+        == "stage4_failure_discovery_collapsed_to_seed_state"
+    )
+    assert stage4_diagnostic["failure_packet_count"] == 32
+    assert stage4_diagnostic["unique_failure_state_move_count"] == 1
+    assert (
+        stage4_diagnostic["all_unique_failures_already_in_selector_seed"] is True
+    )
+    assert (
+        stage4_diagnostic["sequence_review_status"]
+        == "stage4_caveat_sequence_followup_gap_review_ready"
+    )
+    assert (
+        stage4_diagnostic["sequence_review_primary_diagnosis"]
+        == "stage4_sequence_followup_gap_single_state"
+    )
+    assert stage4_diagnostic["sequence_review_single_unique_failure"] is True
+    assert (
+        stage4_diagnostic["sequence_review_base_control_reproduces_failure_count"]
+        is True
+    )
+    assert (
+        stage4_diagnostic["sequence_candidate_status"]
+        == "stage4_first_move_ranking_gap"
+    )
+    assert stage4_diagnostic["sequence_candidate_legal_first_move_count"] == 12
+    assert stage4_diagnostic["sequence_candidate_converting_first_move_count"] == 7
+    assert stage4_diagnostic["sequence_candidate_non_converting_first_move_count"] == 5
+    assert (
+        stage4_diagnostic["feature_review_status"]
+        == "stage4_first_move_feature_contrast_found_single_state"
+    )
+    assert stage4_diagnostic["feature_review_single_state_only"] is True
+    assert stage4_diagnostic["feature_review_positive_terms"] == [
+        "king_destination_c_file",
+        "rook_mid_rank8_cut_candidate",
+    ]
+    assert stage4_diagnostic["feature_review_failure_terms"] == [
+        "king_destination_a7",
+        "rook_far_rank8_drift_candidate",
+    ]
+    assert (
+        stage4_diagnostic["stratified_validation_status"]
+        == "stage4_stratified_contrast_validation_supports_first_move_ranking_gap"
+    )
+    assert stage4_diagnostic["stratified_validation_variant_count"] == 4
+    assert stage4_diagnostic["stratified_validation_gap_variant_count"] == 4
+    assert stage4_diagnostic["stratified_validation_candidate_row_count"] == 48
+    assert (
+        stage4_diagnostic["runtime_review_status"]
+        == "stage4_first_move_contrast_runtime_review_ready_pending_explicit_approval"
+    )
+    assert stage4_diagnostic["runtime_review_ready"] is True
+    assert stage4_diagnostic["runtime_review_implementation_authorized"] is False
+    assert (
+        stage4_diagnostic["sequence_control_dataset_status"]
+        == "krk_sequence_control_contrast_dataset_ready_non_causal"
+    )
+    assert stage4_diagnostic["sequence_control_dataset_row_count"] == 76
+    assert (
+        stage4_diagnostic["sequence_control_dataset_runtime_authorization_row_count"]
+        == 0
+    )
+    assert (
+        stage4_diagnostic["sequence_control_probe_status"]
+        == "sequence_control_dataset_ready_for_broader_sequence_policy_review"
+    )
+    assert (
+        stage4_diagnostic[
+            "sequence_control_probe_stage4_review_ready_pending_approval"
+        ]
+        is True
+    )
+    assert (
+        stage4_diagnostic[
+            "sequence_control_probe_stage7_rows_are_current_gate_evidence_not_promotion"
+        ]
+        is True
+    )
+    assert stage4_diagnostic["selector_training_allowed"] is False
+    assert stage4_diagnostic["stage7_promotion_allowed"] is False
+    assert stage4_diagnostic["stage8_training_allowed"] is False
 
 
 def test_full_suite_readiness_writer_helpers_are_deterministic():

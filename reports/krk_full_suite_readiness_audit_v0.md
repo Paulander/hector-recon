@@ -122,7 +122,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `779487d10c8b1e46a5e59c147a0cbc2b17f684ea7a70d2ca9029b617ee26a23f`
+- expected_readiness_fingerprint: `7ace1da96987b412eaf452614f14329a9313b8e63f60ee76a4e0bbf99bcffb58`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -212,6 +212,30 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Stage 4 First-Move Diagnostic Evidence
+
+- failure_discovery_status: `stage4_failure_discovery_collapsed_to_seed_state`
+- failure_packet_count: `32`
+- unique_failure_state_move_count: `1`
+- sequence_review_status: `stage4_caveat_sequence_followup_gap_review_ready`
+- sequence_review_primary_diagnosis: `stage4_sequence_followup_gap_single_state`
+- sequence_candidate_status: `stage4_first_move_ranking_gap`
+- sequence_candidate_converting_first_move_count: `7`
+- feature_review_status: `stage4_first_move_feature_contrast_found_single_state`
+- feature_review_positive_terms: `['king_destination_c_file', 'rook_mid_rank8_cut_candidate']`
+- feature_review_failure_terms: `['king_destination_a7', 'rook_far_rank8_drift_candidate']`
+- stratified_validation_status: `stage4_stratified_contrast_validation_supports_first_move_ranking_gap`
+- stratified_validation_gap_variant_count: `4`
+- runtime_review_status: `stage4_first_move_contrast_runtime_review_ready_pending_explicit_approval`
+- runtime_review_implementation_authorized: `False`
+- sequence_control_dataset_status: `krk_sequence_control_contrast_dataset_ready_non_causal`
+- sequence_control_dataset_row_count: `76`
+- sequence_control_dataset_runtime_authorization_row_count: `0`
+- sequence_control_probe_status: `sequence_control_dataset_ready_for_broader_sequence_policy_review`
+- selector_training_allowed: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Current Control Plane Gate
 
 - status: `krk_control_plane_waiting_on_explicit_gate_choice`
@@ -234,5 +258,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `562`
+- checked_flag_count: `616`
 - violation_count: `0`

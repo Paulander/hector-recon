@@ -472,6 +472,99 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["selector_objective_selector_training_allowed"] is False
     assert payload["summary"]["selector_objective_stage7_promotion_allowed"] is False
     assert payload["summary"]["selector_objective_stage8_training_allowed"] is False
+    assert (
+        payload["summary"]["stage4_first_move_diagnostic_failure_discovery_status"]
+        == "stage4_failure_discovery_collapsed_to_seed_state"
+    )
+    assert payload["summary"]["stage4_first_move_diagnostic_failure_packet_count"] == 32
+    assert (
+        payload["summary"][
+            "stage4_first_move_diagnostic_unique_failure_state_move_count"
+        ]
+        == 1
+    )
+    assert (
+        payload["summary"]["stage4_first_move_diagnostic_sequence_review_status"]
+        == "stage4_caveat_sequence_followup_gap_review_ready"
+    )
+    assert (
+        payload["summary"][
+            "stage4_first_move_diagnostic_sequence_review_primary_diagnosis"
+        ]
+        == "stage4_sequence_followup_gap_single_state"
+    )
+    assert (
+        payload["summary"]["stage4_first_move_diagnostic_sequence_candidate_status"]
+        == "stage4_first_move_ranking_gap"
+    )
+    assert (
+        payload["summary"]["stage4_first_move_diagnostic_converting_first_move_count"]
+        == 7
+    )
+    assert (
+        payload["summary"]["stage4_first_move_diagnostic_feature_review_status"]
+        == "stage4_first_move_feature_contrast_found_single_state"
+    )
+    assert payload["summary"][
+        "stage4_first_move_diagnostic_feature_review_positive_terms"
+    ] == [
+        "king_destination_c_file",
+        "rook_mid_rank8_cut_candidate",
+    ]
+    assert payload["summary"][
+        "stage4_first_move_diagnostic_feature_review_failure_terms"
+    ] == [
+        "king_destination_a7",
+        "rook_far_rank8_drift_candidate",
+    ]
+    assert (
+        payload["summary"]["stage4_first_move_diagnostic_stratified_validation_status"]
+        == "stage4_stratified_contrast_validation_supports_first_move_ranking_gap"
+    )
+    assert (
+        payload["summary"][
+            "stage4_first_move_diagnostic_stratified_gap_variant_count"
+        ]
+        == 4
+    )
+    assert (
+        payload["summary"]["stage4_first_move_diagnostic_runtime_review_status"]
+        == "stage4_first_move_contrast_runtime_review_ready_pending_explicit_approval"
+    )
+    assert (
+        payload["summary"][
+            "stage4_first_move_diagnostic_runtime_review_implementation_authorized"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "stage4_first_move_diagnostic_sequence_control_dataset_row_count"
+        ]
+        == 76
+    )
+    assert (
+        payload["summary"][
+            "stage4_first_move_diagnostic_sequence_control_dataset_runtime_authorization_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["stage4_first_move_diagnostic_sequence_control_probe_status"]
+        == "sequence_control_dataset_ready_for_broader_sequence_policy_review"
+    )
+    assert (
+        payload["summary"]["stage4_first_move_diagnostic_selector_training_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["stage4_first_move_diagnostic_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["stage4_first_move_diagnostic_stage8_training_allowed"]
+        is False
+    )
 
 
 def test_gate_advancement_writer_includes_all_passive_steps():

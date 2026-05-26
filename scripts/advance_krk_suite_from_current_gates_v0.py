@@ -584,6 +584,9 @@ def build_payload() -> dict[str, Any]:
         readiness.get("protected_missing_provider_gate") or {}
     )
     selector_objective_gate = readiness.get("selector_objective_gate") or {}
+    stage4_first_move_diagnostic_gate = (
+        readiness.get("stage4_first_move_diagnostic_gate") or {}
+    )
     protected_stack_repair_statuses = {
         "sequence_policy_pilot_blocked_pending_protected_stack_repair",
         "stage8_training_blocked_pending_protected_stack_repair",
@@ -1265,6 +1268,66 @@ def build_payload() -> dict[str, Any]:
                 "stage7_promotion_allowed"
             ),
             "selector_objective_stage8_training_allowed": selector_objective_gate.get(
+                "stage8_training_allowed"
+            ),
+            "stage4_first_move_diagnostic_failure_discovery_status": stage4_first_move_diagnostic_gate.get(
+                "failure_discovery_status"
+            ),
+            "stage4_first_move_diagnostic_failure_packet_count": stage4_first_move_diagnostic_gate.get(
+                "failure_packet_count"
+            ),
+            "stage4_first_move_diagnostic_unique_failure_state_move_count": stage4_first_move_diagnostic_gate.get(
+                "unique_failure_state_move_count"
+            ),
+            "stage4_first_move_diagnostic_sequence_review_status": stage4_first_move_diagnostic_gate.get(
+                "sequence_review_status"
+            ),
+            "stage4_first_move_diagnostic_sequence_review_primary_diagnosis": stage4_first_move_diagnostic_gate.get(
+                "sequence_review_primary_diagnosis"
+            ),
+            "stage4_first_move_diagnostic_sequence_candidate_status": stage4_first_move_diagnostic_gate.get(
+                "sequence_candidate_status"
+            ),
+            "stage4_first_move_diagnostic_converting_first_move_count": stage4_first_move_diagnostic_gate.get(
+                "sequence_candidate_converting_first_move_count"
+            ),
+            "stage4_first_move_diagnostic_feature_review_status": stage4_first_move_diagnostic_gate.get(
+                "feature_review_status"
+            ),
+            "stage4_first_move_diagnostic_feature_review_positive_terms": stage4_first_move_diagnostic_gate.get(
+                "feature_review_positive_terms"
+            ),
+            "stage4_first_move_diagnostic_feature_review_failure_terms": stage4_first_move_diagnostic_gate.get(
+                "feature_review_failure_terms"
+            ),
+            "stage4_first_move_diagnostic_stratified_validation_status": stage4_first_move_diagnostic_gate.get(
+                "stratified_validation_status"
+            ),
+            "stage4_first_move_diagnostic_stratified_gap_variant_count": stage4_first_move_diagnostic_gate.get(
+                "stratified_validation_gap_variant_count"
+            ),
+            "stage4_first_move_diagnostic_runtime_review_status": stage4_first_move_diagnostic_gate.get(
+                "runtime_review_status"
+            ),
+            "stage4_first_move_diagnostic_runtime_review_implementation_authorized": stage4_first_move_diagnostic_gate.get(
+                "runtime_review_implementation_authorized"
+            ),
+            "stage4_first_move_diagnostic_sequence_control_dataset_row_count": stage4_first_move_diagnostic_gate.get(
+                "sequence_control_dataset_row_count"
+            ),
+            "stage4_first_move_diagnostic_sequence_control_dataset_runtime_authorization_row_count": stage4_first_move_diagnostic_gate.get(
+                "sequence_control_dataset_runtime_authorization_row_count"
+            ),
+            "stage4_first_move_diagnostic_sequence_control_probe_status": stage4_first_move_diagnostic_gate.get(
+                "sequence_control_probe_status"
+            ),
+            "stage4_first_move_diagnostic_selector_training_allowed": stage4_first_move_diagnostic_gate.get(
+                "selector_training_allowed"
+            ),
+            "stage4_first_move_diagnostic_stage7_promotion_allowed": stage4_first_move_diagnostic_gate.get(
+                "stage7_promotion_allowed"
+            ),
+            "stage4_first_move_diagnostic_stage8_training_allowed": stage4_first_move_diagnostic_gate.get(
                 "stage8_training_allowed"
             ),
             "sequence_policy_underpowered_pilot_status": underpowered_pilot.get(
