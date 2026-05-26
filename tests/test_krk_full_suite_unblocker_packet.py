@@ -388,6 +388,26 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
     )
     assert "implementation_authorized_by_approval_request: `False`" in rendered
     assert (
+        "sandbox_scope_id: "
+        "`default_off_stage4_candidate_move_first_move_contrast_sandbox_only`"
+        in rendered
+    )
+    assert "default_off: `True`" in rendered
+    assert "default_enabled: `False`" in rendered
+    assert (
+        "runtime_change_class: `default_off_candidate_move_frame_sandbox_only`"
+        in rendered
+    )
+    assert "exact_state_or_exact_move_exception: `False`" in rendered
+    assert "runtime_dtm_or_tablebase_lookup: `False`" in rendered
+    assert "hidden_python_controller: `False`" in rendered
+    assert "selector_training_allowed: `False`" in rendered
+    assert "provider_suppression_allowed: `False`" in rendered
+    assert "broad_stage0_penalty_allowed: `False`" in rendered
+    assert "gameplay_topology_mutation: `False`" in rendered
+    assert "stage7_promotion_allowed: `False`" in rendered
+    assert "stage8_training_allowed: `False`" in rendered
+    assert (
         "protected_plan_window_failure_contrast_approval_request_status: "
         "`protected_plan_window_failure_contrast_approval_request_ready`"
         in rendered

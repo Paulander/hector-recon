@@ -129,6 +129,19 @@
 - approval_request_status: `stage4_first_move_contrast_sandbox_approval_request_ready`
 - approval_request_created: `False`
 - implementation_authorized_by_approval_request: `False`
+- sandbox_scope_id: `default_off_stage4_candidate_move_first_move_contrast_sandbox_only`
+- default_off: `True`
+- default_enabled: `False`
+- runtime_change_class: `default_off_candidate_move_frame_sandbox_only`
+- exact_state_or_exact_move_exception: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- hidden_python_controller: `False`
+- selector_training_allowed: `False`
+- provider_suppression_allowed: `False`
+- broad_stage0_penalty_allowed: `False`
+- gameplay_topology_mutation: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
 - why_secondary: This may reduce Stage 4 debt, but it does not directly fill the protected plan-window failure-contrast sparsity now blocking sequence-policy review.
 
 ## Low-Value Safe Work Remaining
