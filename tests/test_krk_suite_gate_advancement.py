@@ -565,6 +565,136 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["stage4_first_move_diagnostic_stage8_training_allowed"]
         is False
     )
+    assert (
+        payload["summary"]["candidate_generation_training_refresh_dataset_v3_status"]
+        == "strategy_sequence_dataset_v3_refreshed_non_causal_selector_blocked"
+    )
+    assert (
+        payload["summary"]["candidate_generation_training_refresh_dataset_v3_row_count"]
+        == 320
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_dataset_v3_candidate_generation_training_row_count"
+        ]
+        == 26
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_dataset_v3_selector_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_context_benchmark_status"
+        ]
+        == "candidate_generation_v3_context_useful_selector_still_blocked"
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_context_benchmark_stage_family_positive_capacity_recall_from_trace"
+        ]
+        == 0.7692307692307693
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_runtime_boundary_status"
+        ]
+        == "candidate_generation_v3_runtime_boundary_context_ready_selector_blocked"
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_runtime_boundary_new_runtime_behavior_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["candidate_generation_training_refresh_design_status"]
+        == "candidate_generation_training_refresh_v3_design_ready"
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_design_implementation_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["candidate_generation_training_refresh_benchmark_status"]
+        == "candidate_generation_training_refresh_v3_benchmark_passed_runtime_review_needed"
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_benchmark_best_policy"
+        ]
+        == "trace_stage_family_context"
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_benchmark_positive_capacity_recall"
+        ]
+        == 0.7692307692307693
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_benchmark_negative_capacity_suppression"
+        ]
+        == 1.0
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_benchmark_thresholds_met"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_runtime_review_status"
+        ]
+        == "candidate_generation_training_refresh_runtime_review_ready"
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_runtime_review_ready"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_runtime_review_candidate_generation_allowed_by_packet"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_runtime_review_implementation_authorized"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_runtime_work_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_selector_training_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_stage7_promotion_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_training_refresh_stage8_training_allowed"
+        ]
+        is False
+    )
 
 
 def test_gate_advancement_writer_includes_all_passive_steps():

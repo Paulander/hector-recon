@@ -128,6 +128,20 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         payload["source_artifacts"]["sequence_control_contrast_dataset"]
         == "reports/strategy_arbitration/krk_sequence_control_contrast_dataset_v0.json"
     )
+    assert (
+        payload["source_artifacts"]["strategy_sequence_dataset_v3"]
+        == "reports/strategy_arbitration/krk_strategy_sequence_dataset_v3.json"
+    )
+    assert (
+        payload["source_artifacts"]["candidate_generation_training_refresh_benchmark_v3"]
+        == "reports/strategy_arbitration/krk_candidate_generation_training_refresh_benchmark_v3.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "candidate_generation_training_refresh_runtime_review_v3"
+        ]
+        == "reports/strategy_arbitration/krk_candidate_generation_training_refresh_runtime_review_packet_v3.json"
+    )
 
 
 def test_full_suite_readiness_identifies_current_gate():
@@ -660,6 +674,113 @@ def test_full_suite_readiness_identifies_current_gate():
     assert stage4_diagnostic["selector_training_allowed"] is False
     assert stage4_diagnostic["stage7_promotion_allowed"] is False
     assert stage4_diagnostic["stage8_training_allowed"] is False
+
+    candidate_generation = payload["candidate_generation_training_refresh_gate"]
+    assert (
+        candidate_generation["dataset_v3_status"]
+        == "strategy_sequence_dataset_v3_refreshed_non_causal_selector_blocked"
+    )
+    assert candidate_generation["dataset_v3_row_count"] == 320
+    assert (
+        candidate_generation["dataset_v3_candidate_generation_training_row_count"]
+        == 26
+    )
+    assert candidate_generation["dataset_v3_selector_training_row_count"] == 0
+    assert candidate_generation["dataset_v3_stage7_readiness_training_row_count"] == 0
+    assert candidate_generation["dataset_v3_runtime_trace_feature_row_count"] == 44
+    assert (
+        candidate_generation["quality_probe_status"]
+        == "strategy_sequence_dataset_v3_quality_candidate_generation_context_ready_selector_blocked"
+    )
+    assert (
+        "no_explicit_ownership_selector_rows"
+        in candidate_generation["quality_probe_selector_blockers"]
+    )
+    assert (
+        candidate_generation["context_review_status"]
+        == "strategy_sequence_dataset_v3_context_integrated_selector_still_blocked"
+    )
+    assert (
+        candidate_generation["context_benchmark_status"]
+        == "candidate_generation_v3_context_useful_selector_still_blocked"
+    )
+    assert (
+        candidate_generation[
+            "context_benchmark_exact_positive_capacity_recall_from_trace"
+        ]
+        == 0.3076923076923077
+    )
+    assert (
+        candidate_generation[
+            "context_benchmark_stage_family_positive_capacity_recall_from_trace"
+        ]
+        == 0.7692307692307693
+    )
+    assert (
+        candidate_generation[
+            "context_benchmark_stage_family_negative_capacity_exposure_from_trace"
+        ]
+        == 0.0
+    )
+    assert (
+        candidate_generation["runtime_boundary_status"]
+        == "candidate_generation_v3_runtime_boundary_context_ready_selector_blocked"
+    )
+    assert candidate_generation["runtime_boundary_new_runtime_behavior_allowed"] is False
+    assert candidate_generation["runtime_boundary_selector_allowed"] is False
+    assert (
+        candidate_generation["training_refresh_review_status"]
+        == "candidate_generation_v3_training_refresh_design_ready_non_causal"
+    )
+    assert (
+        candidate_generation["training_refresh_design_status"]
+        == "candidate_generation_training_refresh_v3_design_ready"
+    )
+    assert (
+        candidate_generation["training_refresh_design_implementation_allowed"]
+        is False
+    )
+    assert (
+        candidate_generation["benchmark_status"]
+        == "candidate_generation_training_refresh_v3_benchmark_passed_runtime_review_needed"
+    )
+    assert candidate_generation["benchmark_best_policy"] == "trace_stage_family_context"
+    assert candidate_generation["benchmark_positive_capacity_recall"] == 0.7692307692307693
+    assert candidate_generation["benchmark_positive_precision"] == 1.0
+    assert candidate_generation["benchmark_negative_capacity_suppression"] == 1.0
+    assert (
+        candidate_generation["benchmark_leave_stage_out_positive_capacity_recall"]
+        == 0.7692307692307693
+    )
+    assert candidate_generation["benchmark_thresholds_met"] is True
+    assert candidate_generation["benchmark_selector_training_row_count"] == 0
+    assert candidate_generation["benchmark_stage7_training_row_count"] == 0
+    assert (
+        candidate_generation["runtime_review_status"]
+        == "candidate_generation_training_refresh_runtime_review_ready"
+    )
+    assert candidate_generation["runtime_review_ready"] is True
+    assert (
+        candidate_generation["runtime_review_candidate_generation_allowed_by_packet"]
+        is False
+    )
+    assert candidate_generation["runtime_review_implementation_authorized"] is False
+    assert (
+        candidate_generation["runtime_review_sandbox_type"]
+        == "default_off_candidate_generation_refresh"
+    )
+    assert candidate_generation["runtime_review_protected_stages"] == [
+        "stage5",
+        "stage6",
+    ]
+    assert candidate_generation["runtime_review_direct_request"] is False
+    assert candidate_generation["runtime_review_score_delta"] == 0.0
+    assert candidate_generation["runtime_work_allowed"] is False
+    assert candidate_generation["runtime_candidate_generation_allowed"] is False
+    assert candidate_generation["selector_allowed"] is False
+    assert candidate_generation["selector_training_allowed"] is False
+    assert candidate_generation["stage7_promotion_allowed"] is False
+    assert candidate_generation["stage8_training_allowed"] is False
 
 
 def test_full_suite_readiness_writer_helpers_are_deterministic():

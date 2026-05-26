@@ -122,7 +122,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `7ace1da96987b412eaf452614f14329a9313b8e63f60ee76a4e0bbf99bcffb58`
+- expected_readiness_fingerprint: `05e2bc2d2002e8d6ebee006a27afc3c794335f56a0c02b55f1b54110e6788ef5`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -236,6 +236,32 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Candidate Generation Training-Refresh Evidence
+
+- dataset_v3_status: `strategy_sequence_dataset_v3_refreshed_non_causal_selector_blocked`
+- dataset_v3_row_count: `320`
+- dataset_v3_candidate_generation_training_row_count: `26`
+- dataset_v3_selector_training_row_count: `0`
+- context_benchmark_status: `candidate_generation_v3_context_useful_selector_still_blocked`
+- context_benchmark_stage_family_positive_capacity_recall_from_trace: `0.7692307692307693`
+- runtime_boundary_status: `candidate_generation_v3_runtime_boundary_context_ready_selector_blocked`
+- runtime_boundary_new_runtime_behavior_allowed: `False`
+- training_refresh_design_status: `candidate_generation_training_refresh_v3_design_ready`
+- training_refresh_design_implementation_allowed: `False`
+- benchmark_status: `candidate_generation_training_refresh_v3_benchmark_passed_runtime_review_needed`
+- benchmark_best_policy: `trace_stage_family_context`
+- benchmark_positive_capacity_recall: `0.7692307692307693`
+- benchmark_negative_capacity_suppression: `1.0`
+- benchmark_thresholds_met: `True`
+- runtime_review_status: `candidate_generation_training_refresh_runtime_review_ready`
+- runtime_review_ready: `True`
+- runtime_review_candidate_generation_allowed_by_packet: `False`
+- runtime_review_implementation_authorized: `False`
+- runtime_work_allowed: `False`
+- selector_training_allowed: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Current Control Plane Gate
 
 - status: `krk_control_plane_waiting_on_explicit_gate_choice`
@@ -258,5 +284,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `616`
+- checked_flag_count: `697`
 - violation_count: `0`

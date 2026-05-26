@@ -587,6 +587,9 @@ def build_payload() -> dict[str, Any]:
     stage4_first_move_diagnostic_gate = (
         readiness.get("stage4_first_move_diagnostic_gate") or {}
     )
+    candidate_generation_training_refresh_gate = (
+        readiness.get("candidate_generation_training_refresh_gate") or {}
+    )
     protected_stack_repair_statuses = {
         "sequence_policy_pilot_blocked_pending_protected_stack_repair",
         "stage8_training_blocked_pending_protected_stack_repair",
@@ -1328,6 +1331,75 @@ def build_payload() -> dict[str, Any]:
                 "stage7_promotion_allowed"
             ),
             "stage4_first_move_diagnostic_stage8_training_allowed": stage4_first_move_diagnostic_gate.get(
+                "stage8_training_allowed"
+            ),
+            "candidate_generation_training_refresh_dataset_v3_status": candidate_generation_training_refresh_gate.get(
+                "dataset_v3_status"
+            ),
+            "candidate_generation_training_refresh_dataset_v3_row_count": candidate_generation_training_refresh_gate.get(
+                "dataset_v3_row_count"
+            ),
+            "candidate_generation_training_refresh_dataset_v3_candidate_generation_training_row_count": candidate_generation_training_refresh_gate.get(
+                "dataset_v3_candidate_generation_training_row_count"
+            ),
+            "candidate_generation_training_refresh_dataset_v3_selector_training_row_count": candidate_generation_training_refresh_gate.get(
+                "dataset_v3_selector_training_row_count"
+            ),
+            "candidate_generation_training_refresh_context_benchmark_status": candidate_generation_training_refresh_gate.get(
+                "context_benchmark_status"
+            ),
+            "candidate_generation_training_refresh_context_benchmark_stage_family_positive_capacity_recall_from_trace": candidate_generation_training_refresh_gate.get(
+                "context_benchmark_stage_family_positive_capacity_recall_from_trace"
+            ),
+            "candidate_generation_training_refresh_runtime_boundary_status": candidate_generation_training_refresh_gate.get(
+                "runtime_boundary_status"
+            ),
+            "candidate_generation_training_refresh_runtime_boundary_new_runtime_behavior_allowed": candidate_generation_training_refresh_gate.get(
+                "runtime_boundary_new_runtime_behavior_allowed"
+            ),
+            "candidate_generation_training_refresh_design_status": candidate_generation_training_refresh_gate.get(
+                "training_refresh_design_status"
+            ),
+            "candidate_generation_training_refresh_design_implementation_allowed": candidate_generation_training_refresh_gate.get(
+                "training_refresh_design_implementation_allowed"
+            ),
+            "candidate_generation_training_refresh_benchmark_status": candidate_generation_training_refresh_gate.get(
+                "benchmark_status"
+            ),
+            "candidate_generation_training_refresh_benchmark_best_policy": candidate_generation_training_refresh_gate.get(
+                "benchmark_best_policy"
+            ),
+            "candidate_generation_training_refresh_benchmark_positive_capacity_recall": candidate_generation_training_refresh_gate.get(
+                "benchmark_positive_capacity_recall"
+            ),
+            "candidate_generation_training_refresh_benchmark_negative_capacity_suppression": candidate_generation_training_refresh_gate.get(
+                "benchmark_negative_capacity_suppression"
+            ),
+            "candidate_generation_training_refresh_benchmark_thresholds_met": candidate_generation_training_refresh_gate.get(
+                "benchmark_thresholds_met"
+            ),
+            "candidate_generation_training_refresh_runtime_review_status": candidate_generation_training_refresh_gate.get(
+                "runtime_review_status"
+            ),
+            "candidate_generation_training_refresh_runtime_review_ready": candidate_generation_training_refresh_gate.get(
+                "runtime_review_ready"
+            ),
+            "candidate_generation_training_refresh_runtime_review_candidate_generation_allowed_by_packet": candidate_generation_training_refresh_gate.get(
+                "runtime_review_candidate_generation_allowed_by_packet"
+            ),
+            "candidate_generation_training_refresh_runtime_review_implementation_authorized": candidate_generation_training_refresh_gate.get(
+                "runtime_review_implementation_authorized"
+            ),
+            "candidate_generation_training_refresh_runtime_work_allowed": candidate_generation_training_refresh_gate.get(
+                "runtime_work_allowed"
+            ),
+            "candidate_generation_training_refresh_selector_training_allowed": candidate_generation_training_refresh_gate.get(
+                "selector_training_allowed"
+            ),
+            "candidate_generation_training_refresh_stage7_promotion_allowed": candidate_generation_training_refresh_gate.get(
+                "stage7_promotion_allowed"
+            ),
+            "candidate_generation_training_refresh_stage8_training_allowed": candidate_generation_training_refresh_gate.get(
                 "stage8_training_allowed"
             ),
             "sequence_policy_underpowered_pilot_status": underpowered_pilot.get(

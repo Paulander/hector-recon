@@ -108,6 +108,33 @@ SOURCES = {
     "sequence_control_contrast_dataset": (
         "reports/strategy_arbitration/krk_sequence_control_contrast_dataset_v0.json"
     ),
+    "strategy_sequence_dataset_v3": (
+        "reports/strategy_arbitration/krk_strategy_sequence_dataset_v3.json"
+    ),
+    "strategy_sequence_dataset_v3_quality_probe": (
+        "reports/strategy_arbitration/krk_strategy_sequence_dataset_v3_quality_probe.json"
+    ),
+    "strategy_sequence_dataset_v3_context_review": (
+        "reports/strategy_arbitration/krk_strategy_sequence_dataset_v3_context_review.json"
+    ),
+    "candidate_generation_v3_context_benchmark": (
+        "reports/strategy_arbitration/krk_candidate_generation_v3_context_benchmark.json"
+    ),
+    "candidate_generation_v3_runtime_boundary_review": (
+        "reports/strategy_arbitration/krk_candidate_generation_v3_runtime_boundary_review.json"
+    ),
+    "candidate_generation_v3_training_refresh_review": (
+        "reports/strategy_arbitration/krk_candidate_generation_v3_training_refresh_review.json"
+    ),
+    "candidate_generation_training_refresh_design_v3": (
+        "reports/strategy_arbitration/krk_candidate_generation_training_refresh_design_v3.json"
+    ),
+    "candidate_generation_training_refresh_benchmark_v3": (
+        "reports/strategy_arbitration/krk_candidate_generation_training_refresh_benchmark_v3.json"
+    ),
+    "candidate_generation_training_refresh_runtime_review_v3": (
+        "reports/strategy_arbitration/krk_candidate_generation_training_refresh_runtime_review_packet_v3.json"
+    ),
     "active_protected_stack": "reports/krk_active_protected_stack_v0.json",
     "clean_stack_validation": "reports/krk_clean_stack_post_replacement_validation_v0.json",
     "preservation_checks": "reports/krk_clean_retrain_retry1_preservation_checks_v0.json",
@@ -441,6 +468,31 @@ def build_payload() -> dict[str, Any]:
     ]
     sequence_control_contrast_dataset = payloads["sequence_control_contrast_dataset"]
     sequence_control_contrast_probe = payloads["sequence_control_contrast_probe"]
+    strategy_sequence_dataset_v3 = payloads["strategy_sequence_dataset_v3"]
+    strategy_sequence_dataset_v3_quality_probe = payloads[
+        "strategy_sequence_dataset_v3_quality_probe"
+    ]
+    strategy_sequence_dataset_v3_context_review = payloads[
+        "strategy_sequence_dataset_v3_context_review"
+    ]
+    candidate_generation_v3_context_benchmark = payloads[
+        "candidate_generation_v3_context_benchmark"
+    ]
+    candidate_generation_v3_runtime_boundary_review = payloads[
+        "candidate_generation_v3_runtime_boundary_review"
+    ]
+    candidate_generation_v3_training_refresh_review = payloads[
+        "candidate_generation_v3_training_refresh_review"
+    ]
+    candidate_generation_training_refresh_design_v3 = payloads[
+        "candidate_generation_training_refresh_design_v3"
+    ]
+    candidate_generation_training_refresh_benchmark_v3 = payloads[
+        "candidate_generation_training_refresh_benchmark_v3"
+    ]
+    candidate_generation_training_refresh_runtime_review_v3 = payloads[
+        "candidate_generation_training_refresh_runtime_review_v3"
+    ]
     runner = payloads["stage7_sampling_runner"]
     output_validation = payloads["stage7_sampling_output_validation"]
     integration = payloads["stage7_sampling_integration"]
@@ -1781,6 +1833,201 @@ def build_payload() -> dict[str, Any]:
             "stage7_promotion_allowed": False,
             "stage8_training_allowed": False,
         },
+        "candidate_generation_training_refresh_gate": {
+            "dataset_v3_status": (
+                strategy_sequence_dataset_v3.get("decision", {}).get("status")
+            ),
+            "dataset_v3_row_count": (
+                strategy_sequence_dataset_v3.get("summary", {}).get("row_count")
+            ),
+            "dataset_v3_candidate_generation_training_row_count": (
+                strategy_sequence_dataset_v3.get("summary", {}).get(
+                    "candidate_generation_training_row_count"
+                )
+            ),
+            "dataset_v3_selector_training_row_count": (
+                strategy_sequence_dataset_v3.get("summary", {}).get(
+                    "selector_training_row_count"
+                )
+            ),
+            "dataset_v3_stage7_readiness_training_row_count": (
+                strategy_sequence_dataset_v3.get("summary", {}).get(
+                    "stage7_readiness_training_row_count"
+                )
+            ),
+            "dataset_v3_runtime_trace_feature_row_count": (
+                strategy_sequence_dataset_v3.get("summary", {}).get(
+                    "runtime_trace_feature_row_count"
+                )
+            ),
+            "quality_probe_status": (
+                strategy_sequence_dataset_v3_quality_probe.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "quality_probe_selector_blockers": (
+                strategy_sequence_dataset_v3_quality_probe.get("selector_blockers")
+            ),
+            "context_review_status": (
+                strategy_sequence_dataset_v3_context_review.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "context_benchmark_status": (
+                candidate_generation_v3_context_benchmark.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "context_benchmark_exact_positive_capacity_recall_from_trace": (
+                candidate_generation_v3_context_benchmark.get("summary", {}).get(
+                    "exact_positive_capacity_recall_from_trace"
+                )
+            ),
+            "context_benchmark_stage_family_positive_capacity_recall_from_trace": (
+                candidate_generation_v3_context_benchmark.get("summary", {}).get(
+                    "stage_family_positive_capacity_recall_from_trace"
+                )
+            ),
+            "context_benchmark_stage_family_negative_capacity_exposure_from_trace": (
+                candidate_generation_v3_context_benchmark.get("summary", {}).get(
+                    "stage_family_negative_capacity_exposure_from_trace"
+                )
+            ),
+            "runtime_boundary_status": (
+                candidate_generation_v3_runtime_boundary_review.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "runtime_boundary_new_runtime_behavior_allowed": (
+                candidate_generation_v3_runtime_boundary_review.get(
+                    "approved_runtime_boundary", {}
+                ).get("new_runtime_behavior_allowed")
+            ),
+            "runtime_boundary_selector_allowed": (
+                candidate_generation_v3_runtime_boundary_review.get(
+                    "approved_runtime_boundary", {}
+                ).get("selector_allowed")
+            ),
+            "training_refresh_review_status": (
+                candidate_generation_v3_training_refresh_review.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "training_refresh_design_status": (
+                candidate_generation_training_refresh_design_v3.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "training_refresh_design_next_step": (
+                candidate_generation_training_refresh_design_v3.get(
+                    "decision", {}
+                ).get("recommended_next_step")
+            ),
+            "training_refresh_design_implementation_allowed": (
+                candidate_generation_training_refresh_design_v3.get(
+                    "decision", {}
+                ).get("implementation_allowed_by_this_artifact")
+            ),
+            "benchmark_status": (
+                candidate_generation_training_refresh_benchmark_v3.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "benchmark_best_policy": (
+                candidate_generation_training_refresh_benchmark_v3.get(
+                    "summary", {}
+                ).get("best_policy")
+            ),
+            "benchmark_positive_capacity_recall": (
+                candidate_generation_training_refresh_benchmark_v3.get(
+                    "summary", {}
+                )
+                .get("best_policy_metrics", {})
+                .get("positive_capacity_recall")
+            ),
+            "benchmark_positive_precision": (
+                candidate_generation_training_refresh_benchmark_v3.get(
+                    "summary", {}
+                )
+                .get("best_policy_metrics", {})
+                .get("positive_precision")
+            ),
+            "benchmark_negative_capacity_suppression": (
+                candidate_generation_training_refresh_benchmark_v3.get(
+                    "summary", {}
+                )
+                .get("best_policy_metrics", {})
+                .get("negative_capacity_suppression")
+            ),
+            "benchmark_leave_stage_out_positive_capacity_recall": (
+                candidate_generation_training_refresh_benchmark_v3.get(
+                    "summary", {}
+                )
+                .get("best_policy_leave_stage_out_metrics", {})
+                .get("positive_capacity_recall")
+            ),
+            "benchmark_thresholds_met": (
+                candidate_generation_training_refresh_benchmark_v3.get(
+                    "summary", {}
+                ).get("thresholds_met")
+            ),
+            "benchmark_selector_training_row_count": (
+                candidate_generation_training_refresh_benchmark_v3.get(
+                    "summary", {}
+                ).get("selector_training_row_count")
+            ),
+            "benchmark_stage7_training_row_count": (
+                candidate_generation_training_refresh_benchmark_v3.get(
+                    "summary", {}
+                ).get("stage7_training_row_count")
+            ),
+            "runtime_review_status": (
+                candidate_generation_training_refresh_runtime_review_v3.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "runtime_review_ready": (
+                candidate_generation_training_refresh_runtime_review_v3.get(
+                    "decision", {}
+                ).get("runtime_review_ready")
+            ),
+            "runtime_review_candidate_generation_allowed_by_packet": (
+                candidate_generation_training_refresh_runtime_review_v3.get(
+                    "decision", {}
+                ).get("runtime_candidate_generation_allowed_by_this_packet")
+            ),
+            "runtime_review_implementation_authorized": (
+                candidate_generation_training_refresh_runtime_review_v3.get(
+                    "decision", {}
+                ).get("implementation_authorized_by_this_packet")
+            ),
+            "runtime_review_sandbox_type": (
+                candidate_generation_training_refresh_runtime_review_v3.get(
+                    "approved_scope_if_later_authorized", {}
+                ).get("sandbox_type")
+            ),
+            "runtime_review_protected_stages": (
+                candidate_generation_training_refresh_runtime_review_v3.get(
+                    "approved_scope_if_later_authorized", {}
+                ).get("protected_stages")
+            ),
+            "runtime_review_direct_request": (
+                candidate_generation_training_refresh_runtime_review_v3.get(
+                    "approved_scope_if_later_authorized", {}
+                ).get("direct_request")
+            ),
+            "runtime_review_score_delta": (
+                candidate_generation_training_refresh_runtime_review_v3.get(
+                    "approved_scope_if_later_authorized", {}
+                ).get("score_delta")
+            ),
+            "runtime_work_allowed": False,
+            "runtime_candidate_generation_allowed": False,
+            "selector_allowed": False,
+            "selector_training_allowed": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": False,
+        },
         "stage7_sampling_gate": {
             "runner_status": runner.get("decision", {}).get("status"),
             "runner_dry_run": runner.get("summary", {}).get("dry_run"),
@@ -2032,6 +2279,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     missing_provider = payload["protected_missing_provider_gate"]
     selector_objective = payload["selector_objective_gate"]
     stage4_diagnostic = payload["stage4_first_move_diagnostic_gate"]
+    candidate_generation_refresh = payload["candidate_generation_training_refresh_gate"]
     current_gate = payload["current_control_plane_gate"]
     decision = payload["decision"]
     lines = [
@@ -2278,6 +2526,32 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- selector_training_allowed: `{stage4_diagnostic['selector_training_allowed']}`",
             f"- stage7_promotion_allowed: `{stage4_diagnostic['stage7_promotion_allowed']}`",
             f"- stage8_training_allowed: `{stage4_diagnostic['stage8_training_allowed']}`",
+            "",
+            "## Candidate Generation Training-Refresh Evidence",
+            "",
+            f"- dataset_v3_status: `{candidate_generation_refresh['dataset_v3_status']}`",
+            f"- dataset_v3_row_count: `{candidate_generation_refresh['dataset_v3_row_count']}`",
+            f"- dataset_v3_candidate_generation_training_row_count: `{candidate_generation_refresh['dataset_v3_candidate_generation_training_row_count']}`",
+            f"- dataset_v3_selector_training_row_count: `{candidate_generation_refresh['dataset_v3_selector_training_row_count']}`",
+            f"- context_benchmark_status: `{candidate_generation_refresh['context_benchmark_status']}`",
+            f"- context_benchmark_stage_family_positive_capacity_recall_from_trace: `{candidate_generation_refresh['context_benchmark_stage_family_positive_capacity_recall_from_trace']}`",
+            f"- runtime_boundary_status: `{candidate_generation_refresh['runtime_boundary_status']}`",
+            f"- runtime_boundary_new_runtime_behavior_allowed: `{candidate_generation_refresh['runtime_boundary_new_runtime_behavior_allowed']}`",
+            f"- training_refresh_design_status: `{candidate_generation_refresh['training_refresh_design_status']}`",
+            f"- training_refresh_design_implementation_allowed: `{candidate_generation_refresh['training_refresh_design_implementation_allowed']}`",
+            f"- benchmark_status: `{candidate_generation_refresh['benchmark_status']}`",
+            f"- benchmark_best_policy: `{candidate_generation_refresh['benchmark_best_policy']}`",
+            f"- benchmark_positive_capacity_recall: `{candidate_generation_refresh['benchmark_positive_capacity_recall']}`",
+            f"- benchmark_negative_capacity_suppression: `{candidate_generation_refresh['benchmark_negative_capacity_suppression']}`",
+            f"- benchmark_thresholds_met: `{candidate_generation_refresh['benchmark_thresholds_met']}`",
+            f"- runtime_review_status: `{candidate_generation_refresh['runtime_review_status']}`",
+            f"- runtime_review_ready: `{candidate_generation_refresh['runtime_review_ready']}`",
+            f"- runtime_review_candidate_generation_allowed_by_packet: `{candidate_generation_refresh['runtime_review_candidate_generation_allowed_by_packet']}`",
+            f"- runtime_review_implementation_authorized: `{candidate_generation_refresh['runtime_review_implementation_authorized']}`",
+            f"- runtime_work_allowed: `{candidate_generation_refresh['runtime_work_allowed']}`",
+            f"- selector_training_allowed: `{candidate_generation_refresh['selector_training_allowed']}`",
+            f"- stage7_promotion_allowed: `{candidate_generation_refresh['stage7_promotion_allowed']}`",
+            f"- stage8_training_allowed: `{candidate_generation_refresh['stage8_training_allowed']}`",
             "",
             "## Current Control Plane Gate",
             "",
