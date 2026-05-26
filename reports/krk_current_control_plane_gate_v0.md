@@ -5,7 +5,15 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 ## Current State
 
 - protected_stack: `retry1_stage5_6_active_manifest_validated`
+- protected_stack_readiness_status: `retry1_protected_stage5_6_stack_adopted_manifest_only`
 - protected_stack_ready: `True`
+- protected_stack_rollback_paths_preserved: `True`
+- protected_stack_active_paths_safe: `True`
+- protected_stack_active_paths_exist: `True`
+- protected_stack_rollback_paths_safe: `True`
+- protected_stack_rollback_paths_exist: `True`
+- protected_stack_rollback_common_paths_distinct: `True`
+- protected_stack_filesystem_snapshots_replaced: `False`
 - protected_stack_hard_blockers: `[]`
 - stage4: `first_move_contrast_runtime_review_ready_pending_explicit_approval`
 - stage7: `heldout_clean_success_controls_ready_sequence_benchmark_available`
@@ -96,6 +104,14 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
   - max_jobs: `6`
   - horizon: `h40`
   - stage: `protected_plan_window_failure_contrast_evidence_only`
+  - protected_stack_readiness_status: `retry1_protected_stage5_6_stack_adopted_manifest_only`
+  - protected_stack_rollback_paths_preserved: `True`
+  - protected_stack_active_paths_safe: `True`
+  - protected_stack_active_paths_exist: `True`
+  - protected_stack_rollback_paths_safe: `True`
+  - protected_stack_rollback_paths_exist: `True`
+  - protected_stack_rollback_common_paths_distinct: `True`
+  - protected_stack_filesystem_snapshots_replaced: `False`
   - source_stage_counts: `{'stage4': 2, 'stage5': 2, 'stage6': 2}`
   - stop_after_unique_failures: `4`
   - observation_only: `True`

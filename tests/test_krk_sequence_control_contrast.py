@@ -226,6 +226,23 @@ def test_current_control_plane_gate_requires_explicit_choice():
     assert payload["decision"]["stage7_promotion_allowed"] is False
     assert payload["decision"]["stage8_training_allowed"] is False
     assert payload["current_state"]["protected_stack_ready"] is True
+    assert (
+        payload["current_state"]["protected_stack_readiness_status"]
+        == "retry1_protected_stage5_6_stack_adopted_manifest_only"
+    )
+    assert payload["current_state"]["protected_stack_rollback_paths_preserved"] is True
+    assert payload["current_state"]["protected_stack_active_paths_safe"] is True
+    assert payload["current_state"]["protected_stack_active_paths_exist"] is True
+    assert payload["current_state"]["protected_stack_rollback_paths_safe"] is True
+    assert payload["current_state"]["protected_stack_rollback_paths_exist"] is True
+    assert (
+        payload["current_state"]["protected_stack_rollback_common_paths_distinct"]
+        is True
+    )
+    assert (
+        payload["current_state"]["protected_stack_filesystem_snapshots_replaced"]
+        is False
+    )
     assert payload["current_state"]["protected_stack_hard_blockers"] == []
     option_ids = {option["option_id"] for option in payload["approval_options"]}
     assert option_ids == {
@@ -398,6 +415,23 @@ def test_current_control_plane_gate_requires_explicit_choice():
     assert (
         review_option["safety_scope"]["stage"]
         == "protected_plan_window_failure_contrast_evidence_only"
+    )
+    assert (
+        review_option["safety_scope"]["protected_stack_readiness_status"]
+        == "retry1_protected_stage5_6_stack_adopted_manifest_only"
+    )
+    assert review_option["safety_scope"]["protected_stack_rollback_paths_preserved"] is True
+    assert review_option["safety_scope"]["protected_stack_active_paths_safe"] is True
+    assert review_option["safety_scope"]["protected_stack_active_paths_exist"] is True
+    assert review_option["safety_scope"]["protected_stack_rollback_paths_safe"] is True
+    assert review_option["safety_scope"]["protected_stack_rollback_paths_exist"] is True
+    assert (
+        review_option["safety_scope"]["protected_stack_rollback_common_paths_distinct"]
+        is True
+    )
+    assert (
+        review_option["safety_scope"]["protected_stack_filesystem_snapshots_replaced"]
+        is False
     )
     assert review_option["safety_scope"]["source_stage_counts"] == {
         "stage4": 2,

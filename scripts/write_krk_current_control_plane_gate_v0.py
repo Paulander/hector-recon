@@ -193,9 +193,10 @@ def build_payload(
     protected_plan_windows = protected_plan_windows or _load_optional(PROTECTED_PLAN_WINDOWS)
     sequence_policy_inputs = sequence_policy_inputs or _load_optional(SEQUENCE_POLICY_INPUTS)
     full_suite_readiness = full_suite_readiness or _load_optional(FULL_SUITE_READINESS)
-    protected_stack_ready = bool(
-        (full_suite_readiness.get("protected_stack") or {}).get("ready", True)
-    )
+    protected_stack = full_suite_readiness.get("protected_stack") or {}
+    active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
+    rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
+    protected_stack_ready = bool(protected_stack.get("ready", True))
     protected_stack_status = (
         "retry1_stage5_6_active_manifest_validated"
         if protected_stack_ready
@@ -344,6 +345,28 @@ def build_payload(
                 "command_if_explicitly_approved": None,
                 "safety_scope": {
                     "protected_stack_ready": protected_stack_ready,
+                    "protected_stack_readiness_status": protected_stack.get("status"),
+                    "protected_stack_rollback_paths_preserved": protected_stack.get(
+                        "rollback_paths_preserved"
+                    ),
+                    "protected_stack_active_paths_safe": active_stack_path_status.get(
+                        "all_paths_safe"
+                    ),
+                    "protected_stack_active_paths_exist": active_stack_path_status.get(
+                        "all_paths_exist"
+                    ),
+                    "protected_stack_rollback_paths_safe": rollback_stack_path_status.get(
+                        "all_paths_safe"
+                    ),
+                    "protected_stack_rollback_paths_exist": rollback_stack_path_status.get(
+                        "all_paths_exist"
+                    ),
+                    "protected_stack_rollback_common_paths_distinct": protected_stack.get(
+                        "rollback_common_paths_distinct"
+                    ),
+                    "protected_stack_filesystem_snapshots_replaced": protected_stack.get(
+                        "filesystem_snapshots_replaced"
+                    ),
                     "hard_blockers": protected_stack_blockers,
                     "runtime_behavior_changed": False,
                     "stage7_promotion_allowed": False,
@@ -469,6 +492,28 @@ def build_payload(
                         else None
                     ),
                     "stage": "protected_plan_window_failure_contrast_evidence_only",
+                    "protected_stack_readiness_status": protected_stack.get("status"),
+                    "protected_stack_rollback_paths_preserved": protected_stack.get(
+                        "rollback_paths_preserved"
+                    ),
+                    "protected_stack_active_paths_safe": active_stack_path_status.get(
+                        "all_paths_safe"
+                    ),
+                    "protected_stack_active_paths_exist": active_stack_path_status.get(
+                        "all_paths_exist"
+                    ),
+                    "protected_stack_rollback_paths_safe": rollback_stack_path_status.get(
+                        "all_paths_safe"
+                    ),
+                    "protected_stack_rollback_paths_exist": rollback_stack_path_status.get(
+                        "all_paths_exist"
+                    ),
+                    "protected_stack_rollback_common_paths_distinct": protected_stack.get(
+                        "rollback_common_paths_distinct"
+                    ),
+                    "protected_stack_filesystem_snapshots_replaced": protected_stack.get(
+                        "filesystem_snapshots_replaced"
+                    ),
                     "source_stage_counts": failure_contrast_manifest_summary.get(
                         "source_stage_counts"
                     ),
@@ -604,7 +649,29 @@ def build_payload(
         ],
         "current_state": {
             "protected_stack": protected_stack_status,
+            "protected_stack_readiness_status": protected_stack.get("status"),
             "protected_stack_ready": protected_stack_ready,
+            "protected_stack_rollback_paths_preserved": protected_stack.get(
+                "rollback_paths_preserved"
+            ),
+            "protected_stack_active_paths_safe": active_stack_path_status.get(
+                "all_paths_safe"
+            ),
+            "protected_stack_active_paths_exist": active_stack_path_status.get(
+                "all_paths_exist"
+            ),
+            "protected_stack_rollback_paths_safe": rollback_stack_path_status.get(
+                "all_paths_safe"
+            ),
+            "protected_stack_rollback_paths_exist": rollback_stack_path_status.get(
+                "all_paths_exist"
+            ),
+            "protected_stack_rollback_common_paths_distinct": protected_stack.get(
+                "rollback_common_paths_distinct"
+            ),
+            "protected_stack_filesystem_snapshots_replaced": protected_stack.get(
+                "filesystem_snapshots_replaced"
+            ),
             "protected_stack_hard_blockers": protected_stack_blockers,
             "stage4": "first_move_contrast_runtime_review_ready_pending_explicit_approval",
             "stage7": "heldout_clean_success_controls_ready_sequence_benchmark_available"
