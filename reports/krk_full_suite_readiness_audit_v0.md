@@ -122,7 +122,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `14d8cecf5201a4f378aa8a602897cdd338ff66caea550ac26377eef9cdb11886`
+- expected_readiness_fingerprint: `779487d10c8b1e46a5e59c147a0cbc2b17f684ea7a70d2ca9029b617ee26a23f`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -185,6 +185,33 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Selector Objective Evidence
+
+- stage4_collection_status: `stage4_joined_trace_ownership_collection_complete`
+- stage4_collection_collected_row_count: `6`
+- stage4_collection_generated_frame_count: `170`
+- stage4_collection_switch_contrast_with_positive_capacity_count: `1`
+- stage4_collection_default_off_equivalence_passed: `True`
+- stage4_collection_selected_move_delta_count: `0`
+- stage4_collection_selected_provider_delta_count: `0`
+- stage4_collection_score_delta_count: `0`
+- stage4_collection_routing_delta_count: `0`
+- seed_manifest_v2_status: `selector_objective_seed_manifest_v2_ready_non_causal`
+- seed_manifest_v2_seed_row_count: `18`
+- seed_manifest_v2_objective_channel_counts: `{'candidate_switch_contrast_seed': 5, 'failure_context_without_candidate_seed': 5, 'safe_preservation_contrast_seed': 8}`
+- seed_probe_v2_status: `selector_objective_seed_probe_v2_ready_for_non_causal_benchmark`
+- selector_benchmark_v2_status: `selector_objective_benchmark_v2_runtime_feature_review_ready`
+- selector_benchmark_v2_best_runtime_model: `visible_failure_risk_heuristic_v2`
+- selector_benchmark_v2_runtime_threshold_passing_model_count: `1`
+- selector_benchmark_review_status: `selector_objective_benchmark_review_ready_for_independent_validation`
+- independent_validation_status: `selector_objective_independent_validation_underpowered`
+- independent_validation_target_counts: `{'preserve': 10}`
+- independent_validation_blocker_status: `selector_objective_runtime_blocked_pending_independent_switch_contrasts`
+- independent_validation_runtime_selector_blocked: `True`
+- selector_training_allowed: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Current Control Plane Gate
 
 - status: `krk_control_plane_waiting_on_explicit_gate_choice`
@@ -207,5 +234,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `507`
+- checked_flag_count: `562`
 - violation_count: `0`

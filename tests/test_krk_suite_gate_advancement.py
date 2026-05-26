@@ -360,6 +360,118 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert (
         payload["summary"]["protected_missing_provider_runtime_work_allowed"] is False
     )
+    assert (
+        payload["summary"]["selector_objective_stage4_collection_status"]
+        == "stage4_joined_trace_ownership_collection_complete"
+    )
+    assert payload["summary"]["selector_objective_stage4_collection_collected_row_count"] == 6
+    assert payload["summary"]["selector_objective_stage4_collection_generated_frame_count"] == 170
+    assert (
+        payload["summary"][
+            "selector_objective_stage4_collection_switch_contrast_with_positive_capacity_count"
+        ]
+        == 1
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_stage4_collection_default_off_equivalence_passed"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"]["selector_objective_stage4_collection_selected_move_delta_count"]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_stage4_collection_selected_provider_delta_count"
+        ]
+        == 0
+    )
+    assert payload["summary"]["selector_objective_stage4_collection_score_delta_count"] == 0
+    assert payload["summary"]["selector_objective_stage4_collection_routing_delta_count"] == 0
+    assert (
+        payload["summary"]["selector_objective_seed_manifest_v2_status"]
+        == "selector_objective_seed_manifest_v2_ready_non_causal"
+    )
+    assert payload["summary"]["selector_objective_seed_manifest_v2_seed_row_count"] == 18
+    assert payload["summary"]["selector_objective_seed_manifest_v2_objective_channel_counts"] == {
+        "candidate_switch_contrast_seed": 5,
+        "failure_context_without_candidate_seed": 5,
+        "safe_preservation_contrast_seed": 8,
+    }
+    assert (
+        payload["summary"]["selector_objective_seed_probe_v2_status"]
+        == "selector_objective_seed_probe_v2_ready_for_non_causal_benchmark"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_seed_probe_v2_runtime_feature_eligible_prediction_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["selector_objective_benchmark_v2_status"]
+        == "selector_objective_benchmark_v2_runtime_feature_review_ready"
+    )
+    assert (
+        payload["summary"]["selector_objective_benchmark_v2_best_runtime_model"]
+        == "visible_failure_risk_heuristic_v2"
+    )
+    assert payload["summary"]["selector_objective_benchmark_v2_best_runtime_accuracy"] == 1.0
+    assert (
+        payload["summary"][
+            "selector_objective_benchmark_v2_best_runtime_switch_recall"
+        ]
+        == 1.0
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_benchmark_v2_runtime_threshold_passing_model_count"
+        ]
+        == 1
+    )
+    assert (
+        payload["summary"]["selector_objective_benchmark_review_status"]
+        == "selector_objective_benchmark_review_ready_for_independent_validation"
+    )
+    assert (
+        payload["summary"]["selector_objective_benchmark_review_runtime_review_ready"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_benchmark_review_independent_validation_ready"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"]["selector_objective_independent_validation_status"]
+        == "selector_objective_independent_validation_underpowered"
+    )
+    assert payload["summary"]["selector_objective_independent_validation_row_count"] == 10
+    assert payload["summary"]["selector_objective_independent_validation_target_counts"] == {
+        "preserve": 10
+    }
+    assert payload["summary"]["selector_objective_independent_validation_switch_recall"] == 0.0
+    assert payload["summary"]["selector_objective_independent_validation_preserve_recall"] == 1.0
+    assert (
+        payload["summary"]["selector_objective_independent_validation_blocker_status"]
+        == "selector_objective_runtime_blocked_pending_independent_switch_contrasts"
+    )
+    assert (
+        payload["summary"]["selector_objective_independent_validation_blocker_class"]
+        == "independent_switch_contrast_absent"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_independent_validation_runtime_selector_blocked"
+        ]
+        is True
+    )
+    assert payload["summary"]["selector_objective_selector_training_allowed"] is False
+    assert payload["summary"]["selector_objective_stage7_promotion_allowed"] is False
+    assert payload["summary"]["selector_objective_stage8_training_allowed"] is False
 
 
 def test_gate_advancement_writer_includes_all_passive_steps():

@@ -71,6 +71,27 @@ SOURCES = {
     "two_stage_candidate_selection_benchmark": (
         "reports/krk_two_stage_candidate_selection_benchmark_v0.json"
     ),
+    "stage4_joined_trace_ownership_collection": (
+        "reports/strategy_arbitration/krk_stage4_joined_trace_ownership_collection_v0.json"
+    ),
+    "selector_objective_seed_manifest_v2": (
+        "reports/strategy_arbitration/krk_selector_objective_seed_manifest_v2.json"
+    ),
+    "selector_objective_seed_probe_v2": (
+        "reports/strategy_arbitration/krk_selector_objective_seed_probe_v2.json"
+    ),
+    "selector_objective_benchmark_v2": (
+        "reports/strategy_arbitration/krk_selector_objective_benchmark_v2.json"
+    ),
+    "selector_objective_benchmark_review_packet_v2": (
+        "reports/strategy_arbitration/krk_selector_objective_benchmark_review_packet_v2.json"
+    ),
+    "selector_objective_independent_validation": (
+        "reports/strategy_arbitration/krk_selector_objective_independent_validation_v0.json"
+    ),
+    "selector_objective_independent_validation_blocker": (
+        "reports/strategy_arbitration/krk_selector_objective_independent_validation_blocker_v0.json"
+    ),
     "active_protected_stack": "reports/krk_active_protected_stack_v0.json",
     "clean_stack_validation": "reports/krk_clean_stack_post_replacement_validation_v0.json",
     "preservation_checks": "reports/krk_clean_retrain_retry1_preservation_checks_v0.json",
@@ -376,6 +397,23 @@ def build_payload() -> dict[str, Any]:
     ]
     two_stage_candidate_selection_benchmark = payloads[
         "two_stage_candidate_selection_benchmark"
+    ]
+    stage4_joined_trace_ownership_collection = payloads[
+        "stage4_joined_trace_ownership_collection"
+    ]
+    selector_objective_seed_manifest_v2 = payloads[
+        "selector_objective_seed_manifest_v2"
+    ]
+    selector_objective_seed_probe_v2 = payloads["selector_objective_seed_probe_v2"]
+    selector_objective_benchmark_v2 = payloads["selector_objective_benchmark_v2"]
+    selector_objective_benchmark_review_packet_v2 = payloads[
+        "selector_objective_benchmark_review_packet_v2"
+    ]
+    selector_objective_independent_validation = payloads[
+        "selector_objective_independent_validation"
+    ]
+    selector_objective_independent_validation_blocker = payloads[
+        "selector_objective_independent_validation_blocker"
     ]
     runner = payloads["stage7_sampling_runner"]
     output_validation = payloads["stage7_sampling_output_validation"]
@@ -1345,6 +1383,231 @@ def build_payload() -> dict[str, Any]:
             "stage7_promotion_allowed": False,
             "stage8_training_allowed": False,
         },
+        "selector_objective_gate": {
+            "stage4_collection_status": (
+                stage4_joined_trace_ownership_collection.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "stage4_collection_next_step": (
+                stage4_joined_trace_ownership_collection.get("decision", {}).get(
+                    "recommended_next_step"
+                )
+            ),
+            "stage4_collection_collected_row_count": (
+                stage4_joined_trace_ownership_collection.get("summary", {}).get(
+                    "collected_row_count"
+                )
+            ),
+            "stage4_collection_generated_frame_count": (
+                stage4_joined_trace_ownership_collection.get("summary", {}).get(
+                    "generated_frame_count"
+                )
+            ),
+            "stage4_collection_switch_contrast_with_positive_capacity_count": (
+                stage4_joined_trace_ownership_collection.get("summary", {}).get(
+                    "switch_contrast_with_positive_capacity_count"
+                )
+            ),
+            "stage4_collection_default_off_equivalence_passed": (
+                stage4_joined_trace_ownership_collection.get("summary", {}).get(
+                    "default_off_equivalence_passed"
+                )
+            ),
+            "stage4_collection_selected_move_delta_count": (
+                stage4_joined_trace_ownership_collection.get("summary", {}).get(
+                    "selected_move_delta_count"
+                )
+            ),
+            "stage4_collection_selected_provider_delta_count": (
+                stage4_joined_trace_ownership_collection.get("summary", {}).get(
+                    "selected_provider_delta_count"
+                )
+            ),
+            "stage4_collection_score_delta_count": (
+                stage4_joined_trace_ownership_collection.get("summary", {}).get(
+                    "score_delta_count"
+                )
+            ),
+            "stage4_collection_routing_delta_count": (
+                stage4_joined_trace_ownership_collection.get("summary", {}).get(
+                    "routing_delta_count"
+                )
+            ),
+            "stage4_collection_selector_training_row_count": (
+                stage4_joined_trace_ownership_collection.get("summary", {}).get(
+                    "selector_training_row_count"
+                )
+            ),
+            "stage4_collection_stage7_training_row_count": (
+                stage4_joined_trace_ownership_collection.get("summary", {}).get(
+                    "stage7_training_row_count"
+                )
+            ),
+            "seed_manifest_v2_status": selector_objective_seed_manifest_v2.get(
+                "decision", {}
+            ).get("status"),
+            "seed_manifest_v2_next_step": selector_objective_seed_manifest_v2.get(
+                "decision", {}
+            ).get("recommended_next_step"),
+            "seed_manifest_v2_seed_row_count": selector_objective_seed_manifest_v2.get(
+                "summary", {}
+            ).get("seed_row_count"),
+            "seed_manifest_v2_objective_channel_counts": (
+                selector_objective_seed_manifest_v2.get("summary", {}).get(
+                    "objective_channel_counts"
+                )
+            ),
+            "seed_manifest_v2_source_stage_counts": (
+                selector_objective_seed_manifest_v2.get("summary", {}).get(
+                    "source_stage_counts"
+                )
+            ),
+            "seed_manifest_v2_selector_training_row_count": (
+                selector_objective_seed_manifest_v2.get("summary", {}).get(
+                    "selector_training_row_count"
+                )
+            ),
+            "seed_manifest_v2_stage7_training_row_count": (
+                selector_objective_seed_manifest_v2.get("summary", {}).get(
+                    "stage7_training_row_count"
+                )
+            ),
+            "seed_probe_v2_status": selector_objective_seed_probe_v2.get(
+                "decision", {}
+            ).get("status"),
+            "seed_probe_v2_runtime_feature_eligible_prediction_count": (
+                selector_objective_seed_probe_v2.get("summary", {}).get(
+                    "runtime_feature_eligible_prediction_count"
+                )
+            ),
+            "seed_probe_v2_target_action_counts": (
+                selector_objective_seed_probe_v2.get("summary", {}).get(
+                    "target_action_counts"
+                )
+            ),
+            "selector_benchmark_v2_status": selector_objective_benchmark_v2.get(
+                "decision", {}
+            ).get("status"),
+            "selector_benchmark_v2_next_step": selector_objective_benchmark_v2.get(
+                "decision", {}
+            ).get("recommended_next_step"),
+            "selector_benchmark_v2_best_runtime_model": (
+                selector_objective_benchmark_v2.get("summary", {}).get(
+                    "best_runtime_model"
+                )
+            ),
+            "selector_benchmark_v2_best_runtime_accuracy": (
+                selector_objective_benchmark_v2.get("summary", {}).get(
+                    "best_runtime_accuracy"
+                )
+            ),
+            "selector_benchmark_v2_best_runtime_switch_recall": (
+                selector_objective_benchmark_v2.get("summary", {}).get(
+                    "best_runtime_switch_recall"
+                )
+            ),
+            "selector_benchmark_v2_best_runtime_preserve_recall": (
+                selector_objective_benchmark_v2.get("summary", {}).get(
+                    "best_runtime_preserve_recall"
+                )
+            ),
+            "selector_benchmark_v2_best_runtime_abstain_recall": (
+                selector_objective_benchmark_v2.get("summary", {}).get(
+                    "best_runtime_abstain_recall"
+                )
+            ),
+            "selector_benchmark_v2_runtime_threshold_passing_model_count": (
+                selector_objective_benchmark_v2.get("summary", {}).get(
+                    "runtime_threshold_passing_model_count"
+                )
+            ),
+            "selector_benchmark_v2_selector_training_row_count": (
+                selector_objective_benchmark_v2.get("summary", {}).get(
+                    "selector_training_row_count"
+                )
+            ),
+            "selector_benchmark_v2_stage7_training_row_count": (
+                selector_objective_benchmark_v2.get("summary", {}).get(
+                    "stage7_training_row_count"
+                )
+            ),
+            "selector_benchmark_review_status": (
+                selector_objective_benchmark_review_packet_v2.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "selector_benchmark_review_next_step": (
+                selector_objective_benchmark_review_packet_v2.get(
+                    "decision", {}
+                ).get("recommended_next_step")
+            ),
+            "selector_benchmark_review_runtime_review_ready": (
+                selector_objective_benchmark_review_packet_v2.get(
+                    "decision", {}
+                ).get("runtime_review_ready")
+            ),
+            "selector_benchmark_review_independent_validation_ready": (
+                selector_objective_benchmark_review_packet_v2.get(
+                    "decision", {}
+                ).get("independent_validation_review_ready")
+            ),
+            "independent_validation_status": (
+                selector_objective_independent_validation.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "independent_validation_row_count": (
+                selector_objective_independent_validation.get("summary", {}).get(
+                    "row_count"
+                )
+            ),
+            "independent_validation_target_counts": (
+                selector_objective_independent_validation.get("summary", {}).get(
+                    "target_counts"
+                )
+            ),
+            "independent_validation_switch_recall": (
+                selector_objective_independent_validation.get("summary", {}).get(
+                    "switch_recall"
+                )
+            ),
+            "independent_validation_preserve_recall": (
+                selector_objective_independent_validation.get("summary", {}).get(
+                    "preserve_recall"
+                )
+            ),
+            "independent_validation_selector_training_row_count": (
+                selector_objective_independent_validation.get("summary", {}).get(
+                    "selector_training_row_count"
+                )
+            ),
+            "independent_validation_stage7_training_row_count": (
+                selector_objective_independent_validation.get("summary", {}).get(
+                    "stage7_training_row_count"
+                )
+            ),
+            "independent_validation_blocker_status": (
+                selector_objective_independent_validation_blocker.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "independent_validation_blocker_class": (
+                selector_objective_independent_validation_blocker.get(
+                    "blocker", {}
+                ).get("blocker_class")
+            ),
+            "independent_validation_runtime_selector_blocked": (
+                selector_objective_independent_validation_blocker.get(
+                    "blocker", {}
+                ).get("runtime_selector_blocked")
+            ),
+            "runtime_work_allowed": False,
+            "selector_allowed": False,
+            "selector_training_allowed": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": False,
+        },
         "stage7_sampling_gate": {
             "runner_status": runner.get("decision", {}).get("status"),
             "runner_dry_run": runner.get("summary", {}).get("dry_run"),
@@ -1594,6 +1857,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     sequence = payload["sequence_policy"]
     protected_failure_contrast = payload["protected_failure_contrast_gate"]
     missing_provider = payload["protected_missing_provider_gate"]
+    selector_objective = payload["selector_objective_gate"]
     current_gate = payload["current_control_plane_gate"]
     decision = payload["decision"]
     lines = [
@@ -1789,6 +2053,33 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- selector_training_allowed: `{missing_provider['selector_training_allowed']}`",
             f"- stage7_promotion_allowed: `{missing_provider['stage7_promotion_allowed']}`",
             f"- stage8_training_allowed: `{missing_provider['stage8_training_allowed']}`",
+            "",
+            "## Selector Objective Evidence",
+            "",
+            f"- stage4_collection_status: `{selector_objective['stage4_collection_status']}`",
+            f"- stage4_collection_collected_row_count: `{selector_objective['stage4_collection_collected_row_count']}`",
+            f"- stage4_collection_generated_frame_count: `{selector_objective['stage4_collection_generated_frame_count']}`",
+            f"- stage4_collection_switch_contrast_with_positive_capacity_count: `{selector_objective['stage4_collection_switch_contrast_with_positive_capacity_count']}`",
+            f"- stage4_collection_default_off_equivalence_passed: `{selector_objective['stage4_collection_default_off_equivalence_passed']}`",
+            f"- stage4_collection_selected_move_delta_count: `{selector_objective['stage4_collection_selected_move_delta_count']}`",
+            f"- stage4_collection_selected_provider_delta_count: `{selector_objective['stage4_collection_selected_provider_delta_count']}`",
+            f"- stage4_collection_score_delta_count: `{selector_objective['stage4_collection_score_delta_count']}`",
+            f"- stage4_collection_routing_delta_count: `{selector_objective['stage4_collection_routing_delta_count']}`",
+            f"- seed_manifest_v2_status: `{selector_objective['seed_manifest_v2_status']}`",
+            f"- seed_manifest_v2_seed_row_count: `{selector_objective['seed_manifest_v2_seed_row_count']}`",
+            f"- seed_manifest_v2_objective_channel_counts: `{selector_objective['seed_manifest_v2_objective_channel_counts']}`",
+            f"- seed_probe_v2_status: `{selector_objective['seed_probe_v2_status']}`",
+            f"- selector_benchmark_v2_status: `{selector_objective['selector_benchmark_v2_status']}`",
+            f"- selector_benchmark_v2_best_runtime_model: `{selector_objective['selector_benchmark_v2_best_runtime_model']}`",
+            f"- selector_benchmark_v2_runtime_threshold_passing_model_count: `{selector_objective['selector_benchmark_v2_runtime_threshold_passing_model_count']}`",
+            f"- selector_benchmark_review_status: `{selector_objective['selector_benchmark_review_status']}`",
+            f"- independent_validation_status: `{selector_objective['independent_validation_status']}`",
+            f"- independent_validation_target_counts: `{selector_objective['independent_validation_target_counts']}`",
+            f"- independent_validation_blocker_status: `{selector_objective['independent_validation_blocker_status']}`",
+            f"- independent_validation_runtime_selector_blocked: `{selector_objective['independent_validation_runtime_selector_blocked']}`",
+            f"- selector_training_allowed: `{selector_objective['selector_training_allowed']}`",
+            f"- stage7_promotion_allowed: `{selector_objective['stage7_promotion_allowed']}`",
+            f"- stage8_training_allowed: `{selector_objective['stage8_training_allowed']}`",
             "",
             "## Current Control Plane Gate",
             "",

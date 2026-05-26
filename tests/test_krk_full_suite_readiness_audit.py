@@ -104,6 +104,18 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         payload["source_artifacts"]["two_stage_candidate_selection_benchmark"]
         == "reports/krk_two_stage_candidate_selection_benchmark_v0.json"
     )
+    assert (
+        payload["source_artifacts"]["stage4_joined_trace_ownership_collection"]
+        == "reports/strategy_arbitration/krk_stage4_joined_trace_ownership_collection_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_objective_seed_manifest_v2"]
+        == "reports/strategy_arbitration/krk_selector_objective_seed_manifest_v2.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_objective_independent_validation_blocker"]
+        == "reports/strategy_arbitration/krk_selector_objective_independent_validation_blocker_v0.json"
+    )
 
 
 def test_full_suite_readiness_identifies_current_gate():
@@ -477,6 +489,80 @@ def test_full_suite_readiness_identifies_current_gate():
     assert missing_provider["selector_training_allowed"] is False
     assert missing_provider["stage7_promotion_allowed"] is False
     assert missing_provider["stage8_training_allowed"] is False
+
+    selector = payload["selector_objective_gate"]
+    assert (
+        selector["stage4_collection_status"]
+        == "stage4_joined_trace_ownership_collection_complete"
+    )
+    assert selector["stage4_collection_collected_row_count"] == 6
+    assert selector["stage4_collection_generated_frame_count"] == 170
+    assert selector["stage4_collection_switch_contrast_with_positive_capacity_count"] == 1
+    assert selector["stage4_collection_default_off_equivalence_passed"] is True
+    assert selector["stage4_collection_selected_move_delta_count"] == 0
+    assert selector["stage4_collection_selected_provider_delta_count"] == 0
+    assert selector["stage4_collection_score_delta_count"] == 0
+    assert selector["stage4_collection_routing_delta_count"] == 0
+    assert selector["stage4_collection_selector_training_row_count"] == 0
+    assert selector["stage4_collection_stage7_training_row_count"] == 0
+    assert (
+        selector["seed_manifest_v2_status"]
+        == "selector_objective_seed_manifest_v2_ready_non_causal"
+    )
+    assert selector["seed_manifest_v2_seed_row_count"] == 18
+    assert selector["seed_manifest_v2_objective_channel_counts"] == {
+        "candidate_switch_contrast_seed": 5,
+        "failure_context_without_candidate_seed": 5,
+        "safe_preservation_contrast_seed": 8,
+    }
+    assert selector["seed_manifest_v2_selector_training_row_count"] == 0
+    assert selector["seed_manifest_v2_stage7_training_row_count"] == 0
+    assert (
+        selector["seed_probe_v2_status"]
+        == "selector_objective_seed_probe_v2_ready_for_non_causal_benchmark"
+    )
+    assert selector["seed_probe_v2_runtime_feature_eligible_prediction_count"] == 0
+    assert (
+        selector["selector_benchmark_v2_status"]
+        == "selector_objective_benchmark_v2_runtime_feature_review_ready"
+    )
+    assert selector["selector_benchmark_v2_best_runtime_model"] == (
+        "visible_failure_risk_heuristic_v2"
+    )
+    assert selector["selector_benchmark_v2_best_runtime_accuracy"] == 1.0
+    assert selector["selector_benchmark_v2_best_runtime_switch_recall"] == 1.0
+    assert selector["selector_benchmark_v2_runtime_threshold_passing_model_count"] == 1
+    assert selector["selector_benchmark_v2_selector_training_row_count"] == 0
+    assert selector["selector_benchmark_v2_stage7_training_row_count"] == 0
+    assert (
+        selector["selector_benchmark_review_status"]
+        == "selector_objective_benchmark_review_ready_for_independent_validation"
+    )
+    assert selector["selector_benchmark_review_runtime_review_ready"] is False
+    assert selector["selector_benchmark_review_independent_validation_ready"] is True
+    assert (
+        selector["independent_validation_status"]
+        == "selector_objective_independent_validation_underpowered"
+    )
+    assert selector["independent_validation_row_count"] == 10
+    assert selector["independent_validation_target_counts"] == {"preserve": 10}
+    assert selector["independent_validation_switch_recall"] == 0.0
+    assert selector["independent_validation_preserve_recall"] == 1.0
+    assert selector["independent_validation_selector_training_row_count"] == 0
+    assert selector["independent_validation_stage7_training_row_count"] == 0
+    assert (
+        selector["independent_validation_blocker_status"]
+        == "selector_objective_runtime_blocked_pending_independent_switch_contrasts"
+    )
+    assert selector["independent_validation_blocker_class"] == (
+        "independent_switch_contrast_absent"
+    )
+    assert selector["independent_validation_runtime_selector_blocked"] is True
+    assert selector["runtime_work_allowed"] is False
+    assert selector["selector_allowed"] is False
+    assert selector["selector_training_allowed"] is False
+    assert selector["stage7_promotion_allowed"] is False
+    assert selector["stage8_training_allowed"] is False
 
 
 def test_full_suite_readiness_writer_helpers_are_deterministic():

@@ -583,6 +583,7 @@ def build_payload() -> dict[str, Any]:
     protected_missing_provider_gate = (
         readiness.get("protected_missing_provider_gate") or {}
     )
+    selector_objective_gate = readiness.get("selector_objective_gate") or {}
     protected_stack_repair_statuses = {
         "sequence_policy_pilot_blocked_pending_protected_stack_repair",
         "stage8_training_blocked_pending_protected_stack_repair",
@@ -1166,6 +1167,105 @@ def build_payload() -> dict[str, Any]:
             ),
             "protected_missing_provider_runtime_work_allowed": protected_missing_provider_gate.get(
                 "runtime_work_allowed"
+            ),
+            "selector_objective_stage4_collection_status": selector_objective_gate.get(
+                "stage4_collection_status"
+            ),
+            "selector_objective_stage4_collection_collected_row_count": selector_objective_gate.get(
+                "stage4_collection_collected_row_count"
+            ),
+            "selector_objective_stage4_collection_generated_frame_count": selector_objective_gate.get(
+                "stage4_collection_generated_frame_count"
+            ),
+            "selector_objective_stage4_collection_switch_contrast_with_positive_capacity_count": selector_objective_gate.get(
+                "stage4_collection_switch_contrast_with_positive_capacity_count"
+            ),
+            "selector_objective_stage4_collection_default_off_equivalence_passed": selector_objective_gate.get(
+                "stage4_collection_default_off_equivalence_passed"
+            ),
+            "selector_objective_stage4_collection_selected_move_delta_count": selector_objective_gate.get(
+                "stage4_collection_selected_move_delta_count"
+            ),
+            "selector_objective_stage4_collection_selected_provider_delta_count": selector_objective_gate.get(
+                "stage4_collection_selected_provider_delta_count"
+            ),
+            "selector_objective_stage4_collection_score_delta_count": selector_objective_gate.get(
+                "stage4_collection_score_delta_count"
+            ),
+            "selector_objective_stage4_collection_routing_delta_count": selector_objective_gate.get(
+                "stage4_collection_routing_delta_count"
+            ),
+            "selector_objective_seed_manifest_v2_status": selector_objective_gate.get(
+                "seed_manifest_v2_status"
+            ),
+            "selector_objective_seed_manifest_v2_seed_row_count": selector_objective_gate.get(
+                "seed_manifest_v2_seed_row_count"
+            ),
+            "selector_objective_seed_manifest_v2_objective_channel_counts": selector_objective_gate.get(
+                "seed_manifest_v2_objective_channel_counts"
+            ),
+            "selector_objective_seed_probe_v2_status": selector_objective_gate.get(
+                "seed_probe_v2_status"
+            ),
+            "selector_objective_seed_probe_v2_runtime_feature_eligible_prediction_count": selector_objective_gate.get(
+                "seed_probe_v2_runtime_feature_eligible_prediction_count"
+            ),
+            "selector_objective_benchmark_v2_status": selector_objective_gate.get(
+                "selector_benchmark_v2_status"
+            ),
+            "selector_objective_benchmark_v2_best_runtime_model": selector_objective_gate.get(
+                "selector_benchmark_v2_best_runtime_model"
+            ),
+            "selector_objective_benchmark_v2_best_runtime_accuracy": selector_objective_gate.get(
+                "selector_benchmark_v2_best_runtime_accuracy"
+            ),
+            "selector_objective_benchmark_v2_best_runtime_switch_recall": selector_objective_gate.get(
+                "selector_benchmark_v2_best_runtime_switch_recall"
+            ),
+            "selector_objective_benchmark_v2_runtime_threshold_passing_model_count": selector_objective_gate.get(
+                "selector_benchmark_v2_runtime_threshold_passing_model_count"
+            ),
+            "selector_objective_benchmark_review_status": selector_objective_gate.get(
+                "selector_benchmark_review_status"
+            ),
+            "selector_objective_benchmark_review_runtime_review_ready": selector_objective_gate.get(
+                "selector_benchmark_review_runtime_review_ready"
+            ),
+            "selector_objective_benchmark_review_independent_validation_ready": selector_objective_gate.get(
+                "selector_benchmark_review_independent_validation_ready"
+            ),
+            "selector_objective_independent_validation_status": selector_objective_gate.get(
+                "independent_validation_status"
+            ),
+            "selector_objective_independent_validation_row_count": selector_objective_gate.get(
+                "independent_validation_row_count"
+            ),
+            "selector_objective_independent_validation_target_counts": selector_objective_gate.get(
+                "independent_validation_target_counts"
+            ),
+            "selector_objective_independent_validation_switch_recall": selector_objective_gate.get(
+                "independent_validation_switch_recall"
+            ),
+            "selector_objective_independent_validation_preserve_recall": selector_objective_gate.get(
+                "independent_validation_preserve_recall"
+            ),
+            "selector_objective_independent_validation_blocker_status": selector_objective_gate.get(
+                "independent_validation_blocker_status"
+            ),
+            "selector_objective_independent_validation_blocker_class": selector_objective_gate.get(
+                "independent_validation_blocker_class"
+            ),
+            "selector_objective_independent_validation_runtime_selector_blocked": selector_objective_gate.get(
+                "independent_validation_runtime_selector_blocked"
+            ),
+            "selector_objective_selector_training_allowed": selector_objective_gate.get(
+                "selector_training_allowed"
+            ),
+            "selector_objective_stage7_promotion_allowed": selector_objective_gate.get(
+                "stage7_promotion_allowed"
+            ),
+            "selector_objective_stage8_training_allowed": selector_objective_gate.get(
+                "stage8_training_allowed"
             ),
             "sequence_policy_underpowered_pilot_status": underpowered_pilot.get(
                 "decision", {}
