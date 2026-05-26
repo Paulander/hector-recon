@@ -101,6 +101,18 @@ SOURCES = {
     "candidate_generation_observation_gap_review": (
         "reports/strategy_arbitration/krk_candidate_generation_observation_gap_review_v1.json"
     ),
+    "candidate_move_capacity_annotation_v1": (
+        "reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v1.json"
+    ),
+    "candidate_move_capacity_label_manifest_v1": (
+        "reports/strategy_arbitration/krk_candidate_move_capacity_label_manifest_v1.json"
+    ),
+    "candidate_move_capacity_labels_v1": (
+        "reports/strategy_arbitration/krk_candidate_move_capacity_labels_v1.json"
+    ),
+    "candidate_move_capacity_annotation_v2": (
+        "reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v2.json"
+    ),
     "candidate_generation_label_blocker_review": (
         "reports/strategy_arbitration/krk_candidate_generation_label_blocker_review_v1.json"
     ),
@@ -724,6 +736,18 @@ def build_payload() -> dict[str, Any]:
     ]
     candidate_generation_observation_gap_review = payloads[
         "candidate_generation_observation_gap_review"
+    ]
+    candidate_move_capacity_annotation_v1 = payloads[
+        "candidate_move_capacity_annotation_v1"
+    ]
+    candidate_move_capacity_label_manifest_v1 = payloads[
+        "candidate_move_capacity_label_manifest_v1"
+    ]
+    candidate_move_capacity_labels_v1 = payloads[
+        "candidate_move_capacity_labels_v1"
+    ]
+    candidate_move_capacity_annotation_v2 = payloads[
+        "candidate_move_capacity_annotation_v2"
     ]
     candidate_generation_label_blocker_review = payloads[
         "candidate_generation_label_blocker_review"
@@ -2156,6 +2180,69 @@ def build_payload() -> dict[str, Any]:
             "observation_gap_review_missing_expected_sources": (
                 candidate_generation_observation_gap_review.get("summary", {}).get(
                     "missing_expected_sources"
+                )
+            ),
+            "capacity_annotation_v1_status": (
+                candidate_move_capacity_annotation_v1.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "capacity_annotation_v1_protected_annotation_recall": (
+                candidate_move_capacity_annotation_v1.get("summary", {}).get(
+                    "protected_annotation_recall"
+                )
+            ),
+            "capacity_label_manifest_status": (
+                candidate_move_capacity_label_manifest_v1.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "capacity_label_manifest_labels_run_by_this_artifact": (
+                candidate_move_capacity_label_manifest_v1.get("decision", {}).get(
+                    "labels_run_by_this_artifact"
+                )
+            ),
+            "capacity_label_manifest_job_count": (
+                candidate_move_capacity_label_manifest_v1.get("summary", {}).get(
+                    "job_count"
+                )
+            ),
+            "capacity_label_manifest_stage7_job_count": (
+                candidate_move_capacity_label_manifest_v1.get("summary", {}).get(
+                    "stage7_job_count"
+                )
+            ),
+            "capacity_labels_status": (
+                candidate_move_capacity_labels_v1.get("decision", {}).get("status")
+            ),
+            "capacity_labels_label_count": (
+                candidate_move_capacity_labels_v1.get("summary", {}).get(
+                    "label_count"
+                )
+            ),
+            "capacity_labels_stage7_training_label_count": (
+                candidate_move_capacity_labels_v1.get("summary", {}).get(
+                    "stage7_training_label_count"
+                )
+            ),
+            "capacity_annotation_v2_status": (
+                candidate_move_capacity_annotation_v2.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "capacity_annotation_v2_annotated_candidate_move_count": (
+                candidate_move_capacity_annotation_v2.get("summary", {}).get(
+                    "annotated_candidate_move_count"
+                )
+            ),
+            "capacity_annotation_v2_protected_annotation_recall": (
+                candidate_move_capacity_annotation_v2.get("summary", {}).get(
+                    "protected_annotation_recall"
+                )
+            ),
+            "capacity_annotation_v2_stage7_readiness_training_row_count": (
+                candidate_move_capacity_annotation_v2.get("summary", {}).get(
+                    "stage7_readiness_training_row_count"
                 )
             ),
             "label_blocker_status": (
@@ -4599,6 +4686,16 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- observation_broadened_selected_move_or_provider_delta_count: `{strategy_source['observation_broadened_selected_move_or_provider_delta_count']}`",
             f"- observation_gap_review_status: `{strategy_source['observation_gap_review_status']}`",
             f"- observation_gap_review_unknown_capacity_ratio: `{strategy_source['observation_gap_review_unknown_capacity_ratio']}`",
+            f"- capacity_annotation_v1_status: `{strategy_source['capacity_annotation_v1_status']}`",
+            f"- capacity_annotation_v1_protected_annotation_recall: `{strategy_source['capacity_annotation_v1_protected_annotation_recall']}`",
+            f"- capacity_label_manifest_status: `{strategy_source['capacity_label_manifest_status']}`",
+            f"- capacity_label_manifest_labels_run_by_this_artifact: `{strategy_source['capacity_label_manifest_labels_run_by_this_artifact']}`",
+            f"- capacity_label_manifest_stage7_job_count: `{strategy_source['capacity_label_manifest_stage7_job_count']}`",
+            f"- capacity_labels_status: `{strategy_source['capacity_labels_status']}`",
+            f"- capacity_labels_label_count: `{strategy_source['capacity_labels_label_count']}`",
+            f"- capacity_labels_stage7_training_label_count: `{strategy_source['capacity_labels_stage7_training_label_count']}`",
+            f"- capacity_annotation_v2_status: `{strategy_source['capacity_annotation_v2_status']}`",
+            f"- capacity_annotation_v2_protected_annotation_recall: `{strategy_source['capacity_annotation_v2_protected_annotation_recall']}`",
             f"- label_blocker_status: `{strategy_source['label_blocker_status']}`",
             f"- label_blocker_more_blind_label_farming_not_recommended: `{strategy_source['label_blocker_more_blind_label_farming_not_recommended']}`",
             f"- quality_prioritization_review_status: `{strategy_source['quality_prioritization_review_status']}`",

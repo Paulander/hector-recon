@@ -1313,6 +1313,45 @@ def build_payload() -> dict[str, Any]:
             "strategy_sequence_candidate_source_observation_gap_review_missing_expected_sources": strategy_sequence_candidate_source_gate.get(
                 "observation_gap_review_missing_expected_sources"
             ),
+            "strategy_sequence_candidate_source_capacity_annotation_v1_status": strategy_sequence_candidate_source_gate.get(
+                "capacity_annotation_v1_status"
+            ),
+            "strategy_sequence_candidate_source_capacity_annotation_v1_protected_annotation_recall": strategy_sequence_candidate_source_gate.get(
+                "capacity_annotation_v1_protected_annotation_recall"
+            ),
+            "strategy_sequence_candidate_source_capacity_label_manifest_status": strategy_sequence_candidate_source_gate.get(
+                "capacity_label_manifest_status"
+            ),
+            "strategy_sequence_candidate_source_capacity_label_manifest_labels_run_by_this_artifact": strategy_sequence_candidate_source_gate.get(
+                "capacity_label_manifest_labels_run_by_this_artifact"
+            ),
+            "strategy_sequence_candidate_source_capacity_label_manifest_job_count": strategy_sequence_candidate_source_gate.get(
+                "capacity_label_manifest_job_count"
+            ),
+            "strategy_sequence_candidate_source_capacity_label_manifest_stage7_job_count": strategy_sequence_candidate_source_gate.get(
+                "capacity_label_manifest_stage7_job_count"
+            ),
+            "strategy_sequence_candidate_source_capacity_labels_status": strategy_sequence_candidate_source_gate.get(
+                "capacity_labels_status"
+            ),
+            "strategy_sequence_candidate_source_capacity_labels_label_count": strategy_sequence_candidate_source_gate.get(
+                "capacity_labels_label_count"
+            ),
+            "strategy_sequence_candidate_source_capacity_labels_stage7_training_label_count": strategy_sequence_candidate_source_gate.get(
+                "capacity_labels_stage7_training_label_count"
+            ),
+            "strategy_sequence_candidate_source_capacity_annotation_v2_status": strategy_sequence_candidate_source_gate.get(
+                "capacity_annotation_v2_status"
+            ),
+            "strategy_sequence_candidate_source_capacity_annotation_v2_annotated_candidate_move_count": strategy_sequence_candidate_source_gate.get(
+                "capacity_annotation_v2_annotated_candidate_move_count"
+            ),
+            "strategy_sequence_candidate_source_capacity_annotation_v2_protected_annotation_recall": strategy_sequence_candidate_source_gate.get(
+                "capacity_annotation_v2_protected_annotation_recall"
+            ),
+            "strategy_sequence_candidate_source_capacity_annotation_v2_stage7_readiness_training_row_count": strategy_sequence_candidate_source_gate.get(
+                "capacity_annotation_v2_stage7_readiness_training_row_count"
+            ),
             "strategy_sequence_candidate_source_label_blocker_status": strategy_sequence_candidate_source_gate.get(
                 "label_blocker_status"
             ),

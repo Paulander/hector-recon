@@ -562,6 +562,84 @@ def test_gate_advancement_reports_current_stage7_blocker():
         == ["broader_strategy_candidate", "plan_capsule_sequence_candidate"]
     )
     assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_capacity_annotation_v1_status"
+        ]
+        == "candidate_move_capacity_annotation_partial_selector_blocked"
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_capacity_annotation_v1_protected_annotation_recall"
+        ]
+        == 0.03424657534246575
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_capacity_label_manifest_status"
+        ]
+        == "bounded_candidate_move_capacity_manifest_ready"
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_capacity_label_manifest_labels_run_by_this_artifact"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_capacity_label_manifest_job_count"
+        ]
+        == 12
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_capacity_label_manifest_stage7_job_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_capacity_labels_status"
+        ]
+        == "bounded_candidate_move_capacity_labels_completed"
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_capacity_labels_label_count"
+        ]
+        == 12
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_capacity_labels_stage7_training_label_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_capacity_annotation_v2_status"
+        ]
+        == "candidate_move_capacity_annotation_improved_but_selector_blocked"
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_capacity_annotation_v2_annotated_candidate_move_count"
+        ]
+        == 22
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_capacity_annotation_v2_protected_annotation_recall"
+        ]
+        == 0.07534246575342465
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_capacity_annotation_v2_stage7_readiness_training_row_count"
+        ]
+        == 0
+    )
+    assert (
         payload["summary"]["strategy_sequence_candidate_source_label_blocker_status"]
         == "candidate_generation_label_coverage_underpowered_selector_blocked"
     )

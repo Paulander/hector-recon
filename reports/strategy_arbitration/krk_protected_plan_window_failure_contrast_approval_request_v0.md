@@ -11,9 +11,9 @@ This is a passive request packet only. It does not create the approval receipt, 
 - job_count: `6`
 - manifest_status: `protected_plan_window_failure_contrast_manifest_ready_for_review`
 - readiness_status: `protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval`
-- readiness_checked_flag_count: `1426`
+- readiness_checked_flag_count: `1462`
 - readiness_boundary_violation_count: `0`
-- readiness_source_artifact_count: `160`
+- readiness_source_artifact_count: `164`
 - runner_status: `protected_plan_window_failure_contrast_runner_dry_run_ready`
 - runner_execution_requested: `False`
 - runner_processed_job_count: `0`
@@ -31,7 +31,7 @@ This is a passive request packet only. It does not create the approval receipt, 
 - pre_collection_sequence_policy_after_protected_failure_contrast_rows: `0`
 - pre_collection_sequence_policy_after_protected_failure_contrast_stage7_training_row_count: `0`
 - manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- readiness_fingerprint: `f266d78c3204a7dc6b55be4dc0236d275f297cd9ccccb8c28e3243164f7cf5b9`
+- readiness_fingerprint: `efcaa7c2b376e07f8c8ae1c3c25b921dec95210b27e57ee27680d2e70c58ed83`
 - protected_stack_status: `retry1_protected_stage5_6_stack_adopted_manifest_only`
 - protected_stack_ready: `True`
 - protected_stack_rollback_paths_preserved: `True`
@@ -101,9 +101,9 @@ This is a passive request packet only. It does not create the approval receipt, 
     "protected_stack_rollback_paths_safe": true,
     "protected_stack_status": "retry1_protected_stage5_6_stack_adopted_manifest_only",
     "readiness_boundary_violation_count": 0,
-    "readiness_checked_flag_count": 1426,
-    "readiness_fingerprint": "f266d78c3204a7dc6b55be4dc0236d275f297cd9ccccb8c28e3243164f7cf5b9",
-    "readiness_source_artifact_count": 160,
+    "readiness_checked_flag_count": 1462,
+    "readiness_fingerprint": "efcaa7c2b376e07f8c8ae1c3c25b921dec95210b27e57ee27680d2e70c58ed83",
+    "readiness_source_artifact_count": 164,
     "readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
     "refresh_after_run": true
   },

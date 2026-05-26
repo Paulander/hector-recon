@@ -129,7 +129,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `f266d78c3204a7dc6b55be4dc0236d275f297cd9ccccb8c28e3243164f7cf5b9`
+- expected_readiness_fingerprint: `efcaa7c2b376e07f8c8ae1c3c25b921dec95210b27e57ee27680d2e70c58ed83`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -224,6 +224,16 @@
 - observation_broadened_selected_move_or_provider_delta_count: `0`
 - observation_gap_review_status: `observation_gap_review_blocks_selector_recommends_capacity_annotation`
 - observation_gap_review_unknown_capacity_ratio: `0.7768014059753954`
+- capacity_annotation_v1_status: `candidate_move_capacity_annotation_partial_selector_blocked`
+- capacity_annotation_v1_protected_annotation_recall: `0.03424657534246575`
+- capacity_label_manifest_status: `bounded_candidate_move_capacity_manifest_ready`
+- capacity_label_manifest_labels_run_by_this_artifact: `False`
+- capacity_label_manifest_stage7_job_count: `0`
+- capacity_labels_status: `bounded_candidate_move_capacity_labels_completed`
+- capacity_labels_label_count: `12`
+- capacity_labels_stage7_training_label_count: `0`
+- capacity_annotation_v2_status: `candidate_move_capacity_annotation_improved_but_selector_blocked`
+- capacity_annotation_v2_protected_annotation_recall: `0.07534246575342465`
 - label_blocker_status: `candidate_generation_label_coverage_underpowered_selector_blocked`
 - label_blocker_more_blind_label_farming_not_recommended: `True`
 - quality_prioritization_review_status: `proposal_quality_prioritization_review_ready`
@@ -536,5 +546,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1426`
+- checked_flag_count: `1462`
 - violation_count: `0`

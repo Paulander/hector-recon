@@ -129,6 +129,14 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/strategy_arbitration/krk_candidate_generation_observation_gap_review_v1.json"
     )
     assert (
+        payload["source_artifacts"]["candidate_move_capacity_annotation_v2"]
+        == "reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v2.json"
+    )
+    assert (
+        payload["source_artifacts"]["candidate_move_capacity_labels_v1"]
+        == "reports/strategy_arbitration/krk_candidate_move_capacity_labels_v1.json"
+    )
+    assert (
         payload["source_artifacts"]["candidate_generation_label_blocker_review"]
         == "reports/strategy_arbitration/krk_candidate_generation_label_blocker_review_v1.json"
     )
@@ -772,6 +780,37 @@ def test_full_suite_readiness_identifies_current_gate():
         "broader_strategy_candidate",
         "plan_capsule_sequence_candidate",
     ]
+    assert (
+        strategy_source["capacity_annotation_v1_status"]
+        == "candidate_move_capacity_annotation_partial_selector_blocked"
+    )
+    assert (
+        strategy_source["capacity_annotation_v1_protected_annotation_recall"]
+        == 0.03424657534246575
+    )
+    assert (
+        strategy_source["capacity_label_manifest_status"]
+        == "bounded_candidate_move_capacity_manifest_ready"
+    )
+    assert strategy_source["capacity_label_manifest_labels_run_by_this_artifact"] is False
+    assert strategy_source["capacity_label_manifest_job_count"] == 12
+    assert strategy_source["capacity_label_manifest_stage7_job_count"] == 0
+    assert (
+        strategy_source["capacity_labels_status"]
+        == "bounded_candidate_move_capacity_labels_completed"
+    )
+    assert strategy_source["capacity_labels_label_count"] == 12
+    assert strategy_source["capacity_labels_stage7_training_label_count"] == 0
+    assert (
+        strategy_source["capacity_annotation_v2_status"]
+        == "candidate_move_capacity_annotation_improved_but_selector_blocked"
+    )
+    assert strategy_source["capacity_annotation_v2_annotated_candidate_move_count"] == 22
+    assert (
+        strategy_source["capacity_annotation_v2_protected_annotation_recall"]
+        == 0.07534246575342465
+    )
+    assert strategy_source["capacity_annotation_v2_stage7_readiness_training_row_count"] == 0
     assert (
         strategy_source["label_blocker_status"]
         == "candidate_generation_label_coverage_underpowered_selector_blocked"
