@@ -610,6 +610,36 @@ SOURCES = {
     "balanced_hard_negative_evidence_review_v0": (
         "reports/krk_balanced_hard_negative_evidence_review_v0.json"
     ),
+    "hard_negative_selector_target_dataset_v2": (
+        "reports/krk_hard_negative_selector_target_dataset_v2.json"
+    ),
+    "hard_negative_selector_target_training_semantics_review_v0": (
+        "reports/krk_hard_negative_selector_target_training_semantics_review_v0.json"
+    ),
+    "ownership_context_feature_review_v3": (
+        "reports/krk_ownership_context_feature_review_v3.json"
+    ),
+    "ownership_objective_architecture_review_v0": (
+        "reports/krk_ownership_objective_architecture_review_v0.json"
+    ),
+    "state_local_paired_ownership_objective_plan_v0": (
+        "reports/krk_state_local_paired_ownership_objective_plan_v0.json"
+    ),
+    "state_local_paired_ownership_work_package_v0": (
+        "reports/krk_state_local_paired_ownership_work_package_v0.json"
+    ),
+    "state_local_paired_ownership_inventory_v1": (
+        "reports/krk_state_local_paired_ownership_inventory_v1.json"
+    ),
+    "state_local_paired_ownership_probe_v1": (
+        "reports/krk_state_local_paired_ownership_probe_v1.json"
+    ),
+    "state_local_paired_ownership_error_audit_v0": (
+        "reports/krk_state_local_paired_ownership_error_audit_v0.json"
+    ),
+    "state_local_paired_ownership_review_v1": (
+        "reports/krk_state_local_paired_ownership_review_v1.json"
+    ),
     "clean_retrain_retry1_replacement_readiness_review": (
         "reports/krk_clean_retrain_retry1_replacement_readiness_review_v0.json"
     ),
@@ -1404,6 +1434,36 @@ def build_payload() -> dict[str, Any]:
     balanced_hard_negative_evidence_review_v0 = payloads[
         "balanced_hard_negative_evidence_review_v0"
     ]
+    hard_negative_selector_target_dataset_v2 = payloads[
+        "hard_negative_selector_target_dataset_v2"
+    ]
+    hard_negative_selector_target_training_semantics_review_v0 = payloads[
+        "hard_negative_selector_target_training_semantics_review_v0"
+    ]
+    ownership_context_feature_review_v3 = payloads[
+        "ownership_context_feature_review_v3"
+    ]
+    ownership_objective_architecture_review_v0 = payloads[
+        "ownership_objective_architecture_review_v0"
+    ]
+    state_local_paired_ownership_objective_plan_v0 = payloads[
+        "state_local_paired_ownership_objective_plan_v0"
+    ]
+    state_local_paired_ownership_work_package_v0 = payloads[
+        "state_local_paired_ownership_work_package_v0"
+    ]
+    state_local_paired_ownership_inventory_v1 = payloads[
+        "state_local_paired_ownership_inventory_v1"
+    ]
+    state_local_paired_ownership_probe_v1 = payloads[
+        "state_local_paired_ownership_probe_v1"
+    ]
+    state_local_paired_ownership_error_audit_v0 = payloads[
+        "state_local_paired_ownership_error_audit_v0"
+    ]
+    state_local_paired_ownership_review_v1 = payloads[
+        "state_local_paired_ownership_review_v1"
+    ]
     clean_replacement_readiness = payloads[
         "clean_retrain_retry1_replacement_readiness_review"
     ]
@@ -2069,6 +2129,127 @@ def build_payload() -> dict[str, Any]:
         and balanced_hard_negative_evidence_review_v0.get("stage7_promotion_allowed")
         is False
         and balanced_hard_negative_evidence_review_v0.get("stage8_training_allowed")
+        is False
+    )
+    hard_negative_targets_decision = (
+        hard_negative_selector_target_dataset_v2.get("decision") or {}
+    )
+    hard_negative_targets_summary = (
+        hard_negative_selector_target_dataset_v2.get("summary") or {}
+    )
+    hard_negative_semantics_decision = (
+        hard_negative_selector_target_training_semantics_review_v0.get("decision")
+        or {}
+    )
+    hard_negative_semantics_summary = (
+        hard_negative_selector_target_training_semantics_review_v0.get("summary") or {}
+    )
+    ownership_context_decision = ownership_context_feature_review_v3.get(
+        "decision"
+    ) or {}
+    ownership_context_summary = ownership_context_feature_review_v3.get("summary") or {}
+    ownership_architecture_decision = (
+        ownership_objective_architecture_review_v0.get("decision") or {}
+    )
+    ownership_architecture_summary = (
+        ownership_objective_architecture_review_v0.get("summary") or {}
+    )
+    paired_plan_decision = (
+        state_local_paired_ownership_objective_plan_v0.get("decision") or {}
+    )
+    paired_work_package_decision = (
+        state_local_paired_ownership_work_package_v0.get("decision") or {}
+    )
+    paired_inventory_decision = (
+        state_local_paired_ownership_inventory_v1.get("decision") or {}
+    )
+    paired_inventory_summary = (
+        state_local_paired_ownership_inventory_v1.get("summary") or {}
+    )
+    paired_probe_decision = state_local_paired_ownership_probe_v1.get("decision") or {}
+    paired_probe_summary = state_local_paired_ownership_probe_v1.get("summary") or {}
+    paired_error_audit_decision = (
+        state_local_paired_ownership_error_audit_v0.get("decision") or {}
+    )
+    paired_error_audit_summary = (
+        state_local_paired_ownership_error_audit_v0.get("summary") or {}
+    )
+    paired_review_decision = (
+        state_local_paired_ownership_review_v1.get("decision") or {}
+    )
+    paired_review_summary = state_local_paired_ownership_review_v1.get("summary") or {}
+    state_local_paired_ownership_passive = (
+        hard_negative_targets_decision.get("status")
+        == "hard_negative_selector_target_dataset_expanded_v2"
+        and hard_negative_targets_decision.get("runtime_work_allowed") is False
+        and hard_negative_targets_decision.get("selector_training_allowed") is False
+        and hard_negative_targets_summary.get("row_count") == 40
+        and hard_negative_targets_summary.get("training_row_count") == 0
+        and hard_negative_targets_summary.get("stage7_row_count") == 0
+        and hard_negative_semantics_decision.get("status")
+        == "hard_negative_targets_approved_for_offline_benchmark_only"
+        and hard_negative_semantics_decision.get("runtime_work_allowed") is False
+        and hard_negative_semantics_decision.get("selector_training_allowed") is False
+        and hard_negative_semantics_summary.get("current_training_row_count") == 0
+        and hard_negative_semantics_summary.get("stage7_row_count") == 0
+        and ownership_context_decision.get("status")
+        == "context_features_review_ready_but_not_runtime_ready"
+        and ownership_context_decision.get("runtime_work_allowed") is False
+        and ownership_context_decision.get("selector_training_allowed") is False
+        and ownership_context_summary.get("runtime_threshold_passed") is False
+        and ownership_context_summary.get("context_row_count") == 41
+        and ownership_architecture_decision.get("status")
+        == "ownership_objective_requires_state_local_pairing_review"
+        and ownership_architecture_decision.get("runtime_work_allowed") is False
+        and ownership_architecture_decision.get("selector_training_allowed") is False
+        and ownership_architecture_summary.get("stage7_rows") == 0
+        and ownership_architecture_summary.get("runtime_threshold_passed") is False
+        and paired_plan_decision.get("status")
+        == "state_local_paired_ownership_objective_plan_ready"
+        and paired_plan_decision.get("runtime_work_allowed") is False
+        and paired_plan_decision.get("selector_training_allowed") is False
+        and paired_work_package_decision.get("status") == "work_package_ready"
+        and paired_work_package_decision.get("runtime_work_allowed") is False
+        and paired_work_package_decision.get("selector_training_allowed") is False
+        and paired_inventory_decision.get("status")
+        == "paired_inventory_ready_for_non_causal_probe"
+        and paired_inventory_decision.get("runtime_work_allowed") is False
+        and paired_inventory_decision.get("selector_training_allowed") is False
+        and paired_inventory_summary.get("pair_count") == 40
+        and paired_inventory_summary.get("selector_training_row_count") == 0
+        and paired_inventory_summary.get("stage7_row_count") == 0
+        and paired_probe_decision.get("status")
+        == "semantic_gate_review_ready_runtime_feature_translation_needed"
+        and paired_probe_decision.get("runtime_work_allowed") is False
+        and paired_probe_decision.get("selector_training_allowed") is False
+        and paired_probe_summary.get("runtime_feature_passing_model_count") == 0
+        and paired_probe_summary.get("stage7_row_count") == 0
+        and paired_error_audit_decision.get("status")
+        == "safe_preservation_false_positives_are_outcome_semantics_errors"
+        and paired_error_audit_decision.get("runtime_work_allowed") is False
+        and paired_error_audit_decision.get("selector_training_allowed") is False
+        and paired_error_audit_summary.get("stage7_row_count") == 0
+        and paired_review_decision.get("status")
+        == "semantic_gate_review_ready_runtime_feature_translation_needed"
+        and paired_review_decision.get("runtime_work_allowed") is False
+        and paired_review_decision.get("selector_training_allowed") is False
+        and paired_review_summary.get("runtime_feature_passing_model_count") == 0
+        and paired_review_summary.get("stage7_row_count") == 0
+        and state_local_paired_ownership_review_v1.get("runtime_behavior_changed")
+        is False
+        and state_local_paired_ownership_review_v1.get("runtime_defaults_changed")
+        is False
+        and state_local_paired_ownership_review_v1.get("runtime_selector_implemented")
+        is False
+        and state_local_paired_ownership_review_v1.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and state_local_paired_ownership_review_v1.get("runtime_terminals_added")
+        is False
+        and state_local_paired_ownership_review_v1.get("stage7_promotion_allowed")
+        is False
+        and state_local_paired_ownership_review_v1.get("stage8_training_allowed")
         is False
     )
     replacement_readiness_decision = clean_replacement_readiness.get("decision") or {}
@@ -3292,6 +3473,123 @@ def build_payload() -> dict[str, Any]:
                 "stage7_promotion_allowed"
             ),
             "stage8_training_allowed": balanced_hard_negative_evidence_review_v0.get(
+                "stage8_training_allowed"
+            ),
+        },
+        "state_local_paired_ownership_gate": {
+            "status": paired_review_decision.get("status"),
+            "passive_semantic_gate_ready": state_local_paired_ownership_passive,
+            "hard_negative_target_dataset_status": hard_negative_targets_decision.get(
+                "status"
+            ),
+            "hard_negative_target_row_count": hard_negative_targets_summary.get(
+                "row_count"
+            ),
+            "hard_negative_training_row_count": hard_negative_targets_summary.get(
+                "training_row_count"
+            ),
+            "hard_negative_stage7_row_count": hard_negative_targets_summary.get(
+                "stage7_row_count"
+            ),
+            "hard_negative_semantics_status": hard_negative_semantics_decision.get(
+                "status"
+            ),
+            "hard_negative_semantics_current_training_row_count": (
+                hard_negative_semantics_summary.get("current_training_row_count")
+            ),
+            "ownership_context_status": ownership_context_decision.get("status"),
+            "ownership_context_row_count": ownership_context_summary.get(
+                "context_row_count"
+            ),
+            "ownership_context_runtime_threshold_passed": (
+                ownership_context_summary.get("runtime_threshold_passed")
+            ),
+            "ownership_context_targeted_negative_label_count": (
+                ownership_context_summary.get("targeted_negative_label_count")
+            ),
+            "ownership_architecture_status": ownership_architecture_decision.get(
+                "status"
+            ),
+            "ownership_architecture_runtime_threshold_passed": (
+                ownership_architecture_summary.get("runtime_threshold_passed")
+            ),
+            "ownership_architecture_stage7_rows": ownership_architecture_summary.get(
+                "stage7_rows"
+            ),
+            "objective_plan_status": paired_plan_decision.get("status"),
+            "work_package_status": paired_work_package_decision.get("status"),
+            "inventory_status": paired_inventory_decision.get("status"),
+            "inventory_pair_count": paired_inventory_summary.get("pair_count"),
+            "inventory_state_count": paired_inventory_summary.get("state_count"),
+            "inventory_same_state_conflict_pair_count": (
+                paired_inventory_summary.get("same_state_conflict_pair_count")
+            ),
+            "inventory_safe_preservation_pair_count": (
+                paired_inventory_summary.get("safe_preservation_pair_count")
+            ),
+            "inventory_selected_failure_with_alternative_success_count": (
+                paired_inventory_summary.get(
+                    "selected_failure_with_alternative_success_count"
+                )
+            ),
+            "inventory_selector_training_row_count": (
+                paired_inventory_summary.get("selector_training_row_count")
+            ),
+            "inventory_stage7_row_count": paired_inventory_summary.get(
+                "stage7_row_count"
+            ),
+            "probe_status": paired_probe_decision.get("status"),
+            "probe_row_count": paired_probe_summary.get("row_count"),
+            "probe_threshold_passing_model_count": paired_probe_summary.get(
+                "threshold_passing_model_count"
+            ),
+            "probe_runtime_feature_passing_model_count": paired_probe_summary.get(
+                "runtime_feature_passing_model_count"
+            ),
+            "probe_stage7_row_count": paired_probe_summary.get("stage7_row_count"),
+            "error_audit_status": paired_error_audit_decision.get("status"),
+            "error_audit_false_positive_count": paired_error_audit_summary.get(
+                "false_positive_count"
+            ),
+            "error_audit_false_negative_count": paired_error_audit_summary.get(
+                "false_negative_count"
+            ),
+            "review_status": paired_review_decision.get("status"),
+            "review_best_objective": paired_review_summary.get("best_objective"),
+            "review_prefer_capacity_recall": paired_review_summary.get(
+                "prefer_capacity_recall"
+            ),
+            "review_safe_preservation_recall": paired_review_summary.get(
+                "safe_preservation_recall"
+            ),
+            "review_selected_preservation_recall": paired_review_summary.get(
+                "selected_preservation_recall"
+            ),
+            "review_runtime_feature_passing_model_count": (
+                paired_review_summary.get("runtime_feature_passing_model_count")
+            ),
+            "review_stage7_row_count": paired_review_summary.get("stage7_row_count"),
+            "runtime_behavior_changed": state_local_paired_ownership_review_v1.get(
+                "runtime_behavior_changed"
+            ),
+            "runtime_defaults_changed": state_local_paired_ownership_review_v1.get(
+                "runtime_defaults_changed"
+            ),
+            "runtime_selector_implemented": state_local_paired_ownership_review_v1.get(
+                "runtime_selector_implemented"
+            ),
+            "runtime_dtm_or_tablebase_lookup": (
+                state_local_paired_ownership_review_v1.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "runtime_terminals_added": state_local_paired_ownership_review_v1.get(
+                "runtime_terminals_added"
+            ),
+            "stage7_promotion_allowed": state_local_paired_ownership_review_v1.get(
+                "stage7_promotion_allowed"
+            ),
+            "stage8_training_allowed": state_local_paired_ownership_review_v1.get(
                 "stage8_training_allowed"
             ),
         },
@@ -6927,6 +7225,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     abstention_selector_safety = payload["abstention_selector_safety_gate"]
     targeted_ownership_recovery = payload["targeted_ownership_recovery_gate"]
     balanced_hard_negative = payload["balanced_hard_negative_gate"]
+    state_local_paired_ownership = payload["state_local_paired_ownership_gate"]
     clean_replacement = payload["clean_replacement_review_gate"]
     stage7 = payload["stage7_sampling_gate"]
     sequence = payload["sequence_policy"]
@@ -7150,6 +7449,37 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- runtime_terminals_added: `{balanced_hard_negative['runtime_terminals_added']}`",
         f"- stage7_promotion_allowed: `{balanced_hard_negative['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{balanced_hard_negative['stage8_training_allowed']}`",
+        "",
+        "## State-Local Paired Ownership",
+        "",
+        f"- passive_semantic_gate_ready: `{state_local_paired_ownership['passive_semantic_gate_ready']}`",
+        f"- hard_negative_target_dataset_status: `{state_local_paired_ownership['hard_negative_target_dataset_status']}`",
+        f"- hard_negative_target_row_count: `{state_local_paired_ownership['hard_negative_target_row_count']}`",
+        f"- hard_negative_training_row_count: `{state_local_paired_ownership['hard_negative_training_row_count']}`",
+        f"- hard_negative_stage7_row_count: `{state_local_paired_ownership['hard_negative_stage7_row_count']}`",
+        f"- ownership_context_status: `{state_local_paired_ownership['ownership_context_status']}`",
+        f"- ownership_context_runtime_threshold_passed: `{state_local_paired_ownership['ownership_context_runtime_threshold_passed']}`",
+        f"- ownership_architecture_status: `{state_local_paired_ownership['ownership_architecture_status']}`",
+        f"- objective_plan_status: `{state_local_paired_ownership['objective_plan_status']}`",
+        f"- work_package_status: `{state_local_paired_ownership['work_package_status']}`",
+        f"- inventory_status: `{state_local_paired_ownership['inventory_status']}`",
+        f"- inventory_pair_count: `{state_local_paired_ownership['inventory_pair_count']}`",
+        f"- inventory_same_state_conflict_pair_count: `{state_local_paired_ownership['inventory_same_state_conflict_pair_count']}`",
+        f"- inventory_selector_training_row_count: `{state_local_paired_ownership['inventory_selector_training_row_count']}`",
+        f"- inventory_stage7_row_count: `{state_local_paired_ownership['inventory_stage7_row_count']}`",
+        f"- probe_status: `{state_local_paired_ownership['probe_status']}`",
+        f"- probe_threshold_passing_model_count: `{state_local_paired_ownership['probe_threshold_passing_model_count']}`",
+        f"- probe_runtime_feature_passing_model_count: `{state_local_paired_ownership['probe_runtime_feature_passing_model_count']}`",
+        f"- error_audit_status: `{state_local_paired_ownership['error_audit_status']}`",
+        f"- review_status: `{state_local_paired_ownership['review_status']}`",
+        f"- review_best_objective: `{state_local_paired_ownership['review_best_objective']}`",
+        f"- review_runtime_feature_passing_model_count: `{state_local_paired_ownership['review_runtime_feature_passing_model_count']}`",
+        f"- review_stage7_row_count: `{state_local_paired_ownership['review_stage7_row_count']}`",
+        f"- runtime_selector_implemented: `{state_local_paired_ownership['runtime_selector_implemented']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{state_local_paired_ownership['runtime_dtm_or_tablebase_lookup']}`",
+        f"- runtime_terminals_added: `{state_local_paired_ownership['runtime_terminals_added']}`",
+        f"- stage7_promotion_allowed: `{state_local_paired_ownership['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{state_local_paired_ownership['stage8_training_allowed']}`",
         "",
         "## Clean Replacement Review",
         "",

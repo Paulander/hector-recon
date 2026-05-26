@@ -594,6 +594,9 @@ def build_payload() -> dict[str, Any]:
         readiness.get("targeted_ownership_recovery_gate") or {}
     )
     balanced_hard_negative_gate = readiness.get("balanced_hard_negative_gate") or {}
+    state_local_paired_ownership_gate = (
+        readiness.get("state_local_paired_ownership_gate") or {}
+    )
     clean_replacement_review_gate = readiness.get("clean_replacement_review_gate") or {}
     active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
@@ -1256,6 +1259,98 @@ def build_payload() -> dict[str, Any]:
             ),
             "balanced_hard_negative_stage8_training_allowed": (
                 balanced_hard_negative_gate.get("stage8_training_allowed")
+            ),
+            "state_local_paired_ownership_passive_ready": (
+                state_local_paired_ownership_gate.get("passive_semantic_gate_ready")
+            ),
+            "state_local_paired_hard_negative_target_status": (
+                state_local_paired_ownership_gate.get(
+                    "hard_negative_target_dataset_status"
+                )
+            ),
+            "state_local_paired_hard_negative_target_row_count": (
+                state_local_paired_ownership_gate.get("hard_negative_target_row_count")
+            ),
+            "state_local_paired_hard_negative_training_row_count": (
+                state_local_paired_ownership_gate.get("hard_negative_training_row_count")
+            ),
+            "state_local_paired_hard_negative_stage7_row_count": (
+                state_local_paired_ownership_gate.get("hard_negative_stage7_row_count")
+            ),
+            "state_local_paired_ownership_context_status": (
+                state_local_paired_ownership_gate.get("ownership_context_status")
+            ),
+            "state_local_paired_ownership_context_runtime_threshold_passed": (
+                state_local_paired_ownership_gate.get(
+                    "ownership_context_runtime_threshold_passed"
+                )
+            ),
+            "state_local_paired_ownership_architecture_status": (
+                state_local_paired_ownership_gate.get("ownership_architecture_status")
+            ),
+            "state_local_paired_inventory_status": (
+                state_local_paired_ownership_gate.get("inventory_status")
+            ),
+            "state_local_paired_inventory_pair_count": (
+                state_local_paired_ownership_gate.get("inventory_pair_count")
+            ),
+            "state_local_paired_inventory_same_state_conflict_pair_count": (
+                state_local_paired_ownership_gate.get(
+                    "inventory_same_state_conflict_pair_count"
+                )
+            ),
+            "state_local_paired_inventory_selector_training_row_count": (
+                state_local_paired_ownership_gate.get(
+                    "inventory_selector_training_row_count"
+                )
+            ),
+            "state_local_paired_inventory_stage7_row_count": (
+                state_local_paired_ownership_gate.get("inventory_stage7_row_count")
+            ),
+            "state_local_paired_probe_status": (
+                state_local_paired_ownership_gate.get("probe_status")
+            ),
+            "state_local_paired_probe_threshold_passing_model_count": (
+                state_local_paired_ownership_gate.get(
+                    "probe_threshold_passing_model_count"
+                )
+            ),
+            "state_local_paired_probe_runtime_feature_passing_model_count": (
+                state_local_paired_ownership_gate.get(
+                    "probe_runtime_feature_passing_model_count"
+                )
+            ),
+            "state_local_paired_error_audit_status": (
+                state_local_paired_ownership_gate.get("error_audit_status")
+            ),
+            "state_local_paired_review_status": (
+                state_local_paired_ownership_gate.get("review_status")
+            ),
+            "state_local_paired_review_best_objective": (
+                state_local_paired_ownership_gate.get("review_best_objective")
+            ),
+            "state_local_paired_review_runtime_feature_passing_model_count": (
+                state_local_paired_ownership_gate.get(
+                    "review_runtime_feature_passing_model_count"
+                )
+            ),
+            "state_local_paired_review_stage7_row_count": (
+                state_local_paired_ownership_gate.get("review_stage7_row_count")
+            ),
+            "state_local_paired_runtime_selector_implemented": (
+                state_local_paired_ownership_gate.get("runtime_selector_implemented")
+            ),
+            "state_local_paired_runtime_dtm_or_tablebase_lookup": (
+                state_local_paired_ownership_gate.get("runtime_dtm_or_tablebase_lookup")
+            ),
+            "state_local_paired_runtime_terminals_added": (
+                state_local_paired_ownership_gate.get("runtime_terminals_added")
+            ),
+            "state_local_paired_stage7_promotion_allowed": (
+                state_local_paired_ownership_gate.get("stage7_promotion_allowed")
+            ),
+            "state_local_paired_stage8_training_allowed": (
+                state_local_paired_ownership_gate.get("stage8_training_allowed")
             ),
             "clean_replacement_review_passive_ready": clean_replacement_review_gate.get(
                 "passive_review_ready"

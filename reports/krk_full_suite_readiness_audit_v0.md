@@ -202,6 +202,37 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## State-Local Paired Ownership
+
+- passive_semantic_gate_ready: `True`
+- hard_negative_target_dataset_status: `hard_negative_selector_target_dataset_expanded_v2`
+- hard_negative_target_row_count: `40`
+- hard_negative_training_row_count: `0`
+- hard_negative_stage7_row_count: `0`
+- ownership_context_status: `context_features_review_ready_but_not_runtime_ready`
+- ownership_context_runtime_threshold_passed: `False`
+- ownership_architecture_status: `ownership_objective_requires_state_local_pairing_review`
+- objective_plan_status: `state_local_paired_ownership_objective_plan_ready`
+- work_package_status: `work_package_ready`
+- inventory_status: `paired_inventory_ready_for_non_causal_probe`
+- inventory_pair_count: `40`
+- inventory_same_state_conflict_pair_count: `9`
+- inventory_selector_training_row_count: `0`
+- inventory_stage7_row_count: `0`
+- probe_status: `semantic_gate_review_ready_runtime_feature_translation_needed`
+- probe_threshold_passing_model_count: `2`
+- probe_runtime_feature_passing_model_count: `0`
+- error_audit_status: `safe_preservation_false_positives_are_outcome_semantics_errors`
+- review_status: `semantic_gate_review_ready_runtime_feature_translation_needed`
+- review_best_objective: `safe_preservation_gated_model`
+- review_runtime_feature_passing_model_count: `0`
+- review_stage7_row_count: `0`
+- runtime_selector_implemented: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- runtime_terminals_added: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Clean Replacement Review
 
 - passive_review_ready: `True`
@@ -324,7 +355,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `8a984f5c559e3f75f081c9da16b4fc63170d92d4149a3b7b0899c46ededefd04`
+- expected_readiness_fingerprint: `fe6ec8d7f1fd351bdb62918af516a753e28fa93cdfb01743a6ae8ec41b411ad9`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -853,5 +884,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1980`
+- checked_flag_count: `2050`
 - violation_count: `0`

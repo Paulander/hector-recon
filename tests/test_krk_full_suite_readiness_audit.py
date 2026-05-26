@@ -511,6 +511,22 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_balanced_hard_negative_evidence_review_v0.json"
     )
     assert (
+        payload["source_artifacts"]["hard_negative_selector_target_dataset_v2"]
+        == "reports/krk_hard_negative_selector_target_dataset_v2.json"
+    )
+    assert (
+        payload["source_artifacts"]["ownership_context_feature_review_v3"]
+        == "reports/krk_ownership_context_feature_review_v3.json"
+    )
+    assert (
+        payload["source_artifacts"]["state_local_paired_ownership_inventory_v1"]
+        == "reports/krk_state_local_paired_ownership_inventory_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["state_local_paired_ownership_review_v1"]
+        == "reports/krk_state_local_paired_ownership_review_v1.json"
+    )
+    assert (
         payload["source_artifacts"][
             "clean_retrain_retry1_replacement_readiness_review"
         ]
@@ -948,6 +964,77 @@ def test_full_suite_readiness_identifies_current_gate():
     assert balanced_hard_negative["runtime_terminals_added"] is False
     assert balanced_hard_negative["stage7_promotion_allowed"] is False
     assert balanced_hard_negative["stage8_training_allowed"] is False
+
+    state_local = payload["state_local_paired_ownership_gate"]
+    assert state_local["passive_semantic_gate_ready"] is True
+    assert (
+        state_local["hard_negative_target_dataset_status"]
+        == "hard_negative_selector_target_dataset_expanded_v2"
+    )
+    assert state_local["hard_negative_target_row_count"] == 40
+    assert state_local["hard_negative_training_row_count"] == 0
+    assert state_local["hard_negative_stage7_row_count"] == 0
+    assert (
+        state_local["hard_negative_semantics_status"]
+        == "hard_negative_targets_approved_for_offline_benchmark_only"
+    )
+    assert state_local["hard_negative_semantics_current_training_row_count"] == 0
+    assert (
+        state_local["ownership_context_status"]
+        == "context_features_review_ready_but_not_runtime_ready"
+    )
+    assert state_local["ownership_context_row_count"] == 41
+    assert state_local["ownership_context_runtime_threshold_passed"] is False
+    assert state_local["ownership_context_targeted_negative_label_count"] == 6
+    assert (
+        state_local["ownership_architecture_status"]
+        == "ownership_objective_requires_state_local_pairing_review"
+    )
+    assert state_local["ownership_architecture_runtime_threshold_passed"] is False
+    assert state_local["ownership_architecture_stage7_rows"] == 0
+    assert (
+        state_local["objective_plan_status"]
+        == "state_local_paired_ownership_objective_plan_ready"
+    )
+    assert state_local["work_package_status"] == "work_package_ready"
+    assert state_local["inventory_status"] == "paired_inventory_ready_for_non_causal_probe"
+    assert state_local["inventory_pair_count"] == 40
+    assert state_local["inventory_state_count"] == 14
+    assert state_local["inventory_same_state_conflict_pair_count"] == 9
+    assert state_local["inventory_safe_preservation_pair_count"] == 23
+    assert state_local["inventory_selector_training_row_count"] == 0
+    assert state_local["inventory_stage7_row_count"] == 0
+    assert (
+        state_local["probe_status"]
+        == "semantic_gate_review_ready_runtime_feature_translation_needed"
+    )
+    assert state_local["probe_row_count"] == 32
+    assert state_local["probe_threshold_passing_model_count"] == 2
+    assert state_local["probe_runtime_feature_passing_model_count"] == 0
+    assert state_local["probe_stage7_row_count"] == 0
+    assert (
+        state_local["error_audit_status"]
+        == "safe_preservation_false_positives_are_outcome_semantics_errors"
+    )
+    assert state_local["error_audit_false_positive_count"] == 6
+    assert state_local["error_audit_false_negative_count"] == 1
+    assert (
+        state_local["review_status"]
+        == "semantic_gate_review_ready_runtime_feature_translation_needed"
+    )
+    assert state_local["review_best_objective"] == "safe_preservation_gated_model"
+    assert state_local["review_prefer_capacity_recall"] == 1.0
+    assert state_local["review_safe_preservation_recall"] == 1.0
+    assert state_local["review_selected_preservation_recall"] == 1.0
+    assert state_local["review_runtime_feature_passing_model_count"] == 0
+    assert state_local["review_stage7_row_count"] == 0
+    assert state_local["runtime_behavior_changed"] is False
+    assert state_local["runtime_defaults_changed"] is False
+    assert state_local["runtime_selector_implemented"] is False
+    assert state_local["runtime_dtm_or_tablebase_lookup"] is False
+    assert state_local["runtime_terminals_added"] is False
+    assert state_local["stage7_promotion_allowed"] is False
+    assert state_local["stage8_training_allowed"] is False
 
     clean_replacement = payload["clean_replacement_review_gate"]
     assert clean_replacement["passive_review_ready"] is True

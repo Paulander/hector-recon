@@ -414,6 +414,85 @@ def test_gate_advancement_reports_current_stage7_blocker():
         is False
     )
     assert payload["summary"]["balanced_hard_negative_stage8_training_allowed"] is False
+    assert payload["summary"]["state_local_paired_ownership_passive_ready"] is True
+    assert (
+        payload["summary"]["state_local_paired_hard_negative_target_status"]
+        == "hard_negative_selector_target_dataset_expanded_v2"
+    )
+    assert payload["summary"]["state_local_paired_hard_negative_target_row_count"] == 40
+    assert (
+        payload["summary"]["state_local_paired_hard_negative_training_row_count"]
+        == 0
+    )
+    assert payload["summary"]["state_local_paired_hard_negative_stage7_row_count"] == 0
+    assert (
+        payload["summary"]["state_local_paired_ownership_context_status"]
+        == "context_features_review_ready_but_not_runtime_ready"
+    )
+    assert (
+        payload["summary"][
+            "state_local_paired_ownership_context_runtime_threshold_passed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["state_local_paired_ownership_architecture_status"]
+        == "ownership_objective_requires_state_local_pairing_review"
+    )
+    assert (
+        payload["summary"]["state_local_paired_inventory_status"]
+        == "paired_inventory_ready_for_non_causal_probe"
+    )
+    assert payload["summary"]["state_local_paired_inventory_pair_count"] == 40
+    assert (
+        payload["summary"][
+            "state_local_paired_inventory_same_state_conflict_pair_count"
+        ]
+        == 9
+    )
+    assert (
+        payload["summary"]["state_local_paired_inventory_selector_training_row_count"]
+        == 0
+    )
+    assert payload["summary"]["state_local_paired_inventory_stage7_row_count"] == 0
+    assert (
+        payload["summary"]["state_local_paired_probe_status"]
+        == "semantic_gate_review_ready_runtime_feature_translation_needed"
+    )
+    assert payload["summary"]["state_local_paired_probe_threshold_passing_model_count"] == 2
+    assert (
+        payload["summary"][
+            "state_local_paired_probe_runtime_feature_passing_model_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["state_local_paired_error_audit_status"]
+        == "safe_preservation_false_positives_are_outcome_semantics_errors"
+    )
+    assert (
+        payload["summary"]["state_local_paired_review_status"]
+        == "semantic_gate_review_ready_runtime_feature_translation_needed"
+    )
+    assert (
+        payload["summary"]["state_local_paired_review_best_objective"]
+        == "safe_preservation_gated_model"
+    )
+    assert (
+        payload["summary"][
+            "state_local_paired_review_runtime_feature_passing_model_count"
+        ]
+        == 0
+    )
+    assert payload["summary"]["state_local_paired_review_stage7_row_count"] == 0
+    assert payload["summary"]["state_local_paired_runtime_selector_implemented"] is False
+    assert (
+        payload["summary"]["state_local_paired_runtime_dtm_or_tablebase_lookup"]
+        is False
+    )
+    assert payload["summary"]["state_local_paired_runtime_terminals_added"] is False
+    assert payload["summary"]["state_local_paired_stage7_promotion_allowed"] is False
+    assert payload["summary"]["state_local_paired_stage8_training_allowed"] is False
     assert payload["summary"]["clean_replacement_review_passive_ready"] is True
     assert (
         payload["summary"]["clean_replacement_review_packet_status"]
