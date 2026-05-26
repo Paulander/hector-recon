@@ -436,6 +436,58 @@ def test_stage8_training_readiness_review_routes_blocked_collection_request_to_r
     assert payload["decision"]["stage8_training_allowed"] is False
 
 
+def test_stage8_training_readiness_review_prioritizes_protected_stack_repair():
+    readiness = {
+        "protected_stack": {
+            "ready": False,
+            "rollback_paths_preserved": False,
+            "active_stack_path_status": {"all_paths_safe": False},
+            "rollback_common_paths_distinct": False,
+            "filesystem_snapshots_replaced": True,
+        },
+        "stage_status": {
+            "stage4": {"ready_for_current_suite": True},
+            "stage7": {
+                "success_controls_ready": True,
+                "success_controls": 5,
+                "success_controls_required": 5,
+                "ready_for_promotion": False,
+            },
+        },
+        "protected_failure_contrast_gate": {
+            "ready_for_explicit_approval": True,
+            "approval_request_status": (
+                "protected_plan_window_failure_contrast_approval_request_ready"
+            ),
+            "approval_request_blockers": [],
+            "approval_request_ready_for_collection": True,
+        },
+        "explicit_gate_blockers": [
+            "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+        ],
+    }
+    benchmark_review = {
+        "decision": {"status": "sequence_policy_benchmark_mixed_plan_window_underpowered"}
+    }
+
+    payload = _review.build_payload(readiness=readiness, benchmark_review=benchmark_review)
+
+    assert "protected_stage5_6_stack_not_ready" in payload["blockers"]
+    assert "protected_stack_rollback_paths_not_preserved" in payload["blockers"]
+    assert "protected_stack_active_paths_unsafe" in payload["blockers"]
+    assert "protected_stack_rollback_common_paths_not_distinct" in payload["blockers"]
+    assert (
+        "protected_stack_filesystem_snapshot_replacement_detected"
+        in payload["blockers"]
+    )
+    assert (
+        payload["decision"]["status"]
+        == "stage8_training_blocked_pending_protected_stack_repair"
+    )
+    assert payload["decision"]["recommended_next_step"] == "repair_protected_stack_validation"
+    assert payload["decision"]["stage8_training_allowed"] is False
+
+
 def test_stage8_training_readiness_review_falls_back_when_collection_ready_is_null():
     readiness = {
         "protected_stack": {

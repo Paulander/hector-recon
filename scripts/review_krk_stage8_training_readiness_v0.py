@@ -69,6 +69,27 @@ def build_payload(
     protected_failure_contrast = readiness.get("protected_failure_contrast_gate") or {}
     active_stack_path_status = protected.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected.get("rollback_stack_path_status") or {}
+    protected_stack_blockers: list[str] = []
+    if protected.get("ready") is False:
+        protected_stack_blockers.append("protected_stage5_6_stack_not_ready")
+    if protected.get("rollback_paths_preserved") is False:
+        protected_stack_blockers.append("protected_stack_rollback_paths_not_preserved")
+    if active_stack_path_status.get("all_paths_safe") is False:
+        protected_stack_blockers.append("protected_stack_active_paths_unsafe")
+    if active_stack_path_status.get("all_paths_exist") is False:
+        protected_stack_blockers.append("protected_stack_active_paths_missing")
+    if rollback_stack_path_status.get("all_paths_safe") is False:
+        protected_stack_blockers.append("protected_stack_rollback_paths_unsafe")
+    if rollback_stack_path_status.get("all_paths_exist") is False:
+        protected_stack_blockers.append("protected_stack_rollback_paths_missing")
+    if protected.get("rollback_common_paths_distinct") is False:
+        protected_stack_blockers.append(
+            "protected_stack_rollback_common_paths_not_distinct"
+        )
+    if protected.get("filesystem_snapshots_replaced") is True:
+        protected_stack_blockers.append(
+            "protected_stack_filesystem_snapshot_replacement_detected"
+        )
     readiness_boundaries = readiness.get("runtime_and_training_boundaries") or {}
     explicit_gate_blockers = set(readiness.get("explicit_gate_blockers") or [])
     hard_blockers = set(readiness.get("hard_blockers") or [])
@@ -148,8 +169,7 @@ def build_payload(
 
     blockers: list[str] = []
     warnings: list[str] = []
-    if not protected_ready:
-        blockers.append("protected_stage5_6_stack_not_ready")
+    blockers.extend(protected_stack_blockers)
     if not stage7_controls_ready:
         blockers.append("stage7_clean_success_controls_missing")
     if not sequence_review_ready:
@@ -176,6 +196,9 @@ def build_payload(
         if "sequence_policy_forbidden_training_or_runtime_rows" in blockers:
             status = "stage8_training_blocked_forbidden_training_or_runtime_rows"
             next_step = "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+        elif protected_stack_blockers:
+            status = "stage8_training_blocked_pending_protected_stack_repair"
+            next_step = "repair_protected_stack_validation"
         elif "stage7_clean_success_controls_missing" in blockers:
             status = "stage8_training_blocked_pending_stage7_sequence_gate"
             next_step = "fill_stage7_success_controls_and_rerun_passive_gate_advancement"

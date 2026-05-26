@@ -94,6 +94,27 @@ def build_payload(
     protected_stack = readiness.get("protected_stack") or {}
     active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
+    protected_stack_blockers: list[str] = []
+    if protected_stack.get("ready") is False:
+        protected_stack_blockers.append("protected_stage5_6_stack_not_ready")
+    if protected_stack.get("rollback_paths_preserved") is False:
+        protected_stack_blockers.append("protected_stack_rollback_paths_not_preserved")
+    if active_stack_path_status.get("all_paths_safe") is False:
+        protected_stack_blockers.append("protected_stack_active_paths_unsafe")
+    if active_stack_path_status.get("all_paths_exist") is False:
+        protected_stack_blockers.append("protected_stack_active_paths_missing")
+    if rollback_stack_path_status.get("all_paths_safe") is False:
+        protected_stack_blockers.append("protected_stack_rollback_paths_unsafe")
+    if rollback_stack_path_status.get("all_paths_exist") is False:
+        protected_stack_blockers.append("protected_stack_rollback_paths_missing")
+    if protected_stack.get("rollback_common_paths_distinct") is False:
+        protected_stack_blockers.append(
+            "protected_stack_rollback_common_paths_not_distinct"
+        )
+    if protected_stack.get("filesystem_snapshots_replaced") is True:
+        protected_stack_blockers.append(
+            "protected_stack_filesystem_snapshot_replacement_detected"
+        )
     sequence_policy = readiness.get("sequence_policy") or {}
     readiness_boundaries = readiness.get("runtime_and_training_boundaries") or {}
     explicit_gate_blockers = set(readiness.get("explicit_gate_blockers") or [])
@@ -177,7 +198,9 @@ def build_payload(
     if stage4_binary_insufficient:
         findings.append("stage4_one_term_binary_rule_insufficient")
     if protected_plan_window_underpowered:
-        if not protected_failure_contrast_request_ready:
+        if protected_stack_blockers:
+            blockers.extend(protected_stack_blockers)
+        elif not protected_failure_contrast_request_ready:
             blockers.append(
                 "protected_plan_window_failure_contrast_approval_request_blocked"
             )
@@ -207,6 +230,9 @@ def build_payload(
             "sequence_policy_pilot_blocked_pending_protected_failure_contrast_approval_request_repair"
         )
         recommended_next_step = "repair_protected_failure_contrast_approval_request_scope"
+    elif protected_plan_window_underpowered and protected_stack_blockers:
+        decision_status = "sequence_policy_pilot_blocked_pending_protected_stack_repair"
+        recommended_next_step = "repair_protected_stack_validation"
     elif protected_plan_window_underpowered and protected_failure_contrast_pending_approval:
         decision_status = (
             "sequence_policy_pilot_underpowered_pending_protected_failure_contrast_collection"
