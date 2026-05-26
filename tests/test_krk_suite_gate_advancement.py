@@ -695,6 +695,125 @@ def test_gate_advancement_reports_current_stage7_blocker():
         ]
         is False
     )
+    assert (
+        payload["summary"]["candidate_generation_trace_refresh_sandbox_status"]
+        == "candidate_generation_refresh_sandbox_ready_for_non_causal_coverage_analysis"
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_trace_refresh_sandbox_generated_frame_count"
+        ]
+        == 25
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_trace_refresh_sandbox_default_off_equivalence_passed"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"]["candidate_generation_trace_refresh_coverage_status"]
+        == "candidate_generation_refresh_coverage_ready_for_trace_dataset_refresh"
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_trace_refresh_coverage_exact_positive_capacity_recall"
+        ]
+        == 1.0
+    )
+    assert (
+        payload["summary"]["candidate_generation_trace_dataset_v4_status"]
+        == "strategy_sequence_dataset_v4_refreshed_non_causal_selector_blocked"
+    )
+    assert payload["summary"]["candidate_generation_trace_dataset_v4_row_count"] == 307
+    assert (
+        payload["summary"]["candidate_generation_trace_v4_boundary_status"]
+        == "candidate_generation_v4_next_runtime_boundary_context_ready_selector_blocked"
+    )
+    assert (
+        payload["summary"]["candidate_generation_trace_source_gap_manifest_status"]
+        == "candidate_source_gap_manifest_ready_non_causal"
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_trace_source_gap_exact_missing_positive_capacity_count"
+        ]
+        == 21
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_trace_exact_trace_runtime_review_status"
+        ]
+        == "exact_trace_enrichment_runtime_review_ready"
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_trace_exact_trace_runtime_review_implementation_authorized"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["candidate_generation_trace_exact_trace_sandbox_status"]
+        == "exact_trace_enrichment_sandbox_ready_for_non_causal_coverage_analysis"
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_trace_exact_trace_sandbox_generated_frame_count"
+        ]
+        == 3
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_trace_exact_trace_coverage_exact_gap_recall"
+        ]
+        == 1.0
+    )
+    assert (
+        payload["summary"]["candidate_generation_trace_dataset_v5_status"]
+        == "strategy_sequence_dataset_v5_refreshed_non_causal_selector_blocked"
+    )
+    assert payload["summary"]["candidate_generation_trace_dataset_v5_row_count"] == 310
+    assert (
+        payload["summary"][
+            "candidate_generation_trace_dataset_v5_selector_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_trace_v5_context_benchmark_status"
+        ]
+        == "candidate_generation_v5_context_useful_selector_still_blocked"
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_trace_v5_exact_positive_capacity_recall_from_candidate_generation_trace"
+        ]
+        == 0.3076923076923077
+    )
+    assert (
+        payload["summary"]["candidate_generation_trace_v5_boundary_status"]
+        == "candidate_generation_v5_next_boundary_context_improved_selector_blocked"
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_trace_v5_boundary_implement_new_runtime_sandbox"
+        ]
+        is False
+    )
+    assert payload["summary"]["candidate_generation_trace_runtime_work_allowed"] is False
+    assert (
+        payload["summary"]["candidate_generation_trace_selector_training_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["candidate_generation_trace_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["candidate_generation_trace_stage8_training_allowed"]
+        is False
+    )
 
 
 def test_gate_advancement_writer_includes_all_passive_steps():

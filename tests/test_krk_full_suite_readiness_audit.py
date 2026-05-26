@@ -142,6 +142,18 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         ]
         == "reports/strategy_arbitration/krk_candidate_generation_training_refresh_runtime_review_packet_v3.json"
     )
+    assert (
+        payload["source_artifacts"]["candidate_generation_refresh_sandbox"]
+        == "reports/strategy_arbitration/krk_candidate_generation_refresh_sandbox_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_sequence_dataset_v5"]
+        == "reports/strategy_arbitration/krk_strategy_sequence_dataset_v5.json"
+    )
+    assert (
+        payload["source_artifacts"]["candidate_generation_v5_next_boundary_review"]
+        == "reports/strategy_arbitration/krk_candidate_generation_v5_next_boundary_review_v0.json"
+    )
 
 
 def test_full_suite_readiness_identifies_current_gate():
@@ -781,6 +793,123 @@ def test_full_suite_readiness_identifies_current_gate():
     assert candidate_generation["selector_training_allowed"] is False
     assert candidate_generation["stage7_promotion_allowed"] is False
     assert candidate_generation["stage8_training_allowed"] is False
+
+    trace_context = payload["candidate_generation_trace_context_gate"]
+    assert (
+        trace_context["refresh_sandbox_status"]
+        == "candidate_generation_refresh_sandbox_ready_for_non_causal_coverage_analysis"
+    )
+    assert trace_context["refresh_sandbox_default_off_equivalence_passed"] is True
+    assert trace_context["refresh_sandbox_generated_frame_count"] == 25
+    assert trace_context["refresh_sandbox_stage7_held_out_frame_count"] == 0
+    assert trace_context["refresh_sandbox_selected_move_delta_count"] == 0
+    assert trace_context["refresh_sandbox_selected_provider_delta_count"] == 0
+    assert trace_context["refresh_sandbox_score_delta_count"] == 0
+    assert (
+        trace_context["refresh_coverage_status"]
+        == "candidate_generation_refresh_coverage_ready_for_trace_dataset_refresh"
+    )
+    assert trace_context["refresh_coverage_exact_positive_capacity_recall"] == 1.0
+    assert trace_context["refresh_coverage_exact_negative_capacity_exposure_rate"] == 0.0
+    assert trace_context["refresh_coverage_stage4_frame_count"] == 0
+    assert trace_context["refresh_coverage_stage7_frame_count"] == 0
+    assert (
+        trace_context["dataset_v4_status"]
+        == "strategy_sequence_dataset_v4_refreshed_non_causal_selector_blocked"
+    )
+    assert trace_context["dataset_v4_row_count"] == 307
+    assert trace_context["dataset_v4_runtime_trace_feature_row_count"] == 31
+    assert trace_context["dataset_v4_selector_training_row_count"] == 0
+    assert trace_context["dataset_v4_stage7_readiness_training_row_count"] == 0
+    assert (
+        trace_context["v4_boundary_status"]
+        == "candidate_generation_v4_next_runtime_boundary_context_ready_selector_blocked"
+    )
+    assert trace_context["v4_boundary_new_runtime_sandbox_allowed"] is False
+    assert (
+        trace_context["scope_gap_status"]
+        == "candidate_generation_scope_gap_review_blocks_new_runtime_boundary"
+    )
+    assert (
+        trace_context["source_gap_manifest_status"]
+        == "candidate_source_gap_manifest_ready_non_causal"
+    )
+    assert trace_context["source_gap_exact_covered_positive_capacity_count"] == 5
+    assert trace_context["source_gap_exact_missing_positive_capacity_count"] == 21
+    assert trace_context["source_gap_policy_cell_covered_exact_missing_count"] == 15
+    assert (
+        trace_context["source_expansion_options_status"]
+        == "candidate_source_expansion_options_review_complete_runtime_packet_required"
+    )
+    assert (
+        trace_context["source_expansion_preferred_next_review"]
+        == "exact_trace_enrichment_within_existing_policy_cells"
+    )
+    assert (
+        trace_context["exact_trace_runtime_review_status"]
+        == "exact_trace_enrichment_runtime_review_ready"
+    )
+    assert trace_context["exact_trace_runtime_review_ready"] is True
+    assert trace_context["exact_trace_runtime_review_implementation_authorized"] is False
+    assert (
+        trace_context["exact_trace_sandbox_status"]
+        == "exact_trace_enrichment_sandbox_ready_for_non_causal_coverage_analysis"
+    )
+    assert trace_context["exact_trace_sandbox_default_off_equivalence_passed"] is True
+    assert trace_context["exact_trace_sandbox_generated_frame_count"] == 3
+    assert trace_context["exact_trace_sandbox_selected_move_delta_count"] == 0
+    assert trace_context["exact_trace_sandbox_selected_provider_delta_count"] == 0
+    assert trace_context["exact_trace_sandbox_score_delta_count"] == 0
+    assert (
+        trace_context["exact_trace_coverage_status"]
+        == "exact_trace_enrichment_coverage_ready_for_trace_dataset_refresh"
+    )
+    assert trace_context["exact_trace_coverage_exact_gap_recall"] == 1.0
+    assert trace_context["exact_trace_coverage_stage4_frame_count"] == 0
+    assert trace_context["exact_trace_coverage_stage7_frame_count"] == 0
+    assert (
+        trace_context["dataset_v5_status"]
+        == "strategy_sequence_dataset_v5_refreshed_non_causal_selector_blocked"
+    )
+    assert trace_context["dataset_v5_row_count"] == 310
+    assert trace_context["dataset_v5_runtime_trace_feature_row_count"] == 34
+    assert trace_context["dataset_v5_exact_trace_enrichment_row_count"] == 3
+    assert trace_context["dataset_v5_selector_training_row_count"] == 0
+    assert trace_context["dataset_v5_stage7_readiness_training_row_count"] == 0
+    assert (
+        trace_context["dataset_v5_quality_status"]
+        == "strategy_sequence_dataset_v5_quality_candidate_generation_context_ready_selector_blocked"
+    )
+    assert (
+        trace_context["dataset_v5_context_status"]
+        == "strategy_sequence_dataset_v5_context_integrated_selector_still_blocked"
+    )
+    assert (
+        trace_context["v5_context_benchmark_status"]
+        == "candidate_generation_v5_context_useful_selector_still_blocked"
+    )
+    assert (
+        trace_context[
+            "v5_exact_positive_capacity_recall_from_candidate_generation_trace"
+        ]
+        == 0.3076923076923077
+    )
+    assert trace_context["v5_exact_positive_capacity_recall_delta_vs_v4"] == (
+        0.11538461538461539
+    )
+    assert trace_context["v5_policy_cell_negative_capacity_exposure"] == 0.0
+    assert (
+        trace_context["v5_boundary_status"]
+        == "candidate_generation_v5_next_boundary_context_improved_selector_blocked"
+    )
+    assert trace_context["v5_boundary_implement_new_runtime_sandbox"] is False
+    assert trace_context["v5_boundary_selector_allowed"] is False
+    assert trace_context["runtime_work_allowed"] is False
+    assert trace_context["runtime_candidate_generation_allowed"] is False
+    assert trace_context["selector_allowed"] is False
+    assert trace_context["selector_training_allowed"] is False
+    assert trace_context["stage7_promotion_allowed"] is False
+    assert trace_context["stage8_training_allowed"] is False
 
 
 def test_full_suite_readiness_writer_helpers_are_deterministic():

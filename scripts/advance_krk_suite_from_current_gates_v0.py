@@ -590,6 +590,9 @@ def build_payload() -> dict[str, Any]:
     candidate_generation_training_refresh_gate = (
         readiness.get("candidate_generation_training_refresh_gate") or {}
     )
+    candidate_generation_trace_context_gate = (
+        readiness.get("candidate_generation_trace_context_gate") or {}
+    )
     protected_stack_repair_statuses = {
         "sequence_policy_pilot_blocked_pending_protected_stack_repair",
         "stage8_training_blocked_pending_protected_stack_repair",
@@ -1400,6 +1403,84 @@ def build_payload() -> dict[str, Any]:
                 "stage7_promotion_allowed"
             ),
             "candidate_generation_training_refresh_stage8_training_allowed": candidate_generation_training_refresh_gate.get(
+                "stage8_training_allowed"
+            ),
+            "candidate_generation_trace_refresh_sandbox_status": candidate_generation_trace_context_gate.get(
+                "refresh_sandbox_status"
+            ),
+            "candidate_generation_trace_refresh_sandbox_generated_frame_count": candidate_generation_trace_context_gate.get(
+                "refresh_sandbox_generated_frame_count"
+            ),
+            "candidate_generation_trace_refresh_sandbox_default_off_equivalence_passed": candidate_generation_trace_context_gate.get(
+                "refresh_sandbox_default_off_equivalence_passed"
+            ),
+            "candidate_generation_trace_refresh_coverage_status": candidate_generation_trace_context_gate.get(
+                "refresh_coverage_status"
+            ),
+            "candidate_generation_trace_refresh_coverage_exact_positive_capacity_recall": candidate_generation_trace_context_gate.get(
+                "refresh_coverage_exact_positive_capacity_recall"
+            ),
+            "candidate_generation_trace_dataset_v4_status": candidate_generation_trace_context_gate.get(
+                "dataset_v4_status"
+            ),
+            "candidate_generation_trace_dataset_v4_row_count": candidate_generation_trace_context_gate.get(
+                "dataset_v4_row_count"
+            ),
+            "candidate_generation_trace_v4_boundary_status": candidate_generation_trace_context_gate.get(
+                "v4_boundary_status"
+            ),
+            "candidate_generation_trace_source_gap_manifest_status": candidate_generation_trace_context_gate.get(
+                "source_gap_manifest_status"
+            ),
+            "candidate_generation_trace_source_gap_exact_missing_positive_capacity_count": candidate_generation_trace_context_gate.get(
+                "source_gap_exact_missing_positive_capacity_count"
+            ),
+            "candidate_generation_trace_exact_trace_runtime_review_status": candidate_generation_trace_context_gate.get(
+                "exact_trace_runtime_review_status"
+            ),
+            "candidate_generation_trace_exact_trace_runtime_review_implementation_authorized": candidate_generation_trace_context_gate.get(
+                "exact_trace_runtime_review_implementation_authorized"
+            ),
+            "candidate_generation_trace_exact_trace_sandbox_status": candidate_generation_trace_context_gate.get(
+                "exact_trace_sandbox_status"
+            ),
+            "candidate_generation_trace_exact_trace_sandbox_generated_frame_count": candidate_generation_trace_context_gate.get(
+                "exact_trace_sandbox_generated_frame_count"
+            ),
+            "candidate_generation_trace_exact_trace_coverage_exact_gap_recall": candidate_generation_trace_context_gate.get(
+                "exact_trace_coverage_exact_gap_recall"
+            ),
+            "candidate_generation_trace_dataset_v5_status": candidate_generation_trace_context_gate.get(
+                "dataset_v5_status"
+            ),
+            "candidate_generation_trace_dataset_v5_row_count": candidate_generation_trace_context_gate.get(
+                "dataset_v5_row_count"
+            ),
+            "candidate_generation_trace_dataset_v5_selector_training_row_count": candidate_generation_trace_context_gate.get(
+                "dataset_v5_selector_training_row_count"
+            ),
+            "candidate_generation_trace_v5_context_benchmark_status": candidate_generation_trace_context_gate.get(
+                "v5_context_benchmark_status"
+            ),
+            "candidate_generation_trace_v5_exact_positive_capacity_recall_from_candidate_generation_trace": candidate_generation_trace_context_gate.get(
+                "v5_exact_positive_capacity_recall_from_candidate_generation_trace"
+            ),
+            "candidate_generation_trace_v5_boundary_status": candidate_generation_trace_context_gate.get(
+                "v5_boundary_status"
+            ),
+            "candidate_generation_trace_v5_boundary_implement_new_runtime_sandbox": candidate_generation_trace_context_gate.get(
+                "v5_boundary_implement_new_runtime_sandbox"
+            ),
+            "candidate_generation_trace_runtime_work_allowed": candidate_generation_trace_context_gate.get(
+                "runtime_work_allowed"
+            ),
+            "candidate_generation_trace_selector_training_allowed": candidate_generation_trace_context_gate.get(
+                "selector_training_allowed"
+            ),
+            "candidate_generation_trace_stage7_promotion_allowed": candidate_generation_trace_context_gate.get(
+                "stage7_promotion_allowed"
+            ),
+            "candidate_generation_trace_stage8_training_allowed": candidate_generation_trace_context_gate.get(
                 "stage8_training_allowed"
             ),
             "sequence_policy_underpowered_pilot_status": underpowered_pilot.get(

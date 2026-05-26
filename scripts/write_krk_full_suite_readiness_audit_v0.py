@@ -135,6 +135,63 @@ SOURCES = {
     "candidate_generation_training_refresh_runtime_review_v3": (
         "reports/strategy_arbitration/krk_candidate_generation_training_refresh_runtime_review_packet_v3.json"
     ),
+    "candidate_generation_refresh_sandbox": (
+        "reports/strategy_arbitration/krk_candidate_generation_refresh_sandbox_v0.json"
+    ),
+    "candidate_generation_refresh_coverage": (
+        "reports/strategy_arbitration/krk_candidate_generation_refresh_coverage_analysis_v0.json"
+    ),
+    "strategy_sequence_dataset_v4": (
+        "reports/strategy_arbitration/krk_strategy_sequence_dataset_v4.json"
+    ),
+    "strategy_sequence_dataset_v4_quality_probe": (
+        "reports/strategy_arbitration/krk_strategy_sequence_dataset_v4_quality_probe.json"
+    ),
+    "strategy_sequence_dataset_v4_context_review": (
+        "reports/strategy_arbitration/krk_strategy_sequence_dataset_v4_context_review.json"
+    ),
+    "candidate_generation_v4_context_benchmark": (
+        "reports/strategy_arbitration/krk_candidate_generation_v4_context_benchmark.json"
+    ),
+    "candidate_generation_v4_next_boundary_review": (
+        "reports/strategy_arbitration/krk_candidate_generation_v4_next_runtime_boundary_review_v0.json"
+    ),
+    "candidate_generation_scope_gap_review": (
+        "reports/strategy_arbitration/krk_candidate_generation_scope_gap_review_v0.json"
+    ),
+    "candidate_source_gap_manifest": (
+        "reports/strategy_arbitration/krk_candidate_source_gap_manifest_v0.json"
+    ),
+    "candidate_source_expansion_options": (
+        "reports/strategy_arbitration/krk_candidate_source_expansion_options_v0.json"
+    ),
+    "exact_trace_enrichment_runtime_review": (
+        "reports/strategy_arbitration/krk_exact_trace_enrichment_runtime_review_packet_v0.json"
+    ),
+    "exact_trace_enrichment_sandbox": (
+        "reports/strategy_arbitration/krk_exact_trace_enrichment_sandbox_v0.json"
+    ),
+    "exact_trace_enrichment_coverage": (
+        "reports/strategy_arbitration/krk_exact_trace_enrichment_coverage_analysis_v0.json"
+    ),
+    "strategy_sequence_exact_trace_enrichment_trace_features": (
+        "reports/strategy_arbitration/krk_strategy_sequence_exact_trace_enrichment_trace_features_v1.json"
+    ),
+    "strategy_sequence_dataset_v5": (
+        "reports/strategy_arbitration/krk_strategy_sequence_dataset_v5.json"
+    ),
+    "strategy_sequence_dataset_v5_quality_probe": (
+        "reports/strategy_arbitration/krk_strategy_sequence_dataset_v5_quality_probe.json"
+    ),
+    "strategy_sequence_dataset_v5_context_review": (
+        "reports/strategy_arbitration/krk_strategy_sequence_dataset_v5_context_review.json"
+    ),
+    "candidate_generation_v5_context_benchmark": (
+        "reports/strategy_arbitration/krk_candidate_generation_v5_context_benchmark.json"
+    ),
+    "candidate_generation_v5_next_boundary_review": (
+        "reports/strategy_arbitration/krk_candidate_generation_v5_next_boundary_review_v0.json"
+    ),
     "active_protected_stack": "reports/krk_active_protected_stack_v0.json",
     "clean_stack_validation": "reports/krk_clean_stack_post_replacement_validation_v0.json",
     "preservation_checks": "reports/krk_clean_retrain_retry1_preservation_checks_v0.json",
@@ -492,6 +549,50 @@ def build_payload() -> dict[str, Any]:
     ]
     candidate_generation_training_refresh_runtime_review_v3 = payloads[
         "candidate_generation_training_refresh_runtime_review_v3"
+    ]
+    candidate_generation_refresh_sandbox = payloads[
+        "candidate_generation_refresh_sandbox"
+    ]
+    candidate_generation_refresh_coverage = payloads[
+        "candidate_generation_refresh_coverage"
+    ]
+    strategy_sequence_dataset_v4 = payloads["strategy_sequence_dataset_v4"]
+    strategy_sequence_dataset_v4_quality_probe = payloads[
+        "strategy_sequence_dataset_v4_quality_probe"
+    ]
+    strategy_sequence_dataset_v4_context_review = payloads[
+        "strategy_sequence_dataset_v4_context_review"
+    ]
+    candidate_generation_v4_context_benchmark = payloads[
+        "candidate_generation_v4_context_benchmark"
+    ]
+    candidate_generation_v4_next_boundary_review = payloads[
+        "candidate_generation_v4_next_boundary_review"
+    ]
+    candidate_generation_scope_gap_review = payloads[
+        "candidate_generation_scope_gap_review"
+    ]
+    candidate_source_gap_manifest = payloads["candidate_source_gap_manifest"]
+    candidate_source_expansion_options = payloads[
+        "candidate_source_expansion_options"
+    ]
+    exact_trace_enrichment_runtime_review = payloads[
+        "exact_trace_enrichment_runtime_review"
+    ]
+    exact_trace_enrichment_sandbox = payloads["exact_trace_enrichment_sandbox"]
+    exact_trace_enrichment_coverage = payloads["exact_trace_enrichment_coverage"]
+    strategy_sequence_dataset_v5 = payloads["strategy_sequence_dataset_v5"]
+    strategy_sequence_dataset_v5_quality_probe = payloads[
+        "strategy_sequence_dataset_v5_quality_probe"
+    ]
+    strategy_sequence_dataset_v5_context_review = payloads[
+        "strategy_sequence_dataset_v5_context_review"
+    ]
+    candidate_generation_v5_context_benchmark = payloads[
+        "candidate_generation_v5_context_benchmark"
+    ]
+    candidate_generation_v5_next_boundary_review = payloads[
+        "candidate_generation_v5_next_boundary_review"
     ]
     runner = payloads["stage7_sampling_runner"]
     output_validation = payloads["stage7_sampling_output_validation"]
@@ -2028,6 +2129,277 @@ def build_payload() -> dict[str, Any]:
             "stage7_promotion_allowed": False,
             "stage8_training_allowed": False,
         },
+        "candidate_generation_trace_context_gate": {
+            "refresh_sandbox_status": (
+                candidate_generation_refresh_sandbox.get("decision", {}).get("status")
+            ),
+            "refresh_sandbox_default_off_equivalence_passed": (
+                candidate_generation_refresh_sandbox.get("summary", {}).get(
+                    "default_off_equivalence_passed"
+                )
+            ),
+            "refresh_sandbox_generated_frame_count": (
+                candidate_generation_refresh_sandbox.get("summary", {}).get(
+                    "generated_frame_count"
+                )
+            ),
+            "refresh_sandbox_stage7_held_out_frame_count": (
+                candidate_generation_refresh_sandbox.get("summary", {}).get(
+                    "stage7_held_out_frame_count"
+                )
+            ),
+            "refresh_sandbox_selected_move_delta_count": (
+                candidate_generation_refresh_sandbox.get("summary", {}).get(
+                    "selected_move_delta_count"
+                )
+            ),
+            "refresh_sandbox_selected_provider_delta_count": (
+                candidate_generation_refresh_sandbox.get("summary", {}).get(
+                    "selected_provider_delta_count"
+                )
+            ),
+            "refresh_sandbox_score_delta_count": (
+                candidate_generation_refresh_sandbox.get("summary", {}).get(
+                    "score_delta_count"
+                )
+            ),
+            "refresh_coverage_status": (
+                candidate_generation_refresh_coverage.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "refresh_coverage_exact_positive_capacity_recall": (
+                candidate_generation_refresh_coverage.get("summary", {}).get(
+                    "exact_positive_capacity_recall"
+                )
+            ),
+            "refresh_coverage_exact_negative_capacity_exposure_rate": (
+                candidate_generation_refresh_coverage.get("summary", {}).get(
+                    "exact_negative_capacity_exposure_rate"
+                )
+            ),
+            "refresh_coverage_stage4_frame_count": (
+                candidate_generation_refresh_coverage.get("summary", {}).get(
+                    "stage4_frame_count"
+                )
+            ),
+            "refresh_coverage_stage7_frame_count": (
+                candidate_generation_refresh_coverage.get("summary", {}).get(
+                    "stage7_frame_count"
+                )
+            ),
+            "dataset_v4_status": (
+                strategy_sequence_dataset_v4.get("decision", {}).get("status")
+            ),
+            "dataset_v4_row_count": (
+                strategy_sequence_dataset_v4.get("summary", {}).get("row_count")
+            ),
+            "dataset_v4_runtime_trace_feature_row_count": (
+                strategy_sequence_dataset_v4.get("summary", {}).get(
+                    "runtime_trace_feature_row_count"
+                )
+            ),
+            "dataset_v4_selector_training_row_count": (
+                strategy_sequence_dataset_v4.get("summary", {}).get(
+                    "selector_training_row_count"
+                )
+            ),
+            "dataset_v4_stage7_readiness_training_row_count": (
+                strategy_sequence_dataset_v4.get("summary", {}).get(
+                    "stage7_readiness_training_row_count"
+                )
+            ),
+            "dataset_v4_quality_status": (
+                strategy_sequence_dataset_v4_quality_probe.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "dataset_v4_context_status": (
+                strategy_sequence_dataset_v4_context_review.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "v4_context_benchmark_status": (
+                candidate_generation_v4_context_benchmark.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "v4_boundary_status": (
+                candidate_generation_v4_next_boundary_review.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "v4_boundary_new_runtime_sandbox_allowed": (
+                candidate_generation_v4_next_boundary_review.get(
+                    "approved_now", {}
+                ).get("implement_new_runtime_sandbox")
+            ),
+            "scope_gap_status": (
+                candidate_generation_scope_gap_review.get("decision", {}).get("status")
+            ),
+            "source_gap_manifest_status": (
+                candidate_source_gap_manifest.get("decision", {}).get("status")
+            ),
+            "source_gap_exact_covered_positive_capacity_count": (
+                candidate_source_gap_manifest.get("summary", {}).get(
+                    "exact_covered_positive_capacity_count"
+                )
+            ),
+            "source_gap_exact_missing_positive_capacity_count": (
+                candidate_source_gap_manifest.get("summary", {}).get(
+                    "exact_missing_positive_capacity_count"
+                )
+            ),
+            "source_gap_policy_cell_covered_exact_missing_count": (
+                candidate_source_gap_manifest.get("summary", {}).get(
+                    "policy_cell_covered_exact_missing_count"
+                )
+            ),
+            "source_expansion_options_status": (
+                candidate_source_expansion_options.get("decision", {}).get("status")
+            ),
+            "source_expansion_preferred_next_review": (
+                candidate_source_expansion_options.get("preferred_next_review")
+            ),
+            "exact_trace_runtime_review_status": (
+                exact_trace_enrichment_runtime_review.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "exact_trace_runtime_review_ready": (
+                exact_trace_enrichment_runtime_review.get("decision", {}).get(
+                    "runtime_review_ready"
+                )
+            ),
+            "exact_trace_runtime_review_implementation_authorized": (
+                exact_trace_enrichment_runtime_review.get("decision", {}).get(
+                    "implementation_authorized_by_this_packet"
+                )
+            ),
+            "exact_trace_sandbox_status": (
+                exact_trace_enrichment_sandbox.get("decision", {}).get("status")
+            ),
+            "exact_trace_sandbox_default_off_equivalence_passed": (
+                exact_trace_enrichment_sandbox.get("summary", {}).get(
+                    "default_off_equivalence_passed"
+                )
+            ),
+            "exact_trace_sandbox_generated_frame_count": (
+                exact_trace_enrichment_sandbox.get("summary", {}).get(
+                    "generated_frame_count"
+                )
+            ),
+            "exact_trace_sandbox_selected_move_delta_count": (
+                exact_trace_enrichment_sandbox.get("summary", {}).get(
+                    "selected_move_delta_count"
+                )
+            ),
+            "exact_trace_sandbox_selected_provider_delta_count": (
+                exact_trace_enrichment_sandbox.get("summary", {}).get(
+                    "selected_provider_delta_count"
+                )
+            ),
+            "exact_trace_sandbox_score_delta_count": (
+                exact_trace_enrichment_sandbox.get("summary", {}).get(
+                    "score_delta_count"
+                )
+            ),
+            "exact_trace_coverage_status": (
+                exact_trace_enrichment_coverage.get("decision", {}).get("status")
+            ),
+            "exact_trace_coverage_exact_gap_recall": (
+                exact_trace_enrichment_coverage.get("summary", {}).get(
+                    "exact_gap_recall"
+                )
+            ),
+            "exact_trace_coverage_stage4_frame_count": (
+                exact_trace_enrichment_coverage.get("summary", {}).get(
+                    "stage4_frame_count"
+                )
+            ),
+            "exact_trace_coverage_stage7_frame_count": (
+                exact_trace_enrichment_coverage.get("summary", {}).get(
+                    "stage7_frame_count"
+                )
+            ),
+            "dataset_v5_status": (
+                strategy_sequence_dataset_v5.get("decision", {}).get("status")
+            ),
+            "dataset_v5_row_count": (
+                strategy_sequence_dataset_v5.get("summary", {}).get("row_count")
+            ),
+            "dataset_v5_runtime_trace_feature_row_count": (
+                strategy_sequence_dataset_v5.get("summary", {}).get(
+                    "runtime_trace_feature_row_count"
+                )
+            ),
+            "dataset_v5_exact_trace_enrichment_row_count": (
+                strategy_sequence_dataset_v5.get("summary", {}).get(
+                    "added_exact_trace_enrichment_row_count"
+                )
+            ),
+            "dataset_v5_selector_training_row_count": (
+                strategy_sequence_dataset_v5.get("summary", {}).get(
+                    "selector_training_row_count"
+                )
+            ),
+            "dataset_v5_stage7_readiness_training_row_count": (
+                strategy_sequence_dataset_v5.get("summary", {}).get(
+                    "stage7_readiness_training_row_count"
+                )
+            ),
+            "dataset_v5_quality_status": (
+                strategy_sequence_dataset_v5_quality_probe.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "dataset_v5_context_status": (
+                strategy_sequence_dataset_v5_context_review.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "v5_context_benchmark_status": (
+                candidate_generation_v5_context_benchmark.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "v5_exact_positive_capacity_recall_from_candidate_generation_trace": (
+                candidate_generation_v5_context_benchmark.get("summary", {}).get(
+                    "exact_positive_capacity_recall_from_candidate_generation_trace"
+                )
+            ),
+            "v5_exact_positive_capacity_recall_delta_vs_v4": (
+                candidate_generation_v5_context_benchmark.get("summary", {}).get(
+                    "exact_positive_capacity_recall_delta_vs_v4"
+                )
+            ),
+            "v5_policy_cell_negative_capacity_exposure": (
+                candidate_generation_v5_context_benchmark.get("summary", {}).get(
+                    "policy_cell_negative_capacity_exposure_from_candidate_generation_trace"
+                )
+            ),
+            "v5_boundary_status": (
+                candidate_generation_v5_next_boundary_review.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "v5_boundary_implement_new_runtime_sandbox": (
+                candidate_generation_v5_next_boundary_review.get(
+                    "approved_now", {}
+                ).get("implement_new_runtime_sandbox")
+            ),
+            "v5_boundary_selector_allowed": (
+                candidate_generation_v5_next_boundary_review.get(
+                    "approved_now", {}
+                ).get("selector_allowed")
+            ),
+            "runtime_work_allowed": False,
+            "runtime_candidate_generation_allowed": False,
+            "selector_allowed": False,
+            "selector_training_allowed": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": False,
+        },
         "stage7_sampling_gate": {
             "runner_status": runner.get("decision", {}).get("status"),
             "runner_dry_run": runner.get("summary", {}).get("dry_run"),
@@ -2280,6 +2652,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     selector_objective = payload["selector_objective_gate"]
     stage4_diagnostic = payload["stage4_first_move_diagnostic_gate"]
     candidate_generation_refresh = payload["candidate_generation_training_refresh_gate"]
+    candidate_generation_trace = payload["candidate_generation_trace_context_gate"]
     current_gate = payload["current_control_plane_gate"]
     decision = payload["decision"]
     lines = [
@@ -2552,6 +2925,35 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- selector_training_allowed: `{candidate_generation_refresh['selector_training_allowed']}`",
             f"- stage7_promotion_allowed: `{candidate_generation_refresh['stage7_promotion_allowed']}`",
             f"- stage8_training_allowed: `{candidate_generation_refresh['stage8_training_allowed']}`",
+            "",
+            "## Candidate Generation Trace-Context Evidence",
+            "",
+            f"- refresh_sandbox_status: `{candidate_generation_trace['refresh_sandbox_status']}`",
+            f"- refresh_sandbox_generated_frame_count: `{candidate_generation_trace['refresh_sandbox_generated_frame_count']}`",
+            f"- refresh_sandbox_default_off_equivalence_passed: `{candidate_generation_trace['refresh_sandbox_default_off_equivalence_passed']}`",
+            f"- refresh_coverage_status: `{candidate_generation_trace['refresh_coverage_status']}`",
+            f"- refresh_coverage_exact_positive_capacity_recall: `{candidate_generation_trace['refresh_coverage_exact_positive_capacity_recall']}`",
+            f"- dataset_v4_status: `{candidate_generation_trace['dataset_v4_status']}`",
+            f"- dataset_v4_row_count: `{candidate_generation_trace['dataset_v4_row_count']}`",
+            f"- v4_boundary_status: `{candidate_generation_trace['v4_boundary_status']}`",
+            f"- source_gap_manifest_status: `{candidate_generation_trace['source_gap_manifest_status']}`",
+            f"- source_gap_exact_missing_positive_capacity_count: `{candidate_generation_trace['source_gap_exact_missing_positive_capacity_count']}`",
+            f"- exact_trace_runtime_review_status: `{candidate_generation_trace['exact_trace_runtime_review_status']}`",
+            f"- exact_trace_runtime_review_implementation_authorized: `{candidate_generation_trace['exact_trace_runtime_review_implementation_authorized']}`",
+            f"- exact_trace_sandbox_status: `{candidate_generation_trace['exact_trace_sandbox_status']}`",
+            f"- exact_trace_sandbox_generated_frame_count: `{candidate_generation_trace['exact_trace_sandbox_generated_frame_count']}`",
+            f"- exact_trace_coverage_exact_gap_recall: `{candidate_generation_trace['exact_trace_coverage_exact_gap_recall']}`",
+            f"- dataset_v5_status: `{candidate_generation_trace['dataset_v5_status']}`",
+            f"- dataset_v5_row_count: `{candidate_generation_trace['dataset_v5_row_count']}`",
+            f"- dataset_v5_selector_training_row_count: `{candidate_generation_trace['dataset_v5_selector_training_row_count']}`",
+            f"- v5_context_benchmark_status: `{candidate_generation_trace['v5_context_benchmark_status']}`",
+            f"- v5_exact_positive_capacity_recall_from_candidate_generation_trace: `{candidate_generation_trace['v5_exact_positive_capacity_recall_from_candidate_generation_trace']}`",
+            f"- v5_boundary_status: `{candidate_generation_trace['v5_boundary_status']}`",
+            f"- v5_boundary_implement_new_runtime_sandbox: `{candidate_generation_trace['v5_boundary_implement_new_runtime_sandbox']}`",
+            f"- runtime_work_allowed: `{candidate_generation_trace['runtime_work_allowed']}`",
+            f"- selector_training_allowed: `{candidate_generation_trace['selector_training_allowed']}`",
+            f"- stage7_promotion_allowed: `{candidate_generation_trace['stage7_promotion_allowed']}`",
+            f"- stage8_training_allowed: `{candidate_generation_trace['stage8_training_allowed']}`",
             "",
             "## Current Control Plane Gate",
             "",
