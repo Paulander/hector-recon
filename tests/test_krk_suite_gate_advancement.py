@@ -493,6 +493,66 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["state_local_paired_runtime_terminals_added"] is False
     assert payload["summary"]["state_local_paired_stage7_promotion_allowed"] is False
     assert payload["summary"]["state_local_paired_stage8_training_allowed"] is False
+    assert payload["summary"]["selected_owner_failure_risk_proxy_passive_ready"] is True
+    assert payload["summary"]["selected_owner_failure_risk_runtime_proxy_design_status"] == (
+        "proxy_design_ready_for_replay_free_validation"
+    )
+    assert payload["summary"][
+        "selected_owner_failure_risk_runtime_proxy_dataset_row_count"
+    ] == 40
+    assert payload["summary"][
+        "selected_owner_failure_risk_runtime_proxy_dataset_stage7_row_count"
+    ] == 0
+    assert payload["summary"]["selected_owner_failure_risk_runtime_proxy_review_status"] == (
+        "runtime_proxy_translation_still_blocked"
+    )
+    assert payload["summary"][
+        "selected_owner_failure_risk_runtime_review_packet_v0_translation_blocker"
+    ] is True
+    assert payload["summary"]["selected_owner_failure_risk_evidence_status"] == (
+        "failure_risk_evidence_v1_built"
+    )
+    assert payload["summary"]["selected_owner_failure_risk_evidence_row_count"] == 48
+    assert payload["summary"]["selected_owner_failure_risk_visible_proxy_precision"] == 1.0
+    assert payload["summary"]["selected_owner_failure_risk_visible_proxy_recall"] == 1.0
+    assert payload["summary"]["selected_owner_failure_risk_proxy_v1_probe_status"] == (
+        "proxy_v1_independent_candidate_found"
+    )
+    assert payload["summary"][
+        "selected_owner_failure_risk_proxy_v1_independent_passing_proxy_count"
+    ] == 3
+    assert payload["summary"]["selected_owner_failure_risk_independent_label_count"] == 8
+    assert payload["summary"][
+        "selected_owner_failure_risk_independent_label_stage7_training_rows"
+    ] == 0
+    assert payload["summary"][
+        "selected_owner_failure_risk_independent_validation_status"
+    ] == "independent_proxy_validation_passed"
+    assert payload["summary"][
+        "selected_owner_failure_risk_independent_validation_threshold_met"
+    ] is True
+    assert payload["summary"][
+        "selected_owner_failure_risk_runtime_proxy_review_packet_v1_status"
+    ] == "runtime_review_ready_progress_window_scope_only"
+    assert payload["summary"][
+        "selected_owner_failure_risk_runtime_proxy_review_packet_v1_implementation_allowed"
+    ] is False
+    assert (
+        payload["summary"]["selected_owner_failure_risk_runtime_selector_implemented"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "selected_owner_failure_risk_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert payload["summary"]["selected_owner_failure_risk_runtime_terminals_added"] is False
+    assert (
+        payload["summary"]["selected_owner_failure_risk_stage7_promotion_allowed"]
+        is False
+    )
+    assert payload["summary"]["selected_owner_failure_risk_stage8_training_allowed"] is False
     assert payload["summary"]["clean_replacement_review_passive_ready"] is True
     assert (
         payload["summary"]["clean_replacement_review_packet_status"]

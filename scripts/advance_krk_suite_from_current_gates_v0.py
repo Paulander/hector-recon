@@ -597,6 +597,9 @@ def build_payload() -> dict[str, Any]:
     state_local_paired_ownership_gate = (
         readiness.get("state_local_paired_ownership_gate") or {}
     )
+    selected_owner_failure_risk_proxy_gate = (
+        readiness.get("selected_owner_failure_risk_proxy_gate") or {}
+    )
     clean_replacement_review_gate = readiness.get("clean_replacement_review_gate") or {}
     active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
@@ -1351,6 +1354,97 @@ def build_payload() -> dict[str, Any]:
             ),
             "state_local_paired_stage8_training_allowed": (
                 state_local_paired_ownership_gate.get("stage8_training_allowed")
+            ),
+            "selected_owner_failure_risk_proxy_passive_ready": (
+                selected_owner_failure_risk_proxy_gate.get("passive_proxy_review_ready")
+            ),
+            "selected_owner_failure_risk_runtime_proxy_design_status": (
+                selected_owner_failure_risk_proxy_gate.get("runtime_proxy_design_status")
+            ),
+            "selected_owner_failure_risk_runtime_proxy_dataset_row_count": (
+                selected_owner_failure_risk_proxy_gate.get(
+                    "runtime_proxy_dataset_row_count"
+                )
+            ),
+            "selected_owner_failure_risk_runtime_proxy_dataset_stage7_row_count": (
+                selected_owner_failure_risk_proxy_gate.get(
+                    "runtime_proxy_dataset_stage7_row_count"
+                )
+            ),
+            "selected_owner_failure_risk_runtime_proxy_review_status": (
+                selected_owner_failure_risk_proxy_gate.get("runtime_proxy_review_status")
+            ),
+            "selected_owner_failure_risk_runtime_review_packet_v0_translation_blocker": (
+                selected_owner_failure_risk_proxy_gate.get(
+                    "runtime_review_packet_v0_translation_blocker"
+                )
+            ),
+            "selected_owner_failure_risk_evidence_status": (
+                selected_owner_failure_risk_proxy_gate.get("failure_risk_evidence_status")
+            ),
+            "selected_owner_failure_risk_evidence_row_count": (
+                selected_owner_failure_risk_proxy_gate.get(
+                    "failure_risk_evidence_row_count"
+                )
+            ),
+            "selected_owner_failure_risk_visible_proxy_precision": (
+                selected_owner_failure_risk_proxy_gate.get("visible_proxy_precision")
+            ),
+            "selected_owner_failure_risk_visible_proxy_recall": (
+                selected_owner_failure_risk_proxy_gate.get("visible_proxy_recall")
+            ),
+            "selected_owner_failure_risk_proxy_v1_probe_status": (
+                selected_owner_failure_risk_proxy_gate.get("proxy_v1_probe_status")
+            ),
+            "selected_owner_failure_risk_proxy_v1_independent_passing_proxy_count": (
+                selected_owner_failure_risk_proxy_gate.get(
+                    "proxy_v1_independent_passing_proxy_count"
+                )
+            ),
+            "selected_owner_failure_risk_independent_label_count": (
+                selected_owner_failure_risk_proxy_gate.get("independent_label_count")
+            ),
+            "selected_owner_failure_risk_independent_label_stage7_training_rows": (
+                selected_owner_failure_risk_proxy_gate.get(
+                    "independent_label_stage7_training_rows"
+                )
+            ),
+            "selected_owner_failure_risk_independent_validation_status": (
+                selected_owner_failure_risk_proxy_gate.get(
+                    "independent_validation_status"
+                )
+            ),
+            "selected_owner_failure_risk_independent_validation_threshold_met": (
+                selected_owner_failure_risk_proxy_gate.get(
+                    "independent_validation_threshold_met"
+                )
+            ),
+            "selected_owner_failure_risk_runtime_proxy_review_packet_v1_status": (
+                selected_owner_failure_risk_proxy_gate.get(
+                    "runtime_proxy_review_packet_v1_status"
+                )
+            ),
+            "selected_owner_failure_risk_runtime_proxy_review_packet_v1_implementation_allowed": (
+                selected_owner_failure_risk_proxy_gate.get(
+                    "runtime_proxy_review_packet_v1_implementation_allowed"
+                )
+            ),
+            "selected_owner_failure_risk_runtime_selector_implemented": (
+                selected_owner_failure_risk_proxy_gate.get("runtime_selector_implemented")
+            ),
+            "selected_owner_failure_risk_runtime_dtm_or_tablebase_lookup": (
+                selected_owner_failure_risk_proxy_gate.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "selected_owner_failure_risk_runtime_terminals_added": (
+                selected_owner_failure_risk_proxy_gate.get("runtime_terminals_added")
+            ),
+            "selected_owner_failure_risk_stage7_promotion_allowed": (
+                selected_owner_failure_risk_proxy_gate.get("stage7_promotion_allowed")
+            ),
+            "selected_owner_failure_risk_stage8_training_allowed": (
+                selected_owner_failure_risk_proxy_gate.get("stage8_training_allowed")
             ),
             "clean_replacement_review_passive_ready": clean_replacement_review_gate.get(
                 "passive_review_ready"

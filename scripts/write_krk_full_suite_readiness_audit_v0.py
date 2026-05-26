@@ -640,6 +640,42 @@ SOURCES = {
     "state_local_paired_ownership_review_v1": (
         "reports/krk_state_local_paired_ownership_review_v1.json"
     ),
+    "state_local_paired_runtime_proxy_design_v0": (
+        "reports/krk_state_local_paired_runtime_proxy_design_v0.json"
+    ),
+    "state_local_paired_runtime_proxy_dataset_v0": (
+        "reports/krk_state_local_paired_runtime_proxy_dataset_v0.json"
+    ),
+    "state_local_paired_runtime_proxy_probe_v0": (
+        "reports/krk_state_local_paired_runtime_proxy_probe_v0.json"
+    ),
+    "state_local_paired_runtime_proxy_review_v0": (
+        "reports/krk_state_local_paired_runtime_proxy_review_v0.json"
+    ),
+    "state_local_paired_selector_runtime_review_packet_v0": (
+        "reports/krk_state_local_paired_selector_runtime_review_packet_v0.json"
+    ),
+    "selected_owner_failure_risk_evidence_v1": (
+        "reports/krk_selected_owner_failure_risk_evidence_v1.json"
+    ),
+    "selected_owner_failure_risk_visible_terms_v0": (
+        "reports/krk_selected_owner_failure_risk_visible_terms_v0.json"
+    ),
+    "selected_owner_failure_risk_visible_proxy_review_v0": (
+        "reports/krk_selected_owner_failure_risk_visible_proxy_review_v0.json"
+    ),
+    "selected_owner_failure_risk_proxy_probe_v1": (
+        "reports/krk_selected_owner_failure_risk_proxy_probe_v1.json"
+    ),
+    "selected_owner_failure_risk_proxy_independent_labels_v0": (
+        "reports/krk_selected_owner_failure_risk_proxy_independent_labels_v0.json"
+    ),
+    "selected_owner_failure_risk_proxy_independent_validation_v1": (
+        "reports/krk_selected_owner_failure_risk_proxy_independent_validation_v1.json"
+    ),
+    "state_local_paired_selector_runtime_proxy_review_packet_v1": (
+        "reports/krk_state_local_paired_selector_runtime_proxy_review_packet_v1.json"
+    ),
     "clean_retrain_retry1_replacement_readiness_review": (
         "reports/krk_clean_retrain_retry1_replacement_readiness_review_v0.json"
     ),
@@ -1464,6 +1500,42 @@ def build_payload() -> dict[str, Any]:
     state_local_paired_ownership_review_v1 = payloads[
         "state_local_paired_ownership_review_v1"
     ]
+    state_local_paired_runtime_proxy_design_v0 = payloads[
+        "state_local_paired_runtime_proxy_design_v0"
+    ]
+    state_local_paired_runtime_proxy_dataset_v0 = payloads[
+        "state_local_paired_runtime_proxy_dataset_v0"
+    ]
+    state_local_paired_runtime_proxy_probe_v0 = payloads[
+        "state_local_paired_runtime_proxy_probe_v0"
+    ]
+    state_local_paired_runtime_proxy_review_v0 = payloads[
+        "state_local_paired_runtime_proxy_review_v0"
+    ]
+    state_local_paired_selector_runtime_review_packet_v0 = payloads[
+        "state_local_paired_selector_runtime_review_packet_v0"
+    ]
+    selected_owner_failure_risk_evidence_v1 = payloads[
+        "selected_owner_failure_risk_evidence_v1"
+    ]
+    selected_owner_failure_risk_visible_terms_v0 = payloads[
+        "selected_owner_failure_risk_visible_terms_v0"
+    ]
+    selected_owner_failure_risk_visible_proxy_review_v0 = payloads[
+        "selected_owner_failure_risk_visible_proxy_review_v0"
+    ]
+    selected_owner_failure_risk_proxy_probe_v1 = payloads[
+        "selected_owner_failure_risk_proxy_probe_v1"
+    ]
+    selected_owner_failure_risk_proxy_independent_labels_v0 = payloads[
+        "selected_owner_failure_risk_proxy_independent_labels_v0"
+    ]
+    selected_owner_failure_risk_proxy_independent_validation_v1 = payloads[
+        "selected_owner_failure_risk_proxy_independent_validation_v1"
+    ]
+    state_local_paired_selector_runtime_proxy_review_packet_v1 = payloads[
+        "state_local_paired_selector_runtime_proxy_review_packet_v1"
+    ]
     clean_replacement_readiness = payloads[
         "clean_retrain_retry1_replacement_readiness_review"
     ]
@@ -2250,6 +2322,202 @@ def build_payload() -> dict[str, Any]:
         and state_local_paired_ownership_review_v1.get("stage7_promotion_allowed")
         is False
         and state_local_paired_ownership_review_v1.get("stage8_training_allowed")
+        is False
+    )
+    runtime_proxy_design_decision = (
+        state_local_paired_runtime_proxy_design_v0.get("decision") or {}
+    )
+    runtime_proxy_dataset_decision = (
+        state_local_paired_runtime_proxy_dataset_v0.get("decision") or {}
+    )
+    runtime_proxy_dataset_summary = (
+        state_local_paired_runtime_proxy_dataset_v0.get("summary") or {}
+    )
+    runtime_proxy_probe_decision = (
+        state_local_paired_runtime_proxy_probe_v0.get("decision") or {}
+    )
+    runtime_proxy_probe_summary = (
+        state_local_paired_runtime_proxy_probe_v0.get("summary") or {}
+    )
+    runtime_proxy_review_decision = (
+        state_local_paired_runtime_proxy_review_v0.get("decision") or {}
+    )
+    runtime_proxy_review_summary = (
+        state_local_paired_runtime_proxy_review_v0.get("summary") or {}
+    )
+    runtime_review_packet_v0_decision = (
+        state_local_paired_selector_runtime_review_packet_v0.get("decision") or {}
+    )
+    runtime_review_packet_v0_summary = (
+        state_local_paired_selector_runtime_review_packet_v0.get("summary") or {}
+    )
+    failure_risk_evidence_decision = (
+        selected_owner_failure_risk_evidence_v1.get("decision") or {}
+    )
+    failure_risk_evidence_summary = (
+        selected_owner_failure_risk_evidence_v1.get("summary") or {}
+    )
+    failure_risk_visible_terms_decision = (
+        selected_owner_failure_risk_visible_terms_v0.get("decision") or {}
+    )
+    failure_risk_visible_terms_summary = (
+        selected_owner_failure_risk_visible_terms_v0.get("summary") or {}
+    )
+    failure_risk_visible_proxy_metrics = (
+        failure_risk_visible_terms_summary.get("term_metrics") or {}
+    ).get("selected_owner_failure_risk_proxy_v0") or {}
+    failure_risk_visible_review_decision = (
+        selected_owner_failure_risk_visible_proxy_review_v0.get("decision") or {}
+    )
+    failure_risk_visible_review_summary = (
+        selected_owner_failure_risk_visible_proxy_review_v0.get("summary") or {}
+    )
+    failure_risk_proxy_probe_decision = (
+        selected_owner_failure_risk_proxy_probe_v1.get("decision") or {}
+    )
+    failure_risk_proxy_probe_summary = (
+        selected_owner_failure_risk_proxy_probe_v1.get("summary") or {}
+    )
+    failure_risk_independent_labels_decision = (
+        selected_owner_failure_risk_proxy_independent_labels_v0.get("decision") or {}
+    )
+    failure_risk_independent_labels_summary = (
+        selected_owner_failure_risk_proxy_independent_labels_v0.get("summary") or {}
+    )
+    failure_risk_independent_validation_decision = (
+        selected_owner_failure_risk_proxy_independent_validation_v1.get("decision") or {}
+    )
+    failure_risk_independent_validation_summary = (
+        selected_owner_failure_risk_proxy_independent_validation_v1.get("summary") or {}
+    )
+    runtime_proxy_review_packet_v1_decision = (
+        state_local_paired_selector_runtime_proxy_review_packet_v1.get("decision")
+        or {}
+    )
+    runtime_proxy_review_packet_v1_summary = (
+        state_local_paired_selector_runtime_proxy_review_packet_v1.get("summary") or {}
+    )
+    selected_owner_failure_risk_proxy_passive = (
+        runtime_proxy_design_decision.get("status")
+        == "proxy_design_ready_for_replay_free_validation"
+        and runtime_proxy_design_decision.get("runtime_work_allowed") is False
+        and runtime_proxy_design_decision.get("selector_training_allowed") is False
+        and runtime_proxy_dataset_decision.get("status")
+        == "runtime_proxy_dataset_ready_for_non_causal_probe"
+        and runtime_proxy_dataset_decision.get("runtime_work_allowed") is False
+        and runtime_proxy_dataset_decision.get("selector_training_allowed") is False
+        and runtime_proxy_dataset_summary.get("row_count") == 40
+        and runtime_proxy_dataset_summary.get("selector_training_row_count") == 0
+        and runtime_proxy_dataset_summary.get("stage7_row_count") == 0
+        and runtime_proxy_probe_decision.get("status")
+        == "visible_runtime_proxy_features_insufficient"
+        and runtime_proxy_probe_decision.get("runtime_work_allowed") is False
+        and runtime_proxy_probe_decision.get("selector_training_allowed") is False
+        and runtime_proxy_probe_summary.get("visible_proxy_review_ready") is False
+        and runtime_proxy_probe_summary.get("stage7_row_count") == 0
+        and runtime_proxy_review_decision.get("status")
+        == "runtime_proxy_translation_still_blocked"
+        and runtime_proxy_review_decision.get("runtime_work_allowed") is False
+        and runtime_proxy_review_decision.get("selector_training_allowed") is False
+        and runtime_proxy_review_summary.get("visible_proxy_review_ready") is False
+        and runtime_proxy_review_summary.get("stage7_row_count") == 0
+        and runtime_review_packet_v0_decision.get("status")
+        == "runtime_review_packet_ready_with_translation_blocker"
+        and runtime_review_packet_v0_decision.get("implementation_allowed_by_this_packet")
+        is False
+        and runtime_review_packet_v0_summary.get("runtime_feature_translation_blocker")
+        is True
+        and runtime_review_packet_v0_summary.get("runtime_feature_passing_model_count")
+        == 0
+        and runtime_review_packet_v0_summary.get("stage7_row_count") == 0
+        and failure_risk_evidence_decision.get("status")
+        == "failure_risk_evidence_v1_built"
+        and failure_risk_evidence_decision.get("runtime_work_allowed") is False
+        and failure_risk_evidence_decision.get("selector_training_allowed") is False
+        and failure_risk_evidence_summary.get("row_count") == 48
+        and failure_risk_evidence_summary.get("selector_training_row_count") == 0
+        and failure_risk_evidence_summary.get("stage7_row_count") == 0
+        and failure_risk_visible_terms_decision.get("status")
+        == "visible_failure_risk_terms_extracted_for_probe"
+        and failure_risk_visible_terms_decision.get("runtime_work_allowed") is False
+        and failure_risk_visible_terms_decision.get("selector_training_allowed")
+        is False
+        and failure_risk_visible_terms_summary.get("row_count") == 40
+        and failure_risk_visible_terms_summary.get("stage7_row_count") == 0
+        and failure_risk_visible_proxy_metrics.get("precision") == 1.0
+        and failure_risk_visible_proxy_metrics.get("recall") == 1.0
+        and failure_risk_visible_review_decision.get("status")
+        == "visible_failure_risk_proxy_candidate_identified_not_runtime_ready"
+        and failure_risk_visible_review_decision.get("runtime_work_allowed") is False
+        and failure_risk_visible_review_decision.get("selector_training_allowed")
+        is False
+        and failure_risk_visible_review_summary.get(
+            "review_threshold_met_on_current_dataset"
+        )
+        is True
+        and failure_risk_visible_review_summary.get("stage7_row_count") == 0
+        and failure_risk_proxy_probe_decision.get("status")
+        == "proxy_v1_independent_candidate_found"
+        and failure_risk_proxy_probe_decision.get("runtime_work_allowed") is False
+        and failure_risk_proxy_probe_decision.get("selector_training_allowed") is False
+        and failure_risk_proxy_probe_summary.get("row_count") == 48
+        and failure_risk_proxy_probe_summary.get("independent_passing_proxy_count") == 3
+        and failure_risk_proxy_probe_summary.get("stage7_row_count") == 0
+        and failure_risk_independent_labels_decision.get("status")
+        == "independent_proxy_validation_labels_collected"
+        and failure_risk_independent_labels_decision.get("runtime_work_allowed")
+        is False
+        and failure_risk_independent_labels_decision.get("selector_training_allowed")
+        is False
+        and failure_risk_independent_labels_summary.get("label_count") == 8
+        and failure_risk_independent_labels_summary.get("stage7_training_rows") == 0
+        and failure_risk_independent_validation_decision.get("status")
+        == "independent_proxy_validation_passed"
+        and failure_risk_independent_validation_decision.get("runtime_work_allowed")
+        is False
+        and failure_risk_independent_validation_decision.get(
+            "selector_training_allowed"
+        )
+        is False
+        and failure_risk_independent_validation_summary.get("threshold_met") is True
+        and failure_risk_independent_validation_summary.get("stage7_row_count") == 0
+        and runtime_proxy_review_packet_v1_decision.get("status")
+        == "runtime_review_ready_progress_window_scope_only"
+        and runtime_proxy_review_packet_v1_decision.get(
+            "runtime_implementation_allowed"
+        )
+        is False
+        and runtime_proxy_review_packet_v1_summary.get("label_count") == 8
+        and runtime_proxy_review_packet_v1_summary.get("precision") == 1.0
+        and runtime_proxy_review_packet_v1_summary.get("recall") == 1.0
+        and runtime_proxy_review_packet_v1_summary.get("stage7_row_count") == 0
+        and state_local_paired_selector_runtime_proxy_review_packet_v1.get(
+            "runtime_behavior_changed"
+        )
+        is False
+        and state_local_paired_selector_runtime_proxy_review_packet_v1.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and state_local_paired_selector_runtime_proxy_review_packet_v1.get(
+            "runtime_selector_implemented"
+        )
+        is False
+        and state_local_paired_selector_runtime_proxy_review_packet_v1.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and state_local_paired_selector_runtime_proxy_review_packet_v1.get(
+            "runtime_terminals_added"
+        )
+        is False
+        and state_local_paired_selector_runtime_proxy_review_packet_v1.get(
+            "stage7_promotion_allowed"
+        )
+        is False
+        and state_local_paired_selector_runtime_proxy_review_packet_v1.get(
+            "stage8_training_allowed"
+        )
         is False
     )
     replacement_readiness_decision = clean_replacement_readiness.get("decision") or {}
@@ -3591,6 +3859,177 @@ def build_payload() -> dict[str, Any]:
             ),
             "stage8_training_allowed": state_local_paired_ownership_review_v1.get(
                 "stage8_training_allowed"
+            ),
+        },
+        "selected_owner_failure_risk_proxy_gate": {
+            "status": runtime_proxy_review_packet_v1_decision.get("status"),
+            "passive_proxy_review_ready": selected_owner_failure_risk_proxy_passive,
+            "runtime_proxy_design_status": runtime_proxy_design_decision.get("status"),
+            "runtime_proxy_dataset_status": runtime_proxy_dataset_decision.get(
+                "status"
+            ),
+            "runtime_proxy_dataset_row_count": runtime_proxy_dataset_summary.get(
+                "row_count"
+            ),
+            "runtime_proxy_dataset_selector_training_row_count": (
+                runtime_proxy_dataset_summary.get("selector_training_row_count")
+            ),
+            "runtime_proxy_dataset_stage7_row_count": (
+                runtime_proxy_dataset_summary.get("stage7_row_count")
+            ),
+            "runtime_proxy_probe_status": runtime_proxy_probe_decision.get("status"),
+            "runtime_proxy_probe_visible_review_ready": (
+                runtime_proxy_probe_summary.get("visible_proxy_review_ready")
+            ),
+            "runtime_proxy_review_status": runtime_proxy_review_decision.get("status"),
+            "runtime_proxy_review_visible_review_ready": (
+                runtime_proxy_review_summary.get("visible_proxy_review_ready")
+            ),
+            "runtime_review_packet_v0_status": runtime_review_packet_v0_decision.get(
+                "status"
+            ),
+            "runtime_review_packet_v0_implementation_allowed": (
+                runtime_review_packet_v0_decision.get(
+                    "implementation_allowed_by_this_packet"
+                )
+            ),
+            "runtime_review_packet_v0_translation_blocker": (
+                runtime_review_packet_v0_summary.get(
+                    "runtime_feature_translation_blocker"
+                )
+            ),
+            "runtime_review_packet_v0_runtime_feature_passing_model_count": (
+                runtime_review_packet_v0_summary.get(
+                    "runtime_feature_passing_model_count"
+                )
+            ),
+            "failure_risk_evidence_status": failure_risk_evidence_decision.get(
+                "status"
+            ),
+            "failure_risk_evidence_row_count": failure_risk_evidence_summary.get(
+                "row_count"
+            ),
+            "failure_risk_evidence_target_counts": (
+                failure_risk_evidence_summary.get("target_counts") or {}
+            ),
+            "failure_risk_evidence_selector_training_row_count": (
+                failure_risk_evidence_summary.get("selector_training_row_count")
+            ),
+            "failure_risk_evidence_stage7_row_count": (
+                failure_risk_evidence_summary.get("stage7_row_count")
+            ),
+            "visible_terms_status": failure_risk_visible_terms_decision.get("status"),
+            "visible_terms_row_count": failure_risk_visible_terms_summary.get(
+                "row_count"
+            ),
+            "visible_terms_stage7_row_count": failure_risk_visible_terms_summary.get(
+                "stage7_row_count"
+            ),
+            "visible_proxy_precision": failure_risk_visible_proxy_metrics.get(
+                "precision"
+            ),
+            "visible_proxy_recall": failure_risk_visible_proxy_metrics.get("recall"),
+            "visible_proxy_safe_preservation_recall": (
+                failure_risk_visible_proxy_metrics.get("safe_preservation_recall")
+            ),
+            "visible_proxy_review_status": failure_risk_visible_review_decision.get(
+                "status"
+            ),
+            "visible_proxy_review_threshold_met": (
+                failure_risk_visible_review_summary.get(
+                    "review_threshold_met_on_current_dataset"
+                )
+            ),
+            "proxy_v1_probe_status": failure_risk_proxy_probe_decision.get("status"),
+            "proxy_v1_probe_row_count": failure_risk_proxy_probe_summary.get(
+                "row_count"
+            ),
+            "proxy_v1_independent_passing_proxy_count": (
+                failure_risk_proxy_probe_summary.get("independent_passing_proxy_count")
+            ),
+            "proxy_v1_selected_proxy_for_independent_validation": (
+                failure_risk_proxy_probe_summary.get(
+                    "selected_proxy_for_independent_validation"
+                )
+            ),
+            "independent_labels_status": failure_risk_independent_labels_decision.get(
+                "status"
+            ),
+            "independent_label_count": failure_risk_independent_labels_summary.get(
+                "label_count"
+            ),
+            "independent_label_target_failure_risk_count": (
+                failure_risk_independent_labels_summary.get("target_failure_risk_count")
+            ),
+            "independent_label_stage7_training_rows": (
+                failure_risk_independent_labels_summary.get("stage7_training_rows")
+            ),
+            "independent_validation_status": (
+                failure_risk_independent_validation_decision.get("status")
+            ),
+            "independent_validation_threshold_met": (
+                failure_risk_independent_validation_summary.get("threshold_met")
+            ),
+            "independent_validation_runtime_scope": (
+                failure_risk_independent_validation_summary.get("runtime_scope")
+            ),
+            "independent_validation_stage7_row_count": (
+                failure_risk_independent_validation_summary.get("stage7_row_count")
+            ),
+            "runtime_proxy_review_packet_v1_status": (
+                runtime_proxy_review_packet_v1_decision.get("status")
+            ),
+            "runtime_proxy_review_packet_v1_implementation_allowed": (
+                runtime_proxy_review_packet_v1_decision.get(
+                    "runtime_implementation_allowed"
+                )
+            ),
+            "runtime_proxy_review_packet_v1_precision": (
+                runtime_proxy_review_packet_v1_summary.get("precision")
+            ),
+            "runtime_proxy_review_packet_v1_recall": (
+                runtime_proxy_review_packet_v1_summary.get("recall")
+            ),
+            "runtime_proxy_review_packet_v1_safe_preservation_recall": (
+                runtime_proxy_review_packet_v1_summary.get("safe_preservation_recall")
+            ),
+            "runtime_proxy_review_packet_v1_stage7_row_count": (
+                runtime_proxy_review_packet_v1_summary.get("stage7_row_count")
+            ),
+            "runtime_behavior_changed": (
+                state_local_paired_selector_runtime_proxy_review_packet_v1.get(
+                    "runtime_behavior_changed"
+                )
+            ),
+            "runtime_defaults_changed": (
+                state_local_paired_selector_runtime_proxy_review_packet_v1.get(
+                    "runtime_defaults_changed"
+                )
+            ),
+            "runtime_selector_implemented": (
+                state_local_paired_selector_runtime_proxy_review_packet_v1.get(
+                    "runtime_selector_implemented"
+                )
+            ),
+            "runtime_dtm_or_tablebase_lookup": (
+                state_local_paired_selector_runtime_proxy_review_packet_v1.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "runtime_terminals_added": (
+                state_local_paired_selector_runtime_proxy_review_packet_v1.get(
+                    "runtime_terminals_added"
+                )
+            ),
+            "stage7_promotion_allowed": (
+                state_local_paired_selector_runtime_proxy_review_packet_v1.get(
+                    "stage7_promotion_allowed"
+                )
+            ),
+            "stage8_training_allowed": (
+                state_local_paired_selector_runtime_proxy_review_packet_v1.get(
+                    "stage8_training_allowed"
+                )
             ),
         },
         "clean_replacement_review_gate": {
@@ -7226,6 +7665,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     targeted_ownership_recovery = payload["targeted_ownership_recovery_gate"]
     balanced_hard_negative = payload["balanced_hard_negative_gate"]
     state_local_paired_ownership = payload["state_local_paired_ownership_gate"]
+    selected_owner_failure_risk = payload["selected_owner_failure_risk_proxy_gate"]
     clean_replacement = payload["clean_replacement_review_gate"]
     stage7 = payload["stage7_sampling_gate"]
     sequence = payload["sequence_policy"]
@@ -7480,6 +7920,35 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- runtime_terminals_added: `{state_local_paired_ownership['runtime_terminals_added']}`",
         f"- stage7_promotion_allowed: `{state_local_paired_ownership['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{state_local_paired_ownership['stage8_training_allowed']}`",
+        "",
+        "## Selected-Owner Failure-Risk Proxy",
+        "",
+        f"- passive_proxy_review_ready: `{selected_owner_failure_risk['passive_proxy_review_ready']}`",
+        f"- runtime_proxy_design_status: `{selected_owner_failure_risk['runtime_proxy_design_status']}`",
+        f"- runtime_proxy_dataset_row_count: `{selected_owner_failure_risk['runtime_proxy_dataset_row_count']}`",
+        f"- runtime_proxy_dataset_selector_training_row_count: `{selected_owner_failure_risk['runtime_proxy_dataset_selector_training_row_count']}`",
+        f"- runtime_proxy_dataset_stage7_row_count: `{selected_owner_failure_risk['runtime_proxy_dataset_stage7_row_count']}`",
+        f"- runtime_proxy_review_status: `{selected_owner_failure_risk['runtime_proxy_review_status']}`",
+        f"- runtime_review_packet_v0_translation_blocker: `{selected_owner_failure_risk['runtime_review_packet_v0_translation_blocker']}`",
+        f"- failure_risk_evidence_status: `{selected_owner_failure_risk['failure_risk_evidence_status']}`",
+        f"- failure_risk_evidence_row_count: `{selected_owner_failure_risk['failure_risk_evidence_row_count']}`",
+        f"- visible_proxy_precision: `{selected_owner_failure_risk['visible_proxy_precision']}`",
+        f"- visible_proxy_recall: `{selected_owner_failure_risk['visible_proxy_recall']}`",
+        f"- proxy_v1_probe_status: `{selected_owner_failure_risk['proxy_v1_probe_status']}`",
+        f"- proxy_v1_independent_passing_proxy_count: `{selected_owner_failure_risk['proxy_v1_independent_passing_proxy_count']}`",
+        f"- independent_label_count: `{selected_owner_failure_risk['independent_label_count']}`",
+        f"- independent_label_stage7_training_rows: `{selected_owner_failure_risk['independent_label_stage7_training_rows']}`",
+        f"- independent_validation_status: `{selected_owner_failure_risk['independent_validation_status']}`",
+        f"- independent_validation_threshold_met: `{selected_owner_failure_risk['independent_validation_threshold_met']}`",
+        f"- independent_validation_runtime_scope: `{selected_owner_failure_risk['independent_validation_runtime_scope']}`",
+        f"- runtime_proxy_review_packet_v1_status: `{selected_owner_failure_risk['runtime_proxy_review_packet_v1_status']}`",
+        f"- runtime_proxy_review_packet_v1_implementation_allowed: `{selected_owner_failure_risk['runtime_proxy_review_packet_v1_implementation_allowed']}`",
+        f"- runtime_proxy_review_packet_v1_stage7_row_count: `{selected_owner_failure_risk['runtime_proxy_review_packet_v1_stage7_row_count']}`",
+        f"- runtime_selector_implemented: `{selected_owner_failure_risk['runtime_selector_implemented']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{selected_owner_failure_risk['runtime_dtm_or_tablebase_lookup']}`",
+        f"- runtime_terminals_added: `{selected_owner_failure_risk['runtime_terminals_added']}`",
+        f"- stage7_promotion_allowed: `{selected_owner_failure_risk['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{selected_owner_failure_risk['stage8_training_allowed']}`",
         "",
         "## Clean Replacement Review",
         "",

@@ -527,6 +527,26 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_state_local_paired_ownership_review_v1.json"
     )
     assert (
+        payload["source_artifacts"]["state_local_paired_runtime_proxy_review_v0"]
+        == "reports/krk_state_local_paired_runtime_proxy_review_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["selected_owner_failure_risk_evidence_v1"]
+        == "reports/krk_selected_owner_failure_risk_evidence_v1.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "selected_owner_failure_risk_proxy_independent_validation_v1"
+        ]
+        == "reports/krk_selected_owner_failure_risk_proxy_independent_validation_v1.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "state_local_paired_selector_runtime_proxy_review_packet_v1"
+        ]
+        == "reports/krk_state_local_paired_selector_runtime_proxy_review_packet_v1.json"
+    )
+    assert (
         payload["source_artifacts"][
             "clean_retrain_retry1_replacement_readiness_review"
         ]
@@ -1035,6 +1055,91 @@ def test_full_suite_readiness_identifies_current_gate():
     assert state_local["runtime_terminals_added"] is False
     assert state_local["stage7_promotion_allowed"] is False
     assert state_local["stage8_training_allowed"] is False
+
+    failure_risk = payload["selected_owner_failure_risk_proxy_gate"]
+    assert failure_risk["passive_proxy_review_ready"] is True
+    assert (
+        failure_risk["runtime_proxy_design_status"]
+        == "proxy_design_ready_for_replay_free_validation"
+    )
+    assert (
+        failure_risk["runtime_proxy_dataset_status"]
+        == "runtime_proxy_dataset_ready_for_non_causal_probe"
+    )
+    assert failure_risk["runtime_proxy_dataset_row_count"] == 40
+    assert failure_risk["runtime_proxy_dataset_selector_training_row_count"] == 0
+    assert failure_risk["runtime_proxy_dataset_stage7_row_count"] == 0
+    assert failure_risk["runtime_proxy_probe_status"] == (
+        "visible_runtime_proxy_features_insufficient"
+    )
+    assert failure_risk["runtime_proxy_probe_visible_review_ready"] is False
+    assert failure_risk["runtime_proxy_review_status"] == (
+        "runtime_proxy_translation_still_blocked"
+    )
+    assert failure_risk["runtime_proxy_review_visible_review_ready"] is False
+    assert failure_risk["runtime_review_packet_v0_status"] == (
+        "runtime_review_packet_ready_with_translation_blocker"
+    )
+    assert failure_risk["runtime_review_packet_v0_implementation_allowed"] is False
+    assert failure_risk["runtime_review_packet_v0_translation_blocker"] is True
+    assert (
+        failure_risk["runtime_review_packet_v0_runtime_feature_passing_model_count"]
+        == 0
+    )
+    assert failure_risk["failure_risk_evidence_status"] == (
+        "failure_risk_evidence_v1_built"
+    )
+    assert failure_risk["failure_risk_evidence_row_count"] == 48
+    assert failure_risk["failure_risk_evidence_target_counts"] == {
+        "failure_risk": 8,
+        "safe_preservation": 40,
+    }
+    assert failure_risk["failure_risk_evidence_selector_training_row_count"] == 0
+    assert failure_risk["failure_risk_evidence_stage7_row_count"] == 0
+    assert failure_risk["visible_terms_status"] == (
+        "visible_failure_risk_terms_extracted_for_probe"
+    )
+    assert failure_risk["visible_terms_row_count"] == 40
+    assert failure_risk["visible_terms_stage7_row_count"] == 0
+    assert failure_risk["visible_proxy_precision"] == 1.0
+    assert failure_risk["visible_proxy_recall"] == 1.0
+    assert failure_risk["visible_proxy_safe_preservation_recall"] == 1.0
+    assert failure_risk["visible_proxy_review_status"] == (
+        "visible_failure_risk_proxy_candidate_identified_not_runtime_ready"
+    )
+    assert failure_risk["visible_proxy_review_threshold_met"] is True
+    assert failure_risk["proxy_v1_probe_status"] == "proxy_v1_independent_candidate_found"
+    assert failure_risk["proxy_v1_probe_row_count"] == 48
+    assert failure_risk["proxy_v1_independent_passing_proxy_count"] == 3
+    assert failure_risk["independent_labels_status"] == (
+        "independent_proxy_validation_labels_collected"
+    )
+    assert failure_risk["independent_label_count"] == 8
+    assert failure_risk["independent_label_target_failure_risk_count"] == 1
+    assert failure_risk["independent_label_stage7_training_rows"] == 0
+    assert failure_risk["independent_validation_status"] == (
+        "independent_proxy_validation_passed"
+    )
+    assert failure_risk["independent_validation_threshold_met"] is True
+    assert failure_risk["independent_validation_runtime_scope"] == (
+        "progress_window_monitor_or_reconsideration_only"
+    )
+    assert failure_risk["independent_validation_stage7_row_count"] == 0
+    assert failure_risk["runtime_proxy_review_packet_v1_status"] == (
+        "runtime_review_ready_progress_window_scope_only"
+    )
+    assert failure_risk["runtime_proxy_review_packet_v1_implementation_allowed"] is False
+    assert failure_risk["runtime_proxy_review_packet_v1_precision"] == 1.0
+    assert failure_risk["runtime_proxy_review_packet_v1_recall"] == 1.0
+    assert failure_risk["runtime_proxy_review_packet_v1_safe_preservation_recall"] == 1.0
+    assert failure_risk["runtime_proxy_review_packet_v1_stage7_row_count"] == 0
+    assert failure_risk["runtime_behavior_changed"] is False
+    assert failure_risk["runtime_defaults_changed"] is False
+    assert failure_risk["runtime_selector_implemented"] is False
+    assert failure_risk["runtime_dtm_or_tablebase_lookup"] is False
+    assert failure_risk["runtime_terminals_added"] is False
+    assert failure_risk["stage7_promotion_allowed"] is False
+    assert failure_risk["stage8_training_allowed"] is False
 
     clean_replacement = payload["clean_replacement_review_gate"]
     assert clean_replacement["passive_review_ready"] is True
