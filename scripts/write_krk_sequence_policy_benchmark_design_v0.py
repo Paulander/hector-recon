@@ -129,6 +129,18 @@ def build_payload(
         "sequence_policy_benchmark_mixed_plan_window_underpowered",
         "sequence_policy_benchmark_mixed_or_insufficient",
     }
+    passive_continuation_status = (
+        "non_causal_sequence_policy_design_blocked_forbidden_training_or_runtime_rows"
+        if forbidden_training_or_runtime_inputs
+        else "non_causal_sequence_policy_design_blocked_pending_ready_inputs"
+        if not benchmark_ready
+        else "non_causal_sequence_policy_review_packet_ready"
+        if benchmark_review_status
+        == "sequence_policy_benchmark_supports_non_causal_sequence_policy_review"
+        else "non_causal_sequence_policy_design_without_new_labels_ready"
+        if benchmark_review_status == "sequence_policy_benchmark_mixed_plan_window_underpowered"
+        else "non_causal_sequence_policy_design_review_needed"
+    )
     status = (
         "sequence_policy_benchmark_design_blocked_forbidden_training_or_runtime_rows"
         if forbidden_training_or_runtime_inputs
@@ -223,6 +235,36 @@ def build_payload(
                 "stage7 held-out challenge result",
             ],
         },
+        "passive_design_without_new_labels": {
+            "status": passive_continuation_status,
+            "depends_on_new_label_execution": False,
+            "depends_on_protected_failure_contrast_collection": False,
+            "current_evidence_limit": (
+                "protected_plan_window_failure_evidence_sparse"
+                if benchmark_review_status == "sequence_policy_benchmark_mixed_plan_window_underpowered"
+                else None
+            ),
+            "allowed_work": [
+                "refine objective definitions against existing non-causal benchmark rows",
+                "draft abstain-or-review criteria for plan-window entry/progress/exit/abort",
+                "define held-out reporting tables and failure-slice diagnostics",
+                "prepare a review packet template for a future explicit runtime-or-training decision",
+            ],
+            "blocked_work_without_explicit_approval": [
+                "protected plan-window failure-contrast collection",
+                "new Stage 7 label execution",
+                "selector training",
+                "runtime selector implementation",
+                "runtime default or score changes",
+                "Stage 7 promotion",
+                "Stage 8 training",
+            ],
+            "exit_criteria_for_causal_work": [
+                "matching approval receipt and completed protected failure-contrast integration, or separate explicit runtime sandbox approval",
+                "separate reviewed packet authorizing any training or runtime change",
+                "no selector-training or runtime-authorization rows in passive benchmark inputs",
+            ],
+        },
         "blocked_or_pending": [
             {
                 "item": "stage4_first_move_contrast_sandbox",
@@ -310,6 +352,25 @@ def write_markdown(payload: dict[str, Any]) -> str:
         "",
     ])
     lines.extend(f"- {item}" for item in payload["benchmark_design"]["metrics"])
+    passive = payload["passive_design_without_new_labels"]
+    lines.extend(
+        [
+            "",
+            "## Passive Design Without New Labels",
+            "",
+            f"- status: `{passive['status']}`",
+            f"- depends_on_new_label_execution: `{passive['depends_on_new_label_execution']}`",
+            f"- depends_on_protected_failure_contrast_collection: `{passive['depends_on_protected_failure_contrast_collection']}`",
+            f"- current_evidence_limit: `{passive['current_evidence_limit']}`",
+            "",
+            "Allowed work:",
+        ]
+    )
+    lines.extend(f"- {item}" for item in passive["allowed_work"])
+    lines.extend(["", "Blocked without explicit approval:"])
+    lines.extend(f"- {item}" for item in passive["blocked_work_without_explicit_approval"])
+    lines.extend(["", "Exit criteria for causal work:"])
+    lines.extend(f"- {item}" for item in passive["exit_criteria_for_causal_work"])
     lines.extend([
         "",
         "## Decision",

@@ -72,6 +72,16 @@ def test_sequence_policy_benchmark_design_is_ready_but_blocks_training_and_runti
         payload["decision"]["recommended_next_step"]
         == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
+    passive = payload["passive_design_without_new_labels"]
+    assert passive["status"] == "non_causal_sequence_policy_design_without_new_labels_ready"
+    assert passive["depends_on_new_label_execution"] is False
+    assert passive["depends_on_protected_failure_contrast_collection"] is False
+    assert passive["current_evidence_limit"] == "protected_plan_window_failure_evidence_sparse"
+    assert "protected plan-window failure-contrast collection" in passive[
+        "blocked_work_without_explicit_approval"
+    ]
+    assert "selector training" in passive["blocked_work_without_explicit_approval"]
+    assert "new Stage 7 label execution" in passive["blocked_work_without_explicit_approval"]
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["selector_training_allowed"] is False
     assert payload["decision"]["stage7_promotion_allowed"] is False
@@ -112,6 +122,10 @@ def test_sequence_policy_benchmark_design_fixture_requires_clean_success_control
         payload["decision"]["status"]
         == "sequence_policy_benchmark_blocked_pending_clean_stage7_controls"
     )
+    assert (
+        payload["passive_design_without_new_labels"]["status"]
+        == "non_causal_sequence_policy_design_blocked_pending_ready_inputs"
+    )
     assert payload["readiness"]["benchmark_ready"] is False
     assert payload["decision"]["stage8_training_allowed"] is False
 
@@ -147,6 +161,10 @@ def test_sequence_policy_benchmark_design_fixture_can_become_ready_non_causally(
     )
 
     assert payload["decision"]["status"] == "sequence_policy_benchmark_design_ready_non_causal"
+    assert (
+        payload["passive_design_without_new_labels"]["status"]
+        == "non_causal_sequence_policy_design_review_needed"
+    )
     assert payload["readiness"]["benchmark_ready"] is True
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["selector_training_allowed"] is False
@@ -197,6 +215,10 @@ def test_sequence_policy_benchmark_design_routes_forbidden_rows_to_repair():
     assert (
         payload["decision"]["recommended_next_step"]
         == "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+    )
+    assert (
+        payload["passive_design_without_new_labels"]["status"]
+        == "non_causal_sequence_policy_design_blocked_forbidden_training_or_runtime_rows"
     )
     assert "selector_training_rows_forbidden" in payload["readiness"][
         "forbidden_training_or_runtime_input_blockers"

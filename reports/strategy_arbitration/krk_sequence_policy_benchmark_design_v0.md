@@ -68,6 +68,33 @@ This is a non-causal benchmark design/readiness artifact. It does not train a mo
 - first miss per sequence
 - stage7 held-out challenge result
 
+## Passive Design Without New Labels
+
+- status: `non_causal_sequence_policy_design_without_new_labels_ready`
+- depends_on_new_label_execution: `False`
+- depends_on_protected_failure_contrast_collection: `False`
+- current_evidence_limit: `protected_plan_window_failure_evidence_sparse`
+
+Allowed work:
+- refine objective definitions against existing non-causal benchmark rows
+- draft abstain-or-review criteria for plan-window entry/progress/exit/abort
+- define held-out reporting tables and failure-slice diagnostics
+- prepare a review packet template for a future explicit runtime-or-training decision
+
+Blocked without explicit approval:
+- protected plan-window failure-contrast collection
+- new Stage 7 label execution
+- selector training
+- runtime selector implementation
+- runtime default or score changes
+- Stage 7 promotion
+- Stage 8 training
+
+Exit criteria for causal work:
+- matching approval receipt and completed protected failure-contrast integration, or separate explicit runtime sandbox approval
+- separate reviewed packet authorizing any training or runtime change
+- no selector-training or runtime-authorization rows in passive benchmark inputs
+
 ## Decision
 
 - recommended_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`

@@ -230,6 +230,9 @@ def build_payload(
         sequence_policy_benchmark_review.get("decision", {}).get("status")
         or sequence_policy_design.get("decision", {}).get("status")
     )
+    passive_sequence_design = (
+        sequence_policy_design.get("passive_design_without_new_labels") or {}
+    )
     sequence_policy_input_summary = sequence_policy_inputs.get("summary", {})
     sequence_policy_input_decision = sequence_policy_inputs.get("decision", {})
     sequence_policy_benchmark_review_blockers = set(
@@ -775,6 +778,20 @@ def build_payload(
             if protected_plan_window_met
             else "missing_or_underpowered",
             "sequence_policy": sequence_policy_status,
+            "sequence_policy_passive_design_without_new_labels": (
+                passive_sequence_design.get("status")
+            ),
+            "sequence_policy_passive_design_current_evidence_limit": (
+                passive_sequence_design.get("current_evidence_limit")
+            ),
+            "sequence_policy_passive_design_depends_on_new_label_execution": (
+                passive_sequence_design.get("depends_on_new_label_execution")
+            ),
+            "sequence_policy_passive_design_depends_on_protected_failure_contrast_collection": (
+                passive_sequence_design.get(
+                    "depends_on_protected_failure_contrast_collection"
+                )
+            ),
             "sequence_policy_forbidden_training_or_runtime_input_blocked": (
                 sequence_forbidden_training_or_runtime_inputs
             ),

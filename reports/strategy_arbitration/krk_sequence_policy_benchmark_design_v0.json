@@ -72,6 +72,32 @@
     "status": "sequence_policy_benchmark_design_ready_non_causal"
   },
   "gameplay_topology_mutation": false,
+  "passive_design_without_new_labels": {
+    "allowed_work": [
+      "refine objective definitions against existing non-causal benchmark rows",
+      "draft abstain-or-review criteria for plan-window entry/progress/exit/abort",
+      "define held-out reporting tables and failure-slice diagnostics",
+      "prepare a review packet template for a future explicit runtime-or-training decision"
+    ],
+    "blocked_work_without_explicit_approval": [
+      "protected plan-window failure-contrast collection",
+      "new Stage 7 label execution",
+      "selector training",
+      "runtime selector implementation",
+      "runtime default or score changes",
+      "Stage 7 promotion",
+      "Stage 8 training"
+    ],
+    "current_evidence_limit": "protected_plan_window_failure_evidence_sparse",
+    "depends_on_new_label_execution": false,
+    "depends_on_protected_failure_contrast_collection": false,
+    "exit_criteria_for_causal_work": [
+      "matching approval receipt and completed protected failure-contrast integration, or separate explicit runtime sandbox approval",
+      "separate reviewed packet authorizing any training or runtime change",
+      "no selector-training or runtime-authorization rows in passive benchmark inputs"
+    ],
+    "status": "non_causal_sequence_policy_design_without_new_labels_ready"
+  },
   "readiness": {
     "benchmark_ready": true,
     "cross_stage_sequence_evidence_met": true,

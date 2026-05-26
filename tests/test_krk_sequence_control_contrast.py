@@ -267,6 +267,26 @@ def test_current_control_plane_gate_requires_explicit_choice():
         == "sequence_policy_benchmark_mixed_plan_window_underpowered"
     )
     assert (
+        payload["current_state"]["sequence_policy_passive_design_without_new_labels"]
+        == "non_causal_sequence_policy_design_without_new_labels_ready"
+    )
+    assert (
+        payload["current_state"]["sequence_policy_passive_design_current_evidence_limit"]
+        == "protected_plan_window_failure_evidence_sparse"
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_passive_design_depends_on_new_label_execution"
+        ]
+        is False
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_passive_design_depends_on_protected_failure_contrast_collection"
+        ]
+        is False
+    )
+    assert (
         payload["current_state"]["sequence_policy_inputs"]
         == "sequence_policy_benchmark_inputs_ready_non_causal"
     )
