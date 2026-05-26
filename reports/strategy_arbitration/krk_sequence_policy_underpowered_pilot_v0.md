@@ -25,6 +25,15 @@ This is a non-causal pilot review over underpowered inputs. It preserves diagnos
 - stage7_replay_free_backfill_exhausted: `False`
 - stage7_backfillable_success_controls: `0`
 - protected_failure_contrast_ready_for_explicit_approval: `True`
+- protected_stack_status: `retry1_protected_stage5_6_stack_adopted_manifest_only`
+- protected_stack_ready: `True`
+- protected_stack_rollback_paths_preserved: `True`
+- protected_stack_active_paths_safe: `True`
+- protected_stack_active_paths_exist: `True`
+- protected_stack_rollback_paths_safe: `True`
+- protected_stack_rollback_paths_exist: `True`
+- protected_stack_rollback_common_paths_distinct: `True`
+- protected_stack_filesystem_snapshots_replaced: `False`
 - protected_failure_contrast_integration_ready: `False`
 - protected_failure_contrast_runner_status: `protected_plan_window_failure_contrast_runner_dry_run_ready`
 - protected_failure_contrast_runner_manifest_status: `protected_plan_window_failure_contrast_manifest_ready_for_review`

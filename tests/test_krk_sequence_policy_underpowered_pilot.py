@@ -82,6 +82,18 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
     assert payload["summary"]["stage7_success_gap"] == 0
     assert payload["summary"]["stage7_replay_free_backfill_exhausted"] is False
     assert payload["summary"]["protected_failure_contrast_ready_for_explicit_approval"] is True
+    assert (
+        payload["summary"]["protected_stack_status"]
+        == "retry1_protected_stage5_6_stack_adopted_manifest_only"
+    )
+    assert payload["summary"]["protected_stack_ready"] is True
+    assert payload["summary"]["protected_stack_rollback_paths_preserved"] is True
+    assert payload["summary"]["protected_stack_active_paths_safe"] is True
+    assert payload["summary"]["protected_stack_active_paths_exist"] is True
+    assert payload["summary"]["protected_stack_rollback_paths_safe"] is True
+    assert payload["summary"]["protected_stack_rollback_paths_exist"] is True
+    assert payload["summary"]["protected_stack_rollback_common_paths_distinct"] is True
+    assert payload["summary"]["protected_stack_filesystem_snapshots_replaced"] is False
     assert payload["summary"]["protected_failure_contrast_integration_ready"] is False
     assert (
         payload["summary"]["protected_failure_contrast_runner_status"]

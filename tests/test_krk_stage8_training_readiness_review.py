@@ -112,6 +112,18 @@ def test_stage8_training_readiness_review_blocks_current_state():
         ]
         is True
     )
+    assert (
+        payload["requirements"]["protected_stack_status"]
+        == "retry1_protected_stage5_6_stack_adopted_manifest_only"
+    )
+    assert payload["requirements"]["protected_stack_ready"] is True
+    assert payload["requirements"]["protected_stack_rollback_paths_preserved"] is True
+    assert payload["requirements"]["protected_stack_active_paths_safe"] is True
+    assert payload["requirements"]["protected_stack_active_paths_exist"] is True
+    assert payload["requirements"]["protected_stack_rollback_paths_safe"] is True
+    assert payload["requirements"]["protected_stack_rollback_paths_exist"] is True
+    assert payload["requirements"]["protected_stack_rollback_common_paths_distinct"] is True
+    assert payload["requirements"]["protected_stack_filesystem_snapshots_replaced"] is False
     assert payload["requirements"]["protected_failure_contrast_integration_ready"] is False
     assert (
         payload["requirements"]["protected_failure_contrast_runner_status"]

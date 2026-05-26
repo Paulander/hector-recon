@@ -81,6 +81,18 @@ def test_stage7_post_label_outcome_current_artifact_reports_sequence_policy_gap(
         == 0
     )
     assert payload["summary"]["protected_failure_contrast_ready_for_explicit_approval"] is True
+    assert (
+        payload["summary"]["protected_stack_status"]
+        == "retry1_protected_stage5_6_stack_adopted_manifest_only"
+    )
+    assert payload["summary"]["protected_stack_ready"] is True
+    assert payload["summary"]["protected_stack_rollback_paths_preserved"] is True
+    assert payload["summary"]["protected_stack_active_paths_safe"] is True
+    assert payload["summary"]["protected_stack_active_paths_exist"] is True
+    assert payload["summary"]["protected_stack_rollback_paths_safe"] is True
+    assert payload["summary"]["protected_stack_rollback_paths_exist"] is True
+    assert payload["summary"]["protected_stack_rollback_common_paths_distinct"] is True
+    assert payload["summary"]["protected_stack_filesystem_snapshots_replaced"] is False
     assert payload["summary"]["protected_failure_contrast_integration_ready"] is False
     assert (
         payload["summary"]["protected_failure_contrast_runner_status"]

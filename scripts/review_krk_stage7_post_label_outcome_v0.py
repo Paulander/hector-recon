@@ -89,6 +89,9 @@ def build_payload(
     readiness_status = (readiness.get("decision") or {}).get("status")
     stage8_status = (stage8_review.get("decision") or {}).get("status")
     protected_failure_contrast = readiness.get("protected_failure_contrast_gate") or {}
+    protected_stack = readiness.get("protected_stack") or {}
+    active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
+    rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
     readiness_boundaries = readiness.get("runtime_and_training_boundaries") or {}
     explicit_gate_blockers = set(readiness.get("explicit_gate_blockers") or [])
     hard_blockers = set(readiness.get("hard_blockers") or [])
@@ -307,6 +310,29 @@ def build_payload(
             ),
             "protected_failure_contrast_ready_for_explicit_approval": (
                 protected_failure_contrast_ready_for_explicit_approval
+            ),
+            "protected_stack_status": protected_stack.get("status"),
+            "protected_stack_ready": protected_stack.get("ready"),
+            "protected_stack_rollback_paths_preserved": protected_stack.get(
+                "rollback_paths_preserved"
+            ),
+            "protected_stack_active_paths_safe": active_stack_path_status.get(
+                "all_paths_safe"
+            ),
+            "protected_stack_active_paths_exist": active_stack_path_status.get(
+                "all_paths_exist"
+            ),
+            "protected_stack_rollback_paths_safe": rollback_stack_path_status.get(
+                "all_paths_safe"
+            ),
+            "protected_stack_rollback_paths_exist": rollback_stack_path_status.get(
+                "all_paths_exist"
+            ),
+            "protected_stack_rollback_common_paths_distinct": protected_stack.get(
+                "rollback_common_paths_distinct"
+            ),
+            "protected_stack_filesystem_snapshots_replaced": protected_stack.get(
+                "filesystem_snapshots_replaced"
             ),
             "protected_failure_contrast_integration_ready": (
                 protected_failure_contrast.get("integration_ready")
