@@ -77,6 +77,9 @@ def _ready_execution_summary(job_count: int = 1) -> dict:
         "protected_stack_rollback_common_paths_distinct": True,
         "protected_stack_filesystem_snapshots_replaced": False,
         "protected_stack_hard_blockers": [],
+        "readiness_checked_flag_count": 430,
+        "readiness_boundary_violation_count": 0,
+        "readiness_source_artifact_count": 44,
     }
 
 
@@ -119,6 +122,9 @@ def _approval_receipt(
             "protected_stack_rollback_common_paths_distinct": True,
             "protected_stack_filesystem_snapshots_replaced": False,
             "protected_stack_hard_blockers": [],
+            "readiness_checked_flag_count": 430,
+            "readiness_boundary_violation_count": 0,
+            "readiness_source_artifact_count": 44,
         },
         "decision": {
             "status": _runner.APPROVAL_STATUS,
@@ -310,6 +316,9 @@ def test_failure_contrast_execution_readiness_is_dry_run_only():
     )
     assert payload["summary"]["protected_stack_filesystem_snapshots_replaced"] is False
     assert payload["summary"]["protected_stack_hard_blockers"] == []
+    assert payload["summary"]["readiness_checked_flag_count"] >= 430
+    assert payload["summary"]["readiness_boundary_violation_count"] == 0
+    assert payload["summary"]["readiness_source_artifact_count"] >= 44
     assert len(payload["summary"]["readiness_fingerprint"]) == 64
     assert (
         payload["decision"]["status"]
@@ -407,6 +416,9 @@ def test_failure_contrast_runner_is_dry_run_ready_without_authorizing_collection
         is False
     )
     assert payload["summary"]["execution_readiness_protected_stack_hard_blockers"] == []
+    assert payload["summary"]["execution_readiness_checked_flag_count"] >= 430
+    assert payload["summary"]["execution_readiness_boundary_violation_count"] == 0
+    assert payload["summary"]["execution_readiness_source_artifact_count"] >= 44
     assert payload["summary"]["approval_receipt_required_for_execution"] is True
     assert payload["summary"]["approval_receipt_present"] is False
     assert payload["summary"]["approval_receipt_valid"] is False
@@ -493,6 +505,9 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
     assert payload["summary"]["protected_stack_ready"] is True
     assert payload["summary"]["protected_stack_rollback_paths_preserved"] is True
     assert payload["summary"]["protected_stack_filesystem_snapshots_replaced"] is False
+    assert payload["summary"]["readiness_checked_flag_count"] >= 430
+    assert payload["summary"]["readiness_boundary_violation_count"] == 0
+    assert payload["summary"]["readiness_source_artifact_count"] >= 44
     assert payload["protected_stack_safety"] == {
         "status": "retry1_protected_stage5_6_stack_adopted_manifest_only",
         "ready": True,
@@ -546,6 +561,9 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
     )
     assert required["approval_scope"]["protected_stack_filesystem_snapshots_replaced"] is False
     assert required["approval_scope"]["protected_stack_hard_blockers"] == []
+    assert required["approval_scope"]["readiness_checked_flag_count"] >= 430
+    assert required["approval_scope"]["readiness_boundary_violation_count"] == 0
+    assert required["approval_scope"]["readiness_source_artifact_count"] >= 44
     assert required["decision"]["runtime_changes_allowed"] is False
     assert required["decision"]["label_run_allowed"] is False
     assert required["decision"]["selector_allowed"] is False
@@ -670,6 +688,9 @@ def test_failure_contrast_approval_request_fixture_tracks_current_scope():
         "protected_stack_rollback_common_paths_distinct": None,
         "protected_stack_filesystem_snapshots_replaced": None,
         "protected_stack_hard_blockers": [],
+        "readiness_checked_flag_count": None,
+        "readiness_boundary_violation_count": None,
+        "readiness_source_artifact_count": None,
     }
     assert payload["decision"]["collection_run_allowed"] is False
 
@@ -1511,6 +1532,9 @@ def test_failure_contrast_runner_blocks_stale_protected_stack_receipt_scope(monk
     stale_receipt["approval_scope"]["protected_stack_hard_blockers"] = [
         "stale_stack_blocker"
     ]
+    stale_receipt["approval_scope"]["readiness_checked_flag_count"] = 1
+    stale_receipt["approval_scope"]["readiness_boundary_violation_count"] = 1
+    stale_receipt["approval_scope"]["readiness_source_artifact_count"] = 1
     monkeypatch.setattr(_runner, "_load_optional", lambda _path: stale_receipt)
     monkeypatch.setattr(
         _runner,
@@ -1554,6 +1578,15 @@ def test_failure_contrast_runner_blocks_stale_protected_stack_receipt_scope(monk
         in payload["execution_blockers"]
     )
     assert "approval_receipt_protected_stack_hard_blockers_mismatch" in payload[
+        "execution_blockers"
+    ]
+    assert "approval_receipt_readiness_checked_flag_count_mismatch" in payload[
+        "execution_blockers"
+    ]
+    assert "approval_receipt_readiness_boundary_violation_count_mismatch" in payload[
+        "execution_blockers"
+    ]
+    assert "approval_receipt_readiness_source_artifact_count_mismatch" in payload[
         "execution_blockers"
     ]
     assert payload["summary"]["approval_receipt_present"] is True

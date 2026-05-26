@@ -476,6 +476,9 @@ def _approval_receipt_blockers(
         "protected_stack_rollback_common_paths_distinct",
         "protected_stack_filesystem_snapshots_replaced",
         "protected_stack_hard_blockers",
+        "readiness_checked_flag_count",
+        "readiness_boundary_violation_count",
+        "readiness_source_artifact_count",
     ):
         if approval_scope.get(key) != readiness_summary.get(key):
             blockers.append(f"approval_receipt_{key}_mismatch")
@@ -723,6 +726,15 @@ def build_payload(
             "execution_readiness_protected_stack_hard_blockers": readiness.get(
                 "summary", {}
             ).get("protected_stack_hard_blockers"),
+            "execution_readiness_checked_flag_count": readiness.get(
+                "summary", {}
+            ).get("readiness_checked_flag_count"),
+            "execution_readiness_boundary_violation_count": readiness.get(
+                "summary", {}
+            ).get("readiness_boundary_violation_count"),
+            "execution_readiness_source_artifact_count": readiness.get(
+                "summary", {}
+            ).get("readiness_source_artifact_count"),
             "approval_receipt_required_for_execution": True,
             "approval_receipt_present": approval_receipt is not None,
             "approval_receipt_valid": not approval_blockers,

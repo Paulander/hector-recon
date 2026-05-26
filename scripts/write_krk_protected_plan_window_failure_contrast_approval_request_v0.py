@@ -163,6 +163,15 @@ def build_payload(
             "protected_stack_hard_blockers": (
                 readiness_summary.get("protected_stack_hard_blockers") or []
             ),
+            "readiness_checked_flag_count": readiness_summary.get(
+                "readiness_checked_flag_count"
+            ),
+            "readiness_boundary_violation_count": readiness_summary.get(
+                "readiness_boundary_violation_count"
+            ),
+            "readiness_source_artifact_count": readiness_summary.get(
+                "readiness_source_artifact_count"
+            ),
         },
         "decision": {
             "status": APPROVAL_STATUS,
@@ -205,6 +214,15 @@ def build_payload(
             "job_count": job_count,
             "manifest_status": manifest.get("decision", {}).get("status"),
             "readiness_status": readiness.get("decision", {}).get("status"),
+            "readiness_checked_flag_count": readiness_summary.get(
+                "readiness_checked_flag_count"
+            ),
+            "readiness_boundary_violation_count": readiness_summary.get(
+                "readiness_boundary_violation_count"
+            ),
+            "readiness_source_artifact_count": readiness_summary.get(
+                "readiness_source_artifact_count"
+            ),
             "runner_status": runner.get("decision", {}).get("status"),
             "runner_execution_requested": runner.get("execution_requested"),
             "runner_processed_job_count": runner_summary.get("processed_job_count"),

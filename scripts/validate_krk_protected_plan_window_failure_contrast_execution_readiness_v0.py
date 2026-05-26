@@ -179,6 +179,9 @@ def _readiness_fingerprint(payload: dict[str, Any]) -> str:
             "protected_stack_rollback_common_paths_distinct",
             "protected_stack_filesystem_snapshots_replaced",
             "protected_stack_hard_blockers",
+            "readiness_checked_flag_count",
+            "readiness_boundary_violation_count",
+            "readiness_source_artifact_count",
         )
     }
     canonical = {
@@ -206,6 +209,7 @@ def build_payload(
     manifest_status = manifest.get("decision", {}).get("status")
     review_status = review.get("decision", {}).get("status")
     protected_stack = full_suite_readiness.get("protected_stack") or {}
+    readiness_boundaries = full_suite_readiness.get("runtime_and_training_boundaries") or {}
     active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
     protected_stack_hard_blockers = list(full_suite_readiness.get("hard_blockers") or [])
@@ -252,6 +256,9 @@ def build_payload(
         blockers.append("protected_stack_filesystem_snapshot_replacement_detected")
     if protected_stack_hard_blockers:
         blockers.append("protected_stack_hard_blockers_present")
+    boundary_violation_count = readiness_boundaries.get("violation_count")
+    if boundary_violation_count not in (None, 0):
+        blockers.append("readiness_boundary_violations_present")
 
     seen_job_ids: set[str] = set()
     seen_outputs: set[str] = set()
@@ -334,6 +341,13 @@ def build_payload(
                 "filesystem_snapshots_replaced"
             ),
             "protected_stack_hard_blockers": protected_stack_hard_blockers,
+            "readiness_checked_flag_count": readiness_boundaries.get(
+                "checked_flag_count"
+            ),
+            "readiness_boundary_violation_count": boundary_violation_count,
+            "readiness_source_artifact_count": len(
+                full_suite_readiness.get("source_artifacts") or {}
+            ),
         },
         "job_checks": job_checks,
         "decision": {
