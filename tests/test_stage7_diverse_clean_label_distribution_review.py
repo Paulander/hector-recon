@@ -46,6 +46,7 @@ def test_stage7_label_distribution_review_reports_closed_success_gap():
     assert payload["runtime_score_changes"] is False
     assert payload["runtime_direct_routing"] is False
     assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["hidden_python_controller"] is False
     assert payload["gameplay_topology_mutation"] is False
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False

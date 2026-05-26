@@ -51,6 +51,7 @@ def test_stage7_additional_clean_sampling_manifest_is_review_only():
     assert payload["runtime_score_changes"] is False
     assert payload["runtime_direct_routing"] is False
     assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["hidden_python_controller"] is False
     assert payload["gameplay_topology_mutation"] is False
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
@@ -170,6 +171,7 @@ def test_stage7_additional_clean_sampling_runner_defaults_to_dry_run():
     assert payload["summary"]["executed_job_count"] == 0
     assert payload["summary"]["stage7_training_row_count"] == 0
     assert payload["summary"]["runtime_authorization_row_count"] == 0
+    assert payload["hidden_python_controller"] is False
     assert payload["summary"]["output_validation_status"] == (
         "stage7_additional_clean_sampling_outputs_not_applicable_success_gate_closed"
     )
@@ -198,6 +200,7 @@ def test_stage7_additional_clean_sampling_output_validation_accepts_outputs():
     assert payload["runtime_score_changes"] is False
     assert payload["runtime_direct_routing"] is False
     assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["hidden_python_controller"] is False
     assert payload["gameplay_topology_mutation"] is False
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False

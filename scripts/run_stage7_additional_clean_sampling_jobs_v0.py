@@ -36,6 +36,7 @@ COMMON_FALSE_FLAGS = {
     "runtime_score_changes": False,
     "runtime_direct_routing": False,
     "runtime_dtm_or_tablebase_lookup": False,
+    "hidden_python_controller": False,
     "gameplay_topology_mutation": False,
     "stage7_promotion_allowed": False,
     "stage8_training_allowed": False,
