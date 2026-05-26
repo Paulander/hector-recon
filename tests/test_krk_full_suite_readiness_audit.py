@@ -154,6 +154,7 @@ def test_full_suite_readiness_identifies_current_gate():
         == "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection"
     )
     assert payload["hard_blockers"] == []
+    assert payload["control_plane_gate_review_blockers"] == []
     assert payload["explicit_gate_blockers"] == [
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
     ]
@@ -514,6 +515,20 @@ def test_full_suite_readiness_reports_current_gate_blocking_option(monkeypatch):
     assert (
         current_gate["protected_failure_contrast_collection_blocked_by_option_id"]
         == "repair_protected_stack_validation"
+    )
+    assert payload["hard_blockers"] == []
+    assert payload["control_plane_gate_review_blockers"] == [
+        "protected_plan_window_failure_contrast_control_plane_gate_review_required"
+    ]
+    assert payload["explicit_gate_blockers"] == []
+    assert payload["blockers"] == payload["control_plane_gate_review_blockers"]
+    assert (
+        payload["decision"]["status"]
+        == "krk_suite_readiness_blocked_pending_protected_failure_contrast_control_plane_gate_review"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
     )
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["stage8_training_allowed"] is False

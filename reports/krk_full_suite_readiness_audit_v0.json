@@ -58,6 +58,7 @@
     "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
   ],
   "causal_status": "non_causal_readiness_audit",
+  "control_plane_gate_review_blockers": [],
   "current_control_plane_gate": {
     "approval_option_ids": [
       "approve_stage4_first_move_contrast_sandbox",

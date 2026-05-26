@@ -322,6 +322,9 @@ def build_payload() -> dict[str, Any]:
         gate,
         "approve_protected_plan_window_failure_contrast_collection",
     )
+    protected_collection_command_available = bool(
+        protected_collection_gate_option.get("command_if_explicitly_approved")
+    )
     protected_collection_blocking_gate_option = find_first_approval_option(
         gate,
         (
@@ -655,15 +658,21 @@ def build_payload() -> dict[str, Any]:
     if boundaries["violation_count"]:
         hard_blockers.append("hard_invariant_violation_detected")
     explicit_gate_blockers: list[str] = []
+    control_plane_gate_review_blockers: list[str] = []
     if (
         protected_failure_contrast_pending
         and protected_stack_validated
         and failure_contrast_approval_request_ready
     ):
-        explicit_gate_blockers.append(
-            "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
-        )
-    blockers = hard_blockers + explicit_gate_blockers
+        if protected_collection_command_available:
+            explicit_gate_blockers.append(
+                "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+            )
+        else:
+            control_plane_gate_review_blockers.append(
+                "protected_plan_window_failure_contrast_control_plane_gate_review_required"
+            )
+    blockers = hard_blockers + control_plane_gate_review_blockers + explicit_gate_blockers
 
     if sequence_forbidden_training_or_runtime_inputs:
         decision_status = "krk_suite_readiness_blocked_forbidden_training_or_runtime_rows"
@@ -681,6 +690,11 @@ def build_payload() -> dict[str, Any]:
         next_step = (
             "explicitly_approve_stage7_diverse_clean_sampling_or_choose_stage4_sandbox_gate"
         )
+    elif control_plane_gate_review_blockers:
+        decision_status = (
+            "krk_suite_readiness_blocked_pending_protected_failure_contrast_control_plane_gate_review"
+        )
+        next_step = "review_current_control_plane_gate_for_protected_failure_contrast_collection"
     elif explicit_gate_blockers:
         decision_status = (
             "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection"
@@ -1020,6 +1034,7 @@ def build_payload() -> dict[str, Any]:
         },
         "blockers": blockers,
         "hard_blockers": hard_blockers,
+        "control_plane_gate_review_blockers": control_plane_gate_review_blockers,
         "explicit_gate_blockers": explicit_gate_blockers,
         "approval_gates": {
             "stage7_diverse_clean_label_execution": {
