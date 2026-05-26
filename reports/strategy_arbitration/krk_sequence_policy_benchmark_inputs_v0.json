@@ -11,6 +11,7 @@
     "status": "sequence_policy_benchmark_inputs_ready_non_causal"
   },
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "label_semantics": {
     "benchmark_inputs_do_not_authorize_runtime_or_training": true,
     "capacity_labels_are_not_runtime_ownership_labels": true,

@@ -66,6 +66,7 @@
     "gameplay_topology_mutation"
   ],
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "implementation_boundaries": {
     "guardrails_before_target_smoke": false,
     "implementation_allowed_by_this_packet": false,

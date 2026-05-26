@@ -78,6 +78,7 @@ def test_sequence_control_contrast_probe_keeps_stage8_blocked():
     assert payload["runtime_selector_implemented"] is False
     assert payload["runtime_score_changes"] is False
     assert payload["runtime_direct_routing"] is False
+    assert payload["hidden_python_controller"] is False
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
     assert (

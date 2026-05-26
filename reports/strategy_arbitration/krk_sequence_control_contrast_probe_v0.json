@@ -15,6 +15,7 @@
     "status": "sequence_control_dataset_ready_for_broader_sequence_policy_review"
   },
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "readiness": {
     "broader_runtime_selector_ready": false,
     "stage4_first_move_contrast_sandbox_review_ready": true,

@@ -92,6 +92,7 @@ def test_stage4_collection_report_is_observation_only_and_valid():
     assert payload["runtime_score_changes"] is False
     assert payload["runtime_direct_routing"] is False
     assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["hidden_python_controller"] is False
     assert payload["gameplay_topology_mutation"] is False
     summary = payload["summary"]
     assert summary["stage4_row_count"] == 6

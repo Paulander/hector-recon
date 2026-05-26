@@ -42,6 +42,7 @@ def test_sequence_policy_benchmark_inputs_are_non_causal_and_ready_after_stage7_
     assert payload["runtime_score_changes"] is False
     assert payload["runtime_direct_routing"] is False
     assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["hidden_python_controller"] is False
     assert payload["gameplay_topology_mutation"] is False
     assert payload["stage7_promotion_allowed"] is False
     assert payload["stage8_training_allowed"] is False
