@@ -30,6 +30,11 @@ STAGE7_ADDITIONAL_RUNNER = (
 STAGE7_POST_LABEL_OUTCOME = ROOT / "reports/krk_stage7_post_label_outcome_review_v0.json"
 SEQUENCE_PROBE = ROOT / "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.json"
 SEQUENCE_POLICY_DESIGN = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json"
+SEQUENCE_POLICY_CROSS_STAGE_REQUIREMENTS = (
+    ROOT
+    / "reports/strategy_arbitration/"
+    "krk_cross_stage_plan_capsule_evidence_requirements_v0.json"
+)
 SEQUENCE_POLICY_BENCHMARK_REVIEW = (
     ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
 )
@@ -133,6 +138,7 @@ def build_payload(
     stage7_post_label_outcome: dict[str, Any] | None = None,
     sequence_probe: dict[str, Any] | None = None,
     sequence_policy_design: dict[str, Any] | None = None,
+    sequence_policy_cross_stage_requirements: dict[str, Any] | None = None,
     sequence_policy_benchmark_review: dict[str, Any] | None = None,
     failure_contrast_plan: dict[str, Any] | None = None,
     failure_contrast_manifest: dict[str, Any] | None = None,
@@ -162,6 +168,10 @@ def build_payload(
     stage7_post_label_outcome = stage7_post_label_outcome or _load_optional(STAGE7_POST_LABEL_OUTCOME)
     sequence_probe = sequence_probe or _load(SEQUENCE_PROBE)
     sequence_policy_design = sequence_policy_design or _load(SEQUENCE_POLICY_DESIGN)
+    sequence_policy_cross_stage_requirements = (
+        sequence_policy_cross_stage_requirements
+        or _load_optional(SEQUENCE_POLICY_CROSS_STAGE_REQUIREMENTS)
+    )
     sequence_policy_benchmark_review = sequence_policy_benchmark_review or _load_optional(
         SEQUENCE_POLICY_BENCHMARK_REVIEW
     )
@@ -232,6 +242,9 @@ def build_payload(
     )
     passive_sequence_design = (
         sequence_policy_design.get("passive_design_without_new_labels") or {}
+    )
+    cross_stage_requirements_readiness = (
+        sequence_policy_cross_stage_requirements.get("current_readiness") or {}
     )
     sequence_policy_input_summary = sequence_policy_inputs.get("summary", {})
     sequence_policy_input_decision = sequence_policy_inputs.get("decision", {})
@@ -645,6 +658,7 @@ def build_payload(
             "reports/krk_stage7_post_label_outcome_review_v0.json",
             "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.json",
             "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json",
+            "reports/strategy_arbitration/krk_cross_stage_plan_capsule_evidence_requirements_v0.json",
             "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
             "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_plan_v0.json",
             "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json",
@@ -791,6 +805,17 @@ def build_payload(
                 passive_sequence_design.get(
                     "depends_on_protected_failure_contrast_collection"
                 )
+            ),
+            "sequence_policy_cross_stage_requirements": (
+                sequence_policy_cross_stage_requirements.get("decision", {}).get("status")
+            ),
+            "sequence_policy_replay_free_protected_cross_stage_evidence": (
+                cross_stage_requirements_readiness.get(
+                    "replay_free_protected_cross_stage_evidence"
+                )
+            ),
+            "sequence_policy_cross_stage_sequence_evidence_met": (
+                cross_stage_requirements_readiness.get("cross_stage_sequence_evidence_met")
             ),
             "sequence_policy_forbidden_training_or_runtime_input_blocked": (
                 sequence_forbidden_training_or_runtime_inputs

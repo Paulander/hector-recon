@@ -49,6 +49,9 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - sequence_policy_passive_design_current_evidence_limit: `protected_plan_window_failure_evidence_sparse`
 - sequence_policy_passive_design_depends_on_new_label_execution: `False`
 - sequence_policy_passive_design_depends_on_protected_failure_contrast_collection: `False`
+- sequence_policy_cross_stage_requirements: `cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark`
+- sequence_policy_replay_free_protected_cross_stage_evidence: `True`
+- sequence_policy_cross_stage_sequence_evidence_met: `True`
 - sequence_policy_forbidden_training_or_runtime_input_blocked: `False`
 - sequence_policy_forbidden_training_or_runtime_input_blockers: `[]`
 - protected_plan_window_failure_contrast_plan: `protected_plan_window_failure_contrast_plan_ready_pending_explicit_collection_approval`

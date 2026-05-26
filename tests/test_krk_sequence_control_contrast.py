@@ -287,6 +287,20 @@ def test_current_control_plane_gate_requires_explicit_choice():
         is False
     )
     assert (
+        payload["current_state"]["sequence_policy_cross_stage_requirements"]
+        == "cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark"
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_replay_free_protected_cross_stage_evidence"
+        ]
+        is True
+    )
+    assert (
+        payload["current_state"]["sequence_policy_cross_stage_sequence_evidence_met"]
+        is True
+    )
+    assert (
         payload["current_state"]["sequence_policy_inputs"]
         == "sequence_policy_benchmark_inputs_ready_non_causal"
     )
