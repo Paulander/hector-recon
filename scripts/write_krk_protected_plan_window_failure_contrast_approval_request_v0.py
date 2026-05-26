@@ -104,7 +104,11 @@ def build_payload(
         ),
         "hard_blockers": full_suite_readiness.get("hard_blockers") or [],
     }
-    job_count = int(manifest_summary.get("job_count") or len(manifest.get("jobs") or []))
+    job_count = int(
+        runner_summary.get("job_count")
+        if runner_summary.get("job_count") is not None
+        else manifest_summary.get("job_count") or len(manifest.get("jobs") or [])
+    )
     approval_receipt_path = runner.get("approval_receipt_path") or DEFAULT_APPROVAL_RECEIPT
     required_receipt = {
         "schema_version": APPROVAL_SCHEMA_VERSION,

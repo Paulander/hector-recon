@@ -595,6 +595,56 @@ def test_failure_contrast_approval_request_fixture_tracks_current_scope():
     assert payload["decision"]["collection_run_allowed"] is False
 
 
+def test_failure_contrast_approval_request_uses_runner_job_scope():
+    payload = _approval_request.build_payload(
+        manifest={
+            "decision": {"status": "protected_plan_window_failure_contrast_manifest_ready_for_review"},
+            "summary": {"job_count": 6},
+            "jobs": [{"job_id": str(index)} for index in range(6)],
+        },
+        readiness={
+            "decision": {
+                "status": (
+                    "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+                )
+            },
+            "summary": {
+                "manifest_fingerprint": "m" * 64,
+                "readiness_fingerprint": "r" * 64,
+            },
+        },
+        runner={
+            "approval_receipt_path": (
+                "reports/strategy_arbitration/"
+                "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
+            ),
+            "execution_requested": False,
+            "decision": {"status": "protected_plan_window_failure_contrast_runner_dry_run_ready"},
+            "summary": {
+                "job_count": 2,
+                "max_jobs": 2,
+                "job_timeout_seconds": 900,
+                "overwrite_existing_outputs": False,
+                "refresh_after_run_requested": True,
+                "approval_receipt_present": False,
+                "approval_receipt_valid": False,
+                "approval_receipt_blockers": ["approval_receipt_missing"],
+                "processed_job_count": 0,
+                "executed_job_count": 0,
+            },
+        },
+        full_suite_readiness={
+            "protected_stack": {},
+            "hard_blockers": [],
+        },
+    )
+
+    scope = payload["required_receipt_if_user_approves"]["approval_scope"]
+    assert scope["job_count"] == 2
+    assert scope["max_jobs"] == 2
+    assert scope["refresh_after_run"] is True
+
+
 def test_failure_contrast_runner_fixture_blocks_without_review(monkeypatch):
     monkeypatch.setattr(
         _runner,
