@@ -499,6 +499,18 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_targeted_ownership_negative_labels_v0.json"
     )
     assert (
+        payload["source_artifacts"]["balanced_hard_negative_label_plan_v1"]
+        == "reports/krk_balanced_hard_negative_label_plan_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["balanced_hard_negative_labels_v1"]
+        == "reports/krk_balanced_hard_negative_labels_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["balanced_hard_negative_evidence_review_v0"]
+        == "reports/krk_balanced_hard_negative_evidence_review_v0.json"
+    )
+    assert (
         payload["source_artifacts"][
             "clean_retrain_retry1_replacement_readiness_review"
         ]
@@ -889,6 +901,53 @@ def test_full_suite_readiness_identifies_current_gate():
     assert targeted_ownership["runtime_terminals_added"] is False
     assert targeted_ownership["stage7_promotion_allowed"] is False
     assert targeted_ownership["stage8_training_allowed"] is False
+
+    balanced_hard_negative = payload["balanced_hard_negative_gate"]
+    assert balanced_hard_negative["passive_evidence_ready"] is True
+    assert (
+        balanced_hard_negative["label_plan_status"]
+        == "balanced_hard_negative_label_plan_v1_ready"
+    )
+    assert balanced_hard_negative["label_plan_job_count"] == 12
+    assert balanced_hard_negative["label_plan_stage7_jobs"] == 0
+    assert (
+        balanced_hard_negative["execution_manifest_status"]
+        == "balanced_hard_negative_execution_manifest_bound"
+    )
+    assert balanced_hard_negative["execution_manifest_labels_allowed_now"] is False
+    assert balanced_hard_negative["execution_manifest_all_bindings_valid"] is True
+    assert balanced_hard_negative["execution_manifest_job_count"] == 12
+    assert balanced_hard_negative["execution_manifest_stage7_jobs"] == 0
+    assert (
+        balanced_hard_negative["execution_manifest_review_status"]
+        == "balanced_hard_negative_manifest_review_passed_labels_allowed"
+    )
+    assert (
+        balanced_hard_negative["labels_status"]
+        == "balanced_hard_negative_labels_completed"
+    )
+    assert balanced_hard_negative["label_count"] == 12
+    assert balanced_hard_negative["positive_capacity_count"] == 11
+    assert balanced_hard_negative["negative_capacity_count"] == 1
+    assert balanced_hard_negative["stage7_labels"] == 0
+    assert balanced_hard_negative["stage7_training_labels"] == 0
+    assert balanced_hard_negative["trace_failures_only"] is True
+    assert (
+        balanced_hard_negative["evidence_review_status"]
+        == "balanced_hard_negative_signal_promising_but_underpowered"
+    )
+    assert balanced_hard_negative["evidence_underpowered"] is True
+    assert balanced_hard_negative["evidence_expanded_row_count"] == 40
+    assert balanced_hard_negative["evidence_expanded_hard_negative_count"] == 9
+    assert balanced_hard_negative["evidence_expanded_positive_context_count"] == 31
+    assert balanced_hard_negative["evidence_stage7_row_count"] == 0
+    assert balanced_hard_negative["runtime_behavior_changed"] is False
+    assert balanced_hard_negative["runtime_defaults_changed"] is False
+    assert balanced_hard_negative["runtime_selector_implemented"] is False
+    assert balanced_hard_negative["runtime_dtm_or_tablebase_lookup"] is False
+    assert balanced_hard_negative["runtime_terminals_added"] is False
+    assert balanced_hard_negative["stage7_promotion_allowed"] is False
+    assert balanced_hard_negative["stage8_training_allowed"] is False
 
     clean_replacement = payload["clean_replacement_review_gate"]
     assert clean_replacement["passive_review_ready"] is True

@@ -595,6 +595,21 @@ SOURCES = {
     "targeted_ownership_negative_labels_v0": (
         "reports/krk_targeted_ownership_negative_labels_v0.json"
     ),
+    "balanced_hard_negative_label_plan_v1": (
+        "reports/krk_balanced_hard_negative_label_plan_v1.json"
+    ),
+    "balanced_hard_negative_execution_manifest_v1": (
+        "reports/krk_balanced_hard_negative_execution_manifest_v1.json"
+    ),
+    "balanced_hard_negative_execution_manifest_review_v1": (
+        "reports/krk_balanced_hard_negative_execution_manifest_review_v1.json"
+    ),
+    "balanced_hard_negative_labels_v1": (
+        "reports/krk_balanced_hard_negative_labels_v1.json"
+    ),
+    "balanced_hard_negative_evidence_review_v0": (
+        "reports/krk_balanced_hard_negative_evidence_review_v0.json"
+    ),
     "clean_retrain_retry1_replacement_readiness_review": (
         "reports/krk_clean_retrain_retry1_replacement_readiness_review_v0.json"
     ),
@@ -1374,6 +1389,21 @@ def build_payload() -> dict[str, Any]:
     targeted_ownership_negative_labels_v0 = payloads[
         "targeted_ownership_negative_labels_v0"
     ]
+    balanced_hard_negative_label_plan_v1 = payloads[
+        "balanced_hard_negative_label_plan_v1"
+    ]
+    balanced_hard_negative_execution_manifest_v1 = payloads[
+        "balanced_hard_negative_execution_manifest_v1"
+    ]
+    balanced_hard_negative_execution_manifest_review_v1 = payloads[
+        "balanced_hard_negative_execution_manifest_review_v1"
+    ]
+    balanced_hard_negative_labels_v1 = payloads[
+        "balanced_hard_negative_labels_v1"
+    ]
+    balanced_hard_negative_evidence_review_v0 = payloads[
+        "balanced_hard_negative_evidence_review_v0"
+    ]
     clean_replacement_readiness = payloads[
         "clean_retrain_retry1_replacement_readiness_review"
     ]
@@ -1947,6 +1977,98 @@ def build_payload() -> dict[str, Any]:
         and targeted_ownership_negative_labels_v0.get("stage7_promotion_allowed")
         is False
         and targeted_ownership_negative_labels_v0.get("stage8_training_allowed")
+        is False
+    )
+    balanced_hard_negative_plan_decision = (
+        balanced_hard_negative_label_plan_v1.get("decision") or {}
+    )
+    balanced_hard_negative_plan_summary = (
+        balanced_hard_negative_label_plan_v1.get("summary") or {}
+    )
+    balanced_hard_negative_manifest_decision = (
+        balanced_hard_negative_execution_manifest_v1.get("decision") or {}
+    )
+    balanced_hard_negative_manifest_binding = (
+        balanced_hard_negative_execution_manifest_v1.get("binding_summary") or {}
+    )
+    balanced_hard_negative_manifest_review_decision = (
+        balanced_hard_negative_execution_manifest_review_v1.get("decision") or {}
+    )
+    balanced_hard_negative_labels_decision = (
+        balanced_hard_negative_labels_v1.get("decision") or {}
+    )
+    balanced_hard_negative_labels_summary = (
+        balanced_hard_negative_labels_v1.get("summary") or {}
+    )
+    balanced_hard_negative_review_decision = (
+        balanced_hard_negative_evidence_review_v0.get("decision") or {}
+    )
+    balanced_hard_negative_review_summary = (
+        balanced_hard_negative_evidence_review_v0.get("summary") or {}
+    )
+    balanced_hard_negative_passive = (
+        balanced_hard_negative_plan_decision.get("status")
+        == "balanced_hard_negative_label_plan_v1_ready"
+        and balanced_hard_negative_plan_decision.get("runtime_work_allowed") is False
+        and balanced_hard_negative_plan_decision.get("selector_training_allowed")
+        is False
+        and balanced_hard_negative_plan_summary.get("job_count") == 12
+        and balanced_hard_negative_plan_summary.get("stage7_jobs") == 0
+        and balanced_hard_negative_manifest_decision.get("status")
+        == "balanced_hard_negative_execution_manifest_bound"
+        and balanced_hard_negative_manifest_decision.get("labels_allowed_now")
+        is False
+        and balanced_hard_negative_manifest_decision.get("runtime_work_allowed")
+        is False
+        and balanced_hard_negative_manifest_decision.get("selector_training_allowed")
+        is False
+        and balanced_hard_negative_manifest_binding.get("all_bindings_valid") is True
+        and balanced_hard_negative_manifest_binding.get("job_count") == 12
+        and balanced_hard_negative_manifest_binding.get("stage7_jobs") == 0
+        and balanced_hard_negative_manifest_review_decision.get("status")
+        == "balanced_hard_negative_manifest_review_passed_labels_allowed"
+        and balanced_hard_negative_manifest_review_decision.get("runtime_work_allowed")
+        is False
+        and balanced_hard_negative_manifest_review_decision.get(
+            "selector_training_allowed"
+        )
+        is False
+        and balanced_hard_negative_labels_decision.get("status")
+        == "balanced_hard_negative_labels_completed"
+        and balanced_hard_negative_labels_decision.get("runtime_work_allowed") is False
+        and balanced_hard_negative_labels_decision.get("selector_training_allowed")
+        is False
+        and balanced_hard_negative_labels_summary.get("label_count") == 12
+        and balanced_hard_negative_labels_summary.get("stage7_labels") == 0
+        and balanced_hard_negative_labels_summary.get("stage7_training_labels") == 0
+        and balanced_hard_negative_review_decision.get("status")
+        == "balanced_hard_negative_signal_promising_but_underpowered"
+        and balanced_hard_negative_review_decision.get("runtime_work_allowed") is False
+        and balanced_hard_negative_review_decision.get("selector_training_allowed")
+        is False
+        and balanced_hard_negative_review_decision.get("stage7_promotion_allowed")
+        is False
+        and balanced_hard_negative_review_decision.get("stage8_training_allowed")
+        is False
+        and balanced_hard_negative_review_summary.get("underpowered") is True
+        and balanced_hard_negative_review_summary.get("stage7_row_count") == 0
+        and balanced_hard_negative_evidence_review_v0.get("runtime_behavior_changed")
+        is False
+        and balanced_hard_negative_evidence_review_v0.get("runtime_defaults_changed")
+        is False
+        and balanced_hard_negative_evidence_review_v0.get(
+            "runtime_selector_implemented"
+        )
+        is False
+        and balanced_hard_negative_evidence_review_v0.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and balanced_hard_negative_evidence_review_v0.get("runtime_terminals_added")
+        is False
+        and balanced_hard_negative_evidence_review_v0.get("stage7_promotion_allowed")
+        is False
+        and balanced_hard_negative_evidence_review_v0.get("stage8_training_allowed")
         is False
     )
     replacement_readiness_decision = clean_replacement_readiness.get("decision") or {}
@@ -3065,6 +3187,111 @@ def build_payload() -> dict[str, Any]:
                 "stage7_promotion_allowed"
             ),
             "stage8_training_allowed": targeted_ownership_negative_labels_v0.get(
+                "stage8_training_allowed"
+            ),
+        },
+        "balanced_hard_negative_gate": {
+            "status": balanced_hard_negative_review_decision.get("status"),
+            "passive_evidence_ready": balanced_hard_negative_passive,
+            "label_plan_status": balanced_hard_negative_plan_decision.get("status"),
+            "label_plan_job_count": balanced_hard_negative_plan_summary.get(
+                "job_count"
+            ),
+            "label_plan_stage7_jobs": balanced_hard_negative_plan_summary.get(
+                "stage7_jobs"
+            ),
+            "label_plan_provider_family_counts": (
+                balanced_hard_negative_plan_summary.get("provider_family_counts") or {}
+            ),
+            "execution_manifest_status": (
+                balanced_hard_negative_manifest_decision.get("status")
+            ),
+            "execution_manifest_labels_allowed_now": (
+                balanced_hard_negative_manifest_decision.get("labels_allowed_now")
+            ),
+            "execution_manifest_all_bindings_valid": (
+                balanced_hard_negative_manifest_binding.get("all_bindings_valid")
+            ),
+            "execution_manifest_job_count": (
+                balanced_hard_negative_manifest_binding.get("job_count")
+            ),
+            "execution_manifest_stage7_jobs": (
+                balanced_hard_negative_manifest_binding.get("stage7_jobs")
+            ),
+            "execution_manifest_review_status": (
+                balanced_hard_negative_manifest_review_decision.get("status")
+            ),
+            "execution_manifest_review_labels_allowed": (
+                balanced_hard_negative_manifest_review_decision.get("labels_allowed")
+            ),
+            "labels_status": balanced_hard_negative_labels_decision.get("status"),
+            "label_count": balanced_hard_negative_labels_summary.get("label_count"),
+            "positive_capacity_count": (
+                balanced_hard_negative_labels_summary.get("positive_capacity_count")
+            ),
+            "negative_capacity_count": (
+                balanced_hard_negative_labels_summary.get("negative_capacity_count")
+            ),
+            "stage7_labels": balanced_hard_negative_labels_summary.get(
+                "stage7_labels"
+            ),
+            "stage7_training_labels": balanced_hard_negative_labels_summary.get(
+                "stage7_training_labels"
+            ),
+            "trace_failures_only": balanced_hard_negative_labels_summary.get(
+                "trace_failures_only"
+            ),
+            "evidence_review_status": balanced_hard_negative_review_decision.get(
+                "status"
+            ),
+            "evidence_underpowered": balanced_hard_negative_review_summary.get(
+                "underpowered"
+            ),
+            "evidence_expanded_row_count": (
+                balanced_hard_negative_review_summary.get("expanded_row_count")
+            ),
+            "evidence_expanded_hard_negative_count": (
+                balanced_hard_negative_review_summary.get(
+                    "expanded_hard_negative_count"
+                )
+            ),
+            "evidence_expanded_positive_context_count": (
+                balanced_hard_negative_review_summary.get(
+                    "expanded_positive_context_count"
+                )
+            ),
+            "evidence_best_negative_suppression": (
+                balanced_hard_negative_review_summary.get("best_negative_suppression")
+            ),
+            "evidence_best_positive_recall": (
+                balanced_hard_negative_review_summary.get("best_positive_recall")
+            ),
+            "evidence_stage7_row_count": (
+                balanced_hard_negative_review_summary.get("stage7_row_count")
+            ),
+            "runtime_behavior_changed": balanced_hard_negative_evidence_review_v0.get(
+                "runtime_behavior_changed"
+            ),
+            "runtime_defaults_changed": balanced_hard_negative_evidence_review_v0.get(
+                "runtime_defaults_changed"
+            ),
+            "runtime_selector_implemented": (
+                balanced_hard_negative_evidence_review_v0.get(
+                    "runtime_selector_implemented"
+                )
+            ),
+            "runtime_dtm_or_tablebase_lookup": (
+                balanced_hard_negative_evidence_review_v0.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "runtime_terminals_added": balanced_hard_negative_evidence_review_v0.get(
+                "runtime_terminals_added"
+            ),
+            "stage7_promotion_allowed": balanced_hard_negative_evidence_review_v0.get(
+                "stage7_promotion_allowed"
+            ),
+            "stage8_training_allowed": balanced_hard_negative_evidence_review_v0.get(
                 "stage8_training_allowed"
             ),
         },
@@ -6699,6 +6926,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     selector_objective_normalization = payload["selector_objective_normalization_gate"]
     abstention_selector_safety = payload["abstention_selector_safety_gate"]
     targeted_ownership_recovery = payload["targeted_ownership_recovery_gate"]
+    balanced_hard_negative = payload["balanced_hard_negative_gate"]
     clean_replacement = payload["clean_replacement_review_gate"]
     stage7 = payload["stage7_sampling_gate"]
     sequence = payload["sequence_policy"]
@@ -6895,6 +7123,33 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- runtime_terminals_added: `{targeted_ownership_recovery['runtime_terminals_added']}`",
         f"- stage7_promotion_allowed: `{targeted_ownership_recovery['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{targeted_ownership_recovery['stage8_training_allowed']}`",
+        "",
+        "## Balanced Hard-Negative Evidence",
+        "",
+        f"- passive_evidence_ready: `{balanced_hard_negative['passive_evidence_ready']}`",
+        f"- label_plan_status: `{balanced_hard_negative['label_plan_status']}`",
+        f"- label_plan_job_count: `{balanced_hard_negative['label_plan_job_count']}`",
+        f"- label_plan_stage7_jobs: `{balanced_hard_negative['label_plan_stage7_jobs']}`",
+        f"- execution_manifest_status: `{balanced_hard_negative['execution_manifest_status']}`",
+        f"- execution_manifest_labels_allowed_now: `{balanced_hard_negative['execution_manifest_labels_allowed_now']}`",
+        f"- execution_manifest_stage7_jobs: `{balanced_hard_negative['execution_manifest_stage7_jobs']}`",
+        f"- execution_manifest_review_status: `{balanced_hard_negative['execution_manifest_review_status']}`",
+        f"- labels_status: `{balanced_hard_negative['labels_status']}`",
+        f"- label_count: `{balanced_hard_negative['label_count']}`",
+        f"- positive_capacity_count: `{balanced_hard_negative['positive_capacity_count']}`",
+        f"- negative_capacity_count: `{balanced_hard_negative['negative_capacity_count']}`",
+        f"- stage7_labels: `{balanced_hard_negative['stage7_labels']}`",
+        f"- stage7_training_labels: `{balanced_hard_negative['stage7_training_labels']}`",
+        f"- evidence_review_status: `{balanced_hard_negative['evidence_review_status']}`",
+        f"- evidence_underpowered: `{balanced_hard_negative['evidence_underpowered']}`",
+        f"- evidence_expanded_row_count: `{balanced_hard_negative['evidence_expanded_row_count']}`",
+        f"- evidence_expanded_hard_negative_count: `{balanced_hard_negative['evidence_expanded_hard_negative_count']}`",
+        f"- evidence_best_negative_suppression: `{balanced_hard_negative['evidence_best_negative_suppression']}`",
+        f"- runtime_selector_implemented: `{balanced_hard_negative['runtime_selector_implemented']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{balanced_hard_negative['runtime_dtm_or_tablebase_lookup']}`",
+        f"- runtime_terminals_added: `{balanced_hard_negative['runtime_terminals_added']}`",
+        f"- stage7_promotion_allowed: `{balanced_hard_negative['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{balanced_hard_negative['stage8_training_allowed']}`",
         "",
         "## Clean Replacement Review",
         "",

@@ -358,6 +358,62 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["targeted_ownership_runtime_terminals_added"] is False
     assert payload["summary"]["targeted_ownership_stage7_promotion_allowed"] is False
     assert payload["summary"]["targeted_ownership_stage8_training_allowed"] is False
+    assert payload["summary"]["balanced_hard_negative_passive_ready"] is True
+    assert (
+        payload["summary"]["balanced_hard_negative_label_plan_status"]
+        == "balanced_hard_negative_label_plan_v1_ready"
+    )
+    assert payload["summary"]["balanced_hard_negative_label_plan_job_count"] == 12
+    assert payload["summary"]["balanced_hard_negative_label_plan_stage7_jobs"] == 0
+    assert (
+        payload["summary"]["balanced_hard_negative_execution_manifest_status"]
+        == "balanced_hard_negative_execution_manifest_bound"
+    )
+    assert (
+        payload["summary"][
+            "balanced_hard_negative_execution_manifest_labels_allowed_now"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["balanced_hard_negative_execution_manifest_stage7_jobs"]
+        == 0
+    )
+    assert (
+        payload["summary"]["balanced_hard_negative_labels_status"]
+        == "balanced_hard_negative_labels_completed"
+    )
+    assert payload["summary"]["balanced_hard_negative_label_count"] == 12
+    assert payload["summary"]["balanced_hard_negative_positive_capacity_count"] == 11
+    assert payload["summary"]["balanced_hard_negative_negative_capacity_count"] == 1
+    assert payload["summary"]["balanced_hard_negative_stage7_labels"] == 0
+    assert payload["summary"]["balanced_hard_negative_stage7_training_labels"] == 0
+    assert (
+        payload["summary"]["balanced_hard_negative_evidence_review_status"]
+        == "balanced_hard_negative_signal_promising_but_underpowered"
+    )
+    assert payload["summary"]["balanced_hard_negative_evidence_underpowered"] is True
+    assert payload["summary"]["balanced_hard_negative_evidence_expanded_row_count"] == 40
+    assert (
+        payload["summary"][
+            "balanced_hard_negative_evidence_expanded_hard_negative_count"
+        ]
+        == 9
+    )
+    assert (
+        payload["summary"]["balanced_hard_negative_runtime_selector_implemented"]
+        is False
+    )
+    assert (
+        payload["summary"]["balanced_hard_negative_runtime_dtm_or_tablebase_lookup"]
+        is False
+    )
+    assert payload["summary"]["balanced_hard_negative_runtime_terminals_added"] is False
+    assert (
+        payload["summary"]["balanced_hard_negative_stage7_promotion_allowed"]
+        is False
+    )
+    assert payload["summary"]["balanced_hard_negative_stage8_training_allowed"] is False
     assert payload["summary"]["clean_replacement_review_passive_ready"] is True
     assert (
         payload["summary"]["clean_replacement_review_packet_status"]

@@ -175,6 +175,33 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Balanced Hard-Negative Evidence
+
+- passive_evidence_ready: `True`
+- label_plan_status: `balanced_hard_negative_label_plan_v1_ready`
+- label_plan_job_count: `12`
+- label_plan_stage7_jobs: `0`
+- execution_manifest_status: `balanced_hard_negative_execution_manifest_bound`
+- execution_manifest_labels_allowed_now: `False`
+- execution_manifest_stage7_jobs: `0`
+- execution_manifest_review_status: `balanced_hard_negative_manifest_review_passed_labels_allowed`
+- labels_status: `balanced_hard_negative_labels_completed`
+- label_count: `12`
+- positive_capacity_count: `11`
+- negative_capacity_count: `1`
+- stage7_labels: `0`
+- stage7_training_labels: `0`
+- evidence_review_status: `balanced_hard_negative_signal_promising_but_underpowered`
+- evidence_underpowered: `True`
+- evidence_expanded_row_count: `40`
+- evidence_expanded_hard_negative_count: `9`
+- evidence_best_negative_suppression: `0.2222222222222222`
+- runtime_selector_implemented: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- runtime_terminals_added: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Clean Replacement Review
 
 - passive_review_ready: `True`
@@ -297,7 +324,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `8579cdb3fda5d46ac9b540ce56623df866812745f6fdf66e0349cea791699739`
+- expected_readiness_fingerprint: `8a984f5c559e3f75f081c9da16b4fc63170d92d4149a3b7b0899c46ededefd04`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -826,5 +853,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1945`
+- checked_flag_count: `1980`
 - violation_count: `0`

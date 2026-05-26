@@ -593,6 +593,7 @@ def build_payload() -> dict[str, Any]:
     targeted_ownership_recovery_gate = (
         readiness.get("targeted_ownership_recovery_gate") or {}
     )
+    balanced_hard_negative_gate = readiness.get("balanced_hard_negative_gate") or {}
     clean_replacement_review_gate = readiness.get("clean_replacement_review_gate") or {}
     active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
@@ -1187,6 +1188,74 @@ def build_payload() -> dict[str, Any]:
             ),
             "targeted_ownership_stage8_training_allowed": (
                 targeted_ownership_recovery_gate.get("stage8_training_allowed")
+            ),
+            "balanced_hard_negative_passive_ready": (
+                balanced_hard_negative_gate.get("passive_evidence_ready")
+            ),
+            "balanced_hard_negative_label_plan_status": (
+                balanced_hard_negative_gate.get("label_plan_status")
+            ),
+            "balanced_hard_negative_label_plan_job_count": (
+                balanced_hard_negative_gate.get("label_plan_job_count")
+            ),
+            "balanced_hard_negative_label_plan_stage7_jobs": (
+                balanced_hard_negative_gate.get("label_plan_stage7_jobs")
+            ),
+            "balanced_hard_negative_execution_manifest_status": (
+                balanced_hard_negative_gate.get("execution_manifest_status")
+            ),
+            "balanced_hard_negative_execution_manifest_labels_allowed_now": (
+                balanced_hard_negative_gate.get(
+                    "execution_manifest_labels_allowed_now"
+                )
+            ),
+            "balanced_hard_negative_execution_manifest_stage7_jobs": (
+                balanced_hard_negative_gate.get("execution_manifest_stage7_jobs")
+            ),
+            "balanced_hard_negative_labels_status": (
+                balanced_hard_negative_gate.get("labels_status")
+            ),
+            "balanced_hard_negative_label_count": (
+                balanced_hard_negative_gate.get("label_count")
+            ),
+            "balanced_hard_negative_positive_capacity_count": (
+                balanced_hard_negative_gate.get("positive_capacity_count")
+            ),
+            "balanced_hard_negative_negative_capacity_count": (
+                balanced_hard_negative_gate.get("negative_capacity_count")
+            ),
+            "balanced_hard_negative_stage7_labels": (
+                balanced_hard_negative_gate.get("stage7_labels")
+            ),
+            "balanced_hard_negative_stage7_training_labels": (
+                balanced_hard_negative_gate.get("stage7_training_labels")
+            ),
+            "balanced_hard_negative_evidence_review_status": (
+                balanced_hard_negative_gate.get("evidence_review_status")
+            ),
+            "balanced_hard_negative_evidence_underpowered": (
+                balanced_hard_negative_gate.get("evidence_underpowered")
+            ),
+            "balanced_hard_negative_evidence_expanded_row_count": (
+                balanced_hard_negative_gate.get("evidence_expanded_row_count")
+            ),
+            "balanced_hard_negative_evidence_expanded_hard_negative_count": (
+                balanced_hard_negative_gate.get("evidence_expanded_hard_negative_count")
+            ),
+            "balanced_hard_negative_runtime_selector_implemented": (
+                balanced_hard_negative_gate.get("runtime_selector_implemented")
+            ),
+            "balanced_hard_negative_runtime_dtm_or_tablebase_lookup": (
+                balanced_hard_negative_gate.get("runtime_dtm_or_tablebase_lookup")
+            ),
+            "balanced_hard_negative_runtime_terminals_added": (
+                balanced_hard_negative_gate.get("runtime_terminals_added")
+            ),
+            "balanced_hard_negative_stage7_promotion_allowed": (
+                balanced_hard_negative_gate.get("stage7_promotion_allowed")
+            ),
+            "balanced_hard_negative_stage8_training_allowed": (
+                balanced_hard_negative_gate.get("stage8_training_allowed")
             ),
             "clean_replacement_review_passive_ready": clean_replacement_review_gate.get(
                 "passive_review_ready"
