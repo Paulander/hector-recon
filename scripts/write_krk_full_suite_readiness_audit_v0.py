@@ -426,6 +426,9 @@ def build_payload() -> dict[str, Any]:
         stage4_status == "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval"
     )
     stage4_approval_request_decision = stage4_approval_request.get("decision") or {}
+    stage4_approval_scope = (
+        stage4_approval_request.get("required_scope_if_user_approves") or {}
+    )
 
     stage_status = {
         "stage1": {
@@ -884,6 +887,41 @@ def build_payload() -> dict[str, Any]:
                 "implementation_authorized_by_approval_request": (
                     stage4_approval_request.get("implementation_authorized_by_request")
                 ),
+                "safety_scope": {
+                    "approval_id": stage4_approval_scope.get("approval_id"),
+                    "sandbox_scope_id": stage4_approval_scope.get("sandbox_scope_id"),
+                    "default_off": stage4_approval_scope.get("default_off"),
+                    "default_enabled": stage4_approval_scope.get("default_enabled"),
+                    "implementation_authorized_by_request": (
+                        stage4_approval_scope.get(
+                            "implementation_authorized_by_request"
+                        )
+                    ),
+                    "runtime_change_class": stage4_approval_scope.get(
+                        "runtime_change_class"
+                    ),
+                    "exact_state_or_exact_move_exception": stage4_approval_scope.get(
+                        "exact_state_or_exact_move_exception"
+                    ),
+                    "runtime_dtm_or_tablebase_lookup": stage4_approval_scope.get(
+                        "runtime_dtm_or_tablebase_lookup"
+                    ),
+                    "hidden_python_controller": stage4_approval_scope.get(
+                        "hidden_python_controller"
+                    ),
+                    "selector_training_allowed": stage4_approval_scope.get(
+                        "selector_training_allowed"
+                    ),
+                    "gameplay_topology_mutation": stage4_approval_scope.get(
+                        "gameplay_topology_mutation"
+                    ),
+                    "stage7_promotion_allowed": stage4_approval_scope.get(
+                        "stage7_promotion_allowed"
+                    ),
+                    "stage8_training_allowed": stage4_approval_scope.get(
+                        "stage8_training_allowed"
+                    ),
+                },
                 "why": "Stage 4 has a reviewed default-off first-move contrast sandbox scope, but implementation still requires explicit sandbox approval.",
             },
             "stage8_training": {

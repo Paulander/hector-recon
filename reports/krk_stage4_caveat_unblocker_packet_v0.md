@@ -13,6 +13,12 @@ This packet is non-causal. It consolidates Stage 4 caveat evidence and the revie
 - approval_request_status: `stage4_first_move_contrast_sandbox_approval_request_ready`
 - approval_request_created: `False`
 - implementation_authorized_by_approval_request: `False`
+- approval_scope_id: `default_off_stage4_candidate_move_first_move_contrast_sandbox_only`
+- approval_scope_default_off: `True`
+- approval_scope_default_enabled: `False`
+- approval_scope_runtime_dtm_or_tablebase_lookup: `False`
+- approval_scope_hidden_python_controller: `False`
+- approval_scope_selector_training_allowed: `False`
 - implementation_authorized_by_review_packet: `False`
 - requires_explicit_approval_before_implementation: `True`
 - caveat_control_status: `stage4_caveat_reproduces_in_base_control_no_overlay_regression`

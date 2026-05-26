@@ -65,6 +65,20 @@ def test_stage4_caveat_unblocker_is_review_ready_but_not_authorized():
         payload["current_stage4_status"]["implementation_authorized_by_approval_request"]
         is False
     )
+    assert (
+        payload["current_stage4_status"]["approval_scope_id"]
+        == "default_off_stage4_candidate_move_first_move_contrast_sandbox_only"
+    )
+    assert payload["current_stage4_status"]["approval_scope_default_off"] is True
+    assert payload["current_stage4_status"]["approval_scope_default_enabled"] is False
+    assert (
+        payload["current_stage4_status"][
+            "approval_scope_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert payload["current_stage4_status"]["approval_scope_hidden_python_controller"] is False
+    assert payload["current_stage4_status"]["approval_scope_selector_training_allowed"] is False
 
 
 def test_stage4_caveat_unblocker_scope_remains_narrow():
@@ -129,6 +143,25 @@ def test_stage4_sandbox_approval_request_is_not_authorization():
         payload["required_scope_if_user_approves"]["review_packet"]
         == "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json"
     )
+    scope = payload["required_scope_if_user_approves"]
+    assert (
+        scope["sandbox_scope_id"]
+        == "default_off_stage4_candidate_move_first_move_contrast_sandbox_only"
+    )
+    assert scope["default_off"] is True
+    assert scope["default_enabled"] is False
+    assert scope["approval_request_created"] is False
+    assert scope["implementation_authorized_by_request"] is False
+    assert scope["runtime_change_class"] == "default_off_candidate_move_frame_sandbox_only"
+    assert scope["exact_state_or_exact_move_exception"] is False
+    assert scope["runtime_dtm_or_tablebase_lookup"] is False
+    assert scope["hidden_python_controller"] is False
+    assert scope["selector_training_allowed"] is False
+    assert scope["provider_suppression_allowed"] is False
+    assert scope["broad_stage0_penalty_allowed"] is False
+    assert scope["gameplay_topology_mutation"] is False
+    assert scope["stage7_promotion_allowed"] is False
+    assert scope["stage8_training_allowed"] is False
 
 
 def test_stage4_sandbox_approval_request_fixture_blocks_unready_review():

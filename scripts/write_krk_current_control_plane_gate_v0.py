@@ -292,6 +292,9 @@ def build_payload(
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
     )
+    stage4_approval_scope = (
+        stage4_approval_request.get("required_scope_if_user_approves") or {}
+    )
     approval_options = [
         {
             "option_id": "approve_stage4_first_move_contrast_sandbox",
@@ -307,6 +310,48 @@ def build_payload(
             ),
             "status": stage4_packet.get("decision", {}).get("status"),
             "what_it_allows": "default-off Stage 4 CandidateMoveFrame first-move contrast sandbox only",
+            "safety_scope": {
+                "approval_id": stage4_approval_scope.get("approval_id"),
+                "sandbox_scope_id": stage4_approval_scope.get("sandbox_scope_id"),
+                "default_off": stage4_approval_scope.get("default_off"),
+                "default_enabled": stage4_approval_scope.get("default_enabled"),
+                "approval_request_created": stage4_approval_scope.get(
+                    "approval_request_created"
+                ),
+                "implementation_authorized_by_request": stage4_approval_scope.get(
+                    "implementation_authorized_by_request"
+                ),
+                "runtime_change_class": stage4_approval_scope.get(
+                    "runtime_change_class"
+                ),
+                "exact_state_or_exact_move_exception": stage4_approval_scope.get(
+                    "exact_state_or_exact_move_exception"
+                ),
+                "runtime_dtm_or_tablebase_lookup": stage4_approval_scope.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                ),
+                "hidden_python_controller": stage4_approval_scope.get(
+                    "hidden_python_controller"
+                ),
+                "selector_training_allowed": stage4_approval_scope.get(
+                    "selector_training_allowed"
+                ),
+                "provider_suppression_allowed": stage4_approval_scope.get(
+                    "provider_suppression_allowed"
+                ),
+                "broad_stage0_penalty_allowed": stage4_approval_scope.get(
+                    "broad_stage0_penalty_allowed"
+                ),
+                "gameplay_topology_mutation": stage4_approval_scope.get(
+                    "gameplay_topology_mutation"
+                ),
+                "stage7_promotion_allowed": stage4_approval_scope.get(
+                    "stage7_promotion_allowed"
+                ),
+                "stage8_training_allowed": stage4_approval_scope.get(
+                    "stage8_training_allowed"
+                ),
+            },
             "what_it_does_not_allow": [
                 "default enablement",
                 "exact-state or exact-move runtime exception",

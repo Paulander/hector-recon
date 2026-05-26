@@ -16,6 +16,12 @@
   "current_stage4_status": {
     "approval_request_created": false,
     "approval_request_status": "stage4_first_move_contrast_sandbox_approval_request_ready",
+    "approval_scope_default_enabled": false,
+    "approval_scope_default_off": true,
+    "approval_scope_hidden_python_controller": false,
+    "approval_scope_id": "default_off_stage4_candidate_move_first_move_contrast_sandbox_only",
+    "approval_scope_runtime_dtm_or_tablebase_lookup": false,
+    "approval_scope_selector_training_allowed": false,
     "caveat_control_status": "stage4_caveat_reproduces_in_base_control_no_overlay_regression",
     "control_plane_approval_request_artifact": "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md",
     "control_plane_option_artifact": "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.md",
@@ -62,6 +68,66 @@
     "Stage 8 training"
   ],
   "gameplay_topology_mutation": false,
+  "required_approval_scope_if_user_approves": {
+    "acceptance_if_later_approved": {
+      "default_off_equivalence_passes": true,
+      "default_off_score_delta_count": 0,
+      "default_off_selected_move_delta_count": 0,
+      "runtime_dtm_or_tablebase_lookup": false,
+      "stage7_training_row_count": 0,
+      "stage8_training_row_count": 0,
+      "target_smoke_required": [
+        "identity Stage 4 caveat state",
+        "file-mirrored Stage 4 caveat state",
+        "rank-mirrored Stage 4 caveat state",
+        "rotated Stage 4 caveat state"
+      ],
+      "topology_mutation": false
+    },
+    "allowed_runtime_behavior": [
+      "enumerate legal CandidateMoveFrame first-move hypotheses in Stage 4 contexts",
+      "attach visible first-move contrast terms to candidate frames",
+      "apply a bounded default-off support only if a later packet explicitly authorizes it"
+    ],
+    "approval_id": "approve_stage4_first_move_contrast_sandbox",
+    "approval_request_created": false,
+    "approval_required_before_implementation": true,
+    "broad_stage0_penalty_allowed": false,
+    "default_enabled": false,
+    "default_off": true,
+    "exact_state_or_exact_move_exception": false,
+    "gameplay_topology_mutation": false,
+    "hidden_python_controller": false,
+    "implementation_authorized_by_request": false,
+    "implementation_boundaries": {
+      "guardrails_before_target_smoke": false,
+      "implementation_allowed_by_this_packet": false,
+      "promotion_allowed": false,
+      "requires_later_explicit_approval": true,
+      "selector_allowed": false,
+      "selector_training_allowed": false,
+      "target_smoke_before_guardrails": true
+    },
+    "provider_suppression_allowed": false,
+    "review_packet": "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json",
+    "review_packet_status": "stage4_first_move_contrast_runtime_review_ready_pending_explicit_approval",
+    "runtime_change_class": "default_off_candidate_move_frame_sandbox_only",
+    "runtime_dtm_or_tablebase_lookup": false,
+    "sandbox_id": "sandbox.krk.stage4_first_move_contrast_v0",
+    "sandbox_scope_id": "default_off_stage4_candidate_move_first_move_contrast_sandbox_only",
+    "scope": {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "domain": "KRK",
+      "exact_state_exception_allowed": false,
+      "stage": "stage4",
+      "stage5_stage6_guardrails_required_before_promotion": true,
+      "stage7_allowed": false,
+      "stage8_allowed": false
+    },
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false
+  },
   "runtime_behavior_changed": false,
   "runtime_defaults_changed": false,
   "runtime_direct_routing": false,

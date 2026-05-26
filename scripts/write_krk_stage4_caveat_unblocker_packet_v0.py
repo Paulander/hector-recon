@@ -67,6 +67,7 @@ def build_payload() -> dict[str, Any]:
     stage4_option = _find_stage4_option(control_gate)
     runtime_decision = runtime_packet.get("decision") or {}
     approval_request_decision = approval_request.get("decision") or {}
+    approval_scope = approval_request.get("required_scope_if_user_approves") or {}
     sequence_summary = sequence_review.get("summary") or {}
     stratified_summary = stratified_validation.get("summary") or {}
     contrast_summary = sequence_contrast.get("summary") or {}
@@ -124,6 +125,18 @@ def build_payload() -> dict[str, Any]:
             "implementation_authorized_by_approval_request": approval_request.get(
                 "implementation_authorized_by_request"
             ),
+            "approval_scope_id": approval_scope.get("sandbox_scope_id"),
+            "approval_scope_default_off": approval_scope.get("default_off"),
+            "approval_scope_default_enabled": approval_scope.get("default_enabled"),
+            "approval_scope_runtime_dtm_or_tablebase_lookup": approval_scope.get(
+                "runtime_dtm_or_tablebase_lookup"
+            ),
+            "approval_scope_hidden_python_controller": approval_scope.get(
+                "hidden_python_controller"
+            ),
+            "approval_scope_selector_training_allowed": approval_scope.get(
+                "selector_training_allowed"
+            ),
             "implementation_authorized_by_review_packet": runtime_decision.get(
                 "implementation_authorized_by_this_packet"
             ),
@@ -163,6 +176,7 @@ def build_payload() -> dict[str, Any]:
             "stage7_promotion": False,
             "stage8_training": False,
         },
+        "required_approval_scope_if_user_approves": approval_scope,
         "forbidden_without_later_explicit_approval": [
             "runtime sandbox implementation",
             "default enablement",

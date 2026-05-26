@@ -29,7 +29,16 @@ This is a passive request packet only. It does not approve or implement runtime 
 - review_packet: `reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json`
 - review_packet_status: `stage4_first_move_contrast_runtime_review_ready_pending_explicit_approval`
 - sandbox_id: `sandbox.krk.stage4_first_move_contrast_v0`
+- sandbox_scope_id: `default_off_stage4_candidate_move_first_move_contrast_sandbox_only`
 - default_off: `True`
+- default_enabled: `False`
+- runtime_change_class: `default_off_candidate_move_frame_sandbox_only`
+- exact_state_or_exact_move_exception: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- hidden_python_controller: `False`
+- selector_training_allowed: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
 
 ## Blockers
 

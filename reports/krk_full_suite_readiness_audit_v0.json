@@ -16,6 +16,21 @@
       "current_artifact_allows_implementation": false,
       "implementation_authorized_by_approval_request": false,
       "ready_for_explicit_approval": true,
+      "safety_scope": {
+        "approval_id": "approve_stage4_first_move_contrast_sandbox",
+        "default_enabled": false,
+        "default_off": true,
+        "exact_state_or_exact_move_exception": false,
+        "gameplay_topology_mutation": false,
+        "hidden_python_controller": false,
+        "implementation_authorized_by_request": false,
+        "runtime_change_class": "default_off_candidate_move_frame_sandbox_only",
+        "runtime_dtm_or_tablebase_lookup": false,
+        "sandbox_scope_id": "default_off_stage4_candidate_move_first_move_contrast_sandbox_only",
+        "selector_training_allowed": false,
+        "stage7_promotion_allowed": false,
+        "stage8_training_allowed": false
+      },
       "status": "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval",
       "why": "Stage 4 has a reviewed default-off first-move contrast sandbox scope, but implementation still requires explicit sandbox approval."
     },

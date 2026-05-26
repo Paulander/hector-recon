@@ -263,6 +263,25 @@ def test_current_control_plane_gate_requires_explicit_choice():
     )
     assert stage4_option["approval_request_created"] is False
     assert (
+        stage4_option["safety_scope"]["sandbox_scope_id"]
+        == "default_off_stage4_candidate_move_first_move_contrast_sandbox_only"
+    )
+    assert stage4_option["safety_scope"]["default_off"] is True
+    assert stage4_option["safety_scope"]["default_enabled"] is False
+    assert (
+        stage4_option["safety_scope"]["runtime_change_class"]
+        == "default_off_candidate_move_frame_sandbox_only"
+    )
+    assert stage4_option["safety_scope"]["exact_state_or_exact_move_exception"] is False
+    assert stage4_option["safety_scope"]["runtime_dtm_or_tablebase_lookup"] is False
+    assert stage4_option["safety_scope"]["hidden_python_controller"] is False
+    assert stage4_option["safety_scope"]["selector_training_allowed"] is False
+    assert stage4_option["safety_scope"]["provider_suppression_allowed"] is False
+    assert stage4_option["safety_scope"]["broad_stage0_penalty_allowed"] is False
+    assert stage4_option["safety_scope"]["gameplay_topology_mutation"] is False
+    assert stage4_option["safety_scope"]["stage7_promotion_allowed"] is False
+    assert stage4_option["safety_scope"]["stage8_training_allowed"] is False
+    assert (
         payload["current_state"]["sequence_policy"]
         == "sequence_policy_benchmark_mixed_plan_window_underpowered"
     )
