@@ -80,7 +80,13 @@ def _ready_execution_summary(job_count: int = 1) -> dict:
     }
 
 
-def _approval_receipt(job_count: int = 1) -> dict:
+def _approval_receipt(
+    job_count: int = 1,
+    *,
+    max_jobs: int | None = None,
+    job_timeout_seconds: int = 900,
+    overwrite_existing_outputs: bool = False,
+) -> dict:
     return {
         "schema_version": _runner.APPROVAL_SCHEMA_VERSION,
         "approval_id": "approve_protected_plan_window_failure_contrast_collection",
@@ -89,6 +95,9 @@ def _approval_receipt(job_count: int = 1) -> dict:
             "manifest_fingerprint": "m" * 64,
             "readiness_fingerprint": "r" * 64,
             "job_count": job_count,
+            "max_jobs": max_jobs,
+            "job_timeout_seconds": job_timeout_seconds,
+            "overwrite_existing_outputs": overwrite_existing_outputs,
             "manifest_status": "protected_plan_window_failure_contrast_manifest_ready_for_review",
             "readiness_status": (
                 "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
@@ -447,6 +456,9 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
     assert required["approval_id"] == "approve_protected_plan_window_failure_contrast_collection"
     assert required["receipt_path"] == payload["approval_receipt_path"]
     assert required["approval_scope"]["job_count"] == 6
+    assert required["approval_scope"]["max_jobs"] is None
+    assert required["approval_scope"]["job_timeout_seconds"] == 900
+    assert required["approval_scope"]["overwrite_existing_outputs"] is False
     assert (
         required["approval_scope"]["manifest_fingerprint"]
         == payload["summary"]["manifest_fingerprint"]
@@ -552,6 +564,9 @@ def test_failure_contrast_approval_request_fixture_tracks_current_scope():
         "manifest_fingerprint": "m" * 64,
         "readiness_fingerprint": "r" * 64,
         "job_count": 2,
+        "max_jobs": None,
+        "job_timeout_seconds": None,
+        "overwrite_existing_outputs": None,
         "manifest_status": "protected_plan_window_failure_contrast_manifest_ready_for_review",
         "readiness_status": (
             "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
@@ -1093,6 +1108,75 @@ def test_failure_contrast_runner_requires_receipt_path_identity(monkeypatch):
     assert payload["decision"]["collection_run_allowed"] is False
 
 
+def test_failure_contrast_runner_blocks_receipt_execution_option_drift(monkeypatch):
+    monkeypatch.setattr(
+        _runner,
+        "_run_execution_readiness",
+        lambda _manifest: {
+            "decision": {
+                "status": (
+                    "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+                )
+            },
+            "summary": _ready_execution_summary(),
+        },
+    )
+    stale_receipt = _approval_receipt(job_timeout_seconds=900)
+    monkeypatch.setattr(_runner, "_load_optional", lambda _path: stale_receipt)
+    monkeypatch.setattr(
+        _runner,
+        "_run_output_validation",
+        lambda: {
+            "decision": {
+                "status": "protected_plan_window_failure_contrast_outputs_validation_pending"
+            },
+            "summary": {"output_exists_count": 0, "output_valid_count": 0},
+            "output_checks": [],
+        },
+    )
+    monkeypatch.setattr(
+        _runner,
+        "_load",
+        lambda _path: {
+            "decision": {
+                "status": "protected_plan_window_failure_contrast_manifest_ready_for_review",
+                "runtime_changes_allowed": False,
+                "stage7_promotion_allowed": False,
+                "stage8_training_allowed": False,
+            },
+            "jobs": [
+                {
+                    "job_id": "safe",
+                    "expected_output_json": (
+                        "reports/strategy_arbitration/"
+                        "protected_plan_window_failure_contrasts/safe.json"
+                    ),
+                    "execution_binding": {"topology_path": "pyproject.toml"},
+                }
+            ],
+        },
+    )
+
+    payload = _runner.build_payload(
+        execute=True,
+        job_timeout_seconds=1,
+        overwrite_existing_outputs=True,
+        run_post_success_refresh=False,
+    )
+
+    assert payload["decision"]["status"] == "protected_plan_window_failure_contrast_runner_blocked"
+    assert "approval_receipt_job_timeout_seconds_mismatch" in payload[
+        "execution_blockers"
+    ]
+    assert "approval_receipt_overwrite_existing_outputs_mismatch" in payload[
+        "execution_blockers"
+    ]
+    assert payload["summary"]["approval_receipt_present"] is True
+    assert payload["summary"]["approval_receipt_valid"] is False
+    assert payload["summary"]["processed_job_count"] == 0
+    assert payload["decision"]["collection_run_allowed"] is False
+
+
 def test_failure_contrast_runner_blocks_stale_protected_stack_receipt_scope(monkeypatch):
     monkeypatch.setattr(
         _runner,
@@ -1249,7 +1333,11 @@ def test_failure_contrast_runner_marks_job_timeout(monkeypatch):
             "summary": _ready_execution_summary(),
         },
     )
-    monkeypatch.setattr(_runner, "_load_optional", lambda _path: _approval_receipt())
+    monkeypatch.setattr(
+        _runner,
+        "_load_optional",
+        lambda _path: _approval_receipt(job_timeout_seconds=1),
+    )
     monkeypatch.setattr(
         _runner,
         "_run_output_validation",
@@ -1324,7 +1412,11 @@ def test_failure_contrast_runner_records_unexpected_job_failure(monkeypatch):
             "summary": _ready_execution_summary(),
         },
     )
-    monkeypatch.setattr(_runner, "_load_optional", lambda _path: _approval_receipt())
+    monkeypatch.setattr(
+        _runner,
+        "_load_optional",
+        lambda _path: _approval_receipt(job_timeout_seconds=1),
+    )
     monkeypatch.setattr(
         _runner,
         "_run_output_validation",

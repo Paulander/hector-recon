@@ -114,6 +114,11 @@ def build_payload(
             "manifest_fingerprint": readiness_summary.get("manifest_fingerprint"),
             "readiness_fingerprint": readiness_summary.get("readiness_fingerprint"),
             "job_count": job_count,
+            "max_jobs": runner_summary.get("max_jobs"),
+            "job_timeout_seconds": runner_summary.get("job_timeout_seconds"),
+            "overwrite_existing_outputs": runner_summary.get(
+                "overwrite_existing_outputs"
+            ),
             "manifest_status": manifest.get("decision", {}).get("status"),
             "readiness_status": readiness.get("decision", {}).get("status"),
             "protected_stack_status": readiness_summary.get("protected_stack_status"),
