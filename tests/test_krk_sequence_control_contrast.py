@@ -427,6 +427,36 @@ def test_current_control_plane_gate_requires_explicit_choice():
         == "sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs"
     )
     assert payload["current_state"]["sequence_policy_after_protected_failure_contrast_rows"] == 0
+    assert (
+        payload["current_state"][
+            "sequence_policy_after_protected_failure_contrast_boundaries_preserved"
+        ]
+        is True
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_after_protected_failure_contrast_boundary_violation_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_after_protected_failure_contrast_stage7_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_after_protected_failure_contrast_selector_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_after_protected_failure_contrast_runtime_authorization_row_count"
+        ]
+        == 0
+    )
     review_option = [
         option
         for option in payload["approval_options"]

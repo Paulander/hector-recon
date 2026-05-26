@@ -657,6 +657,21 @@ def build_payload() -> dict[str, Any]:
             "sequence_policy_after_protected_failure_contrast_rows": post_failure_refresh.get(
                 "summary", {}
             ).get("protected_failure_contrast_row_count"),
+            "sequence_policy_after_protected_failure_contrast_boundaries_preserved": post_failure_refresh.get(
+                "summary", {}
+            ).get("all_boundaries_preserved"),
+            "sequence_policy_after_protected_failure_contrast_boundary_violation_count": post_failure_refresh.get(
+                "summary", {}
+            ).get("boundary_violation_count"),
+            "sequence_policy_after_protected_failure_contrast_stage7_training_row_count": post_failure_refresh.get(
+                "summary", {}
+            ).get("stage7_training_row_count"),
+            "sequence_policy_after_protected_failure_contrast_selector_training_row_count": post_failure_refresh.get(
+                "summary", {}
+            ).get("selector_training_row_count"),
+            "sequence_policy_after_protected_failure_contrast_runtime_authorization_row_count": post_failure_refresh.get(
+                "summary", {}
+            ).get("runtime_authorization_row_count"),
             "sequence_policy_underpowered_pilot_status": underpowered_pilot.get(
                 "decision", {}
             ).get("status"),

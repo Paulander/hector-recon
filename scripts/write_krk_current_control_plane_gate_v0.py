@@ -274,6 +274,9 @@ def build_payload(
         "collection_constraints", {}
     )
     failure_contrast_runner_summary = failure_contrast_runner.get("summary", {})
+    post_failure_contrast_sequence_refresh_summary = (
+        post_failure_contrast_sequence_refresh.get("summary") or {}
+    )
     failure_contrast_ready_for_collection = (
         failure_contrast_manifest_review.get("decision", {}).get("status")
         == "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
@@ -889,6 +892,21 @@ def build_payload(
             "sequence_policy_after_protected_failure_contrast_rows": post_failure_contrast_sequence_refresh.get(
                 "summary", {}
             ).get("protected_failure_contrast_row_count"),
+            "sequence_policy_after_protected_failure_contrast_boundaries_preserved": post_failure_contrast_sequence_refresh_summary.get(
+                "all_boundaries_preserved"
+            ),
+            "sequence_policy_after_protected_failure_contrast_boundary_violation_count": post_failure_contrast_sequence_refresh_summary.get(
+                "boundary_violation_count"
+            ),
+            "sequence_policy_after_protected_failure_contrast_stage7_training_row_count": post_failure_contrast_sequence_refresh_summary.get(
+                "stage7_training_row_count"
+            ),
+            "sequence_policy_after_protected_failure_contrast_selector_training_row_count": post_failure_contrast_sequence_refresh_summary.get(
+                "selector_training_row_count"
+            ),
+            "sequence_policy_after_protected_failure_contrast_runtime_authorization_row_count": post_failure_contrast_sequence_refresh_summary.get(
+                "runtime_authorization_row_count"
+            ),
             "sequence_policy_inputs": sequence_policy_inputs.get("decision", {}).get(
                 "status",
                 "not_assembled",

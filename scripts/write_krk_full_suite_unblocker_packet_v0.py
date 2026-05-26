@@ -450,6 +450,21 @@ def build_payload() -> dict[str, Any]:
             "sequence_policy_after_protected_failure_contrast_rows": post_failure_contrast_sequence_refresh.get(
                 "summary", {}
             ).get("protected_failure_contrast_row_count"),
+            "sequence_policy_after_protected_failure_contrast_boundaries_preserved": sequence.get(
+                "post_failure_contrast_refresh_boundaries_preserved"
+            ),
+            "sequence_policy_after_protected_failure_contrast_boundary_violation_count": sequence.get(
+                "post_failure_contrast_refresh_boundary_violation_count"
+            ),
+            "sequence_policy_after_protected_failure_contrast_stage7_training_row_count": sequence.get(
+                "post_failure_contrast_refresh_stage7_training_row_count"
+            ),
+            "sequence_policy_after_protected_failure_contrast_selector_training_row_count": post_failure_contrast_sequence_refresh.get(
+                "summary", {}
+            ).get("selector_training_row_count"),
+            "sequence_policy_after_protected_failure_contrast_runtime_authorization_row_count": post_failure_contrast_sequence_refresh.get(
+                "summary", {}
+            ).get("runtime_authorization_row_count"),
         },
         "why_agent_stops_here": [
             (
@@ -831,6 +846,11 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- protected_plan_window_failure_contrast_integration_ready: `{state['protected_plan_window_failure_contrast_integration_ready']}`",
         f"- sequence_policy_after_protected_failure_contrast_refresh_status: `{state['sequence_policy_after_protected_failure_contrast_refresh_status']}`",
         f"- sequence_policy_after_protected_failure_contrast_rows: `{state['sequence_policy_after_protected_failure_contrast_rows']}`",
+        f"- sequence_policy_after_protected_failure_contrast_boundaries_preserved: `{state['sequence_policy_after_protected_failure_contrast_boundaries_preserved']}`",
+        f"- sequence_policy_after_protected_failure_contrast_boundary_violation_count: `{state['sequence_policy_after_protected_failure_contrast_boundary_violation_count']}`",
+        f"- sequence_policy_after_protected_failure_contrast_stage7_training_row_count: `{state['sequence_policy_after_protected_failure_contrast_stage7_training_row_count']}`",
+        f"- sequence_policy_after_protected_failure_contrast_selector_training_row_count: `{state['sequence_policy_after_protected_failure_contrast_selector_training_row_count']}`",
+        f"- sequence_policy_after_protected_failure_contrast_runtime_authorization_row_count: `{state['sequence_policy_after_protected_failure_contrast_runtime_authorization_row_count']}`",
         "",
         "## Why Work Stops At This Gate",
         "",

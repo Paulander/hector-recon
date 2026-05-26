@@ -76,6 +76,11 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - protected_plan_window_failure_contrast_integration_ready: `False`
 - sequence_policy_after_protected_failure_contrast_refresh: `sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs`
 - sequence_policy_after_protected_failure_contrast_rows: `0`
+- sequence_policy_after_protected_failure_contrast_boundaries_preserved: `True`
+- sequence_policy_after_protected_failure_contrast_boundary_violation_count: `0`
+- sequence_policy_after_protected_failure_contrast_stage7_training_row_count: `0`
+- sequence_policy_after_protected_failure_contrast_selector_training_row_count: `0`
+- sequence_policy_after_protected_failure_contrast_runtime_authorization_row_count: `0`
 - sequence_policy_inputs: `sequence_policy_benchmark_inputs_ready_non_causal`
 - stage8: `blocked`
 - runtime_selector: `blocked`

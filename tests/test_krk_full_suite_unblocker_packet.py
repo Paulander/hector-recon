@@ -273,6 +273,36 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
         == "sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs"
     )
     assert payload["current_state"]["sequence_policy_after_protected_failure_contrast_rows"] == 0
+    assert (
+        payload["current_state"][
+            "sequence_policy_after_protected_failure_contrast_boundaries_preserved"
+        ]
+        is True
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_after_protected_failure_contrast_boundary_violation_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_after_protected_failure_contrast_stage7_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_after_protected_failure_contrast_selector_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_after_protected_failure_contrast_runtime_authorization_row_count"
+        ]
+        == 0
+    )
 
 
 def test_unblocker_packet_keeps_stage4_as_secondary_gate():
@@ -344,6 +374,14 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
     )
     assert (
         "protected_plan_window_failure_contrast_approval_receipt_created: `False`"
+        in rendered
+    )
+    assert (
+        "sequence_policy_after_protected_failure_contrast_boundaries_preserved: `True`"
+        in rendered
+    )
+    assert (
+        "sequence_policy_after_protected_failure_contrast_stage7_training_row_count: `0`"
         in rendered
     )
     assert (

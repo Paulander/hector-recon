@@ -217,6 +217,36 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     )
     assert payload["summary"]["sequence_policy_after_protected_failure_contrast_rows"] == 0
     assert (
+        payload["summary"][
+            "sequence_policy_after_protected_failure_contrast_boundaries_preserved"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_after_protected_failure_contrast_boundary_violation_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_after_protected_failure_contrast_stage7_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_after_protected_failure_contrast_selector_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "sequence_policy_after_protected_failure_contrast_runtime_authorization_row_count"
+        ]
+        == 0
+    )
+    assert (
         payload["summary"]["sequence_policy_underpowered_pilot_status"]
         == "sequence_policy_pilot_underpowered_pending_protected_failure_contrast_collection"
     )
