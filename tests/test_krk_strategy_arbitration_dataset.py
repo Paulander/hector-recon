@@ -2688,8 +2688,68 @@ def test_krk_control_plane_stage7_boundary_refresh_keeps_stage7_heldout(tmp_path
         json.dumps(
             {
                 "decision": {
-                    "status": "box_shrink_reclassified_as_local_evidence_handoff_trigger"
-                }
+                    "status": "box_shrink_reclassified_as_local_evidence_handoff_trigger",
+                    "recommended_next_step": (
+                        "obtain_matching_approval_receipt_before_"
+                        "protected_failure_contrast_collection"
+                    ),
+                },
+                "current_evidence_state": {
+                    "stage7_clean_review_next_step": (
+                        "obtain_matching_approval_receipt_before_"
+                        "protected_failure_contrast_collection"
+                    )
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reports / "krk_full_suite_readiness_audit_v0.json").write_text(
+        json.dumps(
+            {
+                "decision": {
+                    "status": (
+                        "krk_suite_readiness_waiting_on_explicit_"
+                        "protected_failure_contrast_collection"
+                    ),
+                    "recommended_next_step": (
+                        "obtain_matching_approval_receipt_before_"
+                        "protected_failure_contrast_collection"
+                    ),
+                },
+                "current_control_plane_gate": {
+                    "protected_failure_contrast_collection_option_available": True,
+                    "protected_failure_contrast_collection_command_available": True,
+                    "protected_failure_contrast_collection_option_id": (
+                        "approve_protected_plan_window_failure_contrast_collection"
+                    ),
+                },
+                "protected_failure_contrast_gate": {
+                    "runner_status": (
+                        "protected_plan_window_failure_contrast_runner_dry_run_ready"
+                    )
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    strategy_arbitration = reports / "strategy_arbitration"
+    strategy_arbitration.mkdir(parents=True, exist_ok=True)
+    runner_path = (
+        strategy_arbitration / "krk_protected_plan_window_failure_contrast_runner_v0.json"
+    )
+    runner_path.write_text(
+        json.dumps(
+            {
+                "decision": {"collection_run_allowed": False},
+                "execution_requested": False,
+                "summary": {
+                    "approval_receipt_present": False,
+                    "approval_receipt_valid": False,
+                    "approval_receipt_blockers": ["approval_receipt_missing"],
+                    "processed_job_count": 0,
+                    "executed_job_count": 0,
+                },
             }
         ),
         encoding="utf-8",
@@ -2748,8 +2808,20 @@ def test_krk_control_plane_stage7_boundary_refresh_keeps_stage7_heldout(tmp_path
     assert review["decision"]["status"] == "control_plane_respects_stage7_boundary"
     assert (
         review["decision"]["recommended_next_step"]
-        == "continue_broader_krk_strategy_sequence_work_with_stage7_heldout"
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
+    gate = review["protected_failure_contrast_gate"]
+    assert gate["collection_command_available"] is True
+    assert (
+        gate["runner_status"] == "protected_plan_window_failure_contrast_runner_dry_run_ready"
+    )
+    assert gate["approval_receipt_present"] is False
+    assert gate["approval_receipt_valid"] is False
+    assert gate["approval_receipt_blockers"] == ["approval_receipt_missing"]
+    assert gate["runner_collection_run_allowed"] is False
+    assert gate["runner_execution_requested"] is False
+    assert gate["runner_processed_job_count"] == 0
+    assert gate["runner_executed_job_count"] == 0
     assert review["filtered_frame_summary"]["strategy_ready_by_stage"] == {"stage5": 1}
     assert review["filtered_frame_summary"]["stage7_boundary_heldout_frame_count"] == 1
 

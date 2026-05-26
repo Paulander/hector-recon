@@ -10,17 +10,17 @@
   },
   "boundary_current_evidence_state": {
     "stage7_clean_hard_negatives_met": true,
-    "stage7_clean_review_next_step": "continue_protected_failure_contrast_sequence_policy_gate_review",
+    "stage7_clean_review_next_step": "obtain_matching_approval_receipt_before_protected_failure_contrast_collection",
     "stage7_clean_review_status": "stage7_clean_control_collection_closed_heldout_only",
     "stage7_clean_success_controls_met": true,
     "strategy_sequence_inventory_next_step": "review_state_holdout_signal_before_runtime_or_continue_protected_failure_contrast_gate",
     "strategy_sequence_inventory_status": "replay_free_inventory_state_holdout_gap_blocks_runtime"
   },
   "boundary_decision_status": "box_shrink_reclassified_as_local_evidence_handoff_trigger",
-  "boundary_recommended_next_step": "continue_protected_failure_contrast_sequence_policy_gate_review",
+  "boundary_recommended_next_step": "obtain_matching_approval_receipt_before_protected_failure_contrast_collection",
   "causal_status": "non_causal_artifact_review",
   "decision": {
-    "recommended_next_step": "continue_protected_failure_contrast_sequence_policy_gate_review",
+    "recommended_next_step": "obtain_matching_approval_receipt_before_protected_failure_contrast_collection",
     "runtime_work_allowed": false,
     "status": "control_plane_respects_stage7_boundary"
   },
@@ -42,6 +42,23 @@
   },
   "gameplay_topology_mutation": false,
   "hidden_python_controller": false,
+  "protected_failure_contrast_gate": {
+    "approval_receipt_blockers": [
+      "approval_receipt_missing"
+    ],
+    "approval_receipt_present": false,
+    "approval_receipt_valid": false,
+    "collection_command_available": true,
+    "collection_option_available": true,
+    "collection_option_id": "approve_protected_plan_window_failure_contrast_collection",
+    "readiness_recommended_next_step": "obtain_matching_approval_receipt_before_protected_failure_contrast_collection",
+    "readiness_status": "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection",
+    "runner_collection_run_allowed": false,
+    "runner_executed_job_count": 0,
+    "runner_execution_requested": false,
+    "runner_processed_job_count": 0,
+    "runner_status": "protected_plan_window_failure_contrast_runner_dry_run_ready"
+  },
   "runtime_behavior_changed": false,
   "runtime_defaults_changed": false,
   "runtime_direct_routing": false,
@@ -53,7 +70,9 @@
     "reports/structural_candidates/stage7_curriculum_boundary_decision_v0.json",
     "reports/krk_control_plane_filtered_frames_v0.json",
     "reports/krk_control_plane_strategy_arbitration_probe_v0.json",
-    "reports/krk_control_plane_strategy_arbitration_baseline_v1.json"
+    "reports/krk_control_plane_strategy_arbitration_baseline_v1.json",
+    "reports/krk_full_suite_readiness_audit_v0.json",
+    "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_runner_v0.json"
   ],
   "stage7_promotion_allowed": false,
   "stage8_training_allowed": false,

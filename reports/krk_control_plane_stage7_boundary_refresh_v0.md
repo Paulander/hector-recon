@@ -25,12 +25,28 @@ This review verifies that refreshed control-plane artifacts treat Stage 7 as hel
 
 ## Boundary Evidence
 
-- boundary_recommended_next_step: `continue_protected_failure_contrast_sequence_policy_gate_review`
+- boundary_recommended_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - stage7_clean_hard_negatives_met: `True`
-- stage7_clean_review_next_step: `continue_protected_failure_contrast_sequence_policy_gate_review`
+- stage7_clean_review_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - stage7_clean_review_status: `stage7_clean_control_collection_closed_heldout_only`
 - stage7_clean_success_controls_met: `True`
 - strategy_sequence_inventory_next_step: `review_state_holdout_signal_before_runtime_or_continue_protected_failure_contrast_gate`
 - strategy_sequence_inventory_status: `replay_free_inventory_state_holdout_gap_blocks_runtime`
 
-Recommended next step: `continue_protected_failure_contrast_sequence_policy_gate_review`
+## Protected Failure-Contrast Gate
+
+- readiness_status: `krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection`
+- readiness_recommended_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
+- collection_option_available: `True`
+- collection_command_available: `True`
+- collection_option_id: `approve_protected_plan_window_failure_contrast_collection`
+- approval_receipt_present: `False`
+- approval_receipt_valid: `False`
+- approval_receipt_blockers: `['approval_receipt_missing']`
+- runner_status: `protected_plan_window_failure_contrast_runner_dry_run_ready`
+- runner_collection_run_allowed: `False`
+- runner_execution_requested: `False`
+- runner_processed_job_count: `0`
+- runner_executed_job_count: `0`
+
+Recommended next step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
