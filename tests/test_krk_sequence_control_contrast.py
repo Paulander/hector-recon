@@ -267,8 +267,15 @@ def test_current_control_plane_gate_requires_explicit_choice():
         == "stage4_first_move_contrast_sandbox_approval_request_ready"
     )
     assert stage4_option["approval_request_blockers"] == []
+    assert stage4_option["approval_request_ready_for_runtime_approval"] is True
     assert stage4_option["approval_request_created"] is False
     assert stage4_option["safety_scope"]["approval_request_blockers"] == []
+    assert (
+        stage4_option["safety_scope"][
+            "approval_request_ready_for_runtime_approval"
+        ]
+        is True
+    )
     assert (
         stage4_option["safety_scope"]["sandbox_scope_id"]
         == "default_off_stage4_candidate_move_first_move_contrast_sandbox_only"
@@ -306,6 +313,12 @@ def test_current_control_plane_gate_requires_explicit_choice():
             "stage4_first_move_contrast_sandbox_approval_request_blockers"
         ]
         == []
+    )
+    assert (
+        payload["current_state"][
+            "stage4_first_move_contrast_sandbox_approval_request_ready_for_runtime_approval"
+        ]
+        is True
     )
     assert (
         payload["current_state"]["sequence_policy"]
@@ -446,6 +459,12 @@ def test_current_control_plane_gate_requires_explicit_choice():
             "protected_plan_window_failure_contrast_approval_request_blockers"
         ]
         == []
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_approval_request_ready_for_collection"
+        ]
+        is True
     )
     assert (
         payload["current_state"][
@@ -601,6 +620,11 @@ def test_current_control_plane_gate_requires_explicit_choice():
         == "protected_plan_window_failure_contrast_approval_request_ready"
     )
     assert review_option["safety_scope"]["approval_request_blockers"] == []
+    assert review_option["approval_request_ready_for_collection"] is True
+    assert (
+        review_option["safety_scope"]["approval_request_ready_for_collection"]
+        is True
+    )
     assert review_option["safety_scope"]["approval_receipt_created_by_request"] is False
     assert len(review_option["safety_scope"]["expected_manifest_fingerprint"]) == 64
     assert len(review_option["safety_scope"]["expected_readiness_fingerprint"]) == 64
@@ -772,9 +796,16 @@ def test_current_control_plane_gate_blocks_stage4_runtime_when_approval_request_
     assert repair_option["approval_request_blockers"] == [
         "full_suite_readiness_audit_not_clean"
     ]
+    assert repair_option["approval_request_ready_for_runtime_approval"] is False
     assert repair_option["safety_scope"]["approval_request_blockers"] == [
         "full_suite_readiness_audit_not_clean"
     ]
+    assert (
+        repair_option["safety_scope"][
+            "approval_request_ready_for_runtime_approval"
+        ]
+        is False
+    )
     assert repair_option["safety_scope"]["runtime_dtm_or_tablebase_lookup"] is False
     assert repair_option["safety_scope"]["hidden_python_controller"] is False
     assert repair_option["safety_scope"]["stage7_promotion_allowed"] is False
@@ -827,6 +858,11 @@ def test_current_control_plane_gate_blocks_collection_when_approval_request_bloc
     assert repair_option["safety_scope"]["approval_request_blockers"] == [
         "full_suite_readiness_audit_not_clean"
     ]
+    assert repair_option["approval_request_ready_for_collection"] is False
+    assert (
+        repair_option["safety_scope"]["approval_request_ready_for_collection"]
+        is False
+    )
     assert (
         payload["recommendation"]["preferred_next_if_no_user_approval"]
         == "repair_protected_failure_contrast_approval_request_scope"

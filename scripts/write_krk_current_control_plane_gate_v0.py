@@ -330,6 +330,9 @@ def build_payload(
                 "status"
             ),
             "approval_request_blockers": stage4_approval_request.get("blockers") or [],
+            "approval_request_ready_for_runtime_approval": (
+                stage4_approval_request_ready
+            ),
             "approval_request_created": stage4_approval_request.get(
                 "approval_request_created"
             ),
@@ -347,6 +350,9 @@ def build_payload(
                 "approval_id": stage4_approval_scope.get("approval_id"),
                 "approval_request_blockers": stage4_approval_request.get("blockers")
                 or [],
+                "approval_request_ready_for_runtime_approval": (
+                    stage4_approval_request_ready
+                ),
                 "sandbox_scope_id": stage4_approval_scope.get("sandbox_scope_id"),
                 "default_off": stage4_approval_scope.get("default_off"),
                 "default_enabled": stage4_approval_scope.get("default_enabled"),
@@ -609,6 +615,11 @@ def build_payload(
             )
             if failure_contrast_manifest_review_passed
             else None,
+            "approval_request_ready_for_collection": (
+                failure_contrast_approval_request_ready
+                if failure_contrast_manifest_review_passed
+                else None
+            ),
             "safety_scope": (
                 {
                     "manifest_job_count": failure_contrast_manifest_summary.get(
@@ -685,6 +696,9 @@ def build_payload(
                     ).get("status"),
                     "approval_request_blockers": (
                         failure_contrast_approval_request.get("blockers") or []
+                    ),
+                    "approval_request_ready_for_collection": (
+                        failure_contrast_approval_request_ready
                     ),
                     "approval_receipt_created_by_request": (
                         failure_contrast_approval_request.get(
@@ -866,6 +880,9 @@ def build_payload(
             "stage4_first_move_contrast_sandbox_approval_request_blockers": (
                 stage4_approval_request.get("blockers") or []
             ),
+            "stage4_first_move_contrast_sandbox_approval_request_ready_for_runtime_approval": (
+                stage4_approval_request_ready
+            ),
             "stage7": "heldout_clean_success_controls_ready_sequence_benchmark_available"
             if stage7_success_ready
             else "heldout_clean_success_controls_insufficient_sampling_manifest_ready",
@@ -1027,6 +1044,9 @@ def build_payload(
             ).get("status", "not_written"),
             "protected_plan_window_failure_contrast_approval_request_blockers": (
                 failure_contrast_approval_request.get("blockers") or []
+            ),
+            "protected_plan_window_failure_contrast_approval_request_ready_for_collection": (
+                failure_contrast_approval_request_ready
             ),
             "protected_plan_window_failure_contrast_approval_receipt_created": failure_contrast_approval_request.get(
                 "approval_receipt_created"
@@ -1213,6 +1233,16 @@ def write_markdown(payload: dict[str, Any]) -> str:
             lines.append(
                 "- approval_request_status: "
                 f"`{option['approval_request_status']}`"
+            )
+        if "approval_request_ready_for_runtime_approval" in option:
+            lines.append(
+                "- approval_request_ready_for_runtime_approval: "
+                f"`{option['approval_request_ready_for_runtime_approval']}`"
+            )
+        if "approval_request_ready_for_collection" in option:
+            lines.append(
+                "- approval_request_ready_for_collection: "
+                f"`{option['approval_request_ready_for_collection']}`"
             )
         if option.get("safety_scope"):
             lines.append("- safety_scope:")

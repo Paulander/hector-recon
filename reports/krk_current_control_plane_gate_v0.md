@@ -21,6 +21,7 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - stage4: `first_move_contrast_runtime_review_ready_pending_explicit_approval`
 - stage4_first_move_contrast_sandbox_approval_request: `stage4_first_move_contrast_sandbox_approval_request_ready`
 - stage4_first_move_contrast_sandbox_approval_request_blockers: `[]`
+- stage4_first_move_contrast_sandbox_approval_request_ready_for_runtime_approval: `True`
 - stage7: `heldout_clean_success_controls_ready_sequence_benchmark_available`
 - stage7_success_controls_ready: `True`
 - stage7_success_controls: `11`
@@ -72,6 +73,7 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - protected_plan_window_failure_contrast_runner_executed_job_count: `0`
 - protected_plan_window_failure_contrast_approval_request: `protected_plan_window_failure_contrast_approval_request_ready`
 - protected_plan_window_failure_contrast_approval_request_blockers: `[]`
+- protected_plan_window_failure_contrast_approval_request_ready_for_collection: `True`
 - protected_plan_window_failure_contrast_approval_receipt_created: `False`
 - protected_plan_window_failure_contrast_approval_receipt_blockers: `['approval_receipt_missing']`
 - protected_plan_window_failure_contrast_post_success_refresh_required: `True`
@@ -104,9 +106,11 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - recommended_if: you want to reduce the known Stage 4 h40 caveat now
 - approval_request_artifact: `reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md`
 - approval_request_status: `stage4_first_move_contrast_sandbox_approval_request_ready`
+- approval_request_ready_for_runtime_approval: `True`
 - safety_scope:
   - approval_id: `approve_stage4_first_move_contrast_sandbox`
   - approval_request_blockers: `[]`
+  - approval_request_ready_for_runtime_approval: `True`
   - sandbox_scope_id: `default_off_stage4_candidate_move_first_move_contrast_sandbox_only`
   - default_off: `True`
   - default_enabled: `False`
@@ -144,6 +148,7 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - recommended_if: manifest review passed and you want to collect bounded observation-only failure contrasts
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - approval_request_artifact: `reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_approval_request_v0.md`
+- approval_request_ready_for_collection: `True`
 - safety_scope:
   - manifest_job_count: `6`
   - max_jobs: `6`
@@ -172,6 +177,7 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
   - approval_receipt_blockers: `['approval_receipt_missing']`
   - approval_request_status: `protected_plan_window_failure_contrast_approval_request_ready`
   - approval_request_blockers: `[]`
+  - approval_request_ready_for_collection: `True`
   - approval_receipt_created_by_request: `False`
   - post_success_refresh_required: `True`
   - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`

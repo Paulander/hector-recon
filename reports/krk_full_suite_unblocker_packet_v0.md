@@ -120,6 +120,7 @@
 - approval_request_artifact: `reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_approval_request_v0.json`
 - approval_request_status: `protected_plan_window_failure_contrast_approval_request_ready`
 - approval_request_blockers: `[]`
+- approval_request_ready_for_collection: `True`
 - approval_receipt_created_by_request: `False`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
 - expected_readiness_fingerprint: `3d8481218b7f46804e054090e7bd83b4a8a39d341a3290a537068a0a7b586987`
@@ -141,6 +142,7 @@
 - purpose: Address the separate Stage 4 h40 caveat through a reviewed default-off sandbox path.
 - approval_request_artifact: `reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md`
 - approval_request_status: `stage4_first_move_contrast_sandbox_approval_request_ready`
+- approval_request_ready_for_runtime_approval: `True`
 - approval_request_created: `False`
 - implementation_authorized_by_approval_request: `False`
 - sandbox_scope_id: `default_off_stage4_candidate_move_first_move_contrast_sandbox_only`

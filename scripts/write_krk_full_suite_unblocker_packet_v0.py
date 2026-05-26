@@ -134,6 +134,20 @@ def build_payload() -> dict[str, Any]:
         "collection_constraints", {}
     )
     failure_contrast_runner_summary = failure_contrast_runner.get("summary", {})
+    failure_contrast_approval_request_summary = (
+        failure_contrast_approval_request.get("summary") or {}
+    )
+    failure_contrast_approval_request_ready = (
+        failure_contrast_approval_request.get("decision", {}).get("status")
+        == "protected_plan_window_failure_contrast_approval_request_ready"
+        and failure_contrast_approval_request_summary.get("request_ready") is True
+        and not (failure_contrast_approval_request.get("blockers") or [])
+    )
+    stage4_approval_request_ready = (
+        stage4_current.get("approval_request_status")
+        == "stage4_first_move_contrast_sandbox_approval_request_ready"
+        and not (stage4_current.get("approval_request_blockers") or [])
+    )
     failure_contrast_integration_ready = bool(
         failure_contrast_integration.get("summary", {}).get("integration_ready")
     )
@@ -440,6 +454,9 @@ def build_payload() -> dict[str, Any]:
             "protected_plan_window_failure_contrast_approval_request_blockers": (
                 failure_contrast_approval_request.get("blockers") or []
             ),
+            "protected_plan_window_failure_contrast_approval_request_ready_for_collection": (
+                failure_contrast_approval_request_ready
+            ),
             "protected_plan_window_failure_contrast_approval_receipt_created": failure_contrast_approval_request.get(
                 "approval_receipt_created"
             ),
@@ -699,6 +716,11 @@ def build_payload() -> dict[str, Any]:
                     if failure_contrast_primary
                     else None
                 ),
+                "approval_request_ready_for_collection": (
+                    failure_contrast_approval_request_ready
+                    if failure_contrast_primary
+                    else None
+                ),
                 "approval_receipt_created_by_request": (
                     failure_contrast_approval_request.get("approval_receipt_created")
                     if failure_contrast_primary
@@ -764,6 +786,9 @@ def build_payload() -> dict[str, Any]:
             "approval_request_blockers": (
                 stage4_current.get("approval_request_blockers") or []
             ),
+            "approval_request_ready_for_runtime_approval": (
+                stage4_approval_request_ready
+            ),
             "approval_request_created": stage4_current.get("approval_request_created"),
             "implementation_authorized_by_approval_request": stage4_current.get(
                 "implementation_authorized_by_approval_request"
@@ -772,6 +797,9 @@ def build_payload() -> dict[str, Any]:
                 "approval_id": stage4_approval_scope.get("approval_id"),
                 "approval_request_blockers": (
                     stage4_current.get("approval_request_blockers") or []
+                ),
+                "approval_request_ready_for_runtime_approval": (
+                    stage4_approval_request_ready
                 ),
                 "sandbox_scope_id": stage4_approval_scope.get("sandbox_scope_id"),
                 "default_off": stage4_approval_scope.get("default_off"),
@@ -987,6 +1015,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- approval_request_artifact: `{primary['scope']['approval_request_artifact']}`",
             f"- approval_request_status: `{primary['scope']['approval_request_status']}`",
             f"- approval_request_blockers: `{primary['scope']['approval_request_blockers']}`",
+            f"- approval_request_ready_for_collection: `{primary['scope']['approval_request_ready_for_collection']}`",
             f"- approval_receipt_created_by_request: `{primary['scope']['approval_receipt_created_by_request']}`",
             f"- expected_manifest_fingerprint: `{primary['scope']['expected_manifest_fingerprint']}`",
             f"- expected_readiness_fingerprint: `{primary['scope']['expected_readiness_fingerprint']}`",
@@ -1008,6 +1037,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- purpose: {secondary['purpose']}",
             f"- approval_request_artifact: `{secondary['approval_request_artifact']}`",
             f"- approval_request_status: `{secondary['approval_request_status']}`",
+            f"- approval_request_ready_for_runtime_approval: `{secondary['approval_request_ready_for_runtime_approval']}`",
             f"- approval_request_created: `{secondary['approval_request_created']}`",
             f"- implementation_authorized_by_approval_request: `{secondary['implementation_authorized_by_approval_request']}`",
             f"- sandbox_scope_id: `{secondary['scope']['sandbox_scope_id']}`",

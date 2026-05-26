@@ -132,6 +132,7 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
         == "protected_plan_window_failure_contrast_approval_request_ready"
     )
     assert primary["scope"]["approval_request_blockers"] == []
+    assert primary["scope"]["approval_request_ready_for_collection"] is True
     assert primary["scope"]["approval_receipt_created_by_request"] is False
     assert len(primary["scope"]["expected_manifest_fingerprint"]) == 64
     assert len(primary["scope"]["expected_readiness_fingerprint"]) == 64
@@ -234,6 +235,12 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
             "protected_plan_window_failure_contrast_approval_request_blockers"
         ]
         == []
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_approval_request_ready_for_collection"
+        ]
+        is True
     )
     assert (
         payload["current_state"][
@@ -342,6 +349,7 @@ def test_unblocker_packet_keeps_stage4_as_secondary_gate():
         == "stage4_first_move_contrast_sandbox_approval_request_ready"
     )
     assert secondary["approval_request_blockers"] == []
+    assert secondary["approval_request_ready_for_runtime_approval"] is True
     assert secondary["approval_request_created"] is False
     assert secondary["implementation_authorized_by_approval_request"] is False
     assert (
@@ -349,6 +357,10 @@ def test_unblocker_packet_keeps_stage4_as_secondary_gate():
         == "default_off_stage4_candidate_move_first_move_contrast_sandbox_only"
     )
     assert secondary["scope"]["approval_request_blockers"] == []
+    assert (
+        secondary["scope"]["approval_request_ready_for_runtime_approval"]
+        is True
+    )
     assert secondary["scope"]["default_off"] is True
     assert secondary["scope"]["default_enabled"] is False
     assert secondary["scope"]["implementation_authorized_by_request"] is False
