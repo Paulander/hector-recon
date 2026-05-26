@@ -45,7 +45,7 @@ Default mode is dry-run only. Executing collection requires explicit user approv
 
 ## Decision
 
-- recommended_next_step: `run_with_explicit_execute_flag_after_user_approval`
+- recommended_next_step: `obtain_matching_approval_receipt_then_run_with_explicit_execute_flag`
 - collection_run_allowed: `False`
 - label_run_allowed: `False`
 - runtime_changes_allowed: `false`

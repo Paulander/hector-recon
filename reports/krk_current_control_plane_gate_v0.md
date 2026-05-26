@@ -124,6 +124,6 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 
 - if_no_user_approval: `wait_for_explicit_protected_plan_window_failure_contrast_collection_approval`
 - if_runtime_approved: `implement_stage4_default_off_first_move_contrast_sandbox`
-- if_collection_approved: `execute_bounded_protected_plan_window_failure_contrast_collection_from_reviewed_manifest`
+- if_collection_approved: `create_matching_approval_receipt_then_execute_bounded_protected_plan_window_failure_contrast_collection_from_reviewed_manifest`
 - if_labels_approved: `not_applicable_stage7_success_gate_closed`
 - reason: Stage 7 held-out clean controls now satisfy the benchmark gate; the remaining work is non-causal benchmark review/protected plan-window contrast analysis, while Stage 4 runtime work still requires explicit sandbox approval.

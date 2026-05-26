@@ -428,7 +428,7 @@ def test_current_control_plane_gate_fixture_preserves_no_implicit_approval():
     )
     assert (
         payload["recommendation"]["preferred_next_if_user_approves_collection"]
-        == "execute_bounded_protected_plan_window_failure_contrast_collection_from_reviewed_manifest"
+        == "create_matching_approval_receipt_then_execute_bounded_protected_plan_window_failure_contrast_collection_from_reviewed_manifest"
     )
     assert (
         payload["recommendation"]["preferred_next_if_user_approves_labels"]

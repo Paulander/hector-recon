@@ -138,7 +138,7 @@
   "gameplay_topology_mutation": false,
   "recommendation": {
     "preferred_next_if_no_user_approval": "wait_for_explicit_protected_plan_window_failure_contrast_collection_approval",
-    "preferred_next_if_user_approves_collection": "execute_bounded_protected_plan_window_failure_contrast_collection_from_reviewed_manifest",
+    "preferred_next_if_user_approves_collection": "create_matching_approval_receipt_then_execute_bounded_protected_plan_window_failure_contrast_collection_from_reviewed_manifest",
     "preferred_next_if_user_approves_labels": "not_applicable_stage7_success_gate_closed",
     "preferred_next_if_user_approves_runtime": "implement_stage4_default_off_first_move_contrast_sandbox",
     "preferred_next_if_user_defers_both": "non_causal_sequence_policy_design_without_new_labels",

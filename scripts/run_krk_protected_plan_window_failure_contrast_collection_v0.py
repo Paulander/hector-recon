@@ -646,7 +646,7 @@ def build_payload(
         "decision": {
             "status": status,
             "recommended_next_step": (
-                "run_with_explicit_execute_flag_after_user_approval"
+                "obtain_matching_approval_receipt_then_run_with_explicit_execute_flag"
                 if not execute and not blockers
                 else "run_passive_sequence_policy_refresh"
                 if execute and not failed_jobs and not blockers

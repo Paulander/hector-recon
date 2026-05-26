@@ -760,7 +760,7 @@ def build_payload(
             if not protected_stack_ready
             else "not_applicable_pending_sequence_policy_input_repair"
             if sequence_forbidden_training_or_runtime_inputs
-            else "execute_bounded_protected_plan_window_failure_contrast_collection_from_reviewed_manifest"
+            else "create_matching_approval_receipt_then_execute_bounded_protected_plan_window_failure_contrast_collection_from_reviewed_manifest"
             if failure_contrast_ready_for_collection
                 else "not_applicable_pending_protected_failure_contrast_manifest_review"
             ),

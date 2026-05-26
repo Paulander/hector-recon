@@ -246,6 +246,10 @@ def test_failure_contrast_runner_is_dry_run_ready_without_authorizing_collection
         payload["decision"]["status"]
         == "protected_plan_window_failure_contrast_runner_dry_run_ready"
     )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "obtain_matching_approval_receipt_then_run_with_explicit_execute_flag"
+    )
     assert payload["execution_requested"] is False
     assert payload["approval_receipt_path"] == (
         "reports/strategy_arbitration/"
