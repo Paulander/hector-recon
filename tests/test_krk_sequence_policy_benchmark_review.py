@@ -24,6 +24,30 @@ _review = _load_module(
 )
 
 
+def _collection_gate(command: str | None = "approved command") -> dict:
+    options = []
+    if command is None:
+        options.append(
+            {
+                "option_id": (
+                    "review_protected_plan_window_failure_contrast_execution_readiness"
+                ),
+                "command_if_explicitly_approved": None,
+            }
+        )
+    else:
+        options.append(
+            {
+                "option_id": "approve_protected_plan_window_failure_contrast_collection",
+                "command_if_explicitly_approved": command,
+            }
+        )
+    return {
+        "decision": {"status": "krk_control_plane_waiting_on_explicit_gate_choice"},
+        "approval_options": options,
+    }
+
+
 def _read_report() -> dict:
     payload = json.loads(
         (
@@ -62,6 +86,28 @@ def test_sequence_policy_benchmark_review_reports_current_mixed_result():
     assert (
         payload["decision"]["recommended_next_step"]
         == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+    )
+    assert (
+        "approve_protected_plan_window_failure_contrast_collection"
+        in payload["current_control_plane_gate"]["approval_option_ids"]
+    )
+    assert (
+        payload["current_control_plane_gate"][
+            "protected_failure_contrast_collection_option_available"
+        ]
+        is True
+    )
+    assert (
+        payload["current_control_plane_gate"][
+            "protected_failure_contrast_collection_command_available"
+        ]
+        is True
+    )
+    assert (
+        payload["current_control_plane_gate"][
+            "protected_failure_contrast_collection_option_id"
+        ]
+        == "approve_protected_plan_window_failure_contrast_collection"
     )
     assert "stage4_topk_sequence_signal_present" in payload["findings"]
     assert "stage4_binary_rule_insufficient" in payload["findings"]
@@ -114,7 +160,7 @@ def test_sequence_policy_benchmark_review_ready_fixture_supports_review_packet()
         ],
     }
 
-    payload = _review.build_payload(benchmark=benchmark)
+    payload = _review.build_payload(benchmark=benchmark, gate=_collection_gate())
 
     assert (
         payload["decision"]["status"]
@@ -169,7 +215,7 @@ def test_sequence_policy_benchmark_review_ready_fixture_can_still_be_underpowere
         ],
     }
 
-    payload = _review.build_payload(benchmark=benchmark)
+    payload = _review.build_payload(benchmark=benchmark, gate=_collection_gate())
 
     assert payload["decision"]["status"] == "sequence_policy_benchmark_mixed_plan_window_underpowered"
     assert (
@@ -178,6 +224,85 @@ def test_sequence_policy_benchmark_review_ready_fixture_can_still_be_underpowere
     )
     assert "protected_plan_window_failure_evidence_sparse" in payload["blockers"]
     assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_sequence_policy_benchmark_review_routes_missing_collection_option_to_gate_review():
+    benchmark = {
+        "preflight": {
+            "benchmark_input_ready": True,
+            "blockers": [],
+            "row_count": 35,
+            "selector_training_row_count": 0,
+            "runtime_authorization_row_count": 0,
+            "stage7_heldout_row_count": 10,
+        },
+        "decision": {"benchmark_executed_as_ready": True},
+        "objectives": [
+            {
+                "objective_id": "stage4_state_local_first_move_contrast",
+                "row_count": 20,
+                "state_count": 4,
+                "metrics": {
+                    "top1_conversion_positive_by_state": 0.75,
+                    "top3_conversion_positive_by_state": 1.0,
+                    "recall": 0.5,
+                    "negative_suppression": 0.9,
+                },
+            },
+            {
+                "objective_id": "protected_plan_window_entry_progress_exit_abort",
+                "row_count": 5,
+                "target_label_counts": {
+                    "conversion_positive": 4,
+                    "conversion_failure": 1,
+                },
+                "failure_evidence_sparse": True,
+            },
+            {
+                "objective_id": "stage7_heldout_sequence_success_vs_hard_negative",
+                "row_count": 10,
+                "target_label_counts": {
+                    "conversion_positive": 5,
+                    "conversion_failure": 5,
+                },
+                "success_controls_met": True,
+                "failure_controls_met": True,
+            },
+        ],
+    }
+
+    payload = _review.build_payload(benchmark=benchmark, gate=_collection_gate(None))
+
+    assert (
+        payload["decision"]["status"]
+        == "sequence_policy_benchmark_mixed_plan_window_underpowered_"
+        "blocked_pending_protected_failure_contrast_control_plane_gate_review"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+    )
+    assert (
+        payload["current_control_plane_gate"][
+            "protected_failure_contrast_collection_option_available"
+        ]
+        is False
+    )
+    assert (
+        payload["current_control_plane_gate"][
+            "protected_failure_contrast_collection_command_available"
+        ]
+        is False
+    )
+    assert (
+        payload["current_control_plane_gate"][
+            "protected_failure_contrast_collection_blocked_by_option_id"
+        ]
+        == "review_protected_plan_window_failure_contrast_execution_readiness"
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["selector_training_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
 
 
 def test_sequence_policy_benchmark_review_not_ready_routes_by_preflight_blocker():
@@ -193,7 +318,8 @@ def test_sequence_policy_benchmark_review_not_ready_routes_by_preflight_blocker(
             },
             "decision": {"benchmark_executed_as_ready": False},
             "objectives": [],
-        }
+        },
+        gate=_collection_gate(),
     )
 
     assert (
@@ -226,7 +352,8 @@ def test_sequence_policy_benchmark_review_blocks_forbidden_training_or_runtime_r
                 "stage8_training_allowed": False,
             },
             "objectives": [],
-        }
+        },
+        gate=_collection_gate(),
     )
 
     assert (

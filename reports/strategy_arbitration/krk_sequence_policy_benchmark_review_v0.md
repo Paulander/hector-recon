@@ -49,6 +49,15 @@ This review is non-causal. It does not train a sequence policy, implement a sele
 
 - `protected_plan_window_failure_evidence_sparse`
 
+## Current Control Plane Gate
+
+- status: `krk_control_plane_waiting_on_explicit_gate_choice`
+- approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'approve_protected_plan_window_failure_contrast_collection']`
+- protected_failure_contrast_collection_option_available: `True`
+- protected_failure_contrast_collection_command_available: `True`
+- protected_failure_contrast_collection_option_id: `approve_protected_plan_window_failure_contrast_collection`
+- protected_failure_contrast_collection_blocked_by_option_id: `None`
+
 ## Decision
 
 - recommended_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`

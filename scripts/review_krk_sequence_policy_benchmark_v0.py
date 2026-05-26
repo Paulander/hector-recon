@@ -15,6 +15,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 BENCHMARK = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json"
+CONTROL_PLANE_GATE = ROOT / "reports/krk_current_control_plane_gate_v0.json"
 OUTPUT_JSON = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
 OUTPUT_MD = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.md"
 
@@ -54,8 +55,30 @@ def _numeric(value: Any, default: float = 0.0) -> float:
     return float(value)
 
 
-def build_payload(*, benchmark: dict[str, Any] | None = None) -> dict[str, Any]:
+def _find_approval_option(gate: dict[str, Any], option_id: str) -> dict[str, Any]:
+    for option in gate.get("approval_options") or []:
+        if option.get("option_id") == option_id:
+            return option
+    return {}
+
+
+def _find_first_approval_option(
+    gate: dict[str, Any], option_ids: tuple[str, ...]
+) -> dict[str, Any]:
+    for option_id in option_ids:
+        option = _find_approval_option(gate, option_id)
+        if option:
+            return option
+    return {}
+
+
+def build_payload(
+    *,
+    benchmark: dict[str, Any] | None = None,
+    gate: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     benchmark = benchmark or _load(BENCHMARK)
+    gate = gate or _load(CONTROL_PLANE_GATE)
     preflight = benchmark.get("preflight") or {}
     benchmark_decision = benchmark.get("decision") or {}
     ready = bool(benchmark_decision.get("benchmark_executed_as_ready"))
@@ -73,6 +96,24 @@ def build_payload(*, benchmark: dict[str, Any] | None = None) -> dict[str, Any]:
     plan_failure_sparse = bool(plan.get("failure_evidence_sparse"))
     stage7_success_met = bool(stage7.get("success_controls_met"))
     stage7_failure_met = bool(stage7.get("failure_controls_met"))
+    protected_collection_option = _find_approval_option(
+        gate,
+        "approve_protected_plan_window_failure_contrast_collection",
+    )
+    protected_collection_blocking_option = _find_first_approval_option(
+        gate,
+        (
+            "repair_protected_stack_validation",
+            "repair_protected_failure_contrast_approval_request_scope",
+            "review_protected_plan_window_failure_contrast_execution_readiness",
+            "review_protected_plan_window_failure_contrast_manifest",
+            "review_protected_plan_window_failure_contrast_plan",
+        ),
+    )
+    protected_collection_option_available = bool(protected_collection_option)
+    protected_collection_command_available = bool(
+        protected_collection_option.get("command_if_explicitly_approved")
+    )
 
     findings: list[str] = []
     if stage4_top3 >= 0.9:
@@ -124,9 +165,18 @@ def build_payload(*, benchmark: dict[str, Any] | None = None) -> dict[str, Any]:
         recommended_next_step = "write_sequence_policy_runtime_or_training_review_packet"
     elif stage4_top3 >= 0.9 and stage7_success_met and stage7_failure_met:
         status = "sequence_policy_benchmark_mixed_plan_window_underpowered"
-        recommended_next_step = (
-            "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
-        )
+        if protected_collection_command_available:
+            recommended_next_step = (
+                "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+            )
+        else:
+            status = (
+                "sequence_policy_benchmark_mixed_plan_window_underpowered_"
+                "blocked_pending_protected_failure_contrast_control_plane_gate_review"
+            )
+            recommended_next_step = (
+                "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+            )
     else:
         status = "sequence_policy_benchmark_mixed_or_insufficient"
         recommended_next_step = "review_sequence_policy_objective_or_collect_more_balanced_controls"
@@ -136,7 +186,8 @@ def build_payload(*, benchmark: dict[str, Any] | None = None) -> dict[str, Any]:
         "causal_status": "non_causal_benchmark_review",
         **COMMON_FALSE_FLAGS,
         "source_artifacts": [
-            "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json"
+            "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
+            "reports/krk_current_control_plane_gate_v0.json",
         ],
         "benchmark_preflight": {
             "benchmark_input_ready": preflight.get("benchmark_input_ready"),
@@ -186,6 +237,24 @@ def build_payload(*, benchmark: dict[str, Any] | None = None) -> dict[str, Any]:
         },
         "findings": findings,
         "blockers": blockers,
+        "current_control_plane_gate": {
+            "status": gate.get("decision", {}).get("status"),
+            "approval_option_ids": [
+                option.get("option_id") for option in gate.get("approval_options") or []
+            ],
+            "protected_failure_contrast_collection_option_available": (
+                protected_collection_option_available
+            ),
+            "protected_failure_contrast_collection_command_available": (
+                protected_collection_command_available
+            ),
+            "protected_failure_contrast_collection_option_id": (
+                protected_collection_option.get("option_id")
+            ),
+            "protected_failure_contrast_collection_blocked_by_option_id": (
+                protected_collection_blocking_option.get("option_id")
+            ),
+        },
         "decision": {
             "status": status,
             "recommended_next_step": recommended_next_step,
@@ -203,6 +272,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     decision = payload["decision"]
     preflight = payload["benchmark_preflight"]
     review = payload["objective_review"]
+    current_gate = payload["current_control_plane_gate"]
     lines = [
         "# KRK Sequence-Policy Benchmark Review v0",
         "",
@@ -231,6 +301,9 @@ def write_markdown(payload: dict[str, Any]) -> str:
         lines.append(f"- `{blocker}`")
     if not payload["blockers"]:
         lines.append("- none")
+    lines.extend(["", "## Current Control Plane Gate", ""])
+    for key, value in current_gate.items():
+        lines.append(f"- {key}: `{value}`")
     lines.extend(
         [
             "",
