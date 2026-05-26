@@ -2,7 +2,7 @@
 
 Status: `stage7_additional_clean_sampling_manifest_not_applicable_success_gate_closed`
 
-This is a review-only follow-up label manifest for the remaining Stage 7 clean success-control gap. It does not authorize execution.
+This review-only follow-up label manifest is not applicable because the Stage 7 clean success-control gate is closed. It does not authorize execution.
 
 ## Review Basis
 

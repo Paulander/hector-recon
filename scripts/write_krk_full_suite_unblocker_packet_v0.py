@@ -740,7 +740,7 @@ def build_payload() -> dict[str, Any]:
                 else "Rerunning the original Stage 7 command without overwrite will skip existing outputs and will not fill the remaining unique success-control gap."
             ),
             (
-                "More passive summaries can be written, but the next useful work is benchmark review or protected plan-window failure-contrast collection."
+                "Passive benchmark and cross-stage design summaries are current; the next useful gate-moving work is explicit protected plan-window failure-contrast collection approval, or separately explicit Stage 4 runtime-sandbox approval."
                 if sequence["benchmark_ready"]
                 else "More passive summaries can be written, but they will not unblock Stage 8 or the sequence-policy benchmark."
             ),

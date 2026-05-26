@@ -47,6 +47,34 @@ def test_stage8_training_readiness_review_blocks_current_state():
     assert payload["requirements"]["stage7_clean_success_controls_ready"] is True
     assert payload["requirements"]["sequence_policy_benchmark_review_ready"] is True
     assert (
+        payload["requirements"]["sequence_policy_benchmark_design_status"]
+        == "sequence_policy_benchmark_design_ready_non_causal"
+    )
+    assert (
+        payload["requirements"][
+            "sequence_policy_passive_design_without_new_labels_status"
+        ]
+        == "non_causal_sequence_policy_design_without_new_labels_ready"
+    )
+    assert (
+        payload["requirements"]["sequence_policy_passive_design_current_evidence_limit"]
+        == "protected_plan_window_failure_evidence_sparse"
+    )
+    assert (
+        payload["requirements"]["sequence_policy_cross_stage_requirements_status"]
+        == "cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark"
+    )
+    assert (
+        payload["requirements"][
+            "sequence_policy_replay_free_protected_cross_stage_evidence"
+        ]
+        is True
+    )
+    assert (
+        payload["requirements"]["sequence_policy_cross_stage_sequence_evidence_met"]
+        is True
+    )
+    assert (
         payload["requirements"][
             "protected_failure_contrast_collection_ready_for_explicit_approval"
         ]

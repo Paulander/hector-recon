@@ -230,12 +230,23 @@ def write_markdown(payload: dict[str, Any]) -> str:
     decision = payload["decision"]
     review = payload["review_basis"]
     summary = payload["summary"]
+    if summary.get("job_count") == 0 and review.get("success_gap") == 0:
+        description = (
+            "This review-only follow-up label manifest is not applicable because "
+            "the Stage 7 clean success-control gate is closed. It does not "
+            "authorize execution."
+        )
+    else:
+        description = (
+            "This is a review-only follow-up label manifest for the remaining "
+            "Stage 7 clean success-control gap. It does not authorize execution."
+        )
     lines = [
         "# Stage 7 Additional Clean Sampling Manifest v0",
         "",
         f"Status: `{decision['status']}`",
         "",
-        "This is a review-only follow-up label manifest for the remaining Stage 7 clean success-control gap. It does not authorize execution.",
+        description,
         "",
         "## Review Basis",
         "",

@@ -154,6 +154,9 @@ def test_stage7_additional_clean_sampling_manifest_fixture_closes_without_gap():
         == "stage7_additional_clean_sampling_manifest_not_applicable_success_gate_closed"
     )
     assert payload["decision"]["implementation_authorized_by_this_manifest"] is False
+    rendered = _manifest.write_markdown(payload)
+    assert "not applicable because the Stage 7 clean success-control gate is closed" in rendered
+    assert "remaining Stage 7 clean success-control gap" not in rendered
 
 
 def test_stage7_additional_clean_sampling_runner_defaults_to_dry_run():

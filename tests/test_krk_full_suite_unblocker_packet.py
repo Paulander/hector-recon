@@ -44,6 +44,13 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     assert payload["decision"]["stage7_promotion_allowed"] is False
     assert payload["decision"]["stage8_training_allowed"] is False
     assert (
+        "Passive benchmark and cross-stage design summaries are current; "
+        "the next useful gate-moving work is explicit protected plan-window "
+        "failure-contrast collection approval, or separately explicit Stage 4 "
+        "runtime-sandbox approval."
+        in payload["low_value_safe_work_remaining"]
+    )
+    assert (
         payload["decision"]["recommended_next_step"]
         == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )

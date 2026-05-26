@@ -129,4 +129,4 @@
 ## Low-Value Safe Work Remaining
 
 - Rerunning Stage 7 label commands without overwrite will skip existing outputs; the Stage 7 success-control gap is already closed.
-- More passive summaries can be written, but the next useful work is benchmark review or protected plan-window failure-contrast collection.
+- Passive benchmark and cross-stage design summaries are current; the next useful gate-moving work is explicit protected plan-window failure-contrast collection approval, or separately explicit Stage 4 runtime-sandbox approval.

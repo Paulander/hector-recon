@@ -175,9 +175,27 @@ def build_payload(
             "stage7_success_controls_required": stage7.get("success_controls_required"),
             "stage7_promoted": stage7_promoted,
             "stage4_ready_for_current_suite": stage4_ready,
+            "sequence_policy_benchmark_design_status": sequence_policy.get(
+                "benchmark_design_status"
+            ),
             "sequence_policy_benchmark_review_status": sequence_decision.get("status"),
             "sequence_policy_benchmark_review_ready": sequence_review_ready,
             "sequence_policy_benchmark_supportive": sequence_review_supportive,
+            "sequence_policy_passive_design_without_new_labels_status": (
+                sequence_policy.get("passive_design_without_new_labels_status")
+            ),
+            "sequence_policy_passive_design_current_evidence_limit": (
+                sequence_policy.get("passive_design_current_evidence_limit")
+            ),
+            "sequence_policy_cross_stage_requirements_status": sequence_policy.get(
+                "cross_stage_requirements_status"
+            ),
+            "sequence_policy_replay_free_protected_cross_stage_evidence": (
+                sequence_policy.get("replay_free_protected_cross_stage_evidence")
+            ),
+            "sequence_policy_cross_stage_sequence_evidence_met": sequence_policy.get(
+                "cross_stage_sequence_evidence_met"
+            ),
             "sequence_policy_forbidden_training_or_runtime_input_blocked": (
                 sequence_forbidden_training_or_runtime_inputs
             ),
