@@ -704,6 +704,15 @@ def build_payload() -> dict[str, Any]:
             "protected_plan_window_failure_contrast_runner_status": failure_contrast_runner.get(
                 "decision", {}
             ).get("status"),
+            "protected_plan_window_failure_contrast_runner_manifest_status": failure_contrast_runner.get(
+                "summary", {}
+            ).get("manifest_status"),
+            "protected_plan_window_failure_contrast_runner_manifest_declared_job_count": failure_contrast_runner.get(
+                "summary", {}
+            ).get("manifest_declared_job_count"),
+            "protected_plan_window_failure_contrast_runner_manifest_fingerprint": failure_contrast_runner.get(
+                "summary", {}
+            ).get("manifest_fingerprint"),
             "protected_plan_window_failure_contrast_runner_processed_job_count": failure_contrast_runner.get(
                 "summary", {}
             ).get("processed_job_count"),

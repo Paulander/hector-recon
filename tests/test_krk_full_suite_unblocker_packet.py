@@ -222,6 +222,26 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
         payload["current_state"]["protected_plan_window_failure_contrast_runner_status"]
         == "protected_plan_window_failure_contrast_runner_dry_run_ready"
     )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_runner_manifest_status"
+        ]
+        == "protected_plan_window_failure_contrast_manifest_ready_for_review"
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_runner_manifest_declared_job_count"
+        ]
+        == 6
+    )
+    assert (
+        len(
+            payload["current_state"][
+                "protected_plan_window_failure_contrast_runner_manifest_fingerprint"
+            ]
+        )
+        == 64
+    )
     assert payload["current_state"]["protected_plan_window_failure_contrast_runner_processed_job_count"] == 0
     assert payload["current_state"]["protected_plan_window_failure_contrast_runner_executed_job_count"] == 0
     assert (

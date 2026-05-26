@@ -240,6 +240,12 @@ def test_full_suite_readiness_identifies_current_gate():
         protected_failure_contrast["runner_status"]
         == "protected_plan_window_failure_contrast_runner_dry_run_ready"
     )
+    assert (
+        protected_failure_contrast["runner_manifest_status"]
+        == "protected_plan_window_failure_contrast_manifest_ready_for_review"
+    )
+    assert protected_failure_contrast["runner_manifest_declared_job_count"] == 6
+    assert len(protected_failure_contrast["runner_manifest_fingerprint"]) == 64
     assert protected_failure_contrast["runner_processed_job_count"] == 0
     assert protected_failure_contrast["runner_executed_job_count"] == 0
     assert (

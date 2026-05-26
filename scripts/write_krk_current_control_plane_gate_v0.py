@@ -639,6 +639,17 @@ def build_payload(
                     "manifest_job_count": failure_contrast_manifest_summary.get(
                         "job_count"
                     ),
+                    "runner_manifest_status": failure_contrast_runner_summary.get(
+                        "manifest_status"
+                    ),
+                    "runner_manifest_declared_job_count": (
+                        failure_contrast_runner_summary.get(
+                            "manifest_declared_job_count"
+                        )
+                    ),
+                    "runner_manifest_fingerprint": failure_contrast_runner_summary.get(
+                        "manifest_fingerprint"
+                    ),
                     "max_jobs": failure_contrast_manifest_summary.get("job_count"),
                     "runner_max_jobs_option": failure_contrast_runner_summary.get(
                         "max_jobs"
@@ -1047,6 +1058,17 @@ def build_payload(
             "protected_plan_window_failure_contrast_runner": failure_contrast_runner.get(
                 "decision", {}
             ).get("status", "not_written"),
+            "protected_plan_window_failure_contrast_runner_manifest_status": (
+                failure_contrast_runner.get("summary", {}).get("manifest_status")
+            ),
+            "protected_plan_window_failure_contrast_runner_manifest_declared_job_count": (
+                failure_contrast_runner.get("summary", {}).get(
+                    "manifest_declared_job_count"
+                )
+            ),
+            "protected_plan_window_failure_contrast_runner_manifest_fingerprint": (
+                failure_contrast_runner.get("summary", {}).get("manifest_fingerprint")
+            ),
             "protected_plan_window_failure_contrast_runner_processed_job_count": failure_contrast_runner.get(
                 "summary", {}
             ).get("processed_job_count"),

@@ -456,6 +456,15 @@ def build_payload() -> dict[str, Any]:
             "protected_plan_window_failure_contrast_runner_status": failure_contrast_runner.get(
                 "decision", {}
             ).get("status"),
+            "protected_plan_window_failure_contrast_runner_manifest_status": failure_contrast_runner_summary.get(
+                "manifest_status"
+            ),
+            "protected_plan_window_failure_contrast_runner_manifest_declared_job_count": failure_contrast_runner_summary.get(
+                "manifest_declared_job_count"
+            ),
+            "protected_plan_window_failure_contrast_runner_manifest_fingerprint": failure_contrast_runner_summary.get(
+                "manifest_fingerprint"
+            ),
             "protected_plan_window_failure_contrast_runner_processed_job_count": failure_contrast_runner.get(
                 "summary", {}
             ).get("processed_job_count"),
@@ -963,6 +972,9 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- protected_plan_window_failure_contrast_execution_readiness_status: `{state['protected_plan_window_failure_contrast_execution_readiness_status']}`",
         f"- protected_plan_window_failure_contrast_execution_jobs_passing: `{state['protected_plan_window_failure_contrast_execution_jobs_passing']}`",
         f"- protected_plan_window_failure_contrast_runner_status: `{state['protected_plan_window_failure_contrast_runner_status']}`",
+        f"- protected_plan_window_failure_contrast_runner_manifest_status: `{state['protected_plan_window_failure_contrast_runner_manifest_status']}`",
+        f"- protected_plan_window_failure_contrast_runner_manifest_declared_job_count: `{state['protected_plan_window_failure_contrast_runner_manifest_declared_job_count']}`",
+        f"- protected_plan_window_failure_contrast_runner_manifest_fingerprint: `{state['protected_plan_window_failure_contrast_runner_manifest_fingerprint']}`",
         f"- protected_plan_window_failure_contrast_runner_processed_job_count: `{state['protected_plan_window_failure_contrast_runner_processed_job_count']}`",
         f"- protected_plan_window_failure_contrast_runner_executed_job_count: `{state['protected_plan_window_failure_contrast_runner_executed_job_count']}`",
         f"- protected_plan_window_failure_contrast_approval_request_status: `{state['protected_plan_window_failure_contrast_approval_request_status']}`",

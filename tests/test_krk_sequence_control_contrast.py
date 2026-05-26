@@ -448,6 +448,26 @@ def test_current_control_plane_gate_requires_explicit_choice():
         payload["current_state"]["protected_plan_window_failure_contrast_runner"]
         == "protected_plan_window_failure_contrast_runner_dry_run_ready"
     )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_runner_manifest_status"
+        ]
+        == "protected_plan_window_failure_contrast_manifest_ready_for_review"
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_runner_manifest_declared_job_count"
+        ]
+        == 6
+    )
+    assert (
+        len(
+            payload["current_state"][
+                "protected_plan_window_failure_contrast_runner_manifest_fingerprint"
+            ]
+        )
+        == 64
+    )
     assert payload["current_state"]["protected_plan_window_failure_contrast_runner_processed_job_count"] == 0
     assert payload["current_state"]["protected_plan_window_failure_contrast_runner_executed_job_count"] == 0
     assert (
@@ -564,6 +584,12 @@ def test_current_control_plane_gate_requires_explicit_choice():
     )
     assert review_option["safety_scope"]["max_jobs"] == 6
     assert review_option["safety_scope"]["manifest_job_count"] == 6
+    assert (
+        review_option["safety_scope"]["runner_manifest_status"]
+        == "protected_plan_window_failure_contrast_manifest_ready_for_review"
+    )
+    assert review_option["safety_scope"]["runner_manifest_declared_job_count"] == 6
+    assert len(review_option["safety_scope"]["runner_manifest_fingerprint"]) == 64
     assert review_option["safety_scope"]["runner_max_jobs_option"] is None
     assert review_option["safety_scope"]["horizon"] == "h40"
     assert (
