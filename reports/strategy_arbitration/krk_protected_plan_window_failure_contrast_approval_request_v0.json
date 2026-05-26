@@ -19,6 +19,18 @@
     "status": "protected_plan_window_failure_contrast_approval_request_ready"
   },
   "gameplay_topology_mutation": false,
+  "protected_stack_safety": {
+    "active_paths_exist": true,
+    "active_paths_safe": true,
+    "filesystem_snapshots_replaced": false,
+    "hard_blockers": [],
+    "ready": true,
+    "rollback_common_paths_distinct": true,
+    "rollback_paths_exist": true,
+    "rollback_paths_preserved": true,
+    "rollback_paths_safe": true,
+    "status": "retry1_protected_stage5_6_stack_adopted_manifest_only"
+  },
   "required_receipt_if_user_approves": {
     "approval_id": "approve_protected_plan_window_failure_contrast_collection",
     "approval_scope": {
@@ -50,7 +62,8 @@
   "source_artifacts": [
     "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json",
     "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_execution_readiness_v0.json",
-    "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_runner_v0.json"
+    "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_runner_v0.json",
+    "reports/krk_full_suite_readiness_audit_v0.json"
   ],
   "stage7_promotion_allowed": false,
   "stage8_training_allowed": false,
@@ -60,6 +73,10 @@
     "job_count": 6,
     "manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
     "manifest_status": "protected_plan_window_failure_contrast_manifest_ready_for_review",
+    "protected_stack_filesystem_snapshots_replaced": false,
+    "protected_stack_ready": true,
+    "protected_stack_rollback_paths_preserved": true,
+    "protected_stack_status": "retry1_protected_stage5_6_stack_adopted_manifest_only",
     "readiness_fingerprint": "9e3760e042b380429e8c2b1b7c533296cb98bb59fbf31b287e2bfdae30abdc0d",
     "readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
     "runner_executed_job_count": 0,

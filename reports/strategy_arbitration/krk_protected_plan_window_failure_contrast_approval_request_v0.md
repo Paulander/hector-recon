@@ -15,8 +15,28 @@ This is a passive request packet only. It does not create the approval receipt, 
 - runner_executed_job_count: `0`
 - manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
 - readiness_fingerprint: `9e3760e042b380429e8c2b1b7c533296cb98bb59fbf31b287e2bfdae30abdc0d`
+- protected_stack_status: `retry1_protected_stage5_6_stack_adopted_manifest_only`
+- protected_stack_ready: `True`
+- protected_stack_rollback_paths_preserved: `True`
+- protected_stack_filesystem_snapshots_replaced: `False`
 - approval_receipt_required: `True`
 - approval_receipt_missing: `True`
+
+## Protected Stack Safety
+
+- status: `retry1_protected_stage5_6_stack_adopted_manifest_only`
+- ready: `True`
+- rollback_paths_preserved: `True`
+- active_paths_safe: `True`
+- active_paths_exist: `True`
+- rollback_paths_safe: `True`
+- rollback_paths_exist: `True`
+- rollback_common_paths_distinct: `True`
+- filesystem_snapshots_replaced: `False`
+- hard_blockers: `[]`
+
+## Approval Receipt Status
+
 - approval_receipt_path: `reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - approval_receipt_present: `False`
 - approval_receipt_valid: `False`

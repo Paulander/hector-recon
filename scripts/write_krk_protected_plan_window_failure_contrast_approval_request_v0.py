@@ -28,6 +28,7 @@ RUNNER = (
     ROOT
     / "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_runner_v0.json"
 )
+FULL_SUITE_READINESS = ROOT / "reports/krk_full_suite_readiness_audit_v0.json"
 OUTPUT_JSON = (
     ROOT
     / "reports/strategy_arbitration/"
@@ -75,13 +76,34 @@ def build_payload(
     manifest: dict[str, Any] | None = None,
     readiness: dict[str, Any] | None = None,
     runner: dict[str, Any] | None = None,
+    full_suite_readiness: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     manifest = manifest or _load(MANIFEST)
     readiness = readiness or _load(READINESS)
     runner = runner or _load(RUNNER)
+    full_suite_readiness = full_suite_readiness or _load(FULL_SUITE_READINESS)
     manifest_summary = manifest.get("summary") or {}
     readiness_summary = readiness.get("summary") or {}
     runner_summary = runner.get("summary") or {}
+    protected_stack = full_suite_readiness.get("protected_stack") or {}
+    active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
+    rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
+    protected_stack_safety = {
+        "status": protected_stack.get("status"),
+        "ready": protected_stack.get("ready"),
+        "rollback_paths_preserved": protected_stack.get("rollback_paths_preserved"),
+        "active_paths_safe": active_stack_path_status.get("all_paths_safe"),
+        "active_paths_exist": active_stack_path_status.get("all_paths_exist"),
+        "rollback_paths_safe": rollback_stack_path_status.get("all_paths_safe"),
+        "rollback_paths_exist": rollback_stack_path_status.get("all_paths_exist"),
+        "rollback_common_paths_distinct": protected_stack.get(
+            "rollback_common_paths_distinct"
+        ),
+        "filesystem_snapshots_replaced": protected_stack.get(
+            "filesystem_snapshots_replaced"
+        ),
+        "hard_blockers": full_suite_readiness.get("hard_blockers") or [],
+    }
     job_count = int(manifest_summary.get("job_count") or len(manifest.get("jobs") or []))
     approval_receipt_path = runner.get("approval_receipt_path") or DEFAULT_APPROVAL_RECEIPT
     required_receipt = {
@@ -113,12 +135,14 @@ def build_payload(
             "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json",
             "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_execution_readiness_v0.json",
             "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_runner_v0.json",
+            "reports/krk_full_suite_readiness_audit_v0.json",
         ],
         "approval_receipt_path": approval_receipt_path,
         "approval_receipt_created": False,
         "approval_receipt_present": runner_summary.get("approval_receipt_present"),
         "approval_receipt_valid": runner_summary.get("approval_receipt_valid"),
         "approval_receipt_blockers": runner_summary.get("approval_receipt_blockers") or [],
+        "protected_stack_safety": protected_stack_safety,
         "required_receipt_if_user_approves": required_receipt,
         "summary": {
             "job_count": job_count,
@@ -130,6 +154,14 @@ def build_payload(
             "runner_executed_job_count": runner_summary.get("executed_job_count"),
             "manifest_fingerprint": readiness_summary.get("manifest_fingerprint"),
             "readiness_fingerprint": readiness_summary.get("readiness_fingerprint"),
+            "protected_stack_status": protected_stack_safety["status"],
+            "protected_stack_ready": protected_stack_safety["ready"],
+            "protected_stack_rollback_paths_preserved": protected_stack_safety[
+                "rollback_paths_preserved"
+            ],
+            "protected_stack_filesystem_snapshots_replaced": protected_stack_safety[
+                "filesystem_snapshots_replaced"
+            ],
             "approval_receipt_required": True,
             "approval_receipt_missing": not bool(runner_summary.get("approval_receipt_present")),
         },
@@ -165,8 +197,14 @@ def write_markdown(payload: dict[str, Any]) -> str:
     ]
     for key, value in summary.items():
         lines.append(f"- {key}: `{value}`")
+    lines.extend(["", "## Protected Stack Safety", ""])
+    for key, value in payload["protected_stack_safety"].items():
+        lines.append(f"- {key}: `{value}`")
     lines.extend(
         [
+            "",
+            "## Approval Receipt Status",
+            "",
             f"- approval_receipt_path: `{payload['approval_receipt_path']}`",
             f"- approval_receipt_present: `{payload['approval_receipt_present']}`",
             f"- approval_receipt_valid: `{payload['approval_receipt_valid']}`",

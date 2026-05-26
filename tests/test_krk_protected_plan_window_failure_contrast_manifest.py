@@ -351,6 +351,25 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
     assert payload["summary"]["runner_processed_job_count"] == 0
     assert payload["summary"]["runner_executed_job_count"] == 0
     assert payload["summary"]["approval_receipt_required"] is True
+    assert (
+        payload["summary"]["protected_stack_status"]
+        == "retry1_protected_stage5_6_stack_adopted_manifest_only"
+    )
+    assert payload["summary"]["protected_stack_ready"] is True
+    assert payload["summary"]["protected_stack_rollback_paths_preserved"] is True
+    assert payload["summary"]["protected_stack_filesystem_snapshots_replaced"] is False
+    assert payload["protected_stack_safety"] == {
+        "status": "retry1_protected_stage5_6_stack_adopted_manifest_only",
+        "ready": True,
+        "rollback_paths_preserved": True,
+        "active_paths_safe": True,
+        "active_paths_exist": True,
+        "rollback_paths_safe": True,
+        "rollback_paths_exist": True,
+        "rollback_common_paths_distinct": True,
+        "filesystem_snapshots_replaced": False,
+        "hard_blockers": [],
+    }
     assert len(payload["summary"]["manifest_fingerprint"]) == 64
     assert len(payload["summary"]["readiness_fingerprint"]) == 64
     required = payload["required_receipt_if_user_approves"]
@@ -411,9 +430,29 @@ def test_failure_contrast_approval_request_fixture_tracks_current_scope():
                 "executed_job_count": 0,
             },
         },
+        full_suite_readiness={
+            "protected_stack": {
+                "status": "fixture_stack_ready",
+                "ready": True,
+                "rollback_paths_preserved": True,
+                "active_stack_path_status": {
+                    "all_paths_safe": True,
+                    "all_paths_exist": True,
+                },
+                "rollback_stack_path_status": {
+                    "all_paths_safe": True,
+                    "all_paths_exist": True,
+                },
+                "rollback_common_paths_distinct": True,
+                "filesystem_snapshots_replaced": False,
+            },
+            "hard_blockers": [],
+        },
     )
 
     assert payload["approval_receipt_created"] is False
+    assert payload["protected_stack_safety"]["status"] == "fixture_stack_ready"
+    assert payload["protected_stack_safety"]["rollback_paths_preserved"] is True
     assert payload["required_receipt_if_user_approves"]["approval_scope"] == {
         "manifest_fingerprint": "m" * 64,
         "readiness_fingerprint": "r" * 64,
