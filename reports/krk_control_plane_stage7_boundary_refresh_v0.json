@@ -41,9 +41,12 @@
     "strategy_ready_frame_count": 24
   },
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "runtime_behavior_changed": false,
   "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
   "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
   "runtime_selector_implemented": false,
   "schema_version": "krk_control_plane_stage7_boundary_refresh.v0",
   "source_artifacts": [

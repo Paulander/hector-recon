@@ -3,6 +3,25 @@ import json
 from pathlib import Path
 
 
+CONTROL_PLANE_BOUNDARY_FALSE_KEYS = (
+    "runtime_behavior_changed",
+    "runtime_defaults_changed",
+    "runtime_selector_implemented",
+    "runtime_score_changes",
+    "runtime_direct_routing",
+    "runtime_dtm_or_tablebase_lookup",
+    "hidden_python_controller",
+    "gameplay_topology_mutation",
+    "stage7_promotion_allowed",
+    "stage8_training_allowed",
+)
+
+
+def assert_control_plane_boundary_flags(payload):
+    for key in CONTROL_PLANE_BOUNDARY_FALSE_KEYS:
+        assert payload[key] is False
+
+
 _dataset_spec = importlib.util.spec_from_file_location(
     "build_krk_strategy_arbitration_dataset",
     Path(__file__).resolve().parents[1] / "scripts" / "build_krk_strategy_arbitration_dataset.py",
@@ -320,6 +339,15 @@ assert _forced_provider_binding_spec is not None
 assert _forced_provider_binding_spec.loader is not None
 _forced_provider_binding = importlib.util.module_from_spec(_forced_provider_binding_spec)
 _forced_provider_binding_spec.loader.exec_module(_forced_provider_binding)
+
+_forced_provider_merge_spec = importlib.util.spec_from_file_location(
+    "merge_krk_forced_provider_control_labels",
+    Path(__file__).resolve().parents[1] / "scripts" / "merge_krk_forced_provider_control_labels.py",
+)
+assert _forced_provider_merge_spec is not None
+assert _forced_provider_merge_spec.loader is not None
+_forced_provider_merge = importlib.util.module_from_spec(_forced_provider_merge_spec)
+_forced_provider_merge_spec.loader.exec_module(_forced_provider_merge)
 
 _out_of_sample_manifest_spec = importlib.util.spec_from_file_location(
     "generate_krk_strategy_arbiter_out_of_sample_execution_manifest",
@@ -1945,6 +1973,7 @@ def test_krk_control_plane_contract_is_non_causal_schema(tmp_path):
 
     assert contract["schema_version"] == "krk_control_plane_evidence_contract.v0"
     assert contract["causal_status"] == "non_causal_schema_contract"
+    assert_control_plane_boundary_flags(contract)
     assert contract["runtime_behavior_changed"] is False
     assert contract["runtime_arbiter_added"] is False
     assert contract["runtime_terminals_added"] is False
@@ -2074,6 +2103,7 @@ def test_krk_control_plane_manifest_maps_existing_artifacts_without_playouts(tmp
 
     assert manifest["schema_version"] == "krk_control_plane_manifest.v0"
     assert manifest["causal_status"] == "non_causal_manifest"
+    assert_control_plane_boundary_flags(manifest)
     assert manifest["runtime_behavior_changed"] is False
     assert manifest["runtime_arbiter_added"] is False
     assert manifest["runtime_terminals_added"] is False
@@ -2130,6 +2160,7 @@ def test_krk_control_plane_gap_report_recommends_replay_free_frame_export(tmp_pa
 
     assert report["schema_version"] == "krk_control_plane_gap_report.v0"
     assert report["causal_status"] == "non_causal_gap_report"
+    assert_control_plane_boundary_flags(report)
     assert report["runtime_behavior_changed"] is False
     assert report["runtime_arbiter_added"] is False
     assert report["runtime_terminals_added"] is False
@@ -2263,6 +2294,7 @@ def test_krk_control_plane_frame_export_is_replay_free_and_non_causal(tmp_path):
 
     assert export["schema_version"] == "krk_control_plane_frames_export.v0"
     assert export["causal_status"] == "non_causal_frame_export"
+    assert_control_plane_boundary_flags(export)
     assert export["runtime_behavior_changed"] is False
     assert export["runtime_arbiter_added"] is False
     assert export["runtime_terminals_added"] is False
@@ -2328,6 +2360,7 @@ def test_krk_control_plane_frame_quality_blocks_runtime_and_recommends_filters(t
 
     assert report["schema_version"] == "krk_control_plane_frame_quality_report.v0"
     assert report["causal_status"] == "non_causal_quality_report"
+    assert_control_plane_boundary_flags(report)
     assert report["runtime_behavior_changed"] is False
     assert report["runtime_arbiter_added"] is False
     assert report["runtime_terminals_added"] is False
@@ -2415,6 +2448,7 @@ def test_krk_control_plane_filter_marks_strategy_ready_and_dedupes(tmp_path):
 
     assert result["schema_version"] == "krk_control_plane_filtered_frames.v0"
     assert result["causal_status"] == "non_causal_filtered_frame_export"
+    assert_control_plane_boundary_flags(result)
     assert result["runtime_behavior_changed"] is False
     assert result["runtime_arbiter_added"] is False
     assert result["runtime_terminals_added"] is False
@@ -2482,6 +2516,7 @@ def test_krk_control_plane_strategy_probe_stays_non_causal_and_reports_label_gap
 
     assert probe["schema_version"] == "krk_control_plane_strategy_arbitration_probe.v0"
     assert probe["causal_status"] == "non_causal_probe"
+    assert_control_plane_boundary_flags(probe)
     assert probe["runtime_behavior_changed"] is False
     assert probe["runtime_arbiter_added"] is False
     assert probe["runtime_terminals_added"] is False
@@ -2624,6 +2659,7 @@ def test_krk_control_plane_strategy_baseline_is_non_causal_and_reads_labels(tmp_
 
     assert baseline["schema_version"] == "krk_control_plane_strategy_arbitration_baseline.v1"
     assert baseline["causal_status"] == "non_causal_probe"
+    assert_control_plane_boundary_flags(baseline)
     assert baseline["runtime_behavior_changed"] is False
     assert baseline["runtime_arbiter_added"] is False
     assert baseline["runtime_terminals_added"] is False
@@ -2704,6 +2740,7 @@ def test_krk_control_plane_stage7_boundary_refresh_keeps_stage7_heldout(tmp_path
 
     assert review["schema_version"] == "krk_control_plane_stage7_boundary_refresh.v0"
     assert review["causal_status"] == "non_causal_artifact_review"
+    assert_control_plane_boundary_flags(review)
     assert review["runtime_behavior_changed"] is False
     assert review["runtime_selector_implemented"] is False
     assert review["stage7_promotion_allowed"] is False
@@ -3259,6 +3296,63 @@ def test_krk_forced_provider_execution_manifest_binds_topologies(tmp_path, monke
     )
     assert manifest["jobs"][1]["execution_binding"]["topology_version"] == "stage6_overlay_composed_v1"
     assert manifest["recommended_next_step"] == "run_bounded_forced_provider_control_labels"
+
+
+def test_krk_forced_provider_control_merge_preserves_control_plane_boundaries(tmp_path):
+    root = tmp_path
+
+    def write_json(relative_path, payload):
+        path = root / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload), encoding="utf-8")
+
+    write_json(
+        _forced_provider_merge.FILTERED_FRAMES,
+        {
+            "causal_status": "non_causal_filtered_frame_export",
+            "frames": [
+                {
+                    "frame_id": "cp.stage5",
+                    "strategy_proposal_frames": [
+                        {"provider_id": "krk.stage0_basin", "move_uci": "f2g3"}
+                    ],
+                }
+            ],
+        },
+    )
+    write_json(
+        _forced_provider_merge.CONTROL_LABELS,
+        {
+            "causal_status": "non_causal_label_run",
+            "labels": [
+                {
+                    "job_id": "job.stage5",
+                    "frame_id": "cp.stage5",
+                    "provider_id": "krk.stage0_basin",
+                    "requested_reference_move": "f2g3",
+                    "result": "mate",
+                    "plies": 17,
+                    "horizon": 40,
+                    "forced_first_move": "f2g3",
+                    "forced_successor_available": True,
+                    "topology_version": "stage6_overlay_composed_v1",
+                    "composition_profile": "stage6_overlay",
+                }
+            ],
+        },
+    )
+
+    payload = _forced_provider_merge.build_augmented(root)
+
+    assert payload["schema_version"] == "krk_control_plane_filtered_frames_with_forced_controls.v0"
+    assert payload["causal_status"] == "non_causal_augmented_frame_export"
+    assert_control_plane_boundary_flags(payload)
+    assert payload["runtime_arbiter_implemented"] is False
+    assert payload["runtime_terminals_added"] is False
+    assert payload["summary"]["forced_control_labels_attached"] == 1
+    label_ref = payload["frames"][0]["strategy_proposal_frames"][0]["forced_control_outcome_label"]
+    assert label_ref["causal_status"] == "non_causal_outcome_label"
+    assert label_ref["result"] == "mate"
 
 
 def test_krk_out_of_sample_execution_manifest_is_bounded_and_non_causal(tmp_path, monkeypatch):

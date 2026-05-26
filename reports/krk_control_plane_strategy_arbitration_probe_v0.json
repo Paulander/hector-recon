@@ -15,6 +15,7 @@
     "selected_status": "provider_labels_sufficient_for_small_probe"
   },
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "label_coverage": {
     "frames_with_known_provider_mate": 12,
     "frames_with_normalized_scores": 24,
@@ -30,7 +31,10 @@
   "runtime_arbiter_added": false,
   "runtime_behavior_changed": false,
   "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
   "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
   "runtime_terminals_added": false,
   "schema_version": "krk_control_plane_strategy_arbitration_probe.v0",
   "selector_results": [

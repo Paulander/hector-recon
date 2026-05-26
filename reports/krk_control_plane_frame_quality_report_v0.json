@@ -57,6 +57,7 @@
     }
   },
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "quality_flags": [
     {
       "count": 2,
@@ -116,7 +117,10 @@
   "runtime_arbiter_added": false,
   "runtime_behavior_changed": false,
   "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
   "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
   "runtime_terminals_added": false,
   "schema_version": "krk_control_plane_frame_quality_report.v0",
   "source_artifacts": [

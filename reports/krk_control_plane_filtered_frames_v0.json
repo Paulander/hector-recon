@@ -10881,6 +10881,7 @@
     }
   ],
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "readiness": {
     "offline_sequence_policy_benchmark": "blocked_general_krk_stage7_only",
     "offline_strategy_arbitration_probe": "ready_on_strategy_arbitration_benchmark_frames",
@@ -10892,7 +10893,10 @@
   "runtime_arbiter_added": false,
   "runtime_behavior_changed": false,
   "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
   "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
   "runtime_terminals_added": false,
   "schema_version": "krk_control_plane_filtered_frames.v0",
   "source_artifacts": [
