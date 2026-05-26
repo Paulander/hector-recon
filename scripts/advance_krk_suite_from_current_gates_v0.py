@@ -49,6 +49,13 @@ FORBIDDEN_INPUT_STATUSES = {
     "krk_suite_unblocker_blocked_forbidden_training_or_runtime_rows",
 }
 
+PROTECTED_FAILURE_CONTRAST_APPROVAL_REQUEST_REPAIR_STATUSES = {
+    "sequence_policy_pilot_blocked_pending_protected_failure_contrast_approval_request_repair",
+    "stage8_training_blocked_pending_protected_failure_contrast_approval_request_repair",
+    "post_label_outcome_blocked_pending_protected_failure_contrast_approval_request_repair",
+    "krk_suite_readiness_blocked_pending_protected_failure_contrast_approval_request_repair",
+}
+
 
 def _approval_ready_with_status_fallback(
     *,
@@ -401,10 +408,25 @@ def build_payload() -> dict[str, Any]:
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
     )
+    failure_contrast_approval_request_decision = (
+        failure_contrast_approval_request.get("decision") or {}
+    )
+    failure_contrast_approval_request_status = (
+        failure_contrast_approval_request_decision.get("status")
+    )
+    failure_contrast_approval_request_blockers = (
+        failure_contrast_approval_request.get("blockers") or []
+    )
     failure_contrast_approval_request_summary = (
         failure_contrast_approval_request.get("summary") or {}
     )
     protected_failure_contrast_gate = readiness.get("protected_failure_contrast_gate") or {}
+    protected_failure_contrast_gate_approval_request_status = (
+        protected_failure_contrast_gate.get("approval_request_status")
+    )
+    protected_failure_contrast_gate_approval_request_blockers = (
+        protected_failure_contrast_gate.get("approval_request_blockers") or []
+    )
     stage4_approval_request_ready = _approval_ready_with_status_fallback(
         explicit_value=stage4_current.get(
             "approval_request_ready_for_runtime_approval"
@@ -417,9 +439,9 @@ def build_payload() -> dict[str, Any]:
         explicit_value=protected_failure_contrast_gate.get(
             "approval_request_ready_for_collection"
         ),
-        status=failure_contrast_approval_request.get("decision", {}).get("status"),
+        status=failure_contrast_approval_request_status,
         ready_status="protected_plan_window_failure_contrast_approval_request_ready",
-        blockers=failure_contrast_approval_request.get("blockers") or [],
+        blockers=failure_contrast_approval_request_blockers,
         summary_ready=failure_contrast_approval_request_summary.get("request_ready"),
     )
     failure_contrast_output_validation = _load_json(
@@ -498,6 +520,28 @@ def build_payload() -> dict[str, Any]:
         or post_label_review.get("decision", {}).get("status")
         in protected_stack_repair_statuses
     )
+    protected_failure_contrast_approval_request_repair_required = (
+        benchmark_ready
+        and (
+            failure_contrast_approval_request_status
+            == "protected_plan_window_failure_contrast_approval_request_blocked"
+            or protected_failure_contrast_gate_approval_request_status
+            == "protected_plan_window_failure_contrast_approval_request_blocked"
+            or bool(failure_contrast_approval_request_blockers)
+            or bool(protected_failure_contrast_gate_approval_request_blockers)
+            or protected_failure_contrast_gate.get("approval_request_ready_for_collection")
+            is False
+            or failure_contrast_approval_request_summary.get("request_ready") is False
+            or readiness.get("decision", {}).get("status")
+            in PROTECTED_FAILURE_CONTRAST_APPROVAL_REQUEST_REPAIR_STATUSES
+            or underpowered_pilot.get("decision", {}).get("status")
+            in PROTECTED_FAILURE_CONTRAST_APPROVAL_REQUEST_REPAIR_STATUSES
+            or stage8_review.get("decision", {}).get("status")
+            in PROTECTED_FAILURE_CONTRAST_APPROVAL_REQUEST_REPAIR_STATUSES
+            or post_label_review.get("decision", {}).get("status")
+            in PROTECTED_FAILURE_CONTRAST_APPROVAL_REQUEST_REPAIR_STATUSES
+        )
+    )
     sequence_forbidden_blockers = sorted(
         FORBIDDEN_INPUT_BLOCKERS
         & (
@@ -537,6 +581,12 @@ def build_payload() -> dict[str, Any]:
     elif protected_stack_repair_required:
         status = "krk_suite_passive_advancement_blocked_pending_protected_stack_repair"
         next_step = "repair_protected_stack_validation"
+    elif protected_failure_contrast_approval_request_repair_required:
+        status = (
+            "krk_suite_passive_advancement_blocked_pending_"
+            "protected_failure_contrast_approval_request_repair"
+        )
+        next_step = "repair_protected_failure_contrast_approval_request_scope"
     elif benchmark_ready:
         status = (
             "krk_suite_passive_advancement_ready_for_protected_failure_contrast_collection"
@@ -755,7 +805,7 @@ def build_payload() -> dict[str, Any]:
                 "decision", {}
             ).get("status"),
             "protected_plan_window_failure_contrast_approval_request_blockers": (
-                failure_contrast_approval_request.get("blockers") or []
+                failure_contrast_approval_request_blockers
             ),
             "protected_plan_window_failure_contrast_approval_request_ready_for_collection": (
                 failure_contrast_approval_request_ready
