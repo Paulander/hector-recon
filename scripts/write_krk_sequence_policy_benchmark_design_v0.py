@@ -17,6 +17,9 @@ STAGE7_CLEAN_CONTROLS = ROOT / "reports/structural_candidates/stage7_clean_seque
 STAGE7_SAMPLING_MANIFEST = ROOT / "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json"
 PROTECTED_PLAN_WINDOWS = ROOT / "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json"
 BENCHMARK_REVIEW = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
+STAGE4_APPROVAL_REQUEST = (
+    ROOT / "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
+)
 OUTPUT_JSON = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json"
 OUTPUT_MD = ROOT / "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.md"
 
@@ -67,6 +70,7 @@ def build_payload(
     sampling_manifest: dict[str, Any] | None = None,
     protected_plan_windows: dict[str, Any] | None = None,
     benchmark_review: dict[str, Any] | None = None,
+    stage4_approval_request: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     loading_repo_defaults = all(
         item is None
@@ -78,6 +82,7 @@ def build_payload(
             clean_controls,
             sampling_manifest,
             protected_plan_windows,
+            stage4_approval_request,
         )
     )
     contrast_probe = contrast_probe or _load(CONTRAST_PROBE)
@@ -87,6 +92,9 @@ def build_payload(
     clean_controls = clean_controls or _load(STAGE7_CLEAN_CONTROLS)
     sampling_manifest = sampling_manifest or _load(STAGE7_SAMPLING_MANIFEST)
     protected_plan_windows = protected_plan_windows or _load_optional(PROTECTED_PLAN_WINDOWS)
+    stage4_approval_request = stage4_approval_request or _load_optional(
+        STAGE4_APPROVAL_REQUEST
+    )
     if benchmark_review is None:
         benchmark_review = _load_optional(BENCHMARK_REVIEW) if loading_repo_defaults else {}
 
@@ -103,6 +111,15 @@ def build_payload(
     post_box_count = int(post_box_controls.get("summary", {}).get("control_count", 0) or 0)
     stage4_review_ready = bool(
         contrast_probe.get("readiness", {}).get("stage4_first_move_contrast_sandbox_review_ready")
+    )
+    stage4_approval_request_status = stage4_approval_request.get("decision", {}).get(
+        "status"
+    )
+    stage4_approval_request_blockers = stage4_approval_request.get("blockers") or []
+    stage4_approval_request_ready = (
+        stage4_approval_request_status
+        == "stage4_first_move_contrast_sandbox_approval_request_ready"
+        and not stage4_approval_request_blockers
     )
     plan_capsule_stage7_only = bool(
         plan_capsule_review.get("readiness", {}).get("stage7_only_evidence")
@@ -166,9 +183,19 @@ def build_payload(
             "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
             "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json",
             "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
+            "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json",
         ],
         "readiness": {
             "stage4_first_move_contrast_sandbox_review_ready": stage4_review_ready,
+            "stage4_first_move_contrast_sandbox_approval_request_status": (
+                stage4_approval_request_status
+            ),
+            "stage4_first_move_contrast_sandbox_approval_request_blockers": (
+                stage4_approval_request_blockers
+            ),
+            "stage4_first_move_contrast_sandbox_approval_request_ready": (
+                stage4_approval_request_ready
+            ),
             "stage7_clean_success_controls": clean_success,
             "stage7_clean_failure_controls": clean_fail,
             "stage7_clean_success_controls_required": 5,
@@ -269,9 +296,17 @@ def build_payload(
         "blocked_or_pending": [
             {
                 "item": "stage4_first_move_contrast_sandbox",
-                "status": "review_ready_pending_explicit_approval"
-                if stage4_review_ready
-                else "not_ready",
+                "status": (
+                    "review_ready_pending_explicit_approval"
+                    if stage4_review_ready and stage4_approval_request_ready
+                    else "approval_request_blocked_pending_repair"
+                    if stage4_review_ready
+                    and stage4_approval_request_status
+                    and not stage4_approval_request_ready
+                    else "not_ready"
+                ),
+                "approval_request_status": stage4_approval_request_status,
+                "approval_request_blockers": stage4_approval_request_blockers,
             },
             {
                 "item": "stage7_diverse_clean_sampling_manifest",

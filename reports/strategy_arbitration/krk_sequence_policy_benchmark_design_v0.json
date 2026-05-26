@@ -45,6 +45,8 @@
   },
   "blocked_or_pending": [
     {
+      "approval_request_blockers": [],
+      "approval_request_status": "stage4_first_move_contrast_sandbox_approval_request_ready",
       "item": "stage4_first_move_contrast_sandbox",
       "status": "review_ready_pending_explicit_approval"
     },
@@ -113,6 +115,9 @@
     "post_box_sandbox_sourced_success_controls": 16,
     "protected_plan_window_evidence_met": true,
     "protected_plan_window_frame_count": 20,
+    "stage4_first_move_contrast_sandbox_approval_request_blockers": [],
+    "stage4_first_move_contrast_sandbox_approval_request_ready": true,
+    "stage4_first_move_contrast_sandbox_approval_request_status": "stage4_first_move_contrast_sandbox_approval_request_ready",
     "stage4_first_move_contrast_sandbox_review_ready": true,
     "stage7_clean_failure_controls": 39,
     "stage7_clean_failure_controls_met": true,
@@ -135,7 +140,8 @@
     "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json",
     "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
     "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json",
-    "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
+    "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
+    "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
   ],
   "stage7_promotion_allowed": false,
   "stage8_training_allowed": false

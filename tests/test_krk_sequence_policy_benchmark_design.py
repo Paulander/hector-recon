@@ -51,6 +51,24 @@ def test_sequence_policy_benchmark_design_is_ready_but_blocks_training_and_runti
         == "sequence_policy_benchmark_design_ready_non_causal"
     )
     assert payload["readiness"]["stage4_first_move_contrast_sandbox_review_ready"] is True
+    assert (
+        payload["readiness"][
+            "stage4_first_move_contrast_sandbox_approval_request_status"
+        ]
+        == "stage4_first_move_contrast_sandbox_approval_request_ready"
+    )
+    assert (
+        payload["readiness"][
+            "stage4_first_move_contrast_sandbox_approval_request_blockers"
+        ]
+        == []
+    )
+    assert (
+        payload["readiness"][
+            "stage4_first_move_contrast_sandbox_approval_request_ready"
+        ]
+        is True
+    )
     assert payload["readiness"]["stage7_clean_success_controls"] == 11
     assert payload["readiness"]["stage7_clean_failure_controls"] == 39
     assert payload["readiness"]["stage7_clean_success_controls_met"] is True
@@ -87,6 +105,17 @@ def test_sequence_policy_benchmark_design_is_ready_but_blocks_training_and_runti
     assert payload["decision"]["selector_training_allowed"] is False
     assert payload["decision"]["stage7_promotion_allowed"] is False
     assert payload["decision"]["stage8_training_allowed"] is False
+    stage4_pending = [
+        item
+        for item in payload["blocked_or_pending"]
+        if item["item"] == "stage4_first_move_contrast_sandbox"
+    ][0]
+    assert stage4_pending["status"] == "review_ready_pending_explicit_approval"
+    assert (
+        stage4_pending["approval_request_status"]
+        == "stage4_first_move_contrast_sandbox_approval_request_ready"
+    )
+    assert stage4_pending["approval_request_blockers"] == []
 
 
 def test_sequence_policy_benchmark_design_fixture_requires_clean_success_controls():
@@ -225,3 +254,75 @@ def test_sequence_policy_benchmark_design_routes_forbidden_rows_to_repair():
         "forbidden_training_or_runtime_input_blockers"
     ]
     assert payload["decision"]["selector_training_allowed"] is False
+
+
+def test_sequence_policy_benchmark_design_propagates_stage4_approval_request_blockers():
+    payload = _design.build_payload(
+        contrast_probe={
+            "readiness": {"stage4_first_move_contrast_sandbox_review_ready": True}
+        },
+        contrast_dataset={},
+        plan_capsule_review={
+            "readiness": {
+                "stage7_only_evidence": False,
+                "policy_succeeded": False,
+            }
+        },
+        post_box_controls={"summary": {"control_count": 14}},
+        clean_controls={
+            "summary": {
+                "role_counts": {
+                    "clean_sequence_success_control": 5,
+                    "clean_sequence_hard_negative": 5,
+                }
+            }
+        },
+        sampling_manifest={"decision": {"status": "review_ready"}},
+        protected_plan_windows={
+            "summary": {
+                "frame_count": 21,
+                "protected_cross_stage_evidence_met": True,
+            }
+        },
+        stage4_approval_request={
+            "decision": {
+                "status": (
+                    "stage4_first_move_contrast_sandbox_approval_request_blocked"
+                )
+            },
+            "blockers": ["full_suite_readiness_audit_not_clean"],
+        },
+    )
+
+    assert (
+        payload["decision"]["status"]
+        == "sequence_policy_benchmark_design_ready_non_causal"
+    )
+    assert (
+        payload["readiness"][
+            "stage4_first_move_contrast_sandbox_approval_request_status"
+        ]
+        == "stage4_first_move_contrast_sandbox_approval_request_blocked"
+    )
+    assert (
+        payload["readiness"][
+            "stage4_first_move_contrast_sandbox_approval_request_blockers"
+        ]
+        == ["full_suite_readiness_audit_not_clean"]
+    )
+    assert (
+        payload["readiness"][
+            "stage4_first_move_contrast_sandbox_approval_request_ready"
+        ]
+        is False
+    )
+    stage4_pending = [
+        item
+        for item in payload["blocked_or_pending"]
+        if item["item"] == "stage4_first_move_contrast_sandbox"
+    ][0]
+    assert stage4_pending["status"] == "approval_request_blocked_pending_repair"
+    assert stage4_pending["approval_request_blockers"] == [
+        "full_suite_readiness_audit_not_clean"
+    ]
+    assert payload["decision"]["runtime_changes_allowed"] is False
