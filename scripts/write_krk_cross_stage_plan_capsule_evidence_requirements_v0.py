@@ -50,6 +50,16 @@ def _find_approval_option(
     return {}
 
 
+def _find_first_approval_option(
+    control_plane_gate: dict[str, Any], option_ids: tuple[str, ...]
+) -> dict[str, Any]:
+    for option_id in option_ids:
+        option = _find_approval_option(control_plane_gate, option_id)
+        if option:
+            return option
+    return {}
+
+
 def build_payload(
     *,
     plan_capsule_review: dict[str, Any] | None = None,
@@ -82,6 +92,21 @@ def build_payload(
         control_plane_gate,
         "approve_protected_plan_window_failure_contrast_collection",
     )
+    protected_blocking_option = _find_first_approval_option(
+        control_plane_gate,
+        (
+            "repair_protected_stack_validation",
+            "repair_protected_failure_contrast_approval_request_scope",
+            "review_protected_plan_window_failure_contrast_execution_readiness",
+            "review_protected_plan_window_failure_contrast_manifest",
+            "review_protected_plan_window_failure_contrast_plan",
+        ),
+    )
+    protected_collection_option_available = bool(protected_collection_option)
+    protected_collection_command = protected_collection_option.get(
+        "command_if_explicitly_approved"
+    )
+    protected_collection_command_available = bool(protected_collection_command)
     protected_collection_option_scope = (
         protected_collection_option.get("safety_scope") or {}
     )
@@ -161,6 +186,18 @@ def build_payload(
             ),
             "protected_failure_contrast_approval_request_ready_for_collection": (
                 protected_request_ready
+            ),
+            "protected_failure_contrast_collection_option_available": (
+                protected_collection_option_available
+            ),
+            "protected_failure_contrast_collection_command_available": (
+                protected_collection_command_available
+            ),
+            "protected_failure_contrast_collection_option_id": (
+                protected_collection_option.get("option_id")
+            ),
+            "protected_failure_contrast_collection_blocked_by_option_id": (
+                protected_blocking_option.get("option_id")
             ),
             "protected_failure_contrast_approval_receipt_blockers": (
                 control_state.get(

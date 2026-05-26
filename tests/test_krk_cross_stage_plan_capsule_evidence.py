@@ -79,6 +79,13 @@ def test_cross_stage_plan_capsule_requirements_remain_non_causal():
         ]
         is True
     )
+    assert readiness["protected_failure_contrast_collection_option_available"] is True
+    assert readiness["protected_failure_contrast_collection_command_available"] is True
+    assert (
+        readiness["protected_failure_contrast_collection_option_id"]
+        == "approve_protected_plan_window_failure_contrast_collection"
+    )
+    assert readiness["protected_failure_contrast_collection_blocked_by_option_id"] is None
     assert readiness["protected_failure_contrast_approval_receipt_blockers"] == [
         "approval_receipt_missing"
     ]
@@ -168,6 +175,10 @@ def test_cross_stage_plan_capsule_requirements_propagates_collection_request_blo
         ]
         is False
     )
+    assert readiness["protected_failure_contrast_collection_option_available"] is False
+    assert readiness["protected_failure_contrast_collection_command_available"] is False
+    assert readiness["protected_failure_contrast_collection_option_id"] is None
+    assert readiness["protected_failure_contrast_collection_blocked_by_option_id"] is None
     assert readiness["protected_failure_contrast_approval_receipt_blockers"] == [
         "approval_receipt_missing"
     ]
@@ -239,9 +250,108 @@ def test_cross_stage_plan_capsule_requirements_falls_back_for_null_request_ready
         ]
         is True
     )
+    assert readiness["protected_failure_contrast_collection_option_available"] is True
+    assert readiness["protected_failure_contrast_collection_command_available"] is False
+    assert (
+        readiness["protected_failure_contrast_collection_option_id"]
+        == "approve_protected_plan_window_failure_contrast_collection"
+    )
+    assert readiness["protected_failure_contrast_collection_blocked_by_option_id"] is None
     assert readiness["protected_failure_contrast_approval_receipt_blockers"] == [
         "approval_receipt_missing"
     ]
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["label_run_allowed"] is False
+
+
+def test_cross_stage_plan_capsule_requirements_reports_blocking_repair_option():
+    payload = _requirements.build_payload(
+        plan_capsule_review={"readiness": {}},
+        sequence_policy_design={"readiness": {}},
+        control_plane_gate={
+            "decision": {"status": "krk_control_plane_waiting_on_explicit_gate_choice"},
+            "current_state": {
+                "protected_plan_window_failure_contrast_approval_request": (
+                    "protected_plan_window_failure_contrast_approval_request_ready"
+                ),
+                "protected_plan_window_failure_contrast_approval_request_blockers": [],
+                "protected_plan_window_failure_contrast_approval_request_ready_for_collection": (
+                    True
+                ),
+                "protected_plan_window_failure_contrast_approval_receipt_blockers": [
+                    "approval_receipt_missing"
+                ],
+            },
+            "approval_options": [
+                {
+                    "option_id": "repair_protected_stack_validation",
+                    "command_if_explicitly_approved": None,
+                }
+            ],
+        },
+    )
+
+    readiness = payload["current_readiness"]
+    assert (
+        readiness[
+            "protected_failure_contrast_approval_request_ready_for_collection"
+        ]
+        is True
+    )
+    assert readiness["protected_failure_contrast_collection_option_available"] is False
+    assert readiness["protected_failure_contrast_collection_command_available"] is False
+    assert readiness["protected_failure_contrast_collection_option_id"] is None
+    assert (
+        readiness["protected_failure_contrast_collection_blocked_by_option_id"]
+        == "repair_protected_stack_validation"
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["label_run_allowed"] is False
+
+
+def test_cross_stage_plan_capsule_requirements_reports_blocking_execution_review():
+    payload = _requirements.build_payload(
+        plan_capsule_review={"readiness": {}},
+        sequence_policy_design={"readiness": {}},
+        control_plane_gate={
+            "decision": {"status": "krk_control_plane_waiting_on_explicit_gate_choice"},
+            "current_state": {
+                "protected_plan_window_failure_contrast_approval_request": (
+                    "protected_plan_window_failure_contrast_approval_request_ready"
+                ),
+                "protected_plan_window_failure_contrast_approval_request_blockers": [],
+                "protected_plan_window_failure_contrast_approval_request_ready_for_collection": (
+                    True
+                ),
+                "protected_plan_window_failure_contrast_approval_receipt_blockers": [
+                    "approval_receipt_missing"
+                ],
+            },
+            "approval_options": [
+                {
+                    "option_id": (
+                        "review_protected_plan_window_failure_contrast_execution_readiness"
+                    ),
+                    "command_if_explicitly_approved": None,
+                }
+            ],
+        },
+    )
+
+    readiness = payload["current_readiness"]
+    assert (
+        readiness[
+            "protected_failure_contrast_approval_request_ready_for_collection"
+        ]
+        is True
+    )
+    assert readiness["protected_failure_contrast_collection_option_available"] is False
+    assert readiness["protected_failure_contrast_collection_command_available"] is False
+    assert readiness["protected_failure_contrast_collection_option_id"] is None
+    assert (
+        readiness["protected_failure_contrast_collection_blocked_by_option_id"]
+        == "review_protected_plan_window_failure_contrast_execution_readiness"
+    )
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False
 
