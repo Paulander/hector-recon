@@ -179,8 +179,32 @@ def build_payload(
         and integrated_new_failure_count >= minimum_new_unique_failures_needed
         and projected_unique_failure_count >= minimum_required_unique_failures
     )
+    protected_collection_option_available = bool(
+        validation_summary.get("protected_failure_contrast_collection_option_available")
+    )
+    protected_collection_command_available = bool(
+        validation_summary.get("protected_failure_contrast_collection_command_available")
+    )
+    pending_collection_outputs = (
+        validation_status
+        == "protected_plan_window_failure_contrast_outputs_validation_pending"
+    )
+    pending_collection_outputs_gate_review = (
+        validation_status
+        == (
+            "protected_plan_window_failure_contrast_outputs_validation_pending_"
+            "protected_failure_contrast_control_plane_gate_review"
+        )
+        or (pending_collection_outputs and not protected_collection_command_available)
+    )
 
-    if validation_status == "protected_plan_window_failure_contrast_outputs_validation_pending":
+    if pending_collection_outputs_gate_review:
+        status = (
+            "protected_plan_window_failure_contrast_integration_pending_outputs_"
+            "protected_failure_contrast_control_plane_gate_review"
+        )
+        next_step = "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+    elif pending_collection_outputs:
         status = "protected_plan_window_failure_contrast_integration_pending_outputs"
         next_step = "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     elif validation_status == "protected_plan_window_failure_contrast_outputs_invalid_block_integration":
@@ -225,6 +249,24 @@ def build_payload(
             "stage7_training_row_count": 0,
             "selector_training_row_count": 0,
             "runtime_authorization_row_count": 0,
+            "current_control_plane_approval_option_ids": (
+                validation_summary.get("current_control_plane_approval_option_ids") or []
+            ),
+            "current_gate_status": validation_summary.get("current_gate_status"),
+            "protected_failure_contrast_collection_option_available": (
+                protected_collection_option_available
+            ),
+            "protected_failure_contrast_collection_command_available": (
+                protected_collection_command_available
+            ),
+            "protected_failure_contrast_collection_option_id": validation_summary.get(
+                "protected_failure_contrast_collection_option_id"
+            ),
+            "protected_failure_contrast_collection_blocked_by_option_id": (
+                validation_summary.get(
+                    "protected_failure_contrast_collection_blocked_by_option_id"
+                )
+            ),
         },
         "integrated_failure_contrasts": rows,
         "decision": {

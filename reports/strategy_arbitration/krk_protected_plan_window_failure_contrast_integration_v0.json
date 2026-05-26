@@ -29,6 +29,11 @@
   "stage7_promotion_allowed": false,
   "stage8_training_allowed": false,
   "summary": {
+    "current_control_plane_approval_option_ids": [
+      "approve_stage4_first_move_contrast_sandbox",
+      "approve_protected_plan_window_failure_contrast_collection"
+    ],
+    "current_gate_status": "krk_control_plane_waiting_on_explicit_gate_choice",
     "existing_unique_failure_count": 1,
     "integrated_new_failure_count": 0,
     "integration_ready": false,
@@ -38,6 +43,10 @@
     "output_exists_count": 0,
     "output_valid_count": 0,
     "projected_unique_failure_count": 1,
+    "protected_failure_contrast_collection_blocked_by_option_id": null,
+    "protected_failure_contrast_collection_command_available": true,
+    "protected_failure_contrast_collection_option_available": true,
+    "protected_failure_contrast_collection_option_id": "approve_protected_plan_window_failure_contrast_collection",
     "runtime_authorization_row_count": 0,
     "selector_training_row_count": 0,
     "skipped_counts": {
