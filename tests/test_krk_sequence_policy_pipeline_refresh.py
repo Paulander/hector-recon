@@ -54,7 +54,7 @@ def test_sequence_policy_pipeline_refresh_preserves_boundaries():
     )
     assert (
         payload["summary"]["sequence_policy_benchmark_review_next_step"]
-        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
     assert (
         payload["decision"]["status"]
@@ -62,7 +62,7 @@ def test_sequence_policy_pipeline_refresh_preserves_boundaries():
     )
     assert (
         payload["decision"]["recommended_next_step"]
-        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False
@@ -99,12 +99,12 @@ def test_sequence_policy_pipeline_refresh_ready_status_logic():
             "sequence_policy_inputs_ready": True,
             "sequence_policy_benchmark_status": "sequence_policy_benchmark_ready_non_causal_results_available",
             "sequence_policy_benchmark_review_status": "sequence_policy_benchmark_mixed_plan_window_underpowered",
-            "sequence_policy_benchmark_review_next_step": "explicitly_approve_protected_plan_window_failure_contrast_collection",
+            "sequence_policy_benchmark_review_next_step": "obtain_matching_approval_receipt_before_protected_failure_contrast_collection",
             "current_gate_status": "krk_control_plane_waiting_on_explicit_gate_choice",
         },
         "decision": {
             "status": "sequence_policy_pipeline_refreshed_ready_for_non_causal_benchmark_review",
-            "recommended_next_step": "explicitly_approve_protected_plan_window_failure_contrast_collection",
+            "recommended_next_step": "obtain_matching_approval_receipt_before_protected_failure_contrast_collection",
             "runtime_changes_allowed": False,
             "label_run_allowed": False,
             "selector_training_allowed": False,

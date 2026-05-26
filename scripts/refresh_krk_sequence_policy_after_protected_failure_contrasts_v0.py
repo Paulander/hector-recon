@@ -184,7 +184,7 @@ def build_payload() -> dict[str, Any]:
                 else
                 "review_non_causal_sequence_policy_benchmark_with_protected_failure_contrasts"
                 if integration_ready and protected_failure_rows > 0
-                else "explicitly_approve_protected_plan_window_failure_contrast_collection"
+                else "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
             ),
             "runtime_changes_allowed": False,
             "label_run_allowed": False,

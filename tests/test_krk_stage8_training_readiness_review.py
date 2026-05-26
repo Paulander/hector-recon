@@ -78,7 +78,7 @@ def test_stage8_training_readiness_review_blocks_current_state():
     )
     assert (
         payload["decision"]["recommended_next_step"]
-        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
     assert payload["decision"]["implementation_allowed_by_this_review"] is False
     assert payload["decision"]["stage8_training_allowed"] is False
@@ -172,7 +172,7 @@ def test_stage8_training_readiness_review_fixture_blocks_mixed_sequence_result()
     )
     assert (
         payload["decision"]["recommended_next_step"]
-        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
     assert "stage7_not_promoted_and_must_remain_held_out_without_explicit_gate" in payload["warnings"]
     assert payload["decision"]["stage8_training_allowed"] is False

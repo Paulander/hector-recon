@@ -281,7 +281,7 @@ def build_payload(
                 else "protected_plan_window_failure_contrast_execution_readiness_blocked"
             ),
             "recommended_next_step": (
-                "explicitly_approve_protected_plan_window_failure_contrast_collection"
+                "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
                 if ready
                 else "fix_protected_plan_window_failure_contrast_execution_readiness"
             ),

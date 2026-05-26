@@ -204,7 +204,7 @@ def build_payload(*, manifest: dict[str, Any] | None = None) -> dict[str, Any]:
                 else "protected_plan_window_failure_contrast_manifest_review_failed"
             ),
             "recommended_next_step": (
-                "explicitly_approve_protected_plan_window_failure_contrast_collection"
+                "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
                 if review_passed
                 else "fix_protected_plan_window_failure_contrast_manifest"
             ),

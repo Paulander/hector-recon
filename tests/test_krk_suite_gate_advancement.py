@@ -65,7 +65,7 @@ def test_gate_advancement_reports_current_stage7_blocker():
     )
     assert (
         payload["decision"]["recommended_next_step"]
-        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
     assert payload["summary"]["stage7_success_controls"] == 11
     assert payload["summary"]["stage7_success_controls_required"] == 5
@@ -171,7 +171,7 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     )
     assert (
         payload["summary"]["sequence_policy_underpowered_pilot_next_step"]
-        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
     assert payload["summary"]["sequence_policy_underpowered_pilot_stage4_topk_signal"] is True
     assert payload["summary"]["sequence_policy_underpowered_pilot_stage7_success_gap"] == 0
@@ -202,7 +202,7 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     )
     assert (
         payload["summary"]["stage7_post_label_outcome_next_step"]
-        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
     assert (
         payload["summary"][

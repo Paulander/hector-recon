@@ -142,7 +142,7 @@ def build_payload(
             next_step = "fill_stage7_success_controls_and_rerun_passive_gate_advancement"
         elif "protected_plan_window_failure_contrast_collection_pending_explicit_approval" in blockers:
             status = "stage8_training_blocked_pending_protected_failure_contrast_collection"
-            next_step = "explicitly_approve_protected_plan_window_failure_contrast_collection"
+            next_step = "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
         elif "sequence_policy_benchmark_mixed_or_underpowered" in blockers:
             status = "stage8_training_blocked_pending_sequence_policy_benchmark_review"
             next_step = "inspect_sequence_policy_benchmark_review_before_stage8_training"

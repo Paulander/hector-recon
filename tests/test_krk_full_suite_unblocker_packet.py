@@ -45,7 +45,7 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     assert payload["decision"]["stage8_training_allowed"] is False
     assert (
         payload["decision"]["recommended_next_step"]
-        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
 
     primary = payload["primary_unblocker"]

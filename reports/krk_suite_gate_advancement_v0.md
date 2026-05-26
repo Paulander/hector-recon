@@ -41,7 +41,7 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - sequence_policy_after_protected_failure_contrast_refresh_status: `sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs`
 - sequence_policy_after_protected_failure_contrast_rows: `0`
 - sequence_policy_underpowered_pilot_status: `sequence_policy_pilot_underpowered_pending_protected_failure_contrast_collection`
-- sequence_policy_underpowered_pilot_next_step: `explicitly_approve_protected_plan_window_failure_contrast_collection`
+- sequence_policy_underpowered_pilot_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - sequence_policy_underpowered_pilot_stage4_topk_signal: `True`
 - sequence_policy_underpowered_pilot_stage7_success_gap: `0`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_processed_job_count: `0`
@@ -50,7 +50,7 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - unblocker_status: `krk_suite_protected_failure_contrast_unblocker_ready_pending_explicit_collection_approval`
 - stage8_training_readiness_status: `stage8_training_blocked_pending_protected_failure_contrast_collection`
 - stage7_post_label_outcome_status: `post_label_outcome_waiting_on_explicit_protected_failure_contrast_collection`
-- stage7_post_label_outcome_next_step: `explicitly_approve_protected_plan_window_failure_contrast_collection`
+- stage7_post_label_outcome_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - stage7_post_label_outcome_protected_failure_contrast_runner_processed_job_count: `0`
 - stage7_post_label_outcome_protected_failure_contrast_runner_executed_job_count: `0`
 - stage7_label_distribution_review_status: `stage7_label_distribution_review_success_gate_closed`
@@ -92,7 +92,7 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 
 ## Decision
 
-- recommended_next_step: `explicitly_approve_protected_plan_window_failure_contrast_collection`
+- recommended_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - runtime_changes_allowed: `false`
 - label_run_allowed: `false`
 - selector_training_allowed: `false`

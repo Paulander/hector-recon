@@ -179,7 +179,7 @@ def build_payload(
         else:
             blockers.append("protected_plan_window_failure_evidence_sparse")
             status = "post_label_outcome_sequence_policy_mixed_plan_window_underpowered"
-        next_step = "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        next_step = "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     elif benchmark_review_status == "sequence_policy_benchmark_review_blocked_pending_ready_inputs":
         blockers.append("sequence_policy_benchmark_review_not_ready")
         status = "post_label_outcome_benchmark_review_still_blocked"

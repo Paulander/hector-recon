@@ -77,7 +77,7 @@ def test_stage7_post_label_outcome_current_artifact_reports_sequence_policy_gap(
     assert "protected_plan_window_failure_contrast_gate_ready_for_approval" in payload["findings"]
     assert (
         payload["decision"]["recommended_next_step"]
-        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
     assert payload["decision"]["label_run_allowed"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False

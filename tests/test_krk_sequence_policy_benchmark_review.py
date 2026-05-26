@@ -60,7 +60,7 @@ def test_sequence_policy_benchmark_review_reports_current_mixed_result():
     assert "protected_plan_window_failure_evidence_sparse" in payload["blockers"]
     assert (
         payload["decision"]["recommended_next_step"]
-        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
     assert "stage4_topk_sequence_signal_present" in payload["findings"]
     assert "stage4_binary_rule_insufficient" in payload["findings"]
@@ -173,7 +173,7 @@ def test_sequence_policy_benchmark_review_ready_fixture_can_still_be_underpowere
     assert payload["decision"]["status"] == "sequence_policy_benchmark_mixed_plan_window_underpowered"
     assert (
         payload["decision"]["recommended_next_step"]
-        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
     assert "protected_plan_window_failure_evidence_sparse" in payload["blockers"]
     assert payload["decision"]["runtime_changes_allowed"] is False

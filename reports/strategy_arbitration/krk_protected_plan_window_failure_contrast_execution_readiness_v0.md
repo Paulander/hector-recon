@@ -21,7 +21,7 @@ This is a dry-run preflight only. It does not execute collection, run labels, ch
 - selector_training_row_count: `0`
 - runtime_authorization_row_count: `0`
 - stage7_training_row_count: `0`
-- readiness_fingerprint: `2a1b10fb7e14001a58397f74fbce3fb68941305b01378c14676a0f1948d5889d`
+- readiness_fingerprint: `9e3760e042b380429e8c2b1b7c533296cb98bb59fbf31b287e2bfdae30abdc0d`
 
 ## Jobs
 
@@ -34,7 +34,7 @@ This is a dry-run preflight only. It does not execute collection, run labels, ch
 
 ## Decision
 
-- recommended_next_step: `explicitly_approve_protected_plan_window_failure_contrast_collection`
+- recommended_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - collection_run_allowed: `false`
 - label_run_allowed: `false`
 - runtime_changes_allowed: `false`

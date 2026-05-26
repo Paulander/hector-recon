@@ -123,7 +123,9 @@ def build_payload(*, benchmark: dict[str, Any] | None = None) -> dict[str, Any]:
         recommended_next_step = "write_sequence_policy_runtime_or_training_review_packet"
     elif stage4_top3 >= 0.9 and stage7_success_met and stage7_failure_met:
         status = "sequence_policy_benchmark_mixed_plan_window_underpowered"
-        recommended_next_step = "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        recommended_next_step = (
+            "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        )
     else:
         status = "sequence_policy_benchmark_mixed_or_insufficient"
         recommended_next_step = "review_sequence_policy_objective_or_collect_more_balanced_controls"

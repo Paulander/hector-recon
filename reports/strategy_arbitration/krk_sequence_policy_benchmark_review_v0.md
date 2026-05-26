@@ -51,7 +51,7 @@ This review is non-causal. It does not train a sequence policy, implement a sele
 
 ## Decision
 
-- recommended_next_step: `explicitly_approve_protected_plan_window_failure_contrast_collection`
+- recommended_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - runtime_changes_allowed: `false`
 - label_run_allowed: `false`
 - selector_training_allowed: `false`

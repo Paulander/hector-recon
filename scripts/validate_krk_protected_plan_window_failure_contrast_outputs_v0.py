@@ -194,7 +194,7 @@ def build_payload(*, manifest: dict[str, Any] | None = None) -> dict[str, Any]:
     all_outputs_valid = all_outputs_present and all_present_outputs_valid and parse_error_count == 0
     if not any_outputs_present:
         status = "protected_plan_window_failure_contrast_outputs_validation_pending"
-        next_step = "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        next_step = "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     elif all_outputs_valid:
         status = "protected_plan_window_failure_contrast_outputs_valid_ready_for_integration"
         next_step = "integrate_protected_plan_window_failure_contrasts_passively"

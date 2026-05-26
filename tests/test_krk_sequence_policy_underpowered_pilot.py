@@ -65,7 +65,7 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
     )
     assert (
         payload["decision"]["recommended_next_step"]
-        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
     assert payload["summary"]["benchmark_executed_as_ready"] is True
     assert (

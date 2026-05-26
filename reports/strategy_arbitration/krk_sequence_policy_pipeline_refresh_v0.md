@@ -22,7 +22,7 @@ This passive refresh reruns integration, input assembly, probe, benchmark, and g
 - runtime_authorization_row_count: `0`
 - forbidden_training_or_runtime_input_blocked: `False`
 - forbidden_training_or_runtime_input_blockers: `[]`
-- sequence_policy_benchmark_review_next_step: `explicitly_approve_protected_plan_window_failure_contrast_collection`
+- sequence_policy_benchmark_review_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - current_gate_status: `krk_control_plane_waiting_on_explicit_gate_choice`
 
 ## Steps
@@ -38,7 +38,7 @@ This passive refresh reruns integration, input assembly, probe, benchmark, and g
 
 ## Decision
 
-- recommended_next_step: `explicitly_approve_protected_plan_window_failure_contrast_collection`
+- recommended_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - runtime_changes_allowed: `false`
 - label_run_allowed: `false`
 - selector_training_allowed: `false`

@@ -162,7 +162,7 @@ def build_payload(
             "sequence_policy_pilot_underpowered_pending_protected_failure_contrast_collection"
         )
         recommended_next_step = (
-            "explicitly_approve_protected_plan_window_failure_contrast_collection"
+            "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
         )
     else:
         decision_status = "sequence_policy_pilot_underpowered_needs_review"

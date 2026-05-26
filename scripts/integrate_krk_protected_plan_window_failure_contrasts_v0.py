@@ -181,7 +181,7 @@ def build_payload(
 
     if validation_status == "protected_plan_window_failure_contrast_outputs_validation_pending":
         status = "protected_plan_window_failure_contrast_integration_pending_outputs"
-        next_step = "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        next_step = "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     elif validation_status == "protected_plan_window_failure_contrast_outputs_invalid_block_integration":
         status = "protected_plan_window_failure_contrast_integration_blocked_invalid_outputs"
         next_step = "inspect_invalid_protected_plan_window_failure_contrast_outputs"

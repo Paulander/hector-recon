@@ -68,7 +68,7 @@ def test_sequence_policy_benchmark_inputs_are_non_causal_and_ready_after_stage7_
     )
     assert (
         payload["summary"]["current_benchmark_review_next_step"]
-        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
     assert payload["summary"]["current_benchmark_review_available"] is True
     assert payload["summary"]["selector_training_row_count"] == 0
@@ -79,7 +79,7 @@ def test_sequence_policy_benchmark_inputs_are_non_causal_and_ready_after_stage7_
     )
     assert (
         payload["decision"]["recommended_next_step"]
-        == "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False

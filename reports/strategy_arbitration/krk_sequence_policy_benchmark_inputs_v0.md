@@ -24,7 +24,7 @@ This artifact assembles currently available non-causal inputs for a future seque
 - protected_failure_contrast_row_count: `0`
 - protected_failure_contrast_skipped_counts: `{}`
 - current_benchmark_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered`
-- current_benchmark_review_next_step: `explicitly_approve_protected_plan_window_failure_contrast_collection`
+- current_benchmark_review_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - current_benchmark_review_available: `True`
 - stage7_heldout_row_count: `50`
 - selector_training_row_count: `0`
@@ -41,7 +41,7 @@ This artifact assembles currently available non-causal inputs for a future seque
 
 ## Decision
 
-- recommended_next_step: `explicitly_approve_protected_plan_window_failure_contrast_collection`
+- recommended_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - runtime_changes_allowed: `false`
 - label_run_allowed: `false`
 - selector_training_allowed: `false`

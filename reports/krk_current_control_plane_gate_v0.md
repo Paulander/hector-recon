@@ -103,7 +103,7 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
   - approval_receipt_valid: `False`
   - approval_receipt_blockers: `['approval_receipt_missing']`
   - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-  - expected_readiness_fingerprint: `2a1b10fb7e14001a58397f74fbce3fb68941305b01378c14676a0f1948d5889d`
+  - expected_readiness_fingerprint: `9e3760e042b380429e8c2b1b7c533296cb98bb59fbf31b287e2bfdae30abdc0d`
   - per_job_timeout_seconds: `900`
   - processed_job_count: `0`
   - executed_job_count: `0`

@@ -21,8 +21,10 @@ This is a non-causal benchmark design/readiness artifact. It does not train a mo
 - plan_capsule_policy_succeeded: `False`
 - benchmark_ready: `True`
 - current_benchmark_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered`
-- current_benchmark_review_next_step: `explicitly_approve_protected_plan_window_failure_contrast_collection`
+- current_benchmark_review_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - current_benchmark_review_available: `True`
+- forbidden_training_or_runtime_input_blocked: `False`
+- forbidden_training_or_runtime_input_blockers: `[]`
 
 ## Candidate Objectives
 
@@ -68,7 +70,7 @@ This is a non-causal benchmark design/readiness artifact. It does not train a mo
 
 ## Decision
 
-- recommended_next_step: `explicitly_approve_protected_plan_window_failure_contrast_collection`
+- recommended_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - runtime_changes_allowed: `false`
 - selector_training_allowed: `false`
 - Stage 7 promotion and Stage 8 training remain blocked.

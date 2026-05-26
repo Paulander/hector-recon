@@ -481,7 +481,7 @@ def build_payload() -> dict[str, Any]:
         decision_status = (
             "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection"
         )
-        next_step = "explicitly_approve_protected_plan_window_failure_contrast_collection"
+        next_step = "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     else:
         decision_status = "krk_suite_readiness_ready_for_next_runtime_or_training_review"
         next_step = "prepare_explicit_runtime_or_training_review_packet"
