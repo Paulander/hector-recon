@@ -356,6 +356,21 @@ SOURCES = {
     "selector_objective_independent_validation_blocker": (
         "reports/strategy_arbitration/krk_selector_objective_independent_validation_blocker_v0.json"
     ),
+    "selector_stratified_label_dataset_v1": (
+        "reports/krk_selector_stratified_label_dataset_v1.json"
+    ),
+    "selector_stratified_label_balance_probe_v1": (
+        "reports/krk_selector_stratified_label_balance_probe_v1.json"
+    ),
+    "selector_balanced_label_dataset_v1": (
+        "reports/krk_selector_balanced_label_dataset_v1.json"
+    ),
+    "selector_balanced_label_probe_v1": (
+        "reports/krk_selector_balanced_label_probe_v1.json"
+    ),
+    "selector_balanced_architecture_review_v1": (
+        "reports/krk_selector_balanced_architecture_review_v1.json"
+    ),
     "stage4_failure_discovery": "reports/krk_stage4_failure_discovery_v0.json",
     "stage4_caveat_sequence_review": (
         "reports/krk_stage4_caveat_sequence_review_v0.json"
@@ -1306,6 +1321,19 @@ def build_payload() -> dict[str, Any]:
     selector_objective_independent_validation_blocker = payloads[
         "selector_objective_independent_validation_blocker"
     ]
+    selector_stratified_label_dataset_v1 = payloads[
+        "selector_stratified_label_dataset_v1"
+    ]
+    selector_stratified_label_balance_probe_v1 = payloads[
+        "selector_stratified_label_balance_probe_v1"
+    ]
+    selector_balanced_label_dataset_v1 = payloads[
+        "selector_balanced_label_dataset_v1"
+    ]
+    selector_balanced_label_probe_v1 = payloads["selector_balanced_label_probe_v1"]
+    selector_balanced_architecture_review_v1 = payloads[
+        "selector_balanced_architecture_review_v1"
+    ]
     stage4_failure_discovery = payloads["stage4_failure_discovery"]
     stage4_caveat_sequence_review = payloads["stage4_caveat_sequence_review"]
     stage4_sequence_candidate_review = payloads["stage4_sequence_candidate_review"]
@@ -1977,6 +2005,122 @@ def build_payload() -> dict[str, Any]:
         and split_selector_objective_readiness_v3.get("stage7_promotion_allowed")
         is False
         and split_selector_objective_readiness_v3.get("stage8_training_allowed")
+        is False
+    )
+    selector_stratified_dataset_decision = (
+        selector_stratified_label_dataset_v1.get("decision") or {}
+    )
+    selector_stratified_probe_decision = (
+        selector_stratified_label_balance_probe_v1.get("decision") or {}
+    )
+    selector_stratified_probe_label_counts = (
+        selector_stratified_label_balance_probe_v1.get("label_counts") or {}
+    )
+    selector_stratified_rows = selector_stratified_label_dataset_v1.get("rows") or []
+    selector_stratified_stage7_training_rows = sum(
+        1 for row in selector_stratified_rows if row.get("stage7_training_row") is True
+    )
+    selector_balanced_dataset_decision = (
+        selector_balanced_label_dataset_v1.get("decision") or {}
+    )
+    selector_balanced_probe_decision = (
+        selector_balanced_label_probe_v1.get("decision") or {}
+    )
+    selector_balanced_probe_label_counts = (
+        selector_balanced_label_probe_v1.get("label_counts") or {}
+    )
+    selector_balanced_probe_best_baseline = (
+        selector_balanced_label_probe_v1.get("best_baseline") or {}
+    )
+    selector_balanced_rows = selector_balanced_label_dataset_v1.get("rows") or []
+    selector_balanced_stage7_training_rows = sum(
+        1 for row in selector_balanced_rows if row.get("stage7_training_row") is True
+    )
+    selector_balanced_provider_family_counts = {
+        family: sum(
+            1 for row in selector_balanced_rows if row.get("provider_family") == family
+        )
+        for family in sorted(
+            {
+                row.get("provider_family")
+                for row in selector_balanced_rows
+                if row.get("provider_family") is not None
+            }
+        )
+    }
+    selector_balanced_architecture_decision = (
+        selector_balanced_architecture_review_v1.get("decision") or {}
+    )
+    selector_balanced_architecture_evidence = (
+        selector_balanced_architecture_review_v1.get("evidence") or {}
+    )
+    selector_balanced_blocked_next_work = (
+        selector_balanced_architecture_review_v1.get("blocked_next_work") or []
+    )
+    selector_label_balance_passive = (
+        selector_stratified_dataset_decision.get("status")
+        == "stratified_selector_label_dataset_built_replay_free"
+        and selector_stratified_dataset_decision.get("runtime_arbiter_allowed")
+        is False
+        and selector_stratified_dataset_decision.get("selector_sandbox_ready") is False
+        and selector_stratified_label_dataset_v1.get("row_count") == 11
+        and selector_stratified_stage7_training_rows == 0
+        and selector_stratified_label_balance_probe_v1.get("causal_status")
+        == "non_causal_probe"
+        and selector_stratified_probe_decision.get("status")
+        == "stratified_labels_underbalanced_no_selector_probe"
+        and selector_stratified_probe_decision.get("runtime_arbiter_allowed")
+        is False
+        and selector_stratified_probe_decision.get("selector_sandbox_ready") is False
+        and selector_stratified_label_balance_probe_v1.get("underbalanced") is True
+        and selector_stratified_probe_label_counts == {"negative": 1, "positive": 10}
+        and selector_balanced_dataset_decision.get("status")
+        == "balanced_selector_label_dataset_built_replay_free"
+        and selector_balanced_dataset_decision.get("runtime_arbiter_allowed")
+        is False
+        and selector_balanced_dataset_decision.get("selector_sandbox_ready") is False
+        and selector_balanced_label_dataset_v1.get("row_count") == 18
+        and selector_balanced_stage7_training_rows == 0
+        and selector_balanced_label_probe_v1.get("causal_status")
+        == "non_causal_probe"
+        and selector_balanced_probe_decision.get("status")
+        == "balanced_labels_support_non_causal_selector_signal"
+        and selector_balanced_probe_decision.get("runtime_arbiter_allowed") is False
+        and selector_balanced_probe_decision.get("selector_sandbox_ready") is False
+        and selector_balanced_probe_label_counts == {"negative": 9, "positive": 9}
+        and selector_balanced_architecture_review_v1.get("causal_status")
+        == "non_causal_architecture_review"
+        and selector_balanced_architecture_decision.get("status")
+        == "selector_signal_promising_sandbox_blocked_pending_readiness_criteria"
+        and selector_balanced_architecture_decision.get("runtime_arbiter_allowed")
+        is False
+        and selector_balanced_architecture_decision.get("selector_sandbox_ready")
+        is False
+        and selector_balanced_architecture_decision.get("stage7_promotion_allowed")
+        is False
+        and selector_balanced_architecture_decision.get("stage8_training_allowed")
+        is False
+        and "runtime_arbiter" in selector_balanced_blocked_next_work
+        and "selector_sandbox_implementation" in selector_balanced_blocked_next_work
+        and "runtime_dtm_or_tablebase" in selector_balanced_blocked_next_work
+        and "stage7_promotion" in selector_balanced_blocked_next_work
+        and "stage8_training" in selector_balanced_blocked_next_work
+        and all(
+            artifact.get("runtime_behavior_changed") is False
+            and artifact.get("runtime_defaults_changed") is False
+            for artifact in [
+                selector_stratified_label_dataset_v1,
+                selector_stratified_label_balance_probe_v1,
+                selector_balanced_label_dataset_v1,
+                selector_balanced_label_probe_v1,
+                selector_balanced_architecture_review_v1,
+            ]
+        )
+        and selector_balanced_label_probe_v1.get("runtime_arbiter_implemented")
+        is False
+        and selector_balanced_architecture_review_v1.get(
+            "runtime_arbiter_implemented"
+        )
         is False
     )
     abstention_objective_decision = (
@@ -3908,6 +4052,95 @@ def build_payload() -> dict[str, Any]:
             ),
             "stage8_training_allowed": split_selector_objective_readiness_v3.get(
                 "stage8_training_allowed"
+            ),
+        },
+        "selector_label_balance_gate": {
+            "status": selector_balanced_architecture_decision.get("status"),
+            "passive_label_balance_ready": selector_label_balance_passive,
+            "stratified_dataset_status": selector_stratified_dataset_decision.get(
+                "status"
+            ),
+            "stratified_dataset_row_count": selector_stratified_label_dataset_v1.get(
+                "row_count"
+            ),
+            "stratified_dataset_stage7_training_rows": (
+                selector_stratified_stage7_training_rows
+            ),
+            "stratified_probe_status": selector_stratified_probe_decision.get(
+                "status"
+            ),
+            "stratified_probe_label_counts": selector_stratified_probe_label_counts,
+            "stratified_probe_underbalanced": (
+                selector_stratified_label_balance_probe_v1.get("underbalanced")
+            ),
+            "stratified_probe_runtime_arbiter_allowed": (
+                selector_stratified_probe_decision.get("runtime_arbiter_allowed")
+            ),
+            "stratified_probe_selector_sandbox_ready": (
+                selector_stratified_probe_decision.get("selector_sandbox_ready")
+            ),
+            "balanced_dataset_status": selector_balanced_dataset_decision.get(
+                "status"
+            ),
+            "balanced_dataset_row_count": selector_balanced_label_dataset_v1.get(
+                "row_count"
+            ),
+            "balanced_dataset_stage7_training_rows": (
+                selector_balanced_stage7_training_rows
+            ),
+            "balanced_dataset_provider_family_counts": (
+                selector_balanced_provider_family_counts
+            ),
+            "balanced_probe_status": selector_balanced_probe_decision.get("status"),
+            "balanced_probe_label_counts": selector_balanced_probe_label_counts,
+            "balanced_probe_best_baseline": (
+                selector_balanced_probe_best_baseline.get("name")
+            ),
+            "balanced_probe_best_accuracy": (
+                selector_balanced_probe_best_baseline.get("accuracy")
+            ),
+            "balanced_probe_runtime_arbiter_allowed": (
+                selector_balanced_probe_decision.get("runtime_arbiter_allowed")
+            ),
+            "balanced_probe_selector_sandbox_ready": (
+                selector_balanced_probe_decision.get("selector_sandbox_ready")
+            ),
+            "architecture_status": selector_balanced_architecture_decision.get(
+                "status"
+            ),
+            "architecture_recommended_next_step": (
+                selector_balanced_architecture_decision.get("recommended_next_step")
+            ),
+            "architecture_runtime_arbiter_allowed": (
+                selector_balanced_architecture_decision.get("runtime_arbiter_allowed")
+            ),
+            "architecture_selector_sandbox_ready": (
+                selector_balanced_architecture_decision.get("selector_sandbox_ready")
+            ),
+            "architecture_stage7_training_rows": (
+                selector_balanced_architecture_evidence.get("stage7_training_rows")
+            ),
+            "blocked_next_work": selector_balanced_blocked_next_work,
+            "runtime_behavior_changed": (
+                selector_balanced_architecture_review_v1.get(
+                    "runtime_behavior_changed"
+                )
+            ),
+            "runtime_defaults_changed": (
+                selector_balanced_architecture_review_v1.get(
+                    "runtime_defaults_changed"
+                )
+            ),
+            "runtime_selector_implemented": False,
+            "runtime_dtm_or_tablebase_lookup": False,
+            "runtime_terminals_added": False,
+            "stage7_promotion_allowed": (
+                selector_balanced_architecture_decision.get(
+                    "stage7_promotion_allowed"
+                )
+            ),
+            "stage8_training_allowed": (
+                selector_balanced_architecture_decision.get("stage8_training_allowed")
             ),
         },
         "abstention_selector_safety_gate": {
@@ -8551,6 +8784,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     strategy_sequence_architecture = payload["strategy_sequence_architecture_gate"]
     strategy_owner_contrast = payload["strategy_owner_contrast_gate"]
     selector_objective_normalization = payload["selector_objective_normalization_gate"]
+    selector_label_balance = payload["selector_label_balance_gate"]
     abstention_selector_safety = payload["abstention_selector_safety_gate"]
     targeted_ownership_recovery = payload["targeted_ownership_recovery_gate"]
     balanced_hard_negative = payload["balanced_hard_negative_gate"]
@@ -8708,6 +8942,34 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- runtime_terminals_added: `{selector_objective_normalization['runtime_terminals_added']}`",
         f"- stage7_promotion_allowed: `{selector_objective_normalization['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{selector_objective_normalization['stage8_training_allowed']}`",
+        "",
+        "## Selector Label Balance",
+        "",
+        f"- passive_label_balance_ready: `{selector_label_balance['passive_label_balance_ready']}`",
+        f"- stratified_dataset_status: `{selector_label_balance['stratified_dataset_status']}`",
+        f"- stratified_dataset_row_count: `{selector_label_balance['stratified_dataset_row_count']}`",
+        f"- stratified_dataset_stage7_training_rows: `{selector_label_balance['stratified_dataset_stage7_training_rows']}`",
+        f"- stratified_probe_status: `{selector_label_balance['stratified_probe_status']}`",
+        f"- stratified_probe_label_counts: `{selector_label_balance['stratified_probe_label_counts']}`",
+        f"- stratified_probe_underbalanced: `{selector_label_balance['stratified_probe_underbalanced']}`",
+        f"- balanced_dataset_status: `{selector_label_balance['balanced_dataset_status']}`",
+        f"- balanced_dataset_row_count: `{selector_label_balance['balanced_dataset_row_count']}`",
+        f"- balanced_dataset_stage7_training_rows: `{selector_label_balance['balanced_dataset_stage7_training_rows']}`",
+        f"- balanced_dataset_provider_family_counts: `{selector_label_balance['balanced_dataset_provider_family_counts']}`",
+        f"- balanced_probe_status: `{selector_label_balance['balanced_probe_status']}`",
+        f"- balanced_probe_label_counts: `{selector_label_balance['balanced_probe_label_counts']}`",
+        f"- balanced_probe_best_baseline: `{selector_label_balance['balanced_probe_best_baseline']}`",
+        f"- balanced_probe_best_accuracy: `{selector_label_balance['balanced_probe_best_accuracy']}`",
+        f"- architecture_status: `{selector_label_balance['architecture_status']}`",
+        f"- architecture_recommended_next_step: `{selector_label_balance['architecture_recommended_next_step']}`",
+        f"- architecture_runtime_arbiter_allowed: `{selector_label_balance['architecture_runtime_arbiter_allowed']}`",
+        f"- architecture_selector_sandbox_ready: `{selector_label_balance['architecture_selector_sandbox_ready']}`",
+        f"- blocked_next_work: `{selector_label_balance['blocked_next_work']}`",
+        f"- runtime_selector_implemented: `{selector_label_balance['runtime_selector_implemented']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{selector_label_balance['runtime_dtm_or_tablebase_lookup']}`",
+        f"- runtime_terminals_added: `{selector_label_balance['runtime_terminals_added']}`",
+        f"- stage7_promotion_allowed: `{selector_label_balance['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{selector_label_balance['stage8_training_allowed']}`",
         "",
         "## Abstention Selector Safety",
         "",

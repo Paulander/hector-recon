@@ -6,9 +6,9 @@ This review is non-causal. It does not train Stage 8, promote Stage 7, change ru
 
 ## Requirements
 
-- readiness_checked_flag_count: `2207`
+- readiness_checked_flag_count: `2217`
 - readiness_boundary_violation_count: `0`
-- readiness_source_artifact_count: `278`
+- readiness_source_artifact_count: `283`
 - protected_stage5_6_stack_ready: `True`
 - m1_m4_preservation_passed: `True`
 - kpk_kqk_bridge_preservation_passed: `True`

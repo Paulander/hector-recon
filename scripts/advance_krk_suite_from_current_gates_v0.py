@@ -587,6 +587,7 @@ def build_payload() -> dict[str, Any]:
     selector_objective_normalization_gate = (
         readiness.get("selector_objective_normalization_gate") or {}
     )
+    selector_label_balance_gate = readiness.get("selector_label_balance_gate") or {}
     abstention_selector_safety_gate = (
         readiness.get("abstention_selector_safety_gate") or {}
     )
@@ -1075,6 +1076,62 @@ def build_payload() -> dict[str, Any]:
             ),
             "selector_objective_stage8_training_allowed": (
                 selector_objective_normalization_gate.get("stage8_training_allowed")
+            ),
+            "selector_label_balance_passive_ready": (
+                selector_label_balance_gate.get("passive_label_balance_ready")
+            ),
+            "selector_label_balance_stratified_dataset_status": (
+                selector_label_balance_gate.get("stratified_dataset_status")
+            ),
+            "selector_label_balance_stratified_dataset_row_count": (
+                selector_label_balance_gate.get("stratified_dataset_row_count")
+            ),
+            "selector_label_balance_stratified_dataset_stage7_training_rows": (
+                selector_label_balance_gate.get(
+                    "stratified_dataset_stage7_training_rows"
+                )
+            ),
+            "selector_label_balance_stratified_probe_status": (
+                selector_label_balance_gate.get("stratified_probe_status")
+            ),
+            "selector_label_balance_stratified_probe_underbalanced": (
+                selector_label_balance_gate.get("stratified_probe_underbalanced")
+            ),
+            "selector_label_balance_balanced_dataset_status": (
+                selector_label_balance_gate.get("balanced_dataset_status")
+            ),
+            "selector_label_balance_balanced_dataset_row_count": (
+                selector_label_balance_gate.get("balanced_dataset_row_count")
+            ),
+            "selector_label_balance_balanced_dataset_stage7_training_rows": (
+                selector_label_balance_gate.get("balanced_dataset_stage7_training_rows")
+            ),
+            "selector_label_balance_balanced_probe_status": (
+                selector_label_balance_gate.get("balanced_probe_status")
+            ),
+            "selector_label_balance_balanced_probe_best_accuracy": (
+                selector_label_balance_gate.get("balanced_probe_best_accuracy")
+            ),
+            "selector_label_balance_architecture_status": (
+                selector_label_balance_gate.get("architecture_status")
+            ),
+            "selector_label_balance_architecture_runtime_arbiter_allowed": (
+                selector_label_balance_gate.get("architecture_runtime_arbiter_allowed")
+            ),
+            "selector_label_balance_architecture_selector_sandbox_ready": (
+                selector_label_balance_gate.get("architecture_selector_sandbox_ready")
+            ),
+            "selector_label_balance_runtime_selector_implemented": (
+                selector_label_balance_gate.get("runtime_selector_implemented")
+            ),
+            "selector_label_balance_runtime_dtm_or_tablebase_lookup": (
+                selector_label_balance_gate.get("runtime_dtm_or_tablebase_lookup")
+            ),
+            "selector_label_balance_stage7_promotion_allowed": (
+                selector_label_balance_gate.get("stage7_promotion_allowed")
+            ),
+            "selector_label_balance_stage8_training_allowed": (
+                selector_label_balance_gate.get("stage8_training_allowed")
             ),
             "abstention_selector_safety_passive_ready": (
                 abstention_selector_safety_gate.get("passive_safety_ready")

@@ -263,6 +263,59 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["selector_objective_runtime_terminals_added"] is False
     assert payload["summary"]["selector_objective_stage7_promotion_allowed"] is False
     assert payload["summary"]["selector_objective_stage8_training_allowed"] is False
+    assert payload["summary"]["selector_label_balance_passive_ready"] is True
+    assert payload["summary"]["selector_label_balance_stratified_dataset_status"] == (
+        "stratified_selector_label_dataset_built_replay_free"
+    )
+    assert payload["summary"]["selector_label_balance_stratified_dataset_row_count"] == 11
+    assert (
+        payload["summary"][
+            "selector_label_balance_stratified_dataset_stage7_training_rows"
+        ]
+        == 0
+    )
+    assert payload["summary"]["selector_label_balance_stratified_probe_status"] == (
+        "stratified_labels_underbalanced_no_selector_probe"
+    )
+    assert payload["summary"]["selector_label_balance_stratified_probe_underbalanced"] is True
+    assert payload["summary"]["selector_label_balance_balanced_dataset_status"] == (
+        "balanced_selector_label_dataset_built_replay_free"
+    )
+    assert payload["summary"]["selector_label_balance_balanced_dataset_row_count"] == 18
+    assert (
+        payload["summary"]["selector_label_balance_balanced_dataset_stage7_training_rows"]
+        == 0
+    )
+    assert payload["summary"]["selector_label_balance_balanced_probe_status"] == (
+        "balanced_labels_support_non_causal_selector_signal"
+    )
+    assert (
+        payload["summary"]["selector_label_balance_balanced_probe_best_accuracy"]
+        == 0.7777777777777778
+    )
+    assert payload["summary"]["selector_label_balance_architecture_status"] == (
+        "selector_signal_promising_sandbox_blocked_pending_readiness_criteria"
+    )
+    assert (
+        payload["summary"][
+            "selector_label_balance_architecture_runtime_arbiter_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_label_balance_architecture_selector_sandbox_ready"]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_label_balance_runtime_selector_implemented"]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_label_balance_runtime_dtm_or_tablebase_lookup"]
+        is False
+    )
+    assert payload["summary"]["selector_label_balance_stage7_promotion_allowed"] is False
+    assert payload["summary"]["selector_label_balance_stage8_training_allowed"] is False
     assert payload["summary"]["abstention_selector_safety_passive_ready"] is True
     assert (
         payload["summary"]["abstention_selector_first_objective_status"]

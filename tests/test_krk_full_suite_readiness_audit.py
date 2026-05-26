@@ -471,6 +471,26 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_split_selector_objective_readiness_v3.json"
     )
     assert (
+        payload["source_artifacts"]["selector_stratified_label_dataset_v1"]
+        == "reports/krk_selector_stratified_label_dataset_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_stratified_label_balance_probe_v1"]
+        == "reports/krk_selector_stratified_label_balance_probe_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_balanced_label_dataset_v1"]
+        == "reports/krk_selector_balanced_label_dataset_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_balanced_label_probe_v1"]
+        == "reports/krk_selector_balanced_label_probe_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_balanced_architecture_review_v1"]
+        == "reports/krk_selector_balanced_architecture_review_v1.json"
+    )
+    assert (
         payload["source_artifacts"]["abstention_first_selector_objective_v0"]
         == "reports/krk_abstention_first_selector_objective_v0.json"
     )
@@ -894,6 +914,69 @@ def test_full_suite_readiness_identifies_current_gate():
     assert selector_objective["runtime_terminals_added"] is False
     assert selector_objective["stage7_promotion_allowed"] is False
     assert selector_objective["stage8_training_allowed"] is False
+
+    selector_balance = payload["selector_label_balance_gate"]
+    assert selector_balance["passive_label_balance_ready"] is True
+    assert (
+        selector_balance["stratified_dataset_status"]
+        == "stratified_selector_label_dataset_built_replay_free"
+    )
+    assert selector_balance["stratified_dataset_row_count"] == 11
+    assert selector_balance["stratified_dataset_stage7_training_rows"] == 0
+    assert (
+        selector_balance["stratified_probe_status"]
+        == "stratified_labels_underbalanced_no_selector_probe"
+    )
+    assert selector_balance["stratified_probe_label_counts"] == {
+        "negative": 1,
+        "positive": 10,
+    }
+    assert selector_balance["stratified_probe_underbalanced"] is True
+    assert selector_balance["stratified_probe_runtime_arbiter_allowed"] is False
+    assert selector_balance["stratified_probe_selector_sandbox_ready"] is False
+    assert (
+        selector_balance["balanced_dataset_status"]
+        == "balanced_selector_label_dataset_built_replay_free"
+    )
+    assert selector_balance["balanced_dataset_row_count"] == 18
+    assert selector_balance["balanced_dataset_stage7_training_rows"] == 0
+    assert selector_balance["balanced_dataset_provider_family_counts"] == {
+        "edge_trap": 9,
+        "stage0_basin": 9,
+    }
+    assert (
+        selector_balance["balanced_probe_status"]
+        == "balanced_labels_support_non_causal_selector_signal"
+    )
+    assert selector_balance["balanced_probe_label_counts"] == {
+        "negative": 9,
+        "positive": 9,
+    }
+    assert selector_balance["balanced_probe_best_baseline"] == "provider_id_loo"
+    assert selector_balance["balanced_probe_best_accuracy"] == 0.7777777777777778
+    assert selector_balance["balanced_probe_runtime_arbiter_allowed"] is False
+    assert selector_balance["balanced_probe_selector_sandbox_ready"] is False
+    assert selector_balance["architecture_status"] == (
+        "selector_signal_promising_sandbox_blocked_pending_readiness_criteria"
+    )
+    assert (
+        selector_balance["architecture_recommended_next_step"]
+        == "define_strategy_arbiter_sandbox_readiness_criteria"
+    )
+    assert selector_balance["architecture_runtime_arbiter_allowed"] is False
+    assert selector_balance["architecture_selector_sandbox_ready"] is False
+    assert selector_balance["architecture_stage7_training_rows"] == 0
+    assert "runtime_arbiter" in selector_balance["blocked_next_work"]
+    assert "runtime_dtm_or_tablebase" in selector_balance["blocked_next_work"]
+    assert "stage7_promotion" in selector_balance["blocked_next_work"]
+    assert "stage8_training" in selector_balance["blocked_next_work"]
+    assert selector_balance["runtime_behavior_changed"] is False
+    assert selector_balance["runtime_defaults_changed"] is False
+    assert selector_balance["runtime_selector_implemented"] is False
+    assert selector_balance["runtime_dtm_or_tablebase_lookup"] is False
+    assert selector_balance["runtime_terminals_added"] is False
+    assert selector_balance["stage7_promotion_allowed"] is False
+    assert selector_balance["stage8_training_allowed"] is False
 
     abstention = payload["abstention_selector_safety_gate"]
     assert abstention["passive_safety_ready"] is True
