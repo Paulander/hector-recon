@@ -67,6 +67,16 @@ def _ready_execution_summary(job_count: int = 1) -> dict:
         "jobs_passing_readiness": job_count,
         "manifest_fingerprint": "m" * 64,
         "readiness_fingerprint": "r" * 64,
+        "protected_stack_status": "fixture_stack_ready",
+        "protected_stack_ready": True,
+        "protected_stack_rollback_paths_preserved": True,
+        "protected_stack_active_paths_safe": True,
+        "protected_stack_active_paths_exist": True,
+        "protected_stack_rollback_paths_safe": True,
+        "protected_stack_rollback_paths_exist": True,
+        "protected_stack_rollback_common_paths_distinct": True,
+        "protected_stack_filesystem_snapshots_replaced": False,
+        "protected_stack_hard_blockers": [],
     }
 
 
@@ -83,6 +93,16 @@ def _approval_receipt(job_count: int = 1) -> dict:
             "readiness_status": (
                 "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
             ),
+            "protected_stack_status": "fixture_stack_ready",
+            "protected_stack_ready": True,
+            "protected_stack_rollback_paths_preserved": True,
+            "protected_stack_active_paths_safe": True,
+            "protected_stack_active_paths_exist": True,
+            "protected_stack_rollback_paths_safe": True,
+            "protected_stack_rollback_paths_exist": True,
+            "protected_stack_rollback_common_paths_distinct": True,
+            "protected_stack_filesystem_snapshots_replaced": False,
+            "protected_stack_hard_blockers": [],
         },
         "decision": {
             "status": _runner.APPROVAL_STATUS,
@@ -435,6 +455,22 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
         required["approval_scope"]["readiness_fingerprint"]
         == payload["summary"]["readiness_fingerprint"]
     )
+    assert (
+        required["approval_scope"]["protected_stack_status"]
+        == "retry1_protected_stage5_6_stack_adopted_manifest_only"
+    )
+    assert required["approval_scope"]["protected_stack_ready"] is True
+    assert required["approval_scope"]["protected_stack_rollback_paths_preserved"] is True
+    assert required["approval_scope"]["protected_stack_active_paths_safe"] is True
+    assert required["approval_scope"]["protected_stack_active_paths_exist"] is True
+    assert required["approval_scope"]["protected_stack_rollback_paths_safe"] is True
+    assert required["approval_scope"]["protected_stack_rollback_paths_exist"] is True
+    assert (
+        required["approval_scope"]["protected_stack_rollback_common_paths_distinct"]
+        is True
+    )
+    assert required["approval_scope"]["protected_stack_filesystem_snapshots_replaced"] is False
+    assert required["approval_scope"]["protected_stack_hard_blockers"] == []
     assert required["decision"]["runtime_changes_allowed"] is False
     assert required["decision"]["label_run_allowed"] is False
     assert required["decision"]["selector_allowed"] is False
@@ -520,6 +556,16 @@ def test_failure_contrast_approval_request_fixture_tracks_current_scope():
         "readiness_status": (
             "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
         ),
+        "protected_stack_status": None,
+        "protected_stack_ready": None,
+        "protected_stack_rollback_paths_preserved": None,
+        "protected_stack_active_paths_safe": None,
+        "protected_stack_active_paths_exist": None,
+        "protected_stack_rollback_paths_safe": None,
+        "protected_stack_rollback_paths_exist": None,
+        "protected_stack_rollback_common_paths_distinct": None,
+        "protected_stack_filesystem_snapshots_replaced": None,
+        "protected_stack_hard_blockers": [],
     }
     assert payload["decision"]["collection_run_allowed"] is False
 
@@ -981,6 +1027,76 @@ def test_failure_contrast_runner_blocks_stale_approval_receipt(monkeypatch):
 
     assert payload["decision"]["status"] == "protected_plan_window_failure_contrast_runner_blocked"
     assert "approval_receipt_readiness_fingerprint_mismatch" in payload["execution_blockers"]
+    assert payload["summary"]["approval_receipt_present"] is True
+    assert payload["summary"]["approval_receipt_valid"] is False
+    assert payload["summary"]["processed_job_count"] == 0
+    assert payload["decision"]["collection_run_allowed"] is False
+
+
+def test_failure_contrast_runner_blocks_stale_protected_stack_receipt_scope(monkeypatch):
+    monkeypatch.setattr(
+        _runner,
+        "_run_execution_readiness",
+        lambda _manifest: {
+            "decision": {
+                "status": (
+                    "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+                )
+            },
+            "summary": _ready_execution_summary(),
+        },
+    )
+    stale_receipt = _approval_receipt()
+    stale_receipt["approval_scope"] = dict(stale_receipt["approval_scope"])
+    stale_receipt["approval_scope"]["protected_stack_rollback_paths_preserved"] = False
+    stale_receipt["approval_scope"]["protected_stack_hard_blockers"] = [
+        "stale_stack_blocker"
+    ]
+    monkeypatch.setattr(_runner, "_load_optional", lambda _path: stale_receipt)
+    monkeypatch.setattr(
+        _runner,
+        "_run_output_validation",
+        lambda: {
+            "decision": {
+                "status": "protected_plan_window_failure_contrast_outputs_validation_pending"
+            },
+            "summary": {"output_exists_count": 0, "output_valid_count": 0},
+            "output_checks": [],
+        },
+    )
+    monkeypatch.setattr(
+        _runner,
+        "_load",
+        lambda _path: {
+            "decision": {
+                "status": "protected_plan_window_failure_contrast_manifest_ready_for_review",
+                "runtime_changes_allowed": False,
+                "stage7_promotion_allowed": False,
+                "stage8_training_allowed": False,
+            },
+            "jobs": [
+                {
+                    "job_id": "safe",
+                    "expected_output_json": (
+                        "reports/strategy_arbitration/"
+                        "protected_plan_window_failure_contrasts/safe.json"
+                    ),
+                    "execution_binding": {"topology_path": "pyproject.toml"},
+                }
+            ],
+        },
+    )
+
+    payload = _runner.build_payload(execute=True, run_post_success_refresh=False)
+
+    assert payload["decision"]["status"] == "protected_plan_window_failure_contrast_runner_blocked"
+    assert (
+        "approval_receipt_protected_stack_rollback_paths_preserved_mismatch"
+        in payload["execution_blockers"]
+    )
+    assert "approval_receipt_protected_stack_hard_blockers_mismatch" in payload[
+        "execution_blockers"
+    ]
     assert payload["summary"]["approval_receipt_present"] is True
     assert payload["summary"]["approval_receipt_valid"] is False
     assert payload["summary"]["processed_job_count"] == 0

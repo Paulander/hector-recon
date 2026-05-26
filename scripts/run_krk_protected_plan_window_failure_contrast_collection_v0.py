@@ -433,6 +433,21 @@ def _approval_receipt_blockers(
         != readiness.get("decision", {}).get("status")
     ):
         blockers.append("approval_receipt_readiness_status_mismatch")
+    readiness_summary = readiness.get("summary", {})
+    for key in (
+        "protected_stack_status",
+        "protected_stack_ready",
+        "protected_stack_rollback_paths_preserved",
+        "protected_stack_active_paths_safe",
+        "protected_stack_active_paths_exist",
+        "protected_stack_rollback_paths_safe",
+        "protected_stack_rollback_paths_exist",
+        "protected_stack_rollback_common_paths_distinct",
+        "protected_stack_filesystem_snapshots_replaced",
+        "protected_stack_hard_blockers",
+    ):
+        if approval_scope.get(key) != readiness_summary.get(key):
+            blockers.append(f"approval_receipt_{key}_mismatch")
     expected_receipt_path = str(receipt_path.relative_to(ROOT))
     if receipt.get("receipt_path") not in {None, expected_receipt_path}:
         blockers.append("approval_receipt_path_mismatch")

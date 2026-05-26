@@ -116,6 +116,32 @@ def build_payload(
             "job_count": job_count,
             "manifest_status": manifest.get("decision", {}).get("status"),
             "readiness_status": readiness.get("decision", {}).get("status"),
+            "protected_stack_status": readiness_summary.get("protected_stack_status"),
+            "protected_stack_ready": readiness_summary.get("protected_stack_ready"),
+            "protected_stack_rollback_paths_preserved": readiness_summary.get(
+                "protected_stack_rollback_paths_preserved"
+            ),
+            "protected_stack_active_paths_safe": readiness_summary.get(
+                "protected_stack_active_paths_safe"
+            ),
+            "protected_stack_active_paths_exist": readiness_summary.get(
+                "protected_stack_active_paths_exist"
+            ),
+            "protected_stack_rollback_paths_safe": readiness_summary.get(
+                "protected_stack_rollback_paths_safe"
+            ),
+            "protected_stack_rollback_paths_exist": readiness_summary.get(
+                "protected_stack_rollback_paths_exist"
+            ),
+            "protected_stack_rollback_common_paths_distinct": readiness_summary.get(
+                "protected_stack_rollback_common_paths_distinct"
+            ),
+            "protected_stack_filesystem_snapshots_replaced": readiness_summary.get(
+                "protected_stack_filesystem_snapshots_replaced"
+            ),
+            "protected_stack_hard_blockers": (
+                readiness_summary.get("protected_stack_hard_blockers") or []
+            ),
         },
         "decision": {
             "status": APPROVAL_STATUS,
