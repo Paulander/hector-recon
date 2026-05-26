@@ -129,7 +129,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `efcaa7c2b376e07f8c8ae1c3c25b921dec95210b27e57ee27680d2e70c58ed83`
+- expected_readiness_fingerprint: `dfc28ec8f589ee3e2a851a329db26e6553d132d7417a8610f3cf1d830cdb8629`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -194,6 +194,11 @@
 
 ## Strategy Sequence Candidate-Source Evidence
 
+- candidate_proposal_coverage_status: `candidate_generation_gap_confirmed`
+- candidate_proposal_coverage_positive_capacity_recall: `0.0`
+- candidate_proposal_coverage_missing_positive_capacity_count: `11`
+- candidate_generation_strategy_review_status: `strategy_sequence_control_plane_v1_needed`
+- candidate_generation_strategy_review_runtime_sandbox_allowed: `False`
 - schema_status: `strategy_sequence_candidate_frame_schema_defined`
 - schema_runtime_sandbox_allowed: `False`
 - frames_status: `strategy_sequence_frames_populated_non_causal`
@@ -546,5 +551,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1462`
+- checked_flag_count: `1476`
 - violation_count: `0`

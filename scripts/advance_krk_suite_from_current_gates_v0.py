@@ -1223,6 +1223,30 @@ def build_payload() -> dict[str, Any]:
             "protected_missing_provider_runtime_work_allowed": protected_missing_provider_gate.get(
                 "runtime_work_allowed"
             ),
+            "strategy_sequence_candidate_source_candidate_proposal_coverage_status": strategy_sequence_candidate_source_gate.get(
+                "candidate_proposal_coverage_status"
+            ),
+            "strategy_sequence_candidate_source_candidate_proposal_coverage_positive_capacity_recall": strategy_sequence_candidate_source_gate.get(
+                "candidate_proposal_coverage_positive_capacity_recall"
+            ),
+            "strategy_sequence_candidate_source_candidate_proposal_coverage_missing_positive_capacity_count": strategy_sequence_candidate_source_gate.get(
+                "candidate_proposal_coverage_missing_positive_capacity_count"
+            ),
+            "strategy_sequence_candidate_source_candidate_proposal_coverage_stage7_row_count": strategy_sequence_candidate_source_gate.get(
+                "candidate_proposal_coverage_stage7_row_count"
+            ),
+            "strategy_sequence_candidate_source_candidate_proposal_coverage_selector_training_allowed": strategy_sequence_candidate_source_gate.get(
+                "candidate_proposal_coverage_selector_training_allowed"
+            ),
+            "strategy_sequence_candidate_source_candidate_generation_strategy_review_status": strategy_sequence_candidate_source_gate.get(
+                "candidate_generation_strategy_review_status"
+            ),
+            "strategy_sequence_candidate_source_candidate_generation_strategy_review_runtime_sandbox_allowed": strategy_sequence_candidate_source_gate.get(
+                "candidate_generation_strategy_review_runtime_sandbox_allowed"
+            ),
+            "strategy_sequence_candidate_source_candidate_generation_strategy_review_recommended_next_step": strategy_sequence_candidate_source_gate.get(
+                "candidate_generation_strategy_review_recommended_next_step"
+            ),
             "strategy_sequence_candidate_source_schema_status": strategy_sequence_candidate_source_gate.get(
                 "schema_status"
             ),

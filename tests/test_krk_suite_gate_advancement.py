@@ -399,6 +399,54 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["protected_missing_provider_runtime_work_allowed"] is False
     )
     assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_candidate_proposal_coverage_status"
+        ]
+        == "candidate_generation_gap_confirmed"
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_candidate_proposal_coverage_positive_capacity_recall"
+        ]
+        == 0.0
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_candidate_proposal_coverage_missing_positive_capacity_count"
+        ]
+        == 11
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_candidate_proposal_coverage_stage7_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_candidate_proposal_coverage_selector_training_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_candidate_generation_strategy_review_status"
+        ]
+        == "strategy_sequence_control_plane_v1_needed"
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_candidate_generation_strategy_review_runtime_sandbox_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_candidate_generation_strategy_review_recommended_next_step"
+        ]
+        == "define_non_causal_strategy_sequence_candidate_frame_v1"
+    )
+    assert (
         payload["summary"]["strategy_sequence_candidate_source_schema_status"]
         == "strategy_sequence_candidate_frame_schema_defined"
     )

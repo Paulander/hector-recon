@@ -109,6 +109,14 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_two_stage_candidate_selection_benchmark_v0.json"
     )
     assert (
+        payload["source_artifacts"]["candidate_proposal_coverage"]
+        == "reports/strategy_arbitration/krk_candidate_proposal_coverage_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["candidate_generation_strategy_review"]
+        == "reports/strategy_arbitration/krk_candidate_generation_strategy_review_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["strategy_sequence_candidate_frames_v1"]
         == "reports/strategy_arbitration/krk_strategy_sequence_candidate_frames_v1.json"
     )
@@ -689,6 +697,30 @@ def test_full_suite_readiness_identifies_current_gate():
     assert missing_provider["stage8_training_allowed"] is False
 
     strategy_source = payload["strategy_sequence_candidate_source_gate"]
+    assert (
+        strategy_source["candidate_proposal_coverage_status"]
+        == "candidate_generation_gap_confirmed"
+    )
+    assert strategy_source["candidate_proposal_coverage_positive_capacity_recall"] == 0.0
+    assert strategy_source["candidate_proposal_coverage_missing_positive_capacity_count"] == 11
+    assert strategy_source["candidate_proposal_coverage_stage7_row_count"] == 0
+    assert strategy_source["candidate_proposal_coverage_selector_training_allowed"] is False
+    assert (
+        strategy_source["candidate_generation_strategy_review_status"]
+        == "strategy_sequence_control_plane_v1_needed"
+    )
+    assert (
+        strategy_source[
+            "candidate_generation_strategy_review_runtime_sandbox_allowed"
+        ]
+        is False
+    )
+    assert (
+        strategy_source[
+            "candidate_generation_strategy_review_recommended_next_step"
+        ]
+        == "define_non_causal_strategy_sequence_candidate_frame_v1"
+    )
     assert (
         strategy_source["schema_status"]
         == "strategy_sequence_candidate_frame_schema_defined"

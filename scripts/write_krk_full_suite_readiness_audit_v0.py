@@ -71,6 +71,12 @@ SOURCES = {
     "two_stage_candidate_selection_benchmark": (
         "reports/krk_two_stage_candidate_selection_benchmark_v0.json"
     ),
+    "candidate_proposal_coverage": (
+        "reports/strategy_arbitration/krk_candidate_proposal_coverage_v0.json"
+    ),
+    "candidate_generation_strategy_review": (
+        "reports/strategy_arbitration/krk_candidate_generation_strategy_review_v0.json"
+    ),
     "strategy_sequence_candidate_frame_schema_v1": (
         "reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_v1.json"
     ),
@@ -703,6 +709,10 @@ def build_payload() -> dict[str, Any]:
     ]
     two_stage_candidate_selection_benchmark = payloads[
         "two_stage_candidate_selection_benchmark"
+    ]
+    candidate_proposal_coverage = payloads["candidate_proposal_coverage"]
+    candidate_generation_strategy_review = payloads[
+        "candidate_generation_strategy_review"
     ]
     strategy_sequence_candidate_frame_schema_v1 = payloads[
         "strategy_sequence_candidate_frame_schema_v1"
@@ -1998,6 +2008,42 @@ def build_payload() -> dict[str, Any]:
             "stage8_training_allowed": False,
         },
         "strategy_sequence_candidate_source_gate": {
+            "candidate_proposal_coverage_status": (
+                candidate_proposal_coverage.get("decision", {}).get("status")
+            ),
+            "candidate_proposal_coverage_positive_capacity_recall": (
+                candidate_proposal_coverage.get("summary", {}).get(
+                    "positive_capacity_recall"
+                )
+            ),
+            "candidate_proposal_coverage_missing_positive_capacity_count": (
+                candidate_proposal_coverage.get("summary", {}).get(
+                    "missing_positive_capacity_count"
+                )
+            ),
+            "candidate_proposal_coverage_stage7_row_count": (
+                candidate_proposal_coverage.get("summary", {}).get(
+                    "stage7_row_count"
+                )
+            ),
+            "candidate_proposal_coverage_selector_training_allowed": (
+                candidate_proposal_coverage.get("decision", {}).get(
+                    "selector_training_allowed"
+                )
+            ),
+            "candidate_generation_strategy_review_status": (
+                candidate_generation_strategy_review.get("decision", {}).get("status")
+            ),
+            "candidate_generation_strategy_review_runtime_sandbox_allowed": (
+                candidate_generation_strategy_review.get("decision", {}).get(
+                    "runtime_sandbox_allowed"
+                )
+            ),
+            "candidate_generation_strategy_review_recommended_next_step": (
+                candidate_generation_strategy_review.get("decision", {}).get(
+                    "recommended_next_step"
+                )
+            ),
             "schema_status": (
                 strategy_sequence_candidate_frame_schema_v1.get("decision", {}).get(
                     "status"
@@ -4656,6 +4702,11 @@ def write_markdown(payload: dict[str, Any]) -> str:
             "",
             "## Strategy Sequence Candidate-Source Evidence",
             "",
+            f"- candidate_proposal_coverage_status: `{strategy_source['candidate_proposal_coverage_status']}`",
+            f"- candidate_proposal_coverage_positive_capacity_recall: `{strategy_source['candidate_proposal_coverage_positive_capacity_recall']}`",
+            f"- candidate_proposal_coverage_missing_positive_capacity_count: `{strategy_source['candidate_proposal_coverage_missing_positive_capacity_count']}`",
+            f"- candidate_generation_strategy_review_status: `{strategy_source['candidate_generation_strategy_review_status']}`",
+            f"- candidate_generation_strategy_review_runtime_sandbox_allowed: `{strategy_source['candidate_generation_strategy_review_runtime_sandbox_allowed']}`",
             f"- schema_status: `{strategy_source['schema_status']}`",
             f"- schema_runtime_sandbox_allowed: `{strategy_source['schema_runtime_sandbox_allowed']}`",
             f"- frames_status: `{strategy_source['frames_status']}`",
