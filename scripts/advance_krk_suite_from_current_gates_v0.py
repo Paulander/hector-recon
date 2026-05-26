@@ -63,6 +63,10 @@ PROTECTED_FAILURE_CONTRAST_EXECUTION_READINESS_STATUSES = {
     "krk_suite_protected_failure_contrast_unblocker_blocked_pending_execution_readiness",
 }
 
+PROTECTED_FAILURE_CONTRAST_CONTROL_PLANE_GATE_REVIEW_STATUSES = {
+    "krk_suite_protected_failure_contrast_unblocker_blocked_pending_control_plane_gate_review",
+}
+
 
 def _approval_ready_with_status_fallback(
     *,
@@ -308,6 +312,23 @@ def _run_script(script: str, args: list[str] | None = None) -> dict[str, Any]:
     return {"script": script, "args": list(args or []), "ran": True}
 
 
+def _find_approval_option(gate: dict[str, Any], option_id: str) -> dict[str, Any]:
+    for option in gate.get("approval_options") or []:
+        if option.get("option_id") == option_id:
+            return option
+    return {}
+
+
+def _find_first_approval_option(
+    gate: dict[str, Any], option_ids: tuple[str, ...]
+) -> dict[str, Any]:
+    for option_id in option_ids:
+        option = _find_approval_option(gate, option_id)
+        if option:
+            return option
+    return {}
+
+
 def build_payload() -> dict[str, Any]:
     step_results: list[dict[str, Any]] = []
     for step in PASSIVE_STEPS:
@@ -370,6 +391,29 @@ def build_payload() -> dict[str, Any]:
 
     readiness = _load_json("reports/krk_full_suite_readiness_audit_v0.json")
     unblocker = _load_json("reports/krk_full_suite_unblocker_packet_v0.json")
+    current_control_plane_gate = _load_json("reports/krk_current_control_plane_gate_v0.json")
+    current_gate_collection_option = _find_approval_option(
+        current_control_plane_gate,
+        "approve_protected_plan_window_failure_contrast_collection",
+    )
+    current_gate_blocking_option = _find_first_approval_option(
+        current_control_plane_gate,
+        (
+            "repair_protected_stack_validation",
+            "repair_protected_failure_contrast_approval_request_scope",
+            "review_protected_plan_window_failure_contrast_execution_readiness",
+            "review_protected_plan_window_failure_contrast_manifest",
+            "review_protected_plan_window_failure_contrast_plan",
+        ),
+    )
+    current_gate_approval_option_ids = [
+        option.get("option_id")
+        for option in current_control_plane_gate.get("approval_options") or []
+    ]
+    current_gate_collection_option_available = bool(current_gate_collection_option)
+    current_gate_collection_command_available = bool(
+        current_gate_collection_option.get("command_if_explicitly_approved")
+    )
     stage4_approval_request = _load_json(
         "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
     )
@@ -568,6 +612,17 @@ def build_payload() -> dict[str, Any]:
             in PROTECTED_FAILURE_CONTRAST_EXECUTION_READINESS_STATUSES
         )
     )
+    protected_failure_contrast_control_plane_gate_review_required = (
+        benchmark_ready
+        and not protected_failure_contrast_approval_request_repair_required
+        and not protected_failure_contrast_execution_readiness_required
+        and not current_gate_collection_command_available
+        and (
+            current_gate_collection_option_available is False
+            or unblocker.get("decision", {}).get("status")
+            in PROTECTED_FAILURE_CONTRAST_CONTROL_PLANE_GATE_REVIEW_STATUSES
+        )
+    )
     sequence_forbidden_blockers = sorted(
         FORBIDDEN_INPUT_BLOCKERS
         & (
@@ -619,6 +674,14 @@ def build_payload() -> dict[str, Any]:
             "protected_failure_contrast_execution_readiness"
         )
         next_step = "review_protected_plan_window_failure_contrast_execution_readiness"
+    elif protected_failure_contrast_control_plane_gate_review_required:
+        status = (
+            "krk_suite_passive_advancement_blocked_pending_"
+            "protected_failure_contrast_control_plane_gate_review"
+        )
+        next_step = (
+            "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+        )
     elif benchmark_ready:
         status = (
             "krk_suite_passive_advancement_ready_for_protected_failure_contrast_collection"
@@ -784,6 +847,24 @@ def build_payload() -> dict[str, Any]:
             ),
             "sequence_policy_forbidden_training_or_runtime_input_blockers": (
                 sequence_forbidden_blockers
+            ),
+            "current_control_plane_gate_status": current_control_plane_gate.get(
+                "decision", {}
+            ).get("status"),
+            "current_control_plane_approval_option_ids": (
+                current_gate_approval_option_ids
+            ),
+            "protected_plan_window_failure_contrast_collection_option_available": (
+                current_gate_collection_option_available
+            ),
+            "protected_plan_window_failure_contrast_collection_command_available": (
+                current_gate_collection_command_available
+            ),
+            "protected_plan_window_failure_contrast_collection_option_id": (
+                current_gate_collection_option.get("option_id")
+            ),
+            "protected_plan_window_failure_contrast_collection_blocked_by_option_id": (
+                current_gate_blocking_option.get("option_id")
             ),
             "protected_plan_window_failure_contrast_plan_status": failure_contrast_plan.get(
                 "decision", {}

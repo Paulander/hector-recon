@@ -697,6 +697,11 @@
   "summary": {
     "all_boundaries_preserved": true,
     "cross_stage_plan_capsule_requirements_status": "cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark",
+    "current_control_plane_approval_option_ids": [
+      "approve_stage4_first_move_contrast_sandbox",
+      "approve_protected_plan_window_failure_contrast_collection"
+    ],
+    "current_control_plane_gate_status": "krk_control_plane_waiting_on_explicit_gate_choice",
     "protected_plan_window_failure_contrast_approval_receipt_blockers": [
       "approval_receipt_missing"
     ],
@@ -704,6 +709,10 @@
     "protected_plan_window_failure_contrast_approval_request_blockers": [],
     "protected_plan_window_failure_contrast_approval_request_ready_for_collection": true,
     "protected_plan_window_failure_contrast_approval_request_status": "protected_plan_window_failure_contrast_approval_request_ready",
+    "protected_plan_window_failure_contrast_collection_blocked_by_option_id": null,
+    "protected_plan_window_failure_contrast_collection_command_available": true,
+    "protected_plan_window_failure_contrast_collection_option_available": true,
+    "protected_plan_window_failure_contrast_collection_option_id": "approve_protected_plan_window_failure_contrast_collection",
     "protected_plan_window_failure_contrast_execution_jobs_passing": 6,
     "protected_plan_window_failure_contrast_execution_readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
     "protected_plan_window_failure_contrast_hidden_python_controller": false,
