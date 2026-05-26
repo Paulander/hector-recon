@@ -163,6 +163,28 @@ def test_stage8_training_readiness_review_blocks_current_state():
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
     )
+    assert (
+        payload["requirements"][
+            "protected_failure_contrast_collection_option_available"
+        ]
+        is True
+    )
+    assert (
+        payload["requirements"][
+            "protected_failure_contrast_collection_command_available"
+        ]
+        is True
+    )
+    assert (
+        payload["requirements"]["protected_failure_contrast_collection_option_id"]
+        == "approve_protected_plan_window_failure_contrast_collection"
+    )
+    assert (
+        payload["requirements"][
+            "protected_failure_contrast_collection_blocked_by_option_id"
+        ]
+        is None
+    )
     assert payload["requirements"]["protected_failure_contrast_approval_request_artifact"] == (
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
@@ -299,6 +321,15 @@ def test_stage8_training_readiness_review_fixture_can_be_review_ready():
             "runner_status": "protected_plan_window_failure_contrast_runner_dry_run_ready",
             "runner_processed_job_count": 0,
             "runner_executed_job_count": 0,
+            "command_if_explicitly_approved": "SHOULD_NOT_SURFACE",
+        },
+        "current_control_plane_gate": {
+            "protected_failure_contrast_collection_option_available": False,
+            "protected_failure_contrast_collection_command_available": False,
+            "protected_failure_contrast_collection_option_id": None,
+            "protected_failure_contrast_collection_blocked_by_option_id": (
+                "review_protected_plan_window_failure_contrast_execution_readiness"
+            ),
         },
         "explicit_gate_blockers": [
             "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
@@ -344,6 +375,15 @@ def test_stage8_training_readiness_review_fixture_blocks_mixed_sequence_result()
             "runner_status": "protected_plan_window_failure_contrast_runner_dry_run_ready",
             "runner_processed_job_count": 0,
             "runner_executed_job_count": 0,
+            "command_if_explicitly_approved": "SHOULD_NOT_SURFACE",
+        },
+        "current_control_plane_gate": {
+            "protected_failure_contrast_collection_option_available": False,
+            "protected_failure_contrast_collection_command_available": False,
+            "protected_failure_contrast_collection_option_id": None,
+            "protected_failure_contrast_collection_blocked_by_option_id": (
+                "review_protected_plan_window_failure_contrast_execution_readiness"
+            ),
         },
         "explicit_gate_blockers": [
             "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
@@ -607,6 +647,15 @@ def test_stage8_training_readiness_review_falls_back_when_collection_ready_is_nu
             "runner_status": "protected_plan_window_failure_contrast_runner_dry_run_ready",
             "runner_processed_job_count": 0,
             "runner_executed_job_count": 0,
+            "command_if_explicitly_approved": "SHOULD_NOT_SURFACE",
+        },
+        "current_control_plane_gate": {
+            "protected_failure_contrast_collection_option_available": False,
+            "protected_failure_contrast_collection_command_available": False,
+            "protected_failure_contrast_collection_option_id": None,
+            "protected_failure_contrast_collection_blocked_by_option_id": (
+                "review_protected_plan_window_failure_contrast_execution_readiness"
+            ),
         },
         "explicit_gate_blockers": [
             "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
@@ -633,6 +682,24 @@ def test_stage8_training_readiness_review_falls_back_when_collection_ready_is_nu
     assert (
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
         in payload["blockers"]
+    )
+    assert (
+        payload["requirements"][
+            "protected_failure_contrast_command_if_explicitly_approved"
+        ]
+        is None
+    )
+    assert (
+        payload["requirements"][
+            "protected_failure_contrast_collection_command_available"
+        ]
+        is False
+    )
+    assert (
+        payload["requirements"][
+            "protected_failure_contrast_collection_blocked_by_option_id"
+        ]
+        == "review_protected_plan_window_failure_contrast_execution_readiness"
     )
     assert (
         payload["decision"]["status"]

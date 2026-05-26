@@ -130,6 +130,22 @@ def test_stage7_post_label_outcome_current_artifact_reports_sequence_policy_gap(
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
     )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_option_available"]
+        is True
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_command_available"]
+        is True
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_option_id"]
+        == "approve_protected_plan_window_failure_contrast_collection"
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_blocked_by_option_id"]
+        is None
+    )
     assert payload["summary"]["protected_failure_contrast_approval_request_artifact"] == (
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
@@ -442,6 +458,15 @@ def test_stage7_post_label_outcome_routes_blocked_collection_request_to_repair()
                 "runner_status": "protected_plan_window_failure_contrast_runner_dry_run_ready",
                 "runner_processed_job_count": 0,
                 "runner_executed_job_count": 0,
+                "command_if_explicitly_approved": "SHOULD_NOT_SURFACE",
+            },
+            "current_control_plane_gate": {
+                "protected_failure_contrast_collection_option_available": False,
+                "protected_failure_contrast_collection_command_available": False,
+                "protected_failure_contrast_collection_option_id": None,
+                "protected_failure_contrast_collection_blocked_by_option_id": (
+                    "review_protected_plan_window_failure_contrast_execution_readiness"
+                ),
             },
             "explicit_gate_blockers": [
                 "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
@@ -693,6 +718,15 @@ def test_stage7_post_label_outcome_falls_back_when_collection_ready_is_null():
                 "runner_status": "protected_plan_window_failure_contrast_runner_dry_run_ready",
                 "runner_processed_job_count": 0,
                 "runner_executed_job_count": 0,
+                "command_if_explicitly_approved": "SHOULD_NOT_SURFACE",
+            },
+            "current_control_plane_gate": {
+                "protected_failure_contrast_collection_option_available": False,
+                "protected_failure_contrast_collection_command_available": False,
+                "protected_failure_contrast_collection_option_id": None,
+                "protected_failure_contrast_collection_blocked_by_option_id": (
+                    "review_protected_plan_window_failure_contrast_execution_readiness"
+                ),
             },
             "explicit_gate_blockers": [
                 "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
@@ -715,6 +749,18 @@ def test_stage7_post_label_outcome_falls_back_when_collection_ready_is_null():
     assert (
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
         in payload["blockers"]
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_command_if_explicitly_approved"]
+        is None
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_command_available"]
+        is False
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_blocked_by_option_id"]
+        == "review_protected_plan_window_failure_contrast_execution_readiness"
     )
     assert (
         payload["decision"]["status"]

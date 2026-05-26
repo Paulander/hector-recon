@@ -94,6 +94,7 @@ def build_payload(
     explicit_gate_blockers = set(readiness.get("explicit_gate_blockers") or [])
     hard_blockers = set(readiness.get("hard_blockers") or [])
     sequence_policy = readiness.get("sequence_policy") or {}
+    current_gate = readiness.get("current_control_plane_gate") or {}
     sequence_decision = benchmark_review.get("decision") or {}
     benchmark_review_blockers = set(benchmark_review.get("blockers") or [])
 
@@ -159,9 +160,18 @@ def build_payload(
         and protected_failure_contrast_request_ready
         and protected_failure_contrast_execution_preconditions_ready
     )
+    protected_collection_command_available_value = current_gate.get(
+        "protected_failure_contrast_collection_command_available"
+    )
+    protected_collection_command_available = (
+        bool(protected_collection_command_available_value)
+        if protected_collection_command_available_value is not None
+        else bool(protected_failure_contrast.get("command_if_explicitly_approved"))
+    )
     protected_failure_contrast_command_if_explicitly_approved = (
         protected_failure_contrast.get("command_if_explicitly_approved")
         if protected_failure_contrast_collection_ready
+        and protected_collection_command_available
         and not protected_stack_blockers
         else None
     )
@@ -377,6 +387,22 @@ def build_payload(
             ),
             "protected_failure_contrast_command_if_explicitly_approved": (
                 protected_failure_contrast_command_if_explicitly_approved
+            ),
+            "protected_failure_contrast_collection_option_available": (
+                current_gate.get(
+                    "protected_failure_contrast_collection_option_available"
+                )
+            ),
+            "protected_failure_contrast_collection_command_available": (
+                protected_collection_command_available
+            ),
+            "protected_failure_contrast_collection_option_id": (
+                current_gate.get("protected_failure_contrast_collection_option_id")
+            ),
+            "protected_failure_contrast_collection_blocked_by_option_id": (
+                current_gate.get(
+                    "protected_failure_contrast_collection_blocked_by_option_id"
+                )
             ),
             "protected_failure_contrast_approval_request_artifact": (
                 protected_failure_contrast.get("approval_request_artifact")

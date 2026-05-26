@@ -91,6 +91,7 @@ def build_payload(
     benchmark_review_decision = benchmark_review.get("decision") or {}
     backfill_summary = backfill_audit.get("summary") or {}
     protected_failure_contrast = readiness.get("protected_failure_contrast_gate") or {}
+    current_gate = readiness.get("current_control_plane_gate") or {}
     protected_stack = readiness.get("protected_stack") or {}
     active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
@@ -171,9 +172,18 @@ def build_payload(
         and protected_failure_contrast_request_ready
         and protected_failure_contrast_execution_preconditions_ready
     )
+    protected_collection_command_available_value = current_gate.get(
+        "protected_failure_contrast_collection_command_available"
+    )
+    protected_collection_command_available = (
+        bool(protected_collection_command_available_value)
+        if protected_collection_command_available_value is not None
+        else bool(protected_failure_contrast.get("command_if_explicitly_approved"))
+    )
     protected_failure_contrast_command_if_explicitly_approved = (
         protected_failure_contrast.get("command_if_explicitly_approved")
         if protected_failure_contrast_ready_for_explicit_approval
+        and protected_collection_command_available
         and not protected_stack_blockers
         else None
     )
@@ -381,6 +391,22 @@ def build_payload(
             ),
             "protected_failure_contrast_command_if_explicitly_approved": (
                 protected_failure_contrast_command_if_explicitly_approved
+            ),
+            "protected_failure_contrast_collection_option_available": (
+                current_gate.get(
+                    "protected_failure_contrast_collection_option_available"
+                )
+            ),
+            "protected_failure_contrast_collection_command_available": (
+                protected_collection_command_available
+            ),
+            "protected_failure_contrast_collection_option_id": (
+                current_gate.get("protected_failure_contrast_collection_option_id")
+            ),
+            "protected_failure_contrast_collection_blocked_by_option_id": (
+                current_gate.get(
+                    "protected_failure_contrast_collection_blocked_by_option_id"
+                )
             ),
             "protected_failure_contrast_approval_request_artifact": (
                 protected_failure_contrast.get("approval_request_artifact")

@@ -131,6 +131,22 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
     )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_option_available"]
+        is True
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_command_available"]
+        is True
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_option_id"]
+        == "approve_protected_plan_window_failure_contrast_collection"
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_blocked_by_option_id"]
+        is None
+    )
     assert payload["summary"]["protected_failure_contrast_approval_request_artifact"] == (
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
@@ -697,6 +713,15 @@ def test_underpowered_pilot_falls_back_when_collection_ready_is_null():
             ),
             "approval_request_blockers": [],
             "approval_request_ready_for_collection": True,
+            "command_if_explicitly_approved": "SHOULD_NOT_SURFACE",
+        },
+        "current_control_plane_gate": {
+            "protected_failure_contrast_collection_option_available": False,
+            "protected_failure_contrast_collection_command_available": False,
+            "protected_failure_contrast_collection_option_id": None,
+            "protected_failure_contrast_collection_blocked_by_option_id": (
+                "review_protected_plan_window_failure_contrast_execution_readiness"
+            ),
         },
         "explicit_gate_blockers": [
             "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
@@ -721,6 +746,18 @@ def test_underpowered_pilot_falls_back_when_collection_ready_is_null():
     assert (
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
         in payload["blockers"]
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_command_if_explicitly_approved"]
+        is None
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_command_available"]
+        is False
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_collection_blocked_by_option_id"]
+        == "review_protected_plan_window_failure_contrast_execution_readiness"
     )
     assert (
         payload["decision"]["status"]
