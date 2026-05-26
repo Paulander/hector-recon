@@ -300,6 +300,9 @@ SOURCES = {
     "candidate_generation_refresh_coverage": (
         "reports/strategy_arbitration/krk_candidate_generation_refresh_coverage_analysis_v0.json"
     ),
+    "strategy_sequence_candidate_generation_refresh_trace_features": (
+        "reports/strategy_arbitration/krk_strategy_sequence_candidate_generation_refresh_trace_features_v1.json"
+    ),
     "strategy_sequence_dataset_v4": (
         "reports/strategy_arbitration/krk_strategy_sequence_dataset_v4.json"
     ),
@@ -863,6 +866,9 @@ def build_payload() -> dict[str, Any]:
     ]
     candidate_generation_refresh_coverage = payloads[
         "candidate_generation_refresh_coverage"
+    ]
+    strategy_sequence_candidate_generation_refresh_trace_features = payloads[
+        "strategy_sequence_candidate_generation_refresh_trace_features"
     ]
     strategy_sequence_dataset_v4 = payloads["strategy_sequence_dataset_v4"]
     strategy_sequence_dataset_v4_quality_probe = payloads[
@@ -3624,6 +3630,36 @@ def build_payload() -> dict[str, Any]:
                     "stage7_frame_count"
                 )
             ),
+            "refresh_trace_features_status": (
+                strategy_sequence_candidate_generation_refresh_trace_features.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "refresh_trace_features_trace_frame_count": (
+                strategy_sequence_candidate_generation_refresh_trace_features.get(
+                    "summary", {}
+                ).get("trace_frame_count")
+            ),
+            "refresh_trace_features_stage_counts": (
+                strategy_sequence_candidate_generation_refresh_trace_features.get(
+                    "summary", {}
+                ).get("stage_counts")
+            ),
+            "refresh_trace_features_stage7_trace_frame_count": (
+                strategy_sequence_candidate_generation_refresh_trace_features.get(
+                    "summary", {}
+                ).get("stage7_trace_frame_count")
+            ),
+            "refresh_trace_features_selector_training_row_count": (
+                strategy_sequence_candidate_generation_refresh_trace_features.get(
+                    "summary", {}
+                ).get("selector_training_row_count")
+            ),
+            "refresh_trace_features_candidate_generation_training_row_count": (
+                strategy_sequence_candidate_generation_refresh_trace_features.get(
+                    "summary", {}
+                ).get("candidate_generation_training_row_count")
+            ),
             "dataset_v4_status": (
                 strategy_sequence_dataset_v4.get("decision", {}).get("status")
             ),
@@ -4561,6 +4597,10 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- refresh_sandbox_default_off_equivalence_passed: `{candidate_generation_trace['refresh_sandbox_default_off_equivalence_passed']}`",
             f"- refresh_coverage_status: `{candidate_generation_trace['refresh_coverage_status']}`",
             f"- refresh_coverage_exact_positive_capacity_recall: `{candidate_generation_trace['refresh_coverage_exact_positive_capacity_recall']}`",
+            f"- refresh_trace_features_status: `{candidate_generation_trace['refresh_trace_features_status']}`",
+            f"- refresh_trace_features_trace_frame_count: `{candidate_generation_trace['refresh_trace_features_trace_frame_count']}`",
+            f"- refresh_trace_features_stage7_trace_frame_count: `{candidate_generation_trace['refresh_trace_features_stage7_trace_frame_count']}`",
+            f"- refresh_trace_features_selector_training_row_count: `{candidate_generation_trace['refresh_trace_features_selector_training_row_count']}`",
             f"- dataset_v4_status: `{candidate_generation_trace['dataset_v4_status']}`",
             f"- dataset_v4_row_count: `{candidate_generation_trace['dataset_v4_row_count']}`",
             f"- v4_boundary_status: `{candidate_generation_trace['v4_boundary_status']}`",

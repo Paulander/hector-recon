@@ -122,7 +122,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `e2672fee559872b2b9e1cb265d721b5af88a8a4d4284dbabfef9f56e58a3aa9d`
+- expected_readiness_fingerprint: `ac2ce0ad75f392f73eb5b41cbc35b5a66661a01eb722963c2c1b6824124a9a25`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -456,6 +456,10 @@
 - refresh_sandbox_default_off_equivalence_passed: `True`
 - refresh_coverage_status: `candidate_generation_refresh_coverage_ready_for_trace_dataset_refresh`
 - refresh_coverage_exact_positive_capacity_recall: `1.0`
+- refresh_trace_features_status: `candidate_generation_refresh_trace_features_folded_non_causal`
+- refresh_trace_features_trace_frame_count: `25`
+- refresh_trace_features_stage7_trace_frame_count: `0`
+- refresh_trace_features_selector_training_row_count: `0`
 - dataset_v4_status: `strategy_sequence_dataset_v4_refreshed_non_causal_selector_blocked`
 - dataset_v4_row_count: `307`
 - v4_boundary_status: `candidate_generation_v4_next_runtime_boundary_context_ready_selector_blocked`
@@ -500,5 +504,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1329`
+- checked_flag_count: `1338`
 - violation_count: `0`

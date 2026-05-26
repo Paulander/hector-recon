@@ -1948,6 +1948,21 @@ def build_payload() -> dict[str, Any]:
             "candidate_generation_trace_refresh_coverage_exact_positive_capacity_recall": candidate_generation_trace_context_gate.get(
                 "refresh_coverage_exact_positive_capacity_recall"
             ),
+            "candidate_generation_trace_refresh_trace_features_status": candidate_generation_trace_context_gate.get(
+                "refresh_trace_features_status"
+            ),
+            "candidate_generation_trace_refresh_trace_features_trace_frame_count": candidate_generation_trace_context_gate.get(
+                "refresh_trace_features_trace_frame_count"
+            ),
+            "candidate_generation_trace_refresh_trace_features_stage7_trace_frame_count": candidate_generation_trace_context_gate.get(
+                "refresh_trace_features_stage7_trace_frame_count"
+            ),
+            "candidate_generation_trace_refresh_trace_features_selector_training_row_count": candidate_generation_trace_context_gate.get(
+                "refresh_trace_features_selector_training_row_count"
+            ),
+            "candidate_generation_trace_refresh_trace_features_candidate_generation_training_row_count": candidate_generation_trace_context_gate.get(
+                "refresh_trace_features_candidate_generation_training_row_count"
+            ),
             "candidate_generation_trace_dataset_v4_status": candidate_generation_trace_context_gate.get(
                 "dataset_v4_status"
             ),

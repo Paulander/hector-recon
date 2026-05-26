@@ -1601,6 +1601,36 @@ def test_gate_advancement_reports_current_stage7_blocker():
         == 1.0
     )
     assert (
+        payload["summary"][
+            "candidate_generation_trace_refresh_trace_features_status"
+        ]
+        == "candidate_generation_refresh_trace_features_folded_non_causal"
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_trace_refresh_trace_features_trace_frame_count"
+        ]
+        == 25
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_trace_refresh_trace_features_stage7_trace_frame_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_trace_refresh_trace_features_selector_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "candidate_generation_trace_refresh_trace_features_candidate_generation_training_row_count"
+        ]
+        == 0
+    )
+    assert (
         payload["summary"]["candidate_generation_trace_dataset_v4_status"]
         == "strategy_sequence_dataset_v4_refreshed_non_causal_selector_blocked"
     )

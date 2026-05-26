@@ -183,6 +183,12 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/strategy_arbitration/krk_stage_conditioned_candidate_generation_benchmark_v3.json"
     )
     assert (
+        payload["source_artifacts"][
+            "strategy_sequence_candidate_generation_refresh_trace_features"
+        ]
+        == "reports/strategy_arbitration/krk_strategy_sequence_candidate_generation_refresh_trace_features_v1.json"
+    )
+    assert (
         payload["source_artifacts"]["ownership_label_recovery_review"]
         == "reports/strategy_arbitration/krk_ownership_label_recovery_review_v0.json"
     )
@@ -1412,6 +1418,23 @@ def test_full_suite_readiness_identifies_current_gate():
     assert trace_context["refresh_coverage_exact_negative_capacity_exposure_rate"] == 0.0
     assert trace_context["refresh_coverage_stage4_frame_count"] == 0
     assert trace_context["refresh_coverage_stage7_frame_count"] == 0
+    assert (
+        trace_context["refresh_trace_features_status"]
+        == "candidate_generation_refresh_trace_features_folded_non_causal"
+    )
+    assert trace_context["refresh_trace_features_trace_frame_count"] == 25
+    assert trace_context["refresh_trace_features_stage_counts"] == {
+        "stage5": 24,
+        "stage6": 1,
+    }
+    assert trace_context["refresh_trace_features_stage7_trace_frame_count"] == 0
+    assert trace_context["refresh_trace_features_selector_training_row_count"] == 0
+    assert (
+        trace_context[
+            "refresh_trace_features_candidate_generation_training_row_count"
+        ]
+        == 0
+    )
     assert (
         trace_context["dataset_v4_status"]
         == "strategy_sequence_dataset_v4_refreshed_non_causal_selector_blocked"
