@@ -110,6 +110,7 @@ def build_payload() -> dict[str, Any]:
     stage7_gate = readiness["stage7_sampling_gate"]
     sequence = readiness["sequence_policy"]
     protected = readiness["protected_stack"]
+    boundary_audit = readiness.get("runtime_and_training_boundaries") or {}
     active_stack_path_status = protected.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected.get("rollback_stack_path_status") or {}
     stage4_decision = stage4_unblocker.get("decision") or {}
@@ -287,6 +288,9 @@ def build_payload() -> dict[str, Any]:
             ),
         },
         "current_state": {
+            "readiness_checked_flag_count": boundary_audit.get("checked_flag_count"),
+            "readiness_boundary_violation_count": boundary_audit.get("violation_count"),
+            "readiness_source_artifact_count": len(readiness.get("source_artifacts") or {}),
             "protected_stack_ready": protected["ready"],
             "protected_stack_status": protected.get("status"),
             "protected_stack_rollback_paths_preserved": protected.get(
@@ -844,6 +848,9 @@ def write_markdown(payload: dict[str, Any]) -> str:
         "",
         "## Current State",
         "",
+        f"- readiness_checked_flag_count: `{state['readiness_checked_flag_count']}`",
+        f"- readiness_boundary_violation_count: `{state['readiness_boundary_violation_count']}`",
+        f"- readiness_source_artifact_count: `{state['readiness_source_artifact_count']}`",
         f"- protected_stack_ready: `{state['protected_stack_ready']}`",
         f"- protected_stack_status: `{state['protected_stack_status']}`",
         f"- protected_stack_rollback_paths_preserved: `{state['protected_stack_rollback_paths_preserved']}`",

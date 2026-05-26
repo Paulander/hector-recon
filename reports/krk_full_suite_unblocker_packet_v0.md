@@ -10,6 +10,9 @@
 
 ## Current State
 
+- readiness_checked_flag_count: `430`
+- readiness_boundary_violation_count: `0`
+- readiness_source_artifact_count: `44`
 - protected_stack_ready: `True`
 - protected_stack_status: `retry1_protected_stage5_6_stack_adopted_manifest_only`
 - protected_stack_rollback_paths_preserved: `True`

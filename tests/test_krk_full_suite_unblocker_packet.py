@@ -100,6 +100,9 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     assert primary["scope"]["protected_stack_rollback_paths_exist"] is True
     assert primary["scope"]["protected_stack_rollback_common_paths_distinct"] is True
     assert primary["scope"]["protected_stack_filesystem_snapshots_replaced"] is False
+    assert payload["current_state"]["readiness_checked_flag_count"] >= 430
+    assert payload["current_state"]["readiness_boundary_violation_count"] == 0
+    assert payload["current_state"]["readiness_source_artifact_count"] >= 44
     assert primary["scope"]["source_stage_counts"] == {
         "stage4": 2,
         "stage5": 2,
