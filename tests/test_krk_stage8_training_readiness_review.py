@@ -389,6 +389,7 @@ def test_stage8_training_readiness_review_routes_blocked_collection_request_to_r
         },
         "protected_failure_contrast_gate": {
             "ready_for_explicit_approval": True,
+            "command_if_explicitly_approved": "SHOULD_NOT_SURFACE",
             "approval_request_status": (
                 "protected_plan_window_failure_contrast_approval_request_ready"
             ),
@@ -433,6 +434,12 @@ def test_stage8_training_readiness_review_routes_blocked_collection_request_to_r
         payload["decision"]["recommended_next_step"]
         == "repair_protected_failure_contrast_approval_request_scope"
     )
+    assert (
+        payload["requirements"][
+            "protected_failure_contrast_command_if_explicitly_approved"
+        ]
+        is None
+    )
     assert payload["decision"]["stage8_training_allowed"] is False
 
 
@@ -456,6 +463,7 @@ def test_stage8_training_readiness_review_prioritizes_protected_stack_repair():
         },
         "protected_failure_contrast_gate": {
             "ready_for_explicit_approval": True,
+            "command_if_explicitly_approved": "SHOULD_NOT_SURFACE",
             "approval_request_status": (
                 "protected_plan_window_failure_contrast_approval_request_ready"
             ),
@@ -485,6 +493,12 @@ def test_stage8_training_readiness_review_prioritizes_protected_stack_repair():
         == "stage8_training_blocked_pending_protected_stack_repair"
     )
     assert payload["decision"]["recommended_next_step"] == "repair_protected_stack_validation"
+    assert (
+        payload["requirements"][
+            "protected_failure_contrast_command_if_explicitly_approved"
+        ]
+        is None
+    )
     assert payload["decision"]["stage8_training_allowed"] is False
 
 

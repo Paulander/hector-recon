@@ -157,6 +157,12 @@ def build_payload(
         protected_failure_contrast_gate_ready
         and protected_failure_contrast_request_ready
     )
+    protected_failure_contrast_command_if_explicitly_approved = (
+        protected_failure_contrast.get("command_if_explicitly_approved")
+        if protected_failure_contrast_ready_for_explicit_approval
+        and not protected_stack_blockers
+        else None
+    )
 
     stage4_topk_signal = (
         (stage4_metrics.get("top1_conversion_positive_by_state") or 0) >= 0.7
@@ -225,14 +231,14 @@ def build_payload(
         recommended_next_step = (
             "explicitly_approve_stage7_diverse_clean_label_execution_before_full_sequence_policy_benchmark"
         )
+    elif protected_plan_window_underpowered and protected_stack_blockers:
+        decision_status = "sequence_policy_pilot_blocked_pending_protected_stack_repair"
+        recommended_next_step = "repair_protected_stack_validation"
     elif protected_plan_window_underpowered and not protected_failure_contrast_request_ready:
         decision_status = (
             "sequence_policy_pilot_blocked_pending_protected_failure_contrast_approval_request_repair"
         )
         recommended_next_step = "repair_protected_failure_contrast_approval_request_scope"
-    elif protected_plan_window_underpowered and protected_stack_blockers:
-        decision_status = "sequence_policy_pilot_blocked_pending_protected_stack_repair"
-        recommended_next_step = "repair_protected_stack_validation"
     elif protected_plan_window_underpowered and protected_failure_contrast_pending_approval:
         decision_status = (
             "sequence_policy_pilot_underpowered_pending_protected_failure_contrast_collection"
@@ -346,7 +352,7 @@ def build_payload(
                 protected_failure_contrast.get("runner_executed_job_count")
             ),
             "protected_failure_contrast_command_if_explicitly_approved": (
-                protected_failure_contrast.get("command_if_explicitly_approved")
+                protected_failure_contrast_command_if_explicitly_approved
             ),
             "protected_failure_contrast_approval_request_artifact": (
                 protected_failure_contrast.get("approval_request_artifact")

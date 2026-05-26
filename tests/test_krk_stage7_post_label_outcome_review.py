@@ -432,6 +432,7 @@ def test_stage7_post_label_outcome_routes_blocked_collection_request_to_repair()
             "decision": {"status": "krk_suite_readiness_blocked"},
             "protected_failure_contrast_gate": {
                 "ready_for_explicit_approval": True,
+                "command_if_explicitly_approved": "SHOULD_NOT_SURFACE",
                 "approval_request_status": (
                     "protected_plan_window_failure_contrast_approval_request_ready"
                 ),
@@ -471,6 +472,10 @@ def test_stage7_post_label_outcome_routes_blocked_collection_request_to_repair()
     assert (
         payload["decision"]["recommended_next_step"]
         == "repair_protected_failure_contrast_approval_request_scope"
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_command_if_explicitly_approved"]
+        is None
     )
     assert payload["decision"]["runtime_changes_allowed"] is False
 
@@ -518,6 +523,7 @@ def test_stage7_post_label_outcome_routes_unsafe_protected_stack_to_repair():
             "decision": {"status": "krk_suite_readiness_blocked"},
             "protected_failure_contrast_gate": {
                 "ready_for_explicit_approval": True,
+                "command_if_explicitly_approved": "SHOULD_NOT_SURFACE",
                 "approval_request_status": (
                     "protected_plan_window_failure_contrast_approval_request_ready"
                 ),
@@ -547,6 +553,10 @@ def test_stage7_post_label_outcome_routes_unsafe_protected_stack_to_repair():
         == "post_label_outcome_blocked_pending_protected_stack_repair"
     )
     assert payload["decision"]["recommended_next_step"] == "repair_protected_stack_validation"
+    assert (
+        payload["summary"]["protected_failure_contrast_command_if_explicitly_approved"]
+        is None
+    )
     assert payload["decision"]["runtime_changes_allowed"] is False
 
 

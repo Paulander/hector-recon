@@ -146,6 +146,12 @@ def build_payload(
         protected_failure_contrast_gate_ready
         and protected_failure_contrast_request_ready
     )
+    protected_failure_contrast_command_if_explicitly_approved = (
+        protected_failure_contrast.get("command_if_explicitly_approved")
+        if protected_failure_contrast_collection_ready
+        and not protected_stack_blockers
+        else None
+    )
     protected_failure_contrast_integration_ready = bool(
         protected_failure_contrast.get("integration_ready")
     )
@@ -346,7 +352,7 @@ def build_payload(
                 protected_failure_contrast.get("runner_executed_job_count")
             ),
             "protected_failure_contrast_command_if_explicitly_approved": (
-                protected_failure_contrast.get("command_if_explicitly_approved")
+                protected_failure_contrast_command_if_explicitly_approved
             ),
             "protected_failure_contrast_approval_request_artifact": (
                 protected_failure_contrast.get("approval_request_artifact")
