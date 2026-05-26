@@ -53,7 +53,7 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
     assert payload["decision"]["stage8_training_allowed"] is False
 
     boundaries = payload["runtime_and_training_boundaries"]
-    assert boundaries["checked_flag_count"] >= 330
+    assert boundaries["checked_flag_count"] >= 430
     assert boundaries["violation_count"] == 0
     assert boundaries["runtime_behavior_changed"] is False
     assert boundaries["runtime_selector_implemented"] is False
@@ -69,6 +69,14 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
     assert (
         payload["source_artifacts"]["control_plane_forced_controls"]
         == "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["sequence_benchmark_inputs"]
+        == "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["stage7_sampling_manifest"]
+        == "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json"
     )
 
 

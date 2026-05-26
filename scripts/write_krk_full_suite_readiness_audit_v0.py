@@ -42,11 +42,20 @@ SOURCES = {
     "clean_stack_validation": "reports/krk_clean_stack_post_replacement_validation_v0.json",
     "preservation_checks": "reports/krk_clean_retrain_retry1_preservation_checks_v0.json",
     "stage4_caveat_unblocker": "reports/krk_stage4_caveat_unblocker_packet_v0.json",
+    "stage4_first_move_contrast_runtime_review": (
+        "reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.json"
+    ),
     "stage4_sandbox_approval_request": (
         "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
     ),
+    "sequence_control_contrast_probe": (
+        "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.json"
+    ),
     "sequence_pipeline_refresh": (
         "reports/strategy_arbitration/krk_sequence_policy_pipeline_refresh_v0.json"
+    ),
+    "sequence_benchmark_inputs": (
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json"
     ),
     "sequence_benchmark": "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
     "sequence_benchmark_design": (
@@ -58,6 +67,9 @@ SOURCES = {
     "cross_stage_plan_capsule_requirements": (
         "reports/strategy_arbitration/"
         "krk_cross_stage_plan_capsule_evidence_requirements_v0.json"
+    ),
+    "protected_plan_window_frames": (
+        "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json"
     ),
     "protected_failure_contrast_plan": (
         "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_plan_v0.json"
@@ -94,12 +106,28 @@ SOURCES = {
     "stage7_sampling_runner": (
         "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json"
     ),
+    "stage7_sampling_manifest": (
+        "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json"
+    ),
+    "stage7_sampling_execution_readiness": (
+        "reports/structural_candidates/stage7_diverse_clean_sampling_execution_readiness_v0.json"
+    ),
     "stage7_sampling_output_validation": (
         "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json"
     ),
     "stage7_sampling_integration": (
         "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json"
     ),
+    "stage7_diverse_clean_label_distribution_review": (
+        "reports/structural_candidates/stage7_diverse_clean_label_distribution_review_v0.json"
+    ),
+    "stage7_additional_clean_sampling_manifest": (
+        "reports/structural_candidates/stage7_additional_clean_sampling_manifest_v0.json"
+    ),
+    "stage7_additional_clean_sampling_runner": (
+        "reports/structural_candidates/stage7_additional_clean_sampling_runner_v0.json"
+    ),
+    "stage7_post_label_outcome_review": "reports/krk_stage7_post_label_outcome_review_v0.json",
 }
 
 
