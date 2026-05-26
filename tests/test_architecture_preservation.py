@@ -7,6 +7,9 @@ These tests guard the intended separation:
 - shadow growth proposals do not mutate topology during gameplay.
 """
 
+import ast
+from pathlib import Path
+
 from recon_lite.graph import Graph, LinkType, Node, NodeState, NodeType
 from recon_lite.trace_db import EpisodeSummary
 from recon_lite_chess.routing.contracts import (
@@ -28,12 +31,58 @@ from recon_lite_hector.plasticity.consolidate import (
 )
 
 
+ROOT = Path(__file__).resolve().parents[1]
+
+
 def _make_graph() -> Graph:
     graph = Graph()
     graph.add_node(Node("phase1", NodeType.SCRIPT, state=NodeState.INACTIVE))
     graph.add_node(Node("phase2", NodeType.SCRIPT, state=NodeState.INACTIVE))
     graph.add_edge("phase1", "phase2", LinkType.POR)
     return graph
+
+
+def test_krk_runtime_source_has_no_tablebase_or_hidden_controller_imports():
+    runtime_root = ROOT / "src" / "recon_lite_chess"
+    forbidden_imports = {
+        "chess.syzygy",
+        "subprocess",
+    }
+    forbidden_call_names = {
+        "SimpleEngine",
+        "open_tablebase",
+        "popen_uci",
+    }
+    violations = []
+
+    for path in sorted(runtime_root.rglob("*.py")):
+        relative = path.relative_to(runtime_root)
+        if "/scripts/" in path.as_posix():
+            continue
+        if not (
+            path.name.startswith("krk_")
+            or relative.parts[:1] in {("graph",), ("routing",)}
+        ):
+            continue
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    imported = alias.name
+                    if imported in forbidden_imports:
+                        violations.append((path.relative_to(ROOT).as_posix(), imported))
+            elif isinstance(node, ast.ImportFrom) and node.module:
+                module = node.module
+                if module in forbidden_imports:
+                    violations.append((path.relative_to(ROOT).as_posix(), module))
+            elif isinstance(node, ast.Call):
+                func = node.func
+                if isinstance(func, ast.Attribute) and func.attr in forbidden_call_names:
+                    violations.append((path.relative_to(ROOT).as_posix(), func.attr))
+                elif isinstance(func, ast.Name) and func.id in forbidden_call_names:
+                    violations.append((path.relative_to(ROOT).as_posix(), func.id))
+
+    assert violations == []
 
 
 def test_handoff_diagnostics_round_trip_without_becoming_m4_inputs():
