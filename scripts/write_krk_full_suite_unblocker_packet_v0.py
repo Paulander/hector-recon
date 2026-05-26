@@ -137,11 +137,18 @@ def build_payload() -> dict[str, Any]:
     failure_contrast_approval_request_summary = (
         failure_contrast_approval_request.get("summary") or {}
     )
+    failure_contrast_approval_request_ready_value = failure_contrast_approval_request.get(
+        "approval_request_ready_for_collection"
+    )
     failure_contrast_approval_request_ready = (
-        failure_contrast_approval_request.get("decision", {}).get("status")
-        == "protected_plan_window_failure_contrast_approval_request_ready"
-        and failure_contrast_approval_request_summary.get("request_ready") is True
-        and not (failure_contrast_approval_request.get("blockers") or [])
+        bool(failure_contrast_approval_request_ready_value)
+        if failure_contrast_approval_request_ready_value is not None
+        else (
+            failure_contrast_approval_request.get("decision", {}).get("status")
+            == "protected_plan_window_failure_contrast_approval_request_ready"
+            and failure_contrast_approval_request_summary.get("request_ready") is True
+            and not (failure_contrast_approval_request.get("blockers") or [])
+        )
     )
     stage4_approval_request_ready = bool(
         stage4_current.get(

@@ -423,10 +423,17 @@ def build_payload() -> dict[str, Any]:
     failure_contrast_approval_request_blockers = (
         failure_contrast_approval_request.get("blockers") or []
     )
+    failure_contrast_approval_request_ready_value = failure_contrast_approval_request.get(
+        "approval_request_ready_for_collection"
+    )
     failure_contrast_approval_request_ready = (
-        failure_contrast_approval_request_decision.get("status")
-        == "protected_plan_window_failure_contrast_approval_request_ready"
-        and not failure_contrast_approval_request_blockers
+        bool(failure_contrast_approval_request_ready_value)
+        if failure_contrast_approval_request_ready_value is not None
+        else (
+            failure_contrast_approval_request_decision.get("status")
+            == "protected_plan_window_failure_contrast_approval_request_ready"
+            and not failure_contrast_approval_request_blockers
+        )
     )
     protected_failure_contrast_collection_ready = (
         failure_contrast_manifest_review.get("decision", {}).get("status")

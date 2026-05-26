@@ -509,6 +509,7 @@ def test_full_suite_readiness_routes_blocked_protected_collection_request_to_rep
                 "protected_plan_window_failure_contrast_approval_request_blocked"
             )
             payload["blockers"] = ["full_suite_readiness_audit_not_clean"]
+            payload["approval_request_ready_for_collection"] = False
         return payload
 
     monkeypatch.setattr(_audit, "load_json", tainted_load_json)

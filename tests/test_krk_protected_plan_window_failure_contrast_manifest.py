@@ -499,6 +499,7 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
     )
     assert payload["summary"]["approval_receipt_required"] is True
     assert payload["summary"]["request_ready"] is True
+    assert payload["approval_request_ready_for_collection"] is True
     assert payload["summary"]["request_blockers"] == []
     assert (
         payload["summary"]["protected_stack_status"]
@@ -836,6 +837,7 @@ def test_failure_contrast_approval_request_blocks_unclean_protected_stack():
         == "protected_plan_window_failure_contrast_approval_request_blocked"
     )
     assert payload["summary"]["request_ready"] is False
+    assert payload["approval_request_ready_for_collection"] is False
     assert "protected_stack_not_clean" in payload["blockers"]
     assert payload["decision"]["collection_run_allowed"] is False
 

@@ -248,6 +248,7 @@ def build_payload(
         "approval_receipt_present": runner_summary.get("approval_receipt_present"),
         "approval_receipt_valid": runner_summary.get("approval_receipt_valid"),
         "approval_receipt_blockers": runner_summary.get("approval_receipt_blockers") or [],
+        "approval_request_ready_for_collection": request_ready,
         "protected_stack_safety": protected_stack_safety,
         "required_receipt_if_user_approves": required_receipt,
         "summary": {
