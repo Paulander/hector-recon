@@ -796,6 +796,9 @@ def build_payload() -> dict[str, Any]:
             "runner_manifest_fingerprint": failure_contrast_runner_summary.get(
                 "manifest_fingerprint"
             ),
+            "runner_collection_run_allowed": failure_contrast_runner.get(
+                "decision", {}
+            ).get("collection_run_allowed"),
             "runner_processed_job_count": failure_contrast_runner.get(
                 "summary", {}
             ).get("processed_job_count"),
@@ -1236,6 +1239,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- runner_manifest_status: `{protected_failure_contrast['runner_manifest_status']}`",
             f"- runner_manifest_declared_job_count: `{protected_failure_contrast['runner_manifest_declared_job_count']}`",
             f"- runner_manifest_fingerprint: `{protected_failure_contrast['runner_manifest_fingerprint']}`",
+            f"- runner_collection_run_allowed: `{protected_failure_contrast['runner_collection_run_allowed']}`",
             f"- runner_processed_job_count: `{protected_failure_contrast['runner_processed_job_count']}`",
             f"- runner_executed_job_count: `{protected_failure_contrast['runner_executed_job_count']}`",
             f"- output_validation_status: `{protected_failure_contrast['output_validation_status']}`",

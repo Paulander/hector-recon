@@ -468,6 +468,12 @@ def test_current_control_plane_gate_requires_explicit_choice():
         )
         == 64
     )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_runner_collection_run_allowed"
+        ]
+        is False
+    )
     assert payload["current_state"]["protected_plan_window_failure_contrast_runner_processed_job_count"] == 0
     assert payload["current_state"]["protected_plan_window_failure_contrast_runner_executed_job_count"] == 0
     assert (
@@ -590,6 +596,7 @@ def test_current_control_plane_gate_requires_explicit_choice():
     )
     assert review_option["safety_scope"]["runner_manifest_declared_job_count"] == 6
     assert len(review_option["safety_scope"]["runner_manifest_fingerprint"]) == 64
+    assert review_option["safety_scope"]["runner_collection_run_allowed"] is False
     assert review_option["safety_scope"]["runner_max_jobs_option"] is None
     assert review_option["safety_scope"]["horizon"] == "h40"
     assert (

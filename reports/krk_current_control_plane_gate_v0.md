@@ -72,6 +72,7 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - protected_plan_window_failure_contrast_runner_manifest_status: `protected_plan_window_failure_contrast_manifest_ready_for_review`
 - protected_plan_window_failure_contrast_runner_manifest_declared_job_count: `6`
 - protected_plan_window_failure_contrast_runner_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
+- protected_plan_window_failure_contrast_runner_collection_run_allowed: `False`
 - protected_plan_window_failure_contrast_runner_processed_job_count: `0`
 - protected_plan_window_failure_contrast_runner_executed_job_count: `0`
 - protected_plan_window_failure_contrast_approval_request: `protected_plan_window_failure_contrast_approval_request_ready`
@@ -157,6 +158,7 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
   - runner_manifest_status: `protected_plan_window_failure_contrast_manifest_ready_for_review`
   - runner_manifest_declared_job_count: `6`
   - runner_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
+  - runner_collection_run_allowed: `False`
   - max_jobs: `6`
   - runner_max_jobs_option: `None`
   - horizon: `h40`

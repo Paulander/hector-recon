@@ -650,6 +650,9 @@ def build_payload(
                     "runner_manifest_fingerprint": failure_contrast_runner_summary.get(
                         "manifest_fingerprint"
                     ),
+                    "runner_collection_run_allowed": failure_contrast_runner.get(
+                        "decision", {}
+                    ).get("collection_run_allowed"),
                     "max_jobs": failure_contrast_manifest_summary.get("job_count"),
                     "runner_max_jobs_option": failure_contrast_runner_summary.get(
                         "max_jobs"
@@ -1068,6 +1071,11 @@ def build_payload(
             ),
             "protected_plan_window_failure_contrast_runner_manifest_fingerprint": (
                 failure_contrast_runner.get("summary", {}).get("manifest_fingerprint")
+            ),
+            "protected_plan_window_failure_contrast_runner_collection_run_allowed": (
+                failure_contrast_runner.get("decision", {}).get(
+                    "collection_run_allowed"
+                )
             ),
             "protected_plan_window_failure_contrast_runner_processed_job_count": failure_contrast_runner.get(
                 "summary", {}

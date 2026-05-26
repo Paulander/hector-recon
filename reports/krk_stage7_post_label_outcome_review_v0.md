@@ -39,6 +39,7 @@ This review is passive. It does not execute labels, change runtime behavior, tra
 - protected_failure_contrast_runner_manifest_status: `protected_plan_window_failure_contrast_manifest_ready_for_review`
 - protected_failure_contrast_runner_manifest_declared_job_count: `6`
 - protected_failure_contrast_runner_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
+- protected_failure_contrast_runner_collection_run_allowed: `False`
 - protected_failure_contrast_runner_processed_job_count: `0`
 - protected_failure_contrast_runner_executed_job_count: `0`
 - protected_failure_contrast_command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`

@@ -465,6 +465,9 @@ def build_payload() -> dict[str, Any]:
             "protected_plan_window_failure_contrast_runner_manifest_fingerprint": failure_contrast_runner_summary.get(
                 "manifest_fingerprint"
             ),
+            "protected_plan_window_failure_contrast_runner_collection_run_allowed": failure_contrast_runner.get(
+                "decision", {}
+            ).get("collection_run_allowed"),
             "protected_plan_window_failure_contrast_runner_processed_job_count": failure_contrast_runner.get(
                 "summary", {}
             ).get("processed_job_count"),
@@ -975,6 +978,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- protected_plan_window_failure_contrast_runner_manifest_status: `{state['protected_plan_window_failure_contrast_runner_manifest_status']}`",
         f"- protected_plan_window_failure_contrast_runner_manifest_declared_job_count: `{state['protected_plan_window_failure_contrast_runner_manifest_declared_job_count']}`",
         f"- protected_plan_window_failure_contrast_runner_manifest_fingerprint: `{state['protected_plan_window_failure_contrast_runner_manifest_fingerprint']}`",
+        f"- protected_plan_window_failure_contrast_runner_collection_run_allowed: `{state['protected_plan_window_failure_contrast_runner_collection_run_allowed']}`",
         f"- protected_plan_window_failure_contrast_runner_processed_job_count: `{state['protected_plan_window_failure_contrast_runner_processed_job_count']}`",
         f"- protected_plan_window_failure_contrast_runner_executed_job_count: `{state['protected_plan_window_failure_contrast_runner_executed_job_count']}`",
         f"- protected_plan_window_failure_contrast_approval_request_status: `{state['protected_plan_window_failure_contrast_approval_request_status']}`",

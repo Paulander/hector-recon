@@ -62,6 +62,7 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - protected_plan_window_failure_contrast_runner_manifest_status: `protected_plan_window_failure_contrast_manifest_ready_for_review`
 - protected_plan_window_failure_contrast_runner_manifest_declared_job_count: `6`
 - protected_plan_window_failure_contrast_runner_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
+- protected_plan_window_failure_contrast_runner_collection_run_allowed: `False`
 - protected_plan_window_failure_contrast_runner_processed_job_count: `0`
 - protected_plan_window_failure_contrast_runner_executed_job_count: `0`
 - protected_plan_window_failure_contrast_runner_refresh_after_run_requested: `True`
@@ -97,6 +98,7 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - sequence_policy_underpowered_pilot_readiness_source_artifact_count: `44`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_processed_job_count: `0`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_executed_job_count: `0`
+- sequence_policy_underpowered_pilot_protected_failure_contrast_runner_collection_run_allowed: `False`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_post_success_refresh_required: `True`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runtime_behavior_changed: `False`
@@ -129,6 +131,7 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - stage7_post_label_outcome_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - stage7_post_label_outcome_protected_failure_contrast_runner_processed_job_count: `0`
 - stage7_post_label_outcome_protected_failure_contrast_runner_executed_job_count: `0`
+- stage7_post_label_outcome_protected_failure_contrast_runner_collection_run_allowed: `False`
 - stage7_post_label_outcome_protected_failure_contrast_post_success_refresh_required: `True`
 - stage7_post_label_outcome_protected_failure_contrast_post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - stage7_post_label_outcome_protected_failure_contrast_runtime_direct_routing: `False`

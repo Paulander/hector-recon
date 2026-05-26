@@ -242,6 +242,12 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
         )
         == 64
     )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_runner_collection_run_allowed"
+        ]
+        is False
+    )
     assert payload["current_state"]["protected_plan_window_failure_contrast_runner_processed_job_count"] == 0
     assert payload["current_state"]["protected_plan_window_failure_contrast_runner_executed_job_count"] == 0
     assert (

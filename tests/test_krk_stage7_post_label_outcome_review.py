@@ -104,6 +104,10 @@ def test_stage7_post_label_outcome_current_artifact_reports_sequence_policy_gap(
         )
         == 64
     )
+    assert (
+        payload["summary"]["protected_failure_contrast_runner_collection_run_allowed"]
+        is False
+    )
     assert payload["summary"]["protected_failure_contrast_runner_processed_job_count"] == 0
     assert payload["summary"]["protected_failure_contrast_runner_executed_job_count"] == 0
     assert payload["summary"]["protected_failure_contrast_command_if_explicitly_approved"] == (

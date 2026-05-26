@@ -713,6 +713,9 @@ def build_payload() -> dict[str, Any]:
             "protected_plan_window_failure_contrast_runner_manifest_fingerprint": failure_contrast_runner.get(
                 "summary", {}
             ).get("manifest_fingerprint"),
+            "protected_plan_window_failure_contrast_runner_collection_run_allowed": failure_contrast_runner.get(
+                "decision", {}
+            ).get("collection_run_allowed"),
             "protected_plan_window_failure_contrast_runner_processed_job_count": failure_contrast_runner.get(
                 "summary", {}
             ).get("processed_job_count"),
@@ -824,6 +827,9 @@ def build_payload() -> dict[str, Any]:
             "sequence_policy_underpowered_pilot_protected_failure_contrast_runner_executed_job_count": underpowered_pilot.get(
                 "summary", {}
             ).get("protected_failure_contrast_runner_executed_job_count"),
+            "sequence_policy_underpowered_pilot_protected_failure_contrast_runner_collection_run_allowed": underpowered_pilot.get(
+                "summary", {}
+            ).get("protected_failure_contrast_runner_collection_run_allowed"),
             "sequence_policy_underpowered_pilot_protected_failure_contrast_post_success_refresh_required": underpowered_pilot.get(
                 "summary", {}
             ).get("protected_failure_contrast_post_success_refresh_required"),
@@ -916,6 +922,9 @@ def build_payload() -> dict[str, Any]:
             "stage7_post_label_outcome_protected_failure_contrast_runner_executed_job_count": post_label_review.get(
                 "summary", {}
             ).get("protected_failure_contrast_runner_executed_job_count"),
+            "stage7_post_label_outcome_protected_failure_contrast_runner_collection_run_allowed": post_label_review.get(
+                "summary", {}
+            ).get("protected_failure_contrast_runner_collection_run_allowed"),
             "stage7_post_label_outcome_protected_failure_contrast_post_success_refresh_required": post_label_review.get(
                 "summary", {}
             ).get("protected_failure_contrast_post_success_refresh_required"),
