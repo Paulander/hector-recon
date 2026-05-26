@@ -165,6 +165,10 @@ def build_payload() -> dict[str, Any]:
     failure_contrast_integration_ready = bool(
         failure_contrast_integration.get("summary", {}).get("integration_ready")
     )
+    failure_contrast_manifest_review_passed = (
+        failure_contrast_manifest_review.get("decision", {}).get("status")
+        == "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
+    )
 
     primary_ready = (
         stage7_gate["runner_status"] == "stage7_diverse_clean_sampling_runner_dry_run_ready"
@@ -207,6 +211,11 @@ def build_payload() -> dict[str, Any]:
         "--approval-receipt "
         f"{failure_contrast_runner.get('approval_receipt_path') or DEFAULT_FAILURE_CONTRAST_APPROVAL_RECEIPT}"
     )
+    failure_contrast_approval_request_repair_required = (
+        failure_contrast_primary
+        and failure_contrast_manifest_review_passed
+        and not failure_contrast_approval_request_ready
+    )
     if sequence_forbidden_training_or_runtime_inputs:
         decision_status = "krk_suite_unblocker_blocked_forbidden_training_or_runtime_rows"
         recommended_next_step = "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
@@ -218,6 +227,12 @@ def build_payload() -> dict[str, Any]:
             "krk_suite_additional_stage7_label_unblocker_ready_pending_explicit_approval"
         )
         recommended_next_step = "explicitly_approve_stage7_additional_clean_label_execution"
+    elif failure_contrast_approval_request_repair_required:
+        decision_status = (
+            "krk_suite_protected_failure_contrast_unblocker_blocked_pending_"
+            "approval_request_repair"
+        )
+        recommended_next_step = "repair_protected_failure_contrast_approval_request_scope"
     elif stage7_gate["success_controls_ready"] and sequence["benchmark_ready"]:
         decision_status = (
             "krk_suite_protected_failure_contrast_unblocker_ready_pending_explicit_collection_approval"
@@ -554,6 +569,8 @@ def build_payload() -> dict[str, Any]:
             "status": (
                 "blocked_forbidden_training_or_runtime_rows"
                 if sequence_forbidden_training_or_runtime_inputs
+                else "blocked_pending_protected_failure_contrast_approval_request_repair"
+                if failure_contrast_approval_request_repair_required
                 else "ready_pending_explicit_approval"
                 if primary_ready
                 else "additional_manifest_ready_pending_explicit_approval"
@@ -573,6 +590,8 @@ def build_payload() -> dict[str, Any]:
             "purpose": (
                 "Remove forbidden selector-training or runtime-authorization rows from passive sequence-policy inputs before any protected collection review."
                 if sequence_forbidden_training_or_runtime_inputs
+                else "Repair the protected failure-contrast approval request scope before any collection command is made approvable."
+                if failure_contrast_approval_request_repair_required
                 else
                 "Review the bounded protected plan-window failure-contrast manifest before any explicitly approved collection run."
                 if failure_contrast_primary
@@ -583,6 +602,8 @@ def build_payload() -> dict[str, Any]:
             or failure_contrast_primary
             and failure_contrast_runner.get("decision", {}).get("status")
             != "protected_plan_window_failure_contrast_runner_dry_run_ready"
+            or failure_contrast_primary
+            and not failure_contrast_approval_request_ready
             else failure_contrast_command
             if failure_contrast_primary
             else additional_command

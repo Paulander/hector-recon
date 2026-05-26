@@ -565,6 +565,51 @@ def test_unblocker_packet_routes_forbidden_training_rows_to_input_repair(monkeyp
     assert payload["decision"]["selector_training_allowed"] is False
 
 
+def test_unblocker_packet_blocks_collection_when_approval_request_blocked(monkeypatch):
+    real_load = _packet._load
+
+    def tainted_load(path: Path):
+        payload = json.loads(json.dumps(real_load(path)))
+        if path == _packet.FAILURE_CONTRAST_APPROVAL_REQUEST:
+            payload["blockers"] = ["full_suite_readiness_audit_not_clean"]
+            payload["approval_request_ready_for_collection"] = False
+            payload.setdefault("summary", {})["request_ready"] = False
+            payload.setdefault("decision", {})["status"] = (
+                "protected_plan_window_failure_contrast_approval_request_blocked"
+            )
+        return payload
+
+    monkeypatch.setattr(_packet, "_load", tainted_load)
+
+    payload = _packet.build_payload()
+    primary = payload["primary_unblocker"]
+
+    assert (
+        payload["decision"]["status"]
+        == "krk_suite_protected_failure_contrast_unblocker_blocked_pending_"
+        "approval_request_repair"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "repair_protected_failure_contrast_approval_request_scope"
+    )
+    assert (
+        primary["status"]
+        == "blocked_pending_protected_failure_contrast_approval_request_repair"
+    )
+    assert primary["command_if_explicitly_approved"] is None
+    assert (
+        primary["scope"]["approval_request_status"]
+        == "protected_plan_window_failure_contrast_approval_request_blocked"
+    )
+    assert primary["scope"]["approval_request_blockers"] == [
+        "full_suite_readiness_audit_not_clean"
+    ]
+    assert primary["scope"]["approval_request_ready_for_collection"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
+
+
 def test_unblocker_packet_falls_back_when_stage4_request_ready_is_null(monkeypatch):
     real_load = _packet._load
 
