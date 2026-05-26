@@ -143,6 +143,28 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/strategy_arbitration/krk_candidate_generation_refresh_probe_v2_after_labels.json"
     )
     assert (
+        payload["source_artifacts"][
+            "stage5_6_candidate_generation_refresh_review_packet_v3"
+        ]
+        == "reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_review_packet_v3.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "stage5_6_candidate_generation_refresh_broadened"
+        ]
+        == "reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_broadened_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "strategy_sequence_stage5_6_refresh_trace_features"
+        ]
+        == "reports/strategy_arbitration/krk_strategy_sequence_stage5_6_refresh_trace_features_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_sequence_dataset_design_v3"]
+        == "reports/strategy_arbitration/krk_strategy_sequence_dataset_design_v3.json"
+    )
+    assert (
         payload["source_artifacts"]["ownership_label_recovery_review"]
         == "reports/strategy_arbitration/krk_ownership_label_recovery_review_v0.json"
     )
@@ -823,6 +845,88 @@ def test_full_suite_readiness_identifies_current_gate():
     assert repair_monitor_trace["selector_training_allowed"] is False
     assert repair_monitor_trace["stage7_promotion_allowed"] is False
     assert repair_monitor_trace["stage8_training_allowed"] is False
+
+    stage5_6_refresh = payload["stage5_6_candidate_generation_refresh_gate"]
+    assert (
+        stage5_6_refresh["review_status"]
+        == "stage5_6_candidate_generation_refresh_review_ready"
+    )
+    assert stage5_6_refresh["review_runtime_review_ready"] is True
+    assert stage5_6_refresh["review_implementation_authorized"] is False
+    assert (
+        stage5_6_refresh["review_runtime_candidate_generator_refresh_allowed"]
+        is False
+    )
+    assert (
+        stage5_6_refresh["smoke_status"]
+        == "stage5_6_candidate_generation_refresh_wired_default_off_equivalent"
+    )
+    assert stage5_6_refresh["smoke_case_count"] == 2
+    assert stage5_6_refresh["smoke_refresh_frame_count"] == 13
+    assert stage5_6_refresh["smoke_selected_move_provider_delta_count"] == 0
+    assert stage5_6_refresh["smoke_invariant_failure_count"] == 0
+    assert stage5_6_refresh["smoke_stage7_case_count"] == 0
+    assert (
+        stage5_6_refresh["coverage_status"]
+        == "stage5_6_refresh_coverage_ready_for_broadened_analysis"
+    )
+    assert stage5_6_refresh["coverage_refresh_frame_count"] == 13
+    assert stage5_6_refresh["coverage_selected_move_provider_delta_count"] == 0
+    assert stage5_6_refresh["coverage_invariant_failure_count"] == 0
+    assert stage5_6_refresh["coverage_stage7_case_count"] == 0
+    assert (
+        stage5_6_refresh["broadened_status"]
+        == "stage5_6_candidate_generation_refresh_broadened_default_off_equivalent"
+    )
+    assert stage5_6_refresh["broadened_case_count"] == 4
+    assert stage5_6_refresh["broadened_case_count_by_stage"] == {
+        "stage5": 3,
+        "stage6": 1,
+    }
+    assert stage5_6_refresh["broadened_refresh_frame_count"] == 38
+    assert stage5_6_refresh["broadened_selected_move_provider_delta_count"] == 0
+    assert stage5_6_refresh["broadened_invariant_failure_count"] == 0
+    assert stage5_6_refresh["broadened_stage7_case_count"] == 0
+    assert (
+        stage5_6_refresh["quality_status"]
+        == "stage5_6_candidate_generation_refresh_quality_trace_only_retained"
+    )
+    assert (
+        stage5_6_refresh["quality_trace_usable_for_candidate_generation_context"]
+        is True
+    )
+    assert stage5_6_refresh["quality_refresh_frame_count"] == 38
+    assert stage5_6_refresh["quality_selected_move_provider_delta_count"] == 0
+    assert stage5_6_refresh["quality_invariant_failure_count"] == 0
+    assert stage5_6_refresh["quality_stage7_case_count"] == 0
+    assert (
+        stage5_6_refresh["trace_features_status"]
+        == "stage5_6_refresh_trace_features_folded_non_causal"
+    )
+    assert stage5_6_refresh["trace_features_trace_frame_count"] == 38
+    assert stage5_6_refresh["trace_features_stage_counts"] == {
+        "stage5": 37,
+        "stage6": 1,
+    }
+    assert stage5_6_refresh["trace_features_stage7_trace_frame_count"] == 0
+    assert stage5_6_refresh["trace_features_selector_training_row_count"] == 0
+    assert (
+        stage5_6_refresh[
+            "trace_features_candidate_generation_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        stage5_6_refresh["dataset_design_v3_status"]
+        == "strategy_sequence_dataset_design_v3_ready"
+    )
+    assert stage5_6_refresh["dataset_design_v3_implementation_allowed"] is False
+    assert stage5_6_refresh["runtime_work_allowed"] is False
+    assert stage5_6_refresh["runtime_candidate_generation_allowed"] is False
+    assert stage5_6_refresh["selector_allowed"] is False
+    assert stage5_6_refresh["selector_training_allowed"] is False
+    assert stage5_6_refresh["stage7_promotion_allowed"] is False
+    assert stage5_6_refresh["stage8_training_allowed"] is False
 
     lineage = payload["selector_objective_lineage_gate"]
     assert (

@@ -742,6 +742,186 @@ def test_gate_advancement_reports_current_stage7_blocker():
         is False
     )
     assert (
+        payload["summary"]["stage5_6_candidate_generation_refresh_review_status"]
+        == "stage5_6_candidate_generation_refresh_review_ready"
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_review_runtime_review_ready"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_review_implementation_authorized"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_review_runtime_candidate_generator_refresh_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["stage5_6_candidate_generation_refresh_smoke_status"]
+        == "stage5_6_candidate_generation_refresh_wired_default_off_equivalent"
+    )
+    assert (
+        payload["summary"]["stage5_6_candidate_generation_refresh_smoke_case_count"]
+        == 2
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_smoke_refresh_frame_count"
+        ]
+        == 13
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_smoke_selected_move_provider_delta_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_smoke_invariant_failure_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_smoke_stage7_case_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["stage5_6_candidate_generation_refresh_coverage_status"]
+        == "stage5_6_refresh_coverage_ready_for_broadened_analysis"
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_coverage_refresh_frame_count"
+        ]
+        == 13
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_coverage_stage7_case_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["stage5_6_candidate_generation_refresh_broadened_status"]
+        == "stage5_6_candidate_generation_refresh_broadened_default_off_equivalent"
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_broadened_case_count"
+        ]
+        == 4
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_broadened_refresh_frame_count"
+        ]
+        == 38
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_broadened_selected_move_provider_delta_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_broadened_stage7_case_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["stage5_6_candidate_generation_refresh_quality_status"]
+        == "stage5_6_candidate_generation_refresh_quality_trace_only_retained"
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_quality_trace_usable_for_candidate_generation_context"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_quality_stage7_case_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_trace_features_status"
+        ]
+        == "stage5_6_refresh_trace_features_folded_non_causal"
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_trace_features_trace_frame_count"
+        ]
+        == 38
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_trace_features_stage7_trace_frame_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_trace_features_selector_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_trace_features_candidate_generation_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_dataset_design_v3_status"
+        ]
+        == "strategy_sequence_dataset_design_v3_ready"
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_dataset_design_v3_implementation_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_runtime_work_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_selector_training_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_stage7_promotion_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "stage5_6_candidate_generation_refresh_stage8_training_allowed"
+        ]
+        is False
+    )
+    assert (
         payload["summary"]["selector_objective_lineage_ownership_recovery_status"]
         == "ownership_label_recovery_seed_manifest_ready_selector_blocked"
     )

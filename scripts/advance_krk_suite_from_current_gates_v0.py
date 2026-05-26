@@ -589,6 +589,9 @@ def build_payload() -> dict[str, Any]:
     repair_monitor_trace_feature_gate = (
         readiness.get("repair_monitor_trace_feature_gate") or {}
     )
+    stage5_6_candidate_generation_refresh_gate = (
+        readiness.get("stage5_6_candidate_generation_refresh_gate") or {}
+    )
     selector_objective_lineage_gate = (
         readiness.get("selector_objective_lineage_gate") or {}
     )
@@ -1424,6 +1427,102 @@ def build_payload() -> dict[str, Any]:
                 "stage7_promotion_allowed"
             ),
             "repair_monitor_trace_feature_stage8_training_allowed": repair_monitor_trace_feature_gate.get(
+                "stage8_training_allowed"
+            ),
+            "stage5_6_candidate_generation_refresh_review_status": stage5_6_candidate_generation_refresh_gate.get(
+                "review_status"
+            ),
+            "stage5_6_candidate_generation_refresh_review_runtime_review_ready": stage5_6_candidate_generation_refresh_gate.get(
+                "review_runtime_review_ready"
+            ),
+            "stage5_6_candidate_generation_refresh_review_implementation_authorized": stage5_6_candidate_generation_refresh_gate.get(
+                "review_implementation_authorized"
+            ),
+            "stage5_6_candidate_generation_refresh_review_runtime_candidate_generator_refresh_allowed": stage5_6_candidate_generation_refresh_gate.get(
+                "review_runtime_candidate_generator_refresh_allowed"
+            ),
+            "stage5_6_candidate_generation_refresh_smoke_status": stage5_6_candidate_generation_refresh_gate.get(
+                "smoke_status"
+            ),
+            "stage5_6_candidate_generation_refresh_smoke_case_count": stage5_6_candidate_generation_refresh_gate.get(
+                "smoke_case_count"
+            ),
+            "stage5_6_candidate_generation_refresh_smoke_refresh_frame_count": stage5_6_candidate_generation_refresh_gate.get(
+                "smoke_refresh_frame_count"
+            ),
+            "stage5_6_candidate_generation_refresh_smoke_selected_move_provider_delta_count": stage5_6_candidate_generation_refresh_gate.get(
+                "smoke_selected_move_provider_delta_count"
+            ),
+            "stage5_6_candidate_generation_refresh_smoke_invariant_failure_count": stage5_6_candidate_generation_refresh_gate.get(
+                "smoke_invariant_failure_count"
+            ),
+            "stage5_6_candidate_generation_refresh_smoke_stage7_case_count": stage5_6_candidate_generation_refresh_gate.get(
+                "smoke_stage7_case_count"
+            ),
+            "stage5_6_candidate_generation_refresh_coverage_status": stage5_6_candidate_generation_refresh_gate.get(
+                "coverage_status"
+            ),
+            "stage5_6_candidate_generation_refresh_coverage_refresh_frame_count": stage5_6_candidate_generation_refresh_gate.get(
+                "coverage_refresh_frame_count"
+            ),
+            "stage5_6_candidate_generation_refresh_coverage_stage7_case_count": stage5_6_candidate_generation_refresh_gate.get(
+                "coverage_stage7_case_count"
+            ),
+            "stage5_6_candidate_generation_refresh_broadened_status": stage5_6_candidate_generation_refresh_gate.get(
+                "broadened_status"
+            ),
+            "stage5_6_candidate_generation_refresh_broadened_case_count": stage5_6_candidate_generation_refresh_gate.get(
+                "broadened_case_count"
+            ),
+            "stage5_6_candidate_generation_refresh_broadened_refresh_frame_count": stage5_6_candidate_generation_refresh_gate.get(
+                "broadened_refresh_frame_count"
+            ),
+            "stage5_6_candidate_generation_refresh_broadened_selected_move_provider_delta_count": stage5_6_candidate_generation_refresh_gate.get(
+                "broadened_selected_move_provider_delta_count"
+            ),
+            "stage5_6_candidate_generation_refresh_broadened_stage7_case_count": stage5_6_candidate_generation_refresh_gate.get(
+                "broadened_stage7_case_count"
+            ),
+            "stage5_6_candidate_generation_refresh_quality_status": stage5_6_candidate_generation_refresh_gate.get(
+                "quality_status"
+            ),
+            "stage5_6_candidate_generation_refresh_quality_trace_usable_for_candidate_generation_context": stage5_6_candidate_generation_refresh_gate.get(
+                "quality_trace_usable_for_candidate_generation_context"
+            ),
+            "stage5_6_candidate_generation_refresh_quality_stage7_case_count": stage5_6_candidate_generation_refresh_gate.get(
+                "quality_stage7_case_count"
+            ),
+            "stage5_6_candidate_generation_refresh_trace_features_status": stage5_6_candidate_generation_refresh_gate.get(
+                "trace_features_status"
+            ),
+            "stage5_6_candidate_generation_refresh_trace_features_trace_frame_count": stage5_6_candidate_generation_refresh_gate.get(
+                "trace_features_trace_frame_count"
+            ),
+            "stage5_6_candidate_generation_refresh_trace_features_stage7_trace_frame_count": stage5_6_candidate_generation_refresh_gate.get(
+                "trace_features_stage7_trace_frame_count"
+            ),
+            "stage5_6_candidate_generation_refresh_trace_features_selector_training_row_count": stage5_6_candidate_generation_refresh_gate.get(
+                "trace_features_selector_training_row_count"
+            ),
+            "stage5_6_candidate_generation_refresh_trace_features_candidate_generation_training_row_count": stage5_6_candidate_generation_refresh_gate.get(
+                "trace_features_candidate_generation_training_row_count"
+            ),
+            "stage5_6_candidate_generation_refresh_dataset_design_v3_status": stage5_6_candidate_generation_refresh_gate.get(
+                "dataset_design_v3_status"
+            ),
+            "stage5_6_candidate_generation_refresh_dataset_design_v3_implementation_allowed": stage5_6_candidate_generation_refresh_gate.get(
+                "dataset_design_v3_implementation_allowed"
+            ),
+            "stage5_6_candidate_generation_refresh_runtime_work_allowed": stage5_6_candidate_generation_refresh_gate.get(
+                "runtime_work_allowed"
+            ),
+            "stage5_6_candidate_generation_refresh_selector_training_allowed": stage5_6_candidate_generation_refresh_gate.get(
+                "selector_training_allowed"
+            ),
+            "stage5_6_candidate_generation_refresh_stage7_promotion_allowed": stage5_6_candidate_generation_refresh_gate.get(
+                "stage7_promotion_allowed"
+            ),
+            "stage5_6_candidate_generation_refresh_stage8_training_allowed": stage5_6_candidate_generation_refresh_gate.get(
                 "stage8_training_allowed"
             ),
             "selector_objective_lineage_ownership_recovery_status": selector_objective_lineage_gate.get(

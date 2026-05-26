@@ -122,7 +122,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `de85065167641e990331c66c46f3a10da12acad5ca58fb09cf29c012a521a034`
+- expected_readiness_fingerprint: `769ed046ac9e6cde94f047209da7356dcfb8d34a13c75dad47ec8ec58be3c681`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -266,6 +266,44 @@
 - refresh_after_labels_status: `candidate_generation_refresh_supported_selector_blocked`
 - refresh_after_labels_positive_recall: `0.7368421052631579`
 - refresh_after_labels_negative_suppression: `1.0`
+- runtime_work_allowed: `False`
+- selector_training_allowed: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
+## Stage 5/6 Candidate-Generation Refresh Evidence
+
+- review_status: `stage5_6_candidate_generation_refresh_review_ready`
+- review_runtime_review_ready: `True`
+- review_implementation_authorized: `False`
+- review_runtime_candidate_generator_refresh_allowed: `False`
+- smoke_status: `stage5_6_candidate_generation_refresh_wired_default_off_equivalent`
+- smoke_case_count: `2`
+- smoke_refresh_frame_count: `13`
+- smoke_selected_move_provider_delta_count: `0`
+- smoke_invariant_failure_count: `0`
+- smoke_stage7_case_count: `0`
+- coverage_status: `stage5_6_refresh_coverage_ready_for_broadened_analysis`
+- coverage_refresh_frame_count: `13`
+- coverage_stage7_case_count: `0`
+- broadened_status: `stage5_6_candidate_generation_refresh_broadened_default_off_equivalent`
+- broadened_case_count: `4`
+- broadened_case_count_by_stage: `{'stage5': 3, 'stage6': 1}`
+- broadened_refresh_frame_count: `38`
+- broadened_selected_move_provider_delta_count: `0`
+- broadened_invariant_failure_count: `0`
+- broadened_stage7_case_count: `0`
+- quality_status: `stage5_6_candidate_generation_refresh_quality_trace_only_retained`
+- quality_trace_usable_for_candidate_generation_context: `True`
+- quality_stage7_case_count: `0`
+- trace_features_status: `stage5_6_refresh_trace_features_folded_non_causal`
+- trace_features_trace_frame_count: `38`
+- trace_features_stage_counts: `{'stage5': 37, 'stage6': 1}`
+- trace_features_stage7_trace_frame_count: `0`
+- trace_features_selector_training_row_count: `0`
+- trace_features_candidate_generation_training_row_count: `0`
+- dataset_design_v3_status: `strategy_sequence_dataset_design_v3_ready`
+- dataset_design_v3_implementation_allowed: `False`
 - runtime_work_allowed: `False`
 - selector_training_allowed: `False`
 - stage7_promotion_allowed: `False`
@@ -434,5 +472,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1205`
+- checked_flag_count: `1266`
 - violation_count: `0`

@@ -152,6 +152,27 @@ SOURCES = {
     "candidate_generation_refresh_probe_v2_after_labels": (
         "reports/strategy_arbitration/krk_candidate_generation_refresh_probe_v2_after_labels.json"
     ),
+    "stage5_6_candidate_generation_refresh_review_packet_v3": (
+        "reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_review_packet_v3.json"
+    ),
+    "stage5_6_candidate_generation_refresh_smoke": (
+        "reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_smoke_v0.json"
+    ),
+    "stage5_6_candidate_generation_refresh_coverage": (
+        "reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_coverage_v0.json"
+    ),
+    "stage5_6_candidate_generation_refresh_broadened": (
+        "reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_broadened_v0.json"
+    ),
+    "stage5_6_candidate_generation_refresh_quality_review": (
+        "reports/strategy_arbitration/krk_stage5_6_candidate_generation_refresh_quality_review_v0.json"
+    ),
+    "strategy_sequence_stage5_6_refresh_trace_features": (
+        "reports/strategy_arbitration/krk_strategy_sequence_stage5_6_refresh_trace_features_v0.json"
+    ),
+    "strategy_sequence_dataset_design_v3": (
+        "reports/strategy_arbitration/krk_strategy_sequence_dataset_design_v3.json"
+    ),
     "ownership_label_recovery_review": (
         "reports/strategy_arbitration/krk_ownership_label_recovery_review_v0.json"
     ),
@@ -694,6 +715,27 @@ def build_payload() -> dict[str, Any]:
     ]
     candidate_generation_refresh_probe_v2_after_labels = payloads[
         "candidate_generation_refresh_probe_v2_after_labels"
+    ]
+    stage5_6_candidate_generation_refresh_review_packet_v3 = payloads[
+        "stage5_6_candidate_generation_refresh_review_packet_v3"
+    ]
+    stage5_6_candidate_generation_refresh_smoke = payloads[
+        "stage5_6_candidate_generation_refresh_smoke"
+    ]
+    stage5_6_candidate_generation_refresh_coverage = payloads[
+        "stage5_6_candidate_generation_refresh_coverage"
+    ]
+    stage5_6_candidate_generation_refresh_broadened = payloads[
+        "stage5_6_candidate_generation_refresh_broadened"
+    ]
+    stage5_6_candidate_generation_refresh_quality_review = payloads[
+        "stage5_6_candidate_generation_refresh_quality_review"
+    ]
+    strategy_sequence_stage5_6_refresh_trace_features = payloads[
+        "strategy_sequence_stage5_6_refresh_trace_features"
+    ]
+    strategy_sequence_dataset_design_v3 = payloads[
+        "strategy_sequence_dataset_design_v3"
     ]
     ownership_label_recovery_review = payloads["ownership_label_recovery_review"]
     selector_objective_seed_manifest_v0 = payloads[
@@ -2309,6 +2351,192 @@ def build_payload() -> dict[str, Any]:
             "stage7_promotion_allowed": False,
             "stage8_training_allowed": False,
         },
+        "stage5_6_candidate_generation_refresh_gate": {
+            "review_status": (
+                stage5_6_candidate_generation_refresh_review_packet_v3.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "review_runtime_review_ready": (
+                stage5_6_candidate_generation_refresh_review_packet_v3.get(
+                    "decision", {}
+                ).get("runtime_review_ready")
+            ),
+            "review_implementation_authorized": (
+                stage5_6_candidate_generation_refresh_review_packet_v3.get(
+                    "decision", {}
+                ).get("implementation_authorized_by_this_packet")
+            ),
+            "review_runtime_candidate_generator_refresh_allowed": (
+                stage5_6_candidate_generation_refresh_review_packet_v3.get(
+                    "decision", {}
+                ).get("runtime_candidate_generator_refresh_allowed_by_this_packet")
+            ),
+            "smoke_status": (
+                stage5_6_candidate_generation_refresh_smoke.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "smoke_case_count": (
+                stage5_6_candidate_generation_refresh_smoke.get("summary", {}).get(
+                    "case_count"
+                )
+            ),
+            "smoke_refresh_frame_count": (
+                stage5_6_candidate_generation_refresh_smoke.get("summary", {}).get(
+                    "refresh_frame_count"
+                )
+            ),
+            "smoke_selected_move_provider_delta_count": (
+                stage5_6_candidate_generation_refresh_smoke.get("summary", {}).get(
+                    "selected_move_provider_delta_count"
+                )
+            ),
+            "smoke_invariant_failure_count": (
+                stage5_6_candidate_generation_refresh_smoke.get("summary", {}).get(
+                    "invariant_failure_count"
+                )
+            ),
+            "smoke_stage7_case_count": (
+                stage5_6_candidate_generation_refresh_smoke.get("summary", {}).get(
+                    "stage7_case_count"
+                )
+            ),
+            "coverage_status": (
+                stage5_6_candidate_generation_refresh_coverage.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "coverage_refresh_frame_count": (
+                stage5_6_candidate_generation_refresh_coverage.get(
+                    "summary", {}
+                ).get("refresh_frame_count")
+            ),
+            "coverage_selected_move_provider_delta_count": (
+                stage5_6_candidate_generation_refresh_coverage.get(
+                    "summary", {}
+                ).get("selected_move_provider_delta_count")
+            ),
+            "coverage_invariant_failure_count": (
+                stage5_6_candidate_generation_refresh_coverage.get(
+                    "summary", {}
+                ).get("invariant_failure_count")
+            ),
+            "coverage_stage7_case_count": (
+                stage5_6_candidate_generation_refresh_coverage.get(
+                    "summary", {}
+                ).get("stage7_case_count")
+            ),
+            "broadened_status": (
+                stage5_6_candidate_generation_refresh_broadened.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "broadened_case_count": (
+                stage5_6_candidate_generation_refresh_broadened.get(
+                    "summary", {}
+                ).get("case_count")
+            ),
+            "broadened_case_count_by_stage": (
+                stage5_6_candidate_generation_refresh_broadened.get(
+                    "summary", {}
+                ).get("case_count_by_stage")
+            ),
+            "broadened_refresh_frame_count": (
+                stage5_6_candidate_generation_refresh_broadened.get(
+                    "summary", {}
+                ).get("refresh_frame_count")
+            ),
+            "broadened_selected_move_provider_delta_count": (
+                stage5_6_candidate_generation_refresh_broadened.get(
+                    "summary", {}
+                ).get("selected_move_provider_delta_count")
+            ),
+            "broadened_invariant_failure_count": (
+                stage5_6_candidate_generation_refresh_broadened.get(
+                    "summary", {}
+                ).get("invariant_failure_count")
+            ),
+            "broadened_stage7_case_count": (
+                stage5_6_candidate_generation_refresh_broadened.get(
+                    "summary", {}
+                ).get("stage7_case_count")
+            ),
+            "quality_status": (
+                stage5_6_candidate_generation_refresh_quality_review.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "quality_trace_usable_for_candidate_generation_context": (
+                stage5_6_candidate_generation_refresh_quality_review.get(
+                    "summary", {}
+                ).get("trace_usable_for_candidate_generation_context")
+            ),
+            "quality_refresh_frame_count": (
+                stage5_6_candidate_generation_refresh_quality_review.get(
+                    "summary", {}
+                ).get("refresh_frame_count")
+            ),
+            "quality_selected_move_provider_delta_count": (
+                stage5_6_candidate_generation_refresh_quality_review.get(
+                    "summary", {}
+                ).get("selected_move_provider_delta_count")
+            ),
+            "quality_invariant_failure_count": (
+                stage5_6_candidate_generation_refresh_quality_review.get(
+                    "summary", {}
+                ).get("invariant_failure_count")
+            ),
+            "quality_stage7_case_count": (
+                stage5_6_candidate_generation_refresh_quality_review.get(
+                    "summary", {}
+                ).get("stage7_case_count")
+            ),
+            "trace_features_status": (
+                strategy_sequence_stage5_6_refresh_trace_features.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "trace_features_trace_frame_count": (
+                strategy_sequence_stage5_6_refresh_trace_features.get(
+                    "summary", {}
+                ).get("trace_frame_count")
+            ),
+            "trace_features_stage_counts": (
+                strategy_sequence_stage5_6_refresh_trace_features.get(
+                    "summary", {}
+                ).get("stage_counts")
+            ),
+            "trace_features_stage7_trace_frame_count": (
+                strategy_sequence_stage5_6_refresh_trace_features.get(
+                    "summary", {}
+                ).get("stage7_trace_frame_count")
+            ),
+            "trace_features_selector_training_row_count": (
+                strategy_sequence_stage5_6_refresh_trace_features.get(
+                    "summary", {}
+                ).get("selector_training_row_count")
+            ),
+            "trace_features_candidate_generation_training_row_count": (
+                strategy_sequence_stage5_6_refresh_trace_features.get(
+                    "summary", {}
+                ).get("candidate_generation_training_row_count")
+            ),
+            "dataset_design_v3_status": (
+                strategy_sequence_dataset_design_v3.get("decision", {}).get("status")
+            ),
+            "dataset_design_v3_implementation_allowed": (
+                strategy_sequence_dataset_design_v3.get("decision", {}).get(
+                    "implementation_allowed_by_this_artifact"
+                )
+            ),
+            "runtime_work_allowed": False,
+            "runtime_candidate_generation_allowed": False,
+            "selector_allowed": False,
+            "selector_training_allowed": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": False,
+        },
         "selector_objective_lineage_gate": {
             "ownership_recovery_status": (
                 ownership_label_recovery_review.get("decision", {}).get("status")
@@ -3646,6 +3874,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     missing_provider = payload["protected_missing_provider_gate"]
     strategy_source = payload["strategy_sequence_candidate_source_gate"]
     repair_monitor_trace = payload["repair_monitor_trace_feature_gate"]
+    stage5_6_refresh = payload["stage5_6_candidate_generation_refresh_gate"]
     selector_lineage = payload["selector_objective_lineage_gate"]
     selector_objective = payload["selector_objective_gate"]
     stage4_diagnostic = payload["stage4_first_move_diagnostic_gate"]
@@ -3932,6 +4161,44 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- selector_training_allowed: `{repair_monitor_trace['selector_training_allowed']}`",
             f"- stage7_promotion_allowed: `{repair_monitor_trace['stage7_promotion_allowed']}`",
             f"- stage8_training_allowed: `{repair_monitor_trace['stage8_training_allowed']}`",
+            "",
+            "## Stage 5/6 Candidate-Generation Refresh Evidence",
+            "",
+            f"- review_status: `{stage5_6_refresh['review_status']}`",
+            f"- review_runtime_review_ready: `{stage5_6_refresh['review_runtime_review_ready']}`",
+            f"- review_implementation_authorized: `{stage5_6_refresh['review_implementation_authorized']}`",
+            f"- review_runtime_candidate_generator_refresh_allowed: `{stage5_6_refresh['review_runtime_candidate_generator_refresh_allowed']}`",
+            f"- smoke_status: `{stage5_6_refresh['smoke_status']}`",
+            f"- smoke_case_count: `{stage5_6_refresh['smoke_case_count']}`",
+            f"- smoke_refresh_frame_count: `{stage5_6_refresh['smoke_refresh_frame_count']}`",
+            f"- smoke_selected_move_provider_delta_count: `{stage5_6_refresh['smoke_selected_move_provider_delta_count']}`",
+            f"- smoke_invariant_failure_count: `{stage5_6_refresh['smoke_invariant_failure_count']}`",
+            f"- smoke_stage7_case_count: `{stage5_6_refresh['smoke_stage7_case_count']}`",
+            f"- coverage_status: `{stage5_6_refresh['coverage_status']}`",
+            f"- coverage_refresh_frame_count: `{stage5_6_refresh['coverage_refresh_frame_count']}`",
+            f"- coverage_stage7_case_count: `{stage5_6_refresh['coverage_stage7_case_count']}`",
+            f"- broadened_status: `{stage5_6_refresh['broadened_status']}`",
+            f"- broadened_case_count: `{stage5_6_refresh['broadened_case_count']}`",
+            f"- broadened_case_count_by_stage: `{stage5_6_refresh['broadened_case_count_by_stage']}`",
+            f"- broadened_refresh_frame_count: `{stage5_6_refresh['broadened_refresh_frame_count']}`",
+            f"- broadened_selected_move_provider_delta_count: `{stage5_6_refresh['broadened_selected_move_provider_delta_count']}`",
+            f"- broadened_invariant_failure_count: `{stage5_6_refresh['broadened_invariant_failure_count']}`",
+            f"- broadened_stage7_case_count: `{stage5_6_refresh['broadened_stage7_case_count']}`",
+            f"- quality_status: `{stage5_6_refresh['quality_status']}`",
+            f"- quality_trace_usable_for_candidate_generation_context: `{stage5_6_refresh['quality_trace_usable_for_candidate_generation_context']}`",
+            f"- quality_stage7_case_count: `{stage5_6_refresh['quality_stage7_case_count']}`",
+            f"- trace_features_status: `{stage5_6_refresh['trace_features_status']}`",
+            f"- trace_features_trace_frame_count: `{stage5_6_refresh['trace_features_trace_frame_count']}`",
+            f"- trace_features_stage_counts: `{stage5_6_refresh['trace_features_stage_counts']}`",
+            f"- trace_features_stage7_trace_frame_count: `{stage5_6_refresh['trace_features_stage7_trace_frame_count']}`",
+            f"- trace_features_selector_training_row_count: `{stage5_6_refresh['trace_features_selector_training_row_count']}`",
+            f"- trace_features_candidate_generation_training_row_count: `{stage5_6_refresh['trace_features_candidate_generation_training_row_count']}`",
+            f"- dataset_design_v3_status: `{stage5_6_refresh['dataset_design_v3_status']}`",
+            f"- dataset_design_v3_implementation_allowed: `{stage5_6_refresh['dataset_design_v3_implementation_allowed']}`",
+            f"- runtime_work_allowed: `{stage5_6_refresh['runtime_work_allowed']}`",
+            f"- selector_training_allowed: `{stage5_6_refresh['selector_training_allowed']}`",
+            f"- stage7_promotion_allowed: `{stage5_6_refresh['stage7_promotion_allowed']}`",
+            f"- stage8_training_allowed: `{stage5_6_refresh['stage8_training_allowed']}`",
             "",
             "## Selector Objective Lineage Evidence",
             "",
