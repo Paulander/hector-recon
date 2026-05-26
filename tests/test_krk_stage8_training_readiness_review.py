@@ -392,6 +392,70 @@ def test_stage8_training_readiness_review_routes_blocked_collection_request_to_r
     assert payload["decision"]["stage8_training_allowed"] is False
 
 
+def test_stage8_training_readiness_review_falls_back_when_collection_ready_is_null():
+    readiness = {
+        "protected_stack": {
+            "ready": True,
+            "m1_m4_preservation_passed": True,
+            "kpk_kqk_bridge_preservation_passed": True,
+        },
+        "stage_status": {
+            "stage4": {"ready_for_current_suite": True},
+            "stage7": {
+                "success_controls_ready": True,
+                "success_controls": 5,
+                "success_controls_required": 5,
+                "ready_for_promotion": False,
+            },
+        },
+        "protected_failure_contrast_gate": {
+            "status": (
+                "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+            ),
+            "ready_for_explicit_approval": None,
+            "approval_request_status": (
+                "protected_plan_window_failure_contrast_approval_request_ready"
+            ),
+            "approval_request_blockers": [],
+            "approval_request_ready_for_collection": True,
+            "integration_ready": False,
+            "runner_status": "protected_plan_window_failure_contrast_runner_dry_run_ready",
+            "runner_processed_job_count": 0,
+            "runner_executed_job_count": 0,
+        },
+        "explicit_gate_blockers": [
+            "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+        ],
+    }
+    benchmark_review = {
+        "decision": {"status": "sequence_policy_benchmark_mixed_plan_window_underpowered"}
+    }
+
+    payload = _review.build_payload(readiness=readiness, benchmark_review=benchmark_review)
+
+    assert (
+        payload["requirements"][
+            "protected_failure_contrast_collection_ready_for_explicit_approval"
+        ]
+        is True
+    )
+    assert (
+        payload["requirements"][
+            "protected_failure_contrast_approval_request_ready_for_collection"
+        ]
+        is True
+    )
+    assert (
+        "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+        in payload["blockers"]
+    )
+    assert (
+        payload["decision"]["status"]
+        == "stage8_training_blocked_pending_protected_failure_contrast_collection"
+    )
+    assert payload["decision"]["stage8_training_allowed"] is False
+
+
 def test_stage8_training_readiness_review_keeps_stage7_status_for_stage7_gap():
     payload = _review.build_payload(
         readiness={

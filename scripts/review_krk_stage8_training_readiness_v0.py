@@ -103,15 +103,28 @@ def build_payload(
             in (None, "protected_plan_window_failure_contrast_approval_request_ready")
         )
     )
-    protected_failure_contrast_collection_ready = bool(
-        protected_failure_contrast.get("ready_for_explicit_approval")
-    ) and protected_failure_contrast_request_ready
-    protected_failure_contrast_integration_ready = bool(
-        protected_failure_contrast.get("integration_ready")
-    )
     protected_failure_contrast_collection_blocker = (
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
         in explicit_gate_blockers
+    )
+    protected_failure_contrast_ready_value = protected_failure_contrast.get(
+        "ready_for_explicit_approval"
+    )
+    protected_failure_contrast_gate_ready = (
+        bool(protected_failure_contrast_ready_value)
+        if protected_failure_contrast_ready_value is not None
+        else (
+            protected_failure_contrast.get("status")
+            == "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+            or protected_failure_contrast_collection_blocker
+        )
+    )
+    protected_failure_contrast_collection_ready = (
+        protected_failure_contrast_gate_ready
+        and protected_failure_contrast_request_ready
+    )
+    protected_failure_contrast_integration_ready = bool(
+        protected_failure_contrast.get("integration_ready")
     )
     forbidden_input_blockers = sorted(
         FORBIDDEN_INPUT_BLOCKERS
