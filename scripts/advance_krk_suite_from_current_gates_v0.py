@@ -93,6 +93,19 @@ PASSIVE_STEPS = [
         "output_json": "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
     },
     {
+        "step_id": "sequence_policy_benchmark_design",
+        "script": "scripts/write_krk_sequence_policy_benchmark_design_v0.py",
+        "output_json": "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json",
+    },
+    {
+        "step_id": "cross_stage_plan_capsule_requirements",
+        "script": "scripts/write_krk_cross_stage_plan_capsule_evidence_requirements_v0.py",
+        "output_json": (
+            "reports/strategy_arbitration/"
+            "krk_cross_stage_plan_capsule_evidence_requirements_v0.json"
+        ),
+    },
+    {
         "step_id": "protected_plan_window_failure_contrast_plan",
         "script": "scripts/write_krk_protected_plan_window_failure_contrast_plan_v0.py",
         "output_json": (
@@ -337,6 +350,12 @@ def build_payload() -> dict[str, Any]:
     benchmark_review = _load_json(
         "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
     )
+    benchmark_design = _load_json(
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json"
+    )
+    cross_stage_requirements = _load_json(
+        "reports/strategy_arbitration/krk_cross_stage_plan_capsule_evidence_requirements_v0.json"
+    )
     failure_contrast_plan = _load_json(
         "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_plan_v0.json"
     )
@@ -553,6 +572,15 @@ def build_payload() -> dict[str, Any]:
             "sequence_policy_benchmark_ready": benchmark_ready,
             "sequence_policy_benchmark_review_status": benchmark_review.get("decision", {}).get(
                 "status"
+            ),
+            "sequence_policy_benchmark_design_status": benchmark_design.get(
+                "decision", {}
+            ).get("status"),
+            "sequence_policy_passive_design_without_new_labels_status": (
+                benchmark_design.get("passive_design_without_new_labels") or {}
+            ).get("status"),
+            "cross_stage_plan_capsule_requirements_status": (
+                cross_stage_requirements.get("decision", {}).get("status")
             ),
             "sequence_policy_forbidden_training_or_runtime_input_blocked": (
                 sequence_forbidden_training_or_runtime_inputs

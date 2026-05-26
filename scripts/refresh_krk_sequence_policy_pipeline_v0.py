@@ -82,6 +82,19 @@ STEPS = [
         "output_json": "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
     },
     {
+        "step_id": "sequence_policy_benchmark_design",
+        "script": "scripts/write_krk_sequence_policy_benchmark_design_v0.py",
+        "output_json": "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json",
+    },
+    {
+        "step_id": "cross_stage_plan_capsule_requirements",
+        "script": "scripts/write_krk_cross_stage_plan_capsule_evidence_requirements_v0.py",
+        "output_json": (
+            "reports/strategy_arbitration/"
+            "krk_cross_stage_plan_capsule_evidence_requirements_v0.json"
+        ),
+    },
+    {
         "step_id": "current_control_plane_gate",
         "script": "scripts/write_krk_current_control_plane_gate_v0.py",
         "output_json": "reports/krk_current_control_plane_gate_v0.json",
@@ -137,6 +150,12 @@ def run_refresh() -> dict[str, Any]:
     benchmark = _load_json("reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json")
     benchmark_review = _load_json(
         "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
+    )
+    benchmark_design = _load_json(
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json"
+    )
+    cross_stage_requirements = _load_json(
+        "reports/strategy_arbitration/krk_cross_stage_plan_capsule_evidence_requirements_v0.json"
     )
     gate = _load_json("reports/krk_current_control_plane_gate_v0.json")
     input_summary = inputs.get("summary", {})
@@ -215,6 +234,15 @@ def run_refresh() -> dict[str, Any]:
             "sequence_policy_benchmark_status": benchmark_decision.get("status"),
             "sequence_policy_benchmark_review_status": benchmark_review_decision.get("status"),
             "sequence_policy_benchmark_review_blockers": benchmark_review_blockers,
+            "sequence_policy_benchmark_design_status": benchmark_design.get(
+                "decision", {}
+            ).get("status"),
+            "sequence_policy_passive_design_without_new_labels_status": (
+                benchmark_design.get("passive_design_without_new_labels") or {}
+            ).get("status"),
+            "cross_stage_plan_capsule_requirements_status": (
+                cross_stage_requirements.get("decision", {}).get("status")
+            ),
             "selector_training_row_count": input_summary.get("selector_training_row_count"),
             "runtime_authorization_row_count": input_summary.get(
                 "runtime_authorization_row_count"

@@ -53,6 +53,18 @@ def test_sequence_policy_pipeline_refresh_preserves_boundaries():
         == "sequence_policy_benchmark_mixed_plan_window_underpowered"
     )
     assert (
+        payload["summary"]["sequence_policy_benchmark_design_status"]
+        == "sequence_policy_benchmark_design_ready_non_causal"
+    )
+    assert (
+        payload["summary"]["sequence_policy_passive_design_without_new_labels_status"]
+        == "non_causal_sequence_policy_design_without_new_labels_ready"
+    )
+    assert (
+        payload["summary"]["cross_stage_plan_capsule_requirements_status"]
+        == "cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark"
+    )
+    assert (
         payload["summary"]["sequence_policy_benchmark_review_next_step"]
         == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
     )
@@ -146,6 +158,13 @@ def test_sequence_policy_pipeline_refresh_reports_protected_plan_window_input_ga
         "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json": {
             "decision": {"status": "sequence_policy_benchmark_review_blocked_pending_ready_inputs"}
         },
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json": {
+            "decision": {"status": "sequence_policy_benchmark_design_ready_non_causal"},
+            "passive_design_without_new_labels": {"status": "fixture_passive"},
+        },
+        "reports/strategy_arbitration/krk_cross_stage_plan_capsule_evidence_requirements_v0.json": {
+            "decision": {"status": "fixture_cross_stage"}
+        },
         "reports/krk_current_control_plane_gate_v0.json": {
             "decision": {"status": "krk_control_plane_waiting_on_explicit_gate_choice"}
         },
@@ -199,6 +218,13 @@ def test_sequence_policy_pipeline_refresh_routes_forbidden_rows_to_repair(monkey
                 "status": "sequence_policy_benchmark_review_blocked_forbidden_training_or_runtime_rows",
                 "recommended_next_step": "repair_sequence_policy_inputs_remove_training_or_runtime_rows",
             },
+        },
+        "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json": {
+            "decision": {"status": "sequence_policy_benchmark_design_ready_non_causal"},
+            "passive_design_without_new_labels": {"status": "fixture_passive"},
+        },
+        "reports/strategy_arbitration/krk_cross_stage_plan_capsule_evidence_requirements_v0.json": {
+            "decision": {"status": "fixture_cross_stage"}
         },
         "reports/krk_current_control_plane_gate_v0.json": {
             "decision": {"status": "krk_control_plane_waiting_on_explicit_gate_choice"}

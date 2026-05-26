@@ -6,7 +6,7 @@ This passive refresh reruns integration, input assembly, probe, benchmark, and g
 
 ## Summary
 
-- step_count: `8`
+- step_count: `10`
 - all_boundaries_preserved: `True`
 - stage7_outputs_present_count: `8`
 - stage7_success_controls: `11`
@@ -18,6 +18,9 @@ This passive refresh reruns integration, input assembly, probe, benchmark, and g
 - sequence_policy_benchmark_status: `sequence_policy_benchmark_ready_non_causal_results_available`
 - sequence_policy_benchmark_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered`
 - sequence_policy_benchmark_review_blockers: `['protected_plan_window_failure_evidence_sparse']`
+- sequence_policy_benchmark_design_status: `sequence_policy_benchmark_design_ready_non_causal`
+- sequence_policy_passive_design_without_new_labels_status: `non_causal_sequence_policy_design_without_new_labels_ready`
+- cross_stage_plan_capsule_requirements_status: `cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark`
 - selector_training_row_count: `0`
 - runtime_authorization_row_count: `0`
 - forbidden_training_or_runtime_input_blocked: `False`
@@ -34,6 +37,8 @@ This passive refresh reruns integration, input assembly, probe, benchmark, and g
 - `sequence_policy_input_probe` status=`sequence_policy_input_probe_ready_for_full_non_causal_benchmark` runtime=`False` labels=`False`
 - `sequence_policy_benchmark` status=`sequence_policy_benchmark_ready_non_causal_results_available` runtime=`False` labels=`False`
 - `sequence_policy_benchmark_review` status=`sequence_policy_benchmark_mixed_plan_window_underpowered` runtime=`False` labels=`False`
+- `sequence_policy_benchmark_design` status=`sequence_policy_benchmark_design_ready_non_causal` runtime=`False` labels=`False`
+- `cross_stage_plan_capsule_requirements` status=`cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark` runtime=`False` labels=`False`
 - `current_control_plane_gate` status=`krk_control_plane_waiting_on_explicit_gate_choice` runtime=`False` labels=`False`
 
 ## Decision

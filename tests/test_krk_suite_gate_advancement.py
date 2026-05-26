@@ -106,6 +106,8 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         "stage7_clean_success_backfill_audit",
         "sequence_policy_pipeline_refresh",
         "sequence_policy_benchmark_review",
+        "sequence_policy_benchmark_design",
+        "cross_stage_plan_capsule_requirements",
         "protected_plan_window_failure_contrast_plan",
         "protected_plan_window_failure_contrast_manifest",
         "protected_plan_window_failure_contrast_manifest_review",
@@ -133,6 +135,18 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     assert (
         payload["summary"]["sequence_policy_benchmark_review_status"]
         == "sequence_policy_benchmark_mixed_plan_window_underpowered"
+    )
+    assert (
+        payload["summary"]["sequence_policy_benchmark_design_status"]
+        == "sequence_policy_benchmark_design_ready_non_causal"
+    )
+    assert (
+        payload["summary"]["sequence_policy_passive_design_without_new_labels_status"]
+        == "non_causal_sequence_policy_design_without_new_labels_ready"
+    )
+    assert (
+        payload["summary"]["cross_stage_plan_capsule_requirements_status"]
+        == "cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark"
     )
     assert (
         payload["summary"]["protected_plan_window_failure_contrast_plan_status"]

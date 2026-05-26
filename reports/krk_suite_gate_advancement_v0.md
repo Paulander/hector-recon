@@ -31,6 +31,9 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - sequence_policy_inputs_ready: `True`
 - sequence_policy_benchmark_ready: `True`
 - sequence_policy_benchmark_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered`
+- sequence_policy_benchmark_design_status: `sequence_policy_benchmark_design_ready_non_causal`
+- sequence_policy_passive_design_without_new_labels_status: `non_causal_sequence_policy_design_without_new_labels_ready`
+- cross_stage_plan_capsule_requirements_status: `cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark`
 - sequence_policy_forbidden_training_or_runtime_input_blocked: `False`
 - sequence_policy_forbidden_training_or_runtime_input_blockers: `[]`
 - protected_plan_window_failure_contrast_plan_status: `protected_plan_window_failure_contrast_plan_ready_pending_explicit_collection_approval`
@@ -88,6 +91,8 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - `stage7_clean_success_backfill_audit` status=`stage7_clean_success_backfill_available` labels=`False` runtime=`False` artifact_runtime=`False`
 - `sequence_policy_pipeline_refresh` status=`sequence_policy_pipeline_refreshed_ready_for_non_causal_benchmark_review` labels=`False` runtime=`False` artifact_runtime=`False`
 - `sequence_policy_benchmark_review` status=`sequence_policy_benchmark_mixed_plan_window_underpowered` labels=`False` runtime=`False` artifact_runtime=`False`
+- `sequence_policy_benchmark_design` status=`sequence_policy_benchmark_design_ready_non_causal` labels=`False` runtime=`False` artifact_runtime=`False`
+- `cross_stage_plan_capsule_requirements` status=`cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark` labels=`False` runtime=`False` artifact_runtime=`False`
 - `protected_plan_window_failure_contrast_plan` status=`protected_plan_window_failure_contrast_plan_ready_pending_explicit_collection_approval` labels=`False` runtime=`False` artifact_runtime=`False`
 - `protected_plan_window_failure_contrast_manifest` status=`protected_plan_window_failure_contrast_manifest_ready_for_review` labels=`False` runtime=`False` artifact_runtime=`False`
 - `protected_plan_window_failure_contrast_manifest_review` status=`protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval` labels=`False` runtime=`False` artifact_runtime=`False`

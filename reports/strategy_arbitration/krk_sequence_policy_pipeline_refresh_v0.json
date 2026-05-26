@@ -26,6 +26,8 @@
     "scripts/probe_krk_sequence_policy_inputs_v0.py",
     "scripts/run_krk_sequence_policy_benchmark_v0.py",
     "scripts/review_krk_sequence_policy_benchmark_v0.py",
+    "scripts/write_krk_sequence_policy_benchmark_design_v0.py",
+    "scripts/write_krk_cross_stage_plan_capsule_evidence_requirements_v0.py",
     "scripts/write_krk_current_control_plane_gate_v0.py"
   ],
   "stage7_promotion_allowed": false,
@@ -102,6 +104,26 @@
       "step_id": "sequence_policy_benchmark_review"
     },
     {
+      "decision_status": "sequence_policy_benchmark_design_ready_non_causal",
+      "label_run_allowed": false,
+      "output_json": "reports/strategy_arbitration/krk_sequence_policy_benchmark_design_v0.json",
+      "runtime_changes_allowed": false,
+      "script": "scripts/write_krk_sequence_policy_benchmark_design_v0.py",
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false,
+      "step_id": "sequence_policy_benchmark_design"
+    },
+    {
+      "decision_status": "cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark",
+      "label_run_allowed": false,
+      "output_json": "reports/strategy_arbitration/krk_cross_stage_plan_capsule_evidence_requirements_v0.json",
+      "runtime_changes_allowed": false,
+      "script": "scripts/write_krk_cross_stage_plan_capsule_evidence_requirements_v0.py",
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false,
+      "step_id": "cross_stage_plan_capsule_requirements"
+    },
+    {
       "decision_status": "krk_control_plane_waiting_on_explicit_gate_choice",
       "label_run_allowed": false,
       "output_json": "reports/krk_current_control_plane_gate_v0.json",
@@ -114,12 +136,14 @@
   ],
   "summary": {
     "all_boundaries_preserved": true,
+    "cross_stage_plan_capsule_requirements_status": "cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark",
     "current_gate_status": "krk_control_plane_waiting_on_explicit_gate_choice",
     "forbidden_training_or_runtime_input_blocked": false,
     "forbidden_training_or_runtime_input_blockers": [],
     "protected_plan_window_evidence_met": true,
     "runtime_authorization_row_count": 0,
     "selector_training_row_count": 0,
+    "sequence_policy_benchmark_design_status": "sequence_policy_benchmark_design_ready_non_causal",
     "sequence_policy_benchmark_review_blockers": [
       "protected_plan_window_failure_evidence_sparse"
     ],
@@ -127,11 +151,12 @@
     "sequence_policy_benchmark_review_status": "sequence_policy_benchmark_mixed_plan_window_underpowered",
     "sequence_policy_benchmark_status": "sequence_policy_benchmark_ready_non_causal_results_available",
     "sequence_policy_inputs_ready": true,
+    "sequence_policy_passive_design_without_new_labels_status": "non_causal_sequence_policy_design_without_new_labels_ready",
     "stage7_failure_controls": 39,
     "stage7_failure_controls_required": 5,
     "stage7_outputs_present_count": 8,
     "stage7_success_controls": 11,
     "stage7_success_controls_required": 5,
-    "step_count": 8
+    "step_count": 10
   }
 }
