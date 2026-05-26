@@ -204,6 +204,7 @@ def build_payload(
     protected_plan_windows = protected_plan_windows or _load_optional(PROTECTED_PLAN_WINDOWS)
     sequence_policy_inputs = sequence_policy_inputs or _load_optional(SEQUENCE_POLICY_INPUTS)
     full_suite_readiness = full_suite_readiness or _load_optional(FULL_SUITE_READINESS)
+    readiness_boundaries = full_suite_readiness.get("runtime_and_training_boundaries") or {}
     protected_stack = full_suite_readiness.get("protected_stack") or {}
     active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
@@ -661,6 +662,15 @@ def build_payload(
                             "readiness_fingerprint"
                         )
                     ),
+                    "readiness_checked_flag_count": readiness_boundaries.get(
+                        "checked_flag_count"
+                    ),
+                    "readiness_boundary_violation_count": readiness_boundaries.get(
+                        "violation_count"
+                    ),
+                    "readiness_source_artifact_count": len(
+                        full_suite_readiness.get("source_artifacts") or {}
+                    ),
                     "per_job_timeout_seconds": failure_contrast_runner_summary.get(
                         "job_timeout_seconds"
                     ),
@@ -779,6 +789,15 @@ def build_payload(
                 "filesystem_snapshots_replaced"
             ),
             "protected_stack_hard_blockers": protected_stack_blockers,
+            "readiness_checked_flag_count": readiness_boundaries.get(
+                "checked_flag_count"
+            ),
+            "readiness_boundary_violation_count": readiness_boundaries.get(
+                "violation_count"
+            ),
+            "readiness_source_artifact_count": len(
+                full_suite_readiness.get("source_artifacts") or {}
+            ),
             "stage4": "first_move_contrast_runtime_review_ready_pending_explicit_approval",
             "stage7": "heldout_clean_success_controls_ready_sequence_benchmark_available"
             if stage7_success_ready

@@ -15,6 +15,9 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - protected_stack_rollback_common_paths_distinct: `True`
 - protected_stack_filesystem_snapshots_replaced: `False`
 - protected_stack_hard_blockers: `[]`
+- readiness_checked_flag_count: `430`
+- readiness_boundary_violation_count: `0`
+- readiness_source_artifact_count: `44`
 - stage4: `first_move_contrast_runtime_review_ready_pending_explicit_approval`
 - stage7: `heldout_clean_success_controls_ready_sequence_benchmark_available`
 - stage7_success_controls_ready: `True`
@@ -165,6 +168,9 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
   - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
   - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
   - expected_readiness_fingerprint: `351a366042e7e888018897007e29e096afdb180a9c4f4eb02853940b82228c66`
+  - readiness_checked_flag_count: `430`
+  - readiness_boundary_violation_count: `0`
+  - readiness_source_artifact_count: `44`
   - per_job_timeout_seconds: `900`
   - refresh_after_run: `True`
   - processed_job_count: `0`

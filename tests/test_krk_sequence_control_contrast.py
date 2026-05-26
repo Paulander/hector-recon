@@ -246,6 +246,9 @@ def test_current_control_plane_gate_requires_explicit_choice():
         is False
     )
     assert payload["current_state"]["protected_stack_hard_blockers"] == []
+    assert payload["current_state"]["readiness_checked_flag_count"] >= 430
+    assert payload["current_state"]["readiness_boundary_violation_count"] == 0
+    assert payload["current_state"]["readiness_source_artifact_count"] >= 44
     option_ids = {option["option_id"] for option in payload["approval_options"]}
     assert option_ids == {
         "approve_stage4_first_move_contrast_sandbox",
@@ -573,6 +576,9 @@ def test_current_control_plane_gate_requires_explicit_choice():
     assert review_option["safety_scope"]["approval_receipt_created_by_request"] is False
     assert len(review_option["safety_scope"]["expected_manifest_fingerprint"]) == 64
     assert len(review_option["safety_scope"]["expected_readiness_fingerprint"]) == 64
+    assert review_option["safety_scope"]["readiness_checked_flag_count"] >= 430
+    assert review_option["safety_scope"]["readiness_boundary_violation_count"] == 0
+    assert review_option["safety_scope"]["readiness_source_artifact_count"] >= 44
     assert review_option["safety_scope"]["per_job_timeout_seconds"] == 900
     assert review_option["safety_scope"]["refresh_after_run"] is True
     assert review_option["safety_scope"]["post_success_refresh_required"] is True
