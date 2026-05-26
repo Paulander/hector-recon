@@ -443,6 +443,81 @@ def test_stage8_training_readiness_review_routes_blocked_collection_request_to_r
     assert payload["decision"]["stage8_training_allowed"] is False
 
 
+def test_stage8_training_readiness_review_blocks_collection_when_execution_not_ready():
+    readiness = {
+        "protected_stack": {
+            "ready": True,
+            "m1_m4_preservation_passed": True,
+            "kpk_kqk_bridge_preservation_passed": True,
+        },
+        "stage_status": {
+            "stage4": {"ready_for_current_suite": True},
+            "stage7": {
+                "success_controls_ready": True,
+                "success_controls": 5,
+                "success_controls_required": 5,
+                "ready_for_promotion": False,
+            },
+        },
+        "protected_failure_contrast_gate": {
+            "status": "protected_plan_window_failure_contrast_execution_blocked",
+            "ready_for_explicit_approval": True,
+            "command_if_explicitly_approved": "SHOULD_NOT_SURFACE",
+            "approval_request_status": (
+                "protected_plan_window_failure_contrast_approval_request_ready"
+            ),
+            "approval_request_blockers": [],
+            "approval_request_ready_for_collection": True,
+            "integration_ready": False,
+            "runner_status": "protected_plan_window_failure_contrast_runner_blocked",
+            "runner_processed_job_count": 0,
+            "runner_executed_job_count": 0,
+        },
+        "explicit_gate_blockers": [
+            "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+        ],
+    }
+
+    payload = _review.build_payload(
+        readiness=readiness,
+        benchmark_review={
+            "decision": {
+                "status": "sequence_policy_benchmark_mixed_plan_window_underpowered"
+            }
+        },
+    )
+
+    assert (
+        payload["requirements"][
+            "protected_failure_contrast_collection_ready_for_explicit_approval"
+        ]
+        is False
+    )
+    assert (
+        "protected_plan_window_failure_contrast_execution_readiness_blocked"
+        in payload["blockers"]
+    )
+    assert (
+        "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+        not in payload["blockers"]
+    )
+    assert (
+        payload["decision"]["status"]
+        == "stage8_training_blocked_pending_protected_failure_contrast_execution_readiness"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_protected_plan_window_failure_contrast_execution_readiness"
+    )
+    assert (
+        payload["requirements"][
+            "protected_failure_contrast_command_if_explicitly_approved"
+        ]
+        is None
+    )
+    assert payload["decision"]["stage8_training_allowed"] is False
+
+
 def test_stage8_training_readiness_review_prioritizes_protected_stack_repair():
     readiness = {
         "protected_stack": {

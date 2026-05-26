@@ -126,6 +126,18 @@ def build_payload(
             in (None, "protected_plan_window_failure_contrast_approval_request_ready")
         )
     )
+    protected_failure_contrast_execution_ready = (
+        protected_failure_contrast.get("status")
+        in (None, "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval")
+    )
+    protected_failure_contrast_runner_ready = (
+        protected_failure_contrast.get("runner_status")
+        in (None, "protected_plan_window_failure_contrast_runner_dry_run_ready")
+    )
+    protected_failure_contrast_execution_preconditions_ready = (
+        protected_failure_contrast_execution_ready
+        and protected_failure_contrast_runner_ready
+    )
     protected_failure_contrast_collection_blocker = (
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
         in explicit_gate_blockers
@@ -145,6 +157,7 @@ def build_payload(
     protected_failure_contrast_collection_ready = (
         protected_failure_contrast_gate_ready
         and protected_failure_contrast_request_ready
+        and protected_failure_contrast_execution_preconditions_ready
     )
     protected_failure_contrast_command_if_explicitly_approved = (
         protected_failure_contrast.get("command_if_explicitly_approved")
@@ -185,6 +198,10 @@ def build_payload(
             blockers.append(
                 "protected_plan_window_failure_contrast_approval_request_blocked"
             )
+        elif not protected_failure_contrast_execution_preconditions_ready:
+            blockers.append(
+                "protected_plan_window_failure_contrast_execution_readiness_blocked"
+            )
         elif protected_failure_contrast_collection_blocker:
             blockers.append(
                 "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
@@ -216,6 +233,13 @@ def build_payload(
                 "stage8_training_blocked_pending_protected_failure_contrast_approval_request_repair"
             )
             next_step = "repair_protected_failure_contrast_approval_request_scope"
+        elif "protected_plan_window_failure_contrast_execution_readiness_blocked" in blockers:
+            status = (
+                "stage8_training_blocked_pending_protected_failure_contrast_execution_readiness"
+            )
+            next_step = (
+                "review_protected_plan_window_failure_contrast_execution_readiness"
+            )
         elif "sequence_policy_benchmark_mixed_or_underpowered" in blockers:
             status = "stage8_training_blocked_pending_sequence_policy_benchmark_review"
             next_step = "inspect_sequence_policy_benchmark_review_before_stage8_training"

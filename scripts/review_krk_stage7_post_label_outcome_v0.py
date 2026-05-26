@@ -135,6 +135,18 @@ def build_payload(
             in (None, "protected_plan_window_failure_contrast_approval_request_ready")
         )
     )
+    protected_failure_contrast_execution_ready = (
+        protected_failure_contrast.get("status")
+        in (None, "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval")
+    )
+    protected_failure_contrast_runner_ready = (
+        protected_failure_contrast.get("runner_status")
+        in (None, "protected_plan_window_failure_contrast_runner_dry_run_ready")
+    )
+    protected_failure_contrast_execution_preconditions_ready = (
+        protected_failure_contrast_execution_ready
+        and protected_failure_contrast_runner_ready
+    )
     post_failure_contrast_refresh_boundaries_preserved = sequence_policy.get(
         "post_failure_contrast_refresh_boundaries_preserved"
     )
@@ -146,6 +158,7 @@ def build_payload(
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
         in explicit_gate_blockers
         and protected_failure_contrast_request_ready
+        and protected_failure_contrast_execution_preconditions_ready
     )
     protected_failure_contrast_ready_value = protected_failure_contrast.get(
         "ready_for_explicit_approval"
@@ -162,6 +175,7 @@ def build_payload(
     protected_failure_contrast_ready_for_explicit_approval = (
         protected_failure_contrast_gate_ready
         and protected_failure_contrast_request_ready
+        and protected_failure_contrast_execution_preconditions_ready
     )
     protected_failure_contrast_command_if_explicitly_approved = (
         protected_failure_contrast.get("command_if_explicitly_approved")
@@ -253,6 +267,16 @@ def build_payload(
                 "post_label_outcome_blocked_pending_protected_failure_contrast_approval_request_repair"
             )
             next_step = "repair_protected_failure_contrast_approval_request_scope"
+        elif not protected_failure_contrast_execution_preconditions_ready:
+            blockers.append(
+                "protected_plan_window_failure_contrast_execution_readiness_blocked"
+            )
+            status = (
+                "post_label_outcome_blocked_pending_protected_failure_contrast_execution_readiness"
+            )
+            next_step = (
+                "review_protected_plan_window_failure_contrast_execution_readiness"
+            )
         elif protected_failure_contrast_pending_approval:
             blockers.append(
                 "protected_plan_window_failure_contrast_collection_pending_explicit_approval"

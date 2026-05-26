@@ -472,6 +472,88 @@ def test_underpowered_pilot_routes_blocked_collection_request_to_repair():
     assert payload["decision"]["runtime_changes_allowed"] is False
 
 
+def test_underpowered_pilot_blocks_collection_when_execution_not_ready():
+    benchmark = {
+        "decision": {"benchmark_executed_as_ready": True},
+        "preflight": {"blockers": []},
+        "objectives": [
+            {
+                "objective_id": "stage4_state_local_first_move_contrast",
+                "metrics": {
+                    "top1_conversion_positive_by_state": 1.0,
+                    "top3_conversion_positive_by_state": 1.0,
+                    "precision": 0.8,
+                    "recall": 0.4,
+                    "negative_suppression": 0.9,
+                },
+            },
+            {
+                "objective_id": "protected_plan_window_entry_progress_exit_abort",
+                "failure_evidence_sparse": True,
+            },
+        ],
+    }
+    readiness = {
+        "protected_failure_contrast_gate": {
+            "status": "protected_plan_window_failure_contrast_execution_blocked",
+            "ready_for_explicit_approval": True,
+            "command_if_explicitly_approved": "SHOULD_NOT_SURFACE",
+            "approval_request_status": (
+                "protected_plan_window_failure_contrast_approval_request_ready"
+            ),
+            "approval_request_blockers": [],
+            "approval_request_ready_for_collection": True,
+            "runner_status": "protected_plan_window_failure_contrast_runner_blocked",
+        },
+        "explicit_gate_blockers": [
+            "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+        ],
+    }
+
+    payload = _pilot.build_payload(
+        benchmark=benchmark,
+        benchmark_review={
+            "decision": {
+                "status": "sequence_policy_benchmark_mixed_plan_window_underpowered"
+            },
+            "blockers": [],
+        },
+        inputs={
+            "summary": {
+                "row_count": 21,
+                "stage7_clean_success_controls_required": 5,
+                "selector_training_row_count": 0,
+                "runtime_authorization_row_count": 0,
+            }
+        },
+        backfill_audit={"decision": {"status": "not_needed"}, "summary": {}},
+        readiness=readiness,
+    )
+
+    assert payload["summary"]["protected_failure_contrast_ready_for_explicit_approval"] is False
+    assert (
+        "protected_plan_window_failure_contrast_execution_readiness_blocked"
+        in payload["blockers"]
+    )
+    assert (
+        "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+        not in payload["blockers"]
+    )
+    assert (
+        payload["decision"]["status"]
+        == "sequence_policy_pilot_blocked_pending_protected_failure_contrast_execution_readiness"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_protected_plan_window_failure_contrast_execution_readiness"
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_command_if_explicitly_approved"]
+        is None
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+
+
 def test_underpowered_pilot_routes_unsafe_protected_stack_to_repair():
     benchmark = {
         "decision": {"benchmark_executed_as_ready": True},

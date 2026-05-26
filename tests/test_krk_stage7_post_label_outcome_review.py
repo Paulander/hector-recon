@@ -480,6 +480,90 @@ def test_stage7_post_label_outcome_routes_blocked_collection_request_to_repair()
     assert payload["decision"]["runtime_changes_allowed"] is False
 
 
+def test_stage7_post_label_outcome_blocks_collection_when_execution_not_ready():
+    payload = _review.build_payload(
+        output_validation={
+            "summary": {"output_exists_count": 8, "output_valid_count": 8},
+            "decision": {
+                "status": "stage7_diverse_clean_sampling_outputs_valid_ready_for_integration"
+            },
+        },
+        integration={
+            "summary": {
+                "combined_success_controls": 5,
+                "success_controls_required": 5,
+                "success_controls_met": True,
+                "combined_failure_controls": 8,
+                "failure_controls_required": 5,
+                "failure_controls_met": True,
+            },
+            "decision": {
+                "status": "stage7_diverse_clean_sampling_integration_success_controls_met"
+            },
+        },
+        pipeline={
+            "summary": {"sequence_policy_inputs_ready": True},
+            "decision": {
+                "status": "sequence_policy_pipeline_refreshed_ready_for_non_causal_benchmark_review"
+            },
+        },
+        benchmark_review={
+            "decision": {
+                "status": "sequence_policy_benchmark_mixed_plan_window_underpowered"
+            }
+        },
+        readiness={
+            "stage7_sampling_gate": {"invalid_existing_output_count": 0},
+            "decision": {"status": "krk_suite_readiness_blocked"},
+            "protected_failure_contrast_gate": {
+                "status": "protected_plan_window_failure_contrast_execution_blocked",
+                "ready_for_explicit_approval": True,
+                "command_if_explicitly_approved": "SHOULD_NOT_SURFACE",
+                "approval_request_status": (
+                    "protected_plan_window_failure_contrast_approval_request_ready"
+                ),
+                "approval_request_blockers": [],
+                "approval_request_ready_for_collection": True,
+                "integration_ready": False,
+                "runner_status": "protected_plan_window_failure_contrast_runner_blocked",
+                "runner_processed_job_count": 0,
+                "runner_executed_job_count": 0,
+            },
+            "explicit_gate_blockers": [
+                "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+            ],
+        },
+        stage8_review={
+            "decision": {
+                "status": "stage8_training_blocked_pending_protected_failure_contrast_collection"
+            }
+        },
+    )
+
+    assert payload["summary"]["protected_failure_contrast_ready_for_explicit_approval"] is False
+    assert (
+        "protected_plan_window_failure_contrast_execution_readiness_blocked"
+        in payload["blockers"]
+    )
+    assert (
+        "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+        not in payload["blockers"]
+    )
+    assert (
+        payload["decision"]["status"]
+        == "post_label_outcome_blocked_pending_protected_failure_contrast_execution_readiness"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_protected_plan_window_failure_contrast_execution_readiness"
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_command_if_explicitly_approved"]
+        is None
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+
+
 def test_stage7_post_label_outcome_routes_unsafe_protected_stack_to_repair():
     payload = _review.build_payload(
         output_validation={
