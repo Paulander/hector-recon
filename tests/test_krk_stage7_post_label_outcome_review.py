@@ -747,7 +747,7 @@ def test_stage7_post_label_outcome_falls_back_when_collection_ready_is_null():
         is True
     )
     assert (
-        "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+        "protected_plan_window_failure_contrast_control_plane_gate_review_required"
         in payload["blockers"]
     )
     assert (
@@ -764,6 +764,10 @@ def test_stage7_post_label_outcome_falls_back_when_collection_ready_is_null():
     )
     assert (
         payload["decision"]["status"]
-        == "post_label_outcome_waiting_on_explicit_protected_failure_contrast_collection"
+        == "post_label_outcome_blocked_pending_protected_failure_contrast_control_plane_gate_review"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
     )
     assert payload["decision"]["runtime_changes_allowed"] is False

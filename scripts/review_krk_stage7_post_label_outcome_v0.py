@@ -155,11 +155,27 @@ def build_payload(
         "post_failure_contrast_refresh_boundary_violation_count"
     )
     benchmark_review_blockers = set(benchmark_review.get("blockers") or [])
+    protected_collection_command_available_value = current_gate.get(
+        "protected_failure_contrast_collection_command_available"
+    )
+    protected_collection_command_available = (
+        bool(protected_collection_command_available_value)
+        if protected_collection_command_available_value is not None
+        else bool(protected_failure_contrast.get("command_if_explicitly_approved"))
+    )
     protected_failure_contrast_pending_approval = (
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
         in explicit_gate_blockers
         and protected_failure_contrast_request_ready
         and protected_failure_contrast_execution_preconditions_ready
+        and protected_collection_command_available
+    )
+    protected_failure_contrast_control_plane_gate_review_required = (
+        "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+        in explicit_gate_blockers
+        and protected_failure_contrast_request_ready
+        and protected_failure_contrast_execution_preconditions_ready
+        and not protected_collection_command_available
     )
     protected_failure_contrast_ready_value = protected_failure_contrast.get(
         "ready_for_explicit_approval"
@@ -177,14 +193,6 @@ def build_payload(
         protected_failure_contrast_gate_ready
         and protected_failure_contrast_request_ready
         and protected_failure_contrast_execution_preconditions_ready
-    )
-    protected_collection_command_available_value = current_gate.get(
-        "protected_failure_contrast_collection_command_available"
-    )
-    protected_collection_command_available = (
-        bool(protected_collection_command_available_value)
-        if protected_collection_command_available_value is not None
-        else bool(protected_failure_contrast.get("command_if_explicitly_approved"))
     )
     protected_failure_contrast_command_if_explicitly_approved = (
         protected_failure_contrast.get("command_if_explicitly_approved")
@@ -286,6 +294,16 @@ def build_payload(
             )
             next_step = (
                 "review_protected_plan_window_failure_contrast_execution_readiness"
+            )
+        elif protected_failure_contrast_control_plane_gate_review_required:
+            blockers.append(
+                "protected_plan_window_failure_contrast_control_plane_gate_review_required"
+            )
+            status = (
+                "post_label_outcome_blocked_pending_protected_failure_contrast_control_plane_gate_review"
+            )
+            next_step = (
+                "review_current_control_plane_gate_for_protected_failure_contrast_collection"
             )
         elif protected_failure_contrast_pending_approval:
             blockers.append(

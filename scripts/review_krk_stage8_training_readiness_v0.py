@@ -143,6 +143,14 @@ def build_payload(
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
         in explicit_gate_blockers
     )
+    protected_collection_command_available_value = current_gate.get(
+        "protected_failure_contrast_collection_command_available"
+    )
+    protected_collection_command_available = (
+        bool(protected_collection_command_available_value)
+        if protected_collection_command_available_value is not None
+        else bool(protected_failure_contrast.get("command_if_explicitly_approved"))
+    )
     protected_failure_contrast_ready_value = protected_failure_contrast.get(
         "ready_for_explicit_approval"
     )
@@ -160,13 +168,15 @@ def build_payload(
         and protected_failure_contrast_request_ready
         and protected_failure_contrast_execution_preconditions_ready
     )
-    protected_collection_command_available_value = current_gate.get(
-        "protected_failure_contrast_collection_command_available"
+    protected_failure_contrast_control_plane_gate_review_required = (
+        protected_failure_contrast_collection_blocker
+        and protected_failure_contrast_collection_ready
+        and not protected_collection_command_available
     )
-    protected_collection_command_available = (
-        bool(protected_collection_command_available_value)
-        if protected_collection_command_available_value is not None
-        else bool(protected_failure_contrast.get("command_if_explicitly_approved"))
+    protected_failure_contrast_collection_pending_approval = (
+        protected_failure_contrast_collection_blocker
+        and protected_failure_contrast_collection_ready
+        and protected_collection_command_available
     )
     protected_failure_contrast_command_if_explicitly_approved = (
         protected_failure_contrast.get("command_if_explicitly_approved")
@@ -212,7 +222,11 @@ def build_payload(
             blockers.append(
                 "protected_plan_window_failure_contrast_execution_readiness_blocked"
             )
-        elif protected_failure_contrast_collection_blocker:
+        elif protected_failure_contrast_control_plane_gate_review_required:
+            blockers.append(
+                "protected_plan_window_failure_contrast_control_plane_gate_review_required"
+            )
+        elif protected_failure_contrast_collection_pending_approval:
             blockers.append(
                 "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
             )
@@ -238,6 +252,13 @@ def build_payload(
         elif "protected_plan_window_failure_contrast_collection_pending_explicit_approval" in blockers:
             status = "stage8_training_blocked_pending_protected_failure_contrast_collection"
             next_step = "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        elif "protected_plan_window_failure_contrast_control_plane_gate_review_required" in blockers:
+            status = (
+                "stage8_training_blocked_pending_protected_failure_contrast_control_plane_gate_review"
+            )
+            next_step = (
+                "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+            )
         elif "protected_plan_window_failure_contrast_approval_request_blocked" in blockers:
             status = (
                 "stage8_training_blocked_pending_protected_failure_contrast_approval_request_repair"
