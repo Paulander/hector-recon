@@ -580,6 +580,21 @@ SOURCES = {
     "abstention_feature_gap_review_v0": (
         "reports/krk_abstention_feature_gap_review_v0.json"
     ),
+    "targeted_non_stage0_ownership_manifest_v0": (
+        "reports/krk_targeted_non_stage0_ownership_manifest_v0.json"
+    ),
+    "targeted_non_stage0_ownership_labels_v0": (
+        "reports/krk_targeted_non_stage0_ownership_labels_v0.json"
+    ),
+    "targeted_non_stage0_ownership_review_v0": (
+        "reports/krk_targeted_non_stage0_ownership_review_v0.json"
+    ),
+    "targeted_ownership_negative_manifest_v0": (
+        "reports/krk_targeted_ownership_negative_manifest_v0.json"
+    ),
+    "targeted_ownership_negative_labels_v0": (
+        "reports/krk_targeted_ownership_negative_labels_v0.json"
+    ),
     "clean_retrain_retry1_replacement_readiness_review": (
         "reports/krk_clean_retrain_retry1_replacement_readiness_review_v0.json"
     ),
@@ -1344,6 +1359,21 @@ def build_payload() -> dict[str, Any]:
     ]
     abstention_context_error_audit_v0 = payloads["abstention_context_error_audit_v0"]
     abstention_feature_gap_review_v0 = payloads["abstention_feature_gap_review_v0"]
+    targeted_non_stage0_ownership_manifest_v0 = payloads[
+        "targeted_non_stage0_ownership_manifest_v0"
+    ]
+    targeted_non_stage0_ownership_labels_v0 = payloads[
+        "targeted_non_stage0_ownership_labels_v0"
+    ]
+    targeted_non_stage0_ownership_review_v0 = payloads[
+        "targeted_non_stage0_ownership_review_v0"
+    ]
+    targeted_ownership_negative_manifest_v0 = payloads[
+        "targeted_ownership_negative_manifest_v0"
+    ]
+    targeted_ownership_negative_labels_v0 = payloads[
+        "targeted_ownership_negative_labels_v0"
+    ]
     clean_replacement_readiness = payloads[
         "clean_retrain_retry1_replacement_readiness_review"
     ]
@@ -1800,6 +1830,124 @@ def build_payload() -> dict[str, Any]:
         is False
         and abstention_feature_gap_review_v0.get("stage7_promotion_allowed") is False
         and abstention_feature_gap_review_v0.get("stage8_training_allowed") is False
+    )
+    targeted_non_stage0_manifest_decision = (
+        targeted_non_stage0_ownership_manifest_v0.get("decision") or {}
+    )
+    targeted_non_stage0_manifest_binding = (
+        targeted_non_stage0_ownership_manifest_v0.get("binding_summary") or {}
+    )
+    targeted_non_stage0_labels_decision = (
+        targeted_non_stage0_ownership_labels_v0.get("decision") or {}
+    )
+    targeted_non_stage0_labels_summary = (
+        targeted_non_stage0_ownership_labels_v0.get("summary") or {}
+    )
+    targeted_non_stage0_review_decision = (
+        targeted_non_stage0_ownership_review_v0.get("decision") or {}
+    )
+    targeted_non_stage0_review_summary = (
+        targeted_non_stage0_ownership_review_v0.get("summary") or {}
+    )
+    targeted_negative_manifest_decision = (
+        targeted_ownership_negative_manifest_v0.get("decision") or {}
+    )
+    targeted_negative_manifest_binding = (
+        targeted_ownership_negative_manifest_v0.get("binding_summary") or {}
+    )
+    targeted_negative_labels_decision = (
+        targeted_ownership_negative_labels_v0.get("decision") or {}
+    )
+    targeted_negative_labels_summary = (
+        targeted_ownership_negative_labels_v0.get("summary") or {}
+    )
+    targeted_ownership_recovery_passive = (
+        targeted_non_stage0_manifest_decision.get("status")
+        == "targeted_non_stage0_manifest_ready"
+        and targeted_non_stage0_manifest_decision.get("runtime_arbiter_allowed")
+        is False
+        and targeted_non_stage0_manifest_decision.get("selector_training_allowed")
+        is False
+        and targeted_non_stage0_ownership_manifest_v0.get(
+            "labels_generated_in_this_slice"
+        )
+        is False
+        and targeted_non_stage0_manifest_binding.get("all_bindings_valid") is True
+        and targeted_non_stage0_manifest_binding.get("missing_path_count") == 0
+        and targeted_non_stage0_manifest_binding.get("job_count") == 4
+        and targeted_non_stage0_manifest_binding.get("stage7_job_count") == 0
+        and targeted_non_stage0_labels_decision.get("status")
+        == "current_profile_preserves_some_historical_non_stage0_ownership"
+        and targeted_non_stage0_labels_decision.get("runtime_arbiter_allowed")
+        is False
+        and targeted_non_stage0_labels_decision.get("selector_training_allowed")
+        is False
+        and targeted_non_stage0_labels_summary.get("label_count") == 4
+        and targeted_non_stage0_labels_summary.get("stage7_training_rows") == 0
+        and targeted_non_stage0_labels_summary.get(
+            "preserved_historical_non_stage0_count"
+        )
+        == 4
+        and targeted_non_stage0_labels_summary.get("current_stage0_collapse_count")
+        == 0
+        and targeted_non_stage0_review_decision.get("status")
+        == "non_stage0_current_profile_evidence_recovered"
+        and targeted_non_stage0_review_decision.get("runtime_arbiter_allowed")
+        is False
+        and targeted_non_stage0_review_decision.get("selector_training_allowed")
+        is False
+        and targeted_non_stage0_review_summary.get("targeted_label_count") == 4
+        and targeted_non_stage0_review_summary.get("stage0_collapse_count") == 0
+        and targeted_negative_manifest_decision.get("status")
+        == "targeted_ownership_negative_manifest_ready"
+        and targeted_negative_manifest_decision.get("runtime_work_allowed") is False
+        and targeted_negative_manifest_decision.get("selector_training_allowed")
+        is False
+        and targeted_ownership_negative_manifest_v0.get(
+            "labels_generated_in_this_slice"
+        )
+        is False
+        and targeted_negative_manifest_binding.get("all_bindings_valid") is True
+        and targeted_negative_manifest_binding.get("missing_path_count") == 0
+        and targeted_negative_manifest_binding.get("job_count") == 6
+        and targeted_negative_manifest_binding.get("stage7_job_count") == 0
+        and targeted_negative_labels_decision.get("status")
+        == "targeted_ownership_negative_labels_collected"
+        and targeted_negative_labels_decision.get("runtime_work_allowed") is False
+        and targeted_negative_labels_decision.get("selector_training_allowed") is False
+        and targeted_negative_labels_summary.get("label_count") == 6
+        and targeted_negative_labels_summary.get("stage7_training_rows") == 0
+        and targeted_negative_labels_summary.get("preselection_preserved_count") == 6
+        and targeted_non_stage0_ownership_review_v0.get("runtime_behavior_changed")
+        is False
+        and targeted_non_stage0_ownership_review_v0.get("runtime_defaults_changed")
+        is False
+        and targeted_non_stage0_ownership_review_v0.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and targeted_non_stage0_ownership_review_v0.get("runtime_terminals_added")
+        is False
+        and targeted_non_stage0_ownership_review_v0.get("stage7_promotion_allowed")
+        is False
+        and targeted_non_stage0_ownership_review_v0.get("stage8_training_allowed")
+        is False
+        and targeted_ownership_negative_labels_v0.get("runtime_behavior_changed")
+        is False
+        and targeted_ownership_negative_labels_v0.get("runtime_defaults_changed")
+        is False
+        and targeted_ownership_negative_labels_v0.get("runtime_selector_implemented")
+        is False
+        and targeted_ownership_negative_labels_v0.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and targeted_ownership_negative_labels_v0.get("runtime_terminals_added")
+        is False
+        and targeted_ownership_negative_labels_v0.get("stage7_promotion_allowed")
+        is False
+        and targeted_ownership_negative_labels_v0.get("stage8_training_allowed")
+        is False
     )
     replacement_readiness_decision = clean_replacement_readiness.get("decision") or {}
     replacement_packet_decision = clean_stack_replacement_packet.get("decision") or {}
@@ -2830,6 +2978,93 @@ def build_payload() -> dict[str, Any]:
                 "stage7_promotion_allowed"
             ),
             "stage8_training_allowed": abstention_feature_gap_review_v0.get(
+                "stage8_training_allowed"
+            ),
+        },
+        "targeted_ownership_recovery_gate": {
+            "status": targeted_non_stage0_review_decision.get("status"),
+            "passive_recovery_ready": targeted_ownership_recovery_passive,
+            "non_stage0_manifest_status": targeted_non_stage0_manifest_decision.get(
+                "status"
+            ),
+            "non_stage0_manifest_job_count": targeted_non_stage0_manifest_binding.get(
+                "job_count"
+            ),
+            "non_stage0_manifest_stage7_job_count": (
+                targeted_non_stage0_manifest_binding.get("stage7_job_count")
+            ),
+            "non_stage0_manifest_labels_generated": (
+                targeted_non_stage0_ownership_manifest_v0.get(
+                    "labels_generated_in_this_slice"
+                )
+            ),
+            "non_stage0_labels_status": targeted_non_stage0_labels_decision.get(
+                "status"
+            ),
+            "non_stage0_label_count": targeted_non_stage0_labels_summary.get(
+                "label_count"
+            ),
+            "non_stage0_preserved_count": targeted_non_stage0_labels_summary.get(
+                "preserved_historical_non_stage0_count"
+            ),
+            "non_stage0_stage0_collapse_count": (
+                targeted_non_stage0_labels_summary.get("current_stage0_collapse_count")
+            ),
+            "non_stage0_selected_owner_failed_count": (
+                targeted_non_stage0_review_summary.get("selected_owner_failed_count")
+            ),
+            "non_stage0_stage7_training_rows": (
+                targeted_non_stage0_labels_summary.get("stage7_training_rows")
+            ),
+            "negative_manifest_status": targeted_negative_manifest_decision.get(
+                "status"
+            ),
+            "negative_manifest_job_count": targeted_negative_manifest_binding.get(
+                "job_count"
+            ),
+            "negative_manifest_stage7_job_count": (
+                targeted_negative_manifest_binding.get("stage7_job_count")
+            ),
+            "negative_manifest_labels_generated": (
+                targeted_ownership_negative_manifest_v0.get(
+                    "labels_generated_in_this_slice"
+                )
+            ),
+            "negative_labels_status": targeted_negative_labels_decision.get("status"),
+            "negative_label_count": targeted_negative_labels_summary.get("label_count"),
+            "negative_preselection_preserved_count": (
+                targeted_negative_labels_summary.get("preselection_preserved_count")
+            ),
+            "negative_targeted_owner_converted_count": (
+                targeted_negative_labels_summary.get("targeted_owner_converted_count")
+            ),
+            "negative_targeted_owner_failed_count": (
+                targeted_negative_labels_summary.get("targeted_owner_failed_count")
+            ),
+            "negative_stage7_training_rows": (
+                targeted_negative_labels_summary.get("stage7_training_rows")
+            ),
+            "runtime_behavior_changed": targeted_ownership_negative_labels_v0.get(
+                "runtime_behavior_changed"
+            ),
+            "runtime_defaults_changed": targeted_ownership_negative_labels_v0.get(
+                "runtime_defaults_changed"
+            ),
+            "runtime_selector_implemented": targeted_ownership_negative_labels_v0.get(
+                "runtime_selector_implemented"
+            ),
+            "runtime_dtm_or_tablebase_lookup": (
+                targeted_ownership_negative_labels_v0.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "runtime_terminals_added": targeted_ownership_negative_labels_v0.get(
+                "runtime_terminals_added"
+            ),
+            "stage7_promotion_allowed": targeted_ownership_negative_labels_v0.get(
+                "stage7_promotion_allowed"
+            ),
+            "stage8_training_allowed": targeted_ownership_negative_labels_v0.get(
                 "stage8_training_allowed"
             ),
         },
@@ -6463,6 +6698,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     strategy_owner_contrast = payload["strategy_owner_contrast_gate"]
     selector_objective_normalization = payload["selector_objective_normalization_gate"]
     abstention_selector_safety = payload["abstention_selector_safety_gate"]
+    targeted_ownership_recovery = payload["targeted_ownership_recovery_gate"]
     clean_replacement = payload["clean_replacement_review_gate"]
     stage7 = payload["stage7_sampling_gate"]
     sequence = payload["sequence_policy"]
@@ -6634,6 +6870,31 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- runtime_dtm_or_tablebase_lookup: `{abstention_selector_safety['runtime_dtm_or_tablebase_lookup']}`",
         f"- stage7_promotion_allowed: `{abstention_selector_safety['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{abstention_selector_safety['stage8_training_allowed']}`",
+        "",
+        "## Targeted Ownership Recovery",
+        "",
+        f"- passive_recovery_ready: `{targeted_ownership_recovery['passive_recovery_ready']}`",
+        f"- non_stage0_manifest_status: `{targeted_ownership_recovery['non_stage0_manifest_status']}`",
+        f"- non_stage0_manifest_job_count: `{targeted_ownership_recovery['non_stage0_manifest_job_count']}`",
+        f"- non_stage0_manifest_stage7_job_count: `{targeted_ownership_recovery['non_stage0_manifest_stage7_job_count']}`",
+        f"- non_stage0_labels_status: `{targeted_ownership_recovery['non_stage0_labels_status']}`",
+        f"- non_stage0_label_count: `{targeted_ownership_recovery['non_stage0_label_count']}`",
+        f"- non_stage0_preserved_count: `{targeted_ownership_recovery['non_stage0_preserved_count']}`",
+        f"- non_stage0_stage0_collapse_count: `{targeted_ownership_recovery['non_stage0_stage0_collapse_count']}`",
+        f"- non_stage0_stage7_training_rows: `{targeted_ownership_recovery['non_stage0_stage7_training_rows']}`",
+        f"- negative_manifest_status: `{targeted_ownership_recovery['negative_manifest_status']}`",
+        f"- negative_manifest_job_count: `{targeted_ownership_recovery['negative_manifest_job_count']}`",
+        f"- negative_manifest_stage7_job_count: `{targeted_ownership_recovery['negative_manifest_stage7_job_count']}`",
+        f"- negative_labels_status: `{targeted_ownership_recovery['negative_labels_status']}`",
+        f"- negative_label_count: `{targeted_ownership_recovery['negative_label_count']}`",
+        f"- negative_targeted_owner_converted_count: `{targeted_ownership_recovery['negative_targeted_owner_converted_count']}`",
+        f"- negative_targeted_owner_failed_count: `{targeted_ownership_recovery['negative_targeted_owner_failed_count']}`",
+        f"- negative_stage7_training_rows: `{targeted_ownership_recovery['negative_stage7_training_rows']}`",
+        f"- runtime_selector_implemented: `{targeted_ownership_recovery['runtime_selector_implemented']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{targeted_ownership_recovery['runtime_dtm_or_tablebase_lookup']}`",
+        f"- runtime_terminals_added: `{targeted_ownership_recovery['runtime_terminals_added']}`",
+        f"- stage7_promotion_allowed: `{targeted_ownership_recovery['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{targeted_ownership_recovery['stage8_training_allowed']}`",
         "",
         "## Clean Replacement Review",
         "",

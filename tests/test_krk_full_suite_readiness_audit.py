@@ -487,6 +487,18 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_abstention_feature_gap_review_v0.json"
     )
     assert (
+        payload["source_artifacts"]["targeted_non_stage0_ownership_labels_v0"]
+        == "reports/krk_targeted_non_stage0_ownership_labels_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["targeted_non_stage0_ownership_review_v0"]
+        == "reports/krk_targeted_non_stage0_ownership_review_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["targeted_ownership_negative_labels_v0"]
+        == "reports/krk_targeted_ownership_negative_labels_v0.json"
+    )
+    assert (
         payload["source_artifacts"][
             "clean_retrain_retry1_replacement_readiness_review"
         ]
@@ -835,6 +847,48 @@ def test_full_suite_readiness_identifies_current_gate():
     assert abstention["runtime_dtm_or_tablebase_lookup"] is False
     assert abstention["stage7_promotion_allowed"] is False
     assert abstention["stage8_training_allowed"] is False
+
+    targeted_ownership = payload["targeted_ownership_recovery_gate"]
+    assert targeted_ownership["passive_recovery_ready"] is True
+    assert (
+        targeted_ownership["non_stage0_manifest_status"]
+        == "targeted_non_stage0_manifest_ready"
+    )
+    assert targeted_ownership["non_stage0_manifest_job_count"] == 4
+    assert targeted_ownership["non_stage0_manifest_stage7_job_count"] == 0
+    assert targeted_ownership["non_stage0_manifest_labels_generated"] is False
+    assert (
+        targeted_ownership["non_stage0_labels_status"]
+        == "current_profile_preserves_some_historical_non_stage0_ownership"
+    )
+    assert targeted_ownership["non_stage0_label_count"] == 4
+    assert targeted_ownership["non_stage0_preserved_count"] == 4
+    assert targeted_ownership["non_stage0_stage0_collapse_count"] == 0
+    assert targeted_ownership["non_stage0_selected_owner_failed_count"] == 1
+    assert targeted_ownership["non_stage0_stage7_training_rows"] == 0
+    assert (
+        targeted_ownership["negative_manifest_status"]
+        == "targeted_ownership_negative_manifest_ready"
+    )
+    assert targeted_ownership["negative_manifest_job_count"] == 6
+    assert targeted_ownership["negative_manifest_stage7_job_count"] == 0
+    assert targeted_ownership["negative_manifest_labels_generated"] is False
+    assert (
+        targeted_ownership["negative_labels_status"]
+        == "targeted_ownership_negative_labels_collected"
+    )
+    assert targeted_ownership["negative_label_count"] == 6
+    assert targeted_ownership["negative_preselection_preserved_count"] == 6
+    assert targeted_ownership["negative_targeted_owner_converted_count"] == 4
+    assert targeted_ownership["negative_targeted_owner_failed_count"] == 2
+    assert targeted_ownership["negative_stage7_training_rows"] == 0
+    assert targeted_ownership["runtime_behavior_changed"] is False
+    assert targeted_ownership["runtime_defaults_changed"] is False
+    assert targeted_ownership["runtime_selector_implemented"] is False
+    assert targeted_ownership["runtime_dtm_or_tablebase_lookup"] is False
+    assert targeted_ownership["runtime_terminals_added"] is False
+    assert targeted_ownership["stage7_promotion_allowed"] is False
+    assert targeted_ownership["stage8_training_allowed"] is False
 
     clean_replacement = payload["clean_replacement_review_gate"]
     assert clean_replacement["passive_review_ready"] is True

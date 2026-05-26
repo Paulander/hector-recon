@@ -311,6 +311,53 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["abstention_runtime_dtm_or_tablebase_lookup"] is False
     assert payload["summary"]["abstention_stage7_promotion_allowed"] is False
     assert payload["summary"]["abstention_stage8_training_allowed"] is False
+    assert payload["summary"]["targeted_ownership_recovery_passive_ready"] is True
+    assert (
+        payload["summary"]["targeted_ownership_non_stage0_manifest_status"]
+        == "targeted_non_stage0_manifest_ready"
+    )
+    assert payload["summary"]["targeted_ownership_non_stage0_manifest_job_count"] == 4
+    assert (
+        payload["summary"]["targeted_ownership_non_stage0_manifest_stage7_job_count"]
+        == 0
+    )
+    assert (
+        payload["summary"]["targeted_ownership_non_stage0_labels_status"]
+        == "current_profile_preserves_some_historical_non_stage0_ownership"
+    )
+    assert payload["summary"]["targeted_ownership_non_stage0_label_count"] == 4
+    assert payload["summary"]["targeted_ownership_non_stage0_preserved_count"] == 4
+    assert (
+        payload["summary"]["targeted_ownership_non_stage0_stage7_training_rows"]
+        == 0
+    )
+    assert (
+        payload["summary"]["targeted_ownership_negative_manifest_status"]
+        == "targeted_ownership_negative_manifest_ready"
+    )
+    assert payload["summary"]["targeted_ownership_negative_manifest_job_count"] == 6
+    assert (
+        payload["summary"]["targeted_ownership_negative_manifest_stage7_job_count"]
+        == 0
+    )
+    assert (
+        payload["summary"]["targeted_ownership_negative_labels_status"]
+        == "targeted_ownership_negative_labels_collected"
+    )
+    assert payload["summary"]["targeted_ownership_negative_label_count"] == 6
+    assert (
+        payload["summary"]["targeted_ownership_negative_targeted_owner_failed_count"]
+        == 2
+    )
+    assert payload["summary"]["targeted_ownership_negative_stage7_training_rows"] == 0
+    assert payload["summary"]["targeted_ownership_runtime_selector_implemented"] is False
+    assert (
+        payload["summary"]["targeted_ownership_runtime_dtm_or_tablebase_lookup"]
+        is False
+    )
+    assert payload["summary"]["targeted_ownership_runtime_terminals_added"] is False
+    assert payload["summary"]["targeted_ownership_stage7_promotion_allowed"] is False
+    assert payload["summary"]["targeted_ownership_stage8_training_allowed"] is False
     assert payload["summary"]["clean_replacement_review_passive_ready"] is True
     assert (
         payload["summary"]["clean_replacement_review_packet_status"]

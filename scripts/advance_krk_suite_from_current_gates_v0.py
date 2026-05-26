@@ -590,6 +590,9 @@ def build_payload() -> dict[str, Any]:
     abstention_selector_safety_gate = (
         readiness.get("abstention_selector_safety_gate") or {}
     )
+    targeted_ownership_recovery_gate = (
+        readiness.get("targeted_ownership_recovery_gate") or {}
+    )
     clean_replacement_review_gate = readiness.get("clean_replacement_review_gate") or {}
     active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
@@ -1118,6 +1121,72 @@ def build_payload() -> dict[str, Any]:
             ),
             "abstention_stage8_training_allowed": (
                 abstention_selector_safety_gate.get("stage8_training_allowed")
+            ),
+            "targeted_ownership_recovery_passive_ready": (
+                targeted_ownership_recovery_gate.get("passive_recovery_ready")
+            ),
+            "targeted_ownership_non_stage0_manifest_status": (
+                targeted_ownership_recovery_gate.get("non_stage0_manifest_status")
+            ),
+            "targeted_ownership_non_stage0_manifest_job_count": (
+                targeted_ownership_recovery_gate.get("non_stage0_manifest_job_count")
+            ),
+            "targeted_ownership_non_stage0_manifest_stage7_job_count": (
+                targeted_ownership_recovery_gate.get(
+                    "non_stage0_manifest_stage7_job_count"
+                )
+            ),
+            "targeted_ownership_non_stage0_labels_status": (
+                targeted_ownership_recovery_gate.get("non_stage0_labels_status")
+            ),
+            "targeted_ownership_non_stage0_label_count": (
+                targeted_ownership_recovery_gate.get("non_stage0_label_count")
+            ),
+            "targeted_ownership_non_stage0_preserved_count": (
+                targeted_ownership_recovery_gate.get("non_stage0_preserved_count")
+            ),
+            "targeted_ownership_non_stage0_stage7_training_rows": (
+                targeted_ownership_recovery_gate.get("non_stage0_stage7_training_rows")
+            ),
+            "targeted_ownership_negative_manifest_status": (
+                targeted_ownership_recovery_gate.get("negative_manifest_status")
+            ),
+            "targeted_ownership_negative_manifest_job_count": (
+                targeted_ownership_recovery_gate.get("negative_manifest_job_count")
+            ),
+            "targeted_ownership_negative_manifest_stage7_job_count": (
+                targeted_ownership_recovery_gate.get(
+                    "negative_manifest_stage7_job_count"
+                )
+            ),
+            "targeted_ownership_negative_labels_status": (
+                targeted_ownership_recovery_gate.get("negative_labels_status")
+            ),
+            "targeted_ownership_negative_label_count": (
+                targeted_ownership_recovery_gate.get("negative_label_count")
+            ),
+            "targeted_ownership_negative_targeted_owner_failed_count": (
+                targeted_ownership_recovery_gate.get(
+                    "negative_targeted_owner_failed_count"
+                )
+            ),
+            "targeted_ownership_negative_stage7_training_rows": (
+                targeted_ownership_recovery_gate.get("negative_stage7_training_rows")
+            ),
+            "targeted_ownership_runtime_selector_implemented": (
+                targeted_ownership_recovery_gate.get("runtime_selector_implemented")
+            ),
+            "targeted_ownership_runtime_dtm_or_tablebase_lookup": (
+                targeted_ownership_recovery_gate.get("runtime_dtm_or_tablebase_lookup")
+            ),
+            "targeted_ownership_runtime_terminals_added": (
+                targeted_ownership_recovery_gate.get("runtime_terminals_added")
+            ),
+            "targeted_ownership_stage7_promotion_allowed": (
+                targeted_ownership_recovery_gate.get("stage7_promotion_allowed")
+            ),
+            "targeted_ownership_stage8_training_allowed": (
+                targeted_ownership_recovery_gate.get("stage8_training_allowed")
             ),
             "clean_replacement_review_passive_ready": clean_replacement_review_gate.get(
                 "passive_review_ready"

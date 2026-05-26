@@ -150,6 +150,31 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Targeted Ownership Recovery
+
+- passive_recovery_ready: `True`
+- non_stage0_manifest_status: `targeted_non_stage0_manifest_ready`
+- non_stage0_manifest_job_count: `4`
+- non_stage0_manifest_stage7_job_count: `0`
+- non_stage0_labels_status: `current_profile_preserves_some_historical_non_stage0_ownership`
+- non_stage0_label_count: `4`
+- non_stage0_preserved_count: `4`
+- non_stage0_stage0_collapse_count: `0`
+- non_stage0_stage7_training_rows: `0`
+- negative_manifest_status: `targeted_ownership_negative_manifest_ready`
+- negative_manifest_job_count: `6`
+- negative_manifest_stage7_job_count: `0`
+- negative_labels_status: `targeted_ownership_negative_labels_collected`
+- negative_label_count: `6`
+- negative_targeted_owner_converted_count: `4`
+- negative_targeted_owner_failed_count: `2`
+- negative_stage7_training_rows: `0`
+- runtime_selector_implemented: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- runtime_terminals_added: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Clean Replacement Review
 
 - passive_review_ready: `True`
@@ -272,7 +297,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `7322af51693bcc4d48d49609522d88e533e714a42be2135f8ab9a69a77649b9b`
+- expected_readiness_fingerprint: `8579cdb3fda5d46ac9b540ce56623df866812745f6fdf66e0349cea791699739`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -801,5 +826,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1913`
+- checked_flag_count: `1945`
 - violation_count: `0`

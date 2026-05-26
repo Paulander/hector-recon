@@ -37,10 +37,10 @@ This is a dry-run preflight only. It does not execute collection, run labels, ch
 - protected_stack_rollback_common_paths_distinct: `True`
 - protected_stack_filesystem_snapshots_replaced: `False`
 - protected_stack_hard_blockers: `[]`
-- readiness_checked_flag_count: `1913`
+- readiness_checked_flag_count: `1945`
 - readiness_boundary_violation_count: `0`
-- readiness_source_artifact_count: `234`
-- readiness_fingerprint: `7322af51693bcc4d48d49609522d88e533e714a42be2135f8ab9a69a77649b9b`
+- readiness_source_artifact_count: `239`
+- readiness_fingerprint: `8579cdb3fda5d46ac9b540ce56623df866812745f6fdf66e0349cea791699739`
 
 ## Jobs
 
