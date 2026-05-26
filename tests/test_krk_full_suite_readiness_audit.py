@@ -382,6 +382,32 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         payload["source_artifacts"]["candidate_generation_v5_next_boundary_review"]
         == "reports/strategy_arbitration/krk_candidate_generation_v5_next_boundary_review_v0.json"
     )
+    assert (
+        payload["source_artifacts"][
+            "clean_retrain_retry1_replacement_readiness_review"
+        ]
+        == "reports/krk_clean_retrain_retry1_replacement_readiness_review_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "clean_retrain_retry1_protected_stack_snapshot_manifest"
+        ]
+        == "reports/krk_clean_retrain_retry1_protected_stack_snapshot_manifest_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "clean_retrain_retry1_clean_stack_replacement_review_packet"
+        ]
+        == "reports/krk_clean_retrain_retry1_clean_stack_replacement_review_packet_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["clean_stack_replacement_deferred_review"]
+        == "reports/krk_clean_stack_replacement_deferred_review_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["protected_stage_status"]
+        == "reports/krk_protected_stage_status.json"
+    )
 
 
 def test_full_suite_readiness_identifies_current_gate():
@@ -399,6 +425,49 @@ def test_full_suite_readiness_identifies_current_gate():
     assert payload["protected_stack"]["rollback_common_paths_distinct"] is True
     assert payload["protected_stack"]["m1_m4_preservation_passed"] is True
     assert payload["protected_stack"]["kpk_kqk_bridge_preservation_passed"] is True
+
+    clean_replacement = payload["clean_replacement_review_gate"]
+    assert clean_replacement["passive_review_ready"] is True
+    assert (
+        clean_replacement["replacement_readiness_status"]
+        == "retry1_ready_for_remaining_preservation_checks_not_replacement"
+    )
+    assert (
+        clean_replacement["replacement_readiness_clean_stack_replacement_allowed"]
+        is False
+    )
+    assert (
+        clean_replacement["snapshot_manifest_status"]
+        == "retry1_protected_stack_snapshot_manifest_ready_no_replacement"
+    )
+    assert clean_replacement["snapshot_manifest_all_referenced_paths_exist"] is True
+    assert clean_replacement["snapshot_manifest_replacement_allowed"] is False
+    assert clean_replacement["snapshot_current_stack_path_status"]["all_paths_exist"] is True
+    assert clean_replacement["snapshot_retry1_stack_path_status"]["all_paths_exist"] is True
+    assert (
+        clean_replacement["review_packet_status"]
+        == "retry1_clean_stack_replacement_review_ready_explicit_approval_required"
+    )
+    assert clean_replacement["review_packet_replacement_review_ready"] is True
+    assert clean_replacement["review_packet_implementation_allowed"] is False
+    assert clean_replacement["review_packet_explicit_human_approval_required"] is True
+    assert (
+        clean_replacement["deferred_review_status"]
+        == "clean_stack_adoption_deferred_explicit_approval_required"
+    )
+    assert clean_replacement["deferred_review_explicit_approval_detected"] is False
+    assert clean_replacement["deferred_review_implementation_allowed"] is False
+    assert clean_replacement["protected_stage_reference_mode"] == "retry1_manifest_active"
+    assert (
+        clean_replacement["protected_stage_active_stack_status"]
+        == "retry1_protected_stage5_6_stack_adopted_manifest_only"
+    )
+    assert clean_replacement["runtime_behavior_changed"] is False
+    assert clean_replacement["runtime_defaults_changed"] is False
+    assert clean_replacement["runtime_dtm_or_tablebase_lookup"] is False
+    assert clean_replacement["gameplay_topology_mutation"] is False
+    assert clean_replacement["stage7_promotion_allowed"] is False
+    assert clean_replacement["stage8_training_allowed"] is False
 
     stage7 = payload["stage7_sampling_gate"]
     assert stage7["runner_status"] == "stage7_diverse_clean_sampling_runner_executed_success"

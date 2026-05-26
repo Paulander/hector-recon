@@ -577,6 +577,7 @@ def build_payload() -> dict[str, Any]:
         output_validation.get("summary", {}).get("output_valid_count") or 0
     ) > 0
     protected_stack = readiness.get("protected_stack") or {}
+    clean_replacement_review_gate = readiness.get("clean_replacement_review_gate") or {}
     active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
     readiness_boundaries = readiness.get("runtime_and_training_boundaries") or {}
@@ -817,6 +818,40 @@ def build_payload() -> dict[str, Any]:
             ),
             "protected_stack_filesystem_snapshots_replaced": protected_stack.get(
                 "filesystem_snapshots_replaced"
+            ),
+            "clean_replacement_review_passive_ready": clean_replacement_review_gate.get(
+                "passive_review_ready"
+            ),
+            "clean_replacement_review_packet_status": clean_replacement_review_gate.get(
+                "review_packet_status"
+            ),
+            "clean_replacement_review_packet_implementation_allowed": (
+                clean_replacement_review_gate.get("review_packet_implementation_allowed")
+            ),
+            "clean_replacement_deferred_review_status": clean_replacement_review_gate.get(
+                "deferred_review_status"
+            ),
+            "clean_replacement_deferred_review_explicit_approval_detected": (
+                clean_replacement_review_gate.get(
+                    "deferred_review_explicit_approval_detected"
+                )
+            ),
+            "clean_replacement_deferred_review_implementation_allowed": (
+                clean_replacement_review_gate.get(
+                    "deferred_review_implementation_allowed"
+                )
+            ),
+            "clean_replacement_protected_stage_reference_mode": (
+                clean_replacement_review_gate.get("protected_stage_reference_mode")
+            ),
+            "clean_replacement_protected_stage_active_stack_status": (
+                clean_replacement_review_gate.get("protected_stage_active_stack_status")
+            ),
+            "clean_replacement_stage7_promotion_allowed": (
+                clean_replacement_review_gate.get("stage7_promotion_allowed")
+            ),
+            "clean_replacement_stage8_training_allowed": (
+                clean_replacement_review_gate.get("stage8_training_allowed")
             ),
             "stage7_output_validation_status": output_validation.get("decision", {}).get(
                 "status"

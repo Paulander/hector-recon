@@ -459,6 +459,19 @@ SOURCES = {
     "candidate_generation_v5_next_boundary_review": (
         "reports/strategy_arbitration/krk_candidate_generation_v5_next_boundary_review_v0.json"
     ),
+    "clean_retrain_retry1_replacement_readiness_review": (
+        "reports/krk_clean_retrain_retry1_replacement_readiness_review_v0.json"
+    ),
+    "clean_retrain_retry1_protected_stack_snapshot_manifest": (
+        "reports/krk_clean_retrain_retry1_protected_stack_snapshot_manifest_v0.json"
+    ),
+    "clean_retrain_retry1_clean_stack_replacement_review_packet": (
+        "reports/krk_clean_retrain_retry1_clean_stack_replacement_review_packet_v0.json"
+    ),
+    "clean_stack_replacement_deferred_review": (
+        "reports/krk_clean_stack_replacement_deferred_review_v0.json"
+    ),
+    "protected_stage_status": "reports/krk_protected_stage_status.json",
     "active_protected_stack": "reports/krk_active_protected_stack_v0.json",
     "clean_stack_validation": "reports/krk_clean_stack_post_replacement_validation_v0.json",
     "preservation_checks": "reports/krk_clean_retrain_retry1_preservation_checks_v0.json",
@@ -653,6 +666,29 @@ def stack_path_status(stack: dict[str, Any]) -> dict[str, Any]:
         "missing_paths": missing_paths,
         "all_paths_safe": not unsafe_paths,
         "all_paths_exist": not missing_paths,
+    }
+
+
+def flatten_bool_tree(tree: dict[str, Any]) -> dict[str, Any]:
+    false_paths: list[str] = []
+    checked = 0
+
+    def visit(node: Any, prefix: str) -> None:
+        nonlocal checked
+        if isinstance(node, dict):
+            for key, value in node.items():
+                label = f"{prefix}.{key}" if prefix else str(key)
+                visit(value, label)
+            return
+        checked += 1
+        if node is not True:
+            false_paths.append(prefix)
+
+    visit(tree, "")
+    return {
+        "checked_path_count": checked,
+        "false_paths": false_paths,
+        "all_paths_exist": checked > 0 and not false_paths,
     }
 
 
@@ -1098,6 +1134,17 @@ def build_payload() -> dict[str, Any]:
     candidate_generation_v5_next_boundary_review = payloads[
         "candidate_generation_v5_next_boundary_review"
     ]
+    clean_replacement_readiness = payloads[
+        "clean_retrain_retry1_replacement_readiness_review"
+    ]
+    clean_stack_snapshot_manifest = payloads[
+        "clean_retrain_retry1_protected_stack_snapshot_manifest"
+    ]
+    clean_stack_replacement_packet = payloads[
+        "clean_retrain_retry1_clean_stack_replacement_review_packet"
+    ]
+    clean_stack_deferred_review = payloads["clean_stack_replacement_deferred_review"]
+    protected_stage_status = payloads["protected_stage_status"]
     runner = payloads["stage7_sampling_runner"]
     output_validation = payloads["stage7_sampling_output_validation"]
     integration = payloads["stage7_sampling_integration"]
@@ -1136,6 +1183,44 @@ def build_payload() -> dict[str, Any]:
     rollback_stack_paths = stack_path_status(rollback_stack)
     rollback_common_paths_distinct = rollback_distinct_for_common_paths(
         active_stack, rollback_stack
+    )
+    snapshot_decision = clean_stack_snapshot_manifest.get("decision") or {}
+    snapshot_path_existence = clean_stack_snapshot_manifest.get("path_existence") or {}
+    snapshot_current_stack_path_status = flatten_bool_tree(
+        snapshot_path_existence.get("current_protected_stack") or {}
+    )
+    snapshot_retry1_stack_path_status = flatten_bool_tree(
+        snapshot_path_existence.get("retry1_candidate_stack") or {}
+    )
+    replacement_readiness_decision = clean_replacement_readiness.get("decision") or {}
+    replacement_packet_decision = clean_stack_replacement_packet.get("decision") or {}
+    protected_stage_status_summary = protected_stage_status.get("summary") or {}
+    clean_replacement_review_passive = (
+        replacement_readiness_decision.get("clean_stack_replacement_allowed") is False
+        and snapshot_decision.get("all_referenced_paths_exist") is True
+        and snapshot_decision.get("clean_stack_replacement_allowed_by_manifest")
+        is False
+        and snapshot_current_stack_path_status["all_paths_exist"]
+        and snapshot_retry1_stack_path_status["all_paths_exist"]
+        and replacement_packet_decision.get("replacement_review_ready") is True
+        and replacement_packet_decision.get("implementation_allowed_by_this_packet")
+        is False
+        and replacement_packet_decision.get(
+            "explicit_human_approval_required_before_any_file_change"
+        )
+        is True
+        and clean_stack_deferred_review.get("replacement_review_ready") is True
+        and clean_stack_deferred_review.get("explicit_approval_detected") is False
+        and clean_stack_deferred_review.get("implementation_allowed_by_review_packet")
+        is False
+        and protected_stage_status.get("protected_stack_reference_mode")
+        == "retry1_manifest_active"
+        and protected_stage_status.get("runtime_behavior_changed") is False
+        and protected_stage_status.get("runtime_defaults_changed") is False
+        and protected_stage_status.get("runtime_dtm_or_tablebase_lookup") is False
+        and protected_stage_status.get("gameplay_topology_mutation") is False
+        and protected_stage_status.get("stage7_promotion_allowed") is False
+        and protected_stage_status.get("stage8_training_allowed") is False
     )
     protected_stack_validated = (
         active.get("decision", {}).get("clean_stack_adopted") is True
@@ -1534,6 +1619,89 @@ def build_payload() -> dict[str, Any]:
                 "kpk_kqk_bridge_preservation_passed"
             ),
             "ready": protected_stack_validated,
+        },
+        "clean_replacement_review_gate": {
+            "status": clean_stack_replacement_packet.get("status"),
+            "passive_review_ready": clean_replacement_review_passive,
+            "replacement_readiness_status": clean_replacement_readiness.get("status"),
+            "replacement_readiness_clean_stack_replacement_allowed": (
+                replacement_readiness_decision.get("clean_stack_replacement_allowed")
+            ),
+            "snapshot_manifest_status": clean_stack_snapshot_manifest.get("status"),
+            "snapshot_manifest_all_referenced_paths_exist": snapshot_decision.get(
+                "all_referenced_paths_exist"
+            ),
+            "snapshot_manifest_replacement_allowed": snapshot_decision.get(
+                "clean_stack_replacement_allowed_by_manifest"
+            ),
+            "snapshot_current_stack_path_status": snapshot_current_stack_path_status,
+            "snapshot_retry1_stack_path_status": snapshot_retry1_stack_path_status,
+            "review_packet_status": clean_stack_replacement_packet.get("status"),
+            "review_packet_replacement_review_ready": replacement_packet_decision.get(
+                "replacement_review_ready"
+            ),
+            "review_packet_implementation_allowed": replacement_packet_decision.get(
+                "implementation_allowed_by_this_packet"
+            ),
+            "review_packet_explicit_human_approval_required": (
+                replacement_packet_decision.get(
+                    "explicit_human_approval_required_before_any_file_change"
+                )
+            ),
+            "deferred_review_status": clean_stack_deferred_review.get("status"),
+            "deferred_review_decision_state": clean_stack_deferred_review.get(
+                "decision_state"
+            ),
+            "deferred_review_explicit_approval_detected": (
+                clean_stack_deferred_review.get("explicit_approval_detected")
+            ),
+            "deferred_review_implementation_allowed": (
+                clean_stack_deferred_review.get("implementation_allowed_by_review_packet")
+            ),
+            "protected_stage_active_stack_status": protected_stage_status.get(
+                "active_stack_status"
+            ),
+            "protected_stage_reference_mode": protected_stage_status.get(
+                "protected_stack_reference_mode"
+            ),
+            "protected_stage_stage4_status": next(
+                (
+                    item.get("status")
+                    for item in protected_stage_status.get("stage_statuses") or []
+                    if item.get("stage") == "stage4_wrong_tempo"
+                ),
+                None,
+            ),
+            "protected_stage_stage7_status": protected_stage_status.get(
+                "stage7_status"
+            ),
+            "protected_stage_stage8_training_allowed": protected_stage_status.get(
+                "stage8_training_allowed"
+            ),
+            "protected_stage_blocked_next_steps": (
+                protected_stage_status.get("blocked_next_steps") or []
+            ),
+            "protected_stage_cleanest_solved_components": (
+                protected_stage_status_summary.get("cleanest_solved_components") or []
+            ),
+            "runtime_behavior_changed": protected_stage_status.get(
+                "runtime_behavior_changed"
+            ),
+            "runtime_defaults_changed": protected_stage_status.get(
+                "runtime_defaults_changed"
+            ),
+            "runtime_dtm_or_tablebase_lookup": protected_stage_status.get(
+                "runtime_dtm_or_tablebase_lookup"
+            ),
+            "gameplay_topology_mutation": protected_stage_status.get(
+                "gameplay_topology_mutation"
+            ),
+            "stage7_promotion_allowed": protected_stage_status.get(
+                "stage7_promotion_allowed"
+            ),
+            "stage8_training_allowed": protected_stage_status.get(
+                "stage8_training_allowed"
+            ),
         },
         "stage_status": stage_status,
         "sequence_policy": {
@@ -5077,6 +5245,7 @@ def build_payload() -> dict[str, Any]:
 
 def write_markdown(payload: dict[str, Any]) -> str:
     protected = payload["protected_stack"]
+    clean_replacement = payload["clean_replacement_review_gate"]
     stage7 = payload["stage7_sampling_gate"]
     sequence = payload["sequence_policy"]
     protected_failure_contrast = payload["protected_failure_contrast_gate"]
@@ -5125,6 +5294,27 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- stage6_drive_validation_passed: `{protected['stage6_drive_validation_passed']}`",
         f"- m1_m4_preservation_passed: `{protected['m1_m4_preservation_passed']}`",
         f"- kpk_kqk_bridge_preservation_passed: `{protected['kpk_kqk_bridge_preservation_passed']}`",
+        "",
+        "## Clean Replacement Review",
+        "",
+        f"- passive_review_ready: `{clean_replacement['passive_review_ready']}`",
+        f"- replacement_readiness_status: `{clean_replacement['replacement_readiness_status']}`",
+        f"- replacement_readiness_clean_stack_replacement_allowed: `{clean_replacement['replacement_readiness_clean_stack_replacement_allowed']}`",
+        f"- snapshot_manifest_status: `{clean_replacement['snapshot_manifest_status']}`",
+        f"- snapshot_manifest_all_referenced_paths_exist: `{clean_replacement['snapshot_manifest_all_referenced_paths_exist']}`",
+        f"- snapshot_manifest_replacement_allowed: `{clean_replacement['snapshot_manifest_replacement_allowed']}`",
+        f"- review_packet_status: `{clean_replacement['review_packet_status']}`",
+        f"- review_packet_replacement_review_ready: `{clean_replacement['review_packet_replacement_review_ready']}`",
+        f"- review_packet_implementation_allowed: `{clean_replacement['review_packet_implementation_allowed']}`",
+        f"- deferred_review_status: `{clean_replacement['deferred_review_status']}`",
+        f"- deferred_review_explicit_approval_detected: `{clean_replacement['deferred_review_explicit_approval_detected']}`",
+        f"- deferred_review_implementation_allowed: `{clean_replacement['deferred_review_implementation_allowed']}`",
+        f"- protected_stage_reference_mode: `{clean_replacement['protected_stage_reference_mode']}`",
+        f"- protected_stage_active_stack_status: `{clean_replacement['protected_stage_active_stack_status']}`",
+        f"- protected_stage_stage4_status: `{clean_replacement['protected_stage_stage4_status']}`",
+        f"- protected_stage_stage7_status: `{clean_replacement['protected_stage_stage7_status']}`",
+        f"- stage7_promotion_allowed: `{clean_replacement['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{clean_replacement['stage8_training_allowed']}`",
         "",
         "## Stage Status",
         "",

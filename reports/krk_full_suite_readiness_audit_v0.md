@@ -28,6 +28,27 @@
 - m1_m4_preservation_passed: `True`
 - kpk_kqk_bridge_preservation_passed: `True`
 
+## Clean Replacement Review
+
+- passive_review_ready: `True`
+- replacement_readiness_status: `retry1_ready_for_remaining_preservation_checks_not_replacement`
+- replacement_readiness_clean_stack_replacement_allowed: `False`
+- snapshot_manifest_status: `retry1_protected_stack_snapshot_manifest_ready_no_replacement`
+- snapshot_manifest_all_referenced_paths_exist: `True`
+- snapshot_manifest_replacement_allowed: `False`
+- review_packet_status: `retry1_clean_stack_replacement_review_ready_explicit_approval_required`
+- review_packet_replacement_review_ready: `True`
+- review_packet_implementation_allowed: `False`
+- deferred_review_status: `clean_stack_adoption_deferred_explicit_approval_required`
+- deferred_review_explicit_approval_detected: `False`
+- deferred_review_implementation_allowed: `False`
+- protected_stage_reference_mode: `retry1_manifest_active`
+- protected_stage_active_stack_status: `retry1_protected_stage5_6_stack_adopted_manifest_only`
+- protected_stage_stage4_status: `protected_profile_solved_with_overlay_guardrail_caveat`
+- protected_stage_stage7_status: `local_valid_composition_quarantined`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Stage Status
 
 - `stage1`: `protected_component_from_current_brief`
@@ -129,7 +150,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `f4dd7cf407867d1930c6f90719a218a81b7b3e212936443da0ffdd8a5ef47d70`
+- expected_readiness_fingerprint: `d8501dcfead251aa785d693d34b28b9807a28fd9b83bf0236eb027ca15a6772c`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -658,5 +679,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1604`
+- checked_flag_count: `1635`
 - violation_count: `0`

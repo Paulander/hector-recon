@@ -81,6 +81,43 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["protected_stack_rollback_paths_exist"] is True
     assert payload["summary"]["protected_stack_rollback_common_paths_distinct"] is True
     assert payload["summary"]["protected_stack_filesystem_snapshots_replaced"] is False
+    assert payload["summary"]["clean_replacement_review_passive_ready"] is True
+    assert (
+        payload["summary"]["clean_replacement_review_packet_status"]
+        == "retry1_clean_stack_replacement_review_ready_explicit_approval_required"
+    )
+    assert (
+        payload["summary"][
+            "clean_replacement_review_packet_implementation_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["clean_replacement_deferred_review_status"]
+        == "clean_stack_adoption_deferred_explicit_approval_required"
+    )
+    assert (
+        payload["summary"][
+            "clean_replacement_deferred_review_explicit_approval_detected"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "clean_replacement_deferred_review_implementation_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["clean_replacement_protected_stage_reference_mode"]
+        == "retry1_manifest_active"
+    )
+    assert (
+        payload["summary"]["clean_replacement_protected_stage_active_stack_status"]
+        == "retry1_protected_stage5_6_stack_adopted_manifest_only"
+    )
+    assert payload["summary"]["clean_replacement_stage7_promotion_allowed"] is False
+    assert payload["summary"]["clean_replacement_stage8_training_allowed"] is False
     assert payload["summary"]["stage7_success_controls_required"] == 5
     assert payload["summary"]["stage7_success_controls_ready"] is True
     assert (
