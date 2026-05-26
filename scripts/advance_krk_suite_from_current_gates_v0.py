@@ -580,6 +580,9 @@ def build_payload() -> dict[str, Any]:
     clean_curriculum_run_lineage_gate = (
         readiness.get("clean_curriculum_run_lineage_gate") or {}
     )
+    strategy_sequence_architecture_gate = (
+        readiness.get("strategy_sequence_architecture_gate") or {}
+    )
     clean_replacement_review_gate = readiness.get("clean_replacement_review_gate") or {}
     active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
@@ -879,6 +882,52 @@ def build_payload() -> dict[str, Any]:
             ),
             "clean_curriculum_stage8_training_allowed": (
                 clean_curriculum_run_lineage_gate.get("stage8_training_allowed")
+            ),
+            "strategy_sequence_architecture_passive_ready": (
+                strategy_sequence_architecture_gate.get("passive_architecture_ready")
+            ),
+            "strategy_sequence_architecture_review_status": (
+                strategy_sequence_architecture_gate.get("architecture_review_status")
+            ),
+            "strategy_sequence_architecture_runtime_work_allowed": (
+                strategy_sequence_architecture_gate.get("architecture_runtime_work_allowed")
+            ),
+            "strategy_sequence_architecture_next_objective_ids": (
+                strategy_sequence_architecture_gate.get("architecture_next_objective_ids")
+            ),
+            "strategy_sequence_evidence_plan_status": (
+                strategy_sequence_architecture_gate.get("evidence_plan_status")
+            ),
+            "strategy_sequence_evidence_plan_runtime_work_allowed": (
+                strategy_sequence_architecture_gate.get("evidence_plan_runtime_work_allowed")
+            ),
+            "strategy_sequence_inventory_status": (
+                strategy_sequence_architecture_gate.get("inventory_status")
+            ),
+            "strategy_sequence_inventory_runtime_work_allowed": (
+                strategy_sequence_architecture_gate.get("inventory_runtime_work_allowed")
+            ),
+            "strategy_sequence_inventory_clean_gate_closed": (
+                strategy_sequence_architecture_gate.get(
+                    "inventory_sequence_policy_clean_gate_closed"
+                )
+            ),
+            "strategy_sequence_inventory_state_holdout_gap_blocks_runtime": (
+                strategy_sequence_architecture_gate.get(
+                    "inventory_state_holdout_gap_blocks_runtime"
+                )
+            ),
+            "strategy_sequence_inventory_stage7_is_held_out": (
+                strategy_sequence_architecture_gate.get("inventory_stage7_is_held_out")
+            ),
+            "strategy_sequence_runtime_selector_implemented": (
+                strategy_sequence_architecture_gate.get("runtime_selector_implemented")
+            ),
+            "strategy_sequence_stage7_promotion_allowed": (
+                strategy_sequence_architecture_gate.get("stage7_promotion_allowed")
+            ),
+            "strategy_sequence_stage8_training_allowed": (
+                strategy_sequence_architecture_gate.get("stage8_training_allowed")
             ),
             "clean_replacement_review_passive_ready": clean_replacement_review_gate.get(
                 "passive_review_ready"

@@ -138,6 +138,44 @@ def test_gate_advancement_reports_current_stage7_blocker():
     )
     assert payload["summary"]["clean_curriculum_stage7_promotion_allowed"] is False
     assert payload["summary"]["clean_curriculum_stage8_training_allowed"] is False
+    assert payload["summary"]["strategy_sequence_architecture_passive_ready"] is True
+    assert (
+        payload["summary"]["strategy_sequence_architecture_review_status"]
+        == "broader_krk_strategy_sequence_review_ready"
+    )
+    assert (
+        payload["summary"]["strategy_sequence_architecture_runtime_work_allowed"]
+        is False
+    )
+    assert payload["summary"]["strategy_sequence_architecture_next_objective_ids"] == [
+        "strategy_ownership_evidence",
+        "sequence_policy_evidence",
+        "curriculum_boundary_evidence",
+    ]
+    assert (
+        payload["summary"]["strategy_sequence_evidence_plan_status"]
+        == "strategy_sequence_evidence_plan_defined"
+    )
+    assert (
+        payload["summary"]["strategy_sequence_evidence_plan_runtime_work_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["strategy_sequence_inventory_status"]
+        == "replay_free_inventory_state_holdout_gap_blocks_runtime"
+    )
+    assert payload["summary"]["strategy_sequence_inventory_runtime_work_allowed"] is False
+    assert payload["summary"]["strategy_sequence_inventory_clean_gate_closed"] is True
+    assert (
+        payload["summary"][
+            "strategy_sequence_inventory_state_holdout_gap_blocks_runtime"
+        ]
+        is True
+    )
+    assert payload["summary"]["strategy_sequence_inventory_stage7_is_held_out"] is True
+    assert payload["summary"]["strategy_sequence_runtime_selector_implemented"] is False
+    assert payload["summary"]["strategy_sequence_stage7_promotion_allowed"] is False
+    assert payload["summary"]["strategy_sequence_stage8_training_allowed"] is False
     assert payload["summary"]["clean_replacement_review_passive_ready"] is True
     assert (
         payload["summary"]["clean_replacement_review_packet_status"]

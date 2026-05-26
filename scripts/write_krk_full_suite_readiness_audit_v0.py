@@ -504,6 +504,13 @@ SOURCES = {
     "stage7_to_stage8_blocker_review": (
         "reports/structural_candidates/stage7_to_stage8_blocker_review_v0.json"
     ),
+    "strategy_sequence_architecture_review": (
+        "reports/krk_strategy_sequence_architecture_review_v0.json"
+    ),
+    "strategy_sequence_evidence_plan": (
+        "reports/krk_strategy_sequence_evidence_plan_v0.json"
+    ),
+    "strategy_sequence_inventory": "reports/krk_strategy_sequence_inventory_v0.json",
     "clean_retrain_retry1_replacement_readiness_review": (
         "reports/krk_clean_retrain_retry1_replacement_readiness_review_v0.json"
     ),
@@ -1208,6 +1215,11 @@ def build_payload() -> dict[str, Any]:
     ]
     stage7_heldout_unlock_review = payloads["stage7_heldout_unlock_review"]
     stage7_to_stage8_blocker_review = payloads["stage7_to_stage8_blocker_review"]
+    strategy_sequence_architecture_review = payloads[
+        "strategy_sequence_architecture_review"
+    ]
+    strategy_sequence_evidence_plan = payloads["strategy_sequence_evidence_plan"]
+    strategy_sequence_inventory = payloads["strategy_sequence_inventory"]
     clean_replacement_readiness = payloads[
         "clean_retrain_retry1_replacement_readiness_review"
     ]
@@ -1356,6 +1368,72 @@ def build_payload() -> dict[str, Any]:
         == "stage7_unlock_path_identified_broader_sequence_control_not_micro_repair"
         and stage7_to_stage8_blocker_review.get("stage7_promotion_allowed") is False
         and stage7_to_stage8_blocker_review.get("stage8_training_allowed") is False
+    )
+    strategy_sequence_architecture_decision = (
+        strategy_sequence_architecture_review.get("decision") or {}
+    )
+    strategy_sequence_evidence_plan_decision = (
+        strategy_sequence_evidence_plan.get("decision") or {}
+    )
+    strategy_sequence_inventory_decision = (
+        strategy_sequence_inventory.get("decision") or {}
+    )
+    strategy_sequence_gap_summary = strategy_sequence_inventory.get("gap_summary") or {}
+    strategy_sequence_boundary_inventory = (
+        strategy_sequence_inventory.get("curriculum_boundary_inventory") or {}
+    )
+    strategy_sequence_next_objective_ids = [
+        item.get("objective_id")
+        for item in strategy_sequence_architecture_review.get(
+            "next_architecture_objectives"
+        )
+        or []
+        if item.get("objective_id")
+    ]
+    strategy_sequence_architecture_passive = (
+        strategy_sequence_architecture_decision.get("status")
+        == "broader_krk_strategy_sequence_review_ready"
+        and strategy_sequence_architecture_decision.get("runtime_work_allowed") is False
+        and strategy_sequence_architecture_review.get("runtime_behavior_changed") is False
+        and strategy_sequence_architecture_review.get("runtime_defaults_changed") is False
+        and strategy_sequence_architecture_review.get("runtime_selector_implemented")
+        is False
+        and strategy_sequence_architecture_review.get("runtime_dtm_or_tablebase_lookup")
+        is False
+        and strategy_sequence_architecture_review.get("stage7_promotion_allowed")
+        is False
+        and strategy_sequence_architecture_review.get("stage8_training_allowed")
+        is False
+        and strategy_sequence_evidence_plan_decision.get("status")
+        == "strategy_sequence_evidence_plan_defined"
+        and strategy_sequence_evidence_plan_decision.get("runtime_work_allowed") is False
+        and strategy_sequence_evidence_plan.get("runtime_behavior_changed") is False
+        and strategy_sequence_evidence_plan.get("runtime_defaults_changed") is False
+        and strategy_sequence_evidence_plan.get("runtime_selector_implemented") is False
+        and strategy_sequence_evidence_plan.get("runtime_dtm_or_tablebase_lookup")
+        is False
+        and strategy_sequence_evidence_plan.get("stage7_promotion_allowed") is False
+        and strategy_sequence_evidence_plan.get("stage8_training_allowed") is False
+        and strategy_sequence_inventory_decision.get("status")
+        == "replay_free_inventory_state_holdout_gap_blocks_runtime"
+        and strategy_sequence_inventory_decision.get("runtime_work_allowed") is False
+        and strategy_sequence_gap_summary.get("runtime_work_allowed") is False
+        and strategy_sequence_gap_summary.get("sequence_policy_clean_gate_closed")
+        is True
+        and strategy_sequence_gap_summary.get("sequence_policy_has_clean_success_gap")
+        is False
+        and strategy_sequence_gap_summary.get("state_holdout_gap_blocks_runtime") is True
+        and strategy_sequence_gap_summary.get("strategy_ownership_has_some_signal")
+        is True
+        and strategy_sequence_gap_summary.get("strategy_ownership_state_holdout_ready")
+        is False
+        and strategy_sequence_boundary_inventory.get("stage7_is_held_out") is True
+        and strategy_sequence_inventory.get("runtime_behavior_changed") is False
+        and strategy_sequence_inventory.get("runtime_defaults_changed") is False
+        and strategy_sequence_inventory.get("runtime_selector_implemented") is False
+        and strategy_sequence_inventory.get("runtime_dtm_or_tablebase_lookup") is False
+        and strategy_sequence_inventory.get("stage7_promotion_allowed") is False
+        and strategy_sequence_inventory.get("stage8_training_allowed") is False
     )
     replacement_readiness_decision = clean_replacement_readiness.get("decision") or {}
     replacement_packet_decision = clean_stack_replacement_packet.get("decision") or {}
@@ -1948,6 +2026,83 @@ def build_payload() -> dict[str, Any]:
                 "stage7_promotion_allowed"
             ),
             "stage8_training_allowed": stage7_to_stage8_blocker_review.get(
+                "stage8_training_allowed"
+            ),
+        },
+        "strategy_sequence_architecture_gate": {
+            "status": strategy_sequence_inventory_decision.get("status"),
+            "passive_architecture_ready": strategy_sequence_architecture_passive,
+            "architecture_review_status": strategy_sequence_architecture_decision.get(
+                "status"
+            ),
+            "architecture_runtime_work_allowed": (
+                strategy_sequence_architecture_decision.get("runtime_work_allowed")
+            ),
+            "architecture_forbidden_shortcuts": (
+                strategy_sequence_architecture_review.get("forbidden_shortcuts") or []
+            ),
+            "architecture_next_objective_ids": strategy_sequence_next_objective_ids,
+            "architecture_recommended_next_slice_id": (
+                strategy_sequence_architecture_review.get("recommended_next_slice")
+                or {}
+            ).get("slice_id"),
+            "evidence_plan_status": strategy_sequence_evidence_plan_decision.get(
+                "status"
+            ),
+            "evidence_plan_runtime_work_allowed": (
+                strategy_sequence_evidence_plan_decision.get("runtime_work_allowed")
+            ),
+            "evidence_plan_blocked_actions": (
+                strategy_sequence_evidence_plan.get("blocked_actions") or []
+            ),
+            "inventory_status": strategy_sequence_inventory_decision.get("status"),
+            "inventory_runtime_work_allowed": (
+                strategy_sequence_inventory_decision.get("runtime_work_allowed")
+            ),
+            "inventory_sequence_policy_clean_gate_closed": (
+                strategy_sequence_gap_summary.get("sequence_policy_clean_gate_closed")
+            ),
+            "inventory_sequence_policy_has_clean_success_gap": (
+                strategy_sequence_gap_summary.get("sequence_policy_has_clean_success_gap")
+            ),
+            "inventory_state_holdout_gap_blocks_runtime": (
+                strategy_sequence_gap_summary.get("state_holdout_gap_blocks_runtime")
+            ),
+            "inventory_strategy_ownership_has_some_signal": (
+                strategy_sequence_gap_summary.get("strategy_ownership_has_some_signal")
+            ),
+            "inventory_strategy_ownership_state_holdout_ready": (
+                strategy_sequence_gap_summary.get("strategy_ownership_state_holdout_ready")
+            ),
+            "inventory_stage7_is_held_out": (
+                strategy_sequence_boundary_inventory.get("stage7_is_held_out")
+            ),
+            "inventory_stage7_clean_control_collection_paused": (
+                strategy_sequence_boundary_inventory.get(
+                    "stage7_clean_control_collection_paused"
+                )
+            ),
+            "inventory_stage7_clean_review_recommendation": (
+                strategy_sequence_boundary_inventory.get(
+                    "stage7_clean_review_recommendation"
+                )
+            ),
+            "runtime_behavior_changed": strategy_sequence_inventory.get(
+                "runtime_behavior_changed"
+            ),
+            "runtime_defaults_changed": strategy_sequence_inventory.get(
+                "runtime_defaults_changed"
+            ),
+            "runtime_selector_implemented": strategy_sequence_inventory.get(
+                "runtime_selector_implemented"
+            ),
+            "runtime_dtm_or_tablebase_lookup": strategy_sequence_inventory.get(
+                "runtime_dtm_or_tablebase_lookup"
+            ),
+            "stage7_promotion_allowed": strategy_sequence_inventory.get(
+                "stage7_promotion_allowed"
+            ),
+            "stage8_training_allowed": strategy_sequence_inventory.get(
                 "stage8_training_allowed"
             ),
         },
@@ -5577,6 +5732,7 @@ def build_payload() -> dict[str, Any]:
 def write_markdown(payload: dict[str, Any]) -> str:
     protected = payload["protected_stack"]
     clean_curriculum = payload["clean_curriculum_run_lineage_gate"]
+    strategy_sequence_architecture = payload["strategy_sequence_architecture_gate"]
     clean_replacement = payload["clean_replacement_review_gate"]
     stage7 = payload["stage7_sampling_gate"]
     sequence = payload["sequence_policy"]
@@ -5654,6 +5810,27 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- curriculum_stage8_status: `{clean_curriculum['curriculum_stage8_status']}`",
         f"- stage7_promotion_allowed: `{clean_curriculum['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{clean_curriculum['stage8_training_allowed']}`",
+        "",
+        "## Strategy Sequence Architecture",
+        "",
+        f"- passive_architecture_ready: `{strategy_sequence_architecture['passive_architecture_ready']}`",
+        f"- architecture_review_status: `{strategy_sequence_architecture['architecture_review_status']}`",
+        f"- architecture_runtime_work_allowed: `{strategy_sequence_architecture['architecture_runtime_work_allowed']}`",
+        f"- architecture_recommended_next_slice_id: `{strategy_sequence_architecture['architecture_recommended_next_slice_id']}`",
+        f"- evidence_plan_status: `{strategy_sequence_architecture['evidence_plan_status']}`",
+        f"- evidence_plan_runtime_work_allowed: `{strategy_sequence_architecture['evidence_plan_runtime_work_allowed']}`",
+        f"- inventory_status: `{strategy_sequence_architecture['inventory_status']}`",
+        f"- inventory_runtime_work_allowed: `{strategy_sequence_architecture['inventory_runtime_work_allowed']}`",
+        f"- inventory_sequence_policy_clean_gate_closed: `{strategy_sequence_architecture['inventory_sequence_policy_clean_gate_closed']}`",
+        f"- inventory_sequence_policy_has_clean_success_gap: `{strategy_sequence_architecture['inventory_sequence_policy_has_clean_success_gap']}`",
+        f"- inventory_state_holdout_gap_blocks_runtime: `{strategy_sequence_architecture['inventory_state_holdout_gap_blocks_runtime']}`",
+        f"- inventory_strategy_ownership_has_some_signal: `{strategy_sequence_architecture['inventory_strategy_ownership_has_some_signal']}`",
+        f"- inventory_strategy_ownership_state_holdout_ready: `{strategy_sequence_architecture['inventory_strategy_ownership_state_holdout_ready']}`",
+        f"- inventory_stage7_is_held_out: `{strategy_sequence_architecture['inventory_stage7_is_held_out']}`",
+        f"- inventory_stage7_clean_review_recommendation: `{strategy_sequence_architecture['inventory_stage7_clean_review_recommendation']}`",
+        f"- runtime_selector_implemented: `{strategy_sequence_architecture['runtime_selector_implemented']}`",
+        f"- stage7_promotion_allowed: `{strategy_sequence_architecture['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{strategy_sequence_architecture['stage8_training_allowed']}`",
         "",
         "## Clean Replacement Review",
         "",

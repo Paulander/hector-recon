@@ -56,6 +56,27 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Strategy Sequence Architecture
+
+- passive_architecture_ready: `True`
+- architecture_review_status: `broader_krk_strategy_sequence_review_ready`
+- architecture_runtime_work_allowed: `False`
+- architecture_recommended_next_slice_id: `krk_strategy_sequence_evidence_plan_v0`
+- evidence_plan_status: `strategy_sequence_evidence_plan_defined`
+- evidence_plan_runtime_work_allowed: `False`
+- inventory_status: `replay_free_inventory_state_holdout_gap_blocks_runtime`
+- inventory_runtime_work_allowed: `False`
+- inventory_sequence_policy_clean_gate_closed: `True`
+- inventory_sequence_policy_has_clean_success_gap: `False`
+- inventory_state_holdout_gap_blocks_runtime: `True`
+- inventory_strategy_ownership_has_some_signal: `True`
+- inventory_strategy_ownership_state_holdout_ready: `False`
+- inventory_stage7_is_held_out: `True`
+- inventory_stage7_clean_review_recommendation: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
+- runtime_selector_implemented: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Clean Replacement Review
 
 - passive_review_ready: `True`
@@ -178,7 +199,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `7ec29dd06ff28d21435d2612e0e58ea407e052f62f66028ed4bad337a60c43bf`
+- expected_readiness_fingerprint: `51f049ca5434c140bee1199d5a9de70b69516948559d324ed4a2b025ec8449f9`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -707,5 +728,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1754`
+- checked_flag_count: `1775`
 - violation_count: `0`

@@ -415,6 +415,18 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/structural_candidates/stage7_to_stage8_blocker_review_v0.json"
     )
     assert (
+        payload["source_artifacts"]["strategy_sequence_architecture_review"]
+        == "reports/krk_strategy_sequence_architecture_review_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_sequence_evidence_plan"]
+        == "reports/krk_strategy_sequence_evidence_plan_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_sequence_inventory"]
+        == "reports/krk_strategy_sequence_inventory_v0.json"
+    )
+    assert (
         payload["source_artifacts"][
             "clean_retrain_retry1_replacement_readiness_review"
         ]
@@ -542,6 +554,44 @@ def test_full_suite_readiness_identifies_current_gate():
     assert clean_curriculum["curriculum_stage8_status"] == "stage8_remains_blocked_with_review"
     assert clean_curriculum["stage7_promotion_allowed"] is False
     assert clean_curriculum["stage8_training_allowed"] is False
+
+    strategy_sequence = payload["strategy_sequence_architecture_gate"]
+    assert strategy_sequence["passive_architecture_ready"] is True
+    assert (
+        strategy_sequence["architecture_review_status"]
+        == "broader_krk_strategy_sequence_review_ready"
+    )
+    assert strategy_sequence["architecture_runtime_work_allowed"] is False
+    assert strategy_sequence["architecture_recommended_next_slice_id"] == (
+        "krk_strategy_sequence_evidence_plan_v0"
+    )
+    assert strategy_sequence["architecture_next_objective_ids"] == [
+        "strategy_ownership_evidence",
+        "sequence_policy_evidence",
+        "curriculum_boundary_evidence",
+    ]
+    assert (
+        strategy_sequence["evidence_plan_status"]
+        == "strategy_sequence_evidence_plan_defined"
+    )
+    assert strategy_sequence["evidence_plan_runtime_work_allowed"] is False
+    assert (
+        strategy_sequence["inventory_status"]
+        == "replay_free_inventory_state_holdout_gap_blocks_runtime"
+    )
+    assert strategy_sequence["inventory_runtime_work_allowed"] is False
+    assert strategy_sequence["inventory_sequence_policy_clean_gate_closed"] is True
+    assert strategy_sequence["inventory_sequence_policy_has_clean_success_gap"] is False
+    assert strategy_sequence["inventory_state_holdout_gap_blocks_runtime"] is True
+    assert strategy_sequence["inventory_strategy_ownership_has_some_signal"] is True
+    assert strategy_sequence["inventory_strategy_ownership_state_holdout_ready"] is False
+    assert strategy_sequence["inventory_stage7_is_held_out"] is True
+    assert strategy_sequence["runtime_behavior_changed"] is False
+    assert strategy_sequence["runtime_defaults_changed"] is False
+    assert strategy_sequence["runtime_selector_implemented"] is False
+    assert strategy_sequence["runtime_dtm_or_tablebase_lookup"] is False
+    assert strategy_sequence["stage7_promotion_allowed"] is False
+    assert strategy_sequence["stage8_training_allowed"] is False
 
     clean_replacement = payload["clean_replacement_review_gate"]
     assert clean_replacement["passive_review_ready"] is True
