@@ -104,6 +104,18 @@ SOURCES = {
     "candidate_generation_label_blocker_review": (
         "reports/strategy_arbitration/krk_candidate_generation_label_blocker_review_v1.json"
     ),
+    "candidate_proposal_quality_prioritization_review": (
+        "reports/strategy_arbitration/krk_candidate_proposal_quality_prioritization_review_v1.json"
+    ),
+    "candidate_proposal_quality_dataset": (
+        "reports/strategy_arbitration/krk_candidate_proposal_quality_dataset_v1.json"
+    ),
+    "candidate_proposal_quality_probe": (
+        "reports/strategy_arbitration/krk_candidate_proposal_quality_probe_v1.json"
+    ),
+    "candidate_proposal_quality_decision": (
+        "reports/strategy_arbitration/krk_candidate_proposal_quality_decision_v1.json"
+    ),
     "broader_strategy_sequence_candidate_source_design_v1": (
         "reports/strategy_arbitration/krk_broader_strategy_sequence_candidate_source_design_v1.json"
     ),
@@ -715,6 +727,16 @@ def build_payload() -> dict[str, Any]:
     ]
     candidate_generation_label_blocker_review = payloads[
         "candidate_generation_label_blocker_review"
+    ]
+    candidate_proposal_quality_prioritization_review = payloads[
+        "candidate_proposal_quality_prioritization_review"
+    ]
+    candidate_proposal_quality_dataset = payloads[
+        "candidate_proposal_quality_dataset"
+    ]
+    candidate_proposal_quality_probe = payloads["candidate_proposal_quality_probe"]
+    candidate_proposal_quality_decision = payloads[
+        "candidate_proposal_quality_decision"
     ]
     plan_capsule_sequence_candidate_observation_review_v1 = payloads[
         "plan_capsule_sequence_candidate_observation_review_v1"
@@ -2149,6 +2171,63 @@ def build_payload() -> dict[str, Any]:
             "label_blocker_protected_annotation_recall": (
                 candidate_generation_label_blocker_review.get("evidence", {}).get(
                     "protected_annotation_recall"
+                )
+            ),
+            "quality_prioritization_review_status": (
+                candidate_proposal_quality_prioritization_review.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "quality_dataset_status": (
+                candidate_proposal_quality_dataset.get("decision", {}).get("status")
+            ),
+            "quality_dataset_row_count": (
+                candidate_proposal_quality_dataset.get("summary", {}).get(
+                    "row_count"
+                )
+            ),
+            "quality_dataset_quality_probe_row_count": (
+                candidate_proposal_quality_dataset.get("summary", {}).get(
+                    "quality_probe_row_count"
+                )
+            ),
+            "quality_dataset_stage7_readiness_training_row_count": (
+                candidate_proposal_quality_dataset.get("summary", {}).get(
+                    "stage7_readiness_training_row_count"
+                )
+            ),
+            "quality_probe_status": (
+                candidate_proposal_quality_probe.get("decision", {}).get("status")
+            ),
+            "quality_probe_best_probe": (
+                candidate_proposal_quality_probe.get("summary", {}).get("best_probe")
+            ),
+            "quality_probe_best_positive_recall": (
+                candidate_proposal_quality_probe.get("summary", {})
+                .get("best_probe_metrics", {})
+                .get("positive_recall")
+            ),
+            "quality_probe_best_negative_suppression": (
+                candidate_proposal_quality_probe.get("summary", {})
+                .get("best_probe_metrics", {})
+                .get("negative_suppression")
+            ),
+            "quality_probe_ready_for_selector_review": (
+                candidate_proposal_quality_probe.get("interpretation", {}).get(
+                    "quality_axes_ready_for_selector_review"
+                )
+            ),
+            "quality_decision_status": (
+                candidate_proposal_quality_decision.get("decision", {}).get("status")
+            ),
+            "quality_decision_more_blind_label_farming_allowed": (
+                candidate_proposal_quality_decision.get("decision", {}).get(
+                    "more_blind_label_farming_allowed"
+                )
+            ),
+            "quality_decision_recommended_next_step": (
+                candidate_proposal_quality_decision.get("decision", {}).get(
+                    "recommended_next_step"
                 )
             ),
             "source_design_status": (
@@ -4522,6 +4601,17 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- observation_gap_review_unknown_capacity_ratio: `{strategy_source['observation_gap_review_unknown_capacity_ratio']}`",
             f"- label_blocker_status: `{strategy_source['label_blocker_status']}`",
             f"- label_blocker_more_blind_label_farming_not_recommended: `{strategy_source['label_blocker_more_blind_label_farming_not_recommended']}`",
+            f"- quality_prioritization_review_status: `{strategy_source['quality_prioritization_review_status']}`",
+            f"- quality_dataset_status: `{strategy_source['quality_dataset_status']}`",
+            f"- quality_dataset_row_count: `{strategy_source['quality_dataset_row_count']}`",
+            f"- quality_dataset_quality_probe_row_count: `{strategy_source['quality_dataset_quality_probe_row_count']}`",
+            f"- quality_probe_status: `{strategy_source['quality_probe_status']}`",
+            f"- quality_probe_best_probe: `{strategy_source['quality_probe_best_probe']}`",
+            f"- quality_probe_best_positive_recall: `{strategy_source['quality_probe_best_positive_recall']}`",
+            f"- quality_probe_best_negative_suppression: `{strategy_source['quality_probe_best_negative_suppression']}`",
+            f"- quality_probe_ready_for_selector_review: `{strategy_source['quality_probe_ready_for_selector_review']}`",
+            f"- quality_decision_status: `{strategy_source['quality_decision_status']}`",
+            f"- quality_decision_more_blind_label_farming_allowed: `{strategy_source['quality_decision_more_blind_label_farming_allowed']}`",
             f"- source_design_status: `{strategy_source['source_design_status']}`",
             f"- source_design_implementation_allowed: `{strategy_source['source_design_implementation_allowed']}`",
             f"- plan_capsule_source_status: `{strategy_source['plan_capsule_source_status']}`",

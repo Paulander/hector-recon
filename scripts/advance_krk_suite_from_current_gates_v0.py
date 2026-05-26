@@ -1322,6 +1322,45 @@ def build_payload() -> dict[str, Any]:
             "strategy_sequence_candidate_source_label_blocker_protected_annotation_recall": strategy_sequence_candidate_source_gate.get(
                 "label_blocker_protected_annotation_recall"
             ),
+            "strategy_sequence_candidate_source_quality_prioritization_review_status": strategy_sequence_candidate_source_gate.get(
+                "quality_prioritization_review_status"
+            ),
+            "strategy_sequence_candidate_source_quality_dataset_status": strategy_sequence_candidate_source_gate.get(
+                "quality_dataset_status"
+            ),
+            "strategy_sequence_candidate_source_quality_dataset_row_count": strategy_sequence_candidate_source_gate.get(
+                "quality_dataset_row_count"
+            ),
+            "strategy_sequence_candidate_source_quality_dataset_quality_probe_row_count": strategy_sequence_candidate_source_gate.get(
+                "quality_dataset_quality_probe_row_count"
+            ),
+            "strategy_sequence_candidate_source_quality_dataset_stage7_readiness_training_row_count": strategy_sequence_candidate_source_gate.get(
+                "quality_dataset_stage7_readiness_training_row_count"
+            ),
+            "strategy_sequence_candidate_source_quality_probe_status": strategy_sequence_candidate_source_gate.get(
+                "quality_probe_status"
+            ),
+            "strategy_sequence_candidate_source_quality_probe_best_probe": strategy_sequence_candidate_source_gate.get(
+                "quality_probe_best_probe"
+            ),
+            "strategy_sequence_candidate_source_quality_probe_best_positive_recall": strategy_sequence_candidate_source_gate.get(
+                "quality_probe_best_positive_recall"
+            ),
+            "strategy_sequence_candidate_source_quality_probe_best_negative_suppression": strategy_sequence_candidate_source_gate.get(
+                "quality_probe_best_negative_suppression"
+            ),
+            "strategy_sequence_candidate_source_quality_probe_ready_for_selector_review": strategy_sequence_candidate_source_gate.get(
+                "quality_probe_ready_for_selector_review"
+            ),
+            "strategy_sequence_candidate_source_quality_decision_status": strategy_sequence_candidate_source_gate.get(
+                "quality_decision_status"
+            ),
+            "strategy_sequence_candidate_source_quality_decision_more_blind_label_farming_allowed": strategy_sequence_candidate_source_gate.get(
+                "quality_decision_more_blind_label_farming_allowed"
+            ),
+            "strategy_sequence_candidate_source_quality_decision_recommended_next_step": strategy_sequence_candidate_source_gate.get(
+                "quality_decision_recommended_next_step"
+            ),
             "strategy_sequence_candidate_source_design_status": strategy_sequence_candidate_source_gate.get(
                 "source_design_status"
             ),

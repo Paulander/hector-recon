@@ -133,6 +133,14 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/strategy_arbitration/krk_candidate_generation_label_blocker_review_v1.json"
     )
     assert (
+        payload["source_artifacts"]["candidate_proposal_quality_dataset"]
+        == "reports/strategy_arbitration/krk_candidate_proposal_quality_dataset_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["candidate_proposal_quality_decision"]
+        == "reports/strategy_arbitration/krk_candidate_proposal_quality_decision_v1.json"
+    )
+    assert (
         payload["source_artifacts"][
             "protected_strategy_monitor_observation_source_review_packet_v1"
         ]
@@ -775,6 +783,34 @@ def test_full_suite_readiness_identifies_current_gate():
     assert (
         strategy_source["label_blocker_protected_annotation_recall"]
         == 0.07534246575342465
+    )
+    assert (
+        strategy_source["quality_prioritization_review_status"]
+        == "proposal_quality_prioritization_review_ready"
+    )
+    assert (
+        strategy_source["quality_dataset_status"]
+        == "candidate_proposal_quality_dataset_ready_for_probe"
+    )
+    assert strategy_source["quality_dataset_row_count"] == 569
+    assert strategy_source["quality_dataset_quality_probe_row_count"] == 38
+    assert strategy_source["quality_dataset_stage7_readiness_training_row_count"] == 0
+    assert (
+        strategy_source["quality_probe_status"]
+        == "proposal_quality_axes_insufficient_for_selector_review"
+    )
+    assert strategy_source["quality_probe_best_probe"] == "candidate_move_frame_source"
+    assert strategy_source["quality_probe_best_positive_recall"] == 0.6333333333333333
+    assert strategy_source["quality_probe_best_negative_suppression"] == 0.625
+    assert strategy_source["quality_probe_ready_for_selector_review"] is False
+    assert (
+        strategy_source["quality_decision_status"]
+        == "candidate_proposal_quality_not_selector_ready"
+    )
+    assert strategy_source["quality_decision_more_blind_label_farming_allowed"] is False
+    assert (
+        strategy_source["quality_decision_recommended_next_step"]
+        == "design_broader_strategy_sequence_candidate_sources"
     )
     assert (
         strategy_source["source_design_status"]

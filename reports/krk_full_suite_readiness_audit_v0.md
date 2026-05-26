@@ -129,7 +129,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `67c005573157606e02fadefe63068c81bce49deaf7cc904768809d296b010793`
+- expected_readiness_fingerprint: `f266d78c3204a7dc6b55be4dc0236d275f297cd9ccccb8c28e3243164f7cf5b9`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -226,6 +226,17 @@
 - observation_gap_review_unknown_capacity_ratio: `0.7768014059753954`
 - label_blocker_status: `candidate_generation_label_coverage_underpowered_selector_blocked`
 - label_blocker_more_blind_label_farming_not_recommended: `True`
+- quality_prioritization_review_status: `proposal_quality_prioritization_review_ready`
+- quality_dataset_status: `candidate_proposal_quality_dataset_ready_for_probe`
+- quality_dataset_row_count: `569`
+- quality_dataset_quality_probe_row_count: `38`
+- quality_probe_status: `proposal_quality_axes_insufficient_for_selector_review`
+- quality_probe_best_probe: `candidate_move_frame_source`
+- quality_probe_best_positive_recall: `0.6333333333333333`
+- quality_probe_best_negative_suppression: `0.625`
+- quality_probe_ready_for_selector_review: `False`
+- quality_decision_status: `candidate_proposal_quality_not_selector_ready`
+- quality_decision_more_blind_label_farming_allowed: `False`
 - source_design_status: `broader_strategy_sequence_candidate_source_design_ready`
 - source_design_implementation_allowed: `False`
 - plan_capsule_source_status: `plan_capsule_sequence_observation_source_schema_ready_but_stage7_only`
@@ -525,5 +536,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `1390`
+- checked_flag_count: `1426`
 - violation_count: `0`

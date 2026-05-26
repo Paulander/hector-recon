@@ -578,6 +578,74 @@ def test_gate_advancement_reports_current_stage7_blocker():
         == 0.07534246575342465
     )
     assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_quality_prioritization_review_status"
+        ]
+        == "proposal_quality_prioritization_review_ready"
+    )
+    assert (
+        payload["summary"]["strategy_sequence_candidate_source_quality_dataset_status"]
+        == "candidate_proposal_quality_dataset_ready_for_probe"
+    )
+    assert (
+        payload["summary"]["strategy_sequence_candidate_source_quality_dataset_row_count"]
+        == 569
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_quality_dataset_quality_probe_row_count"
+        ]
+        == 38
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_quality_dataset_stage7_readiness_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["strategy_sequence_candidate_source_quality_probe_status"]
+        == "proposal_quality_axes_insufficient_for_selector_review"
+    )
+    assert (
+        payload["summary"]["strategy_sequence_candidate_source_quality_probe_best_probe"]
+        == "candidate_move_frame_source"
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_quality_probe_best_positive_recall"
+        ]
+        == 0.6333333333333333
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_quality_probe_best_negative_suppression"
+        ]
+        == 0.625
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_quality_probe_ready_for_selector_review"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["strategy_sequence_candidate_source_quality_decision_status"]
+        == "candidate_proposal_quality_not_selector_ready"
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_quality_decision_more_blind_label_farming_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_quality_decision_recommended_next_step"
+        ]
+        == "design_broader_strategy_sequence_candidate_sources"
+    )
+    assert (
         payload["summary"]["strategy_sequence_candidate_source_design_status"]
         == "broader_strategy_sequence_candidate_source_design_ready"
     )
