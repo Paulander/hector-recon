@@ -25,6 +25,10 @@ This review is non-causal. It does not train Stage 8, promote Stage 7, change ru
 - protected_failure_contrast_runner_processed_job_count: `0`
 - protected_failure_contrast_runner_executed_job_count: `0`
 - protected_failure_contrast_command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
+- protected_failure_contrast_approval_request_artifact: `reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_approval_request_v0.json`
+- protected_failure_contrast_approval_request_status: `protected_plan_window_failure_contrast_approval_request_ready`
+- protected_failure_contrast_approval_receipt_created_by_request: `False`
+- protected_failure_contrast_approval_receipt_blockers: `['approval_receipt_missing']`
 
 ## Blockers
 

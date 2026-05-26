@@ -93,6 +93,23 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
     )
+    assert payload["summary"]["protected_failure_contrast_approval_request_artifact"] == (
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
+    )
+    assert (
+        payload["summary"]["protected_failure_contrast_approval_request_status"]
+        == "protected_plan_window_failure_contrast_approval_request_ready"
+    )
+    assert (
+        payload["summary"][
+            "protected_failure_contrast_approval_receipt_created_by_request"
+        ]
+        is False
+    )
+    assert payload["summary"][
+        "protected_failure_contrast_approval_receipt_blockers"
+    ] == ["approval_receipt_missing"]
     assert "stage4_state_local_topk_signal_present" in payload["pilot_findings"]
     assert "stage7_clean_success_controls_missing" not in payload["blockers"]
     assert (

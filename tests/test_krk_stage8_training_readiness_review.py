@@ -67,6 +67,23 @@ def test_stage8_training_readiness_review_blocks_current_state():
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
     )
+    assert payload["requirements"]["protected_failure_contrast_approval_request_artifact"] == (
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
+    )
+    assert (
+        payload["requirements"]["protected_failure_contrast_approval_request_status"]
+        == "protected_plan_window_failure_contrast_approval_request_ready"
+    )
+    assert (
+        payload["requirements"][
+            "protected_failure_contrast_approval_receipt_created_by_request"
+        ]
+        is False
+    )
+    assert payload["requirements"][
+        "protected_failure_contrast_approval_receipt_blockers"
+    ] == ["approval_receipt_missing"]
     assert "stage7_clean_success_controls_missing" not in payload["blockers"]
     assert (
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"

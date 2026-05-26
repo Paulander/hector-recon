@@ -202,6 +202,18 @@ def build_payload(
             "protected_failure_contrast_command_if_explicitly_approved": (
                 protected_failure_contrast.get("command_if_explicitly_approved")
             ),
+            "protected_failure_contrast_approval_request_artifact": (
+                protected_failure_contrast.get("approval_request_artifact")
+            ),
+            "protected_failure_contrast_approval_request_status": (
+                protected_failure_contrast.get("approval_request_status")
+            ),
+            "protected_failure_contrast_approval_receipt_created_by_request": (
+                protected_failure_contrast.get("approval_receipt_created_by_request")
+            ),
+            "protected_failure_contrast_approval_receipt_blockers": (
+                protected_failure_contrast.get("approval_receipt_blockers") or []
+            ),
         },
         "blockers": blockers,
         "warnings": warnings,
