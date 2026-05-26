@@ -122,7 +122,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `33a462821c76b5aa38a00155a119a4a46d7ccdd7be2b61f020d67050d77b19ee`
+- expected_readiness_fingerprint: `5b3214a20bfa40c31343c4c8a912f9a2a2d056e9ff52616f47fd5992b62dcc2b`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -180,6 +180,44 @@
 - two_stage_benchmark_current_positive_recall_rate: `0.0`
 - two_stage_benchmark_expanded_positive_recall_rate: `1.0`
 - two_stage_benchmark_selector_ready: `False`
+- runtime_work_allowed: `False`
+- selector_training_allowed: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
+## Strategy Sequence Candidate-Source Evidence
+
+- schema_status: `strategy_sequence_candidate_frame_schema_defined`
+- schema_runtime_sandbox_allowed: `False`
+- frames_status: `strategy_sequence_frames_populated_non_causal`
+- frames_frame_count: `256`
+- frames_frame_type_counts: `{'broader_krk_strategy_candidate': 13, 'candidate_move_hypothesis': 140, 'validated_provider_candidate': 103}`
+- frames_stage7_challenge_row_count: `198`
+- frames_stage7_readiness_training_row_count: `0`
+- quality_status: `frame_quality_probe_supports_next_sequence_candidate_benchmark`
+- quality_capacity_not_selector_label: `True`
+- quality_sequence_candidate_mate_count: `0`
+- source_benchmark_status: `candidate_generation_sources_promising_selector_blocked`
+- source_benchmark_protected_positive_capacity_ratio: `0.6875`
+- source_benchmark_protected_negative_capacity_ratio: `0.3125`
+- source_benchmark_progress_window_sequence_candidate_mate_count: `0`
+- control_plane_status: `candidate_generation_control_plane_ready_for_architecture_review`
+- control_plane_runtime_sandbox_allowed: `False`
+- sandbox_review_status: `candidate_generation_observation_sandbox_review_ready`
+- sandbox_review_implementation_authorized: `False`
+- source_design_status: `broader_strategy_sequence_candidate_source_design_ready`
+- source_design_implementation_allowed: `False`
+- plan_capsule_source_status: `plan_capsule_sequence_observation_source_schema_ready_but_stage7_only`
+- broader_strategy_source_status: `broader_strategy_observation_source_schema_ready_but_stage7_only`
+- source_review_status: `source_reviews_complete_runtime_expansion_not_authorized`
+- source_review_implementation_allowed: `False`
+- protected_monitor_expansion_status: `protected_strategy_monitor_frames_expanded_non_causal`
+- protected_monitor_expansion_frame_count: `85`
+- protected_monitor_expansion_stage7_challenge_row_count: `0`
+- protected_monitor_quality_status: `protected_strategy_monitor_frames_have_monitor_signal`
+- protected_monitor_quality_strong_failure_family_count: `1`
+- repair_monitor_review_status: `protected_repair_monitor_observation_source_review_ready`
+- repair_monitor_review_implementation_authorized: `False`
 - runtime_work_allowed: `False`
 - selector_training_allowed: `False`
 - stage7_promotion_allowed: `False`
@@ -348,5 +386,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `976`
+- checked_flag_count: `1081`
 - violation_count: `0`

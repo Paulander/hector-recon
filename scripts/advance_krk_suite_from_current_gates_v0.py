@@ -583,6 +583,9 @@ def build_payload() -> dict[str, Any]:
     protected_missing_provider_gate = (
         readiness.get("protected_missing_provider_gate") or {}
     )
+    strategy_sequence_candidate_source_gate = (
+        readiness.get("strategy_sequence_candidate_source_gate") or {}
+    )
     selector_objective_lineage_gate = (
         readiness.get("selector_objective_lineage_gate") or {}
     )
@@ -1179,6 +1182,108 @@ def build_payload() -> dict[str, Any]:
             ),
             "protected_missing_provider_runtime_work_allowed": protected_missing_provider_gate.get(
                 "runtime_work_allowed"
+            ),
+            "strategy_sequence_candidate_source_schema_status": strategy_sequence_candidate_source_gate.get(
+                "schema_status"
+            ),
+            "strategy_sequence_candidate_source_schema_runtime_sandbox_allowed": strategy_sequence_candidate_source_gate.get(
+                "schema_runtime_sandbox_allowed"
+            ),
+            "strategy_sequence_candidate_source_frames_status": strategy_sequence_candidate_source_gate.get(
+                "frames_status"
+            ),
+            "strategy_sequence_candidate_source_frames_frame_count": strategy_sequence_candidate_source_gate.get(
+                "frames_frame_count"
+            ),
+            "strategy_sequence_candidate_source_frames_stage7_challenge_row_count": strategy_sequence_candidate_source_gate.get(
+                "frames_stage7_challenge_row_count"
+            ),
+            "strategy_sequence_candidate_source_frames_stage7_readiness_training_row_count": strategy_sequence_candidate_source_gate.get(
+                "frames_stage7_readiness_training_row_count"
+            ),
+            "strategy_sequence_candidate_source_quality_status": strategy_sequence_candidate_source_gate.get(
+                "quality_status"
+            ),
+            "strategy_sequence_candidate_source_quality_capacity_not_selector_label": strategy_sequence_candidate_source_gate.get(
+                "quality_capacity_not_selector_label"
+            ),
+            "strategy_sequence_candidate_source_quality_sequence_candidate_mate_count": strategy_sequence_candidate_source_gate.get(
+                "quality_sequence_candidate_mate_count"
+            ),
+            "strategy_sequence_candidate_source_benchmark_status": strategy_sequence_candidate_source_gate.get(
+                "source_benchmark_status"
+            ),
+            "strategy_sequence_candidate_source_benchmark_protected_positive_capacity_ratio": strategy_sequence_candidate_source_gate.get(
+                "source_benchmark_protected_positive_capacity_ratio"
+            ),
+            "strategy_sequence_candidate_source_benchmark_protected_negative_capacity_ratio": strategy_sequence_candidate_source_gate.get(
+                "source_benchmark_protected_negative_capacity_ratio"
+            ),
+            "strategy_sequence_candidate_source_benchmark_progress_window_sequence_candidate_mate_count": strategy_sequence_candidate_source_gate.get(
+                "source_benchmark_progress_window_sequence_candidate_mate_count"
+            ),
+            "strategy_sequence_candidate_source_control_plane_status": strategy_sequence_candidate_source_gate.get(
+                "control_plane_status"
+            ),
+            "strategy_sequence_candidate_source_control_plane_runtime_sandbox_allowed": strategy_sequence_candidate_source_gate.get(
+                "control_plane_runtime_sandbox_allowed"
+            ),
+            "strategy_sequence_candidate_source_sandbox_review_status": strategy_sequence_candidate_source_gate.get(
+                "sandbox_review_status"
+            ),
+            "strategy_sequence_candidate_source_sandbox_review_implementation_authorized": strategy_sequence_candidate_source_gate.get(
+                "sandbox_review_implementation_authorized"
+            ),
+            "strategy_sequence_candidate_source_design_status": strategy_sequence_candidate_source_gate.get(
+                "source_design_status"
+            ),
+            "strategy_sequence_candidate_source_design_implementation_allowed": strategy_sequence_candidate_source_gate.get(
+                "source_design_implementation_allowed"
+            ),
+            "strategy_sequence_candidate_source_plan_capsule_status": strategy_sequence_candidate_source_gate.get(
+                "plan_capsule_source_status"
+            ),
+            "strategy_sequence_candidate_source_broader_strategy_status": strategy_sequence_candidate_source_gate.get(
+                "broader_strategy_source_status"
+            ),
+            "strategy_sequence_candidate_source_review_status": strategy_sequence_candidate_source_gate.get(
+                "source_review_status"
+            ),
+            "strategy_sequence_candidate_source_review_implementation_allowed": strategy_sequence_candidate_source_gate.get(
+                "source_review_implementation_allowed"
+            ),
+            "strategy_sequence_candidate_source_protected_monitor_expansion_status": strategy_sequence_candidate_source_gate.get(
+                "protected_monitor_expansion_status"
+            ),
+            "strategy_sequence_candidate_source_protected_monitor_expansion_frame_count": strategy_sequence_candidate_source_gate.get(
+                "protected_monitor_expansion_frame_count"
+            ),
+            "strategy_sequence_candidate_source_protected_monitor_expansion_stage7_challenge_row_count": strategy_sequence_candidate_source_gate.get(
+                "protected_monitor_expansion_stage7_challenge_row_count"
+            ),
+            "strategy_sequence_candidate_source_protected_monitor_quality_status": strategy_sequence_candidate_source_gate.get(
+                "protected_monitor_quality_status"
+            ),
+            "strategy_sequence_candidate_source_protected_monitor_quality_strong_failure_family_count": strategy_sequence_candidate_source_gate.get(
+                "protected_monitor_quality_strong_failure_family_count"
+            ),
+            "strategy_sequence_candidate_source_repair_monitor_review_status": strategy_sequence_candidate_source_gate.get(
+                "repair_monitor_review_status"
+            ),
+            "strategy_sequence_candidate_source_repair_monitor_review_implementation_authorized": strategy_sequence_candidate_source_gate.get(
+                "repair_monitor_review_implementation_authorized"
+            ),
+            "strategy_sequence_candidate_source_runtime_work_allowed": strategy_sequence_candidate_source_gate.get(
+                "runtime_work_allowed"
+            ),
+            "strategy_sequence_candidate_source_selector_training_allowed": strategy_sequence_candidate_source_gate.get(
+                "selector_training_allowed"
+            ),
+            "strategy_sequence_candidate_source_stage7_promotion_allowed": strategy_sequence_candidate_source_gate.get(
+                "stage7_promotion_allowed"
+            ),
+            "strategy_sequence_candidate_source_stage8_training_allowed": strategy_sequence_candidate_source_gate.get(
+                "stage8_training_allowed"
             ),
             "selector_objective_lineage_ownership_recovery_status": selector_objective_lineage_gate.get(
                 "ownership_recovery_status"

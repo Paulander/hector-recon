@@ -71,6 +71,45 @@ SOURCES = {
     "two_stage_candidate_selection_benchmark": (
         "reports/krk_two_stage_candidate_selection_benchmark_v0.json"
     ),
+    "strategy_sequence_candidate_frame_schema_v1": (
+        "reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_v1.json"
+    ),
+    "strategy_sequence_candidate_frames_v1": (
+        "reports/strategy_arbitration/krk_strategy_sequence_candidate_frames_v1.json"
+    ),
+    "strategy_sequence_candidate_frame_quality_v1": (
+        "reports/strategy_arbitration/krk_strategy_sequence_candidate_frame_quality_v1.json"
+    ),
+    "candidate_frame_source_benchmark_v1": (
+        "reports/strategy_arbitration/krk_candidate_frame_source_benchmark_v1.json"
+    ),
+    "strategy_sequence_control_plane_decision_v1": (
+        "reports/strategy_arbitration/krk_strategy_sequence_control_plane_decision_v1.json"
+    ),
+    "candidate_generation_sandbox_review": (
+        "reports/strategy_arbitration/krk_candidate_generation_sandbox_review_v0.json"
+    ),
+    "broader_strategy_sequence_candidate_source_design_v1": (
+        "reports/strategy_arbitration/krk_broader_strategy_sequence_candidate_source_design_v1.json"
+    ),
+    "plan_capsule_sequence_candidate_observation_review_v1": (
+        "reports/strategy_arbitration/krk_plan_capsule_sequence_candidate_observation_review_v1.json"
+    ),
+    "broader_strategy_candidate_observation_review_v1": (
+        "reports/strategy_arbitration/krk_broader_strategy_candidate_observation_review_v1.json"
+    ),
+    "broader_strategy_sequence_candidate_source_review_v1": (
+        "reports/strategy_arbitration/krk_broader_strategy_sequence_candidate_source_review_v1.json"
+    ),
+    "protected_strategy_monitor_frame_expansion_v1": (
+        "reports/strategy_arbitration/krk_protected_strategy_monitor_frame_expansion_v1.json"
+    ),
+    "protected_strategy_monitor_frame_quality_v1": (
+        "reports/strategy_arbitration/krk_protected_strategy_monitor_frame_quality_v1.json"
+    ),
+    "protected_strategy_monitor_observation_source_review_packet_v1": (
+        "reports/strategy_arbitration/krk_protected_strategy_monitor_observation_source_review_packet_v1.json"
+    ),
     "ownership_label_recovery_review": (
         "reports/strategy_arbitration/krk_ownership_label_recovery_review_v0.json"
     ),
@@ -534,6 +573,45 @@ def build_payload() -> dict[str, Any]:
     ]
     two_stage_candidate_selection_benchmark = payloads[
         "two_stage_candidate_selection_benchmark"
+    ]
+    strategy_sequence_candidate_frame_schema_v1 = payloads[
+        "strategy_sequence_candidate_frame_schema_v1"
+    ]
+    strategy_sequence_candidate_frames_v1 = payloads[
+        "strategy_sequence_candidate_frames_v1"
+    ]
+    strategy_sequence_candidate_frame_quality_v1 = payloads[
+        "strategy_sequence_candidate_frame_quality_v1"
+    ]
+    candidate_frame_source_benchmark_v1 = payloads[
+        "candidate_frame_source_benchmark_v1"
+    ]
+    strategy_sequence_control_plane_decision_v1 = payloads[
+        "strategy_sequence_control_plane_decision_v1"
+    ]
+    candidate_generation_sandbox_review = payloads[
+        "candidate_generation_sandbox_review"
+    ]
+    broader_strategy_sequence_candidate_source_design_v1 = payloads[
+        "broader_strategy_sequence_candidate_source_design_v1"
+    ]
+    plan_capsule_sequence_candidate_observation_review_v1 = payloads[
+        "plan_capsule_sequence_candidate_observation_review_v1"
+    ]
+    broader_strategy_candidate_observation_review_v1 = payloads[
+        "broader_strategy_candidate_observation_review_v1"
+    ]
+    broader_strategy_sequence_candidate_source_review_v1 = payloads[
+        "broader_strategy_sequence_candidate_source_review_v1"
+    ]
+    protected_strategy_monitor_frame_expansion_v1 = payloads[
+        "protected_strategy_monitor_frame_expansion_v1"
+    ]
+    protected_strategy_monitor_frame_quality_v1 = payloads[
+        "protected_strategy_monitor_frame_quality_v1"
+    ]
+    protected_strategy_monitor_observation_source_review_packet_v1 = payloads[
+        "protected_strategy_monitor_observation_source_review_packet_v1"
     ]
     ownership_label_recovery_review = payloads["ownership_label_recovery_review"]
     selector_objective_seed_manifest_v0 = payloads[
@@ -1622,6 +1700,198 @@ def build_payload() -> dict[str, Any]:
                 ).get("stage7_training_leakage")
             ),
             "runtime_work_allowed": False,
+            "selector_training_allowed": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": False,
+        },
+        "strategy_sequence_candidate_source_gate": {
+            "schema_status": (
+                strategy_sequence_candidate_frame_schema_v1.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "schema_runtime_sandbox_allowed": (
+                strategy_sequence_candidate_frame_schema_v1.get("decision", {}).get(
+                    "runtime_sandbox_allowed"
+                )
+            ),
+            "frames_status": (
+                strategy_sequence_candidate_frames_v1.get("decision", {}).get("status")
+            ),
+            "frames_frame_count": (
+                strategy_sequence_candidate_frames_v1.get("summary", {}).get(
+                    "frame_count"
+                )
+            ),
+            "frames_frame_type_counts": (
+                strategy_sequence_candidate_frames_v1.get("summary", {}).get(
+                    "frame_type_counts"
+                )
+            ),
+            "frames_capacity_evidence_row_count": (
+                strategy_sequence_candidate_frames_v1.get("summary", {}).get(
+                    "capacity_evidence_row_count"
+                )
+            ),
+            "frames_candidate_generation_training_row_count": (
+                strategy_sequence_candidate_frames_v1.get("summary", {}).get(
+                    "candidate_generation_training_row_count"
+                )
+            ),
+            "frames_stage7_challenge_row_count": (
+                strategy_sequence_candidate_frames_v1.get("summary", {}).get(
+                    "stage7_challenge_row_count"
+                )
+            ),
+            "frames_stage7_readiness_training_row_count": (
+                strategy_sequence_candidate_frames_v1.get("summary", {}).get(
+                    "readiness_training_stage7_row_count"
+                )
+            ),
+            "quality_status": (
+                strategy_sequence_candidate_frame_quality_v1.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "quality_capacity_not_selector_label": (
+                strategy_sequence_candidate_frame_quality_v1.get(
+                    "quality_checks", {}
+                ).get("capacity_not_selector_label")
+            ),
+            "quality_runtime_flags_false": (
+                strategy_sequence_candidate_frame_quality_v1.get(
+                    "quality_checks", {}
+                ).get("runtime_flags_false")
+            ),
+            "quality_protected_frame_count": (
+                strategy_sequence_candidate_frame_quality_v1.get("summary", {}).get(
+                    "protected_frame_count"
+                )
+            ),
+            "quality_protected_positive_capacity_candidate_count": (
+                strategy_sequence_candidate_frame_quality_v1.get("summary", {}).get(
+                    "protected_positive_capacity_candidate_count"
+                )
+            ),
+            "quality_sequence_candidate_count": (
+                strategy_sequence_candidate_frame_quality_v1.get("summary", {}).get(
+                    "sequence_candidate_count"
+                )
+            ),
+            "quality_sequence_candidate_mate_count": (
+                strategy_sequence_candidate_frame_quality_v1.get("summary", {}).get(
+                    "sequence_candidate_mate_count"
+                )
+            ),
+            "source_benchmark_status": (
+                candidate_frame_source_benchmark_v1.get("decision", {}).get("status")
+            ),
+            "source_benchmark_protected_positive_capacity_ratio": (
+                candidate_frame_source_benchmark_v1.get("channel_summaries", {})
+                .get("protected_forced_capacity", {})
+                .get("positive_capacity_ratio")
+            ),
+            "source_benchmark_protected_negative_capacity_ratio": (
+                candidate_frame_source_benchmark_v1.get("channel_summaries", {})
+                .get("protected_forced_capacity", {})
+                .get("negative_capacity_ratio")
+            ),
+            "source_benchmark_progress_window_sequence_candidate_mate_count": (
+                candidate_frame_source_benchmark_v1.get("source_readiness", {})
+                .get("progress_window_supported_move", {})
+                .get("sequence_candidate_mate_count")
+            ),
+            "control_plane_status": (
+                strategy_sequence_control_plane_decision_v1.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "control_plane_runtime_sandbox_allowed": (
+                strategy_sequence_control_plane_decision_v1.get("decision", {}).get(
+                    "runtime_sandbox_allowed_by_this_packet"
+                )
+            ),
+            "sandbox_review_status": (
+                candidate_generation_sandbox_review.get("decision", {}).get("status")
+            ),
+            "sandbox_review_implementation_authorized": (
+                candidate_generation_sandbox_review.get("decision", {}).get(
+                    "implementation_authorized_by_this_packet"
+                )
+            ),
+            "sandbox_review_recommended_first_sandbox": (
+                candidate_generation_sandbox_review.get("decision", {}).get(
+                    "recommended_first_sandbox"
+                )
+            ),
+            "source_design_status": (
+                broader_strategy_sequence_candidate_source_design_v1.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "source_design_implementation_allowed": (
+                broader_strategy_sequence_candidate_source_design_v1.get(
+                    "decision", {}
+                ).get("implementation_allowed_by_this_artifact")
+            ),
+            "plan_capsule_source_status": (
+                plan_capsule_sequence_candidate_observation_review_v1.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "broader_strategy_source_status": (
+                broader_strategy_candidate_observation_review_v1.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "source_review_status": (
+                broader_strategy_sequence_candidate_source_review_v1.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "source_review_implementation_allowed": (
+                broader_strategy_sequence_candidate_source_review_v1.get(
+                    "decision", {}
+                ).get("implementation_allowed_by_this_artifact")
+            ),
+            "protected_monitor_expansion_status": (
+                protected_strategy_monitor_frame_expansion_v1.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "protected_monitor_expansion_frame_count": (
+                protected_strategy_monitor_frame_expansion_v1.get("summary", {}).get(
+                    "frame_count"
+                )
+            ),
+            "protected_monitor_expansion_stage7_challenge_row_count": (
+                protected_strategy_monitor_frame_expansion_v1.get("summary", {}).get(
+                    "stage7_challenge_row_count"
+                )
+            ),
+            "protected_monitor_quality_status": (
+                protected_strategy_monitor_frame_quality_v1.get("decision", {}).get(
+                    "status"
+                )
+            ),
+            "protected_monitor_quality_strong_failure_family_count": (
+                protected_strategy_monitor_frame_quality_v1.get("summary", {}).get(
+                    "strong_failure_family_count"
+                )
+            ),
+            "repair_monitor_review_status": (
+                protected_strategy_monitor_observation_source_review_packet_v1.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "repair_monitor_review_implementation_authorized": (
+                protected_strategy_monitor_observation_source_review_packet_v1.get(
+                    "decision", {}
+                ).get("implementation_allowed_by_this_packet")
+            ),
+            "runtime_work_allowed": False,
+            "runtime_candidate_generation_allowed": False,
+            "selector_allowed": False,
             "selector_training_allowed": False,
             "stage7_promotion_allowed": False,
             "stage8_training_allowed": False,
@@ -2961,6 +3231,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     sequence = payload["sequence_policy"]
     protected_failure_contrast = payload["protected_failure_contrast_gate"]
     missing_provider = payload["protected_missing_provider_gate"]
+    strategy_source = payload["strategy_sequence_candidate_source_gate"]
     selector_lineage = payload["selector_objective_lineage_gate"]
     selector_objective = payload["selector_objective_gate"]
     stage4_diagnostic = payload["stage4_first_move_diagnostic_gate"]
@@ -3161,6 +3432,44 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- selector_training_allowed: `{missing_provider['selector_training_allowed']}`",
             f"- stage7_promotion_allowed: `{missing_provider['stage7_promotion_allowed']}`",
             f"- stage8_training_allowed: `{missing_provider['stage8_training_allowed']}`",
+            "",
+            "## Strategy Sequence Candidate-Source Evidence",
+            "",
+            f"- schema_status: `{strategy_source['schema_status']}`",
+            f"- schema_runtime_sandbox_allowed: `{strategy_source['schema_runtime_sandbox_allowed']}`",
+            f"- frames_status: `{strategy_source['frames_status']}`",
+            f"- frames_frame_count: `{strategy_source['frames_frame_count']}`",
+            f"- frames_frame_type_counts: `{strategy_source['frames_frame_type_counts']}`",
+            f"- frames_stage7_challenge_row_count: `{strategy_source['frames_stage7_challenge_row_count']}`",
+            f"- frames_stage7_readiness_training_row_count: `{strategy_source['frames_stage7_readiness_training_row_count']}`",
+            f"- quality_status: `{strategy_source['quality_status']}`",
+            f"- quality_capacity_not_selector_label: `{strategy_source['quality_capacity_not_selector_label']}`",
+            f"- quality_sequence_candidate_mate_count: `{strategy_source['quality_sequence_candidate_mate_count']}`",
+            f"- source_benchmark_status: `{strategy_source['source_benchmark_status']}`",
+            f"- source_benchmark_protected_positive_capacity_ratio: `{strategy_source['source_benchmark_protected_positive_capacity_ratio']}`",
+            f"- source_benchmark_protected_negative_capacity_ratio: `{strategy_source['source_benchmark_protected_negative_capacity_ratio']}`",
+            f"- source_benchmark_progress_window_sequence_candidate_mate_count: `{strategy_source['source_benchmark_progress_window_sequence_candidate_mate_count']}`",
+            f"- control_plane_status: `{strategy_source['control_plane_status']}`",
+            f"- control_plane_runtime_sandbox_allowed: `{strategy_source['control_plane_runtime_sandbox_allowed']}`",
+            f"- sandbox_review_status: `{strategy_source['sandbox_review_status']}`",
+            f"- sandbox_review_implementation_authorized: `{strategy_source['sandbox_review_implementation_authorized']}`",
+            f"- source_design_status: `{strategy_source['source_design_status']}`",
+            f"- source_design_implementation_allowed: `{strategy_source['source_design_implementation_allowed']}`",
+            f"- plan_capsule_source_status: `{strategy_source['plan_capsule_source_status']}`",
+            f"- broader_strategy_source_status: `{strategy_source['broader_strategy_source_status']}`",
+            f"- source_review_status: `{strategy_source['source_review_status']}`",
+            f"- source_review_implementation_allowed: `{strategy_source['source_review_implementation_allowed']}`",
+            f"- protected_monitor_expansion_status: `{strategy_source['protected_monitor_expansion_status']}`",
+            f"- protected_monitor_expansion_frame_count: `{strategy_source['protected_monitor_expansion_frame_count']}`",
+            f"- protected_monitor_expansion_stage7_challenge_row_count: `{strategy_source['protected_monitor_expansion_stage7_challenge_row_count']}`",
+            f"- protected_monitor_quality_status: `{strategy_source['protected_monitor_quality_status']}`",
+            f"- protected_monitor_quality_strong_failure_family_count: `{strategy_source['protected_monitor_quality_strong_failure_family_count']}`",
+            f"- repair_monitor_review_status: `{strategy_source['repair_monitor_review_status']}`",
+            f"- repair_monitor_review_implementation_authorized: `{strategy_source['repair_monitor_review_implementation_authorized']}`",
+            f"- runtime_work_allowed: `{strategy_source['runtime_work_allowed']}`",
+            f"- selector_training_allowed: `{strategy_source['selector_training_allowed']}`",
+            f"- stage7_promotion_allowed: `{strategy_source['stage7_promotion_allowed']}`",
+            f"- stage8_training_allowed: `{strategy_source['stage8_training_allowed']}`",
             "",
             "## Selector Objective Lineage Evidence",
             "",

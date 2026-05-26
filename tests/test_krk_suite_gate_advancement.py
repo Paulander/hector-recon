@@ -361,6 +361,183 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["protected_missing_provider_runtime_work_allowed"] is False
     )
     assert (
+        payload["summary"]["strategy_sequence_candidate_source_schema_status"]
+        == "strategy_sequence_candidate_frame_schema_defined"
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_schema_runtime_sandbox_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["strategy_sequence_candidate_source_frames_status"]
+        == "strategy_sequence_frames_populated_non_causal"
+    )
+    assert payload["summary"]["strategy_sequence_candidate_source_frames_frame_count"] == 256
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_frames_stage7_challenge_row_count"
+        ]
+        == 198
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_frames_stage7_readiness_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["strategy_sequence_candidate_source_quality_status"]
+        == "frame_quality_probe_supports_next_sequence_candidate_benchmark"
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_quality_capacity_not_selector_label"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_quality_sequence_candidate_mate_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["strategy_sequence_candidate_source_benchmark_status"]
+        == "candidate_generation_sources_promising_selector_blocked"
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_benchmark_protected_positive_capacity_ratio"
+        ]
+        == 0.6875
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_benchmark_protected_negative_capacity_ratio"
+        ]
+        == 0.3125
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_benchmark_progress_window_sequence_candidate_mate_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["strategy_sequence_candidate_source_control_plane_status"]
+        == "candidate_generation_control_plane_ready_for_architecture_review"
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_control_plane_runtime_sandbox_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["strategy_sequence_candidate_source_sandbox_review_status"]
+        == "candidate_generation_observation_sandbox_review_ready"
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_sandbox_review_implementation_authorized"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["strategy_sequence_candidate_source_design_status"]
+        == "broader_strategy_sequence_candidate_source_design_ready"
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_design_implementation_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["strategy_sequence_candidate_source_plan_capsule_status"]
+        == "plan_capsule_sequence_observation_source_schema_ready_but_stage7_only"
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_broader_strategy_status"
+        ]
+        == "broader_strategy_observation_source_schema_ready_but_stage7_only"
+    )
+    assert (
+        payload["summary"]["strategy_sequence_candidate_source_review_status"]
+        == "source_reviews_complete_runtime_expansion_not_authorized"
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_review_implementation_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_protected_monitor_expansion_status"
+        ]
+        == "protected_strategy_monitor_frames_expanded_non_causal"
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_protected_monitor_expansion_frame_count"
+        ]
+        == 85
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_protected_monitor_expansion_stage7_challenge_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_protected_monitor_quality_status"
+        ]
+        == "protected_strategy_monitor_frames_have_monitor_signal"
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_protected_monitor_quality_strong_failure_family_count"
+        ]
+        == 1
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_repair_monitor_review_status"
+        ]
+        == "protected_repair_monitor_observation_source_review_ready"
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_repair_monitor_review_implementation_authorized"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["strategy_sequence_candidate_source_runtime_work_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_selector_training_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "strategy_sequence_candidate_source_stage7_promotion_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["strategy_sequence_candidate_source_stage8_training_allowed"]
+        is False
+    )
+    assert (
         payload["summary"]["selector_objective_lineage_ownership_recovery_status"]
         == "ownership_label_recovery_seed_manifest_ready_selector_blocked"
     )

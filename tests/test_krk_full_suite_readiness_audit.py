@@ -105,6 +105,24 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_two_stage_candidate_selection_benchmark_v0.json"
     )
     assert (
+        payload["source_artifacts"]["strategy_sequence_candidate_frames_v1"]
+        == "reports/strategy_arbitration/krk_strategy_sequence_candidate_frames_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["candidate_frame_source_benchmark_v1"]
+        == "reports/strategy_arbitration/krk_candidate_frame_source_benchmark_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["candidate_generation_sandbox_review"]
+        == "reports/strategy_arbitration/krk_candidate_generation_sandbox_review_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "protected_strategy_monitor_observation_source_review_packet_v1"
+        ]
+        == "reports/strategy_arbitration/krk_protected_strategy_monitor_observation_source_review_packet_v1.json"
+    )
+    assert (
         payload["source_artifacts"]["ownership_label_recovery_review"]
         == "reports/strategy_arbitration/krk_ownership_label_recovery_review_v0.json"
     )
@@ -549,6 +567,103 @@ def test_full_suite_readiness_identifies_current_gate():
     assert missing_provider["selector_training_allowed"] is False
     assert missing_provider["stage7_promotion_allowed"] is False
     assert missing_provider["stage8_training_allowed"] is False
+
+    strategy_source = payload["strategy_sequence_candidate_source_gate"]
+    assert (
+        strategy_source["schema_status"]
+        == "strategy_sequence_candidate_frame_schema_defined"
+    )
+    assert strategy_source["schema_runtime_sandbox_allowed"] is False
+    assert (
+        strategy_source["frames_status"]
+        == "strategy_sequence_frames_populated_non_causal"
+    )
+    assert strategy_source["frames_frame_count"] == 256
+    assert strategy_source["frames_frame_type_counts"] == {
+        "broader_krk_strategy_candidate": 13,
+        "candidate_move_hypothesis": 140,
+        "validated_provider_candidate": 103,
+    }
+    assert strategy_source["frames_capacity_evidence_row_count"] == 16
+    assert strategy_source["frames_candidate_generation_training_row_count"] == 11
+    assert strategy_source["frames_stage7_challenge_row_count"] == 198
+    assert strategy_source["frames_stage7_readiness_training_row_count"] == 0
+    assert (
+        strategy_source["quality_status"]
+        == "frame_quality_probe_supports_next_sequence_candidate_benchmark"
+    )
+    assert strategy_source["quality_capacity_not_selector_label"] is True
+    assert strategy_source["quality_runtime_flags_false"] is True
+    assert strategy_source["quality_protected_frame_count"] == 58
+    assert strategy_source["quality_protected_positive_capacity_candidate_count"] == 11
+    assert strategy_source["quality_sequence_candidate_count"] == 140
+    assert strategy_source["quality_sequence_candidate_mate_count"] == 0
+    assert (
+        strategy_source["source_benchmark_status"]
+        == "candidate_generation_sources_promising_selector_blocked"
+    )
+    assert strategy_source["source_benchmark_protected_positive_capacity_ratio"] == 0.6875
+    assert strategy_source["source_benchmark_protected_negative_capacity_ratio"] == 0.3125
+    assert (
+        strategy_source[
+            "source_benchmark_progress_window_sequence_candidate_mate_count"
+        ]
+        == 0
+    )
+    assert (
+        strategy_source["control_plane_status"]
+        == "candidate_generation_control_plane_ready_for_architecture_review"
+    )
+    assert strategy_source["control_plane_runtime_sandbox_allowed"] is False
+    assert (
+        strategy_source["sandbox_review_status"]
+        == "candidate_generation_observation_sandbox_review_ready"
+    )
+    assert strategy_source["sandbox_review_implementation_authorized"] is False
+    assert (
+        strategy_source["sandbox_review_recommended_first_sandbox"]
+        == "default_off_observation_only_candidate_generation"
+    )
+    assert (
+        strategy_source["source_design_status"]
+        == "broader_strategy_sequence_candidate_source_design_ready"
+    )
+    assert strategy_source["source_design_implementation_allowed"] is False
+    assert (
+        strategy_source["plan_capsule_source_status"]
+        == "plan_capsule_sequence_observation_source_schema_ready_but_stage7_only"
+    )
+    assert (
+        strategy_source["broader_strategy_source_status"]
+        == "broader_strategy_observation_source_schema_ready_but_stage7_only"
+    )
+    assert (
+        strategy_source["source_review_status"]
+        == "source_reviews_complete_runtime_expansion_not_authorized"
+    )
+    assert strategy_source["source_review_implementation_allowed"] is False
+    assert (
+        strategy_source["protected_monitor_expansion_status"]
+        == "protected_strategy_monitor_frames_expanded_non_causal"
+    )
+    assert strategy_source["protected_monitor_expansion_frame_count"] == 85
+    assert strategy_source["protected_monitor_expansion_stage7_challenge_row_count"] == 0
+    assert (
+        strategy_source["protected_monitor_quality_status"]
+        == "protected_strategy_monitor_frames_have_monitor_signal"
+    )
+    assert strategy_source["protected_monitor_quality_strong_failure_family_count"] == 1
+    assert (
+        strategy_source["repair_monitor_review_status"]
+        == "protected_repair_monitor_observation_source_review_ready"
+    )
+    assert strategy_source["repair_monitor_review_implementation_authorized"] is False
+    assert strategy_source["runtime_work_allowed"] is False
+    assert strategy_source["runtime_candidate_generation_allowed"] is False
+    assert strategy_source["selector_allowed"] is False
+    assert strategy_source["selector_training_allowed"] is False
+    assert strategy_source["stage7_promotion_allowed"] is False
+    assert strategy_source["stage8_training_allowed"] is False
 
     lineage = payload["selector_objective_lineage_gate"]
     assert (
