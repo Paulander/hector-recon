@@ -447,6 +447,7 @@ def build_payload() -> dict[str, Any]:
         protected_failure_contrast_collection_ready
         and not sequence_forbidden_training_or_runtime_inputs
         and failure_contrast_approval_request_ready
+        and protected_stack_validated
     )
     protected_failure_contrast_integration_ready = bool(
         failure_contrast_integration.get("summary", {}).get("integration_ready")
@@ -487,9 +488,11 @@ def build_payload() -> dict[str, Any]:
     )
     protected_failure_contrast_approval_request_repair_pending = (
         protected_failure_contrast_pending
+        and protected_stack_validated
         and protected_failure_contrast_collection_ready
         and not failure_contrast_approval_request_ready
     )
+    protected_stack_repair_pending = not protected_stack_validated
 
     stage4_decision = stage4_unblocker.get("decision") or {}
     stage4_status = (
@@ -620,7 +623,11 @@ def build_payload() -> dict[str, Any]:
     if boundaries["violation_count"]:
         hard_blockers.append("hard_invariant_violation_detected")
     explicit_gate_blockers: list[str] = []
-    if protected_failure_contrast_pending and failure_contrast_approval_request_ready:
+    if (
+        protected_failure_contrast_pending
+        and protected_stack_validated
+        and failure_contrast_approval_request_ready
+    ):
         explicit_gate_blockers.append(
             "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
         )
@@ -629,6 +636,9 @@ def build_payload() -> dict[str, Any]:
     if sequence_forbidden_training_or_runtime_inputs:
         decision_status = "krk_suite_readiness_blocked_forbidden_training_or_runtime_rows"
         next_step = "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+    elif protected_stack_repair_pending:
+        decision_status = "krk_suite_readiness_blocked_pending_protected_stack_repair"
+        next_step = "repair_protected_stack_validation"
     elif protected_failure_contrast_approval_request_repair_pending:
         decision_status = (
             "krk_suite_readiness_blocked_pending_protected_failure_contrast_approval_request_repair"

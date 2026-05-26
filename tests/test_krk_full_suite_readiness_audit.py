@@ -647,6 +647,16 @@ def test_full_suite_readiness_blocks_unsafe_protected_stack_paths(monkeypatch):
             payload["active_protected_stack"]["stage6_drive_overlay"][
                 "topology"
             ] = "../unsafe_topology.json"
+        if (
+            relative
+            == "reports/strategy_arbitration/"
+            "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
+        ):
+            payload.setdefault("decision", {})["status"] = (
+                "protected_plan_window_failure_contrast_approval_request_blocked"
+            )
+            payload["blockers"] = ["full_suite_readiness_audit_not_clean"]
+            payload["approval_request_ready_for_collection"] = False
         return payload
 
     monkeypatch.setattr(_audit, "load_json", tainted_load_json)
@@ -659,5 +669,22 @@ def test_full_suite_readiness_blocks_unsafe_protected_stack_paths(monkeypatch):
         "active_stack_path_status"
     ]["unsafe_paths"]
     assert "protected_retry1_stage5_6_stack_not_validated" in payload["hard_blockers"]
-    assert payload["decision"]["status"].startswith("krk_suite_readiness_blocked")
+    assert (
+        "protected_plan_window_failure_contrast_approval_request_blocked"
+        not in payload["hard_blockers"]
+    )
+    assert payload["explicit_gate_blockers"] == []
+    assert payload["protected_failure_contrast_gate"]["ready_for_explicit_approval"] is False
+    assert (
+        payload["protected_failure_contrast_gate"]["command_if_explicitly_approved"]
+        is None
+    )
+    assert (
+        payload["decision"]["status"]
+        == "krk_suite_readiness_blocked_pending_protected_stack_repair"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "repair_protected_stack_validation"
+    )
     assert payload["decision"]["runtime_changes_allowed"] is False
