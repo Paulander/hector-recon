@@ -133,6 +133,26 @@ def test_gate_advancement_reports_current_stage7_blocker():
         == "stage5_one_ply_guardrail_control_debt_confirmed"
     )
     assert (
+        payload["summary"]["clean_curriculum_stage4_caveat_decision_passive_ready"]
+        is True
+    )
+    assert (
+        payload["summary"]["clean_curriculum_stage4_caveat_decision_status"]
+        == "stage4_candidate_generation_gap_with_known_residual_guardrail"
+    )
+    assert (
+        payload["summary"][
+            "clean_curriculum_stage4_caveat_runtime_or_training_authorized"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "clean_curriculum_stage4_caveat_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
         payload["summary"]["clean_curriculum_stage4_caveat_control_status"]
         == "stage4_caveat_reproduces_in_base_control_no_overlay_regression"
     )

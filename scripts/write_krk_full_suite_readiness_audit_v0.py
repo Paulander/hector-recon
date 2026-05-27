@@ -537,6 +537,9 @@ SOURCES = {
     "clean_retrain_retry1_stage4_caveat_control_review": (
         "reports/krk_clean_retrain_retry1_stage4_caveat_control_review_v0.json"
     ),
+    "stage4_caveat_decision_gate": (
+        "reports/krk_stage4_caveat_decision_gate_v0.json"
+    ),
     "curriculum_next_milestone_decision": (
         "reports/krk_curriculum_next_milestone_decision_v0.json"
     ),
@@ -1673,6 +1676,7 @@ def build_payload() -> dict[str, Any]:
     clean_retrain_retry1_stage4_caveat_control_review = payloads[
         "clean_retrain_retry1_stage4_caveat_control_review"
     ]
+    stage4_caveat_decision_gate = payloads["stage4_caveat_decision_gate"]
     curriculum_next_milestone_decision = payloads[
         "curriculum_next_milestone_decision"
     ]
@@ -2617,9 +2621,54 @@ def build_payload() -> dict[str, Any]:
     stage4_caveat_control_decision = (
         clean_retrain_retry1_stage4_caveat_control_review.get("decision") or {}
     )
+    stage4_caveat_decision_invariants = (
+        stage4_caveat_decision_gate.get("invariants") or {}
+    )
     curriculum_next_invariants = curriculum_next_milestone_decision.get(
         "invariants"
     ) or {}
+    stage4_caveat_decision_passive = (
+        stage4_caveat_decision_gate.get("schema_version")
+        == "krk_stage4_caveat_decision_gate.v0"
+        and stage4_caveat_decision_gate.get("status")
+        == "stage4_candidate_generation_gap_with_known_residual_guardrail"
+        and "stage4_candidate_generation_gap"
+        in (stage4_caveat_decision_gate.get("selected_decisions") or [])
+        and "stage4_known_residual_keep_as_guardrail"
+        in (stage4_caveat_decision_gate.get("selected_decisions") or [])
+        and "stage4_runtime_sandbox_review_ready"
+        in (stage4_caveat_decision_gate.get("rejected_decisions") or [])
+        and "stage4_horizon_label_issue_as_primary"
+        in (stage4_caveat_decision_gate.get("rejected_decisions") or [])
+        and stage4_caveat_decision_gate.get("recommended_next_action")
+        == "explicit_approval_for_stage4_observation_only_trace_collection_or_keep_as_known_guardrail"
+        and stage4_caveat_decision_gate.get("runtime_or_training_authorized")
+        is False
+        and stage4_caveat_decision_invariants.get("protected_stack_replacement_performed")
+        is False
+        and stage4_caveat_decision_invariants.get("runtime_behavior_changed")
+        is False
+        and stage4_caveat_decision_invariants.get("runtime_defaults_changed")
+        is False
+        and stage4_caveat_decision_invariants.get("runtime_direct_routing")
+        is False
+        and stage4_caveat_decision_invariants.get("runtime_score_changes")
+        is False
+        and stage4_caveat_decision_invariants.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and stage4_caveat_decision_invariants.get("runtime_selector_implemented")
+        is False
+        and stage4_caveat_decision_invariants.get("gameplay_topology_mutation")
+        is False
+        and stage4_caveat_decision_invariants.get("stage7_promotion") is False
+        and stage4_caveat_decision_invariants.get("stage8_training") is False
+        and "reports/krk_stage4_caveat_decision_gate_v0.json"
+        in (curriculum_next_milestone_decision.get("source_artifacts") or [])
+        and curriculum_next_milestone_decision.get("stage4_status")
+        == "stage4_candidate_generation_gap_with_known_residual_guardrail"
+    )
     clean_curriculum_run_lineage_passive = (
         clean_retrain_execution_decision.get("full_run_authorized_by_this_manifest")
         is False
@@ -7008,6 +7057,49 @@ def build_payload() -> dict[str, Any]:
         "clean_curriculum_run_lineage_gate": {
             "status": curriculum_next_milestone_decision.get("status"),
             "passive_lineage_ready": clean_curriculum_run_lineage_passive,
+            "stage4_caveat_decision_passive_ready": (
+                stage4_caveat_decision_passive
+            ),
+            "stage4_caveat_decision_status": (
+                stage4_caveat_decision_gate.get("status")
+            ),
+            "stage4_caveat_decision_selected": (
+                stage4_caveat_decision_gate.get("selected_decisions") or []
+            ),
+            "stage4_caveat_decision_rejected": (
+                stage4_caveat_decision_gate.get("rejected_decisions") or []
+            ),
+            "stage4_caveat_decision_next_action": (
+                stage4_caveat_decision_gate.get("recommended_next_action")
+            ),
+            "stage4_caveat_runtime_or_training_authorized": (
+                stage4_caveat_decision_gate.get("runtime_or_training_authorized")
+            ),
+            "stage4_caveat_runtime_behavior_changed": (
+                stage4_caveat_decision_invariants.get("runtime_behavior_changed")
+            ),
+            "stage4_caveat_runtime_defaults_changed": (
+                stage4_caveat_decision_invariants.get("runtime_defaults_changed")
+            ),
+            "stage4_caveat_runtime_selector_implemented": (
+                stage4_caveat_decision_invariants.get(
+                    "runtime_selector_implemented"
+                )
+            ),
+            "stage4_caveat_runtime_dtm_or_tablebase_lookup": (
+                stage4_caveat_decision_invariants.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "stage4_caveat_gameplay_topology_mutation": (
+                stage4_caveat_decision_invariants.get("gameplay_topology_mutation")
+            ),
+            "stage4_caveat_stage7_promotion": (
+                stage4_caveat_decision_invariants.get("stage7_promotion")
+            ),
+            "stage4_caveat_stage8_training": (
+                stage4_caveat_decision_invariants.get("stage8_training")
+            ),
             "checkpoint_plan_status": (
                 clean_curriculum_checkpoint_plan.get("decision", {}).get("status")
             ),
@@ -14611,6 +14703,10 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- stage6_gap_status: `{clean_curriculum['stage6_gap_status']}`",
         f"- stage5_control_debt_status: `{clean_curriculum['stage5_control_debt_status']}`",
         f"- stage5_semantics_status: `{clean_curriculum['stage5_semantics_status']}`",
+        f"- stage4_caveat_decision_passive_ready: `{clean_curriculum['stage4_caveat_decision_passive_ready']}`",
+        f"- stage4_caveat_decision_status: `{clean_curriculum['stage4_caveat_decision_status']}`",
+        f"- stage4_caveat_decision_next_action: `{clean_curriculum['stage4_caveat_decision_next_action']}`",
+        f"- stage4_caveat_runtime_or_training_authorized: `{clean_curriculum['stage4_caveat_runtime_or_training_authorized']}`",
         f"- stage4_caveat_control_status: `{clean_curriculum['stage4_caveat_control_status']}`",
         f"- curriculum_stage7_status: `{clean_curriculum['curriculum_stage7_status']}`",
         f"- curriculum_stage8_status: `{clean_curriculum['curriculum_stage8_status']}`",

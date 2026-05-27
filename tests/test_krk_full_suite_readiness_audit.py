@@ -443,6 +443,10 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_stage5_guardrail_semantics_split_v0.json"
     )
     assert (
+        payload["source_artifacts"]["stage4_caveat_decision_gate"]
+        == "reports/krk_stage4_caveat_decision_gate_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["curriculum_next_milestone_decision"]
         == "reports/krk_curriculum_next_milestone_decision_v0.json"
     )
@@ -1080,6 +1084,30 @@ def test_full_suite_readiness_identifies_current_gate():
     )
     assert clean_curriculum["stage5_semantics_overlay_use_allowed_as_overlay_only"] is True
     assert clean_curriculum["stage5_semantics_clean_stack_replacement_allowed"] is False
+    assert clean_curriculum["stage4_caveat_decision_passive_ready"] is True
+    assert clean_curriculum["stage4_caveat_decision_status"] == (
+        "stage4_candidate_generation_gap_with_known_residual_guardrail"
+    )
+    assert "stage4_candidate_generation_gap" in (
+        clean_curriculum["stage4_caveat_decision_selected"]
+    )
+    assert "stage4_known_residual_keep_as_guardrail" in (
+        clean_curriculum["stage4_caveat_decision_selected"]
+    )
+    assert "stage4_runtime_sandbox_review_ready" in (
+        clean_curriculum["stage4_caveat_decision_rejected"]
+    )
+    assert clean_curriculum["stage4_caveat_decision_next_action"] == (
+        "explicit_approval_for_stage4_observation_only_trace_collection_or_keep_as_known_guardrail"
+    )
+    assert clean_curriculum["stage4_caveat_runtime_or_training_authorized"] is False
+    assert clean_curriculum["stage4_caveat_runtime_behavior_changed"] is False
+    assert clean_curriculum["stage4_caveat_runtime_defaults_changed"] is False
+    assert clean_curriculum["stage4_caveat_runtime_selector_implemented"] is False
+    assert clean_curriculum["stage4_caveat_runtime_dtm_or_tablebase_lookup"] is False
+    assert clean_curriculum["stage4_caveat_gameplay_topology_mutation"] is False
+    assert clean_curriculum["stage4_caveat_stage7_promotion"] is False
+    assert clean_curriculum["stage4_caveat_stage8_training"] is False
     assert (
         clean_curriculum["stage4_caveat_control_status"]
         == "stage4_caveat_reproduces_in_base_control_no_overlay_regression"

@@ -50,6 +50,10 @@
 - stage6_gap_status: `stage6_gap_explained_by_validation_profile_mismatch`
 - stage5_control_debt_status: `stage5_one_ply_guardrail_control_debt_confirmed`
 - stage5_semantics_status: `stage5_guardrail_semantics_split_defined`
+- stage4_caveat_decision_passive_ready: `True`
+- stage4_caveat_decision_status: `stage4_candidate_generation_gap_with_known_residual_guardrail`
+- stage4_caveat_decision_next_action: `explicit_approval_for_stage4_observation_only_trace_collection_or_keep_as_known_guardrail`
+- stage4_caveat_runtime_or_training_authorized: `False`
 - stage4_caveat_control_status: `stage4_caveat_reproduces_in_base_control_no_overlay_regression`
 - curriculum_stage7_status: `stage7_unlock_path_identified_broader_sequence_control_not_micro_repair`
 - curriculum_stage8_status: `stage8_remains_blocked_with_review`
@@ -967,7 +971,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `bebdcf5977fa6783b683e89da11a008f3990afdb678e31ade01c2859cdb4ce54`
+- expected_readiness_fingerprint: `40fd17d6b933328e293dac23ffe018a960741bea03916005b79a4135307fc97c`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1601,5 +1605,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2527`
+- checked_flag_count: `2534`
 - violation_count: `0`

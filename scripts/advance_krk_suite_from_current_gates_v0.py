@@ -1071,6 +1071,26 @@ def build_payload() -> dict[str, Any]:
             "clean_curriculum_stage5_control_debt_status": (
                 clean_curriculum_run_lineage_gate.get("stage5_control_debt_status")
             ),
+            "clean_curriculum_stage4_caveat_decision_passive_ready": (
+                clean_curriculum_run_lineage_gate.get(
+                    "stage4_caveat_decision_passive_ready"
+                )
+            ),
+            "clean_curriculum_stage4_caveat_decision_status": (
+                clean_curriculum_run_lineage_gate.get(
+                    "stage4_caveat_decision_status"
+                )
+            ),
+            "clean_curriculum_stage4_caveat_runtime_or_training_authorized": (
+                clean_curriculum_run_lineage_gate.get(
+                    "stage4_caveat_runtime_or_training_authorized"
+                )
+            ),
+            "clean_curriculum_stage4_caveat_runtime_dtm_or_tablebase_lookup": (
+                clean_curriculum_run_lineage_gate.get(
+                    "stage4_caveat_runtime_dtm_or_tablebase_lookup"
+                )
+            ),
             "clean_curriculum_stage4_caveat_control_status": (
                 clean_curriculum_run_lineage_gate.get("stage4_caveat_control_status")
             ),
