@@ -133,6 +133,26 @@ def test_gate_advancement_reports_current_stage7_blocker():
         == "stage5_one_ply_guardrail_control_debt_confirmed"
     )
     assert (
+        payload["summary"]["clean_curriculum_stage4_caveat_diagnostic_matrix_ready"]
+        is True
+    )
+    assert (
+        payload["summary"]["clean_curriculum_stage4_caveat_diagnostic_status"]
+        == "stage4_caveat_diagnostic_matrix_ready"
+    )
+    assert (
+        payload["summary"][
+            "clean_curriculum_stage4_caveat_diagnostic_max_plies_count"
+        ]
+        == 32
+    )
+    assert (
+        payload["summary"][
+            "clean_curriculum_stage4_caveat_diagnostic_candidate_gap_confidence"
+        ]
+        == "high"
+    )
+    assert (
         payload["summary"]["clean_curriculum_stage4_caveat_decision_passive_ready"]
         is True
     )

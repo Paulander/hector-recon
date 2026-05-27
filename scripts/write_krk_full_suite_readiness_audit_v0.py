@@ -546,6 +546,9 @@ SOURCES = {
     "stage4_caveat_decision_gate": (
         "reports/krk_stage4_caveat_decision_gate_v0.json"
     ),
+    "stage4_caveat_diagnostic_matrix": (
+        "reports/krk_stage4_caveat_diagnostic_matrix_v0.json"
+    ),
     "curriculum_next_milestone_decision": (
         "reports/krk_curriculum_next_milestone_decision_v0.json"
     ),
@@ -1689,6 +1692,7 @@ def build_payload() -> dict[str, Any]:
         "clean_retrain_retry1_stage4_caveat_control_review"
     ]
     stage4_caveat_decision_gate = payloads["stage4_caveat_decision_gate"]
+    stage4_caveat_diagnostic_matrix = payloads["stage4_caveat_diagnostic_matrix"]
     curriculum_next_milestone_decision = payloads[
         "curriculum_next_milestone_decision"
     ]
@@ -2636,9 +2640,63 @@ def build_payload() -> dict[str, Any]:
     stage4_caveat_decision_invariants = (
         stage4_caveat_decision_gate.get("invariants") or {}
     )
+    stage4_caveat_diagnostic_invariants = (
+        stage4_caveat_diagnostic_matrix.get("invariants") or {}
+    )
+    stage4_caveat_diagnostic_observed = (
+        stage4_caveat_diagnostic_matrix.get("stage4_observed_caveat") or {}
+    )
+    stage4_caveat_diagnostic_delta = (
+        stage4_caveat_diagnostic_observed.get("overlay_vs_base_control_delta") or {}
+    )
+    stage4_caveat_diagnostic_hypotheses = {
+        item.get("hypothesis"): item
+        for item in (stage4_caveat_diagnostic_matrix.get("hypotheses") or [])
+    }
+    stage4_caveat_candidate_gap_hypothesis = (
+        stage4_caveat_diagnostic_hypotheses.get("candidate_generation_gap") or {}
+    )
     curriculum_next_invariants = curriculum_next_milestone_decision.get(
         "invariants"
     ) or {}
+    stage4_caveat_diagnostic_matrix_ready = (
+        stage4_caveat_diagnostic_matrix.get("schema_version")
+        == "krk_stage4_caveat_diagnostic_matrix.v0"
+        and stage4_caveat_diagnostic_matrix.get("status")
+        == "stage4_caveat_diagnostic_matrix_ready"
+        and stage4_caveat_diagnostic_observed.get("total") == 300
+        and stage4_caveat_diagnostic_observed.get("mate") == 268
+        and stage4_caveat_diagnostic_observed.get("max_plies") == 32
+        and stage4_caveat_diagnostic_delta.get("mate_delta") == 0
+        and stage4_caveat_diagnostic_delta.get("max_plies_delta") == 0
+        and stage4_caveat_candidate_gap_hypothesis.get("confidence") == "high"
+        and stage4_caveat_candidate_gap_hypothesis.get("recommended_next_test")
+        == "approve_stage4_observation_only_trace_collection_max_6_rows"
+        and "stage4_candidate_generation_gap"
+        in (stage4_caveat_decision_gate.get("selected_decisions") or [])
+        and stage4_caveat_diagnostic_invariants.get(
+            "protected_stack_replacement_performed"
+        )
+        is False
+        and stage4_caveat_diagnostic_invariants.get("runtime_behavior_changed")
+        is False
+        and stage4_caveat_diagnostic_invariants.get("runtime_defaults_changed")
+        is False
+        and stage4_caveat_diagnostic_invariants.get("runtime_direct_routing")
+        is False
+        and stage4_caveat_diagnostic_invariants.get("runtime_score_changes")
+        is False
+        and stage4_caveat_diagnostic_invariants.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and stage4_caveat_diagnostic_invariants.get("runtime_selector_implemented")
+        is False
+        and stage4_caveat_diagnostic_invariants.get("gameplay_topology_mutation")
+        is False
+        and stage4_caveat_diagnostic_invariants.get("stage7_promotion") is False
+        and stage4_caveat_diagnostic_invariants.get("stage8_training") is False
+    )
     stage4_caveat_decision_passive = (
         stage4_caveat_decision_gate.get("schema_version")
         == "krk_stage4_caveat_decision_gate.v0"
@@ -7171,6 +7229,54 @@ def build_payload() -> dict[str, Any]:
         "clean_curriculum_run_lineage_gate": {
             "status": curriculum_next_milestone_decision.get("status"),
             "passive_lineage_ready": clean_curriculum_run_lineage_passive,
+            "stage4_caveat_diagnostic_matrix_ready": (
+                stage4_caveat_diagnostic_matrix_ready
+            ),
+            "stage4_caveat_diagnostic_status": (
+                stage4_caveat_diagnostic_matrix.get("status")
+            ),
+            "stage4_caveat_diagnostic_total": (
+                stage4_caveat_diagnostic_observed.get("total")
+            ),
+            "stage4_caveat_diagnostic_mate_count": (
+                stage4_caveat_diagnostic_observed.get("mate")
+            ),
+            "stage4_caveat_diagnostic_max_plies_count": (
+                stage4_caveat_diagnostic_observed.get("max_plies")
+            ),
+            "stage4_caveat_diagnostic_mate_delta": (
+                stage4_caveat_diagnostic_delta.get("mate_delta")
+            ),
+            "stage4_caveat_diagnostic_max_plies_delta": (
+                stage4_caveat_diagnostic_delta.get("max_plies_delta")
+            ),
+            "stage4_caveat_diagnostic_candidate_gap_confidence": (
+                stage4_caveat_candidate_gap_hypothesis.get("confidence")
+            ),
+            "stage4_caveat_diagnostic_candidate_gap_next_test": (
+                stage4_caveat_candidate_gap_hypothesis.get("recommended_next_test")
+            ),
+            "stage4_caveat_diagnostic_runtime_behavior_changed": (
+                stage4_caveat_diagnostic_invariants.get("runtime_behavior_changed")
+            ),
+            "stage4_caveat_diagnostic_runtime_defaults_changed": (
+                stage4_caveat_diagnostic_invariants.get("runtime_defaults_changed")
+            ),
+            "stage4_caveat_diagnostic_runtime_selector_implemented": (
+                stage4_caveat_diagnostic_invariants.get(
+                    "runtime_selector_implemented"
+                )
+            ),
+            "stage4_caveat_diagnostic_runtime_dtm_or_tablebase_lookup": (
+                stage4_caveat_diagnostic_invariants.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "stage4_caveat_diagnostic_gameplay_topology_mutation": (
+                stage4_caveat_diagnostic_invariants.get(
+                    "gameplay_topology_mutation"
+                )
+            ),
             "stage4_caveat_decision_passive_ready": (
                 stage4_caveat_decision_passive
             ),
@@ -14890,6 +14996,11 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- stage6_gap_status: `{clean_curriculum['stage6_gap_status']}`",
         f"- stage5_control_debt_status: `{clean_curriculum['stage5_control_debt_status']}`",
         f"- stage5_semantics_status: `{clean_curriculum['stage5_semantics_status']}`",
+        f"- stage4_caveat_diagnostic_matrix_ready: `{clean_curriculum['stage4_caveat_diagnostic_matrix_ready']}`",
+        f"- stage4_caveat_diagnostic_status: `{clean_curriculum['stage4_caveat_diagnostic_status']}`",
+        f"- stage4_caveat_diagnostic_max_plies_count: `{clean_curriculum['stage4_caveat_diagnostic_max_plies_count']}`",
+        f"- stage4_caveat_diagnostic_candidate_gap_confidence: `{clean_curriculum['stage4_caveat_diagnostic_candidate_gap_confidence']}`",
+        f"- stage4_caveat_diagnostic_candidate_gap_next_test: `{clean_curriculum['stage4_caveat_diagnostic_candidate_gap_next_test']}`",
         f"- stage4_caveat_decision_passive_ready: `{clean_curriculum['stage4_caveat_decision_passive_ready']}`",
         f"- stage4_caveat_decision_status: `{clean_curriculum['stage4_caveat_decision_status']}`",
         f"- stage4_caveat_decision_next_action: `{clean_curriculum['stage4_caveat_decision_next_action']}`",

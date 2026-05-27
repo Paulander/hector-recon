@@ -50,6 +50,11 @@
 - stage6_gap_status: `stage6_gap_explained_by_validation_profile_mismatch`
 - stage5_control_debt_status: `stage5_one_ply_guardrail_control_debt_confirmed`
 - stage5_semantics_status: `stage5_guardrail_semantics_split_defined`
+- stage4_caveat_diagnostic_matrix_ready: `True`
+- stage4_caveat_diagnostic_status: `stage4_caveat_diagnostic_matrix_ready`
+- stage4_caveat_diagnostic_max_plies_count: `32`
+- stage4_caveat_diagnostic_candidate_gap_confidence: `high`
+- stage4_caveat_diagnostic_candidate_gap_next_test: `approve_stage4_observation_only_trace_collection_max_6_rows`
 - stage4_caveat_decision_passive_ready: `True`
 - stage4_caveat_decision_status: `stage4_candidate_generation_gap_with_known_residual_guardrail`
 - stage4_caveat_decision_next_action: `explicit_approval_for_stage4_observation_only_trace_collection_or_keep_as_known_guardrail`
@@ -971,7 +976,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `677364863fb02d41d7712dc25249b7c8e1fa8a6d5599bcac1022939e85746682`
+- expected_readiness_fingerprint: `83f88df8fd749947826f0ab80bbd42c3681cd68158f46af503f1c65e1e228890`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1615,5 +1620,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2548`
+- checked_flag_count: `2555`
 - violation_count: `0`

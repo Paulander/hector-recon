@@ -459,6 +459,10 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_stage4_caveat_decision_gate_v0.json"
     )
     assert (
+        payload["source_artifacts"]["stage4_caveat_diagnostic_matrix"]
+        == "reports/krk_stage4_caveat_diagnostic_matrix_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["curriculum_next_milestone_decision"]
         == "reports/krk_curriculum_next_milestone_decision_v0.json"
     )
@@ -1096,6 +1100,45 @@ def test_full_suite_readiness_identifies_current_gate():
     )
     assert clean_curriculum["stage5_semantics_overlay_use_allowed_as_overlay_only"] is True
     assert clean_curriculum["stage5_semantics_clean_stack_replacement_allowed"] is False
+    assert clean_curriculum["stage4_caveat_diagnostic_matrix_ready"] is True
+    assert (
+        clean_curriculum["stage4_caveat_diagnostic_status"]
+        == "stage4_caveat_diagnostic_matrix_ready"
+    )
+    assert clean_curriculum["stage4_caveat_diagnostic_total"] == 300
+    assert clean_curriculum["stage4_caveat_diagnostic_mate_count"] == 268
+    assert clean_curriculum["stage4_caveat_diagnostic_max_plies_count"] == 32
+    assert clean_curriculum["stage4_caveat_diagnostic_mate_delta"] == 0
+    assert clean_curriculum["stage4_caveat_diagnostic_max_plies_delta"] == 0
+    assert (
+        clean_curriculum["stage4_caveat_diagnostic_candidate_gap_confidence"]
+        == "high"
+    )
+    assert clean_curriculum[
+        "stage4_caveat_diagnostic_candidate_gap_next_test"
+    ] == "approve_stage4_observation_only_trace_collection_max_6_rows"
+    assert (
+        clean_curriculum["stage4_caveat_diagnostic_runtime_behavior_changed"]
+        is False
+    )
+    assert (
+        clean_curriculum["stage4_caveat_diagnostic_runtime_defaults_changed"]
+        is False
+    )
+    assert (
+        clean_curriculum["stage4_caveat_diagnostic_runtime_selector_implemented"]
+        is False
+    )
+    assert (
+        clean_curriculum[
+            "stage4_caveat_diagnostic_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        clean_curriculum["stage4_caveat_diagnostic_gameplay_topology_mutation"]
+        is False
+    )
     assert clean_curriculum["stage4_caveat_decision_passive_ready"] is True
     assert clean_curriculum["stage4_caveat_decision_status"] == (
         "stage4_candidate_generation_gap_with_known_residual_guardrail"
