@@ -1523,6 +1523,33 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Control Plane Strategy Baseline
+
+- passive_strategy_baseline_ready: `True`
+- probe_status: `provider_labels_sufficient_for_small_probe`
+- probe_causal_next_step_allowed: `False`
+- probe_recommended_next_slice: `offline_strategy_arbitration_baseline_v1`
+- probe_strategy_benchmark_frame_count: `24`
+- probe_provider_labeled_frame_count: `24`
+- probe_frames_with_known_provider_mate: `12`
+- baseline_status: `strategy_arbitration_promising`
+- baseline_causal_next_step_allowed: `False`
+- baseline_recommended_next_class: `non_causal_strategy_arbiter_sandbox_design`
+- baseline_strategy_benchmark_frame_count: `24`
+- baseline_frames_with_provider_mate: `12`
+- baseline_frames_with_only_provider_max_plies: `12`
+- baseline_stage_counts: `{'stage4': 6, 'stage5': 8, 'stage6': 10}`
+- baseline_selector_names: `['raw_global_score', 'normalized_score', 'provider_local_rank', 'visible_context_heuristic', 'stage_prior_heuristic']`
+- baseline_selector_hit_rates: `{'raw_global_score': 1.0, 'normalized_score': 1.0, 'provider_local_rank': 1.0, 'visible_context_heuristic': 0.0, 'stage_prior_heuristic': 1.0}`
+- runtime_behavior_changed: `False`
+- runtime_defaults_changed: `False`
+- runtime_selector_implemented: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- hidden_python_controller: `False`
+- gameplay_topology_mutation: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Current Control Plane Gate
 
 - status: `krk_control_plane_waiting_on_explicit_gate_choice`

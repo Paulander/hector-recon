@@ -2054,6 +2054,8 @@ def build_payload() -> dict[str, Any]:
     control_plane_frame_quality = payloads["control_plane_frame_quality"]
     control_plane_filtered_frames = payloads["control_plane_filtered_frames"]
     control_plane_forced_controls = payloads["control_plane_forced_controls"]
+    control_plane_strategy_probe = payloads["control_plane_strategy_probe"]
+    control_plane_strategy_baseline = payloads["control_plane_strategy_baseline"]
     gate_approval_options = gate.get("approval_options") or []
     protected_collection_gate_option = find_approval_option(
         gate,
@@ -2299,6 +2301,157 @@ def build_payload() -> dict[str, Any]:
             and artifact.get("stage7_promotion_allowed") is False
             and artifact.get("stage8_training_allowed") is False
             for artifact in control_plane_frame_export_artifacts
+        )
+    )
+    control_plane_strategy_probe_decision = (
+        control_plane_strategy_probe.get("decision") or {}
+    )
+    control_plane_strategy_probe_coverage = (
+        control_plane_strategy_probe.get("label_coverage") or {}
+    )
+    control_plane_strategy_baseline_decision = (
+        control_plane_strategy_baseline.get("decision") or {}
+    )
+    control_plane_strategy_baseline_frame_summary = (
+        control_plane_strategy_baseline.get("frame_summary") or {}
+    )
+    control_plane_strategy_baseline_context = (
+        control_plane_strategy_baseline.get("context_summary") or {}
+    )
+    control_plane_strategy_baseline_results = (
+        control_plane_strategy_baseline.get("selector_results") or []
+    )
+    control_plane_strategy_baseline_result_by_selector = {
+        result.get("selector"): result
+        for result in control_plane_strategy_baseline_results
+    }
+    control_plane_strategy_baseline_artifacts = [
+        control_plane_strategy_probe,
+        control_plane_strategy_baseline,
+    ]
+    control_plane_strategy_baseline_passive = (
+        control_plane_strategy_probe.get("schema_version")
+        == "krk_control_plane_strategy_arbitration_probe.v0"
+        and control_plane_strategy_probe.get("causal_status") == "non_causal_probe"
+        and control_plane_strategy_probe.get("source_artifacts")
+        == ["reports/krk_control_plane_filtered_frames_v0.json"]
+        and control_plane_strategy_probe_decision.get("selected_status")
+        == "provider_labels_sufficient_for_small_probe"
+        and control_plane_strategy_probe_decision.get("causal_next_step_allowed")
+        is False
+        and control_plane_strategy_probe_decision.get("recommended_next_slice")
+        == "offline_strategy_arbitration_baseline_v1"
+        and control_plane_strategy_probe_coverage.get(
+            "strategy_benchmark_frame_count"
+        )
+        == 24
+        and control_plane_strategy_probe_coverage.get("provider_labeled_frame_count")
+        == 24
+        and control_plane_strategy_probe_coverage.get(
+            "frames_with_known_provider_mate"
+        )
+        == 12
+        and control_plane_strategy_probe_coverage.get("frames_with_normalized_scores")
+        == 24
+        and all(
+            result.get("selected_count") == 24
+            and result.get("known_selected_count") == 24
+            and result.get("selected_mate_count") == 12
+            and result.get("selected_max_plies_count") == 12
+            and result.get("selected_unknown_count") == 0
+            for result in (control_plane_strategy_probe.get("selector_results") or [])
+        )
+        and control_plane_strategy_baseline.get("schema_version")
+        == "krk_control_plane_strategy_arbitration_baseline.v1"
+        and control_plane_strategy_baseline.get("causal_status")
+        == "non_causal_probe"
+        and control_plane_strategy_baseline.get("source_artifacts")
+        == ["reports/krk_control_plane_filtered_frames_v0.json"]
+        and control_plane_strategy_baseline_decision.get("selected_status")
+        == "strategy_arbitration_promising"
+        and control_plane_strategy_baseline_decision.get("causal_next_step_allowed")
+        is False
+        and control_plane_strategy_baseline_decision.get("recommended_next_class")
+        == "non_causal_strategy_arbiter_sandbox_design"
+        and control_plane_strategy_baseline_frame_summary.get(
+            "strategy_benchmark_frame_count"
+        )
+        == 24
+        and control_plane_strategy_baseline_frame_summary.get(
+            "frames_with_provider_mate"
+        )
+        == 12
+        and control_plane_strategy_baseline_frame_summary.get(
+            "frames_with_only_provider_max_plies"
+        )
+        == 12
+        and control_plane_strategy_baseline_frame_summary.get("stage_counts")
+        == {"stage4": 6, "stage5": 8, "stage6": 10}
+        and control_plane_strategy_baseline_context.get(
+            "box_relevance_by_edge_bucket"
+        )
+        == {"at_edge|low": 24}
+        and all(
+            (result := control_plane_strategy_baseline_result_by_selector.get(
+                selector
+            ))
+            and result.get("selected_count") == 24
+            and result.get("positive_available_frame_count") == 12
+            and result.get("hit_when_positive_available_count") == 12
+            and result.get("hit_when_positive_available_rate") == 1.0
+            and result.get("selected_label_counts") == {"mate": 12, "max_plies": 12}
+            and result.get("selected_mate_rate") == 0.5
+            and result.get("miss_examples") == []
+            for selector in [
+                "raw_global_score",
+                "normalized_score",
+                "provider_local_rank",
+                "stage_prior_heuristic",
+            ]
+        )
+        and (
+            visible_context_result := (
+                control_plane_strategy_baseline_result_by_selector.get(
+                    "visible_context_heuristic"
+                )
+                or {}
+            )
+        ).get("selected_count")
+        == 0
+        and visible_context_result.get("selected_label_counts") == {
+            "no_selection": 24
+        }
+        and visible_context_result.get("hit_when_positive_available_rate") == 0.0
+        and set(control_plane_strategy_baseline_result_by_selector)
+        == {
+            "raw_global_score",
+            "normalized_score",
+            "provider_local_rank",
+            "visible_context_heuristic",
+            "stage_prior_heuristic",
+        }
+        and all(
+            step in (artifact.get("blocked_next_steps") or [])
+            for artifact in control_plane_strategy_baseline_artifacts
+            for step in [
+                "runtime_arbiter",
+                "runtime_internal_terminal",
+                "stage7_promotion",
+                "stage8_training",
+                "runtime_dtm_or_tablebase",
+                "gameplay_topology_mutation",
+            ]
+        )
+        and all(
+            artifact.get("runtime_behavior_changed") is False
+            and artifact.get("runtime_defaults_changed") is False
+            and artifact.get("runtime_selector_implemented") is False
+            and artifact.get("runtime_dtm_or_tablebase_lookup") is False
+            and artifact.get("hidden_python_controller") is False
+            and artifact.get("gameplay_topology_mutation") is False
+            and artifact.get("stage7_promotion_allowed") is False
+            and artifact.get("stage8_training_allowed") is False
+            for artifact in control_plane_strategy_baseline_artifacts
         )
     )
 
@@ -13855,6 +14008,108 @@ def build_payload() -> dict[str, Any]:
                 "stage8_training_allowed"
             ),
         },
+        "control_plane_strategy_baseline_gate": {
+            "status": control_plane_strategy_baseline_decision.get(
+                "selected_status"
+            ),
+            "passive_strategy_baseline_ready": (
+                control_plane_strategy_baseline_passive
+            ),
+            "probe_status": control_plane_strategy_probe_decision.get(
+                "selected_status"
+            ),
+            "probe_causal_next_step_allowed": (
+                control_plane_strategy_probe_decision.get(
+                    "causal_next_step_allowed"
+                )
+            ),
+            "probe_recommended_next_slice": (
+                control_plane_strategy_probe_decision.get("recommended_next_slice")
+            ),
+            "probe_strategy_benchmark_frame_count": (
+                control_plane_strategy_probe_coverage.get(
+                    "strategy_benchmark_frame_count"
+                )
+            ),
+            "probe_provider_labeled_frame_count": (
+                control_plane_strategy_probe_coverage.get(
+                    "provider_labeled_frame_count"
+                )
+            ),
+            "probe_frames_with_known_provider_mate": (
+                control_plane_strategy_probe_coverage.get(
+                    "frames_with_known_provider_mate"
+                )
+            ),
+            "baseline_status": control_plane_strategy_baseline_decision.get(
+                "selected_status"
+            ),
+            "baseline_causal_next_step_allowed": (
+                control_plane_strategy_baseline_decision.get(
+                    "causal_next_step_allowed"
+                )
+            ),
+            "baseline_recommended_next_class": (
+                control_plane_strategy_baseline_decision.get(
+                    "recommended_next_class"
+                )
+            ),
+            "baseline_strategy_benchmark_frame_count": (
+                control_plane_strategy_baseline_frame_summary.get(
+                    "strategy_benchmark_frame_count"
+                )
+            ),
+            "baseline_frames_with_provider_mate": (
+                control_plane_strategy_baseline_frame_summary.get(
+                    "frames_with_provider_mate"
+                )
+            ),
+            "baseline_frames_with_only_provider_max_plies": (
+                control_plane_strategy_baseline_frame_summary.get(
+                    "frames_with_only_provider_max_plies"
+                )
+            ),
+            "baseline_stage_counts": (
+                control_plane_strategy_baseline_frame_summary.get("stage_counts")
+                or {}
+            ),
+            "baseline_selector_names": [
+                result.get("selector")
+                for result in control_plane_strategy_baseline_results
+            ],
+            "baseline_selector_hit_rates": {
+                result.get("selector"): result.get(
+                    "hit_when_positive_available_rate"
+                )
+                for result in control_plane_strategy_baseline_results
+            },
+            "runtime_behavior_changed": (
+                control_plane_strategy_baseline.get("runtime_behavior_changed")
+            ),
+            "runtime_defaults_changed": (
+                control_plane_strategy_baseline.get("runtime_defaults_changed")
+            ),
+            "runtime_selector_implemented": (
+                control_plane_strategy_baseline.get("runtime_selector_implemented")
+            ),
+            "runtime_dtm_or_tablebase_lookup": (
+                control_plane_strategy_baseline.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "hidden_python_controller": (
+                control_plane_strategy_baseline.get("hidden_python_controller")
+            ),
+            "gameplay_topology_mutation": (
+                control_plane_strategy_baseline.get("gameplay_topology_mutation")
+            ),
+            "stage7_promotion_allowed": (
+                control_plane_strategy_baseline.get("stage7_promotion_allowed")
+            ),
+            "stage8_training_allowed": (
+                control_plane_strategy_baseline.get("stage8_training_allowed")
+            ),
+        },
         "blockers": blockers,
         "hard_blockers": hard_blockers,
         "control_plane_gate_review_blockers": control_plane_gate_review_blockers,
@@ -14076,6 +14331,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     candidate_generation_trace = payload["candidate_generation_trace_context_gate"]
     control_plane_contract = payload["control_plane_contract_lineage_gate"]
     control_plane_frame_export = payload["control_plane_frame_export_gate"]
+    control_plane_strategy_baseline = payload["control_plane_strategy_baseline_gate"]
     current_gate = payload["current_control_plane_gate"]
     decision = payload["decision"]
     lines = [
@@ -15609,6 +15865,33 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- gameplay_topology_mutation: `{control_plane_frame_export['gameplay_topology_mutation']}`",
             f"- stage7_promotion_allowed: `{control_plane_frame_export['stage7_promotion_allowed']}`",
             f"- stage8_training_allowed: `{control_plane_frame_export['stage8_training_allowed']}`",
+            "",
+            "## Control Plane Strategy Baseline",
+            "",
+            f"- passive_strategy_baseline_ready: `{control_plane_strategy_baseline['passive_strategy_baseline_ready']}`",
+            f"- probe_status: `{control_plane_strategy_baseline['probe_status']}`",
+            f"- probe_causal_next_step_allowed: `{control_plane_strategy_baseline['probe_causal_next_step_allowed']}`",
+            f"- probe_recommended_next_slice: `{control_plane_strategy_baseline['probe_recommended_next_slice']}`",
+            f"- probe_strategy_benchmark_frame_count: `{control_plane_strategy_baseline['probe_strategy_benchmark_frame_count']}`",
+            f"- probe_provider_labeled_frame_count: `{control_plane_strategy_baseline['probe_provider_labeled_frame_count']}`",
+            f"- probe_frames_with_known_provider_mate: `{control_plane_strategy_baseline['probe_frames_with_known_provider_mate']}`",
+            f"- baseline_status: `{control_plane_strategy_baseline['baseline_status']}`",
+            f"- baseline_causal_next_step_allowed: `{control_plane_strategy_baseline['baseline_causal_next_step_allowed']}`",
+            f"- baseline_recommended_next_class: `{control_plane_strategy_baseline['baseline_recommended_next_class']}`",
+            f"- baseline_strategy_benchmark_frame_count: `{control_plane_strategy_baseline['baseline_strategy_benchmark_frame_count']}`",
+            f"- baseline_frames_with_provider_mate: `{control_plane_strategy_baseline['baseline_frames_with_provider_mate']}`",
+            f"- baseline_frames_with_only_provider_max_plies: `{control_plane_strategy_baseline['baseline_frames_with_only_provider_max_plies']}`",
+            f"- baseline_stage_counts: `{control_plane_strategy_baseline['baseline_stage_counts']}`",
+            f"- baseline_selector_names: `{control_plane_strategy_baseline['baseline_selector_names']}`",
+            f"- baseline_selector_hit_rates: `{control_plane_strategy_baseline['baseline_selector_hit_rates']}`",
+            f"- runtime_behavior_changed: `{control_plane_strategy_baseline['runtime_behavior_changed']}`",
+            f"- runtime_defaults_changed: `{control_plane_strategy_baseline['runtime_defaults_changed']}`",
+            f"- runtime_selector_implemented: `{control_plane_strategy_baseline['runtime_selector_implemented']}`",
+            f"- runtime_dtm_or_tablebase_lookup: `{control_plane_strategy_baseline['runtime_dtm_or_tablebase_lookup']}`",
+            f"- hidden_python_controller: `{control_plane_strategy_baseline['hidden_python_controller']}`",
+            f"- gameplay_topology_mutation: `{control_plane_strategy_baseline['gameplay_topology_mutation']}`",
+            f"- stage7_promotion_allowed: `{control_plane_strategy_baseline['stage7_promotion_allowed']}`",
+            f"- stage8_training_allowed: `{control_plane_strategy_baseline['stage8_training_allowed']}`",
             "",
             "## Current Control Plane Gate",
             "",

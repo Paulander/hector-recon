@@ -28,6 +28,13 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - control_plane_frame_export_strategy_ready_frame_count: `24`
 - control_plane_frame_export_forced_control_labels_attached: `12`
 - control_plane_frame_export_runtime_dtm_or_tablebase_lookup: `False`
+- control_plane_strategy_baseline_passive_ready: `True`
+- control_plane_strategy_baseline_probe_status: `provider_labels_sufficient_for_small_probe`
+- control_plane_strategy_baseline_status: `strategy_arbitration_promising`
+- control_plane_strategy_baseline_frame_count: `24`
+- control_plane_strategy_baseline_provider_mate_frames: `12`
+- control_plane_strategy_baseline_causal_next_step_allowed: `False`
+- control_plane_strategy_baseline_runtime_dtm_or_tablebase_lookup: `False`
 - clean_curriculum_run_lineage_passive_ready: `True`
 - clean_curriculum_checkpoint_plan_status: `clean_curriculum_checkpoint_plan_ready_full_run_requires_review`
 - clean_curriculum_execution_manifest_status: `clean_retrain_execution_manifest_ready_not_run`

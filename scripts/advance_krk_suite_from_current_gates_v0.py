@@ -583,6 +583,9 @@ def build_payload() -> dict[str, Any]:
     control_plane_frame_export_gate = (
         readiness.get("control_plane_frame_export_gate") or {}
     )
+    control_plane_strategy_baseline_gate = (
+        readiness.get("control_plane_strategy_baseline_gate") or {}
+    )
     clean_curriculum_run_lineage_gate = (
         readiness.get("clean_curriculum_run_lineage_gate") or {}
     )
@@ -955,6 +958,37 @@ def build_payload() -> dict[str, Any]:
             ),
             "control_plane_frame_export_runtime_dtm_or_tablebase_lookup": (
                 control_plane_frame_export_gate.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "control_plane_strategy_baseline_passive_ready": (
+                control_plane_strategy_baseline_gate.get(
+                    "passive_strategy_baseline_ready"
+                )
+            ),
+            "control_plane_strategy_baseline_probe_status": (
+                control_plane_strategy_baseline_gate.get("probe_status")
+            ),
+            "control_plane_strategy_baseline_status": (
+                control_plane_strategy_baseline_gate.get("baseline_status")
+            ),
+            "control_plane_strategy_baseline_frame_count": (
+                control_plane_strategy_baseline_gate.get(
+                    "baseline_strategy_benchmark_frame_count"
+                )
+            ),
+            "control_plane_strategy_baseline_provider_mate_frames": (
+                control_plane_strategy_baseline_gate.get(
+                    "baseline_frames_with_provider_mate"
+                )
+            ),
+            "control_plane_strategy_baseline_causal_next_step_allowed": (
+                control_plane_strategy_baseline_gate.get(
+                    "baseline_causal_next_step_allowed"
+                )
+            ),
+            "control_plane_strategy_baseline_runtime_dtm_or_tablebase_lookup": (
+                control_plane_strategy_baseline_gate.get(
                     "runtime_dtm_or_tablebase_lookup"
                 )
             ),

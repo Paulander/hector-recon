@@ -518,6 +518,49 @@
     "status": "offline_strategy_arbitration_probe_filtered_v0"
   },
   "control_plane_gate_review_blockers": [],
+  "control_plane_strategy_baseline_gate": {
+    "baseline_causal_next_step_allowed": false,
+    "baseline_frames_with_only_provider_max_plies": 12,
+    "baseline_frames_with_provider_mate": 12,
+    "baseline_recommended_next_class": "non_causal_strategy_arbiter_sandbox_design",
+    "baseline_selector_hit_rates": {
+      "normalized_score": 1.0,
+      "provider_local_rank": 1.0,
+      "raw_global_score": 1.0,
+      "stage_prior_heuristic": 1.0,
+      "visible_context_heuristic": 0.0
+    },
+    "baseline_selector_names": [
+      "raw_global_score",
+      "normalized_score",
+      "provider_local_rank",
+      "visible_context_heuristic",
+      "stage_prior_heuristic"
+    ],
+    "baseline_stage_counts": {
+      "stage4": 6,
+      "stage5": 8,
+      "stage6": 10
+    },
+    "baseline_status": "strategy_arbitration_promising",
+    "baseline_strategy_benchmark_frame_count": 24,
+    "gameplay_topology_mutation": false,
+    "hidden_python_controller": false,
+    "passive_strategy_baseline_ready": true,
+    "probe_causal_next_step_allowed": false,
+    "probe_frames_with_known_provider_mate": 12,
+    "probe_provider_labeled_frame_count": 24,
+    "probe_recommended_next_slice": "offline_strategy_arbitration_baseline_v1",
+    "probe_status": "provider_labels_sufficient_for_small_probe",
+    "probe_strategy_benchmark_frame_count": 24,
+    "runtime_behavior_changed": false,
+    "runtime_defaults_changed": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "runtime_selector_implemented": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "strategy_arbitration_promising"
+  },
   "cross_stage_candidate_generation_scope_gate": {
     "capacity_labels_label_count": 8,
     "capacity_labels_result_counts": {

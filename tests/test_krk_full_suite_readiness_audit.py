@@ -95,6 +95,14 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json"
     )
     assert (
+        payload["source_artifacts"]["control_plane_strategy_probe"]
+        == "reports/krk_control_plane_strategy_arbitration_probe_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["control_plane_strategy_baseline"]
+        == "reports/krk_control_plane_strategy_arbitration_baseline_v1.json"
+    )
+    assert (
         payload["source_artifacts"]["sequence_benchmark_inputs"]
         == "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json"
     )
@@ -3156,6 +3164,54 @@ def test_full_suite_readiness_identifies_current_gate():
     assert frame_export["gameplay_topology_mutation"] is False
     assert frame_export["stage7_promotion_allowed"] is False
     assert frame_export["stage8_training_allowed"] is False
+    strategy_baseline = payload["control_plane_strategy_baseline_gate"]
+    assert strategy_baseline["passive_strategy_baseline_ready"] is True
+    assert strategy_baseline["probe_status"] == (
+        "provider_labels_sufficient_for_small_probe"
+    )
+    assert strategy_baseline["probe_causal_next_step_allowed"] is False
+    assert (
+        strategy_baseline["probe_recommended_next_slice"]
+        == "offline_strategy_arbitration_baseline_v1"
+    )
+    assert strategy_baseline["probe_strategy_benchmark_frame_count"] == 24
+    assert strategy_baseline["probe_provider_labeled_frame_count"] == 24
+    assert strategy_baseline["probe_frames_with_known_provider_mate"] == 12
+    assert strategy_baseline["baseline_status"] == "strategy_arbitration_promising"
+    assert strategy_baseline["baseline_causal_next_step_allowed"] is False
+    assert strategy_baseline["baseline_recommended_next_class"] == (
+        "non_causal_strategy_arbiter_sandbox_design"
+    )
+    assert strategy_baseline["baseline_strategy_benchmark_frame_count"] == 24
+    assert strategy_baseline["baseline_frames_with_provider_mate"] == 12
+    assert strategy_baseline["baseline_frames_with_only_provider_max_plies"] == 12
+    assert strategy_baseline["baseline_stage_counts"] == {
+        "stage4": 6,
+        "stage5": 8,
+        "stage6": 10,
+    }
+    assert strategy_baseline["baseline_selector_names"] == [
+        "raw_global_score",
+        "normalized_score",
+        "provider_local_rank",
+        "visible_context_heuristic",
+        "stage_prior_heuristic",
+    ]
+    assert strategy_baseline["baseline_selector_hit_rates"] == {
+        "raw_global_score": 1.0,
+        "normalized_score": 1.0,
+        "provider_local_rank": 1.0,
+        "visible_context_heuristic": 0.0,
+        "stage_prior_heuristic": 1.0,
+    }
+    assert strategy_baseline["runtime_behavior_changed"] is False
+    assert strategy_baseline["runtime_defaults_changed"] is False
+    assert strategy_baseline["runtime_selector_implemented"] is False
+    assert strategy_baseline["runtime_dtm_or_tablebase_lookup"] is False
+    assert strategy_baseline["hidden_python_controller"] is False
+    assert strategy_baseline["gameplay_topology_mutation"] is False
+    assert strategy_baseline["stage7_promotion_allowed"] is False
+    assert strategy_baseline["stage8_training_allowed"] is False
 
     sequence = payload["sequence_policy"]
     assert (

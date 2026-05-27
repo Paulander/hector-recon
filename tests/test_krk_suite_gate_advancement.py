@@ -2005,6 +2005,35 @@ def test_gate_advancement_reports_current_stage7_blocker():
         ]
         is False
     )
+    assert (
+        payload["summary"]["control_plane_strategy_baseline_passive_ready"]
+        is True
+    )
+    assert (
+        payload["summary"]["control_plane_strategy_baseline_probe_status"]
+        == "provider_labels_sufficient_for_small_probe"
+    )
+    assert (
+        payload["summary"]["control_plane_strategy_baseline_status"]
+        == "strategy_arbitration_promising"
+    )
+    assert payload["summary"]["control_plane_strategy_baseline_frame_count"] == 24
+    assert (
+        payload["summary"]["control_plane_strategy_baseline_provider_mate_frames"]
+        == 12
+    )
+    assert (
+        payload["summary"][
+            "control_plane_strategy_baseline_causal_next_step_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "control_plane_strategy_baseline_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
     assert payload["summary"]["readiness_control_plane_gate_review_blockers"] == []
     assert payload["summary"]["readiness_explicit_gate_blockers"] == [
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
