@@ -792,6 +792,28 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Runtime Sandbox Policy Update
+
+- passive_policy_update_ready: `True`
+- status: `reviewed_default_off_runtime_sandbox_allowed`
+- allowed_scope: `progress_window_selected_owner_reconsideration`
+- broad_runtime_changes_allowed: `False`
+- default_policy_changes_allowed: `False`
+- test_result_status: `runtime_test_scaffold_wired_but_policy_insufficient`
+- test_result_default_off_equivalence_passed: `True`
+- test_result_activation_observed: `True`
+- test_result_target_improvement_observed: `False`
+- test_result_guardrails_allowed_now: `False`
+- source_review_packet: `reports/krk_state_local_paired_selector_runtime_proxy_review_packet_v1.json`
+- progress_window_passive_review_ready: `True`
+- hidden_python_controller: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- gameplay_topology_mutation: `False`
+- general_predecision_selector: `False`
+- stage7_repair_or_promotion: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Clean Replacement Review
 
 - passive_review_ready: `True`
@@ -914,7 +936,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `b667ff811c783593fcb5b7c27e245fa04251ec4ed44da3ab2302ae8e2f1ea822`
+- expected_readiness_fingerprint: `62baec2fc1277836db87d89a08a6c1e6bed0842e83e1efb4c2d472d9ad82fa8e`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`

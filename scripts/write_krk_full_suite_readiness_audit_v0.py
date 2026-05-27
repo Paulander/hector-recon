@@ -916,6 +916,9 @@ SOURCES = {
     "progress_window_reconsideration_post_activation_audit_v0": (
         "reports/krk_progress_window_reconsideration_post_activation_audit_v0.json"
     ),
+    "runtime_sandbox_policy_update_v0": (
+        "reports/krk_runtime_sandbox_policy_update_v0.json"
+    ),
     "clean_retrain_retry1_replacement_readiness_review": (
         "reports/krk_clean_retrain_retry1_replacement_readiness_review_v0.json"
     ),
@@ -2009,6 +2012,9 @@ def build_payload() -> dict[str, Any]:
     ]
     progress_window_reconsideration_post_activation_audit_v0 = payloads[
         "progress_window_reconsideration_post_activation_audit_v0"
+    ]
+    runtime_sandbox_policy_update_v0 = payloads[
+        "runtime_sandbox_policy_update_v0"
     ]
     clean_replacement_readiness = payloads[
         "clean_retrain_retry1_replacement_readiness_review"
@@ -5574,6 +5580,15 @@ def build_payload() -> dict[str, Any]:
     progress_reconsideration_audit_decision = (
         progress_window_reconsideration_post_activation_audit_v0.get("decision") or {}
     )
+    runtime_sandbox_policy_decision = (
+        runtime_sandbox_policy_update_v0.get("decision") or {}
+    )
+    runtime_sandbox_policy_test_result = (
+        runtime_sandbox_policy_update_v0.get("runtime_test_result") or {}
+    )
+    runtime_sandbox_policy_boundaries = (
+        runtime_sandbox_policy_update_v0.get("hard_boundaries") or {}
+    )
     selected_owner_failure_risk_proxy_passive = (
         runtime_proxy_design_decision.get("status")
         == "proxy_design_ready_for_replay_free_validation"
@@ -5843,6 +5858,54 @@ def build_payload() -> dict[str, Any]:
             "stage8_training_allowed"
         )
         is False
+    )
+    runtime_sandbox_policy_update_passive = (
+        runtime_sandbox_policy_update_v0.get("schema_version")
+        == "krk_runtime_sandbox_policy_update.v0"
+        and runtime_sandbox_policy_decision.get("status")
+        == "reviewed_default_off_runtime_sandbox_allowed"
+        and runtime_sandbox_policy_decision.get("allowed_scope")
+        == "progress_window_selected_owner_reconsideration"
+        and runtime_sandbox_policy_decision.get("broad_runtime_changes_allowed")
+        is False
+        and runtime_sandbox_policy_decision.get("default_policy_changes_allowed")
+        is False
+        and runtime_sandbox_policy_decision.get("stage7_promotion_allowed") is False
+        and runtime_sandbox_policy_decision.get("stage8_training_allowed") is False
+        and runtime_sandbox_policy_test_result.get("source_smoke")
+        == "reports/krk_progress_window_reconsideration_runtime_smoke_v0.json"
+        and runtime_sandbox_policy_test_result.get("source_review")
+        == "reports/krk_progress_window_reconsideration_runtime_test_review_v0.json"
+        and runtime_sandbox_policy_test_result.get("status")
+        == progress_reconsideration_review_decision.get("status")
+        and runtime_sandbox_policy_test_result.get("default_off_equivalence_passed")
+        is True
+        and runtime_sandbox_policy_test_result.get("activation_observed") is True
+        and runtime_sandbox_policy_test_result.get("target_improvement_observed")
+        is False
+        and runtime_sandbox_policy_test_result.get("guardrails_allowed_now") is False
+        and runtime_sandbox_policy_update_v0.get("source_review_packet")
+        == "reports/krk_state_local_paired_selector_runtime_proxy_review_packet_v1.json"
+        and runtime_sandbox_policy_boundaries
+        == {
+            "hidden_python_controller": False,
+            "runtime_dtm_or_tablebase": False,
+            "gameplay_topology_mutation": False,
+            "general_predecision_selector": False,
+            "stage7_repair_or_promotion": False,
+            "stage8_training": False,
+        }
+        and all(
+            item in (runtime_sandbox_policy_update_v0.get("immediate_plan") or [])
+            for item in [
+                "implement_default_off_progress_window_reconsideration_sandbox",
+                "prove_default_off_equivalence",
+                "run_protected_guardrails_only_if_target_improves",
+                "use_stage7_as_heldout_challenge_only",
+                "quarantine_or_keep_sandboxed_until_later_review",
+            ]
+        )
+        and progress_window_reconsideration_passive is True
     )
     replacement_readiness_decision = clean_replacement_readiness.get("decision") or {}
     replacement_packet_decision = clean_stack_replacement_packet.get("decision") or {}
@@ -9550,6 +9613,67 @@ def build_payload() -> dict[str, Any]:
                 )
             ),
         },
+        "runtime_sandbox_policy_update_gate": {
+            "status": runtime_sandbox_policy_decision.get("status"),
+            "passive_policy_update_ready": runtime_sandbox_policy_update_passive,
+            "allowed_scope": runtime_sandbox_policy_decision.get("allowed_scope"),
+            "broad_runtime_changes_allowed": runtime_sandbox_policy_decision.get(
+                "broad_runtime_changes_allowed"
+            ),
+            "default_policy_changes_allowed": runtime_sandbox_policy_decision.get(
+                "default_policy_changes_allowed"
+            ),
+            "stage7_promotion_allowed": runtime_sandbox_policy_decision.get(
+                "stage7_promotion_allowed"
+            ),
+            "stage8_training_allowed": runtime_sandbox_policy_decision.get(
+                "stage8_training_allowed"
+            ),
+            "test_result_status": runtime_sandbox_policy_test_result.get("status"),
+            "test_result_default_off_equivalence_passed": (
+                runtime_sandbox_policy_test_result.get(
+                    "default_off_equivalence_passed"
+                )
+            ),
+            "test_result_activation_observed": (
+                runtime_sandbox_policy_test_result.get("activation_observed")
+            ),
+            "test_result_target_improvement_observed": (
+                runtime_sandbox_policy_test_result.get(
+                    "target_improvement_observed"
+                )
+            ),
+            "test_result_guardrails_allowed_now": (
+                runtime_sandbox_policy_test_result.get("guardrails_allowed_now")
+            ),
+            "source_review_packet": runtime_sandbox_policy_update_v0.get(
+                "source_review_packet"
+            ),
+            "hard_boundaries": runtime_sandbox_policy_boundaries,
+            "immediate_plan": runtime_sandbox_policy_update_v0.get("immediate_plan")
+            or [],
+            "progress_window_passive_review_ready": (
+                progress_window_reconsideration_passive
+            ),
+            "hidden_python_controller": runtime_sandbox_policy_boundaries.get(
+                "hidden_python_controller"
+            ),
+            "runtime_dtm_or_tablebase_lookup": runtime_sandbox_policy_boundaries.get(
+                "runtime_dtm_or_tablebase"
+            ),
+            "gameplay_topology_mutation": runtime_sandbox_policy_boundaries.get(
+                "gameplay_topology_mutation"
+            ),
+            "general_predecision_selector": runtime_sandbox_policy_boundaries.get(
+                "general_predecision_selector"
+            ),
+            "stage7_repair_or_promotion": runtime_sandbox_policy_boundaries.get(
+                "stage7_repair_or_promotion"
+            ),
+            "stage8_training": runtime_sandbox_policy_boundaries.get(
+                "stage8_training"
+            ),
+        },
         "clean_replacement_review_gate": {
             "status": clean_stack_replacement_packet.get("status"),
             "passive_review_ready": clean_replacement_review_passive,
@@ -13208,6 +13332,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     state_local_paired_ownership = payload["state_local_paired_ownership_gate"]
     selected_owner_failure_risk = payload["selected_owner_failure_risk_proxy_gate"]
     progress_window_reconsideration = payload["progress_window_reconsideration_gate"]
+    runtime_sandbox_policy_update = payload["runtime_sandbox_policy_update_gate"]
     clean_replacement = payload["clean_replacement_review_gate"]
     stage7 = payload["stage7_sampling_gate"]
     sequence = payload["sequence_policy"]
@@ -14021,6 +14146,28 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- gameplay_topology_mutation: `{progress_window_reconsideration['gameplay_topology_mutation']}`",
         f"- stage7_promotion_allowed: `{progress_window_reconsideration['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{progress_window_reconsideration['stage8_training_allowed']}`",
+        "",
+        "## Runtime Sandbox Policy Update",
+        "",
+        f"- passive_policy_update_ready: `{runtime_sandbox_policy_update['passive_policy_update_ready']}`",
+        f"- status: `{runtime_sandbox_policy_update['status']}`",
+        f"- allowed_scope: `{runtime_sandbox_policy_update['allowed_scope']}`",
+        f"- broad_runtime_changes_allowed: `{runtime_sandbox_policy_update['broad_runtime_changes_allowed']}`",
+        f"- default_policy_changes_allowed: `{runtime_sandbox_policy_update['default_policy_changes_allowed']}`",
+        f"- test_result_status: `{runtime_sandbox_policy_update['test_result_status']}`",
+        f"- test_result_default_off_equivalence_passed: `{runtime_sandbox_policy_update['test_result_default_off_equivalence_passed']}`",
+        f"- test_result_activation_observed: `{runtime_sandbox_policy_update['test_result_activation_observed']}`",
+        f"- test_result_target_improvement_observed: `{runtime_sandbox_policy_update['test_result_target_improvement_observed']}`",
+        f"- test_result_guardrails_allowed_now: `{runtime_sandbox_policy_update['test_result_guardrails_allowed_now']}`",
+        f"- source_review_packet: `{runtime_sandbox_policy_update['source_review_packet']}`",
+        f"- progress_window_passive_review_ready: `{runtime_sandbox_policy_update['progress_window_passive_review_ready']}`",
+        f"- hidden_python_controller: `{runtime_sandbox_policy_update['hidden_python_controller']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{runtime_sandbox_policy_update['runtime_dtm_or_tablebase_lookup']}`",
+        f"- gameplay_topology_mutation: `{runtime_sandbox_policy_update['gameplay_topology_mutation']}`",
+        f"- general_predecision_selector: `{runtime_sandbox_policy_update['general_predecision_selector']}`",
+        f"- stage7_repair_or_promotion: `{runtime_sandbox_policy_update['stage7_repair_or_promotion']}`",
+        f"- stage7_promotion_allowed: `{runtime_sandbox_policy_update['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{runtime_sandbox_policy_update['stage8_training_allowed']}`",
         "",
         "## Clean Replacement Review",
         "",

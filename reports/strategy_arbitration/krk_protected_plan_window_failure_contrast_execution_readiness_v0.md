@@ -39,8 +39,8 @@ This is a dry-run preflight only. It does not execute collection, run labels, ch
 - protected_stack_hard_blockers: `[]`
 - readiness_checked_flag_count: `2507`
 - readiness_boundary_violation_count: `0`
-- readiness_source_artifact_count: `348`
-- readiness_fingerprint: `b667ff811c783593fcb5b7c27e245fa04251ec4ed44da3ab2302ae8e2f1ea822`
+- readiness_source_artifact_count: `349`
+- readiness_fingerprint: `62baec2fc1277836db87d89a08a6c1e6bed0842e83e1efb4c2d472d9ad82fa8e`
 
 ## Jobs
 

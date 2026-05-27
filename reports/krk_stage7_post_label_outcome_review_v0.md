@@ -13,7 +13,7 @@ This review is passive. It does not execute labels, change runtime behavior, tra
 - readiness_status: `krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection`
 - readiness_checked_flag_count: `2507`
 - readiness_boundary_violation_count: `0`
-- readiness_source_artifact_count: `348`
+- readiness_source_artifact_count: `349`
 - stage8_status: `stage8_training_blocked_pending_protected_failure_contrast_collection`
 - outputs_present_count: `8`
 - outputs_valid_count: `8`

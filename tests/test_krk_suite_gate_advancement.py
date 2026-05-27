@@ -1717,6 +1717,76 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["progress_window_reconsideration_stage8_training_allowed"]
         is False
     )
+    assert payload["summary"]["runtime_sandbox_policy_update_passive_ready"] is True
+    assert payload["summary"]["runtime_sandbox_policy_update_status"] == (
+        "reviewed_default_off_runtime_sandbox_allowed"
+    )
+    assert payload["summary"]["runtime_sandbox_policy_update_allowed_scope"] == (
+        "progress_window_selected_owner_reconsideration"
+    )
+    assert (
+        payload["summary"][
+            "runtime_sandbox_policy_update_broad_runtime_changes_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "runtime_sandbox_policy_update_default_policy_changes_allowed"
+        ]
+        is False
+    )
+    assert payload["summary"]["runtime_sandbox_policy_update_test_result_status"] == (
+        "runtime_test_scaffold_wired_but_policy_insufficient"
+    )
+    assert (
+        payload["summary"][
+            "runtime_sandbox_policy_update_default_off_equivalence_passed"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "runtime_sandbox_policy_update_target_improvement_observed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["runtime_sandbox_policy_update_guardrails_allowed_now"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "runtime_sandbox_policy_update_progress_window_passive_ready"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"]["runtime_sandbox_policy_update_hidden_python_controller"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "runtime_sandbox_policy_update_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["runtime_sandbox_policy_update_gameplay_topology_mutation"]
+        is False
+    )
+    assert (
+        payload["summary"]["runtime_sandbox_policy_update_stage7_repair_or_promotion"]
+        is False
+    )
+    assert (
+        payload["summary"]["runtime_sandbox_policy_update_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["runtime_sandbox_policy_update_stage8_training_allowed"]
+        is False
+    )
     assert payload["summary"]["clean_replacement_review_passive_ready"] is True
     assert (
         payload["summary"]["clean_replacement_review_packet_status"]

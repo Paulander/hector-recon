@@ -27,7 +27,7 @@ This is a passive request packet only. It does not approve or implement runtime 
 - readiness_audit_status: `krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection`
 - readiness_checked_flag_count: `2507`
 - readiness_boundary_violation_count: `0`
-- readiness_source_artifact_count: `348`
+- readiness_source_artifact_count: `349`
 
 ## Required Scope If User Approves
 
@@ -49,7 +49,7 @@ This is a passive request packet only. It does not approve or implement runtime 
 - readiness_audit_status: `krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection`
 - readiness_checked_flag_count: `2507`
 - readiness_boundary_violation_count: `0`
-- readiness_source_artifact_count: `348`
+- readiness_source_artifact_count: `349`
 
 ## Blockers
 

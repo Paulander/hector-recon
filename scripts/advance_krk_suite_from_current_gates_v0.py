@@ -650,6 +650,9 @@ def build_payload() -> dict[str, Any]:
     progress_window_reconsideration_gate = (
         readiness.get("progress_window_reconsideration_gate") or {}
     )
+    runtime_sandbox_policy_update_gate = (
+        readiness.get("runtime_sandbox_policy_update_gate") or {}
+    )
     clean_replacement_review_gate = readiness.get("clean_replacement_review_gate") or {}
     active_stack_path_status = protected_stack.get("active_stack_path_status") or {}
     rollback_stack_path_status = protected_stack.get("rollback_stack_path_status") or {}
@@ -2590,6 +2593,68 @@ def build_payload() -> dict[str, Any]:
             ),
             "progress_window_reconsideration_stage8_training_allowed": (
                 progress_window_reconsideration_gate.get("stage8_training_allowed")
+            ),
+            "runtime_sandbox_policy_update_passive_ready": (
+                runtime_sandbox_policy_update_gate.get("passive_policy_update_ready")
+            ),
+            "runtime_sandbox_policy_update_status": (
+                runtime_sandbox_policy_update_gate.get("status")
+            ),
+            "runtime_sandbox_policy_update_allowed_scope": (
+                runtime_sandbox_policy_update_gate.get("allowed_scope")
+            ),
+            "runtime_sandbox_policy_update_broad_runtime_changes_allowed": (
+                runtime_sandbox_policy_update_gate.get(
+                    "broad_runtime_changes_allowed"
+                )
+            ),
+            "runtime_sandbox_policy_update_default_policy_changes_allowed": (
+                runtime_sandbox_policy_update_gate.get(
+                    "default_policy_changes_allowed"
+                )
+            ),
+            "runtime_sandbox_policy_update_test_result_status": (
+                runtime_sandbox_policy_update_gate.get("test_result_status")
+            ),
+            "runtime_sandbox_policy_update_default_off_equivalence_passed": (
+                runtime_sandbox_policy_update_gate.get(
+                    "test_result_default_off_equivalence_passed"
+                )
+            ),
+            "runtime_sandbox_policy_update_target_improvement_observed": (
+                runtime_sandbox_policy_update_gate.get(
+                    "test_result_target_improvement_observed"
+                )
+            ),
+            "runtime_sandbox_policy_update_guardrails_allowed_now": (
+                runtime_sandbox_policy_update_gate.get(
+                    "test_result_guardrails_allowed_now"
+                )
+            ),
+            "runtime_sandbox_policy_update_progress_window_passive_ready": (
+                runtime_sandbox_policy_update_gate.get(
+                    "progress_window_passive_review_ready"
+                )
+            ),
+            "runtime_sandbox_policy_update_hidden_python_controller": (
+                runtime_sandbox_policy_update_gate.get("hidden_python_controller")
+            ),
+            "runtime_sandbox_policy_update_runtime_dtm_or_tablebase_lookup": (
+                runtime_sandbox_policy_update_gate.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "runtime_sandbox_policy_update_gameplay_topology_mutation": (
+                runtime_sandbox_policy_update_gate.get("gameplay_topology_mutation")
+            ),
+            "runtime_sandbox_policy_update_stage7_repair_or_promotion": (
+                runtime_sandbox_policy_update_gate.get("stage7_repair_or_promotion")
+            ),
+            "runtime_sandbox_policy_update_stage7_promotion_allowed": (
+                runtime_sandbox_policy_update_gate.get("stage7_promotion_allowed")
+            ),
+            "runtime_sandbox_policy_update_stage8_training_allowed": (
+                runtime_sandbox_policy_update_gate.get("stage8_training_allowed")
             ),
             "clean_replacement_review_passive_ready": clean_replacement_review_gate.get(
                 "passive_review_ready"

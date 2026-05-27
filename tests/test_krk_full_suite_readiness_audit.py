@@ -919,6 +919,10 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_progress_window_reconsideration_post_activation_audit_v0.json"
     )
     assert (
+        payload["source_artifacts"]["runtime_sandbox_policy_update_v0"]
+        == "reports/krk_runtime_sandbox_policy_update_v0.json"
+    )
+    assert (
         payload["source_artifacts"][
             "clean_retrain_retry1_replacement_readiness_review"
         ]
@@ -2765,6 +2769,49 @@ def test_full_suite_readiness_identifies_current_gate():
     assert progress_reconsideration["gameplay_topology_mutation"] is False
     assert progress_reconsideration["stage7_promotion_allowed"] is False
     assert progress_reconsideration["stage8_training_allowed"] is False
+
+    runtime_policy = payload["runtime_sandbox_policy_update_gate"]
+    assert runtime_policy["passive_policy_update_ready"] is True
+    assert runtime_policy["status"] == "reviewed_default_off_runtime_sandbox_allowed"
+    assert (
+        runtime_policy["allowed_scope"]
+        == "progress_window_selected_owner_reconsideration"
+    )
+    assert runtime_policy["broad_runtime_changes_allowed"] is False
+    assert runtime_policy["default_policy_changes_allowed"] is False
+    assert runtime_policy["stage7_promotion_allowed"] is False
+    assert runtime_policy["stage8_training_allowed"] is False
+    assert (
+        runtime_policy["test_result_status"]
+        == "runtime_test_scaffold_wired_but_policy_insufficient"
+    )
+    assert runtime_policy["test_result_default_off_equivalence_passed"] is True
+    assert runtime_policy["test_result_activation_observed"] is True
+    assert runtime_policy["test_result_target_improvement_observed"] is False
+    assert runtime_policy["test_result_guardrails_allowed_now"] is False
+    assert runtime_policy["source_review_packet"] == (
+        "reports/krk_state_local_paired_selector_runtime_proxy_review_packet_v1.json"
+    )
+    assert runtime_policy["progress_window_passive_review_ready"] is True
+    assert runtime_policy["hard_boundaries"] == {
+        "hidden_python_controller": False,
+        "runtime_dtm_or_tablebase": False,
+        "gameplay_topology_mutation": False,
+        "general_predecision_selector": False,
+        "stage7_repair_or_promotion": False,
+        "stage8_training": False,
+    }
+    assert "prove_default_off_equivalence" in runtime_policy["immediate_plan"]
+    assert (
+        "run_protected_guardrails_only_if_target_improves"
+        in runtime_policy["immediate_plan"]
+    )
+    assert runtime_policy["hidden_python_controller"] is False
+    assert runtime_policy["runtime_dtm_or_tablebase_lookup"] is False
+    assert runtime_policy["gameplay_topology_mutation"] is False
+    assert runtime_policy["general_predecision_selector"] is False
+    assert runtime_policy["stage7_repair_or_promotion"] is False
+    assert runtime_policy["stage8_training"] is False
 
     clean_replacement = payload["clean_replacement_review_gate"]
     assert clean_replacement["passive_review_ready"] is True
