@@ -596,6 +596,9 @@ def build_payload() -> dict[str, Any]:
     strategy_arbiter_runtime_no_scale_gate = (
         readiness.get("strategy_arbiter_runtime_no_scale_gate") or {}
     )
+    provider_identity_maturity_gate = (
+        readiness.get("provider_identity_maturity_blocker_gate") or {}
+    )
     selector_provenance_prior_gate = (
         readiness.get("selector_provenance_prior_blocker_gate") or {}
     )
@@ -1302,6 +1305,55 @@ def build_payload() -> dict[str, Any]:
             ),
             "strategy_arbiter_runtime_no_scale_stage8_training_allowed": (
                 strategy_arbiter_runtime_no_scale_gate.get("stage8_training_allowed")
+            ),
+            "provider_identity_maturity_passive_ready": (
+                provider_identity_maturity_gate.get(
+                    "passive_provider_identity_maturity_ready"
+                )
+            ),
+            "provider_identity_maturity_status": (
+                provider_identity_maturity_gate.get("status")
+            ),
+            "provider_identity_maturity_row_count": (
+                provider_identity_maturity_gate.get("row_count")
+            ),
+            "provider_identity_maturity_provider_prior_accuracy": (
+                provider_identity_maturity_gate.get("provider_prior_accuracy")
+            ),
+            "provider_identity_maturity_best_feature_probe_baseline": (
+                provider_identity_maturity_gate.get("best_feature_probe_baseline")
+            ),
+            "provider_identity_maturity_provider_identity_signal": (
+                provider_identity_maturity_gate.get("provider_identity_signal")
+            ),
+            "provider_identity_maturity_raw_provider_id_runtime_signal": (
+                provider_identity_maturity_gate.get(
+                    "raw_provider_id_is_principled_runtime_signal"
+                )
+            ),
+            "provider_identity_maturity_required_future_features": (
+                provider_identity_maturity_gate.get("required_future_features")
+            ),
+            "provider_identity_maturity_runtime_arbiter_allowed": (
+                provider_identity_maturity_gate.get("runtime_arbiter_allowed")
+            ),
+            "provider_identity_maturity_selector_sandbox_ready": (
+                provider_identity_maturity_gate.get("selector_sandbox_ready")
+            ),
+            "provider_identity_maturity_stage7_repair_allowed": (
+                provider_identity_maturity_gate.get("stage7_repair_allowed")
+            ),
+            "provider_identity_maturity_runtime_dtm_or_tablebase_lookup": (
+                provider_identity_maturity_gate.get("runtime_dtm_or_tablebase_lookup")
+            ),
+            "provider_identity_maturity_gameplay_topology_mutation": (
+                provider_identity_maturity_gate.get("gameplay_topology_mutation")
+            ),
+            "provider_identity_maturity_stage7_promotion_allowed": (
+                provider_identity_maturity_gate.get("stage7_promotion_allowed")
+            ),
+            "provider_identity_maturity_stage8_training_allowed": (
+                provider_identity_maturity_gate.get("stage8_training_allowed")
             ),
             "selector_provenance_prior_passive_ready": (
                 selector_provenance_prior_gate.get(

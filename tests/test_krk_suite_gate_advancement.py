@@ -542,6 +542,68 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["strategy_arbiter_runtime_no_scale_stage8_training_allowed"]
         is False
     )
+    assert payload["summary"]["provider_identity_maturity_passive_ready"] is True
+    assert payload["summary"]["provider_identity_maturity_status"] == (
+        "provider_identity_signal_requires_provenance_decomposition"
+    )
+    assert payload["summary"]["provider_identity_maturity_row_count"] == 42
+    assert (
+        payload["summary"]["provider_identity_maturity_provider_prior_accuracy"]
+        == 0.8333333333333334
+    )
+    assert (
+        payload["summary"]["provider_identity_maturity_best_feature_probe_baseline"]
+        == "provider_prior_loo"
+    )
+    assert payload["summary"]["provider_identity_maturity_provider_identity_signal"] == (
+        "strong_but_not_causal_ready"
+    )
+    assert (
+        payload["summary"]["provider_identity_maturity_raw_provider_id_runtime_signal"]
+        is False
+    )
+    assert (
+        "provider_maturity"
+        in payload["summary"][
+            "provider_identity_maturity_required_future_features"
+        ]
+    )
+    assert (
+        "protected_provider"
+        in payload["summary"][
+            "provider_identity_maturity_required_future_features"
+        ]
+    )
+    assert (
+        payload["summary"]["provider_identity_maturity_runtime_arbiter_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["provider_identity_maturity_selector_sandbox_ready"]
+        is False
+    )
+    assert (
+        payload["summary"]["provider_identity_maturity_stage7_repair_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "provider_identity_maturity_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["provider_identity_maturity_gameplay_topology_mutation"]
+        is False
+    )
+    assert (
+        payload["summary"]["provider_identity_maturity_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["provider_identity_maturity_stage8_training_allowed"]
+        is False
+    )
     assert payload["summary"]["selector_provenance_prior_passive_ready"] is True
     assert payload["summary"]["selector_provenance_prior_status"] == (
         "provider_prior_remains_best_no_selector_sandbox"

@@ -615,6 +615,10 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_selector_feature_baseline_probe_v0.json"
     )
     assert (
+        payload["source_artifacts"]["provider_identity_maturity_review_v0"]
+        == "reports/krk_provider_identity_maturity_review_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["selector_provenance_feature_dataset_v0"]
         == "reports/krk_selector_provenance_feature_dataset_v0.json"
     )
@@ -1475,6 +1479,64 @@ def test_full_suite_readiness_identifies_current_gate():
     assert runtime_no_scale["gameplay_topology_mutation"] is False
     assert runtime_no_scale["stage7_promotion_allowed"] is False
     assert runtime_no_scale["stage8_training_allowed"] is False
+
+    provider_identity = payload["provider_identity_maturity_blocker_gate"]
+    assert provider_identity["passive_provider_identity_maturity_ready"] is True
+    assert (
+        provider_identity["status"]
+        == "provider_identity_signal_requires_provenance_decomposition"
+    )
+    assert provider_identity["row_count"] == 42
+    assert provider_identity["provider_prior_accuracy"] == 0.8333333333333334
+    assert provider_identity["best_feature_probe_baseline"] == "provider_prior_loo"
+    assert provider_identity["best_feature_probe_accuracy"] == 0.8333333333333334
+    assert provider_identity["provider_identity_signal"] == "strong_but_not_causal_ready"
+    assert (
+        provider_identity["raw_provider_id_is_principled_runtime_signal"]
+        is False
+    )
+    assert provider_identity["stage0_basin_positive_rate"] == 0.7333333333333333
+    assert provider_identity["edge_trap_positive_rates"] == [
+        0.1111111111111111,
+        0.1111111111111111,
+        0.1111111111111111,
+    ]
+    for feature in [
+        "provider_maturity",
+        "provider_version",
+        "source_stage",
+        "validated_profile",
+        "frozen_provider",
+        "overlay_provider",
+        "guardrail_status",
+        "plasticity_scope",
+        "promotion_status",
+        "protected_provider",
+    ]:
+        assert feature in provider_identity["required_future_features"]
+    for blocked in [
+        "runtime_arbiter",
+        "selector_sandbox",
+        "raw_provider_id_runtime_prior",
+        "provider_support_adapter",
+        "score_bonus_or_penalty",
+        "stage7_repair",
+        "stage7_promotion",
+        "stage8_training",
+        "runtime_dtm_or_tablebase",
+        "gameplay_topology_mutation",
+    ]:
+        assert blocked in provider_identity["blocked_next_work"]
+    assert provider_identity["runtime_arbiter_allowed"] is False
+    assert provider_identity["selector_sandbox_ready"] is False
+    assert provider_identity["stage7_repair_allowed"] is False
+    assert provider_identity["runtime_arbiter_implemented"] is False
+    assert provider_identity["runtime_behavior_changed"] is False
+    assert provider_identity["runtime_defaults_changed"] is False
+    assert provider_identity["runtime_dtm_or_tablebase_lookup"] is False
+    assert provider_identity["gameplay_topology_mutation"] is False
+    assert provider_identity["stage7_promotion_allowed"] is False
+    assert provider_identity["stage8_training_allowed"] is False
 
     selector_prior = payload["selector_provenance_prior_blocker_gate"]
     assert selector_prior["passive_provenance_prior_blocker_ready"] is True

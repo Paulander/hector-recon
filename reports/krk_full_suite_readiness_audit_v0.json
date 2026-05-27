@@ -78,8 +78,8 @@
         "readiness_audit": "reports/krk_full_suite_readiness_audit_v0.json",
         "readiness_audit_status": "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection",
         "readiness_boundary_violation_count": 0,
-        "readiness_checked_flag_count": 2454,
-        "readiness_source_artifact_count": 337,
+        "readiness_checked_flag_count": 2456,
+        "readiness_source_artifact_count": 338,
         "runtime_change_class": "default_off_candidate_move_frame_sandbox_only",
         "runtime_dtm_or_tablebase_lookup": false,
         "sandbox_scope_id": "default_off_stage4_candidate_move_first_move_contrast_sandbox_only",
@@ -684,7 +684,7 @@
     "execution_jobs_passing": 6,
     "execution_readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
     "expected_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
-    "expected_readiness_fingerprint": "fd4ed917f89e20dbc4de5110d1fe5687b319adbe9418efd4747b80750116ba8c",
+    "expected_readiness_fingerprint": "08e91583bfd3cbb2aed88801d002b738fb07c16e4cfb4021dc3ee4dd8f57bdac",
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "integrated_new_failure_count": 0,
@@ -841,6 +841,56 @@
     "stage6_drive_validation_passed": true,
     "status": "retry1_protected_stage5_6_stack_adopted_manifest_only"
   },
+  "provider_identity_maturity_blocker_gate": {
+    "best_feature_probe_accuracy": 0.8333333333333334,
+    "best_feature_probe_baseline": "provider_prior_loo",
+    "blocked_next_work": [
+      "runtime_arbiter",
+      "selector_sandbox",
+      "raw_provider_id_runtime_prior",
+      "provider_support_adapter",
+      "score_bonus_or_penalty",
+      "stage7_repair",
+      "stage7_promotion",
+      "stage8_training",
+      "runtime_dtm_or_tablebase",
+      "gameplay_topology_mutation"
+    ],
+    "edge_trap_positive_rates": [
+      0.1111111111111111,
+      0.1111111111111111,
+      0.1111111111111111
+    ],
+    "gameplay_topology_mutation": false,
+    "passive_provider_identity_maturity_ready": true,
+    "provider_identity_signal": "strong_but_not_causal_ready",
+    "provider_prior_accuracy": 0.8333333333333334,
+    "raw_provider_id_is_principled_runtime_signal": false,
+    "required_future_features": [
+      "provider_maturity",
+      "provider_version",
+      "source_stage",
+      "validated_profile",
+      "frozen_provider",
+      "overlay_provider",
+      "guardrail_status",
+      "plasticity_scope",
+      "promotion_status",
+      "protected_provider"
+    ],
+    "row_count": 42,
+    "runtime_arbiter_allowed": false,
+    "runtime_arbiter_implemented": false,
+    "runtime_behavior_changed": false,
+    "runtime_defaults_changed": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "selector_sandbox_ready": false,
+    "stage0_basin_positive_rate": 0.7333333333333333,
+    "stage7_promotion_allowed": false,
+    "stage7_repair_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "provider_identity_signal_requires_provenance_decomposition"
+  },
   "repair_monitor_trace_feature_gate": {
     "broadened_case_count": 6,
     "broadened_case_count_by_stage": {
@@ -919,7 +969,7 @@
     "trace_features_trace_frame_count": 6
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 2454,
+    "checked_flag_count": 2456,
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "runtime_behavior_changed": false,
@@ -1647,6 +1697,7 @@
     "protected_strategy_monitor_frame_expansion_v1": "reports/strategy_arbitration/krk_protected_strategy_monitor_frame_expansion_v1.json",
     "protected_strategy_monitor_frame_quality_v1": "reports/strategy_arbitration/krk_protected_strategy_monitor_frame_quality_v1.json",
     "protected_strategy_monitor_observation_source_review_packet_v1": "reports/strategy_arbitration/krk_protected_strategy_monitor_observation_source_review_packet_v1.json",
+    "provider_identity_maturity_review_v0": "reports/krk_provider_identity_maturity_review_v0.json",
     "ranked_proposal_protected_provider_coverage_review": "reports/krk_ranked_proposal_frame_protected_provider_coverage_review_v0.json",
     "repair_monitor_observation_source_broadened_v1": "reports/strategy_arbitration/krk_repair_monitor_observation_source_broadened_v1.json",
     "repair_monitor_observation_source_coverage_v1": "reports/strategy_arbitration/krk_repair_monitor_observation_source_coverage_v1.json",

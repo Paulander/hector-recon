@@ -239,6 +239,31 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Provider Identity Maturity Blocker
+
+- passive_provider_identity_maturity_ready: `True`
+- status: `provider_identity_signal_requires_provenance_decomposition`
+- row_count: `42`
+- provider_prior_accuracy: `0.8333333333333334`
+- best_feature_probe_baseline: `provider_prior_loo`
+- best_feature_probe_accuracy: `0.8333333333333334`
+- provider_identity_signal: `strong_but_not_causal_ready`
+- raw_provider_id_is_principled_runtime_signal: `False`
+- stage0_basin_positive_rate: `0.7333333333333333`
+- edge_trap_positive_rates: `[0.1111111111111111, 0.1111111111111111, 0.1111111111111111]`
+- required_future_features: `['provider_maturity', 'provider_version', 'source_stage', 'validated_profile', 'frozen_provider', 'overlay_provider', 'guardrail_status', 'plasticity_scope', 'promotion_status', 'protected_provider']`
+- blocked_next_work: `['runtime_arbiter', 'selector_sandbox', 'raw_provider_id_runtime_prior', 'provider_support_adapter', 'score_bonus_or_penalty', 'stage7_repair', 'stage7_promotion', 'stage8_training', 'runtime_dtm_or_tablebase', 'gameplay_topology_mutation']`
+- runtime_arbiter_allowed: `False`
+- selector_sandbox_ready: `False`
+- stage7_repair_allowed: `False`
+- runtime_arbiter_implemented: `False`
+- runtime_behavior_changed: `False`
+- runtime_defaults_changed: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- gameplay_topology_mutation: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Selector Provenance Prior Blocker
 
 - passive_provenance_prior_blocker_ready: `True`
@@ -768,7 +793,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `fd4ed917f89e20dbc4de5110d1fe5687b319adbe9418efd4747b80750116ba8c`
+- expected_readiness_fingerprint: `08e91583bfd3cbb2aed88801d002b738fb07c16e4cfb4021dc3ee4dd8f57bdac`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1297,5 +1322,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2454`
+- checked_flag_count: `2456`
 - violation_count: `0`

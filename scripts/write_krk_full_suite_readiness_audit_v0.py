@@ -682,6 +682,9 @@ SOURCES = {
     "selector_feature_baseline_probe_v0": (
         "reports/krk_selector_feature_baseline_probe_v0.json"
     ),
+    "provider_identity_maturity_review_v0": (
+        "reports/krk_provider_identity_maturity_review_v0.json"
+    ),
     "selector_provenance_feature_dataset_v0": (
         "reports/krk_selector_provenance_feature_dataset_v0.json"
     ),
@@ -1752,6 +1755,9 @@ def build_payload() -> dict[str, Any]:
     selector_feature_dataset_v0 = payloads["selector_feature_dataset_v0"]
     selector_feature_baseline_probe_v0 = payloads[
         "selector_feature_baseline_probe_v0"
+    ]
+    provider_identity_maturity_review_v0 = payloads[
+        "provider_identity_maturity_review_v0"
     ]
     selector_provenance_feature_dataset_v0 = payloads[
         "selector_provenance_feature_dataset_v0"
@@ -3254,6 +3260,79 @@ def build_payload() -> dict[str, Any]:
     )
     selector_feature_baseline_best = (
         selector_feature_baseline_probe_v0.get("best_baseline") or {}
+    )
+    provider_identity_decision = (
+        provider_identity_maturity_review_v0.get("decision") or {}
+    )
+    provider_identity_interpretation = (
+        provider_identity_maturity_review_v0.get("interpretation") or {}
+    )
+    provider_identity_best_feature_baseline = (
+        provider_identity_maturity_review_v0.get("best_feature_probe_baseline") or {}
+    )
+    provider_identity_required_features = (
+        provider_identity_maturity_review_v0.get("required_future_features") or []
+    )
+    provider_identity_blocked_work = (
+        provider_identity_maturity_review_v0.get("blocked_next_work") or []
+    )
+    provider_identity_maturity_passive = (
+        provider_identity_maturity_review_v0.get("causal_status")
+        == "non_causal_architecture_review"
+        and provider_identity_maturity_review_v0.get("source_artifacts")
+        == [
+            "reports/krk_selector_feature_dataset_v0.json",
+            "reports/krk_selector_feature_baseline_probe_v0.json",
+        ]
+        and provider_identity_maturity_review_v0.get("row_count") == 42
+        and provider_identity_maturity_review_v0.get("provider_prior_accuracy")
+        == 0.8333333333333334
+        and provider_identity_best_feature_baseline.get("name")
+        == "provider_prior_loo"
+        and provider_identity_best_feature_baseline.get("accuracy")
+        == 0.8333333333333334
+        and provider_identity_interpretation.get("provider_identity_signal")
+        == "strong_but_not_causal_ready"
+        and provider_identity_interpretation.get(
+            "raw_provider_id_is_principled_runtime_signal"
+        )
+        is False
+        and provider_identity_interpretation.get("stage0_basin_positive_rate")
+        == 0.7333333333333333
+        and provider_identity_interpretation.get("edge_trap_positive_rates")
+        == [0.1111111111111111, 0.1111111111111111, 0.1111111111111111]
+        and provider_identity_decision.get("status")
+        == "provider_identity_signal_requires_provenance_decomposition"
+        and provider_identity_decision.get("runtime_arbiter_allowed") is False
+        and provider_identity_decision.get("selector_sandbox_ready") is False
+        and provider_identity_decision.get("stage7_repair_allowed") is False
+        and provider_identity_decision.get("stage8_training_allowed") is False
+        and "provider_maturity" in provider_identity_required_features
+        and "provider_version" in provider_identity_required_features
+        and "source_stage" in provider_identity_required_features
+        and "validated_profile" in provider_identity_required_features
+        and "frozen_provider" in provider_identity_required_features
+        and "overlay_provider" in provider_identity_required_features
+        and "guardrail_status" in provider_identity_required_features
+        and "plasticity_scope" in provider_identity_required_features
+        and "promotion_status" in provider_identity_required_features
+        and "protected_provider" in provider_identity_required_features
+        and "runtime_arbiter" in provider_identity_blocked_work
+        and "selector_sandbox" in provider_identity_blocked_work
+        and "raw_provider_id_runtime_prior" in provider_identity_blocked_work
+        and "provider_support_adapter" in provider_identity_blocked_work
+        and "score_bonus_or_penalty" in provider_identity_blocked_work
+        and "stage7_repair" in provider_identity_blocked_work
+        and "stage7_promotion" in provider_identity_blocked_work
+        and "stage8_training" in provider_identity_blocked_work
+        and "runtime_dtm_or_tablebase" in provider_identity_blocked_work
+        and "gameplay_topology_mutation" in provider_identity_blocked_work
+        and provider_identity_maturity_review_v0.get("runtime_arbiter_implemented")
+        is False
+        and provider_identity_maturity_review_v0.get("runtime_behavior_changed")
+        is False
+        and provider_identity_maturity_review_v0.get("runtime_defaults_changed")
+        is False
     )
     selector_provenance_dataset_decision = (
         selector_provenance_feature_dataset_v0.get("decision") or {}
@@ -6576,6 +6655,69 @@ def build_payload() -> dict[str, Any]:
                 strategy_arbiter_runtime_test_review_v2.get(
                     "stage8_training_allowed"
                 )
+            ),
+        },
+        "provider_identity_maturity_blocker_gate": {
+            "status": provider_identity_decision.get("status"),
+            "passive_provider_identity_maturity_ready": (
+                provider_identity_maturity_passive
+            ),
+            "row_count": provider_identity_maturity_review_v0.get("row_count"),
+            "provider_prior_accuracy": (
+                provider_identity_maturity_review_v0.get("provider_prior_accuracy")
+            ),
+            "best_feature_probe_baseline": (
+                provider_identity_best_feature_baseline.get("name")
+            ),
+            "best_feature_probe_accuracy": (
+                provider_identity_best_feature_baseline.get("accuracy")
+            ),
+            "provider_identity_signal": provider_identity_interpretation.get(
+                "provider_identity_signal"
+            ),
+            "raw_provider_id_is_principled_runtime_signal": (
+                provider_identity_interpretation.get(
+                    "raw_provider_id_is_principled_runtime_signal"
+                )
+            ),
+            "stage0_basin_positive_rate": provider_identity_interpretation.get(
+                "stage0_basin_positive_rate"
+            ),
+            "edge_trap_positive_rates": (
+                provider_identity_interpretation.get("edge_trap_positive_rates")
+                or []
+            ),
+            "required_future_features": provider_identity_required_features,
+            "blocked_next_work": provider_identity_blocked_work,
+            "runtime_arbiter_allowed": provider_identity_decision.get(
+                "runtime_arbiter_allowed"
+            ),
+            "selector_sandbox_ready": provider_identity_decision.get(
+                "selector_sandbox_ready"
+            ),
+            "stage7_repair_allowed": provider_identity_decision.get(
+                "stage7_repair_allowed"
+            ),
+            "runtime_arbiter_implemented": (
+                provider_identity_maturity_review_v0.get(
+                    "runtime_arbiter_implemented"
+                )
+            ),
+            "runtime_behavior_changed": (
+                provider_identity_maturity_review_v0.get(
+                    "runtime_behavior_changed"
+                )
+            ),
+            "runtime_defaults_changed": (
+                provider_identity_maturity_review_v0.get(
+                    "runtime_defaults_changed"
+                )
+            ),
+            "runtime_dtm_or_tablebase_lookup": False,
+            "gameplay_topology_mutation": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": provider_identity_decision.get(
+                "stage8_training_allowed"
             ),
         },
         "selector_provenance_prior_blocker_gate": {
@@ -12002,6 +12144,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     strategy_arbiter_runtime_no_scale = payload[
         "strategy_arbiter_runtime_no_scale_gate"
     ]
+    provider_identity_maturity = payload["provider_identity_maturity_blocker_gate"]
     selector_provenance_prior = payload["selector_provenance_prior_blocker_gate"]
     selector_objective_normalization = payload["selector_objective_normalization_gate"]
     selector_label_balance = payload["selector_label_balance_gate"]
@@ -12279,6 +12422,31 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- gameplay_topology_mutation: `{strategy_arbiter_runtime_no_scale['gameplay_topology_mutation']}`",
         f"- stage7_promotion_allowed: `{strategy_arbiter_runtime_no_scale['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{strategy_arbiter_runtime_no_scale['stage8_training_allowed']}`",
+        "",
+        "## Provider Identity Maturity Blocker",
+        "",
+        f"- passive_provider_identity_maturity_ready: `{provider_identity_maturity['passive_provider_identity_maturity_ready']}`",
+        f"- status: `{provider_identity_maturity['status']}`",
+        f"- row_count: `{provider_identity_maturity['row_count']}`",
+        f"- provider_prior_accuracy: `{provider_identity_maturity['provider_prior_accuracy']}`",
+        f"- best_feature_probe_baseline: `{provider_identity_maturity['best_feature_probe_baseline']}`",
+        f"- best_feature_probe_accuracy: `{provider_identity_maturity['best_feature_probe_accuracy']}`",
+        f"- provider_identity_signal: `{provider_identity_maturity['provider_identity_signal']}`",
+        f"- raw_provider_id_is_principled_runtime_signal: `{provider_identity_maturity['raw_provider_id_is_principled_runtime_signal']}`",
+        f"- stage0_basin_positive_rate: `{provider_identity_maturity['stage0_basin_positive_rate']}`",
+        f"- edge_trap_positive_rates: `{provider_identity_maturity['edge_trap_positive_rates']}`",
+        f"- required_future_features: `{provider_identity_maturity['required_future_features']}`",
+        f"- blocked_next_work: `{provider_identity_maturity['blocked_next_work']}`",
+        f"- runtime_arbiter_allowed: `{provider_identity_maturity['runtime_arbiter_allowed']}`",
+        f"- selector_sandbox_ready: `{provider_identity_maturity['selector_sandbox_ready']}`",
+        f"- stage7_repair_allowed: `{provider_identity_maturity['stage7_repair_allowed']}`",
+        f"- runtime_arbiter_implemented: `{provider_identity_maturity['runtime_arbiter_implemented']}`",
+        f"- runtime_behavior_changed: `{provider_identity_maturity['runtime_behavior_changed']}`",
+        f"- runtime_defaults_changed: `{provider_identity_maturity['runtime_defaults_changed']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{provider_identity_maturity['runtime_dtm_or_tablebase_lookup']}`",
+        f"- gameplay_topology_mutation: `{provider_identity_maturity['gameplay_topology_mutation']}`",
+        f"- stage7_promotion_allowed: `{provider_identity_maturity['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{provider_identity_maturity['stage8_training_allowed']}`",
         "",
         "## Selector Provenance Prior Blocker",
         "",
