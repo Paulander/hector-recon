@@ -35,6 +35,9 @@ SOURCES = {
     "control_plane_strategy_probe": (
         "reports/krk_control_plane_strategy_arbitration_probe_v0.json"
     ),
+    "provider_label_coverage_plan": (
+        "reports/krk_provider_label_coverage_plan_v0.json"
+    ),
     "control_plane_strategy_baseline": (
         "reports/krk_control_plane_strategy_arbitration_baseline_v1.json"
     ),
@@ -2081,6 +2084,7 @@ def build_payload() -> dict[str, Any]:
     control_plane_filtered_frames = payloads["control_plane_filtered_frames"]
     control_plane_forced_controls = payloads["control_plane_forced_controls"]
     control_plane_strategy_probe = payloads["control_plane_strategy_probe"]
+    provider_label_coverage_plan = payloads["provider_label_coverage_plan"]
     control_plane_strategy_baseline = payloads["control_plane_strategy_baseline"]
     control_plane_stage7_boundary_refresh = payloads[
         "control_plane_stage7_boundary_refresh"
@@ -2338,6 +2342,9 @@ def build_payload() -> dict[str, Any]:
     control_plane_strategy_probe_coverage = (
         control_plane_strategy_probe.get("label_coverage") or {}
     )
+    provider_label_coverage_current = (
+        provider_label_coverage_plan.get("current_label_coverage") or {}
+    )
     control_plane_strategy_baseline_decision = (
         control_plane_strategy_baseline.get("decision") or {}
     )
@@ -2358,6 +2365,50 @@ def build_payload() -> dict[str, Any]:
         control_plane_strategy_probe,
         control_plane_strategy_baseline,
     ]
+    provider_label_coverage_plan_ready = (
+        provider_label_coverage_plan.get("schema_version")
+        == "krk_provider_label_coverage_plan.v0"
+        and provider_label_coverage_plan.get("causal_status")
+        == "non_causal_label_plan"
+        and provider_label_coverage_plan.get("source_artifacts")
+        == [
+            "reports/krk_control_plane_filtered_frames_v0.json",
+            "reports/krk_control_plane_strategy_arbitration_probe_v0.json",
+        ]
+        and provider_label_coverage_current.get("coverage_status")
+        == "sufficient_for_current_small_probe"
+        and provider_label_coverage_current.get("benchmark_frame_count") == 28
+        and provider_label_coverage_current.get("provider_labeled_frame_count") == 28
+        and provider_label_coverage_current.get("frames_with_known_provider_mate")
+        == 14
+        and provider_label_coverage_current.get("unknown_examples") == []
+        and provider_label_coverage_current.get("unknown_provider_label_count_by_stage")
+        == {}
+        and provider_label_coverage_plan.get("labels_generated_in_this_slice")
+        is False
+        and provider_label_coverage_plan.get("recommended_next_slice")
+        == "offline_strategy_arbitration_baseline_v1"
+        and all(
+            step in (provider_label_coverage_plan.get("blocked_next_steps") or [])
+            for step in [
+                "runtime_arbiter",
+                "runtime_internal_terminal",
+                "stage7_promotion",
+                "stage8_training",
+                "runtime_dtm_or_tablebase",
+                "gameplay_topology_mutation",
+            ]
+        )
+        and provider_label_coverage_plan.get("runtime_behavior_changed") is False
+        and provider_label_coverage_plan.get("runtime_defaults_changed") is False
+        and provider_label_coverage_plan.get("runtime_arbiter_added") is False
+        and provider_label_coverage_plan.get("runtime_terminals_added") is False
+        and provider_label_coverage_plan.get("runtime_dtm_or_tablebase_lookup")
+        is False
+        and provider_label_coverage_plan.get("gameplay_topology_mutation") is False
+        and provider_label_coverage_plan.get("stage7_promotion_allowed") is False
+        and provider_label_coverage_plan.get("stage8_training_allowed") is False
+    )
     control_plane_strategy_baseline_passive = (
         control_plane_strategy_probe.get("schema_version")
         == "krk_control_plane_strategy_arbitration_probe.v0"
@@ -2370,6 +2421,7 @@ def build_payload() -> dict[str, Any]:
         is False
         and control_plane_strategy_probe_decision.get("recommended_next_slice")
         == "offline_strategy_arbitration_baseline_v1"
+        and provider_label_coverage_plan_ready
         and control_plane_strategy_probe_coverage.get(
             "strategy_benchmark_frame_count"
         )
@@ -14627,6 +14679,53 @@ def build_payload() -> dict[str, Any]:
             "passive_strategy_baseline_ready": (
                 control_plane_strategy_baseline_passive
             ),
+            "provider_label_coverage_plan_ready": (
+                provider_label_coverage_plan_ready
+            ),
+            "provider_label_coverage_status": (
+                provider_label_coverage_current.get("coverage_status")
+            ),
+            "provider_label_coverage_benchmark_frame_count": (
+                provider_label_coverage_current.get("benchmark_frame_count")
+            ),
+            "provider_label_coverage_labeled_frame_count": (
+                provider_label_coverage_current.get("provider_labeled_frame_count")
+            ),
+            "provider_label_coverage_known_provider_mate_count": (
+                provider_label_coverage_current.get(
+                    "frames_with_known_provider_mate"
+                )
+            ),
+            "provider_label_coverage_unknown_examples": (
+                provider_label_coverage_current.get("unknown_examples") or []
+            ),
+            "provider_label_coverage_recommended_next_slice": (
+                provider_label_coverage_plan.get("recommended_next_slice")
+            ),
+            "provider_label_coverage_labels_generated_in_this_slice": (
+                provider_label_coverage_plan.get("labels_generated_in_this_slice")
+            ),
+            "provider_label_coverage_runtime_behavior_changed": (
+                provider_label_coverage_plan.get("runtime_behavior_changed")
+            ),
+            "provider_label_coverage_runtime_defaults_changed": (
+                provider_label_coverage_plan.get("runtime_defaults_changed")
+            ),
+            "provider_label_coverage_runtime_arbiter_added": (
+                provider_label_coverage_plan.get("runtime_arbiter_added")
+            ),
+            "provider_label_coverage_runtime_dtm_or_tablebase_lookup": (
+                provider_label_coverage_plan.get("runtime_dtm_or_tablebase_lookup")
+            ),
+            "provider_label_coverage_gameplay_topology_mutation": (
+                provider_label_coverage_plan.get("gameplay_topology_mutation")
+            ),
+            "provider_label_coverage_stage7_promotion_allowed": (
+                provider_label_coverage_plan.get("stage7_promotion_allowed")
+            ),
+            "provider_label_coverage_stage8_training_allowed": (
+                provider_label_coverage_plan.get("stage8_training_allowed")
+            ),
             "probe_status": control_plane_strategy_probe_decision.get(
                 "selected_status"
             ),
@@ -16621,6 +16720,11 @@ def write_markdown(payload: dict[str, Any]) -> str:
             "## Control Plane Strategy Baseline",
             "",
             f"- passive_strategy_baseline_ready: `{control_plane_strategy_baseline['passive_strategy_baseline_ready']}`",
+            f"- provider_label_coverage_plan_ready: `{control_plane_strategy_baseline['provider_label_coverage_plan_ready']}`",
+            f"- provider_label_coverage_status: `{control_plane_strategy_baseline['provider_label_coverage_status']}`",
+            f"- provider_label_coverage_benchmark_frame_count: `{control_plane_strategy_baseline['provider_label_coverage_benchmark_frame_count']}`",
+            f"- provider_label_coverage_known_provider_mate_count: `{control_plane_strategy_baseline['provider_label_coverage_known_provider_mate_count']}`",
+            f"- provider_label_coverage_recommended_next_slice: `{control_plane_strategy_baseline['provider_label_coverage_recommended_next_slice']}`",
             f"- probe_status: `{control_plane_strategy_baseline['probe_status']}`",
             f"- probe_causal_next_step_allowed: `{control_plane_strategy_baseline['probe_causal_next_step_allowed']}`",
             f"- probe_recommended_next_slice: `{control_plane_strategy_baseline['probe_recommended_next_slice']}`",

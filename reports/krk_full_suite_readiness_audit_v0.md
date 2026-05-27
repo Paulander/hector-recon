@@ -976,7 +976,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `45fe022199c4724783eb82c3149fe0b338b7c5d70669d4b3d14534741642030b`
+- expected_readiness_fingerprint: `143ecfae074aa3339d840e7cce2f4b35754f04745903a9cf3a1d5c9a9b257fba`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1551,6 +1551,11 @@
 ## Control Plane Strategy Baseline
 
 - passive_strategy_baseline_ready: `True`
+- provider_label_coverage_plan_ready: `True`
+- provider_label_coverage_status: `sufficient_for_current_small_probe`
+- provider_label_coverage_benchmark_frame_count: `28`
+- provider_label_coverage_known_provider_mate_count: `14`
+- provider_label_coverage_recommended_next_slice: `offline_strategy_arbitration_baseline_v1`
 - probe_status: `provider_labels_sufficient_for_small_probe`
 - probe_causal_next_step_allowed: `False`
 - probe_recommended_next_slice: `offline_strategy_arbitration_baseline_v1`
@@ -1626,5 +1631,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2562`
+- checked_flag_count: `2568`
 - violation_count: `0`

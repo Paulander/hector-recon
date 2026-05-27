@@ -99,6 +99,10 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_control_plane_strategy_arbitration_probe_v0.json"
     )
     assert (
+        payload["source_artifacts"]["provider_label_coverage_plan"]
+        == "reports/krk_provider_label_coverage_plan_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["control_plane_strategy_baseline"]
         == "reports/krk_control_plane_strategy_arbitration_baseline_v1.json"
     )
@@ -3257,6 +3261,48 @@ def test_full_suite_readiness_identifies_current_gate():
     assert frame_export["stage8_training_allowed"] is False
     strategy_baseline = payload["control_plane_strategy_baseline_gate"]
     assert strategy_baseline["passive_strategy_baseline_ready"] is True
+    assert strategy_baseline["provider_label_coverage_plan_ready"] is True
+    assert (
+        strategy_baseline["provider_label_coverage_status"]
+        == "sufficient_for_current_small_probe"
+    )
+    assert strategy_baseline["provider_label_coverage_benchmark_frame_count"] == 28
+    assert strategy_baseline["provider_label_coverage_labeled_frame_count"] == 28
+    assert strategy_baseline["provider_label_coverage_known_provider_mate_count"] == 14
+    assert strategy_baseline["provider_label_coverage_unknown_examples"] == []
+    assert (
+        strategy_baseline["provider_label_coverage_recommended_next_slice"]
+        == "offline_strategy_arbitration_baseline_v1"
+    )
+    assert (
+        strategy_baseline["provider_label_coverage_labels_generated_in_this_slice"]
+        is False
+    )
+    assert (
+        strategy_baseline["provider_label_coverage_runtime_behavior_changed"]
+        is False
+    )
+    assert (
+        strategy_baseline["provider_label_coverage_runtime_defaults_changed"]
+        is False
+    )
+    assert strategy_baseline["provider_label_coverage_runtime_arbiter_added"] is False
+    assert (
+        strategy_baseline["provider_label_coverage_runtime_dtm_or_tablebase_lookup"]
+        is False
+    )
+    assert (
+        strategy_baseline["provider_label_coverage_gameplay_topology_mutation"]
+        is False
+    )
+    assert (
+        strategy_baseline["provider_label_coverage_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        strategy_baseline["provider_label_coverage_stage8_training_allowed"]
+        is False
+    )
     assert strategy_baseline["probe_status"] == (
         "provider_labels_sufficient_for_small_probe"
     )

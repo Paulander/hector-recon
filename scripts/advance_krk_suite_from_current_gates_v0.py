@@ -969,6 +969,31 @@ def build_payload() -> dict[str, Any]:
                     "passive_strategy_baseline_ready"
                 )
             ),
+            "control_plane_provider_label_coverage_plan_ready": (
+                control_plane_strategy_baseline_gate.get(
+                    "provider_label_coverage_plan_ready"
+                )
+            ),
+            "control_plane_provider_label_coverage_status": (
+                control_plane_strategy_baseline_gate.get(
+                    "provider_label_coverage_status"
+                )
+            ),
+            "control_plane_provider_label_coverage_benchmark_frame_count": (
+                control_plane_strategy_baseline_gate.get(
+                    "provider_label_coverage_benchmark_frame_count"
+                )
+            ),
+            "control_plane_provider_label_coverage_known_provider_mate_count": (
+                control_plane_strategy_baseline_gate.get(
+                    "provider_label_coverage_known_provider_mate_count"
+                )
+            ),
+            "control_plane_provider_label_coverage_labels_generated_in_this_slice": (
+                control_plane_strategy_baseline_gate.get(
+                    "provider_label_coverage_labels_generated_in_this_slice"
+                )
+            ),
             "control_plane_strategy_baseline_probe_status": (
                 control_plane_strategy_baseline_gate.get("probe_status")
             ),

@@ -2050,6 +2050,32 @@ def test_gate_advancement_reports_current_stage7_blocker():
         is True
     )
     assert (
+        payload["summary"]["control_plane_provider_label_coverage_plan_ready"]
+        is True
+    )
+    assert (
+        payload["summary"]["control_plane_provider_label_coverage_status"]
+        == "sufficient_for_current_small_probe"
+    )
+    assert (
+        payload["summary"][
+            "control_plane_provider_label_coverage_benchmark_frame_count"
+        ]
+        == 28
+    )
+    assert (
+        payload["summary"][
+            "control_plane_provider_label_coverage_known_provider_mate_count"
+        ]
+        == 14
+    )
+    assert (
+        payload["summary"][
+            "control_plane_provider_label_coverage_labels_generated_in_this_slice"
+        ]
+        is False
+    )
+    assert (
         payload["summary"]["control_plane_strategy_baseline_probe_status"]
         == "provider_labels_sufficient_for_small_probe"
     )
