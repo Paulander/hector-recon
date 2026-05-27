@@ -2846,6 +2846,23 @@ def build_payload() -> dict[str, Any]:
             "state_local_contrast_passive_ready": (
                 state_local_contrast_gate.get("passive_contrast_ready")
             ),
+            "state_local_contrast_labels_v1_status": (
+                state_local_contrast_gate.get("labels_v1_status")
+            ),
+            "state_local_contrast_labels_v1_row_count": (
+                state_local_contrast_gate.get("labels_v1_row_count")
+            ),
+            "state_local_contrast_labels_v1_stage7_challenge_row_count": (
+                state_local_contrast_gate.get(
+                    "labels_v1_stage7_challenge_row_count"
+                )
+            ),
+            "state_local_contrast_probe_v1_status": (
+                state_local_contrast_gate.get("probe_v1_status")
+            ),
+            "state_local_contrast_probe_v1_stage7_training_leakage": (
+                state_local_contrast_gate.get("probe_v1_stage7_training_leakage")
+            ),
             "state_local_contrast_labels_status": (
                 state_local_contrast_gate.get("labels_status")
             ),

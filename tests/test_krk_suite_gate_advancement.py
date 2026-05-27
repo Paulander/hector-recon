@@ -1849,6 +1849,26 @@ def test_gate_advancement_reports_current_stage7_blocker():
     )
     assert payload["summary"]["state_local_contrast_passive_ready"] is True
     assert (
+        payload["summary"]["state_local_contrast_labels_v1_status"]
+        == "state_local_contrast_labels_joined"
+    )
+    assert payload["summary"]["state_local_contrast_labels_v1_row_count"] == 28
+    assert (
+        payload["summary"][
+            "state_local_contrast_labels_v1_stage7_challenge_row_count"
+        ]
+        == 0
+    )
+    assert payload["summary"]["state_local_contrast_probe_v1_status"] == (
+        "state_local_contrast_signal_not_ready"
+    )
+    assert (
+        payload["summary"][
+            "state_local_contrast_probe_v1_stage7_training_leakage"
+        ]
+        is False
+    )
+    assert (
         payload["summary"]["state_local_contrast_labels_status"]
         == "state_local_contrast_labels_v2_joined"
     )

@@ -111,8 +111,8 @@
         "readiness_audit": "reports/krk_full_suite_readiness_audit_v0.json",
         "readiness_audit_status": "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection",
         "readiness_boundary_violation_count": 0,
-        "readiness_checked_flag_count": 2844,
-        "readiness_source_artifact_count": 398,
+        "readiness_checked_flag_count": 2856,
+        "readiness_source_artifact_count": 400,
         "runtime_change_class": "default_off_candidate_move_frame_sandbox_only",
         "runtime_dtm_or_tablebase_lookup": false,
         "sandbox_scope_id": "default_off_stage4_candidate_move_first_move_contrast_sandbox_only",
@@ -1104,7 +1104,7 @@
     "execution_jobs_passing": 6,
     "execution_readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
     "expected_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
-    "expected_readiness_fingerprint": "98fd02d232d023dea2fb38ef46fc0cfb26967ae44ca6f14fa68ceaa3e78aa76a",
+    "expected_readiness_fingerprint": "e3fe56094e698a7a3e4593021bfa7688864421e25ffdf58d045260f231ff3d7c",
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "integrated_new_failure_count": 0,
@@ -1423,7 +1423,7 @@
     "trace_features_trace_frame_count": 6
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 2844,
+    "checked_flag_count": 2856,
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "runtime_behavior_changed": false,
@@ -2566,8 +2566,10 @@
     "stage7_sampling_runner": "reports/structural_candidates/stage7_diverse_clean_sampling_runner_v0.json",
     "stage7_to_stage8_blocker_review": "reports/structural_candidates/stage7_to_stage8_blocker_review_v0.json",
     "stage_conditioned_candidate_generation_benchmark_v3": "reports/strategy_arbitration/krk_stage_conditioned_candidate_generation_benchmark_v3.json",
+    "state_local_contrast_labels_v1": "reports/krk_state_local_contrast_labels_v1.json",
     "state_local_contrast_labels_v2": "reports/krk_state_local_contrast_labels_v2.json",
     "state_local_contrast_readiness_review_v2": "reports/krk_state_local_contrast_readiness_review_v2.json",
+    "state_local_contrast_selector_probe_v1": "reports/krk_state_local_contrast_selector_probe_v1.json",
     "state_local_contrast_selector_probe_v2": "reports/krk_state_local_contrast_selector_probe_v2.json",
     "state_local_paired_ownership_error_audit_v0": "reports/krk_state_local_paired_ownership_error_audit_v0.json",
     "state_local_paired_ownership_inventory_v0": "reports/krk_state_local_paired_ownership_inventory_v0.json",
@@ -2879,6 +2881,15 @@
       "positive": 9
     },
     "labels_usable_training_row_count": 12,
+    "labels_v1_contrast_label_counts": {
+      "negative": 15,
+      "positive": 13
+    },
+    "labels_v1_row_count": 28,
+    "labels_v1_runtime_test_allowed_next": false,
+    "labels_v1_stage7_challenge_row_count": 0,
+    "labels_v1_status": "state_local_contrast_labels_joined",
+    "labels_v1_usable_training_row_count": 28,
     "passive_contrast_ready": true,
     "probe_row_count": 20,
     "probe_runtime_test_allowed_next": false,
@@ -2893,6 +2904,10 @@
       "positive": 9
     },
     "probe_training_row_count": 12,
+    "probe_v1_row_count": 28,
+    "probe_v1_runtime_test_allowed_next": false,
+    "probe_v1_stage7_training_leakage": false,
+    "probe_v1_status": "state_local_contrast_signal_not_ready",
     "readiness_blocked_next_steps": [
       "runtime_selector",
       "stage7_repair",

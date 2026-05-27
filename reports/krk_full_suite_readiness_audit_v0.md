@@ -982,7 +982,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `98fd02d232d023dea2fb38ef46fc0cfb26967ae44ca6f14fa68ceaa3e78aa76a`
+- expected_readiness_fingerprint: `e3fe56094e698a7a3e4593021bfa7688864421e25ffdf58d045260f231ff3d7c`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1637,5 +1637,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2844`
+- checked_flag_count: `2856`
 - violation_count: `0`

@@ -1065,6 +1065,14 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_selector_readiness_v3_plan.json"
     )
     assert (
+        payload["source_artifacts"]["state_local_contrast_labels_v1"]
+        == "reports/krk_state_local_contrast_labels_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["state_local_contrast_selector_probe_v1"]
+        == "reports/krk_state_local_contrast_selector_probe_v1.json"
+    )
+    assert (
         payload["source_artifacts"]["state_local_contrast_labels_v2"]
         == "reports/krk_state_local_contrast_labels_v2.json"
     )
@@ -3094,6 +3102,19 @@ def test_full_suite_readiness_identifies_current_gate():
 
     state_local_contrast = payload["state_local_contrast_gate"]
     assert state_local_contrast["passive_contrast_ready"] is True
+    assert state_local_contrast["labels_v1_status"] == "state_local_contrast_labels_joined"
+    assert state_local_contrast["labels_v1_row_count"] == 28
+    assert state_local_contrast["labels_v1_contrast_label_counts"] == {
+        "negative": 15,
+        "positive": 13,
+    }
+    assert state_local_contrast["labels_v1_stage7_challenge_row_count"] == 0
+    assert state_local_contrast["labels_v1_usable_training_row_count"] == 28
+    assert state_local_contrast["labels_v1_runtime_test_allowed_next"] is False
+    assert state_local_contrast["probe_v1_status"] == "state_local_contrast_signal_not_ready"
+    assert state_local_contrast["probe_v1_row_count"] == 28
+    assert state_local_contrast["probe_v1_stage7_training_leakage"] is False
+    assert state_local_contrast["probe_v1_runtime_test_allowed_next"] is False
     assert state_local_contrast["labels_status"] == "state_local_contrast_labels_v2_joined"
     assert state_local_contrast["labels_row_count"] == 20
     assert state_local_contrast["labels_state_count"] == 10

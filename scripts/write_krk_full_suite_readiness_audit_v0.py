@@ -958,6 +958,12 @@ SOURCES = {
     "selector_readiness_v3_plan": (
         "reports/krk_selector_readiness_v3_plan.json"
     ),
+    "state_local_contrast_labels_v1": (
+        "reports/krk_state_local_contrast_labels_v1.json"
+    ),
+    "state_local_contrast_selector_probe_v1": (
+        "reports/krk_state_local_contrast_selector_probe_v1.json"
+    ),
     "state_local_contrast_labels_v2": (
         "reports/krk_state_local_contrast_labels_v2.json"
     ),
@@ -2188,6 +2194,12 @@ def build_payload() -> dict[str, Any]:
         "selected_provider_diversity_architecture_review_v0"
     ]
     selector_readiness_v3_plan = payloads["selector_readiness_v3_plan"]
+    state_local_contrast_labels_v1 = payloads[
+        "state_local_contrast_labels_v1"
+    ]
+    state_local_contrast_selector_probe_v1 = payloads[
+        "state_local_contrast_selector_probe_v1"
+    ]
     state_local_contrast_labels_v2 = payloads[
         "state_local_contrast_labels_v2"
     ]
@@ -7149,11 +7161,53 @@ def build_payload() -> dict[str, Any]:
     state_local_contrast_probe_summary = (
         state_local_contrast_selector_probe_v2.get("summary") or {}
     )
+    state_local_contrast_labels_v1_decision = (
+        state_local_contrast_labels_v1.get("decision") or {}
+    )
+    state_local_contrast_labels_v1_summary = (
+        state_local_contrast_labels_v1.get("summary") or {}
+    )
+    state_local_contrast_probe_v1_decision = (
+        state_local_contrast_selector_probe_v1.get("decision") or {}
+    )
+    state_local_contrast_probe_v1_summary = (
+        state_local_contrast_selector_probe_v1.get("summary") or {}
+    )
     state_local_contrast_readiness_decision = (
         state_local_contrast_readiness_review_v2.get("decision") or {}
     )
     state_local_contrast_passive = (
-        state_local_contrast_labels_v2.get("causal_status")
+        state_local_contrast_labels_v1.get("causal_status")
+        == "non_causal_state_local_contrast_dataset"
+        and state_local_contrast_labels_v1_decision.get("status")
+        == "state_local_contrast_labels_joined"
+        and state_local_contrast_labels_v1_decision.get("runtime_test_allowed_next")
+        is False
+        and state_local_contrast_labels_v1_decision.get("stage7_promotion_allowed")
+        is False
+        and state_local_contrast_labels_v1_decision.get("stage8_training_allowed")
+        is False
+        and state_local_contrast_labels_v1_summary.get("row_count") == 28
+        and state_local_contrast_labels_v1_summary.get("usable_training_row_count")
+        == 28
+        and state_local_contrast_labels_v1_summary.get("stage7_challenge_row_count")
+        == 0
+        and state_local_contrast_labels_v1_summary.get("contrast_label_counts")
+        == {"negative": 15, "positive": 13}
+        and state_local_contrast_selector_probe_v1.get("causal_status")
+        == "non_causal_offline_probe"
+        and state_local_contrast_probe_v1_decision.get("status")
+        == "state_local_contrast_signal_not_ready"
+        and state_local_contrast_probe_v1_decision.get("runtime_test_allowed_next")
+        is False
+        and state_local_contrast_probe_v1_decision.get("stage7_promotion_allowed")
+        is False
+        and state_local_contrast_probe_v1_decision.get("stage8_training_allowed")
+        is False
+        and state_local_contrast_probe_v1_summary.get("row_count") == 28
+        and state_local_contrast_probe_v1_summary.get("stage7_training_leakage")
+        is False
+        and state_local_contrast_labels_v2.get("causal_status")
         == "non_causal_state_local_contrast_dataset"
         and state_local_contrast_labels_decision.get("status")
         == "state_local_contrast_labels_v2_joined"
@@ -7202,6 +7256,8 @@ def build_payload() -> dict[str, Any]:
             and artifact.get("stage7_promotion_allowed") is False
             and artifact.get("stage8_training_allowed") is False
             for artifact in [
+                state_local_contrast_labels_v1,
+                state_local_contrast_selector_probe_v1,
                 state_local_contrast_labels_v2,
                 state_local_contrast_selector_probe_v2,
                 state_local_contrast_readiness_review_v2,
@@ -11775,6 +11831,37 @@ def build_payload() -> dict[str, Any]:
         "state_local_contrast_gate": {
             "status": state_local_contrast_readiness_decision.get("status"),
             "passive_contrast_ready": state_local_contrast_passive,
+            "labels_v1_status": state_local_contrast_labels_v1_decision.get("status"),
+            "labels_v1_row_count": (
+                state_local_contrast_labels_v1_summary.get("row_count")
+            ),
+            "labels_v1_contrast_label_counts": (
+                state_local_contrast_labels_v1_summary.get("contrast_label_counts")
+                or {}
+            ),
+            "labels_v1_stage7_challenge_row_count": (
+                state_local_contrast_labels_v1_summary.get(
+                    "stage7_challenge_row_count"
+                )
+            ),
+            "labels_v1_usable_training_row_count": (
+                state_local_contrast_labels_v1_summary.get("usable_training_row_count")
+            ),
+            "labels_v1_runtime_test_allowed_next": (
+                state_local_contrast_labels_v1_decision.get(
+                    "runtime_test_allowed_next"
+                )
+            ),
+            "probe_v1_status": state_local_contrast_probe_v1_decision.get("status"),
+            "probe_v1_row_count": state_local_contrast_probe_v1_summary.get(
+                "row_count"
+            ),
+            "probe_v1_stage7_training_leakage": (
+                state_local_contrast_probe_v1_summary.get("stage7_training_leakage")
+            ),
+            "probe_v1_runtime_test_allowed_next": (
+                state_local_contrast_probe_v1_decision.get("runtime_test_allowed_next")
+            ),
             "labels_status": state_local_contrast_labels_decision.get("status"),
             "labels_row_count": state_local_contrast_labels_summary.get("row_count"),
             "labels_state_count": state_local_contrast_labels_summary.get(
