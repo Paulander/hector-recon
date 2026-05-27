@@ -2049,6 +2049,11 @@ def build_payload() -> dict[str, Any]:
     self_expansion_architecture_gate = payloads["self_expansion_architecture_gate"]
     control_plane_evidence_contract = payloads["control_plane_evidence_contract"]
     control_plane_manifest = payloads["control_plane_manifest"]
+    control_plane_gap_report = payloads["control_plane_gap_report"]
+    control_plane_frames = payloads["control_plane_frames"]
+    control_plane_frame_quality = payloads["control_plane_frame_quality"]
+    control_plane_filtered_frames = payloads["control_plane_filtered_frames"]
+    control_plane_forced_controls = payloads["control_plane_forced_controls"]
     gate_approval_options = gate.get("approval_options") or []
     protected_collection_gate_option = find_approval_option(
         gate,
@@ -2158,6 +2163,143 @@ def build_payload() -> dict[str, Any]:
         and control_plane_manifest.get("gameplay_topology_mutation") is False
         and control_plane_manifest.get("stage7_promotion_allowed") is False
         and control_plane_manifest.get("stage8_training_allowed") is False
+    )
+    control_plane_gap_next = control_plane_gap_report.get("recommended_next_slice") or {}
+    control_plane_frame_summary = control_plane_frames.get("summary") or {}
+    control_plane_quality_next = (
+        control_plane_frame_quality.get("recommended_next_slice") or {}
+    )
+    control_plane_quality_coverage = (
+        control_plane_frame_quality.get("coverage") or {}
+    )
+    control_plane_quality_readiness = (
+        control_plane_frame_quality.get("readiness") or {}
+    )
+    control_plane_filtered_summary = control_plane_filtered_frames.get("summary") or {}
+    control_plane_filtered_readiness = (
+        control_plane_filtered_frames.get("readiness") or {}
+    )
+    control_plane_forced_summary = control_plane_forced_controls.get("summary") or {}
+    control_plane_forced_readiness = (
+        control_plane_forced_controls.get("readiness") or {}
+    )
+    control_plane_frame_export_artifacts = [
+        control_plane_gap_report,
+        control_plane_frames,
+        control_plane_frame_quality,
+        control_plane_filtered_frames,
+        control_plane_forced_controls,
+    ]
+    control_plane_frame_export_forbidden_steps = [
+        "runtime_arbiter",
+        "runtime_internal_terminal",
+        "stage7_promotion",
+        "stage8_training",
+        "runtime_dtm_or_tablebase",
+        "gameplay_topology_mutation",
+    ]
+    control_plane_frame_export_passive = (
+        control_plane_gap_report.get("schema_version")
+        == "krk_control_plane_gap_report.v0"
+        and control_plane_gap_report.get("causal_status") == "non_causal_gap_report"
+        and control_plane_gap_report.get("source_artifacts")
+        == ["reports/krk_control_plane_manifest_v0.json"]
+        and control_plane_gap_next.get("slice_id")
+        == "export_replay_free_control_plane_frames_v0"
+        and control_plane_gap_next.get("allowed") is True
+        and control_plane_gap_next.get("causal") is False
+        and control_plane_gap_next.get("new_playouts_allowed") is False
+        and all(
+            step in (control_plane_gap_report.get("blocked_next_steps") or [])
+            for step in control_plane_frame_export_forbidden_steps
+        )
+        and control_plane_gap_report.get("coverage_snapshot", {}).get(
+            "new_playouts_added"
+        )
+        == 0
+        and any(
+            gap.get("gap_id") == "no_unified_control_plane_frames"
+            and gap.get("priority") == "p0"
+            and gap.get("causal_allowed") is False
+            and gap.get("minimum_next_step")
+            == "export_replay_free_control_plane_frames_v0"
+            for gap in (control_plane_gap_report.get("stratified_gaps") or [])
+        )
+        and control_plane_frames.get("schema_version")
+        == "krk_control_plane_frames_export.v0"
+        and control_plane_frames.get("causal_status") == "non_causal_frame_export"
+        and control_plane_frames.get("contract_artifact")
+        == "reports/krk_control_plane_evidence_contract_v0.json"
+        and control_plane_frame_summary.get("frame_count") == 33
+        and control_plane_frame_summary.get("frames_by_source_stage")
+        == {"stage4": 6, "stage5": 8, "stage6": 10, "stage7": 9}
+        and control_plane_frame_summary.get("new_playouts_added") == 0
+        and all(
+            frame.get("schema_version") == "control_plane_evidence_frame.v1"
+            and frame.get("causal_status") == "non_causal"
+            for frame in (control_plane_frames.get("frames") or [])
+        )
+        and control_plane_frame_quality.get("schema_version")
+        == "krk_control_plane_frame_quality_report.v0"
+        and control_plane_frame_quality.get("causal_status")
+        == "non_causal_quality_report"
+        and control_plane_frame_quality.get("source_artifacts")
+        == ["reports/krk_control_plane_frames_v0.json"]
+        and control_plane_quality_coverage.get("frame_count") == 33
+        and control_plane_quality_readiness.get("runtime_sandbox") == "blocked"
+        and control_plane_quality_readiness.get("stage7_promotion") == "blocked"
+        and control_plane_quality_readiness.get("stage8_training") == "blocked"
+        and control_plane_quality_next.get("slice_id")
+        == "control_plane_frame_dedupe_and_quality_filters_v0"
+        and control_plane_quality_next.get("causal") is False
+        and control_plane_quality_next.get("new_playouts_allowed") is False
+        and all(
+            step in (control_plane_frame_quality.get("blocked_next_steps") or [])
+            for step in control_plane_frame_export_forbidden_steps
+        )
+        and control_plane_filtered_frames.get("schema_version")
+        == "krk_control_plane_filtered_frames.v0"
+        and control_plane_filtered_frames.get("causal_status")
+        == "non_causal_filtered_frame_export"
+        and control_plane_filtered_frames.get("source_artifacts")
+        == [
+            "reports/krk_control_plane_frames_v0.json",
+            "reports/krk_control_plane_frame_quality_report_v0.json",
+        ]
+        and control_plane_filtered_summary.get("frame_count") == 33
+        and control_plane_filtered_summary.get("strategy_ready_frame_count") == 24
+        and control_plane_filtered_summary.get("stage7_boundary_heldout_frame_count")
+        == 7
+        and control_plane_filtered_summary.get("new_playouts_added") == 0
+        and control_plane_filtered_readiness.get("runtime_sandbox") == "blocked"
+        and control_plane_filtered_readiness.get("stage7_promotion") == "blocked"
+        and control_plane_filtered_readiness.get("stage8_training") == "blocked"
+        and control_plane_forced_controls.get("schema_version")
+        == "krk_control_plane_filtered_frames_with_forced_controls.v0"
+        and control_plane_forced_controls.get("causal_status")
+        == "non_causal_augmented_frame_export"
+        and control_plane_forced_controls.get("source_artifacts")
+        == [
+            "reports/krk_control_plane_filtered_frames_v0.json",
+            "reports/krk_forced_provider_control_labels_v0.json",
+        ]
+        and control_plane_forced_summary.get("frame_count") == 33
+        and control_plane_forced_summary.get("forced_control_labels_attached") == 12
+        and control_plane_forced_summary.get("missing_label_job_ids") == []
+        and control_plane_forced_readiness.get("runtime_sandbox") == "blocked"
+        and control_plane_forced_readiness.get("stage7_promotion") == "blocked"
+        and control_plane_forced_readiness.get("stage8_training") == "blocked"
+        and all(
+            artifact.get("runtime_behavior_changed") is False
+            and artifact.get("runtime_defaults_changed") is False
+            and artifact.get("runtime_selector_implemented") is False
+            and artifact.get("runtime_dtm_or_tablebase_lookup") is False
+            and artifact.get("hidden_python_controller") is False
+            and artifact.get("gameplay_topology_mutation") is False
+            and artifact.get("stage7_promotion_allowed") is False
+            and artifact.get("stage8_training_allowed") is False
+            for artifact in control_plane_frame_export_artifacts
+        )
     )
 
     boundaries = boundary_status(payloads)
@@ -13617,6 +13759,102 @@ def build_payload() -> dict[str, Any]:
                 control_plane_evidence_contract.get("stage8_training_allowed")
             ),
         },
+        "control_plane_frame_export_gate": {
+            "status": control_plane_forced_controls.get("recommended_next_slice"),
+            "passive_frame_export_ready": control_plane_frame_export_passive,
+            "gap_report_next_slice_id": control_plane_gap_next.get("slice_id"),
+            "gap_report_next_slice_allowed": control_plane_gap_next.get("allowed"),
+            "gap_report_next_slice_causal": control_plane_gap_next.get("causal"),
+            "gap_report_new_playouts_allowed": (
+                control_plane_gap_next.get("new_playouts_allowed")
+            ),
+            "gap_report_new_playouts_added": (
+                control_plane_gap_report.get("coverage_snapshot", {}).get(
+                    "new_playouts_added"
+                )
+            ),
+            "frame_export_frame_count": control_plane_frame_summary.get(
+                "frame_count"
+            ),
+            "frame_export_frames_by_source_stage": (
+                control_plane_frame_summary.get("frames_by_source_stage") or {}
+            ),
+            "frame_export_new_playouts_added": (
+                control_plane_frame_summary.get("new_playouts_added")
+            ),
+            "frame_export_strategy_proposal_frame_count": (
+                control_plane_frame_summary.get("strategy_proposal_frame_count")
+            ),
+            "frame_export_internal_monitor_record_count": (
+                control_plane_frame_summary.get("internal_monitor_record_count")
+            ),
+            "frame_quality_next_slice_id": control_plane_quality_next.get(
+                "slice_id"
+            ),
+            "frame_quality_runtime_sandbox": (
+                control_plane_quality_readiness.get("runtime_sandbox")
+            ),
+            "frame_quality_stage7_promotion": (
+                control_plane_quality_readiness.get("stage7_promotion")
+            ),
+            "frame_quality_stage8_training": (
+                control_plane_quality_readiness.get("stage8_training")
+            ),
+            "frame_quality_flag_ids": [
+                flag.get("flag_id")
+                for flag in (control_plane_frame_quality.get("quality_flags") or [])
+            ],
+            "filtered_frame_count": control_plane_filtered_summary.get(
+                "frame_count"
+            ),
+            "filtered_strategy_ready_frame_count": (
+                control_plane_filtered_summary.get("strategy_ready_frame_count")
+            ),
+            "filtered_stage7_boundary_heldout_frame_count": (
+                control_plane_filtered_summary.get(
+                    "stage7_boundary_heldout_frame_count"
+                )
+            ),
+            "filtered_new_playouts_added": (
+                control_plane_filtered_summary.get("new_playouts_added")
+            ),
+            "filtered_runtime_sandbox": (
+                control_plane_filtered_readiness.get("runtime_sandbox")
+            ),
+            "forced_control_labels_attached": (
+                control_plane_forced_summary.get("forced_control_labels_attached")
+            ),
+            "forced_control_missing_label_job_ids": (
+                control_plane_forced_summary.get("missing_label_job_ids") or []
+            ),
+            "forced_control_runtime_sandbox": (
+                control_plane_forced_readiness.get("runtime_sandbox")
+            ),
+            "runtime_behavior_changed": control_plane_forced_controls.get(
+                "runtime_behavior_changed"
+            ),
+            "runtime_defaults_changed": control_plane_forced_controls.get(
+                "runtime_defaults_changed"
+            ),
+            "runtime_selector_implemented": control_plane_forced_controls.get(
+                "runtime_selector_implemented"
+            ),
+            "runtime_dtm_or_tablebase_lookup": control_plane_forced_controls.get(
+                "runtime_dtm_or_tablebase_lookup"
+            ),
+            "hidden_python_controller": control_plane_forced_controls.get(
+                "hidden_python_controller"
+            ),
+            "gameplay_topology_mutation": control_plane_forced_controls.get(
+                "gameplay_topology_mutation"
+            ),
+            "stage7_promotion_allowed": control_plane_forced_controls.get(
+                "stage7_promotion_allowed"
+            ),
+            "stage8_training_allowed": control_plane_forced_controls.get(
+                "stage8_training_allowed"
+            ),
+        },
         "blockers": blockers,
         "hard_blockers": hard_blockers,
         "control_plane_gate_review_blockers": control_plane_gate_review_blockers,
@@ -13837,6 +14075,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     candidate_generation_refresh = payload["candidate_generation_training_refresh_gate"]
     candidate_generation_trace = payload["candidate_generation_trace_context_gate"]
     control_plane_contract = payload["control_plane_contract_lineage_gate"]
+    control_plane_frame_export = payload["control_plane_frame_export_gate"]
     current_gate = payload["current_control_plane_gate"]
     decision = payload["decision"]
     lines = [
@@ -15344,6 +15583,32 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- gameplay_topology_mutation: `{control_plane_contract['gameplay_topology_mutation']}`",
             f"- stage7_promotion_allowed: `{control_plane_contract['stage7_promotion_allowed']}`",
             f"- stage8_training_allowed: `{control_plane_contract['stage8_training_allowed']}`",
+            "",
+            "## Control Plane Frame Export",
+            "",
+            f"- passive_frame_export_ready: `{control_plane_frame_export['passive_frame_export_ready']}`",
+            f"- gap_report_next_slice_id: `{control_plane_frame_export['gap_report_next_slice_id']}`",
+            f"- gap_report_new_playouts_allowed: `{control_plane_frame_export['gap_report_new_playouts_allowed']}`",
+            f"- gap_report_new_playouts_added: `{control_plane_frame_export['gap_report_new_playouts_added']}`",
+            f"- frame_export_frame_count: `{control_plane_frame_export['frame_export_frame_count']}`",
+            f"- frame_export_frames_by_source_stage: `{control_plane_frame_export['frame_export_frames_by_source_stage']}`",
+            f"- frame_export_new_playouts_added: `{control_plane_frame_export['frame_export_new_playouts_added']}`",
+            f"- frame_quality_next_slice_id: `{control_plane_frame_export['frame_quality_next_slice_id']}`",
+            f"- frame_quality_runtime_sandbox: `{control_plane_frame_export['frame_quality_runtime_sandbox']}`",
+            f"- frame_quality_stage7_promotion: `{control_plane_frame_export['frame_quality_stage7_promotion']}`",
+            f"- frame_quality_stage8_training: `{control_plane_frame_export['frame_quality_stage8_training']}`",
+            f"- filtered_strategy_ready_frame_count: `{control_plane_frame_export['filtered_strategy_ready_frame_count']}`",
+            f"- filtered_stage7_boundary_heldout_frame_count: `{control_plane_frame_export['filtered_stage7_boundary_heldout_frame_count']}`",
+            f"- forced_control_labels_attached: `{control_plane_frame_export['forced_control_labels_attached']}`",
+            f"- forced_control_missing_label_job_ids: `{control_plane_frame_export['forced_control_missing_label_job_ids']}`",
+            f"- runtime_behavior_changed: `{control_plane_frame_export['runtime_behavior_changed']}`",
+            f"- runtime_defaults_changed: `{control_plane_frame_export['runtime_defaults_changed']}`",
+            f"- runtime_selector_implemented: `{control_plane_frame_export['runtime_selector_implemented']}`",
+            f"- runtime_dtm_or_tablebase_lookup: `{control_plane_frame_export['runtime_dtm_or_tablebase_lookup']}`",
+            f"- hidden_python_controller: `{control_plane_frame_export['hidden_python_controller']}`",
+            f"- gameplay_topology_mutation: `{control_plane_frame_export['gameplay_topology_mutation']}`",
+            f"- stage7_promotion_allowed: `{control_plane_frame_export['stage7_promotion_allowed']}`",
+            f"- stage8_training_allowed: `{control_plane_frame_export['stage8_training_allowed']}`",
             "",
             "## Current Control Plane Gate",
             "",

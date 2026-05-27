@@ -1986,6 +1986,25 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["control_plane_contract_runtime_dtm_or_tablebase_lookup"]
         is False
     )
+    assert payload["summary"]["control_plane_frame_export_passive_ready"] is True
+    assert payload["summary"]["control_plane_frame_export_frame_count"] == 33
+    assert payload["summary"]["control_plane_frame_export_new_playouts_added"] == 0
+    assert (
+        payload["summary"]["control_plane_frame_export_strategy_ready_frame_count"]
+        == 24
+    )
+    assert (
+        payload["summary"][
+            "control_plane_frame_export_forced_control_labels_attached"
+        ]
+        == 12
+    )
+    assert (
+        payload["summary"][
+            "control_plane_frame_export_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
     assert payload["summary"]["readiness_control_plane_gate_review_blockers"] == []
     assert payload["summary"]["readiness_explicit_gate_blockers"] == [
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"

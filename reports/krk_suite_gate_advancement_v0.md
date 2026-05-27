@@ -22,6 +22,12 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - control_plane_contract_manifest_records_from_existing_artifacts_only: `True`
 - control_plane_contract_manifest_new_playouts_added: `0`
 - control_plane_contract_runtime_dtm_or_tablebase_lookup: `False`
+- control_plane_frame_export_passive_ready: `True`
+- control_plane_frame_export_frame_count: `33`
+- control_plane_frame_export_new_playouts_added: `0`
+- control_plane_frame_export_strategy_ready_frame_count: `24`
+- control_plane_frame_export_forced_control_labels_attached: `12`
+- control_plane_frame_export_runtime_dtm_or_tablebase_lookup: `False`
 - clean_curriculum_run_lineage_passive_ready: `True`
 - clean_curriculum_checkpoint_plan_status: `clean_curriculum_checkpoint_plan_ready_full_run_requires_review`
 - clean_curriculum_execution_manifest_status: `clean_retrain_execution_manifest_ready_not_run`
@@ -582,9 +588,9 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - stage4_first_move_contrast_sandbox_selector_training_allowed: `False`
 - stage4_first_move_contrast_sandbox_stage7_promotion_allowed: `False`
 - stage4_first_move_contrast_sandbox_stage8_training_allowed: `False`
-- stage4_first_move_contrast_sandbox_readiness_checked_flag_count: `2521`
+- stage4_first_move_contrast_sandbox_readiness_checked_flag_count: `2527`
 - stage4_first_move_contrast_sandbox_readiness_boundary_violation_count: `0`
-- stage4_first_move_contrast_sandbox_readiness_source_artifact_count: `351`
+- stage4_first_move_contrast_sandbox_readiness_source_artifact_count: `352`
 - stage7_success_controls: `11`
 - stage7_success_controls_required: `5`
 - stage7_success_controls_ready: `True`

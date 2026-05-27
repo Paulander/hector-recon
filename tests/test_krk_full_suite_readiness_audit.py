@@ -75,6 +75,18 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_control_plane_manifest_v0.json"
     )
     assert (
+        payload["source_artifacts"]["control_plane_gap_report"]
+        == "reports/krk_control_plane_gap_report_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["control_plane_frames"]
+        == "reports/krk_control_plane_frames_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["control_plane_frame_quality"]
+        == "reports/krk_control_plane_frame_quality_report_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["control_plane_filtered_frames"]
         == "reports/krk_control_plane_filtered_frames_v0.json"
     )
@@ -3099,6 +3111,51 @@ def test_full_suite_readiness_identifies_current_gate():
     assert contract["gameplay_topology_mutation"] is False
     assert contract["stage7_promotion_allowed"] is False
     assert contract["stage8_training_allowed"] is False
+    frame_export = payload["control_plane_frame_export_gate"]
+    assert frame_export["passive_frame_export_ready"] is True
+    assert (
+        frame_export["gap_report_next_slice_id"]
+        == "export_replay_free_control_plane_frames_v0"
+    )
+    assert frame_export["gap_report_next_slice_allowed"] is True
+    assert frame_export["gap_report_next_slice_causal"] is False
+    assert frame_export["gap_report_new_playouts_allowed"] is False
+    assert frame_export["gap_report_new_playouts_added"] == 0
+    assert frame_export["frame_export_frame_count"] == 33
+    assert frame_export["frame_export_frames_by_source_stage"] == {
+        "stage4": 6,
+        "stage5": 8,
+        "stage6": 10,
+        "stage7": 9,
+    }
+    assert frame_export["frame_export_new_playouts_added"] == 0
+    assert frame_export["frame_export_strategy_proposal_frame_count"] == 87
+    assert frame_export["frame_export_internal_monitor_record_count"] == 224
+    assert (
+        frame_export["frame_quality_next_slice_id"]
+        == "control_plane_frame_dedupe_and_quality_filters_v0"
+    )
+    assert frame_export["frame_quality_runtime_sandbox"] == "blocked"
+    assert frame_export["frame_quality_stage7_promotion"] == "blocked"
+    assert frame_export["frame_quality_stage8_training"] == "blocked"
+    assert "plan_windows_stage7_only" in frame_export["frame_quality_flag_ids"]
+    assert "sequence_examples_stage7_only" in frame_export["frame_quality_flag_ids"]
+    assert frame_export["filtered_frame_count"] == 33
+    assert frame_export["filtered_strategy_ready_frame_count"] == 24
+    assert frame_export["filtered_stage7_boundary_heldout_frame_count"] == 7
+    assert frame_export["filtered_new_playouts_added"] == 0
+    assert frame_export["filtered_runtime_sandbox"] == "blocked"
+    assert frame_export["forced_control_labels_attached"] == 12
+    assert frame_export["forced_control_missing_label_job_ids"] == []
+    assert frame_export["forced_control_runtime_sandbox"] == "blocked"
+    assert frame_export["runtime_behavior_changed"] is False
+    assert frame_export["runtime_defaults_changed"] is False
+    assert frame_export["runtime_selector_implemented"] is False
+    assert frame_export["runtime_dtm_or_tablebase_lookup"] is False
+    assert frame_export["hidden_python_controller"] is False
+    assert frame_export["gameplay_topology_mutation"] is False
+    assert frame_export["stage7_promotion_allowed"] is False
+    assert frame_export["stage8_training_allowed"] is False
 
     sequence = payload["sequence_policy"]
     assert (

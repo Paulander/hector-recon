@@ -580,6 +580,9 @@ def build_payload() -> dict[str, Any]:
     control_plane_contract_lineage_gate = (
         readiness.get("control_plane_contract_lineage_gate") or {}
     )
+    control_plane_frame_export_gate = (
+        readiness.get("control_plane_frame_export_gate") or {}
+    )
     clean_curriculum_run_lineage_gate = (
         readiness.get("clean_curriculum_run_lineage_gate") or {}
     )
@@ -926,6 +929,32 @@ def build_payload() -> dict[str, Any]:
             ),
             "control_plane_contract_runtime_dtm_or_tablebase_lookup": (
                 control_plane_contract_lineage_gate.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "control_plane_frame_export_passive_ready": (
+                control_plane_frame_export_gate.get("passive_frame_export_ready")
+            ),
+            "control_plane_frame_export_frame_count": (
+                control_plane_frame_export_gate.get("frame_export_frame_count")
+            ),
+            "control_plane_frame_export_new_playouts_added": (
+                control_plane_frame_export_gate.get(
+                    "frame_export_new_playouts_added"
+                )
+            ),
+            "control_plane_frame_export_strategy_ready_frame_count": (
+                control_plane_frame_export_gate.get(
+                    "filtered_strategy_ready_frame_count"
+                )
+            ),
+            "control_plane_frame_export_forced_control_labels_attached": (
+                control_plane_frame_export_gate.get(
+                    "forced_control_labels_attached"
+                )
+            ),
+            "control_plane_frame_export_runtime_dtm_or_tablebase_lookup": (
+                control_plane_frame_export_gate.get(
                     "runtime_dtm_or_tablebase_lookup"
                 )
             ),

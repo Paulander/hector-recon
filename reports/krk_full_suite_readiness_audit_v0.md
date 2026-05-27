@@ -1497,6 +1497,32 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Control Plane Frame Export
+
+- passive_frame_export_ready: `True`
+- gap_report_next_slice_id: `export_replay_free_control_plane_frames_v0`
+- gap_report_new_playouts_allowed: `False`
+- gap_report_new_playouts_added: `0`
+- frame_export_frame_count: `33`
+- frame_export_frames_by_source_stage: `{'stage4': 6, 'stage5': 8, 'stage6': 10, 'stage7': 9}`
+- frame_export_new_playouts_added: `0`
+- frame_quality_next_slice_id: `control_plane_frame_dedupe_and_quality_filters_v0`
+- frame_quality_runtime_sandbox: `blocked`
+- frame_quality_stage7_promotion: `blocked`
+- frame_quality_stage8_training: `blocked`
+- filtered_strategy_ready_frame_count: `24`
+- filtered_stage7_boundary_heldout_frame_count: `7`
+- forced_control_labels_attached: `12`
+- forced_control_missing_label_job_ids: `[]`
+- runtime_behavior_changed: `False`
+- runtime_defaults_changed: `False`
+- runtime_selector_implemented: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- hidden_python_controller: `False`
+- gameplay_topology_mutation: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Current Control Plane Gate
 
 - status: `krk_control_plane_waiting_on_explicit_gate_choice`
