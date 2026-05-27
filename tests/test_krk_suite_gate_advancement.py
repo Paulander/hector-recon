@@ -1117,6 +1117,34 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["ownership_selection_context_review_v0_status"] == (
         "context_features_review_ready_but_not_runtime_ready"
     )
+    assert payload["summary"]["ownership_selection_context_dataset_v1_status"] == (
+        "ownership_selection_context_dataset_ready_for_non_causal_probe"
+    )
+    assert payload["summary"]["ownership_selection_context_dataset_v1_row_count"] == 35
+    assert payload["summary"][
+        "ownership_selection_context_probe_v1_status"
+    ] == "context_features_underpowered"
+    assert (
+        payload["summary"]["ownership_selection_context_probe_v1_underpowered"]
+        is True
+    )
+    assert payload["summary"]["ownership_selection_context_review_v1_status"] == (
+        "context_features_review_ready_but_not_runtime_ready"
+    )
+    assert payload["summary"]["ownership_selection_context_dataset_v2_status"] == (
+        "ownership_selection_context_dataset_ready_for_non_causal_probe"
+    )
+    assert payload["summary"]["ownership_selection_context_dataset_v2_row_count"] == 35
+    assert payload["summary"][
+        "ownership_selection_context_probe_v2_status"
+    ] == "context_features_underpowered"
+    assert (
+        payload["summary"]["ownership_selection_context_probe_v2_underpowered"]
+        is True
+    )
+    assert payload["summary"]["ownership_selection_context_review_v2_status"] == (
+        "context_features_review_ready_but_not_runtime_ready"
+    )
     assert payload["summary"]["ownership_selection_context_dataset_status"] == (
         "ownership_selection_context_dataset_ready_for_non_causal_probe"
     )

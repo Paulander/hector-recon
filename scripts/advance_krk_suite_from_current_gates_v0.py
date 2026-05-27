@@ -2056,6 +2056,36 @@ def build_payload() -> dict[str, Any]:
             "ownership_selection_context_review_v0_status": (
                 ownership_selection_context_gate.get("context_review_v0_status")
             ),
+            "ownership_selection_context_dataset_v1_status": (
+                ownership_selection_context_gate.get("context_dataset_v1_status")
+            ),
+            "ownership_selection_context_dataset_v1_row_count": (
+                ownership_selection_context_gate.get("context_dataset_v1_row_count")
+            ),
+            "ownership_selection_context_probe_v1_status": (
+                ownership_selection_context_gate.get("context_probe_v1_status")
+            ),
+            "ownership_selection_context_probe_v1_underpowered": (
+                ownership_selection_context_gate.get("context_probe_v1_underpowered")
+            ),
+            "ownership_selection_context_review_v1_status": (
+                ownership_selection_context_gate.get("context_review_v1_status")
+            ),
+            "ownership_selection_context_dataset_v2_status": (
+                ownership_selection_context_gate.get("context_dataset_v2_status")
+            ),
+            "ownership_selection_context_dataset_v2_row_count": (
+                ownership_selection_context_gate.get("context_dataset_v2_row_count")
+            ),
+            "ownership_selection_context_probe_v2_status": (
+                ownership_selection_context_gate.get("context_probe_v2_status")
+            ),
+            "ownership_selection_context_probe_v2_underpowered": (
+                ownership_selection_context_gate.get("context_probe_v2_underpowered")
+            ),
+            "ownership_selection_context_review_v2_status": (
+                ownership_selection_context_gate.get("context_review_v2_status")
+            ),
             "ownership_selection_context_dataset_status": (
                 ownership_selection_context_gate.get("context_dataset_status")
             ),
