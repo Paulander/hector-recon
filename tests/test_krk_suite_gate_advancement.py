@@ -604,6 +604,90 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["provider_identity_maturity_stage8_training_allowed"]
         is False
     )
+    assert payload["summary"]["selector_directed_fix_passive_ready"] is True
+    assert payload["summary"]["selector_directed_fix_status"] == (
+        "directed_fix_review_complete_runtime_blocked"
+    )
+    assert payload["summary"]["selector_directed_fix_geometry_audit_status"] == (
+        "geometry_terms_partially_informative_not_sufficient"
+    )
+    assert payload["summary"]["selector_directed_fix_geometry_audit_row_count"] == 16
+    assert (
+        payload["summary"]["selector_directed_fix_geometry_audit_stage7_row_count"]
+        == 0
+    )
+    assert payload["summary"]["selector_directed_fix_geometry_probe_status"] == (
+        "geometry_augmented_features_underpowered"
+    )
+    assert (
+        payload["summary"]["selector_directed_fix_geometry_probe_underpowered"]
+        is True
+    )
+    assert (
+        payload["summary"]["selector_directed_fix_geometry_probe_best_objective"]
+        == "provider_family"
+    )
+    assert (
+        payload["summary"][
+            "selector_directed_fix_geometry_probe_best_negative_suppression"
+        ]
+        == 0.0
+    )
+    assert payload["summary"]["selector_directed_fix_recommended_next_step"] == (
+        "design_hard_negative_selector_target_dataset_v0"
+    )
+    assert payload["summary"]["selector_directed_fix_recommended_class"] == (
+        "non_causal_hard_negative_selector_target_design"
+    )
+    assert (
+        "runtime_selector_now"
+        in payload["summary"]["selector_directed_fix_rejected_fixes"]
+    )
+    assert (
+        "runtime_candidate_generator_now"
+        in payload["summary"]["selector_directed_fix_rejected_fixes"]
+    )
+    assert (
+        "add_simple_geometry_terms_only"
+        in payload["summary"]["selector_directed_fix_rejected_fixes"]
+    )
+    assert payload["summary"]["selector_directed_fix_runtime_work_allowed"] is False
+    assert (
+        payload["summary"][
+            "selector_directed_fix_candidate_generator_runtime_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_directed_fix_selector_training_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_directed_fix_runtime_selector_implemented"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "selector_directed_fix_runtime_candidate_generator_implemented"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_directed_fix_runtime_dtm_or_tablebase_lookup"]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_directed_fix_gameplay_topology_mutation"]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_directed_fix_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_directed_fix_stage8_training_allowed"]
+        is False
+    )
     assert payload["summary"]["selector_provenance_prior_passive_ready"] is True
     assert payload["summary"]["selector_provenance_prior_status"] == (
         "provider_prior_remains_best_no_selector_sandbox"

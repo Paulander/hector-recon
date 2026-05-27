@@ -264,6 +264,35 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Selector Directed Fix Blocker
+
+- passive_selector_directed_fix_ready: `True`
+- status: `directed_fix_review_complete_runtime_blocked`
+- geometry_audit_status: `geometry_terms_partially_informative_not_sufficient`
+- geometry_audit_row_count: `16`
+- geometry_audit_stage7_row_count: `0`
+- geometry_audit_capacity_label_counts: `{'negative_capacity': 5, 'positive_capacity': 11}`
+- geometry_probe_status: `geometry_augmented_features_underpowered`
+- geometry_probe_row_count: `16`
+- geometry_probe_state_count: `6`
+- geometry_probe_underpowered: `True`
+- geometry_probe_best_objective: `provider_family`
+- geometry_probe_best_negative_suppression: `0.0`
+- directed_fix_recommended_next_step: `design_hard_negative_selector_target_dataset_v0`
+- directed_fix_recommended_class: `non_causal_hard_negative_selector_target_design`
+- directed_fix_recommended_not_runtime: `True`
+- directed_fix_rejected_fixes: `['runtime_selector_now', 'runtime_candidate_generator_now', 'train_selector_on_forced_capacity_as_positive', 'add_simple_geometry_terms_only', 'return_to_stage7_patch']`
+- directed_fix_requirements: `['keep candidate generation and selection as separate channels', 'create a hard-negative selector target dataset from protected capacity negatives', 'keep forced-capacity labels distinct from selected-playout labels', 'add move/post-move geometry only as non-causal scoring features', 'evaluate leave-state-out suppression before any sandbox', 'keep Stage 7 held out']`
+- runtime_work_allowed: `False`
+- candidate_generator_runtime_allowed: `False`
+- selector_training_allowed: `False`
+- runtime_selector_implemented: `False`
+- runtime_candidate_generator_implemented: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- gameplay_topology_mutation: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Selector Provenance Prior Blocker
 
 - passive_provenance_prior_blocker_ready: `True`
@@ -793,7 +822,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `08e91583bfd3cbb2aed88801d002b738fb07c16e4cfb4021dc3ee4dd8f57bdac`
+- expected_readiness_fingerprint: `276e657282c46b70fcc8688d249f4f53dc59bb3a9e45a8324709e5253bd7e046`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1322,5 +1351,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2456`
+- checked_flag_count: `2477`
 - violation_count: `0`

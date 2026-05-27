@@ -599,6 +599,9 @@ def build_payload() -> dict[str, Any]:
     provider_identity_maturity_gate = (
         readiness.get("provider_identity_maturity_blocker_gate") or {}
     )
+    selector_directed_fix_gate = (
+        readiness.get("selector_directed_fix_blocker_gate") or {}
+    )
     selector_provenance_prior_gate = (
         readiness.get("selector_provenance_prior_blocker_gate") or {}
     )
@@ -1354,6 +1357,71 @@ def build_payload() -> dict[str, Any]:
             ),
             "provider_identity_maturity_stage8_training_allowed": (
                 provider_identity_maturity_gate.get("stage8_training_allowed")
+            ),
+            "selector_directed_fix_passive_ready": (
+                selector_directed_fix_gate.get("passive_selector_directed_fix_ready")
+            ),
+            "selector_directed_fix_status": selector_directed_fix_gate.get("status"),
+            "selector_directed_fix_geometry_audit_status": (
+                selector_directed_fix_gate.get("geometry_audit_status")
+            ),
+            "selector_directed_fix_geometry_audit_row_count": (
+                selector_directed_fix_gate.get("geometry_audit_row_count")
+            ),
+            "selector_directed_fix_geometry_audit_stage7_row_count": (
+                selector_directed_fix_gate.get("geometry_audit_stage7_row_count")
+            ),
+            "selector_directed_fix_geometry_probe_status": (
+                selector_directed_fix_gate.get("geometry_probe_status")
+            ),
+            "selector_directed_fix_geometry_probe_underpowered": (
+                selector_directed_fix_gate.get("geometry_probe_underpowered")
+            ),
+            "selector_directed_fix_geometry_probe_best_objective": (
+                selector_directed_fix_gate.get("geometry_probe_best_objective")
+            ),
+            "selector_directed_fix_geometry_probe_best_negative_suppression": (
+                selector_directed_fix_gate.get(
+                    "geometry_probe_best_negative_suppression"
+                )
+            ),
+            "selector_directed_fix_recommended_next_step": (
+                selector_directed_fix_gate.get("directed_fix_recommended_next_step")
+            ),
+            "selector_directed_fix_recommended_class": (
+                selector_directed_fix_gate.get("directed_fix_recommended_class")
+            ),
+            "selector_directed_fix_rejected_fixes": (
+                selector_directed_fix_gate.get("directed_fix_rejected_fixes")
+            ),
+            "selector_directed_fix_runtime_work_allowed": (
+                selector_directed_fix_gate.get("runtime_work_allowed")
+            ),
+            "selector_directed_fix_candidate_generator_runtime_allowed": (
+                selector_directed_fix_gate.get("candidate_generator_runtime_allowed")
+            ),
+            "selector_directed_fix_selector_training_allowed": (
+                selector_directed_fix_gate.get("selector_training_allowed")
+            ),
+            "selector_directed_fix_runtime_selector_implemented": (
+                selector_directed_fix_gate.get("runtime_selector_implemented")
+            ),
+            "selector_directed_fix_runtime_candidate_generator_implemented": (
+                selector_directed_fix_gate.get(
+                    "runtime_candidate_generator_implemented"
+                )
+            ),
+            "selector_directed_fix_runtime_dtm_or_tablebase_lookup": (
+                selector_directed_fix_gate.get("runtime_dtm_or_tablebase_lookup")
+            ),
+            "selector_directed_fix_gameplay_topology_mutation": (
+                selector_directed_fix_gate.get("gameplay_topology_mutation")
+            ),
+            "selector_directed_fix_stage7_promotion_allowed": (
+                selector_directed_fix_gate.get("stage7_promotion_allowed")
+            ),
+            "selector_directed_fix_stage8_training_allowed": (
+                selector_directed_fix_gate.get("stage8_training_allowed")
             ),
             "selector_provenance_prior_passive_ready": (
                 selector_provenance_prior_gate.get(

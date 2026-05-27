@@ -619,6 +619,20 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_provider_identity_maturity_review_v0.json"
     )
     assert (
+        payload["source_artifacts"]["capacity_geometry_feature_audit_v0"]
+        == "reports/krk_capacity_geometry_feature_audit_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "geometry_augmented_selector_feature_probe_v0"
+        ]
+        == "reports/krk_geometry_augmented_selector_feature_probe_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_directed_fix_review_v0"]
+        == "reports/krk_selector_directed_fix_review_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["selector_provenance_feature_dataset_v0"]
         == "reports/krk_selector_provenance_feature_dataset_v0.json"
     )
@@ -1537,6 +1551,71 @@ def test_full_suite_readiness_identifies_current_gate():
     assert provider_identity["gameplay_topology_mutation"] is False
     assert provider_identity["stage7_promotion_allowed"] is False
     assert provider_identity["stage8_training_allowed"] is False
+
+    directed_fix = payload["selector_directed_fix_blocker_gate"]
+    assert directed_fix["passive_selector_directed_fix_ready"] is True
+    assert directed_fix["status"] == "directed_fix_review_complete_runtime_blocked"
+    assert (
+        directed_fix["geometry_audit_status"]
+        == "geometry_terms_partially_informative_not_sufficient"
+    )
+    assert directed_fix["geometry_audit_row_count"] == 16
+    assert directed_fix["geometry_audit_stage7_row_count"] == 0
+    assert directed_fix["geometry_audit_capacity_label_counts"] == {
+        "negative_capacity": 5,
+        "positive_capacity": 11,
+    }
+    assert (
+        directed_fix["geometry_probe_status"]
+        == "geometry_augmented_features_underpowered"
+    )
+    assert directed_fix["geometry_probe_row_count"] == 16
+    assert directed_fix["geometry_probe_state_count"] == 6
+    assert directed_fix["geometry_probe_positive_count"] == 11
+    assert directed_fix["geometry_probe_negative_count"] == 5
+    assert directed_fix["geometry_probe_stage7_row_count"] == 0
+    assert directed_fix["geometry_probe_underpowered"] is True
+    assert directed_fix["geometry_probe_best_objective"] == "provider_family"
+    assert directed_fix["geometry_probe_best_accuracy"] == 0.6875
+    assert directed_fix["geometry_probe_best_negative_suppression"] == 0.0
+    assert (
+        directed_fix["directed_fix_recommended_next_step"]
+        == "design_hard_negative_selector_target_dataset_v0"
+    )
+    assert (
+        directed_fix["directed_fix_recommended_class"]
+        == "non_causal_hard_negative_selector_target_design"
+    )
+    assert directed_fix["directed_fix_recommended_not_runtime"] is True
+    for rejected in [
+        "runtime_selector_now",
+        "runtime_candidate_generator_now",
+        "train_selector_on_forced_capacity_as_positive",
+        "add_simple_geometry_terms_only",
+        "return_to_stage7_patch",
+    ]:
+        assert rejected in directed_fix["directed_fix_rejected_fixes"]
+    for requirement in [
+        "keep candidate generation and selection as separate channels",
+        "create a hard-negative selector target dataset from protected capacity negatives",
+        "keep forced-capacity labels distinct from selected-playout labels",
+        "add move/post-move geometry only as non-causal scoring features",
+        "evaluate leave-state-out suppression before any sandbox",
+        "keep Stage 7 held out",
+    ]:
+        assert requirement in directed_fix["directed_fix_requirements"]
+    assert directed_fix["runtime_work_allowed"] is False
+    assert directed_fix["candidate_generator_runtime_allowed"] is False
+    assert directed_fix["selector_training_allowed"] is False
+    assert directed_fix["runtime_behavior_changed"] is False
+    assert directed_fix["runtime_defaults_changed"] is False
+    assert directed_fix["runtime_selector_implemented"] is False
+    assert directed_fix["runtime_candidate_generator_implemented"] is False
+    assert directed_fix["runtime_terminals_added"] is False
+    assert directed_fix["runtime_dtm_or_tablebase_lookup"] is False
+    assert directed_fix["gameplay_topology_mutation"] is False
+    assert directed_fix["stage7_promotion_allowed"] is False
+    assert directed_fix["stage8_training_allowed"] is False
 
     selector_prior = payload["selector_provenance_prior_blocker_gate"]
     assert selector_prior["passive_provenance_prior_blocker_ready"] is True

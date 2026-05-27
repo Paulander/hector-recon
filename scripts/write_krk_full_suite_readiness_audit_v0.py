@@ -685,6 +685,15 @@ SOURCES = {
     "provider_identity_maturity_review_v0": (
         "reports/krk_provider_identity_maturity_review_v0.json"
     ),
+    "capacity_geometry_feature_audit_v0": (
+        "reports/krk_capacity_geometry_feature_audit_v0.json"
+    ),
+    "geometry_augmented_selector_feature_probe_v0": (
+        "reports/krk_geometry_augmented_selector_feature_probe_v0.json"
+    ),
+    "selector_directed_fix_review_v0": (
+        "reports/krk_selector_directed_fix_review_v0.json"
+    ),
     "selector_provenance_feature_dataset_v0": (
         "reports/krk_selector_provenance_feature_dataset_v0.json"
     ),
@@ -1758,6 +1767,15 @@ def build_payload() -> dict[str, Any]:
     ]
     provider_identity_maturity_review_v0 = payloads[
         "provider_identity_maturity_review_v0"
+    ]
+    capacity_geometry_feature_audit_v0 = payloads[
+        "capacity_geometry_feature_audit_v0"
+    ]
+    geometry_augmented_selector_feature_probe_v0 = payloads[
+        "geometry_augmented_selector_feature_probe_v0"
+    ]
+    selector_directed_fix_review_v0 = payloads[
+        "selector_directed_fix_review_v0"
     ]
     selector_provenance_feature_dataset_v0 = payloads[
         "selector_provenance_feature_dataset_v0"
@@ -3333,6 +3351,187 @@ def build_payload() -> dict[str, Any]:
         is False
         and provider_identity_maturity_review_v0.get("runtime_defaults_changed")
         is False
+    )
+    geometry_audit_decision = (
+        capacity_geometry_feature_audit_v0.get("decision") or {}
+    )
+    geometry_audit_summary = (
+        capacity_geometry_feature_audit_v0.get("summary") or {}
+    )
+    geometry_probe_decision = (
+        geometry_augmented_selector_feature_probe_v0.get("decision") or {}
+    )
+    geometry_probe_summary = (
+        geometry_augmented_selector_feature_probe_v0.get("summary") or {}
+    )
+    geometry_probe_best = (
+        geometry_augmented_selector_feature_probe_v0.get("best_result") or {}
+    )
+    directed_fix_decision = selector_directed_fix_review_v0.get("decision") or {}
+    directed_fix_recommended = (
+        selector_directed_fix_review_v0.get("recommended_fix_class") or {}
+    )
+    directed_fix_rejected = [
+        str(item.get("fix") or "")
+        for item in selector_directed_fix_review_v0.get("rejected_fixes", []) or []
+    ]
+    directed_fix_requirements = (
+        selector_directed_fix_review_v0.get("directed_fix_requirements") or []
+    )
+    selector_directed_fix_blocker_passive = (
+        capacity_geometry_feature_audit_v0.get("causal_status")
+        == "non_causal_feature_audit"
+        and capacity_geometry_feature_audit_v0.get("source_artifacts")
+        == [
+            "reports/krk_protected_provider_coverage_frames_v0.json",
+            "reports/krk_selector_negative_suppression_evidence_v0.json",
+        ]
+        and geometry_audit_decision.get("status")
+        == "geometry_terms_partially_informative_not_sufficient"
+        and geometry_audit_decision.get("runtime_work_allowed") is False
+        and geometry_audit_decision.get("candidate_generator_runtime_allowed")
+        is False
+        and geometry_audit_decision.get("selector_training_allowed") is False
+        and geometry_audit_decision.get("stage7_promotion_allowed") is False
+        and geometry_audit_decision.get("stage8_training_allowed") is False
+        and geometry_audit_summary.get("row_count") == 16
+        and geometry_audit_summary.get("stage7_row_count") == 0
+        and geometry_audit_summary.get("capacity_label_counts")
+        == {"negative_capacity": 5, "positive_capacity": 11}
+        and capacity_geometry_feature_audit_v0.get("runtime_behavior_changed")
+        is False
+        and capacity_geometry_feature_audit_v0.get("runtime_defaults_changed")
+        is False
+        and capacity_geometry_feature_audit_v0.get("runtime_selector_implemented")
+        is False
+        and capacity_geometry_feature_audit_v0.get(
+            "runtime_candidate_generator_implemented"
+        )
+        is False
+        and capacity_geometry_feature_audit_v0.get("runtime_terminals_added")
+        is False
+        and capacity_geometry_feature_audit_v0.get("runtime_dtm_or_tablebase_lookup")
+        is False
+        and capacity_geometry_feature_audit_v0.get("gameplay_topology_mutation")
+        is False
+        and capacity_geometry_feature_audit_v0.get("stage7_promotion_allowed")
+        is False
+        and capacity_geometry_feature_audit_v0.get("stage8_training_allowed")
+        is False
+        and geometry_augmented_selector_feature_probe_v0.get("causal_status")
+        == "non_causal_feature_probe"
+        and geometry_augmented_selector_feature_probe_v0.get("source_artifacts")
+        == [
+            "reports/krk_capacity_geometry_feature_audit_v0.json",
+            "reports/krk_selector_negative_suppression_evidence_v0.json",
+        ]
+        and geometry_probe_decision.get("status")
+        == "geometry_augmented_features_underpowered"
+        and geometry_probe_decision.get("runtime_work_allowed") is False
+        and geometry_probe_decision.get("candidate_generator_runtime_allowed")
+        is False
+        and geometry_probe_decision.get("selector_training_allowed") is False
+        and geometry_probe_decision.get("stage7_promotion_allowed") is False
+        and geometry_probe_decision.get("stage8_training_allowed") is False
+        and geometry_probe_summary.get("row_count") == 16
+        and geometry_probe_summary.get("state_count") == 6
+        and geometry_probe_summary.get("positive_count") == 11
+        and geometry_probe_summary.get("negative_count") == 5
+        and geometry_probe_summary.get("stage7_row_count") == 0
+        and geometry_probe_summary.get("underpowered") is True
+        and geometry_probe_best.get("objective") == "provider_family"
+        and geometry_probe_best.get("accuracy") == 0.6875
+        and geometry_probe_best.get("negative_suppression") == 0.0
+        and geometry_augmented_selector_feature_probe_v0.get(
+            "runtime_behavior_changed"
+        )
+        is False
+        and geometry_augmented_selector_feature_probe_v0.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and geometry_augmented_selector_feature_probe_v0.get(
+            "runtime_selector_implemented"
+        )
+        is False
+        and geometry_augmented_selector_feature_probe_v0.get(
+            "runtime_candidate_generator_implemented"
+        )
+        is False
+        and geometry_augmented_selector_feature_probe_v0.get(
+            "runtime_terminals_added"
+        )
+        is False
+        and geometry_augmented_selector_feature_probe_v0.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and geometry_augmented_selector_feature_probe_v0.get(
+            "gameplay_topology_mutation"
+        )
+        is False
+        and geometry_augmented_selector_feature_probe_v0.get(
+            "stage7_promotion_allowed"
+        )
+        is False
+        and geometry_augmented_selector_feature_probe_v0.get(
+            "stage8_training_allowed"
+        )
+        is False
+        and selector_directed_fix_review_v0.get("causal_status")
+        == "non_causal_architecture_review"
+        and selector_directed_fix_review_v0.get("source_artifacts")
+        == [
+            "reports/krk_two_stage_candidate_selection_benchmark_v0.json",
+            "reports/krk_selector_negative_suppression_evidence_v0.json",
+            "reports/krk_geometry_augmented_selector_feature_probe_v0.json",
+            "reports/krk_validated_provider_candidate_set_audit_v0.json",
+            "reports/krk_protected_provider_capacity_frame_training_semantics_review_v0.json",
+        ]
+        and directed_fix_decision.get("status")
+        == "directed_fix_review_complete_runtime_blocked"
+        and directed_fix_decision.get("recommended_next_step")
+        == "design_hard_negative_selector_target_dataset_v0"
+        and directed_fix_decision.get("runtime_work_allowed") is False
+        and directed_fix_decision.get("candidate_generator_runtime_allowed")
+        is False
+        and directed_fix_decision.get("selector_training_allowed") is False
+        and directed_fix_decision.get("stage7_promotion_allowed") is False
+        and directed_fix_decision.get("stage8_training_allowed") is False
+        and directed_fix_recommended.get("name")
+        == "non_causal_hard_negative_selector_target_design"
+        and directed_fix_recommended.get("not_runtime") is True
+        and "runtime_selector_now" in directed_fix_rejected
+        and "runtime_candidate_generator_now" in directed_fix_rejected
+        and "train_selector_on_forced_capacity_as_positive" in directed_fix_rejected
+        and "add_simple_geometry_terms_only" in directed_fix_rejected
+        and "return_to_stage7_patch" in directed_fix_rejected
+        and "keep candidate generation and selection as separate channels"
+        in directed_fix_requirements
+        and "create a hard-negative selector target dataset from protected capacity negatives"
+        in directed_fix_requirements
+        and "keep forced-capacity labels distinct from selected-playout labels"
+        in directed_fix_requirements
+        and "add move/post-move geometry only as non-causal scoring features"
+        in directed_fix_requirements
+        and "evaluate leave-state-out suppression before any sandbox"
+        in directed_fix_requirements
+        and "keep Stage 7 held out" in directed_fix_requirements
+        and selector_directed_fix_review_v0.get("runtime_behavior_changed") is False
+        and selector_directed_fix_review_v0.get("runtime_defaults_changed") is False
+        and selector_directed_fix_review_v0.get("runtime_selector_implemented")
+        is False
+        and selector_directed_fix_review_v0.get(
+            "runtime_candidate_generator_implemented"
+        )
+        is False
+        and selector_directed_fix_review_v0.get("runtime_terminals_added") is False
+        and selector_directed_fix_review_v0.get("runtime_dtm_or_tablebase_lookup")
+        is False
+        and selector_directed_fix_review_v0.get("gameplay_topology_mutation")
+        is False
+        and selector_directed_fix_review_v0.get("stage7_promotion_allowed") is False
+        and selector_directed_fix_review_v0.get("stage8_training_allowed") is False
     )
     selector_provenance_dataset_decision = (
         selector_provenance_feature_dataset_v0.get("decision") or {}
@@ -6718,6 +6917,87 @@ def build_payload() -> dict[str, Any]:
             "stage7_promotion_allowed": False,
             "stage8_training_allowed": provider_identity_decision.get(
                 "stage8_training_allowed"
+            ),
+        },
+        "selector_directed_fix_blocker_gate": {
+            "status": directed_fix_decision.get("status"),
+            "passive_selector_directed_fix_ready": (
+                selector_directed_fix_blocker_passive
+            ),
+            "geometry_audit_status": geometry_audit_decision.get("status"),
+            "geometry_audit_row_count": geometry_audit_summary.get("row_count"),
+            "geometry_audit_stage7_row_count": (
+                geometry_audit_summary.get("stage7_row_count")
+            ),
+            "geometry_audit_capacity_label_counts": (
+                geometry_audit_summary.get("capacity_label_counts") or {}
+            ),
+            "geometry_probe_status": geometry_probe_decision.get("status"),
+            "geometry_probe_row_count": geometry_probe_summary.get("row_count"),
+            "geometry_probe_state_count": geometry_probe_summary.get("state_count"),
+            "geometry_probe_positive_count": (
+                geometry_probe_summary.get("positive_count")
+            ),
+            "geometry_probe_negative_count": (
+                geometry_probe_summary.get("negative_count")
+            ),
+            "geometry_probe_stage7_row_count": (
+                geometry_probe_summary.get("stage7_row_count")
+            ),
+            "geometry_probe_underpowered": geometry_probe_summary.get("underpowered"),
+            "geometry_probe_best_objective": geometry_probe_best.get("objective"),
+            "geometry_probe_best_accuracy": geometry_probe_best.get("accuracy"),
+            "geometry_probe_best_negative_suppression": (
+                geometry_probe_best.get("negative_suppression")
+            ),
+            "directed_fix_recommended_next_step": directed_fix_decision.get(
+                "recommended_next_step"
+            ),
+            "directed_fix_recommended_class": directed_fix_recommended.get("name"),
+            "directed_fix_recommended_not_runtime": (
+                directed_fix_recommended.get("not_runtime")
+            ),
+            "directed_fix_rejected_fixes": directed_fix_rejected,
+            "directed_fix_requirements": directed_fix_requirements,
+            "runtime_work_allowed": directed_fix_decision.get(
+                "runtime_work_allowed"
+            ),
+            "candidate_generator_runtime_allowed": directed_fix_decision.get(
+                "candidate_generator_runtime_allowed"
+            ),
+            "selector_training_allowed": directed_fix_decision.get(
+                "selector_training_allowed"
+            ),
+            "runtime_behavior_changed": (
+                selector_directed_fix_review_v0.get("runtime_behavior_changed")
+            ),
+            "runtime_defaults_changed": (
+                selector_directed_fix_review_v0.get("runtime_defaults_changed")
+            ),
+            "runtime_selector_implemented": (
+                selector_directed_fix_review_v0.get("runtime_selector_implemented")
+            ),
+            "runtime_candidate_generator_implemented": (
+                selector_directed_fix_review_v0.get(
+                    "runtime_candidate_generator_implemented"
+                )
+            ),
+            "runtime_terminals_added": (
+                selector_directed_fix_review_v0.get("runtime_terminals_added")
+            ),
+            "runtime_dtm_or_tablebase_lookup": (
+                selector_directed_fix_review_v0.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "gameplay_topology_mutation": (
+                selector_directed_fix_review_v0.get("gameplay_topology_mutation")
+            ),
+            "stage7_promotion_allowed": (
+                selector_directed_fix_review_v0.get("stage7_promotion_allowed")
+            ),
+            "stage8_training_allowed": (
+                selector_directed_fix_review_v0.get("stage8_training_allowed")
             ),
         },
         "selector_provenance_prior_blocker_gate": {
@@ -12145,6 +12425,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
         "strategy_arbiter_runtime_no_scale_gate"
     ]
     provider_identity_maturity = payload["provider_identity_maturity_blocker_gate"]
+    selector_directed_fix = payload["selector_directed_fix_blocker_gate"]
     selector_provenance_prior = payload["selector_provenance_prior_blocker_gate"]
     selector_objective_normalization = payload["selector_objective_normalization_gate"]
     selector_label_balance = payload["selector_label_balance_gate"]
@@ -12447,6 +12728,35 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- gameplay_topology_mutation: `{provider_identity_maturity['gameplay_topology_mutation']}`",
         f"- stage7_promotion_allowed: `{provider_identity_maturity['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{provider_identity_maturity['stage8_training_allowed']}`",
+        "",
+        "## Selector Directed Fix Blocker",
+        "",
+        f"- passive_selector_directed_fix_ready: `{selector_directed_fix['passive_selector_directed_fix_ready']}`",
+        f"- status: `{selector_directed_fix['status']}`",
+        f"- geometry_audit_status: `{selector_directed_fix['geometry_audit_status']}`",
+        f"- geometry_audit_row_count: `{selector_directed_fix['geometry_audit_row_count']}`",
+        f"- geometry_audit_stage7_row_count: `{selector_directed_fix['geometry_audit_stage7_row_count']}`",
+        f"- geometry_audit_capacity_label_counts: `{selector_directed_fix['geometry_audit_capacity_label_counts']}`",
+        f"- geometry_probe_status: `{selector_directed_fix['geometry_probe_status']}`",
+        f"- geometry_probe_row_count: `{selector_directed_fix['geometry_probe_row_count']}`",
+        f"- geometry_probe_state_count: `{selector_directed_fix['geometry_probe_state_count']}`",
+        f"- geometry_probe_underpowered: `{selector_directed_fix['geometry_probe_underpowered']}`",
+        f"- geometry_probe_best_objective: `{selector_directed_fix['geometry_probe_best_objective']}`",
+        f"- geometry_probe_best_negative_suppression: `{selector_directed_fix['geometry_probe_best_negative_suppression']}`",
+        f"- directed_fix_recommended_next_step: `{selector_directed_fix['directed_fix_recommended_next_step']}`",
+        f"- directed_fix_recommended_class: `{selector_directed_fix['directed_fix_recommended_class']}`",
+        f"- directed_fix_recommended_not_runtime: `{selector_directed_fix['directed_fix_recommended_not_runtime']}`",
+        f"- directed_fix_rejected_fixes: `{selector_directed_fix['directed_fix_rejected_fixes']}`",
+        f"- directed_fix_requirements: `{selector_directed_fix['directed_fix_requirements']}`",
+        f"- runtime_work_allowed: `{selector_directed_fix['runtime_work_allowed']}`",
+        f"- candidate_generator_runtime_allowed: `{selector_directed_fix['candidate_generator_runtime_allowed']}`",
+        f"- selector_training_allowed: `{selector_directed_fix['selector_training_allowed']}`",
+        f"- runtime_selector_implemented: `{selector_directed_fix['runtime_selector_implemented']}`",
+        f"- runtime_candidate_generator_implemented: `{selector_directed_fix['runtime_candidate_generator_implemented']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{selector_directed_fix['runtime_dtm_or_tablebase_lookup']}`",
+        f"- gameplay_topology_mutation: `{selector_directed_fix['gameplay_topology_mutation']}`",
+        f"- stage7_promotion_allowed: `{selector_directed_fix['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{selector_directed_fix['stage8_training_allowed']}`",
         "",
         "## Selector Provenance Prior Blocker",
         "",
