@@ -15,9 +15,9 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
 - protected_stack_rollback_common_paths_distinct: `True`
 - protected_stack_filesystem_snapshots_replaced: `False`
 - protected_stack_hard_blockers: `[]`
-- readiness_checked_flag_count: `2669`
+- readiness_checked_flag_count: `2711`
 - readiness_boundary_violation_count: `0`
-- readiness_source_artifact_count: `373`
+- readiness_source_artifact_count: `379`
 - stage4: `first_move_contrast_runtime_review_ready_pending_explicit_approval`
 - stage4_first_move_contrast_sandbox_approval_request: `stage4_first_move_contrast_sandbox_approval_request_ready`
 - stage4_first_move_contrast_sandbox_approval_request_blockers: `[]`
@@ -132,9 +132,9 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
   - stage8_training_allowed: `False`
   - readiness_audit: `reports/krk_full_suite_readiness_audit_v0.json`
   - readiness_audit_status: `krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection`
-  - readiness_checked_flag_count: `2669`
+  - readiness_checked_flag_count: `2711`
   - readiness_boundary_violation_count: `0`
-  - readiness_source_artifact_count: `373`
+  - readiness_source_artifact_count: `379`
 - does_not_allow:
   - default enablement
   - exact-state or exact-move runtime exception
@@ -191,10 +191,10 @@ Status: `krk_control_plane_waiting_on_explicit_gate_choice`
   - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
   - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
   - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-  - expected_readiness_fingerprint: `a9b4f2849f2b862370c045cf8a3f4aaef741533188608d8658ae15727084eec0`
-  - readiness_checked_flag_count: `2669`
+  - expected_readiness_fingerprint: `55ddb360e2b8aae93eff2b81c0da488515b955fb36010813e8ff310c9e480f69`
+  - readiness_checked_flag_count: `2711`
   - readiness_boundary_violation_count: `0`
-  - readiness_source_artifact_count: `373`
+  - readiness_source_artifact_count: `379`
   - per_job_timeout_seconds: `900`
   - refresh_after_run: `True`
   - processed_job_count: `0`

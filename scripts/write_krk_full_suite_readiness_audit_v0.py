@@ -386,6 +386,24 @@ SOURCES = {
     "selector_balanced_architecture_review_v1": (
         "reports/krk_selector_balanced_architecture_review_v1.json"
     ),
+    "ownership_selection_label_dataset_v0": (
+        "reports/krk_ownership_selection_label_dataset_v0.json"
+    ),
+    "ownership_selection_feature_probe_v0": (
+        "reports/krk_ownership_selection_feature_probe_v0.json"
+    ),
+    "selected_provider_diversity_ownership_labels_v0": (
+        "reports/krk_selected_provider_diversity_ownership_labels_v0.json"
+    ),
+    "ownership_selection_context_dataset_v0": (
+        "reports/krk_ownership_selection_context_dataset_v0.json"
+    ),
+    "ownership_selection_context_feature_probe_v0": (
+        "reports/krk_ownership_selection_context_feature_probe_v0.json"
+    ),
+    "ownership_context_feature_review_v0": (
+        "reports/krk_ownership_context_feature_review_v0.json"
+    ),
     "ownership_selection_label_dataset_v5": (
         "reports/krk_ownership_selection_label_dataset_v5.json"
     ),
@@ -1606,6 +1624,24 @@ def build_payload() -> dict[str, Any]:
     selector_balanced_label_probe_v1 = payloads["selector_balanced_label_probe_v1"]
     selector_balanced_architecture_review_v1 = payloads[
         "selector_balanced_architecture_review_v1"
+    ]
+    ownership_selection_label_dataset_v0 = payloads[
+        "ownership_selection_label_dataset_v0"
+    ]
+    ownership_selection_feature_probe_v0 = payloads[
+        "ownership_selection_feature_probe_v0"
+    ]
+    selected_provider_diversity_ownership_labels_v0 = payloads[
+        "selected_provider_diversity_ownership_labels_v0"
+    ]
+    ownership_selection_context_dataset_v0 = payloads[
+        "ownership_selection_context_dataset_v0"
+    ]
+    ownership_selection_context_feature_probe_v0 = payloads[
+        "ownership_selection_context_feature_probe_v0"
+    ]
+    ownership_context_feature_review_v0 = payloads[
+        "ownership_context_feature_review_v0"
     ]
     selector_stratified_label_plan_v1 = payloads[
         "selector_stratified_label_plan_v1"
@@ -5150,6 +5186,42 @@ def build_payload() -> dict[str, Any]:
     ownership_selection_label_summary = (
         ownership_selection_label_dataset_v5.get("summary") or {}
     )
+    ownership_selection_label_v0_decision = (
+        ownership_selection_label_dataset_v0.get("decision") or {}
+    )
+    ownership_selection_label_v0_summary = (
+        ownership_selection_label_dataset_v0.get("summary") or {}
+    )
+    ownership_selection_probe_v0_decision = (
+        ownership_selection_feature_probe_v0.get("decision") or {}
+    )
+    ownership_selection_probe_v0_summary = (
+        ownership_selection_feature_probe_v0.get("summary") or {}
+    )
+    provider_diversity_ownership_labels_v0_decision = (
+        selected_provider_diversity_ownership_labels_v0.get("decision") or {}
+    )
+    provider_diversity_ownership_labels_v0_summary = (
+        selected_provider_diversity_ownership_labels_v0.get("summary") or {}
+    )
+    ownership_selection_context_v0_decision = (
+        ownership_selection_context_dataset_v0.get("decision") or {}
+    )
+    ownership_selection_context_v0_summary = (
+        ownership_selection_context_dataset_v0.get("summary") or {}
+    )
+    ownership_selection_context_probe_v0_decision = (
+        ownership_selection_context_feature_probe_v0.get("decision") or {}
+    )
+    ownership_selection_context_probe_v0_summary = (
+        ownership_selection_context_feature_probe_v0.get("summary") or {}
+    )
+    ownership_context_review_v0_decision = (
+        ownership_context_feature_review_v0.get("decision") or {}
+    )
+    ownership_context_review_v0_summary = (
+        ownership_context_feature_review_v0.get("summary") or {}
+    )
     ownership_selection_context_decision = (
         ownership_selection_context_dataset_v3.get("decision") or {}
     )
@@ -5186,6 +5258,91 @@ def build_payload() -> dict[str, Any]:
         and ownership_selection_label_summary.get("merged_row_count") == 41
         and ownership_selection_label_summary.get("selector_training_row_count") == 0
         and ownership_selection_label_summary.get("stage7_row_count") == 0
+        and ownership_selection_label_v0_decision.get("status")
+        == "ownership_selection_labels_recovered"
+        and ownership_selection_label_v0_decision.get("runtime_work_allowed") is False
+        and ownership_selection_label_v0_decision.get("selector_training_allowed")
+        is False
+        and ownership_selection_label_v0_decision.get("stage7_promotion_allowed")
+        is False
+        and ownership_selection_label_v0_decision.get("stage8_training_allowed")
+        is False
+        and ownership_selection_label_v0_summary.get("deduplicated_row_count") == 14
+        and ownership_selection_label_v0_summary.get("selector_training_row_count") == 0
+        and ownership_selection_label_v0_summary.get("stage7_row_count") == 0
+        and ownership_selection_probe_v0_decision.get("status")
+        == "ownership_selection_probe_promising_underpowered"
+        and ownership_selection_probe_v0_decision.get("runtime_work_allowed") is False
+        and ownership_selection_probe_v0_decision.get("selector_training_allowed")
+        is False
+        and ownership_selection_probe_v0_decision.get("stage7_promotion_allowed")
+        is False
+        and ownership_selection_probe_v0_decision.get("stage8_training_allowed")
+        is False
+        and ownership_selection_probe_v0_summary.get("underpowered") is True
+        and ownership_selection_probe_v0_summary.get("stage7_row_count") == 0
+        and provider_diversity_ownership_labels_v0_decision.get("status")
+        == "selected_provider_diversity_ownership_labels_collected"
+        and provider_diversity_ownership_labels_v0_decision.get("runtime_work_allowed")
+        is False
+        and provider_diversity_ownership_labels_v0_decision.get(
+            "selector_training_allowed"
+        )
+        is False
+        and provider_diversity_ownership_labels_v0_decision.get(
+            "stage7_promotion_allowed"
+        )
+        is False
+        and provider_diversity_ownership_labels_v0_decision.get(
+            "stage8_training_allowed"
+        )
+        is False
+        and provider_diversity_ownership_labels_v0_summary.get("label_count") == 20
+        and provider_diversity_ownership_labels_v0_summary.get(
+            "stage7_training_rows"
+        )
+        == 0
+        and ownership_selection_context_v0_decision.get("status")
+        == "ownership_selection_context_dataset_ready_for_non_causal_probe"
+        and ownership_selection_context_v0_decision.get("runtime_work_allowed")
+        is False
+        and ownership_selection_context_v0_decision.get("selector_training_allowed")
+        is False
+        and ownership_selection_context_v0_decision.get("stage7_promotion_allowed")
+        is False
+        and ownership_selection_context_v0_decision.get("stage8_training_allowed")
+        is False
+        and ownership_selection_context_v0_summary.get("row_count") == 34
+        and ownership_selection_context_v0_summary.get("selector_training_row_count")
+        == 0
+        and ownership_selection_context_v0_summary.get("stage7_row_count") == 0
+        and ownership_selection_context_probe_v0_decision.get("status")
+        == "context_features_underpowered"
+        and ownership_selection_context_probe_v0_decision.get("runtime_work_allowed")
+        is False
+        and ownership_selection_context_probe_v0_decision.get(
+            "selector_training_allowed"
+        )
+        is False
+        and ownership_selection_context_probe_v0_decision.get(
+            "stage7_promotion_allowed"
+        )
+        is False
+        and ownership_selection_context_probe_v0_decision.get("stage8_training_allowed")
+        is False
+        and ownership_selection_context_probe_v0_summary.get("underpowered") is True
+        and ownership_selection_context_probe_v0_summary.get("stage7_row_count") == 0
+        and ownership_context_review_v0_decision.get("status")
+        == "context_features_review_ready_but_not_runtime_ready"
+        and ownership_context_review_v0_decision.get("runtime_work_allowed") is False
+        and ownership_context_review_v0_decision.get("selector_training_allowed")
+        is False
+        and ownership_context_review_v0_decision.get("stage7_promotion_allowed")
+        is False
+        and ownership_context_review_v0_decision.get("stage8_training_allowed")
+        is False
+        and ownership_context_review_v0_summary.get("runtime_threshold_passed")
+        is False
         and ownership_selection_context_dataset_v3.get("causal_status")
         == "non_causal_context_feature_dataset"
         and ownership_selection_context_decision.get("status")
@@ -5249,6 +5406,12 @@ def build_payload() -> dict[str, Any]:
             and artifact.get("stage8_training_allowed") is False
             for artifact in [
                 ownership_selection_label_dataset_v5,
+                ownership_selection_label_dataset_v0,
+                ownership_selection_feature_probe_v0,
+                selected_provider_diversity_ownership_labels_v0,
+                ownership_selection_context_dataset_v0,
+                ownership_selection_context_feature_probe_v0,
+                ownership_context_feature_review_v0,
                 ownership_selection_context_dataset_v3,
                 ownership_selection_context_feature_probe_v3,
                 ownership_selection_labeling_review_v0,
@@ -9719,6 +9882,61 @@ def build_payload() -> dict[str, Any]:
             ),
             "label_dataset_stage7_row_count": (
                 ownership_selection_label_summary.get("stage7_row_count")
+            ),
+            "label_dataset_v0_status": (
+                ownership_selection_label_v0_decision.get("status")
+            ),
+            "label_dataset_v0_deduplicated_row_count": (
+                ownership_selection_label_v0_summary.get("deduplicated_row_count")
+            ),
+            "label_dataset_v0_selector_training_row_count": (
+                ownership_selection_label_v0_summary.get("selector_training_row_count")
+            ),
+            "label_dataset_v0_stage7_row_count": (
+                ownership_selection_label_v0_summary.get("stage7_row_count")
+            ),
+            "feature_probe_v0_status": (
+                ownership_selection_probe_v0_decision.get("status")
+            ),
+            "feature_probe_v0_underpowered": (
+                ownership_selection_probe_v0_summary.get("underpowered")
+            ),
+            "selected_provider_diversity_labels_v0_status": (
+                provider_diversity_ownership_labels_v0_decision.get("status")
+            ),
+            "selected_provider_diversity_labels_v0_label_count": (
+                provider_diversity_ownership_labels_v0_summary.get("label_count")
+            ),
+            "selected_provider_diversity_labels_v0_stage7_training_rows": (
+                provider_diversity_ownership_labels_v0_summary.get(
+                    "stage7_training_rows"
+                )
+            ),
+            "context_dataset_v0_status": (
+                ownership_selection_context_v0_decision.get("status")
+            ),
+            "context_dataset_v0_row_count": (
+                ownership_selection_context_v0_summary.get("row_count")
+            ),
+            "context_dataset_v0_selector_training_row_count": (
+                ownership_selection_context_v0_summary.get(
+                    "selector_training_row_count"
+                )
+            ),
+            "context_dataset_v0_stage7_row_count": (
+                ownership_selection_context_v0_summary.get("stage7_row_count")
+            ),
+            "context_probe_v0_status": (
+                ownership_selection_context_probe_v0_decision.get("status")
+            ),
+            "context_probe_v0_underpowered": (
+                ownership_selection_context_probe_v0_summary.get("underpowered")
+            ),
+            "context_review_v0_status": ownership_context_review_v0_decision.get(
+                "status"
+            ),
+            "context_review_v0_runtime_threshold_passed": (
+                ownership_context_review_v0_summary.get("runtime_threshold_passed")
             ),
             "context_dataset_status": ownership_selection_context_decision.get(
                 "status"

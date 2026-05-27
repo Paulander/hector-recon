@@ -1950,6 +1950,42 @@ def build_payload() -> dict[str, Any]:
             "ownership_selection_context_label_dataset_stage7_row_count": (
                 ownership_selection_context_gate.get("label_dataset_stage7_row_count")
             ),
+            "ownership_selection_context_label_dataset_v0_status": (
+                ownership_selection_context_gate.get("label_dataset_v0_status")
+            ),
+            "ownership_selection_context_label_dataset_v0_row_count": (
+                ownership_selection_context_gate.get(
+                    "label_dataset_v0_deduplicated_row_count"
+                )
+            ),
+            "ownership_selection_context_label_dataset_v0_stage7_row_count": (
+                ownership_selection_context_gate.get("label_dataset_v0_stage7_row_count")
+            ),
+            "ownership_selection_context_feature_probe_v0_status": (
+                ownership_selection_context_gate.get("feature_probe_v0_status")
+            ),
+            "ownership_selection_context_selected_provider_diversity_labels_v0_status": (
+                ownership_selection_context_gate.get(
+                    "selected_provider_diversity_labels_v0_status"
+                )
+            ),
+            "ownership_selection_context_selected_provider_diversity_labels_v0_count": (
+                ownership_selection_context_gate.get(
+                    "selected_provider_diversity_labels_v0_label_count"
+                )
+            ),
+            "ownership_selection_context_dataset_v0_status": (
+                ownership_selection_context_gate.get("context_dataset_v0_status")
+            ),
+            "ownership_selection_context_dataset_v0_row_count": (
+                ownership_selection_context_gate.get("context_dataset_v0_row_count")
+            ),
+            "ownership_selection_context_probe_v0_status": (
+                ownership_selection_context_gate.get("context_probe_v0_status")
+            ),
+            "ownership_selection_context_review_v0_status": (
+                ownership_selection_context_gate.get("context_review_v0_status")
+            ),
             "ownership_selection_context_dataset_status": (
                 ownership_selection_context_gate.get("context_dataset_status")
             ),

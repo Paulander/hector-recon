@@ -1016,6 +1016,41 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["ownership_selection_context_label_dataset_stage7_row_count"]
         == 0
     )
+    assert payload["summary"][
+        "ownership_selection_context_label_dataset_v0_status"
+    ] == "ownership_selection_labels_recovered"
+    assert (
+        payload["summary"]["ownership_selection_context_label_dataset_v0_row_count"]
+        == 14
+    )
+    assert (
+        payload["summary"][
+            "ownership_selection_context_label_dataset_v0_stage7_row_count"
+        ]
+        == 0
+    )
+    assert payload["summary"][
+        "ownership_selection_context_feature_probe_v0_status"
+    ] == "ownership_selection_probe_promising_underpowered"
+    assert payload["summary"][
+        "ownership_selection_context_selected_provider_diversity_labels_v0_status"
+    ] == "selected_provider_diversity_ownership_labels_collected"
+    assert (
+        payload["summary"][
+            "ownership_selection_context_selected_provider_diversity_labels_v0_count"
+        ]
+        == 20
+    )
+    assert payload["summary"][
+        "ownership_selection_context_dataset_v0_status"
+    ] == "ownership_selection_context_dataset_ready_for_non_causal_probe"
+    assert payload["summary"]["ownership_selection_context_dataset_v0_row_count"] == 34
+    assert payload["summary"][
+        "ownership_selection_context_probe_v0_status"
+    ] == "context_features_underpowered"
+    assert payload["summary"]["ownership_selection_context_review_v0_status"] == (
+        "context_features_review_ready_but_not_runtime_ready"
+    )
     assert payload["summary"]["ownership_selection_context_dataset_status"] == (
         "ownership_selection_context_dataset_ready_for_non_causal_probe"
     )

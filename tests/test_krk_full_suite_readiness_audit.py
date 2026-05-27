@@ -773,6 +773,32 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_selector_balanced_architecture_review_v1.json"
     )
     assert (
+        payload["source_artifacts"]["ownership_selection_label_dataset_v0"]
+        == "reports/krk_ownership_selection_label_dataset_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["ownership_selection_feature_probe_v0"]
+        == "reports/krk_ownership_selection_feature_probe_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "selected_provider_diversity_ownership_labels_v0"
+        ]
+        == "reports/krk_selected_provider_diversity_ownership_labels_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["ownership_selection_context_dataset_v0"]
+        == "reports/krk_ownership_selection_context_dataset_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["ownership_selection_context_feature_probe_v0"]
+        == "reports/krk_ownership_selection_context_feature_probe_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["ownership_context_feature_review_v0"]
+        == "reports/krk_ownership_context_feature_review_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["ownership_selection_label_dataset_v5"]
         == "reports/krk_ownership_selection_label_dataset_v5.json"
     )
@@ -2264,6 +2290,38 @@ def test_full_suite_readiness_identifies_current_gate():
     assert ownership_context["label_dataset_targeted_added_row_count"] == 6
     assert ownership_context["label_dataset_selector_training_row_count"] == 0
     assert ownership_context["label_dataset_stage7_row_count"] == 0
+    assert ownership_context["label_dataset_v0_status"] == (
+        "ownership_selection_labels_recovered"
+    )
+    assert ownership_context["label_dataset_v0_deduplicated_row_count"] == 14
+    assert ownership_context["label_dataset_v0_selector_training_row_count"] == 0
+    assert ownership_context["label_dataset_v0_stage7_row_count"] == 0
+    assert ownership_context["feature_probe_v0_status"] == (
+        "ownership_selection_probe_promising_underpowered"
+    )
+    assert ownership_context["feature_probe_v0_underpowered"] is True
+    assert ownership_context["selected_provider_diversity_labels_v0_status"] == (
+        "selected_provider_diversity_ownership_labels_collected"
+    )
+    assert ownership_context["selected_provider_diversity_labels_v0_label_count"] == 20
+    assert (
+        ownership_context[
+            "selected_provider_diversity_labels_v0_stage7_training_rows"
+        ]
+        == 0
+    )
+    assert ownership_context["context_dataset_v0_status"] == (
+        "ownership_selection_context_dataset_ready_for_non_causal_probe"
+    )
+    assert ownership_context["context_dataset_v0_row_count"] == 34
+    assert ownership_context["context_dataset_v0_selector_training_row_count"] == 0
+    assert ownership_context["context_dataset_v0_stage7_row_count"] == 0
+    assert ownership_context["context_probe_v0_status"] == "context_features_underpowered"
+    assert ownership_context["context_probe_v0_underpowered"] is True
+    assert ownership_context["context_review_v0_status"] == (
+        "context_features_review_ready_but_not_runtime_ready"
+    )
+    assert ownership_context["context_review_v0_runtime_threshold_passed"] is False
     assert ownership_context["context_dataset_status"] == (
         "ownership_selection_context_dataset_ready_for_non_causal_probe"
     )
