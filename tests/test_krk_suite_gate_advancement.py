@@ -1966,6 +1966,26 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["current_control_plane_gate_status"]
         == "krk_control_plane_waiting_on_explicit_gate_choice"
     )
+    assert payload["summary"]["control_plane_contract_lineage_passive_ready"] is True
+    assert (
+        payload["summary"]["control_plane_contract_architecture_goal_id"]
+        == "krk_control_plane_evidence_contract_v0"
+    )
+    assert (
+        payload["summary"]["control_plane_contract_recommended_next_slice"]
+        == "control_plane_manifest_from_existing_artifacts_v0"
+    )
+    assert (
+        payload["summary"][
+            "control_plane_contract_manifest_records_from_existing_artifacts_only"
+        ]
+        is True
+    )
+    assert payload["summary"]["control_plane_contract_manifest_new_playouts_added"] == 0
+    assert (
+        payload["summary"]["control_plane_contract_runtime_dtm_or_tablebase_lookup"]
+        is False
+    )
     assert payload["summary"]["readiness_control_plane_gate_review_blockers"] == []
     assert payload["summary"]["readiness_explicit_gate_blockers"] == [
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"

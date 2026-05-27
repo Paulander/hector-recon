@@ -11,9 +11,9 @@ This is a non-causal pilot review over underpowered inputs. It preserves diagnos
 - benchmark_preflight_blockers: `[]`
 - benchmark_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered`
 - benchmark_review_blockers: `['protected_plan_window_failure_evidence_sparse']`
-- readiness_checked_flag_count: `2521`
+- readiness_checked_flag_count: `2527`
 - readiness_boundary_violation_count: `0`
-- readiness_source_artifact_count: `351`
+- readiness_source_artifact_count: `352`
 - forbidden_training_or_runtime_input_blocked: `False`
 - input_row_count: `118`
 - stage4_topk_signal: `True`

@@ -967,7 +967,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `221eb94d7cd671e903de4e4406373122cb4633b01793985d865b8aec583144f9`
+- expected_readiness_fingerprint: `bebdcf5977fa6783b683e89da11a008f3990afdb678e31ade01c2859cdb4ce54`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1474,6 +1474,29 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Control Plane Contract Lineage
+
+- passive_contract_lineage_ready: `True`
+- architecture_goal_id: `krk_control_plane_evidence_contract_v0`
+- architecture_goal_type: `non_causal_data_contract_and_review`
+- architecture_must_remain_non_causal: `True`
+- architecture_runtime_defaults_must_remain_unchanged: `True`
+- contract_recommended_next_slice: `control_plane_manifest_from_existing_artifacts_v0`
+- contract_causal_status: `non_causal_schema_contract`
+- manifest_causal_status: `non_causal_manifest`
+- manifest_records_from_existing_artifacts_only: `True`
+- manifest_new_playouts_added: `0`
+- manifest_missing_required_fields_after_manifest: `[]`
+- manifest_recommended_next_slice: `stratified_control_plane_gap_report_v0`
+- runtime_behavior_changed: `False`
+- runtime_defaults_changed: `False`
+- runtime_selector_implemented: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- hidden_python_controller: `False`
+- gameplay_topology_mutation: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Current Control Plane Gate
 
 - status: `krk_control_plane_waiting_on_explicit_gate_choice`
@@ -1496,5 +1519,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2521`
+- checked_flag_count: `2527`
 - violation_count: `0`

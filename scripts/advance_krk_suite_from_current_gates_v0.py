@@ -577,6 +577,9 @@ def build_payload() -> dict[str, Any]:
         output_validation.get("summary", {}).get("output_valid_count") or 0
     ) > 0
     protected_stack = readiness.get("protected_stack") or {}
+    control_plane_contract_lineage_gate = (
+        readiness.get("control_plane_contract_lineage_gate") or {}
+    )
     clean_curriculum_run_lineage_gate = (
         readiness.get("clean_curriculum_run_lineage_gate") or {}
     )
@@ -897,6 +900,34 @@ def build_payload() -> dict[str, Any]:
             ),
             "protected_stack_filesystem_snapshots_replaced": protected_stack.get(
                 "filesystem_snapshots_replaced"
+            ),
+            "control_plane_contract_lineage_passive_ready": (
+                control_plane_contract_lineage_gate.get(
+                    "passive_contract_lineage_ready"
+                )
+            ),
+            "control_plane_contract_architecture_goal_id": (
+                control_plane_contract_lineage_gate.get("architecture_goal_id")
+            ),
+            "control_plane_contract_recommended_next_slice": (
+                control_plane_contract_lineage_gate.get(
+                    "contract_recommended_next_slice"
+                )
+            ),
+            "control_plane_contract_manifest_records_from_existing_artifacts_only": (
+                control_plane_contract_lineage_gate.get(
+                    "manifest_records_from_existing_artifacts_only"
+                )
+            ),
+            "control_plane_contract_manifest_new_playouts_added": (
+                control_plane_contract_lineage_gate.get(
+                    "manifest_new_playouts_added"
+                )
+            ),
+            "control_plane_contract_runtime_dtm_or_tablebase_lookup": (
+                control_plane_contract_lineage_gate.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
             ),
             "clean_curriculum_run_lineage_passive_ready": (
                 clean_curriculum_run_lineage_gate.get("passive_lineage_ready")

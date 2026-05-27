@@ -20,6 +20,9 @@ OUT_MD = ROOT / "reports/krk_full_suite_readiness_audit_v0.md"
 SOURCES = {
     "current_brief": "reports/current_agent_brief.md",
     "control_plane_gate": "reports/krk_current_control_plane_gate_v0.json",
+    "self_expansion_architecture_gate": (
+        "reports/krk_self_expansion_architecture_gate_v0.json"
+    ),
     "control_plane_evidence_contract": "reports/krk_control_plane_evidence_contract_v0.json",
     "control_plane_manifest": "reports/krk_control_plane_manifest_v0.json",
     "control_plane_gap_report": "reports/krk_control_plane_gap_report_v0.json",
@@ -2043,6 +2046,9 @@ def build_payload() -> dict[str, Any]:
     output_validation = payloads["stage7_sampling_output_validation"]
     integration = payloads["stage7_sampling_integration"]
     gate = payloads["control_plane_gate"]
+    self_expansion_architecture_gate = payloads["self_expansion_architecture_gate"]
+    control_plane_evidence_contract = payloads["control_plane_evidence_contract"]
+    control_plane_manifest = payloads["control_plane_manifest"]
     gate_approval_options = gate.get("approval_options") or []
     protected_collection_gate_option = find_approval_option(
         gate,
@@ -2060,6 +2066,98 @@ def build_payload() -> dict[str, Any]:
             "review_protected_plan_window_failure_contrast_manifest",
             "review_protected_plan_window_failure_contrast_plan",
         ),
+    )
+    self_expansion_goal = (
+        self_expansion_architecture_gate.get("selected_next_architecture_goal") or {}
+    )
+    self_expansion_allowed_slices = (
+        self_expansion_architecture_gate.get("allowed_next_slices") or []
+    )
+    self_expansion_forbidden_next_steps = (
+        self_expansion_architecture_gate.get("forbidden_next_steps") or []
+    )
+    control_plane_contract_lineage_passive = (
+        self_expansion_architecture_gate.get("schema_version")
+        == "krk_self_expansion_architecture_gate.v0"
+        and self_expansion_architecture_gate.get("causal_status")
+        == "non_causal_architecture_review"
+        and self_expansion_goal.get("goal_id")
+        == "krk_control_plane_evidence_contract_v0"
+        and self_expansion_goal.get("goal_type")
+        == "non_causal_data_contract_and_review"
+        and self_expansion_goal.get("must_remain_non_causal") is True
+        and self_expansion_goal.get("runtime_defaults_must_remain_unchanged")
+        is True
+        and any(
+            slice_.get("slice_id")
+            == "control_plane_manifest_from_existing_artifacts_v0"
+            and slice_.get("allowed") is True
+            and slice_.get("causal") is False
+            for slice_ in self_expansion_allowed_slices
+        )
+        and "runtime_arbiter" in self_expansion_forbidden_next_steps
+        and "runtime_internal_terminal" in self_expansion_forbidden_next_steps
+        and "runtime_dtm_or_tablebase" in self_expansion_forbidden_next_steps
+        and "gameplay_topology_mutation" in self_expansion_forbidden_next_steps
+        and "stage7_promotion" in self_expansion_forbidden_next_steps
+        and "stage8_training" in self_expansion_forbidden_next_steps
+        and self_expansion_architecture_gate.get("runtime_behavior_changed")
+        is False
+        and self_expansion_architecture_gate.get("runtime_defaults_changed")
+        is False
+        and self_expansion_architecture_gate.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and self_expansion_architecture_gate.get("gameplay_topology_mutation")
+        is False
+        and self_expansion_architecture_gate.get("stage7_promotion_allowed")
+        is False
+        and self_expansion_architecture_gate.get("stage8_training_allowed")
+        is False
+        and control_plane_evidence_contract.get("schema_version")
+        == "krk_control_plane_evidence_contract.v0"
+        and "reports/krk_self_expansion_architecture_gate_v0.json"
+        in (control_plane_evidence_contract.get("source_artifacts") or [])
+        and control_plane_evidence_contract.get("causal_status")
+        == "non_causal_schema_contract"
+        and control_plane_evidence_contract.get("recommended_next_slice")
+        == "control_plane_manifest_from_existing_artifacts_v0"
+        and control_plane_evidence_contract.get("runtime_behavior_changed")
+        is False
+        and control_plane_evidence_contract.get("runtime_defaults_changed")
+        is False
+        and control_plane_evidence_contract.get("runtime_selector_implemented")
+        is False
+        and control_plane_evidence_contract.get("runtime_dtm_or_tablebase_lookup")
+        is False
+        and control_plane_evidence_contract.get("hidden_python_controller")
+        is False
+        and control_plane_evidence_contract.get("gameplay_topology_mutation")
+        is False
+        and control_plane_evidence_contract.get("stage7_promotion_allowed")
+        is False
+        and control_plane_evidence_contract.get("stage8_training_allowed")
+        is False
+        and control_plane_manifest.get("causal_status") == "non_causal_manifest"
+        and control_plane_manifest.get("contract_artifact")
+        == "reports/krk_control_plane_evidence_contract_v0.json"
+        and control_plane_manifest.get("summary", {}).get(
+            "records_from_existing_artifacts_only"
+        )
+        is True
+        and control_plane_manifest.get("summary", {}).get("new_playouts_added") == 0
+        and not control_plane_manifest.get("summary", {}).get(
+            "missing_required_fields_after_manifest"
+        )
+        and control_plane_manifest.get("runtime_behavior_changed") is False
+        and control_plane_manifest.get("runtime_defaults_changed") is False
+        and control_plane_manifest.get("runtime_selector_implemented") is False
+        and control_plane_manifest.get("runtime_dtm_or_tablebase_lookup") is False
+        and control_plane_manifest.get("hidden_python_controller") is False
+        and control_plane_manifest.get("gameplay_topology_mutation") is False
+        and control_plane_manifest.get("stage7_promotion_allowed") is False
+        and control_plane_manifest.get("stage8_training_allowed") is False
     )
 
     boundaries = boundary_status(payloads)
@@ -13449,6 +13547,76 @@ def build_payload() -> dict[str, Any]:
             "stage7_promotion_allowed": gate.get("decision", {}).get("stage7_promotion_allowed"),
             "stage8_training_allowed": gate.get("decision", {}).get("stage8_training_allowed"),
         },
+        "control_plane_contract_lineage_gate": {
+            "status": control_plane_manifest.get("summary", {}).get(
+                "recommended_next_slice"
+            ),
+            "passive_contract_lineage_ready": control_plane_contract_lineage_passive,
+            "architecture_goal_id": self_expansion_goal.get("goal_id"),
+            "architecture_goal_type": self_expansion_goal.get("goal_type"),
+            "architecture_must_remain_non_causal": self_expansion_goal.get(
+                "must_remain_non_causal"
+            ),
+            "architecture_runtime_defaults_must_remain_unchanged": (
+                self_expansion_goal.get("runtime_defaults_must_remain_unchanged")
+            ),
+            "architecture_forbidden_next_steps": self_expansion_forbidden_next_steps,
+            "contract_recommended_next_slice": (
+                control_plane_evidence_contract.get("recommended_next_slice")
+            ),
+            "contract_causal_status": (
+                control_plane_evidence_contract.get("causal_status")
+            ),
+            "contract_validation_requirements": (
+                control_plane_evidence_contract.get("validation_requirements") or []
+            ),
+            "manifest_causal_status": control_plane_manifest.get("causal_status"),
+            "manifest_records_from_existing_artifacts_only": (
+                control_plane_manifest.get("summary", {}).get(
+                    "records_from_existing_artifacts_only"
+                )
+            ),
+            "manifest_new_playouts_added": (
+                control_plane_manifest.get("summary", {}).get("new_playouts_added")
+            ),
+            "manifest_missing_required_fields_after_manifest": (
+                control_plane_manifest.get("summary", {}).get(
+                    "missing_required_fields_after_manifest"
+                )
+                or []
+            ),
+            "manifest_recommended_next_slice": (
+                control_plane_manifest.get("summary", {}).get(
+                    "recommended_next_slice"
+                )
+            ),
+            "runtime_behavior_changed": (
+                control_plane_evidence_contract.get("runtime_behavior_changed")
+            ),
+            "runtime_defaults_changed": (
+                control_plane_evidence_contract.get("runtime_defaults_changed")
+            ),
+            "runtime_selector_implemented": (
+                control_plane_evidence_contract.get("runtime_selector_implemented")
+            ),
+            "runtime_dtm_or_tablebase_lookup": (
+                control_plane_evidence_contract.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "hidden_python_controller": (
+                control_plane_evidence_contract.get("hidden_python_controller")
+            ),
+            "gameplay_topology_mutation": (
+                control_plane_evidence_contract.get("gameplay_topology_mutation")
+            ),
+            "stage7_promotion_allowed": (
+                control_plane_evidence_contract.get("stage7_promotion_allowed")
+            ),
+            "stage8_training_allowed": (
+                control_plane_evidence_contract.get("stage8_training_allowed")
+            ),
+        },
         "blockers": blockers,
         "hard_blockers": hard_blockers,
         "control_plane_gate_review_blockers": control_plane_gate_review_blockers,
@@ -13668,6 +13836,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     stage4_diagnostic = payload["stage4_first_move_diagnostic_gate"]
     candidate_generation_refresh = payload["candidate_generation_training_refresh_gate"]
     candidate_generation_trace = payload["candidate_generation_trace_context_gate"]
+    control_plane_contract = payload["control_plane_contract_lineage_gate"]
     current_gate = payload["current_control_plane_gate"]
     decision = payload["decision"]
     lines = [
@@ -15152,6 +15321,29 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- selector_training_allowed: `{candidate_generation_trace['selector_training_allowed']}`",
             f"- stage7_promotion_allowed: `{candidate_generation_trace['stage7_promotion_allowed']}`",
             f"- stage8_training_allowed: `{candidate_generation_trace['stage8_training_allowed']}`",
+            "",
+            "## Control Plane Contract Lineage",
+            "",
+            f"- passive_contract_lineage_ready: `{control_plane_contract['passive_contract_lineage_ready']}`",
+            f"- architecture_goal_id: `{control_plane_contract['architecture_goal_id']}`",
+            f"- architecture_goal_type: `{control_plane_contract['architecture_goal_type']}`",
+            f"- architecture_must_remain_non_causal: `{control_plane_contract['architecture_must_remain_non_causal']}`",
+            f"- architecture_runtime_defaults_must_remain_unchanged: `{control_plane_contract['architecture_runtime_defaults_must_remain_unchanged']}`",
+            f"- contract_recommended_next_slice: `{control_plane_contract['contract_recommended_next_slice']}`",
+            f"- contract_causal_status: `{control_plane_contract['contract_causal_status']}`",
+            f"- manifest_causal_status: `{control_plane_contract['manifest_causal_status']}`",
+            f"- manifest_records_from_existing_artifacts_only: `{control_plane_contract['manifest_records_from_existing_artifacts_only']}`",
+            f"- manifest_new_playouts_added: `{control_plane_contract['manifest_new_playouts_added']}`",
+            f"- manifest_missing_required_fields_after_manifest: `{control_plane_contract['manifest_missing_required_fields_after_manifest']}`",
+            f"- manifest_recommended_next_slice: `{control_plane_contract['manifest_recommended_next_slice']}`",
+            f"- runtime_behavior_changed: `{control_plane_contract['runtime_behavior_changed']}`",
+            f"- runtime_defaults_changed: `{control_plane_contract['runtime_defaults_changed']}`",
+            f"- runtime_selector_implemented: `{control_plane_contract['runtime_selector_implemented']}`",
+            f"- runtime_dtm_or_tablebase_lookup: `{control_plane_contract['runtime_dtm_or_tablebase_lookup']}`",
+            f"- hidden_python_controller: `{control_plane_contract['hidden_python_controller']}`",
+            f"- gameplay_topology_mutation: `{control_plane_contract['gameplay_topology_mutation']}`",
+            f"- stage7_promotion_allowed: `{control_plane_contract['stage7_promotion_allowed']}`",
+            f"- stage8_training_allowed: `{control_plane_contract['stage8_training_allowed']}`",
             "",
             "## Current Control Plane Gate",
             "",

@@ -63,6 +63,18 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
     assert boundaries["hidden_python_controller"] is False
     assert boundaries["gameplay_topology_mutation"] is False
     assert (
+        payload["source_artifacts"]["self_expansion_architecture_gate"]
+        == "reports/krk_self_expansion_architecture_gate_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["control_plane_evidence_contract"]
+        == "reports/krk_control_plane_evidence_contract_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["control_plane_manifest"]
+        == "reports/krk_control_plane_manifest_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["control_plane_filtered_frames"]
         == "reports/krk_control_plane_filtered_frames_v0.json"
     )
@@ -3049,6 +3061,44 @@ def test_full_suite_readiness_identifies_current_gate():
         ]
         is None
     )
+    contract = payload["control_plane_contract_lineage_gate"]
+    assert contract["passive_contract_lineage_ready"] is True
+    assert contract["architecture_goal_id"] == "krk_control_plane_evidence_contract_v0"
+    assert contract["architecture_goal_type"] == (
+        "non_causal_data_contract_and_review"
+    )
+    assert contract["architecture_must_remain_non_causal"] is True
+    assert contract["architecture_runtime_defaults_must_remain_unchanged"] is True
+    assert "runtime_arbiter" in contract["architecture_forbidden_next_steps"]
+    assert "runtime_internal_terminal" in contract["architecture_forbidden_next_steps"]
+    assert "runtime_dtm_or_tablebase" in contract["architecture_forbidden_next_steps"]
+    assert "gameplay_topology_mutation" in contract["architecture_forbidden_next_steps"]
+    assert "stage7_promotion" in contract["architecture_forbidden_next_steps"]
+    assert "stage8_training" in contract["architecture_forbidden_next_steps"]
+    assert (
+        contract["contract_recommended_next_slice"]
+        == "control_plane_manifest_from_existing_artifacts_v0"
+    )
+    assert contract["contract_causal_status"] == "non_causal_schema_contract"
+    assert "all_records_causal_status_non_causal" in (
+        contract["contract_validation_requirements"]
+    )
+    assert contract["manifest_causal_status"] == "non_causal_manifest"
+    assert contract["manifest_records_from_existing_artifacts_only"] is True
+    assert contract["manifest_new_playouts_added"] == 0
+    assert contract["manifest_missing_required_fields_after_manifest"] == []
+    assert (
+        contract["manifest_recommended_next_slice"]
+        == "stratified_control_plane_gap_report_v0"
+    )
+    assert contract["runtime_behavior_changed"] is False
+    assert contract["runtime_defaults_changed"] is False
+    assert contract["runtime_selector_implemented"] is False
+    assert contract["runtime_dtm_or_tablebase_lookup"] is False
+    assert contract["hidden_python_controller"] is False
+    assert contract["gameplay_topology_mutation"] is False
+    assert contract["stage7_promotion_allowed"] is False
+    assert contract["stage8_training_allowed"] is False
 
     sequence = payload["sequence_policy"]
     assert (
