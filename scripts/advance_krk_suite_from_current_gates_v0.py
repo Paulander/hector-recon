@@ -3215,6 +3215,21 @@ def build_payload() -> dict[str, Any]:
             "sequence_policy_after_protected_failure_contrast_runtime_authorization_row_count": post_failure_refresh.get(
                 "summary", {}
             ).get("runtime_authorization_row_count"),
+            "protected_missing_provider_audit_plan_ready": protected_missing_provider_gate.get(
+                "audit_plan_ready"
+            ),
+            "protected_missing_provider_audit_plan_status": protected_missing_provider_gate.get(
+                "audit_plan_status"
+            ),
+            "protected_missing_provider_audit_plan_job_count": protected_missing_provider_gate.get(
+                "audit_plan_job_count"
+            ),
+            "protected_missing_provider_audit_plan_source_frame_count": protected_missing_provider_gate.get(
+                "audit_plan_source_frame_count"
+            ),
+            "protected_missing_provider_audit_plan_runtime_work_allowed": protected_missing_provider_gate.get(
+                "audit_plan_runtime_work_allowed"
+            ),
             "protected_missing_provider_execution_manifest_status": protected_missing_provider_gate.get(
                 "execution_manifest_status"
             ),

@@ -89,6 +89,9 @@ SOURCES = {
     "control_plane_stage7_boundary_refresh": (
         "reports/krk_control_plane_stage7_boundary_refresh_v0.json"
     ),
+    "protected_missing_provider_capacity_audit_plan": (
+        "reports/krk_protected_missing_provider_capacity_audit_plan_v0.json"
+    ),
     "protected_missing_provider_execution_manifest": (
         "reports/krk_protected_missing_provider_capacity_execution_manifest_v0.json"
     ),
@@ -1255,6 +1258,9 @@ def build_payload() -> dict[str, Any]:
     failure_contrast_integration = payloads["protected_failure_contrast_integration"]
     post_failure_contrast_sequence_refresh = payloads[
         "post_failure_contrast_sequence_refresh"
+    ]
+    protected_missing_provider_capacity_audit_plan = payloads[
+        "protected_missing_provider_capacity_audit_plan"
     ]
     protected_missing_provider_execution_manifest = payloads[
         "protected_missing_provider_execution_manifest"
@@ -6874,6 +6880,12 @@ def build_payload() -> dict[str, Any]:
         post_failure_contrast_refresh_boundary_violation_count == 0
         and post_failure_contrast_refresh_summary.get("all_boundaries_preserved") is True
     )
+    protected_missing_provider_audit_plan_decision = (
+        protected_missing_provider_capacity_audit_plan.get("decision") or {}
+    )
+    protected_missing_provider_audit_plan_summary = (
+        protected_missing_provider_capacity_audit_plan.get("summary") or {}
+    )
     protected_missing_provider_manifest_decision = (
         protected_missing_provider_execution_manifest.get("decision") or {}
     )
@@ -6888,6 +6900,53 @@ def build_payload() -> dict[str, Any]:
     )
     protected_missing_provider_labels_decision = (
         protected_missing_provider_labels.get("decision") or {}
+    )
+    protected_missing_provider_audit_plan_ready = (
+        protected_missing_provider_capacity_audit_plan.get("schema_version")
+        == "krk_protected_missing_provider_capacity_audit_plan.v0"
+        and protected_missing_provider_audit_plan_decision.get("status")
+        == "protected_missing_provider_capacity_audit_plan_ready"
+        and protected_missing_provider_audit_plan_decision.get("runtime_work_allowed")
+        is False
+        and protected_missing_provider_audit_plan_summary.get("job_count") == 16
+        and protected_missing_provider_audit_plan_summary.get("source_frame_count")
+        == 6
+        and protected_missing_provider_audit_plan_summary.get("runtime_work_allowed")
+        is False
+        and (
+            protected_missing_provider_audit_plan_summary.get("stage_counts") or {}
+        )
+        == {"stage4": 6, "stage5": 7, "stage6": 3}
+        and "reports/krk_protected_max_only_frame_review_v0.json"
+        in (protected_missing_provider_capacity_audit_plan.get("source_artifacts") or [])
+        and protected_missing_provider_capacity_audit_plan.get(
+            "runtime_behavior_changed"
+        )
+        is False
+        and protected_missing_provider_capacity_audit_plan.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and protected_missing_provider_capacity_audit_plan.get(
+            "runtime_selector_implemented"
+        )
+        is False
+        and protected_missing_provider_capacity_audit_plan.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and protected_missing_provider_capacity_audit_plan.get(
+            "gameplay_topology_mutation"
+        )
+        is False
+        and protected_missing_provider_capacity_audit_plan.get(
+            "stage7_promotion_allowed"
+        )
+        is False
+        and protected_missing_provider_capacity_audit_plan.get(
+            "stage8_training_allowed"
+        )
+        is False
     )
     protected_missing_provider_manifest_review_passive = (
         protected_missing_provider_execution_manifest.get("schema_version")
@@ -6904,6 +6963,9 @@ def build_payload() -> dict[str, Any]:
         is True
         and protected_missing_provider_manifest_binding.get("job_count") == 16
         and protected_missing_provider_manifest_binding.get("stage7_jobs") == 0
+        and protected_missing_provider_audit_plan_ready
+        and "reports/krk_protected_missing_provider_capacity_audit_plan_v0.json"
+        in (protected_missing_provider_execution_manifest.get("source_artifacts") or [])
         and protected_missing_provider_manifest_review_decision.get("status")
         == "protected_missing_provider_capacity_manifest_review_passed_labels_allowed"
         and protected_missing_provider_manifest_review_decision.get(
@@ -11134,6 +11196,62 @@ def build_payload() -> dict[str, Any]:
             "stage8_training_allowed": False,
         },
         "protected_missing_provider_gate": {
+            "audit_plan_ready": protected_missing_provider_audit_plan_ready,
+            "audit_plan_status": (
+                protected_missing_provider_audit_plan_decision.get("status")
+            ),
+            "audit_plan_job_count": (
+                protected_missing_provider_audit_plan_summary.get("job_count")
+            ),
+            "audit_plan_source_frame_count": (
+                protected_missing_provider_audit_plan_summary.get(
+                    "source_frame_count"
+                )
+            ),
+            "audit_plan_stage_counts": (
+                protected_missing_provider_audit_plan_summary.get("stage_counts")
+                or {}
+            ),
+            "audit_plan_runtime_work_allowed": (
+                protected_missing_provider_audit_plan_decision.get(
+                    "runtime_work_allowed"
+                )
+            ),
+            "audit_plan_runtime_behavior_changed": (
+                protected_missing_provider_capacity_audit_plan.get(
+                    "runtime_behavior_changed"
+                )
+            ),
+            "audit_plan_runtime_defaults_changed": (
+                protected_missing_provider_capacity_audit_plan.get(
+                    "runtime_defaults_changed"
+                )
+            ),
+            "audit_plan_runtime_selector_implemented": (
+                protected_missing_provider_capacity_audit_plan.get(
+                    "runtime_selector_implemented"
+                )
+            ),
+            "audit_plan_runtime_dtm_or_tablebase_lookup": (
+                protected_missing_provider_capacity_audit_plan.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "audit_plan_gameplay_topology_mutation": (
+                protected_missing_provider_capacity_audit_plan.get(
+                    "gameplay_topology_mutation"
+                )
+            ),
+            "audit_plan_stage7_promotion_allowed": (
+                protected_missing_provider_capacity_audit_plan.get(
+                    "stage7_promotion_allowed"
+                )
+            ),
+            "audit_plan_stage8_training_allowed": (
+                protected_missing_provider_capacity_audit_plan.get(
+                    "stage8_training_allowed"
+                )
+            ),
             "execution_manifest_status": (
                 protected_missing_provider_manifest_decision.get("status")
             ),
@@ -15944,6 +16062,12 @@ def write_markdown(payload: dict[str, Any]) -> str:
             "",
             "## Protected Missing-Provider Evidence",
             "",
+            f"- audit_plan_ready: `{missing_provider['audit_plan_ready']}`",
+            f"- audit_plan_status: `{missing_provider['audit_plan_status']}`",
+            f"- audit_plan_job_count: `{missing_provider['audit_plan_job_count']}`",
+            f"- audit_plan_source_frame_count: `{missing_provider['audit_plan_source_frame_count']}`",
+            f"- audit_plan_stage_counts: `{missing_provider['audit_plan_stage_counts']}`",
+            f"- audit_plan_runtime_work_allowed: `{missing_provider['audit_plan_runtime_work_allowed']}`",
             f"- execution_manifest_status: `{missing_provider['execution_manifest_status']}`",
             f"- execution_manifest_job_count: `{missing_provider['execution_manifest_job_count']}`",
             f"- execution_manifest_stage7_job_count: `{missing_provider['execution_manifest_stage7_job_count']}`",

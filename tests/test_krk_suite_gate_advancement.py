@@ -2133,6 +2133,24 @@ def test_gate_advancement_reports_current_stage7_blocker():
         ]
         is None
     )
+    assert payload["summary"]["protected_missing_provider_audit_plan_ready"] is True
+    assert (
+        payload["summary"]["protected_missing_provider_audit_plan_status"]
+        == "protected_missing_provider_capacity_audit_plan_ready"
+    )
+    assert payload["summary"]["protected_missing_provider_audit_plan_job_count"] == 16
+    assert (
+        payload["summary"][
+            "protected_missing_provider_audit_plan_source_frame_count"
+        ]
+        == 6
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_audit_plan_runtime_work_allowed"
+        ]
+        is False
+    )
     assert (
         payload["summary"]["protected_missing_provider_execution_manifest_status"]
         == "protected_missing_provider_capacity_execution_manifest_bound"

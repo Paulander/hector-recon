@@ -976,7 +976,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `83f88df8fd749947826f0ab80bbd42c3681cd68158f46af503f1c65e1e228890`
+- expected_readiness_fingerprint: `45fe022199c4724783eb82c3149fe0b338b7c5d70669d4b3d14534741642030b`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -992,6 +992,12 @@
 
 ## Protected Missing-Provider Evidence
 
+- audit_plan_ready: `True`
+- audit_plan_status: `protected_missing_provider_capacity_audit_plan_ready`
+- audit_plan_job_count: `16`
+- audit_plan_source_frame_count: `6`
+- audit_plan_stage_counts: `{'stage4': 6, 'stage5': 7, 'stage6': 3}`
+- audit_plan_runtime_work_allowed: `False`
 - execution_manifest_status: `protected_missing_provider_capacity_execution_manifest_bound`
 - execution_manifest_job_count: `16`
 - execution_manifest_stage7_job_count: `0`
@@ -1620,5 +1626,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2555`
+- checked_flag_count: `2562`
 - violation_count: `0`

@@ -785,6 +785,10 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_protected_max_only_frame_review_v0.json"
     )
     assert (
+        payload["source_artifacts"]["protected_missing_provider_capacity_audit_plan"]
+        == "reports/krk_protected_missing_provider_capacity_audit_plan_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["selector_negative_suppression_evidence_v0"]
         == "reports/krk_selector_negative_suppression_evidence_v0.json"
     )
@@ -3507,6 +3511,26 @@ def test_full_suite_readiness_identifies_current_gate():
     assert protected_failure_contrast["stage8_training_allowed"] is False
 
     missing_provider = payload["protected_missing_provider_gate"]
+    assert missing_provider["audit_plan_ready"] is True
+    assert (
+        missing_provider["audit_plan_status"]
+        == "protected_missing_provider_capacity_audit_plan_ready"
+    )
+    assert missing_provider["audit_plan_job_count"] == 16
+    assert missing_provider["audit_plan_source_frame_count"] == 6
+    assert missing_provider["audit_plan_stage_counts"] == {
+        "stage4": 6,
+        "stage5": 7,
+        "stage6": 3,
+    }
+    assert missing_provider["audit_plan_runtime_work_allowed"] is False
+    assert missing_provider["audit_plan_runtime_behavior_changed"] is False
+    assert missing_provider["audit_plan_runtime_defaults_changed"] is False
+    assert missing_provider["audit_plan_runtime_selector_implemented"] is False
+    assert missing_provider["audit_plan_runtime_dtm_or_tablebase_lookup"] is False
+    assert missing_provider["audit_plan_gameplay_topology_mutation"] is False
+    assert missing_provider["audit_plan_stage7_promotion_allowed"] is False
+    assert missing_provider["audit_plan_stage8_training_allowed"] is False
     assert (
         missing_provider["execution_manifest_status"]
         == "protected_missing_provider_capacity_execution_manifest_bound"
