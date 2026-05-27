@@ -1767,6 +1767,22 @@ def test_gate_advancement_reports_current_stage7_blocker():
         "selected_owner_failure_risk_visible_proxy_probe_v0_status"
     ] == "visible_failure_risk_proxy_candidate_needs_out_of_sample_validation"
     assert payload["summary"][
+        "selected_owner_failure_risk_independent_manifest_status"
+    ] == "independent_proxy_validation_manifest_ready"
+    assert (
+        payload["summary"]["selected_owner_failure_risk_independent_manifest_job_count"]
+        == 8
+    )
+    assert payload["summary"][
+        "selected_owner_failure_risk_independent_manifest_stage7_job_count"
+    ] == 0
+    assert (
+        payload["summary"][
+            "selected_owner_failure_risk_independent_manifest_implementation_allowed"
+        ]
+        is False
+    )
+    assert payload["summary"][
         "selected_owner_failure_risk_independent_validation_v0_status"
     ] == "independent_proxy_validation_failed_or_underpowered"
     assert payload["summary"][

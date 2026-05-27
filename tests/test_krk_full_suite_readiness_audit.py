@@ -982,6 +982,12 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
     )
     assert (
         payload["source_artifacts"][
+            "selected_owner_failure_risk_proxy_independent_manifest_v0"
+        ]
+        == "reports/krk_selected_owner_failure_risk_proxy_independent_manifest_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
             "selected_owner_failure_risk_proxy_blocker_review_v0"
         ]
         == "reports/krk_selected_owner_failure_risk_proxy_blocker_review_v0.json"
@@ -2938,6 +2944,16 @@ def test_full_suite_readiness_identifies_current_gate():
     assert failure_risk["visible_proxy_probe_v0_review_threshold_met"] is True
     assert failure_risk["visible_proxy_probe_v0_row_count"] == 40
     assert failure_risk["visible_proxy_probe_v0_stage7_row_count"] == 0
+    assert failure_risk["independent_manifest_status"] == (
+        "independent_proxy_validation_manifest_ready"
+    )
+    assert failure_risk["independent_manifest_execute_labels_now"] is True
+    assert failure_risk["independent_manifest_implementation_allowed"] is False
+    assert failure_risk["independent_manifest_labels_generated_in_this_slice"] is False
+    assert failure_risk["independent_manifest_all_bindings_valid"] is True
+    assert failure_risk["independent_manifest_job_count"] == 8
+    assert failure_risk["independent_manifest_stage7_job_count"] == 0
+    assert failure_risk["independent_manifest_stage7_training_rows"] == 0
     assert failure_risk["independent_validation_v0_status"] == (
         "independent_proxy_validation_failed_or_underpowered"
     )

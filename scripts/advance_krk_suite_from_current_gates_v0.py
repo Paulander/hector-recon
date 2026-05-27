@@ -2763,6 +2763,26 @@ def build_payload() -> dict[str, Any]:
                     "visible_proxy_probe_v0_status"
                 )
             ),
+            "selected_owner_failure_risk_independent_manifest_status": (
+                selected_owner_failure_risk_proxy_gate.get(
+                    "independent_manifest_status"
+                )
+            ),
+            "selected_owner_failure_risk_independent_manifest_job_count": (
+                selected_owner_failure_risk_proxy_gate.get(
+                    "independent_manifest_job_count"
+                )
+            ),
+            "selected_owner_failure_risk_independent_manifest_stage7_job_count": (
+                selected_owner_failure_risk_proxy_gate.get(
+                    "independent_manifest_stage7_job_count"
+                )
+            ),
+            "selected_owner_failure_risk_independent_manifest_implementation_allowed": (
+                selected_owner_failure_risk_proxy_gate.get(
+                    "independent_manifest_implementation_allowed"
+                )
+            ),
             "selected_owner_failure_risk_independent_validation_v0_status": (
                 selected_owner_failure_risk_proxy_gate.get(
                     "independent_validation_v0_status"

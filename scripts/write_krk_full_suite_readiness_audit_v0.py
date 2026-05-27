@@ -928,6 +928,9 @@ SOURCES = {
     "selected_owner_failure_risk_visible_proxy_probe_v0": (
         "reports/krk_selected_owner_failure_risk_visible_proxy_probe_v0.json"
     ),
+    "selected_owner_failure_risk_proxy_independent_manifest_v0": (
+        "reports/krk_selected_owner_failure_risk_proxy_independent_manifest_v0.json"
+    ),
     "selected_owner_failure_risk_proxy_independent_validation_v0": (
         "reports/krk_selected_owner_failure_risk_proxy_independent_validation_v0.json"
     ),
@@ -2053,6 +2056,9 @@ def build_payload() -> dict[str, Any]:
     ]
     selected_owner_failure_risk_visible_proxy_probe_v0 = payloads[
         "selected_owner_failure_risk_visible_proxy_probe_v0"
+    ]
+    selected_owner_failure_risk_proxy_independent_manifest_v0 = payloads[
+        "selected_owner_failure_risk_proxy_independent_manifest_v0"
     ]
     selected_owner_failure_risk_proxy_independent_validation_v0 = payloads[
         "selected_owner_failure_risk_proxy_independent_validation_v0"
@@ -6516,6 +6522,19 @@ def build_payload() -> dict[str, Any]:
     failure_risk_visible_probe_summary = (
         selected_owner_failure_risk_visible_proxy_probe_v0.get("summary") or {}
     )
+    failure_risk_independent_manifest_decision = (
+        selected_owner_failure_risk_proxy_independent_manifest_v0.get("decision") or {}
+    )
+    failure_risk_independent_manifest_binding_summary = (
+        selected_owner_failure_risk_proxy_independent_manifest_v0.get("binding_summary")
+        or {}
+    )
+    failure_risk_independent_manifest_selection_policy = (
+        selected_owner_failure_risk_proxy_independent_manifest_v0.get(
+            "selection_policy"
+        )
+        or {}
+    )
     failure_risk_independent_validation_v0_decision = (
         selected_owner_failure_risk_proxy_independent_validation_v0.get("decision")
         or {}
@@ -6643,6 +6662,37 @@ def build_payload() -> dict[str, Any]:
         and failure_risk_visible_probe_summary.get("row_count") == 40
         and failure_risk_visible_probe_summary.get("stage7_row_count") == 0
         and failure_risk_visible_probe_summary.get("review_threshold_met") is True
+        and failure_risk_independent_manifest_decision.get("status")
+        == "independent_proxy_validation_manifest_ready"
+        and failure_risk_independent_manifest_decision.get("execute_labels_now")
+        is True
+        and failure_risk_independent_manifest_decision.get("runtime_work_allowed")
+        is False
+        and failure_risk_independent_manifest_decision.get(
+            "selector_training_allowed"
+        )
+        is False
+        and selected_owner_failure_risk_proxy_independent_manifest_v0.get(
+            "implementation_allowed_by_this_manifest"
+        )
+        is False
+        and selected_owner_failure_risk_proxy_independent_manifest_v0.get(
+            "labels_generated_in_this_slice"
+        )
+        is False
+        and failure_risk_independent_manifest_binding_summary.get(
+            "all_bindings_valid"
+        )
+        is True
+        and failure_risk_independent_manifest_binding_summary.get("job_count") == 8
+        and failure_risk_independent_manifest_binding_summary.get(
+            "stage7_job_count"
+        )
+        == 0
+        and failure_risk_independent_manifest_selection_policy.get(
+            "stage7_training_rows"
+        )
+        == 0
         and failure_risk_independent_validation_v0_decision.get("status")
         == "independent_proxy_validation_failed_or_underpowered"
         and failure_risk_independent_validation_v0_decision.get("runtime_work_allowed")
@@ -6671,6 +6721,7 @@ def build_payload() -> dict[str, Any]:
             and artifact.get("stage8_training_allowed") is False
             for artifact in [
                 selected_owner_failure_risk_visible_proxy_probe_v0,
+                selected_owner_failure_risk_proxy_independent_manifest_v0,
                 selected_owner_failure_risk_proxy_independent_validation_v0,
                 selected_owner_failure_risk_proxy_blocker_review_v0,
             ]
@@ -10794,6 +10845,40 @@ def build_payload() -> dict[str, Any]:
             ),
             "visible_proxy_probe_v0_stage7_row_count": (
                 failure_risk_visible_probe_summary.get("stage7_row_count")
+            ),
+            "independent_manifest_status": (
+                failure_risk_independent_manifest_decision.get("status")
+            ),
+            "independent_manifest_execute_labels_now": (
+                failure_risk_independent_manifest_decision.get("execute_labels_now")
+            ),
+            "independent_manifest_implementation_allowed": (
+                selected_owner_failure_risk_proxy_independent_manifest_v0.get(
+                    "implementation_allowed_by_this_manifest"
+                )
+            ),
+            "independent_manifest_labels_generated_in_this_slice": (
+                selected_owner_failure_risk_proxy_independent_manifest_v0.get(
+                    "labels_generated_in_this_slice"
+                )
+            ),
+            "independent_manifest_all_bindings_valid": (
+                failure_risk_independent_manifest_binding_summary.get(
+                    "all_bindings_valid"
+                )
+            ),
+            "independent_manifest_job_count": (
+                failure_risk_independent_manifest_binding_summary.get("job_count")
+            ),
+            "independent_manifest_stage7_job_count": (
+                failure_risk_independent_manifest_binding_summary.get(
+                    "stage7_job_count"
+                )
+            ),
+            "independent_manifest_stage7_training_rows": (
+                failure_risk_independent_manifest_selection_policy.get(
+                    "stage7_training_rows"
+                )
             ),
             "independent_validation_v0_status": (
                 failure_risk_independent_validation_v0_decision.get("status")
