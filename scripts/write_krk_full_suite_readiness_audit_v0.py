@@ -955,6 +955,15 @@ SOURCES = {
     "selected_provider_diversity_architecture_review_v0": (
         "reports/krk_selected_provider_diversity_architecture_review_v0.json"
     ),
+    "diverse_contrast_label_plan_v1": (
+        "reports/krk_diverse_contrast_label_plan_v1.json"
+    ),
+    "diverse_contrast_execution_manifest_v1": (
+        "reports/krk_diverse_contrast_execution_manifest_v1.json"
+    ),
+    "diverse_contrast_labels_v1": (
+        "reports/krk_diverse_contrast_labels_v1.json"
+    ),
     "selector_readiness_v3_plan": (
         "reports/krk_selector_readiness_v3_plan.json"
     ),
@@ -2193,6 +2202,11 @@ def build_payload() -> dict[str, Any]:
     selected_provider_diversity_architecture_review_v0 = payloads[
         "selected_provider_diversity_architecture_review_v0"
     ]
+    diverse_contrast_label_plan_v1 = payloads["diverse_contrast_label_plan_v1"]
+    diverse_contrast_execution_manifest_v1 = payloads[
+        "diverse_contrast_execution_manifest_v1"
+    ]
+    diverse_contrast_labels_v1 = payloads["diverse_contrast_labels_v1"]
     selector_readiness_v3_plan = payloads["selector_readiness_v3_plan"]
     state_local_contrast_labels_v1 = payloads[
         "state_local_contrast_labels_v1"
@@ -6870,6 +6884,17 @@ def build_payload() -> dict[str, Any]:
     provider_diversity_architecture_decision = (
         selected_provider_diversity_architecture_review_v0.get("decision") or {}
     )
+    diverse_contrast_plan_decision = (
+        diverse_contrast_label_plan_v1.get("decision") or {}
+    )
+    diverse_contrast_manifest_decision = (
+        diverse_contrast_execution_manifest_v1.get("decision") or {}
+    )
+    diverse_contrast_manifest_jobs = (
+        diverse_contrast_execution_manifest_v1.get("jobs") or []
+    )
+    diverse_contrast_labels_decision = diverse_contrast_labels_v1.get("decision") or {}
+    diverse_contrast_labels_summary = diverse_contrast_labels_v1.get("summary") or {}
     selected_provider_diversity_passive = (
         selected_provider_diversity_evidence_plan_v0.get("causal_status")
         == "non_causal_design_plan"
@@ -7038,6 +7063,50 @@ def build_payload() -> dict[str, Any]:
             "runtime_candidate_generator_implemented"
         )
         is False
+        and diverse_contrast_label_plan_v1.get("causal_status")
+        == "non_causal_label_plan"
+        and diverse_contrast_plan_decision.get("status")
+        == "diverse_contrast_label_plan_ready"
+        and diverse_contrast_plan_decision.get("runtime_test_allowed_next") is False
+        and diverse_contrast_plan_decision.get("stage7_promotion_allowed") is False
+        and diverse_contrast_plan_decision.get("stage8_training_allowed") is False
+        and diverse_contrast_execution_manifest_v1.get("causal_status")
+        == "non_causal_execution_manifest"
+        and diverse_contrast_manifest_decision.get("status")
+        == "diverse_contrast_execution_manifest_ready"
+        and diverse_contrast_manifest_decision.get("runtime_test_allowed_next")
+        is False
+        and diverse_contrast_manifest_decision.get("stage7_promotion_allowed")
+        is False
+        and diverse_contrast_manifest_decision.get("stage8_training_allowed")
+        is False
+        and len(diverse_contrast_manifest_jobs) == 12
+        and diverse_contrast_labels_v1.get("causal_status") == "non_causal_label_run"
+        and diverse_contrast_labels_decision.get("status")
+        == "diverse_contrast_labels_completed"
+        and diverse_contrast_labels_decision.get("runtime_test_allowed_next")
+        is False
+        and diverse_contrast_labels_decision.get("stage7_promotion_allowed") is False
+        and diverse_contrast_labels_decision.get("stage8_training_allowed") is False
+        and diverse_contrast_labels_summary.get("label_count") == 12
+        and diverse_contrast_labels_summary.get("training_label_count") == 4
+        and diverse_contrast_labels_summary.get("stage7_eval_only_label_count") == 8
+        and diverse_contrast_labels_summary.get("trace_failures_only") is True
+        and diverse_contrast_labels_summary.get("full_failure_traces_elided") is True
+        and all(
+            artifact.get("runtime_behavior_changed") is False
+            and artifact.get("runtime_defaults_changed") is False
+            and artifact.get("runtime_dtm_or_tablebase_lookup") is False
+            and artifact.get("runtime_terminals_added") is not True
+            and artifact.get("gameplay_topology_mutation") is False
+            and artifact.get("stage7_promotion_allowed") is False
+            and artifact.get("stage8_training_allowed") is False
+            for artifact in [
+                diverse_contrast_label_plan_v1,
+                diverse_contrast_execution_manifest_v1,
+                diverse_contrast_labels_v1,
+            ]
+        )
     )
     selector_readiness_v3_decision = selector_readiness_v3_plan.get("decision") or {}
     selector_readiness_v3_checks = {
@@ -11681,6 +11750,36 @@ def build_payload() -> dict[str, Any]:
             ),
             "trace_failures_only": provider_diversity_labels_summary.get(
                 "trace_failures_only"
+            ),
+            "diverse_contrast_plan_status": diverse_contrast_plan_decision.get(
+                "status"
+            ),
+            "diverse_contrast_manifest_status": (
+                diverse_contrast_manifest_decision.get("status")
+            ),
+            "diverse_contrast_manifest_job_count": len(
+                diverse_contrast_manifest_jobs
+            ),
+            "diverse_contrast_labels_status": diverse_contrast_labels_decision.get(
+                "status"
+            ),
+            "diverse_contrast_label_count": (
+                diverse_contrast_labels_summary.get("label_count")
+            ),
+            "diverse_contrast_training_label_count": (
+                diverse_contrast_labels_summary.get("training_label_count")
+            ),
+            "diverse_contrast_stage7_eval_only_label_count": (
+                diverse_contrast_labels_summary.get("stage7_eval_only_label_count")
+            ),
+            "diverse_contrast_result_counts_by_stage": (
+                diverse_contrast_labels_summary.get("result_counts_by_stage") or {}
+            ),
+            "diverse_contrast_trace_failures_only": (
+                diverse_contrast_labels_summary.get("trace_failures_only")
+            ),
+            "diverse_contrast_full_failure_traces_elided": (
+                diverse_contrast_labels_summary.get("full_failure_traces_elided")
             ),
             "architecture_status": provider_diversity_architecture_decision.get(
                 "status"

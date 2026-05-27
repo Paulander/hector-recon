@@ -2760,6 +2760,35 @@ def build_payload() -> dict[str, Any]:
             "selected_provider_diversity_stage7_training_rows": (
                 selected_provider_diversity_gate.get("stage7_training_rows")
             ),
+            "selected_provider_diversity_diverse_contrast_plan_status": (
+                selected_provider_diversity_gate.get("diverse_contrast_plan_status")
+            ),
+            "selected_provider_diversity_diverse_contrast_manifest_status": (
+                selected_provider_diversity_gate.get(
+                    "diverse_contrast_manifest_status"
+                )
+            ),
+            "selected_provider_diversity_diverse_contrast_manifest_job_count": (
+                selected_provider_diversity_gate.get(
+                    "diverse_contrast_manifest_job_count"
+                )
+            ),
+            "selected_provider_diversity_diverse_contrast_labels_status": (
+                selected_provider_diversity_gate.get("diverse_contrast_labels_status")
+            ),
+            "selected_provider_diversity_diverse_contrast_label_count": (
+                selected_provider_diversity_gate.get("diverse_contrast_label_count")
+            ),
+            "selected_provider_diversity_diverse_contrast_training_label_count": (
+                selected_provider_diversity_gate.get(
+                    "diverse_contrast_training_label_count"
+                )
+            ),
+            "selected_provider_diversity_diverse_contrast_stage7_eval_only_label_count": (
+                selected_provider_diversity_gate.get(
+                    "diverse_contrast_stage7_eval_only_label_count"
+                )
+            ),
             "selected_provider_diversity_architecture_status": (
                 selected_provider_diversity_gate.get("architecture_status")
             ),

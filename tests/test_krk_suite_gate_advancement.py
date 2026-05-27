@@ -1747,6 +1747,37 @@ def test_gate_advancement_reports_current_stage7_blocker():
     )
     assert payload["summary"]["selected_provider_diversity_label_count"] == 18
     assert payload["summary"]["selected_provider_diversity_stage7_training_rows"] == 0
+    assert payload["summary"][
+        "selected_provider_diversity_diverse_contrast_plan_status"
+    ] == "diverse_contrast_label_plan_ready"
+    assert payload["summary"][
+        "selected_provider_diversity_diverse_contrast_manifest_status"
+    ] == "diverse_contrast_execution_manifest_ready"
+    assert (
+        payload["summary"][
+            "selected_provider_diversity_diverse_contrast_manifest_job_count"
+        ]
+        == 12
+    )
+    assert payload["summary"][
+        "selected_provider_diversity_diverse_contrast_labels_status"
+    ] == "diverse_contrast_labels_completed"
+    assert (
+        payload["summary"]["selected_provider_diversity_diverse_contrast_label_count"]
+        == 12
+    )
+    assert (
+        payload["summary"][
+            "selected_provider_diversity_diverse_contrast_training_label_count"
+        ]
+        == 4
+    )
+    assert (
+        payload["summary"][
+            "selected_provider_diversity_diverse_contrast_stage7_eval_only_label_count"
+        ]
+        == 8
+    )
     assert payload["summary"]["selected_provider_diversity_architecture_status"] == (
         "selected_provider_diversity_requirement_should_be_reframed"
     )

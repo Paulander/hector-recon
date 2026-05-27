@@ -1061,6 +1061,18 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_selected_provider_diversity_architecture_review_v0.json"
     )
     assert (
+        payload["source_artifacts"]["diverse_contrast_label_plan_v1"]
+        == "reports/krk_diverse_contrast_label_plan_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["diverse_contrast_execution_manifest_v1"]
+        == "reports/krk_diverse_contrast_execution_manifest_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["diverse_contrast_labels_v1"]
+        == "reports/krk_diverse_contrast_labels_v1.json"
+    )
+    assert (
         payload["source_artifacts"]["selector_readiness_v3_plan"]
         == "reports/krk_selector_readiness_v3_plan.json"
     )
@@ -3022,6 +3034,26 @@ def test_full_suite_readiness_identifies_current_gate():
     assert provider_diversity["selected_provider_counts"] == {"krk.stage0_basin": 18}
     assert provider_diversity["stage7_training_rows"] == 0
     assert provider_diversity["trace_failures_only"] is True
+    assert provider_diversity["diverse_contrast_plan_status"] == (
+        "diverse_contrast_label_plan_ready"
+    )
+    assert provider_diversity["diverse_contrast_manifest_status"] == (
+        "diverse_contrast_execution_manifest_ready"
+    )
+    assert provider_diversity["diverse_contrast_manifest_job_count"] == 12
+    assert provider_diversity["diverse_contrast_labels_status"] == (
+        "diverse_contrast_labels_completed"
+    )
+    assert provider_diversity["diverse_contrast_label_count"] == 12
+    assert provider_diversity["diverse_contrast_training_label_count"] == 4
+    assert provider_diversity["diverse_contrast_stage7_eval_only_label_count"] == 8
+    assert provider_diversity["diverse_contrast_result_counts_by_stage"] == {
+        "stage5:mate": 2,
+        "stage6:mate": 2,
+        "stage7:max_plies": 8,
+    }
+    assert provider_diversity["diverse_contrast_trace_failures_only"] is True
+    assert provider_diversity["diverse_contrast_full_failure_traces_elided"] is True
     assert provider_diversity["architecture_status"] == (
         "selected_provider_diversity_requirement_should_be_reframed"
     )
