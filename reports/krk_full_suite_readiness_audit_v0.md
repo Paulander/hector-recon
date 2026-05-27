@@ -376,6 +376,44 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Selector Replay-Free Label Lineage
+
+- passive_replay_free_label_lineage_ready: `True`
+- plan_status: `bounded_selector_stratified_label_plan_ready`
+- plan_execute_labels_now: `False`
+- plan_job_count: `11`
+- plan_job_stage_counts: `{'stage4': 4, 'stage5': 4, 'stage6': 3, 'stage7': 0}`
+- review_status: `planned_labels_replay_free_fillable`
+- review_execute_labels_now: `False`
+- review_missing_replay_free_label_count: `0`
+- review_fill_status_counts: `{'compatible_target_label_available': 11}`
+- negative_control_status: `negative_protected_controls_identified_replay_free`
+- negative_control_count: `9`
+- negative_control_stage_counts: `{'stage4': 2, 'stage5': 4, 'stage6': 3}`
+- negative_control_provider_counts: `{'krk.edge_trap_close': 3, 'krk.edge_trap_enemy_between': 2, 'krk.edge_trap_wrong_tempo': 2, 'krk.stage0_basin': 2}`
+- stratified_dataset_status: `stratified_selector_label_dataset_built_replay_free`
+- stratified_dataset_row_count: `11`
+- stratified_dataset_label_counts: `{'negative': 1, 'positive': 10}`
+- stratified_dataset_stage7_training_rows: `0`
+- balanced_dataset_status: `balanced_selector_label_dataset_built_replay_free`
+- balanced_dataset_row_count: `18`
+- balanced_dataset_label_counts: `{'negative': 9, 'positive': 9}`
+- balanced_dataset_stage7_training_rows: `0`
+- balanced_probe_status: `balanced_labels_support_non_causal_selector_signal`
+- balanced_probe_best_baseline: `provider_id_loo`
+- balanced_probe_best_accuracy: `0.7777777777777778`
+- architecture_status: `selector_signal_promising_sandbox_blocked_pending_readiness_criteria`
+- architecture_selector_sandbox_ready: `False`
+- architecture_runtime_arbiter_allowed: `False`
+- architecture_stage7_repair_allowed: `False`
+- runtime_behavior_changed: `False`
+- runtime_defaults_changed: `False`
+- runtime_arbiter_implemented: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- gameplay_topology_mutation: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Selector Label Balance
 
 - passive_label_balance_ready: `True`
@@ -852,7 +890,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `ea5ad4b169f3146a35d678da605c24ded1489e438f8bde687b9b71d3915295bf`
+- expected_readiness_fingerprint: `67869056b17410145931f2307e8826fa4c74fa45f78d31d0881bfaa7988ee662`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1381,5 +1419,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2495`
+- checked_flag_count: `2501`
 - violation_count: `0`

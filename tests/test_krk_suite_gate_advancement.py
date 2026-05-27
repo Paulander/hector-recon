@@ -849,6 +849,39 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["selector_objective_runtime_terminals_added"] is False
     assert payload["summary"]["selector_objective_stage7_promotion_allowed"] is False
     assert payload["summary"]["selector_objective_stage8_training_allowed"] is False
+    assert payload["summary"]["selector_replay_free_label_passive_ready"] is True
+    assert payload["summary"]["selector_replay_free_label_status"] == (
+        "selector_signal_promising_sandbox_blocked_pending_readiness_criteria"
+    )
+    assert payload["summary"]["selector_replay_free_label_plan_job_count"] == 11
+    assert payload["summary"]["selector_replay_free_label_plan_stage7_jobs"] == 0
+    assert payload["summary"]["selector_replay_free_label_review_missing_count"] == 0
+    assert payload["summary"]["selector_replay_free_label_negative_control_count"] == 9
+    assert payload["summary"]["selector_replay_free_label_balanced_row_count"] == 18
+    assert payload["summary"]["selector_replay_free_label_balanced_label_counts"] == {
+        "negative": 9,
+        "positive": 9,
+    }
+    assert (
+        payload["summary"]["selector_replay_free_label_probe_best_baseline"]
+        == "provider_id_loo"
+    )
+    assert (
+        payload["summary"]["selector_replay_free_label_probe_best_accuracy"]
+        == 0.7777777777777778
+    )
+    assert (
+        payload["summary"]["selector_replay_free_label_selector_sandbox_ready"]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_replay_free_label_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_replay_free_label_stage8_training_allowed"]
+        is False
+    )
     assert payload["summary"]["selector_label_balance_passive_ready"] is True
     assert payload["summary"]["selector_label_balance_stratified_dataset_status"] == (
         "stratified_selector_label_dataset_built_replay_free"

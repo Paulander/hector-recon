@@ -611,6 +611,9 @@ def build_payload() -> dict[str, Any]:
     selector_objective_normalization_gate = (
         readiness.get("selector_objective_normalization_gate") or {}
     )
+    selector_replay_free_label_gate = (
+        readiness.get("selector_replay_free_label_lineage_gate") or {}
+    )
     selector_label_balance_gate = readiness.get("selector_label_balance_gate") or {}
     ownership_selection_context_gate = (
         readiness.get("ownership_selection_context_gate") or {}
@@ -1603,6 +1606,52 @@ def build_payload() -> dict[str, Any]:
             ),
             "selector_objective_stage8_training_allowed": (
                 selector_objective_normalization_gate.get("stage8_training_allowed")
+            ),
+            "selector_replay_free_label_passive_ready": (
+                selector_replay_free_label_gate.get(
+                    "passive_replay_free_label_lineage_ready"
+                )
+            ),
+            "selector_replay_free_label_status": (
+                selector_replay_free_label_gate.get("status")
+            ),
+            "selector_replay_free_label_plan_job_count": (
+                selector_replay_free_label_gate.get("plan_job_count")
+            ),
+            "selector_replay_free_label_plan_stage7_jobs": (
+                (selector_replay_free_label_gate.get("plan_job_stage_counts") or {})
+                .get("stage7")
+            ),
+            "selector_replay_free_label_review_missing_count": (
+                selector_replay_free_label_gate.get(
+                    "review_missing_replay_free_label_count"
+                )
+            ),
+            "selector_replay_free_label_negative_control_count": (
+                selector_replay_free_label_gate.get("negative_control_count")
+            ),
+            "selector_replay_free_label_balanced_row_count": (
+                selector_replay_free_label_gate.get("balanced_dataset_row_count")
+            ),
+            "selector_replay_free_label_balanced_label_counts": (
+                selector_replay_free_label_gate.get("balanced_dataset_label_counts")
+            ),
+            "selector_replay_free_label_probe_best_baseline": (
+                selector_replay_free_label_gate.get("balanced_probe_best_baseline")
+            ),
+            "selector_replay_free_label_probe_best_accuracy": (
+                selector_replay_free_label_gate.get("balanced_probe_best_accuracy")
+            ),
+            "selector_replay_free_label_selector_sandbox_ready": (
+                selector_replay_free_label_gate.get(
+                    "architecture_selector_sandbox_ready"
+                )
+            ),
+            "selector_replay_free_label_stage7_promotion_allowed": (
+                selector_replay_free_label_gate.get("stage7_promotion_allowed")
+            ),
+            "selector_replay_free_label_stage8_training_allowed": (
+                selector_replay_free_label_gate.get("stage8_training_allowed")
             ),
             "selector_label_balance_passive_ready": (
                 selector_label_balance_gate.get("passive_label_balance_ready")

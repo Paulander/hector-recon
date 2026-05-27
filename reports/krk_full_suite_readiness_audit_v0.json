@@ -78,8 +78,8 @@
         "readiness_audit": "reports/krk_full_suite_readiness_audit_v0.json",
         "readiness_audit_status": "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection",
         "readiness_boundary_violation_count": 0,
-        "readiness_checked_flag_count": 2495,
-        "readiness_source_artifact_count": 344,
+        "readiness_checked_flag_count": 2501,
+        "readiness_source_artifact_count": 347,
         "runtime_change_class": "default_off_candidate_move_frame_sandbox_only",
         "runtime_dtm_or_tablebase_lookup": false,
         "sandbox_scope_id": "default_off_stage4_candidate_move_first_move_contrast_sandbox_only",
@@ -746,7 +746,7 @@
     "execution_jobs_passing": 6,
     "execution_readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
     "expected_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
-    "expected_readiness_fingerprint": "ea5ad4b169f3146a35d678da605c24ded1489e438f8bde687b9b71d3915295bf",
+    "expected_readiness_fingerprint": "67869056b17410145931f2307e8826fa4c74fa45f78d31d0881bfaa7988ee662",
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "integrated_new_failure_count": 0,
@@ -1031,7 +1031,7 @@
     "trace_features_trace_frame_count": 6
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 2495,
+    "checked_flag_count": 2501,
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "runtime_behavior_changed": false,
@@ -1625,6 +1625,66 @@
       "positive": 14
     }
   },
+  "selector_replay_free_label_lineage_gate": {
+    "architecture_runtime_arbiter_allowed": false,
+    "architecture_selector_sandbox_ready": false,
+    "architecture_stage7_repair_allowed": false,
+    "architecture_status": "selector_signal_promising_sandbox_blocked_pending_readiness_criteria",
+    "balanced_dataset_label_counts": {
+      "negative": 9,
+      "positive": 9
+    },
+    "balanced_dataset_row_count": 18,
+    "balanced_dataset_stage7_training_rows": 0,
+    "balanced_dataset_status": "balanced_selector_label_dataset_built_replay_free",
+    "balanced_probe_best_accuracy": 0.7777777777777778,
+    "balanced_probe_best_baseline": "provider_id_loo",
+    "balanced_probe_status": "balanced_labels_support_non_causal_selector_signal",
+    "gameplay_topology_mutation": false,
+    "negative_control_count": 9,
+    "negative_control_provider_counts": {
+      "krk.edge_trap_close": 3,
+      "krk.edge_trap_enemy_between": 2,
+      "krk.edge_trap_wrong_tempo": 2,
+      "krk.stage0_basin": 2
+    },
+    "negative_control_stage_counts": {
+      "stage4": 2,
+      "stage5": 4,
+      "stage6": 3
+    },
+    "negative_control_status": "negative_protected_controls_identified_replay_free",
+    "passive_replay_free_label_lineage_ready": true,
+    "plan_execute_labels_now": false,
+    "plan_job_count": 11,
+    "plan_job_stage_counts": {
+      "stage4": 4,
+      "stage5": 4,
+      "stage6": 3,
+      "stage7": 0
+    },
+    "plan_status": "bounded_selector_stratified_label_plan_ready",
+    "review_execute_labels_now": false,
+    "review_fill_status_counts": {
+      "compatible_target_label_available": 11
+    },
+    "review_missing_replay_free_label_count": 0,
+    "review_status": "planned_labels_replay_free_fillable",
+    "runtime_arbiter_implemented": false,
+    "runtime_behavior_changed": false,
+    "runtime_defaults_changed": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "selector_signal_promising_sandbox_blocked_pending_readiness_criteria",
+    "stratified_dataset_label_counts": {
+      "negative": 1,
+      "positive": 10
+    },
+    "stratified_dataset_row_count": 11,
+    "stratified_dataset_stage7_training_rows": 0,
+    "stratified_dataset_status": "stratified_selector_label_dataset_built_replay_free"
+  },
   "sequence_policy": {
     "benchmark_design_status": "sequence_policy_benchmark_design_ready_non_causal",
     "benchmark_preflight_blockers": [],
@@ -1843,6 +1903,8 @@
     "selector_feature_architecture_review_v0": "reports/krk_selector_feature_architecture_review_v0.json",
     "selector_feature_baseline_probe_v0": "reports/krk_selector_feature_baseline_probe_v0.json",
     "selector_feature_dataset_v0": "reports/krk_selector_feature_dataset_v0.json",
+    "selector_label_plan_replay_free_review_v1": "reports/krk_selector_label_plan_replay_free_review_v1.json",
+    "selector_negative_control_manifest_v1": "reports/krk_selector_negative_control_manifest_v1.json",
     "selector_negative_suppression_evidence_v0": "reports/krk_selector_negative_suppression_evidence_v0.json",
     "selector_objective_architecture_review_v1": "reports/krk_selector_objective_architecture_review_v1.json",
     "selector_objective_benchmark_review_packet_v2": "reports/strategy_arbitration/krk_selector_objective_benchmark_review_packet_v2.json",
@@ -1866,6 +1928,7 @@
     "selector_readiness_after_contrast_probe_review_v0": "reports/krk_selector_readiness_after_contrast_probe_review_v0.json",
     "selector_stratified_label_balance_probe_v1": "reports/krk_selector_stratified_label_balance_probe_v1.json",
     "selector_stratified_label_dataset_v1": "reports/krk_selector_stratified_label_dataset_v1.json",
+    "selector_stratified_label_plan_v1": "reports/krk_selector_stratified_label_plan_v1.json",
     "selector_target_dataset_v0": "reports/krk_selector_target_dataset_v0.json",
     "selector_target_probe_v0": "reports/krk_selector_target_probe_v0.json",
     "sequence_benchmark": "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",

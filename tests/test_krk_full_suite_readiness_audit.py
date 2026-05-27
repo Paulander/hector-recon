@@ -673,6 +673,18 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_split_selector_objective_readiness_v3.json"
     )
     assert (
+        payload["source_artifacts"]["selector_stratified_label_plan_v1"]
+        == "reports/krk_selector_stratified_label_plan_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_label_plan_replay_free_review_v1"]
+        == "reports/krk_selector_label_plan_replay_free_review_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_negative_control_manifest_v1"]
+        == "reports/krk_selector_negative_control_manifest_v1.json"
+    )
+    assert (
         payload["source_artifacts"]["selector_stratified_label_dataset_v1"]
         == "reports/krk_selector_stratified_label_dataset_v1.json"
     )
@@ -1879,6 +1891,72 @@ def test_full_suite_readiness_identifies_current_gate():
     assert selector_objective["runtime_terminals_added"] is False
     assert selector_objective["stage7_promotion_allowed"] is False
     assert selector_objective["stage8_training_allowed"] is False
+
+    replay_free = payload["selector_replay_free_label_lineage_gate"]
+    assert replay_free["passive_replay_free_label_lineage_ready"] is True
+    assert replay_free["status"] == (
+        "selector_signal_promising_sandbox_blocked_pending_readiness_criteria"
+    )
+    assert replay_free["plan_status"] == "bounded_selector_stratified_label_plan_ready"
+    assert replay_free["plan_execute_labels_now"] is False
+    assert replay_free["plan_job_count"] == 11
+    assert replay_free["plan_job_stage_counts"] == {
+        "stage4": 4,
+        "stage5": 4,
+        "stage6": 3,
+        "stage7": 0,
+    }
+    assert replay_free["review_status"] == "planned_labels_replay_free_fillable"
+    assert replay_free["review_execute_labels_now"] is False
+    assert replay_free["review_missing_replay_free_label_count"] == 0
+    assert replay_free["review_fill_status_counts"] == {
+        "compatible_target_label_available": 11
+    }
+    assert replay_free["negative_control_status"] == (
+        "negative_protected_controls_identified_replay_free"
+    )
+    assert replay_free["negative_control_count"] == 9
+    assert replay_free["negative_control_stage_counts"] == {
+        "stage4": 2,
+        "stage5": 4,
+        "stage6": 3,
+    }
+    assert replay_free["stratified_dataset_status"] == (
+        "stratified_selector_label_dataset_built_replay_free"
+    )
+    assert replay_free["stratified_dataset_row_count"] == 11
+    assert replay_free["stratified_dataset_label_counts"] == {
+        "negative": 1,
+        "positive": 10,
+    }
+    assert replay_free["stratified_dataset_stage7_training_rows"] == 0
+    assert replay_free["balanced_dataset_status"] == (
+        "balanced_selector_label_dataset_built_replay_free"
+    )
+    assert replay_free["balanced_dataset_row_count"] == 18
+    assert replay_free["balanced_dataset_label_counts"] == {
+        "negative": 9,
+        "positive": 9,
+    }
+    assert replay_free["balanced_dataset_stage7_training_rows"] == 0
+    assert replay_free["balanced_probe_status"] == (
+        "balanced_labels_support_non_causal_selector_signal"
+    )
+    assert replay_free["balanced_probe_best_baseline"] == "provider_id_loo"
+    assert replay_free["balanced_probe_best_accuracy"] == 0.7777777777777778
+    assert replay_free["architecture_status"] == (
+        "selector_signal_promising_sandbox_blocked_pending_readiness_criteria"
+    )
+    assert replay_free["architecture_selector_sandbox_ready"] is False
+    assert replay_free["architecture_runtime_arbiter_allowed"] is False
+    assert replay_free["architecture_stage7_repair_allowed"] is False
+    assert replay_free["runtime_behavior_changed"] is False
+    assert replay_free["runtime_defaults_changed"] is False
+    assert replay_free["runtime_arbiter_implemented"] is False
+    assert replay_free["runtime_dtm_or_tablebase_lookup"] is False
+    assert replay_free["gameplay_topology_mutation"] is False
+    assert replay_free["stage7_promotion_allowed"] is False
+    assert replay_free["stage8_training_allowed"] is False
 
     selector_balance = payload["selector_label_balance_gate"]
     assert selector_balance["passive_label_balance_ready"] is True

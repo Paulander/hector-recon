@@ -727,6 +727,15 @@ SOURCES = {
     "abstention_safe_preservation_label_review_v0": (
         "reports/krk_abstention_safe_preservation_label_review_v0.json"
     ),
+    "selector_stratified_label_plan_v1": (
+        "reports/krk_selector_stratified_label_plan_v1.json"
+    ),
+    "selector_label_plan_replay_free_review_v1": (
+        "reports/krk_selector_label_plan_replay_free_review_v1.json"
+    ),
+    "selector_negative_control_manifest_v1": (
+        "reports/krk_selector_negative_control_manifest_v1.json"
+    ),
     "abstention_training_dataset_v1": (
         "reports/krk_abstention_training_dataset_v1.json"
     ),
@@ -1510,6 +1519,15 @@ def build_payload() -> dict[str, Any]:
     selector_balanced_label_probe_v1 = payloads["selector_balanced_label_probe_v1"]
     selector_balanced_architecture_review_v1 = payloads[
         "selector_balanced_architecture_review_v1"
+    ]
+    selector_stratified_label_plan_v1 = payloads[
+        "selector_stratified_label_plan_v1"
+    ]
+    selector_label_plan_replay_free_review_v1 = payloads[
+        "selector_label_plan_replay_free_review_v1"
+    ]
+    selector_negative_control_manifest_v1 = payloads[
+        "selector_negative_control_manifest_v1"
     ]
     ownership_selection_label_dataset_v5 = payloads[
         "ownership_selection_label_dataset_v5"
@@ -4034,6 +4052,202 @@ def build_payload() -> dict[str, Any]:
     )
     selector_balanced_blocked_next_work = (
         selector_balanced_architecture_review_v1.get("blocked_next_work") or []
+    )
+    selector_replay_free_plan_decision = (
+        selector_stratified_label_plan_v1.get("decision") or {}
+    )
+    selector_replay_free_review_decision = (
+        selector_label_plan_replay_free_review_v1.get("decision") or {}
+    )
+    selector_negative_control_decision = (
+        selector_negative_control_manifest_v1.get("decision") or {}
+    )
+    selector_replay_free_plan_jobs = selector_stratified_label_plan_v1.get("jobs") or []
+    selector_replay_free_review_items = (
+        selector_label_plan_replay_free_review_v1.get("reviews") or []
+    )
+    selector_negative_control_rows = (
+        selector_negative_control_manifest_v1.get("controls") or []
+    )
+    selector_replay_free_plan_job_stage_counts = {
+        stage: sum(
+            1
+            for row in selector_replay_free_plan_jobs
+            if row.get("source_stage") == stage
+        )
+        for stage in ("stage4", "stage5", "stage6", "stage7")
+    }
+    selector_replay_free_plan_sources = [
+        "reports/krk_selector_target_dataset_v0.json",
+        "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+        "reports/krk_selector_objective_architecture_review_v1.json",
+    ]
+    selector_replay_free_review_sources = [
+        "reports/krk_selector_stratified_label_plan_v1.json",
+        "reports/krk_selector_target_dataset_v0.json",
+        "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+    ]
+    selector_replay_free_blocked_work = (
+        selector_stratified_label_plan_v1.get("blocked_next_work") or []
+    )
+    selector_replay_free_lineage_artifacts = [
+        selector_stratified_label_plan_v1,
+        selector_label_plan_replay_free_review_v1,
+        selector_negative_control_manifest_v1,
+        selector_stratified_label_dataset_v1,
+        selector_balanced_label_dataset_v1,
+        selector_balanced_label_probe_v1,
+        selector_balanced_architecture_review_v1,
+    ]
+    selector_replay_free_runtime_behavior_changed = any(
+        artifact.get("runtime_behavior_changed") is True
+        for artifact in selector_replay_free_lineage_artifacts
+    )
+    selector_replay_free_runtime_defaults_changed = any(
+        artifact.get("runtime_defaults_changed") is True
+        for artifact in selector_replay_free_lineage_artifacts
+    )
+    selector_replay_free_runtime_arbiter_implemented = any(
+        artifact.get("runtime_arbiter_implemented") is True
+        for artifact in selector_replay_free_lineage_artifacts
+    )
+    selector_replay_free_label_lineage_passive = (
+        selector_stratified_label_plan_v1.get("causal_status")
+        == "non_causal_label_plan"
+        and selector_stratified_label_plan_v1.get("source_artifacts")
+        == selector_replay_free_plan_sources
+        and selector_replay_free_plan_decision.get("status")
+        == "bounded_selector_stratified_label_plan_ready"
+        and selector_replay_free_plan_decision.get("execute_labels_now") is False
+        and selector_replay_free_plan_decision.get("runtime_arbiter_allowed")
+        is False
+        and selector_replay_free_plan_decision.get("selector_sandbox_ready") is False
+        and len(selector_replay_free_plan_jobs) == 11
+        and selector_replay_free_plan_job_stage_counts
+        == {"stage4": 4, "stage5": 4, "stage6": 3, "stage7": 0}
+        and all(
+            row.get("causal_status") == "non_causal_label_job_plan"
+            and row.get("stage7_training_row") is False
+            for row in selector_replay_free_plan_jobs
+        )
+        and all(
+            item in selector_replay_free_blocked_work
+            for item in [
+                "runtime_arbiter",
+                "selector_sandbox",
+                "stage7_repair",
+                "stage7_promotion",
+                "stage8_training",
+                "runtime_dtm_or_tablebase",
+                "gameplay_topology_mutation",
+            ]
+        )
+        and selector_stratified_label_plan_v1.get("runtime_behavior_changed") is False
+        and selector_stratified_label_plan_v1.get("runtime_defaults_changed") is False
+        and selector_stratified_label_plan_v1.get("runtime_arbiter_implemented")
+        is False
+        and selector_label_plan_replay_free_review_v1.get("causal_status")
+        == "non_causal_replay_free_review"
+        and selector_label_plan_replay_free_review_v1.get("source_artifacts")
+        == selector_replay_free_review_sources
+        and selector_replay_free_review_decision.get("status")
+        == "planned_labels_replay_free_fillable"
+        and selector_replay_free_review_decision.get("execute_labels_now") is False
+        and selector_replay_free_review_decision.get("runtime_arbiter_allowed")
+        is False
+        and selector_replay_free_review_decision.get("selector_sandbox_ready")
+        is False
+        and selector_label_plan_replay_free_review_v1.get("planned_job_count") == 11
+        and selector_label_plan_replay_free_review_v1.get(
+            "missing_replay_free_label_count"
+        )
+        == 0
+        and selector_label_plan_replay_free_review_v1.get("fill_status_counts")
+        == {"compatible_target_label_available": 11}
+        and all(
+            row.get("execute_playout_needed") is False
+            and row.get("fill_status") == "compatible_target_label_available"
+            for row in selector_replay_free_review_items
+        )
+        and selector_label_plan_replay_free_review_v1.get("runtime_behavior_changed")
+        is False
+        and selector_label_plan_replay_free_review_v1.get("runtime_defaults_changed")
+        is False
+        and selector_label_plan_replay_free_review_v1.get(
+            "runtime_arbiter_implemented"
+        )
+        is False
+        and selector_negative_control_manifest_v1.get("causal_status")
+        == "non_causal_negative_control_manifest"
+        and selector_negative_control_manifest_v1.get("source_artifact")
+        == "reports/krk_selector_provenance_feature_dataset_v0.json"
+        and selector_negative_control_decision.get("status")
+        == "negative_protected_controls_identified_replay_free"
+        and selector_negative_control_decision.get("runtime_arbiter_allowed")
+        is False
+        and selector_negative_control_decision.get("selector_sandbox_ready") is False
+        and selector_negative_control_manifest_v1.get("control_count") == 9
+        and selector_negative_control_manifest_v1.get("stage_counts")
+        == {"stage4": 2, "stage5": 4, "stage6": 3}
+        and selector_negative_control_manifest_v1.get("provider_counts")
+        == {
+            "krk.edge_trap_close": 3,
+            "krk.edge_trap_enemy_between": 2,
+            "krk.edge_trap_wrong_tempo": 2,
+            "krk.stage0_basin": 2,
+        }
+        and all(
+            row.get("causal_status") == "non_causal_negative_control"
+            and row.get("schema_version") == "krk_selector_negative_control.v1"
+            and row.get("label") == "negative"
+            and row.get("target_kind") == "selected_playout_success"
+            and row.get("stage7_training_row") is False
+            for row in selector_negative_control_rows
+        )
+        and selector_negative_control_manifest_v1.get("runtime_behavior_changed")
+        is False
+        and selector_negative_control_manifest_v1.get("runtime_defaults_changed")
+        is False
+        and selector_negative_control_manifest_v1.get("runtime_arbiter_implemented")
+        is False
+        and selector_stratified_label_dataset_v1.get("row_count") == 11
+        and selector_stratified_label_dataset_v1.get("label_counts")
+        == {"negative": 1, "positive": 10}
+        and selector_stratified_stage7_training_rows == 0
+        and selector_stratified_dataset_decision.get("status")
+        == "stratified_selector_label_dataset_built_replay_free"
+        and selector_stratified_dataset_decision.get("runtime_arbiter_allowed")
+        is False
+        and selector_stratified_dataset_decision.get("selector_sandbox_ready") is False
+        and selector_balanced_label_dataset_v1.get("row_count") == 18
+        and selector_balanced_label_dataset_v1.get("label_counts")
+        == {"negative": 9, "positive": 9}
+        and selector_balanced_stage7_training_rows == 0
+        and selector_balanced_dataset_decision.get("status")
+        == "balanced_selector_label_dataset_built_replay_free"
+        and selector_balanced_dataset_decision.get("runtime_arbiter_allowed")
+        is False
+        and selector_balanced_dataset_decision.get("selector_sandbox_ready") is False
+        and selector_balanced_probe_decision.get("status")
+        == "balanced_labels_support_non_causal_selector_signal"
+        and selector_balanced_probe_best_baseline.get("name") == "provider_id_loo"
+        and selector_balanced_probe_best_baseline.get("accuracy")
+        == 0.7777777777777778
+        and selector_balanced_architecture_decision.get("status")
+        == "selector_signal_promising_sandbox_blocked_pending_readiness_criteria"
+        and selector_balanced_architecture_decision.get("runtime_arbiter_allowed")
+        is False
+        and selector_balanced_architecture_decision.get("selector_sandbox_ready")
+        is False
+        and selector_balanced_architecture_decision.get("stage7_repair_allowed")
+        is False
+        and selector_balanced_architecture_decision.get("stage7_promotion_allowed")
+        is False
+        and selector_balanced_architecture_decision.get("stage8_training_allowed")
+        is False
+        and selector_replay_free_runtime_behavior_changed is False
+        and selector_replay_free_runtime_defaults_changed is False
+        and selector_replay_free_runtime_arbiter_implemented is False
     )
     selector_label_balance_passive = (
         selector_stratified_dataset_decision.get("status")
@@ -7637,6 +7851,105 @@ def build_payload() -> dict[str, Any]:
             "runtime_selector_implemented": False,
             "runtime_dtm_or_tablebase_lookup": False,
             "runtime_terminals_added": False,
+            "stage7_promotion_allowed": (
+                selector_balanced_architecture_decision.get(
+                    "stage7_promotion_allowed"
+                )
+            ),
+            "stage8_training_allowed": (
+                selector_balanced_architecture_decision.get("stage8_training_allowed")
+            ),
+        },
+        "selector_replay_free_label_lineage_gate": {
+            "status": selector_balanced_architecture_decision.get("status"),
+            "passive_replay_free_label_lineage_ready": (
+                selector_replay_free_label_lineage_passive
+            ),
+            "plan_status": selector_replay_free_plan_decision.get("status"),
+            "plan_execute_labels_now": selector_replay_free_plan_decision.get(
+                "execute_labels_now"
+            ),
+            "plan_job_count": len(selector_replay_free_plan_jobs),
+            "plan_job_stage_counts": selector_replay_free_plan_job_stage_counts,
+            "review_status": selector_replay_free_review_decision.get("status"),
+            "review_execute_labels_now": selector_replay_free_review_decision.get(
+                "execute_labels_now"
+            ),
+            "review_missing_replay_free_label_count": (
+                selector_label_plan_replay_free_review_v1.get(
+                    "missing_replay_free_label_count"
+                )
+            ),
+            "review_fill_status_counts": (
+                selector_label_plan_replay_free_review_v1.get("fill_status_counts")
+                or {}
+            ),
+            "negative_control_status": selector_negative_control_decision.get(
+                "status"
+            ),
+            "negative_control_count": selector_negative_control_manifest_v1.get(
+                "control_count"
+            ),
+            "negative_control_stage_counts": (
+                selector_negative_control_manifest_v1.get("stage_counts") or {}
+            ),
+            "negative_control_provider_counts": (
+                selector_negative_control_manifest_v1.get("provider_counts") or {}
+            ),
+            "stratified_dataset_status": selector_stratified_dataset_decision.get(
+                "status"
+            ),
+            "stratified_dataset_row_count": selector_stratified_label_dataset_v1.get(
+                "row_count"
+            ),
+            "stratified_dataset_label_counts": (
+                selector_stratified_label_dataset_v1.get("label_counts") or {}
+            ),
+            "stratified_dataset_stage7_training_rows": (
+                selector_stratified_stage7_training_rows
+            ),
+            "balanced_dataset_status": selector_balanced_dataset_decision.get(
+                "status"
+            ),
+            "balanced_dataset_row_count": selector_balanced_label_dataset_v1.get(
+                "row_count"
+            ),
+            "balanced_dataset_label_counts": (
+                selector_balanced_label_dataset_v1.get("label_counts") or {}
+            ),
+            "balanced_dataset_stage7_training_rows": (
+                selector_balanced_stage7_training_rows
+            ),
+            "balanced_probe_status": selector_balanced_probe_decision.get("status"),
+            "balanced_probe_best_baseline": (
+                selector_balanced_probe_best_baseline.get("name")
+            ),
+            "balanced_probe_best_accuracy": (
+                selector_balanced_probe_best_baseline.get("accuracy")
+            ),
+            "architecture_status": selector_balanced_architecture_decision.get(
+                "status"
+            ),
+            "architecture_selector_sandbox_ready": (
+                selector_balanced_architecture_decision.get("selector_sandbox_ready")
+            ),
+            "architecture_runtime_arbiter_allowed": (
+                selector_balanced_architecture_decision.get("runtime_arbiter_allowed")
+            ),
+            "architecture_stage7_repair_allowed": (
+                selector_balanced_architecture_decision.get("stage7_repair_allowed")
+            ),
+            "runtime_behavior_changed": (
+                selector_replay_free_runtime_behavior_changed
+            ),
+            "runtime_defaults_changed": (
+                selector_replay_free_runtime_defaults_changed
+            ),
+            "runtime_arbiter_implemented": (
+                selector_replay_free_runtime_arbiter_implemented
+            ),
+            "runtime_dtm_or_tablebase_lookup": False,
+            "gameplay_topology_mutation": False,
             "stage7_promotion_allowed": (
                 selector_balanced_architecture_decision.get(
                     "stage7_promotion_allowed"
@@ -12681,6 +12994,9 @@ def write_markdown(payload: dict[str, Any]) -> str:
     forced_provider_control = payload["forced_provider_control_label_lineage_gate"]
     selector_provenance_prior = payload["selector_provenance_prior_blocker_gate"]
     selector_objective_normalization = payload["selector_objective_normalization_gate"]
+    selector_replay_free_label = payload[
+        "selector_replay_free_label_lineage_gate"
+    ]
     selector_label_balance = payload["selector_label_balance_gate"]
     ownership_selection_context = payload["ownership_selection_context_gate"]
     selector_negative_suppression = payload[
@@ -13093,6 +13409,44 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- runtime_terminals_added: `{selector_objective_normalization['runtime_terminals_added']}`",
         f"- stage7_promotion_allowed: `{selector_objective_normalization['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{selector_objective_normalization['stage8_training_allowed']}`",
+        "",
+        "## Selector Replay-Free Label Lineage",
+        "",
+        f"- passive_replay_free_label_lineage_ready: `{selector_replay_free_label['passive_replay_free_label_lineage_ready']}`",
+        f"- plan_status: `{selector_replay_free_label['plan_status']}`",
+        f"- plan_execute_labels_now: `{selector_replay_free_label['plan_execute_labels_now']}`",
+        f"- plan_job_count: `{selector_replay_free_label['plan_job_count']}`",
+        f"- plan_job_stage_counts: `{selector_replay_free_label['plan_job_stage_counts']}`",
+        f"- review_status: `{selector_replay_free_label['review_status']}`",
+        f"- review_execute_labels_now: `{selector_replay_free_label['review_execute_labels_now']}`",
+        f"- review_missing_replay_free_label_count: `{selector_replay_free_label['review_missing_replay_free_label_count']}`",
+        f"- review_fill_status_counts: `{selector_replay_free_label['review_fill_status_counts']}`",
+        f"- negative_control_status: `{selector_replay_free_label['negative_control_status']}`",
+        f"- negative_control_count: `{selector_replay_free_label['negative_control_count']}`",
+        f"- negative_control_stage_counts: `{selector_replay_free_label['negative_control_stage_counts']}`",
+        f"- negative_control_provider_counts: `{selector_replay_free_label['negative_control_provider_counts']}`",
+        f"- stratified_dataset_status: `{selector_replay_free_label['stratified_dataset_status']}`",
+        f"- stratified_dataset_row_count: `{selector_replay_free_label['stratified_dataset_row_count']}`",
+        f"- stratified_dataset_label_counts: `{selector_replay_free_label['stratified_dataset_label_counts']}`",
+        f"- stratified_dataset_stage7_training_rows: `{selector_replay_free_label['stratified_dataset_stage7_training_rows']}`",
+        f"- balanced_dataset_status: `{selector_replay_free_label['balanced_dataset_status']}`",
+        f"- balanced_dataset_row_count: `{selector_replay_free_label['balanced_dataset_row_count']}`",
+        f"- balanced_dataset_label_counts: `{selector_replay_free_label['balanced_dataset_label_counts']}`",
+        f"- balanced_dataset_stage7_training_rows: `{selector_replay_free_label['balanced_dataset_stage7_training_rows']}`",
+        f"- balanced_probe_status: `{selector_replay_free_label['balanced_probe_status']}`",
+        f"- balanced_probe_best_baseline: `{selector_replay_free_label['balanced_probe_best_baseline']}`",
+        f"- balanced_probe_best_accuracy: `{selector_replay_free_label['balanced_probe_best_accuracy']}`",
+        f"- architecture_status: `{selector_replay_free_label['architecture_status']}`",
+        f"- architecture_selector_sandbox_ready: `{selector_replay_free_label['architecture_selector_sandbox_ready']}`",
+        f"- architecture_runtime_arbiter_allowed: `{selector_replay_free_label['architecture_runtime_arbiter_allowed']}`",
+        f"- architecture_stage7_repair_allowed: `{selector_replay_free_label['architecture_stage7_repair_allowed']}`",
+        f"- runtime_behavior_changed: `{selector_replay_free_label['runtime_behavior_changed']}`",
+        f"- runtime_defaults_changed: `{selector_replay_free_label['runtime_defaults_changed']}`",
+        f"- runtime_arbiter_implemented: `{selector_replay_free_label['runtime_arbiter_implemented']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{selector_replay_free_label['runtime_dtm_or_tablebase_lookup']}`",
+        f"- gameplay_topology_mutation: `{selector_replay_free_label['gameplay_topology_mutation']}`",
+        f"- stage7_promotion_allowed: `{selector_replay_free_label['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{selector_replay_free_label['stage8_training_allowed']}`",
         "",
         "## Selector Label Balance",
         "",
