@@ -3195,6 +3195,30 @@ def build_payload() -> dict[str, Any]:
             "sequence_policy_after_protected_failure_contrast_runtime_authorization_row_count": post_failure_refresh.get(
                 "summary", {}
             ).get("runtime_authorization_row_count"),
+            "protected_missing_provider_execution_manifest_status": protected_missing_provider_gate.get(
+                "execution_manifest_status"
+            ),
+            "protected_missing_provider_execution_manifest_job_count": protected_missing_provider_gate.get(
+                "execution_manifest_job_count"
+            ),
+            "protected_missing_provider_execution_manifest_stage7_job_count": protected_missing_provider_gate.get(
+                "execution_manifest_stage7_job_count"
+            ),
+            "protected_missing_provider_execution_manifest_review_passive_ready": protected_missing_provider_gate.get(
+                "execution_manifest_review_passive_ready"
+            ),
+            "protected_missing_provider_execution_manifest_review_status": protected_missing_provider_gate.get(
+                "execution_manifest_review_status"
+            ),
+            "protected_missing_provider_execution_manifest_review_labels_allowed": protected_missing_provider_gate.get(
+                "execution_manifest_review_labels_allowed"
+            ),
+            "protected_missing_provider_execution_manifest_review_runtime_work_allowed": protected_missing_provider_gate.get(
+                "execution_manifest_review_runtime_work_allowed"
+            ),
+            "protected_missing_provider_execution_manifest_review_violation_count": protected_missing_provider_gate.get(
+                "execution_manifest_review_violation_count"
+            ),
             "protected_missing_provider_labels_status": protected_missing_provider_gate.get(
                 "labels_status"
             ),

@@ -107,6 +107,18 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_control_plane_stage7_boundary_refresh_v0.json"
     )
     assert (
+        payload["source_artifacts"][
+            "protected_missing_provider_execution_manifest"
+        ]
+        == "reports/krk_protected_missing_provider_capacity_execution_manifest_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "protected_missing_provider_execution_manifest_review"
+        ]
+        == "reports/krk_protected_missing_provider_capacity_execution_manifest_review_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["sequence_benchmark_inputs"]
         == "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json"
     )
@@ -3452,6 +3464,52 @@ def test_full_suite_readiness_identifies_current_gate():
     assert protected_failure_contrast["stage8_training_allowed"] is False
 
     missing_provider = payload["protected_missing_provider_gate"]
+    assert (
+        missing_provider["execution_manifest_status"]
+        == "protected_missing_provider_capacity_execution_manifest_bound"
+    )
+    assert missing_provider["execution_manifest_job_count"] == 16
+    assert missing_provider["execution_manifest_stage7_job_count"] == 0
+    assert missing_provider["execution_manifest_labels_allowed_now"] is False
+    assert missing_provider["execution_manifest_runtime_work_allowed"] is False
+    assert missing_provider["execution_manifest_review_passive_ready"] is True
+    assert (
+        missing_provider["execution_manifest_review_status"]
+        == "protected_missing_provider_capacity_manifest_review_passed_labels_allowed"
+    )
+    assert missing_provider["execution_manifest_review_labels_allowed"] is True
+    assert missing_provider["execution_manifest_review_runtime_work_allowed"] is False
+    assert missing_provider["execution_manifest_review_violation_count"] == 0
+    assert (
+        missing_provider["execution_manifest_review_runtime_behavior_changed"]
+        is False
+    )
+    assert (
+        missing_provider["execution_manifest_review_runtime_defaults_changed"]
+        is False
+    )
+    assert (
+        missing_provider["execution_manifest_review_runtime_selector_implemented"]
+        is False
+    )
+    assert (
+        missing_provider[
+            "execution_manifest_review_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        missing_provider["execution_manifest_review_gameplay_topology_mutation"]
+        is False
+    )
+    assert (
+        missing_provider["execution_manifest_review_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        missing_provider["execution_manifest_review_stage8_training_allowed"]
+        is False
+    )
     assert (
         missing_provider["labels_status"]
         == "protected_missing_provider_capacity_labels_completed"

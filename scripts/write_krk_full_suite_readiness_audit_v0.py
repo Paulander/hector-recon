@@ -89,6 +89,12 @@ SOURCES = {
     "control_plane_stage7_boundary_refresh": (
         "reports/krk_control_plane_stage7_boundary_refresh_v0.json"
     ),
+    "protected_missing_provider_execution_manifest": (
+        "reports/krk_protected_missing_provider_capacity_execution_manifest_v0.json"
+    ),
+    "protected_missing_provider_execution_manifest_review": (
+        "reports/krk_protected_missing_provider_capacity_execution_manifest_review_v0.json"
+    ),
     "protected_missing_provider_capacity_labels": (
         "reports/krk_protected_missing_provider_capacity_labels_v0.json"
     ),
@@ -1246,6 +1252,12 @@ def build_payload() -> dict[str, Any]:
     failure_contrast_integration = payloads["protected_failure_contrast_integration"]
     post_failure_contrast_sequence_refresh = payloads[
         "post_failure_contrast_sequence_refresh"
+    ]
+    protected_missing_provider_execution_manifest = payloads[
+        "protected_missing_provider_execution_manifest"
+    ]
+    protected_missing_provider_execution_manifest_review = payloads[
+        "protected_missing_provider_execution_manifest_review"
     ]
     protected_missing_provider_labels = payloads[
         "protected_missing_provider_capacity_labels"
@@ -6804,6 +6816,108 @@ def build_payload() -> dict[str, Any]:
         post_failure_contrast_refresh_boundary_violation_count == 0
         and post_failure_contrast_refresh_summary.get("all_boundaries_preserved") is True
     )
+    protected_missing_provider_manifest_decision = (
+        protected_missing_provider_execution_manifest.get("decision") or {}
+    )
+    protected_missing_provider_manifest_binding = (
+        protected_missing_provider_execution_manifest.get("binding_summary") or {}
+    )
+    protected_missing_provider_manifest_review_decision = (
+        protected_missing_provider_execution_manifest_review.get("decision") or {}
+    )
+    protected_missing_provider_manifest_review_summary = (
+        protected_missing_provider_execution_manifest_review.get("review_summary") or {}
+    )
+    protected_missing_provider_labels_decision = (
+        protected_missing_provider_labels.get("decision") or {}
+    )
+    protected_missing_provider_manifest_review_passive = (
+        protected_missing_provider_execution_manifest.get("schema_version")
+        == "krk_protected_missing_provider_capacity_execution_manifest.v0"
+        and protected_missing_provider_execution_manifest_review.get("schema_version")
+        == "krk_protected_missing_provider_capacity_execution_manifest_review.v0"
+        and protected_missing_provider_manifest_decision.get("status")
+        == "protected_missing_provider_capacity_execution_manifest_bound"
+        and protected_missing_provider_manifest_decision.get("labels_allowed_now")
+        is False
+        and protected_missing_provider_manifest_decision.get("runtime_work_allowed")
+        is False
+        and protected_missing_provider_manifest_binding.get("all_bindings_valid")
+        is True
+        and protected_missing_provider_manifest_binding.get("job_count") == 16
+        and protected_missing_provider_manifest_binding.get("stage7_jobs") == 0
+        and protected_missing_provider_manifest_review_decision.get("status")
+        == "protected_missing_provider_capacity_manifest_review_passed_labels_allowed"
+        and protected_missing_provider_manifest_review_decision.get(
+            "runtime_work_allowed"
+        )
+        is False
+        and protected_missing_provider_manifest_review_summary.get("job_count") == 16
+        and protected_missing_provider_manifest_review_summary.get("violation_count")
+        == 0
+        and protected_missing_provider_execution_manifest.get(
+            "runtime_behavior_changed"
+        )
+        is False
+        and protected_missing_provider_execution_manifest.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and protected_missing_provider_execution_manifest.get(
+            "runtime_selector_implemented"
+        )
+        is False
+        and protected_missing_provider_execution_manifest.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and protected_missing_provider_execution_manifest.get(
+            "gameplay_topology_mutation"
+        )
+        is False
+        and protected_missing_provider_execution_manifest.get(
+            "stage7_promotion_allowed"
+        )
+        is False
+        and protected_missing_provider_execution_manifest.get(
+            "stage8_training_allowed"
+        )
+        is False
+        and protected_missing_provider_execution_manifest_review.get(
+            "runtime_behavior_changed"
+        )
+        is False
+        and protected_missing_provider_execution_manifest_review.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and protected_missing_provider_execution_manifest_review.get(
+            "runtime_selector_implemented"
+        )
+        is False
+        and protected_missing_provider_execution_manifest_review.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and protected_missing_provider_execution_manifest_review.get(
+            "gameplay_topology_mutation"
+        )
+        is False
+        and protected_missing_provider_execution_manifest_review.get(
+            "stage7_promotion_allowed"
+        )
+        is False
+        and protected_missing_provider_execution_manifest_review.get(
+            "stage8_training_allowed"
+        )
+        is False
+        and "reports/krk_protected_missing_provider_capacity_execution_manifest_v0.json"
+        in (protected_missing_provider_labels.get("source_artifacts") or [])
+        and "reports/krk_protected_missing_provider_capacity_execution_manifest_review_v0.json"
+        in (protected_missing_provider_labels.get("source_artifacts") or [])
+        and protected_missing_provider_labels_decision.get("status")
+        == "protected_missing_provider_capacity_labels_completed"
+    )
     failure_contrast_runner_summary = failure_contrast_runner.get("summary", {})
     failure_contrast_approval_request_summary = (
         failure_contrast_approval_request.get("summary") or {}
@@ -10914,6 +11028,79 @@ def build_payload() -> dict[str, Any]:
             "stage8_training_allowed": False,
         },
         "protected_missing_provider_gate": {
+            "execution_manifest_status": (
+                protected_missing_provider_manifest_decision.get("status")
+            ),
+            "execution_manifest_job_count": (
+                protected_missing_provider_manifest_binding.get("job_count")
+            ),
+            "execution_manifest_stage7_job_count": (
+                protected_missing_provider_manifest_binding.get("stage7_jobs")
+            ),
+            "execution_manifest_labels_allowed_now": (
+                protected_missing_provider_manifest_decision.get("labels_allowed_now")
+            ),
+            "execution_manifest_runtime_work_allowed": (
+                protected_missing_provider_manifest_decision.get(
+                    "runtime_work_allowed"
+                )
+            ),
+            "execution_manifest_review_passive_ready": (
+                protected_missing_provider_manifest_review_passive
+            ),
+            "execution_manifest_review_status": (
+                protected_missing_provider_manifest_review_decision.get("status")
+            ),
+            "execution_manifest_review_labels_allowed": (
+                protected_missing_provider_manifest_review_decision.get(
+                    "labels_allowed"
+                )
+            ),
+            "execution_manifest_review_runtime_work_allowed": (
+                protected_missing_provider_manifest_review_decision.get(
+                    "runtime_work_allowed"
+                )
+            ),
+            "execution_manifest_review_violation_count": (
+                protected_missing_provider_manifest_review_summary.get(
+                    "violation_count"
+                )
+            ),
+            "execution_manifest_review_runtime_behavior_changed": (
+                protected_missing_provider_execution_manifest_review.get(
+                    "runtime_behavior_changed"
+                )
+            ),
+            "execution_manifest_review_runtime_defaults_changed": (
+                protected_missing_provider_execution_manifest_review.get(
+                    "runtime_defaults_changed"
+                )
+            ),
+            "execution_manifest_review_runtime_selector_implemented": (
+                protected_missing_provider_execution_manifest_review.get(
+                    "runtime_selector_implemented"
+                )
+            ),
+            "execution_manifest_review_runtime_dtm_or_tablebase_lookup": (
+                protected_missing_provider_execution_manifest_review.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "execution_manifest_review_gameplay_topology_mutation": (
+                protected_missing_provider_execution_manifest_review.get(
+                    "gameplay_topology_mutation"
+                )
+            ),
+            "execution_manifest_review_stage7_promotion_allowed": (
+                protected_missing_provider_execution_manifest_review.get(
+                    "stage7_promotion_allowed"
+                )
+            ),
+            "execution_manifest_review_stage8_training_allowed": (
+                protected_missing_provider_execution_manifest_review.get(
+                    "stage8_training_allowed"
+                )
+            ),
             "labels_status": protected_missing_provider_labels.get(
                 "decision", {}
             ).get("status"),
@@ -15646,6 +15833,16 @@ def write_markdown(payload: dict[str, Any]) -> str:
             "",
             "## Protected Missing-Provider Evidence",
             "",
+            f"- execution_manifest_status: `{missing_provider['execution_manifest_status']}`",
+            f"- execution_manifest_job_count: `{missing_provider['execution_manifest_job_count']}`",
+            f"- execution_manifest_stage7_job_count: `{missing_provider['execution_manifest_stage7_job_count']}`",
+            f"- execution_manifest_labels_allowed_now: `{missing_provider['execution_manifest_labels_allowed_now']}`",
+            f"- execution_manifest_runtime_work_allowed: `{missing_provider['execution_manifest_runtime_work_allowed']}`",
+            f"- execution_manifest_review_passive_ready: `{missing_provider['execution_manifest_review_passive_ready']}`",
+            f"- execution_manifest_review_status: `{missing_provider['execution_manifest_review_status']}`",
+            f"- execution_manifest_review_labels_allowed: `{missing_provider['execution_manifest_review_labels_allowed']}`",
+            f"- execution_manifest_review_runtime_work_allowed: `{missing_provider['execution_manifest_review_runtime_work_allowed']}`",
+            f"- execution_manifest_review_violation_count: `{missing_provider['execution_manifest_review_violation_count']}`",
             f"- labels_status: `{missing_provider['labels_status']}`",
             f"- labels_next_step: `{missing_provider['labels_next_step']}`",
             f"- label_count: `{missing_provider['label_count']}`",

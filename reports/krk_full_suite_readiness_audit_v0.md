@@ -971,7 +971,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `40fd17d6b933328e293dac23ffe018a960741bea03916005b79a4135307fc97c`
+- expected_readiness_fingerprint: `677364863fb02d41d7712dc25249b7c8e1fa8a6d5599bcac1022939e85746682`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -987,6 +987,16 @@
 
 ## Protected Missing-Provider Evidence
 
+- execution_manifest_status: `protected_missing_provider_capacity_execution_manifest_bound`
+- execution_manifest_job_count: `16`
+- execution_manifest_stage7_job_count: `0`
+- execution_manifest_labels_allowed_now: `False`
+- execution_manifest_runtime_work_allowed: `False`
+- execution_manifest_review_passive_ready: `True`
+- execution_manifest_review_status: `protected_missing_provider_capacity_manifest_review_passed_labels_allowed`
+- execution_manifest_review_labels_allowed: `True`
+- execution_manifest_review_runtime_work_allowed: `False`
+- execution_manifest_review_violation_count: `0`
 - labels_status: `protected_missing_provider_capacity_labels_completed`
 - labels_next_step: `merge_missing_provider_labels_and_refresh_strategy_sequence_inventory`
 - label_count: `16`
@@ -1605,5 +1615,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2534`
+- checked_flag_count: `2548`
 - violation_count: `0`

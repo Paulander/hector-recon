@@ -2114,6 +2114,50 @@ def test_gate_advancement_reports_current_stage7_blocker():
         is None
     )
     assert (
+        payload["summary"]["protected_missing_provider_execution_manifest_status"]
+        == "protected_missing_provider_capacity_execution_manifest_bound"
+    )
+    assert (
+        payload["summary"]["protected_missing_provider_execution_manifest_job_count"]
+        == 16
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_execution_manifest_stage7_job_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_execution_manifest_review_passive_ready"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_execution_manifest_review_status"
+        ]
+        == "protected_missing_provider_capacity_manifest_review_passed_labels_allowed"
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_execution_manifest_review_labels_allowed"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_execution_manifest_review_runtime_work_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "protected_missing_provider_execution_manifest_review_violation_count"
+        ]
+        == 0
+    )
+    assert (
         payload["summary"]["protected_missing_provider_labels_status"]
         == "protected_missing_provider_capacity_labels_completed"
     )
