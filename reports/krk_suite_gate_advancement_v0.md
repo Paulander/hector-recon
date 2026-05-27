@@ -174,6 +174,22 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - selector_directed_fix_gameplay_topology_mutation: `False`
 - selector_directed_fix_stage7_promotion_allowed: `False`
 - selector_directed_fix_stage8_training_allowed: `False`
+- forced_provider_control_passive_ready: `True`
+- forced_provider_control_status: `merge_forced_provider_control_labels_and_rerun_stratified_probe`
+- forced_provider_control_plan_selected_job_count: `12`
+- forced_provider_control_plan_selected_job_count_by_stage: `{'stage5': 6, 'stage6': 6}`
+- forced_provider_control_manifest_all_bindings_valid: `True`
+- forced_provider_control_manifest_missing_path_count: `0`
+- forced_provider_control_label_count: `12`
+- forced_provider_control_label_stage_counts: `{'stage4': 0, 'stage5': 6, 'stage6': 6, 'stage7': 0}`
+- forced_provider_control_result_counts: `{'mate': 9, 'max_plies': 3}`
+- forced_provider_control_trace_failures_only: `True`
+- forced_provider_control_trace_included_count: `0`
+- forced_provider_control_forced_successor_available_count: `12`
+- forced_provider_control_runtime_dtm_or_tablebase_lookup: `False`
+- forced_provider_control_gameplay_topology_mutation: `False`
+- forced_provider_control_stage7_promotion_allowed: `False`
+- forced_provider_control_stage8_training_allowed: `False`
 - selector_provenance_prior_passive_ready: `True`
 - selector_provenance_prior_status: `provider_prior_remains_best_no_selector_sandbox`
 - selector_provenance_prior_target_training_row_count: `42`
@@ -492,9 +508,9 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - stage4_first_move_contrast_sandbox_selector_training_allowed: `False`
 - stage4_first_move_contrast_sandbox_stage7_promotion_allowed: `False`
 - stage4_first_move_contrast_sandbox_stage8_training_allowed: `False`
-- stage4_first_move_contrast_sandbox_readiness_checked_flag_count: `2456`
+- stage4_first_move_contrast_sandbox_readiness_checked_flag_count: `2477`
 - stage4_first_move_contrast_sandbox_readiness_boundary_violation_count: `0`
-- stage4_first_move_contrast_sandbox_readiness_source_artifact_count: `338`
+- stage4_first_move_contrast_sandbox_readiness_source_artifact_count: `341`
 - stage7_success_controls: `11`
 - stage7_success_controls_required: `5`
 - stage7_success_controls_ready: `True`
@@ -1003,9 +1019,9 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - sequence_policy_underpowered_pilot_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - sequence_policy_underpowered_pilot_stage4_topk_signal: `True`
 - sequence_policy_underpowered_pilot_stage7_success_gap: `0`
-- sequence_policy_underpowered_pilot_readiness_checked_flag_count: `2477`
+- sequence_policy_underpowered_pilot_readiness_checked_flag_count: `2495`
 - sequence_policy_underpowered_pilot_readiness_boundary_violation_count: `0`
-- sequence_policy_underpowered_pilot_readiness_source_artifact_count: `341`
+- sequence_policy_underpowered_pilot_readiness_source_artifact_count: `344`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_processed_job_count: `0`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_executed_job_count: `0`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_collection_run_allowed: `False`
@@ -1025,23 +1041,23 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - sequence_policy_underpowered_pilot_protected_failure_contrast_stage7_promotion_allowed: `False`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_stage8_training_allowed: `False`
 - readiness_status: `krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection`
-- readiness_checked_flag_count: `2477`
+- readiness_checked_flag_count: `2495`
 - readiness_boundary_violation_count: `0`
-- readiness_source_artifact_count: `341`
+- readiness_source_artifact_count: `344`
 - unblocker_status: `krk_suite_protected_failure_contrast_unblocker_ready_pending_explicit_collection_approval`
 - stage8_training_readiness_status: `stage8_training_blocked_pending_protected_failure_contrast_collection`
-- stage8_training_readiness_checked_flag_count: `2477`
+- stage8_training_readiness_checked_flag_count: `2495`
 - stage8_training_readiness_boundary_violation_count: `0`
-- stage8_training_readiness_source_artifact_count: `341`
+- stage8_training_readiness_source_artifact_count: `344`
 - stage8_training_readiness_protected_failure_contrast_post_success_refresh_required: `True`
 - stage8_training_readiness_protected_failure_contrast_approval_receipt_present: `False`
 - stage8_training_readiness_protected_failure_contrast_approval_receipt_valid: `False`
 - stage8_training_readiness_protected_failure_contrast_runtime_direct_routing: `False`
 - stage8_training_readiness_protected_failure_contrast_hidden_python_controller: `False`
 - stage7_post_label_outcome_status: `post_label_outcome_waiting_on_explicit_protected_failure_contrast_collection`
-- stage7_post_label_outcome_readiness_checked_flag_count: `2477`
+- stage7_post_label_outcome_readiness_checked_flag_count: `2495`
 - stage7_post_label_outcome_readiness_boundary_violation_count: `0`
-- stage7_post_label_outcome_readiness_source_artifact_count: `341`
+- stage7_post_label_outcome_readiness_source_artifact_count: `344`
 - stage7_post_label_outcome_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - stage7_post_label_outcome_protected_failure_contrast_runner_processed_job_count: `0`
 - stage7_post_label_outcome_protected_failure_contrast_runner_executed_job_count: `0`

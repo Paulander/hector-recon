@@ -694,6 +694,15 @@ SOURCES = {
     "selector_directed_fix_review_v0": (
         "reports/krk_selector_directed_fix_review_v0.json"
     ),
+    "forced_provider_control_label_plan_v0": (
+        "reports/krk_forced_provider_control_label_plan_v0.json"
+    ),
+    "forced_provider_label_execution_manifest_v0": (
+        "reports/krk_forced_provider_label_execution_manifest_v0.json"
+    ),
+    "forced_provider_control_labels_v0": (
+        "reports/krk_forced_provider_control_labels_v0.json"
+    ),
     "selector_provenance_feature_dataset_v0": (
         "reports/krk_selector_provenance_feature_dataset_v0.json"
     ),
@@ -1776,6 +1785,15 @@ def build_payload() -> dict[str, Any]:
     ]
     selector_directed_fix_review_v0 = payloads[
         "selector_directed_fix_review_v0"
+    ]
+    forced_provider_control_label_plan_v0 = payloads[
+        "forced_provider_control_label_plan_v0"
+    ]
+    forced_provider_label_execution_manifest_v0 = payloads[
+        "forced_provider_label_execution_manifest_v0"
+    ]
+    forced_provider_control_labels_v0 = payloads[
+        "forced_provider_control_labels_v0"
     ]
     selector_provenance_feature_dataset_v0 = payloads[
         "selector_provenance_feature_dataset_v0"
@@ -3532,6 +3550,150 @@ def build_payload() -> dict[str, Any]:
         is False
         and selector_directed_fix_review_v0.get("stage7_promotion_allowed") is False
         and selector_directed_fix_review_v0.get("stage8_training_allowed") is False
+    )
+    forced_provider_plan_job_selection = (
+        forced_provider_control_label_plan_v0.get("job_selection") or {}
+    )
+    forced_provider_manifest_binding_summary = (
+        forced_provider_label_execution_manifest_v0.get("binding_summary") or {}
+    )
+    forced_provider_labels_summary = (
+        forced_provider_control_labels_v0.get("summary") or {}
+    )
+    forced_provider_label_rows = (
+        forced_provider_control_labels_v0.get("labels") or []
+    )
+    forced_provider_label_stage_counts = {
+        stage: sum(
+            1 for row in forced_provider_label_rows if row.get("source_stage") == stage
+        )
+        for stage in ("stage4", "stage5", "stage6", "stage7")
+    }
+    forced_provider_control_blocked_steps = [
+        "runtime_arbiter",
+        "runtime_internal_terminal",
+        "stage7_promotion",
+        "stage8_training",
+        "runtime_dtm_or_tablebase",
+        "gameplay_topology_mutation",
+    ]
+    forced_provider_control_label_lineage_passive = (
+        forced_provider_control_label_plan_v0.get("causal_status")
+        == "non_causal_label_plan"
+        and forced_provider_control_label_plan_v0.get("source_artifacts")
+        == [
+            "reports/krk_control_plane_filtered_frames_v0.json",
+            "reports/krk_strategy_arbiter_stratified_probe_v2.json",
+        ]
+        and forced_provider_plan_job_selection.get("selected_job_count") == 12
+        and forced_provider_plan_job_selection.get("max_jobs") == 12
+        and forced_provider_plan_job_selection.get("max_jobs_per_stage") == 6
+        and forced_provider_plan_job_selection.get("selected_job_count_by_stage")
+        == {"stage5": 6, "stage6": 6}
+        and forced_provider_plan_job_selection.get("target_stages")
+        == ["stage5", "stage6"]
+        and forced_provider_plan_job_selection.get("current_label_result_counts")
+        == {"mate": 8, "max_plies": 4}
+        and forced_provider_control_label_plan_v0.get("recommended_next_step")
+        == "run_bounded_forced_provider_control_labels_if_runner_available"
+        and all(
+            step in (forced_provider_control_label_plan_v0.get("blocked_next_steps") or [])
+            for step in forced_provider_control_blocked_steps
+        )
+        and forced_provider_control_label_plan_v0.get("runtime_behavior_changed")
+        is False
+        and forced_provider_control_label_plan_v0.get("runtime_defaults_changed")
+        is False
+        and forced_provider_control_label_plan_v0.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and forced_provider_control_label_plan_v0.get("gameplay_topology_mutation")
+        is False
+        and forced_provider_control_label_plan_v0.get("stage7_promotion_allowed")
+        is False
+        and forced_provider_control_label_plan_v0.get("stage8_training_allowed")
+        is False
+        and forced_provider_label_execution_manifest_v0.get("causal_status")
+        == "non_causal_execution_manifest"
+        and forced_provider_label_execution_manifest_v0.get("source_artifacts")
+        == [
+            "reports/krk_forced_provider_control_label_plan_v0.json",
+            "reports/stage6_overlay_validation_manifest.md",
+        ]
+        and forced_provider_manifest_binding_summary.get("all_bindings_valid") is True
+        and forced_provider_manifest_binding_summary.get("job_count") == 12
+        and forced_provider_manifest_binding_summary.get("missing_path_count") == 0
+        and forced_provider_label_execution_manifest_v0.get("recommended_next_step")
+        == "run_bounded_forced_provider_control_labels"
+        and all(
+            step
+            in (
+                forced_provider_label_execution_manifest_v0.get("blocked_next_steps")
+                or []
+            )
+            for step in forced_provider_control_blocked_steps
+        )
+        and forced_provider_label_execution_manifest_v0.get(
+            "runtime_behavior_changed"
+        )
+        is False
+        and forced_provider_label_execution_manifest_v0.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and forced_provider_label_execution_manifest_v0.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and forced_provider_label_execution_manifest_v0.get(
+            "gameplay_topology_mutation"
+        )
+        is False
+        and forced_provider_label_execution_manifest_v0.get(
+            "stage7_promotion_allowed"
+        )
+        is False
+        and forced_provider_label_execution_manifest_v0.get(
+            "stage8_training_allowed"
+        )
+        is False
+        and forced_provider_control_labels_v0.get("causal_status")
+        == "non_causal_label_run"
+        and forced_provider_control_labels_v0.get("source_artifacts")
+        == ["reports/krk_forced_provider_label_execution_manifest_v0.json"]
+        and forced_provider_labels_summary.get("label_count") == 12
+        and forced_provider_labels_summary.get("result_counts")
+        == {"mate": 9, "max_plies": 3}
+        and forced_provider_labels_summary.get("result_counts_by_stage")
+        == {"stage5:mate": 6, "stage6:mate": 3, "stage6:max_plies": 3}
+        and forced_provider_labels_summary.get("trace_failures_only") is True
+        and forced_provider_control_labels_v0.get("recommended_next_step")
+        == "merge_forced_provider_control_labels_and_rerun_stratified_probe"
+        and len(forced_provider_label_rows) == 12
+        and forced_provider_label_stage_counts
+        == {"stage4": 0, "stage5": 6, "stage6": 6, "stage7": 0}
+        and all(row.get("causal_status") == "non_causal_outcome_label" for row in forced_provider_label_rows)
+        and all(row.get("forced_successor_available") is True for row in forced_provider_label_rows)
+        and all(row.get("trace_included") is False for row in forced_provider_label_rows)
+        and all(
+            row.get("schema_version") == "krk_forced_provider_control_label.v0"
+            for row in forced_provider_label_rows
+        )
+        and all(
+            step in (forced_provider_control_labels_v0.get("blocked_next_steps") or [])
+            for step in forced_provider_control_blocked_steps
+        )
+        and forced_provider_control_labels_v0.get("runtime_behavior_changed") is False
+        and forced_provider_control_labels_v0.get("runtime_defaults_changed") is False
+        and forced_provider_control_labels_v0.get("runtime_dtm_or_tablebase_lookup")
+        is False
+        and forced_provider_control_labels_v0.get("gameplay_topology_mutation")
+        is False
+        and forced_provider_control_labels_v0.get("stage7_promotion_allowed")
+        is False
+        and forced_provider_control_labels_v0.get("stage8_training_allowed")
+        is False
     )
     selector_provenance_dataset_decision = (
         selector_provenance_feature_dataset_v0.get("decision") or {}
@@ -6998,6 +7160,96 @@ def build_payload() -> dict[str, Any]:
             ),
             "stage8_training_allowed": (
                 selector_directed_fix_review_v0.get("stage8_training_allowed")
+            ),
+        },
+        "forced_provider_control_label_lineage_gate": {
+            "status": forced_provider_control_labels_v0.get(
+                "recommended_next_step"
+            ),
+            "passive_forced_provider_control_lineage_ready": (
+                forced_provider_control_label_lineage_passive
+            ),
+            "plan_causal_status": forced_provider_control_label_plan_v0.get(
+                "causal_status"
+            ),
+            "plan_selected_job_count": forced_provider_plan_job_selection.get(
+                "selected_job_count"
+            ),
+            "plan_selected_job_count_by_stage": (
+                forced_provider_plan_job_selection.get(
+                    "selected_job_count_by_stage"
+                )
+                or {}
+            ),
+            "plan_current_label_result_counts": (
+                forced_provider_plan_job_selection.get(
+                    "current_label_result_counts"
+                )
+                or {}
+            ),
+            "plan_target_stages": (
+                forced_provider_plan_job_selection.get("target_stages") or []
+            ),
+            "manifest_causal_status": (
+                forced_provider_label_execution_manifest_v0.get("causal_status")
+            ),
+            "manifest_all_bindings_valid": (
+                forced_provider_manifest_binding_summary.get("all_bindings_valid")
+            ),
+            "manifest_job_count": (
+                forced_provider_manifest_binding_summary.get("job_count")
+            ),
+            "manifest_missing_path_count": (
+                forced_provider_manifest_binding_summary.get("missing_path_count")
+            ),
+            "labels_causal_status": forced_provider_control_labels_v0.get(
+                "causal_status"
+            ),
+            "label_count": forced_provider_labels_summary.get("label_count"),
+            "label_stage_counts": forced_provider_label_stage_counts,
+            "result_counts": forced_provider_labels_summary.get("result_counts")
+            or {},
+            "result_counts_by_stage": (
+                forced_provider_labels_summary.get("result_counts_by_stage") or {}
+            ),
+            "trace_failures_only": forced_provider_labels_summary.get(
+                "trace_failures_only"
+            ),
+            "trace_included_count": sum(
+                1 for row in forced_provider_label_rows if row.get("trace_included")
+            ),
+            "forced_successor_available_count": sum(
+                1
+                for row in forced_provider_label_rows
+                if row.get("forced_successor_available")
+            ),
+            "provider_ids": sorted(
+                {
+                    str(row.get("provider_id"))
+                    for row in forced_provider_label_rows
+                    if row.get("provider_id")
+                }
+            ),
+            "blocked_next_steps": forced_provider_control_blocked_steps,
+            "runtime_behavior_changed": (
+                forced_provider_control_labels_v0.get("runtime_behavior_changed")
+            ),
+            "runtime_defaults_changed": (
+                forced_provider_control_labels_v0.get("runtime_defaults_changed")
+            ),
+            "runtime_dtm_or_tablebase_lookup": (
+                forced_provider_control_labels_v0.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "gameplay_topology_mutation": (
+                forced_provider_control_labels_v0.get("gameplay_topology_mutation")
+            ),
+            "stage7_promotion_allowed": (
+                forced_provider_control_labels_v0.get("stage7_promotion_allowed")
+            ),
+            "stage8_training_allowed": (
+                forced_provider_control_labels_v0.get("stage8_training_allowed")
             ),
         },
         "selector_provenance_prior_blocker_gate": {
@@ -12426,6 +12678,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     ]
     provider_identity_maturity = payload["provider_identity_maturity_blocker_gate"]
     selector_directed_fix = payload["selector_directed_fix_blocker_gate"]
+    forced_provider_control = payload["forced_provider_control_label_lineage_gate"]
     selector_provenance_prior = payload["selector_provenance_prior_blocker_gate"]
     selector_objective_normalization = payload["selector_objective_normalization_gate"]
     selector_label_balance = payload["selector_label_balance_gate"]
@@ -12757,6 +13010,36 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- gameplay_topology_mutation: `{selector_directed_fix['gameplay_topology_mutation']}`",
         f"- stage7_promotion_allowed: `{selector_directed_fix['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{selector_directed_fix['stage8_training_allowed']}`",
+        "",
+        "## Forced Provider Control Label Lineage",
+        "",
+        f"- passive_forced_provider_control_lineage_ready: `{forced_provider_control['passive_forced_provider_control_lineage_ready']}`",
+        f"- status: `{forced_provider_control['status']}`",
+        f"- plan_causal_status: `{forced_provider_control['plan_causal_status']}`",
+        f"- plan_selected_job_count: `{forced_provider_control['plan_selected_job_count']}`",
+        f"- plan_selected_job_count_by_stage: `{forced_provider_control['plan_selected_job_count_by_stage']}`",
+        f"- plan_current_label_result_counts: `{forced_provider_control['plan_current_label_result_counts']}`",
+        f"- plan_target_stages: `{forced_provider_control['plan_target_stages']}`",
+        f"- manifest_causal_status: `{forced_provider_control['manifest_causal_status']}`",
+        f"- manifest_all_bindings_valid: `{forced_provider_control['manifest_all_bindings_valid']}`",
+        f"- manifest_job_count: `{forced_provider_control['manifest_job_count']}`",
+        f"- manifest_missing_path_count: `{forced_provider_control['manifest_missing_path_count']}`",
+        f"- labels_causal_status: `{forced_provider_control['labels_causal_status']}`",
+        f"- label_count: `{forced_provider_control['label_count']}`",
+        f"- label_stage_counts: `{forced_provider_control['label_stage_counts']}`",
+        f"- result_counts: `{forced_provider_control['result_counts']}`",
+        f"- result_counts_by_stage: `{forced_provider_control['result_counts_by_stage']}`",
+        f"- trace_failures_only: `{forced_provider_control['trace_failures_only']}`",
+        f"- trace_included_count: `{forced_provider_control['trace_included_count']}`",
+        f"- forced_successor_available_count: `{forced_provider_control['forced_successor_available_count']}`",
+        f"- provider_ids: `{forced_provider_control['provider_ids']}`",
+        f"- blocked_next_steps: `{forced_provider_control['blocked_next_steps']}`",
+        f"- runtime_behavior_changed: `{forced_provider_control['runtime_behavior_changed']}`",
+        f"- runtime_defaults_changed: `{forced_provider_control['runtime_defaults_changed']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{forced_provider_control['runtime_dtm_or_tablebase_lookup']}`",
+        f"- gameplay_topology_mutation: `{forced_provider_control['gameplay_topology_mutation']}`",
+        f"- stage7_promotion_allowed: `{forced_provider_control['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{forced_provider_control['stage8_training_allowed']}`",
         "",
         "## Selector Provenance Prior Blocker",
         "",

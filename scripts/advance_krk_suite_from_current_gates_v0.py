@@ -602,6 +602,9 @@ def build_payload() -> dict[str, Any]:
     selector_directed_fix_gate = (
         readiness.get("selector_directed_fix_blocker_gate") or {}
     )
+    forced_provider_control_gate = (
+        readiness.get("forced_provider_control_label_lineage_gate") or {}
+    )
     selector_provenance_prior_gate = (
         readiness.get("selector_provenance_prior_blocker_gate") or {}
     )
@@ -1422,6 +1425,56 @@ def build_payload() -> dict[str, Any]:
             ),
             "selector_directed_fix_stage8_training_allowed": (
                 selector_directed_fix_gate.get("stage8_training_allowed")
+            ),
+            "forced_provider_control_passive_ready": (
+                forced_provider_control_gate.get(
+                    "passive_forced_provider_control_lineage_ready"
+                )
+            ),
+            "forced_provider_control_status": (
+                forced_provider_control_gate.get("status")
+            ),
+            "forced_provider_control_plan_selected_job_count": (
+                forced_provider_control_gate.get("plan_selected_job_count")
+            ),
+            "forced_provider_control_plan_selected_job_count_by_stage": (
+                forced_provider_control_gate.get("plan_selected_job_count_by_stage")
+            ),
+            "forced_provider_control_manifest_all_bindings_valid": (
+                forced_provider_control_gate.get("manifest_all_bindings_valid")
+            ),
+            "forced_provider_control_manifest_missing_path_count": (
+                forced_provider_control_gate.get("manifest_missing_path_count")
+            ),
+            "forced_provider_control_label_count": (
+                forced_provider_control_gate.get("label_count")
+            ),
+            "forced_provider_control_label_stage_counts": (
+                forced_provider_control_gate.get("label_stage_counts")
+            ),
+            "forced_provider_control_result_counts": (
+                forced_provider_control_gate.get("result_counts")
+            ),
+            "forced_provider_control_trace_failures_only": (
+                forced_provider_control_gate.get("trace_failures_only")
+            ),
+            "forced_provider_control_trace_included_count": (
+                forced_provider_control_gate.get("trace_included_count")
+            ),
+            "forced_provider_control_forced_successor_available_count": (
+                forced_provider_control_gate.get("forced_successor_available_count")
+            ),
+            "forced_provider_control_runtime_dtm_or_tablebase_lookup": (
+                forced_provider_control_gate.get("runtime_dtm_or_tablebase_lookup")
+            ),
+            "forced_provider_control_gameplay_topology_mutation": (
+                forced_provider_control_gate.get("gameplay_topology_mutation")
+            ),
+            "forced_provider_control_stage7_promotion_allowed": (
+                forced_provider_control_gate.get("stage7_promotion_allowed")
+            ),
+            "forced_provider_control_stage8_training_allowed": (
+                forced_provider_control_gate.get("stage8_training_allowed")
             ),
             "selector_provenance_prior_passive_ready": (
                 selector_provenance_prior_gate.get(

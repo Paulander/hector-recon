@@ -293,6 +293,36 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Forced Provider Control Label Lineage
+
+- passive_forced_provider_control_lineage_ready: `True`
+- status: `merge_forced_provider_control_labels_and_rerun_stratified_probe`
+- plan_causal_status: `non_causal_label_plan`
+- plan_selected_job_count: `12`
+- plan_selected_job_count_by_stage: `{'stage5': 6, 'stage6': 6}`
+- plan_current_label_result_counts: `{'mate': 8, 'max_plies': 4}`
+- plan_target_stages: `['stage5', 'stage6']`
+- manifest_causal_status: `non_causal_execution_manifest`
+- manifest_all_bindings_valid: `True`
+- manifest_job_count: `12`
+- manifest_missing_path_count: `0`
+- labels_causal_status: `non_causal_label_run`
+- label_count: `12`
+- label_stage_counts: `{'stage4': 0, 'stage5': 6, 'stage6': 6, 'stage7': 0}`
+- result_counts: `{'mate': 9, 'max_plies': 3}`
+- result_counts_by_stage: `{'stage5:mate': 6, 'stage6:mate': 3, 'stage6:max_plies': 3}`
+- trace_failures_only: `True`
+- trace_included_count: `0`
+- forced_successor_available_count: `12`
+- provider_ids: `['krk.edge_trap_close', 'krk.edge_trap_enemy_between', 'krk.edge_trap_wrong_tempo', 'krk.stage0_basin']`
+- blocked_next_steps: `['runtime_arbiter', 'runtime_internal_terminal', 'stage7_promotion', 'stage8_training', 'runtime_dtm_or_tablebase', 'gameplay_topology_mutation']`
+- runtime_behavior_changed: `False`
+- runtime_defaults_changed: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- gameplay_topology_mutation: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Selector Provenance Prior Blocker
 
 - passive_provenance_prior_blocker_ready: `True`
@@ -822,7 +852,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `276e657282c46b70fcc8688d249f4f53dc59bb3a9e45a8324709e5253bd7e046`
+- expected_readiness_fingerprint: `ea5ad4b169f3146a35d678da605c24ded1489e438f8bde687b9b71d3915295bf`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1351,5 +1381,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2477`
+- checked_flag_count: `2495`
 - violation_count: `0`

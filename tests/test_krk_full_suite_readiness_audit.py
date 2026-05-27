@@ -633,6 +633,20 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_selector_directed_fix_review_v0.json"
     )
     assert (
+        payload["source_artifacts"]["forced_provider_control_label_plan_v0"]
+        == "reports/krk_forced_provider_control_label_plan_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "forced_provider_label_execution_manifest_v0"
+        ]
+        == "reports/krk_forced_provider_label_execution_manifest_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["forced_provider_control_labels_v0"]
+        == "reports/krk_forced_provider_control_labels_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["selector_provenance_feature_dataset_v0"]
         == "reports/krk_selector_provenance_feature_dataset_v0.json"
     )
@@ -1616,6 +1630,69 @@ def test_full_suite_readiness_identifies_current_gate():
     assert directed_fix["gameplay_topology_mutation"] is False
     assert directed_fix["stage7_promotion_allowed"] is False
     assert directed_fix["stage8_training_allowed"] is False
+
+    forced_provider = payload["forced_provider_control_label_lineage_gate"]
+    assert forced_provider["passive_forced_provider_control_lineage_ready"] is True
+    assert (
+        forced_provider["status"]
+        == "merge_forced_provider_control_labels_and_rerun_stratified_probe"
+    )
+    assert forced_provider["plan_causal_status"] == "non_causal_label_plan"
+    assert forced_provider["plan_selected_job_count"] == 12
+    assert forced_provider["plan_selected_job_count_by_stage"] == {
+        "stage5": 6,
+        "stage6": 6,
+    }
+    assert forced_provider["plan_current_label_result_counts"] == {
+        "mate": 8,
+        "max_plies": 4,
+    }
+    assert forced_provider["plan_target_stages"] == ["stage5", "stage6"]
+    assert (
+        forced_provider["manifest_causal_status"]
+        == "non_causal_execution_manifest"
+    )
+    assert forced_provider["manifest_all_bindings_valid"] is True
+    assert forced_provider["manifest_job_count"] == 12
+    assert forced_provider["manifest_missing_path_count"] == 0
+    assert forced_provider["labels_causal_status"] == "non_causal_label_run"
+    assert forced_provider["label_count"] == 12
+    assert forced_provider["label_stage_counts"] == {
+        "stage4": 0,
+        "stage5": 6,
+        "stage6": 6,
+        "stage7": 0,
+    }
+    assert forced_provider["result_counts"] == {"mate": 9, "max_plies": 3}
+    assert forced_provider["result_counts_by_stage"] == {
+        "stage5:mate": 6,
+        "stage6:mate": 3,
+        "stage6:max_plies": 3,
+    }
+    assert forced_provider["trace_failures_only"] is True
+    assert forced_provider["trace_included_count"] == 0
+    assert forced_provider["forced_successor_available_count"] == 12
+    assert forced_provider["provider_ids"] == [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo",
+        "krk.stage0_basin",
+    ]
+    for blocked in [
+        "runtime_arbiter",
+        "runtime_internal_terminal",
+        "stage7_promotion",
+        "stage8_training",
+        "runtime_dtm_or_tablebase",
+        "gameplay_topology_mutation",
+    ]:
+        assert blocked in forced_provider["blocked_next_steps"]
+    assert forced_provider["runtime_behavior_changed"] is False
+    assert forced_provider["runtime_defaults_changed"] is False
+    assert forced_provider["runtime_dtm_or_tablebase_lookup"] is False
+    assert forced_provider["gameplay_topology_mutation"] is False
+    assert forced_provider["stage7_promotion_allowed"] is False
+    assert forced_provider["stage8_training_allowed"] is False
 
     selector_prior = payload["selector_provenance_prior_blocker_gate"]
     assert selector_prior["passive_provenance_prior_blocker_ready"] is True

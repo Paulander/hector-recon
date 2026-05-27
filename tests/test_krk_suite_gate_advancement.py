@@ -688,6 +688,59 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["selector_directed_fix_stage8_training_allowed"]
         is False
     )
+    assert payload["summary"]["forced_provider_control_passive_ready"] is True
+    assert payload["summary"]["forced_provider_control_status"] == (
+        "merge_forced_provider_control_labels_and_rerun_stratified_probe"
+    )
+    assert payload["summary"]["forced_provider_control_plan_selected_job_count"] == 12
+    assert payload["summary"][
+        "forced_provider_control_plan_selected_job_count_by_stage"
+    ] == {
+        "stage5": 6,
+        "stage6": 6,
+    }
+    assert (
+        payload["summary"]["forced_provider_control_manifest_all_bindings_valid"]
+        is True
+    )
+    assert payload["summary"]["forced_provider_control_manifest_missing_path_count"] == 0
+    assert payload["summary"]["forced_provider_control_label_count"] == 12
+    assert payload["summary"]["forced_provider_control_label_stage_counts"] == {
+        "stage4": 0,
+        "stage5": 6,
+        "stage6": 6,
+        "stage7": 0,
+    }
+    assert payload["summary"]["forced_provider_control_result_counts"] == {
+        "mate": 9,
+        "max_plies": 3,
+    }
+    assert payload["summary"]["forced_provider_control_trace_failures_only"] is True
+    assert payload["summary"]["forced_provider_control_trace_included_count"] == 0
+    assert (
+        payload["summary"][
+            "forced_provider_control_forced_successor_available_count"
+        ]
+        == 12
+    )
+    assert (
+        payload["summary"][
+            "forced_provider_control_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["forced_provider_control_gameplay_topology_mutation"]
+        is False
+    )
+    assert (
+        payload["summary"]["forced_provider_control_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["forced_provider_control_stage8_training_allowed"]
+        is False
+    )
     assert payload["summary"]["selector_provenance_prior_passive_ready"] is True
     assert payload["summary"]["selector_provenance_prior_status"] == (
         "provider_prior_remains_best_no_selector_sandbox"
