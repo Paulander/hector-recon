@@ -1790,6 +1790,48 @@ def build_payload() -> dict[str, Any]:
                     "split_readiness_v0_ownership_available"
                 )
             ),
+            "selector_objective_split_dataset_v1_status": (
+                selector_objective_normalization_gate.get("split_dataset_v1_status")
+            ),
+            "selector_objective_split_dataset_v1_row_count": (
+                selector_objective_normalization_gate.get(
+                    "split_dataset_v1_objective_row_count"
+                )
+            ),
+            "selector_objective_split_dataset_v1_ownership_row_count": (
+                selector_objective_normalization_gate.get(
+                    "split_dataset_v1_ownership_selection_row_count"
+                )
+            ),
+            "selector_objective_split_readiness_v1_status": (
+                selector_objective_normalization_gate.get("split_readiness_v1_status")
+            ),
+            "selector_objective_split_readiness_v1_ownership_underpowered": (
+                selector_objective_normalization_gate.get(
+                    "split_readiness_v1_ownership_probe_underpowered"
+                )
+            ),
+            "selector_objective_split_dataset_v2_status": (
+                selector_objective_normalization_gate.get("split_dataset_v2_status")
+            ),
+            "selector_objective_split_dataset_v2_row_count": (
+                selector_objective_normalization_gate.get(
+                    "split_dataset_v2_objective_row_count"
+                )
+            ),
+            "selector_objective_split_dataset_v2_ownership_row_count": (
+                selector_objective_normalization_gate.get(
+                    "split_dataset_v2_ownership_selection_row_count"
+                )
+            ),
+            "selector_objective_split_readiness_v2_status": (
+                selector_objective_normalization_gate.get("split_readiness_v2_status")
+            ),
+            "selector_objective_split_readiness_v2_ownership_underpowered": (
+                selector_objective_normalization_gate.get(
+                    "split_readiness_v2_ownership_probe_underpowered"
+                )
+            ),
             "selector_objective_split_dataset_status": (
                 selector_objective_normalization_gate.get("split_dataset_status")
             ),
@@ -1963,6 +2005,34 @@ def build_payload() -> dict[str, Any]:
             ),
             "ownership_selection_context_feature_probe_v0_status": (
                 ownership_selection_context_gate.get("feature_probe_v0_status")
+            ),
+            "ownership_selection_context_label_dataset_v1_status": (
+                ownership_selection_context_gate.get("label_dataset_v1_status")
+            ),
+            "ownership_selection_context_label_dataset_v1_row_count": (
+                ownership_selection_context_gate.get(
+                    "label_dataset_v1_merged_row_count"
+                )
+            ),
+            "ownership_selection_context_feature_probe_v1_status": (
+                ownership_selection_context_gate.get("feature_probe_v1_status")
+            ),
+            "ownership_selection_context_feature_probe_v1_underpowered": (
+                ownership_selection_context_gate.get("feature_probe_v1_underpowered")
+            ),
+            "ownership_selection_context_label_dataset_v2_status": (
+                ownership_selection_context_gate.get("label_dataset_v2_status")
+            ),
+            "ownership_selection_context_label_dataset_v2_row_count": (
+                ownership_selection_context_gate.get(
+                    "label_dataset_v2_merged_row_count"
+                )
+            ),
+            "ownership_selection_context_feature_probe_v2_status": (
+                ownership_selection_context_gate.get("feature_probe_v2_status")
+            ),
+            "ownership_selection_context_feature_probe_v2_underpowered": (
+                ownership_selection_context_gate.get("feature_probe_v2_underpowered")
             ),
             "ownership_selection_context_selected_provider_diversity_labels_v0_status": (
                 ownership_selection_context_gate.get(

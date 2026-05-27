@@ -733,6 +733,22 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_split_selector_objective_readiness_v0.json"
     )
     assert (
+        payload["source_artifacts"]["split_selector_objective_dataset_v1"]
+        == "reports/krk_split_selector_objective_dataset_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["split_selector_objective_readiness_v1"]
+        == "reports/krk_split_selector_objective_readiness_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["split_selector_objective_dataset_v2"]
+        == "reports/krk_split_selector_objective_dataset_v2.json"
+    )
+    assert (
+        payload["source_artifacts"]["split_selector_objective_readiness_v2"]
+        == "reports/krk_split_selector_objective_readiness_v2.json"
+    )
+    assert (
         payload["source_artifacts"]["split_selector_objective_dataset_v3"]
         == "reports/krk_split_selector_objective_dataset_v3.json"
     )
@@ -779,6 +795,22 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
     assert (
         payload["source_artifacts"]["ownership_selection_feature_probe_v0"]
         == "reports/krk_ownership_selection_feature_probe_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["ownership_selection_label_dataset_v1"]
+        == "reports/krk_ownership_selection_label_dataset_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["ownership_selection_feature_probe_v1"]
+        == "reports/krk_ownership_selection_feature_probe_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["ownership_selection_label_dataset_v2"]
+        == "reports/krk_ownership_selection_label_dataset_v2.json"
+    )
+    assert (
+        payload["source_artifacts"]["ownership_selection_feature_probe_v2"]
+        == "reports/krk_ownership_selection_feature_probe_v2.json"
     )
     assert (
         payload["source_artifacts"][
@@ -2142,6 +2174,34 @@ def test_full_suite_readiness_identifies_current_gate():
     assert selector_objective["split_readiness_v0_selector_training_allowed"] is False
     assert selector_objective["split_readiness_v0_selector_training_row_count"] == 0
     assert selector_objective["split_readiness_v0_stage7_row_count"] == 0
+    assert selector_objective["split_dataset_v1_status"] == (
+        "split_selector_objective_channels_with_ownership_labels"
+    )
+    assert selector_objective["split_dataset_v1_objective_row_count"] == 116
+    assert selector_objective["split_dataset_v1_ownership_selection_row_count"] == 14
+    assert selector_objective["split_dataset_v1_selector_training_row_count"] == 0
+    assert selector_objective["split_dataset_v1_stage7_row_count"] == 0
+    assert selector_objective["split_readiness_v1_status"] == (
+        "ownership_labels_recovered_but_underpowered"
+    )
+    assert selector_objective["split_readiness_v1_ownership_row_count"] == 14
+    assert selector_objective["split_readiness_v1_ownership_probe_underpowered"] is True
+    assert selector_objective["split_readiness_v1_selector_training_row_count"] == 0
+    assert selector_objective["split_readiness_v1_stage7_row_count"] == 0
+    assert selector_objective["split_dataset_v2_status"] == (
+        "split_selector_objective_channels_with_ownership_labels"
+    )
+    assert selector_objective["split_dataset_v2_objective_row_count"] == 136
+    assert selector_objective["split_dataset_v2_ownership_selection_row_count"] == 34
+    assert selector_objective["split_dataset_v2_selector_training_row_count"] == 0
+    assert selector_objective["split_dataset_v2_stage7_row_count"] == 0
+    assert selector_objective["split_readiness_v2_status"] == (
+        "ownership_labels_recovered_but_underpowered"
+    )
+    assert selector_objective["split_readiness_v2_ownership_row_count"] == 34
+    assert selector_objective["split_readiness_v2_ownership_probe_underpowered"] is True
+    assert selector_objective["split_readiness_v2_selector_training_row_count"] == 0
+    assert selector_objective["split_readiness_v2_stage7_row_count"] == 0
     assert (
         selector_objective["split_dataset_status"]
         == "split_selector_objective_channels_with_ownership_labels"
@@ -2330,6 +2390,30 @@ def test_full_suite_readiness_identifies_current_gate():
         ]
         == 0
     )
+    assert ownership_context["label_dataset_v1_status"] == (
+        "ownership_selection_labels_expanded_with_diversity_negatives"
+    )
+    assert ownership_context["label_dataset_v1_merged_row_count"] == 34
+    assert ownership_context["label_dataset_v1_selector_training_row_count"] == 0
+    assert ownership_context["label_dataset_v1_stage7_row_count"] == 0
+    assert ownership_context["feature_probe_v1_status"] == (
+        "ownership_selection_signal_underpowered"
+    )
+    assert ownership_context["feature_probe_v1_row_count"] == 34
+    assert ownership_context["feature_probe_v1_underpowered"] is True
+    assert ownership_context["feature_probe_v1_stage7_row_count"] == 0
+    assert ownership_context["label_dataset_v2_status"] == (
+        "ownership_selection_labels_expanded_with_second_diversity_slice"
+    )
+    assert ownership_context["label_dataset_v2_merged_row_count"] == 34
+    assert ownership_context["label_dataset_v2_selector_training_row_count"] == 0
+    assert ownership_context["label_dataset_v2_stage7_row_count"] == 0
+    assert ownership_context["feature_probe_v2_status"] == (
+        "ownership_selection_signal_underpowered"
+    )
+    assert ownership_context["feature_probe_v2_row_count"] == 34
+    assert ownership_context["feature_probe_v2_underpowered"] is True
+    assert ownership_context["feature_probe_v2_stage7_row_count"] == 0
     assert ownership_context["context_dataset_v0_status"] == (
         "ownership_selection_context_dataset_ready_for_non_causal_probe"
     )

@@ -392,6 +392,18 @@ SOURCES = {
     "ownership_selection_feature_probe_v0": (
         "reports/krk_ownership_selection_feature_probe_v0.json"
     ),
+    "ownership_selection_label_dataset_v1": (
+        "reports/krk_ownership_selection_label_dataset_v1.json"
+    ),
+    "ownership_selection_feature_probe_v1": (
+        "reports/krk_ownership_selection_feature_probe_v1.json"
+    ),
+    "ownership_selection_label_dataset_v2": (
+        "reports/krk_ownership_selection_label_dataset_v2.json"
+    ),
+    "ownership_selection_feature_probe_v2": (
+        "reports/krk_ownership_selection_feature_probe_v2.json"
+    ),
     "selected_provider_diversity_ownership_labels_v0": (
         "reports/krk_selected_provider_diversity_ownership_labels_v0.json"
     ),
@@ -759,6 +771,18 @@ SOURCES = {
     ),
     "split_selector_objective_readiness_v0": (
         "reports/krk_split_selector_objective_readiness_v0.json"
+    ),
+    "split_selector_objective_dataset_v1": (
+        "reports/krk_split_selector_objective_dataset_v1.json"
+    ),
+    "split_selector_objective_readiness_v1": (
+        "reports/krk_split_selector_objective_readiness_v1.json"
+    ),
+    "split_selector_objective_dataset_v2": (
+        "reports/krk_split_selector_objective_dataset_v2.json"
+    ),
+    "split_selector_objective_readiness_v2": (
+        "reports/krk_split_selector_objective_readiness_v2.json"
     ),
     "split_selector_objective_dataset_v3": (
         "reports/krk_split_selector_objective_dataset_v3.json"
@@ -1646,6 +1670,18 @@ def build_payload() -> dict[str, Any]:
     ownership_selection_feature_probe_v0 = payloads[
         "ownership_selection_feature_probe_v0"
     ]
+    ownership_selection_label_dataset_v1 = payloads[
+        "ownership_selection_label_dataset_v1"
+    ]
+    ownership_selection_feature_probe_v1 = payloads[
+        "ownership_selection_feature_probe_v1"
+    ]
+    ownership_selection_label_dataset_v2 = payloads[
+        "ownership_selection_label_dataset_v2"
+    ]
+    ownership_selection_feature_probe_v2 = payloads[
+        "ownership_selection_feature_probe_v2"
+    ]
     selected_provider_diversity_ownership_labels_v0 = payloads[
         "selected_provider_diversity_ownership_labels_v0"
     ]
@@ -1970,6 +2006,18 @@ def build_payload() -> dict[str, Any]:
     ]
     split_selector_objective_readiness_v0 = payloads[
         "split_selector_objective_readiness_v0"
+    ]
+    split_selector_objective_dataset_v1 = payloads[
+        "split_selector_objective_dataset_v1"
+    ]
+    split_selector_objective_readiness_v1 = payloads[
+        "split_selector_objective_readiness_v1"
+    ]
+    split_selector_objective_dataset_v2 = payloads[
+        "split_selector_objective_dataset_v2"
+    ]
+    split_selector_objective_readiness_v2 = payloads[
+        "split_selector_objective_readiness_v2"
     ]
     split_selector_objective_dataset_v3 = payloads[
         "split_selector_objective_dataset_v3"
@@ -4806,6 +4854,22 @@ def build_payload() -> dict[str, Any]:
     split_readiness_v0_summary = (
         split_selector_objective_readiness_v0.get("summary") or {}
     )
+    split_dataset_v1_decision = split_selector_objective_dataset_v1.get("decision") or {}
+    split_dataset_v1_summary = split_selector_objective_dataset_v1.get("summary") or {}
+    split_readiness_v1_decision = (
+        split_selector_objective_readiness_v1.get("decision") or {}
+    )
+    split_readiness_v1_summary = (
+        split_selector_objective_readiness_v1.get("summary") or {}
+    )
+    split_dataset_v2_decision = split_selector_objective_dataset_v2.get("decision") or {}
+    split_dataset_v2_summary = split_selector_objective_dataset_v2.get("summary") or {}
+    split_readiness_v2_decision = (
+        split_selector_objective_readiness_v2.get("decision") or {}
+    )
+    split_readiness_v2_summary = (
+        split_selector_objective_readiness_v2.get("summary") or {}
+    )
     split_dataset_decision = split_selector_objective_dataset_v3.get("decision") or {}
     split_dataset_summary = split_selector_objective_dataset_v3.get("summary") or {}
     split_readiness_decision = (
@@ -4855,6 +4919,46 @@ def build_payload() -> dict[str, Any]:
         and split_readiness_v0_summary.get("ownership_selection_available") is False
         and split_readiness_v0_summary.get("selector_training_row_count") == 0
         and split_readiness_v0_summary.get("stage7_row_count") == 0
+        and split_dataset_v1_decision.get("status")
+        == "split_selector_objective_channels_with_ownership_labels"
+        and split_dataset_v1_decision.get("runtime_work_allowed") is False
+        and split_dataset_v1_decision.get("selector_training_allowed") is False
+        and split_dataset_v1_decision.get("stage7_promotion_allowed") is False
+        and split_dataset_v1_decision.get("stage8_training_allowed") is False
+        and split_dataset_v1_summary.get("objective_row_count") == 116
+        and split_dataset_v1_summary.get("ownership_selection_row_count") == 14
+        and split_dataset_v1_summary.get("selector_training_row_count") == 0
+        and split_dataset_v1_summary.get("stage7_row_count") == 0
+        and split_readiness_v1_decision.get("status")
+        == "ownership_labels_recovered_but_underpowered"
+        and split_readiness_v1_decision.get("runtime_work_allowed") is False
+        and split_readiness_v1_decision.get("selector_training_allowed") is False
+        and split_readiness_v1_decision.get("stage7_promotion_allowed") is False
+        and split_readiness_v1_decision.get("stage8_training_allowed") is False
+        and split_readiness_v1_summary.get("ownership_selection_row_count") == 14
+        and split_readiness_v1_summary.get("ownership_probe_underpowered") is True
+        and split_readiness_v1_summary.get("selector_training_row_count") == 0
+        and split_readiness_v1_summary.get("stage7_row_count") == 0
+        and split_dataset_v2_decision.get("status")
+        == "split_selector_objective_channels_with_ownership_labels"
+        and split_dataset_v2_decision.get("runtime_work_allowed") is False
+        and split_dataset_v2_decision.get("selector_training_allowed") is False
+        and split_dataset_v2_decision.get("stage7_promotion_allowed") is False
+        and split_dataset_v2_decision.get("stage8_training_allowed") is False
+        and split_dataset_v2_summary.get("objective_row_count") == 136
+        and split_dataset_v2_summary.get("ownership_selection_row_count") == 34
+        and split_dataset_v2_summary.get("selector_training_row_count") == 0
+        and split_dataset_v2_summary.get("stage7_row_count") == 0
+        and split_readiness_v2_decision.get("status")
+        == "ownership_labels_recovered_but_underpowered"
+        and split_readiness_v2_decision.get("runtime_work_allowed") is False
+        and split_readiness_v2_decision.get("selector_training_allowed") is False
+        and split_readiness_v2_decision.get("stage7_promotion_allowed") is False
+        and split_readiness_v2_decision.get("stage8_training_allowed") is False
+        and split_readiness_v2_summary.get("ownership_selection_row_count") == 34
+        and split_readiness_v2_summary.get("ownership_probe_underpowered") is True
+        and split_readiness_v2_summary.get("selector_training_row_count") == 0
+        and split_readiness_v2_summary.get("stage7_row_count") == 0
         and all(
             artifact.get("runtime_behavior_changed") is False
             and artifact.get("runtime_defaults_changed") is False
@@ -4869,6 +4973,10 @@ def build_payload() -> dict[str, Any]:
             for artifact in [
                 split_selector_objective_dataset_v0,
                 split_selector_objective_readiness_v0,
+                split_selector_objective_dataset_v1,
+                split_selector_objective_readiness_v1,
+                split_selector_objective_dataset_v2,
+                split_selector_objective_readiness_v2,
             ]
         )
         and split_dataset_decision.get("status")
@@ -5228,6 +5336,30 @@ def build_payload() -> dict[str, Any]:
     ownership_selection_probe_v0_summary = (
         ownership_selection_feature_probe_v0.get("summary") or {}
     )
+    ownership_selection_label_v1_decision = (
+        ownership_selection_label_dataset_v1.get("decision") or {}
+    )
+    ownership_selection_label_v1_summary = (
+        ownership_selection_label_dataset_v1.get("summary") or {}
+    )
+    ownership_selection_probe_v1_decision = (
+        ownership_selection_feature_probe_v1.get("decision") or {}
+    )
+    ownership_selection_probe_v1_summary = (
+        ownership_selection_feature_probe_v1.get("summary") or {}
+    )
+    ownership_selection_label_v2_decision = (
+        ownership_selection_label_dataset_v2.get("decision") or {}
+    )
+    ownership_selection_label_v2_summary = (
+        ownership_selection_label_dataset_v2.get("summary") or {}
+    )
+    ownership_selection_probe_v2_decision = (
+        ownership_selection_feature_probe_v2.get("decision") or {}
+    )
+    ownership_selection_probe_v2_summary = (
+        ownership_selection_feature_probe_v2.get("summary") or {}
+    )
     provider_diversity_ownership_labels_v0_decision = (
         selected_provider_diversity_ownership_labels_v0.get("decision") or {}
     )
@@ -5332,6 +5464,58 @@ def build_payload() -> dict[str, Any]:
             "stage7_training_rows"
         )
         == 0
+        and ownership_selection_label_v1_decision.get("status")
+        == "ownership_selection_labels_expanded_with_diversity_negatives"
+        and ownership_selection_label_v1_decision.get("runtime_work_allowed")
+        is False
+        and ownership_selection_label_v1_decision.get("selector_training_allowed")
+        is False
+        and ownership_selection_label_v1_decision.get("stage7_promotion_allowed")
+        is False
+        and ownership_selection_label_v1_decision.get("stage8_training_allowed")
+        is False
+        and ownership_selection_label_v1_summary.get("merged_row_count") == 34
+        and ownership_selection_label_v1_summary.get("selector_training_row_count")
+        == 0
+        and ownership_selection_label_v1_summary.get("stage7_row_count") == 0
+        and ownership_selection_probe_v1_decision.get("status")
+        == "ownership_selection_signal_underpowered"
+        and ownership_selection_probe_v1_decision.get("runtime_work_allowed") is False
+        and ownership_selection_probe_v1_decision.get("selector_training_allowed")
+        is False
+        and ownership_selection_probe_v1_decision.get("stage7_promotion_allowed")
+        is False
+        and ownership_selection_probe_v1_decision.get("stage8_training_allowed")
+        is False
+        and ownership_selection_probe_v1_summary.get("underpowered") is True
+        and ownership_selection_probe_v1_summary.get("row_count") == 34
+        and ownership_selection_probe_v1_summary.get("stage7_row_count") == 0
+        and ownership_selection_label_v2_decision.get("status")
+        == "ownership_selection_labels_expanded_with_second_diversity_slice"
+        and ownership_selection_label_v2_decision.get("runtime_work_allowed")
+        is False
+        and ownership_selection_label_v2_decision.get("selector_training_allowed")
+        is False
+        and ownership_selection_label_v2_decision.get("stage7_promotion_allowed")
+        is False
+        and ownership_selection_label_v2_decision.get("stage8_training_allowed")
+        is False
+        and ownership_selection_label_v2_summary.get("merged_row_count") == 34
+        and ownership_selection_label_v2_summary.get("selector_training_row_count")
+        == 0
+        and ownership_selection_label_v2_summary.get("stage7_row_count") == 0
+        and ownership_selection_probe_v2_decision.get("status")
+        == "ownership_selection_signal_underpowered"
+        and ownership_selection_probe_v2_decision.get("runtime_work_allowed") is False
+        and ownership_selection_probe_v2_decision.get("selector_training_allowed")
+        is False
+        and ownership_selection_probe_v2_decision.get("stage7_promotion_allowed")
+        is False
+        and ownership_selection_probe_v2_decision.get("stage8_training_allowed")
+        is False
+        and ownership_selection_probe_v2_summary.get("underpowered") is True
+        and ownership_selection_probe_v2_summary.get("row_count") == 34
+        and ownership_selection_probe_v2_summary.get("stage7_row_count") == 0
         and ownership_selection_context_v0_decision.get("status")
         == "ownership_selection_context_dataset_ready_for_non_causal_probe"
         and ownership_selection_context_v0_decision.get("runtime_work_allowed")
@@ -5438,6 +5622,10 @@ def build_payload() -> dict[str, Any]:
                 ownership_selection_label_dataset_v5,
                 ownership_selection_label_dataset_v0,
                 ownership_selection_feature_probe_v0,
+                ownership_selection_label_dataset_v1,
+                ownership_selection_feature_probe_v1,
+                ownership_selection_label_dataset_v2,
+                ownership_selection_feature_probe_v2,
                 selected_provider_diversity_ownership_labels_v0,
                 ownership_selection_context_dataset_v0,
                 ownership_selection_context_feature_probe_v0,
@@ -9718,6 +9906,58 @@ def build_payload() -> dict[str, Any]:
             "split_readiness_v0_stage7_row_count": (
                 split_readiness_v0_summary.get("stage7_row_count")
             ),
+            "split_dataset_v1_status": split_dataset_v1_decision.get("status"),
+            "split_dataset_v1_objective_row_count": (
+                split_dataset_v1_summary.get("objective_row_count")
+            ),
+            "split_dataset_v1_ownership_selection_row_count": (
+                split_dataset_v1_summary.get("ownership_selection_row_count")
+            ),
+            "split_dataset_v1_selector_training_row_count": (
+                split_dataset_v1_summary.get("selector_training_row_count")
+            ),
+            "split_dataset_v1_stage7_row_count": (
+                split_dataset_v1_summary.get("stage7_row_count")
+            ),
+            "split_readiness_v1_status": split_readiness_v1_decision.get("status"),
+            "split_readiness_v1_ownership_row_count": (
+                split_readiness_v1_summary.get("ownership_selection_row_count")
+            ),
+            "split_readiness_v1_ownership_probe_underpowered": (
+                split_readiness_v1_summary.get("ownership_probe_underpowered")
+            ),
+            "split_readiness_v1_selector_training_row_count": (
+                split_readiness_v1_summary.get("selector_training_row_count")
+            ),
+            "split_readiness_v1_stage7_row_count": (
+                split_readiness_v1_summary.get("stage7_row_count")
+            ),
+            "split_dataset_v2_status": split_dataset_v2_decision.get("status"),
+            "split_dataset_v2_objective_row_count": (
+                split_dataset_v2_summary.get("objective_row_count")
+            ),
+            "split_dataset_v2_ownership_selection_row_count": (
+                split_dataset_v2_summary.get("ownership_selection_row_count")
+            ),
+            "split_dataset_v2_selector_training_row_count": (
+                split_dataset_v2_summary.get("selector_training_row_count")
+            ),
+            "split_dataset_v2_stage7_row_count": (
+                split_dataset_v2_summary.get("stage7_row_count")
+            ),
+            "split_readiness_v2_status": split_readiness_v2_decision.get("status"),
+            "split_readiness_v2_ownership_row_count": (
+                split_readiness_v2_summary.get("ownership_selection_row_count")
+            ),
+            "split_readiness_v2_ownership_probe_underpowered": (
+                split_readiness_v2_summary.get("ownership_probe_underpowered")
+            ),
+            "split_readiness_v2_selector_training_row_count": (
+                split_readiness_v2_summary.get("selector_training_row_count")
+            ),
+            "split_readiness_v2_stage7_row_count": (
+                split_readiness_v2_summary.get("stage7_row_count")
+            ),
             "split_dataset_status": split_dataset_decision.get("status"),
             "split_dataset_objective_row_count": split_dataset_summary.get(
                 "objective_row_count"
@@ -10014,6 +10254,58 @@ def build_payload() -> dict[str, Any]:
             ),
             "feature_probe_v0_underpowered": (
                 ownership_selection_probe_v0_summary.get("underpowered")
+            ),
+            "label_dataset_v1_status": (
+                ownership_selection_label_v1_decision.get("status")
+            ),
+            "label_dataset_v1_merged_row_count": (
+                ownership_selection_label_v1_summary.get("merged_row_count")
+            ),
+            "label_dataset_v1_selector_training_row_count": (
+                ownership_selection_label_v1_summary.get(
+                    "selector_training_row_count"
+                )
+            ),
+            "label_dataset_v1_stage7_row_count": (
+                ownership_selection_label_v1_summary.get("stage7_row_count")
+            ),
+            "feature_probe_v1_status": (
+                ownership_selection_probe_v1_decision.get("status")
+            ),
+            "feature_probe_v1_row_count": (
+                ownership_selection_probe_v1_summary.get("row_count")
+            ),
+            "feature_probe_v1_underpowered": (
+                ownership_selection_probe_v1_summary.get("underpowered")
+            ),
+            "feature_probe_v1_stage7_row_count": (
+                ownership_selection_probe_v1_summary.get("stage7_row_count")
+            ),
+            "label_dataset_v2_status": (
+                ownership_selection_label_v2_decision.get("status")
+            ),
+            "label_dataset_v2_merged_row_count": (
+                ownership_selection_label_v2_summary.get("merged_row_count")
+            ),
+            "label_dataset_v2_selector_training_row_count": (
+                ownership_selection_label_v2_summary.get(
+                    "selector_training_row_count"
+                )
+            ),
+            "label_dataset_v2_stage7_row_count": (
+                ownership_selection_label_v2_summary.get("stage7_row_count")
+            ),
+            "feature_probe_v2_status": (
+                ownership_selection_probe_v2_decision.get("status")
+            ),
+            "feature_probe_v2_row_count": (
+                ownership_selection_probe_v2_summary.get("row_count")
+            ),
+            "feature_probe_v2_underpowered": (
+                ownership_selection_probe_v2_summary.get("underpowered")
+            ),
+            "feature_probe_v2_stage7_row_count": (
+                ownership_selection_probe_v2_summary.get("stage7_row_count")
             ),
             "selected_provider_diversity_labels_v0_status": (
                 provider_diversity_ownership_labels_v0_decision.get("status")

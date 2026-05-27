@@ -882,6 +882,40 @@ def test_gate_advancement_reports_current_stage7_blocker():
         ]
         is False
     )
+    assert payload["summary"]["selector_objective_split_dataset_v1_status"] == (
+        "split_selector_objective_channels_with_ownership_labels"
+    )
+    assert payload["summary"]["selector_objective_split_dataset_v1_row_count"] == 116
+    assert (
+        payload["summary"]["selector_objective_split_dataset_v1_ownership_row_count"]
+        == 14
+    )
+    assert payload["summary"]["selector_objective_split_readiness_v1_status"] == (
+        "ownership_labels_recovered_but_underpowered"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_split_readiness_v1_ownership_underpowered"
+        ]
+        is True
+    )
+    assert payload["summary"]["selector_objective_split_dataset_v2_status"] == (
+        "split_selector_objective_channels_with_ownership_labels"
+    )
+    assert payload["summary"]["selector_objective_split_dataset_v2_row_count"] == 136
+    assert (
+        payload["summary"]["selector_objective_split_dataset_v2_ownership_row_count"]
+        == 34
+    )
+    assert payload["summary"]["selector_objective_split_readiness_v2_status"] == (
+        "ownership_labels_recovered_but_underpowered"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_split_readiness_v2_ownership_underpowered"
+        ]
+        is True
+    )
     assert (
         payload["summary"]["selector_objective_split_dataset_status"]
         == "split_selector_objective_channels_with_ownership_labels"
@@ -1032,6 +1066,38 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"][
         "ownership_selection_context_feature_probe_v0_status"
     ] == "ownership_selection_probe_promising_underpowered"
+    assert payload["summary"][
+        "ownership_selection_context_label_dataset_v1_status"
+    ] == "ownership_selection_labels_expanded_with_diversity_negatives"
+    assert (
+        payload["summary"]["ownership_selection_context_label_dataset_v1_row_count"]
+        == 34
+    )
+    assert payload["summary"][
+        "ownership_selection_context_feature_probe_v1_status"
+    ] == "ownership_selection_signal_underpowered"
+    assert (
+        payload["summary"][
+            "ownership_selection_context_feature_probe_v1_underpowered"
+        ]
+        is True
+    )
+    assert payload["summary"][
+        "ownership_selection_context_label_dataset_v2_status"
+    ] == "ownership_selection_labels_expanded_with_second_diversity_slice"
+    assert (
+        payload["summary"]["ownership_selection_context_label_dataset_v2_row_count"]
+        == 34
+    )
+    assert payload["summary"][
+        "ownership_selection_context_feature_probe_v2_status"
+    ] == "ownership_selection_signal_underpowered"
+    assert (
+        payload["summary"][
+            "ownership_selection_context_feature_probe_v2_underpowered"
+        ]
+        is True
+    )
     assert payload["summary"][
         "ownership_selection_context_selected_provider_diversity_labels_v0_status"
     ] == "selected_provider_diversity_ownership_labels_collected"
