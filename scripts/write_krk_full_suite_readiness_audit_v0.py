@@ -937,6 +937,15 @@ SOURCES = {
     "state_local_paired_ownership_work_package_v0": (
         "reports/krk_state_local_paired_ownership_work_package_v0.json"
     ),
+    "state_local_paired_ownership_inventory_v0": (
+        "reports/krk_state_local_paired_ownership_inventory_v0.json"
+    ),
+    "state_local_paired_ownership_probe_v0": (
+        "reports/krk_state_local_paired_ownership_probe_v0.json"
+    ),
+    "state_local_paired_ownership_review_v0": (
+        "reports/krk_state_local_paired_ownership_review_v0.json"
+    ),
     "state_local_paired_ownership_inventory_v1": (
         "reports/krk_state_local_paired_ownership_inventory_v1.json"
     ),
@@ -2109,6 +2118,15 @@ def build_payload() -> dict[str, Any]:
     ]
     state_local_paired_ownership_work_package_v0 = payloads[
         "state_local_paired_ownership_work_package_v0"
+    ]
+    state_local_paired_ownership_inventory_v0 = payloads[
+        "state_local_paired_ownership_inventory_v0"
+    ]
+    state_local_paired_ownership_probe_v0 = payloads[
+        "state_local_paired_ownership_probe_v0"
+    ]
+    state_local_paired_ownership_review_v0 = payloads[
+        "state_local_paired_ownership_review_v0"
     ]
     state_local_paired_ownership_inventory_v1 = payloads[
         "state_local_paired_ownership_inventory_v1"
@@ -6788,6 +6806,22 @@ def build_payload() -> dict[str, Any]:
     paired_work_package_decision = (
         state_local_paired_ownership_work_package_v0.get("decision") or {}
     )
+    paired_inventory_v0_decision = (
+        state_local_paired_ownership_inventory_v0.get("decision") or {}
+    )
+    paired_inventory_v0_summary = (
+        state_local_paired_ownership_inventory_v0.get("summary") or {}
+    )
+    paired_probe_v0_decision = (
+        state_local_paired_ownership_probe_v0.get("decision") or {}
+    )
+    paired_probe_v0_summary = state_local_paired_ownership_probe_v0.get("summary") or {}
+    paired_review_v0_decision = (
+        state_local_paired_ownership_review_v0.get("decision") or {}
+    )
+    paired_review_v0_summary = (
+        state_local_paired_ownership_review_v0.get("summary") or {}
+    )
     paired_inventory_decision = (
         state_local_paired_ownership_inventory_v1.get("decision") or {}
     )
@@ -6839,6 +6873,22 @@ def build_payload() -> dict[str, Any]:
         and paired_work_package_decision.get("status") == "work_package_ready"
         and paired_work_package_decision.get("runtime_work_allowed") is False
         and paired_work_package_decision.get("selector_training_allowed") is False
+        and paired_inventory_v0_decision.get("status") == "paired_inventory_underpowered"
+        and paired_inventory_v0_decision.get("runtime_work_allowed") is False
+        and paired_inventory_v0_decision.get("selector_training_allowed") is False
+        and paired_inventory_v0_summary.get("pair_count") == 15
+        and paired_inventory_v0_summary.get("selector_training_row_count") == 0
+        and paired_inventory_v0_summary.get("stage7_row_count") == 0
+        and paired_probe_v0_decision.get("status")
+        == "paired_objective_feature_model_insufficient"
+        and paired_probe_v0_decision.get("runtime_work_allowed") is False
+        and paired_probe_v0_decision.get("selector_training_allowed") is False
+        and paired_probe_v0_summary.get("inventory_ready") is True
+        and paired_probe_v0_summary.get("stage7_row_count") == 0
+        and paired_review_v0_decision.get("status") == "feature_model_insufficient"
+        and paired_review_v0_decision.get("runtime_work_allowed") is False
+        and paired_review_v0_decision.get("selector_training_allowed") is False
+        and paired_review_v0_summary.get("stage7_row_count") == 0
         and paired_inventory_decision.get("status")
         == "paired_inventory_ready_for_non_causal_probe"
         and paired_inventory_decision.get("runtime_work_allowed") is False
@@ -6863,22 +6913,24 @@ def build_payload() -> dict[str, Any]:
         and paired_review_decision.get("selector_training_allowed") is False
         and paired_review_summary.get("runtime_feature_passing_model_count") == 0
         and paired_review_summary.get("stage7_row_count") == 0
-        and state_local_paired_ownership_review_v1.get("runtime_behavior_changed")
-        is False
-        and state_local_paired_ownership_review_v1.get("runtime_defaults_changed")
-        is False
-        and state_local_paired_ownership_review_v1.get("runtime_selector_implemented")
-        is False
-        and state_local_paired_ownership_review_v1.get(
-            "runtime_dtm_or_tablebase_lookup"
+        and all(
+            artifact.get("runtime_behavior_changed") is False
+            and artifact.get("runtime_defaults_changed") is False
+            and artifact.get("runtime_selector_implemented") is False
+            and artifact.get("runtime_candidate_generator_implemented", False)
+            is False
+            and artifact.get("runtime_dtm_or_tablebase_lookup") is False
+            and artifact.get("runtime_terminals_added") is False
+            and artifact.get("gameplay_topology_mutation", False) is False
+            and artifact.get("stage7_promotion_allowed") is False
+            and artifact.get("stage8_training_allowed") is False
+            for artifact in [
+                state_local_paired_ownership_inventory_v0,
+                state_local_paired_ownership_probe_v0,
+                state_local_paired_ownership_review_v0,
+                state_local_paired_ownership_review_v1,
+            ]
         )
-        is False
-        and state_local_paired_ownership_review_v1.get("runtime_terminals_added")
-        is False
-        and state_local_paired_ownership_review_v1.get("stage7_promotion_allowed")
-        is False
-        and state_local_paired_ownership_review_v1.get("stage8_training_allowed")
-        is False
     )
     runtime_proxy_design_decision = (
         state_local_paired_runtime_proxy_design_v0.get("decision") or {}
@@ -11257,6 +11309,28 @@ def build_payload() -> dict[str, Any]:
             ),
             "objective_plan_status": paired_plan_decision.get("status"),
             "work_package_status": paired_work_package_decision.get("status"),
+            "inventory_v0_status": paired_inventory_v0_decision.get("status"),
+            "inventory_v0_pair_count": paired_inventory_v0_summary.get("pair_count"),
+            "inventory_v0_selector_training_row_count": (
+                paired_inventory_v0_summary.get("selector_training_row_count")
+            ),
+            "inventory_v0_stage7_row_count": paired_inventory_v0_summary.get(
+                "stage7_row_count"
+            ),
+            "probe_v0_status": paired_probe_v0_decision.get("status"),
+            "probe_v0_inventory_ready": paired_probe_v0_summary.get(
+                "inventory_ready"
+            ),
+            "probe_v0_stage7_row_count": paired_probe_v0_summary.get(
+                "stage7_row_count"
+            ),
+            "review_v0_status": paired_review_v0_decision.get("status"),
+            "review_v0_best_balanced_objective": paired_review_v0_summary.get(
+                "best_balanced_objective"
+            ),
+            "review_v0_stage7_row_count": paired_review_v0_summary.get(
+                "stage7_row_count"
+            ),
             "inventory_status": paired_inventory_decision.get("status"),
             "inventory_pair_count": paired_inventory_summary.get("pair_count"),
             "inventory_state_count": paired_inventory_summary.get("state_count"),

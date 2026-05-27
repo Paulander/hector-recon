@@ -1021,6 +1021,18 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_ownership_context_feature_review_v3.json"
     )
     assert (
+        payload["source_artifacts"]["state_local_paired_ownership_inventory_v0"]
+        == "reports/krk_state_local_paired_ownership_inventory_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["state_local_paired_ownership_probe_v0"]
+        == "reports/krk_state_local_paired_ownership_probe_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["state_local_paired_ownership_review_v0"]
+        == "reports/krk_state_local_paired_ownership_review_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["state_local_paired_ownership_inventory_v1"]
         == "reports/krk_state_local_paired_ownership_inventory_v1.json"
     )
@@ -3006,6 +3018,21 @@ def test_full_suite_readiness_identifies_current_gate():
         == "state_local_paired_ownership_objective_plan_ready"
     )
     assert state_local["work_package_status"] == "work_package_ready"
+    assert state_local["inventory_v0_status"] == "paired_inventory_underpowered"
+    assert state_local["inventory_v0_pair_count"] == 15
+    assert state_local["inventory_v0_selector_training_row_count"] == 0
+    assert state_local["inventory_v0_stage7_row_count"] == 0
+    assert (
+        state_local["probe_v0_status"]
+        == "paired_objective_feature_model_insufficient"
+    )
+    assert state_local["probe_v0_inventory_ready"] is True
+    assert state_local["probe_v0_stage7_row_count"] == 0
+    assert state_local["review_v0_status"] == "feature_model_insufficient"
+    assert state_local["review_v0_best_balanced_objective"] == (
+        "owner_family_pair@0.25"
+    )
+    assert state_local["review_v0_stage7_row_count"] == 0
     assert state_local["inventory_status"] == "paired_inventory_ready_for_non_causal_probe"
     assert state_local["inventory_pair_count"] == 40
     assert state_local["inventory_state_count"] == 14

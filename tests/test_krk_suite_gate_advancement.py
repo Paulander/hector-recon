@@ -1797,6 +1797,18 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["state_local_paired_ownership_architecture_status"]
         == "ownership_objective_requires_state_local_pairing_review"
     )
+    assert payload["summary"]["state_local_paired_inventory_v0_status"] == (
+        "paired_inventory_underpowered"
+    )
+    assert payload["summary"]["state_local_paired_inventory_v0_pair_count"] == 15
+    assert payload["summary"]["state_local_paired_inventory_v0_stage7_row_count"] == 0
+    assert payload["summary"]["state_local_paired_probe_v0_status"] == (
+        "paired_objective_feature_model_insufficient"
+    )
+    assert payload["summary"]["state_local_paired_probe_v0_inventory_ready"] is True
+    assert payload["summary"]["state_local_paired_review_v0_status"] == (
+        "feature_model_insufficient"
+    )
     assert (
         payload["summary"]["state_local_paired_inventory_status"]
         == "paired_inventory_ready_for_non_causal_probe"

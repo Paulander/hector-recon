@@ -2791,6 +2791,24 @@ def build_payload() -> dict[str, Any]:
             "state_local_paired_ownership_architecture_status": (
                 state_local_paired_ownership_gate.get("ownership_architecture_status")
             ),
+            "state_local_paired_inventory_v0_status": (
+                state_local_paired_ownership_gate.get("inventory_v0_status")
+            ),
+            "state_local_paired_inventory_v0_pair_count": (
+                state_local_paired_ownership_gate.get("inventory_v0_pair_count")
+            ),
+            "state_local_paired_inventory_v0_stage7_row_count": (
+                state_local_paired_ownership_gate.get("inventory_v0_stage7_row_count")
+            ),
+            "state_local_paired_probe_v0_status": (
+                state_local_paired_ownership_gate.get("probe_v0_status")
+            ),
+            "state_local_paired_probe_v0_inventory_ready": (
+                state_local_paired_ownership_gate.get("probe_v0_inventory_ready")
+            ),
+            "state_local_paired_review_v0_status": (
+                state_local_paired_ownership_gate.get("review_v0_status")
+            ),
             "state_local_paired_inventory_status": (
                 state_local_paired_ownership_gate.get("inventory_status")
             ),
