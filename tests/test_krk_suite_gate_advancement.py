@@ -1490,6 +1490,24 @@ def test_gate_advancement_reports_current_stage7_blocker():
         == 23
     )
     assert (
+        payload["summary"][
+            "selected_provider_diversity_observation_manifest_status"
+        ]
+        == "selected_provider_diversity_sampling_manifest_review_required"
+    )
+    assert (
+        payload["summary"][
+            "selected_provider_diversity_observation_manifest_job_count"
+        ]
+        == 20
+    )
+    assert (
+        payload["summary"][
+            "selected_provider_diversity_observation_manifest_review_status"
+        ]
+        == "selected_provider_diversity_sampling_manifest_review_passed"
+    )
+    assert (
         payload["summary"]["selected_provider_diversity_observation_scan_status"]
         == "selected_provider_diversity_observation_insufficient"
     )

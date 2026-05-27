@@ -2460,6 +2460,19 @@ def build_payload() -> dict[str, Any]:
                     "replay_free_selected_record_count"
                 )
             ),
+            "selected_provider_diversity_observation_manifest_status": (
+                selected_provider_diversity_gate.get("observation_manifest_status")
+            ),
+            "selected_provider_diversity_observation_manifest_job_count": (
+                selected_provider_diversity_gate.get(
+                    "observation_manifest_job_count"
+                )
+            ),
+            "selected_provider_diversity_observation_manifest_review_status": (
+                selected_provider_diversity_gate.get(
+                    "observation_manifest_review_status"
+                )
+            ),
             "selected_provider_diversity_observation_scan_status": (
                 selected_provider_diversity_gate.get("observation_scan_status")
             ),
