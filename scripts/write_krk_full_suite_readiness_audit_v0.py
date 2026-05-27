@@ -736,6 +736,12 @@ SOURCES = {
     "selector_readiness_after_contrast_probe_review_v0": (
         "reports/krk_selector_readiness_after_contrast_probe_review_v0.json"
     ),
+    "split_selector_objective_dataset_v0": (
+        "reports/krk_split_selector_objective_dataset_v0.json"
+    ),
+    "split_selector_objective_readiness_v0": (
+        "reports/krk_split_selector_objective_readiness_v0.json"
+    ),
     "split_selector_objective_dataset_v3": (
         "reports/krk_split_selector_objective_dataset_v3.json"
     ),
@@ -1907,6 +1913,12 @@ def build_payload() -> dict[str, Any]:
     ]
     selector_readiness_after_contrast_probe_review_v0 = payloads[
         "selector_readiness_after_contrast_probe_review_v0"
+    ]
+    split_selector_objective_dataset_v0 = payloads[
+        "split_selector_objective_dataset_v0"
+    ]
+    split_selector_objective_readiness_v0 = payloads[
+        "split_selector_objective_readiness_v0"
     ]
     split_selector_objective_dataset_v3 = payloads[
         "split_selector_objective_dataset_v3"
@@ -4720,6 +4732,14 @@ def build_payload() -> dict[str, Any]:
     selector_architecture_decision = (
         selector_objective_architecture_review_v1.get("decision") or {}
     )
+    split_dataset_v0_decision = split_selector_objective_dataset_v0.get("decision") or {}
+    split_dataset_v0_summary = split_selector_objective_dataset_v0.get("summary") or {}
+    split_readiness_v0_decision = (
+        split_selector_objective_readiness_v0.get("decision") or {}
+    )
+    split_readiness_v0_summary = (
+        split_selector_objective_readiness_v0.get("summary") or {}
+    )
     split_dataset_decision = split_selector_objective_dataset_v3.get("decision") or {}
     split_dataset_summary = split_selector_objective_dataset_v3.get("summary") or {}
     split_readiness_decision = (
@@ -4751,6 +4771,40 @@ def build_payload() -> dict[str, Any]:
         and selector_architecture_decision.get("runtime_arbiter_allowed") is False
         and selector_architecture_decision.get("selector_sandbox_ready") is False
         and selector_objective_label_semantics_v0.get("sandbox_ready") is False
+        and split_dataset_v0_decision.get("status")
+        == "split_selector_objective_channels_built"
+        and split_dataset_v0_decision.get("runtime_work_allowed") is False
+        and split_dataset_v0_decision.get("selector_training_allowed") is False
+        and split_dataset_v0_decision.get("stage7_promotion_allowed") is False
+        and split_dataset_v0_decision.get("stage8_training_allowed") is False
+        and split_dataset_v0_summary.get("ownership_selection_available") is False
+        and split_dataset_v0_summary.get("selector_training_row_count") == 0
+        and split_dataset_v0_summary.get("stage7_row_count") == 0
+        and split_readiness_v0_decision.get("status")
+        == "split_objectives_fixed_semantics_runtime_still_blocked"
+        and split_readiness_v0_decision.get("runtime_work_allowed") is False
+        and split_readiness_v0_decision.get("selector_training_allowed") is False
+        and split_readiness_v0_decision.get("stage7_promotion_allowed") is False
+        and split_readiness_v0_decision.get("stage8_training_allowed") is False
+        and split_readiness_v0_summary.get("ownership_selection_available") is False
+        and split_readiness_v0_summary.get("selector_training_row_count") == 0
+        and split_readiness_v0_summary.get("stage7_row_count") == 0
+        and all(
+            artifact.get("runtime_behavior_changed") is False
+            and artifact.get("runtime_defaults_changed") is False
+            and artifact.get("runtime_selector_implemented") is False
+            and artifact.get("runtime_candidate_generator_implemented", False)
+            is False
+            and artifact.get("runtime_dtm_or_tablebase_lookup") is False
+            and artifact.get("runtime_terminals_added", False) is False
+            and artifact.get("gameplay_topology_mutation") is False
+            and artifact.get("stage7_promotion_allowed") is False
+            and artifact.get("stage8_training_allowed") is False
+            for artifact in [
+                split_selector_objective_dataset_v0,
+                split_selector_objective_readiness_v0,
+            ]
+        )
         and split_dataset_decision.get("status")
         == "split_selector_objective_channels_with_ownership_labels"
         and split_dataset_decision.get("runtime_work_allowed") is False
@@ -9360,6 +9414,32 @@ def build_payload() -> dict[str, Any]:
             ),
             "selector_label_semantics_target_kind_count": len(
                 selector_objective_label_semantics_v0.get("target_kinds") or []
+            ),
+            "split_dataset_v0_status": split_dataset_v0_decision.get("status"),
+            "split_dataset_v0_objective_row_count": split_dataset_v0_summary.get(
+                "objective_row_count"
+            ),
+            "split_dataset_v0_ownership_selection_available": (
+                split_dataset_v0_summary.get("ownership_selection_available")
+            ),
+            "split_dataset_v0_selector_training_row_count": (
+                split_dataset_v0_summary.get("selector_training_row_count")
+            ),
+            "split_dataset_v0_stage7_row_count": split_dataset_v0_summary.get(
+                "stage7_row_count"
+            ),
+            "split_readiness_v0_status": split_readiness_v0_decision.get("status"),
+            "split_readiness_v0_ownership_available": (
+                split_readiness_v0_summary.get("ownership_selection_available")
+            ),
+            "split_readiness_v0_selector_training_allowed": (
+                split_readiness_v0_decision.get("selector_training_allowed")
+            ),
+            "split_readiness_v0_selector_training_row_count": (
+                split_readiness_v0_summary.get("selector_training_row_count")
+            ),
+            "split_readiness_v0_stage7_row_count": (
+                split_readiness_v0_summary.get("stage7_row_count")
             ),
             "split_dataset_status": split_dataset_decision.get("status"),
             "split_dataset_objective_row_count": split_dataset_summary.get(

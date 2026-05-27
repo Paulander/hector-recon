@@ -859,6 +859,29 @@ def test_gate_advancement_reports_current_stage7_blocker():
         == "selector_objective_needs_stratified_label_expansion_before_sandbox"
     )
     assert payload["summary"]["selector_objective_architecture_sandbox_ready"] is False
+    assert payload["summary"]["selector_objective_split_dataset_v0_status"] == (
+        "split_selector_objective_channels_built"
+    )
+    assert payload["summary"]["selector_objective_split_dataset_v0_row_count"] == 103
+    assert (
+        payload["summary"]["selector_objective_split_dataset_v0_ownership_available"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_split_dataset_v0_selector_training_row_count"
+        ]
+        == 0
+    )
+    assert payload["summary"]["selector_objective_split_readiness_v0_status"] == (
+        "split_objectives_fixed_semantics_runtime_still_blocked"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_split_readiness_v0_ownership_available"
+        ]
+        is False
+    )
     assert (
         payload["summary"]["selector_objective_split_dataset_status"]
         == "split_selector_objective_channels_with_ownership_labels"

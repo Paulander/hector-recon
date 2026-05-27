@@ -725,6 +725,14 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_selector_readiness_after_contrast_probe_review_v0.json"
     )
     assert (
+        payload["source_artifacts"]["split_selector_objective_dataset_v0"]
+        == "reports/krk_split_selector_objective_dataset_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["split_selector_objective_readiness_v0"]
+        == "reports/krk_split_selector_objective_readiness_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["split_selector_objective_dataset_v3"]
         == "reports/krk_split_selector_objective_dataset_v3.json"
     )
@@ -2073,6 +2081,21 @@ def test_full_suite_readiness_identifies_current_gate():
     assert selector_objective["selector_architecture_sandbox_ready"] is False
     assert selector_objective["selector_label_semantics_sandbox_ready"] is False
     assert selector_objective["selector_label_semantics_target_kind_count"] == 6
+    assert (
+        selector_objective["split_dataset_v0_status"]
+        == "split_selector_objective_channels_built"
+    )
+    assert selector_objective["split_dataset_v0_objective_row_count"] == 103
+    assert selector_objective["split_dataset_v0_ownership_selection_available"] is False
+    assert selector_objective["split_dataset_v0_selector_training_row_count"] == 0
+    assert selector_objective["split_dataset_v0_stage7_row_count"] == 0
+    assert selector_objective["split_readiness_v0_status"] == (
+        "split_objectives_fixed_semantics_runtime_still_blocked"
+    )
+    assert selector_objective["split_readiness_v0_ownership_available"] is False
+    assert selector_objective["split_readiness_v0_selector_training_allowed"] is False
+    assert selector_objective["split_readiness_v0_selector_training_row_count"] == 0
+    assert selector_objective["split_readiness_v0_stage7_row_count"] == 0
     assert (
         selector_objective["split_dataset_status"]
         == "split_selector_objective_channels_with_ownership_labels"

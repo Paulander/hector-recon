@@ -1764,6 +1764,32 @@ def build_payload() -> dict[str, Any]:
                     "selector_architecture_sandbox_ready"
                 )
             ),
+            "selector_objective_split_dataset_v0_status": (
+                selector_objective_normalization_gate.get("split_dataset_v0_status")
+            ),
+            "selector_objective_split_dataset_v0_row_count": (
+                selector_objective_normalization_gate.get(
+                    "split_dataset_v0_objective_row_count"
+                )
+            ),
+            "selector_objective_split_dataset_v0_ownership_available": (
+                selector_objective_normalization_gate.get(
+                    "split_dataset_v0_ownership_selection_available"
+                )
+            ),
+            "selector_objective_split_dataset_v0_selector_training_row_count": (
+                selector_objective_normalization_gate.get(
+                    "split_dataset_v0_selector_training_row_count"
+                )
+            ),
+            "selector_objective_split_readiness_v0_status": (
+                selector_objective_normalization_gate.get("split_readiness_v0_status")
+            ),
+            "selector_objective_split_readiness_v0_ownership_available": (
+                selector_objective_normalization_gate.get(
+                    "split_readiness_v0_ownership_available"
+                )
+            ),
             "selector_objective_split_dataset_status": (
                 selector_objective_normalization_gate.get("split_dataset_status")
             ),
