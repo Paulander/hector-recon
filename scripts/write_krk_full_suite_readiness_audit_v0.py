@@ -571,6 +571,30 @@ SOURCES = {
     "strategy_owner_contrast_probe": (
         "reports/krk_strategy_owner_contrast_probe_v0.json"
     ),
+    "strategy_arbiter_sandbox_design_v0": (
+        "reports/krk_strategy_arbiter_sandbox_design_v0.json"
+    ),
+    "strategy_arbiter_observability_smoke_v0": (
+        "reports/krk_strategy_arbiter_observability_smoke_v0.json"
+    ),
+    "strategy_arbiter_observation_frames_v0": (
+        "reports/krk_strategy_arbiter_observation_frames_v0.json"
+    ),
+    "strategy_arbiter_observation_separability_review_v0": (
+        "reports/krk_strategy_arbiter_observation_separability_review_v0.json"
+    ),
+    "strategy_arbiter_observation_selector_probe_v0": (
+        "reports/krk_strategy_arbiter_observation_selector_probe_v0.json"
+    ),
+    "strategy_arbiter_labeled_observation_controls_v0": (
+        "reports/krk_strategy_arbiter_labeled_observation_controls_v0.json"
+    ),
+    "strategy_arbiter_labeled_controls_probe_v0": (
+        "reports/krk_strategy_arbiter_labeled_controls_probe_v0.json"
+    ),
+    "strategy_arbiter_protected_control_matrix_v1": (
+        "reports/krk_strategy_arbiter_protected_control_matrix_v1.json"
+    ),
     "strategy_arbiter_evidence_risk_review_v0": (
         "reports/krk_strategy_arbiter_evidence_risk_review_v0.json"
     ),
@@ -1601,6 +1625,30 @@ def build_payload() -> dict[str, Any]:
     ]
     strategy_owner_contrast_dataset = payloads["strategy_owner_contrast_dataset"]
     strategy_owner_contrast_probe = payloads["strategy_owner_contrast_probe"]
+    strategy_arbiter_sandbox_design_v0 = payloads[
+        "strategy_arbiter_sandbox_design_v0"
+    ]
+    strategy_arbiter_observability_smoke_v0 = payloads[
+        "strategy_arbiter_observability_smoke_v0"
+    ]
+    strategy_arbiter_observation_frames_v0 = payloads[
+        "strategy_arbiter_observation_frames_v0"
+    ]
+    strategy_arbiter_observation_separability_review_v0 = payloads[
+        "strategy_arbiter_observation_separability_review_v0"
+    ]
+    strategy_arbiter_observation_selector_probe_v0 = payloads[
+        "strategy_arbiter_observation_selector_probe_v0"
+    ]
+    strategy_arbiter_labeled_observation_controls_v0 = payloads[
+        "strategy_arbiter_labeled_observation_controls_v0"
+    ]
+    strategy_arbiter_labeled_controls_probe_v0 = payloads[
+        "strategy_arbiter_labeled_controls_probe_v0"
+    ]
+    strategy_arbiter_protected_control_matrix_v1 = payloads[
+        "strategy_arbiter_protected_control_matrix_v1"
+    ]
     strategy_arbiter_evidence_risk_review_v0 = payloads[
         "strategy_arbiter_evidence_risk_review_v0"
     ]
@@ -2149,6 +2197,257 @@ def build_payload() -> dict[str, Any]:
         and strategy_owner_contrast_probe.get("runtime_terminals_added") is False
         and strategy_owner_contrast_probe.get("stage7_promotion_allowed") is False
         and strategy_owner_contrast_probe.get("stage8_training_allowed") is False
+    )
+    arbiter_sandbox_future = (
+        strategy_arbiter_sandbox_design_v0.get("proposed_future_sandbox") or {}
+    )
+    arbiter_sandbox_blocked = (
+        strategy_arbiter_sandbox_design_v0.get("blocked_next_steps") or []
+    )
+    arbiter_smoke_decision = (
+        strategy_arbiter_observability_smoke_v0.get("decision") or {}
+    )
+    arbiter_smoke_equivalence = (
+        strategy_arbiter_observability_smoke_v0.get("equivalence") or {}
+    )
+    arbiter_smoke_metadata = (
+        strategy_arbiter_observability_smoke_v0.get("metadata_shape_check") or {}
+    )
+    arbiter_observation_frames_decision = (
+        strategy_arbiter_observation_frames_v0.get("decision") or {}
+    )
+    arbiter_observation_stage_counts = (
+        strategy_arbiter_observation_frames_v0.get("stage_counts") or {}
+    )
+    arbiter_separability_decision = (
+        strategy_arbiter_observation_separability_review_v0.get("decision") or {}
+    )
+    arbiter_selector_probe_decision = (
+        strategy_arbiter_observation_selector_probe_v0.get("decision") or {}
+    )
+    arbiter_labeled_controls_decision = (
+        strategy_arbiter_labeled_observation_controls_v0.get("decision") or {}
+    )
+    arbiter_labeled_controls_stage_counts = (
+        strategy_arbiter_labeled_observation_controls_v0.get("stage_counts") or {}
+    )
+    arbiter_labeled_probe_decision = (
+        strategy_arbiter_labeled_controls_probe_v0.get("decision") or {}
+    )
+    arbiter_matrix_v1_decision = (
+        strategy_arbiter_protected_control_matrix_v1.get("decision") or {}
+    )
+    arbiter_matrix_v1_summary = (
+        strategy_arbiter_protected_control_matrix_v1.get("summary") or {}
+    )
+    arbiter_matrix_v1_sample = (
+        strategy_arbiter_protected_control_matrix_v1.get("sample") or {}
+    )
+    arbiter_trace_observability_passive = (
+        strategy_arbiter_sandbox_design_v0.get("causal_status")
+        == "non_causal_design"
+        and strategy_arbiter_sandbox_design_v0.get("design_status")
+        == "proposed_for_review"
+        and arbiter_sandbox_future.get("default_enabled") is False
+        and "runtime DTM/tablebase lookup"
+        in (arbiter_sandbox_future.get("forbidden_inputs") or [])
+        and "direct move selection"
+        in (arbiter_sandbox_future.get("forbidden_outputs") or [])
+        and "implement_runtime_arbiter_without_review" in arbiter_sandbox_blocked
+        and "promote_stage7" in arbiter_sandbox_blocked
+        and "train_stage8" in arbiter_sandbox_blocked
+        and "use_runtime_dtm_or_tablebase" in arbiter_sandbox_blocked
+        and "mutate_topology_during_gameplay" in arbiter_sandbox_blocked
+        and strategy_arbiter_sandbox_design_v0.get("runtime_behavior_changed")
+        is False
+        and strategy_arbiter_sandbox_design_v0.get("runtime_defaults_changed")
+        is False
+        and strategy_arbiter_sandbox_design_v0.get("runtime_arbiter_implemented")
+        is False
+        and strategy_arbiter_sandbox_design_v0.get("runtime_dtm_or_tablebase_lookup")
+        is False
+        and strategy_arbiter_sandbox_design_v0.get("gameplay_topology_mutation")
+        is False
+        and strategy_arbiter_sandbox_design_v0.get("stage7_promotion_allowed")
+        is False
+        and strategy_arbiter_sandbox_design_v0.get("stage8_training_allowed")
+        is False
+        and strategy_arbiter_observability_smoke_v0.get("causal_status")
+        == "non_causal_smoke_test"
+        and arbiter_smoke_decision.get("status")
+        == "observability_skeleton_smoke_passed"
+        and arbiter_smoke_decision.get("runtime_arbiter_allowed") is False
+        and arbiter_smoke_equivalence.get("selected_behavior_metrics_match") is True
+        and arbiter_smoke_equivalence.get("outcome_metrics_match") is True
+        and arbiter_smoke_equivalence.get("observation_is_only_expected_delta")
+        is True
+        and arbiter_smoke_metadata.get("causal_status") == "non_causal_observation"
+        and arbiter_smoke_metadata.get("direct_request") is False
+        and arbiter_smoke_metadata.get("score_delta") == 0.0
+        and arbiter_smoke_metadata.get("recommendation_only") is True
+        and "provider_selection"
+        in (strategy_arbiter_observability_smoke_v0.get("blocked_causal_actions") or [])
+        and "score_adjustment"
+        in (strategy_arbiter_observability_smoke_v0.get("blocked_causal_actions") or [])
+        and "topology_mutation"
+        in (strategy_arbiter_observability_smoke_v0.get("blocked_causal_actions") or [])
+        and strategy_arbiter_observation_frames_v0.get("causal_status")
+        == "non_causal_observation_export"
+        and arbiter_observation_frames_decision.get("status")
+        == "observation_frames_collected"
+        and arbiter_observation_frames_decision.get("runtime_arbiter_allowed")
+        is False
+        and strategy_arbiter_observation_frames_v0.get("record_count") == 12
+        and arbiter_observation_stage_counts.get("stage7") == 9
+        and strategy_arbiter_observation_frames_v0.get("proposal_count_min") == 10
+        and strategy_arbiter_observation_frames_v0.get("proposal_count_max") == 10
+        and strategy_arbiter_observation_frames_v0.get("runtime_arbiter_implemented")
+        is False
+        and strategy_arbiter_observation_frames_v0.get("runtime_behavior_changed")
+        is False
+        and strategy_arbiter_observation_frames_v0.get("runtime_defaults_changed")
+        is False
+        and strategy_arbiter_observation_frames_v0.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and strategy_arbiter_observation_frames_v0.get("gameplay_topology_mutation")
+        is False
+        and strategy_arbiter_observation_separability_review_v0.get("causal_status")
+        == "non_causal_review"
+        and arbiter_separability_decision.get("status")
+        == "observation_frames_ready_for_non_causal_selector_probe"
+        and arbiter_separability_decision.get("runtime_arbiter_allowed") is False
+        and arbiter_separability_decision.get("sandbox_ready") is False
+        and strategy_arbiter_observation_separability_review_v0.get("record_count")
+        == 12
+        and strategy_arbiter_observation_separability_review_v0.get(
+            "underinstrumented_record_count"
+        )
+        == 0
+        and strategy_arbiter_observation_separability_review_v0.get(
+            "single_provider_record_count"
+        )
+        == 0
+        and strategy_arbiter_observation_separability_review_v0.get(
+            "runtime_arbiter_implemented"
+        )
+        is False
+        and strategy_arbiter_observation_separability_review_v0.get(
+            "runtime_behavior_changed"
+        )
+        is False
+        and strategy_arbiter_observation_separability_review_v0.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and strategy_arbiter_observation_selector_probe_v0.get("causal_status")
+        == "non_causal_selector_probe"
+        and arbiter_selector_probe_decision.get("status")
+        == "observation_selector_probe_underlabeled"
+        and arbiter_selector_probe_decision.get("runtime_arbiter_allowed") is False
+        and arbiter_selector_probe_decision.get("sandbox_ready") is False
+        and strategy_arbiter_observation_selector_probe_v0.get("underlabeled")
+        is True
+        and strategy_arbiter_observation_selector_probe_v0.get("record_count") == 12
+        and strategy_arbiter_observation_selector_probe_v0.get("labeled_row_count")
+        == 3
+        and strategy_arbiter_observation_selector_probe_v0.get(
+            "selected_unknown_count"
+        )
+        == 10
+        and strategy_arbiter_observation_selector_probe_v0.get(
+            "runtime_arbiter_implemented"
+        )
+        is False
+        and strategy_arbiter_observation_selector_probe_v0.get(
+            "runtime_behavior_changed"
+        )
+        is False
+        and strategy_arbiter_observation_selector_probe_v0.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and strategy_arbiter_labeled_observation_controls_v0.get("causal_status")
+        == "non_causal_labeled_observation_controls"
+        and arbiter_labeled_controls_decision.get("status")
+        == "labeled_observation_controls_collected"
+        and arbiter_labeled_controls_decision.get("runtime_arbiter_allowed")
+        is False
+        and strategy_arbiter_labeled_observation_controls_v0.get("record_count")
+        == 21
+        and arbiter_labeled_controls_stage_counts.get("stage7") == 6
+        and strategy_arbiter_labeled_observation_controls_v0.get(
+            "selected_label_counts"
+        )
+        == {"negative": 5, "positive": 9, "unknown": 7}
+        and strategy_arbiter_labeled_observation_controls_v0.get(
+            "runtime_arbiter_implemented"
+        )
+        is False
+        and strategy_arbiter_labeled_observation_controls_v0.get(
+            "runtime_behavior_changed"
+        )
+        is False
+        and strategy_arbiter_labeled_observation_controls_v0.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and strategy_arbiter_labeled_controls_probe_v0.get("causal_status")
+        == "non_causal_probe"
+        and arbiter_labeled_probe_decision.get("status")
+        == "labeled_controls_mixed_no_sandbox"
+        and arbiter_labeled_probe_decision.get("runtime_arbiter_allowed") is False
+        and arbiter_labeled_probe_decision.get("sandbox_ready") is False
+        and strategy_arbiter_labeled_controls_probe_v0.get("record_count") == 21
+        and strategy_arbiter_labeled_controls_probe_v0.get("labeled_record_count")
+        == 14
+        and strategy_arbiter_labeled_controls_probe_v0.get("stage7_unknown_count")
+        == 6
+        and strategy_arbiter_labeled_controls_probe_v0.get(
+            "selected_positive_rate_on_labeled_controls"
+        )
+        == 0.6428571428571429
+        and strategy_arbiter_labeled_controls_probe_v0.get(
+            "runtime_arbiter_implemented"
+        )
+        is False
+        and strategy_arbiter_labeled_controls_probe_v0.get(
+            "runtime_behavior_changed"
+        )
+        is False
+        and strategy_arbiter_labeled_controls_probe_v0.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and strategy_arbiter_protected_control_matrix_v1.get("causal_status")
+        == "runtime_test_protected_control_matrix"
+        and arbiter_matrix_v1_decision.get("status") == "protected_control_matrix_passed"
+        and arbiter_matrix_v1_summary.get("default_off_equivalence_passed") is True
+        and arbiter_matrix_v1_summary.get("enabled_conversion_not_worse") is True
+        and arbiter_matrix_v1_summary.get("enabled_has_no_no_move_or_draw_spike")
+        is True
+        and arbiter_matrix_v1_sample.get("stage7_rows") == 0
+        and strategy_arbiter_protected_control_matrix_v1.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and strategy_arbiter_protected_control_matrix_v1.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and strategy_arbiter_protected_control_matrix_v1.get(
+            "gameplay_topology_mutation"
+        )
+        is False
+        and strategy_arbiter_protected_control_matrix_v1.get(
+            "stage7_promotion_allowed"
+        )
+        is False
+        and strategy_arbiter_protected_control_matrix_v1.get(
+            "stage8_training_allowed"
+        )
+        is False
     )
     arbiter_risk_decision = (
         strategy_arbiter_evidence_risk_review_v0.get("decision") or {}
@@ -5322,6 +5621,187 @@ def build_payload() -> dict[str, Any]:
             ),
             "stage8_training_allowed": strategy_owner_contrast_probe.get(
                 "stage8_training_allowed"
+            ),
+        },
+        "strategy_arbiter_trace_observability_gate": {
+            "status": arbiter_labeled_probe_decision.get("status"),
+            "passive_trace_observability_ready": (
+                arbiter_trace_observability_passive
+            ),
+            "sandbox_design_status": strategy_arbiter_sandbox_design_v0.get(
+                "design_status"
+            ),
+            "sandbox_default_enabled": arbiter_sandbox_future.get(
+                "default_enabled"
+            ),
+            "sandbox_blocked_next_steps": arbiter_sandbox_blocked,
+            "smoke_status": arbiter_smoke_decision.get("status"),
+            "smoke_runtime_arbiter_allowed": arbiter_smoke_decision.get(
+                "runtime_arbiter_allowed"
+            ),
+            "smoke_selected_behavior_metrics_match": (
+                arbiter_smoke_equivalence.get("selected_behavior_metrics_match")
+            ),
+            "smoke_outcome_metrics_match": (
+                arbiter_smoke_equivalence.get("outcome_metrics_match")
+            ),
+            "smoke_observation_is_only_expected_delta": (
+                arbiter_smoke_equivalence.get("observation_is_only_expected_delta")
+            ),
+            "smoke_direct_request": arbiter_smoke_metadata.get("direct_request"),
+            "smoke_score_delta": arbiter_smoke_metadata.get("score_delta"),
+            "smoke_recommendation_only": (
+                arbiter_smoke_metadata.get("recommendation_only")
+            ),
+            "observation_frames_status": (
+                arbiter_observation_frames_decision.get("status")
+            ),
+            "observation_frames_runtime_arbiter_allowed": (
+                arbiter_observation_frames_decision.get("runtime_arbiter_allowed")
+            ),
+            "observation_frame_count": (
+                strategy_arbiter_observation_frames_v0.get("record_count")
+            ),
+            "observation_stage_counts": arbiter_observation_stage_counts,
+            "observation_selected_provider_counts": (
+                strategy_arbiter_observation_frames_v0.get(
+                    "selected_provider_counts"
+                )
+                or {}
+            ),
+            "observation_proposal_count_min": (
+                strategy_arbiter_observation_frames_v0.get("proposal_count_min")
+            ),
+            "observation_proposal_count_max": (
+                strategy_arbiter_observation_frames_v0.get("proposal_count_max")
+            ),
+            "separability_status": arbiter_separability_decision.get("status"),
+            "separability_runtime_arbiter_allowed": (
+                arbiter_separability_decision.get("runtime_arbiter_allowed")
+            ),
+            "separability_sandbox_ready": (
+                arbiter_separability_decision.get("sandbox_ready")
+            ),
+            "separability_underinstrumented_record_count": (
+                strategy_arbiter_observation_separability_review_v0.get(
+                    "underinstrumented_record_count"
+                )
+            ),
+            "separability_single_provider_record_count": (
+                strategy_arbiter_observation_separability_review_v0.get(
+                    "single_provider_record_count"
+                )
+            ),
+            "selector_probe_status": arbiter_selector_probe_decision.get("status"),
+            "selector_probe_runtime_arbiter_allowed": (
+                arbiter_selector_probe_decision.get("runtime_arbiter_allowed")
+            ),
+            "selector_probe_sandbox_ready": (
+                arbiter_selector_probe_decision.get("sandbox_ready")
+            ),
+            "selector_probe_underlabeled": (
+                strategy_arbiter_observation_selector_probe_v0.get("underlabeled")
+            ),
+            "selector_probe_labeled_row_count": (
+                strategy_arbiter_observation_selector_probe_v0.get(
+                    "labeled_row_count"
+                )
+            ),
+            "selector_probe_selected_unknown_count": (
+                strategy_arbiter_observation_selector_probe_v0.get(
+                    "selected_unknown_count"
+                )
+            ),
+            "labeled_controls_status": arbiter_labeled_controls_decision.get(
+                "status"
+            ),
+            "labeled_controls_runtime_arbiter_allowed": (
+                arbiter_labeled_controls_decision.get("runtime_arbiter_allowed")
+            ),
+            "labeled_controls_record_count": (
+                strategy_arbiter_labeled_observation_controls_v0.get("record_count")
+            ),
+            "labeled_controls_stage_counts": arbiter_labeled_controls_stage_counts,
+            "labeled_controls_selected_label_counts": (
+                strategy_arbiter_labeled_observation_controls_v0.get(
+                    "selected_label_counts"
+                )
+                or {}
+            ),
+            "labeled_probe_status": arbiter_labeled_probe_decision.get("status"),
+            "labeled_probe_runtime_arbiter_allowed": (
+                arbiter_labeled_probe_decision.get("runtime_arbiter_allowed")
+            ),
+            "labeled_probe_sandbox_ready": (
+                arbiter_labeled_probe_decision.get("sandbox_ready")
+            ),
+            "labeled_probe_record_count": (
+                strategy_arbiter_labeled_controls_probe_v0.get("record_count")
+            ),
+            "labeled_probe_labeled_record_count": (
+                strategy_arbiter_labeled_controls_probe_v0.get(
+                    "labeled_record_count"
+                )
+            ),
+            "labeled_probe_stage7_unknown_count": (
+                strategy_arbiter_labeled_controls_probe_v0.get(
+                    "stage7_unknown_count"
+                )
+            ),
+            "labeled_probe_selected_positive_rate": (
+                strategy_arbiter_labeled_controls_probe_v0.get(
+                    "selected_positive_rate_on_labeled_controls"
+                )
+            ),
+            "protected_matrix_status": arbiter_matrix_v1_decision.get("status"),
+            "protected_matrix_default_off_equivalence_passed": (
+                arbiter_matrix_v1_summary.get("default_off_equivalence_passed")
+            ),
+            "protected_matrix_enabled_conversion_not_worse": (
+                arbiter_matrix_v1_summary.get("enabled_conversion_not_worse")
+            ),
+            "protected_matrix_no_no_move_or_draw_spike": (
+                arbiter_matrix_v1_summary.get(
+                    "enabled_has_no_no_move_or_draw_spike"
+                )
+            ),
+            "protected_matrix_stage7_rows": (
+                arbiter_matrix_v1_sample.get("stage7_rows")
+            ),
+            "runtime_arbiter_implemented": (
+                strategy_arbiter_labeled_controls_probe_v0.get(
+                    "runtime_arbiter_implemented"
+                )
+            ),
+            "runtime_behavior_changed": (
+                strategy_arbiter_labeled_controls_probe_v0.get(
+                    "runtime_behavior_changed"
+                )
+            ),
+            "runtime_defaults_changed": (
+                strategy_arbiter_labeled_controls_probe_v0.get(
+                    "runtime_defaults_changed"
+                )
+            ),
+            "runtime_dtm_or_tablebase_lookup": (
+                strategy_arbiter_protected_control_matrix_v1.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "gameplay_topology_mutation": (
+                strategy_arbiter_protected_control_matrix_v1.get(
+                    "gameplay_topology_mutation"
+                )
+            ),
+            "stage7_promotion_allowed": (
+                strategy_arbiter_protected_control_matrix_v1.get(
+                    "stage7_promotion_allowed"
+                )
+            ),
+            "stage8_training_allowed": (
+                strategy_arbiter_protected_control_matrix_v1.get(
+                    "stage8_training_allowed"
+                )
             ),
         },
         "strategy_arbiter_semantics_blocker_gate": {
@@ -11074,6 +11554,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     clean_curriculum = payload["clean_curriculum_run_lineage_gate"]
     strategy_sequence_architecture = payload["strategy_sequence_architecture_gate"]
     strategy_owner_contrast = payload["strategy_owner_contrast_gate"]
+    strategy_arbiter_trace = payload["strategy_arbiter_trace_observability_gate"]
     strategy_arbiter_semantics = payload["strategy_arbiter_semantics_blocker_gate"]
     strategy_arbiter_out_of_sample = payload["strategy_arbiter_out_of_sample_gate"]
     strategy_arbiter_runtime_no_scale = payload[
@@ -11219,6 +11700,41 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- runtime_terminals_added: `{strategy_owner_contrast['runtime_terminals_added']}`",
         f"- stage7_promotion_allowed: `{strategy_owner_contrast['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{strategy_owner_contrast['stage8_training_allowed']}`",
+        "",
+        "## Strategy Arbiter Trace Observability",
+        "",
+        f"- passive_trace_observability_ready: `{strategy_arbiter_trace['passive_trace_observability_ready']}`",
+        f"- status: `{strategy_arbiter_trace['status']}`",
+        f"- sandbox_design_status: `{strategy_arbiter_trace['sandbox_design_status']}`",
+        f"- sandbox_default_enabled: `{strategy_arbiter_trace['sandbox_default_enabled']}`",
+        f"- smoke_status: `{strategy_arbiter_trace['smoke_status']}`",
+        f"- smoke_runtime_arbiter_allowed: `{strategy_arbiter_trace['smoke_runtime_arbiter_allowed']}`",
+        f"- smoke_selected_behavior_metrics_match: `{strategy_arbiter_trace['smoke_selected_behavior_metrics_match']}`",
+        f"- smoke_observation_is_only_expected_delta: `{strategy_arbiter_trace['smoke_observation_is_only_expected_delta']}`",
+        f"- smoke_direct_request: `{strategy_arbiter_trace['smoke_direct_request']}`",
+        f"- smoke_score_delta: `{strategy_arbiter_trace['smoke_score_delta']}`",
+        f"- observation_frames_status: `{strategy_arbiter_trace['observation_frames_status']}`",
+        f"- observation_frame_count: `{strategy_arbiter_trace['observation_frame_count']}`",
+        f"- observation_stage_counts: `{strategy_arbiter_trace['observation_stage_counts']}`",
+        f"- separability_status: `{strategy_arbiter_trace['separability_status']}`",
+        f"- separability_sandbox_ready: `{strategy_arbiter_trace['separability_sandbox_ready']}`",
+        f"- selector_probe_status: `{strategy_arbiter_trace['selector_probe_status']}`",
+        f"- selector_probe_underlabeled: `{strategy_arbiter_trace['selector_probe_underlabeled']}`",
+        f"- selector_probe_selected_unknown_count: `{strategy_arbiter_trace['selector_probe_selected_unknown_count']}`",
+        f"- labeled_controls_status: `{strategy_arbiter_trace['labeled_controls_status']}`",
+        f"- labeled_controls_record_count: `{strategy_arbiter_trace['labeled_controls_record_count']}`",
+        f"- labeled_controls_selected_label_counts: `{strategy_arbiter_trace['labeled_controls_selected_label_counts']}`",
+        f"- labeled_probe_status: `{strategy_arbiter_trace['labeled_probe_status']}`",
+        f"- labeled_probe_sandbox_ready: `{strategy_arbiter_trace['labeled_probe_sandbox_ready']}`",
+        f"- labeled_probe_stage7_unknown_count: `{strategy_arbiter_trace['labeled_probe_stage7_unknown_count']}`",
+        f"- protected_matrix_status: `{strategy_arbiter_trace['protected_matrix_status']}`",
+        f"- protected_matrix_default_off_equivalence_passed: `{strategy_arbiter_trace['protected_matrix_default_off_equivalence_passed']}`",
+        f"- protected_matrix_stage7_rows: `{strategy_arbiter_trace['protected_matrix_stage7_rows']}`",
+        f"- runtime_arbiter_implemented: `{strategy_arbiter_trace['runtime_arbiter_implemented']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{strategy_arbiter_trace['runtime_dtm_or_tablebase_lookup']}`",
+        f"- gameplay_topology_mutation: `{strategy_arbiter_trace['gameplay_topology_mutation']}`",
+        f"- stage7_promotion_allowed: `{strategy_arbiter_trace['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{strategy_arbiter_trace['stage8_training_allowed']}`",
         "",
         "## Strategy Arbiter Semantics Blocker",
         "",

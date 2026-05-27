@@ -447,6 +447,42 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_strategy_owner_contrast_probe_v0.json"
     )
     assert (
+        payload["source_artifacts"]["strategy_arbiter_sandbox_design_v0"]
+        == "reports/krk_strategy_arbiter_sandbox_design_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_arbiter_observability_smoke_v0"]
+        == "reports/krk_strategy_arbiter_observability_smoke_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_arbiter_observation_frames_v0"]
+        == "reports/krk_strategy_arbiter_observation_frames_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "strategy_arbiter_observation_separability_review_v0"
+        ]
+        == "reports/krk_strategy_arbiter_observation_separability_review_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_arbiter_observation_selector_probe_v0"]
+        == "reports/krk_strategy_arbiter_observation_selector_probe_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "strategy_arbiter_labeled_observation_controls_v0"
+        ]
+        == "reports/krk_strategy_arbiter_labeled_observation_controls_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_arbiter_labeled_controls_probe_v0"]
+        == "reports/krk_strategy_arbiter_labeled_controls_probe_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["strategy_arbiter_protected_control_matrix_v1"]
+        == "reports/krk_strategy_arbiter_protected_control_matrix_v1.json"
+    )
+    assert (
         payload["source_artifacts"]["strategy_arbiter_evidence_risk_review_v0"]
         == "reports/krk_strategy_arbiter_evidence_risk_review_v0.json"
     )
@@ -1028,6 +1064,88 @@ def test_full_suite_readiness_identifies_current_gate():
     assert strategy_owner["runtime_terminals_added"] is False
     assert strategy_owner["stage7_promotion_allowed"] is False
     assert strategy_owner["stage8_training_allowed"] is False
+
+    arbiter_trace = payload["strategy_arbiter_trace_observability_gate"]
+    assert arbiter_trace["passive_trace_observability_ready"] is True
+    assert arbiter_trace["status"] == "labeled_controls_mixed_no_sandbox"
+    assert arbiter_trace["sandbox_design_status"] == "proposed_for_review"
+    assert arbiter_trace["sandbox_default_enabled"] is False
+    assert "implement_runtime_arbiter_without_review" in (
+        arbiter_trace["sandbox_blocked_next_steps"]
+    )
+    assert "promote_stage7" in arbiter_trace["sandbox_blocked_next_steps"]
+    assert "train_stage8" in arbiter_trace["sandbox_blocked_next_steps"]
+    assert (
+        arbiter_trace["smoke_status"] == "observability_skeleton_smoke_passed"
+    )
+    assert arbiter_trace["smoke_runtime_arbiter_allowed"] is False
+    assert arbiter_trace["smoke_selected_behavior_metrics_match"] is True
+    assert arbiter_trace["smoke_outcome_metrics_match"] is True
+    assert arbiter_trace["smoke_observation_is_only_expected_delta"] is True
+    assert arbiter_trace["smoke_direct_request"] is False
+    assert arbiter_trace["smoke_score_delta"] == 0.0
+    assert arbiter_trace["smoke_recommendation_only"] is True
+    assert arbiter_trace["observation_frames_status"] == "observation_frames_collected"
+    assert arbiter_trace["observation_frames_runtime_arbiter_allowed"] is False
+    assert arbiter_trace["observation_frame_count"] == 12
+    assert arbiter_trace["observation_stage_counts"] == {
+        "stage4": 2,
+        "stage5": 1,
+        "stage7": 9,
+    }
+    assert arbiter_trace["observation_proposal_count_min"] == 10
+    assert arbiter_trace["observation_proposal_count_max"] == 10
+    assert arbiter_trace["separability_status"] == (
+        "observation_frames_ready_for_non_causal_selector_probe"
+    )
+    assert arbiter_trace["separability_runtime_arbiter_allowed"] is False
+    assert arbiter_trace["separability_sandbox_ready"] is False
+    assert arbiter_trace["separability_underinstrumented_record_count"] == 0
+    assert arbiter_trace["separability_single_provider_record_count"] == 0
+    assert arbiter_trace["selector_probe_status"] == (
+        "observation_selector_probe_underlabeled"
+    )
+    assert arbiter_trace["selector_probe_runtime_arbiter_allowed"] is False
+    assert arbiter_trace["selector_probe_sandbox_ready"] is False
+    assert arbiter_trace["selector_probe_underlabeled"] is True
+    assert arbiter_trace["selector_probe_labeled_row_count"] == 3
+    assert arbiter_trace["selector_probe_selected_unknown_count"] == 10
+    assert (
+        arbiter_trace["labeled_controls_status"]
+        == "labeled_observation_controls_collected"
+    )
+    assert arbiter_trace["labeled_controls_runtime_arbiter_allowed"] is False
+    assert arbiter_trace["labeled_controls_record_count"] == 21
+    assert arbiter_trace["labeled_controls_stage_counts"] == {
+        "stage4": 5,
+        "stage5": 6,
+        "stage6": 4,
+        "stage7": 6,
+    }
+    assert arbiter_trace["labeled_controls_selected_label_counts"] == {
+        "negative": 5,
+        "positive": 9,
+        "unknown": 7,
+    }
+    assert arbiter_trace["labeled_probe_status"] == "labeled_controls_mixed_no_sandbox"
+    assert arbiter_trace["labeled_probe_runtime_arbiter_allowed"] is False
+    assert arbiter_trace["labeled_probe_sandbox_ready"] is False
+    assert arbiter_trace["labeled_probe_record_count"] == 21
+    assert arbiter_trace["labeled_probe_labeled_record_count"] == 14
+    assert arbiter_trace["labeled_probe_stage7_unknown_count"] == 6
+    assert arbiter_trace["labeled_probe_selected_positive_rate"] == 0.6428571428571429
+    assert arbiter_trace["protected_matrix_status"] == "protected_control_matrix_passed"
+    assert arbiter_trace["protected_matrix_default_off_equivalence_passed"] is True
+    assert arbiter_trace["protected_matrix_enabled_conversion_not_worse"] is True
+    assert arbiter_trace["protected_matrix_no_no_move_or_draw_spike"] is True
+    assert arbiter_trace["protected_matrix_stage7_rows"] == 0
+    assert arbiter_trace["runtime_arbiter_implemented"] is False
+    assert arbiter_trace["runtime_behavior_changed"] is False
+    assert arbiter_trace["runtime_defaults_changed"] is False
+    assert arbiter_trace["runtime_dtm_or_tablebase_lookup"] is False
+    assert arbiter_trace["gameplay_topology_mutation"] is False
+    assert arbiter_trace["stage7_promotion_allowed"] is False
+    assert arbiter_trace["stage8_training_allowed"] is False
 
     arbiter_semantics = payload["strategy_arbiter_semantics_blocker_gate"]
     assert arbiter_semantics["passive_semantics_blocker_ready"] is True

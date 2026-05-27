@@ -103,6 +103,41 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Strategy Arbiter Trace Observability
+
+- passive_trace_observability_ready: `True`
+- status: `labeled_controls_mixed_no_sandbox`
+- sandbox_design_status: `proposed_for_review`
+- sandbox_default_enabled: `False`
+- smoke_status: `observability_skeleton_smoke_passed`
+- smoke_runtime_arbiter_allowed: `False`
+- smoke_selected_behavior_metrics_match: `True`
+- smoke_observation_is_only_expected_delta: `True`
+- smoke_direct_request: `False`
+- smoke_score_delta: `0.0`
+- observation_frames_status: `observation_frames_collected`
+- observation_frame_count: `12`
+- observation_stage_counts: `{'stage4': 2, 'stage5': 1, 'stage7': 9}`
+- separability_status: `observation_frames_ready_for_non_causal_selector_probe`
+- separability_sandbox_ready: `False`
+- selector_probe_status: `observation_selector_probe_underlabeled`
+- selector_probe_underlabeled: `True`
+- selector_probe_selected_unknown_count: `10`
+- labeled_controls_status: `labeled_observation_controls_collected`
+- labeled_controls_record_count: `21`
+- labeled_controls_selected_label_counts: `{'negative': 5, 'positive': 9, 'unknown': 7}`
+- labeled_probe_status: `labeled_controls_mixed_no_sandbox`
+- labeled_probe_sandbox_ready: `False`
+- labeled_probe_stage7_unknown_count: `6`
+- protected_matrix_status: `protected_control_matrix_passed`
+- protected_matrix_default_off_equivalence_passed: `True`
+- protected_matrix_stage7_rows: `0`
+- runtime_arbiter_implemented: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- gameplay_topology_mutation: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Strategy Arbiter Semantics Blocker
 
 - passive_semantics_blocker_ready: `True`
@@ -704,7 +739,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `4a2102df5e5c09695afd85c64244079c9cda9b8d9533003f2714062a42c50c9c`
+- expected_readiness_fingerprint: `9556bcabafd93886bc74ede39a62756358040230efc6c2b2a8ef942e5b7513e4`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1233,5 +1268,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2411`
+- checked_flag_count: `2434`
 - violation_count: `0`

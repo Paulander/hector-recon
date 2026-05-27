@@ -214,6 +214,61 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["strategy_owner_contrast_runtime_terminals_added"] is False
     assert payload["summary"]["strategy_owner_contrast_stage7_promotion_allowed"] is False
     assert payload["summary"]["strategy_owner_contrast_stage8_training_allowed"] is False
+    assert payload["summary"]["strategy_arbiter_trace_passive_ready"] is True
+    assert (
+        payload["summary"]["strategy_arbiter_trace_status"]
+        == "labeled_controls_mixed_no_sandbox"
+    )
+    assert (
+        payload["summary"]["strategy_arbiter_trace_sandbox_default_enabled"]
+        is False
+    )
+    assert payload["summary"]["strategy_arbiter_trace_smoke_status"] == (
+        "observability_skeleton_smoke_passed"
+    )
+    assert (
+        payload["summary"]["strategy_arbiter_trace_smoke_runtime_arbiter_allowed"]
+        is False
+    )
+    assert payload["summary"]["strategy_arbiter_trace_observation_frames_status"] == (
+        "observation_frames_collected"
+    )
+    assert payload["summary"]["strategy_arbiter_trace_observation_frame_count"] == 12
+    assert payload["summary"]["strategy_arbiter_trace_selector_probe_status"] == (
+        "observation_selector_probe_underlabeled"
+    )
+    assert (
+        payload["summary"]["strategy_arbiter_trace_selector_probe_underlabeled"]
+        is True
+    )
+    assert payload["summary"]["strategy_arbiter_trace_labeled_probe_status"] == (
+        "labeled_controls_mixed_no_sandbox"
+    )
+    assert (
+        payload["summary"]["strategy_arbiter_trace_labeled_probe_sandbox_ready"]
+        is False
+    )
+    assert payload["summary"]["strategy_arbiter_trace_protected_matrix_status"] == (
+        "protected_control_matrix_passed"
+    )
+    assert (
+        payload["summary"][
+            "strategy_arbiter_trace_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["strategy_arbiter_trace_gameplay_topology_mutation"]
+        is False
+    )
+    assert (
+        payload["summary"]["strategy_arbiter_trace_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["strategy_arbiter_trace_stage8_training_allowed"]
+        is False
+    )
     assert payload["summary"]["strategy_arbiter_semantics_passive_ready"] is True
     assert payload["summary"]["strategy_arbiter_semantics_status"] == (
         "selector_objective_and_label_semantics_review_required"

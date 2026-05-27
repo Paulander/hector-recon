@@ -584,6 +584,9 @@ def build_payload() -> dict[str, Any]:
         readiness.get("strategy_sequence_architecture_gate") or {}
     )
     strategy_owner_contrast_gate = readiness.get("strategy_owner_contrast_gate") or {}
+    strategy_arbiter_trace_gate = (
+        readiness.get("strategy_arbiter_trace_observability_gate") or {}
+    )
     strategy_arbiter_semantics_gate = (
         readiness.get("strategy_arbiter_semantics_blocker_gate") or {}
     )
@@ -1028,6 +1031,52 @@ def build_payload() -> dict[str, Any]:
             ),
             "strategy_owner_contrast_stage8_training_allowed": (
                 strategy_owner_contrast_gate.get("stage8_training_allowed")
+            ),
+            "strategy_arbiter_trace_passive_ready": (
+                strategy_arbiter_trace_gate.get("passive_trace_observability_ready")
+            ),
+            "strategy_arbiter_trace_status": strategy_arbiter_trace_gate.get("status"),
+            "strategy_arbiter_trace_sandbox_default_enabled": (
+                strategy_arbiter_trace_gate.get("sandbox_default_enabled")
+            ),
+            "strategy_arbiter_trace_smoke_status": (
+                strategy_arbiter_trace_gate.get("smoke_status")
+            ),
+            "strategy_arbiter_trace_smoke_runtime_arbiter_allowed": (
+                strategy_arbiter_trace_gate.get("smoke_runtime_arbiter_allowed")
+            ),
+            "strategy_arbiter_trace_observation_frames_status": (
+                strategy_arbiter_trace_gate.get("observation_frames_status")
+            ),
+            "strategy_arbiter_trace_observation_frame_count": (
+                strategy_arbiter_trace_gate.get("observation_frame_count")
+            ),
+            "strategy_arbiter_trace_selector_probe_status": (
+                strategy_arbiter_trace_gate.get("selector_probe_status")
+            ),
+            "strategy_arbiter_trace_selector_probe_underlabeled": (
+                strategy_arbiter_trace_gate.get("selector_probe_underlabeled")
+            ),
+            "strategy_arbiter_trace_labeled_probe_status": (
+                strategy_arbiter_trace_gate.get("labeled_probe_status")
+            ),
+            "strategy_arbiter_trace_labeled_probe_sandbox_ready": (
+                strategy_arbiter_trace_gate.get("labeled_probe_sandbox_ready")
+            ),
+            "strategy_arbiter_trace_protected_matrix_status": (
+                strategy_arbiter_trace_gate.get("protected_matrix_status")
+            ),
+            "strategy_arbiter_trace_runtime_dtm_or_tablebase_lookup": (
+                strategy_arbiter_trace_gate.get("runtime_dtm_or_tablebase_lookup")
+            ),
+            "strategy_arbiter_trace_gameplay_topology_mutation": (
+                strategy_arbiter_trace_gate.get("gameplay_topology_mutation")
+            ),
+            "strategy_arbiter_trace_stage7_promotion_allowed": (
+                strategy_arbiter_trace_gate.get("stage7_promotion_allowed")
+            ),
+            "strategy_arbiter_trace_stage8_training_allowed": (
+                strategy_arbiter_trace_gate.get("stage8_training_allowed")
             ),
             "strategy_arbiter_semantics_passive_ready": (
                 strategy_arbiter_semantics_gate.get(
