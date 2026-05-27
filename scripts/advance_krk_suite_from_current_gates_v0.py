@@ -596,6 +596,9 @@ def build_payload() -> dict[str, Any]:
     strategy_arbiter_runtime_no_scale_gate = (
         readiness.get("strategy_arbiter_runtime_no_scale_gate") or {}
     )
+    selector_provenance_prior_gate = (
+        readiness.get("selector_provenance_prior_blocker_gate") or {}
+    )
     selector_objective_normalization_gate = (
         readiness.get("selector_objective_normalization_gate") or {}
     )
@@ -1299,6 +1302,68 @@ def build_payload() -> dict[str, Any]:
             ),
             "strategy_arbiter_runtime_no_scale_stage8_training_allowed": (
                 strategy_arbiter_runtime_no_scale_gate.get("stage8_training_allowed")
+            ),
+            "selector_provenance_prior_passive_ready": (
+                selector_provenance_prior_gate.get(
+                    "passive_provenance_prior_blocker_ready"
+                )
+            ),
+            "selector_provenance_prior_status": (
+                selector_provenance_prior_gate.get("status")
+            ),
+            "selector_provenance_prior_target_training_row_count": (
+                selector_provenance_prior_gate.get(
+                    "target_dataset_training_row_count"
+                )
+            ),
+            "selector_provenance_prior_target_stage7_training_rows": (
+                selector_provenance_prior_gate.get(
+                    "target_dataset_stage7_training_rows"
+                )
+            ),
+            "selector_provenance_prior_baseline_best": (
+                selector_provenance_prior_gate.get("baseline_probe_best_baseline")
+            ),
+            "selector_provenance_prior_feature_improved": (
+                selector_provenance_prior_gate.get(
+                    "feature_baseline_improved_over_provider_prior"
+                )
+            ),
+            "selector_provenance_prior_probe_status": (
+                selector_provenance_prior_gate.get("provenance_probe_status")
+            ),
+            "selector_provenance_prior_raw_provider_runtime_prior_allowed": (
+                selector_provenance_prior_gate.get(
+                    "provenance_probe_raw_provider_id_runtime_prior_allowed"
+                )
+            ),
+            "selector_provenance_prior_selector_sandbox_ready": (
+                selector_provenance_prior_gate.get(
+                    "provenance_probe_selector_sandbox_ready"
+                )
+            ),
+            "selector_provenance_prior_architecture_status": (
+                selector_provenance_prior_gate.get("architecture_review_status")
+            ),
+            "selector_provenance_prior_after_contrast_status": (
+                selector_provenance_prior_gate.get("after_contrast_status")
+            ),
+            "selector_provenance_prior_after_contrast_blockers": (
+                selector_provenance_prior_gate.get(
+                    "after_contrast_readiness_blockers"
+                )
+            ),
+            "selector_provenance_prior_runtime_dtm_or_tablebase_lookup": (
+                selector_provenance_prior_gate.get("runtime_dtm_or_tablebase_lookup")
+            ),
+            "selector_provenance_prior_gameplay_topology_mutation": (
+                selector_provenance_prior_gate.get("gameplay_topology_mutation")
+            ),
+            "selector_provenance_prior_stage7_promotion_allowed": (
+                selector_provenance_prior_gate.get("stage7_promotion_allowed")
+            ),
+            "selector_provenance_prior_stage8_training_allowed": (
+                selector_provenance_prior_gate.get("stage8_training_allowed")
             ),
             "selector_objective_normalization_passive_ready": (
                 selector_objective_normalization_gate.get("passive_objective_ready")

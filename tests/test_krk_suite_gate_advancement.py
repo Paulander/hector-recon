@@ -542,6 +542,65 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["strategy_arbiter_runtime_no_scale_stage8_training_allowed"]
         is False
     )
+    assert payload["summary"]["selector_provenance_prior_passive_ready"] is True
+    assert payload["summary"]["selector_provenance_prior_status"] == (
+        "provider_prior_remains_best_no_selector_sandbox"
+    )
+    assert (
+        payload["summary"][
+            "selector_provenance_prior_target_training_row_count"
+        ]
+        == 42
+    )
+    assert (
+        payload["summary"]["selector_provenance_prior_target_stage7_training_rows"]
+        == 0
+    )
+    assert (
+        payload["summary"]["selector_provenance_prior_baseline_best"]
+        == "provider_prior_loo"
+    )
+    assert payload["summary"]["selector_provenance_prior_feature_improved"] is False
+    assert payload["summary"]["selector_provenance_prior_probe_status"] == (
+        "provenance_features_explain_provider_prior_non_causal"
+    )
+    assert (
+        payload["summary"][
+            "selector_provenance_prior_raw_provider_runtime_prior_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_provenance_prior_selector_sandbox_ready"]
+        is False
+    )
+    assert payload["summary"]["selector_provenance_prior_architecture_status"] == (
+        "provider_prior_remains_best_no_selector_sandbox"
+    )
+    assert payload["summary"]["selector_provenance_prior_after_contrast_status"] == (
+        "selector_sandbox_blocked_selected_provider_evidence_missing"
+    )
+    assert payload["summary"]["selector_provenance_prior_after_contrast_blockers"] == [
+        "insufficient_selected_provider_family_diversity"
+    ]
+    assert (
+        payload["summary"][
+            "selector_provenance_prior_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_provenance_prior_gameplay_topology_mutation"]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_provenance_prior_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_provenance_prior_stage8_training_allowed"]
+        is False
+    )
     assert payload["summary"]["selector_objective_normalization_passive_ready"] is True
     assert (
         payload["summary"]["selector_objective_arbitration_status"]

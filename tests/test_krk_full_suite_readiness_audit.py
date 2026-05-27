@@ -595,6 +595,44 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_selector_objective_architecture_review_v1.json"
     )
     assert (
+        payload["source_artifacts"]["selector_target_dataset_v0"]
+        == "reports/krk_selector_target_dataset_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_target_probe_v0"]
+        == "reports/krk_selector_target_probe_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_baseline_probe_v0"]
+        == "reports/krk_selector_baseline_probe_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_feature_dataset_v0"]
+        == "reports/krk_selector_feature_dataset_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_feature_baseline_probe_v0"]
+        == "reports/krk_selector_feature_baseline_probe_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_provenance_feature_dataset_v0"]
+        == "reports/krk_selector_provenance_feature_dataset_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_provenance_feature_probe_v0"]
+        == "reports/krk_selector_provenance_feature_probe_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["selector_feature_architecture_review_v0"]
+        == "reports/krk_selector_feature_architecture_review_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "selector_readiness_after_contrast_probe_review_v0"
+        ]
+        == "reports/krk_selector_readiness_after_contrast_probe_review_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["split_selector_objective_dataset_v3"]
         == "reports/krk_split_selector_objective_dataset_v3.json"
     )
@@ -1437,6 +1475,130 @@ def test_full_suite_readiness_identifies_current_gate():
     assert runtime_no_scale["gameplay_topology_mutation"] is False
     assert runtime_no_scale["stage7_promotion_allowed"] is False
     assert runtime_no_scale["stage8_training_allowed"] is False
+
+    selector_prior = payload["selector_provenance_prior_blocker_gate"]
+    assert selector_prior["passive_provenance_prior_blocker_ready"] is True
+    assert (
+        selector_prior["status"] == "provider_prior_remains_best_no_selector_sandbox"
+    )
+    assert selector_prior["target_dataset_status"] == "selector_target_dataset_built"
+    assert selector_prior["target_dataset_training_row_count"] == 42
+    assert selector_prior["target_dataset_stage7_training_rows"] == 0
+    assert selector_prior["target_dataset_target_kind_counts"] == {
+        "forced_provider_conversion": 12,
+        "held_out_challenge": 9,
+        "selected_playout_success": 42,
+    }
+    assert (
+        selector_prior["target_probe_status"]
+        == "target_dataset_ready_for_non_causal_baseline_probe"
+    )
+    assert selector_prior["target_probe_training_label_counts"] == {
+        "negative": 28,
+        "positive": 14,
+    }
+    assert selector_prior["target_probe_heldout_training_row_count"] == 0
+    assert (
+        selector_prior["baseline_probe_status"]
+        == "simple_selector_baseline_promising_non_causal"
+    )
+    assert selector_prior["baseline_probe_best_baseline"] == "provider_prior_loo"
+    assert selector_prior["baseline_probe_best_accuracy"] == 0.8333333333333334
+    assert selector_prior["feature_dataset_status"] == "selector_feature_dataset_built"
+    assert selector_prior["feature_dataset_training_row_count"] == 42
+    assert selector_prior["feature_dataset_stage7_training_rows"] == 0
+    assert selector_prior["feature_dataset_rows_with_observation"] == 60
+    assert (
+        selector_prior["feature_baseline_status"]
+        == "provider_prior_remains_best_non_causal_baseline"
+    )
+    assert selector_prior["feature_baseline_best_name"] == "provider_prior_loo"
+    assert selector_prior["feature_baseline_best_accuracy"] == 0.8333333333333334
+    assert selector_prior["feature_baseline_improved_over_provider_prior"] is False
+    assert (
+        selector_prior["provenance_dataset_status"]
+        == "selector_provenance_feature_dataset_built"
+    )
+    assert selector_prior["provenance_dataset_rows_with_provider_provenance"] == 54
+    assert selector_prior["provenance_dataset_training_row_count"] == 42
+    assert selector_prior["provenance_dataset_stage7_training_rows"] == 0
+    assert (
+        selector_prior["provenance_probe_status"]
+        == "provenance_features_explain_provider_prior_non_causal"
+    )
+    assert selector_prior["provenance_probe_raw_provider_id_runtime_prior_allowed"] is False
+    assert selector_prior["provenance_probe_runtime_arbiter_allowed"] is False
+    assert selector_prior["provenance_probe_selector_sandbox_ready"] is False
+    assert selector_prior["provenance_probe_best_name"] == "provider_id_loo"
+    assert selector_prior["provenance_probe_best_accuracy"] == 0.8333333333333334
+    assert "runtime_arbiter" in selector_prior["provenance_probe_blocked_next_work"]
+    assert "selector_sandbox" in selector_prior["provenance_probe_blocked_next_work"]
+    assert (
+        "raw_provider_id_runtime_prior"
+        in selector_prior["provenance_probe_blocked_next_work"]
+    )
+    assert "stage7_promotion" in selector_prior["provenance_probe_blocked_next_work"]
+    assert "stage8_training" in selector_prior["provenance_probe_blocked_next_work"]
+    assert (
+        selector_prior["architecture_review_status"]
+        == "provider_prior_remains_best_no_selector_sandbox"
+    )
+    assert selector_prior["architecture_best_baseline"] == "provider_prior_loo"
+    assert (
+        selector_prior["architecture_best_baseline_accuracy"] == 0.8333333333333334
+    )
+    assert (
+        selector_prior["architecture_observation_features_improved_over_provider_prior"]
+        is False
+    )
+    assert selector_prior["architecture_must_remain_non_causal"] is True
+    assert "runtime_arbiter" in selector_prior["architecture_blocked_next_work"]
+    assert (
+        "default_off_selector_sandbox"
+        in selector_prior["architecture_blocked_next_work"]
+    )
+    assert (
+        "runtime_dtm_or_tablebase" in selector_prior["architecture_blocked_next_work"]
+    )
+    assert (
+        "gameplay_topology_mutation"
+        in selector_prior["architecture_blocked_next_work"]
+    )
+    assert "stage7_promotion" in selector_prior["architecture_blocked_next_work"]
+    assert "stage8_training" in selector_prior["architecture_blocked_next_work"]
+    assert (
+        selector_prior["after_contrast_status"]
+        == "selector_sandbox_blocked_selected_provider_evidence_missing"
+    )
+    assert selector_prior["after_contrast_runtime_arbiter_allowed"] is False
+    assert selector_prior["after_contrast_selector_sandbox_ready"] is False
+    assert selector_prior["after_contrast_training_row_count"] == 9
+    assert selector_prior["after_contrast_heldout_row_count"] == 4
+    assert selector_prior["after_contrast_readiness_blockers"] == [
+        "insufficient_selected_provider_family_diversity"
+    ]
+    assert selector_prior["after_contrast_selected_training_provider_families"] == [
+        "edge_trap"
+    ]
+    assert "runtime_arbiter" in selector_prior["after_contrast_blocked_next_steps"]
+    assert "selector_sandbox" in selector_prior["after_contrast_blocked_next_steps"]
+    assert (
+        "runtime_dtm_or_tablebase"
+        in selector_prior["after_contrast_blocked_next_steps"]
+    )
+    assert (
+        "gameplay_topology_mutation"
+        in selector_prior["after_contrast_blocked_next_steps"]
+    )
+    assert "stage7_promotion" in selector_prior["after_contrast_blocked_next_steps"]
+    assert "stage8_training" in selector_prior["after_contrast_blocked_next_steps"]
+    assert selector_prior["runtime_arbiter_implemented"] is False
+    assert selector_prior["runtime_behavior_changed"] is False
+    assert selector_prior["runtime_defaults_changed"] is False
+    assert selector_prior["runtime_dtm_or_tablebase_lookup"] is False
+    assert selector_prior["gameplay_topology_mutation"] is False
+    assert selector_prior["stage7_promotion_allowed"] is False
+    assert selector_prior["stage8_training_allowed"] is False
 
     selector_objective = payload["selector_objective_normalization_gate"]
     assert selector_objective["passive_objective_ready"] is True

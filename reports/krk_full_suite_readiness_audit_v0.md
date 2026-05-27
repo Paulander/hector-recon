@@ -239,6 +239,35 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Selector Provenance Prior Blocker
+
+- passive_provenance_prior_blocker_ready: `True`
+- status: `provider_prior_remains_best_no_selector_sandbox`
+- target_dataset_status: `selector_target_dataset_built`
+- target_dataset_training_row_count: `42`
+- target_dataset_stage7_training_rows: `0`
+- target_probe_heldout_training_row_count: `0`
+- baseline_probe_best_baseline: `provider_prior_loo`
+- baseline_probe_best_accuracy: `0.8333333333333334`
+- feature_baseline_status: `provider_prior_remains_best_non_causal_baseline`
+- feature_baseline_improved_over_provider_prior: `False`
+- provenance_dataset_rows_with_provider_provenance: `54`
+- provenance_probe_status: `provenance_features_explain_provider_prior_non_causal`
+- provenance_probe_raw_provider_id_runtime_prior_allowed: `False`
+- provenance_probe_selector_sandbox_ready: `False`
+- provenance_probe_best_name: `provider_id_loo`
+- architecture_review_status: `provider_prior_remains_best_no_selector_sandbox`
+- architecture_observation_features_improved_over_provider_prior: `False`
+- architecture_must_remain_non_causal: `True`
+- after_contrast_status: `selector_sandbox_blocked_selected_provider_evidence_missing`
+- after_contrast_selector_sandbox_ready: `False`
+- after_contrast_readiness_blockers: `['insufficient_selected_provider_family_diversity']`
+- runtime_arbiter_implemented: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- gameplay_topology_mutation: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Selector Objective Normalization
 
 - passive_objective_ready: `True`
@@ -739,7 +768,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `9556bcabafd93886bc74ede39a62756358040230efc6c2b2a8ef942e5b7513e4`
+- expected_readiness_fingerprint: `fd4ed917f89e20dbc4de5110d1fe5687b319adbe9418efd4747b80750116ba8c`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1268,5 +1297,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2434`
+- checked_flag_count: `2454`
 - violation_count: `0`

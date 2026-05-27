@@ -673,6 +673,27 @@ SOURCES = {
     "selector_objective_label_semantics_v0": (
         "reports/krk_selector_objective_label_semantics_v0.json"
     ),
+    "selector_target_dataset_v0": (
+        "reports/krk_selector_target_dataset_v0.json"
+    ),
+    "selector_target_probe_v0": "reports/krk_selector_target_probe_v0.json",
+    "selector_baseline_probe_v0": "reports/krk_selector_baseline_probe_v0.json",
+    "selector_feature_dataset_v0": "reports/krk_selector_feature_dataset_v0.json",
+    "selector_feature_baseline_probe_v0": (
+        "reports/krk_selector_feature_baseline_probe_v0.json"
+    ),
+    "selector_provenance_feature_dataset_v0": (
+        "reports/krk_selector_provenance_feature_dataset_v0.json"
+    ),
+    "selector_provenance_feature_probe_v0": (
+        "reports/krk_selector_provenance_feature_probe_v0.json"
+    ),
+    "selector_feature_architecture_review_v0": (
+        "reports/krk_selector_feature_architecture_review_v0.json"
+    ),
+    "selector_readiness_after_contrast_probe_review_v0": (
+        "reports/krk_selector_readiness_after_contrast_probe_review_v0.json"
+    ),
     "split_selector_objective_dataset_v3": (
         "reports/krk_split_selector_objective_dataset_v3.json"
     ),
@@ -1724,6 +1745,25 @@ def build_payload() -> dict[str, Any]:
     ]
     selector_objective_label_semantics_v0 = payloads[
         "selector_objective_label_semantics_v0"
+    ]
+    selector_target_dataset_v0 = payloads["selector_target_dataset_v0"]
+    selector_target_probe_v0 = payloads["selector_target_probe_v0"]
+    selector_baseline_probe_v0 = payloads["selector_baseline_probe_v0"]
+    selector_feature_dataset_v0 = payloads["selector_feature_dataset_v0"]
+    selector_feature_baseline_probe_v0 = payloads[
+        "selector_feature_baseline_probe_v0"
+    ]
+    selector_provenance_feature_dataset_v0 = payloads[
+        "selector_provenance_feature_dataset_v0"
+    ]
+    selector_provenance_feature_probe_v0 = payloads[
+        "selector_provenance_feature_probe_v0"
+    ]
+    selector_feature_architecture_review_v0 = payloads[
+        "selector_feature_architecture_review_v0"
+    ]
+    selector_readiness_after_contrast_probe_review_v0 = payloads[
+        "selector_readiness_after_contrast_probe_review_v0"
     ]
     split_selector_objective_dataset_v3 = payloads[
         "split_selector_objective_dataset_v3"
@@ -3201,6 +3241,229 @@ def build_payload() -> dict[str, Any]:
         and strategy_arbiter_runtime_test_review_v2.get("stage7_promotion_allowed")
         is False
         and strategy_arbiter_runtime_test_review_v2.get("stage8_training_allowed")
+        is False
+    )
+    selector_target_dataset_decision = selector_target_dataset_v0.get("decision") or {}
+    selector_target_probe_decision = selector_target_probe_v0.get("decision") or {}
+    selector_baseline_probe_decision = selector_baseline_probe_v0.get("decision") or {}
+    selector_feature_dataset_decision = (
+        selector_feature_dataset_v0.get("decision") or {}
+    )
+    selector_feature_baseline_decision = (
+        selector_feature_baseline_probe_v0.get("decision") or {}
+    )
+    selector_feature_baseline_best = (
+        selector_feature_baseline_probe_v0.get("best_baseline") or {}
+    )
+    selector_provenance_dataset_decision = (
+        selector_provenance_feature_dataset_v0.get("decision") or {}
+    )
+    selector_provenance_probe_decision = (
+        selector_provenance_feature_probe_v0.get("decision") or {}
+    )
+    selector_provenance_probe_best = (
+        selector_provenance_feature_probe_v0.get("best_baseline") or {}
+    )
+    selector_provenance_blocked_work = (
+        selector_provenance_feature_probe_v0.get("blocked_next_work") or []
+    )
+    selector_feature_architecture_summary = (
+        selector_feature_architecture_review_v0.get("summary") or {}
+    )
+    selector_feature_architecture_recommended = (
+        selector_feature_architecture_review_v0.get("recommended_next_step") or {}
+    )
+    selector_feature_architecture_blocked = (
+        selector_feature_architecture_review_v0.get("blocked_next_work") or []
+    )
+    selector_after_contrast_decision = (
+        selector_readiness_after_contrast_probe_review_v0.get("decision") or {}
+    )
+    selector_after_contrast_evidence = (
+        selector_readiness_after_contrast_probe_review_v0.get("evidence") or {}
+    )
+    selector_after_contrast_blocked = (
+        selector_readiness_after_contrast_probe_review_v0.get("blocked_next_steps")
+        or []
+    )
+    selector_provenance_prior_blocker_passive = (
+        selector_target_dataset_v0.get("causal_status") == "non_causal_target_dataset"
+        and selector_target_dataset_decision.get("status")
+        == "selector_target_dataset_built"
+        and selector_target_dataset_decision.get("runtime_arbiter_allowed") is False
+        and selector_target_dataset_decision.get("sandbox_ready") is False
+        and selector_target_dataset_v0.get("row_count") == 63
+        and selector_target_dataset_v0.get("training_row_count") == 42
+        and selector_target_dataset_v0.get("stage7_training_rows") == 0
+        and selector_target_dataset_v0.get("target_kind_counts")
+        == {
+            "forced_provider_conversion": 12,
+            "held_out_challenge": 9,
+            "selected_playout_success": 42,
+        }
+        and selector_target_dataset_v0.get("runtime_arbiter_implemented") is False
+        and selector_target_dataset_v0.get("runtime_behavior_changed") is False
+        and selector_target_dataset_v0.get("runtime_defaults_changed") is False
+        and selector_target_probe_v0.get("causal_status") == "non_causal_probe"
+        and selector_target_probe_decision.get("status")
+        == "target_dataset_ready_for_non_causal_baseline_probe"
+        and selector_target_probe_decision.get("runtime_arbiter_allowed") is False
+        and selector_target_probe_decision.get("sandbox_ready") is False
+        and selector_target_probe_v0.get("training_row_count") == 42
+        and selector_target_probe_v0.get("heldout_training_row_count") == 0
+        and selector_target_probe_v0.get("training_label_counts")
+        == {"negative": 28, "positive": 14}
+        and selector_target_probe_v0.get("runtime_arbiter_implemented") is False
+        and selector_target_probe_v0.get("runtime_behavior_changed") is False
+        and selector_target_probe_v0.get("runtime_defaults_changed") is False
+        and selector_baseline_probe_v0.get("causal_status") == "non_causal_probe"
+        and selector_baseline_probe_decision.get("status")
+        == "simple_selector_baseline_promising_non_causal"
+        and selector_baseline_probe_decision.get("runtime_arbiter_allowed") is False
+        and selector_baseline_probe_decision.get("sandbox_ready") is False
+        and (selector_baseline_probe_v0.get("best_baseline") or {}).get("name")
+        == "provider_prior_loo"
+        and (selector_baseline_probe_v0.get("best_baseline") or {}).get("accuracy")
+        == 0.8333333333333334
+        and selector_baseline_probe_v0.get("runtime_arbiter_implemented") is False
+        and selector_baseline_probe_v0.get("runtime_behavior_changed") is False
+        and selector_baseline_probe_v0.get("runtime_defaults_changed") is False
+        and selector_feature_dataset_v0.get("causal_status")
+        == "non_causal_feature_dataset"
+        and selector_feature_dataset_decision.get("status")
+        == "selector_feature_dataset_built"
+        and selector_feature_dataset_decision.get("runtime_arbiter_allowed") is False
+        and selector_feature_dataset_decision.get("sandbox_ready") is False
+        and selector_feature_dataset_v0.get("row_count") == 63
+        and selector_feature_dataset_v0.get("training_row_count") == 42
+        and selector_feature_dataset_v0.get("stage7_training_rows") == 0
+        and selector_feature_dataset_v0.get("rows_with_observation") == 60
+        and selector_feature_dataset_v0.get("runtime_arbiter_implemented") is False
+        and selector_feature_dataset_v0.get("runtime_behavior_changed") is False
+        and selector_feature_dataset_v0.get("runtime_defaults_changed") is False
+        and selector_feature_baseline_probe_v0.get("causal_status")
+        == "non_causal_probe"
+        and selector_feature_baseline_decision.get("status")
+        == "provider_prior_remains_best_non_causal_baseline"
+        and selector_feature_baseline_decision.get("runtime_arbiter_allowed")
+        is False
+        and selector_feature_baseline_decision.get("sandbox_ready") is False
+        and selector_feature_baseline_best.get("name") == "provider_prior_loo"
+        and selector_feature_baseline_best.get("accuracy") == 0.8333333333333334
+        and selector_feature_baseline_probe_v0.get("feature_improved_over_provider_prior")
+        is False
+        and selector_feature_baseline_probe_v0.get("runtime_arbiter_implemented")
+        is False
+        and selector_feature_baseline_probe_v0.get("runtime_behavior_changed")
+        is False
+        and selector_feature_baseline_probe_v0.get("runtime_defaults_changed")
+        is False
+        and selector_provenance_feature_dataset_v0.get("causal_status")
+        == "non_causal_provenance_feature_dataset"
+        and selector_provenance_dataset_decision.get("status")
+        == "selector_provenance_feature_dataset_built"
+        and selector_provenance_dataset_decision.get("runtime_arbiter_allowed")
+        is False
+        and selector_provenance_dataset_decision.get("sandbox_ready") is False
+        and selector_provenance_feature_dataset_v0.get("row_count") == 63
+        and selector_provenance_feature_dataset_v0.get("training_row_count") == 42
+        and selector_provenance_feature_dataset_v0.get("stage7_training_rows") == 0
+        and selector_provenance_feature_dataset_v0.get("rows_with_provider_provenance")
+        == 54
+        and selector_provenance_feature_dataset_v0.get("runtime_arbiter_implemented")
+        is False
+        and selector_provenance_feature_dataset_v0.get("runtime_behavior_changed")
+        is False
+        and selector_provenance_feature_dataset_v0.get("runtime_defaults_changed")
+        is False
+        and selector_provenance_feature_probe_v0.get("causal_status")
+        == "non_causal_probe"
+        and selector_provenance_probe_decision.get("status")
+        == "provenance_features_explain_provider_prior_non_causal"
+        and selector_provenance_probe_decision.get("runtime_arbiter_allowed")
+        is False
+        and selector_provenance_probe_decision.get("selector_sandbox_ready")
+        is False
+        and selector_provenance_probe_decision.get(
+            "raw_provider_id_runtime_prior_allowed"
+        )
+        is False
+        and selector_provenance_probe_best.get("name") == "provider_id_loo"
+        and selector_provenance_probe_best.get("accuracy") == 0.8333333333333334
+        and "runtime_arbiter" in selector_provenance_blocked_work
+        and "selector_sandbox" in selector_provenance_blocked_work
+        and "raw_provider_id_runtime_prior" in selector_provenance_blocked_work
+        and "stage7_promotion" in selector_provenance_blocked_work
+        and "stage8_training" in selector_provenance_blocked_work
+        and selector_provenance_feature_probe_v0.get("runtime_arbiter_implemented")
+        is False
+        and selector_provenance_feature_probe_v0.get("runtime_behavior_changed")
+        is False
+        and selector_provenance_feature_probe_v0.get("runtime_defaults_changed")
+        is False
+        and selector_feature_architecture_review_v0.get("causal_status")
+        == "non_causal_architecture_review"
+        and selector_feature_architecture_review_v0.get("decision_status")
+        == "provider_prior_remains_best_no_selector_sandbox"
+        and selector_feature_architecture_summary.get(
+            "observation_features_improved_over_provider_prior"
+        )
+        is False
+        and selector_feature_architecture_summary.get("best_baseline")
+        == "provider_prior_loo"
+        and selector_feature_architecture_summary.get("best_baseline_accuracy")
+        == 0.8333333333333334
+        and selector_feature_architecture_recommended.get("must_remain_non_causal")
+        is True
+        and "runtime_arbiter" in selector_feature_architecture_blocked
+        and "default_off_selector_sandbox" in selector_feature_architecture_blocked
+        and "runtime_dtm_or_tablebase" in selector_feature_architecture_blocked
+        and "gameplay_topology_mutation" in selector_feature_architecture_blocked
+        and "stage7_promotion" in selector_feature_architecture_blocked
+        and "stage8_training" in selector_feature_architecture_blocked
+        and selector_readiness_after_contrast_probe_review_v0.get("causal_status")
+        == "non_causal_architecture_review"
+        and selector_after_contrast_decision.get("status")
+        == "selector_sandbox_blocked_selected_provider_evidence_missing"
+        and selector_after_contrast_decision.get("runtime_arbiter_allowed") is False
+        and selector_after_contrast_decision.get("selector_sandbox_ready") is False
+        and selector_after_contrast_evidence.get("training_row_count") == 9
+        and selector_after_contrast_evidence.get("heldout_row_count") == 4
+        and selector_after_contrast_evidence.get("readiness_blockers")
+        == ["insufficient_selected_provider_family_diversity"]
+        and "runtime_arbiter" in selector_after_contrast_blocked
+        and "selector_sandbox" in selector_after_contrast_blocked
+        and "runtime_dtm_or_tablebase" in selector_after_contrast_blocked
+        and "gameplay_topology_mutation" in selector_after_contrast_blocked
+        and "stage7_promotion" in selector_after_contrast_blocked
+        and "stage8_training" in selector_after_contrast_blocked
+        and selector_readiness_after_contrast_probe_review_v0.get(
+            "runtime_arbiter_implemented"
+        )
+        is False
+        and selector_readiness_after_contrast_probe_review_v0.get(
+            "runtime_behavior_changed"
+        )
+        is False
+        and selector_readiness_after_contrast_probe_review_v0.get(
+            "runtime_defaults_changed"
+        )
+        is False
+        and selector_readiness_after_contrast_probe_review_v0.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and selector_readiness_after_contrast_probe_review_v0.get(
+            "gameplay_topology_mutation"
+        )
+        is False
+        and selector_readiness_after_contrast_probe_review_v0.get(
+            "stage7_promotion_allowed"
+        )
+        is False
+        and selector_readiness_after_contrast_probe_review_v0.get(
+            "stage8_training_allowed"
+        )
         is False
     )
     arbitration_objective_decision = arbitration_objective_review_v1.get(
@@ -6311,6 +6574,185 @@ def build_payload() -> dict[str, Any]:
             ),
             "stage8_training_allowed": (
                 strategy_arbiter_runtime_test_review_v2.get(
+                    "stage8_training_allowed"
+                )
+            ),
+        },
+        "selector_provenance_prior_blocker_gate": {
+            "status": selector_feature_architecture_review_v0.get(
+                "decision_status"
+            ),
+            "passive_provenance_prior_blocker_ready": (
+                selector_provenance_prior_blocker_passive
+            ),
+            "target_dataset_status": selector_target_dataset_decision.get("status"),
+            "target_dataset_row_count": selector_target_dataset_v0.get("row_count"),
+            "target_dataset_training_row_count": (
+                selector_target_dataset_v0.get("training_row_count")
+            ),
+            "target_dataset_stage7_training_rows": (
+                selector_target_dataset_v0.get("stage7_training_rows")
+            ),
+            "target_dataset_target_kind_counts": (
+                selector_target_dataset_v0.get("target_kind_counts") or {}
+            ),
+            "target_probe_status": selector_target_probe_decision.get("status"),
+            "target_probe_training_label_counts": (
+                selector_target_probe_v0.get("training_label_counts") or {}
+            ),
+            "target_probe_heldout_training_row_count": (
+                selector_target_probe_v0.get("heldout_training_row_count")
+            ),
+            "baseline_probe_status": selector_baseline_probe_decision.get(
+                "status"
+            ),
+            "baseline_probe_best_baseline": (
+                (selector_baseline_probe_v0.get("best_baseline") or {}).get("name")
+            ),
+            "baseline_probe_best_accuracy": (
+                (selector_baseline_probe_v0.get("best_baseline") or {}).get(
+                    "accuracy"
+                )
+            ),
+            "feature_dataset_status": selector_feature_dataset_decision.get(
+                "status"
+            ),
+            "feature_dataset_row_count": selector_feature_dataset_v0.get(
+                "row_count"
+            ),
+            "feature_dataset_training_row_count": (
+                selector_feature_dataset_v0.get("training_row_count")
+            ),
+            "feature_dataset_stage7_training_rows": (
+                selector_feature_dataset_v0.get("stage7_training_rows")
+            ),
+            "feature_dataset_rows_with_observation": (
+                selector_feature_dataset_v0.get("rows_with_observation")
+            ),
+            "feature_baseline_status": selector_feature_baseline_decision.get(
+                "status"
+            ),
+            "feature_baseline_best_name": selector_feature_baseline_best.get(
+                "name"
+            ),
+            "feature_baseline_best_accuracy": selector_feature_baseline_best.get(
+                "accuracy"
+            ),
+            "feature_baseline_improved_over_provider_prior": (
+                selector_feature_baseline_probe_v0.get(
+                    "feature_improved_over_provider_prior"
+                )
+            ),
+            "provenance_dataset_status": selector_provenance_dataset_decision.get(
+                "status"
+            ),
+            "provenance_dataset_rows_with_provider_provenance": (
+                selector_provenance_feature_dataset_v0.get(
+                    "rows_with_provider_provenance"
+                )
+            ),
+            "provenance_dataset_training_row_count": (
+                selector_provenance_feature_dataset_v0.get("training_row_count")
+            ),
+            "provenance_dataset_stage7_training_rows": (
+                selector_provenance_feature_dataset_v0.get("stage7_training_rows")
+            ),
+            "provenance_probe_status": selector_provenance_probe_decision.get(
+                "status"
+            ),
+            "provenance_probe_raw_provider_id_runtime_prior_allowed": (
+                selector_provenance_probe_decision.get(
+                    "raw_provider_id_runtime_prior_allowed"
+                )
+            ),
+            "provenance_probe_runtime_arbiter_allowed": (
+                selector_provenance_probe_decision.get("runtime_arbiter_allowed")
+            ),
+            "provenance_probe_selector_sandbox_ready": (
+                selector_provenance_probe_decision.get("selector_sandbox_ready")
+            ),
+            "provenance_probe_best_name": selector_provenance_probe_best.get(
+                "name"
+            ),
+            "provenance_probe_best_accuracy": selector_provenance_probe_best.get(
+                "accuracy"
+            ),
+            "provenance_probe_blocked_next_work": selector_provenance_blocked_work,
+            "architecture_review_status": (
+                selector_feature_architecture_review_v0.get("decision_status")
+            ),
+            "architecture_best_baseline": selector_feature_architecture_summary.get(
+                "best_baseline"
+            ),
+            "architecture_best_baseline_accuracy": (
+                selector_feature_architecture_summary.get("best_baseline_accuracy")
+            ),
+            "architecture_observation_features_improved_over_provider_prior": (
+                selector_feature_architecture_summary.get(
+                    "observation_features_improved_over_provider_prior"
+                )
+            ),
+            "architecture_must_remain_non_causal": (
+                selector_feature_architecture_recommended.get(
+                    "must_remain_non_causal"
+                )
+            ),
+            "architecture_blocked_next_work": selector_feature_architecture_blocked,
+            "after_contrast_status": selector_after_contrast_decision.get("status"),
+            "after_contrast_runtime_arbiter_allowed": (
+                selector_after_contrast_decision.get("runtime_arbiter_allowed")
+            ),
+            "after_contrast_selector_sandbox_ready": (
+                selector_after_contrast_decision.get("selector_sandbox_ready")
+            ),
+            "after_contrast_training_row_count": (
+                selector_after_contrast_evidence.get("training_row_count")
+            ),
+            "after_contrast_heldout_row_count": (
+                selector_after_contrast_evidence.get("heldout_row_count")
+            ),
+            "after_contrast_readiness_blockers": (
+                selector_after_contrast_evidence.get("readiness_blockers") or []
+            ),
+            "after_contrast_selected_training_provider_families": (
+                selector_after_contrast_evidence.get(
+                    "selected_training_provider_families"
+                )
+                or []
+            ),
+            "after_contrast_blocked_next_steps": selector_after_contrast_blocked,
+            "runtime_arbiter_implemented": (
+                selector_readiness_after_contrast_probe_review_v0.get(
+                    "runtime_arbiter_implemented"
+                )
+            ),
+            "runtime_behavior_changed": (
+                selector_readiness_after_contrast_probe_review_v0.get(
+                    "runtime_behavior_changed"
+                )
+            ),
+            "runtime_defaults_changed": (
+                selector_readiness_after_contrast_probe_review_v0.get(
+                    "runtime_defaults_changed"
+                )
+            ),
+            "runtime_dtm_or_tablebase_lookup": (
+                selector_readiness_after_contrast_probe_review_v0.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "gameplay_topology_mutation": (
+                selector_readiness_after_contrast_probe_review_v0.get(
+                    "gameplay_topology_mutation"
+                )
+            ),
+            "stage7_promotion_allowed": (
+                selector_readiness_after_contrast_probe_review_v0.get(
+                    "stage7_promotion_allowed"
+                )
+            ),
+            "stage8_training_allowed": (
+                selector_readiness_after_contrast_probe_review_v0.get(
                     "stage8_training_allowed"
                 )
             ),
@@ -11560,6 +12002,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     strategy_arbiter_runtime_no_scale = payload[
         "strategy_arbiter_runtime_no_scale_gate"
     ]
+    selector_provenance_prior = payload["selector_provenance_prior_blocker_gate"]
     selector_objective_normalization = payload["selector_objective_normalization_gate"]
     selector_label_balance = payload["selector_label_balance_gate"]
     ownership_selection_context = payload["ownership_selection_context_gate"]
@@ -11836,6 +12279,35 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- gameplay_topology_mutation: `{strategy_arbiter_runtime_no_scale['gameplay_topology_mutation']}`",
         f"- stage7_promotion_allowed: `{strategy_arbiter_runtime_no_scale['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{strategy_arbiter_runtime_no_scale['stage8_training_allowed']}`",
+        "",
+        "## Selector Provenance Prior Blocker",
+        "",
+        f"- passive_provenance_prior_blocker_ready: `{selector_provenance_prior['passive_provenance_prior_blocker_ready']}`",
+        f"- status: `{selector_provenance_prior['status']}`",
+        f"- target_dataset_status: `{selector_provenance_prior['target_dataset_status']}`",
+        f"- target_dataset_training_row_count: `{selector_provenance_prior['target_dataset_training_row_count']}`",
+        f"- target_dataset_stage7_training_rows: `{selector_provenance_prior['target_dataset_stage7_training_rows']}`",
+        f"- target_probe_heldout_training_row_count: `{selector_provenance_prior['target_probe_heldout_training_row_count']}`",
+        f"- baseline_probe_best_baseline: `{selector_provenance_prior['baseline_probe_best_baseline']}`",
+        f"- baseline_probe_best_accuracy: `{selector_provenance_prior['baseline_probe_best_accuracy']}`",
+        f"- feature_baseline_status: `{selector_provenance_prior['feature_baseline_status']}`",
+        f"- feature_baseline_improved_over_provider_prior: `{selector_provenance_prior['feature_baseline_improved_over_provider_prior']}`",
+        f"- provenance_dataset_rows_with_provider_provenance: `{selector_provenance_prior['provenance_dataset_rows_with_provider_provenance']}`",
+        f"- provenance_probe_status: `{selector_provenance_prior['provenance_probe_status']}`",
+        f"- provenance_probe_raw_provider_id_runtime_prior_allowed: `{selector_provenance_prior['provenance_probe_raw_provider_id_runtime_prior_allowed']}`",
+        f"- provenance_probe_selector_sandbox_ready: `{selector_provenance_prior['provenance_probe_selector_sandbox_ready']}`",
+        f"- provenance_probe_best_name: `{selector_provenance_prior['provenance_probe_best_name']}`",
+        f"- architecture_review_status: `{selector_provenance_prior['architecture_review_status']}`",
+        f"- architecture_observation_features_improved_over_provider_prior: `{selector_provenance_prior['architecture_observation_features_improved_over_provider_prior']}`",
+        f"- architecture_must_remain_non_causal: `{selector_provenance_prior['architecture_must_remain_non_causal']}`",
+        f"- after_contrast_status: `{selector_provenance_prior['after_contrast_status']}`",
+        f"- after_contrast_selector_sandbox_ready: `{selector_provenance_prior['after_contrast_selector_sandbox_ready']}`",
+        f"- after_contrast_readiness_blockers: `{selector_provenance_prior['after_contrast_readiness_blockers']}`",
+        f"- runtime_arbiter_implemented: `{selector_provenance_prior['runtime_arbiter_implemented']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{selector_provenance_prior['runtime_dtm_or_tablebase_lookup']}`",
+        f"- gameplay_topology_mutation: `{selector_provenance_prior['gameplay_topology_mutation']}`",
+        f"- stage7_promotion_allowed: `{selector_provenance_prior['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{selector_provenance_prior['stage8_training_allowed']}`",
         "",
         "## Selector Objective Normalization",
         "",
