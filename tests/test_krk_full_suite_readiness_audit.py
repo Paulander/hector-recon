@@ -809,6 +809,14 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_abstention_first_selector_objective_v0.json"
     )
     assert (
+        payload["source_artifacts"]["abstention_training_dataset_v0"]
+        == "reports/krk_abstention_training_dataset_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["abstention_training_probe_v0"]
+        == "reports/krk_abstention_training_probe_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["abstention_training_dataset_v1"]
         == "reports/krk_abstention_training_dataset_v1.json"
     )
@@ -2359,6 +2367,19 @@ def test_full_suite_readiness_identifies_current_gate():
         == "safe_preservation_requires_two_stage_label_semantics"
     )
     assert abstention["safe_preservation_false_positive_count"] == 12
+    assert (
+        abstention["training_dataset_v0_status"]
+        == "abstention_training_dataset_under_minimum_requirements"
+    )
+    assert abstention["training_dataset_v0_row_count"] == 28
+    assert abstention["training_dataset_v0_safe_owner_count"] == 23
+    assert abstention["training_dataset_v0_unsafe_owner_count"] == 5
+    assert abstention["training_dataset_v0_stage7_training_rows"] == 0
+    assert (
+        abstention["training_probe_v0_status"]
+        == "abstention_signal_underpowered_no_runtime"
+    )
+    assert abstention["training_probe_v0_under_minimum_requirements"] is True
     assert (
         abstention["training_dataset_status"]
         == "abstention_training_dataset_ready_for_probe"

@@ -760,6 +760,12 @@ SOURCES = {
     "selector_negative_control_manifest_v1": (
         "reports/krk_selector_negative_control_manifest_v1.json"
     ),
+    "abstention_training_dataset_v0": (
+        "reports/krk_abstention_training_dataset_v0.json"
+    ),
+    "abstention_training_probe_v0": (
+        "reports/krk_abstention_training_probe_v0.json"
+    ),
     "abstention_training_dataset_v1": (
         "reports/krk_abstention_training_dataset_v1.json"
     ),
@@ -1917,6 +1923,8 @@ def build_payload() -> dict[str, Any]:
     abstention_safe_preservation_label_review_v0 = payloads[
         "abstention_safe_preservation_label_review_v0"
     ]
+    abstention_training_dataset_v0 = payloads["abstention_training_dataset_v0"]
+    abstention_training_probe_v0 = payloads["abstention_training_probe_v0"]
     abstention_training_dataset_v1 = payloads["abstention_training_dataset_v1"]
     abstention_training_probe_v1 = payloads["abstention_training_probe_v1"]
     abstention_context_feature_dataset_v0 = payloads[
@@ -5332,6 +5340,12 @@ def build_payload() -> dict[str, Any]:
     abstention_safe_review_summary = (
         abstention_safe_preservation_label_review_v0.get("summary") or {}
     )
+    abstention_dataset_v0_decision = (
+        abstention_training_dataset_v0.get("decision") or {}
+    )
+    abstention_dataset_v0_summary = abstention_training_dataset_v0.get("summary") or {}
+    abstention_probe_v0_decision = abstention_training_probe_v0.get("decision") or {}
+    abstention_probe_v0_summary = abstention_training_probe_v0.get("summary") or {}
     abstention_dataset_decision = (
         abstention_training_dataset_v1.get("decision") or {}
     )
@@ -5371,6 +5385,33 @@ def build_payload() -> dict[str, Any]:
         and abstention_safe_review_decision.get("status")
         == "safe_preservation_requires_two_stage_label_semantics"
         and abstention_safe_review_decision.get("runtime_test_allowed_next") is False
+        and abstention_dataset_v0_decision.get("status")
+        == "abstention_training_dataset_under_minimum_requirements"
+        and abstention_dataset_v0_decision.get("runtime_test_allowed_next") is False
+        and abstention_dataset_v0_decision.get("stage7_promotion_allowed") is False
+        and abstention_dataset_v0_decision.get("stage8_training_allowed") is False
+        and abstention_dataset_v0_summary.get("row_count") == 28
+        and abstention_dataset_v0_summary.get("stage7_training_rows") == 0
+        and abstention_probe_v0_decision.get("status")
+        == "abstention_signal_underpowered_no_runtime"
+        and abstention_probe_v0_decision.get("runtime_test_allowed_next") is False
+        and abstention_probe_v0_decision.get("stage7_promotion_allowed") is False
+        and abstention_probe_v0_decision.get("stage8_training_allowed") is False
+        and abstention_probe_v0_summary.get("under_minimum_requirements") is True
+        and all(
+            artifact.get("runtime_behavior_changed") is False
+            and artifact.get("runtime_defaults_changed") is False
+            and artifact.get("runtime_selector_implemented") is False
+            and artifact.get("runtime_dtm_or_tablebase_lookup") is False
+            and artifact.get("runtime_terminals_added", False) is False
+            and artifact.get("gameplay_topology_mutation") is False
+            and artifact.get("stage7_promotion_allowed") is False
+            and artifact.get("stage8_training_allowed") is False
+            for artifact in [
+                abstention_training_dataset_v0,
+                abstention_training_probe_v0,
+            ]
+        )
         and abstention_dataset_decision.get("status")
         == "abstention_training_dataset_ready_for_probe"
         and abstention_dataset_decision.get("runtime_test_allowed_next") is False
@@ -9847,6 +9888,29 @@ def build_payload() -> dict[str, Any]:
             ),
             "safe_preservation_best_safe_preservation": (
                 abstention_safe_review_summary.get("best_safe_preservation")
+            ),
+            "training_dataset_v0_status": (
+                abstention_dataset_v0_decision.get("status")
+            ),
+            "training_dataset_v0_row_count": (
+                abstention_dataset_v0_summary.get("row_count")
+            ),
+            "training_dataset_v0_safe_owner_count": (
+                (abstention_dataset_v0_summary.get("label_counts") or {}).get(
+                    "safe_owner"
+                )
+            ),
+            "training_dataset_v0_unsafe_owner_count": (
+                (abstention_dataset_v0_summary.get("label_counts") or {}).get(
+                    "unsafe_owner"
+                )
+            ),
+            "training_dataset_v0_stage7_training_rows": (
+                abstention_dataset_v0_summary.get("stage7_training_rows")
+            ),
+            "training_probe_v0_status": abstention_probe_v0_decision.get("status"),
+            "training_probe_v0_under_minimum_requirements": (
+                abstention_probe_v0_summary.get("under_minimum_requirements")
             ),
             "training_dataset_status": abstention_dataset_decision.get("status"),
             "training_dataset_row_count": abstention_dataset_summary.get("row_count"),

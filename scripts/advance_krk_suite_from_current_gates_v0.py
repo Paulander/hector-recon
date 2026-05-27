@@ -2056,6 +2056,25 @@ def build_payload() -> dict[str, Any]:
             "abstention_safe_preservation_review_status": (
                 abstention_selector_safety_gate.get("safe_preservation_review_status")
             ),
+            "abstention_training_dataset_v0_status": (
+                abstention_selector_safety_gate.get("training_dataset_v0_status")
+            ),
+            "abstention_training_dataset_v0_row_count": (
+                abstention_selector_safety_gate.get("training_dataset_v0_row_count")
+            ),
+            "abstention_training_dataset_v0_stage7_training_rows": (
+                abstention_selector_safety_gate.get(
+                    "training_dataset_v0_stage7_training_rows"
+                )
+            ),
+            "abstention_training_probe_v0_status": (
+                abstention_selector_safety_gate.get("training_probe_v0_status")
+            ),
+            "abstention_training_probe_v0_under_minimum_requirements": (
+                abstention_selector_safety_gate.get(
+                    "training_probe_v0_under_minimum_requirements"
+                )
+            ),
             "abstention_training_dataset_status": (
                 abstention_selector_safety_gate.get("training_dataset_status")
             ),

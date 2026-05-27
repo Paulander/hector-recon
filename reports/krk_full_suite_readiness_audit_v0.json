@@ -68,8 +68,15 @@
     "training_dataset_stage7_training_rows": 0,
     "training_dataset_status": "abstention_training_dataset_ready_for_probe",
     "training_dataset_unsafe_owner_count": 17,
+    "training_dataset_v0_row_count": 28,
+    "training_dataset_v0_safe_owner_count": 23,
+    "training_dataset_v0_stage7_training_rows": 0,
+    "training_dataset_v0_status": "abstention_training_dataset_under_minimum_requirements",
+    "training_dataset_v0_unsafe_owner_count": 5,
     "training_probe_status": "abstention_signal_underpowered_no_runtime",
-    "training_probe_under_minimum_requirements": false
+    "training_probe_under_minimum_requirements": false,
+    "training_probe_v0_status": "abstention_signal_underpowered_no_runtime",
+    "training_probe_v0_under_minimum_requirements": true
   },
   "approval_gates": {
     "protected_plan_window_failure_contrast_collection": {
@@ -104,8 +111,8 @@
         "readiness_audit": "reports/krk_full_suite_readiness_audit_v0.json",
         "readiness_audit_status": "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection",
         "readiness_boundary_violation_count": 0,
-        "readiness_checked_flag_count": 2641,
-        "readiness_source_artifact_count": 369,
+        "readiness_checked_flag_count": 2655,
+        "readiness_source_artifact_count": 371,
         "runtime_change_class": "default_off_candidate_move_frame_sandbox_only",
         "runtime_dtm_or_tablebase_lookup": false,
         "sandbox_scope_id": "default_off_stage4_candidate_move_first_move_contrast_sandbox_only",
@@ -1041,7 +1048,7 @@
     "execution_jobs_passing": 6,
     "execution_readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
     "expected_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
-    "expected_readiness_fingerprint": "80de117994ae616d5343884f635ee78d474bda362e2917d6c099a7629b0b4fee",
+    "expected_readiness_fingerprint": "645d52ea5f108299f83a756e0786852288254b20ef82f3b8b392d9f8d7e42196",
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "integrated_new_failure_count": 0,
@@ -1360,7 +1367,7 @@
     "trace_features_trace_frame_count": 6
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 2641,
+    "checked_flag_count": 2655,
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "runtime_behavior_changed": false,
@@ -2188,7 +2195,9 @@
     "abstention_feature_gap_review_v0": "reports/krk_abstention_feature_gap_review_v0.json",
     "abstention_first_selector_objective_v0": "reports/krk_abstention_first_selector_objective_v0.json",
     "abstention_safe_preservation_label_review_v0": "reports/krk_abstention_safe_preservation_label_review_v0.json",
+    "abstention_training_dataset_v0": "reports/krk_abstention_training_dataset_v0.json",
     "abstention_training_dataset_v1": "reports/krk_abstention_training_dataset_v1.json",
+    "abstention_training_probe_v0": "reports/krk_abstention_training_probe_v0.json",
     "abstention_training_probe_v1": "reports/krk_abstention_training_probe_v1.json",
     "active_protected_stack": "reports/krk_active_protected_stack_v0.json",
     "arbitration_objective_review_v1": "reports/krk_arbitration_objective_review_v1.json",
