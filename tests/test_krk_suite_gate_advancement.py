@@ -1402,6 +1402,69 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["selected_provider_diversity_stage8_training_allowed"]
         is False
     )
+    assert payload["summary"]["selector_readiness_v3_design_passive_ready"] is True
+    assert payload["summary"]["selector_readiness_v3_design_status"] == (
+        "selector_readiness_v3_sandbox_design_review_allowed"
+    )
+    assert (
+        payload["summary"]["selector_readiness_v3_design_recommended_next_step"]
+        == "design_default_off_strategy_arbiter_sandbox_for_review"
+    )
+    assert (
+        payload["summary"]["selector_readiness_v3_design_runtime_arbiter_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_readiness_v3_design_selector_sandbox_ready"]
+        is False
+    )
+    assert payload["summary"]["selector_readiness_v3_design_hard_blocker_count"] == 0
+    assert payload["summary"]["selector_readiness_v3_design_passed_checks"] == [
+        "proposal_family_diversity",
+        "conversion_positive_provider_diversity",
+        "label_balance",
+        "protected_stage_coverage",
+        "stage7_heldout_boundary",
+    ]
+    assert payload["summary"]["selector_readiness_v3_design_diagnostic_only_checks"] == [
+        "current_selected_provider_diversity"
+    ]
+    assert payload["summary"]["selector_readiness_v3_design_label_balance"] == {
+        "negative": 11,
+        "positive": 13,
+    }
+    assert payload["summary"]["selector_readiness_v3_design_stage_coverage"] == {
+        "stage4": 2,
+        "stage5": 4,
+        "stage6": 3,
+        "stage7": 4,
+    }
+    assert payload["summary"]["selector_readiness_v3_design_stage7_training_rows"] == 0
+    assert payload["summary"]["selector_readiness_v3_design_default_off_status"] == (
+        "default_off_strategy_arbiter_design_ready_for_external_review"
+    )
+    assert (
+        payload["summary"]["selector_readiness_v3_design_runtime_review_packet_status"]
+        == "selector_readiness_v3_sandbox_design_review_allowed"
+    )
+    assert (
+        payload["summary"]["selector_readiness_v3_design_runtime_arbiter_implemented"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "selector_readiness_v3_design_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_readiness_v3_design_stage7_promotion_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["selector_readiness_v3_design_stage8_training_allowed"]
+        is False
+    )
     assert payload["summary"]["state_local_contrast_passive_ready"] is True
     assert (
         payload["summary"]["state_local_contrast_labels_status"]

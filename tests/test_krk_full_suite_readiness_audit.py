@@ -833,6 +833,10 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_selected_provider_diversity_architecture_review_v0.json"
     )
     assert (
+        payload["source_artifacts"]["selector_readiness_v3_plan"]
+        == "reports/krk_selector_readiness_v3_plan.json"
+    )
+    assert (
         payload["source_artifacts"]["state_local_contrast_labels_v2"]
         == "reports/krk_state_local_contrast_labels_v2.json"
     )
@@ -2426,6 +2430,65 @@ def test_full_suite_readiness_identifies_current_gate():
     assert provider_diversity["gameplay_topology_mutation"] is False
     assert provider_diversity["stage7_promotion_allowed"] is False
     assert provider_diversity["stage8_training_allowed"] is False
+
+    readiness_v3 = payload["selector_readiness_v3_design_gate"]
+    assert readiness_v3["passive_design_review_ready"] is True
+    assert readiness_v3["status"] == (
+        "selector_readiness_v3_sandbox_design_review_allowed"
+    )
+    assert readiness_v3["recommended_next_step"] == (
+        "design_default_off_strategy_arbiter_sandbox_for_review"
+    )
+    assert readiness_v3["runtime_arbiter_allowed"] is False
+    assert readiness_v3["selector_sandbox_ready"] is False
+    assert readiness_v3["hard_blocker_count"] == 0
+    assert readiness_v3["passed_checks"] == [
+        "proposal_family_diversity",
+        "conversion_positive_provider_diversity",
+        "label_balance",
+        "protected_stage_coverage",
+        "stage7_heldout_boundary",
+    ]
+    assert readiness_v3["diagnostic_only_checks"] == [
+        "current_selected_provider_diversity"
+    ]
+    assert readiness_v3["label_balance"] == {"negative": 11, "positive": 13}
+    assert readiness_v3["stage_coverage"] == {
+        "stage4": 2,
+        "stage5": 4,
+        "stage6": 3,
+        "stage7": 4,
+    }
+    assert readiness_v3["stage7_training_rows"] == 0
+    assert readiness_v3["conversion_positive_provider_family_count"] == 3
+    assert readiness_v3["conversion_positive_provider_families"] == [
+        "drive_to_edge",
+        "edge_trap",
+        "fence_established",
+    ]
+    assert "runtime_arbiter" in readiness_v3["blocked_next_steps"]
+    assert "runtime_dtm_or_tablebase" in readiness_v3["blocked_next_steps"]
+    assert "gameplay_topology_mutation" in readiness_v3["blocked_next_steps"]
+    assert "default_off" in readiness_v3["sandbox_design_requirements"]
+    assert (
+        "stage7_held_out_challenge_only"
+        in readiness_v3["sandbox_design_requirements"]
+    )
+    assert readiness_v3["default_off_design_status"] == (
+        "default_off_strategy_arbiter_design_ready_for_external_review"
+    )
+    assert readiness_v3["default_off_design_implementation_allowed"] is False
+    assert readiness_v3["runtime_review_packet_readiness_v3_status"] == (
+        "selector_readiness_v3_sandbox_design_review_allowed"
+    )
+    assert readiness_v3["runtime_behavior_changed"] is False
+    assert readiness_v3["runtime_defaults_changed"] is False
+    assert readiness_v3["runtime_arbiter_implemented"] is False
+    assert readiness_v3["runtime_dtm_or_tablebase_lookup"] is False
+    assert readiness_v3["runtime_terminals_added"] is False
+    assert readiness_v3["gameplay_topology_mutation"] is False
+    assert readiness_v3["stage7_promotion_allowed"] is False
+    assert readiness_v3["stage8_training_allowed"] is False
 
     state_local_contrast = payload["state_local_contrast_gate"]
     assert state_local_contrast["passive_contrast_ready"] is True

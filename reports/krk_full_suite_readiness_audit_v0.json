@@ -78,8 +78,8 @@
         "readiness_audit": "reports/krk_full_suite_readiness_audit_v0.json",
         "readiness_audit_status": "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection",
         "readiness_boundary_violation_count": 0,
-        "readiness_checked_flag_count": 2501,
-        "readiness_source_artifact_count": 347,
+        "readiness_checked_flag_count": 2507,
+        "readiness_source_artifact_count": 348,
         "runtime_change_class": "default_off_candidate_move_frame_sandbox_only",
         "runtime_dtm_or_tablebase_lookup": false,
         "sandbox_scope_id": "default_off_stage4_candidate_move_first_move_contrast_sandbox_only",
@@ -746,7 +746,7 @@
     "execution_jobs_passing": 6,
     "execution_readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
     "expected_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
-    "expected_readiness_fingerprint": "67869056b17410145931f2307e8826fa4c74fa45f78d31d0881bfaa7988ee662",
+    "expected_readiness_fingerprint": "b667ff811c783593fcb5b7c27e245fa04251ec4ed44da3ab2302ae8e2f1ea822",
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "integrated_new_failure_count": 0,
@@ -1031,7 +1031,7 @@
     "trace_features_trace_frame_count": 6
   },
   "runtime_and_training_boundaries": {
-    "checked_flag_count": 2501,
+    "checked_flag_count": 2507,
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "runtime_behavior_changed": false,
@@ -1625,6 +1625,72 @@
       "positive": 14
     }
   },
+  "selector_readiness_v3_design_gate": {
+    "blocked_next_steps": [
+      "runtime_arbiter",
+      "selector_sandbox_without_design_review",
+      "stage7_repair",
+      "stage7_promotion",
+      "stage8_training",
+      "runtime_dtm_or_tablebase",
+      "gameplay_topology_mutation"
+    ],
+    "conversion_positive_provider_families": [
+      "drive_to_edge",
+      "edge_trap",
+      "fence_established"
+    ],
+    "conversion_positive_provider_family_count": 3,
+    "default_off_design_implementation_allowed": false,
+    "default_off_design_runtime_arbiter_allowed": false,
+    "default_off_design_selector_sandbox_ready": false,
+    "default_off_design_status": "default_off_strategy_arbiter_design_ready_for_external_review",
+    "diagnostic_only_checks": [
+      "current_selected_provider_diversity"
+    ],
+    "gameplay_topology_mutation": false,
+    "hard_blocker_count": 0,
+    "label_balance": {
+      "negative": 11,
+      "positive": 13
+    },
+    "passed_checks": [
+      "proposal_family_diversity",
+      "conversion_positive_provider_diversity",
+      "label_balance",
+      "protected_stage_coverage",
+      "stage7_heldout_boundary"
+    ],
+    "passive_design_review_ready": true,
+    "recommended_next_step": "design_default_off_strategy_arbiter_sandbox_for_review",
+    "runtime_arbiter_allowed": false,
+    "runtime_arbiter_implemented": false,
+    "runtime_behavior_changed": false,
+    "runtime_defaults_changed": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "runtime_review_packet_readiness_v3_status": "selector_readiness_v3_sandbox_design_review_allowed",
+    "runtime_terminals_added": false,
+    "sandbox_design_requirements": [
+      "default_off",
+      "default_off_equivalence_before_enabled_tests",
+      "visible_source_terms_and_provider_metadata",
+      "no_runtime_dtm_or_tablebase",
+      "no_gameplay_topology_mutation",
+      "stage7_held_out_challenge_only",
+      "guardrail_validation_before_promotion"
+    ],
+    "selector_sandbox_ready": false,
+    "stage7_promotion_allowed": false,
+    "stage7_training_rows": 0,
+    "stage8_training_allowed": false,
+    "stage_coverage": {
+      "stage4": 2,
+      "stage5": 4,
+      "stage6": 3,
+      "stage7": 4
+    },
+    "status": "selector_readiness_v3_sandbox_design_review_allowed"
+  },
   "selector_replay_free_label_lineage_gate": {
     "architecture_runtime_arbiter_allowed": false,
     "architecture_selector_sandbox_ready": false,
@@ -1926,6 +1992,7 @@
     "selector_provenance_feature_dataset_v0": "reports/krk_selector_provenance_feature_dataset_v0.json",
     "selector_provenance_feature_probe_v0": "reports/krk_selector_provenance_feature_probe_v0.json",
     "selector_readiness_after_contrast_probe_review_v0": "reports/krk_selector_readiness_after_contrast_probe_review_v0.json",
+    "selector_readiness_v3_plan": "reports/krk_selector_readiness_v3_plan.json",
     "selector_stratified_label_balance_probe_v1": "reports/krk_selector_stratified_label_balance_probe_v1.json",
     "selector_stratified_label_dataset_v1": "reports/krk_selector_stratified_label_dataset_v1.json",
     "selector_stratified_label_plan_v1": "reports/krk_selector_stratified_label_plan_v1.json",

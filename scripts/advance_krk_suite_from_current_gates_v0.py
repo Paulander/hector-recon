@@ -637,6 +637,9 @@ def build_payload() -> dict[str, Any]:
     selected_provider_diversity_gate = (
         readiness.get("selected_provider_diversity_gate") or {}
     )
+    selector_readiness_v3_design_gate = (
+        readiness.get("selector_readiness_v3_design_gate") or {}
+    )
     state_local_contrast_gate = readiness.get("state_local_contrast_gate") or {}
     state_local_paired_ownership_gate = (
         readiness.get("state_local_paired_ownership_gate") or {}
@@ -2218,6 +2221,61 @@ def build_payload() -> dict[str, Any]:
             ),
             "selected_provider_diversity_stage8_training_allowed": (
                 selected_provider_diversity_gate.get("stage8_training_allowed")
+            ),
+            "selector_readiness_v3_design_passive_ready": (
+                selector_readiness_v3_design_gate.get("passive_design_review_ready")
+            ),
+            "selector_readiness_v3_design_status": (
+                selector_readiness_v3_design_gate.get("status")
+            ),
+            "selector_readiness_v3_design_recommended_next_step": (
+                selector_readiness_v3_design_gate.get("recommended_next_step")
+            ),
+            "selector_readiness_v3_design_runtime_arbiter_allowed": (
+                selector_readiness_v3_design_gate.get("runtime_arbiter_allowed")
+            ),
+            "selector_readiness_v3_design_selector_sandbox_ready": (
+                selector_readiness_v3_design_gate.get("selector_sandbox_ready")
+            ),
+            "selector_readiness_v3_design_hard_blocker_count": (
+                selector_readiness_v3_design_gate.get("hard_blocker_count")
+            ),
+            "selector_readiness_v3_design_passed_checks": (
+                selector_readiness_v3_design_gate.get("passed_checks")
+            ),
+            "selector_readiness_v3_design_diagnostic_only_checks": (
+                selector_readiness_v3_design_gate.get("diagnostic_only_checks")
+            ),
+            "selector_readiness_v3_design_label_balance": (
+                selector_readiness_v3_design_gate.get("label_balance")
+            ),
+            "selector_readiness_v3_design_stage_coverage": (
+                selector_readiness_v3_design_gate.get("stage_coverage")
+            ),
+            "selector_readiness_v3_design_stage7_training_rows": (
+                selector_readiness_v3_design_gate.get("stage7_training_rows")
+            ),
+            "selector_readiness_v3_design_default_off_status": (
+                selector_readiness_v3_design_gate.get("default_off_design_status")
+            ),
+            "selector_readiness_v3_design_runtime_review_packet_status": (
+                selector_readiness_v3_design_gate.get(
+                    "runtime_review_packet_readiness_v3_status"
+                )
+            ),
+            "selector_readiness_v3_design_runtime_arbiter_implemented": (
+                selector_readiness_v3_design_gate.get("runtime_arbiter_implemented")
+            ),
+            "selector_readiness_v3_design_runtime_dtm_or_tablebase_lookup": (
+                selector_readiness_v3_design_gate.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "selector_readiness_v3_design_stage7_promotion_allowed": (
+                selector_readiness_v3_design_gate.get("stage7_promotion_allowed")
+            ),
+            "selector_readiness_v3_design_stage8_training_allowed": (
+                selector_readiness_v3_design_gate.get("stage8_training_allowed")
             ),
             "state_local_contrast_passive_ready": (
                 state_local_contrast_gate.get("passive_contrast_ready")

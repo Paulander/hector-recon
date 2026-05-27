@@ -820,6 +820,9 @@ SOURCES = {
     "selected_provider_diversity_architecture_review_v0": (
         "reports/krk_selected_provider_diversity_architecture_review_v0.json"
     ),
+    "selector_readiness_v3_plan": (
+        "reports/krk_selector_readiness_v3_plan.json"
+    ),
     "state_local_contrast_labels_v2": (
         "reports/krk_state_local_contrast_labels_v2.json"
     ),
@@ -1913,6 +1916,7 @@ def build_payload() -> dict[str, Any]:
     selected_provider_diversity_architecture_review_v0 = payloads[
         "selected_provider_diversity_architecture_review_v0"
     ]
+    selector_readiness_v3_plan = payloads["selector_readiness_v3_plan"]
     state_local_contrast_labels_v2 = payloads[
         "state_local_contrast_labels_v2"
     ]
@@ -5171,6 +5175,116 @@ def build_payload() -> dict[str, Any]:
             "runtime_candidate_generator_implemented"
         )
         is False
+    )
+    selector_readiness_v3_decision = selector_readiness_v3_plan.get("decision") or {}
+    selector_readiness_v3_checks = {
+        check.get("requirement_id"): check
+        for check in selector_readiness_v3_plan.get("readiness_checks_v3") or []
+    }
+    selector_readiness_v3_stage_coverage = (
+        selector_readiness_v3_checks.get("protected_stage_coverage") or {}
+    ).get("observed") or {}
+    selector_readiness_v3_label_balance = (
+        selector_readiness_v3_checks.get("label_balance") or {}
+    ).get("observed") or {}
+    selector_readiness_v3_stage7_boundary = (
+        selector_readiness_v3_checks.get("stage7_heldout_boundary") or {}
+    ).get("observed") or {}
+    selector_readiness_v3_conversion_diversity = (
+        selector_readiness_v3_checks.get("conversion_positive_provider_diversity")
+        or {}
+    ).get("observed") or {}
+    selector_readiness_v3_blocked_next_steps = (
+        selector_readiness_v3_plan.get("blocked_next_steps") or []
+    )
+    selector_readiness_v3_sandbox_requirements = (
+        selector_readiness_v3_plan.get("sandbox_design_requirements") or []
+    )
+    selector_readiness_v3_passive = (
+        selector_readiness_v3_plan.get("causal_status") == "non_causal_design_plan"
+        and selector_readiness_v3_decision.get("status")
+        == "selector_readiness_v3_sandbox_design_review_allowed"
+        and selector_readiness_v3_decision.get("recommended_next_step")
+        == "design_default_off_strategy_arbiter_sandbox_for_review"
+        and selector_readiness_v3_decision.get("runtime_arbiter_allowed") is False
+        and selector_readiness_v3_decision.get("selector_sandbox_ready") is False
+        and selector_readiness_v3_decision.get("hard_blockers") == []
+        and selector_readiness_v3_plan.get("source_artifacts")
+        == [
+            "reports/krk_selected_provider_diversity_architecture_review_v0.json",
+            "reports/krk_strategy_owner_contrast_dataset_v0.json",
+            "reports/krk_strategy_owner_contrast_probe_v0.json",
+        ]
+        and {
+            key: (selector_readiness_v3_checks.get(key) or {}).get("status")
+            for key in [
+                "proposal_family_diversity",
+                "conversion_positive_provider_diversity",
+                "label_balance",
+                "protected_stage_coverage",
+                "stage7_heldout_boundary",
+                "current_selected_provider_diversity",
+            ]
+        }
+        == {
+            "proposal_family_diversity": "passed",
+            "conversion_positive_provider_diversity": "passed",
+            "label_balance": "passed",
+            "protected_stage_coverage": "passed",
+            "stage7_heldout_boundary": "passed",
+            "current_selected_provider_diversity": (
+                "diagnostic_only_not_sandbox_blocker"
+            ),
+        }
+        and selector_readiness_v3_conversion_diversity.get(
+            "distinct_conversion_positive_provider_families"
+        )
+        == 3
+        and selector_readiness_v3_conversion_diversity.get("families")
+        == ["drive_to_edge", "edge_trap", "fence_established"]
+        and selector_readiness_v3_label_balance == {"negative": 11, "positive": 13}
+        and selector_readiness_v3_stage_coverage.get("row_count_by_stage")
+        == {"stage4": 2, "stage5": 4, "stage6": 3, "stage7": 4}
+        and selector_readiness_v3_stage7_boundary.get("stage7_training_rows") == 0
+        and all(
+            item in selector_readiness_v3_blocked_next_steps
+            for item in [
+                "runtime_arbiter",
+                "selector_sandbox_without_design_review",
+                "stage7_repair",
+                "stage7_promotion",
+                "stage8_training",
+                "runtime_dtm_or_tablebase",
+                "gameplay_topology_mutation",
+            ]
+        )
+        and all(
+            item in selector_readiness_v3_sandbox_requirements
+            for item in [
+                "default_off",
+                "default_off_equivalence_before_enabled_tests",
+                "visible_source_terms_and_provider_metadata",
+                "no_runtime_dtm_or_tablebase",
+                "no_gameplay_topology_mutation",
+                "stage7_held_out_challenge_only",
+                "guardrail_validation_before_promotion",
+            ]
+        )
+        and runtime_review_packet_evidence.get("readiness_v3_status")
+        == selector_readiness_v3_decision.get("status")
+        and "reports/krk_selector_readiness_v3_plan.json"
+        in (strategy_arbiter_default_off_design_review_v1.get("source_artifacts") or [])
+        and default_off_design_decision.get("implementation_allowed") is False
+        and default_off_design_decision.get("runtime_arbiter_allowed") is False
+        and default_off_design_decision.get("selector_sandbox_ready") is False
+        and selector_readiness_v3_plan.get("runtime_behavior_changed") is False
+        and selector_readiness_v3_plan.get("runtime_defaults_changed") is False
+        and selector_readiness_v3_plan.get("runtime_arbiter_implemented") is False
+        and selector_readiness_v3_plan.get("runtime_dtm_or_tablebase_lookup") is False
+        and selector_readiness_v3_plan.get("runtime_terminals_added") is False
+        and selector_readiness_v3_plan.get("gameplay_topology_mutation") is False
+        and selector_readiness_v3_plan.get("stage7_promotion_allowed") is False
+        and selector_readiness_v3_plan.get("stage8_training_allowed") is False
     )
     state_local_contrast_labels_decision = (
         state_local_contrast_labels_v2.get("decision") or {}
@@ -8803,6 +8917,87 @@ def build_payload() -> dict[str, Any]:
                 selected_provider_diversity_ownership_labels_v1.get(
                     "stage8_training_allowed"
                 )
+            ),
+        },
+        "selector_readiness_v3_design_gate": {
+            "status": selector_readiness_v3_decision.get("status"),
+            "passive_design_review_ready": selector_readiness_v3_passive,
+            "recommended_next_step": selector_readiness_v3_decision.get(
+                "recommended_next_step"
+            ),
+            "runtime_arbiter_allowed": selector_readiness_v3_decision.get(
+                "runtime_arbiter_allowed"
+            ),
+            "selector_sandbox_ready": selector_readiness_v3_decision.get(
+                "selector_sandbox_ready"
+            ),
+            "hard_blocker_count": len(
+                selector_readiness_v3_decision.get("hard_blockers") or []
+            ),
+            "passed_checks": [
+                key
+                for key, check in selector_readiness_v3_checks.items()
+                if check.get("status") == "passed"
+            ],
+            "diagnostic_only_checks": [
+                key
+                for key, check in selector_readiness_v3_checks.items()
+                if check.get("status") == "diagnostic_only_not_sandbox_blocker"
+            ],
+            "label_balance": selector_readiness_v3_label_balance,
+            "stage_coverage": selector_readiness_v3_stage_coverage.get(
+                "row_count_by_stage"
+            )
+            or {},
+            "stage7_training_rows": selector_readiness_v3_stage7_boundary.get(
+                "stage7_training_rows"
+            ),
+            "conversion_positive_provider_family_count": (
+                selector_readiness_v3_conversion_diversity.get(
+                    "distinct_conversion_positive_provider_families"
+                )
+            ),
+            "conversion_positive_provider_families": (
+                selector_readiness_v3_conversion_diversity.get("families") or []
+            ),
+            "blocked_next_steps": selector_readiness_v3_blocked_next_steps,
+            "sandbox_design_requirements": selector_readiness_v3_sandbox_requirements,
+            "default_off_design_status": default_off_design_decision.get("status"),
+            "default_off_design_implementation_allowed": (
+                default_off_design_decision.get("implementation_allowed")
+            ),
+            "default_off_design_runtime_arbiter_allowed": (
+                default_off_design_decision.get("runtime_arbiter_allowed")
+            ),
+            "default_off_design_selector_sandbox_ready": (
+                default_off_design_decision.get("selector_sandbox_ready")
+            ),
+            "runtime_review_packet_readiness_v3_status": (
+                runtime_review_packet_evidence.get("readiness_v3_status")
+            ),
+            "runtime_behavior_changed": selector_readiness_v3_plan.get(
+                "runtime_behavior_changed"
+            ),
+            "runtime_defaults_changed": selector_readiness_v3_plan.get(
+                "runtime_defaults_changed"
+            ),
+            "runtime_arbiter_implemented": selector_readiness_v3_plan.get(
+                "runtime_arbiter_implemented"
+            ),
+            "runtime_dtm_or_tablebase_lookup": selector_readiness_v3_plan.get(
+                "runtime_dtm_or_tablebase_lookup"
+            ),
+            "runtime_terminals_added": selector_readiness_v3_plan.get(
+                "runtime_terminals_added"
+            ),
+            "gameplay_topology_mutation": selector_readiness_v3_plan.get(
+                "gameplay_topology_mutation"
+            ),
+            "stage7_promotion_allowed": selector_readiness_v3_plan.get(
+                "stage7_promotion_allowed"
+            ),
+            "stage8_training_allowed": selector_readiness_v3_plan.get(
+                "stage8_training_allowed"
             ),
         },
         "state_local_contrast_gate": {
@@ -13008,6 +13203,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     balanced_hard_negative = payload["balanced_hard_negative_gate"]
     stronger_selector_feature = payload["stronger_selector_feature_gate"]
     selected_provider_diversity = payload["selected_provider_diversity_gate"]
+    selector_readiness_v3 = payload["selector_readiness_v3_design_gate"]
     state_local_contrast = payload["state_local_contrast_gate"]
     state_local_paired_ownership = payload["state_local_paired_ownership_gate"]
     selected_owner_failure_risk = payload["selected_owner_failure_risk_proxy_gate"]
@@ -13682,6 +13878,30 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- runtime_terminals_added: `{selected_provider_diversity['runtime_terminals_added']}`",
         f"- stage7_promotion_allowed: `{selected_provider_diversity['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{selected_provider_diversity['stage8_training_allowed']}`",
+        "",
+        "## Selector Readiness v3 Design",
+        "",
+        f"- passive_design_review_ready: `{selector_readiness_v3['passive_design_review_ready']}`",
+        f"- status: `{selector_readiness_v3['status']}`",
+        f"- recommended_next_step: `{selector_readiness_v3['recommended_next_step']}`",
+        f"- runtime_arbiter_allowed: `{selector_readiness_v3['runtime_arbiter_allowed']}`",
+        f"- selector_sandbox_ready: `{selector_readiness_v3['selector_sandbox_ready']}`",
+        f"- hard_blocker_count: `{selector_readiness_v3['hard_blocker_count']}`",
+        f"- passed_checks: `{selector_readiness_v3['passed_checks']}`",
+        f"- diagnostic_only_checks: `{selector_readiness_v3['diagnostic_only_checks']}`",
+        f"- label_balance: `{selector_readiness_v3['label_balance']}`",
+        f"- stage_coverage: `{selector_readiness_v3['stage_coverage']}`",
+        f"- stage7_training_rows: `{selector_readiness_v3['stage7_training_rows']}`",
+        f"- conversion_positive_provider_family_count: `{selector_readiness_v3['conversion_positive_provider_family_count']}`",
+        f"- conversion_positive_provider_families: `{selector_readiness_v3['conversion_positive_provider_families']}`",
+        f"- default_off_design_status: `{selector_readiness_v3['default_off_design_status']}`",
+        f"- default_off_design_implementation_allowed: `{selector_readiness_v3['default_off_design_implementation_allowed']}`",
+        f"- runtime_review_packet_readiness_v3_status: `{selector_readiness_v3['runtime_review_packet_readiness_v3_status']}`",
+        f"- runtime_arbiter_implemented: `{selector_readiness_v3['runtime_arbiter_implemented']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{selector_readiness_v3['runtime_dtm_or_tablebase_lookup']}`",
+        f"- gameplay_topology_mutation: `{selector_readiness_v3['gameplay_topology_mutation']}`",
+        f"- stage7_promotion_allowed: `{selector_readiness_v3['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{selector_readiness_v3['stage8_training_allowed']}`",
         "",
         "## State-Local Contrast",
         "",

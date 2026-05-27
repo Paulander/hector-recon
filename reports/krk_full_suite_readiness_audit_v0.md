@@ -649,6 +649,30 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Selector Readiness v3 Design
+
+- passive_design_review_ready: `True`
+- status: `selector_readiness_v3_sandbox_design_review_allowed`
+- recommended_next_step: `design_default_off_strategy_arbiter_sandbox_for_review`
+- runtime_arbiter_allowed: `False`
+- selector_sandbox_ready: `False`
+- hard_blocker_count: `0`
+- passed_checks: `['proposal_family_diversity', 'conversion_positive_provider_diversity', 'label_balance', 'protected_stage_coverage', 'stage7_heldout_boundary']`
+- diagnostic_only_checks: `['current_selected_provider_diversity']`
+- label_balance: `{'negative': 11, 'positive': 13}`
+- stage_coverage: `{'stage4': 2, 'stage5': 4, 'stage6': 3, 'stage7': 4}`
+- stage7_training_rows: `0`
+- conversion_positive_provider_family_count: `3`
+- conversion_positive_provider_families: `['drive_to_edge', 'edge_trap', 'fence_established']`
+- default_off_design_status: `default_off_strategy_arbiter_design_ready_for_external_review`
+- default_off_design_implementation_allowed: `False`
+- runtime_review_packet_readiness_v3_status: `selector_readiness_v3_sandbox_design_review_allowed`
+- runtime_arbiter_implemented: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- gameplay_topology_mutation: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## State-Local Contrast
 
 - passive_contrast_ready: `True`
@@ -890,7 +914,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `67869056b17410145931f2307e8826fa4c74fa45f78d31d0881bfaa7988ee662`
+- expected_readiness_fingerprint: `b667ff811c783593fcb5b7c27e245fa04251ec4ed44da3ab2302ae8e2f1ea822`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1419,5 +1443,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2501`
+- checked_flag_count: `2507`
 - violation_count: `0`
