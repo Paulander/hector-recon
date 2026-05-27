@@ -103,6 +103,10 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_control_plane_strategy_arbitration_baseline_v1.json"
     )
     assert (
+        payload["source_artifacts"]["control_plane_stage7_boundary_refresh"]
+        == "reports/krk_control_plane_stage7_boundary_refresh_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["sequence_benchmark_inputs"]
         == "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json"
     )
@@ -3212,6 +3216,49 @@ def test_full_suite_readiness_identifies_current_gate():
     assert strategy_baseline["gameplay_topology_mutation"] is False
     assert strategy_baseline["stage7_promotion_allowed"] is False
     assert strategy_baseline["stage8_training_allowed"] is False
+    stage7_boundary = payload["control_plane_stage7_boundary_gate"]
+    assert stage7_boundary["passive_stage7_boundary_ready"] is True
+    assert stage7_boundary["boundary_decision_status"] == (
+        "box_shrink_reclassified_as_local_evidence_handoff_trigger"
+    )
+    assert stage7_boundary["boundary_recommended_next_step"] == (
+        "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+    )
+    assert stage7_boundary["stage7_clean_success_controls_met"] is True
+    assert stage7_boundary["stage7_clean_hard_negatives_met"] is True
+    assert stage7_boundary["stage7_clean_review_status"] == (
+        "stage7_clean_control_collection_closed_heldout_only"
+    )
+    assert stage7_boundary["strategy_sequence_inventory_status"] == (
+        "replay_free_inventory_state_holdout_gap_blocks_runtime"
+    )
+    assert stage7_boundary["strategy_ready_frame_count"] == 24
+    assert stage7_boundary["strategy_ready_by_stage"] == {
+        "stage4": 6,
+        "stage5": 8,
+        "stage6": 10,
+    }
+    assert stage7_boundary["stage7_boundary_heldout_frame_count"] == 7
+    assert stage7_boundary["strategy_probe_status"] == (
+        "provider_labels_sufficient_for_small_probe"
+    )
+    assert stage7_boundary["strategy_baseline_status"] == (
+        "strategy_arbitration_promising"
+    )
+    assert stage7_boundary["approval_receipt_present"] is False
+    assert stage7_boundary["approval_receipt_valid"] is False
+    assert stage7_boundary["runner_execution_requested"] is False
+    assert stage7_boundary["runner_collection_run_allowed"] is False
+    assert stage7_boundary["runner_processed_job_count"] == 0
+    assert stage7_boundary["runner_executed_job_count"] == 0
+    assert stage7_boundary["runtime_behavior_changed"] is False
+    assert stage7_boundary["runtime_defaults_changed"] is False
+    assert stage7_boundary["runtime_selector_implemented"] is False
+    assert stage7_boundary["runtime_dtm_or_tablebase_lookup"] is False
+    assert stage7_boundary["hidden_python_controller"] is False
+    assert stage7_boundary["gameplay_topology_mutation"] is False
+    assert stage7_boundary["stage7_promotion_allowed"] is False
+    assert stage7_boundary["stage8_training_allowed"] is False
 
     sequence = payload["sequence_policy"]
     assert (

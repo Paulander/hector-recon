@@ -1550,6 +1550,35 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Control Plane Stage 7 Boundary
+
+- passive_stage7_boundary_ready: `True`
+- boundary_decision_status: `box_shrink_reclassified_as_local_evidence_handoff_trigger`
+- boundary_recommended_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
+- stage7_clean_success_controls_met: `True`
+- stage7_clean_hard_negatives_met: `True`
+- stage7_clean_review_status: `stage7_clean_control_collection_closed_heldout_only`
+- strategy_sequence_inventory_status: `replay_free_inventory_state_holdout_gap_blocks_runtime`
+- strategy_ready_frame_count: `24`
+- strategy_ready_by_stage: `{'stage4': 6, 'stage5': 8, 'stage6': 10}`
+- stage7_boundary_heldout_frame_count: `7`
+- strategy_probe_status: `provider_labels_sufficient_for_small_probe`
+- strategy_baseline_status: `strategy_arbitration_promising`
+- approval_receipt_present: `False`
+- approval_receipt_valid: `False`
+- runner_execution_requested: `False`
+- runner_collection_run_allowed: `False`
+- runner_processed_job_count: `0`
+- runner_executed_job_count: `0`
+- runtime_behavior_changed: `False`
+- runtime_defaults_changed: `False`
+- runtime_selector_implemented: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- hidden_python_controller: `False`
+- gameplay_topology_mutation: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Current Control Plane Gate
 
 - status: `krk_control_plane_waiting_on_explicit_gate_choice`

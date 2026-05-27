@@ -35,6 +35,13 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - control_plane_strategy_baseline_provider_mate_frames: `12`
 - control_plane_strategy_baseline_causal_next_step_allowed: `False`
 - control_plane_strategy_baseline_runtime_dtm_or_tablebase_lookup: `False`
+- control_plane_stage7_boundary_passive_ready: `True`
+- control_plane_stage7_boundary_decision_status: `box_shrink_reclassified_as_local_evidence_handoff_trigger`
+- control_plane_stage7_boundary_heldout_frame_count: `7`
+- control_plane_stage7_boundary_strategy_ready_frame_count: `24`
+- control_plane_stage7_boundary_approval_receipt_present: `False`
+- control_plane_stage7_boundary_runner_executed_job_count: `0`
+- control_plane_stage7_boundary_runtime_dtm_or_tablebase_lookup: `False`
 - clean_curriculum_run_lineage_passive_ready: `True`
 - clean_curriculum_checkpoint_plan_status: `clean_curriculum_checkpoint_plan_ready_full_run_requires_review`
 - clean_curriculum_execution_manifest_status: `clean_retrain_execution_manifest_ready_not_run`

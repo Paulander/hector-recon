@@ -2056,6 +2056,9 @@ def build_payload() -> dict[str, Any]:
     control_plane_forced_controls = payloads["control_plane_forced_controls"]
     control_plane_strategy_probe = payloads["control_plane_strategy_probe"]
     control_plane_strategy_baseline = payloads["control_plane_strategy_baseline"]
+    control_plane_stage7_boundary_refresh = payloads[
+        "control_plane_stage7_boundary_refresh"
+    ]
     gate_approval_options = gate.get("approval_options") or []
     protected_collection_gate_option = find_approval_option(
         gate,
@@ -2453,6 +2456,112 @@ def build_payload() -> dict[str, Any]:
             and artifact.get("stage8_training_allowed") is False
             for artifact in control_plane_strategy_baseline_artifacts
         )
+    )
+    control_plane_stage7_boundary_decision = (
+        control_plane_stage7_boundary_refresh.get("decision") or {}
+    )
+    control_plane_stage7_boundary_filtered = (
+        control_plane_stage7_boundary_refresh.get("filtered_frame_summary") or {}
+    )
+    control_plane_stage7_boundary_current = (
+        control_plane_stage7_boundary_refresh.get(
+            "boundary_current_evidence_state"
+        )
+        or {}
+    )
+    control_plane_stage7_boundary_protected = (
+        control_plane_stage7_boundary_refresh.get("protected_failure_contrast_gate")
+        or {}
+    )
+    control_plane_stage7_boundary_probe = (
+        control_plane_stage7_boundary_refresh.get("strategy_probe_summary") or {}
+    )
+    control_plane_stage7_boundary_baseline = (
+        control_plane_stage7_boundary_refresh.get("baseline_summary") or {}
+    )
+    control_plane_stage7_boundary_passive = (
+        control_plane_stage7_boundary_refresh.get("schema_version")
+        == "krk_control_plane_stage7_boundary_refresh.v0"
+        and control_plane_stage7_boundary_refresh.get("causal_status")
+        == "non_causal_artifact_review"
+        and control_plane_stage7_boundary_decision.get("status")
+        == "control_plane_respects_stage7_boundary"
+        and control_plane_stage7_boundary_decision.get("runtime_work_allowed")
+        is False
+        and control_plane_stage7_boundary_decision.get("recommended_next_step")
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        and control_plane_stage7_boundary_refresh.get("boundary_decision_status")
+        == "box_shrink_reclassified_as_local_evidence_handoff_trigger"
+        and control_plane_stage7_boundary_refresh.get(
+            "boundary_recommended_next_step"
+        )
+        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        and control_plane_stage7_boundary_current.get(
+            "stage7_clean_success_controls_met"
+        )
+        is True
+        and control_plane_stage7_boundary_current.get(
+            "stage7_clean_hard_negatives_met"
+        )
+        is True
+        and control_plane_stage7_boundary_current.get(
+            "stage7_clean_review_status"
+        )
+        == "stage7_clean_control_collection_closed_heldout_only"
+        and control_plane_stage7_boundary_current.get(
+            "strategy_sequence_inventory_status"
+        )
+        == "replay_free_inventory_state_holdout_gap_blocks_runtime"
+        and control_plane_stage7_boundary_filtered.get(
+            "strategy_ready_frame_count"
+        )
+        == 24
+        and control_plane_stage7_boundary_filtered.get(
+            "stage7_boundary_heldout_frame_count"
+        )
+        == 7
+        and control_plane_stage7_boundary_filtered.get("strategy_ready_by_stage")
+        == {"stage4": 6, "stage5": 8, "stage6": 10}
+        and control_plane_stage7_boundary_probe.get("decision_status")
+        == "provider_labels_sufficient_for_small_probe"
+        and control_plane_stage7_boundary_probe.get("strategy_benchmark_frame_count")
+        == 24
+        and control_plane_stage7_boundary_baseline.get("decision_status")
+        == "strategy_arbitration_promising"
+        and control_plane_stage7_boundary_baseline.get(
+            "strategy_benchmark_frame_count"
+        )
+        == 24
+        and control_plane_stage7_boundary_protected.get("approval_receipt_present")
+        is False
+        and control_plane_stage7_boundary_protected.get("approval_receipt_valid")
+        is False
+        and control_plane_stage7_boundary_protected.get("runner_execution_requested")
+        is False
+        and control_plane_stage7_boundary_protected.get("runner_collection_run_allowed")
+        is False
+        and control_plane_stage7_boundary_protected.get("runner_processed_job_count")
+        == 0
+        and control_plane_stage7_boundary_protected.get("runner_executed_job_count")
+        == 0
+        and control_plane_stage7_boundary_refresh.get("runtime_behavior_changed")
+        is False
+        and control_plane_stage7_boundary_refresh.get("runtime_defaults_changed")
+        is False
+        and control_plane_stage7_boundary_refresh.get("runtime_selector_implemented")
+        is False
+        and control_plane_stage7_boundary_refresh.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and control_plane_stage7_boundary_refresh.get("hidden_python_controller")
+        is False
+        and control_plane_stage7_boundary_refresh.get("gameplay_topology_mutation")
+        is False
+        and control_plane_stage7_boundary_refresh.get("stage7_promotion_allowed")
+        is False
+        and control_plane_stage7_boundary_refresh.get("stage8_training_allowed")
+        is False
     )
 
     boundaries = boundary_status(payloads)
@@ -14110,6 +14219,120 @@ def build_payload() -> dict[str, Any]:
                 control_plane_strategy_baseline.get("stage8_training_allowed")
             ),
         },
+        "control_plane_stage7_boundary_gate": {
+            "status": control_plane_stage7_boundary_decision.get("status"),
+            "passive_stage7_boundary_ready": control_plane_stage7_boundary_passive,
+            "boundary_decision_status": control_plane_stage7_boundary_refresh.get(
+                "boundary_decision_status"
+            ),
+            "boundary_recommended_next_step": (
+                control_plane_stage7_boundary_refresh.get(
+                    "boundary_recommended_next_step"
+                )
+            ),
+            "stage7_clean_success_controls_met": (
+                control_plane_stage7_boundary_current.get(
+                    "stage7_clean_success_controls_met"
+                )
+            ),
+            "stage7_clean_hard_negatives_met": (
+                control_plane_stage7_boundary_current.get(
+                    "stage7_clean_hard_negatives_met"
+                )
+            ),
+            "stage7_clean_review_status": (
+                control_plane_stage7_boundary_current.get(
+                    "stage7_clean_review_status"
+                )
+            ),
+            "strategy_sequence_inventory_status": (
+                control_plane_stage7_boundary_current.get(
+                    "strategy_sequence_inventory_status"
+                )
+            ),
+            "strategy_ready_frame_count": (
+                control_plane_stage7_boundary_filtered.get(
+                    "strategy_ready_frame_count"
+                )
+            ),
+            "strategy_ready_by_stage": (
+                control_plane_stage7_boundary_filtered.get("strategy_ready_by_stage")
+                or {}
+            ),
+            "stage7_boundary_heldout_frame_count": (
+                control_plane_stage7_boundary_filtered.get(
+                    "stage7_boundary_heldout_frame_count"
+                )
+            ),
+            "strategy_probe_status": control_plane_stage7_boundary_probe.get(
+                "decision_status"
+            ),
+            "strategy_baseline_status": (
+                control_plane_stage7_boundary_baseline.get("decision_status")
+            ),
+            "approval_receipt_present": (
+                control_plane_stage7_boundary_protected.get(
+                    "approval_receipt_present"
+                )
+            ),
+            "approval_receipt_valid": (
+                control_plane_stage7_boundary_protected.get(
+                    "approval_receipt_valid"
+                )
+            ),
+            "runner_execution_requested": (
+                control_plane_stage7_boundary_protected.get(
+                    "runner_execution_requested"
+                )
+            ),
+            "runner_collection_run_allowed": (
+                control_plane_stage7_boundary_protected.get(
+                    "runner_collection_run_allowed"
+                )
+            ),
+            "runner_processed_job_count": (
+                control_plane_stage7_boundary_protected.get(
+                    "runner_processed_job_count"
+                )
+            ),
+            "runner_executed_job_count": (
+                control_plane_stage7_boundary_protected.get(
+                    "runner_executed_job_count"
+                )
+            ),
+            "runtime_behavior_changed": (
+                control_plane_stage7_boundary_refresh.get("runtime_behavior_changed")
+            ),
+            "runtime_defaults_changed": (
+                control_plane_stage7_boundary_refresh.get("runtime_defaults_changed")
+            ),
+            "runtime_selector_implemented": (
+                control_plane_stage7_boundary_refresh.get(
+                    "runtime_selector_implemented"
+                )
+            ),
+            "runtime_dtm_or_tablebase_lookup": (
+                control_plane_stage7_boundary_refresh.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "hidden_python_controller": (
+                control_plane_stage7_boundary_refresh.get("hidden_python_controller")
+            ),
+            "gameplay_topology_mutation": (
+                control_plane_stage7_boundary_refresh.get(
+                    "gameplay_topology_mutation"
+                )
+            ),
+            "stage7_promotion_allowed": (
+                control_plane_stage7_boundary_refresh.get(
+                    "stage7_promotion_allowed"
+                )
+            ),
+            "stage8_training_allowed": (
+                control_plane_stage7_boundary_refresh.get("stage8_training_allowed")
+            ),
+        },
         "blockers": blockers,
         "hard_blockers": hard_blockers,
         "control_plane_gate_review_blockers": control_plane_gate_review_blockers,
@@ -14332,6 +14555,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     control_plane_contract = payload["control_plane_contract_lineage_gate"]
     control_plane_frame_export = payload["control_plane_frame_export_gate"]
     control_plane_strategy_baseline = payload["control_plane_strategy_baseline_gate"]
+    control_plane_stage7_boundary = payload["control_plane_stage7_boundary_gate"]
     current_gate = payload["current_control_plane_gate"]
     decision = payload["decision"]
     lines = [
@@ -15892,6 +16116,35 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- gameplay_topology_mutation: `{control_plane_strategy_baseline['gameplay_topology_mutation']}`",
             f"- stage7_promotion_allowed: `{control_plane_strategy_baseline['stage7_promotion_allowed']}`",
             f"- stage8_training_allowed: `{control_plane_strategy_baseline['stage8_training_allowed']}`",
+            "",
+            "## Control Plane Stage 7 Boundary",
+            "",
+            f"- passive_stage7_boundary_ready: `{control_plane_stage7_boundary['passive_stage7_boundary_ready']}`",
+            f"- boundary_decision_status: `{control_plane_stage7_boundary['boundary_decision_status']}`",
+            f"- boundary_recommended_next_step: `{control_plane_stage7_boundary['boundary_recommended_next_step']}`",
+            f"- stage7_clean_success_controls_met: `{control_plane_stage7_boundary['stage7_clean_success_controls_met']}`",
+            f"- stage7_clean_hard_negatives_met: `{control_plane_stage7_boundary['stage7_clean_hard_negatives_met']}`",
+            f"- stage7_clean_review_status: `{control_plane_stage7_boundary['stage7_clean_review_status']}`",
+            f"- strategy_sequence_inventory_status: `{control_plane_stage7_boundary['strategy_sequence_inventory_status']}`",
+            f"- strategy_ready_frame_count: `{control_plane_stage7_boundary['strategy_ready_frame_count']}`",
+            f"- strategy_ready_by_stage: `{control_plane_stage7_boundary['strategy_ready_by_stage']}`",
+            f"- stage7_boundary_heldout_frame_count: `{control_plane_stage7_boundary['stage7_boundary_heldout_frame_count']}`",
+            f"- strategy_probe_status: `{control_plane_stage7_boundary['strategy_probe_status']}`",
+            f"- strategy_baseline_status: `{control_plane_stage7_boundary['strategy_baseline_status']}`",
+            f"- approval_receipt_present: `{control_plane_stage7_boundary['approval_receipt_present']}`",
+            f"- approval_receipt_valid: `{control_plane_stage7_boundary['approval_receipt_valid']}`",
+            f"- runner_execution_requested: `{control_plane_stage7_boundary['runner_execution_requested']}`",
+            f"- runner_collection_run_allowed: `{control_plane_stage7_boundary['runner_collection_run_allowed']}`",
+            f"- runner_processed_job_count: `{control_plane_stage7_boundary['runner_processed_job_count']}`",
+            f"- runner_executed_job_count: `{control_plane_stage7_boundary['runner_executed_job_count']}`",
+            f"- runtime_behavior_changed: `{control_plane_stage7_boundary['runtime_behavior_changed']}`",
+            f"- runtime_defaults_changed: `{control_plane_stage7_boundary['runtime_defaults_changed']}`",
+            f"- runtime_selector_implemented: `{control_plane_stage7_boundary['runtime_selector_implemented']}`",
+            f"- runtime_dtm_or_tablebase_lookup: `{control_plane_stage7_boundary['runtime_dtm_or_tablebase_lookup']}`",
+            f"- hidden_python_controller: `{control_plane_stage7_boundary['hidden_python_controller']}`",
+            f"- gameplay_topology_mutation: `{control_plane_stage7_boundary['gameplay_topology_mutation']}`",
+            f"- stage7_promotion_allowed: `{control_plane_stage7_boundary['stage7_promotion_allowed']}`",
+            f"- stage8_training_allowed: `{control_plane_stage7_boundary['stage8_training_allowed']}`",
             "",
             "## Current Control Plane Gate",
             "",

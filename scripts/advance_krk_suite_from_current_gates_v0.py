@@ -586,6 +586,9 @@ def build_payload() -> dict[str, Any]:
     control_plane_strategy_baseline_gate = (
         readiness.get("control_plane_strategy_baseline_gate") or {}
     )
+    control_plane_stage7_boundary_gate = (
+        readiness.get("control_plane_stage7_boundary_gate") or {}
+    )
     clean_curriculum_run_lineage_gate = (
         readiness.get("clean_curriculum_run_lineage_gate") or {}
     )
@@ -989,6 +992,33 @@ def build_payload() -> dict[str, Any]:
             ),
             "control_plane_strategy_baseline_runtime_dtm_or_tablebase_lookup": (
                 control_plane_strategy_baseline_gate.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "control_plane_stage7_boundary_passive_ready": (
+                control_plane_stage7_boundary_gate.get(
+                    "passive_stage7_boundary_ready"
+                )
+            ),
+            "control_plane_stage7_boundary_decision_status": (
+                control_plane_stage7_boundary_gate.get("boundary_decision_status")
+            ),
+            "control_plane_stage7_boundary_heldout_frame_count": (
+                control_plane_stage7_boundary_gate.get(
+                    "stage7_boundary_heldout_frame_count"
+                )
+            ),
+            "control_plane_stage7_boundary_strategy_ready_frame_count": (
+                control_plane_stage7_boundary_gate.get("strategy_ready_frame_count")
+            ),
+            "control_plane_stage7_boundary_approval_receipt_present": (
+                control_plane_stage7_boundary_gate.get("approval_receipt_present")
+            ),
+            "control_plane_stage7_boundary_runner_executed_job_count": (
+                control_plane_stage7_boundary_gate.get("runner_executed_job_count")
+            ),
+            "control_plane_stage7_boundary_runtime_dtm_or_tablebase_lookup": (
+                control_plane_stage7_boundary_gate.get(
                     "runtime_dtm_or_tablebase_lookup"
                 )
             ),

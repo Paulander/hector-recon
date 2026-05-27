@@ -2034,6 +2034,33 @@ def test_gate_advancement_reports_current_stage7_blocker():
         ]
         is False
     )
+    assert payload["summary"]["control_plane_stage7_boundary_passive_ready"] is True
+    assert (
+        payload["summary"]["control_plane_stage7_boundary_decision_status"]
+        == "box_shrink_reclassified_as_local_evidence_handoff_trigger"
+    )
+    assert (
+        payload["summary"]["control_plane_stage7_boundary_heldout_frame_count"]
+        == 7
+    )
+    assert (
+        payload["summary"]["control_plane_stage7_boundary_strategy_ready_frame_count"]
+        == 24
+    )
+    assert (
+        payload["summary"]["control_plane_stage7_boundary_approval_receipt_present"]
+        is False
+    )
+    assert (
+        payload["summary"]["control_plane_stage7_boundary_runner_executed_job_count"]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "control_plane_stage7_boundary_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
     assert payload["summary"]["readiness_control_plane_gate_review_blockers"] == []
     assert payload["summary"]["readiness_explicit_gate_blockers"] == [
         "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
