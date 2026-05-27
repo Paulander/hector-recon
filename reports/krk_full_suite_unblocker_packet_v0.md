@@ -10,9 +10,9 @@
 
 ## Current State
 
-- readiness_checked_flag_count: `2599`
+- readiness_checked_flag_count: `2641`
 - readiness_boundary_violation_count: `0`
-- readiness_source_artifact_count: `363`
+- readiness_source_artifact_count: `369`
 - protected_stack_ready: `True`
 - protected_stack_status: `retry1_protected_stage5_6_stack_adopted_manifest_only`
 - protected_stack_rollback_paths_preserved: `True`
@@ -137,7 +137,7 @@
 - collection_blocked_by_option_id: `None`
 - approval_receipt_created_by_request: `False`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `3025a428ca11524a751b18b693d5142bc860d8184a3479432cdb43c698974e3c`
+- expected_readiness_fingerprint: `80de117994ae616d5343884f635ee78d474bda362e2917d6c099a7629b0b4fee`
 - timed_out_job_count: `0`
 - post_success_refresh: `full_passive_krk_suite_gate_stack`
 - runtime_behavior_changed: `False`

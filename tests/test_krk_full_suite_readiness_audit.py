@@ -863,6 +863,32 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_targeted_ownership_negative_labels_v0.json"
     )
     assert (
+        payload["source_artifacts"]["hard_negative_selector_target_dataset_v0"]
+        == "reports/krk_hard_negative_selector_target_dataset_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["hard_negative_selector_feature_ablation_v0"]
+        == "reports/krk_hard_negative_selector_feature_ablation_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["balanced_hard_negative_label_plan_v0"]
+        == "reports/krk_balanced_hard_negative_label_plan_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["balanced_hard_negative_execution_manifest_v0"]
+        == "reports/krk_balanced_hard_negative_execution_manifest_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "balanced_hard_negative_execution_manifest_review_v0"
+        ]
+        == "reports/krk_balanced_hard_negative_execution_manifest_review_v0.json"
+    )
+    assert (
+        payload["source_artifacts"]["balanced_hard_negative_labels_v0"]
+        == "reports/krk_balanced_hard_negative_labels_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["balanced_hard_negative_label_plan_v1"]
         == "reports/krk_balanced_hard_negative_label_plan_v1.json"
     )
@@ -2470,6 +2496,37 @@ def test_full_suite_readiness_identifies_current_gate():
 
     balanced_hard_negative = payload["balanced_hard_negative_gate"]
     assert balanced_hard_negative["passive_evidence_ready"] is True
+    assert balanced_hard_negative["hard_negative_target_dataset_v0_status"] == (
+        "hard_negative_selector_target_candidates_built"
+    )
+    assert balanced_hard_negative["hard_negative_target_dataset_v0_row_count"] == 16
+    assert balanced_hard_negative["hard_negative_target_dataset_v0_training_row_count"] == 0
+    assert balanced_hard_negative["hard_negative_target_dataset_v0_stage7_row_count"] == 0
+    assert balanced_hard_negative["hard_negative_feature_ablation_v0_status"] == (
+        "hard_negative_feature_ablation_no_runtime_ready_signal"
+    )
+    assert balanced_hard_negative["hard_negative_feature_ablation_v0_underpowered"] is True
+    assert balanced_hard_negative["hard_negative_feature_ablation_v0_stage7_row_count"] == 0
+    assert balanced_hard_negative["label_plan_v0_status"] == (
+        "balanced_hard_negative_label_plan_ready"
+    )
+    assert balanced_hard_negative["label_plan_v0_job_count"] == 12
+    assert balanced_hard_negative["label_plan_v0_stage7_jobs"] == 0
+    assert balanced_hard_negative["execution_manifest_v0_status"] == (
+        "balanced_hard_negative_execution_manifest_bound"
+    )
+    assert balanced_hard_negative["execution_manifest_v0_labels_allowed_now"] is False
+    assert balanced_hard_negative["execution_manifest_v0_job_count"] == 12
+    assert balanced_hard_negative["execution_manifest_v0_stage7_jobs"] == 0
+    assert balanced_hard_negative["execution_manifest_review_v0_status"] == (
+        "balanced_hard_negative_manifest_review_passed_labels_allowed"
+    )
+    assert balanced_hard_negative["labels_v0_status"] == (
+        "balanced_hard_negative_labels_completed"
+    )
+    assert balanced_hard_negative["label_v0_count"] == 12
+    assert balanced_hard_negative["stage7_labels_v0"] == 0
+    assert balanced_hard_negative["stage7_training_labels_v0"] == 0
     assert (
         balanced_hard_negative["label_plan_status"]
         == "balanced_hard_negative_label_plan_v1_ready"

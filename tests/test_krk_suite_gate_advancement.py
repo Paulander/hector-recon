@@ -1306,6 +1306,41 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["targeted_ownership_stage7_promotion_allowed"] is False
     assert payload["summary"]["targeted_ownership_stage8_training_allowed"] is False
     assert payload["summary"]["balanced_hard_negative_passive_ready"] is True
+    assert payload["summary"][
+        "balanced_hard_negative_target_dataset_v0_status"
+    ] == "hard_negative_selector_target_candidates_built"
+    assert payload["summary"]["balanced_hard_negative_target_dataset_v0_row_count"] == 16
+    assert (
+        payload["summary"]["balanced_hard_negative_target_dataset_v0_stage7_row_count"]
+        == 0
+    )
+    assert payload["summary"][
+        "balanced_hard_negative_feature_ablation_v0_status"
+    ] == "hard_negative_feature_ablation_no_runtime_ready_signal"
+    assert (
+        payload["summary"]["balanced_hard_negative_feature_ablation_v0_underpowered"]
+        is True
+    )
+    assert payload["summary"]["balanced_hard_negative_label_plan_v0_status"] == (
+        "balanced_hard_negative_label_plan_ready"
+    )
+    assert payload["summary"]["balanced_hard_negative_label_plan_v0_job_count"] == 12
+    assert payload["summary"]["balanced_hard_negative_label_plan_v0_stage7_jobs"] == 0
+    assert payload["summary"][
+        "balanced_hard_negative_execution_manifest_v0_status"
+    ] == "balanced_hard_negative_execution_manifest_bound"
+    assert (
+        payload["summary"][
+            "balanced_hard_negative_execution_manifest_v0_stage7_jobs"
+        ]
+        == 0
+    )
+    assert payload["summary"]["balanced_hard_negative_labels_v0_status"] == (
+        "balanced_hard_negative_labels_completed"
+    )
+    assert payload["summary"]["balanced_hard_negative_label_v0_count"] == 12
+    assert payload["summary"]["balanced_hard_negative_stage7_labels_v0"] == 0
+    assert payload["summary"]["balanced_hard_negative_stage7_training_labels_v0"] == 0
     assert (
         payload["summary"]["balanced_hard_negative_label_plan_status"]
         == "balanced_hard_negative_label_plan_v1_ready"
