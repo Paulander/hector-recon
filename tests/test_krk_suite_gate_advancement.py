@@ -1295,6 +1295,70 @@ def test_gate_advancement_reports_current_stage7_blocker():
         is False
     )
     assert payload["summary"]["balanced_hard_negative_stage8_training_allowed"] is False
+    assert payload["summary"]["hard_negative_label_semantics_passive_ready"] is True
+    assert payload["summary"]["hard_negative_label_semantics_status"] == (
+        "capacity_labels_not_direct_selector_targets"
+    )
+    assert (
+        payload["summary"]["hard_negative_label_semantics_recommended_next_step"]
+        == "run_stronger_capacity_risk_feature_review_non_causal"
+    )
+    assert (
+        payload["summary"]["hard_negative_label_semantics_runtime_work_allowed"]
+        is False
+    )
+    assert (
+        payload["summary"]["hard_negative_label_semantics_selector_training_allowed"]
+        is False
+    )
+    assert payload["summary"]["hard_negative_label_semantics_row_count"] == 40
+    assert payload["summary"]["hard_negative_label_semantics_stage7_row_count"] == 0
+    assert payload["summary"]["hard_negative_label_semantics_capacity_negative_count"] == 9
+    assert payload["summary"]["hard_negative_label_semantics_capacity_positive_count"] == 31
+    assert payload["summary"]["hard_negative_label_semantics_blocked_use_by_channel"] == {
+        "forced_provider_capacity_label": (
+            "direct_runtime_owner_selection_or_suppression"
+        ),
+        "state_local_capacity_contrast": "global provider-family suppression",
+        "hard_negative_capacity": (
+            "selector training target until safe-owner preservation is separately "
+            "validated"
+        ),
+    }
+    assert (
+        payload["summary"][
+            "hard_negative_label_semantics_stronger_feature_consumes_semantics"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "hard_negative_label_semantics_runtime_selector_implemented"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "hard_negative_label_semantics_runtime_candidate_generator_implemented"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "hard_negative_label_semantics_runtime_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "hard_negative_label_semantics_stage7_promotion_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"]["hard_negative_label_semantics_stage8_training_allowed"]
+        is False
+    )
     assert payload["summary"]["stronger_selector_feature_passive_ready"] is True
     assert payload["summary"]["stronger_selector_feature_ablation_status"] == (
         "hard_negative_feature_ablation_promising_underpowered"

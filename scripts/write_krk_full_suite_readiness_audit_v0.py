@@ -802,6 +802,9 @@ SOURCES = {
     "balanced_hard_negative_evidence_review_v0": (
         "reports/krk_balanced_hard_negative_evidence_review_v0.json"
     ),
+    "hard_negative_label_semantics_review_v1": (
+        "reports/krk_hard_negative_label_semantics_review_v1.json"
+    ),
     "hard_negative_selector_feature_ablation_v2": (
         "reports/krk_hard_negative_selector_feature_ablation_v2.json"
     ),
@@ -1900,6 +1903,9 @@ def build_payload() -> dict[str, Any]:
     ]
     balanced_hard_negative_evidence_review_v0 = payloads[
         "balanced_hard_negative_evidence_review_v0"
+    ]
+    hard_negative_label_semantics_review_v1 = payloads[
+        "hard_negative_label_semantics_review_v1"
     ]
     hard_negative_selector_feature_ablation_v2 = payloads[
         "hard_negative_selector_feature_ablation_v2"
@@ -4993,6 +4999,110 @@ def build_payload() -> dict[str, Any]:
     )
     hard_negative_semantics_summary = (
         hard_negative_selector_target_training_semantics_review_v0.get("summary") or {}
+    )
+    hard_negative_label_semantics_decision = (
+        hard_negative_label_semantics_review_v1.get("decision") or {}
+    )
+    hard_negative_label_semantics_summary = (
+        hard_negative_label_semantics_review_v1.get("summary") or {}
+    )
+    hard_negative_label_semantics_split = (
+        hard_negative_label_semantics_review_v1.get("recommended_objective_split")
+        or {}
+    )
+    hard_negative_label_semantics_channels = {
+        row.get("label_channel"): row
+        for row in hard_negative_label_semantics_review_v1.get("semantics") or []
+    }
+    hard_negative_label_semantics_passive = (
+        hard_negative_label_semantics_review_v1.get("causal_status")
+        == "non_causal_semantics_review"
+        and hard_negative_label_semantics_decision.get("status")
+        == "capacity_labels_not_direct_selector_targets"
+        and hard_negative_label_semantics_decision.get("recommended_next_step")
+        == "run_stronger_capacity_risk_feature_review_non_causal"
+        and hard_negative_label_semantics_decision.get("runtime_work_allowed") is False
+        and hard_negative_label_semantics_decision.get("selector_training_allowed")
+        is False
+        and hard_negative_label_semantics_decision.get("stage7_promotion_allowed")
+        is False
+        and hard_negative_label_semantics_decision.get("stage8_training_allowed")
+        is False
+        and hard_negative_label_semantics_review_v1.get("source_artifacts")
+        == [
+            "reports/krk_hard_negative_selector_target_dataset_v2.json",
+            "reports/krk_hard_negative_selector_feature_ablation_v2.json",
+            "reports/krk_balanced_hard_negative_evidence_review_v0.json",
+        ]
+        and hard_negative_label_semantics_summary.get("row_count") == 40
+        and hard_negative_label_semantics_summary.get("state_count") == 14
+        and hard_negative_label_semantics_summary.get("stage7_row_count") == 0
+        and hard_negative_label_semantics_summary.get("capacity_negative_count") == 9
+        and hard_negative_label_semantics_summary.get("capacity_positive_count") == 31
+        and hard_negative_label_semantics_summary.get(
+            "state_local_contrast_state_count"
+        )
+        == 2
+        and hard_negative_label_semantics_summary.get(
+            "best_ablation_negative_suppression"
+        )
+        == 0.2222222222222222
+        and hard_negative_label_semantics_summary.get(
+            "best_ablation_positive_recall"
+        )
+        == 1.0
+        and hard_negative_label_semantics_split.get("capacity_recall_objective")
+        == "which validated providers should be present in candidate set"
+        and hard_negative_label_semantics_split.get("capacity_risk_objective")
+        == "which forced-provider paths are risky under current h40 continuation"
+        and hard_negative_label_semantics_split.get("ownership_selection_objective")
+        == (
+            "which provider should own normal runtime decision; "
+            "not supplied by this dataset alone"
+        )
+        and hard_negative_label_semantics_split.get("safe_preservation_objective")
+        == (
+            "validated safe owners must be preserved before any suppression can "
+            "be reviewed"
+        )
+        and {
+            channel: row.get("blocked_use")
+            for channel, row in hard_negative_label_semantics_channels.items()
+        }
+        == {
+            "forced_provider_capacity_label": (
+                "direct_runtime_owner_selection_or_suppression"
+            ),
+            "state_local_capacity_contrast": "global provider-family suppression",
+            "hard_negative_capacity": (
+                "selector training target until safe-owner preservation is "
+                "separately validated"
+            ),
+        }
+        and "reports/krk_hard_negative_label_semantics_review_v1.json"
+        in (stronger_selector_feature_review_v0.get("source_artifacts") or [])
+        and hard_negative_label_semantics_review_v1.get("runtime_behavior_changed")
+        is False
+        and hard_negative_label_semantics_review_v1.get("runtime_defaults_changed")
+        is False
+        and hard_negative_label_semantics_review_v1.get("runtime_selector_implemented")
+        is False
+        and hard_negative_label_semantics_review_v1.get(
+            "runtime_candidate_generator_implemented"
+        )
+        is False
+        and hard_negative_label_semantics_review_v1.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and hard_negative_label_semantics_review_v1.get("runtime_terminals_added")
+        is False
+        and hard_negative_label_semantics_review_v1.get("gameplay_topology_mutation")
+        is False
+        and hard_negative_label_semantics_review_v1.get("stage7_promotion_allowed")
+        is False
+        and hard_negative_label_semantics_review_v1.get("stage8_training_allowed")
+        is False
     )
     feature_ablation_decision = (
         hard_negative_selector_feature_ablation_v2.get("decision") or {}
@@ -8758,6 +8868,102 @@ def build_payload() -> dict[str, Any]:
                 "stage7_promotion_allowed"
             ),
             "stage8_training_allowed": balanced_hard_negative_evidence_review_v0.get(
+                "stage8_training_allowed"
+            ),
+        },
+        "hard_negative_label_semantics_gate": {
+            "status": hard_negative_label_semantics_decision.get("status"),
+            "passive_semantics_ready": hard_negative_label_semantics_passive,
+            "recommended_next_step": hard_negative_label_semantics_decision.get(
+                "recommended_next_step"
+            ),
+            "runtime_work_allowed": hard_negative_label_semantics_decision.get(
+                "runtime_work_allowed"
+            ),
+            "selector_training_allowed": hard_negative_label_semantics_decision.get(
+                "selector_training_allowed"
+            ),
+            "row_count": hard_negative_label_semantics_summary.get("row_count"),
+            "state_count": hard_negative_label_semantics_summary.get("state_count"),
+            "stage7_row_count": hard_negative_label_semantics_summary.get(
+                "stage7_row_count"
+            ),
+            "capacity_negative_count": hard_negative_label_semantics_summary.get(
+                "capacity_negative_count"
+            ),
+            "capacity_positive_count": hard_negative_label_semantics_summary.get(
+                "capacity_positive_count"
+            ),
+            "state_local_contrast_state_count": (
+                hard_negative_label_semantics_summary.get(
+                    "state_local_contrast_state_count"
+                )
+            ),
+            "best_ablation_negative_suppression": (
+                hard_negative_label_semantics_summary.get(
+                    "best_ablation_negative_suppression"
+                )
+            ),
+            "best_ablation_positive_recall": (
+                hard_negative_label_semantics_summary.get(
+                    "best_ablation_positive_recall"
+                )
+            ),
+            "capacity_recall_objective": hard_negative_label_semantics_split.get(
+                "capacity_recall_objective"
+            ),
+            "capacity_risk_objective": hard_negative_label_semantics_split.get(
+                "capacity_risk_objective"
+            ),
+            "ownership_selection_objective": (
+                hard_negative_label_semantics_split.get(
+                    "ownership_selection_objective"
+                )
+            ),
+            "safe_preservation_objective": hard_negative_label_semantics_split.get(
+                "safe_preservation_objective"
+            ),
+            "blocked_use_by_label_channel": {
+                channel: row.get("blocked_use")
+                for channel, row in hard_negative_label_semantics_channels.items()
+            },
+            "stronger_feature_review_consumes_semantics": (
+                "reports/krk_hard_negative_label_semantics_review_v1.json"
+                in (stronger_selector_feature_review_v0.get("source_artifacts") or [])
+            ),
+            "runtime_behavior_changed": hard_negative_label_semantics_review_v1.get(
+                "runtime_behavior_changed"
+            ),
+            "runtime_defaults_changed": hard_negative_label_semantics_review_v1.get(
+                "runtime_defaults_changed"
+            ),
+            "runtime_selector_implemented": (
+                hard_negative_label_semantics_review_v1.get(
+                    "runtime_selector_implemented"
+                )
+            ),
+            "runtime_candidate_generator_implemented": (
+                hard_negative_label_semantics_review_v1.get(
+                    "runtime_candidate_generator_implemented"
+                )
+            ),
+            "runtime_dtm_or_tablebase_lookup": (
+                hard_negative_label_semantics_review_v1.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "runtime_terminals_added": hard_negative_label_semantics_review_v1.get(
+                "runtime_terminals_added"
+            ),
+            "gameplay_topology_mutation": (
+                hard_negative_label_semantics_review_v1.get(
+                    "gameplay_topology_mutation"
+                )
+            ),
+            "stage7_promotion_allowed": hard_negative_label_semantics_review_v1.get(
+                "stage7_promotion_allowed"
+            ),
+            "stage8_training_allowed": hard_negative_label_semantics_review_v1.get(
                 "stage8_training_allowed"
             ),
         },
@@ -13325,6 +13531,7 @@ def write_markdown(payload: dict[str, Any]) -> str:
     two_stage_abstention_no_go = payload["two_stage_abstention_no_go_gate"]
     targeted_ownership_recovery = payload["targeted_ownership_recovery_gate"]
     balanced_hard_negative = payload["balanced_hard_negative_gate"]
+    hard_negative_semantics = payload["hard_negative_label_semantics_gate"]
     stronger_selector_feature = payload["stronger_selector_feature_gate"]
     selected_provider_diversity = payload["selected_provider_diversity_gate"]
     selector_readiness_v3 = payload["selector_readiness_v3_design_gate"]
@@ -13952,6 +14159,30 @@ def write_markdown(payload: dict[str, Any]) -> str:
         f"- runtime_terminals_added: `{balanced_hard_negative['runtime_terminals_added']}`",
         f"- stage7_promotion_allowed: `{balanced_hard_negative['stage7_promotion_allowed']}`",
         f"- stage8_training_allowed: `{balanced_hard_negative['stage8_training_allowed']}`",
+        "",
+        "## Hard-Negative Label Semantics",
+        "",
+        f"- passive_semantics_ready: `{hard_negative_semantics['passive_semantics_ready']}`",
+        f"- status: `{hard_negative_semantics['status']}`",
+        f"- recommended_next_step: `{hard_negative_semantics['recommended_next_step']}`",
+        f"- runtime_work_allowed: `{hard_negative_semantics['runtime_work_allowed']}`",
+        f"- selector_training_allowed: `{hard_negative_semantics['selector_training_allowed']}`",
+        f"- row_count: `{hard_negative_semantics['row_count']}`",
+        f"- state_count: `{hard_negative_semantics['state_count']}`",
+        f"- stage7_row_count: `{hard_negative_semantics['stage7_row_count']}`",
+        f"- capacity_negative_count: `{hard_negative_semantics['capacity_negative_count']}`",
+        f"- capacity_positive_count: `{hard_negative_semantics['capacity_positive_count']}`",
+        f"- state_local_contrast_state_count: `{hard_negative_semantics['state_local_contrast_state_count']}`",
+        f"- best_ablation_negative_suppression: `{hard_negative_semantics['best_ablation_negative_suppression']}`",
+        f"- blocked_use_by_label_channel: `{hard_negative_semantics['blocked_use_by_label_channel']}`",
+        f"- stronger_feature_review_consumes_semantics: `{hard_negative_semantics['stronger_feature_review_consumes_semantics']}`",
+        f"- runtime_selector_implemented: `{hard_negative_semantics['runtime_selector_implemented']}`",
+        f"- runtime_candidate_generator_implemented: `{hard_negative_semantics['runtime_candidate_generator_implemented']}`",
+        f"- runtime_dtm_or_tablebase_lookup: `{hard_negative_semantics['runtime_dtm_or_tablebase_lookup']}`",
+        f"- runtime_terminals_added: `{hard_negative_semantics['runtime_terminals_added']}`",
+        f"- gameplay_topology_mutation: `{hard_negative_semantics['gameplay_topology_mutation']}`",
+        f"- stage7_promotion_allowed: `{hard_negative_semantics['stage7_promotion_allowed']}`",
+        f"- stage8_training_allowed: `{hard_negative_semantics['stage8_training_allowed']}`",
         "",
         "## Stronger Selector Feature Review",
         "",

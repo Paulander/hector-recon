@@ -807,6 +807,10 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_balanced_hard_negative_evidence_review_v0.json"
     )
     assert (
+        payload["source_artifacts"]["hard_negative_label_semantics_review_v1"]
+        == "reports/krk_hard_negative_label_semantics_review_v1.json"
+    )
+    assert (
         payload["source_artifacts"]["hard_negative_selector_feature_ablation_v2"]
         == "reports/krk_hard_negative_selector_feature_ablation_v2.json"
     )
@@ -2318,6 +2322,56 @@ def test_full_suite_readiness_identifies_current_gate():
     assert balanced_hard_negative["runtime_terminals_added"] is False
     assert balanced_hard_negative["stage7_promotion_allowed"] is False
     assert balanced_hard_negative["stage8_training_allowed"] is False
+
+    hard_negative_semantics = payload["hard_negative_label_semantics_gate"]
+    assert hard_negative_semantics["passive_semantics_ready"] is True
+    assert hard_negative_semantics["status"] == (
+        "capacity_labels_not_direct_selector_targets"
+    )
+    assert hard_negative_semantics["recommended_next_step"] == (
+        "run_stronger_capacity_risk_feature_review_non_causal"
+    )
+    assert hard_negative_semantics["runtime_work_allowed"] is False
+    assert hard_negative_semantics["selector_training_allowed"] is False
+    assert hard_negative_semantics["row_count"] == 40
+    assert hard_negative_semantics["state_count"] == 14
+    assert hard_negative_semantics["stage7_row_count"] == 0
+    assert hard_negative_semantics["capacity_negative_count"] == 9
+    assert hard_negative_semantics["capacity_positive_count"] == 31
+    assert hard_negative_semantics["state_local_contrast_state_count"] == 2
+    assert hard_negative_semantics["best_ablation_negative_suppression"] == (
+        0.2222222222222222
+    )
+    assert hard_negative_semantics["best_ablation_positive_recall"] == 1.0
+    assert hard_negative_semantics["capacity_recall_objective"] == (
+        "which validated providers should be present in candidate set"
+    )
+    assert hard_negative_semantics["capacity_risk_objective"] == (
+        "which forced-provider paths are risky under current h40 continuation"
+    )
+    assert hard_negative_semantics["blocked_use_by_label_channel"] == {
+        "forced_provider_capacity_label": (
+            "direct_runtime_owner_selection_or_suppression"
+        ),
+        "state_local_capacity_contrast": "global provider-family suppression",
+        "hard_negative_capacity": (
+            "selector training target until safe-owner preservation is separately "
+            "validated"
+        ),
+    }
+    assert hard_negative_semantics["stronger_feature_review_consumes_semantics"] is True
+    assert hard_negative_semantics["runtime_behavior_changed"] is False
+    assert hard_negative_semantics["runtime_defaults_changed"] is False
+    assert hard_negative_semantics["runtime_selector_implemented"] is False
+    assert (
+        hard_negative_semantics["runtime_candidate_generator_implemented"]
+        is False
+    )
+    assert hard_negative_semantics["runtime_dtm_or_tablebase_lookup"] is False
+    assert hard_negative_semantics["runtime_terminals_added"] is False
+    assert hard_negative_semantics["gameplay_topology_mutation"] is False
+    assert hard_negative_semantics["stage7_promotion_allowed"] is False
+    assert hard_negative_semantics["stage8_training_allowed"] is False
 
     stronger_feature = payload["stronger_selector_feature_gate"]
     assert stronger_feature["passive_feature_review_ready"] is True

@@ -598,6 +598,30 @@
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 
+## Hard-Negative Label Semantics
+
+- passive_semantics_ready: `True`
+- status: `capacity_labels_not_direct_selector_targets`
+- recommended_next_step: `run_stronger_capacity_risk_feature_review_non_causal`
+- runtime_work_allowed: `False`
+- selector_training_allowed: `False`
+- row_count: `40`
+- state_count: `14`
+- stage7_row_count: `0`
+- capacity_negative_count: `9`
+- capacity_positive_count: `31`
+- state_local_contrast_state_count: `2`
+- best_ablation_negative_suppression: `0.2222222222222222`
+- blocked_use_by_label_channel: `{'forced_provider_capacity_label': 'direct_runtime_owner_selection_or_suppression', 'state_local_capacity_contrast': 'global provider-family suppression', 'hard_negative_capacity': 'selector training target until safe-owner preservation is separately validated'}`
+- stronger_feature_review_consumes_semantics: `True`
+- runtime_selector_implemented: `False`
+- runtime_candidate_generator_implemented: `False`
+- runtime_dtm_or_tablebase_lookup: `False`
+- runtime_terminals_added: `False`
+- gameplay_topology_mutation: `False`
+- stage7_promotion_allowed: `False`
+- stage8_training_allowed: `False`
+
 ## Stronger Selector Feature Review
 
 - passive_feature_review_ready: `True`
@@ -936,7 +960,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `62baec2fc1277836db87d89a08a6c1e6bed0842e83e1efb4c2d472d9ad82fa8e`
+- expected_readiness_fingerprint: `2326c6957474ac9e2b1922ed3dc3009b549eeb881cef190bfceadfa75c159057`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1465,5 +1489,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2507`
+- checked_flag_count: `2514`
 - violation_count: `0`

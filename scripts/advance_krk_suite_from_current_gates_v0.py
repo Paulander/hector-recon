@@ -631,6 +631,9 @@ def build_payload() -> dict[str, Any]:
         readiness.get("targeted_ownership_recovery_gate") or {}
     )
     balanced_hard_negative_gate = readiness.get("balanced_hard_negative_gate") or {}
+    hard_negative_label_semantics_gate = (
+        readiness.get("hard_negative_label_semantics_gate") or {}
+    )
     stronger_selector_feature_gate = (
         readiness.get("stronger_selector_feature_gate") or {}
     )
@@ -2113,6 +2116,60 @@ def build_payload() -> dict[str, Any]:
             ),
             "balanced_hard_negative_stage8_training_allowed": (
                 balanced_hard_negative_gate.get("stage8_training_allowed")
+            ),
+            "hard_negative_label_semantics_passive_ready": (
+                hard_negative_label_semantics_gate.get("passive_semantics_ready")
+            ),
+            "hard_negative_label_semantics_status": (
+                hard_negative_label_semantics_gate.get("status")
+            ),
+            "hard_negative_label_semantics_recommended_next_step": (
+                hard_negative_label_semantics_gate.get("recommended_next_step")
+            ),
+            "hard_negative_label_semantics_runtime_work_allowed": (
+                hard_negative_label_semantics_gate.get("runtime_work_allowed")
+            ),
+            "hard_negative_label_semantics_selector_training_allowed": (
+                hard_negative_label_semantics_gate.get("selector_training_allowed")
+            ),
+            "hard_negative_label_semantics_row_count": (
+                hard_negative_label_semantics_gate.get("row_count")
+            ),
+            "hard_negative_label_semantics_stage7_row_count": (
+                hard_negative_label_semantics_gate.get("stage7_row_count")
+            ),
+            "hard_negative_label_semantics_capacity_negative_count": (
+                hard_negative_label_semantics_gate.get("capacity_negative_count")
+            ),
+            "hard_negative_label_semantics_capacity_positive_count": (
+                hard_negative_label_semantics_gate.get("capacity_positive_count")
+            ),
+            "hard_negative_label_semantics_blocked_use_by_channel": (
+                hard_negative_label_semantics_gate.get("blocked_use_by_label_channel")
+            ),
+            "hard_negative_label_semantics_stronger_feature_consumes_semantics": (
+                hard_negative_label_semantics_gate.get(
+                    "stronger_feature_review_consumes_semantics"
+                )
+            ),
+            "hard_negative_label_semantics_runtime_selector_implemented": (
+                hard_negative_label_semantics_gate.get("runtime_selector_implemented")
+            ),
+            "hard_negative_label_semantics_runtime_candidate_generator_implemented": (
+                hard_negative_label_semantics_gate.get(
+                    "runtime_candidate_generator_implemented"
+                )
+            ),
+            "hard_negative_label_semantics_runtime_dtm_or_tablebase_lookup": (
+                hard_negative_label_semantics_gate.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "hard_negative_label_semantics_stage7_promotion_allowed": (
+                hard_negative_label_semantics_gate.get("stage7_promotion_allowed")
+            ),
+            "hard_negative_label_semantics_stage8_training_allowed": (
+                hard_negative_label_semantics_gate.get("stage8_training_allowed")
             ),
             "stronger_selector_feature_passive_ready": (
                 stronger_selector_feature_gate.get("passive_feature_review_ready")
