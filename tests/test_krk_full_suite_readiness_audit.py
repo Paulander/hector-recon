@@ -905,6 +905,14 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_targeted_ownership_negative_labels_v0.json"
     )
     assert (
+        payload["source_artifacts"]["hard_negative_selector_target_dataset_v1"]
+        == "reports/krk_hard_negative_selector_target_dataset_v1.json"
+    )
+    assert (
+        payload["source_artifacts"]["hard_negative_selector_feature_ablation_v1"]
+        == "reports/krk_hard_negative_selector_feature_ablation_v1.json"
+    )
+    assert (
         payload["source_artifacts"]["hard_negative_selector_target_dataset_v0"]
         == "reports/krk_hard_negative_selector_target_dataset_v0.json"
     )
@@ -2621,6 +2629,17 @@ def test_full_suite_readiness_identifies_current_gate():
     )
     assert balanced_hard_negative["hard_negative_feature_ablation_v0_underpowered"] is True
     assert balanced_hard_negative["hard_negative_feature_ablation_v0_stage7_row_count"] == 0
+    assert balanced_hard_negative["hard_negative_target_dataset_v1_status"] == (
+        "hard_negative_selector_target_dataset_expanded"
+    )
+    assert balanced_hard_negative["hard_negative_target_dataset_v1_row_count"] == 28
+    assert balanced_hard_negative["hard_negative_target_dataset_v1_training_row_count"] == 0
+    assert balanced_hard_negative["hard_negative_target_dataset_v1_stage7_row_count"] == 0
+    assert balanced_hard_negative["hard_negative_feature_ablation_v1_status"] == (
+        "hard_negative_feature_ablation_still_not_runtime_ready"
+    )
+    assert balanced_hard_negative["hard_negative_feature_ablation_v1_underpowered"] is True
+    assert balanced_hard_negative["hard_negative_feature_ablation_v1_stage7_row_count"] == 0
     assert balanced_hard_negative["label_plan_v0_status"] == (
         "balanced_hard_negative_label_plan_ready"
     )

@@ -1396,6 +1396,21 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["balanced_hard_negative_feature_ablation_v0_underpowered"]
         is True
     )
+    assert payload["summary"][
+        "balanced_hard_negative_target_dataset_v1_status"
+    ] == "hard_negative_selector_target_dataset_expanded"
+    assert payload["summary"]["balanced_hard_negative_target_dataset_v1_row_count"] == 28
+    assert (
+        payload["summary"]["balanced_hard_negative_target_dataset_v1_stage7_row_count"]
+        == 0
+    )
+    assert payload["summary"][
+        "balanced_hard_negative_feature_ablation_v1_status"
+    ] == "hard_negative_feature_ablation_still_not_runtime_ready"
+    assert (
+        payload["summary"]["balanced_hard_negative_feature_ablation_v1_underpowered"]
+        is True
+    )
     assert payload["summary"]["balanced_hard_negative_label_plan_v0_status"] == (
         "balanced_hard_negative_label_plan_ready"
     )

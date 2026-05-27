@@ -2377,6 +2377,31 @@ def build_payload() -> dict[str, Any]:
                     "hard_negative_feature_ablation_v0_underpowered"
                 )
             ),
+            "balanced_hard_negative_target_dataset_v1_status": (
+                balanced_hard_negative_gate.get(
+                    "hard_negative_target_dataset_v1_status"
+                )
+            ),
+            "balanced_hard_negative_target_dataset_v1_row_count": (
+                balanced_hard_negative_gate.get(
+                    "hard_negative_target_dataset_v1_row_count"
+                )
+            ),
+            "balanced_hard_negative_target_dataset_v1_stage7_row_count": (
+                balanced_hard_negative_gate.get(
+                    "hard_negative_target_dataset_v1_stage7_row_count"
+                )
+            ),
+            "balanced_hard_negative_feature_ablation_v1_status": (
+                balanced_hard_negative_gate.get(
+                    "hard_negative_feature_ablation_v1_status"
+                )
+            ),
+            "balanced_hard_negative_feature_ablation_v1_underpowered": (
+                balanced_hard_negative_gate.get(
+                    "hard_negative_feature_ablation_v1_underpowered"
+                )
+            ),
             "balanced_hard_negative_label_plan_v0_status": (
                 balanced_hard_negative_gate.get("label_plan_v0_status")
             ),

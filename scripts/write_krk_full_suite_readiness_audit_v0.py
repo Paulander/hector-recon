@@ -847,6 +847,12 @@ SOURCES = {
     "hard_negative_selector_feature_ablation_v0": (
         "reports/krk_hard_negative_selector_feature_ablation_v0.json"
     ),
+    "hard_negative_selector_target_dataset_v1": (
+        "reports/krk_hard_negative_selector_target_dataset_v1.json"
+    ),
+    "hard_negative_selector_feature_ablation_v1": (
+        "reports/krk_hard_negative_selector_feature_ablation_v1.json"
+    ),
     "balanced_hard_negative_label_plan_v0": (
         "reports/krk_balanced_hard_negative_label_plan_v0.json"
     ),
@@ -2030,6 +2036,12 @@ def build_payload() -> dict[str, Any]:
     ]
     hard_negative_selector_feature_ablation_v0 = payloads[
         "hard_negative_selector_feature_ablation_v0"
+    ]
+    hard_negative_selector_target_dataset_v1 = payloads[
+        "hard_negative_selector_target_dataset_v1"
+    ]
+    hard_negative_selector_feature_ablation_v1 = payloads[
+        "hard_negative_selector_feature_ablation_v1"
     ]
     balanced_hard_negative_label_plan_v0 = payloads[
         "balanced_hard_negative_label_plan_v0"
@@ -5986,6 +5998,18 @@ def build_payload() -> dict[str, Any]:
     hard_negative_ablation_v0_summary = (
         hard_negative_selector_feature_ablation_v0.get("summary") or {}
     )
+    hard_negative_targets_v1_decision = (
+        hard_negative_selector_target_dataset_v1.get("decision") or {}
+    )
+    hard_negative_targets_v1_summary = (
+        hard_negative_selector_target_dataset_v1.get("summary") or {}
+    )
+    hard_negative_ablation_v1_decision = (
+        hard_negative_selector_feature_ablation_v1.get("decision") or {}
+    )
+    hard_negative_ablation_v1_summary = (
+        hard_negative_selector_feature_ablation_v1.get("summary") or {}
+    )
     balanced_hard_negative_plan_v0_decision = (
         balanced_hard_negative_label_plan_v0.get("decision") or {}
     )
@@ -6118,6 +6142,44 @@ def build_payload() -> dict[str, Any]:
                 balanced_hard_negative_execution_manifest_v0,
                 balanced_hard_negative_execution_manifest_review_v0,
                 balanced_hard_negative_labels_v0,
+            ]
+        )
+        and hard_negative_targets_v1_decision.get("status")
+        == "hard_negative_selector_target_dataset_expanded"
+        and hard_negative_targets_v1_decision.get("runtime_work_allowed") is False
+        and hard_negative_targets_v1_decision.get("selector_training_allowed")
+        is False
+        and hard_negative_targets_v1_decision.get("stage7_promotion_allowed")
+        is False
+        and hard_negative_targets_v1_decision.get("stage8_training_allowed")
+        is False
+        and hard_negative_targets_v1_summary.get("row_count") == 28
+        and hard_negative_targets_v1_summary.get("training_row_count") == 0
+        and hard_negative_targets_v1_summary.get("stage7_row_count") == 0
+        and hard_negative_ablation_v1_decision.get("status")
+        == "hard_negative_feature_ablation_still_not_runtime_ready"
+        and hard_negative_ablation_v1_decision.get("runtime_work_allowed") is False
+        and hard_negative_ablation_v1_decision.get("selector_training_allowed")
+        is False
+        and hard_negative_ablation_v1_decision.get("stage7_promotion_allowed")
+        is False
+        and hard_negative_ablation_v1_decision.get("stage8_training_allowed")
+        is False
+        and hard_negative_ablation_v1_summary.get("row_count") == 28
+        and hard_negative_ablation_v1_summary.get("underpowered") is True
+        and hard_negative_ablation_v1_summary.get("stage7_row_count") == 0
+        and all(
+            artifact.get("runtime_behavior_changed") is False
+            and artifact.get("runtime_defaults_changed") is False
+            and artifact.get("runtime_selector_implemented") is False
+            and artifact.get("runtime_dtm_or_tablebase_lookup") is False
+            and artifact.get("runtime_terminals_added", False) is False
+            and artifact.get("gameplay_topology_mutation") is False
+            and artifact.get("stage7_promotion_allowed") is False
+            and artifact.get("stage8_training_allowed") is False
+            for artifact in [
+                hard_negative_selector_target_dataset_v1,
+                hard_negative_selector_feature_ablation_v1,
             ]
         )
         and balanced_hard_negative_plan_decision.get("status")
@@ -10587,6 +10649,27 @@ def build_payload() -> dict[str, Any]:
             ),
             "hard_negative_feature_ablation_v0_stage7_row_count": (
                 hard_negative_ablation_v0_summary.get("stage7_row_count")
+            ),
+            "hard_negative_target_dataset_v1_status": (
+                hard_negative_targets_v1_decision.get("status")
+            ),
+            "hard_negative_target_dataset_v1_row_count": (
+                hard_negative_targets_v1_summary.get("row_count")
+            ),
+            "hard_negative_target_dataset_v1_training_row_count": (
+                hard_negative_targets_v1_summary.get("training_row_count")
+            ),
+            "hard_negative_target_dataset_v1_stage7_row_count": (
+                hard_negative_targets_v1_summary.get("stage7_row_count")
+            ),
+            "hard_negative_feature_ablation_v1_status": (
+                hard_negative_ablation_v1_decision.get("status")
+            ),
+            "hard_negative_feature_ablation_v1_underpowered": (
+                hard_negative_ablation_v1_summary.get("underpowered")
+            ),
+            "hard_negative_feature_ablation_v1_stage7_row_count": (
+                hard_negative_ablation_v1_summary.get("stage7_row_count")
             ),
             "label_plan_v0_status": (
                 balanced_hard_negative_plan_v0_decision.get("status")
