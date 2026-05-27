@@ -667,6 +667,10 @@
 
 - passive_diversity_review_ready: `True`
 - evidence_plan_status: `selected_provider_diversity_evidence_plan_defined`
+- replay_free_scan_status: `selected_provider_diversity_replay_free_insufficient`
+- replay_free_selected_record_count: `23`
+- observation_scan_status: `selected_provider_diversity_observation_insufficient`
+- observation_scan_count: `20`
 - manifest_status: `fresh_seed_selected_provider_diversity_manifest_ready_for_bounded_labels`
 - manifest_observations_allowed_now: `False`
 - manifest_bounded_labels_allowed_by_script: `True`
@@ -976,7 +980,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `143ecfae074aa3339d840e7cce2f4b35754f04745903a9cf3a1d5c9a9b257fba`
+- expected_readiness_fingerprint: `00c431cec9c500c5870e6ca0bdd090db0c9b07d4a926aa91ed47366e3d9ee7eb`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1631,5 +1635,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2568`
+- checked_flag_count: `2580`
 - violation_count: `0`

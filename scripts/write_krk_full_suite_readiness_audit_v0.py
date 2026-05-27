@@ -838,6 +838,12 @@ SOURCES = {
     "selected_provider_diversity_evidence_plan_v0": (
         "reports/krk_selected_provider_diversity_evidence_plan_v0.json"
     ),
+    "selected_provider_diversity_replay_free_scan_v0": (
+        "reports/krk_selected_provider_diversity_replay_free_scan_v0.json"
+    ),
+    "selected_provider_diversity_observation_scan_v0": (
+        "reports/krk_selected_provider_diversity_observation_scan_v0.json"
+    ),
     "selected_provider_diversity_sampling_manifest_v1": (
         "reports/krk_selected_provider_diversity_sampling_manifest_v1.json"
     ),
@@ -1953,6 +1959,12 @@ def build_payload() -> dict[str, Any]:
     ]
     selected_provider_diversity_evidence_plan_v0 = payloads[
         "selected_provider_diversity_evidence_plan_v0"
+    ]
+    selected_provider_diversity_replay_free_scan_v0 = payloads[
+        "selected_provider_diversity_replay_free_scan_v0"
+    ]
+    selected_provider_diversity_observation_scan_v0 = payloads[
+        "selected_provider_diversity_observation_scan_v0"
     ]
     selected_provider_diversity_sampling_manifest_v1 = payloads[
         "selected_provider_diversity_sampling_manifest_v1"
@@ -5934,6 +5946,18 @@ def build_payload() -> dict[str, Any]:
     provider_diversity_plan_decision = (
         selected_provider_diversity_evidence_plan_v0.get("decision") or {}
     )
+    provider_diversity_replay_decision = (
+        selected_provider_diversity_replay_free_scan_v0.get("decision") or {}
+    )
+    provider_diversity_replay_summary = (
+        selected_provider_diversity_replay_free_scan_v0.get("summary") or {}
+    )
+    provider_diversity_observation_decision = (
+        selected_provider_diversity_observation_scan_v0.get("decision") or {}
+    )
+    provider_diversity_observation_summary = (
+        selected_provider_diversity_observation_scan_v0.get("summary") or {}
+    )
     provider_diversity_manifest_decision = (
         selected_provider_diversity_sampling_manifest_v1.get("decision") or {}
     )
@@ -5963,8 +5987,42 @@ def build_payload() -> dict[str, Any]:
             "labels_generated_in_this_slice"
         )
         is False
+        and selected_provider_diversity_replay_free_scan_v0.get("causal_status")
+        == "non_causal_scan"
+        and provider_diversity_replay_decision.get("status")
+        == "selected_provider_diversity_replay_free_insufficient"
+        and provider_diversity_replay_decision.get("runtime_arbiter_allowed")
+        is False
+        and provider_diversity_replay_decision.get("selector_sandbox_ready")
+        is False
+        and provider_diversity_replay_summary.get("selected_record_count") == 23
+        and provider_diversity_replay_summary.get("stage7_records") == 0
+        and provider_diversity_replay_summary.get(
+            "max_selected_provider_family_dominance"
+        )
+        == 0.7826
+        and selected_provider_diversity_observation_scan_v0.get("causal_status")
+        == "non_causal_observation_scan"
+        and provider_diversity_observation_decision.get("status")
+        == "selected_provider_diversity_observation_insufficient"
+        and provider_diversity_observation_decision.get("runtime_arbiter_allowed")
+        is False
+        and provider_diversity_observation_decision.get("selector_sandbox_ready")
+        is False
+        and provider_diversity_observation_summary.get("observation_count") == 20
+        and provider_diversity_observation_summary.get("stage7_observations") == 0
+        and provider_diversity_observation_summary.get(
+            "max_selected_provider_family_dominance"
+        )
+        == 1.0
         and selected_provider_diversity_sampling_manifest_v1.get("causal_status")
         == "non_causal_sampling_manifest"
+        and "reports/krk_selected_provider_diversity_replay_free_scan_v0.json"
+        in (selected_provider_diversity_sampling_manifest_v1.get("source_artifacts") or [])
+        and "reports/krk_selected_provider_diversity_replay_free_scan_v0.json"
+        in (selected_provider_diversity_architecture_review_v0.get("source_artifacts") or [])
+        and "reports/krk_selected_provider_diversity_observation_scan_v0.json"
+        in (selected_provider_diversity_architecture_review_v0.get("source_artifacts") or [])
         and provider_diversity_manifest_decision.get("status")
         == "fresh_seed_selected_provider_diversity_manifest_ready_for_bounded_labels"
         and provider_diversity_manifest_decision.get("observations_allowed_now")
@@ -10113,6 +10171,34 @@ def build_payload() -> dict[str, Any]:
             ),
             "evidence_plan_selector_sandbox_ready": (
                 provider_diversity_plan_decision.get("selector_sandbox_ready")
+            ),
+            "replay_free_scan_status": provider_diversity_replay_decision.get(
+                "status"
+            ),
+            "replay_free_selected_record_count": (
+                provider_diversity_replay_summary.get("selected_record_count")
+            ),
+            "replay_free_stage7_records": (
+                provider_diversity_replay_summary.get("stage7_records")
+            ),
+            "replay_free_max_selected_provider_family_dominance": (
+                provider_diversity_replay_summary.get(
+                    "max_selected_provider_family_dominance"
+                )
+            ),
+            "observation_scan_status": provider_diversity_observation_decision.get(
+                "status"
+            ),
+            "observation_scan_count": (
+                provider_diversity_observation_summary.get("observation_count")
+            ),
+            "observation_scan_stage7_observations": (
+                provider_diversity_observation_summary.get("stage7_observations")
+            ),
+            "observation_scan_max_selected_provider_family_dominance": (
+                provider_diversity_observation_summary.get(
+                    "max_selected_provider_family_dominance"
+                )
             ),
             "manifest_status": provider_diversity_manifest_decision.get("status"),
             "manifest_observations_allowed_now": (
@@ -15830,6 +15916,10 @@ def write_markdown(payload: dict[str, Any]) -> str:
         "",
         f"- passive_diversity_review_ready: `{selected_provider_diversity['passive_diversity_review_ready']}`",
         f"- evidence_plan_status: `{selected_provider_diversity['evidence_plan_status']}`",
+        f"- replay_free_scan_status: `{selected_provider_diversity['replay_free_scan_status']}`",
+        f"- replay_free_selected_record_count: `{selected_provider_diversity['replay_free_selected_record_count']}`",
+        f"- observation_scan_status: `{selected_provider_diversity['observation_scan_status']}`",
+        f"- observation_scan_count: `{selected_provider_diversity['observation_scan_count']}`",
         f"- manifest_status: `{selected_provider_diversity['manifest_status']}`",
         f"- manifest_observations_allowed_now: `{selected_provider_diversity['manifest_observations_allowed_now']}`",
         f"- manifest_bounded_labels_allowed_by_script: `{selected_provider_diversity['manifest_bounded_labels_allowed_by_script']}`",

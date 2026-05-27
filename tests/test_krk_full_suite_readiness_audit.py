@@ -891,6 +891,18 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_selected_provider_diversity_evidence_plan_v0.json"
     )
     assert (
+        payload["source_artifacts"][
+            "selected_provider_diversity_replay_free_scan_v0"
+        ]
+        == "reports/krk_selected_provider_diversity_replay_free_scan_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "selected_provider_diversity_observation_scan_v0"
+        ]
+        == "reports/krk_selected_provider_diversity_observation_scan_v0.json"
+    )
+    assert (
         payload["source_artifacts"]["selected_provider_diversity_sampling_manifest_v1"]
         == "reports/krk_selected_provider_diversity_sampling_manifest_v1.json"
     )
@@ -2595,6 +2607,24 @@ def test_full_suite_readiness_identifies_current_gate():
     )
     assert provider_diversity["evidence_plan_runtime_arbiter_allowed"] is False
     assert provider_diversity["evidence_plan_selector_sandbox_ready"] is False
+    assert provider_diversity["replay_free_scan_status"] == (
+        "selected_provider_diversity_replay_free_insufficient"
+    )
+    assert provider_diversity["replay_free_selected_record_count"] == 23
+    assert provider_diversity["replay_free_stage7_records"] == 0
+    assert (
+        provider_diversity["replay_free_max_selected_provider_family_dominance"]
+        == 0.7826
+    )
+    assert provider_diversity["observation_scan_status"] == (
+        "selected_provider_diversity_observation_insufficient"
+    )
+    assert provider_diversity["observation_scan_count"] == 20
+    assert provider_diversity["observation_scan_stage7_observations"] == 0
+    assert (
+        provider_diversity["observation_scan_max_selected_provider_family_dominance"]
+        == 1.0
+    )
     assert provider_diversity["manifest_status"] == (
         "fresh_seed_selected_provider_diversity_manifest_ready_for_bounded_labels"
     )
