@@ -737,6 +737,10 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_runtime_selector_readiness_review_v1.json"
     )
     assert (
+        payload["source_artifacts"]["runtime_test_architecture_review_v3"]
+        == "reports/krk_runtime_test_architecture_review_v3.json"
+    )
+    assert (
         payload["source_artifacts"]["abstention_first_selector_objective_v0"]
         == "reports/krk_abstention_first_selector_objective_v0.json"
     )
@@ -2132,6 +2136,37 @@ def test_full_suite_readiness_identifies_current_gate():
 
     abstention = payload["abstention_selector_safety_gate"]
     assert abstention["passive_safety_ready"] is True
+    assert abstention["runtime_architecture_lineage_ready"] is True
+    assert (
+        abstention["runtime_architecture_review_status"]
+        == "design_abstention_first_selector_objective"
+    )
+    assert abstention["runtime_architecture_implementation_allowed"] == "design_only"
+    assert (
+        "reports/krk_abstention_first_selector_objective_v0.json"
+        in abstention["runtime_architecture_next_artifacts"]
+    )
+    assert abstention["runtime_architecture_selector_ready"] is False
+    assert abstention["runtime_architecture_stage7_repair_ready"] is False
+    assert abstention["runtime_architecture_internal_terminal_ready"] is False
+    assert "runtime_selector" in abstention["runtime_architecture_blocked_next_steps"]
+    assert "stage7_promotion" in abstention["runtime_architecture_blocked_next_steps"]
+    assert "stage8_training" in abstention["runtime_architecture_blocked_next_steps"]
+    assert (
+        "runtime_dtm_or_tablebase"
+        in abstention["runtime_architecture_blocked_next_steps"]
+    )
+    assert (
+        "gameplay_topology_mutation"
+        in abstention["runtime_architecture_blocked_next_steps"]
+    )
+    assert abstention["runtime_architecture_runtime_behavior_changed"] is False
+    assert abstention["runtime_architecture_runtime_defaults_changed"] is False
+    assert abstention["runtime_architecture_selector_implemented"] is False
+    assert abstention["runtime_architecture_dtm_or_tablebase_lookup"] is False
+    assert abstention["runtime_architecture_gameplay_topology_mutation"] is False
+    assert abstention["runtime_architecture_stage7_promotion_allowed"] is False
+    assert abstention["runtime_architecture_stage8_training_allowed"] is False
     assert (
         abstention["first_objective_status"]
         == "abstention_first_selector_objective_defined"

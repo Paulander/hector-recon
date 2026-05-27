@@ -721,6 +721,9 @@ SOURCES = {
     "split_selector_objective_readiness_v3": (
         "reports/krk_split_selector_objective_readiness_v3.json"
     ),
+    "runtime_test_architecture_review_v3": (
+        "reports/krk_runtime_test_architecture_review_v3.json"
+    ),
     "abstention_first_selector_objective_v0": (
         "reports/krk_abstention_first_selector_objective_v0.json"
     ),
@@ -1839,6 +1842,9 @@ def build_payload() -> dict[str, Any]:
     ]
     split_selector_objective_readiness_v3 = payloads[
         "split_selector_objective_readiness_v3"
+    ]
+    runtime_test_architecture_review_v3 = payloads[
+        "runtime_test_architecture_review_v3"
     ]
     abstention_first_selector_objective_v0 = payloads[
         "abstention_first_selector_objective_v0"
@@ -4522,6 +4528,58 @@ def build_payload() -> dict[str, Any]:
     )
     abstention_objective_decision = (
         abstention_first_selector_objective_v0.get("decision") or {}
+    )
+    runtime_test_architecture_next = (
+        runtime_test_architecture_review_v3.get("recommended_next_class") or {}
+    )
+    runtime_test_architecture_readiness = (
+        runtime_test_architecture_review_v3.get("runtime_readiness") or {}
+    )
+    runtime_test_architecture_blocked = (
+        runtime_test_architecture_review_v3.get("blocked_next_steps") or []
+    )
+    runtime_test_architecture_lineage_passive = (
+        runtime_test_architecture_review_v3.get("schema_version")
+        == "krk_runtime_test_architecture_review.v3"
+        and runtime_test_architecture_review_v3.get("causal_status")
+        == "non_causal_architecture_review"
+        and runtime_test_architecture_next.get("status")
+        == "design_abstention_first_selector_objective"
+        and runtime_test_architecture_next.get("implementation_allowed")
+        == "design_only"
+        and "reports/krk_abstention_first_selector_objective_v0.json"
+        in (runtime_test_architecture_next.get("next_artifacts") or [])
+        and runtime_test_architecture_readiness.get("runtime_selector_ready")
+        is False
+        and runtime_test_architecture_readiness.get("runtime_stage7_repair_ready")
+        is False
+        and runtime_test_architecture_readiness.get(
+            "runtime_internal_terminal_ready"
+        )
+        is False
+        and "runtime_selector" in runtime_test_architecture_blocked
+        and "stage7_promotion" in runtime_test_architecture_blocked
+        and "stage8_training" in runtime_test_architecture_blocked
+        and "runtime_dtm_or_tablebase" in runtime_test_architecture_blocked
+        and "gameplay_topology_mutation" in runtime_test_architecture_blocked
+        and runtime_test_architecture_review_v3.get("runtime_behavior_changed")
+        is False
+        and runtime_test_architecture_review_v3.get("runtime_defaults_changed")
+        is False
+        and runtime_test_architecture_review_v3.get(
+            "runtime_selector_implemented"
+        )
+        is False
+        and runtime_test_architecture_review_v3.get(
+            "runtime_dtm_or_tablebase_lookup"
+        )
+        is False
+        and runtime_test_architecture_review_v3.get("gameplay_topology_mutation")
+        is False
+        and runtime_test_architecture_review_v3.get("stage7_promotion_allowed")
+        is False
+        and runtime_test_architecture_review_v3.get("stage8_training_allowed")
+        is False
     )
     abstention_safe_review_decision = (
         abstention_safe_preservation_label_review_v0.get("decision") or {}
@@ -8450,6 +8508,59 @@ def build_payload() -> dict[str, Any]:
         },
         "abstention_selector_safety_gate": {
             "status": abstention_context_probe_decision.get("status"),
+            "runtime_architecture_lineage_ready": (
+                runtime_test_architecture_lineage_passive
+            ),
+            "runtime_architecture_review_status": (
+                runtime_test_architecture_next.get("status")
+            ),
+            "runtime_architecture_implementation_allowed": (
+                runtime_test_architecture_next.get("implementation_allowed")
+            ),
+            "runtime_architecture_next_artifacts": (
+                runtime_test_architecture_next.get("next_artifacts") or []
+            ),
+            "runtime_architecture_selector_ready": (
+                runtime_test_architecture_readiness.get("runtime_selector_ready")
+            ),
+            "runtime_architecture_stage7_repair_ready": (
+                runtime_test_architecture_readiness.get("runtime_stage7_repair_ready")
+            ),
+            "runtime_architecture_internal_terminal_ready": (
+                runtime_test_architecture_readiness.get(
+                    "runtime_internal_terminal_ready"
+                )
+            ),
+            "runtime_architecture_blocked_next_steps": (
+                runtime_test_architecture_blocked
+            ),
+            "runtime_architecture_runtime_behavior_changed": (
+                runtime_test_architecture_review_v3.get("runtime_behavior_changed")
+            ),
+            "runtime_architecture_runtime_defaults_changed": (
+                runtime_test_architecture_review_v3.get("runtime_defaults_changed")
+            ),
+            "runtime_architecture_selector_implemented": (
+                runtime_test_architecture_review_v3.get(
+                    "runtime_selector_implemented"
+                )
+            ),
+            "runtime_architecture_dtm_or_tablebase_lookup": (
+                runtime_test_architecture_review_v3.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "runtime_architecture_gameplay_topology_mutation": (
+                runtime_test_architecture_review_v3.get(
+                    "gameplay_topology_mutation"
+                )
+            ),
+            "runtime_architecture_stage7_promotion_allowed": (
+                runtime_test_architecture_review_v3.get("stage7_promotion_allowed")
+            ),
+            "runtime_architecture_stage8_training_allowed": (
+                runtime_test_architecture_review_v3.get("stage8_training_allowed")
+            ),
             "passive_safety_ready": abstention_selector_safety_passive,
             "first_objective_status": abstention_objective_decision.get("status"),
             "safe_preservation_review_status": (
@@ -14058,6 +14169,13 @@ def write_markdown(payload: dict[str, Any]) -> str:
         "## Abstention Selector Safety",
         "",
         f"- passive_safety_ready: `{abstention_selector_safety['passive_safety_ready']}`",
+        f"- runtime_architecture_lineage_ready: `{abstention_selector_safety['runtime_architecture_lineage_ready']}`",
+        f"- runtime_architecture_review_status: `{abstention_selector_safety['runtime_architecture_review_status']}`",
+        f"- runtime_architecture_implementation_allowed: `{abstention_selector_safety['runtime_architecture_implementation_allowed']}`",
+        f"- runtime_architecture_selector_ready: `{abstention_selector_safety['runtime_architecture_selector_ready']}`",
+        f"- runtime_architecture_stage7_repair_ready: `{abstention_selector_safety['runtime_architecture_stage7_repair_ready']}`",
+        f"- runtime_architecture_internal_terminal_ready: `{abstention_selector_safety['runtime_architecture_internal_terminal_ready']}`",
+        f"- runtime_architecture_blocked_next_steps: `{abstention_selector_safety['runtime_architecture_blocked_next_steps']}`",
         f"- first_objective_status: `{abstention_selector_safety['first_objective_status']}`",
         f"- safe_preservation_review_status: `{abstention_selector_safety['safe_preservation_review_status']}`",
         f"- training_dataset_status: `{abstention_selector_safety['training_dataset_status']}`",

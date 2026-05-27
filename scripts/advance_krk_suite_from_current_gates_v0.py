@@ -1831,6 +1831,36 @@ def build_payload() -> dict[str, Any]:
             "abstention_selector_safety_passive_ready": (
                 abstention_selector_safety_gate.get("passive_safety_ready")
             ),
+            "abstention_runtime_architecture_lineage_ready": (
+                abstention_selector_safety_gate.get(
+                    "runtime_architecture_lineage_ready"
+                )
+            ),
+            "abstention_runtime_architecture_review_status": (
+                abstention_selector_safety_gate.get(
+                    "runtime_architecture_review_status"
+                )
+            ),
+            "abstention_runtime_architecture_implementation_allowed": (
+                abstention_selector_safety_gate.get(
+                    "runtime_architecture_implementation_allowed"
+                )
+            ),
+            "abstention_runtime_architecture_selector_ready": (
+                abstention_selector_safety_gate.get(
+                    "runtime_architecture_selector_ready"
+                )
+            ),
+            "abstention_runtime_architecture_stage7_repair_ready": (
+                abstention_selector_safety_gate.get(
+                    "runtime_architecture_stage7_repair_ready"
+                )
+            ),
+            "abstention_runtime_architecture_dtm_or_tablebase_lookup": (
+                abstention_selector_safety_gate.get(
+                    "runtime_architecture_dtm_or_tablebase_lookup"
+                )
+            ),
             "abstention_selector_first_objective_status": (
                 abstention_selector_safety_gate.get("first_objective_status")
             ),

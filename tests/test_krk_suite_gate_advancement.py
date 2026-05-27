@@ -1047,6 +1047,32 @@ def test_gate_advancement_reports_current_stage7_blocker():
     )
     assert payload["summary"]["abstention_selector_safety_passive_ready"] is True
     assert (
+        payload["summary"]["abstention_runtime_architecture_lineage_ready"]
+        is True
+    )
+    assert (
+        payload["summary"]["abstention_runtime_architecture_review_status"]
+        == "design_abstention_first_selector_objective"
+    )
+    assert (
+        payload["summary"]["abstention_runtime_architecture_implementation_allowed"]
+        == "design_only"
+    )
+    assert (
+        payload["summary"]["abstention_runtime_architecture_selector_ready"]
+        is False
+    )
+    assert (
+        payload["summary"]["abstention_runtime_architecture_stage7_repair_ready"]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "abstention_runtime_architecture_dtm_or_tablebase_lookup"
+        ]
+        is False
+    )
+    assert (
         payload["summary"]["abstention_selector_first_objective_status"]
         == "abstention_first_selector_objective_defined"
     )

@@ -496,6 +496,13 @@
 ## Abstention Selector Safety
 
 - passive_safety_ready: `True`
+- runtime_architecture_lineage_ready: `True`
+- runtime_architecture_review_status: `design_abstention_first_selector_objective`
+- runtime_architecture_implementation_allowed: `design_only`
+- runtime_architecture_selector_ready: `False`
+- runtime_architecture_stage7_repair_ready: `False`
+- runtime_architecture_internal_terminal_ready: `False`
+- runtime_architecture_blocked_next_steps: `['runtime_selector', 'stage7_repair', 'stage7_promotion', 'stage8_training', 'runtime_dtm_or_tablebase', 'gameplay_topology_mutation', 'm3_m4_arbitration_update']`
 - first_objective_status: `abstention_first_selector_objective_defined`
 - safe_preservation_review_status: `safe_preservation_requires_two_stage_label_semantics`
 - training_dataset_status: `abstention_training_dataset_ready_for_probe`
@@ -960,7 +967,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `2326c6957474ac9e2b1922ed3dc3009b549eeb881cef190bfceadfa75c159057`
+- expected_readiness_fingerprint: `221eb94d7cd671e903de4e4406373122cb4633b01793985d865b8aec583144f9`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1489,5 +1496,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2514`
+- checked_flag_count: `2521`
 - violation_count: `0`
