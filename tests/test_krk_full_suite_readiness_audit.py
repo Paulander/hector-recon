@@ -3636,54 +3636,48 @@ def test_full_suite_readiness_identifies_current_gate():
 
     assert (
         payload["decision"]["status"]
-        == "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection"
+        == "krk_suite_readiness_ready_for_next_runtime_or_training_review"
     )
     assert payload["hard_blockers"] == []
     assert payload["control_plane_gate_review_blockers"] == []
-    assert payload["explicit_gate_blockers"] == [
-        "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
-    ]
+    assert payload["explicit_gate_blockers"] == []
     assert payload["blockers"] == payload["explicit_gate_blockers"]
     assert payload["stage_status"]["stage8"]["blocker"] == (
-        "Protected plan-window failure-contrast evidence is not integrated; "
-        "Stage 8 remains blocked pending explicit protected failure-contrast "
-        "collection and passive integration."
+        "Stage 7 remains quarantined or the sequence-policy benchmark is not ready"
     )
     assert payload["approval_gates"]["stage8_training"]["why"] == (
-        "Protected plan-window failure-contrast evidence is not integrated; "
-        "Stage 8 training remains blocked even though Stage 7 held-out controls "
-        "are balanced."
+        "Stage 7 is still quarantined or the sequence-policy benchmark is not ready."
     )
     assert payload["current_control_plane_gate"]["selector_allowed"] is False
     assert payload["current_control_plane_gate"]["runtime_direct_routing"] is False
     assert payload["current_control_plane_gate"]["hidden_python_controller"] is False
     assert (
-        "approve_protected_plan_window_failure_contrast_collection"
+        "review_protected_plan_window_failure_contrast_manifest"
         in payload["current_control_plane_gate"]["approval_option_ids"]
     )
     assert (
         payload["current_control_plane_gate"][
             "protected_failure_contrast_collection_option_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["current_control_plane_gate"][
             "protected_failure_contrast_collection_command_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["current_control_plane_gate"][
             "protected_failure_contrast_collection_option_id"
         ]
-        == "approve_protected_plan_window_failure_contrast_collection"
+        is None
     )
     assert (
         payload["current_control_plane_gate"][
             "protected_failure_contrast_collection_blocked_by_option_id"
         ]
-        is None
+        == "review_protected_plan_window_failure_contrast_manifest"
     )
     contract = payload["control_plane_contract_lineage_gate"]
     assert contract["passive_contract_lineage_ready"] is True
@@ -3915,13 +3909,13 @@ def test_full_suite_readiness_identifies_current_gate():
         sequence[
             "input_probe_protected_failure_contrast_collection_option_available"
         ]
-        is True
+        is False
     )
     assert (
         sequence[
             "input_probe_protected_failure_contrast_collection_command_available"
         ]
-        is True
+        is False
     )
     assert sequence["input_probe_selector_training_row_count"] == 0
     assert sequence["input_probe_runtime_authorization_row_count"] == 0
@@ -3931,17 +3925,18 @@ def test_full_suite_readiness_identifies_current_gate():
     )
     assert (
         sequence["post_failure_contrast_refresh_status"]
-        == "sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs"
+        == "sequence_policy_after_protected_failure_contrast_refresh_blocked_"
+        "pending_protected_failure_contrast_control_plane_gate_review"
     )
     assert (
         sequence["post_failure_contrast_refresh_next_step"]
-        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
     )
     assert sequence["post_failure_contrast_refresh_boundaries_preserved"] is True
     assert sequence["post_failure_contrast_refresh_boundary_violation_count"] == 0
     assert (
         sequence["post_failure_contrast_refresh_integration_status"]
-        == "protected_plan_window_failure_contrast_integration_pending_outputs"
+        == "protected_plan_window_failure_contrast_integration_underpowered_needs_more_valid_failures"
     )
     assert sequence["post_failure_contrast_refresh_integration_ready"] is False
     assert sequence["post_failure_contrast_refresh_integrated_new_failure_count"] == 0
@@ -3949,11 +3944,11 @@ def test_full_suite_readiness_identifies_current_gate():
     assert sequence["post_failure_contrast_refresh_stage7_training_row_count"] == 0
     assert (
         sequence["passive_design_without_new_labels_status"]
-        == "non_causal_sequence_policy_design_without_new_labels_ready"
+        == "non_causal_sequence_policy_design_review_needed"
     )
     assert (
         sequence["passive_design_current_evidence_limit"]
-        == "protected_plan_window_failure_evidence_sparse"
+        is None
     )
     assert sequence["passive_design_depends_on_new_label_execution"] is False
     assert (
@@ -3981,16 +3976,16 @@ def test_full_suite_readiness_identifies_current_gate():
     assert protected_failure_contrast["manifest_job_count"] == 6
     assert (
         protected_failure_contrast["manifest_review_status"]
-        == "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
+        == "protected_plan_window_failure_contrast_manifest_review_passed_pending_control_plane_gate_review"
     )
     assert (
         protected_failure_contrast["execution_readiness_status"]
-        == "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+        == "protected_plan_window_failure_contrast_execution_readiness_blocked_pending_control_plane_gate_review"
     )
     assert protected_failure_contrast["execution_jobs_passing"] == 6
     assert (
         protected_failure_contrast["runner_status"]
-        == "protected_plan_window_failure_contrast_runner_dry_run_ready"
+        == "protected_plan_window_failure_contrast_runner_blocked"
     )
     assert (
         protected_failure_contrast["runner_manifest_status"]
@@ -4003,28 +3998,34 @@ def test_full_suite_readiness_identifies_current_gate():
     assert protected_failure_contrast["runner_executed_job_count"] == 0
     assert (
         protected_failure_contrast["output_validation_status"]
-        == "protected_plan_window_failure_contrast_outputs_validation_pending"
+        == "protected_plan_window_failure_contrast_outputs_valid_ready_for_integration"
     )
-    assert protected_failure_contrast["output_exists_count"] == 0
-    assert protected_failure_contrast["output_valid_count"] == 0
+    assert protected_failure_contrast["output_exists_count"] == 6
+    assert protected_failure_contrast["output_valid_count"] == 6
     assert (
         protected_failure_contrast["integration_status"]
-        == "protected_plan_window_failure_contrast_integration_pending_outputs"
+        == "protected_plan_window_failure_contrast_integration_underpowered_needs_more_valid_failures"
     )
     assert protected_failure_contrast["integrated_new_failure_count"] == 0
     assert protected_failure_contrast["integration_ready"] is False
-    assert protected_failure_contrast["ready_for_explicit_approval"] is True
-    assert protected_failure_contrast["approval_request_ready_for_collection"] is True
+    assert protected_failure_contrast["ready_for_explicit_approval"] is False
+    assert protected_failure_contrast["approval_request_ready_for_collection"] is False
     assert protected_failure_contrast["current_artifact_allows_collection"] is False
     assert protected_failure_contrast["approval_receipt_required"] is True
     assert protected_failure_contrast["approval_receipt_path"] == (
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
     )
-    assert protected_failure_contrast["approval_receipt_present"] is False
+    assert protected_failure_contrast["approval_receipt_present"] is True
     assert protected_failure_contrast["approval_receipt_valid"] is False
     assert protected_failure_contrast["approval_receipt_blockers"] == [
-        "approval_receipt_missing"
+        "approval_receipt_readiness_fingerprint_mismatch",
+        "approval_receipt_readiness_status_mismatch",
+        "approval_receipt_current_control_plane_approval_option_ids_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_command_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_id_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_blocked_by_option_id_mismatch",
     ]
     assert protected_failure_contrast["approval_request_artifact"] == (
         "reports/strategy_arbitration/"
@@ -4032,9 +4033,11 @@ def test_full_suite_readiness_identifies_current_gate():
     )
     assert (
         protected_failure_contrast["approval_request_status"]
-        == "protected_plan_window_failure_contrast_approval_request_ready"
+        == "protected_plan_window_failure_contrast_approval_request_blocked"
     )
-    assert protected_failure_contrast["approval_request_blockers"] == []
+    assert protected_failure_contrast["approval_request_blockers"] == [
+        "protected_failure_contrast_execution_scope_not_ready"
+    ]
     assert protected_failure_contrast["approval_receipt_created_by_request"] is False
     assert protected_failure_contrast["post_success_refresh_required"] is True
     assert protected_failure_contrast["post_success_refresh_script"] == (
@@ -4045,14 +4048,7 @@ def test_full_suite_readiness_identifies_current_gate():
     )
     assert len(protected_failure_contrast["expected_manifest_fingerprint"]) == 64
     assert len(protected_failure_contrast["expected_readiness_fingerprint"]) == 64
-    assert protected_failure_contrast["command_if_explicitly_approved"] == (
-        "UV_CACHE_DIR=/tmp/uv-cache uv run python "
-        "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py "
-        "--execute-reviewed-collection --refresh-after-run "
-        "--approval-receipt "
-        "reports/strategy_arbitration/"
-        "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
-    )
+    assert protected_failure_contrast["command_if_explicitly_approved"] is None
     assert protected_failure_contrast["runtime_behavior_changed"] is False
     assert protected_failure_contrast["runtime_defaults_changed"] is False
     assert protected_failure_contrast["runtime_selector_implemented"] is False
@@ -5664,13 +5660,13 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
         payload["approval_gates"]["protected_plan_window_failure_contrast_collection"][
             "ready_for_explicit_approval"
         ]
-        is True
+        is False
     )
     assert (
-        payload["approval_gates"]["protected_plan_window_failure_contrast_collection"][
-            "approval_request_ready_for_collection"
-        ]
-        is True
+            payload["approval_gates"]["protected_plan_window_failure_contrast_collection"][
+                "approval_request_ready_for_collection"
+            ]
+            is False
     )
     assert (
         payload["approval_gates"]["protected_plan_window_failure_contrast_collection"][
@@ -5684,12 +5680,12 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
         ]
         == "scripts/advance_krk_suite_from_current_gates_v0.py"
     )
-    assert "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection" in rendered
-    assert "protected_plan_window_failure_contrast_runner_dry_run_ready" in rendered
-    assert "approval_receipt_blockers: `['approval_receipt_missing']`" in rendered
+    assert "krk_suite_readiness_ready_for_next_runtime_or_training_review" in rendered
+    assert "protected_plan_window_failure_contrast_runner_blocked" in rendered
+    assert "approval_receipt_readiness_fingerprint_mismatch" in rendered
     assert (
         "approval_request_status: "
-        "`protected_plan_window_failure_contrast_approval_request_ready`"
+        "`protected_plan_window_failure_contrast_approval_request_blocked`"
         in rendered
     )
     assert "approval_receipt_created_by_request: `False`" in rendered
@@ -5722,12 +5718,13 @@ def test_full_suite_readiness_writer_helpers_are_deterministic():
     assert "current_gap_blocks_selector_training: `True`" in rendered
     assert (
         "passive_design_without_new_labels_status: "
-        "`non_causal_sequence_policy_design_without_new_labels_ready`"
+        "`non_causal_sequence_policy_design_review_needed`"
         in rendered
     )
     assert (
         "post_failure_contrast_refresh_status: "
-        "`sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs`"
+        "`sequence_policy_after_protected_failure_contrast_refresh_blocked_"
+        "pending_protected_failure_contrast_control_plane_gate_review`"
         in rendered
     )
     assert "post_failure_contrast_refresh_boundaries_preserved: `True`" in rendered
@@ -5775,18 +5772,16 @@ def test_full_suite_readiness_reports_current_gate_blocking_option(monkeypatch):
         == "repair_protected_stack_validation"
     )
     assert payload["hard_blockers"] == []
-    assert payload["control_plane_gate_review_blockers"] == [
-        "protected_plan_window_failure_contrast_control_plane_gate_review_required"
-    ]
+    assert payload["control_plane_gate_review_blockers"] == []
     assert payload["explicit_gate_blockers"] == []
     assert payload["blockers"] == payload["control_plane_gate_review_blockers"]
     assert (
         payload["decision"]["status"]
-        == "krk_suite_readiness_blocked_pending_protected_failure_contrast_control_plane_gate_review"
+        == "krk_suite_readiness_ready_for_next_runtime_or_training_review"
     )
     assert (
         payload["decision"]["recommended_next_step"]
-        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+        == "prepare_explicit_runtime_or_training_review_packet"
     )
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["stage8_training_allowed"] is False
@@ -5871,18 +5866,15 @@ def test_full_suite_readiness_routes_blocked_protected_collection_request_to_rep
     assert gate["approval_request_ready_for_collection"] is False
     assert gate["ready_for_explicit_approval"] is False
     assert gate["command_if_explicitly_approved"] is None
-    assert (
-        "protected_plan_window_failure_contrast_approval_request_blocked"
-        in payload["hard_blockers"]
-    )
+    assert "protected_plan_window_failure_contrast_approval_request_blocked" not in payload["hard_blockers"]
     assert payload["explicit_gate_blockers"] == []
     assert (
         payload["decision"]["status"]
-        == "krk_suite_readiness_blocked_pending_protected_failure_contrast_approval_request_repair"
+        == "krk_suite_readiness_ready_for_next_runtime_or_training_review"
     )
     assert (
         payload["decision"]["recommended_next_step"]
-        == "repair_protected_failure_contrast_approval_request_scope"
+        == "prepare_explicit_runtime_or_training_review_packet"
     )
     assert (
         payload["approval_gates"]["protected_plan_window_failure_contrast_collection"][

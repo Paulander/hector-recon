@@ -108,20 +108,20 @@
     "selector_training_allowed": false,
     "stage7_promotion_allowed": false,
     "stage8_training_allowed": false,
-    "status": "krk_suite_protected_failure_contrast_unblocker_ready_pending_explicit_collection_approval"
+    "status": "krk_suite_protected_failure_contrast_unblocker_blocked_pending_control_plane_gate_review"
   },
   "gameplay_topology_mutation": false,
   "hidden_python_controller": false,
   "low_value_safe_work_remaining": [
     "Rerunning Stage 7 label commands without overwrite will skip existing outputs; the Stage 7 success-control gap is already closed.",
-    "Passive benchmark and cross-stage design summaries are current; the next useful gate-moving work is explicit protected plan-window failure-contrast collection approval, or separately explicit Stage 4 runtime-sandbox approval."
+    "Passive benchmark and cross-stage design summaries are current; the next useful gate-moving work is current control-plane review for protected plan-window failure-contrast evidence, or separately explicit Stage 4 runtime-sandbox approval."
   ],
   "primary_unblocker": {
     "approval_required": true,
     "command_if_explicitly_approved": null,
     "id": "protected_plan_window_failure_contrast_collection",
     "implementation_allowed_by_this_packet": false,
-    "purpose": "Review the bounded protected plan-window failure-contrast manifest before any explicitly approved collection run.",
+    "purpose": "Review current control-plane gate option exposure before any collection command is made approvable.",
     "scope": {
       "approval_receipt_blockers": [
         "approval_receipt_readiness_fingerprint_mismatch",
@@ -186,7 +186,7 @@
       "stop_after_unique_failures": 4,
       "timed_out_job_count": 0
     },
-    "status": "protected_plan_window_failure_contrast_manifest_review_passed_pending_control_plane_gate_review"
+    "status": "blocked_pending_protected_failure_contrast_control_plane_gate_review"
   },
   "runtime_behavior_changed": false,
   "runtime_defaults_changed": false,

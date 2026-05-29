@@ -166,10 +166,13 @@ def build_payload() -> dict[str, Any]:
     failure_contrast_integration_ready = bool(
         failure_contrast_integration.get("summary", {}).get("integration_ready")
     )
-    failure_contrast_manifest_review_passed = (
-        failure_contrast_manifest_review.get("decision", {}).get("status")
-        == "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
-    )
+    failure_contrast_manifest_review_status = failure_contrast_manifest_review.get(
+        "decision", {}
+    ).get("status")
+    failure_contrast_manifest_review_passed = failure_contrast_manifest_review_status in {
+        "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval",
+        "protected_plan_window_failure_contrast_manifest_review_passed_pending_control_plane_gate_review",
+    }
     protected_stack_ready = bool(protected.get("ready"))
     failure_contrast_execution_ready = (
         failure_contrast_execution_readiness.get("decision", {}).get("status")
@@ -233,6 +236,7 @@ def build_payload() -> dict[str, Any]:
         failure_contrast_primary
         and failure_contrast_manifest_review_passed
         and protected_stack_ready
+        and failure_contrast_collection_command_available
         and not failure_contrast_approval_request_ready
     )
     failure_contrast_stack_repair_required = (
@@ -244,6 +248,7 @@ def build_payload() -> dict[str, Any]:
         failure_contrast_primary
         and failure_contrast_manifest_review_passed
         and protected_stack_ready
+        and failure_contrast_collection_command_available
         and failure_contrast_approval_request_ready
         and (
             not failure_contrast_execution_ready
@@ -252,12 +257,11 @@ def build_payload() -> dict[str, Any]:
     )
     failure_contrast_control_plane_gate_review_required = (
         failure_contrast_primary
-        and failure_contrast_manifest_review_passed
         and protected_stack_ready
-        and failure_contrast_approval_request_ready
-        and failure_contrast_execution_ready
-        and failure_contrast_runner_dry_run_ready
         and not failure_contrast_collection_command_available
+        and bool(
+            current_gate.get("protected_failure_contrast_collection_blocked_by_option_id")
+        )
     )
     failure_contrast_collection_ready = (
         failure_contrast_primary
@@ -309,7 +313,9 @@ def build_payload() -> dict[str, Any]:
         )
     elif stage7_gate["success_controls_ready"] and sequence["benchmark_ready"]:
         decision_status = (
-            "krk_suite_protected_failure_contrast_unblocker_ready_pending_explicit_collection_approval"
+            "krk_suite_protected_failure_contrast_unblocker_blocked_pending_control_plane_gate_review"
+            if not failure_contrast_collection_command_available
+            else "krk_suite_protected_failure_contrast_unblocker_ready_pending_explicit_collection_approval"
         )
         recommended_next_step = (
             failure_contrast_integration.get("decision", {}).get("recommended_next_step")
@@ -1044,7 +1050,7 @@ def build_payload() -> dict[str, Any]:
                 else "Rerunning the original Stage 7 command without overwrite will skip existing outputs and will not fill the remaining unique success-control gap."
             ),
             (
-                "Passive benchmark and cross-stage design summaries are current; the next useful gate-moving work is explicit protected plan-window failure-contrast collection approval, or separately explicit Stage 4 runtime-sandbox approval."
+                "Passive benchmark and cross-stage design summaries are current; the next useful gate-moving work is current control-plane review for protected plan-window failure-contrast evidence, or separately explicit Stage 4 runtime-sandbox approval."
                 if sequence["benchmark_ready"]
                 else "More passive summaries can be written, but they will not unblock Stage 8 or the sequence-policy benchmark."
             ),

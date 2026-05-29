@@ -55,7 +55,7 @@ def test_cross_stage_plan_capsule_requirements_remain_non_causal():
     assert payload["decision"]["selector_training_allowed"] is False
     assert (
         payload["decision"]["recommended_next_step"]
-        == "continue_non_causal_sequence_policy_design_without_new_labels_or_obtain_protected_failure_contrast_approval"
+        == "review_non_causal_sequence_policy_benchmark_results"
     )
     readiness = payload["current_readiness"]
     assert readiness["plan_capsule_stage7_only_evidence"] is True
@@ -65,30 +65,38 @@ def test_cross_stage_plan_capsule_requirements_remain_non_causal():
     assert readiness["sequence_policy_benchmark_ready"] is True
     assert (
         readiness["sequence_policy_passive_design_status"]
-        == "non_causal_sequence_policy_design_without_new_labels_ready"
+        == "non_causal_sequence_policy_design_review_needed"
     )
-    assert readiness["remaining_evidence_gap"] == "protected_plan_window_failure_evidence_sparse"
+    assert readiness["remaining_evidence_gap"] is None
     assert (
         readiness["protected_failure_contrast_approval_request_status"]
-        == "protected_plan_window_failure_contrast_approval_request_ready"
+        == "protected_plan_window_failure_contrast_approval_request_blocked"
     )
-    assert readiness["protected_failure_contrast_approval_request_blockers"] == []
+    assert readiness["protected_failure_contrast_approval_request_blockers"] == [
+        "protected_failure_contrast_execution_scope_not_ready"
+    ]
     assert (
         readiness[
             "protected_failure_contrast_approval_request_ready_for_collection"
         ]
-        is True
+        is False
     )
-    assert readiness["protected_failure_contrast_collection_option_available"] is True
-    assert readiness["protected_failure_contrast_collection_command_available"] is True
+    assert readiness["protected_failure_contrast_collection_option_available"] is False
+    assert readiness["protected_failure_contrast_collection_command_available"] is False
+    assert readiness["protected_failure_contrast_collection_option_id"] is None
     assert (
-        readiness["protected_failure_contrast_collection_option_id"]
-        == "approve_protected_plan_window_failure_contrast_collection"
+        readiness["protected_failure_contrast_collection_blocked_by_option_id"]
+        == "review_protected_plan_window_failure_contrast_manifest"
     )
-    assert readiness["protected_failure_contrast_collection_blocked_by_option_id"] is None
-    assert readiness["protected_failure_contrast_approval_receipt_blockers"] == [
-        "approval_receipt_missing"
-    ]
+    assert set(readiness["protected_failure_contrast_approval_receipt_blockers"]) == {
+        "approval_receipt_readiness_fingerprint_mismatch",
+        "approval_receipt_readiness_status_mismatch",
+        "approval_receipt_current_control_plane_approval_option_ids_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_command_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_id_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_blocked_by_option_id_mismatch",
+    }
 
 
 def test_cross_stage_plan_capsule_requirements_fixture_can_be_ready():

@@ -47,7 +47,7 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     assert payload["stage8_training_allowed"] is False
     assert (
         payload["decision"]["status"]
-        == "krk_suite_protected_failure_contrast_unblocker_ready_pending_explicit_collection_approval"
+        == "krk_suite_protected_failure_contrast_unblocker_blocked_pending_control_plane_gate_review"
     )
     assert payload["decision"]["label_run_allowed"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False
@@ -55,29 +55,24 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     assert payload["decision"]["stage8_training_allowed"] is False
     assert (
         "Passive benchmark and cross-stage design summaries are current; "
-        "the next useful gate-moving work is explicit protected plan-window "
-        "failure-contrast collection approval, or separately explicit Stage 4 "
+        "the next useful gate-moving work is current control-plane review for "
+        "protected plan-window failure-contrast evidence, or separately explicit Stage 4 "
         "runtime-sandbox approval."
         in payload["low_value_safe_work_remaining"]
     )
     assert (
         payload["decision"]["recommended_next_step"]
-        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
     )
 
     primary = payload["primary_unblocker"]
     assert primary["id"] == "protected_plan_window_failure_contrast_collection"
     assert primary["approval_required"] is True
     assert primary["implementation_allowed_by_this_packet"] is False
-    assert primary["status"] == "ready_pending_explicit_approval"
-    assert primary["command_if_explicitly_approved"] == (
-        "UV_CACHE_DIR=/tmp/uv-cache uv run python "
-        "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py "
-        "--execute-reviewed-collection --refresh-after-run "
-        "--approval-receipt "
-        "reports/strategy_arbitration/"
-        "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
+    assert primary["status"] == (
+        "blocked_pending_protected_failure_contrast_control_plane_gate_review"
     )
+    assert primary["command_if_explicitly_approved"] is None
     assert primary["scope"]["resume_safe"] is True
     assert primary["scope"]["max_jobs"] == 6
     assert primary["scope"]["manifest_job_count"] == 6
@@ -117,26 +112,36 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
     )
-    assert primary["scope"]["approval_receipt_present"] is False
+    assert primary["scope"]["approval_receipt_present"] is True
     assert primary["scope"]["approval_receipt_valid"] is False
-    assert primary["scope"]["approval_receipt_blockers"] == ["approval_receipt_missing"]
+    assert set(primary["scope"]["approval_receipt_blockers"]) == {
+        "approval_receipt_readiness_fingerprint_mismatch",
+        "approval_receipt_readiness_status_mismatch",
+        "approval_receipt_current_control_plane_approval_option_ids_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_command_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_id_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_blocked_by_option_id_mismatch",
+    }
     assert primary["scope"]["approval_request_artifact"] == (
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
     )
     assert (
         primary["scope"]["approval_request_status"]
-        == "protected_plan_window_failure_contrast_approval_request_ready"
+        == "protected_plan_window_failure_contrast_approval_request_blocked"
     )
-    assert primary["scope"]["approval_request_blockers"] == []
-    assert primary["scope"]["approval_request_ready_for_collection"] is True
-    assert primary["scope"]["collection_option_available"] is True
-    assert primary["scope"]["collection_command_available"] is True
+    assert primary["scope"]["approval_request_blockers"] == [
+        "protected_failure_contrast_execution_scope_not_ready"
+    ]
+    assert primary["scope"]["approval_request_ready_for_collection"] is False
+    assert primary["scope"]["collection_option_available"] is False
+    assert primary["scope"]["collection_command_available"] is False
+    assert primary["scope"]["collection_option_id"] is None
     assert (
-        primary["scope"]["collection_option_id"]
-        == "approve_protected_plan_window_failure_contrast_collection"
+        primary["scope"]["collection_blocked_by_option_id"]
+        == "review_protected_plan_window_failure_contrast_manifest"
     )
-    assert primary["scope"]["collection_blocked_by_option_id"] is None
     assert primary["scope"]["approval_receipt_created_by_request"] is False
     assert len(primary["scope"]["expected_manifest_fingerprint"]) == 64
     assert len(primary["scope"]["expected_readiness_fingerprint"]) == 64
@@ -213,18 +218,18 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
         payload["current_state"][
             "protected_plan_window_failure_contrast_manifest_review_status"
         ]
-        == "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
+        == "protected_plan_window_failure_contrast_manifest_review_passed_pending_control_plane_gate_review"
     )
     assert (
         payload["current_state"][
             "protected_plan_window_failure_contrast_execution_readiness_status"
         ]
-        == "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+        == "protected_plan_window_failure_contrast_execution_readiness_blocked_pending_control_plane_gate_review"
     )
     assert payload["current_state"]["protected_plan_window_failure_contrast_execution_jobs_passing"] == 6
     assert (
         payload["current_state"]["protected_plan_window_failure_contrast_runner_status"]
-        == "protected_plan_window_failure_contrast_runner_dry_run_ready"
+        == "protected_plan_window_failure_contrast_runner_blocked"
     )
     assert (
         payload["current_state"][
@@ -258,47 +263,47 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
         payload["current_state"][
             "protected_plan_window_failure_contrast_approval_request_status"
         ]
-        == "protected_plan_window_failure_contrast_approval_request_ready"
+        == "protected_plan_window_failure_contrast_approval_request_blocked"
     )
     assert (
         payload["current_state"][
             "protected_plan_window_failure_contrast_approval_request_blockers"
         ]
-        == []
+        == ["protected_failure_contrast_execution_scope_not_ready"]
     )
     assert (
         payload["current_state"][
             "protected_plan_window_failure_contrast_approval_request_ready_for_collection"
         ]
-        is True
+        is False
     )
-    assert (
-        "approve_protected_plan_window_failure_contrast_collection"
-        in payload["current_state"]["current_control_plane_approval_option_ids"]
-    )
+    assert payload["current_state"]["current_control_plane_approval_option_ids"] == [
+        "approve_stage4_first_move_contrast_sandbox",
+        "review_protected_plan_window_failure_contrast_manifest",
+    ]
     assert (
         payload["current_state"][
             "protected_plan_window_failure_contrast_collection_option_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["current_state"][
             "protected_plan_window_failure_contrast_collection_command_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["current_state"][
             "protected_plan_window_failure_contrast_collection_option_id"
         ]
-        == "approve_protected_plan_window_failure_contrast_collection"
+        is None
     )
     assert (
         payload["current_state"][
             "protected_plan_window_failure_contrast_collection_blocked_by_option_id"
         ]
-        is None
+        == "review_protected_plan_window_failure_contrast_manifest"
     )
     assert (
         payload["current_state"][
@@ -308,16 +313,24 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
     )
     assert payload["current_state"][
         "protected_plan_window_failure_contrast_approval_receipt_blockers"
-    ] == ["approval_receipt_missing"]
+    ] == [
+        "approval_receipt_readiness_fingerprint_mismatch",
+        "approval_receipt_readiness_status_mismatch",
+        "approval_receipt_current_control_plane_approval_option_ids_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_command_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_id_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_blocked_by_option_id_mismatch",
+    ]
     assert (
         payload["current_state"]["protected_plan_window_failure_contrast_output_validation_status"]
-        == "protected_plan_window_failure_contrast_outputs_validation_pending"
+        == "protected_plan_window_failure_contrast_outputs_valid_ready_for_integration"
     )
-    assert payload["current_state"]["protected_plan_window_failure_contrast_output_exists_count"] == 0
-    assert payload["current_state"]["protected_plan_window_failure_contrast_output_valid_count"] == 0
+    assert payload["current_state"]["protected_plan_window_failure_contrast_output_exists_count"] == 6
+    assert payload["current_state"]["protected_plan_window_failure_contrast_output_valid_count"] == 6
     assert (
         payload["current_state"]["protected_plan_window_failure_contrast_integration_status"]
-        == "protected_plan_window_failure_contrast_integration_pending_outputs"
+        == "protected_plan_window_failure_contrast_integration_underpowered_needs_more_valid_failures"
     )
     assert (
         payload["current_state"][
@@ -334,11 +347,11 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
         payload["current_state"][
             "sequence_policy_passive_design_without_new_labels_status"
         ]
-        == "non_causal_sequence_policy_design_without_new_labels_ready"
+        == "non_causal_sequence_policy_design_review_needed"
     )
     assert (
         payload["current_state"]["sequence_policy_passive_design_current_evidence_limit"]
-        == "protected_plan_window_failure_evidence_sparse"
+        is None
     )
     assert (
         payload["current_state"]["sequence_policy_cross_stage_requirements_status"]
@@ -358,7 +371,8 @@ def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
         payload["current_state"][
             "sequence_policy_after_protected_failure_contrast_refresh_status"
         ]
-        == "sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs"
+        == "sequence_policy_after_protected_failure_contrast_refresh_blocked_"
+        "pending_protected_failure_contrast_control_plane_gate_review"
     )
     assert payload["current_state"]["sequence_policy_after_protected_failure_contrast_rows"] == 0
     assert (
@@ -451,14 +465,8 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
     rendered = _packet.write_markdown(payload)
 
     assert "protected_plan_window_failure_contrast_collection" in rendered
-    assert (
-        "command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python "
-        "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py "
-        "--execute-reviewed-collection --refresh-after-run "
-        "--approval-receipt reports/strategy_arbitration/"
-        "krk_protected_plan_window_failure_contrast_collection_approval_v0.json`"
-        in rendered
-    )
+    assert "command_if_explicitly_approved: `None`" in rendered
+    assert "collection_command_available: `False`" in rendered
     assert "max_jobs: `6`" in rendered
     assert "manifest_job_count: `6`" in rendered
     assert "runner_max_jobs_option: `None`" in rendered
@@ -469,10 +477,10 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
     assert "invalid_existing_outputs_block_without_overwrite: `True`" in rendered
     assert "per_job_timeout_seconds: `900`" in rendered
     assert "approval_receipt_required: `True`" in rendered
-    assert "approval_receipt_blockers: `['approval_receipt_missing']`" in rendered
+    assert "approval_receipt_readiness_fingerprint_mismatch" in rendered
     assert (
         "approval_request_status: "
-        "`protected_plan_window_failure_contrast_approval_request_ready`"
+        "`protected_plan_window_failure_contrast_approval_request_blocked`"
         in rendered
     )
     assert "approval_receipt_created_by_request: `False`" in rendered
@@ -515,7 +523,7 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
     assert "stage8_training_allowed: `False`" in rendered
     assert (
         "protected_plan_window_failure_contrast_approval_request_status: "
-        "`protected_plan_window_failure_contrast_approval_request_ready`"
+        "`protected_plan_window_failure_contrast_approval_request_blocked`"
         in rendered
     )
     assert (
@@ -547,7 +555,7 @@ def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_executi
     assert "stage8_training_allowed: `False`" in rendered
     assert (
         "sequence_policy_passive_design_without_new_labels_status: "
-        "`non_causal_sequence_policy_design_without_new_labels_ready`"
+        "`non_causal_sequence_policy_design_review_needed`"
         in rendered
     )
     assert "approval_required: `True`" in rendered
@@ -619,15 +627,15 @@ def test_unblocker_packet_blocks_collection_when_approval_request_blocked(monkey
     assert (
         payload["decision"]["status"]
         == "krk_suite_protected_failure_contrast_unblocker_blocked_pending_"
-        "approval_request_repair"
+        "control_plane_gate_review"
     )
     assert (
         payload["decision"]["recommended_next_step"]
-        == "repair_protected_failure_contrast_approval_request_scope"
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
     )
     assert (
         primary["status"]
-        == "blocked_pending_protected_failure_contrast_approval_request_repair"
+        == "blocked_pending_protected_failure_contrast_control_plane_gate_review"
     )
     assert primary["command_if_explicitly_approved"] is None
     assert (
@@ -662,18 +670,18 @@ def test_unblocker_packet_blocks_collection_when_execution_not_ready(monkeypatch
     assert (
         payload["decision"]["status"]
         == "krk_suite_protected_failure_contrast_unblocker_blocked_pending_"
-        "execution_readiness"
+        "control_plane_gate_review"
     )
     assert (
         payload["decision"]["recommended_next_step"]
-        == "review_protected_plan_window_failure_contrast_execution_readiness"
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
     )
     assert (
         primary["status"]
-        == "blocked_pending_protected_failure_contrast_execution_readiness"
+        == "blocked_pending_protected_failure_contrast_control_plane_gate_review"
     )
     assert primary["command_if_explicitly_approved"] is None
-    assert primary["scope"]["approval_request_ready_for_collection"] is True
+    assert primary["scope"]["approval_request_ready_for_collection"] is False
     assert primary["scope"]["protected_stack_ready"] is True
     assert (
         payload["current_state"][
@@ -726,7 +734,7 @@ def test_unblocker_packet_blocks_collection_when_control_plane_option_not_expose
         == "blocked_pending_protected_failure_contrast_control_plane_gate_review"
     )
     assert primary["command_if_explicitly_approved"] is None
-    assert primary["scope"]["approval_request_ready_for_collection"] is True
+    assert primary["scope"]["approval_request_ready_for_collection"] is False
     assert primary["scope"]["collection_option_available"] is False
     assert primary["scope"]["collection_command_available"] is False
     assert primary["scope"]["collection_option_id"] is None

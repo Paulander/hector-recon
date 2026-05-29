@@ -62,16 +62,17 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
 
     assert (
         payload["decision"]["status"]
-        == "sequence_policy_pilot_underpowered_pending_protected_failure_contrast_collection"
+        == "sequence_policy_pilot_blocked_pending_protected_failure_contrast_control_plane_gate_review"
     )
     assert (
         payload["decision"]["recommended_next_step"]
-        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
     )
     assert payload["summary"]["benchmark_executed_as_ready"] is True
     assert (
         payload["summary"]["benchmark_review_status"]
-        == "sequence_policy_benchmark_mixed_plan_window_underpowered"
+        == "sequence_policy_benchmark_mixed_plan_window_underpowered_"
+        "blocked_pending_protected_failure_contrast_control_plane_gate_review"
     )
     assert payload["summary"]["readiness_checked_flag_count"] >= 430
     assert payload["summary"]["readiness_boundary_violation_count"] == 0
@@ -81,7 +82,7 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
     assert payload["summary"]["stage4_binary_rule_insufficient"] is True
     assert payload["summary"]["stage7_success_gap"] == 0
     assert payload["summary"]["stage7_replay_free_backfill_exhausted"] is False
-    assert payload["summary"]["protected_failure_contrast_ready_for_explicit_approval"] is True
+    assert payload["summary"]["protected_failure_contrast_ready_for_explicit_approval"] is False
     assert (
         payload["summary"]["protected_stack_status"]
         == "retry1_protected_stage5_6_stack_adopted_manifest_only"
@@ -97,7 +98,7 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
     assert payload["summary"]["protected_failure_contrast_integration_ready"] is False
     assert (
         payload["summary"]["protected_failure_contrast_runner_status"]
-        == "protected_plan_window_failure_contrast_runner_dry_run_ready"
+        == "protected_plan_window_failure_contrast_runner_blocked"
     )
     assert (
         payload["summary"]["protected_failure_contrast_runner_manifest_status"]
@@ -124,28 +125,20 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
     assert payload["summary"]["protected_failure_contrast_runner_processed_job_count"] == 0
     assert payload["summary"]["protected_failure_contrast_runner_executed_job_count"] == 0
     assert payload["summary"]["protected_failure_contrast_command_if_explicitly_approved"] == (
-        "UV_CACHE_DIR=/tmp/uv-cache uv run python "
-        "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py "
-        "--execute-reviewed-collection --refresh-after-run "
-        "--approval-receipt "
-        "reports/strategy_arbitration/"
-        "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
+        None
     )
     assert (
         payload["summary"]["protected_failure_contrast_collection_option_available"]
-        is True
+        is False
     )
     assert (
         payload["summary"]["protected_failure_contrast_collection_command_available"]
-        is True
+        is False
     )
-    assert (
-        payload["summary"]["protected_failure_contrast_collection_option_id"]
-        == "approve_protected_plan_window_failure_contrast_collection"
-    )
+    assert payload["summary"]["protected_failure_contrast_collection_option_id"] is None
     assert (
         payload["summary"]["protected_failure_contrast_collection_blocked_by_option_id"]
-        is None
+        == "review_protected_plan_window_failure_contrast_manifest"
     )
     assert payload["summary"]["protected_failure_contrast_approval_request_artifact"] == (
         "reports/strategy_arbitration/"
@@ -153,23 +146,24 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
     )
     assert (
         payload["summary"]["protected_failure_contrast_approval_request_status"]
-        == "protected_plan_window_failure_contrast_approval_request_ready"
+        == "protected_plan_window_failure_contrast_approval_request_blocked"
     )
     assert (
         payload["summary"]["protected_failure_contrast_approval_request_blockers"]
-        == []
+        == ["protected_failure_contrast_execution_scope_not_ready"]
     )
     assert (
         payload["summary"][
             "protected_failure_contrast_approval_request_ready_for_collection"
         ]
-        is True
+        is False
     )
     assert (
         payload["summary"][
             "sequence_policy_after_protected_failure_contrast_refresh_status"
         ]
-        == "sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs"
+        == "sequence_policy_after_protected_failure_contrast_refresh_blocked_"
+        "pending_protected_failure_contrast_control_plane_gate_review"
     )
     assert (
         payload["summary"][
@@ -198,7 +192,7 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
     )
     assert (
         payload["summary"]["protected_failure_contrast_approval_receipt_present"]
-        is False
+        is True
     )
     assert (
         payload["summary"]["protected_failure_contrast_approval_receipt_valid"]
@@ -206,7 +200,15 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
     )
     assert payload["summary"][
         "protected_failure_contrast_approval_receipt_blockers"
-    ] == ["approval_receipt_missing"]
+    ] == [
+        "approval_receipt_readiness_fingerprint_mismatch",
+        "approval_receipt_readiness_status_mismatch",
+        "approval_receipt_current_control_plane_approval_option_ids_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_command_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_id_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_blocked_by_option_id_mismatch",
+    ]
     assert (
         payload["summary"][
             "protected_failure_contrast_post_success_refresh_required"
@@ -264,7 +266,7 @@ def test_underpowered_pilot_keeps_ready_gate_blocked_but_preserves_signal():
     assert "stage4_state_local_topk_signal_present" in payload["pilot_findings"]
     assert "stage7_clean_success_controls_missing" not in payload["blockers"]
     assert (
-        "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+        "protected_plan_window_failure_contrast_underpowered_after_collection"
         in payload["blockers"]
     )
 

@@ -75,7 +75,8 @@ def test_sequence_policy_benchmark_review_reports_current_mixed_result():
     assert payload["stage8_training_allowed"] is False
     assert (
         payload["decision"]["status"]
-        == "sequence_policy_benchmark_mixed_plan_window_underpowered"
+        == "sequence_policy_benchmark_mixed_plan_window_underpowered_"
+        "blocked_pending_protected_failure_contrast_control_plane_gate_review"
     )
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False
@@ -85,29 +86,29 @@ def test_sequence_policy_benchmark_review_reports_current_mixed_result():
     assert "protected_plan_window_failure_evidence_sparse" in payload["blockers"]
     assert (
         payload["decision"]["recommended_next_step"]
-        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
     )
     assert (
-        "approve_protected_plan_window_failure_contrast_collection"
+        "review_protected_plan_window_failure_contrast_manifest"
         in payload["current_control_plane_gate"]["approval_option_ids"]
     )
     assert (
         payload["current_control_plane_gate"][
             "protected_failure_contrast_collection_option_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["current_control_plane_gate"][
             "protected_failure_contrast_collection_command_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["current_control_plane_gate"][
             "protected_failure_contrast_collection_option_id"
         ]
-        == "approve_protected_plan_window_failure_contrast_collection"
+        is None
     )
     assert "stage4_topk_sequence_signal_present" in payload["findings"]
     assert "stage4_binary_rule_insufficient" in payload["findings"]

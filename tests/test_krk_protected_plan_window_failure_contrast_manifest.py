@@ -291,17 +291,17 @@ def test_failure_contrast_manifest_review_passes_without_authorizing_collection(
         payload["review_summary"][
             "protected_failure_contrast_collection_option_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["review_summary"][
             "protected_failure_contrast_collection_command_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["decision"]["status"]
-        == "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
+        == "protected_plan_window_failure_contrast_manifest_review_passed_pending_control_plane_gate_review"
     )
     assert payload["decision"]["collection_run_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False
@@ -326,7 +326,7 @@ def test_failure_contrast_execution_readiness_is_dry_run_only():
     assert payload["summary"]["jobs_passing_readiness"] == 6
     assert payload["summary"]["all_jobs_pass_readiness"] is True
     assert payload["summary"]["job_readiness_blocker_count"] == 0
-    assert payload["summary"]["existing_output_count"] == 0
+    assert payload["summary"]["existing_output_count"] == 6
     assert (
         payload["summary"]["recorded_manifest_fingerprint"]
         == payload["summary"]["manifest_fingerprint"]
@@ -358,18 +358,18 @@ def test_failure_contrast_execution_readiness_is_dry_run_only():
         payload["summary"][
             "protected_failure_contrast_collection_option_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["summary"][
             "protected_failure_contrast_collection_command_available"
         ]
-        is True
+        is False
     )
     assert len(payload["summary"]["readiness_fingerprint"]) == 64
     assert (
         payload["decision"]["status"]
-        == "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+        == "protected_plan_window_failure_contrast_execution_readiness_blocked_pending_control_plane_gate_review"
     )
     assert payload["decision"]["collection_run_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False
@@ -379,7 +379,7 @@ def test_failure_contrast_execution_readiness_is_dry_run_only():
     assert payload["decision"]["stage8_training_allowed"] is False
 
 
-def test_failure_contrast_output_validation_is_pending_before_collection():
+def test_failure_contrast_output_validation_reports_collected_outputs_ready():
     payload = _read_report(
         "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_output_validation_v0.json"
     )
@@ -391,32 +391,29 @@ def test_failure_contrast_output_validation_is_pending_before_collection():
     assert payload["causal_status"] == "non_causal_output_validation"
     assert (
         payload["decision"]["status"]
-        == "protected_plan_window_failure_contrast_outputs_validation_pending"
+        == "protected_plan_window_failure_contrast_outputs_valid_ready_for_integration"
     )
     assert payload["summary"]["job_count"] == 6
-    assert payload["summary"]["output_exists_count"] == 0
-    assert payload["summary"]["output_valid_count"] == 0
-    assert payload["summary"]["all_outputs_valid"] is False
+    assert payload["summary"]["output_exists_count"] == 6
+    assert payload["summary"]["output_valid_count"] == 6
+    assert payload["summary"]["all_outputs_valid"] is True
     assert payload["summary"]["unique_failure_candidate_count"] == 0
-    assert (
-        "approve_protected_plan_window_failure_contrast_collection"
-        in payload["summary"]["current_control_plane_approval_option_ids"]
-    )
+    assert payload["summary"]["current_control_plane_approval_option_ids"] == [
+        "approve_stage4_first_move_contrast_sandbox",
+        "review_protected_plan_window_failure_contrast_manifest",
+    ]
     assert (
         payload["summary"]["protected_failure_contrast_collection_option_available"]
-        is True
+        is False
     )
     assert (
         payload["summary"]["protected_failure_contrast_collection_command_available"]
-        is True
+        is False
     )
-    assert (
-        payload["summary"]["protected_failure_contrast_collection_option_id"]
-        == "approve_protected_plan_window_failure_contrast_collection"
-    )
+    assert payload["summary"]["protected_failure_contrast_collection_option_id"] is None
     assert (
         payload["summary"]["protected_failure_contrast_collection_blocked_by_option_id"]
-        is None
+        == "review_protected_plan_window_failure_contrast_manifest"
     )
     assert payload["hidden_python_controller"] is False
     assert payload["decision"]["collection_run_allowed"] is False
@@ -475,7 +472,7 @@ def test_failure_contrast_output_validation_routes_missing_collection_option_to_
     assert payload["decision"]["runtime_changes_allowed"] is False
 
 
-def test_failure_contrast_runner_is_dry_run_ready_without_authorizing_collection():
+def test_failure_contrast_runner_blocks_after_approval_scope_is_spent():
     payload = _read_report(
         "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_runner_v0.json"
     )
@@ -484,11 +481,11 @@ def test_failure_contrast_runner_is_dry_run_ready_without_authorizing_collection
     assert payload["causal_status"] == "non_causal_collection_runner_wrapper"
     assert (
         payload["decision"]["status"]
-        == "protected_plan_window_failure_contrast_runner_dry_run_ready"
+        == "protected_plan_window_failure_contrast_runner_blocked"
     )
     assert (
         payload["decision"]["recommended_next_step"]
-        == "obtain_matching_approval_receipt_then_run_with_explicit_execute_flag"
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
     )
     assert payload["execution_requested"] is False
     assert payload["approval_receipt_path"] == (
@@ -543,19 +540,19 @@ def test_failure_contrast_runner_is_dry_run_ready_without_authorizing_collection
         payload["summary"][
             "execution_readiness_protected_failure_contrast_collection_option_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["summary"][
             "execution_readiness_protected_failure_contrast_collection_command_available"
         ]
-        is True
+        is False
     )
     assert payload["summary"]["approval_receipt_required_for_execution"] is True
-    assert payload["summary"]["approval_receipt_present"] is False
+    assert payload["summary"]["approval_receipt_present"] is True
     assert payload["summary"]["approval_receipt_valid"] is False
-    assert "approval_receipt_missing" in payload["summary"]["approval_receipt_blockers"]
-    assert payload["summary"]["output_exists_count"] == 0
+    assert "approval_receipt_readiness_fingerprint_mismatch" in payload["summary"]["approval_receipt_blockers"]
+    assert payload["summary"]["output_exists_count"] == 6
     assert payload["decision"]["collection_run_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False
@@ -581,9 +578,17 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
         "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
     )
     assert payload["approval_receipt_created"] is False
-    assert payload["approval_receipt_present"] is False
+    assert payload["approval_receipt_present"] is True
     assert payload["approval_receipt_valid"] is False
-    assert payload["approval_receipt_blockers"] == ["approval_receipt_missing"]
+    assert payload["approval_receipt_blockers"] == [
+        "approval_receipt_readiness_fingerprint_mismatch",
+        "approval_receipt_readiness_status_mismatch",
+        "approval_receipt_current_control_plane_approval_option_ids_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_command_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_id_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_blocked_by_option_id_mismatch",
+    ]
     assert payload["summary"]["job_count"] == 6
     assert payload["summary"]["runner_execution_requested"] is False
     assert payload["summary"]["runner_processed_job_count"] == 0
@@ -603,7 +608,8 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
         payload["summary"][
             "pre_collection_sequence_policy_after_protected_failure_contrast_refresh_status"
         ]
-        == "sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs"
+        == "sequence_policy_after_protected_failure_contrast_refresh_blocked_"
+        "pending_protected_failure_contrast_control_plane_gate_review"
     )
     assert (
         payload["summary"][
@@ -630,9 +636,11 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
         == 0
     )
     assert payload["summary"]["approval_receipt_required"] is True
-    assert payload["summary"]["request_ready"] is True
-    assert payload["approval_request_ready_for_collection"] is True
-    assert payload["summary"]["request_blockers"] == []
+    assert payload["summary"]["request_ready"] is False
+    assert payload["approval_request_ready_for_collection"] is False
+    assert payload["summary"]["request_blockers"] == [
+        "protected_failure_contrast_execution_scope_not_ready"
+    ]
     assert (
         payload["summary"]["protected_stack_status"]
         == "retry1_protected_stage5_6_stack_adopted_manifest_only"
@@ -644,13 +652,13 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
         payload["summary"][
             "protected_failure_contrast_collection_option_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["summary"][
             "protected_failure_contrast_collection_command_available"
         ]
-        is True
+        is False
     )
     assert payload["summary"]["readiness_checked_flag_count"] >= 430
     assert payload["summary"]["readiness_boundary_violation_count"] == 0
@@ -715,7 +723,7 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
         required["approval_scope"][
             "protected_failure_contrast_collection_command_available"
         ]
-        is True
+        is False
     )
     assert required["decision"]["runtime_changes_allowed"] is False
     assert required["decision"]["label_run_allowed"] is False
@@ -731,10 +739,10 @@ def test_failure_contrast_approval_request_is_not_an_approval_receipt():
     assert required["decision"]["gameplay_topology_mutation"] is False
     assert required["decision"]["stage7_promotion_allowed"] is False
     assert required["decision"]["stage8_training_allowed"] is False
-    assert payload["blockers"] == []
+    assert payload["blockers"] == ["protected_failure_contrast_execution_scope_not_ready"]
     assert (
         payload["decision"]["status"]
-        == "protected_plan_window_failure_contrast_approval_request_ready"
+        == "protected_plan_window_failure_contrast_approval_request_blocked"
     )
     assert payload["decision"]["collection_run_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False
@@ -1536,6 +1544,7 @@ def test_failure_contrast_runner_blocks_execute_without_approval_receipt(monkeyp
             "output_checks": [],
         },
     )
+    monkeypatch.setattr(_runner, "_load_optional", lambda _path: None)
     monkeypatch.setattr(
         _runner,
         "_load",
@@ -2376,7 +2385,7 @@ def test_failure_contrast_execution_readiness_fixture_rejects_unsafe_output():
 
     assert (
         payload["decision"]["status"]
-        == "protected_plan_window_failure_contrast_execution_readiness_blocked"
+        == "protected_plan_window_failure_contrast_execution_readiness_blocked_pending_control_plane_gate_review"
     )
     assert payload["decision"]["collection_run_allowed"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False
@@ -2417,7 +2426,7 @@ def test_failure_contrast_execution_readiness_fixture_rejects_unsafe_topology():
 
     assert (
         payload["decision"]["status"]
-        == "protected_plan_window_failure_contrast_execution_readiness_blocked"
+        == "protected_plan_window_failure_contrast_execution_readiness_blocked_pending_control_plane_gate_review"
     )
     assert "missing_or_invalid_topology_binding" in payload["job_checks"][0]["readiness_blockers"]
     assert payload["decision"]["collection_run_allowed"] is False
@@ -2440,7 +2449,7 @@ def test_failure_contrast_execution_readiness_rejects_stale_manifest_review():
 
     assert (
         payload["decision"]["status"]
-        == "protected_plan_window_failure_contrast_execution_readiness_blocked"
+        == "protected_plan_window_failure_contrast_execution_readiness_blocked_pending_control_plane_gate_review"
     )
     assert "manifest_review_fingerprint_mismatch" in payload["summary"][
         "execution_readiness_blockers"
@@ -2594,7 +2603,8 @@ def test_failure_contrast_output_validation_fixture_accepts_safe_output(tmp_path
                     ),
                 }
             ]
-        }
+        },
+        gate=_collection_gate(),
     )
 
     assert (
@@ -2622,7 +2632,8 @@ def test_failure_contrast_output_validation_counts_missing_outputs():
                     ),
                 }
             ]
-        }
+        },
+        gate=_collection_gate(),
     )
 
     assert (
@@ -2649,7 +2660,8 @@ def test_failure_contrast_output_validation_rejects_unsafe_output_path():
                     "expected_output_json": "../unsafe.json",
                 }
             ]
-        }
+        },
+        gate=_collection_gate(),
     )
 
     assert (

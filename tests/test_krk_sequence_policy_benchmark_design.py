@@ -86,24 +86,25 @@ def test_sequence_policy_benchmark_design_is_ready_but_blocks_training_and_runti
     assert payload["readiness"]["benchmark_ready"] is True
     assert (
         payload["readiness"]["current_benchmark_review_status"]
-        == "sequence_policy_benchmark_mixed_plan_window_underpowered"
+        == "sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_"
+        "protected_failure_contrast_control_plane_gate_review"
     )
     assert (
         payload["readiness"]["current_benchmark_review_next_step"]
-        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
     )
-    assert payload["readiness"]["current_benchmark_review_available"] is True
+    assert payload["readiness"]["current_benchmark_review_available"] is False
     assert (
         payload["readiness"][
             "protected_failure_contrast_collection_option_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["readiness"][
             "protected_failure_contrast_collection_command_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["readiness"][
@@ -113,13 +114,13 @@ def test_sequence_policy_benchmark_design_is_ready_but_blocks_training_and_runti
     )
     assert (
         payload["decision"]["recommended_next_step"]
-        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        == "implement_non_causal_sequence_policy_benchmark"
     )
     passive = payload["passive_design_without_new_labels"]
-    assert passive["status"] == "non_causal_sequence_policy_design_without_new_labels_ready"
+    assert passive["status"] == "non_causal_sequence_policy_design_review_needed"
     assert passive["depends_on_new_label_execution"] is False
     assert passive["depends_on_protected_failure_contrast_collection"] is False
-    assert passive["current_evidence_limit"] == "protected_plan_window_failure_evidence_sparse"
+    assert passive["current_evidence_limit"] is None
     assert "protected plan-window failure-contrast collection" in passive[
         "blocked_work_without_explicit_approval"
     ]
@@ -291,6 +292,12 @@ def test_sequence_policy_benchmark_design_routes_missing_collection_command_to_g
     benchmark_review["current_control_plane_gate"][
         "protected_failure_contrast_collection_blocked_by_option_id"
     ] = "review_protected_plan_window_failure_contrast_execution_readiness"
+    benchmark_review["decision"][
+        "status"
+    ] = "sequence_policy_benchmark_mixed_plan_window_underpowered"
+    benchmark_review["decision"][
+        "recommended_next_step"
+    ] = "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
 
     payload = _design.build_payload(benchmark_review=benchmark_review)
 

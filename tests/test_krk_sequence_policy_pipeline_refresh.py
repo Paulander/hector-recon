@@ -51,7 +51,8 @@ def test_sequence_policy_pipeline_refresh_preserves_boundaries():
     assert payload["summary"]["sequence_policy_inputs_ready"] is True
     assert (
         payload["summary"]["sequence_policy_benchmark_review_status"]
-        == "sequence_policy_benchmark_mixed_plan_window_underpowered"
+        == "sequence_policy_benchmark_mixed_plan_window_underpowered_"
+        "blocked_pending_protected_failure_contrast_control_plane_gate_review"
     )
     assert (
         payload["summary"]["sequence_policy_benchmark_design_status"]
@@ -59,7 +60,7 @@ def test_sequence_policy_pipeline_refresh_preserves_boundaries():
     )
     assert (
         payload["summary"]["sequence_policy_passive_design_without_new_labels_status"]
-        == "non_causal_sequence_policy_design_without_new_labels_ready"
+        == "non_causal_sequence_policy_design_review_needed"
     )
     assert (
         payload["summary"]["cross_stage_plan_capsule_requirements_status"]
@@ -67,35 +68,35 @@ def test_sequence_policy_pipeline_refresh_preserves_boundaries():
     )
     assert (
         payload["summary"]["sequence_policy_benchmark_review_next_step"]
-        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
     )
-    assert (
-        "approve_protected_plan_window_failure_contrast_collection"
-        in payload["summary"]["current_control_plane_approval_option_ids"]
-    )
+    assert payload["summary"]["current_control_plane_approval_option_ids"] == [
+        "approve_stage4_first_move_contrast_sandbox",
+        "review_protected_plan_window_failure_contrast_manifest",
+    ]
     assert (
         payload["summary"][
             "protected_plan_window_failure_contrast_collection_option_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["summary"][
             "protected_plan_window_failure_contrast_collection_command_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["summary"][
             "protected_plan_window_failure_contrast_collection_option_id"
         ]
-        == "approve_protected_plan_window_failure_contrast_collection"
+        is None
     )
     assert (
         payload["summary"][
             "protected_plan_window_failure_contrast_collection_blocked_by_option_id"
         ]
-        is None
+        == "review_protected_plan_window_failure_contrast_manifest"
     )
     assert (
         payload["decision"]["status"]
@@ -103,7 +104,7 @@ def test_sequence_policy_pipeline_refresh_preserves_boundaries():
     )
     assert (
         payload["decision"]["recommended_next_step"]
-        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
     )
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False

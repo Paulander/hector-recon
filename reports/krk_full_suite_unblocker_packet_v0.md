@@ -2,7 +2,7 @@
 
 ## Decision
 
-- status: `krk_suite_protected_failure_contrast_unblocker_ready_pending_explicit_collection_approval`
+- status: `krk_suite_protected_failure_contrast_unblocker_blocked_pending_control_plane_gate_review`
 - recommended_next_step: `review_current_control_plane_gate_for_protected_failure_contrast_collection`
 - implementation_allowed_by_this_packet: `False`
 - label_run_allowed: `False`
@@ -95,8 +95,8 @@
 ## Primary Unblocker
 
 - id: `protected_plan_window_failure_contrast_collection`
-- status: `protected_plan_window_failure_contrast_manifest_review_passed_pending_control_plane_gate_review`
-- purpose: Review the bounded protected plan-window failure-contrast manifest before any explicitly approved collection run.
+- status: `blocked_pending_protected_failure_contrast_control_plane_gate_review`
+- purpose: Review current control-plane gate option exposure before any collection command is made approvable.
 - command_if_explicitly_approved: `None`
 - max_jobs: `6`
 - manifest_job_count: `6`
@@ -177,4 +177,4 @@
 ## Low-Value Safe Work Remaining
 
 - Rerunning Stage 7 label commands without overwrite will skip existing outputs; the Stage 7 success-control gap is already closed.
-- Passive benchmark and cross-stage design summaries are current; the next useful gate-moving work is explicit protected plan-window failure-contrast collection approval, or separately explicit Stage 4 runtime-sandbox approval.
+- Passive benchmark and cross-stage design summaries are current; the next useful gate-moving work is current control-plane review for protected plan-window failure-contrast evidence, or separately explicit Stage 4 runtime-sandbox approval.

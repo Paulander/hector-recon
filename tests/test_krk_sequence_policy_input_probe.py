@@ -54,24 +54,25 @@ def test_sequence_policy_input_probe_is_non_causal_and_ready():
     assert payload["summary"]["runtime_authorization_row_count"] == 0
     assert (
         payload["summary"]["current_benchmark_review_status"]
-        == "sequence_policy_benchmark_mixed_plan_window_underpowered"
+        == "sequence_policy_benchmark_mixed_plan_window_underpowered_"
+        "blocked_pending_protected_failure_contrast_control_plane_gate_review"
     )
     assert (
         payload["summary"]["current_benchmark_review_next_step"]
-        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
     )
-    assert payload["summary"]["current_benchmark_review_available"] is True
+    assert payload["summary"]["current_benchmark_review_available"] is False
     assert (
         payload["summary"][
             "protected_failure_contrast_collection_option_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["summary"][
             "protected_failure_contrast_collection_command_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["summary"][
@@ -85,7 +86,7 @@ def test_sequence_policy_input_probe_is_non_causal_and_ready():
     )
     assert (
         payload["decision"]["recommended_next_step"]
-        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        == "run_full_non_causal_sequence_policy_benchmark"
     )
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert payload["decision"]["label_run_allowed"] is False
@@ -230,18 +231,17 @@ def test_sequence_policy_input_probe_routes_missing_collection_command_to_gate_r
 
     assert (
         payload["decision"]["status"]
-        == "sequence_policy_input_probe_blocked_pending_"
-        "protected_failure_contrast_control_plane_gate_review"
+        == "sequence_policy_input_probe_ready_for_full_non_causal_benchmark"
     )
     assert (
         payload["decision"]["recommended_next_step"]
-        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+        == "run_full_non_causal_sequence_policy_benchmark"
     )
     assert (
         payload["summary"][
             "protected_failure_contrast_control_plane_gate_review_required"
         ]
-        is True
+        is False
     )
     assert (
         payload["summary"][
