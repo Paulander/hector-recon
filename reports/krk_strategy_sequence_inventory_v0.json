@@ -2,7 +2,7 @@
   "causal_status": "non_causal_replay_free_inventory",
   "curriculum_boundary_inventory": {
     "stage7_clean_control_collection_paused": true,
-    "stage7_clean_review_recommendation": "obtain_matching_approval_receipt_before_protected_failure_contrast_collection",
+    "stage7_clean_review_recommendation": "review_current_control_plane_gate_for_protected_failure_contrast_collection",
     "stage7_is_held_out": true
   },
   "decision": {

@@ -16,7 +16,7 @@
     "The current protected failure-contrast runner remains dry-run only; collection still requires a matching approval receipt and explicit execute flag."
   ],
   "decision": {
-    "recommended_next_step": "obtain_matching_approval_receipt_before_protected_failure_contrast_collection",
+    "recommended_next_step": "review_current_control_plane_gate_for_protected_failure_contrast_collection",
     "runtime_work_allowed": false,
     "status": "stage7_clean_control_collection_closed_heldout_only"
   },
@@ -30,19 +30,19 @@
     "clean_sequence_hard_negatives": 39,
     "clean_sequence_success_controls": 11,
     "clean_sequence_success_required": 5,
-    "protected_failure_contrast_approval_receipt_present": false,
+    "protected_failure_contrast_approval_receipt_present": true,
     "protected_failure_contrast_approval_receipt_valid": false,
-    "protected_failure_contrast_collection_blocked_by_option_id": null,
-    "protected_failure_contrast_collection_command_available": true,
-    "protected_failure_contrast_collection_option_available": true,
-    "protected_failure_contrast_collection_option_id": "approve_protected_plan_window_failure_contrast_collection",
-    "protected_failure_contrast_gate_status": "protected_plan_window_failure_contrast_runner_dry_run_ready",
+    "protected_failure_contrast_collection_blocked_by_option_id": "review_protected_plan_window_failure_contrast_manifest",
+    "protected_failure_contrast_collection_command_available": false,
+    "protected_failure_contrast_collection_option_available": false,
+    "protected_failure_contrast_collection_option_id": null,
+    "protected_failure_contrast_gate_status": "protected_plan_window_failure_contrast_runner_blocked",
     "protected_failure_contrast_runner_collection_run_allowed": false,
     "protected_failure_contrast_runner_executed_job_count": 0,
     "protected_failure_contrast_runner_execution_requested": false,
     "protected_failure_contrast_runner_processed_job_count": 0,
     "sampling_overlap_detected": true,
-    "suite_gate_advancement_status": "krk_suite_passive_advancement_ready_for_protected_failure_contrast_collection"
+    "suite_gate_advancement_status": "krk_suite_passive_advancement_blocked_pending_protected_failure_contrast_control_plane_gate_review"
   },
   "gameplay_topology_mutation": false,
   "recommended_paths": [

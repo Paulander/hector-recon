@@ -1,20 +1,20 @@
 # KRK Protected Plan-Window Failure Contrast Approval Request v0
 
-Status: `protected_plan_window_failure_contrast_approval_request_ready`
+Status: `protected_plan_window_failure_contrast_approval_request_blocked`
 
 This is a passive request packet only. It does not create the approval receipt, execute collection, run labels, change runtime behavior, train a selector, promote Stage 7, or train Stage 8.
 
 ## Summary
 
-- request_ready: `True`
-- request_blockers: `[]`
+- request_ready: `False`
+- request_blockers: `['protected_failure_contrast_execution_scope_not_ready']`
 - job_count: `6`
 - manifest_status: `protected_plan_window_failure_contrast_manifest_ready_for_review`
-- readiness_status: `protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval`
+- readiness_status: `protected_plan_window_failure_contrast_execution_readiness_blocked_pending_control_plane_gate_review`
 - readiness_checked_flag_count: `2912`
 - readiness_boundary_violation_count: `0`
 - readiness_source_artifact_count: `408`
-- runner_status: `protected_plan_window_failure_contrast_runner_dry_run_ready`
+- runner_status: `protected_plan_window_failure_contrast_runner_blocked`
 - runner_execution_requested: `False`
 - runner_processed_job_count: `0`
 - runner_executed_job_count: `0`
@@ -25,25 +25,25 @@ This is a passive request packet only. It does not create the approval receipt, 
 - post_success_refresh_required: `True`
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
-- pre_collection_sequence_policy_after_protected_failure_contrast_refresh_status: `sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs`
+- pre_collection_sequence_policy_after_protected_failure_contrast_refresh_status: `sequence_policy_after_protected_failure_contrast_refresh_blocked_pending_protected_failure_contrast_control_plane_gate_review`
 - pre_collection_sequence_policy_after_protected_failure_contrast_boundaries_preserved: `True`
 - pre_collection_sequence_policy_after_protected_failure_contrast_boundary_violation_count: `0`
 - pre_collection_sequence_policy_after_protected_failure_contrast_rows: `0`
 - pre_collection_sequence_policy_after_protected_failure_contrast_stage7_training_row_count: `0`
 - manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- readiness_fingerprint: `543ceb8c5d28a575485562e83da6fc07867ad808e144321041b45527993b5923`
+- readiness_fingerprint: `0a9fe46170cb062d4a12db0b4ddf3bb9348142c9e2f575ee946afc30960acfbe`
 - protected_stack_status: `retry1_protected_stage5_6_stack_adopted_manifest_only`
 - protected_stack_ready: `True`
 - protected_stack_rollback_paths_preserved: `True`
 - protected_stack_filesystem_snapshots_replaced: `False`
 - current_control_plane_gate_status: `krk_control_plane_waiting_on_explicit_gate_choice`
-- current_control_plane_approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'approve_protected_plan_window_failure_contrast_collection']`
-- protected_failure_contrast_collection_option_available: `True`
-- protected_failure_contrast_collection_command_available: `True`
-- protected_failure_contrast_collection_option_id: `approve_protected_plan_window_failure_contrast_collection`
-- protected_failure_contrast_collection_blocked_by_option_id: `None`
+- current_control_plane_approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'review_protected_plan_window_failure_contrast_manifest']`
+- protected_failure_contrast_collection_option_available: `False`
+- protected_failure_contrast_collection_command_available: `False`
+- protected_failure_contrast_collection_option_id: `None`
+- protected_failure_contrast_collection_blocked_by_option_id: `review_protected_plan_window_failure_contrast_manifest`
 - approval_receipt_required: `True`
-- approval_receipt_missing: `True`
+- approval_receipt_missing: `False`
 
 ## Protected Stack Safety
 
@@ -61,9 +61,9 @@ This is a passive request packet only. It does not create the approval receipt, 
 ## Approval Receipt Status
 
 - approval_receipt_path: `reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
-- approval_receipt_present: `False`
+- approval_receipt_present: `True`
 - approval_receipt_valid: `False`
-- approval_receipt_blockers: `['approval_receipt_missing']`
+- approval_receipt_blockers: `['approval_receipt_readiness_fingerprint_mismatch', 'approval_receipt_readiness_status_mismatch', 'approval_receipt_current_control_plane_approval_option_ids_mismatch', 'approval_receipt_protected_failure_contrast_collection_option_available_mismatch', 'approval_receipt_protected_failure_contrast_collection_command_available_mismatch', 'approval_receipt_protected_failure_contrast_collection_option_id_mismatch', 'approval_receipt_protected_failure_contrast_collection_blocked_by_option_id_mismatch']`
 - approval_receipt_created: `False`
 
 ## Required Receipt If Explicitly Approved
@@ -74,7 +74,7 @@ This is a passive request packet only. It does not create the approval receipt, 
   "approval_scope": {
     "current_control_plane_approval_option_ids": [
       "approve_stage4_first_move_contrast_sandbox",
-      "approve_protected_plan_window_failure_contrast_collection"
+      "review_protected_plan_window_failure_contrast_manifest"
     ],
     "current_control_plane_gate_status": "krk_control_plane_waiting_on_explicit_gate_choice",
     "job_count": 6,
@@ -86,10 +86,10 @@ This is a passive request packet only. It does not create the approval receipt, 
     "post_success_refresh_required": true,
     "post_success_refresh_scope": "full_passive_krk_suite_gate_stack",
     "post_success_refresh_script": "scripts/advance_krk_suite_from_current_gates_v0.py",
-    "protected_failure_contrast_collection_blocked_by_option_id": null,
-    "protected_failure_contrast_collection_command_available": true,
-    "protected_failure_contrast_collection_option_available": true,
-    "protected_failure_contrast_collection_option_id": "approve_protected_plan_window_failure_contrast_collection",
+    "protected_failure_contrast_collection_blocked_by_option_id": "review_protected_plan_window_failure_contrast_manifest",
+    "protected_failure_contrast_collection_command_available": false,
+    "protected_failure_contrast_collection_option_available": false,
+    "protected_failure_contrast_collection_option_id": null,
     "protected_stack_active_paths_exist": true,
     "protected_stack_active_paths_safe": true,
     "protected_stack_filesystem_snapshots_replaced": false,
@@ -102,9 +102,9 @@ This is a passive request packet only. It does not create the approval receipt, 
     "protected_stack_status": "retry1_protected_stage5_6_stack_adopted_manifest_only",
     "readiness_boundary_violation_count": 0,
     "readiness_checked_flag_count": 2912,
-    "readiness_fingerprint": "543ceb8c5d28a575485562e83da6fc07867ad808e144321041b45527993b5923",
+    "readiness_fingerprint": "0a9fe46170cb062d4a12db0b4ddf3bb9348142c9e2f575ee946afc30960acfbe",
     "readiness_source_artifact_count": 408,
-    "readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
+    "readiness_status": "protected_plan_window_failure_contrast_execution_readiness_blocked_pending_control_plane_gate_review",
     "refresh_after_run": true
   },
   "decision": {
@@ -132,7 +132,7 @@ This is a passive request packet only. It does not create the approval receipt, 
 
 ## Decision
 
-- recommended_next_step: `user_may_create_matching_approval_receipt_only_if_collection_is_explicitly_approved`
+- recommended_next_step: `repair_protected_failure_contrast_approval_request_scope`
 - collection_run_allowed: `False`
 - label_run_allowed: `False`
 - runtime_changes_allowed: `false`

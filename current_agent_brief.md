@@ -2,25 +2,22 @@
 
 ## Active KRK Gate
 
-- Completed the explicitly approved bounded joined trace/ownership observation collection.
-- Collection artifact: `reports/strategy_arbitration/krk_joined_trace_ownership_collection_v0.json`.
-- Seed artifacts: `reports/strategy_arbitration/krk_selector_objective_seed_manifest_v1.json` and `reports/strategy_arbitration/krk_selector_objective_seed_probe_v1.json`.
-- Follow-up non-causal feature probe ran and is blocked: `selector_feature_probe_blocks_runtime_needs_diverse_evidence`.
+- Completed the explicitly approved bounded protected plan-window failure-contrast observation collection.
+- Collection outputs: `reports/strategy_arbitration/protected_plan_window_failure_contrasts/`.
+- Collection result: `reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_result_v0.json` with status `collection_complete_underpowered`.
+- Follow-up review-only packet: `reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_followup_review_packet_v0.json` with status `blocked_needs_human_approval`.
 
 ## Verified Invariants
 
-- Scope stayed Stage 5/6 only, max 8 rows; Stage 4/7/8 excluded.
-- Observation-only trace/proposal/ownership data; no selector training and no runtime selector authorization.
-- Selected move/provider unchanged; score and routing deltas are zero.
+- Approved run produced 6 valid observation-only outputs, all `conversion_positive`; no new protected plan-window failure rows integrated.
+- Selected move/provider deltas, score deltas, and routing deltas are zero.
 - Runtime DTM/tablebase use is false.
 - Gameplay-time topology mutation is false.
+- Selector training rows, Stage 7 training rows, and runtime authorization rows are zero.
 - Stage 7 promotion and Stage 8 training remain blocked.
 
 ## Next Needed Work
 
-- Diversity review completed at `reports/strategy_arbitration/krk_selector_objective_diversity_review_v0.json`.
-- Diversity gap review aligned to the current selector-objective decision at `reports/strategy_arbitration/krk_selector_objective_diversity_gap_review_v0.json`.
-- Future bounded Stage 5/6-only collection review packet completed at `reports/strategy_arbitration/krk_selector_objective_diverse_collection_review_packet_v0.json`.
-- Replay-free recovery was not sufficient: current extra Stage 5/6 rows do not add enough switch or non-stage0 joined trace/ownership evidence.
-- Do not execute the future diverse collection without explicit approval.
-- Do not set runtime-selector-ready from the current seed or feature probe.
+- Replay-free recovery from current artifacts is not enough: protected plan-window evidence remains sparse at 1 failure vs 19 positives in the benchmark review.
+- Do not execute additional protected plan-window collection without fresh explicit approval.
+- Do not set runtime-selector-ready from the current evidence.

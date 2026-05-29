@@ -19,19 +19,19 @@ This artifact assembles currently available non-causal inputs for a future seque
 - stage7_clean_failure_controls_met: `True`
 - stage7_diverse_outputs_present: `True`
 - stage7_diverse_new_controls: `0`
-- protected_failure_contrast_integration_status: `protected_plan_window_failure_contrast_integration_pending_outputs`
+- protected_failure_contrast_integration_status: `protected_plan_window_failure_contrast_integration_underpowered_needs_more_valid_failures`
 - protected_failure_contrast_integration_ready: `False`
 - protected_failure_contrast_row_count: `0`
 - protected_failure_contrast_skipped_counts: `{}`
-- current_benchmark_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered`
-- current_benchmark_review_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
-- current_benchmark_review_available: `True`
+- current_benchmark_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_protected_failure_contrast_control_plane_gate_review`
+- current_benchmark_review_next_step: `review_current_control_plane_gate_for_protected_failure_contrast_collection`
+- current_benchmark_review_available: `False`
 - current_control_plane_gate_status: `krk_control_plane_waiting_on_explicit_gate_choice`
-- current_control_plane_approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'approve_protected_plan_window_failure_contrast_collection']`
-- protected_failure_contrast_collection_option_available: `True`
-- protected_failure_contrast_collection_command_available: `True`
-- protected_failure_contrast_collection_option_id: `approve_protected_plan_window_failure_contrast_collection`
-- protected_failure_contrast_collection_blocked_by_option_id: `None`
+- current_control_plane_approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'review_protected_plan_window_failure_contrast_manifest']`
+- protected_failure_contrast_collection_option_available: `False`
+- protected_failure_contrast_collection_command_available: `False`
+- protected_failure_contrast_collection_option_id: `None`
+- protected_failure_contrast_collection_blocked_by_option_id: `review_protected_plan_window_failure_contrast_manifest`
 - protected_failure_contrast_control_plane_gate_review_required: `False`
 - stage7_heldout_row_count: `50`
 - selector_training_row_count: `0`
@@ -48,7 +48,7 @@ This artifact assembles currently available non-causal inputs for a future seque
 
 ## Decision
 
-- recommended_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
+- recommended_next_step: `implement_non_causal_sequence_policy_benchmark`
 - runtime_changes_allowed: `false`
 - label_run_allowed: `false`
 - selector_training_allowed: `false`

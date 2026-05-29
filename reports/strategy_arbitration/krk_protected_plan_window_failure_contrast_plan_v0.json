@@ -127,7 +127,7 @@
   "summary": {
     "benchmark_failure_evidence_sparse": true,
     "benchmark_objective_row_count": 20,
-    "benchmark_review_status": "sequence_policy_benchmark_mixed_plan_window_underpowered",
+    "benchmark_review_status": "sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_protected_failure_contrast_control_plane_gate_review",
     "duplicate_row_count": 0,
     "failure_source_family_counts": {
       "wrong_tempo_plan_window": 1

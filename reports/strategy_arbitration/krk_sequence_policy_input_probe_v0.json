@@ -2,7 +2,7 @@
   "causal_status": "non_causal_sequence_policy_input_probe",
   "decision": {
     "label_run_allowed": false,
-    "recommended_next_step": "obtain_matching_approval_receipt_before_protected_failure_contrast_collection",
+    "recommended_next_step": "run_full_non_causal_sequence_policy_benchmark",
     "runtime_changes_allowed": false,
     "selector_allowed": false,
     "selector_training_allowed": false,
@@ -187,20 +187,20 @@
   "stage8_training_allowed": false,
   "summary": {
     "benchmark_input_ready": true,
-    "current_benchmark_review_available": true,
-    "current_benchmark_review_next_step": "obtain_matching_approval_receipt_before_protected_failure_contrast_collection",
-    "current_benchmark_review_status": "sequence_policy_benchmark_mixed_plan_window_underpowered",
+    "current_benchmark_review_available": false,
+    "current_benchmark_review_next_step": "review_current_control_plane_gate_for_protected_failure_contrast_collection",
+    "current_benchmark_review_status": "sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_protected_failure_contrast_control_plane_gate_review",
     "current_control_plane_approval_option_ids": [
       "approve_stage4_first_move_contrast_sandbox",
-      "approve_protected_plan_window_failure_contrast_collection"
+      "review_protected_plan_window_failure_contrast_manifest"
     ],
     "current_control_plane_gate_status": "krk_control_plane_waiting_on_explicit_gate_choice",
     "forbidden_training_or_runtime_input_blocked": false,
     "forbidden_training_or_runtime_input_blockers": [],
-    "protected_failure_contrast_collection_blocked_by_option_id": null,
-    "protected_failure_contrast_collection_command_available": true,
-    "protected_failure_contrast_collection_option_available": true,
-    "protected_failure_contrast_collection_option_id": "approve_protected_plan_window_failure_contrast_collection",
+    "protected_failure_contrast_collection_blocked_by_option_id": "review_protected_plan_window_failure_contrast_manifest",
+    "protected_failure_contrast_collection_command_available": false,
+    "protected_failure_contrast_collection_option_available": false,
+    "protected_failure_contrast_collection_option_id": null,
     "protected_failure_contrast_control_plane_gate_review_required": false,
     "protected_plan_window_failure_sparse": true,
     "row_count": 118,

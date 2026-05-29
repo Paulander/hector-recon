@@ -16,22 +16,22 @@ This passive refresh reruns integration, input assembly, probe, benchmark, and g
 - protected_plan_window_evidence_met: `True`
 - sequence_policy_inputs_ready: `True`
 - sequence_policy_benchmark_status: `sequence_policy_benchmark_ready_non_causal_results_available`
-- sequence_policy_benchmark_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered`
+- sequence_policy_benchmark_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_protected_failure_contrast_control_plane_gate_review`
 - sequence_policy_benchmark_review_blockers: `['protected_plan_window_failure_evidence_sparse']`
 - sequence_policy_benchmark_design_status: `sequence_policy_benchmark_design_ready_non_causal`
-- sequence_policy_passive_design_without_new_labels_status: `non_causal_sequence_policy_design_without_new_labels_ready`
+- sequence_policy_passive_design_without_new_labels_status: `non_causal_sequence_policy_design_review_needed`
 - cross_stage_plan_capsule_requirements_status: `cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark`
 - selector_training_row_count: `0`
 - runtime_authorization_row_count: `0`
 - forbidden_training_or_runtime_input_blocked: `False`
 - forbidden_training_or_runtime_input_blockers: `[]`
-- sequence_policy_benchmark_review_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
+- sequence_policy_benchmark_review_next_step: `review_current_control_plane_gate_for_protected_failure_contrast_collection`
 - current_gate_status: `krk_control_plane_waiting_on_explicit_gate_choice`
-- current_control_plane_approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'approve_protected_plan_window_failure_contrast_collection']`
-- protected_plan_window_failure_contrast_collection_option_available: `True`
-- protected_plan_window_failure_contrast_collection_command_available: `True`
-- protected_plan_window_failure_contrast_collection_option_id: `approve_protected_plan_window_failure_contrast_collection`
-- protected_plan_window_failure_contrast_collection_blocked_by_option_id: `None`
+- current_control_plane_approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'review_protected_plan_window_failure_contrast_manifest']`
+- protected_plan_window_failure_contrast_collection_option_available: `False`
+- protected_plan_window_failure_contrast_collection_command_available: `False`
+- protected_plan_window_failure_contrast_collection_option_id: `None`
+- protected_plan_window_failure_contrast_collection_blocked_by_option_id: `review_protected_plan_window_failure_contrast_manifest`
 
 ## Steps
 
@@ -41,14 +41,14 @@ This passive refresh reruns integration, input assembly, probe, benchmark, and g
 - `sequence_policy_inputs` status=`sequence_policy_benchmark_inputs_ready_non_causal` runtime=`False` labels=`False`
 - `sequence_policy_input_probe` status=`sequence_policy_input_probe_ready_for_full_non_causal_benchmark` runtime=`False` labels=`False`
 - `sequence_policy_benchmark` status=`sequence_policy_benchmark_ready_non_causal_results_available` runtime=`False` labels=`False`
-- `sequence_policy_benchmark_review` status=`sequence_policy_benchmark_mixed_plan_window_underpowered` runtime=`False` labels=`False`
+- `sequence_policy_benchmark_review` status=`sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_protected_failure_contrast_control_plane_gate_review` runtime=`False` labels=`False`
 - `sequence_policy_benchmark_design` status=`sequence_policy_benchmark_design_ready_non_causal` runtime=`False` labels=`False`
 - `cross_stage_plan_capsule_requirements` status=`cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark` runtime=`False` labels=`False`
 - `current_control_plane_gate` status=`krk_control_plane_waiting_on_explicit_gate_choice` runtime=`False` labels=`False`
 
 ## Decision
 
-- recommended_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
+- recommended_next_step: `review_current_control_plane_gate_for_protected_failure_contrast_collection`
 - runtime_changes_allowed: `false`
 - label_run_allowed: `false`
 - selector_training_allowed: `false`

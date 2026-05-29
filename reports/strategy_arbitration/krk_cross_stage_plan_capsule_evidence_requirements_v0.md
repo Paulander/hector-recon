@@ -14,17 +14,17 @@ This is a non-causal requirements artifact. It does not implement PlanCapsule ru
 - stage7_clean_success_controls_met: `True`
 - stage7_clean_failure_controls_met: `True`
 - sequence_policy_benchmark_ready: `True`
-- sequence_policy_current_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered`
-- sequence_policy_passive_design_status: `non_causal_sequence_policy_design_without_new_labels_ready`
-- remaining_evidence_gap: `protected_plan_window_failure_evidence_sparse`
-- protected_failure_contrast_approval_request_status: `protected_plan_window_failure_contrast_approval_request_ready`
-- protected_failure_contrast_approval_request_blockers: `[]`
-- protected_failure_contrast_approval_request_ready_for_collection: `True`
-- protected_failure_contrast_collection_option_available: `True`
-- protected_failure_contrast_collection_command_available: `True`
-- protected_failure_contrast_collection_option_id: `approve_protected_plan_window_failure_contrast_collection`
-- protected_failure_contrast_collection_blocked_by_option_id: `None`
-- protected_failure_contrast_approval_receipt_blockers: `['approval_receipt_missing']`
+- sequence_policy_current_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_protected_failure_contrast_control_plane_gate_review`
+- sequence_policy_passive_design_status: `non_causal_sequence_policy_design_review_needed`
+- remaining_evidence_gap: `None`
+- protected_failure_contrast_approval_request_status: `protected_plan_window_failure_contrast_approval_request_blocked`
+- protected_failure_contrast_approval_request_blockers: `['protected_failure_contrast_execution_scope_not_ready']`
+- protected_failure_contrast_approval_request_ready_for_collection: `False`
+- protected_failure_contrast_collection_option_available: `False`
+- protected_failure_contrast_collection_command_available: `False`
+- protected_failure_contrast_collection_option_id: `None`
+- protected_failure_contrast_collection_blocked_by_option_id: `review_protected_plan_window_failure_contrast_manifest`
+- protected_failure_contrast_approval_receipt_blockers: `['approval_receipt_readiness_fingerprint_mismatch', 'approval_receipt_readiness_status_mismatch', 'approval_receipt_current_control_plane_approval_option_ids_mismatch', 'approval_receipt_protected_failure_contrast_collection_option_available_mismatch', 'approval_receipt_protected_failure_contrast_collection_command_available_mismatch', 'approval_receipt_protected_failure_contrast_collection_option_id_mismatch', 'approval_receipt_protected_failure_contrast_collection_blocked_by_option_id_mismatch']`
 - control_plane_gate_status: `krk_control_plane_waiting_on_explicit_gate_choice`
 
 ## Required Evidence Frames
@@ -103,7 +103,7 @@ This is a non-causal requirements artifact. It does not implement PlanCapsule ru
 
 ## Decision
 
-- recommended_next_step: `continue_non_causal_sequence_policy_design_without_new_labels_or_obtain_protected_failure_contrast_approval`
+- recommended_next_step: `review_non_causal_sequence_policy_benchmark_results`
 - runtime_changes_allowed: `false`
 - label_run_allowed: `false`
 - selector_training_allowed: `false`

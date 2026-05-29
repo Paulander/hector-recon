@@ -24,7 +24,7 @@ This is a passive request packet only. It does not approve or implement runtime 
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 - readiness_audit: `reports/krk_full_suite_readiness_audit_v0.json`
-- readiness_audit_status: `krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection`
+- readiness_audit_status: `krk_suite_readiness_ready_for_next_runtime_or_training_review`
 - readiness_checked_flag_count: `2912`
 - readiness_boundary_violation_count: `0`
 - readiness_source_artifact_count: `408`
@@ -46,7 +46,7 @@ This is a passive request packet only. It does not approve or implement runtime 
 - stage7_promotion_allowed: `False`
 - stage8_training_allowed: `False`
 - readiness_audit: `reports/krk_full_suite_readiness_audit_v0.json`
-- readiness_audit_status: `krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection`
+- readiness_audit_status: `krk_suite_readiness_ready_for_next_runtime_or_training_review`
 - readiness_checked_flag_count: `2912`
 - readiness_boundary_violation_count: `0`
 - readiness_source_artifact_count: `408`

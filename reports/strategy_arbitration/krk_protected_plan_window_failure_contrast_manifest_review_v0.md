@@ -1,6 +1,6 @@
 # KRK Protected Plan-Window Failure Contrast Manifest Review v0
 
-Status: `protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval`
+Status: `protected_plan_window_failure_contrast_manifest_review_passed_pending_control_plane_gate_review`
 
 This is a non-causal manifest review. Passing review does not execute collection or authorize labels; explicit approval is still required.
 
@@ -21,15 +21,15 @@ This is a non-causal manifest review. Passing review does not execute collection
 - runtime_work_allowed: `False`
 - review_passed: `True`
 - current_control_plane_gate_status: `krk_control_plane_waiting_on_explicit_gate_choice`
-- current_control_plane_approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'approve_protected_plan_window_failure_contrast_collection']`
-- protected_failure_contrast_collection_option_available: `True`
-- protected_failure_contrast_collection_command_available: `True`
-- protected_failure_contrast_collection_option_id: `approve_protected_plan_window_failure_contrast_collection`
-- protected_failure_contrast_collection_blocked_by_option_id: `None`
+- current_control_plane_approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'review_protected_plan_window_failure_contrast_manifest']`
+- protected_failure_contrast_collection_option_available: `False`
+- protected_failure_contrast_collection_command_available: `False`
+- protected_failure_contrast_collection_option_id: `None`
+- protected_failure_contrast_collection_blocked_by_option_id: `review_protected_plan_window_failure_contrast_manifest`
 
 ## Decision
 
-- recommended_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
+- recommended_next_step: `review_current_control_plane_gate_for_protected_failure_contrast_collection`
 - collection_run_allowed: `false`
 - label_run_allowed: `false`
 - runtime_changes_allowed: `false`

@@ -18,7 +18,7 @@
   "causal_status": "non_causal_architecture_decision",
   "current_evidence_state": {
     "stage7_clean_hard_negatives_met": true,
-    "stage7_clean_review_next_step": "obtain_matching_approval_receipt_before_protected_failure_contrast_collection",
+    "stage7_clean_review_next_step": "review_current_control_plane_gate_for_protected_failure_contrast_collection",
     "stage7_clean_review_status": "stage7_clean_control_collection_closed_heldout_only",
     "stage7_clean_success_controls_met": true,
     "strategy_sequence_inventory_next_step": "review_state_holdout_signal_before_runtime_or_continue_protected_failure_contrast_gate",
@@ -26,7 +26,7 @@
   },
   "decision": {
     "box_shrink_promotable_independent_stage": false,
-    "recommended_next_step": "obtain_matching_approval_receipt_before_protected_failure_contrast_collection",
+    "recommended_next_step": "review_current_control_plane_gate_for_protected_failure_contrast_collection",
     "runtime_work_allowed": false,
     "stage7_standalone_repair_target": false,
     "stage7_status": "local_valid_composition_quarantined",

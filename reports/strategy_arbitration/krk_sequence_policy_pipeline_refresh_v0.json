@@ -2,7 +2,7 @@
   "causal_status": "non_causal_passive_pipeline_refresh",
   "decision": {
     "label_run_allowed": false,
-    "recommended_next_step": "obtain_matching_approval_receipt_before_protected_failure_contrast_collection",
+    "recommended_next_step": "review_current_control_plane_gate_for_protected_failure_contrast_collection",
     "runtime_changes_allowed": false,
     "selector_allowed": false,
     "selector_training_allowed": false,
@@ -95,7 +95,7 @@
       "step_id": "sequence_policy_benchmark"
     },
     {
-      "decision_status": "sequence_policy_benchmark_mixed_plan_window_underpowered",
+      "decision_status": "sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_protected_failure_contrast_control_plane_gate_review",
       "label_run_allowed": false,
       "output_json": "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
       "runtime_changes_allowed": false,
@@ -140,27 +140,27 @@
     "cross_stage_plan_capsule_requirements_status": "cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark",
     "current_control_plane_approval_option_ids": [
       "approve_stage4_first_move_contrast_sandbox",
-      "approve_protected_plan_window_failure_contrast_collection"
+      "review_protected_plan_window_failure_contrast_manifest"
     ],
     "current_gate_status": "krk_control_plane_waiting_on_explicit_gate_choice",
     "forbidden_training_or_runtime_input_blocked": false,
     "forbidden_training_or_runtime_input_blockers": [],
     "protected_plan_window_evidence_met": true,
-    "protected_plan_window_failure_contrast_collection_blocked_by_option_id": null,
-    "protected_plan_window_failure_contrast_collection_command_available": true,
-    "protected_plan_window_failure_contrast_collection_option_available": true,
-    "protected_plan_window_failure_contrast_collection_option_id": "approve_protected_plan_window_failure_contrast_collection",
+    "protected_plan_window_failure_contrast_collection_blocked_by_option_id": "review_protected_plan_window_failure_contrast_manifest",
+    "protected_plan_window_failure_contrast_collection_command_available": false,
+    "protected_plan_window_failure_contrast_collection_option_available": false,
+    "protected_plan_window_failure_contrast_collection_option_id": null,
     "runtime_authorization_row_count": 0,
     "selector_training_row_count": 0,
     "sequence_policy_benchmark_design_status": "sequence_policy_benchmark_design_ready_non_causal",
     "sequence_policy_benchmark_review_blockers": [
       "protected_plan_window_failure_evidence_sparse"
     ],
-    "sequence_policy_benchmark_review_next_step": "obtain_matching_approval_receipt_before_protected_failure_contrast_collection",
-    "sequence_policy_benchmark_review_status": "sequence_policy_benchmark_mixed_plan_window_underpowered",
+    "sequence_policy_benchmark_review_next_step": "review_current_control_plane_gate_for_protected_failure_contrast_collection",
+    "sequence_policy_benchmark_review_status": "sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_protected_failure_contrast_control_plane_gate_review",
     "sequence_policy_benchmark_status": "sequence_policy_benchmark_ready_non_causal_results_available",
     "sequence_policy_inputs_ready": true,
-    "sequence_policy_passive_design_without_new_labels_status": "non_causal_sequence_policy_design_without_new_labels_ready",
+    "sequence_policy_passive_design_without_new_labels_status": "non_causal_sequence_policy_design_review_needed",
     "stage7_failure_controls": 39,
     "stage7_failure_controls_required": 5,
     "stage7_outputs_present_count": 8,

@@ -1,6 +1,6 @@
 # KRK Suite Gate Advancement v0
 
-Status: `krk_suite_passive_advancement_ready_for_protected_failure_contrast_collection`
+Status: `krk_suite_passive_advancement_blocked_pending_protected_failure_contrast_control_plane_gate_review`
 
 This passive advancement reruns the safe post-label integration, sequence-policy, readiness, and unblocker artifacts. It never executes labels, changes runtime behavior, trains selectors, promotes Stage 7, or trains Stage 8.
 
@@ -732,34 +732,34 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - sequence_policy_input_probe_benchmark_input_ready: `True`
 - sequence_policy_input_probe_stage4_topk_signal: `True`
 - sequence_policy_input_probe_protected_plan_window_failure_sparse: `True`
-- sequence_policy_input_probe_protected_failure_contrast_collection_option_available: `True`
-- sequence_policy_input_probe_protected_failure_contrast_collection_command_available: `True`
+- sequence_policy_input_probe_protected_failure_contrast_collection_option_available: `False`
+- sequence_policy_input_probe_protected_failure_contrast_collection_command_available: `False`
 - sequence_policy_input_probe_selector_training_row_count: `0`
 - sequence_policy_input_probe_runtime_authorization_row_count: `0`
 - sequence_policy_benchmark_ready: `True`
-- sequence_policy_benchmark_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered`
+- sequence_policy_benchmark_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_protected_failure_contrast_control_plane_gate_review`
 - sequence_policy_benchmark_design_status: `sequence_policy_benchmark_design_ready_non_causal`
-- sequence_policy_passive_design_without_new_labels_status: `non_causal_sequence_policy_design_without_new_labels_ready`
+- sequence_policy_passive_design_without_new_labels_status: `non_causal_sequence_policy_design_review_needed`
 - cross_stage_plan_capsule_requirements_status: `cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark`
 - sequence_policy_forbidden_training_or_runtime_input_blocked: `False`
 - sequence_policy_forbidden_training_or_runtime_input_blockers: `[]`
 - readiness_control_plane_gate_review_blockers: `[]`
-- readiness_explicit_gate_blockers: `['protected_plan_window_failure_contrast_collection_pending_explicit_approval']`
+- readiness_explicit_gate_blockers: `[]`
 - current_control_plane_gate_status: `krk_control_plane_waiting_on_explicit_gate_choice`
-- current_control_plane_approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'approve_protected_plan_window_failure_contrast_collection']`
-- protected_plan_window_failure_contrast_collection_option_available: `True`
-- protected_plan_window_failure_contrast_collection_command_available: `True`
-- protected_plan_window_failure_contrast_collection_option_id: `approve_protected_plan_window_failure_contrast_collection`
-- protected_plan_window_failure_contrast_collection_blocked_by_option_id: `None`
+- current_control_plane_approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'review_protected_plan_window_failure_contrast_manifest']`
+- protected_plan_window_failure_contrast_collection_option_available: `False`
+- protected_plan_window_failure_contrast_collection_command_available: `False`
+- protected_plan_window_failure_contrast_collection_option_id: `None`
+- protected_plan_window_failure_contrast_collection_blocked_by_option_id: `review_protected_plan_window_failure_contrast_manifest`
 - protected_plan_window_failure_contrast_plan_status: `protected_plan_window_failure_contrast_plan_ready_pending_explicit_collection_approval`
 - protected_plan_window_unique_failure_count: `1`
 - protected_plan_window_minimum_new_failures_needed: `4`
 - protected_plan_window_failure_contrast_manifest_status: `protected_plan_window_failure_contrast_manifest_ready_for_review`
 - protected_plan_window_failure_contrast_manifest_job_count: `6`
-- protected_plan_window_failure_contrast_manifest_review_status: `protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval`
-- protected_plan_window_failure_contrast_execution_readiness_status: `protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval`
+- protected_plan_window_failure_contrast_manifest_review_status: `protected_plan_window_failure_contrast_manifest_review_passed_pending_control_plane_gate_review`
+- protected_plan_window_failure_contrast_execution_readiness_status: `protected_plan_window_failure_contrast_execution_readiness_blocked_pending_control_plane_gate_review`
 - protected_plan_window_failure_contrast_execution_jobs_passing: `6`
-- protected_plan_window_failure_contrast_runner_status: `protected_plan_window_failure_contrast_runner_dry_run_ready`
+- protected_plan_window_failure_contrast_runner_status: `protected_plan_window_failure_contrast_runner_blocked`
 - protected_plan_window_failure_contrast_runner_manifest_status: `protected_plan_window_failure_contrast_manifest_ready_for_review`
 - protected_plan_window_failure_contrast_runner_manifest_declared_job_count: `6`
 - protected_plan_window_failure_contrast_runner_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
@@ -767,23 +767,23 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - protected_plan_window_failure_contrast_runner_processed_job_count: `0`
 - protected_plan_window_failure_contrast_runner_executed_job_count: `0`
 - protected_plan_window_failure_contrast_runner_refresh_after_run_requested: `True`
-- protected_plan_window_failure_contrast_approval_request_status: `protected_plan_window_failure_contrast_approval_request_ready`
-- protected_plan_window_failure_contrast_approval_request_blockers: `[]`
-- protected_plan_window_failure_contrast_approval_request_ready_for_collection: `True`
+- protected_plan_window_failure_contrast_approval_request_status: `protected_plan_window_failure_contrast_approval_request_blocked`
+- protected_plan_window_failure_contrast_approval_request_blockers: `['protected_failure_contrast_execution_scope_not_ready']`
+- protected_plan_window_failure_contrast_approval_request_ready_for_collection: `False`
 - protected_plan_window_failure_contrast_approval_receipt_created: `False`
-- protected_plan_window_failure_contrast_approval_receipt_blockers: `['approval_receipt_missing']`
+- protected_plan_window_failure_contrast_approval_receipt_blockers: `['approval_receipt_readiness_fingerprint_mismatch', 'approval_receipt_readiness_status_mismatch', 'approval_receipt_current_control_plane_approval_option_ids_mismatch', 'approval_receipt_protected_failure_contrast_collection_option_available_mismatch', 'approval_receipt_protected_failure_contrast_collection_command_available_mismatch', 'approval_receipt_protected_failure_contrast_collection_option_id_mismatch', 'approval_receipt_protected_failure_contrast_collection_blocked_by_option_id_mismatch']`
 - protected_plan_window_failure_contrast_post_success_refresh_required: `True`
 - protected_plan_window_failure_contrast_post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - protected_plan_window_failure_contrast_post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - protected_plan_window_failure_contrast_runtime_direct_routing: `False`
 - protected_plan_window_failure_contrast_hidden_python_controller: `False`
-- protected_plan_window_failure_contrast_output_validation_status: `protected_plan_window_failure_contrast_outputs_validation_pending`
-- protected_plan_window_failure_contrast_output_exists_count: `0`
-- protected_plan_window_failure_contrast_output_valid_count: `0`
-- protected_plan_window_failure_contrast_integration_status: `protected_plan_window_failure_contrast_integration_pending_outputs`
+- protected_plan_window_failure_contrast_output_validation_status: `protected_plan_window_failure_contrast_outputs_valid_ready_for_integration`
+- protected_plan_window_failure_contrast_output_exists_count: `6`
+- protected_plan_window_failure_contrast_output_valid_count: `6`
+- protected_plan_window_failure_contrast_integration_status: `protected_plan_window_failure_contrast_integration_underpowered_needs_more_valid_failures`
 - protected_plan_window_failure_contrast_integrated_new_failure_count: `0`
 - protected_plan_window_failure_contrast_integration_ready: `False`
-- sequence_policy_after_protected_failure_contrast_refresh_status: `sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs`
+- sequence_policy_after_protected_failure_contrast_refresh_status: `sequence_policy_after_protected_failure_contrast_refresh_blocked_pending_protected_failure_contrast_control_plane_gate_review`
 - sequence_policy_after_protected_failure_contrast_rows: `0`
 - sequence_policy_after_protected_failure_contrast_boundaries_preserved: `True`
 - sequence_policy_after_protected_failure_contrast_boundary_violation_count: `0`
@@ -1262,8 +1262,8 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - internal_terminal_selector_training_allowed: `False`
 - internal_terminal_stage7_promotion_allowed: `False`
 - internal_terminal_stage8_training_allowed: `False`
-- sequence_policy_underpowered_pilot_status: `sequence_policy_pilot_underpowered_pending_protected_failure_contrast_collection`
-- sequence_policy_underpowered_pilot_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
+- sequence_policy_underpowered_pilot_status: `sequence_policy_pilot_blocked_pending_protected_failure_contrast_control_plane_gate_review`
+- sequence_policy_underpowered_pilot_next_step: `review_current_control_plane_gate_for_protected_failure_contrast_collection`
 - sequence_policy_underpowered_pilot_stage4_topk_signal: `True`
 - sequence_policy_underpowered_pilot_stage7_success_gap: `0`
 - sequence_policy_underpowered_pilot_readiness_checked_flag_count: `2912`
@@ -1272,7 +1272,7 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_processed_job_count: `0`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_executed_job_count: `0`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_collection_run_allowed: `False`
-- sequence_policy_underpowered_pilot_protected_failure_contrast_approval_receipt_present: `False`
+- sequence_policy_underpowered_pilot_protected_failure_contrast_approval_receipt_present: `True`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_approval_receipt_valid: `False`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_post_success_refresh_required: `True`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
@@ -1287,29 +1287,29 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - sequence_policy_underpowered_pilot_protected_failure_contrast_selector_training_allowed: `False`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_stage7_promotion_allowed: `False`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_stage8_training_allowed: `False`
-- readiness_status: `krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection`
+- readiness_status: `krk_suite_readiness_ready_for_next_runtime_or_training_review`
 - readiness_checked_flag_count: `2912`
 - readiness_boundary_violation_count: `0`
 - readiness_source_artifact_count: `408`
 - unblocker_status: `krk_suite_protected_failure_contrast_unblocker_ready_pending_explicit_collection_approval`
-- stage8_training_readiness_status: `stage8_training_blocked_pending_protected_failure_contrast_collection`
+- stage8_training_readiness_status: `stage8_training_blocked_pending_sequence_policy_gate`
 - stage8_training_readiness_checked_flag_count: `2912`
 - stage8_training_readiness_boundary_violation_count: `0`
 - stage8_training_readiness_source_artifact_count: `408`
 - stage8_training_readiness_protected_failure_contrast_post_success_refresh_required: `True`
-- stage8_training_readiness_protected_failure_contrast_approval_receipt_present: `False`
+- stage8_training_readiness_protected_failure_contrast_approval_receipt_present: `True`
 - stage8_training_readiness_protected_failure_contrast_approval_receipt_valid: `False`
 - stage8_training_readiness_protected_failure_contrast_runtime_direct_routing: `False`
 - stage8_training_readiness_protected_failure_contrast_hidden_python_controller: `False`
-- stage7_post_label_outcome_status: `post_label_outcome_waiting_on_explicit_protected_failure_contrast_collection`
+- stage7_post_label_outcome_status: `post_label_outcome_manual_review_required`
 - stage7_post_label_outcome_readiness_checked_flag_count: `2912`
 - stage7_post_label_outcome_readiness_boundary_violation_count: `0`
 - stage7_post_label_outcome_readiness_source_artifact_count: `408`
-- stage7_post_label_outcome_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
+- stage7_post_label_outcome_next_step: `inspect_sequence_policy_and_stage8_reviews`
 - stage7_post_label_outcome_protected_failure_contrast_runner_processed_job_count: `0`
 - stage7_post_label_outcome_protected_failure_contrast_runner_executed_job_count: `0`
 - stage7_post_label_outcome_protected_failure_contrast_runner_collection_run_allowed: `False`
-- stage7_post_label_outcome_protected_failure_contrast_approval_receipt_present: `False`
+- stage7_post_label_outcome_protected_failure_contrast_approval_receipt_present: `True`
 - stage7_post_label_outcome_protected_failure_contrast_approval_receipt_valid: `False`
 - stage7_post_label_outcome_protected_failure_contrast_post_success_refresh_required: `True`
 - stage7_post_label_outcome_protected_failure_contrast_post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
@@ -1333,27 +1333,27 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - `stage7_clean_sequence_control_recovery` status=`clean_sequence_controls_recovered_for_offline_source_bias_audit` labels=`False` runtime=`False` artifact_runtime=`False`
 - `stage7_clean_success_backfill_audit` status=`stage7_clean_success_backfill_available` labels=`False` runtime=`False` artifact_runtime=`False`
 - `sequence_policy_pipeline_refresh` status=`sequence_policy_pipeline_refreshed_ready_for_non_causal_benchmark_review` labels=`False` runtime=`False` artifact_runtime=`False`
-- `sequence_policy_benchmark_review` status=`sequence_policy_benchmark_mixed_plan_window_underpowered` labels=`False` runtime=`False` artifact_runtime=`False`
+- `sequence_policy_benchmark_review` status=`sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_protected_failure_contrast_control_plane_gate_review` labels=`False` runtime=`False` artifact_runtime=`False`
 - `sequence_policy_benchmark_design` status=`sequence_policy_benchmark_design_ready_non_causal` labels=`False` runtime=`False` artifact_runtime=`False`
 - `cross_stage_plan_capsule_requirements` status=`cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark` labels=`False` runtime=`False` artifact_runtime=`False`
 - `protected_plan_window_failure_contrast_plan` status=`protected_plan_window_failure_contrast_plan_ready_pending_explicit_collection_approval` labels=`False` runtime=`False` artifact_runtime=`False`
 - `protected_plan_window_failure_contrast_manifest` status=`protected_plan_window_failure_contrast_manifest_ready_for_review` labels=`False` runtime=`False` artifact_runtime=`False`
-- `protected_plan_window_failure_contrast_manifest_review` status=`protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval` labels=`False` runtime=`False` artifact_runtime=`False`
-- `protected_plan_window_failure_contrast_execution_readiness` status=`protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval` labels=`False` runtime=`False` artifact_runtime=`False`
-- `protected_plan_window_failure_contrast_runner` status=`protected_plan_window_failure_contrast_runner_dry_run_ready` labels=`False` runtime=`False` artifact_runtime=`False`
-- `protected_plan_window_failure_contrast_approval_request` status=`protected_plan_window_failure_contrast_approval_request_ready` labels=`False` runtime=`False` artifact_runtime=`False`
-- `protected_plan_window_failure_contrast_output_validation` status=`protected_plan_window_failure_contrast_outputs_validation_pending` labels=`False` runtime=`False` artifact_runtime=`False`
-- `protected_plan_window_failure_contrast_integration` status=`protected_plan_window_failure_contrast_integration_pending_outputs` labels=`False` runtime=`False` artifact_runtime=`False`
-- `sequence_policy_after_protected_failure_contrast_refresh` status=`sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs` labels=`False` runtime=`False` artifact_runtime=`False`
+- `protected_plan_window_failure_contrast_manifest_review` status=`protected_plan_window_failure_contrast_manifest_review_passed_pending_control_plane_gate_review` labels=`False` runtime=`False` artifact_runtime=`False`
+- `protected_plan_window_failure_contrast_execution_readiness` status=`protected_plan_window_failure_contrast_execution_readiness_blocked_pending_control_plane_gate_review` labels=`False` runtime=`False` artifact_runtime=`False`
+- `protected_plan_window_failure_contrast_runner` status=`protected_plan_window_failure_contrast_runner_blocked` labels=`False` runtime=`False` artifact_runtime=`False`
+- `protected_plan_window_failure_contrast_approval_request` status=`protected_plan_window_failure_contrast_approval_request_blocked` labels=`False` runtime=`False` artifact_runtime=`False`
+- `protected_plan_window_failure_contrast_output_validation` status=`protected_plan_window_failure_contrast_outputs_valid_ready_for_integration` labels=`False` runtime=`False` artifact_runtime=`False`
+- `protected_plan_window_failure_contrast_integration` status=`protected_plan_window_failure_contrast_integration_underpowered_needs_more_valid_failures` labels=`False` runtime=`False` artifact_runtime=`False`
+- `sequence_policy_after_protected_failure_contrast_refresh` status=`sequence_policy_after_protected_failure_contrast_refresh_blocked_pending_protected_failure_contrast_control_plane_gate_review` labels=`False` runtime=`False` artifact_runtime=`False`
 - `candidate_generator_coverage_audit` status=`candidate_generator_recall_gap_confirmed` labels=`False` runtime=`False` artifact_runtime=`False`
 - `validated_provider_candidate_set_audit` status=`validated_provider_candidate_set_recall_promising_requires_selector_semantics` labels=`False` runtime=`False` artifact_runtime=`False`
 - `two_stage_candidate_selection_review` status=`two_stage_non_causal_benchmark_design_needed` labels=`False` runtime=`False` artifact_runtime=`False`
 - `two_stage_candidate_selection_benchmark_plan` status=`two_stage_candidate_selection_benchmark_plan_ready` labels=`False` runtime=`False` artifact_runtime=`False`
 - `two_stage_candidate_selection_benchmark` status=`candidate_generation_recall_improves_selection_not_ready` labels=`False` runtime=`False` artifact_runtime=`False`
-- `full_suite_readiness_audit` status=`krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection` labels=`False` runtime=`False` artifact_runtime=`False`
-- `sequence_policy_underpowered_pilot_review` status=`sequence_policy_pilot_underpowered_pending_protected_failure_contrast_collection` labels=`False` runtime=`False` artifact_runtime=`False`
-- `stage8_training_readiness_review` status=`stage8_training_blocked_pending_protected_failure_contrast_collection` labels=`False` runtime=`False` artifact_runtime=`False`
-- `stage7_post_label_outcome_review` status=`post_label_outcome_waiting_on_explicit_protected_failure_contrast_collection` labels=`False` runtime=`False` artifact_runtime=`False`
+- `full_suite_readiness_audit` status=`krk_suite_readiness_ready_for_next_runtime_or_training_review` labels=`False` runtime=`False` artifact_runtime=`False`
+- `sequence_policy_underpowered_pilot_review` status=`sequence_policy_pilot_blocked_pending_protected_failure_contrast_control_plane_gate_review` labels=`False` runtime=`False` artifact_runtime=`False`
+- `stage8_training_readiness_review` status=`stage8_training_blocked_pending_sequence_policy_gate` labels=`False` runtime=`False` artifact_runtime=`False`
+- `stage7_post_label_outcome_review` status=`post_label_outcome_manual_review_required` labels=`False` runtime=`False` artifact_runtime=`False`
 - `stage7_label_distribution_review` status=`stage7_label_distribution_review_success_gate_closed` labels=`False` runtime=`False` artifact_runtime=`False`
 - `stage7_additional_clean_sampling_manifest` status=`stage7_additional_clean_sampling_manifest_not_applicable_success_gate_closed` labels=`False` runtime=`False` artifact_runtime=`False`
 - `stage7_additional_clean_output_validation` status=`stage7_additional_clean_sampling_outputs_not_applicable_success_gate_closed` labels=`False` runtime=`False` artifact_runtime=`False`
@@ -1363,7 +1363,7 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 
 ## Decision
 
-- recommended_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
+- recommended_next_step: `review_current_control_plane_gate_for_protected_failure_contrast_collection`
 - runtime_changes_allowed: `false`
 - label_run_allowed: `false`
 - selector_training_allowed: `false`

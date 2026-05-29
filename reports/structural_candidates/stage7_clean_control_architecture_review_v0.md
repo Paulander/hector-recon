@@ -13,18 +13,18 @@ Non-causal closure review for the Stage 7 clean-control collection branch.
 - bounded_label_run_playouts: `{'mate': 3, 'max_plies': 7}`
 - bounded_label_run_novel_controls: `0`
 - sampling_overlap_detected: `True`
-- protected_failure_contrast_gate_status: `protected_plan_window_failure_contrast_runner_dry_run_ready`
-- protected_failure_contrast_collection_option_available: `True`
-- protected_failure_contrast_collection_command_available: `True`
-- protected_failure_contrast_collection_option_id: `approve_protected_plan_window_failure_contrast_collection`
-- protected_failure_contrast_collection_blocked_by_option_id: `None`
-- protected_failure_contrast_approval_receipt_present: `False`
+- protected_failure_contrast_gate_status: `protected_plan_window_failure_contrast_runner_blocked`
+- protected_failure_contrast_collection_option_available: `False`
+- protected_failure_contrast_collection_command_available: `False`
+- protected_failure_contrast_collection_option_id: `None`
+- protected_failure_contrast_collection_blocked_by_option_id: `review_protected_plan_window_failure_contrast_manifest`
+- protected_failure_contrast_approval_receipt_present: `True`
 - protected_failure_contrast_approval_receipt_valid: `False`
 - protected_failure_contrast_runner_collection_run_allowed: `False`
 - protected_failure_contrast_runner_execution_requested: `False`
 - protected_failure_contrast_runner_processed_job_count: `0`
 - protected_failure_contrast_runner_executed_job_count: `0`
-- suite_gate_advancement_status: `krk_suite_passive_advancement_ready_for_protected_failure_contrast_collection`
+- suite_gate_advancement_status: `krk_suite_passive_advancement_blocked_pending_protected_failure_contrast_control_plane_gate_review`
 
 ## Conclusions
 
@@ -48,4 +48,4 @@ Non-causal closure review for the Stage 7 clean-control collection branch.
 - `runtime selector/arbiter implementation from this evidence`
 - `support bonus or provider penalty tuning`
 
-Recommended next step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
+Recommended next step: `review_current_control_plane_gate_for_protected_failure_contrast_collection`

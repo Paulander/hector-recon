@@ -1,6 +1,6 @@
 # KRK Sequence-Policy Benchmark Review v0
 
-Status: `sequence_policy_benchmark_mixed_plan_window_underpowered`
+Status: `sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_protected_failure_contrast_control_plane_gate_review`
 
 This review is non-causal. It does not train a sequence policy, implement a selector, change runtime behavior, promote Stage 7, or train Stage 8.
 
@@ -52,15 +52,15 @@ This review is non-causal. It does not train a sequence policy, implement a sele
 ## Current Control Plane Gate
 
 - status: `krk_control_plane_waiting_on_explicit_gate_choice`
-- approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'approve_protected_plan_window_failure_contrast_collection']`
-- protected_failure_contrast_collection_option_available: `True`
-- protected_failure_contrast_collection_command_available: `True`
-- protected_failure_contrast_collection_option_id: `approve_protected_plan_window_failure_contrast_collection`
-- protected_failure_contrast_collection_blocked_by_option_id: `None`
+- approval_option_ids: `['approve_stage4_first_move_contrast_sandbox', 'review_protected_plan_window_failure_contrast_manifest']`
+- protected_failure_contrast_collection_option_available: `False`
+- protected_failure_contrast_collection_command_available: `False`
+- protected_failure_contrast_collection_option_id: `None`
+- protected_failure_contrast_collection_blocked_by_option_id: `review_protected_plan_window_failure_contrast_manifest`
 
 ## Decision
 
-- recommended_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
+- recommended_next_step: `review_current_control_plane_gate_for_protected_failure_contrast_collection`
 - runtime_changes_allowed: `false`
 - label_run_allowed: `false`
 - selector_training_allowed: `false`

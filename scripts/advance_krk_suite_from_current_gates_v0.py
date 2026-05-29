@@ -529,6 +529,13 @@ def build_payload() -> dict[str, Any]:
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_output_validation_v0.json"
     )
+    failure_contrast_outputs_ready = (
+        failure_contrast_output_validation.get("decision", {}).get("status")
+        in {
+            "protected_plan_window_failure_contrast_outputs_valid_ready_for_integration",
+            "protected_plan_window_failure_contrast_outputs_partial_valid_pending_remaining_jobs",
+        }
+    )
     failure_contrast_integration = _load_json(
         "reports/strategy_arbitration/"
         "krk_protected_plan_window_failure_contrast_integration_v0.json"
@@ -730,6 +737,7 @@ def build_payload() -> dict[str, Any]:
     )
     protected_failure_contrast_approval_request_repair_required = (
         benchmark_ready
+        and not failure_contrast_outputs_ready
         and (
             failure_contrast_approval_request_status
             == "protected_plan_window_failure_contrast_approval_request_blocked"
@@ -752,6 +760,7 @@ def build_payload() -> dict[str, Any]:
     )
     protected_failure_contrast_execution_readiness_required = (
         benchmark_ready
+        and not failure_contrast_outputs_ready
         and (
             failure_contrast_execution_readiness.get("decision", {}).get("status")
             != "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"

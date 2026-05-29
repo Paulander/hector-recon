@@ -62,11 +62,12 @@ def test_gate_advancement_reports_current_stage7_blocker():
 
     assert (
         payload["decision"]["status"]
-        == "krk_suite_passive_advancement_ready_for_protected_failure_contrast_collection"
+        == "krk_suite_passive_advancement_blocked_pending_"
+        "protected_failure_contrast_control_plane_gate_review"
     )
     assert (
         payload["decision"]["recommended_next_step"]
-        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
     )
     assert payload["summary"]["stage7_success_controls"] == 11
     assert (
@@ -2348,13 +2349,13 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"][
             "sequence_policy_input_probe_protected_failure_contrast_collection_option_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["summary"][
             "sequence_policy_input_probe_protected_failure_contrast_collection_command_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["summary"]["sequence_policy_input_probe_selector_training_row_count"]
@@ -2493,36 +2494,34 @@ def test_gate_advancement_reports_current_stage7_blocker():
         is False
     )
     assert payload["summary"]["readiness_control_plane_gate_review_blockers"] == []
-    assert payload["summary"]["readiness_explicit_gate_blockers"] == [
-        "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
-    ]
+    assert payload["summary"]["readiness_explicit_gate_blockers"] == []
     assert (
-        "approve_protected_plan_window_failure_contrast_collection"
+        "review_protected_plan_window_failure_contrast_manifest"
         in payload["summary"]["current_control_plane_approval_option_ids"]
     )
     assert (
         payload["summary"][
             "protected_plan_window_failure_contrast_collection_option_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["summary"][
             "protected_plan_window_failure_contrast_collection_command_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["summary"][
             "protected_plan_window_failure_contrast_collection_option_id"
         ]
-        == "approve_protected_plan_window_failure_contrast_collection"
+        is None
     )
     assert (
         payload["summary"][
             "protected_plan_window_failure_contrast_collection_blocked_by_option_id"
         ]
-        is None
+        == "review_protected_plan_window_failure_contrast_manifest"
     )
     assert payload["summary"]["protected_missing_provider_audit_plan_ready"] is True
     assert (
@@ -4881,12 +4880,14 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         "current_control_plane_gate",
     }
     assert (
-        "krk_suite_passive_advancement_ready_for_protected_failure_contrast_collection"
+        "krk_suite_passive_advancement_blocked_pending_"
+        "protected_failure_contrast_control_plane_gate_review"
         in rendered
     )
     assert (
         payload["summary"]["sequence_policy_benchmark_review_status"]
-        == "sequence_policy_benchmark_mixed_plan_window_underpowered"
+        == "sequence_policy_benchmark_mixed_plan_window_underpowered_"
+        "blocked_pending_protected_failure_contrast_control_plane_gate_review"
     )
     assert (
         payload["summary"]["sequence_policy_benchmark_design_status"]
@@ -4894,7 +4895,7 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     )
     assert (
         payload["summary"]["sequence_policy_passive_design_without_new_labels_status"]
-        == "non_causal_sequence_policy_design_without_new_labels_ready"
+        == "non_causal_sequence_policy_design_review_needed"
     )
     assert (
         payload["summary"]["cross_stage_plan_capsule_requirements_status"]
@@ -4913,18 +4914,20 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     assert payload["summary"]["protected_plan_window_failure_contrast_manifest_job_count"] == 6
     assert (
         payload["summary"]["protected_plan_window_failure_contrast_manifest_review_status"]
-        == "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval"
+        == "protected_plan_window_failure_contrast_manifest_review_passed_pending_"
+        "control_plane_gate_review"
     )
     assert (
         payload["summary"][
             "protected_plan_window_failure_contrast_execution_readiness_status"
         ]
-        == "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval"
+        == "protected_plan_window_failure_contrast_execution_readiness_blocked_pending_"
+        "control_plane_gate_review"
     )
     assert payload["summary"]["protected_plan_window_failure_contrast_execution_jobs_passing"] == 6
     assert (
         payload["summary"]["protected_plan_window_failure_contrast_runner_status"]
-        == "protected_plan_window_failure_contrast_runner_dry_run_ready"
+        == "protected_plan_window_failure_contrast_runner_blocked"
     )
     assert (
         payload["summary"][
@@ -4968,17 +4971,17 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     assert runner_step["script_args"] == ["--refresh-after-run"]
     assert (
         payload["summary"]["protected_plan_window_failure_contrast_approval_request_status"]
-        == "protected_plan_window_failure_contrast_approval_request_ready"
+        == "protected_plan_window_failure_contrast_approval_request_blocked"
     )
     assert (
         payload["summary"]["protected_plan_window_failure_contrast_approval_request_blockers"]
-        == []
+        == ["protected_failure_contrast_execution_scope_not_ready"]
     )
     assert (
         payload["summary"][
             "protected_plan_window_failure_contrast_approval_request_ready_for_collection"
         ]
-        is True
+        is False
     )
     assert (
         payload["summary"]["protected_plan_window_failure_contrast_approval_receipt_created"]
@@ -4986,7 +4989,15 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     )
     assert payload["summary"][
         "protected_plan_window_failure_contrast_approval_receipt_blockers"
-    ] == ["approval_receipt_missing"]
+    ] == [
+        "approval_receipt_readiness_fingerprint_mismatch",
+        "approval_receipt_readiness_status_mismatch",
+        "approval_receipt_current_control_plane_approval_option_ids_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_command_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_id_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_blocked_by_option_id_mismatch",
+    ]
     assert (
         payload["summary"][
             "protected_plan_window_failure_contrast_post_success_refresh_required"
@@ -5015,19 +5026,20 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     )
     assert (
         payload["summary"]["protected_plan_window_failure_contrast_output_validation_status"]
-        == "protected_plan_window_failure_contrast_outputs_validation_pending"
+        == "protected_plan_window_failure_contrast_outputs_valid_ready_for_integration"
     )
-    assert payload["summary"]["protected_plan_window_failure_contrast_output_exists_count"] == 0
-    assert payload["summary"]["protected_plan_window_failure_contrast_output_valid_count"] == 0
+    assert payload["summary"]["protected_plan_window_failure_contrast_output_exists_count"] == 6
+    assert payload["summary"]["protected_plan_window_failure_contrast_output_valid_count"] == 6
     assert (
         payload["summary"]["protected_plan_window_failure_contrast_integration_status"]
-        == "protected_plan_window_failure_contrast_integration_pending_outputs"
+        == "protected_plan_window_failure_contrast_integration_underpowered_needs_more_valid_failures"
     )
     assert payload["summary"]["protected_plan_window_failure_contrast_integrated_new_failure_count"] == 0
     assert payload["summary"]["protected_plan_window_failure_contrast_integration_ready"] is False
     assert (
         payload["summary"]["sequence_policy_after_protected_failure_contrast_refresh_status"]
-        == "sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs"
+        == "sequence_policy_after_protected_failure_contrast_refresh_blocked_pending_"
+        "protected_failure_contrast_control_plane_gate_review"
     )
     assert payload["summary"]["sequence_policy_after_protected_failure_contrast_rows"] == 0
     assert (
@@ -5062,11 +5074,11 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     )
     assert (
         payload["summary"]["sequence_policy_underpowered_pilot_status"]
-        == "sequence_policy_pilot_underpowered_pending_protected_failure_contrast_collection"
+        == "sequence_policy_pilot_blocked_pending_protected_failure_contrast_control_plane_gate_review"
     )
     assert (
         payload["summary"]["sequence_policy_underpowered_pilot_next_step"]
-        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
     )
     assert payload["summary"]["sequence_policy_underpowered_pilot_stage4_topk_signal"] is True
     assert payload["summary"]["sequence_policy_underpowered_pilot_stage7_success_gap"] == 0
@@ -5100,7 +5112,7 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         payload["summary"][
             "sequence_policy_underpowered_pilot_protected_failure_contrast_approval_receipt_present"
         ]
-        is False
+        is True
     )
     assert (
         payload["summary"][
@@ -5193,7 +5205,7 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     assert payload["summary"]["stage7_output_valid_count"] == 8
     assert (
         payload["summary"]["stage8_training_readiness_status"]
-        == "stage8_training_blocked_pending_protected_failure_contrast_collection"
+        == "stage8_training_blocked_pending_sequence_policy_gate"
     )
     assert payload["summary"]["readiness_checked_flag_count"] >= 430
     assert payload["summary"]["readiness_boundary_violation_count"] == 0
@@ -5211,7 +5223,7 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         payload["summary"][
             "stage8_training_readiness_protected_failure_contrast_approval_receipt_present"
         ]
-        is False
+        is True
     )
     assert (
         payload["summary"][
@@ -5233,7 +5245,7 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     )
     assert (
         payload["summary"]["stage7_post_label_outcome_status"]
-        == "post_label_outcome_waiting_on_explicit_protected_failure_contrast_collection"
+        == "post_label_outcome_manual_review_required"
     )
     assert payload["summary"]["stage7_post_label_outcome_readiness_checked_flag_count"] >= 430
     assert (
@@ -5243,7 +5255,7 @@ def test_gate_advancement_writer_includes_all_passive_steps():
     assert payload["summary"]["stage7_post_label_outcome_readiness_source_artifact_count"] >= 44
     assert (
         payload["summary"]["stage7_post_label_outcome_next_step"]
-        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        == "inspect_sequence_policy_and_stage8_reviews"
     )
     assert (
         payload["summary"][
@@ -5261,7 +5273,7 @@ def test_gate_advancement_writer_includes_all_passive_steps():
         payload["summary"][
             "stage7_post_label_outcome_protected_failure_contrast_approval_receipt_present"
         ]
-        is False
+        is True
     )
     assert (
         payload["summary"][
@@ -5637,6 +5649,16 @@ def test_gate_advancement_routes_broken_protected_approval_request_to_repair(
                 "sequence_policy_pilot_blocked_pending_"
                 "protected_failure_contrast_approval_request_repair"
             )
+        if (
+            relative
+            == "reports/strategy_arbitration/"
+            "krk_protected_plan_window_failure_contrast_output_validation_v0.json"
+        ):
+            payload.setdefault("decision", {})["status"] = (
+                "protected_plan_window_failure_contrast_outputs_validation_pending"
+            )
+            payload.setdefault("summary", {})["output_exists_count"] = 0
+            payload["summary"]["output_valid_count"] = 0
         return payload
 
     monkeypatch.setattr(_advance, "_run_script", no_op_run_script)
@@ -5702,10 +5724,36 @@ def test_gate_advancement_routes_blocked_execution_readiness_to_review(monkeypat
             gate["status"] = "protected_plan_window_failure_contrast_execution_blocked"
             gate["ready_for_explicit_approval"] = False
             gate["runner_status"] = "protected_plan_window_failure_contrast_runner_blocked"
+            gate["approval_request_status"] = (
+                "protected_plan_window_failure_contrast_approval_request_ready"
+            )
+            gate["approval_request_blockers"] = []
             gate["approval_request_ready_for_collection"] = True
             payload.setdefault("decision", {})["status"] = (
                 "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection"
             )
+        if (
+            relative
+            == "reports/strategy_arbitration/"
+            "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
+        ):
+            payload.setdefault("decision", {})["status"] = (
+                "protected_plan_window_failure_contrast_approval_request_ready"
+            )
+            payload["blockers"] = []
+            payload["approval_request_ready_for_collection"] = True
+            payload.setdefault("summary", {})["request_ready"] = True
+            payload["summary"]["request_blockers"] = []
+        if (
+            relative
+            == "reports/strategy_arbitration/"
+            "krk_protected_plan_window_failure_contrast_output_validation_v0.json"
+        ):
+            payload.setdefault("decision", {})["status"] = (
+                "protected_plan_window_failure_contrast_outputs_validation_pending"
+            )
+            payload.setdefault("summary", {})["output_exists_count"] = 0
+            payload["summary"]["output_valid_count"] = 0
         if (
             relative
             == "reports/strategy_arbitration/"
@@ -5771,6 +5819,25 @@ def test_gate_advancement_routes_missing_collection_option_to_gate_review(monkey
             payload.setdefault("primary_unblocker", {})["status"] = (
                 "blocked_pending_protected_failure_contrast_control_plane_gate_review"
             )
+        if relative == "reports/krk_full_suite_readiness_audit_v0.json":
+            gate = payload.setdefault("protected_failure_contrast_gate", {})
+            gate["approval_request_status"] = (
+                "protected_plan_window_failure_contrast_approval_request_ready"
+            )
+            gate["approval_request_blockers"] = []
+            gate["approval_request_ready_for_collection"] = True
+        if (
+            relative
+            == "reports/strategy_arbitration/"
+            "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
+        ):
+            payload.setdefault("decision", {})["status"] = (
+                "protected_plan_window_failure_contrast_approval_request_ready"
+            )
+            payload["blockers"] = []
+            payload["approval_request_ready_for_collection"] = True
+            payload.setdefault("summary", {})["request_ready"] = True
+            payload["summary"]["request_blockers"] = []
         return payload
 
     monkeypatch.setattr(_advance, "_run_script", no_op_run_script)
@@ -5832,6 +5899,12 @@ def test_gate_advancement_routes_readiness_gate_review_blocker_to_gate_review(
                 "protected_plan_window_failure_contrast_control_plane_gate_review_required"
             ]
             payload["blockers"] = payload["control_plane_gate_review_blockers"]
+            gate = payload.setdefault("protected_failure_contrast_gate", {})
+            gate["approval_request_status"] = (
+                "protected_plan_window_failure_contrast_approval_request_ready"
+            )
+            gate["approval_request_blockers"] = []
+            gate["approval_request_ready_for_collection"] = True
             payload.setdefault("decision", {})["status"] = (
                 "krk_suite_readiness_blocked_pending_"
                 "protected_failure_contrast_control_plane_gate_review"
@@ -5839,6 +5912,18 @@ def test_gate_advancement_routes_readiness_gate_review_blocker_to_gate_review(
             payload["decision"]["recommended_next_step"] = (
                 "review_current_control_plane_gate_for_protected_failure_contrast_collection"
             )
+        if (
+            relative
+            == "reports/strategy_arbitration/"
+            "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
+        ):
+            payload.setdefault("decision", {})["status"] = (
+                "protected_plan_window_failure_contrast_approval_request_ready"
+            )
+            payload["blockers"] = []
+            payload["approval_request_ready_for_collection"] = True
+            payload.setdefault("summary", {})["request_ready"] = True
+            payload["summary"]["request_blockers"] = []
         return payload
 
     monkeypatch.setattr(_advance, "_run_script", no_op_run_script)
@@ -5862,7 +5947,7 @@ def test_gate_advancement_routes_readiness_gate_review_blocker_to_gate_review(
         payload["summary"][
             "protected_plan_window_failure_contrast_collection_option_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["summary"][
@@ -5888,9 +5973,24 @@ def test_gate_advancement_summary_falls_back_when_request_ready_flags_are_null(m
                 "approval_request_ready_for_runtime_approval"
             ] = None
         if relative == "reports/krk_full_suite_readiness_audit_v0.json":
-            payload.setdefault("protected_failure_contrast_gate", {})[
-                "approval_request_ready_for_collection"
-            ] = None
+            gate = payload.setdefault("protected_failure_contrast_gate", {})
+            gate["approval_request_status"] = (
+                "protected_plan_window_failure_contrast_approval_request_ready"
+            )
+            gate["approval_request_blockers"] = []
+            gate["approval_request_ready_for_collection"] = None
+        if (
+            relative
+            == "reports/strategy_arbitration/"
+            "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
+        ):
+            payload.setdefault("decision", {})["status"] = (
+                "protected_plan_window_failure_contrast_approval_request_ready"
+            )
+            payload["blockers"] = []
+            payload["approval_request_ready_for_collection"] = True
+            payload.setdefault("summary", {})["request_ready"] = True
+            payload["summary"]["request_blockers"] = []
         return payload
 
     monkeypatch.setattr(_advance, "_run_script", no_op_run_script)

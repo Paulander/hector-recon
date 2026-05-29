@@ -80,13 +80,13 @@
   },
   "approval_gates": {
     "protected_plan_window_failure_contrast_collection": {
-      "approval_request_ready_for_collection": true,
+      "approval_request_ready_for_collection": false,
       "current_artifact_allows_collection": false,
       "post_success_refresh_required": true,
       "post_success_refresh_scope": "full_passive_krk_suite_gate_stack",
       "post_success_refresh_script": "scripts/advance_krk_suite_from_current_gates_v0.py",
-      "ready_for_explicit_approval": true,
-      "status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
+      "ready_for_explicit_approval": false,
+      "status": "protected_plan_window_failure_contrast_execution_readiness_blocked_pending_control_plane_gate_review",
       "why": "The sequence-policy benchmark is mixed/underpowered on protected plan-window failures; bounded observation-only collection is the current explicit gate."
     },
     "stage4_first_move_contrast_sandbox": {
@@ -109,7 +109,7 @@
         "hidden_python_controller": false,
         "implementation_authorized_by_request": false,
         "readiness_audit": "reports/krk_full_suite_readiness_audit_v0.json",
-        "readiness_audit_status": "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection",
+        "readiness_audit_status": "krk_suite_readiness_ready_for_next_runtime_or_training_review",
         "readiness_boundary_violation_count": 0,
         "readiness_checked_flag_count": 2912,
         "readiness_source_artifact_count": 408,
@@ -130,7 +130,7 @@
     },
     "stage8_training": {
       "ready_for_explicit_approval": false,
-      "why": "Protected plan-window failure-contrast evidence is not integrated; Stage 8 training remains blocked even though Stage 7 held-out controls are balanced."
+      "why": "Stage 7 is still quarantined or the sequence-policy benchmark is not ready."
     }
   },
   "balanced_hard_negative_gate": {
@@ -200,9 +200,7 @@
     "status": "balanced_hard_negative_signal_promising_but_underpowered",
     "trace_failures_only": true
   },
-  "blockers": [
-    "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
-  ],
+  "blockers": [],
   "candidate_generation_trace_context_gate": {
     "dataset_v4_context_status": "strategy_sequence_dataset_v4_context_integrated_selector_still_blocked",
     "dataset_v4_quality_status": "strategy_sequence_dataset_v4_quality_candidate_generation_context_ready_selector_blocked",
@@ -737,14 +735,14 @@
   "current_control_plane_gate": {
     "approval_option_ids": [
       "approve_stage4_first_move_contrast_sandbox",
-      "approve_protected_plan_window_failure_contrast_collection"
+      "review_protected_plan_window_failure_contrast_manifest"
     ],
     "hidden_python_controller": false,
     "label_run_allowed": false,
-    "protected_failure_contrast_collection_blocked_by_option_id": null,
-    "protected_failure_contrast_collection_command_available": true,
-    "protected_failure_contrast_collection_option_available": true,
-    "protected_failure_contrast_collection_option_id": "approve_protected_plan_window_failure_contrast_collection",
+    "protected_failure_contrast_collection_blocked_by_option_id": "review_protected_plan_window_failure_contrast_manifest",
+    "protected_failure_contrast_collection_command_available": false,
+    "protected_failure_contrast_collection_option_available": false,
+    "protected_failure_contrast_collection_option_id": null,
     "runtime_changes_allowed": false,
     "runtime_direct_routing": false,
     "selector_allowed": false,
@@ -755,17 +753,15 @@
   },
   "decision": {
     "label_run_allowed": false,
-    "recommended_next_step": "obtain_matching_approval_receipt_before_protected_failure_contrast_collection",
+    "recommended_next_step": "prepare_explicit_runtime_or_training_review_packet",
     "runtime_changes_allowed": false,
     "selector_allowed": false,
     "selector_training_allowed": false,
     "stage7_promotion_allowed": false,
     "stage8_training_allowed": false,
-    "status": "krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection"
+    "status": "krk_suite_readiness_ready_for_next_runtime_or_training_review"
   },
-  "explicit_gate_blockers": [
-    "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
-  ],
+  "explicit_gate_blockers": [],
   "forced_provider_control_label_lineage_gate": {
     "blocked_next_steps": [
       "runtime_arbiter",
@@ -1096,47 +1092,55 @@
   },
   "protected_failure_contrast_gate": {
     "approval_receipt_blockers": [
-      "approval_receipt_missing"
+      "approval_receipt_readiness_fingerprint_mismatch",
+      "approval_receipt_readiness_status_mismatch",
+      "approval_receipt_current_control_plane_approval_option_ids_mismatch",
+      "approval_receipt_protected_failure_contrast_collection_option_available_mismatch",
+      "approval_receipt_protected_failure_contrast_collection_command_available_mismatch",
+      "approval_receipt_protected_failure_contrast_collection_option_id_mismatch",
+      "approval_receipt_protected_failure_contrast_collection_blocked_by_option_id_mismatch"
     ],
     "approval_receipt_created_by_request": false,
     "approval_receipt_path": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json",
-    "approval_receipt_present": false,
+    "approval_receipt_present": true,
     "approval_receipt_required": true,
     "approval_receipt_valid": false,
     "approval_request_artifact": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_approval_request_v0.json",
-    "approval_request_blockers": [],
-    "approval_request_ready_for_collection": true,
-    "approval_request_status": "protected_plan_window_failure_contrast_approval_request_ready",
-    "command_if_explicitly_approved": "UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json",
+    "approval_request_blockers": [
+      "protected_failure_contrast_execution_scope_not_ready"
+    ],
+    "approval_request_ready_for_collection": false,
+    "approval_request_status": "protected_plan_window_failure_contrast_approval_request_blocked",
+    "command_if_explicitly_approved": null,
     "current_artifact_allows_collection": false,
     "execution_jobs_passing": 6,
-    "execution_readiness_status": "protected_plan_window_failure_contrast_execution_ready_pending_explicit_approval",
+    "execution_readiness_status": "protected_plan_window_failure_contrast_execution_readiness_blocked_pending_control_plane_gate_review",
     "expected_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
-    "expected_readiness_fingerprint": "543ceb8c5d28a575485562e83da6fc07867ad808e144321041b45527993b5923",
+    "expected_readiness_fingerprint": "0a9fe46170cb062d4a12db0b4ddf3bb9348142c9e2f575ee946afc30960acfbe",
     "gameplay_topology_mutation": false,
     "hidden_python_controller": false,
     "integrated_new_failure_count": 0,
     "integration_ready": false,
-    "integration_status": "protected_plan_window_failure_contrast_integration_pending_outputs",
+    "integration_status": "protected_plan_window_failure_contrast_integration_underpowered_needs_more_valid_failures",
     "manifest_job_count": 6,
-    "manifest_review_status": "protected_plan_window_failure_contrast_manifest_review_passed_pending_explicit_approval",
+    "manifest_review_status": "protected_plan_window_failure_contrast_manifest_review_passed_pending_control_plane_gate_review",
     "manifest_status": "protected_plan_window_failure_contrast_manifest_ready_for_review",
     "minimum_new_failures_needed": 4,
-    "output_exists_count": 0,
-    "output_valid_count": 0,
-    "output_validation_status": "protected_plan_window_failure_contrast_outputs_validation_pending",
+    "output_exists_count": 6,
+    "output_valid_count": 6,
+    "output_validation_status": "protected_plan_window_failure_contrast_outputs_valid_ready_for_integration",
     "plan_status": "protected_plan_window_failure_contrast_plan_ready_pending_explicit_collection_approval",
     "post_success_refresh_required": true,
     "post_success_refresh_scope": "full_passive_krk_suite_gate_stack",
     "post_success_refresh_script": "scripts/advance_krk_suite_from_current_gates_v0.py",
-    "ready_for_explicit_approval": true,
+    "ready_for_explicit_approval": false,
     "runner_collection_run_allowed": false,
     "runner_executed_job_count": 0,
     "runner_manifest_declared_job_count": 6,
     "runner_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
     "runner_manifest_status": "protected_plan_window_failure_contrast_manifest_ready_for_review",
     "runner_processed_job_count": 0,
-    "runner_status": "protected_plan_window_failure_contrast_runner_dry_run_ready",
+    "runner_status": "protected_plan_window_failure_contrast_runner_blocked",
     "runtime_behavior_changed": false,
     "runtime_defaults_changed": false,
     "runtime_direct_routing": false,
@@ -2324,15 +2328,15 @@
     "benchmark_review_blockers": [
       "protected_plan_window_failure_evidence_sparse"
     ],
-    "benchmark_review_status": "sequence_policy_benchmark_mixed_plan_window_underpowered",
+    "benchmark_review_status": "sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_protected_failure_contrast_control_plane_gate_review",
     "benchmark_status": "sequence_policy_benchmark_ready_non_causal_results_available",
     "cross_stage_requirements_status": "cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark",
     "cross_stage_sequence_evidence_met": true,
     "forbidden_training_or_runtime_input_blocked": false,
     "forbidden_training_or_runtime_input_blockers": [],
     "input_probe_benchmark_input_ready": true,
-    "input_probe_protected_failure_contrast_collection_command_available": true,
-    "input_probe_protected_failure_contrast_collection_option_available": true,
+    "input_probe_protected_failure_contrast_collection_command_available": false,
+    "input_probe_protected_failure_contrast_collection_option_available": false,
     "input_probe_protected_plan_window_failure_sparse": true,
     "input_probe_row_count": 118,
     "input_probe_runtime_authorization_row_count": 0,
@@ -2341,20 +2345,20 @@
     "input_probe_status": "sequence_policy_input_probe_ready_for_full_non_causal_benchmark",
     "input_row_count": 118,
     "inputs_ready": true,
-    "passive_design_current_evidence_limit": "protected_plan_window_failure_evidence_sparse",
+    "passive_design_current_evidence_limit": null,
     "passive_design_depends_on_new_label_execution": false,
     "passive_design_depends_on_protected_failure_contrast_collection": false,
-    "passive_design_without_new_labels_status": "non_causal_sequence_policy_design_without_new_labels_ready",
+    "passive_design_without_new_labels_status": "non_causal_sequence_policy_design_review_needed",
     "pipeline_status": "sequence_policy_pipeline_refreshed_ready_for_non_causal_benchmark_review",
     "post_failure_contrast_refresh_boundaries_preserved": true,
     "post_failure_contrast_refresh_boundary_violation_count": 0,
     "post_failure_contrast_refresh_integrated_new_failure_count": 0,
     "post_failure_contrast_refresh_integration_ready": false,
-    "post_failure_contrast_refresh_integration_status": "protected_plan_window_failure_contrast_integration_pending_outputs",
-    "post_failure_contrast_refresh_next_step": "obtain_matching_approval_receipt_before_protected_failure_contrast_collection",
+    "post_failure_contrast_refresh_integration_status": "protected_plan_window_failure_contrast_integration_underpowered_needs_more_valid_failures",
+    "post_failure_contrast_refresh_next_step": "review_current_control_plane_gate_for_protected_failure_contrast_collection",
     "post_failure_contrast_refresh_row_count": 0,
     "post_failure_contrast_refresh_stage7_training_row_count": 0,
-    "post_failure_contrast_refresh_status": "sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs",
+    "post_failure_contrast_refresh_status": "sequence_policy_after_protected_failure_contrast_refresh_blocked_pending_protected_failure_contrast_control_plane_gate_review",
     "replay_free_protected_cross_stage_evidence": true,
     "runtime_authorization_row_count": 0,
     "selector_training_row_count": 0,
@@ -2946,7 +2950,7 @@
       "success_controls_required": 5
     },
     "stage8": {
-      "blocker": "Protected plan-window failure-contrast evidence is not integrated; Stage 8 remains blocked pending explicit protected failure-contrast collection and passive integration.",
+      "blocker": "Stage 7 remains quarantined or the sequence-policy benchmark is not ready",
       "ready_for_training": false,
       "status": "blocked"
     }
@@ -3652,7 +3656,7 @@
     "inventory_sequence_policy_clean_gate_closed": true,
     "inventory_sequence_policy_has_clean_success_gap": false,
     "inventory_stage7_clean_control_collection_paused": true,
-    "inventory_stage7_clean_review_recommendation": "obtain_matching_approval_receipt_before_protected_failure_contrast_collection",
+    "inventory_stage7_clean_review_recommendation": "review_current_control_plane_gate_for_protected_failure_contrast_collection",
     "inventory_stage7_is_held_out": true,
     "inventory_state_holdout_gap_blocks_runtime": true,
     "inventory_status": "replay_free_inventory_state_holdout_gap_blocks_runtime",

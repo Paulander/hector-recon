@@ -103,7 +103,7 @@ def _validation(status: str, valid_count: int) -> dict:
     }
 
 
-def test_failure_contrast_integration_pending_before_outputs():
+def test_failure_contrast_integration_current_outputs_underpowered_without_training_or_runtime_rows():
     payload = _read_report()
 
     assert (
@@ -123,39 +123,42 @@ def test_failure_contrast_integration_pending_before_outputs():
     assert payload["stage8_training_allowed"] is False
     assert (
         payload["decision"]["status"]
-        == "protected_plan_window_failure_contrast_integration_pending_outputs"
+        == "protected_plan_window_failure_contrast_integration_underpowered_needs_more_valid_failures"
     )
     assert payload["summary"]["validation_status"] == (
-        "protected_plan_window_failure_contrast_outputs_validation_pending"
+        "protected_plan_window_failure_contrast_outputs_valid_ready_for_integration"
     )
-    assert payload["summary"]["output_exists_count"] == 0
-    assert payload["summary"]["output_valid_count"] == 0
+    assert payload["summary"]["output_exists_count"] == 6
+    assert payload["summary"]["output_valid_count"] == 6
+    assert payload["summary"]["validated_unique_failure_candidate_count"] == 0
     assert payload["summary"]["integrated_new_failure_count"] == 0
     assert payload["summary"]["existing_unique_failure_count"] == 1
     assert payload["summary"]["minimum_new_unique_failures_needed"] == 4
+    assert payload["summary"]["projected_unique_failure_count"] == 1
     assert payload["summary"]["integration_ready"] is False
+    assert payload["summary"]["skipped_counts"] == {"not_conversion_failure": 6}
     assert payload["summary"]["stage7_training_row_count"] == 0
     assert payload["summary"]["selector_training_row_count"] == 0
     assert payload["summary"]["runtime_authorization_row_count"] == 0
     assert (
-        "approve_protected_plan_window_failure_contrast_collection"
+        "review_protected_plan_window_failure_contrast_manifest"
         in payload["summary"]["current_control_plane_approval_option_ids"]
     )
     assert (
         payload["summary"]["protected_failure_contrast_collection_option_available"]
-        is True
+        is False
     )
     assert (
         payload["summary"]["protected_failure_contrast_collection_command_available"]
-        is True
+        is False
     )
     assert (
         payload["summary"]["protected_failure_contrast_collection_option_id"]
-        == "approve_protected_plan_window_failure_contrast_collection"
+        is None
     )
     assert (
         payload["summary"]["protected_failure_contrast_collection_blocked_by_option_id"]
-        is None
+        == "review_protected_plan_window_failure_contrast_manifest"
     )
     assert payload["integrated_failure_contrasts"] == []
     assert payload["decision"]["collection_run_allowed"] is False

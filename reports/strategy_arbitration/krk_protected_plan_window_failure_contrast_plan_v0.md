@@ -6,7 +6,7 @@ This is a non-causal collection plan only. It does not execute labels, change ru
 
 ## Summary
 
-- benchmark_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered`
+- benchmark_review_status: `sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_protected_failure_contrast_control_plane_gate_review`
 - benchmark_objective_row_count: `20`
 - benchmark_failure_evidence_sparse: `True`
 - input_row_count: `20`

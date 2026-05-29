@@ -49,7 +49,7 @@ def test_stage8_training_readiness_review_blocks_current_state():
     assert payload["requirements"]["readiness_source_artifact_count"] >= 44
     assert payload["requirements"]["protected_stage5_6_stack_ready"] is True
     assert payload["requirements"]["stage7_clean_success_controls_ready"] is True
-    assert payload["requirements"]["sequence_policy_benchmark_review_ready"] is True
+    assert payload["requirements"]["sequence_policy_benchmark_review_ready"] is False
     assert (
         payload["requirements"]["sequence_policy_benchmark_design_status"]
         == "sequence_policy_benchmark_design_ready_non_causal"
@@ -58,11 +58,11 @@ def test_stage8_training_readiness_review_blocks_current_state():
         payload["requirements"][
             "sequence_policy_passive_design_without_new_labels_status"
         ]
-        == "non_causal_sequence_policy_design_without_new_labels_ready"
+        == "non_causal_sequence_policy_design_review_needed"
     )
     assert (
         payload["requirements"]["sequence_policy_passive_design_current_evidence_limit"]
-        == "protected_plan_window_failure_evidence_sparse"
+        is None
     )
     assert (
         payload["requirements"]["sequence_policy_cross_stage_requirements_status"]
@@ -82,7 +82,8 @@ def test_stage8_training_readiness_review_blocks_current_state():
         payload["requirements"][
             "sequence_policy_after_protected_failure_contrast_refresh_status"
         ]
-        == "sequence_policy_after_protected_failure_contrast_refresh_waiting_on_integration_outputs"
+        == "sequence_policy_after_protected_failure_contrast_refresh_blocked_pending_"
+        "protected_failure_contrast_control_plane_gate_review"
     )
     assert (
         payload["requirements"][
@@ -110,7 +111,7 @@ def test_stage8_training_readiness_review_blocks_current_state():
         payload["requirements"][
             "protected_failure_contrast_collection_ready_for_explicit_approval"
         ]
-        is True
+        is False
     )
     assert (
         payload["requirements"]["protected_stack_status"]
@@ -127,7 +128,7 @@ def test_stage8_training_readiness_review_blocks_current_state():
     assert payload["requirements"]["protected_failure_contrast_integration_ready"] is False
     assert (
         payload["requirements"]["protected_failure_contrast_runner_status"]
-        == "protected_plan_window_failure_contrast_runner_dry_run_ready"
+        == "protected_plan_window_failure_contrast_runner_blocked"
     )
     assert (
         payload["requirements"]["protected_failure_contrast_runner_manifest_status"]
@@ -155,35 +156,33 @@ def test_stage8_training_readiness_review_blocks_current_state():
     )
     assert payload["requirements"]["protected_failure_contrast_runner_processed_job_count"] == 0
     assert payload["requirements"]["protected_failure_contrast_runner_executed_job_count"] == 0
-    assert payload["requirements"]["protected_failure_contrast_command_if_explicitly_approved"] == (
-        "UV_CACHE_DIR=/tmp/uv-cache uv run python "
-        "scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py "
-        "--execute-reviewed-collection --refresh-after-run "
-        "--approval-receipt "
-        "reports/strategy_arbitration/"
-        "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
+    assert (
+        payload["requirements"][
+            "protected_failure_contrast_command_if_explicitly_approved"
+        ]
+        is None
     )
     assert (
         payload["requirements"][
             "protected_failure_contrast_collection_option_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["requirements"][
             "protected_failure_contrast_collection_command_available"
         ]
-        is True
+        is False
     )
     assert (
         payload["requirements"]["protected_failure_contrast_collection_option_id"]
-        == "approve_protected_plan_window_failure_contrast_collection"
+        is None
     )
     assert (
         payload["requirements"][
             "protected_failure_contrast_collection_blocked_by_option_id"
         ]
-        is None
+        == "review_protected_plan_window_failure_contrast_manifest"
     )
     assert payload["requirements"]["protected_failure_contrast_approval_request_artifact"] == (
         "reports/strategy_arbitration/"
@@ -191,19 +190,19 @@ def test_stage8_training_readiness_review_blocks_current_state():
     )
     assert (
         payload["requirements"]["protected_failure_contrast_approval_request_status"]
-        == "protected_plan_window_failure_contrast_approval_request_ready"
+        == "protected_plan_window_failure_contrast_approval_request_blocked"
     )
     assert (
         payload["requirements"][
             "protected_failure_contrast_approval_request_blockers"
         ]
-        == []
+        == ["protected_failure_contrast_execution_scope_not_ready"]
     )
     assert (
         payload["requirements"][
             "protected_failure_contrast_approval_request_ready_for_collection"
         ]
-        is True
+        is False
     )
     assert (
         payload["requirements"][
@@ -213,7 +212,7 @@ def test_stage8_training_readiness_review_blocks_current_state():
     )
     assert (
         payload["requirements"]["protected_failure_contrast_approval_receipt_present"]
-        is False
+        is True
     )
     assert (
         payload["requirements"]["protected_failure_contrast_approval_receipt_valid"]
@@ -221,7 +220,15 @@ def test_stage8_training_readiness_review_blocks_current_state():
     )
     assert payload["requirements"][
         "protected_failure_contrast_approval_receipt_blockers"
-    ] == ["approval_receipt_missing"]
+    ] == [
+        "approval_receipt_readiness_fingerprint_mismatch",
+        "approval_receipt_readiness_status_mismatch",
+        "approval_receipt_current_control_plane_approval_option_ids_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_command_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_id_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_blocked_by_option_id_mismatch",
+    ]
     assert (
         payload["requirements"][
             "protected_failure_contrast_post_success_refresh_required"
@@ -284,16 +291,16 @@ def test_stage8_training_readiness_review_blocks_current_state():
     )
     assert "stage7_clean_success_controls_missing" not in payload["blockers"]
     assert (
-        "protected_plan_window_failure_contrast_collection_pending_explicit_approval"
+        "sequence_policy_benchmark_review_not_ready"
         in payload["blockers"]
     )
     assert (
         payload["decision"]["status"]
-        == "stage8_training_blocked_pending_protected_failure_contrast_collection"
+        == "stage8_training_blocked_pending_sequence_policy_gate"
     )
     assert (
         payload["decision"]["recommended_next_step"]
-        == "obtain_matching_approval_receipt_before_protected_failure_contrast_collection"
+        == "rerun_passive_gate_advancement_or_inspect_sequence_policy_benchmark_review"
     )
     assert payload["decision"]["implementation_allowed_by_this_review"] is False
     assert payload["decision"]["stage8_training_allowed"] is False

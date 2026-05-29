@@ -195,6 +195,13 @@ def build_payload(
         and not protected_stack_blockers
         else None
     )
+    protected_failure_contrast_outputs_ready = (
+        protected_failure_contrast.get("output_validation_status")
+        in {
+            "protected_plan_window_failure_contrast_outputs_valid_ready_for_integration",
+            "protected_plan_window_failure_contrast_outputs_partial_valid_pending_remaining_jobs",
+        }
+    )
 
     stage4_topk_signal = (
         (stage4_metrics.get("top1_conversion_positive_by_state") or 0) >= 0.7
@@ -238,6 +245,10 @@ def build_payload(
     if protected_plan_window_underpowered:
         if protected_stack_blockers:
             blockers.extend(protected_stack_blockers)
+        elif protected_failure_contrast_outputs_ready:
+            blockers.append(
+                "protected_plan_window_failure_contrast_underpowered_after_collection"
+            )
         elif not protected_failure_contrast_request_ready:
             blockers.append(
                 "protected_plan_window_failure_contrast_approval_request_blocked"
@@ -274,6 +285,13 @@ def build_payload(
     elif protected_plan_window_underpowered and protected_stack_blockers:
         decision_status = "sequence_policy_pilot_blocked_pending_protected_stack_repair"
         recommended_next_step = "repair_protected_stack_validation"
+    elif protected_plan_window_underpowered and protected_failure_contrast_outputs_ready:
+        decision_status = (
+            "sequence_policy_pilot_blocked_pending_protected_failure_contrast_control_plane_gate_review"
+        )
+        recommended_next_step = (
+            "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+        )
     elif protected_plan_window_underpowered and not protected_failure_contrast_request_ready:
         decision_status = (
             "sequence_policy_pilot_blocked_pending_protected_failure_contrast_approval_request_repair"
