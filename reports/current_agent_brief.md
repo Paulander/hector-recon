@@ -1304,6 +1304,21 @@ Artifacts:
 
 The feature probe tests simple visible keys over the `12` seed rows. No runtime-feature model passes thresholds. The best switch-recall model reaches switch recall `0.75` but preserve recall `0.0`; the best preservation/precision model reaches preserve recall `1.0` and switch precision `1.0` but switch recall only `0.5`. The offline outcome oracle remains `1.0`, confirming semantics but not runtime eligibility. Runtime selector work remains blocked; the next safe step is more diverse joined trace/ownership evidence, especially more selected-failure rows and non-stage0 selected-owner rows.
 
+Current selector-objective diversity boundary:
+
+```text
+selector_objective_diverse_collection_review_ready
+```
+
+Artifacts:
+
+* `reports/strategy_arbitration/krk_selector_objective_diversity_review_v0.md`
+* `reports/strategy_arbitration/krk_selector_objective_diversity_review_v0.json`
+* `reports/strategy_arbitration/krk_selector_objective_diverse_collection_review_packet_v0.md`
+* `reports/strategy_arbitration/krk_selector_objective_diverse_collection_review_packet_v0.json`
+
+The diversity review finds existing replay-free evidence still underpowered for runtime selector work and prepares an `8` row Stage 5/6-only future observation scope: `7` Stage 5 rows, `1` Stage 6 row, `0` Stage 4/7/8 rows, `0` selector-training rows, and `0` Stage 7 training rows. The review packet is runtime-review-ready only as an approval packet; it sets `implementation_authorized_by_this_packet=false` and `runtime_changes_allowed_without_explicit_approval=false`. Do not execute the diverse collection, train a selector, route providers, change scores, suppress providers, promote Stage 7, or train Stage 8 without explicit new approval.
+
 Latest selector-objective diversity gap review:
 
 ```text

@@ -371,6 +371,16 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/strategy_arbitration/krk_selector_objective_feature_probe_review_v0.json"
     )
     assert (
+        payload["source_artifacts"]["selector_objective_diversity_review"]
+        == "reports/strategy_arbitration/krk_selector_objective_diversity_review_v0.json"
+    )
+    assert (
+        payload["source_artifacts"][
+            "selector_objective_diverse_collection_review_packet"
+        ]
+        == "reports/strategy_arbitration/krk_selector_objective_diverse_collection_review_packet_v0.json"
+    )
+    assert (
         payload["source_artifacts"][
             "stage4_joined_trace_ownership_scope_review_packet"
         ]
@@ -5045,6 +5055,81 @@ def test_full_suite_readiness_identifies_current_gate():
     )
     assert lineage["diversity_gap_remaining_stage4_selected_failure_count"] == 6
     assert lineage["diversity_gap_remaining_stage5_6_selected_failure_count"] == 0
+    assert (
+        lineage["diversity_review_status"]
+        == "selector_objective_diverse_collection_review_ready"
+    )
+    assert lineage["diversity_review_replay_free_recovery_enough"] is False
+    assert lineage["diversity_review_future_collection_candidate_count"] == 8
+    assert lineage["diversity_review_future_collection_stage_counts"] == {
+        "stage5": 7,
+        "stage6": 1,
+    }
+    assert lineage["diversity_review_future_collection_owner_label_counts"] == {
+        "selected_owner_converted": 6,
+        "selected_owner_failed": 2,
+    }
+    assert lineage["diversity_review_future_collection_provider_family_counts"] == {
+        "edge_trap": 3,
+        "fence_established": 1,
+        "stage0_basin": 4,
+    }
+    assert lineage["diversity_review_selector_training_row_count"] == 0
+    assert lineage["diversity_review_stage7_training_row_count"] == 0
+    assert lineage["diversity_review_runtime_changes_allowed"] is False
+    assert lineage["diversity_review_selector_allowed"] is False
+    assert lineage["diversity_review_runtime_behavior_changed"] is False
+    assert lineage["diversity_review_runtime_defaults_changed"] is False
+    assert lineage["diversity_review_runtime_selector_implemented"] is False
+    assert lineage["diversity_review_runtime_score_changes"] is False
+    assert lineage["diversity_review_runtime_direct_routing"] is False
+    assert lineage["diversity_review_runtime_provider_suppression"] is False
+    assert lineage["diversity_review_runtime_dtm_or_tablebase_lookup"] is False
+    assert lineage["diversity_review_gameplay_topology_mutation"] is False
+    assert lineage["diversity_review_stage7_promotion_allowed"] is False
+    assert lineage["diversity_review_stage8_training_allowed"] is False
+    assert (
+        lineage["diverse_collection_review_status"]
+        == "selector_objective_diverse_collection_review_ready"
+    )
+    assert lineage["diverse_collection_review_runtime_review_ready"] is True
+    assert lineage["diverse_collection_review_implementation_authorized"] is False
+    assert (
+        lineage[
+            "diverse_collection_review_runtime_changes_allowed_without_explicit_approval"
+        ]
+        is False
+    )
+    assert lineage["diverse_collection_review_row_count"] == 8
+    assert lineage["diverse_collection_review_runtime_collection_allowed_row_count"] == 0
+    assert lineage["diverse_collection_review_stage_counts"] == {
+        "stage5": 7,
+        "stage6": 1,
+    }
+    assert lineage["diverse_collection_review_owner_label_counts"] == {
+        "selected_owner_converted": 6,
+        "selected_owner_failed": 2,
+    }
+    assert lineage["diverse_collection_review_provider_family_counts"] == {
+        "edge_trap": 3,
+        "fence_established": 1,
+        "stage0_basin": 4,
+    }
+    assert lineage["diverse_collection_review_selector_training_row_count"] == 0
+    assert lineage["diverse_collection_review_stage4_row_count"] == 0
+    assert lineage["diverse_collection_review_stage7_row_count"] == 0
+    assert lineage["diverse_collection_review_stage7_training_row_count"] == 0
+    assert lineage["diverse_collection_review_stage8_row_count"] == 0
+    assert lineage["diverse_collection_review_runtime_behavior_changed"] is False
+    assert lineage["diverse_collection_review_runtime_defaults_changed"] is False
+    assert lineage["diverse_collection_review_runtime_selector_implemented"] is False
+    assert lineage["diverse_collection_review_runtime_score_changes"] is False
+    assert lineage["diverse_collection_review_runtime_direct_routing"] is False
+    assert lineage["diverse_collection_review_runtime_provider_suppression"] is False
+    assert lineage["diverse_collection_review_runtime_dtm_or_tablebase_lookup"] is False
+    assert lineage["diverse_collection_review_gameplay_topology_mutation"] is False
+    assert lineage["diverse_collection_review_stage7_promotion_allowed"] is False
+    assert lineage["diverse_collection_review_stage8_training_allowed"] is False
     assert (
         lineage["stage4_scope_review_status"]
         == "stage4_joined_trace_ownership_scope_review_ready"

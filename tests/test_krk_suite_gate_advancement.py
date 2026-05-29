@@ -4001,6 +4001,136 @@ def test_gate_advancement_reports_current_stage7_blocker():
         == 0
     )
     assert (
+        payload["summary"]["selector_objective_lineage_diversity_review_status"]
+        == "selector_objective_diverse_collection_review_ready"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_diversity_review_replay_free_recovery_enough"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_diversity_review_future_collection_candidate_count"
+        ]
+        == 8
+    )
+    assert payload["summary"][
+        "selector_objective_lineage_diversity_review_future_collection_stage_counts"
+    ] == {
+        "stage5": 7,
+        "stage6": 1,
+    }
+    assert payload["summary"][
+        "selector_objective_lineage_diversity_review_future_collection_owner_label_counts"
+    ] == {
+        "selected_owner_converted": 6,
+        "selected_owner_failed": 2,
+    }
+    assert payload["summary"][
+        "selector_objective_lineage_diversity_review_future_collection_provider_family_counts"
+    ] == {
+        "edge_trap": 3,
+        "fence_established": 1,
+        "stage0_basin": 4,
+    }
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_diversity_review_selector_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_diversity_review_stage7_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"]["selector_objective_lineage_diverse_collection_review_status"]
+        == "selector_objective_diverse_collection_review_ready"
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_diverse_collection_review_runtime_review_ready"
+        ]
+        is True
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_diverse_collection_review_implementation_authorized"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_diverse_collection_review_runtime_changes_allowed_without_explicit_approval"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_diverse_collection_review_row_count"
+        ]
+        == 8
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_diverse_collection_review_runtime_collection_allowed_row_count"
+        ]
+        == 0
+    )
+    assert payload["summary"][
+        "selector_objective_lineage_diverse_collection_review_stage_counts"
+    ] == {
+        "stage5": 7,
+        "stage6": 1,
+    }
+    assert payload["summary"][
+        "selector_objective_lineage_diverse_collection_review_owner_label_counts"
+    ] == {
+        "selected_owner_converted": 6,
+        "selected_owner_failed": 2,
+    }
+    assert payload["summary"][
+        "selector_objective_lineage_diverse_collection_review_provider_family_counts"
+    ] == {
+        "edge_trap": 3,
+        "fence_established": 1,
+        "stage0_basin": 4,
+    }
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_diverse_collection_review_selector_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_diverse_collection_review_stage4_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_diverse_collection_review_stage7_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_diverse_collection_review_stage7_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["summary"][
+            "selector_objective_lineage_diverse_collection_review_stage8_row_count"
+        ]
+        == 0
+    )
+    assert (
         payload["summary"]["selector_objective_lineage_stage4_scope_review_status"]
         == "stage4_joined_trace_ownership_scope_review_ready"
     )

@@ -4486,6 +4486,72 @@ def build_payload() -> dict[str, Any]:
             "selector_objective_lineage_diversity_gap_remaining_stage5_6_selected_failure_count": selector_objective_lineage_gate.get(
                 "diversity_gap_remaining_stage5_6_selected_failure_count"
             ),
+            "selector_objective_lineage_diversity_review_status": selector_objective_lineage_gate.get(
+                "diversity_review_status"
+            ),
+            "selector_objective_lineage_diversity_review_replay_free_recovery_enough": selector_objective_lineage_gate.get(
+                "diversity_review_replay_free_recovery_enough"
+            ),
+            "selector_objective_lineage_diversity_review_future_collection_candidate_count": selector_objective_lineage_gate.get(
+                "diversity_review_future_collection_candidate_count"
+            ),
+            "selector_objective_lineage_diversity_review_future_collection_stage_counts": selector_objective_lineage_gate.get(
+                "diversity_review_future_collection_stage_counts"
+            ),
+            "selector_objective_lineage_diversity_review_future_collection_owner_label_counts": selector_objective_lineage_gate.get(
+                "diversity_review_future_collection_owner_label_counts"
+            ),
+            "selector_objective_lineage_diversity_review_future_collection_provider_family_counts": selector_objective_lineage_gate.get(
+                "diversity_review_future_collection_provider_family_counts"
+            ),
+            "selector_objective_lineage_diversity_review_selector_training_row_count": selector_objective_lineage_gate.get(
+                "diversity_review_selector_training_row_count"
+            ),
+            "selector_objective_lineage_diversity_review_stage7_training_row_count": selector_objective_lineage_gate.get(
+                "diversity_review_stage7_training_row_count"
+            ),
+            "selector_objective_lineage_diverse_collection_review_status": selector_objective_lineage_gate.get(
+                "diverse_collection_review_status"
+            ),
+            "selector_objective_lineage_diverse_collection_review_runtime_review_ready": selector_objective_lineage_gate.get(
+                "diverse_collection_review_runtime_review_ready"
+            ),
+            "selector_objective_lineage_diverse_collection_review_implementation_authorized": selector_objective_lineage_gate.get(
+                "diverse_collection_review_implementation_authorized"
+            ),
+            "selector_objective_lineage_diverse_collection_review_runtime_changes_allowed_without_explicit_approval": selector_objective_lineage_gate.get(
+                "diverse_collection_review_runtime_changes_allowed_without_explicit_approval"
+            ),
+            "selector_objective_lineage_diverse_collection_review_row_count": selector_objective_lineage_gate.get(
+                "diverse_collection_review_row_count"
+            ),
+            "selector_objective_lineage_diverse_collection_review_runtime_collection_allowed_row_count": selector_objective_lineage_gate.get(
+                "diverse_collection_review_runtime_collection_allowed_row_count"
+            ),
+            "selector_objective_lineage_diverse_collection_review_stage_counts": selector_objective_lineage_gate.get(
+                "diverse_collection_review_stage_counts"
+            ),
+            "selector_objective_lineage_diverse_collection_review_owner_label_counts": selector_objective_lineage_gate.get(
+                "diverse_collection_review_owner_label_counts"
+            ),
+            "selector_objective_lineage_diverse_collection_review_provider_family_counts": selector_objective_lineage_gate.get(
+                "diverse_collection_review_provider_family_counts"
+            ),
+            "selector_objective_lineage_diverse_collection_review_selector_training_row_count": selector_objective_lineage_gate.get(
+                "diverse_collection_review_selector_training_row_count"
+            ),
+            "selector_objective_lineage_diverse_collection_review_stage4_row_count": selector_objective_lineage_gate.get(
+                "diverse_collection_review_stage4_row_count"
+            ),
+            "selector_objective_lineage_diverse_collection_review_stage7_row_count": selector_objective_lineage_gate.get(
+                "diverse_collection_review_stage7_row_count"
+            ),
+            "selector_objective_lineage_diverse_collection_review_stage7_training_row_count": selector_objective_lineage_gate.get(
+                "diverse_collection_review_stage7_training_row_count"
+            ),
+            "selector_objective_lineage_diverse_collection_review_stage8_row_count": selector_objective_lineage_gate.get(
+                "diverse_collection_review_stage8_row_count"
+            ),
             "selector_objective_lineage_stage4_scope_review_status": selector_objective_lineage_gate.get(
                 "stage4_scope_review_status"
             ),

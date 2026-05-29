@@ -720,9 +720,9 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - stage4_first_move_contrast_sandbox_selector_training_allowed: `False`
 - stage4_first_move_contrast_sandbox_stage7_promotion_allowed: `False`
 - stage4_first_move_contrast_sandbox_stage8_training_allowed: `False`
-- stage4_first_move_contrast_sandbox_readiness_checked_flag_count: `2888`
+- stage4_first_move_contrast_sandbox_readiness_checked_flag_count: `2894`
 - stage4_first_move_contrast_sandbox_readiness_boundary_violation_count: `0`
-- stage4_first_move_contrast_sandbox_readiness_source_artifact_count: `405`
+- stage4_first_move_contrast_sandbox_readiness_source_artifact_count: `406`
 - stage7_success_controls: `11`
 - stage7_success_controls_required: `5`
 - stage7_success_controls_ready: `True`
@@ -1071,6 +1071,28 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - selector_objective_lineage_diversity_gap_status: `selector_objective_diversity_gap_requires_stage4_scope_review`
 - selector_objective_lineage_diversity_gap_remaining_stage4_selected_failure_count: `6`
 - selector_objective_lineage_diversity_gap_remaining_stage5_6_selected_failure_count: `0`
+- selector_objective_lineage_diversity_review_status: `selector_objective_diverse_collection_review_ready`
+- selector_objective_lineage_diversity_review_replay_free_recovery_enough: `False`
+- selector_objective_lineage_diversity_review_future_collection_candidate_count: `8`
+- selector_objective_lineage_diversity_review_future_collection_stage_counts: `{'stage5': 7, 'stage6': 1}`
+- selector_objective_lineage_diversity_review_future_collection_owner_label_counts: `{'selected_owner_converted': 6, 'selected_owner_failed': 2}`
+- selector_objective_lineage_diversity_review_future_collection_provider_family_counts: `{'edge_trap': 3, 'fence_established': 1, 'stage0_basin': 4}`
+- selector_objective_lineage_diversity_review_selector_training_row_count: `0`
+- selector_objective_lineage_diversity_review_stage7_training_row_count: `0`
+- selector_objective_lineage_diverse_collection_review_status: `selector_objective_diverse_collection_review_ready`
+- selector_objective_lineage_diverse_collection_review_runtime_review_ready: `True`
+- selector_objective_lineage_diverse_collection_review_implementation_authorized: `False`
+- selector_objective_lineage_diverse_collection_review_runtime_changes_allowed_without_explicit_approval: `False`
+- selector_objective_lineage_diverse_collection_review_row_count: `8`
+- selector_objective_lineage_diverse_collection_review_runtime_collection_allowed_row_count: `0`
+- selector_objective_lineage_diverse_collection_review_stage_counts: `{'stage5': 7, 'stage6': 1}`
+- selector_objective_lineage_diverse_collection_review_owner_label_counts: `{'selected_owner_converted': 6, 'selected_owner_failed': 2}`
+- selector_objective_lineage_diverse_collection_review_provider_family_counts: `{'edge_trap': 3, 'fence_established': 1, 'stage0_basin': 4}`
+- selector_objective_lineage_diverse_collection_review_selector_training_row_count: `0`
+- selector_objective_lineage_diverse_collection_review_stage4_row_count: `0`
+- selector_objective_lineage_diverse_collection_review_stage7_row_count: `0`
+- selector_objective_lineage_diverse_collection_review_stage7_training_row_count: `0`
+- selector_objective_lineage_diverse_collection_review_stage8_row_count: `0`
 - selector_objective_lineage_stage4_scope_review_status: `stage4_joined_trace_ownership_scope_review_ready`
 - selector_objective_lineage_stage4_scope_review_implementation_authorized: `False`
 - selector_objective_lineage_selector_training_allowed: `False`
@@ -1244,9 +1266,9 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - sequence_policy_underpowered_pilot_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - sequence_policy_underpowered_pilot_stage4_topk_signal: `True`
 - sequence_policy_underpowered_pilot_stage7_success_gap: `0`
-- sequence_policy_underpowered_pilot_readiness_checked_flag_count: `2894`
+- sequence_policy_underpowered_pilot_readiness_checked_flag_count: `2912`
 - sequence_policy_underpowered_pilot_readiness_boundary_violation_count: `0`
-- sequence_policy_underpowered_pilot_readiness_source_artifact_count: `406`
+- sequence_policy_underpowered_pilot_readiness_source_artifact_count: `408`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_processed_job_count: `0`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_executed_job_count: `0`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_runner_collection_run_allowed: `False`
@@ -1266,23 +1288,23 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - sequence_policy_underpowered_pilot_protected_failure_contrast_stage7_promotion_allowed: `False`
 - sequence_policy_underpowered_pilot_protected_failure_contrast_stage8_training_allowed: `False`
 - readiness_status: `krk_suite_readiness_waiting_on_explicit_protected_failure_contrast_collection`
-- readiness_checked_flag_count: `2894`
+- readiness_checked_flag_count: `2912`
 - readiness_boundary_violation_count: `0`
-- readiness_source_artifact_count: `406`
+- readiness_source_artifact_count: `408`
 - unblocker_status: `krk_suite_protected_failure_contrast_unblocker_ready_pending_explicit_collection_approval`
 - stage8_training_readiness_status: `stage8_training_blocked_pending_protected_failure_contrast_collection`
-- stage8_training_readiness_checked_flag_count: `2894`
+- stage8_training_readiness_checked_flag_count: `2912`
 - stage8_training_readiness_boundary_violation_count: `0`
-- stage8_training_readiness_source_artifact_count: `406`
+- stage8_training_readiness_source_artifact_count: `408`
 - stage8_training_readiness_protected_failure_contrast_post_success_refresh_required: `True`
 - stage8_training_readiness_protected_failure_contrast_approval_receipt_present: `False`
 - stage8_training_readiness_protected_failure_contrast_approval_receipt_valid: `False`
 - stage8_training_readiness_protected_failure_contrast_runtime_direct_routing: `False`
 - stage8_training_readiness_protected_failure_contrast_hidden_python_controller: `False`
 - stage7_post_label_outcome_status: `post_label_outcome_waiting_on_explicit_protected_failure_contrast_collection`
-- stage7_post_label_outcome_readiness_checked_flag_count: `2894`
+- stage7_post_label_outcome_readiness_checked_flag_count: `2912`
 - stage7_post_label_outcome_readiness_boundary_violation_count: `0`
-- stage7_post_label_outcome_readiness_source_artifact_count: `406`
+- stage7_post_label_outcome_readiness_source_artifact_count: `408`
 - stage7_post_label_outcome_next_step: `obtain_matching_approval_receipt_before_protected_failure_contrast_collection`
 - stage7_post_label_outcome_protected_failure_contrast_runner_processed_job_count: `0`
 - stage7_post_label_outcome_protected_failure_contrast_runner_executed_job_count: `0`

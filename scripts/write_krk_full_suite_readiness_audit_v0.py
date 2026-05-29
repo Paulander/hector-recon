@@ -341,6 +341,12 @@ SOURCES = {
     "selector_objective_diversity_gap_review": (
         "reports/strategy_arbitration/krk_selector_objective_diversity_gap_review_v0.json"
     ),
+    "selector_objective_diversity_review": (
+        "reports/strategy_arbitration/krk_selector_objective_diversity_review_v0.json"
+    ),
+    "selector_objective_diverse_collection_review_packet": (
+        "reports/strategy_arbitration/krk_selector_objective_diverse_collection_review_packet_v0.json"
+    ),
     "stage4_joined_trace_ownership_scope_review_packet": (
         "reports/strategy_arbitration/krk_stage4_joined_trace_ownership_scope_review_packet_v0.json"
     ),
@@ -1664,6 +1670,12 @@ def build_payload() -> dict[str, Any]:
     ]
     selector_objective_diversity_gap_review = payloads[
         "selector_objective_diversity_gap_review"
+    ]
+    selector_objective_diversity_review = payloads[
+        "selector_objective_diversity_review"
+    ]
+    selector_objective_diverse_collection_review_packet = payloads[
+        "selector_objective_diverse_collection_review_packet"
     ]
     stage4_joined_trace_ownership_scope_review_packet = payloads[
         "stage4_joined_trace_ownership_scope_review_packet"
@@ -15298,6 +15310,208 @@ def build_payload() -> dict[str, Any]:
                     "remaining_stage5_6_selected_failure_count"
                 )
             ),
+            "diversity_review_status": (
+                selector_objective_diversity_review.get("decision", {}).get("status")
+            ),
+            "diversity_review_replay_free_recovery_enough": (
+                selector_objective_diversity_review.get("summary", {}).get(
+                    "replay_free_recovery_enough"
+                )
+            ),
+            "diversity_review_future_collection_candidate_count": (
+                selector_objective_diversity_review.get("summary", {}).get(
+                    "future_collection_candidate_count"
+                )
+            ),
+            "diversity_review_future_collection_stage_counts": (
+                selector_objective_diversity_review.get("summary", {}).get(
+                    "future_collection_stage_counts"
+                )
+            ),
+            "diversity_review_future_collection_owner_label_counts": (
+                selector_objective_diversity_review.get("summary", {}).get(
+                    "future_collection_owner_label_counts"
+                )
+            ),
+            "diversity_review_future_collection_provider_family_counts": (
+                selector_objective_diversity_review.get("summary", {}).get(
+                    "future_collection_provider_family_counts"
+                )
+            ),
+            "diversity_review_selector_training_row_count": (
+                selector_objective_diversity_review.get("summary", {}).get(
+                    "selector_training_row_count"
+                )
+            ),
+            "diversity_review_stage7_training_row_count": (
+                selector_objective_diversity_review.get("summary", {}).get(
+                    "stage7_training_row_count"
+                )
+            ),
+            "diversity_review_runtime_changes_allowed": (
+                selector_objective_diversity_review.get("decision", {}).get(
+                    "runtime_changes_allowed"
+                )
+            ),
+            "diversity_review_selector_allowed": (
+                selector_objective_diversity_review.get("decision", {}).get(
+                    "selector_allowed"
+                )
+            ),
+            "diversity_review_runtime_behavior_changed": (
+                selector_objective_diversity_review.get("runtime_behavior_changed")
+            ),
+            "diversity_review_runtime_defaults_changed": (
+                selector_objective_diversity_review.get("runtime_defaults_changed")
+            ),
+            "diversity_review_runtime_selector_implemented": (
+                selector_objective_diversity_review.get("runtime_selector_implemented")
+            ),
+            "diversity_review_runtime_score_changes": (
+                selector_objective_diversity_review.get("runtime_score_changes")
+            ),
+            "diversity_review_runtime_direct_routing": (
+                selector_objective_diversity_review.get("runtime_direct_routing")
+            ),
+            "diversity_review_runtime_provider_suppression": (
+                selector_objective_diversity_review.get(
+                    "runtime_provider_suppression"
+                )
+            ),
+            "diversity_review_runtime_dtm_or_tablebase_lookup": (
+                selector_objective_diversity_review.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "diversity_review_gameplay_topology_mutation": (
+                selector_objective_diversity_review.get("gameplay_topology_mutation")
+            ),
+            "diversity_review_stage7_promotion_allowed": (
+                selector_objective_diversity_review.get("stage7_promotion_allowed")
+            ),
+            "diversity_review_stage8_training_allowed": (
+                selector_objective_diversity_review.get("stage8_training_allowed")
+            ),
+            "diverse_collection_review_status": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "decision", {}
+                ).get("status")
+            ),
+            "diverse_collection_review_runtime_review_ready": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "decision", {}
+                ).get("runtime_review_ready")
+            ),
+            "diverse_collection_review_implementation_authorized": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "decision", {}
+                ).get("implementation_authorized_by_this_packet")
+            ),
+            "diverse_collection_review_runtime_changes_allowed_without_explicit_approval": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "decision", {}
+                ).get("runtime_changes_allowed_without_explicit_approval")
+            ),
+            "diverse_collection_review_row_count": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "summary", {}
+                ).get("review_row_count")
+            ),
+            "diverse_collection_review_runtime_collection_allowed_row_count": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "summary", {}
+                ).get("runtime_collection_allowed_row_count")
+            ),
+            "diverse_collection_review_stage_counts": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "summary", {}
+                ).get("stage_counts")
+            ),
+            "diverse_collection_review_owner_label_counts": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "summary", {}
+                ).get("owner_label_counts")
+            ),
+            "diverse_collection_review_provider_family_counts": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "summary", {}
+                ).get("provider_family_counts")
+            ),
+            "diverse_collection_review_selector_training_row_count": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "summary", {}
+                ).get("selector_training_row_count")
+            ),
+            "diverse_collection_review_stage4_row_count": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "summary", {}
+                ).get("stage4_row_count")
+            ),
+            "diverse_collection_review_stage7_row_count": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "summary", {}
+                ).get("stage7_row_count")
+            ),
+            "diverse_collection_review_stage7_training_row_count": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "summary", {}
+                ).get("stage7_training_row_count")
+            ),
+            "diverse_collection_review_stage8_row_count": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "summary", {}
+                ).get("stage8_row_count")
+            ),
+            "diverse_collection_review_runtime_behavior_changed": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "runtime_behavior_changed"
+                )
+            ),
+            "diverse_collection_review_runtime_defaults_changed": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "runtime_defaults_changed"
+                )
+            ),
+            "diverse_collection_review_runtime_selector_implemented": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "runtime_selector_implemented"
+                )
+            ),
+            "diverse_collection_review_runtime_score_changes": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "runtime_score_changes"
+                )
+            ),
+            "diverse_collection_review_runtime_direct_routing": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "runtime_direct_routing"
+                )
+            ),
+            "diverse_collection_review_runtime_provider_suppression": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "runtime_provider_suppression"
+                )
+            ),
+            "diverse_collection_review_runtime_dtm_or_tablebase_lookup": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "runtime_dtm_or_tablebase_lookup"
+                )
+            ),
+            "diverse_collection_review_gameplay_topology_mutation": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "gameplay_topology_mutation"
+                )
+            ),
+            "diverse_collection_review_stage7_promotion_allowed": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "stage7_promotion_allowed"
+                )
+            ),
+            "diverse_collection_review_stage8_training_allowed": (
+                selector_objective_diverse_collection_review_packet.get(
+                    "stage8_training_allowed"
+                )
+            ),
             "stage4_scope_review_status": (
                 stage4_joined_trace_ownership_scope_review_packet.get(
                     "decision", {}
@@ -18416,6 +18630,15 @@ def write_markdown(payload: dict[str, Any]) -> str:
             f"- diversity_gap_status: `{selector_lineage['diversity_gap_status']}`",
             f"- diversity_gap_remaining_stage4_selected_failure_count: `{selector_lineage['diversity_gap_remaining_stage4_selected_failure_count']}`",
             f"- diversity_gap_remaining_stage5_6_selected_failure_count: `{selector_lineage['diversity_gap_remaining_stage5_6_selected_failure_count']}`",
+            f"- diversity_review_status: `{selector_lineage['diversity_review_status']}`",
+            f"- diversity_review_replay_free_recovery_enough: `{selector_lineage['diversity_review_replay_free_recovery_enough']}`",
+            f"- diversity_review_future_collection_candidate_count: `{selector_lineage['diversity_review_future_collection_candidate_count']}`",
+            f"- diversity_review_future_collection_stage_counts: `{selector_lineage['diversity_review_future_collection_stage_counts']}`",
+            f"- diverse_collection_review_status: `{selector_lineage['diverse_collection_review_status']}`",
+            f"- diverse_collection_review_runtime_review_ready: `{selector_lineage['diverse_collection_review_runtime_review_ready']}`",
+            f"- diverse_collection_review_implementation_authorized: `{selector_lineage['diverse_collection_review_implementation_authorized']}`",
+            f"- diverse_collection_review_row_count: `{selector_lineage['diverse_collection_review_row_count']}`",
+            f"- diverse_collection_review_runtime_collection_allowed_row_count: `{selector_lineage['diverse_collection_review_runtime_collection_allowed_row_count']}`",
             f"- stage4_scope_review_status: `{selector_lineage['stage4_scope_review_status']}`",
             f"- stage4_scope_review_implementation_authorized: `{selector_lineage['stage4_scope_review_implementation_authorized']}`",
             f"- selector_training_allowed: `{selector_lineage['selector_training_allowed']}`",

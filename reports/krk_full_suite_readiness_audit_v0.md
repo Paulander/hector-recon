@@ -986,7 +986,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `5ea53ffc76e4e5add3580ee22cf26479eebec0ccc6134f8178a84e62cc58a75a`
+- expected_readiness_fingerprint: `543ceb8c5d28a575485562e83da6fc07867ad808e144321041b45527993b5923`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1380,6 +1380,15 @@
 - diversity_gap_status: `selector_objective_diversity_gap_requires_stage4_scope_review`
 - diversity_gap_remaining_stage4_selected_failure_count: `6`
 - diversity_gap_remaining_stage5_6_selected_failure_count: `0`
+- diversity_review_status: `selector_objective_diverse_collection_review_ready`
+- diversity_review_replay_free_recovery_enough: `False`
+- diversity_review_future_collection_candidate_count: `8`
+- diversity_review_future_collection_stage_counts: `{'stage5': 7, 'stage6': 1}`
+- diverse_collection_review_status: `selector_objective_diverse_collection_review_ready`
+- diverse_collection_review_runtime_review_ready: `True`
+- diverse_collection_review_implementation_authorized: `False`
+- diverse_collection_review_row_count: `8`
+- diverse_collection_review_runtime_collection_allowed_row_count: `0`
 - stage4_scope_review_status: `stage4_joined_trace_ownership_scope_review_ready`
 - stage4_scope_review_implementation_authorized: `False`
 - selector_training_allowed: `False`
@@ -1641,5 +1650,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2894`
+- checked_flag_count: `2912`
 - violation_count: `0`
