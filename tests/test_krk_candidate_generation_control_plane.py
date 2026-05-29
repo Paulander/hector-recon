@@ -5846,19 +5846,34 @@ def test_selector_objective_diversity_gap_points_to_stage4_scope_review():
         feature_review=feature_review,
     )
 
-    assert payload["decision"]["status"] == (
-        "selector_objective_diversity_gap_requires_stage4_scope_review"
-    )
+    assert payload["decision"]["status"] == "selector_objective_diverse_collection_review_ready"
     assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["selector_training_allowed"] is False
     assert payload["summary"]["remaining_stage4_selected_failure_count"] == 1
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert payload["summary"]["stage7_training_row_count"] == 0
     assert payload["interpretation"]["stage4_scope_needed_for_more_switch_contrast"] is True
+    assert payload["interpretation"]["capacity_labels_are_not_ownership_labels"] is True
+    assert payload["questions"]["provider_diversity_is_blocker"] is True
+    assert payload["questions"]["failure_type_diversity_is_blocker"] is True
+    assert payload["questions"]["feature_quality_is_blocker"] is True
+    assert payload["questions"]["selected_owner_failed_rows_diverse_enough"] is False
+    assert payload["questions"]["safe_preservation_rows_diverse_enough"] is False
+    assert payload["questions"]["can_recover_more_rows_replay_free_from_existing_artifacts"] is False
+    assert (
+        payload["questions"]["bounded_observation_only_collection_needed"][
+            "requires_explicit_approval"
+        ]
+        is True
+    )
 
 
 def test_stage4_joined_trace_scope_packet_requires_explicit_approval():
     diversity = {
         "decision": {
-            "status": "selector_objective_diversity_gap_requires_stage4_scope_review"
+            "status": "selector_objective_diverse_collection_review_ready"
         },
+        "interpretation": {"stage4_scope_needed_for_more_switch_contrast": True},
         "stage4_failure_candidates": [
             {
                 "state_id": "state.stage4.fail",

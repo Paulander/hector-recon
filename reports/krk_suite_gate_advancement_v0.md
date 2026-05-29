@@ -720,9 +720,9 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - stage4_first_move_contrast_sandbox_selector_training_allowed: `False`
 - stage4_first_move_contrast_sandbox_stage7_promotion_allowed: `False`
 - stage4_first_move_contrast_sandbox_stage8_training_allowed: `False`
-- stage4_first_move_contrast_sandbox_readiness_checked_flag_count: `2894`
+- stage4_first_move_contrast_sandbox_readiness_checked_flag_count: `2912`
 - stage4_first_move_contrast_sandbox_readiness_boundary_violation_count: `0`
-- stage4_first_move_contrast_sandbox_readiness_source_artifact_count: `406`
+- stage4_first_move_contrast_sandbox_readiness_source_artifact_count: `408`
 - stage7_success_controls: `11`
 - stage7_success_controls_required: `5`
 - stage7_success_controls_ready: `True`
@@ -1068,7 +1068,7 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - selector_objective_lineage_feature_probe_review_status: `selector_feature_probe_blocks_runtime_needs_diverse_evidence`
 - selector_objective_lineage_feature_probe_review_best_switch_recall: `0.75`
 - selector_objective_lineage_feature_probe_review_best_preserve_recall: `1.0`
-- selector_objective_lineage_diversity_gap_status: `selector_objective_diversity_gap_requires_stage4_scope_review`
+- selector_objective_lineage_diversity_gap_status: `selector_objective_diverse_collection_review_ready`
 - selector_objective_lineage_diversity_gap_remaining_stage4_selected_failure_count: `6`
 - selector_objective_lineage_diversity_gap_remaining_stage5_6_selected_failure_count: `0`
 - selector_objective_lineage_diversity_review_status: `selector_objective_diverse_collection_review_ready`

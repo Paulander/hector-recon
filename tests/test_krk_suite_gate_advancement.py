@@ -3986,7 +3986,7 @@ def test_gate_advancement_reports_current_stage7_blocker():
     )
     assert (
         payload["summary"]["selector_objective_lineage_diversity_gap_status"]
-        == "selector_objective_diversity_gap_requires_stage4_scope_review"
+        == "selector_objective_diverse_collection_review_ready"
     )
     assert (
         payload["summary"][

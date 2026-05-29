@@ -5051,7 +5051,7 @@ def test_full_suite_readiness_identifies_current_gate():
     assert lineage["feature_probe_review_runtime_threshold_passing_model_count"] == 0
     assert (
         lineage["diversity_gap_status"]
-        == "selector_objective_diversity_gap_requires_stage4_scope_review"
+        == "selector_objective_diverse_collection_review_ready"
     )
     assert lineage["diversity_gap_remaining_stage4_selected_failure_count"] == 6
     assert lineage["diversity_gap_remaining_stage5_6_selected_failure_count"] == 0

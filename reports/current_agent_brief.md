@@ -1322,7 +1322,7 @@ The diversity review finds existing replay-free evidence still underpowered for 
 Latest selector-objective diversity gap review:
 
 ```text
-selector_objective_diversity_gap_requires_stage4_scope_review
+selector_objective_diverse_collection_review_ready
 stage4_joined_trace_ownership_scope_review_ready
 ```
 
@@ -1333,7 +1333,7 @@ Artifacts:
 * `reports/strategy_arbitration/krk_stage4_joined_trace_ownership_scope_review_packet_v0.md`
 * `reports/strategy_arbitration/krk_stage4_joined_trace_ownership_scope_review_packet_v0.json`
 
-The Stage 5/6 approved scope is nearly exhausted for switch evidence: remaining Stage 5/6 rows have `0` selected-owner failures and only `1` non-stage0 selected-owner row. The remaining selected-owner failures are all Stage 4. A Stage 4 observation-only scope review packet is ready, but it does not authorize implementation or execution. It explicitly requires a new Stage 4 observation source, default-off equivalence, zero selected move/provider/score/routing deltas, and separate approval before any run.
+The diversity gap review now records the active selector-objective decision as `selector_objective_diverse_collection_review_ready`: current blockers are provider diversity, failure-type diversity, and feature quality under the current seed, not raw row count or Stage 5/6 stage coverage. It preserves the historical Stage 4 contrast finding: remaining Stage 5/6 rows have `0` selected-owner failures and only `1` non-stage0 selected-owner row, while remaining selected-owner failures are all Stage 4. The Stage 4 observation-only scope review packet remains ready as a separate historical boundary, but neither packet authorizes implementation or execution. Any future diverse collection or Stage 4 observation source requires explicit approval and must preserve default-off equivalence, zero selected move/provider/score/routing deltas, zero selector-training rows, and zero Stage 7 training rows.
 
 Latest clean curriculum checkpoint package:
 

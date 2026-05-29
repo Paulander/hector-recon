@@ -1377,7 +1377,7 @@
 - feature_probe_review_status: `selector_feature_probe_blocks_runtime_needs_diverse_evidence`
 - feature_probe_review_best_switch_recall: `0.75`
 - feature_probe_review_best_preserve_recall: `1.0`
-- diversity_gap_status: `selector_objective_diversity_gap_requires_stage4_scope_review`
+- diversity_gap_status: `selector_objective_diverse_collection_review_ready`
 - diversity_gap_remaining_stage4_selected_failure_count: `6`
 - diversity_gap_remaining_stage5_6_selected_failure_count: `0`
 - diversity_review_status: `selector_objective_diverse_collection_review_ready`

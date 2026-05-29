@@ -29,9 +29,9 @@ def build_payload(diversity: dict[str, Any] | None = None) -> dict[str, Any]:
         if isinstance(row, dict)
     ]
     review_rows = candidates[:6]
+    interpretation = diversity.get("interpretation") or {}
     ready = (
-        (diversity.get("decision") or {}).get("status")
-        == "selector_objective_diversity_gap_requires_stage4_scope_review"
+        bool(interpretation.get("stage4_scope_needed_for_more_switch_contrast"))
         and len(review_rows) > 0
     )
     return {
