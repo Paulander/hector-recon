@@ -2,6 +2,7 @@
 """Tests for non-causal KRK candidate-generation control-plane artifacts."""
 
 import importlib.util
+import json
 from pathlib import Path
 
 
@@ -5207,6 +5208,20 @@ def test_joined_trace_ownership_collection_preserves_observation_only_invariants
                 "selected_owner_label": "selected_owner_failed",
                 "priority": "excluded_requires_separate_review",
             },
+            {
+                "state_id": "state.stage7",
+                "source_stage": "stage7",
+                "selected_provider": "krk.stage0_basin",
+                "selected_owner_label": "selected_owner_failed",
+                "priority": "excluded_requires_separate_review",
+            },
+            {
+                "state_id": "state.stage8",
+                "source_stage": "stage8",
+                "selected_provider": "krk.stage0_basin",
+                "selected_owner_label": "selected_owner_converted",
+                "priority": "excluded_requires_separate_review",
+            },
         ],
     }
     context = {
@@ -5258,13 +5273,111 @@ def test_joined_trace_ownership_collection_preserves_observation_only_invariants
     assert payload["decision"]["status"] == "joined_trace_ownership_collection_complete_seed_improved"
     assert payload["summary"]["attempted_row_count"] == 2
     assert payload["summary"]["joined_row_count"] == 2
+    assert payload["summary"]["stage_counts"] == {"stage5": 1, "stage6": 1}
     assert payload["summary"]["switch_contrast_count"] == 1
     assert payload["summary"]["safe_preservation_count"] == 1
+    assert {row["source_stage"] for row in payload["rows"]} == {"stage5", "stage6"}
+    assert all(row["source_stage"] not in {"stage4", "stage7", "stage8"} for row in payload["rows"])
+    assert all(
+        row["selected_owner_label"]
+        in {"selected_owner_failed", "selected_owner_converted"}
+        for row in payload["rows"]
+    )
+    assert all(row["usable_for_selector_training"] is False for row in payload["rows"])
     assert payload["summary"]["selected_move_provider_delta_count"] == 0
+    assert payload["summary"]["selected_move_delta_count"] == 0
+    assert payload["summary"]["selected_provider_delta_count"] == 0
     assert payload["summary"]["score_delta_count"] == 0
     assert payload["summary"]["routing_delta_count"] == 0
+    assert payload["summary"]["selector_training_row_count"] == 0
     assert payload["summary"]["stage7_training_row_count"] == 0
     assert payload["runtime_selector_implemented"] is False
+
+
+def test_joined_trace_ownership_collection_artifacts_preserve_approved_scope():
+    root = Path(__file__).resolve().parents[1]
+    collection = json.loads(
+        (
+            root
+            / "reports/strategy_arbitration/krk_joined_trace_ownership_collection_v0.json"
+        ).read_text(encoding="utf-8")
+    )
+    manifest = json.loads(
+        (
+            root
+            / "reports/strategy_arbitration/krk_selector_objective_seed_manifest_v1.json"
+        ).read_text(encoding="utf-8")
+    )
+    probe = json.loads(
+        (
+            root
+            / "reports/strategy_arbitration/krk_selector_objective_seed_probe_v1.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    summary = collection["summary"]
+    assert collection["decision"]["status"] == (
+        "joined_trace_ownership_collection_complete_seed_improved"
+    )
+    assert summary["attempted_row_count"] == 8
+    assert summary["collected_row_count"] == 8
+    assert summary["joined_row_count"] == 8
+    assert summary["switch_contrast_count"] == 2
+    assert summary["safe_preservation_count"] == 6
+    assert summary["stage_counts"] == {"stage5": 5, "stage6": 3}
+    assert set(summary["provider_counts"]) == {"krk.stage0_basin"}
+    assert summary["selected_move_provider_delta_count"] == 0
+    assert summary["selected_move_delta_count"] == 0
+    assert summary["selected_provider_delta_count"] == 0
+    assert summary["score_delta_count"] == 0
+    assert summary["routing_delta_count"] == 0
+    assert summary["selector_training_row_count"] == 0
+    assert summary["stage7_training_row_count"] == 0
+    assert collection["runtime_behavior_changed"] is False
+    assert collection["runtime_dtm_or_tablebase_lookup"] is False
+    assert collection["gameplay_topology_mutation"] is False
+
+    rows = collection["rows"]
+    assert {row["source_stage"] for row in rows} == {"stage5", "stage6"}
+    assert all(row["source_stage"] not in {"stage4", "stage7", "stage8"} for row in rows)
+    assert all(row["selected_move_delta"] is False for row in rows)
+    assert all(row["selected_provider_delta"] is False for row in rows)
+    assert all(row["selected_score_delta"] is False for row in rows)
+    assert all(row["routing_delta"] is False for row in rows)
+    assert all(row["usable_for_selector_training"] is False for row in rows)
+    assert {
+        row["selected_owner_label"]
+        for row in rows
+    } == {"selected_owner_failed", "selected_owner_converted"}
+    assert all(
+        row["recovery_class"] == "selected_failure_with_visible_positive_alternative"
+        for row in rows
+        if row["selected_owner_label"] == "selected_owner_failed"
+    )
+    assert all(
+        row["recovery_class"] == "safe_preservation_with_visible_positive_alternative"
+        for row in rows
+        if row["selected_owner_label"] == "selected_owner_converted"
+    )
+
+    assert manifest["summary"]["selector_training_row_count"] == 0
+    assert manifest["summary"]["stage7_training_row_count"] == 0
+    assert all(
+        row["objective_channel"] == "candidate_switch_contrast_seed"
+        for row in manifest["seed_rows"]
+        if row["selected_owner_label"] == "selected_owner_failed"
+    )
+    assert all(
+        row["objective_channel"] == "safe_preservation_contrast_seed"
+        for row in manifest["seed_rows"]
+        if row["selected_owner_label"] == "selected_owner_converted"
+    )
+    assert probe["decision"]["status"] == (
+        "selector_objective_seed_ready_for_non_causal_feature_probe"
+    )
+    assert probe["decision"]["selector_allowed"] is False
+    assert probe["summary"]["selector_training_row_count"] == 0
+    assert probe["summary"]["stage7_training_row_count"] == 0
 
 
 def test_selector_objective_seed_manifest_v1_adds_collection_rows_without_training():
