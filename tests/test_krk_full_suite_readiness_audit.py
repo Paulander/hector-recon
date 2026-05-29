@@ -855,6 +855,14 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_ownership_context_feature_review_v2.json"
     )
     assert (
+        payload["source_artifacts"]["ownership_selection_label_dataset_v3"]
+        == "reports/krk_ownership_selection_label_dataset_v3.json"
+    )
+    assert (
+        payload["source_artifacts"]["ownership_selection_label_dataset_v4"]
+        == "reports/krk_ownership_selection_label_dataset_v4.json"
+    )
+    assert (
         payload["source_artifacts"]["ownership_selection_label_dataset_v5"]
         == "reports/krk_ownership_selection_label_dataset_v5.json"
     )
@@ -2458,6 +2466,18 @@ def test_full_suite_readiness_identifies_current_gate():
     assert ownership_context["feature_probe_v2_row_count"] == 34
     assert ownership_context["feature_probe_v2_underpowered"] is True
     assert ownership_context["feature_probe_v2_stage7_row_count"] == 0
+    assert ownership_context["label_dataset_v3_status"] == (
+        "ownership_selection_labels_supplemented_from_selected_provider_groups"
+    )
+    assert ownership_context["label_dataset_v3_merged_row_count"] == 35
+    assert ownership_context["label_dataset_v3_selector_training_row_count"] == 0
+    assert ownership_context["label_dataset_v3_stage7_row_count"] == 0
+    assert ownership_context["label_dataset_v4_status"] == (
+        "ownership_selection_labels_refreshed_with_targeted_non_stage0_current_profile_h40"
+    )
+    assert ownership_context["label_dataset_v4_merged_row_count"] == 35
+    assert ownership_context["label_dataset_v4_selector_training_row_count"] == 0
+    assert ownership_context["label_dataset_v4_stage7_row_count"] == 0
     assert ownership_context["context_dataset_v0_status"] == (
         "ownership_selection_context_dataset_ready_for_non_causal_probe"
     )

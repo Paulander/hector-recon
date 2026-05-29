@@ -1090,6 +1090,22 @@ def test_gate_advancement_reports_current_stage7_blocker():
         == 34
     )
     assert payload["summary"][
+        "ownership_selection_context_label_dataset_v3_status"
+    ] == "ownership_selection_labels_supplemented_from_selected_provider_groups"
+    assert (
+        payload["summary"]["ownership_selection_context_label_dataset_v3_row_count"]
+        == 35
+    )
+    assert payload["summary"][
+        "ownership_selection_context_label_dataset_v4_status"
+    ] == (
+        "ownership_selection_labels_refreshed_with_targeted_non_stage0_current_profile_h40"
+    )
+    assert (
+        payload["summary"]["ownership_selection_context_label_dataset_v4_row_count"]
+        == 35
+    )
+    assert payload["summary"][
         "ownership_selection_context_feature_probe_v2_status"
     ] == "ownership_selection_signal_underpowered"
     assert (

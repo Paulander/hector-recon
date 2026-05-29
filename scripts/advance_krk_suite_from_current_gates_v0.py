@@ -2028,6 +2028,22 @@ def build_payload() -> dict[str, Any]:
                     "label_dataset_v2_merged_row_count"
                 )
             ),
+            "ownership_selection_context_label_dataset_v3_status": (
+                ownership_selection_context_gate.get("label_dataset_v3_status")
+            ),
+            "ownership_selection_context_label_dataset_v3_row_count": (
+                ownership_selection_context_gate.get(
+                    "label_dataset_v3_merged_row_count"
+                )
+            ),
+            "ownership_selection_context_label_dataset_v4_status": (
+                ownership_selection_context_gate.get("label_dataset_v4_status")
+            ),
+            "ownership_selection_context_label_dataset_v4_row_count": (
+                ownership_selection_context_gate.get(
+                    "label_dataset_v4_merged_row_count"
+                )
+            ),
             "ownership_selection_context_feature_probe_v2_status": (
                 ownership_selection_context_gate.get("feature_probe_v2_status")
             ),
