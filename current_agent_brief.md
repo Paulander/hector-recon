@@ -18,5 +18,8 @@
 
 ## Next Needed Work
 
-- Collect or review more diverse joined trace/ownership evidence before any selector runtime review.
+- Diversity review completed at `reports/strategy_arbitration/krk_selector_objective_diversity_review_v0.json`.
+- Future bounded Stage 5/6-only collection review packet completed at `reports/strategy_arbitration/krk_selector_objective_diverse_collection_review_packet_v0.json`.
+- Replay-free recovery was not sufficient: current extra Stage 5/6 rows do not add enough switch or non-stage0 joined trace/ownership evidence.
+- Do not execute the future diverse collection without explicit approval.
 - Do not set runtime-selector-ready from the current seed or feature probe.

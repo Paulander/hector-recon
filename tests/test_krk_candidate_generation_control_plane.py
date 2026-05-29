@@ -1117,6 +1117,34 @@ _selector_objective_feature_review = importlib.util.module_from_spec(
 )
 _selector_objective_feature_review_spec.loader.exec_module(_selector_objective_feature_review)
 
+_selector_objective_diversity_spec = importlib.util.spec_from_file_location(
+    "review_krk_selector_objective_diversity_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "review_krk_selector_objective_diversity_v0.py",
+)
+assert _selector_objective_diversity_spec is not None
+assert _selector_objective_diversity_spec.loader is not None
+_selector_objective_diversity = importlib.util.module_from_spec(
+    _selector_objective_diversity_spec
+)
+_selector_objective_diversity_spec.loader.exec_module(_selector_objective_diversity)
+
+_selector_objective_diverse_collection_packet_spec = importlib.util.spec_from_file_location(
+    "write_krk_selector_objective_diverse_collection_review_packet_v0",
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "write_krk_selector_objective_diverse_collection_review_packet_v0.py",
+)
+assert _selector_objective_diverse_collection_packet_spec is not None
+assert _selector_objective_diverse_collection_packet_spec.loader is not None
+_selector_objective_diverse_collection_packet = importlib.util.module_from_spec(
+    _selector_objective_diverse_collection_packet_spec
+)
+_selector_objective_diverse_collection_packet_spec.loader.exec_module(
+    _selector_objective_diverse_collection_packet
+)
+
 _selector_objective_diversity_gap_spec = importlib.util.spec_from_file_location(
     "review_krk_selector_objective_diversity_gap_v0",
     Path(__file__).resolve().parents[1]
@@ -5568,6 +5596,222 @@ def test_selector_objective_feature_probe_review_blocks_runtime_without_passing_
     assert payload["decision"]["runtime_changes_allowed"] is False
     assert "offline_outcome_oracle_is_not_runtime_feature_eligible" in payload["blockers"]
     assert "more_non_stage0_selected_owner_rows" in payload["recommended_evidence"]
+
+
+def test_selector_objective_diversity_review_prepares_stage5_6_packet_without_runtime():
+    collection = {
+        "decision": {"status": "joined_trace_ownership_collection_complete_seed_improved"},
+        "rows": [
+            {
+                "state_id": "state.collected",
+                "selected_provider_label": "krk.stage0_basin",
+                "source_stage": "stage5",
+            }
+        ],
+    }
+    seed = {
+        "seed_rows": [
+            {
+                "state_id": "state.collected",
+                "source_stage": "stage5",
+                "selected_provider": "krk.stage0_basin",
+                "selected_provider_family": "stage0_basin",
+                "selected_owner_label": "selected_owner_failed",
+            },
+            {
+                "state_id": "state.edge.fail",
+                "source_stage": "stage6",
+                "selected_provider": "krk.edge_trap_close",
+                "selected_provider_family": "edge_trap",
+                "selected_owner_label": "selected_owner_failed",
+            },
+            {
+                "state_id": "state.fence.safe",
+                "source_stage": "stage5",
+                "selected_provider": "krk.fence_established",
+                "selected_provider_family": "fence_established",
+                "selected_owner_label": "selected_owner_converted",
+            },
+        ]
+    }
+    ownership_context = {
+        "rows": [
+            {
+                "state_id": "state.edge.fail",
+                "frame_id": "cp.edge.fail",
+                "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                "source_stage": "stage6",
+                "active_landmark_label": "drive_to_edge",
+                "provider_id": "krk.edge_trap_close",
+                "provider_family": "edge_trap",
+                "target_label": "selected_owner_failed",
+            },
+            {
+                "state_id": "state.fence.safe",
+                "frame_id": "cp.fence.safe",
+                "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                "source_stage": "stage5",
+                "active_landmark_label": "fence_established",
+                "provider_id": "krk.fence_established",
+                "provider_family": "fence_established",
+                "target_label": "selected_owner_converted",
+            },
+            {
+                "state_id": "state.stage4.excluded",
+                "frame_id": "cp.stage4.excluded",
+                "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                "source_stage": "stage4",
+                "active_landmark_label": "wrong_tempo_control",
+                "provider_id": "krk.stage0_basin",
+                "provider_family": "stage0_basin",
+                "target_label": "selected_owner_failed",
+            },
+            {
+                "state_id": "state.capacity.not.owner",
+                "frame_id": "cp.capacity.not.owner",
+                "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                "source_stage": "stage5",
+                "active_landmark_label": "fence_established",
+                "provider_id": "krk.drive_to_edge",
+                "provider_family": "drive_to_edge",
+                "target_label": "include_validated_provider_candidate",
+            },
+        ]
+    }
+    feature_review = {
+        "decision": {"status": "selector_feature_probe_blocks_runtime_needs_diverse_evidence"}
+    }
+    seed_probe = {
+        "decision": {"status": "selector_objective_seed_ready_for_non_causal_feature_probe"}
+    }
+
+    payload = _selector_objective_diversity.build_payload(
+        collection=collection,
+        seed=seed,
+        seed_probe=seed_probe,
+        feature_review=feature_review,
+        ownership_context=ownership_context,
+    )
+
+    assert payload["decision"]["status"] == "selector_objective_diverse_collection_review_ready"
+    assert payload["questions"]["can_recover_more_replay_free_from_existing_artifacts"] is False
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert payload["summary"]["stage7_training_row_count"] == 0
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["gameplay_topology_mutation"] is False
+    assert {row["source_stage"] for row in payload["future_collection_candidates"]} == {
+        "stage5",
+        "stage6",
+    }
+    assert all(
+        row["selected_owner_label"]
+        in {"selected_owner_failed", "selected_owner_converted"}
+        for row in payload["future_collection_candidates"]
+    )
+    assert "state.stage4.excluded" not in {
+        row["state_id"] for row in payload["future_collection_candidates"]
+    }
+    assert "state.capacity.not.owner" not in {
+        row["state_id"] for row in payload["future_collection_candidates"]
+    }
+
+
+def test_selector_objective_diverse_collection_packet_requires_future_approval():
+    diversity_review = {
+        "decision": {"status": "selector_objective_diverse_collection_review_ready"},
+        "future_collection_candidates": [
+            {
+                "state_id": "state.edge.fail",
+                "frame_id": "cp.edge.fail",
+                "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                "source_stage": "stage6",
+                "active_landmark_label": "drive_to_edge",
+                "selected_provider": "krk.edge_trap_close",
+                "selected_provider_family": "edge_trap",
+                "selected_owner_label": "selected_owner_failed",
+                "objective_channel": "candidate_switch_contrast_seed",
+                "recovery_class": "selected_failure_requires_joined_trace_observation",
+                "priority_reason": "non_stage0_switch_seed_needs_joined_observation",
+            },
+            {
+                "state_id": "state.stage7.excluded",
+                "frame_id": "cp.stage7.excluded",
+                "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+                "source_stage": "stage7",
+                "active_landmark_label": "heldout",
+                "selected_provider": "krk.stage0_basin",
+                "selected_provider_family": "stage0_basin",
+                "selected_owner_label": "selected_owner_failed",
+                "objective_channel": "candidate_switch_contrast_seed",
+                "recovery_class": "excluded_stage7",
+                "priority_reason": "excluded",
+            },
+        ],
+    }
+
+    payload = _selector_objective_diverse_collection_packet.build_payload(
+        diversity_review=diversity_review
+    )
+
+    assert payload["decision"]["status"] == "selector_objective_diverse_collection_review_ready"
+    assert payload["decision"]["implementation_authorized_by_this_packet"] is False
+    assert payload["decision"]["selector_training_allowed"] is False
+    assert payload["summary"]["review_row_count"] == 1
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert payload["summary"]["stage7_training_row_count"] == 0
+    assert payload["summary"]["stage4_row_count"] == 0
+    assert payload["summary"]["stage7_row_count"] == 0
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_score_changes"] is False
+    assert payload["runtime_direct_routing"] is False
+    assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["gameplay_topology_mutation"] is False
+    assert payload["review_rows"][0]["selected_owner_label"] == "selected_owner_failed"
+
+
+def test_selector_objective_diversity_artifacts_parse_and_preserve_constraints():
+    root = Path(__file__).resolve().parents[1]
+    diversity = json.loads(
+        (
+            root
+            / "reports/strategy_arbitration/krk_selector_objective_diversity_review_v0.json"
+        ).read_text(encoding="utf-8")
+    )
+    packet = json.loads(
+        (
+            root
+            / "reports/strategy_arbitration/krk_selector_objective_diverse_collection_review_packet_v0.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert diversity["decision"]["status"] == "selector_objective_diverse_collection_review_ready"
+    assert diversity["summary"]["replay_free_recovery_enough"] is False
+    assert diversity["summary"]["selector_training_row_count"] == 0
+    assert diversity["summary"]["stage7_training_row_count"] == 0
+    assert diversity["runtime_behavior_changed"] is False
+    assert diversity["runtime_score_changes"] is False
+    assert diversity["runtime_direct_routing"] is False
+    assert packet["decision"]["status"] == "selector_objective_diverse_collection_review_ready"
+    assert packet["decision"]["implementation_authorized_by_this_packet"] is False
+    assert packet["summary"]["review_row_count"] == 8
+    assert packet["summary"]["selector_training_row_count"] == 0
+    assert packet["summary"]["stage7_training_row_count"] == 0
+    assert packet["summary"]["stage4_row_count"] == 0
+    assert packet["summary"]["stage7_row_count"] == 0
+    assert packet["summary"]["stage8_row_count"] == 0
+    assert all(row["source_stage"] in {"stage5", "stage6"} for row in packet["review_rows"])
+    assert all(
+        row["selected_owner_label"]
+        in {"selected_owner_failed", "selected_owner_converted"}
+        for row in packet["review_rows"]
+    )
+    assert all(row["usable_for_selector_training"] is False for row in packet["review_rows"])
+    assert packet["runtime_behavior_changed"] is False
+    assert packet["runtime_score_changes"] is False
+    assert packet["runtime_direct_routing"] is False
+    assert packet["runtime_dtm_or_tablebase_lookup"] is False
+    assert packet["gameplay_topology_mutation"] is False
 
 
 def test_selector_objective_diversity_gap_points_to_stage4_scope_review():
