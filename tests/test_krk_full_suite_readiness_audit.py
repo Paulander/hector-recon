@@ -487,6 +487,10 @@ def test_full_suite_readiness_artifact_preserves_boundaries():
         == "reports/krk_strategy_sequence_inventory_v0.json"
     )
     assert (
+        payload["source_artifacts"]["selector_readiness_v2_plan"]
+        == "reports/krk_selector_readiness_v2_plan.json"
+    )
+    assert (
         payload["source_artifacts"]["strategy_owner_contrast_label_plan"]
         == "reports/krk_strategy_owner_contrast_label_plan_v0.json"
     )
@@ -1428,6 +1432,21 @@ def test_full_suite_readiness_identifies_current_gate():
 
     strategy_owner = payload["strategy_owner_contrast_gate"]
     assert strategy_owner["passive_probe_ready"] is True
+    assert strategy_owner["readiness_v2_plan_status"] == (
+        "selector_readiness_v2_defined_runtime_sandbox_blocked"
+    )
+    assert strategy_owner["readiness_v2_plan_runtime_arbiter_allowed"] is False
+    assert strategy_owner["readiness_v2_plan_selector_sandbox_ready"] is False
+    assert (
+        strategy_owner["readiness_v2_plan_next_slice"]
+        == "strategy_owner_contrast_dataset_v0"
+    )
+    assert strategy_owner["readiness_v2_plan_next_slice_causal_status"] == (
+        "non_causal_only"
+    )
+    assert "insufficient_non_stage0_conversion_positive_ownership_examples" in (
+        strategy_owner["readiness_v2_plan_blockers"]
+    )
     assert (
         strategy_owner["label_plan_status"]
         == "protected_strategy_owner_contrast_label_plan_defined_execution_review_required"

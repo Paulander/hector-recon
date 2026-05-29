@@ -625,6 +625,7 @@ SOURCES = {
         "reports/krk_strategy_sequence_evidence_plan_v0.json"
     ),
     "strategy_sequence_inventory": "reports/krk_strategy_sequence_inventory_v0.json",
+    "selector_readiness_v2_plan": "reports/krk_selector_readiness_v2_plan.json",
     "strategy_owner_contrast_label_plan": (
         "reports/krk_strategy_owner_contrast_label_plan_v0.json"
     ),
@@ -1907,6 +1908,7 @@ def build_payload() -> dict[str, Any]:
     ]
     strategy_sequence_evidence_plan = payloads["strategy_sequence_evidence_plan"]
     strategy_sequence_inventory = payloads["strategy_sequence_inventory"]
+    selector_readiness_v2_plan = payloads["selector_readiness_v2_plan"]
     strategy_owner_contrast_label_plan = payloads[
         "strategy_owner_contrast_label_plan"
     ]
@@ -3196,6 +3198,19 @@ def build_payload() -> dict[str, Any]:
         and strategy_sequence_inventory.get("stage7_promotion_allowed") is False
         and strategy_sequence_inventory.get("stage8_training_allowed") is False
     )
+    selector_readiness_v2_decision = selector_readiness_v2_plan.get(
+        "decision"
+    ) or {}
+    selector_readiness_v2_next_slice = (
+        selector_readiness_v2_plan.get("next_allowed_evidence_slice") or {}
+    )
+    selector_readiness_v2_requirements = {
+        item.get("requirement_id"): item
+        for item in selector_readiness_v2_plan.get("readiness_requirements_v2") or []
+    }
+    selector_readiness_v2_blockers = (
+        selector_readiness_v2_plan.get("blocked_by_current_evidence") or []
+    )
     strategy_owner_plan_decision = strategy_owner_contrast_label_plan.get(
         "decision"
     ) or {}
@@ -3230,7 +3245,51 @@ def build_payload() -> dict[str, Any]:
     strategy_owner_probe_decision = strategy_owner_contrast_probe.get("decision") or {}
     strategy_owner_probe_metrics = strategy_owner_contrast_probe.get("metrics") or {}
     strategy_owner_probe_passive = (
-        strategy_owner_plan_decision.get("status")
+        selector_readiness_v2_plan.get("causal_status")
+        == "non_causal_design_plan"
+        and selector_readiness_v2_decision.get("status")
+        == "selector_readiness_v2_defined_runtime_sandbox_blocked"
+        and selector_readiness_v2_decision.get("runtime_arbiter_allowed") is False
+        and selector_readiness_v2_decision.get("selector_sandbox_ready") is False
+        and selector_readiness_v2_decision.get("recommended_next_step")
+        == "build_non_causal_strategy_owner_contrast_dataset_v0"
+        and selector_readiness_v2_next_slice.get("causal_status")
+        == "non_causal_only"
+        and selector_readiness_v2_next_slice.get("name")
+        == "strategy_owner_contrast_dataset_v0"
+        and "runtime_arbiter" in selector_readiness_v2_next_slice.get(
+            "forbidden"
+        )
+        and "stage7_promotion" in selector_readiness_v2_next_slice.get(
+            "forbidden"
+        )
+        and "stage8_training" in selector_readiness_v2_next_slice.get(
+            "forbidden"
+        )
+        and selector_readiness_v2_requirements["stage_coverage"]["minimum"].get(
+            "stage7_training_rows"
+        )
+        == 0
+        and selector_readiness_v2_requirements["held_out_challenge_boundary"][
+            "minimum"
+        ].get("stage7_training_rows")
+        == 0
+        and selector_readiness_v2_requirements["provider_diversity"][
+            "minimum"
+        ].get("distinct_selected_provider_families")
+        == 3
+        and "insufficient_non_stage0_conversion_positive_ownership_examples"
+        in selector_readiness_v2_blockers
+        and selector_readiness_v2_plan.get("runtime_arbiter_implemented") is False
+        and selector_readiness_v2_plan.get("runtime_behavior_changed") is False
+        and selector_readiness_v2_plan.get("runtime_defaults_changed") is False
+        and selector_readiness_v2_plan.get("runtime_dtm_or_tablebase_lookup")
+        is False
+        and selector_readiness_v2_plan.get("runtime_terminals_added") is False
+        and selector_readiness_v2_plan.get("gameplay_topology_mutation") is False
+        and selector_readiness_v2_plan.get("stage7_promotion_allowed") is False
+        and selector_readiness_v2_plan.get("stage8_training_allowed") is False
+        and strategy_owner_plan_decision.get("status")
         == "protected_strategy_owner_contrast_label_plan_defined_execution_review_required"
         and strategy_owner_plan_decision.get("runtime_arbiter_allowed") is False
         and strategy_owner_plan_decision.get("selector_sandbox_ready") is False
@@ -8937,6 +8996,22 @@ def build_payload() -> dict[str, Any]:
         "strategy_owner_contrast_gate": {
             "status": strategy_owner_probe_decision.get("status"),
             "passive_probe_ready": strategy_owner_probe_passive,
+            "readiness_v2_plan_status": selector_readiness_v2_decision.get(
+                "status"
+            ),
+            "readiness_v2_plan_runtime_arbiter_allowed": (
+                selector_readiness_v2_decision.get("runtime_arbiter_allowed")
+            ),
+            "readiness_v2_plan_selector_sandbox_ready": (
+                selector_readiness_v2_decision.get("selector_sandbox_ready")
+            ),
+            "readiness_v2_plan_next_slice": (
+                selector_readiness_v2_next_slice.get("name")
+            ),
+            "readiness_v2_plan_next_slice_causal_status": (
+                selector_readiness_v2_next_slice.get("causal_status")
+            ),
+            "readiness_v2_plan_blockers": selector_readiness_v2_blockers,
             "label_plan_status": strategy_owner_plan_decision.get("status"),
             "label_plan_job_count": len(
                 strategy_owner_contrast_label_plan.get("jobs") or []
@@ -17044,6 +17119,10 @@ def write_markdown(payload: dict[str, Any]) -> str:
         "## Strategy Owner Contrast",
         "",
         f"- passive_probe_ready: `{strategy_owner_contrast['passive_probe_ready']}`",
+        f"- readiness_v2_plan_status: `{strategy_owner_contrast['readiness_v2_plan_status']}`",
+        f"- readiness_v2_plan_runtime_arbiter_allowed: `{strategy_owner_contrast['readiness_v2_plan_runtime_arbiter_allowed']}`",
+        f"- readiness_v2_plan_selector_sandbox_ready: `{strategy_owner_contrast['readiness_v2_plan_selector_sandbox_ready']}`",
+        f"- readiness_v2_plan_next_slice: `{strategy_owner_contrast['readiness_v2_plan_next_slice']}`",
         f"- label_plan_status: `{strategy_owner_contrast['label_plan_status']}`",
         f"- label_plan_job_count: `{strategy_owner_contrast['label_plan_job_count']}`",
         f"- label_plan_stage7_job_count: `{strategy_owner_contrast['label_plan_stage7_job_count']}`",

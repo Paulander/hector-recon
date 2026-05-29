@@ -1194,6 +1194,22 @@ def build_payload() -> dict[str, Any]:
             "strategy_owner_contrast_passive_probe_ready": (
                 strategy_owner_contrast_gate.get("passive_probe_ready")
             ),
+            "strategy_owner_contrast_readiness_v2_plan_status": (
+                strategy_owner_contrast_gate.get("readiness_v2_plan_status")
+            ),
+            "strategy_owner_contrast_readiness_v2_plan_runtime_arbiter_allowed": (
+                strategy_owner_contrast_gate.get(
+                    "readiness_v2_plan_runtime_arbiter_allowed"
+                )
+            ),
+            "strategy_owner_contrast_readiness_v2_plan_selector_sandbox_ready": (
+                strategy_owner_contrast_gate.get(
+                    "readiness_v2_plan_selector_sandbox_ready"
+                )
+            ),
+            "strategy_owner_contrast_readiness_v2_plan_next_slice": (
+                strategy_owner_contrast_gate.get("readiness_v2_plan_next_slice")
+            ),
             "strategy_owner_contrast_label_plan_status": (
                 strategy_owner_contrast_gate.get("label_plan_status")
             ),

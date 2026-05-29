@@ -217,6 +217,24 @@ def test_gate_advancement_reports_current_stage7_blocker():
     assert payload["summary"]["strategy_sequence_stage7_promotion_allowed"] is False
     assert payload["summary"]["strategy_sequence_stage8_training_allowed"] is False
     assert payload["summary"]["strategy_owner_contrast_passive_probe_ready"] is True
+    assert payload["summary"][
+        "strategy_owner_contrast_readiness_v2_plan_status"
+    ] == "selector_readiness_v2_defined_runtime_sandbox_blocked"
+    assert (
+        payload["summary"][
+            "strategy_owner_contrast_readiness_v2_plan_runtime_arbiter_allowed"
+        ]
+        is False
+    )
+    assert (
+        payload["summary"][
+            "strategy_owner_contrast_readiness_v2_plan_selector_sandbox_ready"
+        ]
+        is False
+    )
+    assert payload["summary"][
+        "strategy_owner_contrast_readiness_v2_plan_next_slice"
+    ] == "strategy_owner_contrast_dataset_v0"
     assert (
         payload["summary"]["strategy_owner_contrast_label_plan_status"]
         == "protected_strategy_owner_contrast_label_plan_defined_execution_review_required"

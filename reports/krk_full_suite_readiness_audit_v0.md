@@ -89,6 +89,10 @@
 ## Strategy Owner Contrast
 
 - passive_probe_ready: `True`
+- readiness_v2_plan_status: `selector_readiness_v2_defined_runtime_sandbox_blocked`
+- readiness_v2_plan_runtime_arbiter_allowed: `False`
+- readiness_v2_plan_selector_sandbox_ready: `False`
+- readiness_v2_plan_next_slice: `strategy_owner_contrast_dataset_v0`
 - label_plan_status: `protected_strategy_owner_contrast_label_plan_defined_execution_review_required`
 - label_plan_job_count: `12`
 - label_plan_stage7_job_count: `0`
@@ -982,7 +986,7 @@
 - post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
 - post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
 - expected_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
-- expected_readiness_fingerprint: `06fde8608ef1000bd1f9449e64d2ab7984f7be797ec2250fb3c011d903991c59`
+- expected_readiness_fingerprint: `5ea53ffc76e4e5add3580ee22cf26479eebec0ccc6134f8178a84e62cc58a75a`
 - command_if_explicitly_approved: `UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/run_krk_protected_plan_window_failure_contrast_collection_v0.py --execute-reviewed-collection --refresh-after-run --approval-receipt reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_approval_v0.json`
 - runtime_behavior_changed: `False`
 - runtime_defaults_changed: `False`
@@ -1637,5 +1641,5 @@
 
 ## Boundary Check
 
-- checked_flag_count: `2888`
+- checked_flag_count: `2894`
 - violation_count: `0`
