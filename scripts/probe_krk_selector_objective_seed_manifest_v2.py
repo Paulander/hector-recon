@@ -28,6 +28,10 @@ def _target_action(row: dict[str, Any]) -> str:
         return "prefer_visible_alternative"
     if channel == "safe_preservation_contrast_seed":
         return "preserve_selected_owner"
+    if channel == "progress_window_failure_contrast_candidate":
+        if row.get("selected_owner_label") == "selected_owner_failed":
+            return "prefer_visible_alternative"
+        return "preserve_selected_owner"
     return "abstain_context_only"
 
 

@@ -34,6 +34,14 @@ _benchmark = _load_module(
     "benchmark_krk_selector_objective_v2",
     "scripts/benchmark_krk_selector_objective_v2.py",
 )
+_feature_probe_v2 = _load_module(
+    "probe_krk_selector_objective_feature_probe_v2",
+    "scripts/probe_krk_selector_objective_feature_probe_v2.py",
+)
+_gap_scan = _load_module(
+    "write_krk_selector_objective_batch_gap_scan_v0",
+    "scripts/write_krk_selector_objective_batch_gap_scan_v0.py",
+)
 _benchmark_review = _load_module(
     "write_krk_selector_objective_benchmark_review_packet_v2",
     "scripts/write_krk_selector_objective_benchmark_review_packet_v2.py",
@@ -190,11 +198,19 @@ def test_selector_seed_manifest_v2_adds_stage4_without_training_rows():
     assert payload["schema_version"] == "krk_selector_objective_seed_manifest.v2"
     assert payload["decision"]["status"] == "selector_objective_seed_manifest_v2_ready_non_causal"
     assert payload["summary"]["added_stage4_seed_row_count"] == 6
+    assert payload["summary"]["fresh_collection_added_seed_row_count"] == 3
+    assert payload["summary"]["fresh_collection_replaced_seed_row_count"] == 1
+    assert payload["summary"]["fresh_collection_duplicate_lower_value_row_count"] == 4
+    assert payload["summary"]["seed_row_count"] == 21
     assert payload["summary"]["source_stage_counts"]["stage4"] == 6
+    assert payload["summary"]["source_stage_counts"]["stage5"] == 9
+    assert payload["summary"]["source_stage_counts"]["stage6"] == 6
     assert payload["summary"]["candidate_switch_contrast_seed_count"] >= 4
     assert payload["summary"]["safe_preservation_contrast_seed_count"] >= 4
     assert payload["summary"]["selector_training_row_count"] == 0
     assert payload["summary"]["stage7_training_row_count"] == 0
+    assert payload["summary"]["runtime_authorization_row_count"] == 0
+    assert payload["summary"]["capacity_label_used_as_ownership_label_count"] == 0
     assert payload["decision"]["selector_allowed"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False
 
@@ -228,7 +244,11 @@ def test_selector_seed_manifest_v2_fixture_counts_switch_and_preserve():
         ],
     }
 
-    payload = _manifest.build_payload(seed_v1=seed_v1, stage4_collection=collection)
+    payload = _manifest.build_payload(
+        seed_v1=seed_v1,
+        stage4_collection=collection,
+        fresh_collection={"summary": {}, "rows": []},
+    )
 
     assert payload["summary"]["added_stage4_seed_row_count"] == 1
     assert payload["summary"]["candidate_switch_contrast_seed_count"] == 1
@@ -351,8 +371,72 @@ def test_selector_objective_benchmark_fixture_uses_visible_context_without_label
     heuristic = payload["results"]["visible_failure_risk_heuristic_v2"]
     assert heuristic["runtime_feature_eligible"] is True
     assert heuristic["accuracy"] == 1.0
+    assert heuristic["switch_recall"] == 1.0
     assert payload["runtime_selector_implemented"] is False
     assert payload["decision"]["runtime_changes_allowed"] is False
+
+
+def test_selector_objective_feature_probe_v2_is_review_only():
+    payload = _read_report("reports/strategy_arbitration/krk_selector_objective_feature_probe_v2.json")
+
+    assert payload["schema_version"] == "krk_selector_objective_feature_probe.v2"
+    assert payload["causal_status"] == "non_causal_feature_probe"
+    assert payload["decision"]["status"] == "selector_objective_feature_probe_v2_review_ready"
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["selector_training_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_defaults_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_score_changes"] is False
+    assert payload["runtime_direct_routing"] is False
+    assert payload["runtime_provider_suppression"] is False
+    assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["gameplay_topology_mutation"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert payload["summary"]["seed_row_count"] == 21
+    assert payload["summary"]["runtime_threshold_passing_model_count"] == 1
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert payload["summary"]["stage7_training_row_count"] == 0
+    assert payload["summary"]["runtime_authorization_row_count"] == 0
+    assert payload["interpretation"]["capacity_labels_are_not_ownership_labels"] is True
+    assert payload["interpretation"]["selector_training_supported"] is False
+    assert payload["interpretation"]["runtime_selector_supported"] is False
+
+
+def test_selector_objective_batch_gap_scan_ranks_replay_free_paths_and_stops():
+    payload = _read_report(
+        "reports/strategy_arbitration/krk_selector_objective_batch_gap_scan_v0.json"
+    )
+
+    assert payload["schema_version"] == "krk_selector_objective_batch_gap_scan.v0"
+    assert payload["causal_status"] == "non_causal_replay_free_gap_scan"
+    assert payload["decision"]["status"] == "selector_objective_diversity_improved_replay_free"
+    assert payload["decision"]["collection_run_allowed"] is False
+    assert payload["decision"]["selector_allowed"] is False
+    assert payload["decision"]["selector_training_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_defaults_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_score_changes"] is False
+    assert payload["runtime_direct_routing"] is False
+    assert payload["runtime_provider_suppression"] is False
+    assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["gameplay_topology_mutation"] is False
+    assert payload["summary"]["replay_free_recovery_possible"] is True
+    assert payload["summary"]["duplicate_spent_manifest_count"] == 0
+    assert payload["summary"]["stage4_7_8_fresh_row_count"] == 0
+    assert payload["summary"]["unsafe_runtime_delta_count"] == 0
+    assert payload["summary"]["selector_training_row_count"] == 0
+    assert payload["summary"]["stage7_training_row_count"] == 0
+    assert payload["summary"]["runtime_authorization_row_count"] == 0
+    assert [row["rank"] for row in payload["ranked_evidence_paths"]] == [1, 2, 3, 4, 5, 6]
+    assert all(row["capacity_labels_are_not_ownership_labels"] is True for row in payload["ranked_evidence_paths"])
+    assert payload["ranked_evidence_paths"][0]["path_id"] == (
+        "more_selected_owner_failed_switch_contrast_rows"
+    )
 
 
 def test_selector_objective_benchmark_review_packet_blocks_runtime():

@@ -1,22 +1,448 @@
 {
-  "causal_status": "non_causal_selector_objective_benchmark",
+  "causal_status": "non_causal_feature_probe",
   "decision": {
-    "recommended_next_step": "write_selector_objective_benchmark_review_packet",
+    "recommended_next_step": "review_selector_objective_feature_probe_v2_before_any_runtime_design",
     "runtime_changes_allowed": false,
     "selector_allowed": false,
     "selector_training_allowed": false,
-    "status": "selector_objective_benchmark_v2_runtime_feature_review_ready"
+    "status": "selector_objective_feature_probe_v2_review_ready"
   },
   "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
   "interpretation": {
+    "capacity_labels_are_not_ownership_labels": true,
+    "feature_probe_ready_for_review": true,
     "independent_validation_required_before_runtime": true,
     "offline_semantics_confirmed": true,
-    "reason": "Seed v2 supports a non-causal benchmark with switch/preserve/abstain labels. Passing runtime-feature models would justify a later review packet only; this artifact does not train or implement a selector. Heuristic probes are not enough for runtime use without independent protected validation.",
-    "runtime_feature_benchmark_ready_for_review": true,
+    "reason": "Feature probe v2 summarizes runtime-visible non-causal models only. It does not train or authorize a selector and does not use ownership labels as runtime features.",
     "runtime_selector_supported": false,
     "selector_training_supported": false
   },
-  "results": {
+  "passing_runtime_feature_models": {
+    "visible_failure_risk_heuristic_v2": {
+      "abstain_precision": 1.0,
+      "abstain_recall": 1.0,
+      "accuracy": 0.9523809523809523,
+      "correct_count": 20,
+      "model_id": "visible_failure_risk_heuristic_v2",
+      "model_kind": "fixed_visible_heuristic_probe",
+      "notes": "Non-causal visible-term probe only. Passing thresholds here justifies independent validation or a review packet, not runtime selector use.",
+      "per_action": {
+        "abstain": {
+          "false_negative": 0,
+          "false_positive": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "true_positive": 5
+        },
+        "preserve": {
+          "false_negative": 0,
+          "false_positive": 1,
+          "precision": 0.9166666666666666,
+          "recall": 1.0,
+          "true_positive": 11
+        },
+        "switch": {
+          "false_negative": 1,
+          "false_positive": 0,
+          "precision": 1.0,
+          "recall": 0.8,
+          "true_positive": 4
+        }
+      },
+      "predictions": [
+        {
+          "feature_key": [
+            "stage5",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "medium"
+          ],
+          "objective_channel": "progress_window_failure_contrast_candidate",
+          "predicted_action": "preserve",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.edge_trap_enemy_between",
+          "source_stage": "stage5",
+          "state_id": "protected.planwin.227342c93b11",
+          "target_action": "preserve"
+        },
+        {
+          "feature_key": [
+            "stage6",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "medium"
+          ],
+          "objective_channel": "progress_window_failure_contrast_candidate",
+          "predicted_action": "preserve",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.stage0_basin",
+          "source_stage": "stage6",
+          "state_id": "protected.planwin.5fa48b6e0286",
+          "target_action": "preserve"
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "edge",
+            "low",
+            "far",
+            "rook",
+            "high"
+          ],
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.fence_established",
+          "source_stage": "stage5",
+          "state_id": "state.02feb8593cc6",
+          "target_action": "preserve"
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "near_edge",
+            "medium",
+            "far",
+            "rook",
+            "medium"
+          ],
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "switch",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.stage0_basin",
+          "source_stage": "stage5",
+          "state_id": "state.0b1f2153179b",
+          "target_action": "switch"
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "edge",
+            "low",
+            "close",
+            "rook",
+            "medium"
+          ],
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.stage0_basin",
+          "source_stage": "stage5",
+          "state_id": "state.18cfccc9c4c1",
+          "target_action": "preserve"
+        },
+        {
+          "feature_key": [
+            "stage4",
+            "wrong_tempo_control",
+            "edge",
+            "low",
+            "medium",
+            "king",
+            "low"
+          ],
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "switch",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.stage0_basin",
+          "source_stage": "stage4",
+          "state_id": "state.256a3da30f0f",
+          "target_action": "switch"
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "edge",
+            "low",
+            "far",
+            "rook",
+            "medium"
+          ],
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.stage0_basin",
+          "source_stage": "stage5",
+          "state_id": "state.2c1d6da27ea1",
+          "target_action": "preserve"
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "edge",
+            "low",
+            "far",
+            "rook",
+            "high"
+          ],
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.edge_trap_close",
+          "source_stage": "stage5",
+          "state_id": "state.326222aefdf1",
+          "target_action": "preserve"
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "edge",
+            "low",
+            "medium",
+            "rook",
+            "medium"
+          ],
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.stage0_basin",
+          "source_stage": "stage5",
+          "state_id": "state.388d05197dd9",
+          "target_action": "preserve"
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "edge",
+            "low",
+            "close",
+            "king",
+            "high"
+          ],
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.stage0_basin",
+          "source_stage": "stage5",
+          "state_id": "state.3dca34326fca",
+          "target_action": "switch"
+        },
+        {
+          "feature_key": [
+            "stage4",
+            "edge_trap_wrong_tempo",
+            "edge",
+            "low",
+            "close",
+            "rook",
+            "none"
+          ],
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.stage0_basin",
+          "source_stage": "stage4",
+          "state_id": "state.44938ccb8ab7",
+          "target_action": "abstain"
+        },
+        {
+          "feature_key": [
+            "stage6",
+            "drive_to_edge",
+            "edge",
+            "low",
+            "close",
+            "rook",
+            "medium"
+          ],
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.stage0_basin",
+          "source_stage": "stage6",
+          "state_id": "state.52085d244e9d",
+          "target_action": "preserve"
+        },
+        {
+          "feature_key": [
+            "stage6",
+            "drive_to_edge",
+            "edge",
+            "low",
+            "far",
+            "rook",
+            "medium"
+          ],
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "switch",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.stage0_basin",
+          "source_stage": "stage6",
+          "state_id": "state.67a88e3b1dd2",
+          "target_action": "switch"
+        },
+        {
+          "feature_key": [
+            "stage6",
+            "drive_to_edge",
+            "edge",
+            "low",
+            "close",
+            "rook",
+            "medium"
+          ],
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.stage0_basin",
+          "source_stage": "stage6",
+          "state_id": "state.69711173114a",
+          "target_action": "preserve"
+        },
+        {
+          "feature_key": [
+            "stage6",
+            "drive_to_edge",
+            "edge",
+            "low",
+            "far",
+            "rook",
+            "low"
+          ],
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "switch",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.edge_trap_close",
+          "source_stage": "stage6",
+          "state_id": "state.699f0003a511",
+          "target_action": "switch"
+        },
+        {
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "edge",
+            "low",
+            "far",
+            "king",
+            "medium"
+          ],
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.stage0_basin",
+          "source_stage": "stage5",
+          "state_id": "state.6e84c77a4520",
+          "target_action": "preserve"
+        },
+        {
+          "feature_key": [
+            "stage4",
+            "edge_trap_wrong_tempo",
+            "edge",
+            "low",
+            "close",
+            "rook",
+            "none"
+          ],
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.stage0_basin",
+          "source_stage": "stage4",
+          "state_id": "state.80080a9a826d",
+          "target_action": "abstain"
+        },
+        {
+          "feature_key": [
+            "stage4",
+            "edge_trap_wrong_tempo",
+            "edge",
+            "low",
+            "far",
+            "rook",
+            "none"
+          ],
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.stage0_basin",
+          "source_stage": "stage4",
+          "state_id": "state.b09c954a787e",
+          "target_action": "abstain"
+        },
+        {
+          "feature_key": [
+            "stage4",
+            "wrong_tempo_control",
+            "edge",
+            "low",
+            "medium",
+            "rook",
+            "none"
+          ],
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.stage0_basin",
+          "source_stage": "stage4",
+          "state_id": "state.b11124d658cf",
+          "target_action": "abstain"
+        },
+        {
+          "feature_key": [
+            "stage6",
+            "drive_to_edge",
+            "edge",
+            "low",
+            "close",
+            "rook",
+            "medium"
+          ],
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.stage0_basin",
+          "source_stage": "stage6",
+          "state_id": "state.d1f052d2cab2",
+          "target_action": "preserve"
+        },
+        {
+          "feature_key": [
+            "stage4",
+            "edge_trap_wrong_tempo",
+            "edge",
+            "low",
+            "close",
+            "rook",
+            "none"
+          ],
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain",
+          "runtime_feature_eligible": true,
+          "selected_provider": "krk.stage0_basin",
+          "source_stage": "stage4",
+          "state_id": "state.ea634c29ece7",
+          "target_action": "abstain"
+        }
+      ],
+      "preserve_precision": 0.9166666666666666,
+      "preserve_recall": 1.0,
+      "row_count": 21,
+      "runtime_feature_eligible": true,
+      "switch_precision": 1.0,
+      "switch_recall": 0.8
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_feature_models": {
     "active_landmark_label": {
       "abstain_precision": 0.8,
       "abstain_recall": 0.8,
@@ -2580,235 +3006,6 @@
       "runtime_feature_eligible": true,
       "switch_precision": null,
       "switch_recall": 0.0
-    },
-    "offline_target_label_oracle": {
-      "abstain_precision": 1.0,
-      "abstain_recall": 1.0,
-      "accuracy": 1.0,
-      "correct_count": 21,
-      "model_id": "offline_target_label_oracle",
-      "model_kind": "offline_semantic_oracle",
-      "notes": "Uses objective labels; ceiling only.",
-      "per_action": {
-        "abstain": {
-          "false_negative": 0,
-          "false_positive": 0,
-          "precision": 1.0,
-          "recall": 1.0,
-          "true_positive": 5
-        },
-        "preserve": {
-          "false_negative": 0,
-          "false_positive": 0,
-          "precision": 1.0,
-          "recall": 1.0,
-          "true_positive": 11
-        },
-        "switch": {
-          "false_negative": 0,
-          "false_positive": 0,
-          "precision": 1.0,
-          "recall": 1.0,
-          "true_positive": 5
-        }
-      },
-      "predictions": [
-        {
-          "objective_channel": "progress_window_failure_contrast_candidate",
-          "predicted_action": "preserve",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.edge_trap_enemy_between",
-          "source_stage": "stage5",
-          "state_id": "protected.planwin.227342c93b11",
-          "target_action": "preserve"
-        },
-        {
-          "objective_channel": "progress_window_failure_contrast_candidate",
-          "predicted_action": "preserve",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.stage0_basin",
-          "source_stage": "stage6",
-          "state_id": "protected.planwin.5fa48b6e0286",
-          "target_action": "preserve"
-        },
-        {
-          "objective_channel": "safe_preservation_contrast_seed",
-          "predicted_action": "preserve",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.fence_established",
-          "source_stage": "stage5",
-          "state_id": "state.02feb8593cc6",
-          "target_action": "preserve"
-        },
-        {
-          "objective_channel": "candidate_switch_contrast_seed",
-          "predicted_action": "switch",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.stage0_basin",
-          "source_stage": "stage5",
-          "state_id": "state.0b1f2153179b",
-          "target_action": "switch"
-        },
-        {
-          "objective_channel": "safe_preservation_contrast_seed",
-          "predicted_action": "preserve",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.stage0_basin",
-          "source_stage": "stage5",
-          "state_id": "state.18cfccc9c4c1",
-          "target_action": "preserve"
-        },
-        {
-          "objective_channel": "candidate_switch_contrast_seed",
-          "predicted_action": "switch",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.stage0_basin",
-          "source_stage": "stage4",
-          "state_id": "state.256a3da30f0f",
-          "target_action": "switch"
-        },
-        {
-          "objective_channel": "safe_preservation_contrast_seed",
-          "predicted_action": "preserve",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.stage0_basin",
-          "source_stage": "stage5",
-          "state_id": "state.2c1d6da27ea1",
-          "target_action": "preserve"
-        },
-        {
-          "objective_channel": "safe_preservation_contrast_seed",
-          "predicted_action": "preserve",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.edge_trap_close",
-          "source_stage": "stage5",
-          "state_id": "state.326222aefdf1",
-          "target_action": "preserve"
-        },
-        {
-          "objective_channel": "safe_preservation_contrast_seed",
-          "predicted_action": "preserve",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.stage0_basin",
-          "source_stage": "stage5",
-          "state_id": "state.388d05197dd9",
-          "target_action": "preserve"
-        },
-        {
-          "objective_channel": "candidate_switch_contrast_seed",
-          "predicted_action": "switch",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.stage0_basin",
-          "source_stage": "stage5",
-          "state_id": "state.3dca34326fca",
-          "target_action": "switch"
-        },
-        {
-          "objective_channel": "failure_context_without_candidate_seed",
-          "predicted_action": "abstain",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.stage0_basin",
-          "source_stage": "stage4",
-          "state_id": "state.44938ccb8ab7",
-          "target_action": "abstain"
-        },
-        {
-          "objective_channel": "safe_preservation_contrast_seed",
-          "predicted_action": "preserve",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.stage0_basin",
-          "source_stage": "stage6",
-          "state_id": "state.52085d244e9d",
-          "target_action": "preserve"
-        },
-        {
-          "objective_channel": "candidate_switch_contrast_seed",
-          "predicted_action": "switch",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.stage0_basin",
-          "source_stage": "stage6",
-          "state_id": "state.67a88e3b1dd2",
-          "target_action": "switch"
-        },
-        {
-          "objective_channel": "safe_preservation_contrast_seed",
-          "predicted_action": "preserve",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.stage0_basin",
-          "source_stage": "stage6",
-          "state_id": "state.69711173114a",
-          "target_action": "preserve"
-        },
-        {
-          "objective_channel": "candidate_switch_contrast_seed",
-          "predicted_action": "switch",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.edge_trap_close",
-          "source_stage": "stage6",
-          "state_id": "state.699f0003a511",
-          "target_action": "switch"
-        },
-        {
-          "objective_channel": "safe_preservation_contrast_seed",
-          "predicted_action": "preserve",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.stage0_basin",
-          "source_stage": "stage5",
-          "state_id": "state.6e84c77a4520",
-          "target_action": "preserve"
-        },
-        {
-          "objective_channel": "failure_context_without_candidate_seed",
-          "predicted_action": "abstain",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.stage0_basin",
-          "source_stage": "stage4",
-          "state_id": "state.80080a9a826d",
-          "target_action": "abstain"
-        },
-        {
-          "objective_channel": "failure_context_without_candidate_seed",
-          "predicted_action": "abstain",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.stage0_basin",
-          "source_stage": "stage4",
-          "state_id": "state.b09c954a787e",
-          "target_action": "abstain"
-        },
-        {
-          "objective_channel": "failure_context_without_candidate_seed",
-          "predicted_action": "abstain",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.stage0_basin",
-          "source_stage": "stage4",
-          "state_id": "state.b11124d658cf",
-          "target_action": "abstain"
-        },
-        {
-          "objective_channel": "safe_preservation_contrast_seed",
-          "predicted_action": "preserve",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.stage0_basin",
-          "source_stage": "stage6",
-          "state_id": "state.d1f052d2cab2",
-          "target_action": "preserve"
-        },
-        {
-          "objective_channel": "failure_context_without_candidate_seed",
-          "predicted_action": "abstain",
-          "runtime_feature_eligible": false,
-          "selected_provider": "krk.stage0_basin",
-          "source_stage": "stage4",
-          "state_id": "state.ea634c29ece7",
-          "target_action": "abstain"
-        }
-      ],
-      "preserve_precision": 1.0,
-      "preserve_recall": 1.0,
-      "row_count": 21,
-      "runtime_feature_eligible": false,
-      "switch_precision": 1.0,
-      "switch_recall": 1.0
     },
     "positive_trace_count_bucket": {
       "abstain_precision": 1.0,
@@ -8623,17 +8820,14 @@
       "switch_recall": 0.8
     }
   },
-  "runtime_behavior_changed": false,
-  "runtime_defaults_changed": false,
-  "runtime_direct_routing": false,
-  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_provider_suppression": false,
   "runtime_score_changes": false,
   "runtime_selector_implemented": false,
-  "schema_version": "krk_selector_objective_benchmark.v2",
+  "schema_version": "krk_selector_objective_feature_probe.v2",
   "source_artifacts": [
     "reports/strategy_arbitration/krk_selector_objective_seed_manifest_v2.json",
     "reports/strategy_arbitration/krk_selector_objective_seed_probe_v2.json",
-    "reports/krk_ownership_selection_context_dataset_v3.json"
+    "reports/strategy_arbitration/krk_selector_objective_benchmark_v2.json"
   ],
   "stage7_promotion_allowed": false,
   "stage8_training_allowed": false,
@@ -8644,11 +8838,9 @@
     "best_runtime_preserve_recall": 1.0,
     "best_runtime_switch_precision": 1.0,
     "best_runtime_switch_recall": 0.8,
-    "context_row_count": 41,
-    "offline_oracle_accuracy": 1.0,
+    "runtime_authorization_row_count": 0,
     "runtime_feature_model_count": 26,
     "runtime_threshold_passing_model_count": 1,
-    "seed_probe_status": "selector_objective_seed_probe_v2_ready_for_non_causal_benchmark",
     "seed_row_count": 21,
     "selector_training_row_count": 0,
     "stage7_training_row_count": 0,

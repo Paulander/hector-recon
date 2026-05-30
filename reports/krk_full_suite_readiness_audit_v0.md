@@ -1407,8 +1407,8 @@
 - stage4_collection_score_delta_count: `0`
 - stage4_collection_routing_delta_count: `0`
 - seed_manifest_v2_status: `selector_objective_seed_manifest_v2_ready_non_causal`
-- seed_manifest_v2_seed_row_count: `18`
-- seed_manifest_v2_objective_channel_counts: `{'candidate_switch_contrast_seed': 5, 'failure_context_without_candidate_seed': 5, 'safe_preservation_contrast_seed': 8}`
+- seed_manifest_v2_seed_row_count: `21`
+- seed_manifest_v2_objective_channel_counts: `{'candidate_switch_contrast_seed': 5, 'failure_context_without_candidate_seed': 5, 'progress_window_failure_contrast_candidate': 2, 'safe_preservation_contrast_seed': 9}`
 - seed_probe_v2_status: `selector_objective_seed_probe_v2_ready_for_non_causal_benchmark`
 - selector_benchmark_v2_status: `selector_objective_benchmark_v2_runtime_feature_review_ready`
 - selector_benchmark_v2_best_runtime_model: `visible_failure_risk_heuristic_v2`

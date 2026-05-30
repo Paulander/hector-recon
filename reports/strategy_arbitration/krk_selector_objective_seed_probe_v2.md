@@ -11,10 +11,10 @@ This non-causal probe checks whether the expanded seed manifest encodes switch-v
 
 ## Summary
 
-- seed_row_count: `18`
-- target_action_counts: `{'abstain_context_only': 5, 'prefer_visible_alternative': 5, 'preserve_selected_owner': 8}`
-- source_stage_counts: `{'stage4': 6, 'stage5': 8, 'stage6': 4}`
-- correct_count: `18`
+- seed_row_count: `21`
+- target_action_counts: `{'abstain_context_only': 5, 'prefer_visible_alternative': 5, 'preserve_selected_owner': 11}`
+- source_stage_counts: `{'stage4': 6, 'stage5': 9, 'stage6': 6}`
+- correct_count: `21`
 - apparent_semantic_rule_accuracy: `1.0`
 - has_switch_and_preserve_seeds: `True`
 - benchmark_underpowered: `False`

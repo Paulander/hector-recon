@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build selector-objective seed manifest v2 with Stage 4 observation rows."""
+"""Build selector-objective seed manifest v2 with replay-free observation rows."""
 
 from __future__ import annotations
 
@@ -13,6 +13,9 @@ ROOT = Path(__file__).resolve().parents[1]
 SEED_V1 = Path("reports/strategy_arbitration/krk_selector_objective_seed_manifest_v1.json")
 STAGE4_COLLECTION = Path(
     "reports/strategy_arbitration/krk_stage4_joined_trace_ownership_collection_v0.json"
+)
+FRESH_DIVERSITY_COLLECTION = Path(
+    "reports/strategy_arbitration/krk_selector_objective_fresh_diversity_collection_v0.json"
 )
 OUT_JSON = Path("reports/strategy_arbitration/krk_selector_objective_seed_manifest_v2.json")
 OUT_MD = Path("reports/strategy_arbitration/krk_selector_objective_seed_manifest_v2.md")
@@ -57,13 +60,60 @@ def _row_from_stage4(row: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _fresh_recovery_class(row: dict[str, Any]) -> str:
+    recovery_class = str(row.get("recovery_class") or "")
+    if recovery_class:
+        return recovery_class
+    if row.get("selected_owner_label") == "selected_owner_failed":
+        return "selected_failure_with_visible_positive_capacity"
+    return "safe_preservation_with_visible_positive_capacity"
+
+
+def _row_from_fresh_collection(row: dict[str, Any]) -> dict[str, Any]:
+    provider = str(row.get("selected_provider_label") or "")
+    return {
+        "schema_version": "krk_selector_objective_seed_manifest_row.v2",
+        "causal_status": "non_causal_selector_objective_seed",
+        "state_id": row.get("state_id"),
+        "source_stage": row.get("source_stage"),
+        "selected_provider": provider,
+        "selected_provider_family": provider.replace("krk.", ""),
+        "selected_owner_label": row.get("selected_owner_label"),
+        "trace_provider_candidate_count": row.get("enabled_refresh_frame_count"),
+        "positive_trace_provider_candidate_count": row.get("positive_capacity_frame_count"),
+        "trace_sources": ["fresh_stage5_6_selector_objective_diversity_collection"],
+        "recovery_class": _fresh_recovery_class(row),
+        "objective_channel": row.get("objective_channel"),
+        "source_collection": "fresh_stage5_6_selector_objective_diversity_collection_v0",
+        "source_type": row.get("source_type"),
+        "capacity_label_used_as_ownership_label": False,
+        "usable_for_selector_training": False,
+        "usable_for_runtime": False,
+        "stage7_training_row": False,
+    }
+
+
+def _prefer_fresh_row(existing: dict[str, Any] | None, fresh: dict[str, Any]) -> bool:
+    if existing is None:
+        return True
+    existing_positive = int(existing.get("positive_trace_provider_candidate_count") or 0)
+    fresh_positive = int(fresh.get("positive_trace_provider_candidate_count") or 0)
+    if fresh_positive > existing_positive:
+        return True
+    existing_trace = int(existing.get("trace_provider_candidate_count") or 0)
+    fresh_trace = int(fresh.get("trace_provider_candidate_count") or 0)
+    return fresh_positive == existing_positive and fresh_trace > existing_trace
+
+
 def build_payload(
     *,
     seed_v1: dict[str, Any] | None = None,
     stage4_collection: dict[str, Any] | None = None,
+    fresh_collection: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     seed_v1 = seed_v1 or _load(SEED_V1)
     stage4_collection = stage4_collection or _load(STAGE4_COLLECTION)
+    fresh_collection = fresh_collection or _load(FRESH_DIVERSITY_COLLECTION)
     rows_by_state: dict[str, dict[str, Any]] = {}
     for row in seed_v1.get("seed_rows") or []:
         if not isinstance(row, dict):
@@ -84,6 +134,26 @@ def build_payload(
         if state_id not in rows_by_state:
             added_count += 1
         rows_by_state[state_id] = updated
+
+    fresh_added_count = 0
+    fresh_replaced_count = 0
+    fresh_duplicate_count = 0
+    for row in fresh_collection.get("rows") or []:
+        if not isinstance(row, dict) or not row.get("joined_trace_ownership_row"):
+            continue
+        if row.get("source_stage") not in {"stage5", "stage6"}:
+            continue
+        updated = _row_from_fresh_collection(row)
+        state_id = str(updated.get("state_id") or "")
+        existing = rows_by_state.get(state_id)
+        if _prefer_fresh_row(existing, updated):
+            if existing is None:
+                fresh_added_count += 1
+            else:
+                fresh_replaced_count += 1
+            rows_by_state[state_id] = updated
+        else:
+            fresh_duplicate_count += 1
 
     seed_rows = [rows_by_state[key] for key in sorted(rows_by_state)]
     channel_counts = Counter(str(row.get("objective_channel")) for row in seed_rows)
@@ -107,13 +177,23 @@ def build_payload(
         "gameplay_topology_mutation": False,
         "stage7_promotion_allowed": False,
         "stage8_training_allowed": False,
-        "source_artifacts": [str(SEED_V1), str(STAGE4_COLLECTION)],
+        "source_artifacts": [
+            str(SEED_V1),
+            str(STAGE4_COLLECTION),
+            str(FRESH_DIVERSITY_COLLECTION),
+        ],
         "summary": {
             "input_seed_v1_row_count": len(seed_v1.get("seed_rows") or []),
             "stage4_joined_row_count": (stage4_collection.get("summary") or {}).get(
                 "joined_row_count"
             ),
             "added_stage4_seed_row_count": added_count,
+            "fresh_collection_joined_row_count": (fresh_collection.get("summary") or {}).get(
+                "joined_row_count"
+            ),
+            "fresh_collection_added_seed_row_count": fresh_added_count,
+            "fresh_collection_replaced_seed_row_count": fresh_replaced_count,
+            "fresh_collection_duplicate_lower_value_row_count": fresh_duplicate_count,
             "seed_row_count": len(seed_rows),
             "objective_channel_counts": dict(sorted(channel_counts.items())),
             "recovery_class_counts": dict(sorted(recovery_counts.items())),
@@ -129,6 +209,12 @@ def build_payload(
             ),
             "stage7_training_row_count": sum(
                 1 for row in seed_rows if row.get("stage7_training_row")
+            ),
+            "runtime_authorization_row_count": sum(
+                1 for row in seed_rows if row.get("usable_for_runtime")
+            ),
+            "capacity_label_used_as_ownership_label_count": sum(
+                1 for row in seed_rows if row.get("capacity_label_used_as_ownership_label")
             ),
         },
         "seed_rows": seed_rows,
@@ -154,7 +240,7 @@ def write_markdown(payload: dict[str, Any]) -> None:
     lines = [
         "# KRK Selector Objective Seed Manifest v2",
         "",
-        "This manifest adds Stage 4 observation-only trace rows to the non-causal selector-objective seed set. It remains evidence only.",
+        "This manifest adds replay-free observation-only trace rows to the non-causal selector-objective seed set. It remains evidence only.",
         "",
         "## Decision",
         "",

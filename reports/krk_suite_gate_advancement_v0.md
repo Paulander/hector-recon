@@ -1108,14 +1108,14 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - selector_objective_stage4_collection_score_delta_count: `0`
 - selector_objective_stage4_collection_routing_delta_count: `0`
 - selector_objective_seed_manifest_v2_status: `selector_objective_seed_manifest_v2_ready_non_causal`
-- selector_objective_seed_manifest_v2_seed_row_count: `18`
-- selector_objective_seed_manifest_v2_objective_channel_counts: `{'candidate_switch_contrast_seed': 5, 'failure_context_without_candidate_seed': 5, 'safe_preservation_contrast_seed': 8}`
+- selector_objective_seed_manifest_v2_seed_row_count: `21`
+- selector_objective_seed_manifest_v2_objective_channel_counts: `{'candidate_switch_contrast_seed': 5, 'failure_context_without_candidate_seed': 5, 'progress_window_failure_contrast_candidate': 2, 'safe_preservation_contrast_seed': 9}`
 - selector_objective_seed_probe_v2_status: `selector_objective_seed_probe_v2_ready_for_non_causal_benchmark`
 - selector_objective_seed_probe_v2_runtime_feature_eligible_prediction_count: `0`
 - selector_objective_benchmark_v2_status: `selector_objective_benchmark_v2_runtime_feature_review_ready`
 - selector_objective_benchmark_v2_best_runtime_model: `visible_failure_risk_heuristic_v2`
-- selector_objective_benchmark_v2_best_runtime_accuracy: `1.0`
-- selector_objective_benchmark_v2_best_runtime_switch_recall: `1.0`
+- selector_objective_benchmark_v2_best_runtime_accuracy: `0.9523809523809523`
+- selector_objective_benchmark_v2_best_runtime_switch_recall: `0.8`
 - selector_objective_benchmark_v2_runtime_threshold_passing_model_count: `1`
 - selector_objective_benchmark_review_status: `selector_objective_benchmark_review_ready_for_independent_validation`
 - selector_objective_benchmark_review_runtime_review_ready: `False`
@@ -1291,7 +1291,7 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - readiness_checked_flag_count: `2912`
 - readiness_boundary_violation_count: `0`
 - readiness_source_artifact_count: `408`
-- unblocker_status: `krk_suite_protected_failure_contrast_unblocker_ready_pending_explicit_collection_approval`
+- unblocker_status: `krk_suite_protected_failure_contrast_unblocker_blocked_pending_control_plane_gate_review`
 - stage8_training_readiness_status: `stage8_training_blocked_pending_sequence_policy_gate`
 - stage8_training_readiness_checked_flag_count: `2912`
 - stage8_training_readiness_boundary_violation_count: `0`
@@ -1359,7 +1359,7 @@ This passive advancement reruns the safe post-label integration, sequence-policy
 - `stage7_additional_clean_output_validation` status=`stage7_additional_clean_sampling_outputs_not_applicable_success_gate_closed` labels=`False` runtime=`False` artifact_runtime=`False`
 - `stage7_additional_clean_sampling_runner` status=`stage7_additional_clean_sampling_runner_not_applicable_success_gate_closed` labels=`False` runtime=`False` artifact_runtime=`False`
 - `current_control_plane_gate` status=`krk_control_plane_waiting_on_explicit_gate_choice` labels=`False` runtime=`False` artifact_runtime=`False`
-- `full_suite_unblocker_packet` status=`krk_suite_protected_failure_contrast_unblocker_ready_pending_explicit_collection_approval` labels=`False` runtime=`False` artifact_runtime=`False`
+- `full_suite_unblocker_packet` status=`krk_suite_protected_failure_contrast_unblocker_blocked_pending_control_plane_gate_review` labels=`False` runtime=`False` artifact_runtime=`False`
 
 ## Decision
 

@@ -17,9 +17,9 @@ This packet reviews the non-causal selector-objective benchmark v2. It does not 
 
 - model_id: `visible_failure_risk_heuristic_v2`
 - model_kind: `fixed_visible_heuristic_probe`
-- accuracy: `1.0`
+- accuracy: `0.9523809523809523`
 - switch_precision: `1.0`
-- switch_recall: `1.0`
+- switch_recall: `0.8`
 - preserve_recall: `1.0`
 - abstain_recall: `1.0`
 - runtime_feature_eligible: `True`

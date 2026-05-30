@@ -22,6 +22,8 @@ is only a pointer to this file.
 - Fresh selector-objective diversity packet: `reports/strategy_arbitration/krk_selector_objective_fresh_diversity_review_packet_v0.json` with status `fresh_stage5_stage6_diversity_collection_review_ready`.
 - Fresh selector-objective diversity collection result: `reports/strategy_arbitration/krk_selector_objective_fresh_diversity_collection_v0.json` with status `fresh_stage5_6_selector_objective_collection_complete`.
 - The approved collection consumed the fresh Stage 5/6-only packet only; it authorizes no selector training, runtime behavior, Stage 7 promotion, or Stage 8 training.
+- Replay-free selector-objective batch gap scan: `reports/strategy_arbitration/krk_selector_objective_batch_gap_scan_v0.json` with status `selector_objective_diversity_improved_replay_free`.
+- Selector-objective feature probe v2: `reports/strategy_arbitration/krk_selector_objective_feature_probe_v2.json` with status `selector_objective_feature_probe_v2_review_ready`.
 
 ## Verified Invariants
 
@@ -36,8 +38,10 @@ is only a pointer to this file.
 - Capacity labels are not ownership labels.
 - Fresh Stage 5/6 selector-objective collection rows: 8 attempted, 8 joined, 76 generated refresh frames, 4 selected-failure visible-positive rows, 4 safe-preservation visible-positive rows.
 - Fresh Stage 5/6 selector-objective collection deltas: selected move 0, provider 0, score 0, routing 0, invalid frames 0, baseline refresh frames 0.
+- Seed manifest v2 now has 21 non-causal rows after replay-free recovery: Stage 4 rows remain historical evidence; the new fresh contribution is Stage 5/6-only and adds or improves four seed rows.
+- Feature probe v2 has one non-causal runtime-visible probe model over review thresholds, but this is a review boundary only. Selector training, runtime selector implementation, routing, scoring, provider selection changes, and provider suppression remain blocked.
 
 ## Next Needed Work
 
-- Review the fresh Stage 5/6-only selector-objective diversity collection result before using it in any downstream packet.
+- Stop at the feature-probe/independent-validation approval boundary before any runtime design or further collection.
 - Do not set runtime-ready, selector-ready, Stage 7-ready, or Stage 8-ready from the current evidence.

@@ -18,6 +18,28 @@
   "predictions": [
     {
       "correct": true,
+      "objective_channel": "progress_window_failure_contrast_candidate",
+      "predicted_action": "preserve_selected_owner",
+      "reason": "uses offline selected-owner outcome labels and observation-only capacity evidence",
+      "runtime_feature_eligible": false,
+      "selected_provider": "krk.edge_trap_enemy_between",
+      "source_stage": "stage5",
+      "state_id": "protected.planwin.227342c93b11",
+      "target_action": "preserve_selected_owner"
+    },
+    {
+      "correct": true,
+      "objective_channel": "progress_window_failure_contrast_candidate",
+      "predicted_action": "preserve_selected_owner",
+      "reason": "uses offline selected-owner outcome labels and observation-only capacity evidence",
+      "runtime_feature_eligible": false,
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage6",
+      "state_id": "protected.planwin.5fa48b6e0286",
+      "target_action": "preserve_selected_owner"
+    },
+    {
+      "correct": true,
       "objective_channel": "safe_preservation_contrast_seed",
       "predicted_action": "preserve_selected_owner",
       "reason": "uses offline selected-owner outcome labels and observation-only capacity evidence",
@@ -205,6 +227,17 @@
     },
     {
       "correct": true,
+      "objective_channel": "safe_preservation_contrast_seed",
+      "predicted_action": "preserve_selected_owner",
+      "reason": "uses offline selected-owner outcome labels and observation-only capacity evidence",
+      "runtime_feature_eligible": false,
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage6",
+      "state_id": "state.d1f052d2cab2",
+      "target_action": "preserve_selected_owner"
+    },
+    {
+      "correct": true,
       "objective_channel": "failure_context_without_candidate_seed",
       "predicted_action": "abstain_context_only",
       "reason": "uses offline selected-owner outcome labels and observation-only capacity evidence",
@@ -230,21 +263,21 @@
   "summary": {
     "apparent_semantic_rule_accuracy": 1.0,
     "benchmark_underpowered": false,
-    "correct_count": 18,
+    "correct_count": 21,
     "has_switch_and_preserve_seeds": true,
     "runtime_feature_eligible_prediction_count": 0,
-    "seed_row_count": 18,
+    "seed_row_count": 21,
     "selector_training_row_count": 0,
     "source_stage_counts": {
       "stage4": 6,
-      "stage5": 8,
-      "stage6": 4
+      "stage5": 9,
+      "stage6": 6
     },
     "stage7_training_row_count": 0,
     "target_action_counts": {
       "abstain_context_only": 5,
       "prefer_visible_alternative": 5,
-      "preserve_selected_owner": 8
+      "preserve_selected_owner": 11
     }
   }
 }

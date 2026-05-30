@@ -11,15 +11,15 @@ This benchmark evaluates runtime-visible feature models over the v2 selector-obj
 
 ## Summary
 
-- seed_row_count: `18`
-- target_action_counts: `{'abstain': 5, 'preserve': 8, 'switch': 5}`
+- seed_row_count: `21`
+- target_action_counts: `{'abstain': 5, 'preserve': 11, 'switch': 5}`
 - runtime_feature_model_count: `26`
 - runtime_threshold_passing_model_count: `1`
 - context_row_count: `41`
 - best_runtime_model: `visible_failure_risk_heuristic_v2`
-- best_runtime_accuracy: `1.0`
+- best_runtime_accuracy: `0.9523809523809523`
 - best_runtime_switch_precision: `1.0`
-- best_runtime_switch_recall: `1.0`
+- best_runtime_switch_recall: `0.8`
 - best_runtime_preserve_recall: `1.0`
 - best_runtime_abstain_recall: `1.0`
 - offline_oracle_accuracy: `1.0`
@@ -29,32 +29,32 @@ This benchmark evaluates runtime-visible feature models over the v2 selector-obj
 
 ## Runtime Feature Models
 
-- `active_landmark_label` accuracy=0.5555555555555556 switch_precision=0.0 switch_recall=0.0 preserve_recall=0.75 abstain_recall=0.8
-- `active_landmark_support` accuracy=0.6666666666666666 switch_precision=0.5 switch_recall=0.4 preserve_recall=0.875 abstain_recall=0.6
-- `active_support_piece_positive_bucket` accuracy=0.5555555555555556 switch_precision=0.0 switch_recall=0.0 preserve_recall=0.875 abstain_recall=0.6
-- `box_area_delta_bucket` accuracy=0.16666666666666666 switch_precision=0.0 switch_recall=0.0 preserve_recall=0.375 abstain_recall=0.0
-- `box_area_relevance` accuracy=0.4444444444444444 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=0.0
-- `conservative_visible_failure_risk_heuristic_v2` accuracy=0.8888888888888888 switch_precision=1.0 switch_recall=0.6 preserve_recall=1.0 abstain_recall=1.0
-- `edge_bucket` accuracy=0.4444444444444444 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=0.0
-- `has_positive_trace_capacity` accuracy=0.7222222222222222 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=1.0
-- `positive_trace_count_bucket` accuracy=0.8888888888888888 switch_precision=1.0 switch_recall=0.6 preserve_recall=1.0 abstain_recall=1.0
-- `rook_distance_delta_bucket` accuracy=0.2222222222222222 switch_precision=None switch_recall=0.0 preserve_recall=0.5 abstain_recall=0.0
-- `selected_piece` accuracy=0.3888888888888889 switch_precision=0.0 switch_recall=0.0 preserve_recall=0.875 abstain_recall=0.0
-- `selected_provider_family` accuracy=0.3888888888888889 switch_precision=0.0 switch_recall=0.0 preserve_recall=0.875 abstain_recall=0.0
-- `source_stage` accuracy=0.6111111111111112 switch_precision=0.0 switch_recall=0.0 preserve_recall=0.75 abstain_recall=1.0
-- `stage_active_landmark` accuracy=0.5555555555555556 switch_precision=0.0 switch_recall=0.0 preserve_recall=0.75 abstain_recall=0.8
-- `stage_active_support_positive_bucket` accuracy=0.6111111111111112 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=0.6
-- `stage_box_relevance_positive_bucket` accuracy=0.7222222222222222 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=1.0
-- `stage_positive_bucket` accuracy=0.7222222222222222 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=1.0
-- `stage_provider_family` accuracy=0.7222222222222222 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=1.0
-- `stage_provider_positive_bucket` accuracy=0.7222222222222222 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=1.0
-- `stage_support_positive_bucket` accuracy=0.6111111111111112 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=0.6
-- `stage_support_rook_positive_bucket` accuracy=0.6111111111111112 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=0.6
-- `stage_trace_positive_bucket` accuracy=0.7222222222222222 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=1.0
-- `support_bucket` accuracy=0.2222222222222222 switch_precision=None switch_recall=0.0 preserve_recall=0.5 abstain_recall=0.0
-- `support_positive_bucket` accuracy=0.5 switch_precision=0.0 switch_recall=0.0 preserve_recall=0.75 abstain_recall=0.6
-- `trace_source_profile` accuracy=0.7222222222222222 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=1.0
-- `visible_failure_risk_heuristic_v2` accuracy=1.0 switch_precision=1.0 switch_recall=1.0 preserve_recall=1.0 abstain_recall=1.0
+- `active_landmark_label` accuracy=0.7142857142857143 switch_precision=0.0 switch_recall=0.0 preserve_recall=1.0 abstain_recall=0.8
+- `active_landmark_support` accuracy=0.7142857142857143 switch_precision=0.5 switch_recall=0.4 preserve_recall=0.9090909090909091 abstain_recall=0.6
+- `active_support_piece_positive_bucket` accuracy=0.6190476190476191 switch_precision=0.0 switch_recall=0.0 preserve_recall=0.9090909090909091 abstain_recall=0.6
+- `box_area_delta_bucket` accuracy=0.2857142857142857 switch_precision=0.0 switch_recall=0.0 preserve_recall=0.5454545454545454 abstain_recall=0.0
+- `box_area_relevance` accuracy=0.5238095238095238 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=0.0
+- `conservative_visible_failure_risk_heuristic_v2` accuracy=0.9047619047619048 switch_precision=1.0 switch_recall=0.6 preserve_recall=1.0 abstain_recall=1.0
+- `edge_bucket` accuracy=0.5238095238095238 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=0.0
+- `has_positive_trace_capacity` accuracy=0.7619047619047619 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=1.0
+- `positive_trace_count_bucket` accuracy=0.8571428571428571 switch_precision=1.0 switch_recall=0.4 preserve_recall=1.0 abstain_recall=1.0
+- `rook_distance_delta_bucket` accuracy=0.3333333333333333 switch_precision=None switch_recall=0.0 preserve_recall=0.6363636363636364 abstain_recall=0.0
+- `selected_piece` accuracy=0.47619047619047616 switch_precision=0.0 switch_recall=0.0 preserve_recall=0.9090909090909091 abstain_recall=0.0
+- `selected_provider_family` accuracy=0.47619047619047616 switch_precision=0.0 switch_recall=0.0 preserve_recall=0.9090909090909091 abstain_recall=0.0
+- `source_stage` accuracy=0.7619047619047619 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=1.0
+- `stage_active_landmark` accuracy=0.7142857142857143 switch_precision=0.0 switch_recall=0.0 preserve_recall=1.0 abstain_recall=0.8
+- `stage_active_support_positive_bucket` accuracy=0.6666666666666666 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=0.6
+- `stage_box_relevance_positive_bucket` accuracy=0.7619047619047619 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=1.0
+- `stage_positive_bucket` accuracy=0.7619047619047619 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=1.0
+- `stage_provider_family` accuracy=0.7619047619047619 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=1.0
+- `stage_provider_positive_bucket` accuracy=0.7619047619047619 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=1.0
+- `stage_support_positive_bucket` accuracy=0.6666666666666666 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=0.6
+- `stage_support_rook_positive_bucket` accuracy=0.6666666666666666 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=0.6
+- `stage_trace_positive_bucket` accuracy=0.7619047619047619 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=1.0
+- `support_bucket` accuracy=0.47619047619047616 switch_precision=None switch_recall=0.0 preserve_recall=0.9090909090909091 abstain_recall=0.0
+- `support_positive_bucket` accuracy=0.5714285714285714 switch_precision=0.0 switch_recall=0.0 preserve_recall=0.8181818181818182 abstain_recall=0.6
+- `trace_source_profile` accuracy=0.7619047619047619 switch_precision=None switch_recall=0.0 preserve_recall=1.0 abstain_recall=1.0
+- `visible_failure_risk_heuristic_v2` accuracy=0.9523809523809523 switch_precision=1.0 switch_recall=0.8 preserve_recall=1.0 abstain_recall=1.0
 
 ## Interpretation
 

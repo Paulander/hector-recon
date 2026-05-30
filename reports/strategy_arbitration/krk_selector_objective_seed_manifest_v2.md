@@ -1,6 +1,6 @@
 # KRK Selector Objective Seed Manifest v2
 
-This manifest adds Stage 4 observation-only trace rows to the non-causal selector-objective seed set. It remains evidence only.
+This manifest adds replay-free observation-only trace rows to the non-causal selector-objective seed set. It remains evidence only.
 
 ## Decision
 
@@ -14,17 +14,25 @@ This manifest adds Stage 4 observation-only trace rows to the non-causal selecto
 - input_seed_v1_row_count: `12`
 - stage4_joined_row_count: `6`
 - added_stage4_seed_row_count: `6`
-- seed_row_count: `18`
-- objective_channel_counts: `{'candidate_switch_contrast_seed': 5, 'failure_context_without_candidate_seed': 5, 'safe_preservation_contrast_seed': 8}`
-- recovery_class_counts: `{'safe_preservation_with_visible_positive_alternative': 8, 'selected_failure_with_visible_positive_alternative': 4, 'stage4_selected_failure_trace_context_only': 5, 'stage4_selected_failure_with_visible_positive_capacity': 1}`
-- source_stage_counts: `{'stage4': 6, 'stage5': 8, 'stage6': 4}`
+- fresh_collection_joined_row_count: `8`
+- fresh_collection_added_seed_row_count: `3`
+- fresh_collection_replaced_seed_row_count: `1`
+- fresh_collection_duplicate_lower_value_row_count: `4`
+- seed_row_count: `21`
+- objective_channel_counts: `{'candidate_switch_contrast_seed': 5, 'failure_context_without_candidate_seed': 5, 'progress_window_failure_contrast_candidate': 2, 'safe_preservation_contrast_seed': 9}`
+- recovery_class_counts: `{'safe_preservation_with_visible_positive_alternative': 8, 'safe_preservation_with_visible_positive_capacity': 3, 'selected_failure_with_visible_positive_alternative': 3, 'selected_failure_with_visible_positive_capacity': 1, 'stage4_selected_failure_trace_context_only': 5, 'stage4_selected_failure_with_visible_positive_capacity': 1}`
+- source_stage_counts: `{'stage4': 6, 'stage5': 9, 'stage6': 6}`
 - candidate_switch_contrast_seed_count: `5`
-- safe_preservation_contrast_seed_count: `8`
+- safe_preservation_contrast_seed_count: `9`
 - selector_training_row_count: `0`
 - stage7_training_row_count: `0`
+- runtime_authorization_row_count: `0`
+- capacity_label_used_as_ownership_label_count: `0`
 
 ## Seed Rows
 
+- `protected.planwin.227342c93b11` stage=stage5 channel=`progress_window_failure_contrast_candidate` selected=krk.edge_trap_enemy_between label=selected_owner_converted positive_trace_candidates=10
+- `protected.planwin.5fa48b6e0286` stage=stage6 channel=`progress_window_failure_contrast_candidate` selected=krk.stage0_basin label=selected_owner_converted positive_trace_candidates=10
 - `state.02feb8593cc6` stage=stage5 channel=`safe_preservation_contrast_seed` selected=krk.fence_established label=selected_owner_converted positive_trace_candidates=12
 - `state.0b1f2153179b` stage=stage5 channel=`candidate_switch_contrast_seed` selected=krk.stage0_basin label=selected_owner_failed positive_trace_candidates=10
 - `state.18cfccc9c4c1` stage=stage5 channel=`safe_preservation_contrast_seed` selected=krk.stage0_basin label=selected_owner_converted positive_trace_candidates=10
@@ -32,7 +40,7 @@ This manifest adds Stage 4 observation-only trace rows to the non-causal selecto
 - `state.2c1d6da27ea1` stage=stage5 channel=`safe_preservation_contrast_seed` selected=krk.stage0_basin label=selected_owner_converted positive_trace_candidates=10
 - `state.326222aefdf1` stage=stage5 channel=`safe_preservation_contrast_seed` selected=krk.edge_trap_close label=selected_owner_converted positive_trace_candidates=12
 - `state.388d05197dd9` stage=stage5 channel=`safe_preservation_contrast_seed` selected=krk.stage0_basin label=selected_owner_converted positive_trace_candidates=10
-- `state.3dca34326fca` stage=stage5 channel=`candidate_switch_contrast_seed` selected=krk.stage0_basin label=selected_owner_failed positive_trace_candidates=3
+- `state.3dca34326fca` stage=stage5 channel=`candidate_switch_contrast_seed` selected=krk.stage0_basin label=selected_owner_failed positive_trace_candidates=13
 - `state.44938ccb8ab7` stage=stage4 channel=`failure_context_without_candidate_seed` selected=krk.stage0_basin label=selected_owner_failed positive_trace_candidates=0
 - `state.52085d244e9d` stage=stage6 channel=`safe_preservation_contrast_seed` selected=krk.stage0_basin label=selected_owner_converted positive_trace_candidates=10
 - `state.67a88e3b1dd2` stage=stage6 channel=`candidate_switch_contrast_seed` selected=krk.stage0_basin label=selected_owner_failed positive_trace_candidates=10
@@ -42,4 +50,5 @@ This manifest adds Stage 4 observation-only trace rows to the non-causal selecto
 - `state.80080a9a826d` stage=stage4 channel=`failure_context_without_candidate_seed` selected=krk.stage0_basin label=selected_owner_failed positive_trace_candidates=0
 - `state.b09c954a787e` stage=stage4 channel=`failure_context_without_candidate_seed` selected=krk.stage0_basin label=selected_owner_failed positive_trace_candidates=0
 - `state.b11124d658cf` stage=stage4 channel=`failure_context_without_candidate_seed` selected=krk.stage0_basin label=selected_owner_failed positive_trace_candidates=0
+- `state.d1f052d2cab2` stage=stage6 channel=`safe_preservation_contrast_seed` selected=krk.stage0_basin label=selected_owner_converted positive_trace_candidates=10
 - `state.ea634c29ece7` stage=stage4 channel=`failure_context_without_candidate_seed` selected=krk.stage0_basin label=selected_owner_failed positive_trace_candidates=0

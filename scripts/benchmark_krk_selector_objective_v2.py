@@ -131,6 +131,10 @@ def _target_action(row: dict[str, Any]) -> str:
         return "switch"
     if channel == "safe_preservation_contrast_seed":
         return "preserve"
+    if channel == "progress_window_failure_contrast_candidate":
+        if row.get("selected_owner_label") == "selected_owner_failed":
+            return "switch"
+        return "preserve"
     return "abstain"
 
 

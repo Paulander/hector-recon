@@ -5158,11 +5158,12 @@ def test_full_suite_readiness_identifies_current_gate():
         selector["seed_manifest_v2_status"]
         == "selector_objective_seed_manifest_v2_ready_non_causal"
     )
-    assert selector["seed_manifest_v2_seed_row_count"] == 18
+    assert selector["seed_manifest_v2_seed_row_count"] == 21
     assert selector["seed_manifest_v2_objective_channel_counts"] == {
         "candidate_switch_contrast_seed": 5,
         "failure_context_without_candidate_seed": 5,
-        "safe_preservation_contrast_seed": 8,
+        "progress_window_failure_contrast_candidate": 2,
+        "safe_preservation_contrast_seed": 9,
     }
     assert selector["seed_manifest_v2_selector_training_row_count"] == 0
     assert selector["seed_manifest_v2_stage7_training_row_count"] == 0
@@ -5178,8 +5179,8 @@ def test_full_suite_readiness_identifies_current_gate():
     assert selector["selector_benchmark_v2_best_runtime_model"] == (
         "visible_failure_risk_heuristic_v2"
     )
-    assert selector["selector_benchmark_v2_best_runtime_accuracy"] == 1.0
-    assert selector["selector_benchmark_v2_best_runtime_switch_recall"] == 1.0
+    assert selector["selector_benchmark_v2_best_runtime_accuracy"] == 0.9523809523809523
+    assert selector["selector_benchmark_v2_best_runtime_switch_recall"] == 0.8
     assert selector["selector_benchmark_v2_runtime_threshold_passing_model_count"] == 1
     assert selector["selector_benchmark_v2_selector_training_row_count"] == 0
     assert selector["selector_benchmark_v2_stage7_training_row_count"] == 0

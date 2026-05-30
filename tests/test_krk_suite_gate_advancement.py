@@ -4185,11 +4185,12 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["selector_objective_seed_manifest_v2_status"]
         == "selector_objective_seed_manifest_v2_ready_non_causal"
     )
-    assert payload["summary"]["selector_objective_seed_manifest_v2_seed_row_count"] == 18
+    assert payload["summary"]["selector_objective_seed_manifest_v2_seed_row_count"] == 21
     assert payload["summary"]["selector_objective_seed_manifest_v2_objective_channel_counts"] == {
         "candidate_switch_contrast_seed": 5,
         "failure_context_without_candidate_seed": 5,
-        "safe_preservation_contrast_seed": 8,
+        "progress_window_failure_contrast_candidate": 2,
+        "safe_preservation_contrast_seed": 9,
     }
     assert (
         payload["summary"]["selector_objective_seed_probe_v2_status"]
@@ -4209,12 +4210,15 @@ def test_gate_advancement_reports_current_stage7_blocker():
         payload["summary"]["selector_objective_benchmark_v2_best_runtime_model"]
         == "visible_failure_risk_heuristic_v2"
     )
-    assert payload["summary"]["selector_objective_benchmark_v2_best_runtime_accuracy"] == 1.0
+    assert (
+        payload["summary"]["selector_objective_benchmark_v2_best_runtime_accuracy"]
+        == 0.9523809523809523
+    )
     assert (
         payload["summary"][
             "selector_objective_benchmark_v2_best_runtime_switch_recall"
         ]
-        == 1.0
+        == 0.8
     )
     assert (
         payload["summary"][
