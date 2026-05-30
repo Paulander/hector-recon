@@ -26,6 +26,7 @@ is only a pointer to this file.
 - Selector-objective feature probe v2: `reports/strategy_arbitration/krk_selector_objective_feature_probe_v2.json` with status `selector_objective_feature_probe_v2_review_ready`.
 - Selector-objective benchmark v0: `reports/strategy_arbitration/krk_selector_objective_benchmark_v0.json` with status `selector_objective_benchmark_promising_non_causal`.
 - Selector-objective benchmark decision v0: `reports/strategy_arbitration/krk_selector_objective_benchmark_decision_v0.json`; implementation remains unauthorized.
+- Selector-objective runtime review packet v0: `reports/strategy_arbitration/krk_selector_objective_runtime_review_packet_v0.json` with status `selector_runtime_review_packet_ready`; implementation and runtime sandbox execution remain unauthorized by the packet.
 
 ## Verified Invariants
 
@@ -43,8 +44,9 @@ is only a pointer to this file.
 - Seed manifest v2 now has 21 non-causal rows after replay-free recovery: Stage 4 rows remain historical evidence; the new fresh contribution is Stage 5/6-only and adds or improves four seed rows.
 - Feature probe v2 has one non-causal runtime-visible probe model over review thresholds, but this is a review boundary only. Selector training, runtime selector implementation, routing, scoring, provider selection changes, and provider suppression remain blocked.
 - Benchmark v0 compared majority, provider prior, stage/provider-family prior, trace/context rule, proposal-count rule, and combined simple rule. Best non-causal model: `combined_simple_rule` with accuracy 0.952, safe-preservation recall 1.0, switch-contrast recall 0.8, abstain recall 1.0.
+- Runtime review packet v0 is review-only: default-off, opt-in, trace-only first, recommendation-only future sandbox envelope; it forbids score/routing/provider/default changes, provider suppression, Stage 7 promotion, Stage 8 training, runtime DTM/tablebase, topology mutation, state-hash exceptions, and treating capacity labels as ownership labels.
 
 ## Next Needed Work
 
-- Stop at the benchmark/runtime-review approval boundary before any runtime design or further collection.
+- Stop at the runtime-review approval boundary; any default-off selector-objective sandbox still requires separate explicit approval before implementation.
 - Do not set runtime-ready, selector-ready, Stage 7-ready, or Stage 8-ready from the current evidence.
