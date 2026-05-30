@@ -1331,6 +1331,195 @@ def _krk_candidate_generation_observation_for_suggestions(
     }
 
 
+_KRK_SELECTOR_OBJECTIVE_FORBIDDEN_ACTIONS = [
+    "selecting_a_provider",
+    "selecting_a_move",
+    "changing_scores",
+    "suppressing_providers",
+    "routing_directly_to_a_provider",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation",
+    "stage7_promotion",
+    "stage8_training",
+    "m3_m4_update",
+]
+
+
+def _krk_selector_positive_bucket(count: int) -> str:
+    if count <= 0:
+        return "none"
+    if count <= 3:
+        return "low"
+    if count <= 10:
+        return "medium"
+    return "high"
+
+
+def _krk_selector_edge_bucket(board: chess.Board | None) -> str:
+    if board is None:
+        return "unknown"
+    _, edge_distance = _krk_box_area_and_edge(board)
+    if edge_distance is None:
+        return "unknown"
+    if edge_distance <= 0:
+        return "at_edge"
+    if edge_distance == 1:
+        return "near_edge"
+    return "central_or_midboard"
+
+
+def _krk_selector_box_area_relevance(board: chess.Board | None) -> str:
+    if board is None:
+        return "unknown"
+    box_area, edge_distance = _krk_box_area_and_edge(board)
+    if box_area is None or edge_distance is None:
+        return "unknown"
+    if edge_distance <= 0:
+        return "low"
+    if edge_distance == 1:
+        return "medium" if box_area >= 8 else "low"
+    return "high" if box_area >= 12 else "medium"
+
+
+def _krk_selected_piece_name(board: chess.Board | None, move_uci: str | None) -> str:
+    if board is None or not move_uci:
+        return "unknown"
+    try:
+        move = chess.Move.from_uci(str(move_uci))
+    except ValueError:
+        return "unknown"
+    piece = board.piece_at(move.from_square)
+    if piece is None:
+        return "unknown"
+    return chess.piece_name(piece.piece_type)
+
+
+def _krk_selector_objective_recommendation_for_observation(
+    observation: dict,
+    *,
+    selected_suggestion: dict | None = None,
+    active_landmark_label: str | None = None,
+    board: chess.Board | None = None,
+    confidence: float | None = None,
+) -> dict:
+    """Compute combined_simple_rule as recommendation-only trace metadata."""
+    selected_provider = (
+        _skill_id_for_suggestion(selected_suggestion)
+        if isinstance(selected_suggestion, dict)
+        else None
+    )
+    selected_move = (
+        _suggestion_move_uci(selected_suggestion)
+        if isinstance(selected_suggestion, dict)
+        else None
+    )
+    frames = [
+        frame
+        for frame in observation.get("frames", []) or []
+        if isinstance(frame, dict)
+    ]
+    positive_frames = [
+        frame
+        for frame in frames
+        if str(frame.get("capacity_evidence_kind") or "").startswith("positive_capacity")
+        and frame.get("protected_status") != "held_out_stage7_challenge"
+    ]
+    visible_alternatives = []
+    source_terms: set[str] = set()
+    for frame in positive_frames[:10]:
+        for term in frame.get("source_terms") or []:
+            source_terms.add(str(term))
+        visible_alternatives.append({
+            "candidate_source": frame.get("candidate_source"),
+            "provider_id": frame.get("provider_id"),
+            "provider_family": frame.get("provider_family"),
+            "move_id": frame.get("move_id"),
+            "stage": frame.get("stage"),
+            "policy_cell": frame.get("policy_cell"),
+            "capacity_evidence_kind": frame.get("capacity_evidence_kind"),
+            "label_semantics": frame.get("label_semantics"),
+            "direct_request": frame.get("direct_request"),
+            "score_delta": frame.get("score_delta"),
+            "causal_status": frame.get("causal_status"),
+        })
+    edge_bucket = _krk_selector_edge_bucket(board)
+    support_bucket = _krk_white_king_support_bucket(board)
+    box_area_relevance = _krk_selector_box_area_relevance(board)
+    selected_piece = _krk_selected_piece_name(board, selected_move)
+    positive_count = len(positive_frames)
+    positive_bucket = _krk_selector_positive_bucket(positive_count)
+    source_stage = _krk_stage_for_active_landmark(active_landmark_label)
+    explanation_terms = [
+        "selector_model.combined_simple_rule",
+        f"positive_trace_provider_candidate_count.{positive_count}",
+        f"positive_trace_count_bucket.{positive_bucket}",
+        f"edge_bucket.{edge_bucket}",
+        f"support_bucket.{support_bucket}",
+        f"box_area_relevance.{box_area_relevance}",
+        f"selected_piece.{selected_piece}",
+        f"source_stage.{source_stage}",
+        f"active_landmark_label.{active_landmark_label or ''}",
+    ]
+    if positive_count <= 0:
+        recommendation = "abstain_context_only"
+        reason = "no_positive_trace_provider_candidates"
+    elif positive_bucket == "high":
+        recommendation = "preserve_selected_owner"
+        reason = "high_positive_trace_count_bucket"
+    elif edge_bucket == "near_edge" or box_area_relevance == "medium":
+        recommendation = "prefer_visible_alternative"
+        reason = "near_edge_or_medium_box_relevance"
+    elif source_stage == "stage6" and support_bucket == "far":
+        recommendation = "prefer_visible_alternative"
+        reason = "stage6_far_white_king_support"
+    elif active_landmark_label == "wrong_tempo_control" and selected_piece == "king":
+        recommendation = "prefer_visible_alternative"
+        reason = "wrong_tempo_control_selected_king"
+    elif (
+        active_landmark_label == "fence_established"
+        and selected_piece == "king"
+        and support_bucket == "close"
+    ):
+        recommendation = "prefer_visible_alternative"
+        reason = "fence_established_close_support_selected_king"
+    else:
+        recommendation = "preserve_selected_owner"
+        reason = "default_preserve_selected_owner"
+    return {
+        "schema_version": "krk_selector_objective_recommendation.v0",
+        "sandbox_id": "sandbox.krk.selector_objective_observability_v0",
+        "selector_model_id": "combined_simple_rule",
+        "enabled": True,
+        "causal_status": "recommendation_only",
+        "recommendation": recommendation,
+        "decision_reason": reason,
+        "confidence": confidence,
+        "direct_request": False,
+        "score_delta": 0.0,
+        "selected_provider_before_recommendation": selected_provider,
+        "selected_move_before_recommendation": selected_move,
+        "selected_owner_before_recommendation": "runtime_unknown_offline_owner_label_not_visible",
+        "selected_owner_observation": {
+            "owner_label": None,
+            "source": "runtime_visible_selected_provider_only",
+            "label_semantics": "offline_selected_owner_labels_not_runtime_visible",
+        },
+        "active_landmark_label": str(active_landmark_label or ""),
+        "source_stage": source_stage,
+        "positive_trace_provider_candidate_count": positive_count,
+        "positive_trace_count_bucket": positive_bucket,
+        "edge_bucket": edge_bucket,
+        "support_bucket": support_bucket,
+        "box_area_relevance": box_area_relevance,
+        "selected_piece": selected_piece,
+        "source_terms": sorted(source_terms)[:32],
+        "explanation_terms": explanation_terms,
+        "visible_alternatives_considered": visible_alternatives,
+        "visible_alternative_count": len(visible_alternatives),
+        "forbidden_actions": list(_KRK_SELECTOR_OBJECTIVE_FORBIDDEN_ACTIONS),
+    }
+
+
 def _krk_strategy_provider_family(skill_id: str) -> str:
     if "stage0_basin" in skill_id:
         return "stage0_basin"
@@ -3433,6 +3622,7 @@ def choose_move_details(
     krk_repair_monitor_observation_source_enabled: bool = False,
     krk_stage5_6_candidate_generation_refresh_enabled: bool = False,
     krk_exact_trace_enrichment_enabled: bool = False,
+    krk_selector_objective_observability_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -3522,6 +3712,9 @@ def choose_move_details(
                 krk_stage5_6_candidate_generation_refresh_enabled
             ),
             krk_exact_trace_enrichment_enabled=krk_exact_trace_enrichment_enabled,
+            krk_selector_objective_observability_enabled=(
+                krk_selector_objective_observability_enabled
+            ),
             krk_strategy_arbiter_observability_enabled=(
                 krk_strategy_arbiter_observability_enabled
             ),
@@ -3616,6 +3809,7 @@ def _choose_move_details_impl(
     krk_repair_monitor_observation_source_enabled: bool = False,
     krk_stage5_6_candidate_generation_refresh_enabled: bool = False,
     krk_exact_trace_enrichment_enabled: bool = False,
+    krk_selector_objective_observability_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -3782,6 +3976,9 @@ def _choose_move_details_impl(
     )
     env["blackboard"]["krk_exact_trace_enrichment_enabled"] = bool(
         krk_exact_trace_enrichment_enabled
+    )
+    env["blackboard"]["krk_selector_objective_observability_enabled"] = bool(
+        krk_selector_objective_observability_enabled
     )
     env["blackboard"]["krk_strategy_arbiter_sandbox_enabled"] = bool(
         krk_strategy_arbiter_sandbox_enabled
@@ -4083,6 +4280,38 @@ def _choose_move_details_impl(
                 exact_trace_enrichment_enabled=krk_exact_trace_enrichment_enabled,
             )
         )
+    selector_objective_recommendation = {}
+    if krk_selector_objective_observability_enabled:
+        selector_observation = candidate_generation_observation
+        if not selector_observation:
+            if "krk_candidate_move_frames" not in env.get("blackboard", {}):
+                _enumerate_candidate_move_frames(
+                    board,
+                    blackboard=env["blackboard"],
+                    include_worst_reply=False,
+                    causal_status="non_causal",
+                )
+            selector_observation = _krk_candidate_generation_observation_for_suggestions(
+                suggestion_source,
+                selected_suggestion=selected_suggestion,
+                active_landmark_label=active_landmark_label,
+                visible_terms=env.get("blackboard", {}).get("krk_visible_terms", {}) or {},
+                board=board,
+                blackboard=env.get("blackboard", {}),
+                limit=suggestion_limit,
+                repair_monitor_observation_source_enabled=False,
+                stage5_6_candidate_generation_refresh_enabled=True,
+                exact_trace_enrichment_enabled=False,
+            )
+        selector_objective_recommendation = (
+            _krk_selector_objective_recommendation_for_observation(
+                selector_observation,
+                selected_suggestion=selected_suggestion,
+                active_landmark_label=active_landmark_label,
+                board=board,
+                confidence=selected_confidence,
+            )
+        )
     clean_suggestions = []
     clean_source = list(suggestion_source)
     if (
@@ -4205,6 +4434,14 @@ def _choose_move_details_impl(
                 "krk_candidate_generation_observation": candidate_generation_observation,
             }
             if candidate_generation_observation
+            else {}
+        ),
+        **(
+            {
+                "krk_selector_objective_observability_enabled": True,
+                "krk_selector_objective_recommendation": selector_objective_recommendation,
+            }
+            if selector_objective_recommendation
             else {}
         ),
         "krk_strategy_arbiter_sandbox_enabled": bool(krk_strategy_arbiter_sandbox_enabled),
@@ -4468,6 +4705,7 @@ def play_to_mate(
     krk_repair_monitor_observation_source_enabled: bool = False,
     krk_stage5_6_candidate_generation_refresh_enabled: bool = False,
     krk_exact_trace_enrichment_enabled: bool = False,
+    krk_selector_objective_observability_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -4642,6 +4880,9 @@ def play_to_mate(
                     krk_stage5_6_candidate_generation_refresh_enabled
                 ),
                 krk_exact_trace_enrichment_enabled=krk_exact_trace_enrichment_enabled,
+                krk_selector_objective_observability_enabled=(
+                    krk_selector_objective_observability_enabled
+                ),
                 krk_strategy_arbiter_observability_enabled=(
                     krk_strategy_arbiter_observability_enabled
                 ),
@@ -5725,6 +5966,7 @@ def evaluate_landmark_progress(
     krk_repair_monitor_observation_source_enabled: bool = False,
     krk_stage5_6_candidate_generation_refresh_enabled: bool = False,
     krk_exact_trace_enrichment_enabled: bool = False,
+    krk_selector_objective_observability_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -5957,6 +6199,9 @@ def evaluate_landmark_progress(
                 krk_stage5_6_candidate_generation_refresh_enabled
             ),
             krk_exact_trace_enrichment_enabled=krk_exact_trace_enrichment_enabled,
+            krk_selector_objective_observability_enabled=(
+                krk_selector_objective_observability_enabled
+            ),
             krk_strategy_arbiter_observability_enabled=(
                 krk_strategy_arbiter_observability_enabled
             ),
@@ -6233,6 +6478,9 @@ def evaluate_landmark_progress(
                     krk_stage5_6_candidate_generation_refresh_enabled
                 ),
                 krk_exact_trace_enrichment_enabled=krk_exact_trace_enrichment_enabled,
+                krk_selector_objective_observability_enabled=(
+                    krk_selector_objective_observability_enabled
+                ),
                 krk_strategy_arbiter_observability_enabled=(
                     krk_strategy_arbiter_observability_enabled
                 ),
@@ -7755,6 +8003,8 @@ def main() -> None:
                         help="Runtime test: alias for the approved default-off Stage 5/6 candidate-generation refresh frame source; no score/routing effect")
     parser.add_argument("--enable-krk-exact-trace-enrichment", action="store_true",
                         help="Runtime test: add default-off exact candidate-generation observation frames for reviewed Stage 5/6 source gaps; no score/routing effect")
+    parser.add_argument("--enable-krk-selector-objective-observability", action="store_true",
+                        help="Runtime test: emit default-off recommendation-only KRK selector-objective metadata; no score/routing/selection effect")
     parser.add_argument("--enable-krk-strategy-arbiter-observability", action="store_true",
                         help="Enable default-off trace-only KRK strategy-arbiter observation metadata; does not alter scores or move selection")
     parser.add_argument("--enable-krk-strategy-arbiter-sandbox", action="store_true",
@@ -7895,6 +8145,9 @@ def main() -> None:
             or args.enable_krk_candidate_generation_refresh
         ),
         krk_exact_trace_enrichment_enabled=args.enable_krk_exact_trace_enrichment,
+        krk_selector_objective_observability_enabled=(
+            args.enable_krk_selector_objective_observability
+        ),
         krk_strategy_arbiter_observability_enabled=args.enable_krk_strategy_arbiter_observability,
         krk_strategy_arbiter_sandbox_enabled=args.enable_krk_strategy_arbiter_sandbox,
         krk_strategy_arbiter_support=args.krk_strategy_arbiter_support,
