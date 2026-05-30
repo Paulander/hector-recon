@@ -20,7 +20,8 @@ is only a pointer to this file.
 - The conditional approval for one additional collection was not consumed.
 - Do not execute additional protected failure-contrast collection without a fresh reviewed Stage 5/6-only diversity manifest and explicit approval.
 - Fresh selector-objective diversity packet: `reports/strategy_arbitration/krk_selector_objective_fresh_diversity_review_packet_v0.json` with status `fresh_stage5_stage6_diversity_collection_review_ready`.
-- This packet is review-only; it authorizes no collection, selector training, runtime behavior, Stage 7 promotion, or Stage 8 training.
+- Fresh selector-objective diversity collection result: `reports/strategy_arbitration/krk_selector_objective_fresh_diversity_collection_v0.json` with status `fresh_stage5_6_selector_objective_collection_complete`.
+- The approved collection consumed the fresh Stage 5/6-only packet only; it authorizes no selector training, runtime behavior, Stage 7 promotion, or Stage 8 training.
 
 ## Verified Invariants
 
@@ -33,9 +34,10 @@ is only a pointer to this file.
 - Stage 7 promotion and Stage 8 training remain blocked.
 - M1-M4 semantics remain preserved.
 - Capacity labels are not ownership labels.
+- Fresh Stage 5/6 selector-objective collection rows: 8 attempted, 8 joined, 76 generated refresh frames, 4 selected-failure visible-positive rows, 4 safe-preservation visible-positive rows.
+- Fresh Stage 5/6 selector-objective collection deltas: selected move 0, provider 0, score 0, routing 0, invalid frames 0, baseline refresh frames 0.
 
 ## Next Needed Work
 
-- If more protected failure-contrast evidence is desired, first author and review a fresh bounded Stage 5/6-only diversity manifest.
-- The fresh Stage 5/6-only selector-objective diversity packet is ready for human review; execution would require a separate explicit approval.
+- Review the fresh Stage 5/6-only selector-objective diversity collection result before using it in any downstream packet.
 - Do not set runtime-ready, selector-ready, Stage 7-ready, or Stage 8-ready from the current evidence.
