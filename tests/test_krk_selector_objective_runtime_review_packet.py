@@ -50,6 +50,26 @@ def test_selector_objective_runtime_review_packet_json_parses_and_is_ready():
         "reversible": True,
         "traceable": True,
     }
+    first = payload["first_sandbox_scope_if_separately_approved_later"]
+    assert first["name"] == "trace_only_selector_objective_recommendation"
+    assert first["implementation_status"] == "not_implemented"
+    assert first["authorization_status"] == "not_authorized_by_this_packet"
+    assert first["may_compute"] == "combined_simple_rule_selector_objective"
+    assert first["may_emit_recommendations"] == [
+        "preserve_selected_owner",
+        "prefer_visible_alternative",
+        "abstain_context_only",
+    ]
+    assert "explanation_terms" in first["may_record"]
+    assert "source_terms" in first["may_record"]
+    assert first["direct_request"] is False
+    assert first["score_delta"] == 0.0
+    assert first["selected_move_delta_allowed"] is False
+    assert first["selected_provider_delta_allowed"] is False
+    assert first["routing_delta_allowed"] is False
+    assert first["provider_suppression_allowed"] is False
+    assert first["runtime_default_change_allowed"] is False
+    assert first["runtime_effect"] == "recommendation_only_no_selection"
 
 
 def test_selector_objective_runtime_review_packet_does_not_authorize_runtime():

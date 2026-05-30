@@ -20,6 +20,18 @@ This packet reviews a possible future default-off selector-objective sandbox. It
 - reversible: `True`
 - default_behavior_change: `False`
 
+## First Sandbox Scope If Separately Approved Later
+
+- name: `trace_only_selector_objective_recommendation`
+- may_compute: `combined_simple_rule_selector_objective`
+- may_emit_recommendations: `['preserve_selected_owner', 'prefer_visible_alternative', 'abstain_context_only']`
+- may_record: `['recommendation', 'explanation_terms', 'source_terms', 'selected_owner_observation']`
+- direct_request: `False`
+- score_delta: `0.0`
+- selected_move_delta_allowed: `False`
+- selected_provider_delta_allowed: `False`
+- runtime_effect: `recommendation_only_no_selection`
+
 ## Allowed Only If Separately Approved Later
 
 - `observe_current_selected_owner`

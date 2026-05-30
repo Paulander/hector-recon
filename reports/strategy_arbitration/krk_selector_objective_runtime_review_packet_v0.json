@@ -41,6 +41,31 @@
     "hidden_python_controller",
     "guardrails_before_target_smoke"
   ],
+  "first_sandbox_scope_if_separately_approved_later": {
+    "authorization_status": "not_authorized_by_this_packet",
+    "direct_request": false,
+    "implementation_status": "not_implemented",
+    "may_compute": "combined_simple_rule_selector_objective",
+    "may_emit_recommendations": [
+      "preserve_selected_owner",
+      "prefer_visible_alternative",
+      "abstain_context_only"
+    ],
+    "may_record": [
+      "recommendation",
+      "explanation_terms",
+      "source_terms",
+      "selected_owner_observation"
+    ],
+    "name": "trace_only_selector_objective_recommendation",
+    "provider_suppression_allowed": false,
+    "routing_delta_allowed": false,
+    "runtime_default_change_allowed": false,
+    "runtime_effect": "recommendation_only_no_selection",
+    "score_delta": 0.0,
+    "selected_move_delta_allowed": false,
+    "selected_provider_delta_allowed": false
+  },
   "future_sandbox_envelope_before_implementation": [
     "explicit_flag",
     "default_off_equivalence",
