@@ -24,6 +24,8 @@ is only a pointer to this file.
 - The approved collection consumed the fresh Stage 5/6-only packet only; it authorizes no selector training, runtime behavior, Stage 7 promotion, or Stage 8 training.
 - Replay-free selector-objective batch gap scan: `reports/strategy_arbitration/krk_selector_objective_batch_gap_scan_v0.json` with status `selector_objective_diversity_improved_replay_free`.
 - Selector-objective feature probe v2: `reports/strategy_arbitration/krk_selector_objective_feature_probe_v2.json` with status `selector_objective_feature_probe_v2_review_ready`.
+- Selector-objective benchmark v0: `reports/strategy_arbitration/krk_selector_objective_benchmark_v0.json` with status `selector_objective_benchmark_promising_non_causal`.
+- Selector-objective benchmark decision v0: `reports/strategy_arbitration/krk_selector_objective_benchmark_decision_v0.json`; implementation remains unauthorized.
 
 ## Verified Invariants
 
@@ -40,8 +42,9 @@ is only a pointer to this file.
 - Fresh Stage 5/6 selector-objective collection deltas: selected move 0, provider 0, score 0, routing 0, invalid frames 0, baseline refresh frames 0.
 - Seed manifest v2 now has 21 non-causal rows after replay-free recovery: Stage 4 rows remain historical evidence; the new fresh contribution is Stage 5/6-only and adds or improves four seed rows.
 - Feature probe v2 has one non-causal runtime-visible probe model over review thresholds, but this is a review boundary only. Selector training, runtime selector implementation, routing, scoring, provider selection changes, and provider suppression remain blocked.
+- Benchmark v0 compared majority, provider prior, stage/provider-family prior, trace/context rule, proposal-count rule, and combined simple rule. Best non-causal model: `combined_simple_rule` with accuracy 0.952, safe-preservation recall 1.0, switch-contrast recall 0.8, abstain recall 1.0.
 
 ## Next Needed Work
 
-- Stop at the feature-probe/independent-validation approval boundary before any runtime design or further collection.
+- Stop at the benchmark/runtime-review approval boundary before any runtime design or further collection.
 - Do not set runtime-ready, selector-ready, Stage 7-ready, or Stage 8-ready from the current evidence.
