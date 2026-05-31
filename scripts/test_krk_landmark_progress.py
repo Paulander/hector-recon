@@ -1569,6 +1569,105 @@ def _krk_selector_objective_recommendation_for_observation(
     }
 
 
+def _krk_selector_behavior_sandbox_choice(
+    recommendation: dict,
+    suggestions: list[dict],
+    selected_suggestion: dict | None,
+) -> tuple[dict | None, dict]:
+    """Bounded opt-in switch to an already-visible suggestion.
+
+    This never creates candidates, requests providers, mutates scores, or routes
+    directly. It only chooses a currently visible suggestion if its provider/move
+    pair is also present in the refined selector recommendation's visible
+    alternatives.
+    """
+    original_provider = (
+        _skill_id_for_suggestion(selected_suggestion)
+        if isinstance(selected_suggestion, dict)
+        else None
+    )
+    original_move = (
+        _suggestion_move_uci(selected_suggestion)
+        if isinstance(selected_suggestion, dict)
+        else None
+    )
+    base = {
+        "schema_version": "krk_selector_behavior_sandbox_decision.v0",
+        "enabled": True,
+        "causal_status": "sandbox_opt_in_bounded_visible_switch",
+        "direct_request": False,
+        "score_delta": 0.0,
+        "runtime_dtm_or_tablebase": False,
+        "gameplay_topology_mutation": False,
+        "new_candidate_generation": False,
+        "hidden_routing": False,
+        "provider_suppression": False,
+        "recommendation": recommendation.get("recommendation"),
+        "original_selected_provider": original_provider,
+        "original_selected_move": original_move,
+        "replacement_provider": None,
+        "replacement_move": None,
+        "source_terms": list(recommendation.get("source_terms") or []),
+        "explanation_terms": list(recommendation.get("explanation_terms") or []),
+        "visible_alternative_count": int(
+            recommendation.get("visible_alternative_count", 0) or 0
+        ),
+        "why_selected_alternative": None,
+        "veto_reason": None,
+        "action": "no_op",
+    }
+    if recommendation.get("recommendation") != "prefer_visible_alternative":
+        base["veto_reason"] = "recommendation_not_prefer_visible_alternative"
+        return None, base
+    if not base["source_terms"]:
+        base["veto_reason"] = "source_terms_missing"
+        return None, base
+
+    alternatives = [
+        item
+        for item in recommendation.get("visible_alternatives_considered") or []
+        if isinstance(item, dict)
+    ]
+    if not alternatives:
+        base["veto_reason"] = "no_visible_alternative_exists"
+        return None, base
+    visible_pairs = {
+        (str(item.get("provider_id") or ""), str(item.get("move_id") or ""))
+        for item in alternatives
+        if item.get("provider_id")
+        and item.get("move_id")
+        and item.get("direct_request") is False
+        and float(item.get("score_delta", 0.0) or 0.0) == 0.0
+        and item.get("causal_status")
+        in {"observation_only", "candidate_generation_only"}
+        and item.get("protected_status") != "held_out_stage7_challenge"
+    }
+    if not visible_pairs:
+        base["veto_reason"] = "alternative_lacks_runtime_visible_provenance"
+        return None, base
+
+    for suggestion in suggestions:
+        provider = _skill_id_for_suggestion(suggestion)
+        move = _suggestion_move_uci(suggestion)
+        if (provider, move) not in visible_pairs:
+            continue
+        if provider == original_provider and move == original_move:
+            continue
+        base.update({
+            "action": "switch_to_visible_alternative",
+            "replacement_provider": provider,
+            "replacement_move": move,
+            "replacement_score_observed": float(suggestion.get("score", 0.0) or 0.0),
+            "why_selected_alternative": (
+                "first_current_suggestion_matching_runtime_visible_alternative"
+            ),
+            "veto_reason": None,
+        })
+        return suggestion, base
+    base["veto_reason"] = "no_current_suggestion_matches_visible_alternative"
+    return None, base
+
+
 def _krk_strategy_provider_family(skill_id: str) -> str:
     if "stage0_basin" in skill_id:
         return "stage0_basin"
@@ -3673,6 +3772,7 @@ def choose_move_details(
     krk_exact_trace_enrichment_enabled: bool = False,
     krk_selector_objective_observability_enabled: bool = False,
     krk_refined_selector_objective_observability_enabled: bool = False,
+    krk_selector_behavior_sandbox_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -3767,6 +3867,9 @@ def choose_move_details(
             ),
             krk_refined_selector_objective_observability_enabled=(
                 krk_refined_selector_objective_observability_enabled
+            ),
+            krk_selector_behavior_sandbox_enabled=(
+                krk_selector_behavior_sandbox_enabled
             ),
             krk_strategy_arbiter_observability_enabled=(
                 krk_strategy_arbiter_observability_enabled
@@ -3864,6 +3967,7 @@ def _choose_move_details_impl(
     krk_exact_trace_enrichment_enabled: bool = False,
     krk_selector_objective_observability_enabled: bool = False,
     krk_refined_selector_objective_observability_enabled: bool = False,
+    krk_selector_behavior_sandbox_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -4036,6 +4140,9 @@ def _choose_move_details_impl(
     )
     env["blackboard"]["krk_refined_selector_objective_observability_enabled"] = bool(
         krk_refined_selector_objective_observability_enabled
+    )
+    env["blackboard"]["krk_selector_behavior_sandbox_enabled"] = bool(
+        krk_selector_behavior_sandbox_enabled
     )
     env["blackboard"]["krk_strategy_arbiter_sandbox_enabled"] = bool(
         krk_strategy_arbiter_sandbox_enabled
@@ -4341,6 +4448,7 @@ def _choose_move_details_impl(
     selector_observability_requested = (
         krk_selector_objective_observability_enabled
         or krk_refined_selector_objective_observability_enabled
+        or krk_selector_behavior_sandbox_enabled
     )
     if selector_observability_requested:
         selector_observation = candidate_generation_observation
@@ -4373,9 +4481,26 @@ def _choose_move_details_impl(
                 confidence=selected_confidence,
                 preserve_failure_risk_refinement_enabled=(
                     krk_refined_selector_objective_observability_enabled
+                    or krk_selector_behavior_sandbox_enabled
                 ),
             )
         )
+    selector_behavior_sandbox_decision = {}
+    selected_by_selector_behavior_sandbox = False
+    if krk_selector_behavior_sandbox_enabled and selector_objective_recommendation:
+        replacement_suggestion, selector_behavior_sandbox_decision = (
+            _krk_selector_behavior_sandbox_choice(
+                selector_objective_recommendation,
+                list(suggestion_source),
+                selected_suggestion,
+            )
+        )
+        if replacement_suggestion is not None:
+            selected_suggestion = replacement_suggestion
+            selected_by_selector_behavior_sandbox = True
+            raw_move = selected_suggestion.get("move")
+            selected_move = raw_move.uci() if hasattr(raw_move, "uci") else raw_move
+            selected_actuator = selected_suggestion.get("actuator")
     clean_suggestions = []
     clean_source = list(suggestion_source)
     if (
@@ -4511,6 +4636,17 @@ def _choose_move_details_impl(
                 "krk_selector_objective_recommendation": selector_objective_recommendation,
             }
             if selector_objective_recommendation
+            else {}
+        ),
+        **(
+            {
+                "krk_selector_behavior_sandbox_enabled": True,
+                "krk_selector_behavior_sandbox_decision": selector_behavior_sandbox_decision,
+                "selected_by_selector_behavior_sandbox": bool(
+                    selected_by_selector_behavior_sandbox
+                ),
+            }
+            if selector_behavior_sandbox_decision
             else {}
         ),
         "krk_strategy_arbiter_sandbox_enabled": bool(krk_strategy_arbiter_sandbox_enabled),
@@ -4776,6 +4912,7 @@ def play_to_mate(
     krk_exact_trace_enrichment_enabled: bool = False,
     krk_selector_objective_observability_enabled: bool = False,
     krk_refined_selector_objective_observability_enabled: bool = False,
+    krk_selector_behavior_sandbox_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -4955,6 +5092,9 @@ def play_to_mate(
                 ),
                 krk_refined_selector_objective_observability_enabled=(
                     krk_refined_selector_objective_observability_enabled
+                ),
+                krk_selector_behavior_sandbox_enabled=(
+                    krk_selector_behavior_sandbox_enabled
                 ),
                 krk_strategy_arbiter_observability_enabled=(
                     krk_strategy_arbiter_observability_enabled
@@ -6041,6 +6181,7 @@ def evaluate_landmark_progress(
     krk_exact_trace_enrichment_enabled: bool = False,
     krk_selector_objective_observability_enabled: bool = False,
     krk_refined_selector_objective_observability_enabled: bool = False,
+    krk_selector_behavior_sandbox_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
     krk_strategy_arbiter_support: float = 0.0,
@@ -6278,6 +6419,9 @@ def evaluate_landmark_progress(
             ),
             krk_refined_selector_objective_observability_enabled=(
                 krk_refined_selector_objective_observability_enabled
+            ),
+            krk_selector_behavior_sandbox_enabled=(
+                krk_selector_behavior_sandbox_enabled
             ),
             krk_strategy_arbiter_observability_enabled=(
                 krk_strategy_arbiter_observability_enabled
@@ -6560,6 +6704,9 @@ def evaluate_landmark_progress(
                 ),
                 krk_refined_selector_objective_observability_enabled=(
                     krk_refined_selector_objective_observability_enabled
+                ),
+                krk_selector_behavior_sandbox_enabled=(
+                    krk_selector_behavior_sandbox_enabled
                 ),
                 krk_strategy_arbiter_observability_enabled=(
                     krk_strategy_arbiter_observability_enabled
@@ -8087,6 +8234,8 @@ def main() -> None:
                         help="Runtime test: emit default-off recommendation-only KRK selector-objective metadata; no score/routing/selection effect")
     parser.add_argument("--enable-krk-refined-selector-observability", action="store_true",
                         help="Runtime test: emit default-off refined recommendation-only KRK selector-objective metadata; no score/routing/selection effect")
+    parser.add_argument("--enable-krk-selector-behavior-sandbox", action="store_true",
+                        help="Runtime test: enable default-off bounded selector behavior sandbox for reviewed prefer-visible-alternative cases")
     parser.add_argument("--enable-krk-strategy-arbiter-observability", action="store_true",
                         help="Enable default-off trace-only KRK strategy-arbiter observation metadata; does not alter scores or move selection")
     parser.add_argument("--enable-krk-strategy-arbiter-sandbox", action="store_true",
@@ -8233,6 +8382,7 @@ def main() -> None:
         krk_refined_selector_objective_observability_enabled=(
             args.enable_krk_refined_selector_observability
         ),
+        krk_selector_behavior_sandbox_enabled=args.enable_krk_selector_behavior_sandbox,
         krk_strategy_arbiter_observability_enabled=args.enable_krk_strategy_arbiter_observability,
         krk_strategy_arbiter_sandbox_enabled=args.enable_krk_strategy_arbiter_sandbox,
         krk_strategy_arbiter_support=args.krk_strategy_arbiter_support,
