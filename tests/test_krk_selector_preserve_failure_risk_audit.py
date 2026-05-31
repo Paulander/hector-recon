@@ -91,6 +91,7 @@ def test_preserve_failure_refinement_is_non_causal_and_resolves_risk():
     assert refined["metrics"]["switch_on_safe_owner_count"] == 0
     assert refined["metrics"]["safe_preservation_recall"] == 1.0
     assert refined["metrics"]["switch_contrast_recall"] >= 0.75
+    assert refined["metrics"]["abstain_recall"] == 1.0
 
 
 def test_preserve_failure_audit_preserves_runtime_invariants():
