@@ -75,7 +75,7 @@ def test_initial_owner_refined_selector_artifact_parses_and_decision_ready():
         "refined_selector_initial_owner_observability_ready_for_recommendation_analysis"
     )
     assert payload["decision"]["status"] in payload["possible_statuses"]
-    assert payload["decision"]["selector_runtime_ready"] is False
+    assert "selector_runtime_ready" not in payload["decision"]
     assert "# KRK Refined Selector Initial Owner Observability Sandbox v0" in markdown
     json.dumps(payload)
 

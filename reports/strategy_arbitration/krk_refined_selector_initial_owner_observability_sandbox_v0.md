@@ -5,7 +5,6 @@ This report records a default-off, recommendation-only refined selector observab
 ## Decision
 
 - status: `refined_selector_initial_owner_observability_ready_for_recommendation_analysis`
-- selector_runtime_ready: `False`
 - runtime_changes_allowed: `False`
 - behavior_changing_selector_allowed: `False`
 - selector_training_allowed: `False`

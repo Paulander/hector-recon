@@ -150,7 +150,6 @@
     "behavior_changing_selector_allowed": false,
     "recommended_next_step": "non_causal_initial_owner_recommendation_analysis",
     "runtime_changes_allowed": false,
-    "selector_runtime_ready": false,
     "selector_training_allowed": false,
     "stage7_promotion_allowed": false,
     "stage8_training_allowed": false,
@@ -1687,7 +1686,7 @@
       "direct_request": false,
       "enabled_decision": {
         "candidate_generation_observation_present": false,
-        "confidence": -0.013539869287113352,
+        "confidence": -0.013539902069667974,
         "move": "h7c7",
         "selected_provider": "krk.fence_established",
         "selector_recommendation": {
@@ -1700,7 +1699,7 @@
           "active_landmark_label": "fence_established",
           "box_area_relevance": "low",
           "causal_status": "recommendation_only",
-          "confidence": -0.013539869287113352,
+          "confidence": -0.013539902069667974,
           "continuation_recommendation": false,
           "current_ply": null,
           "decision_reason": "high_positive_trace_count_bucket",
@@ -1927,7 +1926,7 @@
       "fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
       "flag_off_decision": {
         "candidate_generation_observation_present": false,
-        "confidence": -0.013539869287113352,
+        "confidence": -0.013539902069667974,
         "move": "h7c7",
         "selected_provider": "krk.fence_established",
         "selector_recommendation": {},

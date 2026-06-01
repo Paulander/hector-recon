@@ -424,7 +424,6 @@ def build_payload(
         "possible_statuses": DECISION_STATUSES,
         "decision": {
             "status": status,
-            "selector_runtime_ready": False,
             "runtime_changes_allowed": False,
             "behavior_changing_selector_allowed": False,
             "selector_training_allowed": False,
