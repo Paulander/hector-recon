@@ -1,0 +1,56 @@
+{
+  "behavior_changing_selector_implemented": false,
+  "causal_status": "review_gate_only_no_behavior_change",
+  "decision": {
+    "implement_behavior_selector": false,
+    "move_selection_changes_allowed": false,
+    "provider_selection_changes_allowed": false,
+    "provider_suppression_allowed": false,
+    "recommended_next_step": "review_future_default_off_behavior_selector_packet_before_any_implementation",
+    "routing_changes_allowed": false,
+    "runtime_changes_allowed": false,
+    "score_changes_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "refined_selector_initial_owner_ready_for_behavior_review_packet",
+    "write_behavior_review_packet_only": true
+  },
+  "evidence": {
+    "abstain_missed_switch_count": 1,
+    "capacity_label_used_as_ownership_label_count": 0,
+    "continuation_recommendation_count": 0,
+    "preserve_on_failure_count": 0,
+    "runtime_behavior_changed": false,
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0,
+    "switch_on_safe_owner_count": 0,
+    "unsafe_if_causal_count": 0
+  },
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "possible_decisions": [
+    "refined_selector_initial_owner_ready_for_behavior_review_packet",
+    "refined_selector_initial_owner_needs_more_observation_data",
+    "refined_selector_initial_owner_blocked_by_preserve_failure_risk",
+    "refined_selector_initial_owner_blocked_by_switch_safe_owner_risk",
+    "refined_selector_initial_owner_blocked_by_abstain_gap",
+    "refined_selector_initial_owner_architecture_review_required"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_provider_suppression": false,
+  "runtime_score_changes": false,
+  "schema_version": "krk_refined_selector_initial_owner_next_gate.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_refined_selector_initial_owner_recommendation_analysis_v0.json",
+    "reports/strategy_arbitration/krk_refined_selector_initial_owner_observability_sandbox_v0.json",
+    "reports/strategy_arbitration/krk_selector_preserve_failure_risk_decision_v0.json",
+    "reports/strategy_arbitration/krk_selector_objective_benchmark_v0.json",
+    "reports/strategy_arbitration/krk_selector_objective_seed_manifest_v2.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}
