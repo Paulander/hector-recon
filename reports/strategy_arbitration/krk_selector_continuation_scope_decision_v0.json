@@ -1,0 +1,49 @@
+{
+  "causal_status": "future_review_packet_only_no_runtime_change",
+  "decision": {
+    "implement_fix_now": false,
+    "make_default": false,
+    "promote_selector": false,
+    "promote_stage7": false,
+    "recommended_next_step": "write a separate future default-off narrowed selector sandbox review that allows behavior only for initial-owner choice and blocks active continuation windows",
+    "runtime_changes_allowed": false,
+    "status": "selector_scope_initial_owner_only_supported",
+    "train_stage8": false,
+    "write_future_narrowed_sandbox_review_only": true
+  },
+  "evidence": {
+    "capacity_label_used_as_ownership_label_count": 0,
+    "regression_ply": 4,
+    "regression_row_id": "joined_trace_ownership_4",
+    "safe_regression_count": 1,
+    "selector_remains_quarantined": true,
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0,
+    "successful_initial_switch_count": 2,
+    "target_improvement_count": 2
+  },
+  "gameplay_topology_mutation": false,
+  "possible_decisions": [
+    "selector_scope_initial_owner_only_supported",
+    "selector_scope_needs_continuation_window_monitor",
+    "selector_scope_regression_requires_quarantine",
+    "selector_scope_needs_more_evidence",
+    "selector_behavior_path_architecture_review_required"
+  ],
+  "production_fix_implemented": false,
+  "production_runtime_behavior_changed": false,
+  "rationale": "Initial-owner-only scoping matches the current positive evidence and blocks the known ply-4 continuation regression. It is not an implemented fix; it is only supported enough for a future default-off review packet.",
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_selector_continuation_scope_decision.v0",
+  "selector_unquarantined": false,
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_selector_continuation_scope_audit_v0.json",
+    "reports/strategy_arbitration/krk_selector_behavior_continuation_regression_root_cause_v0.json",
+    "reports/strategy_arbitration/krk_selector_behavior_sandbox_v0.json",
+    "reports/strategy_arbitration/krk_selector_behavior_sandbox_validation_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "thresholds_tuned": false
+}
