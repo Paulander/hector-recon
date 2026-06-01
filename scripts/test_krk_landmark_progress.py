@@ -3772,6 +3772,7 @@ def choose_move_details(
     krk_exact_trace_enrichment_enabled: bool = False,
     krk_selector_objective_observability_enabled: bool = False,
     krk_refined_selector_objective_observability_enabled: bool = False,
+    krk_refined_selector_initial_owner_observability_enabled: bool = False,
     krk_selector_behavior_sandbox_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
@@ -3867,6 +3868,9 @@ def choose_move_details(
             ),
             krk_refined_selector_objective_observability_enabled=(
                 krk_refined_selector_objective_observability_enabled
+            ),
+            krk_refined_selector_initial_owner_observability_enabled=(
+                krk_refined_selector_initial_owner_observability_enabled
             ),
             krk_selector_behavior_sandbox_enabled=(
                 krk_selector_behavior_sandbox_enabled
@@ -3967,6 +3971,7 @@ def _choose_move_details_impl(
     krk_exact_trace_enrichment_enabled: bool = False,
     krk_selector_objective_observability_enabled: bool = False,
     krk_refined_selector_objective_observability_enabled: bool = False,
+    krk_refined_selector_initial_owner_observability_enabled: bool = False,
     krk_selector_behavior_sandbox_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
@@ -4140,6 +4145,9 @@ def _choose_move_details_impl(
     )
     env["blackboard"]["krk_refined_selector_objective_observability_enabled"] = bool(
         krk_refined_selector_objective_observability_enabled
+    )
+    env["blackboard"]["krk_refined_selector_initial_owner_observability_enabled"] = bool(
+        krk_refined_selector_initial_owner_observability_enabled
     )
     env["blackboard"]["krk_selector_behavior_sandbox_enabled"] = bool(
         krk_selector_behavior_sandbox_enabled
@@ -4445,9 +4453,14 @@ def _choose_move_details_impl(
             )
         )
     selector_objective_recommendation = {}
+    initial_owner_observability_window = (
+        krk_refined_selector_initial_owner_observability_enabled
+        and (current_ply is None or int(current_ply) == 0)
+    )
     selector_observability_requested = (
         krk_selector_objective_observability_enabled
         or krk_refined_selector_objective_observability_enabled
+        or initial_owner_observability_window
         or krk_selector_behavior_sandbox_enabled
     )
     if selector_observability_requested:
@@ -4481,10 +4494,24 @@ def _choose_move_details_impl(
                 confidence=selected_confidence,
                 preserve_failure_risk_refinement_enabled=(
                     krk_refined_selector_objective_observability_enabled
+                    or krk_refined_selector_initial_owner_observability_enabled
                     or krk_selector_behavior_sandbox_enabled
                 ),
             )
         )
+        if initial_owner_observability_window:
+            selector_objective_recommendation.update({
+                "sandbox_id": (
+                    "sandbox.krk.refined_selector_initial_owner_observability_v0"
+                ),
+                "selector_scope": "initial_owner_only",
+                "decision_window": "initial_owner_choice",
+                "current_ply": current_ply,
+                "continuation_recommendation": False,
+                "plan_capsule_continuation_influence": False,
+                "progress_window_reconsideration_influence": False,
+                "move_provider_selection_effect": False,
+            })
     selector_behavior_sandbox_decision = {}
     selected_by_selector_behavior_sandbox = False
     if krk_selector_behavior_sandbox_enabled and selector_objective_recommendation:
@@ -4632,6 +4659,9 @@ def _choose_move_details_impl(
                 ),
                 "krk_refined_selector_objective_observability_enabled": bool(
                     krk_refined_selector_objective_observability_enabled
+                ),
+                "krk_refined_selector_initial_owner_observability_enabled": bool(
+                    krk_refined_selector_initial_owner_observability_enabled
                 ),
                 "krk_selector_objective_recommendation": selector_objective_recommendation,
             }
@@ -4912,6 +4942,7 @@ def play_to_mate(
     krk_exact_trace_enrichment_enabled: bool = False,
     krk_selector_objective_observability_enabled: bool = False,
     krk_refined_selector_objective_observability_enabled: bool = False,
+    krk_refined_selector_initial_owner_observability_enabled: bool = False,
     krk_selector_behavior_sandbox_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
@@ -5092,6 +5123,9 @@ def play_to_mate(
                 ),
                 krk_refined_selector_objective_observability_enabled=(
                     krk_refined_selector_objective_observability_enabled
+                ),
+                krk_refined_selector_initial_owner_observability_enabled=(
+                    krk_refined_selector_initial_owner_observability_enabled
                 ),
                 krk_selector_behavior_sandbox_enabled=(
                     krk_selector_behavior_sandbox_enabled
@@ -6181,6 +6215,7 @@ def evaluate_landmark_progress(
     krk_exact_trace_enrichment_enabled: bool = False,
     krk_selector_objective_observability_enabled: bool = False,
     krk_refined_selector_objective_observability_enabled: bool = False,
+    krk_refined_selector_initial_owner_observability_enabled: bool = False,
     krk_selector_behavior_sandbox_enabled: bool = False,
     krk_strategy_arbiter_observability_enabled: bool = False,
     krk_strategy_arbiter_sandbox_enabled: bool = False,
@@ -6419,6 +6454,9 @@ def evaluate_landmark_progress(
             ),
             krk_refined_selector_objective_observability_enabled=(
                 krk_refined_selector_objective_observability_enabled
+            ),
+            krk_refined_selector_initial_owner_observability_enabled=(
+                krk_refined_selector_initial_owner_observability_enabled
             ),
             krk_selector_behavior_sandbox_enabled=(
                 krk_selector_behavior_sandbox_enabled
@@ -6704,6 +6742,9 @@ def evaluate_landmark_progress(
                 ),
                 krk_refined_selector_objective_observability_enabled=(
                     krk_refined_selector_objective_observability_enabled
+                ),
+                krk_refined_selector_initial_owner_observability_enabled=(
+                    krk_refined_selector_initial_owner_observability_enabled
                 ),
                 krk_selector_behavior_sandbox_enabled=(
                     krk_selector_behavior_sandbox_enabled
@@ -8380,6 +8421,9 @@ def main() -> None:
             args.enable_krk_selector_objective_observability
         ),
         krk_refined_selector_objective_observability_enabled=(
+            False
+        ),
+        krk_refined_selector_initial_owner_observability_enabled=(
             args.enable_krk_refined_selector_observability
         ),
         krk_selector_behavior_sandbox_enabled=args.enable_krk_selector_behavior_sandbox,
