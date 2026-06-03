@@ -1,0 +1,141 @@
+{
+  "schema_version": "krk_selector_behavior_branch_closure.v0",
+  "causal_status": "architecture_branch_closure_no_runtime_change",
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_selector_authorized": false,
+  "behavior_changing_selector_authorized": false,
+  "runtime_score_changes": false,
+  "runtime_provider_suppression": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "gameplay_topology_mutation": false,
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_selector_objective_benchmark_v0.json",
+    "reports/strategy_arbitration/krk_selector_objective_observability_sandbox_v0.json",
+    "reports/strategy_arbitration/krk_refined_selector_observability_sandbox_v0.json",
+    "reports/strategy_arbitration/krk_refined_selector_initial_owner_observability_sandbox_v0.json",
+    "reports/strategy_arbitration/krk_refined_selector_initial_owner_recommendation_analysis_v0.json",
+    "reports/strategy_arbitration/krk_refined_selector_initial_owner_next_gate_v0.json",
+    "reports/strategy_arbitration/krk_refined_selector_initial_owner_behavior_review_packet_v0.json",
+    "reports/strategy_arbitration/krk_selector_behavior_sandbox_v0.json",
+    "reports/strategy_arbitration/krk_selector_behavior_sandbox_validation_v0.json",
+    "reports/strategy_arbitration/krk_selector_behavior_regression_audit_v0.json",
+    "reports/strategy_arbitration/krk_selector_behavior_regression_decision_v0.json",
+    "reports/strategy_arbitration/krk_selector_behavior_continuation_regression_root_cause_v0.json",
+    "reports/strategy_arbitration/krk_selector_continuation_scope_decision_v0.json"
+  ],
+  "timeline": [
+    {
+      "step": "selector_objective_benchmark",
+      "artifact": "reports/strategy_arbitration/krk_selector_objective_benchmark_v0.json",
+      "status": "selector_objective_benchmark_promising_non_causal",
+      "interpretation": "Offline runtime-visible terms were promising, but only as non-causal evidence."
+    },
+    {
+      "step": "trace_only_observability",
+      "artifact": "reports/strategy_arbitration/krk_selector_objective_observability_sandbox_v0.json",
+      "status": "trace_only_recommendation_sandbox",
+      "interpretation": "Default-off recommendation traces did not change routing, score, provider, or move selection."
+    },
+    {
+      "step": "refined_initial_owner_observability",
+      "artifact": "reports/strategy_arbitration/krk_refined_selector_initial_owner_observability_sandbox_v0.json",
+      "status": "refined_selector_initial_owner_observability_ready_for_recommendation_analysis",
+      "interpretation": "The safest trace shape was initial-owner-only and recommendation-only."
+    },
+    {
+      "step": "initial_owner_recommendation_analysis",
+      "artifact": "reports/strategy_arbitration/krk_refined_selector_initial_owner_next_gate_v0.json",
+      "status": "refined_selector_initial_owner_ready_for_behavior_review_packet",
+      "interpretation": "This authorized writing a review packet only; it did not authorize selector behavior."
+    },
+    {
+      "step": "behavior_sandbox",
+      "artifact": "reports/strategy_arbitration/krk_selector_behavior_sandbox_v0.json",
+      "status": "selector_behavior_sandbox_target_improved",
+      "interpretation": "The default-off sandbox improved a tiny target sample, which was insufficient for promotion."
+    },
+    {
+      "step": "protected_validation",
+      "artifact": "reports/strategy_arbitration/krk_selector_behavior_sandbox_validation_v0.json",
+      "status": "selector_behavior_sandbox_regresses_safe_controls",
+      "interpretation": "Protected validation found one h40 safe-control regression and no h40 improvement."
+    },
+    {
+      "step": "regression_decision",
+      "artifact": "reports/strategy_arbitration/krk_selector_behavior_regression_decision_v0.json",
+      "status": "selector_behavior_quarantined_due_to_safe_regression",
+      "interpretation": "The behavior selector was quarantined rather than fixed, narrowed, promoted, or made default."
+    },
+    {
+      "step": "continuation_scope_audit",
+      "artifact": "reports/strategy_arbitration/krk_selector_continuation_scope_decision_v0.json",
+      "status": "selector_scope_initial_owner_only_supported",
+      "interpretation": "Continuation behavior requires a broader architecture decision rather than more selector patching."
+    }
+  ],
+  "final_branch_status": {
+    "selector_behavior_sandbox": "quarantined",
+    "behavior_changing_selector": "blocked",
+    "trace_only_observability": "useful_non_causal",
+    "recommendation_artifacts": "non_causal_evidence_only",
+    "runtime_selector_authorized": false,
+    "selector_runtime_ready": false
+  },
+  "evidence_summary": {
+    "offline_benchmark_promising": true,
+    "recommendation_analysis_ready_for_review_packet": true,
+    "behavior_sandbox_target_improved": true,
+    "protected_safe_regression_count": 1,
+    "protected_h40_improvement_count": 0,
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0,
+    "capacity_label_used_as_ownership_label_count": 0,
+    "default_off_equivalence_preserved": true,
+    "runtime_behavior_changed": false
+  },
+  "main_lesson": {
+    "recommendation_correctness_not_enough_for_causal_switching": true,
+    "safe_owner_preservation_is_fragile": true,
+    "selected_owner_failure_and_alternative_capacity_must_be_compared_state_locally": true,
+    "continuation_policy_cannot_be_inferred_from_initial_owner_recommendations": true,
+    "future_selector_requires_stronger_safe_preservation_proof": true,
+    "summary": "Trace-only selector observability remains useful, but a provider-switching selector is not an adequate control surface by itself. Future causal work should move up to a KRK strategy and sequence control plane with state-local paired evidence before any provider-choice override is reconsidered."
+  },
+  "allowed_work": [
+    "trace_only_selector_observability",
+    "offline_recommendation_analysis",
+    "broader_krk_strategy_sequence_control_plane_review",
+    "state_local_paired_ownership_evidence_design",
+    "candidate_generation_and_plan_policy_audits"
+  ],
+  "forbidden_work": [
+    "behavior_changing_selector_implementation",
+    "runtime_provider_choice_override",
+    "runtime_move_choice_override",
+    "runtime_score_change",
+    "runtime_routing_change",
+    "provider_suppression",
+    "selector_runtime_ready_marker",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase_lookup",
+    "gameplay_topology_mutation",
+    "using_capacity_labels_as_ownership_labels"
+  ],
+  "recommended_next_direction": {
+    "status": "return_to_control_plane",
+    "description": "Use the selector branch as evidence that local recommendation traces are insufficient for safe causal provider switching. Continue with a broader KRK strategy or sequence control-plane design before any future behavior-changing selector review.",
+    "requires_new_architecture_decision_before_selector_behavior": true
+  },
+  "decision": {
+    "status": "selector_behavior_branch_closed_return_to_control_plane",
+    "implement_selector_behavior": false,
+    "write_behavior_review_packet": false,
+    "runtime_changes_allowed": false,
+    "recommended_next_step": "return_to_broader_krk_strategy_sequence_control_plane"
+  }
+}

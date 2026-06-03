@@ -14,6 +14,10 @@ is only a pointer to this file.
 
 ## Current Decision
 
+- Selector behavior branch closure v0: `reports/strategy_arbitration/krk_selector_behavior_branch_closure_v0.json` with status `selector_behavior_branch_closed_return_to_control_plane`.
+- The behavior-changing selector sandbox is quarantined by `krk_selector_behavior_regression_decision_v0.json` (`selector_behavior_quarantined_due_to_safe_regression`).
+- Trace-only selector observability and recommendation artifacts remain useful as non-causal evidence, but they do not authorize provider choice, move choice, scoring, routing, default, or suppression changes.
+- Next direction: broader KRK strategy/sequence control plane, candidate generation, plan/sequence policy, and state-local paired ownership evidence; not selector behavior.
 - Decision status: `protected_failure_contrast_collection_not_worth_running`.
 - The currently reviewed v0 manifest is the already-spent manifest; its six outputs already exist and all are `conversion_positive`.
 - The v0 manifest includes Stage 4 rows and does not satisfy the new Stage 5/6-only diversity condition for the conditional follow-up approval.
@@ -48,5 +52,7 @@ is only a pointer to this file.
 
 ## Next Needed Work
 
+- Return to KRK strategy/sequence control-plane work; any future causal selector attempt requires a new architecture review and explicit approval.
+- Do not pursue behavior-changing selector variants from the current branch closure.
 - Stop at the runtime-review approval boundary; any default-off selector-objective sandbox still requires separate explicit approval before implementation.
 - Do not set runtime-ready, selector-ready, Stage 7-ready, or Stage 8-ready from the current evidence.
