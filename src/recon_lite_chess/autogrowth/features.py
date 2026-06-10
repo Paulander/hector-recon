@@ -117,18 +117,48 @@ def make_trace_record(
     """Build a generic before/action/after trace record."""
 
     piece = board.piece_at(move.from_square) if move is not None else None
+    before_features = extract_learner_features(board)
+    after_features = extract_learner_features(after_board)
+    progress_deltas = {
+        key: float(after_features[key] - before_features[key])
+        for key in sorted(before_features)
+    }
     record: dict[str, Any] = {
         "ply": int(ply),
-        "before_features": extract_learner_features(board),
+        "before_features": before_features,
         "action": {
             "uci": move.uci() if move is not None else None,
             "from_file": _square_file(move.from_square) if move is not None else -1,
             "from_rank": _square_rank(move.from_square) if move is not None else -1,
             "to_file": _square_file(move.to_square) if move is not None else -1,
             "to_rank": _square_rank(move.to_square) if move is not None else -1,
+            "file_delta": (
+                _square_file(move.to_square) - _square_file(move.from_square)
+                if move is not None
+                else 0
+            ),
+            "rank_delta": (
+                _square_rank(move.to_square) - _square_rank(move.from_square)
+                if move is not None
+                else 0
+            ),
             "piece_type": 0 if piece is None else int(piece.piece_type),
+            "is_capture": 1.0 if move is not None and board.is_capture(move) else 0.0,
+            "gives_check": 1.0 if move is not None and board.gives_check(move) else 0.0,
         },
-        "after_features": extract_learner_features(after_board),
+        "after_features": after_features,
+        "progress_deltas": progress_deltas,
+        "recon_growth_view": {
+            "before_node_type": "TERMINAL",
+            "action_node_type": "ACTION",
+            "after_node_type": "TERMINAL",
+            "script_node_type": "SCRIPT",
+            "allowed_relation_types": ["SUB", "SUR", "POR", "RET"],
+            "behavior_change_applied": False,
+            "external_action_ranking_applied": False,
+            "before_feature_keys": sorted(before_features),
+            "after_feature_keys": sorted(after_features),
+        },
         "outcome": str(outcome),
     }
     validate_learner_record(record)

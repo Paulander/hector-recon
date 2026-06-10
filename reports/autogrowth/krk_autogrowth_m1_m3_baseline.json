@@ -2,58 +2,94 @@
   "arms": {
     "baseline": {
       "40": {
+        "action_vitality_rate": 0.45260347129506007,
         "arm": "baseline",
         "conversion_rate": 0.0,
+        "draw_reasons": {
+          "draw_fivefold_repetition": 200
+        },
         "draws": 200,
         "horizon": 40,
+        "horizon_no_mate": 0,
         "illegal_moves": 0,
         "mates": 0,
         "max_plies": 0,
         "other_failures": 0,
+        "repeated_white_action_events": 1230,
+        "repetition_events": 2600,
         "rook_losses": 0,
         "stalemates": 0,
-        "total": 200
+        "total": 200,
+        "white_action_count": 2247,
+        "white_unique_action_total": 1017
       },
       "80": {
+        "action_vitality_rate": 0.45260347129506007,
         "arm": "baseline",
         "conversion_rate": 0.0,
+        "draw_reasons": {
+          "draw_fivefold_repetition": 200
+        },
         "draws": 200,
         "horizon": 80,
+        "horizon_no_mate": 0,
         "illegal_moves": 0,
         "mates": 0,
         "max_plies": 0,
         "other_failures": 0,
+        "repeated_white_action_events": 1230,
+        "repetition_events": 2600,
         "rook_losses": 0,
         "stalemates": 0,
-        "total": 200
+        "total": 200,
+        "white_action_count": 2247,
+        "white_unique_action_total": 1017
       }
     },
     "sham_growth": {
       "40": {
+        "action_vitality_rate": 0.45260347129506007,
         "arm": "sham_growth",
         "conversion_rate": 0.0,
+        "draw_reasons": {
+          "draw_fivefold_repetition": 200
+        },
         "draws": 200,
         "horizon": 40,
+        "horizon_no_mate": 0,
         "illegal_moves": 0,
         "mates": 0,
         "max_plies": 0,
         "other_failures": 0,
+        "repeated_white_action_events": 1230,
+        "repetition_events": 2600,
         "rook_losses": 0,
         "stalemates": 0,
-        "total": 200
+        "total": 200,
+        "white_action_count": 2247,
+        "white_unique_action_total": 1017
       },
       "80": {
+        "action_vitality_rate": 0.45260347129506007,
         "arm": "sham_growth",
         "conversion_rate": 0.0,
+        "draw_reasons": {
+          "draw_fivefold_repetition": 200
+        },
         "draws": 200,
         "horizon": 80,
+        "horizon_no_mate": 0,
         "illegal_moves": 0,
         "mates": 0,
         "max_plies": 0,
         "other_failures": 0,
+        "repeated_white_action_events": 1230,
+        "repetition_events": 2600,
         "rook_losses": 0,
         "stalemates": 0,
-        "total": 200
+        "total": 200,
+        "white_action_count": 2247,
+        "white_unique_action_total": 1017
       }
     }
   },

@@ -35,8 +35,26 @@ def test_baseline_and_sham_are_identical_without_candidate() -> None:
     assert payload["arms"]["baseline"]["8"]["total"] == 6
     assert "rook_losses" in payload["arms"]["baseline"]["4"]
     assert "draws" in payload["arms"]["baseline"]["4"]
+    assert "draw_reasons" in payload["arms"]["baseline"]["4"]
+    assert "horizon_no_mate" in payload["arms"]["baseline"]["4"]
+    assert "repetition_events" in payload["arms"]["baseline"]["4"]
+    assert "action_vitality_rate" in payload["arms"]["baseline"]["4"]
+    assert (
+        payload["arms"]["baseline"]["4"]["horizon_no_mate"]
+        == payload["arms"]["baseline"]["4"]["max_plies"]
+    )
+    assert (
+        payload["arms"]["baseline"]["4"]["draws"]
+        == sum(payload["arms"]["baseline"]["4"]["draw_reasons"].values())
+    )
     assert payload["arms"]["baseline"]["4"]["mates"] == payload["arms"]["sham_growth"]["4"]["mates"]
     assert payload["arms"]["baseline"]["8"]["mates"] == payload["arms"]["sham_growth"]["8"]["mates"]
+    baseline_h4 = {k: v for k, v in payload["arms"]["baseline"]["4"].items() if k != "arm"}
+    sham_h4 = {k: v for k, v in payload["arms"]["sham_growth"]["4"].items() if k != "arm"}
+    baseline_h8 = {k: v for k, v in payload["arms"]["baseline"]["8"].items() if k != "arm"}
+    sham_h8 = {k: v for k, v in payload["arms"]["sham_growth"]["8"].items() if k != "arm"}
+    assert baseline_h4 == sham_h4
+    assert baseline_h8 == sham_h8
     assert payload["paired_deltas"]["4"]["outcome_changed_count"] == 0
     assert payload["paired_deltas"]["8"]["outcome_changed_count"] == 0
 

@@ -32,11 +32,18 @@ class ArmMetrics:
     total: int
     mates: int
     max_plies: int
+    horizon_no_mate: int
     stalemates: int
     rook_losses: int
     draws: int
+    draw_reasons: dict[str, int]
     illegal_moves: int
     other_failures: int
+    repetition_events: int
+    repeated_white_action_events: int
+    white_action_count: int
+    white_unique_action_total: int
+    action_vitality_rate: float
 
     @property
     def conversion_rate(self) -> float:
@@ -126,6 +133,35 @@ def _move_checkmates(board: chess.Board, move: chess.Move) -> bool:
     return after.is_checkmate()
 
 
+def _position_repetition_key(board: chess.Board) -> str:
+    return " ".join(
+        [
+            board.board_fen(),
+            "w" if board.turn == chess.WHITE else "b",
+            board.castling_xfen(),
+            chess.square_name(board.ep_square) if board.ep_square is not None else "-",
+        ]
+    )
+
+
+def classify_terminal_outcome(board: chess.Board) -> str | None:
+    """Return a concrete terminal reason when python-chess exposes one."""
+
+    if board.is_checkmate():
+        return "mate"
+    if board.is_stalemate():
+        return "stalemate"
+    if _white_rook_square(board) is None:
+        return "rook_loss"
+    outcome = board.outcome(claim_draw=False)
+    if outcome is None:
+        return None
+    reason = outcome.termination.name.lower()
+    if outcome.winner is None:
+        return f"draw_{reason}"
+    return f"terminal_{reason}"
+
+
 def _rook_safe_after_white_move(board: chess.Board, move: chess.Move) -> bool:
     after = board.copy(stack=False)
     after.push(move)
@@ -208,26 +244,54 @@ def _playout(fen: str, *, arm: ArmName, horizon: int, keep_trace: bool = False) 
     board = chess.Board(fen)
     trace: list[dict[str, Any]] = []
     illegal_moves = 0
+    position_counts = {_position_repetition_key(board): 1}
+    white_action_counts: dict[str, int] = {}
+    repetition_events = 0
+    repeated_white_action_events = 0
+    white_action_count = 0
 
     for ply in range(int(horizon)):
-        if board.is_checkmate():
-            return {"outcome": "mate", "plies": ply, "illegal_moves": illegal_moves, "trace": trace}
-        if board.is_stalemate():
-            return {"outcome": "stalemate", "plies": ply, "illegal_moves": illegal_moves, "trace": trace}
-        if _white_rook_square(board) is None:
-            return {"outcome": "rook_loss", "plies": ply, "illegal_moves": illegal_moves, "trace": trace}
-        if board.is_game_over(claim_draw=False):
-            return {"outcome": "draw", "plies": ply, "illegal_moves": illegal_moves, "trace": trace}
+        terminal_outcome = classify_terminal_outcome(board)
+        if terminal_outcome is not None:
+            return {
+                "outcome": terminal_outcome,
+                "plies": ply,
+                "illegal_moves": illegal_moves,
+                "trace": trace,
+                "repetition_events": repetition_events,
+                "repeated_white_action_events": repeated_white_action_events,
+                "white_action_count": white_action_count,
+                "white_unique_action_total": len(white_action_counts),
+            }
 
         move = choose_white_baseline_move(board) if board.turn == chess.WHITE else choose_black_reply(board)
         before = board.copy(stack=False)
         if move is None or move not in board.legal_moves:
             illegal_moves += 1
-            return {"outcome": "illegal_move", "plies": ply, "illegal_moves": illegal_moves, "trace": trace}
+            return {
+                "outcome": "illegal_move",
+                "plies": ply,
+                "illegal_moves": illegal_moves,
+                "trace": trace,
+                "repetition_events": repetition_events,
+                "repeated_white_action_events": repeated_white_action_events,
+                "white_action_count": white_action_count,
+                "white_unique_action_total": len(white_action_counts),
+            }
+
+        if before.turn == chess.WHITE:
+            white_action_count += 1
+            action_key = move.uci()
+            if white_action_counts.get(action_key, 0) > 0:
+                repeated_white_action_events += 1
+            white_action_counts[action_key] = white_action_counts.get(action_key, 0) + 1
 
         board.push(move)
-        if _white_rook_square(board) is None:
-            return {"outcome": "rook_loss", "plies": ply + 1, "illegal_moves": illegal_moves, "trace": trace}
+        position_key = _position_repetition_key(board)
+        if position_counts.get(position_key, 0) > 0:
+            repetition_events += 1
+        position_counts[position_key] = position_counts.get(position_key, 0) + 1
+
         if keep_trace and before.turn == chess.WHITE:
             trace.append(
                 make_trace_record(
@@ -238,30 +302,67 @@ def _playout(fen: str, *, arm: ArmName, horizon: int, keep_trace: bool = False) 
                     ply=ply,
                 )
             )
+        terminal_outcome = classify_terminal_outcome(board)
+        if terminal_outcome is not None:
+            if trace and keep_trace:
+                trace[-1]["outcome"] = terminal_outcome
+                validate_learner_record(trace)
+            return {
+                "outcome": terminal_outcome,
+                "plies": ply + 1,
+                "illegal_moves": illegal_moves,
+                "trace": trace,
+                "repetition_events": repetition_events,
+                "repeated_white_action_events": repeated_white_action_events,
+                "white_action_count": white_action_count,
+                "white_unique_action_total": len(white_action_counts),
+            }
 
-    outcome = "mate" if board.is_checkmate() else "max_plies"
+    outcome = "mate" if board.is_checkmate() else "horizon_no_mate"
     if trace and keep_trace:
         trace[-1]["outcome"] = outcome
         validate_learner_record(trace)
-    return {"outcome": outcome, "plies": int(horizon), "illegal_moves": illegal_moves, "trace": trace}
+    return {
+        "outcome": outcome,
+        "plies": int(horizon),
+        "illegal_moves": illegal_moves,
+        "trace": trace,
+        "repetition_events": repetition_events,
+        "repeated_white_action_events": repeated_white_action_events,
+        "white_action_count": white_action_count,
+        "white_unique_action_total": len(white_action_counts),
+    }
 
 
 def evaluate_arm(fens: Iterable[str], *, arm: ArmName, horizon: int) -> tuple[ArmMetrics, list[dict[str, Any]]]:
     outcomes: list[dict[str, Any]] = []
     counts = {
         "mate": 0,
-        "max_plies": 0,
+        "horizon_no_mate": 0,
         "stalemate": 0,
         "rook_loss": 0,
-        "draw": 0,
         "illegal_move": 0,
         "other_failure": 0,
     }
+    draw_reasons: dict[str, int] = {}
+    repetition_events = 0
+    repeated_white_action_events = 0
+    white_action_count = 0
+    white_unique_action_total = 0
     for fen in fens:
         result = _playout(fen, arm=arm, horizon=horizon)
         outcome = str(result["outcome"])
-        counts[outcome] = counts.get(outcome, 0) + 1
+        if outcome.startswith("draw_"):
+            draw_reasons[outcome] = draw_reasons.get(outcome, 0) + 1
+        else:
+            counts[outcome] = counts.get(outcome, 0) + 1
+        repetition_events += int(result["repetition_events"])
+        repeated_white_action_events += int(result["repeated_white_action_events"])
+        white_action_count += int(result["white_action_count"])
+        white_unique_action_total += int(result["white_unique_action_total"])
         outcomes.append({"fen": fen, **{key: value for key, value in result.items() if key != "trace"}})
+    draws = sum(draw_reasons.values())
+    action_vitality_rate = 0.0 if white_action_count == 0 else white_unique_action_total / white_action_count
 
     return (
         ArmMetrics(
@@ -269,12 +370,19 @@ def evaluate_arm(fens: Iterable[str], *, arm: ArmName, horizon: int) -> tuple[Ar
             horizon=int(horizon),
             total=len(outcomes),
             mates=counts["mate"],
-            max_plies=counts["max_plies"],
+            max_plies=counts["horizon_no_mate"],
+            horizon_no_mate=counts["horizon_no_mate"],
             stalemates=counts["stalemate"],
             rook_losses=counts["rook_loss"],
-            draws=counts["draw"],
+            draws=draws,
+            draw_reasons=dict(sorted(draw_reasons.items())),
             illegal_moves=counts["illegal_move"],
             other_failures=counts["other_failure"],
+            repetition_events=repetition_events,
+            repeated_white_action_events=repeated_white_action_events,
+            white_action_count=white_action_count,
+            white_unique_action_total=white_unique_action_total,
+            action_vitality_rate=action_vitality_rate,
         ),
         outcomes,
     )

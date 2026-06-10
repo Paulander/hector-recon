@@ -19,6 +19,11 @@ from .positions import (
     generate_position_sets,
     is_valid_krk_seed,
 )
+from .traces import (
+    TraceCollectionConfig,
+    TraceCollectionResult,
+    collect_trace_records,
+)
 
 __all__ = [
     "ArmMetrics",
@@ -26,7 +31,10 @@ __all__ = [
     "EvaluationResult",
     "FORBIDDEN_LEARNER_TERMS",
     "KRKPositionSet",
+    "TraceCollectionConfig",
+    "TraceCollectionResult",
     "can_mate_in_one",
+    "collect_trace_records",
     "evaluate_arm",
     "evaluate_baseline_and_sham",
     "extract_learner_features",
